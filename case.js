@@ -5,6 +5,13 @@
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 
+  // leaving for the next project: its loop in the link becomes the next page's cover (cross-document View Transitions)
+  addEventListener("pageswap", (e) => {
+    if (!e.viewTransition || reduce) return;
+    const next = document.querySelector(".next"), to = e.activation && e.activation.entry && e.activation.entry.url;
+    if (next && to && to.startsWith(new URL(next.getAttribute("href"), location.href).href)) { document.querySelector(".cover img").style.viewTransitionName = ""; const v = next.querySelector("video"); if (v) v.style.viewTransitionName = "cover"; next.querySelector(".t").style.viewTransitionName = "title"; document.querySelector(".hero h1").style.viewTransitionName = ""; }
+  });
+
   // reading progress
   const bar = Object.assign(document.createElement("div"), { className: "progress" });
   document.body.append(bar);

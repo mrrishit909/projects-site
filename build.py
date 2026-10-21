@@ -241,25 +241,33 @@ def index_page(projects):
         tools = "".join(f"<li>{escape(t)}</li>" for t in p["tech"][:5])
         w, h = image_size(ROOT / p["slug"] / p["cover"])
         cover = f'{p["slug"]}/{p["cover"]}'
+        sc = f["scale"]
+        val = f"{sc['value']:g}{sc['unit']}" if sc["unit"].startswith("%") else f"{sc['value']:g}{sc['unit']}"
         feats.append(
-            f'<article class="feature chapter" id="feature-{p["slug"]}" data-scene="feature" data-slug="{p["slug"]}" data-cover="{cover}" '
-            f'data-title="{escape(p["title"], quote=True)}" data-area="{escape(f["area"], quote=True)}" data-date="{escape(p["date"], quote=True)}" data-no="{i:02d}">'
-            f'<div class="plate copy feature-copy"><p class="hud-line cap"><span class="no">Portfolio_{i:02d}</span><span>{escape(f["area"])} · {escape(p["date"])}</span></p>'
-            f'<h3><a href="{p["slug"]}/">{escape(p["title"])}</a></h3><p class="headline">{escape(f["headline"])}</p>'
+            f'<article class="feature panel feature-{f.get("layout", "wide")}" id="feature-{p["slug"]}" data-scene="feature" data-slug="{p["slug"]}" data-cover="{cover}" '
+            f'data-title="{escape(p["title"], quote=True)}" data-area="{escape(f["area"], quote=True)}" data-date="{escape(p["date"], quote=True)}" data-no="{i:02d}" '
+            f'data-metric="{escape(sc["metric"], quote=True)}" data-unit="{escape(sc["unit"], quote=True)}" data-min="{sc["min"]}" data-max="{sc["max"]}" data-value="{sc["value"]}" '
+            f'data-evidence="{escape(sc["evidence"], quote=True)}" data-note="{escape(sc["note"], quote=True)}" data-layout="{f.get("layout", "wide")}">'
+            f'<span class="panel-no" aria-hidden="true">{i:02d}</span>'
+            f'<div class="feature-copy"><p class="feature-meta"><span class="no">{i:02d}</span><span>[ {escape(f["area"])} ]</span><span>{escape(p["date"])}</span></p>'
+            f'<h3><a href="{p["slug"]}/">{escape(p["title"])}</a></h3>'
+            f'<p class="reading"><span class="reading-value" data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}">{escape(val)}</span><span class="reading-label">{escape(sc["metric"])}, {escape(sc["note"])}</span></p>'
             f'<dl class="facts"><dt>Problem</dt><dd>{f["problem"]}</dd><dt>What I did</dt><dd>{f["contribution"]}</dd><dt>Result</dt><dd>{f["result"]}</dd></dl>'
             f'<ul class="tools" aria-label="Tools">{tools}</ul><p class="links">{"".join(links)}</p></div>'
             f'<figure class="feature-figure"><a class="inspect" href="{cover}" data-inspect="{p["slug"]}" aria-label="Enlarge screenshot of {escape(p["title"], quote=True)}">'
-            f'<img src="{cover}" alt="" width="{w}" height="{h}" loading="lazy" decoding="async"><span class="inspect-label cap" aria-hidden="true">Enlarge screenshot</span></a>'
+            f'<img src="{cover}" alt="" width="{w}" height="{h}" loading="{"eager" if i == 1 else "lazy"}" decoding="async"{" fetchpriority=\"high\"" if i == 1 else ""}><span class="inspect-label" aria-hidden="true">Enlarge</span></a>'
             f'<figcaption>{escape(f["caption"])}</figcaption></figure></article>')
     heads = Counter(p["kind"].split("\u00b7")[0].strip() for p in projects)
+    atlas = json.loads((ROOT / "assets" / "wall" / "atlas.json").read_text())   # tools/wall-atlas.cjs: every cover's place in the texture atlases
     tiles = []
     for p in projects:
+        p["w"] = atlas["tiles"].get(p["slug"], [0, 0, 0])
         head = p["kind"].split("\u00b7")[0].strip()
         search = escape(" ".join([p["title"], p["kind"], *p["tech"]]).lower(), quote=True)
-        tiles.append(f'<li class="tile" data-slug="{p["slug"]}" data-kind="{escape(head, quote=True)}" data-search="{search}">'
-                     f'<a class="tile-link" href="{p["slug"]}/"><span class="tile-no cap">{order[p["slug"]]:03d}</span>'
-                     f'<span class="tile-title">{escape(p["title"])}</span><span class="tile-kind cap">{escape(p["kind"])}</span></a></li>')
-    keys = ("slug", "title", "kind", "date", "cover", "tagline", "tech", "repo", "demo", "demo_label")
+        tiles.append(f'<li class="tile" data-slug="{p["slug"]}" data-kind="{escape(head, quote=True)}" data-search="{search}" data-w="{",".join(map(str, p["w"]))}">'
+                     f'<a class="tile-link" href="{p["slug"]}/"><span class="tile-no">{order[p["slug"]]:03d}</span>'
+                     f'<span class="tile-title">{escape(p["title"])}</span><span class="tile-kind">{escape(p["kind"])}</span></a></li>')
+    keys = ("slug", "title", "kind", "date", "cover", "tagline", "tech", "repo", "demo", "demo_label", "w")
     data = [{k: p.get(k) for k in keys if p.get(k) is not None} for p in projects]
     captions = {f["slug"]: f["caption"] for f in json.loads((ROOT / "featured.json").read_text())}
     for d in data:
@@ -268,11 +276,14 @@ def index_page(projects):
             d["size"] = list(image_size(ROOT / d["slug"] / d["cover"]))
     kinds = ", ".join(escape(k) for k, _ in heads.most_common(5))
     options = "".join(f'<option value="{escape(k, quote=True)}">{escape(k)} ({n})</option>' for k, n in heads.most_common())
+    marquee = "".join(f'<span>{escape(k)}<i>{n}</i></span>' for k, n in heads.most_common())
+    atlas_meta = json.dumps({k: atlas[k] for k in ("tile", "size", "cols", "atlases")})
+    tabs = "".join(f'<button class="kind-tab" type="button" data-kind="{escape(k, quote=True)}" aria-pressed="false">{escape(k)}</button>' for k, _ in heads.most_common(5))
     tpl = (ROOT / "index.template.html").read_text()
     assert "{{FEATURED}}" in tpl and "{{CATALOG}}" in tpl and "/*DATA*/[]" in tpl
     return (tpl.replace("{{FEATURED}}", "".join(feats)).replace("{{CATALOG}}", "".join(tiles))
                .replace("/*DATA*/[]", json.dumps(data).replace("</", "<\\/"))
-               .replace("{{COUNT}}", str(len(projects))).replace("{{KINDS_OPTIONS}}", options).replace("{{KINDS}}", kinds)
+               .replace("{{COUNT}}", str(len(projects))).replace("{{KINDS_OPTIONS}}", options).replace("{{KINDS_TABS}}", tabs).replace("{{KINDS}}", kinds).replace("{{KINDS_MARQUEE}}", marquee).replace("{{ATLAS}}", atlas_meta)
                .replace("{{THEME}}", asset_version("theme.css")).replace("{{PORTFOLIO_CSS}}", asset_version("portfolio.css"))
                .replace("{{PORTFOLIO_JS}}", asset_version("portfolio.js")).replace("{{SCENE_JS}}", asset_version("scene.js")))
 

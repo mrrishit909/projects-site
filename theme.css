@@ -1,53 +1,57 @@
-/* The one colour and token scheme for every page on the site (home record archive, case studies, the frozen trading-bot page).
+/* The one colour and token scheme for every page on the site (the portfolio home, the case studies, the frozen trading-bot page).
    Three layers, dependency direction component -> semantic -> primitive:
      --p-*  primitives: raw colours, fonts, scales, durations, spring constants
-     --s-*  semantics:  purpose-based aliases (canvas, text-primary, accent, focus-ring ...)
-     --c-*  component decisions for the home page (record sleeve, shelf, toolbar, project panel)
-   The legacy names at the bottom (--paper, --ink, --accent ...) are semantic aliases kept so site.css / style.css keep working.
-   Palette: a custom chili / earth / charcoal / cream set (inspired by, not a copy of, any brand guide). */
+     --s-*  semantics:  purpose-based roles (canvas, reading surface, text, accent, focus ring, overlay ...)
+     --c-*  component decisions (nav, hero measures, figure, catalogue, dialog, controls, the lens)
+   Two worlds share the semantics: `.ink` (warm charcoal: the cinematic chapters) and `.paper` (limestone: reading
+   chapters, case studies). The legacy names at the bottom (--paper, --ink, --accent ...) are aliases of the paper world
+   kept so site.css / style.css keep working. Palette: oxblood, warm charcoal, limestone, paper, copper. */
 :root{
   color-scheme:light;
 
   /* ---- LAYER 1: PRIMITIVES ------------------------------------------------------------------ */
+  --p-color-oxblood-700:#76251F;
+  --p-color-oxblood-600:#8E2C25;   /* hover of oxblood on paper */
   --p-color-chili-600:#A81612;
-  --p-color-chili-700:#8E1310;   /* hover state of chili-600 */
-  --p-color-chili-900:#641D18;
-  --p-color-earth-700:#704632;
-  --p-color-charcoal-950:#24201D;
-  --p-color-stone-600:#685D55;
-  --p-color-stone-400:#9A8E85;   /* decorative hairlines and marks only (3.1:1 on cream: never text) */
-  --p-color-sand-400:#C9BAAA;
-  --p-color-sand-300:#D8CBBE;
-  --p-color-sand-100:#EEE5D8;
-  --p-color-cream-50:#FAF6EF;
+  --p-color-signal-500:#E25A47;    /* the accent on charcoal: 4.6:1 on charcoal-900 */
+  --p-color-signal-400:#F06A55;    /* signal text on charcoal: 5.4:1 */
+  --p-color-copper-500:#B5724C;    /* rim light; decorative on both worlds (3.2:1 on limestone) */
+  --p-color-copper-300:#D49A72;    /* copper as text on charcoal: 6.8:1 */
+  --p-color-copper-700:#8A5234;    /* copper as text on limestone: 5.2:1 */
+  --p-color-charcoal-950:#171412;
+  --p-color-charcoal-900:#211E1B;
+  --p-color-charcoal-800:#2B2724;
+  --p-color-charcoal-700:#3A3430;
+  --p-color-stone-600:#685D55;     /* muted on limestone: 5.3:1 */
+  --p-color-stone-400:#A89E93;     /* muted on charcoal: 6.3:1; decorative only on limestone */
+  --p-color-stone-300:#CFC7BB;
+  --p-color-sand-300:#DDD4C6;
+  --p-color-sand-200:#E6DFD3;
+  --p-color-limestone-100:#EEE8DF;
+  --p-color-paper-50:#FAF7F1;
   --p-color-white:#FFFFFF;
-  --p-color-vinyl:#151413;
-  --p-color-fog-50:#F3F5F8;
-  --p-color-fog-100:#E9EDF2;
-  --p-color-fog-200:#D6DCE4;
-  --p-color-fog-300:#C3C9D2;
-  --p-color-fog-500:#9AA2AE;
-  --p-color-fog-700:#5F6773;
-  --p-color-slate-700:#3B414C;
-  --p-color-slate-900:#262B33;
-  --p-color-ice-glow:#E3F4FF;
 
+  --p-font-display:Fraunces,"Iowan Old Style",Georgia,serif;
   --p-font-sans:Geist,"Helvetica Neue",Arial,system-ui,sans-serif;
   --p-font-mono:"Geist Mono","SFMono-Regular",Menlo,Consolas,monospace;
+  --p-weight-light:300;
   --p-weight-regular:400;
   --p-weight-medium:500;
-  --p-leading-tight:1.05;
-  --p-leading-snug:1.25;
+  --p-leading-none:.88;
+  --p-leading-tight:1.02;
+  --p-leading-snug:1.2;
   --p-leading-body:1.55;
-  --p-tracking-tight:-0.03em;
-  --p-tracking-caps:0.12em;
+  --p-tracking-display:-0.03em;
+  --p-tracking-tight:-0.015em;
+  --p-tracking-caps:0.06em;
   --p-text-xs:12px;
   --p-text-sm:14px;
-  --p-text-md:16px;
-  --p-text-lg:18px;
-  --p-text-xl:clamp(20px,1.3rem + .6vw,26px);
-  --p-text-2xl:clamp(26px,1.4rem + 1.6vw,40px);
-  --p-text-display:clamp(42px,1.6rem + 4.6vw,88px);
+  --p-text-md:17px;
+  --p-text-lg:19px;
+  --p-text-xl:clamp(22px,1.2rem + .8vw,30px);
+  --p-text-2xl:clamp(34px,1.6rem + 2.4vw,64px);
+  --p-text-3xl:clamp(44px,1.8rem + 4vw,92px);
+  --p-text-display:clamp(64px,2.2rem + 8.4vw,176px);
 
   --p-space-1:4px;
   --p-space-2:8px;
@@ -58,6 +62,7 @@
   --p-space-7:48px;
   --p-space-8:64px;
   --p-space-9:96px;
+  --p-space-10:144px;
 
   --p-radius-1:2px;
   --p-radius-2:4px;
@@ -66,123 +71,168 @@
   --p-border-1:1px;
   --p-border-2:2px;
 
-  --p-duration-1:120ms;
-  --p-duration-2:200ms;
-  --p-duration-3:320ms;
-  --p-duration-4:520ms;
-  --p-ease-out:cubic-bezier(.2,.7,.2,1);
+  --p-shadow-figure:0 30px 60px -30px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.06);
+  --p-shadow-figure-paper:0 24px 48px -28px rgba(33,30,27,.45),0 1px 0 rgba(33,30,27,.08);
+  --p-shadow-dialog:0 48px 96px -48px rgba(0,0,0,.7);
+
+  /* motion: the transitions.dev scale (stagger 40, quick 150, fast 250, slow 400, very slow 500) plus two long structural beats */
+  --p-duration-stagger:40ms;
+  --p-duration-micro:80ms;
+  --p-duration-quick:150ms;
+  --p-duration-fast:250ms;
+  --p-duration-medium:350ms;
+  --p-duration-slow:400ms;
+  --p-duration-very-slow:500ms;
+  --p-duration-structural:700ms;
+  --p-duration-intro:1200ms;
+  --p-ease-smooth-out:cubic-bezier(.22,1,.36,1);
   --p-ease-in-out:cubic-bezier(.65,0,.35,1);
-  /* damped spring constants, read by home.js (mass 1) */
-  --p-spring-stiffness:300;
-  --p-spring-damping:28;
+  --p-ease-bounce:cubic-bezier(.34,1.36,.64,1);
+  --p-blur-small:2px;
+  --p-blur-medium:3px;
+  --p-distance-medium:12px;
+  --p-scale-large:.96;
+  /* damped spring constants (mass 1), read by portfolio.js for the dialogs and by scene.js for the lens */
+  --p-spring-stiffness:240;
+  --p-spring-damping:24;
   --p-spring-mass:1;
 
-  /* ---- LAYER 2: SEMANTICS ------------------------------------------------------------------- */
-  --s-canvas:var(--p-color-cream-50);
-  --s-surface-primary:var(--p-color-white);
-  --s-surface-secondary:var(--p-color-sand-100);
-  --s-surface-tertiary:var(--p-color-sand-300);
-  --s-surface-inverse:var(--p-color-charcoal-950);
-  --s-text-primary:var(--p-color-charcoal-950);
+  /* ---- LAYER 2: SEMANTICS (paper world is the default, so case studies need nothing) -------- */
+  --s-canvas:var(--p-color-limestone-100);
+  --s-surface-reading:var(--p-color-paper-50);
+  --s-surface-raised:var(--p-color-white);
+  --s-surface-sunken:var(--p-color-sand-200);
+  --s-surface-inverse:var(--p-color-charcoal-900);
+  --s-text-primary:var(--p-color-charcoal-900);
   --s-text-muted:var(--p-color-stone-600);
-  --s-text-inverse:var(--p-color-cream-50);
-  --s-accent:var(--p-color-chili-600);
-  --s-accent-hover:var(--p-color-chili-700);
-  --s-accent-strong:var(--p-color-chili-900);
-  --s-warm:var(--p-color-earth-700);
+  --s-text-inverse:var(--p-color-limestone-100);
+  --s-text-warm:var(--p-color-copper-700);
+  --s-accent:var(--p-color-oxblood-700);
+  --s-accent-hover:var(--p-color-oxblood-600);
+  --s-accent-strong:var(--p-color-chili-600);
   --s-border-subtle:var(--p-color-sand-300);
-  --s-border-strong:var(--p-color-sand-400);
+  --s-border-strong:var(--p-color-stone-300);
+  --s-border-ink:var(--p-color-charcoal-900);
   --s-mark-decorative:var(--p-color-stone-400);
-  --s-focus-ring:var(--p-color-chili-600);
+  --s-interactive:var(--p-color-charcoal-900);
+  --s-interactive-text:var(--p-color-limestone-100);
+  --s-interactive-hover:var(--p-color-oxblood-700);
+  --s-focus-ring:var(--p-color-oxblood-700);
   --s-focus-ring-width:var(--p-border-2);
   --s-focus-ring-offset:3px;
-  /* the portfolio home is a pale fog environment; these are its surface and text roles */
-  --s-fog-canvas:var(--p-color-fog-300);
-  --s-fog-surface:var(--p-color-fog-100);
-  --s-fog-plate:color-mix(in srgb,var(--p-color-fog-50) 78%,transparent);
-  --s-fog-border:var(--p-color-fog-500);
-  --s-fog-text:var(--p-color-slate-900);
-  --s-fog-text-muted:var(--p-color-slate-700);
-  --s-fog-glow:var(--p-color-ice-glow);
-  --s-fog-focus-ring:var(--p-color-slate-900);
+  --s-overlay:color-mix(in srgb,var(--p-color-charcoal-950) 72%,transparent);
+  --s-selection:color-mix(in srgb,var(--p-color-oxblood-700) 24%,transparent);
+  --s-font-display:var(--p-font-display);
   --s-font-body:var(--p-font-sans);
   --s-font-mono:var(--p-font-mono);
+  --s-shadow-figure:var(--p-shadow-figure-paper);
   --s-space-inline:var(--p-space-3);
   --s-space-component:var(--p-space-5);
-  --s-space-section:clamp(var(--p-space-7),6vw,var(--p-space-9));
-  --s-gutter:clamp(20px,4vw,64px);
-  --s-content-max:1320px;
+  --s-space-section:clamp(var(--p-space-8),9vw,var(--p-space-10));
+  --s-gutter:clamp(20px,4.4vw,72px);
+  --s-content-max:1400px;
 
-  --s-motion-feedback:var(--p-duration-2);
-  --s-motion-scene:var(--p-duration-4);
-  --s-ease-feedback:var(--p-ease-out);
+  --s-motion-feedback:var(--p-duration-quick);
+  --s-motion-control:var(--p-duration-fast);
+  --s-motion-panel:var(--p-duration-slow);
+  --s-motion-reveal:var(--p-duration-very-slow);
+  --s-motion-structural:var(--p-duration-structural);
+  --s-ease-feedback:var(--p-ease-smooth-out);
   --s-ease-scene:var(--p-ease-in-out);
   --s-spring-responsive-stiffness:var(--p-spring-stiffness);
   --s-spring-responsive-damping:var(--p-spring-damping);
   --s-spring-responsive-mass:var(--p-spring-mass);
 
-  /* ---- LAYER 3: COMPONENT DECISIONS (home page) --------------------------------------------- */
-  --c-record-sleeve-radius:var(--p-radius-1);
-  --c-record-sleeve-padding:var(--p-space-3);
-  --c-record-sleeve-background:var(--s-surface-secondary);
-  --c-record-sleeve-edge:var(--s-border-strong);
-  --c-record-label-background:var(--s-surface-secondary);
-  --c-record-label-ink:var(--s-text-primary);
-  --c-record-preview-distance:22%;     /* vinyl extraction on hover/focus, share of sleeve width */
-  --c-record-open-distance:34%;        /* vinyl extraction in the expanded presentation */
-  --c-record-lift:-5px;
-  --c-record-press-scale:.98;
-  --c-record-meta-color:var(--s-text-muted);
-  --c-shelf-gap:clamp(var(--p-space-4),2.2vw,var(--p-space-6));
-  --c-shelf-row-gap:clamp(var(--p-space-6),3vw,var(--p-space-7));
-  --c-toolbar-control-height:44px;
-  --c-toolbar-background:var(--s-canvas);
-  --c-project-panel-width:min(1120px,calc(100vw - 2 * var(--s-gutter)));
-  --c-project-panel-padding:clamp(var(--p-space-5),3vw,var(--p-space-7));
-  --c-project-panel-background:var(--s-surface-primary);
-  --c-project-panel-backdrop:color-mix(in srgb,var(--p-color-charcoal-950) 55%,transparent);
-  --c-record-transition-duration:var(--s-motion-scene);
-  --c-arm-rest-angle:-18deg;
-  --c-arm-play-angle:12deg;
-
-  /* scene (WebGL) palette: portfolio.js reads exactly these, so the renderer and the CSS share one source */
-  --c-scene-fog:var(--p-color-fog-300);
-  --c-scene-ground:#A6ADB9;              /* a step darker than the blocks, so the sculpture reads against the land */
-  --c-scene-block:#D9DFE8;
-  --c-scene-glow:var(--p-color-ice-glow);
-  --c-scene-core-raw:var(--p-color-fog-500);   /* the unlit source layers of the data cube */
-  --c-scene-accent:var(--p-color-chili-600);   /* one restrained warm note: the served layer's core, the rim light */
-  --c-scene-sky:var(--p-color-fog-50);
-  --c-scene-shadow:var(--p-color-fog-700);
-  --c-nav-height:64px;
-  --c-nav-background:color-mix(in srgb,var(--p-color-fog-100) 70%,transparent);
-  --c-plate-background:var(--s-fog-plate);
-  --c-plate-radius:var(--p-radius-3);
-  --c-plate-padding:clamp(var(--p-space-5),3vw,var(--p-space-6));
-  --c-tile-background:color-mix(in srgb,var(--p-color-fog-50) 70%,transparent);
-  --c-tile-border:color-mix(in srgb,var(--p-color-fog-500) 45%,transparent);
+  /* ---- LAYER 3: COMPONENT DECISIONS ---------------------------------------------------------- */
+  --c-nav-height:72px;
+  --c-hero-measure:36rem;
+  --c-hero-display-size:var(--p-text-display);
+  --c-hero-role-size:clamp(24px,1.2rem + 1.4vw,38px);
+  --c-reading-size:var(--p-text-3xl);               /* the flagship's one qualified figure */
+  --c-feature-copy-width:34rem;
+  --c-feature-gap:var(--p-space-8);
+  --c-figure-radius:var(--p-radius-2);
+  --c-figure-max-width:min(44rem,46vw);
+  --c-catalog-gap:var(--p-border-1);
+  --c-catalog-tile-padding:var(--p-space-4);
+  --c-catalog-tile-min:132px;
+  --c-dialog-radius:var(--p-radius-3);
+  --c-dialog-padding:clamp(var(--p-space-5),3vw,var(--p-space-7));
+  --c-dialog-shadow:var(--p-shadow-dialog);
+  --c-control-height:46px;
+  --c-control-radius:var(--p-radius-pill);
   --c-chapter-min-height:100svh;
-  --c-method-min-height:88svh;
-  /* presentation patterns: a frosted plate (featured copy), an editorial sheet (about, experience, catalogue), a figure card */
-  --c-sheet-background:color-mix(in srgb,var(--p-color-fog-50) 88%,transparent);
-  --c-sheet-border:color-mix(in srgb,var(--p-color-fog-500) 35%,transparent);
-  --c-sheet-padding:clamp(var(--p-space-5),4vw,var(--p-space-7));
-  --c-figure-background:var(--p-color-fog-50);
-  --c-figure-border:color-mix(in srgb,var(--p-color-fog-500) 45%,transparent);
-  --c-figure-shadow:0 30px 60px -30px rgba(38,43,51,.45);
-  --c-viewer-backdrop:color-mix(in srgb,var(--p-color-slate-900) 72%,transparent);
+  --c-corridor-length:320svh;                       /* the corridor chapter: the flight through every screen */
+  --c-vt-duration:var(--p-duration-structural);
+  --c-axis-color:var(--p-color-signal-500);
 
-  /* ---- legacy semantic aliases (site.css, style.css): the case studies share the portfolio's fog family ------- */
-  --paper:var(--p-color-fog-50);
-  --raised:var(--p-color-white);
-  --panel:var(--p-color-fog-100);
-  --line:var(--p-color-fog-200);
-  --faint:var(--p-color-fog-500);          /* decorative hairlines and marks only (3.1:1 on the paper: never text) */
-  --wood:var(--p-color-fog-300);
-  --muted:var(--s-fog-text-muted);
-  --ink:var(--s-fog-text);
-  --deep:var(--s-fog-text);
+  /* the corridor (scene.js) reads exactly these, so the renderer and the CSS share one palette */
+  --c-wall-fog:var(--p-color-charcoal-950);
+  --c-wall-rim:#4A423C;
+  --c-wall-hover:var(--p-color-signal-500);
+
+  /* ---- legacy semantic aliases (site.css, style.css): the case studies live in the paper world ------- */
+  --paper:var(--s-surface-reading);
+  --raised:var(--s-surface-raised);
+  --panel:var(--p-color-limestone-100);
+  --line:var(--p-color-sand-300);
+  --faint:var(--p-color-stone-400);          /* decorative hairlines and marks only (2.2:1 on the paper: never text) */
+  --wood:var(--p-color-stone-300);
+  --muted:var(--s-text-muted);
+  --ink:var(--s-text-primary);
+  --deep:var(--s-text-primary);
   --accent:var(--s-accent);
   --accent-ink:var(--s-accent);
   --mono:var(--s-font-mono);
+}
+/* the charcoal world: the portfolio's cinematic chapters. Reading chapters inside it re-declare the paper world with .paper */
+.ink{
+  color-scheme:dark;
+  --s-canvas:var(--p-color-charcoal-900);
+  --s-surface-reading:var(--p-color-charcoal-800);
+  --s-surface-raised:var(--p-color-charcoal-700);
+  --s-surface-sunken:var(--p-color-charcoal-950);
+  --s-surface-inverse:var(--p-color-limestone-100);
+  --s-text-primary:var(--p-color-limestone-100);
+  --s-text-muted:var(--p-color-stone-400);
+  --s-text-inverse:var(--p-color-charcoal-900);
+  --s-text-warm:var(--p-color-copper-300);
+  --s-accent:var(--p-color-signal-400);
+  --s-accent-hover:var(--p-color-signal-500);
+  --s-accent-strong:var(--p-color-signal-500);
+  --s-border-subtle:color-mix(in srgb,var(--p-color-limestone-100) 14%,transparent);
+  --s-border-strong:color-mix(in srgb,var(--p-color-limestone-100) 28%,transparent);
+  --s-border-ink:var(--p-color-limestone-100);
+  --s-mark-decorative:var(--p-color-stone-600);
+  --s-interactive:var(--p-color-limestone-100);
+  --s-interactive-text:var(--p-color-charcoal-900);
+  --s-interactive-hover:var(--p-color-paper-50);
+  --s-focus-ring:var(--p-color-signal-400);
+  --s-selection:color-mix(in srgb,var(--p-color-signal-500) 32%,transparent);
+  --s-shadow-figure:var(--p-shadow-figure);
+}
+.paper{
+  color-scheme:light;
+  --s-canvas:var(--p-color-limestone-100);
+  --s-surface-reading:var(--p-color-paper-50);
+  --s-surface-raised:var(--p-color-white);
+  --s-surface-sunken:var(--p-color-sand-200);
+  --s-surface-inverse:var(--p-color-charcoal-900);
+  --s-text-primary:var(--p-color-charcoal-900);
+  --s-text-muted:var(--p-color-stone-600);
+  --s-text-inverse:var(--p-color-limestone-100);
+  --s-text-warm:var(--p-color-copper-700);
+  --s-accent:var(--p-color-oxblood-700);
+  --s-accent-hover:var(--p-color-oxblood-600);
+  --s-accent-strong:var(--p-color-chili-600);
+  --s-border-subtle:var(--p-color-sand-300);
+  --s-border-strong:var(--p-color-stone-300);
+  --s-border-ink:var(--p-color-charcoal-900);
+  --s-mark-decorative:var(--p-color-stone-400);
+  --s-interactive:var(--p-color-charcoal-900);
+  --s-interactive-text:var(--p-color-limestone-100);
+  --s-interactive-hover:var(--p-color-oxblood-700);
+  --s-focus-ring:var(--p-color-oxblood-700);
+  --s-selection:color-mix(in srgb,var(--p-color-oxblood-700) 24%,transparent);
+  --s-shadow-figure:var(--p-shadow-figure-paper);
 }

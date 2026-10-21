@@ -48,49 +48,69 @@ A project's record sleeve on the home page, and the "Next project" link on the c
 
 ## How the site is laid out (so it can be changed safely)
 
-* **`/projects/` (index.html) is the whole portfolio**: `index.template.html` + `portfolio.css` + `portfolio.js` (DOM) +
-  `scene.js` (3D). One continuous page in this order: hero, the raw / modelled / served method strip, four flagship
-  projects ("Selected work"), about, experience, capabilities, the complete catalogue, contact. All of it is plain HTML;
-  `build.py` fills `{{FEATURED}}` from `featured.json` (four slugs, each with a hand-written headline / problem /
-  contribution / result / caption, numbers and qualifications from that project's case study; 60-100 words of copy),
-  `{{CATALOG}}` (every project as a real link), the kind filter, and the JSON the detail dialog and screenshot viewer read.
-  Each flagship shows its real cover at readable size with an "Enlarge screenshot" control (a link to the file without
-  JavaScript; a `<dialog>` viewer with it). Professional facts come from the résumé at ~/portfolio/resume.pdf and the
-  About site; do not add claims not in those.
-* **The environment** (`scene.js`, Three.js r168 vendored under `vendor/three/`, MIT) is one persistent scene driven by
-  native scroll, in the language of igloo.inc: a pale fog landscape, a "data cube" of frosted blocks (one instanced mesh;
-  the two lower layers matte "raw", the lit middle "modelled", the lit top with a warm note "served") that assembles in the
-  hero and splits into its layers through the method strip, then a dolly through fog past one frosted block per flagship
-  (its real screenshot sealed inside, mono HUD labels with leader lines drawn in the DOM), landing on a glowing ring stage
-  under about, experience, capabilities, the catalogue and contact. **Chapters are the elements with `data-scene`
-  (hero / method / feature / stage) in document order**: camera path, stage position, HUD, glitch boundaries and block
-  visibility are all derived from that list and the real flagship count, so reordering sections or changing
-  `featured.json` needs no scene edits. Chapter changes pulse a
-  chromatic "glitch" pass. DPR is capped, phones get no transmission / bloom, the loop runs only while something changes,
-  it suspends when hidden, and it starts after first paint. No WebGL (or a second context loss) shows
-  `assets/scene-fallback.jpg` (a capture of the live scene; regenerate it if the scene changes) and the featured
-  screenshots inline. `prefers-reduced-motion` stops all self-driven motion; the nav's "Motion" control does the same by hand.
-  The renderer reads its colours from `--c-scene-*` in theme.css, so CSS and WebGL share one palette.
-* **The catalogue** is static HTML (219 links); `portfolio.js` adds search + kind filter (also from `?q=` / `?kind=`;
-  "Clear search" clears the text only, "Reset all filters" both), reveal of 12 at a time on an explicit "Show more projects"
-  (no auto-load), and a `<dialog>` with the project's cover, tagline, tech and links, addressable as `#<slug>`. A click
-  pushes one history entry; Previous / Next replace it (hash, state and links always name the displayed project);
-  popstate only renders. `/projects/archive/` is a static redirect to `/projects/#projects`.
-* **Case studies** (`site.css`) share the portfolio's fog family through the legacy aliases in `theme.css` (`--paper`
-  is fog-50, `--ink` slate, `--accent` chili) and the same Geist sans headings.
+* **`/projects/` (index.html) is the whole portfolio**: `index.template.html` + `portfolio.css` + `portfolio.js` (DOM, GSAP,
+  Lenis) + `scene.js` (3D). One continuous page in this order: intro overlay (once per session), identity (hero), the
+  corridor (`#corridor`, a 320svh sticky flight), the flagship track (`#work`: an intro panel + four flagships, pinned and
+  scrubbed horizontally from 1024px up, vertical below and under reduced motion), then the paper world (`.reading-world`:
+  about, experience, capabilities, the complete catalogue) and contact. `build.py` fills `{{FEATURED}}` from `featured.json`
+  (four slugs, each with a hand-written headline / problem / contribution / result / caption, a `layout` (wide, bleed, left,
+  stack) and a `scale` {metric, unit, min, max, value, evidence, note}: the figure the panel counts up to, taken from that
+  project's case study), `{{CATALOG}}` (every project as a real link carrying `data-w`, its place in the cover atlas),
+  `{{KINDS_MARQUEE}}`, the kind tabs and select, `{{ATLAS}}` (atlas geometry on the canvas) and the JSON the dialogs and
+  the scene read. Each flagship shows its real cover with an "Enlarge" control (a link to the file without JavaScript; a
+  `<dialog>` viewer with a native View Transition of the image with it). Professional facts come from the résumé at
+  ~/portfolio/resume.pdf; do not add claims not in it.
+* **The cover atlas.** `tools/wall-atlas.cjs` crops every `<slug>/cover.jpg` to 320x183 (sips) and packs them 66 per
+  2048x2048 JPEG into `assets/wall/atlas-N.jpg` + `atlas.json`. **Run it after adding a project** (`NODE_PATH=$(npm root -g)
+  node tools/wall-atlas.cjs`), then `python3 build.py`: the corridor, the intro flipbook and the hover previews all read
+  the atlas, so a new project is missing from them until the atlas is rebuilt.
+* **Two worlds, one token scheme.** `html.ink` is the warm-charcoal world (hero, corridor, flagships, contact); `.paper`
+  re-declares the semantic tokens for the limestone reading world and the case studies. `theme.css` holds three layers
+  (`--p-*` primitives, `--s-*` semantics, `--c-*` component decisions incl. `--c-corridor-length` and the corridor colours
+  `--c-wall-*`) plus the legacy aliases (`--paper`, `--ink`, `--accent` ...) that `site.css` and the frozen trading-bot page
+  read. Display type is Fraunces (self-hosted, OFL, `vendor/fonts`), interface and body Geist, Geist Mono for the
+  bracketed labels, indices and the clock.
+* **The corridor** (`scene.js`, Three.js r168 vendored under `vendor/three/`, MIT) is one persistent scene driven by native
+  scroll: every project cover is a screen on the inside of a long tube (12 per ring, one instanced mesh, one draw call,
+  a custom shader sampling the four atlases, rounded corners, depth fade, hover highlight). **Chapters are the elements with
+  `data-scene` (hero / corridor / work / feature / stage) in document order**: the camera stands at the mouth in the hero
+  (drifting forward, yawing with the pointer), flies through all the rings with the corridor chapter's own sticky
+  progress, cuts to black at the end, looks back down the tube behind the flagship track, and orbits the tube from outside
+  at the contact. Hovering a screen in the hero or corridor names it (`.wall-label`), clicking dispatches `portfolio:open`
+  and the catalogue dialog opens it. The paper world covers the canvas and rendering is suspended while it does. Phones use
+  a wider field of view, DPR is capped, the loop runs only while something changes and suspends when hidden. No WebGL (or a
+  second context loss) shows the posters `assets/corridor-poster.jpg` / `-mobile.jpg` / `-contact.jpg` (regenerate with the
+  evidence folder's posters.cjs when the scene changes). `prefers-reduced-motion` keeps the corridor live but still.
+  `window.__scene` (t, z, corridor, ready, hovered, pickAt) is read by the checks.
+* **Motion** (`portfolio.js`): the intro counts 000 to the catalogue size in Fraunces while real covers flash in a frame
+  (drawn from atlas-0), then the curtain lifts and the name's letters rise; skippable, once per session
+  (`sessionStorage`), none under reduced motion or `?intro=off`. Lenis (vendored, MIT) gives the scroll its weight and
+  honours reduced motion itself; GSAP 3.15 + ScrollTrigger + SplitText (vendored, Standard no-charge license) drive the
+  horizontal track (pinned by transform so the pin never reports a layout shift), the count-up figures, the screenshot
+  parallax inside its frame, masked line reveals of headings, the about statement reading itself in, the timeline drawing
+  itself, the tile stagger. Reveals use opacity, never visibility, so controls stay focusable. The hero name's letters
+  swell in weight under the cursor (Fraunces `wght` axis). The nav carries a live Tampa clock. Cover previews that follow
+  the cursor over catalogue entries and capability rows are cut from the atlas (no request per project).
+* **Page changes**: `@view-transition{navigation:auto}` on both the portfolio and the case studies; on `pageswap` the
+  clicked flagship's cover and title (or the open dialog's) get `view-transition-name: cover / title`, and `site.css` names
+  the case study's cover and h1 the same, so they fly into place (Chrome/Edge 126+, Safari 18.2+; Firefox cuts). The
+  case page's next-project link hands its loop on as the next cover (`case.js`).
+* **The catalogue** is static HTML (219 links) in a hairline grid (6 / 4 / 3 / 2 columns, so 12 always fills whole rows);
+  `portfolio.js` adds search + kind filter (five kind tabs with a sliding mark, synchronised with the full select; also
+  from `?q=` / `?kind=`; "Clear search" clears the text only, "Reset all filters" both), reveal of 12 at a time on an
+  explicit "Show more projects" (no auto-load), and a `<dialog>` with the project's cover, tagline, tech and links,
+  addressable as `#<slug>`. History ownership is explicit: a click pushes one entry with `state.pushed`; Previous / Next
+  replace it keeping that flag; Close steps back only over an entry this page pushed and otherwise closes in place
+  (a direct link never leaves the page); popstate only renders. `/projects/archive/` redirects to `/projects/#projects`.
+* **Case studies** (`site.css`) live in the paper world through the legacy aliases and share the Fraunces title.
 * **Checks:** `python3 -m http.server 8800 --bind 127.0.0.1 &` then `NODE_PATH=$(npm root -g) node tests/portfolio-check.cjs`
-  (no-JS content, every internal link on disk, catalogue search / filter / reveal / dialog, keyboard, reduced motion,
-  no WebGL, redirect, contrast, overflow).
-* `vendor/fonts` holds Geist (self-hosted, OFL licence alongside), used by the portfolio and `motion/`.
-* **One token scheme for the whole site:** `theme.css` holds three layers (`--p-*` primitives, `--s-*` semantics including
-  the pale `--s-fog-*` roles the portfolio uses, `--c-*` component decisions) plus the legacy names (`--paper`, `--ink`,
-  `--muted`, `--accent` ...) as aliases of the semantic layer. The portfolio, every case study (`site.css`) and the frozen
-  trading-bot page (`style.css`) take their colours from it, so change colours there, not in the page CSS. `build.py`
-  refuses any `color:` token under 4.5:1 on the cream canvas in `site.css`; the portfolio is checked by
-  `tests/portfolio-check.cjs` from computed styles.
+  (76 checks: no-JS content, every internal link on disk, page order, the corridor flight and statements, the pinned
+  track, picking a screen, cover previews, catalogue search / tabs / filter / reveal / dialog / history ownership, the
+  viewer, keyboard, the intro (runs once, skippable), reduced motion, no WebGL, redirect, contrast per world, overflow at
+  five widths). Scene-dependent checks load `?scene=keep&intro=off`.
+* `vendor/` holds Three.js, GSAP, Lenis, Geist and Fraunces with their licences alongside.
 * Case-study pages use `site.css`. A project marked `"frozen": true` in its `project.json` is never rebuilt.
 
-Scene quality tiers (scene.js): 0 high, 1 lite (phones start here), 2 low, 3 static hand-off; stepped down only, from a
-1.5 s frame-time window. Headless SwiftShader reaches static by itself, so scene-dependent checks load `?scene=keep`.
-Perf evidence and scripts: ~/projects-site-evidence/perf-2026-10-19/ (hardware Chrome, SwiftShader, WebKit).
-Refinement review evidence (screenshots at five breakpoints, case pages): ~/projects-site-evidence/refine-2026-10-19/.
+Evidence folders under ~/projects-site-evidence/: perf-2026-10-19 (the first unified page), refine-2026-10-19,
+redesign-2026-10-19 (the instrument), transform-2026-10-19 (the lens), **statement-2026-10-20 (the corridor: brief,
+decisions, captures, recording, scripts for posters / shots / WebKit smoke)**.
