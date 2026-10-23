@@ -1,4 +1,4 @@
-/* Builds the cover-wall texture atlases for scene.js: every <slug>/cover.jpg cropped to 320x183 and packed, 66 per 2048x2048
+/* Builds the cover atlases (catalogue thumbnails and hover previews): every <slug>/cover.jpg cropped to 320x183 and packed, 66 per 2048x2048
    JPEG, into assets/wall/atlas-N.jpg plus assets/wall/atlas.json ({slug: [atlas, column, row]} with the tile size and grid).
    Run after adding projects:  NODE_PATH=$(npm root -g) node tools/wall-atlas.cjs   (needs sips (macOS) and Playwright's Chromium). */
 const { execFileSync } = require("child_process");

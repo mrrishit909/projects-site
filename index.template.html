@@ -1,188 +1,147 @@
 <!doctype html>
-<html lang="en" class="ink">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rishit Mathur · Data, Analytics & Intelligent Systems</title>
-<meta name="description" content="Rishit Mathur turns scattered data into evidence people can act on: Power BI, SQL, Python, data pipelines, forecasting and AI-enabled tools. Four flagship projects and the complete catalogue of {{COUNT}} projects.">
-<meta name="theme-color" content="#171412">
-<meta property="og:title" content="Rishit Mathur · Data, Analytics & Intelligent Systems">
-<meta property="og:description" content="Scattered data in, evidence out: business intelligence, data pipelines, forecasting and AI-enabled tools, with the tests and sources that back the number. {{COUNT}} case studies.">
-<meta property="og:image" content="https://mrrishit909.github.io/projects/assets/corridor-poster.jpg">
+<title>Rishit Mathur · Data analyst</title>
+<meta name="description" content="Rishit Mathur, data analyst in Tampa: Power BI, SQL, Python, data pipelines, forecasting and AI-enabled tools. Four flagship projects and the complete catalogue of {{COUNT}} case studies.">
+<meta name="theme-color" content="#9BD3FF">
+<meta property="og:title" content="Rishit Mathur · Data analyst">
+<meta property="og:description" content="I turn messy data into numbers people can act on. Four flagship projects and {{COUNT}} case studies, each with the tests and sources behind the number.">
+<meta property="og:image" content="https://mrrishit909.github.io/projects/assets/og-blocks.jpg">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="theme.css?v={{THEME}}">
 <link rel="stylesheet" href="portfolio.css?v={{PORTFOLIO_CSS}}">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23171412'/%3E%3Crect x='6' y='9' width='20' height='12' rx='1.5' fill='%23EEE8DF'/%3E%3Crect x='9' y='12' width='6' height='6' fill='%2376251F'/%3E%3C/svg%3E">
-<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Fraunces-Roman-latin.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Geist-Regular.woff2" crossorigin>
-<link rel="preload" as="image" href="assets/wall/atlas-0.jpg">
-<script>document.documentElement.classList.add("js");try{if(localStorage.getItem("portfolio-motion")==="off")document.documentElement.classList.add("motion-off");if(sessionStorage.getItem("portfolio-intro")||matchMedia("(prefers-reduced-motion: reduce)").matches||/[?&]intro=off/.test(location.search))document.documentElement.classList.add("intro-off");else document.documentElement.classList.add("is-intro")}catch(e){}</script>
-<script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js"}}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%239BD3FF'/%3E%3Crect x='6' y='18' width='6' height='8' rx='1.5' fill='%23FF4F2E'/%3E%3Crect x='13' y='12' width='6' height='14' rx='1.5' fill='%23FFD84D'/%3E%3Crect x='20' y='6' width='6' height='20' rx='1.5' fill='%230E3B2C'/%3E%3C/svg%3E">
+<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Unbounded-latin.woff2" crossorigin>
+<link rel="preload" as="image" href="assets/blocks/000.webp">
+<script>document.documentElement.classList.add("js")</script>
 </head>
-<body class="portfolio">
+<body class="portfolio" data-atlas='{{ATLAS}}'>
 <a class="skip" href="#main">Skip to content</a>
-<canvas class="scene" id="scene" aria-hidden="true" data-atlas='{{ATLAS}}'></canvas>
-<div class="scene-fallback" id="scene-fallback" aria-hidden="true"></div>
-
-<div class="intro" id="intro" aria-hidden="true">
-  <p class="intro-label">[ Loading the catalogue ]</p>
-  <p class="intro-sub">{{COUNT}} case studies<br>one standard</p>
-  <canvas class="intro-flip" id="intro-flip" width="320" height="183"></canvas>
-  <p class="intro-count" id="intro-count">000</p>
-  <span class="intro-bar" id="intro-bar"></span>
-  <p class="intro-skip">Click or press any key to skip</p>
-</div>
 
 <header class="nav" id="nav">
   <a class="wordmark" href="#top">Rishit Mathur</a>
-  <nav class="nav-links" aria-label="Site"><a href="#work">Work</a><a href="#about">About</a><a href="#experience">Experience</a><a href="#projects">Projects</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="#contact">Contact</a></nav>
-  <p class="nav-clock" id="nav-clock" aria-hidden="true"></p>
-  <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false" hidden>Motion on</button>
+  <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+  <nav class="nav-links" id="nav-links" aria-label="Site"><a href="#work">Work</a><a href="#about">About</a><a href="#experience">Experience</a><a href="#projects">Projects</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="#contact">Contact</a></nav>
 </header>
 
 <main id="main">
-<section class="hero chapter" id="top" data-scene="hero" aria-labelledby="hero-name">
-  <div class="hero-copy">
-    <p class="eyebrow">[ Data analyst, Tampa, Florida ]</p>
-    <h1 id="hero-name"><span class="line">Rishit</span> <span class="line">Mathur</span></h1>
-    <div class="hero-row">
-      <p class="hero-role">Scattered data in.<br><em>Evidence out.</em></p>
-      <div class="hero-text">
-        <p class="lede">Business intelligence, data pipelines, forecasting and AI-enabled tools, each with the tests and sources that back the number. {{COUNT}} case studies, one standard.</p>
-        <p class="hero-actions"><a class="btn btn-primary" href="#work">Selected work</a><a class="btn btn-ghost" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a><a class="text-link" href="#contact">Contact</a></p>
-      </div>
+<section class="hero" id="top" aria-labelledby="hero-name">
+  <div class="hero-stage">
+    <div class="hero-copy">
+      <p class="hero-kicker">Data analyst in Tampa, Florida</p>
+      <h1 id="hero-name"><span class="line">Rishit</span> <span class="line">Mathur</span></h1>
+      <p class="hero-lede">I turn messy data into numbers people can act on: dashboards, pipelines, forecasts and AI tools, each with the tests and sources behind the figure.</p>
+      <p class="hero-actions"><a class="btn btn-ink" href="#work">See the work</a><a class="btn btn-cream" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a></p>
+      <p class="hero-creds"><span>B.S. Business Analytics &amp; IS, USF, May 2026</span><span>M.S. candidate, Business &amp; Enterprise Integration</span><span>Microsoft Power BI Data Analyst Associate</span></p>
     </div>
-  </div>
-  <aside class="hero-aside"><p class="hero-aside-head">[ Credentials ]</p><p>B.S. Business Analytics &amp; IS, USF, May 2026<br>M.S. candidate, Business &amp; Enterprise Integration<br>Microsoft Power BI Data Analyst Associate</p></aside>
-  <p class="scroll-hint" aria-hidden="true"><span class="scroll-line"></span>Scroll to walk the corridor<br>hover a screen to name it</p>
-  <div class="marquee" aria-hidden="true"><div class="marquee-track"><span class="marquee-set">{{KINDS_MARQUEE}}</span><span class="marquee-set">{{KINDS_MARQUEE}}</span></div></div>
-</section>
-
-<section class="corridor chapter" id="corridor" data-scene="corridor" aria-labelledby="corridor-title">
-  <div class="corridor-sticky">
-    <div class="corridor-copy">
-      <p class="eyebrow">[ How the work is done ]</p>
-      <h2 id="corridor-title" class="visually-hidden">Every number here went through the same standard.</h2>
-      <ol class="statements" id="statements">
-        <li class="statement" data-at="0.08"><span class="step-no">01</span><p>Raw data is loaded as it arrives, and documented.</p></li>
-        <li class="statement" data-at="0.4"><span class="step-no">02</span><p>Cleaning is written once, as tested transformations.</p></li>
-        <li class="statement" data-at="0.72"><span class="step-no">03</span><p>Every figure is served with a benchmark, a range or a cited source.</p></li>
-      </ol>
-    </div>
-    <p class="corridor-index" aria-hidden="true"><span id="corridor-n">000</span> / {{COUNT}}</p>
-    <p class="corridor-hint" aria-hidden="true">{{COUNT}} screens, every one a real project</p>
+    <figure class="blocks" aria-hidden="true">
+      <img class="blocks-still" src="assets/blocks/000.webp" alt="" width="1000" height="1000" fetchpriority="high">
+      <canvas class="blocks-canvas" id="blocks"></canvas>
+      <figcaption class="blocks-caption"><span class="cap-a">Scattered data in.</span><span class="cap-b">Evidence out.</span></figcaption>
+    </figure>
   </div>
 </section>
 
-<section class="work" id="work" data-scene="work" aria-labelledby="work-title">
-  <div class="track" id="track">
-    <div class="panel panel-intro">
-      <p class="eyebrow">[ Selected work ]</p><h2 id="work-title">Four projects, brought into focus.</h2>
-      <p class="section-lede">One project per focus area, each with a written case study, the code and, where it applies, a working demo. The large figure is the one the case study reports, with its qualification kept.</p>
-      <p class="track-hint" aria-hidden="true">Keep scrolling</p>
-    </div>
+<div class="band" aria-hidden="true"><div class="band-track"><span class="band-set">{{KINDS_MARQUEE}}</span><span class="band-set">{{KINDS_MARQUEE}}</span></div></div>
+
+<section class="work" id="work" aria-labelledby="work-title">
+  <header class="work-head">
+    <h2 id="work-title" class="display">Selected work</h2>
+    <p class="section-lede">Four projects, one per focus area. Each has a written case study, the code and, where it applies, a working demo. The big number is the one the case study reports, with its qualification kept.</p>
+  </header>
+  <div class="stack" id="stack">
     {{FEATURED}}
   </div>
-  <p class="track-rail" id="track-rail" aria-hidden="true"><span class="rail-no" id="rail-no">00</span><span class="rail-line"><span class="rail-fill" id="rail-fill"></span></span><span>04</span></p>
 </section>
 
-<div class="paper reading-world">
 <section class="about" id="about" aria-labelledby="about-title">
-  <div class="editorial">
-    <header class="section-head"><p class="eyebrow">[ About ]</p><h2 id="about-title">Analyst first, builder second.</h2></header>
-    <p class="statement-big" id="about-statement">I am a data analyst in Tampa with hands-on SQL and Python experience. I completed a B.S. in Business Analytics and Information Systems at USF's Muma College of Business in May 2026 and am now an M.S. candidate in Business and Enterprise Integration there, expected May 2028.</p>
-    <div class="about-grid">
-      <div class="about-copy"><p>Across research, athletics operations and a business-analyst role I have gathered reporting requirements, redesigned data structures, cleaned and merged 100K+ records, and built Power BI dashboards that cut report turnaround by 22%. The projects on this page extend that work into pipelines, forecasting, optimisation and AI-enabled tools.</p></div>
-      <dl class="about-facts">
-        <div><dt>Education</dt><dd>M.S. Business and Enterprise Integration, USF, expected May 2028</dd><dd>B.S. Business Analytics and Information Systems, USF, May 2026 (Dean's List, Fall 2024)</dd></div>
-        <div><dt>Certification</dt><dd>Microsoft Power BI Data Analyst Associate</dd><dd>Pursuing PMI-CAPM and AWS Cloud Practitioner (CLF-C02)</dd></div>
-        <div><dt>Looking for</dt><dd>Entry-level data and business analyst roles, US-wide and remote</dd></div>
-      </dl>
-    </div>
+  <div class="about-main">
+    <h2 id="about-title" class="display">Analyst first, builder second.</h2>
+    <p class="statement-big" id="about-statement">A data analyst in Tampa with hands-on SQL and Python, trained at USF's Muma College of Business.</p>
+    <p class="about-copy">In research, athletics operations and a business-analyst role I have redesigned data structures, merged 100K+ records and built Power BI dashboards that cut report turnaround by 22%.</p>
   </div>
+  <figure class="sec-blocks" data-seq="letter_r" aria-hidden="true"><img class="sec-still" src="assets/blocks-letter_r/029.webp" alt="" width="800" height="800" loading="lazy"><canvas></canvas></figure>
+  <dl class="about-facts">
+    <div><dt>Education</dt><dd>M.S. Business and Enterprise Integration, USF, expected May 2028</dd><dd>B.S. Business Analytics and Information Systems, USF, May 2026 (Dean's List, Fall 2024)</dd></div>
+    <div><dt>Certification</dt><dd>Microsoft Power BI Data Analyst Associate</dd><dd>Pursuing PMI-CAPM and AWS Cloud Practitioner (CLF-C02)</dd></div>
+    <div><dt>Looking for</dt><dd>Entry-level data and business analyst roles, US-wide and remote</dd></div>
+  </dl>
 </section>
 
 <section class="experience" id="experience" aria-labelledby="experience-title">
-  <div class="editorial">
-    <header class="section-head"><p class="eyebrow">[ Experience ]</p><h2 id="experience-title">Where the habits come from.</h2></header>
-    <ol class="timeline" id="timeline">
-      <li><p class="tl-when">Sep 2025 to present</p><h3>Research Assistant, USF REACH Lab</h3><p>Managed end-to-end data workflows and built interactive dashboards that turn experimental findings into clear, actionable views for the team.</p></li>
-      <li><p class="tl-when">May 2025 to present</p><h3>Student Assistant, Ticketing Operations, USF Athletics</h3><p>Queried and analysed ticket sales, attendance and entry data to surface trends for event planning and resource allocation; maintained accurate transaction and customer records.</p></li>
-      <li><p class="tl-when">May to Aug 2025</p><h3>Business Analyst, TraceRT</h3><p>Gathered stakeholder reporting requirements, mapped data sources and ran a gap analysis on existing reporting; redesigned the underlying data structures and built Power BI dashboards that reduced report turnaround time by 22%.</p></li>
-      <li><p class="tl-when">Jan to Apr 2025</p><h3>Sales Forecasting &amp; Business Performance Analytics, course project</h3><p>Built an end-to-end analytics solution over historical sales, customer behaviour and operations across regions; cleaned, merged and transformed 100K+ records in Python and R.</p></li>
-    </ol>
-  </div>
+  <h2 id="experience-title" class="display">Where the habits come from.</h2>
+  <figure class="sec-blocks" data-seq="stairs" aria-hidden="true"><img class="sec-still" src="assets/blocks-stairs/029.webp" alt="" width="800" height="800" loading="lazy"><canvas></canvas></figure>
+  <ol class="timeline" id="timeline">
+    <li><p class="tl-when">Sep 2025 to present</p><h3>Research Assistant, USF REACH Lab</h3><p>Managed end-to-end data workflows and built interactive dashboards that turn experimental findings into clear, actionable views for the team.</p></li>
+    <li><p class="tl-when">May 2025 to present</p><h3>Student Assistant, Ticketing Operations, USF Athletics</h3><p>Queried and analysed ticket sales, attendance and entry data to surface trends for event planning and resource allocation; maintained accurate transaction and customer records.</p></li>
+    <li><p class="tl-when">May to Aug 2025</p><h3>Business Analyst, TraceRT</h3><p>Gathered stakeholder reporting requirements, mapped data sources and ran a gap analysis on existing reporting; redesigned the underlying data structures and built Power BI dashboards that reduced report turnaround time by 22%.</p></li>
+    <li><p class="tl-when">Jan to Apr 2025</p><h3>Sales Forecasting &amp; Business Performance Analytics, course project</h3><p>Built an end-to-end analytics solution over historical sales, customer behaviour and operations across regions; cleaned, merged and transformed 100K+ records in Python and R.</p></li>
+  </ol>
 </section>
 
 <section class="capabilities" id="capabilities" aria-labelledby="cap-title">
-  <div class="editorial">
-    <header class="section-head"><p class="eyebrow">[ Capabilities ]</p><h2 id="cap-title">Four things I can do for a team, each with proof on this page.</h2></header>
-    <ul class="cap-list" id="cap-list">
-      <li data-peek="florida-flight-delays"><span class="cap-no">01</span><div><h3>Analysis and business intelligence</h3><p>SQL, Python, pandas, Excel, Power BI with DAX and star schemas, Tableau. Reports with a benchmark and a recount behind every number.</p><p class="cap-proof"><a href="florida-flight-delays/">Florida flight delays</a><a href="chicago-bike-share/">How Chicago rides</a><a href="excel-model/">Costco model in Excel</a></p></div></li>
-      <li data-peek="retail-dbt"><span class="cap-no">02</span><div><h3>Data pipelines and databases</h3><p>dbt, DuckDB, PostgreSQL, SQLite, Oracle, SQL Server. ETL from public sources, data tests, lineage and monitoring for silent failures.</p><p class="cap-proof"><a href="retail-dbt/">Retail pipeline in dbt</a><a href="business-finder/">Business Finder</a><a href="data-reliability-control-plane/">Data reliability control plane</a></p></div></li>
-      <li data-peek="us-retail-forecast"><span class="cap-no">03</span><div><h3>Forecasting, statistics and machine learning</h3><p>Time series with honest backtests, regression and classification, A/B readouts, anomaly detection, optimisation with OR-Tools.</p><p class="cap-proof"><a href="us-retail-forecast/">US retail sales forecast</a><a href="email-ab-test/">E-mail A/B test readout</a><a href="fraud-model-monitoring/">Fraud model monitoring</a></p></div></li>
-      <li data-peek="sec-10k-rag"><span class="cap-no">04</span><div><h3>AI-enabled tools and software systems</h3><p>Retrieval-augmented assistants that cite sources, FastAPI services, Docker Compose, and web front ends over real data.</p><p class="cap-proof"><a href="sec-10k-rag/">Ask the 10-K</a><a href="complaint-sorter/">Complaint sorter</a><a href="contract-rfp-automator/">Contract reviewer</a></p></div></li>
-    </ul>
-  </div>
+  <h2 id="cap-title" class="display">What I can do for a team.</h2>
+  <ul class="cap-list" id="cap-list">
+    <li data-peek="florida-flight-delays"><img class="cap-icon" src="assets/icons/bars.webp" alt="" width="280" height="280" loading="lazy"><h3>Analysis and business intelligence</h3><p>SQL, Python, pandas, Excel, Power BI with DAX and star schemas, Tableau. Reports with a benchmark and a recount behind every number.</p><p class="cap-proof"><a href="florida-flight-delays/">Florida flight delays</a><a href="chicago-bike-share/">How Chicago rides</a><a href="excel-model/">Costco model in Excel</a></p></li>
+    <li data-peek="retail-dbt"><img class="cap-icon" src="assets/icons/pipe.webp" alt="" width="280" height="280" loading="lazy"><h3>Data pipelines and databases</h3><p>dbt, DuckDB, PostgreSQL, SQLite, Oracle, SQL Server. ETL from public sources, data tests, lineage and monitoring for silent failures.</p><p class="cap-proof"><a href="retail-dbt/">Retail pipeline in dbt</a><a href="business-finder/">Business Finder</a><a href="data-reliability-control-plane/">Data reliability control plane</a></p></li>
+    <li data-peek="us-retail-forecast"><img class="cap-icon" src="assets/icons/trend.webp" alt="" width="280" height="280" loading="lazy"><h3>Forecasting, statistics and machine learning</h3><p>Time series with honest backtests, regression and classification, A/B readouts, anomaly detection, optimisation with OR-Tools.</p><p class="cap-proof"><a href="us-retail-forecast/">US retail sales forecast</a><a href="email-ab-test/">E-mail A/B test readout</a><a href="fraud-model-monitoring/">Fraud model monitoring</a></p></li>
+    <li data-peek="sec-10k-rag"><img class="cap-icon" src="assets/icons/ai.webp" alt="" width="280" height="280" loading="lazy"><h3>AI-enabled tools and software systems</h3><p>Retrieval-augmented assistants that cite sources, FastAPI services, Docker Compose, and web front ends over real data.</p><p class="cap-proof"><a href="sec-10k-rag/">Ask the 10-K</a><a href="complaint-sorter/">Complaint sorter</a><a href="contract-rfp-automator/">Contract reviewer</a></p></li>
+  </ul>
 </section>
 
 <section class="projects" id="projects" aria-labelledby="projects-title">
-  <div class="catalog">
-    <header class="section-head catalog-head"><p class="eyebrow">[ All projects ]</p><h2 id="projects-title">The complete collection, {{COUNT}} case studies.</h2><p class="section-lede">Every project has a written case study. Search by title, technology or kind; the most common kinds are {{KINDS}}.</p></header>
-    <form class="toolbar" id="toolbar" role="search" onsubmit="return false">
-      <div class="field"><label class="field-label" for="search">Search</label><input class="control" id="search" type="search" placeholder="Title, technology or kind" autocomplete="off"><button class="clear" id="clear" type="button" aria-label="Clear search" hidden>×</button></div>
-      <div class="kinds" id="kinds" role="group" aria-label="Filter by kind"><span class="kinds-pill" aria-hidden="true"></span><button class="kind-tab" type="button" data-kind="" aria-pressed="true">All kinds</button>{{KINDS_TABS}}</div>
-      <div class="field field-select"><label class="visually-hidden" for="kind">Filter by kind</label><select class="control" id="kind"><option value="">Any kind (full list)</option>{{KINDS_OPTIONS}}</select></div>
-      <p class="count" id="count"><b id="count-n">{{COUNT}}</b> of {{COUNT}} projects</p><button class="reset-all" id="reset-all" type="button" hidden>Reset all filters</button>
-      <p class="visually-hidden" id="announce" aria-live="polite"></p>
-    </form>
-    <ol class="tiles" id="tiles">{{CATALOG}}</ol>
-    <p class="empty" id="empty" hidden>No projects match. <button type="button" id="reset">Reset all filters</button></p>
-    <p class="more"><button class="btn btn-ghost" id="more" type="button" hidden>Show more projects</button><span class="more-count" id="shown"></span></p>
-  </div>
+  <header class="catalog-head">
+    <h2 id="projects-title" class="display">All {{COUNT}} projects</h2>
+    <p class="section-lede">Every project has a written case study. Search by title, technology or kind; the most common kinds are {{KINDS}}.</p>
+  </header>
+  <form class="toolbar" id="toolbar" role="search" onsubmit="return false">
+    <div class="field"><label class="field-label" for="search">Search</label><input class="control" id="search" type="search" placeholder="Title, technology or kind" autocomplete="off"><button class="clear" id="clear" type="button" aria-label="Clear search" hidden>×</button></div>
+    <div class="kinds" id="kinds" role="group" aria-label="Filter by kind"><span class="kinds-pill" aria-hidden="true"></span><button class="kind-tab" type="button" data-kind="" aria-pressed="true">All kinds</button>{{KINDS_TABS}}</div>
+    <div class="field field-select"><label class="visually-hidden" for="kind">Filter by kind</label><select class="control" id="kind"><option value="">Any kind (full list)</option>{{KINDS_OPTIONS}}</select></div>
+    <p class="count" id="count"><b id="count-n">{{COUNT}}</b> of {{COUNT}} projects</p><button class="reset-all" id="reset-all" type="button" hidden>Reset all filters</button>
+    <p class="visually-hidden" id="announce" aria-live="polite"></p>
+  </form>
+  <ol class="tiles" id="tiles">{{CATALOG}}</ol>
+  <p class="empty" id="empty" hidden>No projects match. <button type="button" id="reset">Reset all filters</button></p>
+  <p class="more"><button class="btn btn-ink" id="more" type="button" hidden>Show more projects</button><span class="more-count" id="shown"></span></p>
 </section>
-</div>
 
-<section class="contact chapter" id="contact" data-scene="stage" aria-labelledby="contact-title">
-  <div class="contact-copy">
-    <p class="eyebrow">[ Contact ]</p><h2 id="contact-title">Open to analyst roles.<br><em>Let's talk.</em></h2>
-    <a class="contact-mail" href="mailto:rishit.mathur@yahoo.com">rishit.mathur@yahoo.com</a>
-    <p class="section-lede">Entry-level data and business analyst positions, US-wide and remote. The quickest route is e-mail or LinkedIn.</p>
-    <p class="contact-links"><button class="copy-mail" id="copy-mail" type="button" data-mail="rishit.mathur@yahoo.com" hidden><span class="copy-text">Copy e-mail</span></button><a class="contact-link" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="contact-link" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a><a class="contact-link" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a></p>
-    <p class="visually-hidden" id="copy-status" aria-live="polite"></p>
-  </div>
-  <p class="contact-note" aria-hidden="true">The archive, seen from outside: {{COUNT}} screens, one standard.</p>
+<section class="contact" id="contact" aria-labelledby="contact-title">
+  <figure class="sec-blocks" data-seq="hi" aria-hidden="true"><img class="sec-still" src="assets/blocks-hi/029.webp" alt="" width="800" height="800" loading="lazy"><canvas></canvas></figure>
+  <h2 id="contact-title" class="display">Open to analyst roles. Let's talk.</h2>
+  <a class="contact-mail" href="mailto:rishit.mathur@yahoo.com">rishit.mathur@yahoo.com</a>
+  <p class="section-lede">Entry-level data and business analyst positions, US-wide and remote. The quickest route is e-mail or LinkedIn.</p>
+  <p class="contact-links"><button class="copy-mail btn btn-cream" id="copy-mail" type="button" data-mail="rishit.mathur@yahoo.com" hidden><span class="copy-text">Copy e-mail</span></button><a class="btn btn-cream" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="btn btn-cream" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a><a class="btn btn-cream" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a></p>
+  <p class="visually-hidden" id="copy-status" aria-live="polite"></p>
+  <p class="outro" aria-hidden="true">Rishit Mathur</p>
 </section>
 </main>
 <footer class="foot"><span>© 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="#projects">All projects</a><a href="#about">About</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
 
-<dialog class="detail paper" id="detail" aria-labelledby="detail-title">
+<dialog class="detail" id="detail" aria-labelledby="detail-title">
   <div class="detail-body">
     <div class="detail-head"><span id="detail-catalog"></span><button class="icon-btn" id="detail-close" type="button" aria-label="Close project">×</button></div>
     <div class="detail-grid">
       <figure class="detail-figure"><img id="detail-cover" alt="" width="1400" height="800"></figure>
       <div class="detail-info"><h2 id="detail-title" tabindex="-1"></h2><p class="detail-tagline" id="detail-tagline"></p><ul class="tools" id="detail-tech" aria-label="Built with"></ul>
-        <p class="detail-actions"><a class="btn btn-primary" id="detail-open">Open the case study</a><a class="btn btn-ghost" id="detail-demo" hidden>Live demo</a><a class="btn btn-ghost" id="detail-repo" target="_blank" rel="noopener">Code on GitHub</a></p>
+        <p class="detail-actions"><a class="btn btn-ink" id="detail-open">Open the case study</a><a class="btn btn-cream" id="detail-demo" hidden>Live demo</a><a class="btn btn-cream" id="detail-repo" target="_blank" rel="noopener">Code on GitHub</a></p>
         <p class="detail-nav"><button type="button" id="detail-prev">Previous</button><span id="detail-pos"></span><button type="button" id="detail-next">Next</button></p></div>
     </div>
   </div>
 </dialog>
-<dialog class="viewer ink" id="viewer" aria-labelledby="viewer-title">
+<dialog class="viewer" id="viewer" aria-labelledby="viewer-title">
   <div class="viewer-body">
     <div class="viewer-head"><span id="viewer-title"></span><button class="icon-btn" id="viewer-close" type="button" aria-label="Close screenshot">×</button></div>
-    <img id="viewer-img" alt="" decoding="async">
+    <div class="viewer-scroll"><img id="viewer-img" alt="" decoding="async"></div>
     <p class="viewer-caption" id="viewer-caption"></p>
-    <p class="viewer-actions"><a class="btn btn-primary" id="viewer-case">Open the case study</a><a class="btn btn-ghost" id="viewer-demo" hidden>Demo</a></p>
+    <p class="viewer-actions"><a class="btn btn-ink" id="viewer-case">Open the case study</a><a class="btn btn-cream" id="viewer-demo" hidden>Demo</a></p>
   </div>
 </dialog>
 <div class="peek" id="peek" aria-hidden="true"></div>
 <script type="application/json" id="projects-data">/*DATA*/[]</script>
-<script src="vendor/gsap/gsap.min.js"></script>
-<script src="vendor/gsap/ScrollTrigger.min.js"></script>
-<script src="vendor/gsap/SplitText.min.js"></script>
 <script src="vendor/lenis/lenis.min.js"></script>
 <script src="portfolio.js?v={{PORTFOLIO_JS}}" defer></script>
-<script type="module" src="scene.js?v={{SCENE_JS}}"></script>
 </body>
 </html>
