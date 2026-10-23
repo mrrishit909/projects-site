@@ -1,14 +1,12 @@
 /* The catalogue page (all.html): every project, twelve at a time, with search, a kind filter (tabs + the full select,
-   also from ?q= / ?kind=), cover previews and duotone thumbnails cut from the cover atlas, and a project dialog addressable as
-   #<slug> with explicit history ownership. One classic script, no build step. */
+   also from ?q= / ?kind=), and a project dialog addressable as #<slug> with explicit history ownership. Thumbnails are
+   plain lazy images (assets/thumbs, tools/thumbs.py). One classic script, no build step. */
 (() => {
   "use strict";
   const root = document.documentElement, $ = id => document.getElementById(id);
   const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
   const DATA = JSON.parse($("projects-data").textContent);
   const bySlug = new Map(DATA.map((p, i) => [p.slug, { ...p, index: i }]));
-  const ATLAS = JSON.parse(document.body.dataset.atlas);
   /* ---- phone menu: one row (wordmark + Menu); the links open as a sheet ---- */
   const menuBtn = $("menu-btn"), linksBox = $("nav-links");
   if (menuBtn) {
@@ -17,6 +15,11 @@
     linksBox.addEventListener("click", e => { if (e.target.closest("a")) setMenu(false); });
     addEventListener("keydown", e => { if (e.key === "Escape" && document.body.classList.contains("menu-open")) { setMenu(false); menuBtn.focus(); } });
   }
+
+  /* ---- the nav steps away while scrolling down and returns on any scroll up ---- */
+  const nav = $("nav");
+  let lastY = scrollY;
+  addEventListener("scroll", () => { const y = scrollY; if (Math.abs(y - lastY) > 6) { nav.classList.toggle("is-away", y > lastY && y > 200); lastY = y; } }, { passive: true });
 
   /* ---- a numerical spring for direct feedback: dialog panels settle in from below ---- */
   const springs = new WeakMap();
@@ -37,48 +40,10 @@
     st.raf = requestAnimationFrame(tick);
   }
 
-  /* ---- cover previews from the atlas: a card follows the cursor over catalogue entries and capability rows ---- */
-  const peek = $("peek"), PW = 256, PH = Math.round(256 * ATLAS.tile[1] / ATLAS.tile[0]);
-  const peekAt = w => { if (!w) return; const [a, c, r] = w; peek.style.backgroundImage = `url(assets/wall/atlas-${a}.jpg)`; peek.style.backgroundSize = `${ATLAS.size / ATLAS.tile[0] * PW}px auto`; peek.style.backgroundPosition = `-${c * PW}px -${r * PH}px`; };
-  if (fine && peek) {
-    let on = null, tx = 0, ty = 0, x = 0, y = 0, prf = 0;
-    const follow = () => { x += (tx - x) * 0.22; y += (ty - y) * 0.22; peek.style.transform = `translate(${x}px, ${y}px)`; prf = Math.abs(tx - x) + Math.abs(ty - y) > 0.5 ? requestAnimationFrame(follow) : 0; };
-    document.addEventListener("pointermove", e => {
-      const t = e.target.closest(".tile");
-      tx = e.clientX + 20; ty = e.clientY - PH / 2;
-      if (t !== on) {
-        on = t;
-        if (t) { const p = bySlug.get(t.dataset.slug); peekAt(p?.w); x = tx; y = ty; peek.classList.add("is-on"); }
-        else peek.classList.remove("is-on");
-      }
-      if (t && !prf) prf = requestAnimationFrame(follow);
-    });
-    addEventListener("scroll", () => { if (on) { on = null; peek.classList.remove("is-on"); } }, { passive: true });
-  }
-
-  /* ---- catalogue thumbnails, cut from the cover atlas (kept out of the HTML so the page arrives light) ---- */
-  const [TW, TH] = ATLAS.tile, AS = ATLAS.size;
-  // the atlases (about 1.7 MB) start after the page has loaded, so they never hold back its first paint
-  let thumbsOn = false;
-  addEventListener("load", () => setTimeout(() => { thumbsOn = true; thumbs(); }, 150));
-  const thumbs = () => thumbsOn && document.querySelectorAll(".tile:not(.is-beyond):not([hidden]) .tile-thumb:not(.is-set)").forEach(el => {
-    const [a, c, r] = el.closest(".tile").dataset.w.split(",").map(Number);
-    el.style.setProperty("--thumb", `url(assets/wall/atlas-${a}.jpg)`);
-    el.style.setProperty("--thumb-size", `${(AS / TW) * 100}% auto`);
-    el.style.setProperty("--thumb-pos", `${(c * TW / (AS - TW)) * 100}% ${(r * TH / (AS - TH)) * 100}%`);
-    el.classList.add("is-set");
-    shade(el, a, c, r);
-  });
-  // light screenshots (spreadsheets, white reports) must not be inverted: measure each thumbnail once from its atlas
-  const atlasImgs = new Map(), probe = document.createElement("canvas").getContext("2d", { willReadFrequently: true });
-  function shade(el, a, c, r) {
-    const measure = img => { probe.canvas.width = 8; probe.canvas.height = 5; probe.drawImage(img, c * TW, r * TH, TW, TH, 0, 0, 8, 5);
-      const d = probe.getImageData(0, 0, 8, 5).data; let sum = 0; for (let i = 0; i < d.length; i += 4) sum += 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
-      el.classList.toggle("is-light", sum / (d.length / 4) > 128); };
-    let img = atlasImgs.get(a);
-    if (!img) { img = new Image(); img.src = `assets/wall/atlas-${a}.jpg`; atlasImgs.set(a, img); }
-    if (img.complete && img.naturalWidth) measure(img); else img.addEventListener("load", () => measure(img), { once: true });
-  }
+  /* ---- thumbnails past the first row get their source after the page has loaded (they are lazy images from then on) ---- */
+  let loaded = document.readyState === "complete";
+  const thumbs = () => loaded && document.querySelectorAll(".tile:not(.is-beyond):not([hidden]) img[data-src]").forEach(i => { i.src = i.dataset.src; i.removeAttribute("data-src"); });
+  addEventListener("load", () => setTimeout(() => { loaded = true; thumbs(); }, 300));
 
   /* ---- the catalogue: twelve at a time, more only on request ---- */
   const tiles = [...document.querySelectorAll(".tile")], total = tiles.length, PAGE = 12;
@@ -164,7 +129,7 @@
     if (!detail.open) trigger = from;
     current = slug;
     fill(p);
-    if (!detail.open) { detail.showModal(); settle(detail.querySelector(".detail-body"), { y: 28, s: 0.975 }); peek?.classList.remove("is-on"); }
+    if (!detail.open) { detail.showModal(); settle(detail.querySelector(".detail-body"), { y: 28, s: 0.975 }); }
     $("detail-title").focus({ preventScroll: true });
     return true;
   }

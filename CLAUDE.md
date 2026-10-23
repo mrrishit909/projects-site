@@ -25,7 +25,8 @@ This is the whole workflow, and it is the same for every project:
    as `REQUIRED` in `build.py`). Text fields are trusted HTML fragments.
 2. Run `python3 build.py`. It writes `<slug>/index.html` (the case study) and rebuilds the home page, where the project appears as a
    new entry in the catalogue. Order is newest `date` first (`order` breaks ties).
-3. Make its motion tile (next section), rebuild, and check its catalogue entry and its case study in a browser.
+3. Make its motion tile (next section) and its catalogue thumbnail (`python3 tools/thumbs.py`), rebuild, and check its catalogue
+   entry and its case study in a browser.
 4. Commit what the build changed, then publish (merge into `main`, see Publishing).
 
 Do **not** hand-edit `index.html` or any `<slug>/index.html`: they are generated. Don't touch other projects' files when adding one.
@@ -48,43 +49,54 @@ A project's record sleeve on the home page, and the "Next project" link on the c
 
 ## How the site is laid out (so it can be changed safely)
 
-* **`/projects/` (index.html) is the home** (redesigned 2026-10-23 from the owner's pick of three concepts: B's cinematic hero +
-  C's printed objects + A's stickers, colour and one-project-per-screen carousel; "bright but grown-up"):
+* **`/projects/` (index.html) is the home** (redesigned 2026-10-23 from the owner's pick of three concepts, then calmed the same
+  day at the owner's request: "colour scheme a bit too much", no blocks, add an intro, keep the scroll animation):
   `index.template.html` + `portfolio.css` + `home.js` (no build step; Lenis for smooth scroll). Sections: hero, Selected Work
-  (four full-colour screens), a band linking the catalogue, about + experience (mint, experience on a notebook page), contact
-  (ink, a business card), footer. Palette at the top of `portfolio.css`: sky `#9BD3FF`, butter `#FFD84D`, tomato `#FF7759`,
-  lilac `#CDC6FF`, mint `#BDEBC8`, cream `#FFF7EA`, ink `#15193A`; one typeface, Archivo (variable width + weight,
-  vendor/fonts, OFL). Professional facts come from the résumé at ~/portfolio/resume.pdf; do not add claims not in it.
-* **The hero** is a Blender render (`tools/towers.py`, Blender 4.5: `Blender -b --factory-startup -P tools/towers.py --
-  <out_prefix> <w> <h> <frames>`): a daylight corridor of bar-chart towers in the palette ending at a butter tower. Stills
-  `assets/towers/still-d.webp` (2880x1800) and `still-m.webp` (1170x2532, used under 4:5 aspect); the fly-through is 48 frames
-  each in `assets/towers/d/` (2304x1440) and `m/` (864x1872), drawn on a canvas as the 280svh sticky hero scrolls. The RISHIT
-  wordmark parts, "Clean. Model. Explain." passes, and the flight ends in butter, the first project's colour.
+  (four faintly tinted screens), a band linking the catalogue, about + experience (experience on a notebook page), contact
+  (ink, a business card), footer. Palette at the top of `portfolio.css`: off-white `#F7F5F0`, ink `#15193A`, ONE accent, cobalt
+  `#3B5BFF` (`#2B45D6` for text), used sparingly (numbers, hover, focus); each project screen gets a faint tint after the
+  colour printed on its object (`--t-pass|rcpt|ruler|book`). The printed objects keep their own colours. One typeface, Archivo
+  (variable width + weight, vendor/fonts, OFL). Professional facts come from the résumé at ~/portfolio/resume.pdf; do not add
+  claims not in it.
+* **The intro** (first load at the top of the page, CSS only, `html.intro` set in the head): the desk settles, the frame draws in,
+  RISHIT rises letter by letter, then the nav and labels (about 1.6 s; transform / opacity, starting at opacity 0.01 so the text
+  still counts for LCP at first paint). A repeat visit in the same session plays it at 0.45x (`intro-again`, sessionStorage);
+  never with a hash or under reduced motion.
+* **The hero** is a Blender render (`tools/desk/flight.py`, Blender 4.5, EEVEE: `Blender -b --factory-startup -P
+  tools/desk/flight.py -- <out_prefix> <w> <h> <frames> [only_frame]`; textures in `tools/desk/tex/`, printed by
+  `tools/desk/tex.html` + `shoot.cjs`): the four printed objects on a pale oak desk, the camera high and wide at first, gliding
+  down onto the boarding pass. Stills `assets/flight/still-d.webp` (2560x1600) and `still-m.webp` (1080x2340, used under 4:5
+  aspect, cropped at 30% from the top so portrait tablets keep the open desk under the wordmark); 48 frames each in
+  `assets/flight/d/` (2560x1600) and `m/` (1080x2340), WebP q76 via cwebp, drawn on a canvas as the 280svh sticky hero scrolls.
+  The RISHIT wordmark parts, "Clean. Model. Explain." passes over a veil that quiets the desk, and the flight ends in the
+  boarding pass screen's tint. The nav steps away while scrolling down and returns on any scroll up (both pages).
 * **Selected Work** is filled by `build.py` from `featured.json` (four slugs; area / result / contribution / caption, a `scale`
-  {metric, unit, value, note} and a `screen` {object, bg, stickers, alt}). Each screen shows a printed object
-  (`assets/desk/solo-{pass,rcpt,ruler,book}.webp`, cut-outs from concept C's Blender desk, sources in `tools/desk/`), the number,
+  {metric, unit, value, note} and a `screen` {object, alt}). Each screen shows a printed object
+  (`assets/desk/solo-{pass,rcpt,ruler,book}.webp`, cut-outs from concept C's Blender desk, `tools/desk/desk.py`), the number,
   the first sentence of the result and links; on scroll the object lifts, the number counts up (percentages only; "31 of 31"
-  never counts) and the object flips to "What I did" (the contribution). Stickers are flat SVGs from `tools/stickers.py`
-  (`python3 tools/stickers.py` writes `assets/stickers/`). A fixed pager (prev / project name / next) follows the screens.
-  Without JavaScript or under reduced motion: stills, objects upright, "What I did" printed under each object.
-* **`all.html` is the complete catalogue** (`all.template.html` + `portfolio.css` + `catalog.js`), every project as a real link
-  carrying `data-w`, its place in the cover atlas. Old addresses on the home (`#projects`, `#<slug>`, `?q=` / `?kind=`) are
-  forwarded there by an inline script in the home's head, so case studies' "All projects" link (`../#projects`) and the archive
-  redirect keep working.
-* **The cover atlas.** `tools/wall-atlas.cjs` crops every `<slug>/cover.jpg` to 320x183 (sips) and packs them 66 per
-  2048x2048 JPEG into `assets/wall/atlas-N.jpg` + `atlas.json`. **Run it after adding a project** (`NODE_PATH=$(npm root -g)
-  node tools/wall-atlas.cjs`), then `python3 build.py`, or the new project has no thumbnail or preview.
-* **The catalogue** is static HTML (219 links) in a 4 / 3 / 2 column grid, so 12 always fills whole rows; `catalog.js` adds
+  never counts) and the object flips to "What I did" (the contribution) and "Built with" (the project's tech). The receipt's
+  back prints like a till roll (a wider slip at tablet / phone widths); the ruler's back is an index card behind it. A fixed
+  pager (prev / project name / next) follows the screens. Without JavaScript or under reduced motion: stills, objects upright,
+  the back printed under each object.
+* **`all.html` is the complete catalogue** (`all.template.html` + `portfolio.css` + `catalog.js`): every project as a real link
+  with its own thumbnail. Old addresses on the home (`#projects`, `#<slug>`, `?q=` / `?kind=`) are forwarded there by an inline
+  script in the home's head, so case studies' "All projects" link (`../#projects`) and the archive redirect keep working.
+* **Catalogue thumbnails.** `python3 tools/thumbs.py` (sips + cwebp) writes `assets/thumbs/<slug>.webp` at 880x503, twice the
+  widest tile, cropped to the top-left 72% of the cover so its headline or chart title stays legible. True colours, no filter.
+  **Run it after adding a project**, then `python3 build.py` (the build warns when a thumbnail is missing). The first row loads
+  at once; the rest get their source from `catalog.js` just after the page's load event and are lazy images from then on
+  (without JavaScript a `<noscript>` copy shows).
+* **The catalogue** is static HTML (219 links) in a 3 / 2 / 1 column grid, so 12 always fills whole rows; `catalog.js` adds
   search + kind filter (five kind tabs with a sliding pill, synchronised with the full select; also from `?q=` / `?kind=`),
   reveal of 12 at a time on "Show more projects", and a `<dialog>` addressable as `#<slug>` with explicit history ownership
   (a click pushes one entry with `state.pushed`; Previous / Next replace it; Close steps back only over an entry this page
-  pushed). `/projects/archive/` redirects to `/projects/#projects`, which forwards to `all.html`. The atlases load after the
-  page's load event so they never hold back its first paint.
+  pushed). `/projects/archive/` redirects to `/projects/#projects`, which forwards to `all.html`.
 * **Checks:** `python3 -m http.server 8800 --bind 127.0.0.1 &` then `NODE_PATH=$(npm root -g) node tests/portfolio-check.cjs`
-  (both pages without JS, every internal link on disk, page order, the fly-through following scroll, each screen's number /
-  flip / pager, contrast on every colour field, cover previews, catalogue search / tabs / filter / reveal / dialog / history,
-  deep links and forwards, reduced motion, overflow at five widths on both pages, console errors). Lighthouse with gzip
-  (`npx serve@14.2.4`): home mobile 99 / 100 / 100 / 100, LCP 2.1 s; all.html mobile 99 / 100.
+  (75 checks: both pages without JS, every internal link on disk, page order, the intro, the camera flight following scroll,
+  each screen's number / flip / pager, the nav stepping away and back, sharp thumbnails, contrast on every colour field,
+  catalogue search / tabs / filter / reveal / dialog / history, deep links and forwards, reduced motion, overflow at five widths
+  on both pages, console errors). Lighthouse 12.8.2 with gzip (`npx serve@14.2.4`, port 8801): home mobile 100 / 100 / 100 /
+  100, LCP 1.9 s; all.html mobile 97 / 100 / 100 / 100, LCP 2.4 s; both 100 on desktop; CLS 0.
 * `theme.css` and `site.css` style the case studies (unchanged by the home redesign); `vendor/` holds Lenis, Geist, Fraunces
   and Archivo with their licences.
 * Case-study pages use `site.css`. A project marked `"frozen": true` in its `project.json` is never rebuilt.

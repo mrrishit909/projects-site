@@ -19,12 +19,6 @@
     "layout": "wide",
     "screen": {
       "object": "pass",
-      "bg": "butter",
-      "stickers": [
-        "plane",
-        "cloud",
-        "spark"
-      ],
       "alt": "A boarding pass printed with 75.5% on time across 635,459 flights."
     }
   },
@@ -49,12 +43,6 @@
     "figure": "charts/01_monthly.jpg",
     "screen": {
       "object": "rcpt",
-      "bg": "sky",
-      "stickers": [
-        "bag",
-        "flower",
-        "spark"
-      ],
       "alt": "A till receipt reading 31 of 31 data tests passed and net sales of 18.18 million pounds."
     }
   },
@@ -78,12 +66,6 @@
     "layout": "left",
     "screen": {
       "object": "ruler",
-      "bg": "tomato",
-      "stickers": [
-        "vine",
-        "leaf",
-        "spark"
-      ],
       "alt": "A ruler marking a backtest error of 1.81% on a 0 to 10% scale."
     }
   },
@@ -107,12 +89,6 @@
     "layout": "stack",
     "screen": {
       "object": "book",
-      "bg": "lilac",
-      "stickers": [
-        "magnifier",
-        "sun",
-        "spark-ink"
-      ],
       "alt": "A Form 10-K booklet reading 20 of 20 figures within 0.5% of XBRL."
     }
   }

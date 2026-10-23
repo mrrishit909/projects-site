@@ -1,6 +1,7 @@
 /* The home page's behaviour (one classic script, no build step).
-   Hero: a 48-frame Blender fly-through (tools/towers.py) drawn on a canvas as the hero scrolls; the RISHIT wordmark splits,
-   "Clean. Model. Explain." passes, and the flight ends on the butter tower, which hands its colour to the first project.
+   Hero: a 48-frame Blender camera flight (tools/desk/flight.py) drawn on a canvas as the hero scrolls: from high over the desk
+   down onto the boarding pass, while the RISHIT wordmark splits and "Clean. Model. Explain." passes; the boarding pass then
+   hands over to the first project screen. The intro on first load is CSS (portfolio.css, html.intro).
    Selected Work: each screen's printed object lifts off the table, its number counts up, then it flips to show what I did;
    the pager follows the current project. Everything that moves is driven by scroll and stops under reduced motion, where
    the page shows the finished still images. */
@@ -21,6 +22,11 @@
   const run = () => { raf = 0; for (const j of jobs) j(); };
   const kick = () => { if (!raf) raf = requestAnimationFrame(run); };
   addEventListener("scroll", kick, { passive: true });
+
+  /* the nav steps away while scrolling down past the hero's first screen and returns on any scroll up */
+  const nav = $("nav");
+  let lastY = scrollY;
+  jobs.push(() => { const y = scrollY; if (Math.abs(y - lastY) > 6) { nav.classList.toggle("is-away", y > lastY && y > innerHeight * 0.6); lastY = y; } });
   addEventListener("resize", kick);
 
   /* ---- hero: frames load after first paint; scroll through the hero picks the frame ---- */
@@ -37,7 +43,7 @@
       const dpr = Math.min(devicePixelRatio || 1, 2), w = Math.round(cv.clientWidth * dpr), h = Math.round(cv.clientHeight * dpr);
       if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
       const im = imgs[k], s = Math.max(w / im.width, h / im.height), dw = im.width * s, dh = im.height * s;   // cover, like the still
-      ctx.drawImage(im, (w - dw) / 2, (h - dh) / 2, dw, dh); shown = k;
+      ctx.drawImage(im, (w - dw) / 2, (h - dh) * 0.3, dw, dh); shown = k;   // cropped like the still (object-position 50% 30%)
       root.classList.add("hero-live");
     };
     addEventListener("resize", () => { shown = -1; });
@@ -46,6 +52,7 @@
       if (r.bottom < 0) return;
       draw(Math.round(cl(p / 0.92) * (N - 1)));
       hero.style.setProperty("--p", p.toFixed(3));
+      hero.style.setProperty("--veil", (cl((p - 0.22) / 0.08) * (1 - cl((p - 0.8) / 0.08))).toFixed(3));
       letters.forEach((el, i) => { el.style.transform = `translateX(${((i - 2.5) * ease(cl(p * 1.6)) * 9).toFixed(2)}vw)`; el.style.opacity = (1 - cl(p * 3.8)).toFixed(3); });
       words.forEach((el, i) => { const a = cl((p - 0.28 - i * 0.07) / 0.1), b = cl((p - 0.74) / 0.08); el.style.opacity = (a * (1 - b)).toFixed(3); el.style.transform = `translateY(${((1 - ease(a)) * 40).toFixed(1)}px)`; });
     });
@@ -53,7 +60,7 @@
       const img = new Image();
       img.onload = () => { imgs[i] = img; if (i === 0 || Math.abs(i - shown) < 4) kick(); done(); };
       img.onerror = done;
-      img.src = `assets/towers/${SET}/${String(i).padStart(3, "0")}.webp`;
+      img.src = `assets/flight/${SET}/${String(i).padStart(3, "0")}.webp`;
     });
     setTimeout(async () => { await load(0); for (let i = 1; i < N; i += 8) await Promise.all(Array.from({ length: 8 }, (_, k) => i + k).filter(k => k < N).map(load)); }, 400);
   }
@@ -61,7 +68,7 @@
   /* ---- Selected Work: lift, count, flip as each sticky screen scrolls ---- */
   const screens = [...document.querySelectorAll(".screen")].map(s => {
     const v = s.querySelector(".num-v"), end = +s.dataset.value;
-    return { s, card: s.querySelector(".card"), v, end, dec: (String(end).split(".")[1] || "").length, final: v.textContent, counts: !/\bof\b/.test(s.dataset.unit), st: [...s.querySelectorAll(".st")] };
+    return { s, card: s.querySelector(".card"), v, end, dec: (String(end).split(".")[1] || "").length, final: v.textContent, counts: !/\bof\b/.test(s.dataset.unit) };
   });
   if (!reduced) jobs.push(() => {
     for (const o of screens) {
@@ -73,7 +80,6 @@
       o.card.classList.toggle("is-flipped", flip > 0.5);
       // "31 of 31" counted up would read as failing tests on the way, so only percentages count
       if (o.counts) { const k = ease(cl((enter - 0.25) / 0.6)); o.v.textContent = k < 1 ? (o.end * k).toFixed(o.dec) : o.final; }
-      o.st.forEach((el, i) => { el.style.transform = `translateY(${((0.5 - p) * (40 + i * 30)).toFixed(1)}px) rotate(${((0.5 - p) * (i % 2 ? 8 : -8)).toFixed(2)}deg)`; });
     }
   });
 

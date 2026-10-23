@@ -5,22 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rishit Mathur, data analyst</title>
 <meta name="description" content="Rishit Mathur, data analyst in Tampa: Power BI, SQL, Python, data pipelines, forecasting and AI-enabled tools. Four flagship projects and {{COUNT}} case studies.">
-<meta name="theme-color" content="#9BD3FF">
+<meta name="theme-color" content="#F7F5F0">
 <meta property="og:title" content="Rishit Mathur, data analyst">
 <meta property="og:description" content="Four flagship projects, each with the number its case study reports, and {{COUNT}} case studies in all.">
-<meta property="og:image" content="https://mrrishit909.github.io/projects/assets/og-towers.jpg">
+<meta property="og:image" content="https://mrrishit909.github.io/projects/assets/og-desk.jpg">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="portfolio.css?v={{PORTFOLIO_CSS}}">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%239BD3FF'/%3E%3Crect x='5' y='17' width='6' height='10' rx='1' fill='%23FF7759'/%3E%3Crect x='13' y='6' width='6' height='21' rx='1' fill='%23FFD84D'/%3E%3Crect x='21' y='12' width='6' height='15' rx='1' fill='%2315193A'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Archivo-latin.woff2" crossorigin>
-<link rel="preload" as="image" href="assets/towers/still-d.webp" media="(min-aspect-ratio: 4/5)">
-<link rel="preload" as="image" href="assets/towers/still-m.webp" media="(max-aspect-ratio: 4/5)">
+<link rel="preload" as="image" href="assets/flight/still-d.webp" media="(min-aspect-ratio: 4/5)">
+<link rel="preload" as="image" href="assets/flight/still-m.webp" media="(max-aspect-ratio: 4/5)">
 <script>
 // the catalogue moved to all.html: old links (#projects, #<slug>, ?q= / ?kind=) are forwarded there
 (function () { var h = location.hash.slice(1), q = location.search;
   if (/[?&](q|kind)=/.test(q) || (h && !/^(top|main|work|about|experience|contact|feature-[\w-]+)$/.test(h))) location.replace("all.html" + q + (h && h !== "projects" ? "#" + h : "")); })();
 document.documentElement.classList.add("js");
+// the intro plays on a first load that starts at the top; again in this session it plays faster
+if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  document.documentElement.classList.add("intro");
+  try { if (sessionStorage.getItem("intro")) document.documentElement.classList.add("intro-again"); sessionStorage.setItem("intro", "1"); } catch (_) {}
+}
 </script>
 </head>
 <body class="home">
@@ -36,10 +41,11 @@ document.documentElement.classList.add("js");
 <section class="hero" id="top" aria-labelledby="hero-name">
   <div class="hero-stage">
     <picture class="hero-media">
-      <source media="(max-aspect-ratio: 4/5)" srcset="assets/towers/still-m.webp" width="1170" height="2532">
-      <img class="hero-still" src="assets/towers/still-d.webp" alt="" width="2880" height="1800" fetchpriority="high">
+      <source media="(max-aspect-ratio: 4/5)" srcset="assets/flight/still-m.webp" width="1080" height="2340">
+      <img class="hero-still" src="assets/flight/still-d.webp" alt="" width="2560" height="1600" fetchpriority="high">
     </picture>
     <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-veil" aria-hidden="true"></div>
     <div class="hero-fade" aria-hidden="true"></div>
     <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <h1 id="hero-name" class="wordmark-xl" aria-label="Rishit Mathur, data analyst"><span>R</span><span>I</span><span>S</span><span>H</span><span>I</span><span>T</span></h1>
@@ -60,7 +66,6 @@ document.documentElement.classList.add("js");
 </section>
 
 <section class="more-band" aria-labelledby="more-title">
-  <img class="more-sticker" src="assets/stickers/sun.svg" alt="" width="220" height="220" loading="lazy">
   <h2 id="more-title" class="display">{{COUNT}} projects, each with a written case study.</h2>
   <p><a class="pill pill-ink" href="all.html">Browse all {{COUNT}} projects</a></p>
 </section>

@@ -246,12 +246,10 @@ def home_page(projects):
                  f'<a class="pill" href="{escape(p["repo"])}" target="_blank" rel="noopener">Code</a>']
         if p.get("demo"):
             links.append(f'<a class="pill" href="{escape(demo_url(p))}">{escape(p.get("demo_label", "Demo"))}</a>')
-        stickers = "".join(f'<img class="st st-{n}" src="assets/stickers/{k}.svg" alt="" aria-hidden="true" loading="lazy" decoding="async">'
-                           for n, k in enumerate(scr["stickers"], 1))
         feats.append(
             f'<article class="screen screen-{scr["object"]}" id="feature-{p["slug"]}" data-slug="{p["slug"]}" data-title="{escape(p["title"], quote=True)}" '
-            f'data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" style="--bg: var(--{scr["bg"]})" aria-labelledby="t-{p["slug"]}">'
-            f'<div class="screen-stage">{stickers}'
+            f'data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" style="--bg: var(--t-{scr["object"]})" aria-labelledby="t-{p["slug"]}">'
+            f'<div class="screen-stage">'
             f'<div class="screen-copy"><p class="screen-kind">{i} of 4, {escape(f["area"])}</p>'
             f'<h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3>'
             f'<p class="num"><span class="num-v">{big}</span><span class="num-u">{escape(unit)}</span></p>'
@@ -259,7 +257,8 @@ def home_page(projects):
             f'<p class="screen-line">{line}</p><p class="screen-links">{"".join(links)}</p></div>'
             f'<div class="table"><div class="card card-{scr["object"]}">'
             f'<img class="front" src="{obj}" alt="{escape(scr["alt"], quote=True)}" width="{w}" height="{h}" loading="lazy" decoding="async">'
-            f'<div class="back"><p class="back-label">What I did</p><p>{f["contribution"]}</p></div></div></div>'
+            f'<div class="back"><p class="back-label">What I did</p><p>{f["contribution"]}</p>'
+            f'<p class="back-label">Built with</p><ul class="back-tools">{"".join(f"<li>{escape(t)}</li>" for t in p["tech"])}</ul></div></div></div>'
             f'</div></article>')
     tpl = (ROOT / "index.template.html").read_text()
     assert "{{FEATURED}}" in tpl
@@ -281,29 +280,35 @@ def webp_size(path):
 
 
 def all_page(projects):
-    """all.html (all.template.html + portfolio.css + catalog.js): every project as a real link carrying `data-w`, its place
-    in the cover atlas, plus search, the kind filter and the data the detail dialog reads."""
+    """all.html (all.template.html + portfolio.css + catalog.js): every project as a real link with its thumbnail
+    (assets/thumbs/<slug>.webp, made by tools/thumbs.py), plus search, the kind filter and the data the detail dialog reads."""
     order = {p["slug"]: i + 1 for i, p in enumerate(projects)}
     heads = Counter(p["kind"].split("\u00b7")[0].strip() for p in projects)
-    atlas = json.loads((ROOT / "assets" / "wall" / "atlas.json").read_text())   # tools/wall-atlas.cjs: every cover's place in the texture atlases
     tiles = []
-    for p in projects:
-        p["w"] = atlas["tiles"].get(p["slug"], [0, 0, 0])
+    for n, p in enumerate(projects):
         head = p["kind"].split("\u00b7")[0].strip()
         search = escape(" ".join([p["title"], p["kind"], *p["tech"]]).lower(), quote=True)
-        tiles.append(f'<li class="tile" data-slug="{p["slug"]}" data-kind="{escape(head, quote=True)}" data-search="{search}" data-w="{",".join(map(str, p["w"]))}">'
-                     f'<a class="tile-link" href="{p["slug"]}/"><span class="tile-thumb" aria-hidden="true"></span><span class="tile-no">{order[p["slug"]]:03d}</span>'
+        if (ROOT / "assets" / "thumbs" / f'{p["slug"]}.webp').exists():
+            src, attrs = f'assets/thumbs/{p["slug"]}.webp', 'alt="" width="880" height="503"'
+            if n < 3:   # the first row is above the fold: loads at once
+                thumb = f'<img class="tile-thumb" src="{src}" {attrs}{" fetchpriority=\"high\"" if n == 0 else ""}>'
+            else:       # the rest start after the page has loaded (catalog.js), so they never compete with the first paint
+                thumb = f'<img class="tile-thumb" data-src="{src}" {attrs} loading="lazy" decoding="async"><noscript><img class="tile-thumb" src="{src}" {attrs} loading="lazy"></noscript>'
+        else:
+            print(f'warning: {p["slug"]} has no thumbnail yet (run python3 tools/thumbs.py)')
+            thumb = '<span class="tile-thumb" aria-hidden="true"></span>'
+        tiles.append(f'<li class="tile" data-slug="{p["slug"]}" data-kind="{escape(head, quote=True)}" data-search="{search}">'
+                     f'<a class="tile-link" href="{p["slug"]}/">{thumb}<span class="tile-no">{order[p["slug"]]:03d}</span>'
                      f'<span class="tile-title">{escape(p["title"])}</span><span class="tile-kind">{escape(p["kind"])}</span></a></li>')
-    keys = ("slug", "title", "kind", "date", "cover", "tagline", "tech", "repo", "demo", "demo_label", "w")
+    keys = ("slug", "title", "kind", "date", "cover", "tagline", "tech", "repo", "demo", "demo_label")
     data = [{k: p.get(k) for k in keys if p.get(k) is not None} for p in projects]
     kinds = ", ".join(escape(k) for k, _ in heads.most_common(5))
     options = "".join(f'<option value="{escape(k, quote=True)}">{escape(k)} ({n})</option>' for k, n in heads.most_common())
-    atlas_meta = json.dumps({k: atlas[k] for k in ("tile", "size", "cols", "atlases")})
     tabs = "".join(f'<button class="kind-tab" type="button" data-kind="{escape(k, quote=True)}" aria-pressed="false">{escape(k)}</button>' for k, _ in heads.most_common(5))
     tpl = (ROOT / "all.template.html").read_text()
     assert "{{CATALOG}}" in tpl and "/*DATA*/[]" in tpl
     return (tpl.replace("{{CATALOG}}", "".join(tiles)).replace("/*DATA*/[]", json.dumps(data).replace("</", "<\\/"))
-               .replace("{{COUNT}}", str(len(projects))).replace("{{KINDS_OPTIONS}}", options).replace("{{KINDS_TABS}}", tabs).replace("{{KINDS}}", kinds).replace("{{ATLAS}}", atlas_meta)
+               .replace("{{COUNT}}", str(len(projects))).replace("{{KINDS_OPTIONS}}", options).replace("{{KINDS_TABS}}", tabs).replace("{{KINDS}}", kinds)
                .replace("{{PORTFOLIO_CSS}}", asset_version("portfolio.css")).replace("{{CATALOG_JS}}", asset_version("catalog.js")))
 
 
