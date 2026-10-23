@@ -1,0 +1,81 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&family=Instrument+Serif&family=Bebas+Neue&display=block" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:transparent;font-family:"Familjen Grotesk";color:#141826}
+.t{position:relative;overflow:hidden;margin:0 0 40px}
+/* boarding pass */
+#pass{width:800px;height:320px;background:#fbfaf6;display:flex}
+#pass .main{flex:1;padding:0;position:relative}
+#pass .band{background:#2747e8;color:#fff;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-weight:700;font-size:20px;letter-spacing:.06em}
+#pass .band small{font-weight:400;font-size:14px;letter-spacing:.1em;opacity:.85}
+#pass .row{display:flex;gap:30px;padding:18px 26px 0}
+#pass label{display:block;font-size:11px;letter-spacing:.14em;color:#6b6f80;margin-bottom:3px}
+#pass .v{font-size:22px;font-weight:600}
+#pass .big{font-size:76px;font-weight:700;line-height:.9;letter-spacing:-.03em;color:#2747e8}
+#pass .route{display:flex;align-items:flex-end;gap:16px;padding:16px 26px 0}
+#pass .route .code{font-size:58px;font-weight:700;letter-spacing:-.02em;line-height:1}
+#pass .stub{width:210px;border-left:3px dashed #c9c6bc;padding:0}
+#pass .stub .band{justify-content:center}
+#pass .stub .in{padding:22px 20px}
+.bars{display:flex;gap:2px;height:46px;align-items:stretch;position:absolute;left:26px;right:26px;bottom:18px}
+.bars i{background:#141826;display:block}
+.hole{position:absolute;width:26px;height:26px;border-radius:50%;background:#000;top:-13px}
+/* receipt */
+#rcpt{width:300px;height:1000px;background:#fffefa;font-family:"IBM Plex Mono";font-size:15px;padding:44px 22px;color:#222;
+ -webkit-mask:linear-gradient(#000,#000) center/100% calc(100% - 24px) no-repeat,conic-gradient(from -45deg at 50% 12px,#000 90deg,#0000 0) 0 0/16px 12px repeat-x,conic-gradient(from 135deg at 50% calc(100% - 12px),#000 90deg,#0000 0) 0 100%/16px 12px repeat-x}
+#rcpt h3{text-align:center;font-size:21px;font-weight:600;letter-spacing:.04em}
+#rcpt .c{text-align:center}
+#rcpt hr{border:0;border-top:2px dashed #555;margin:14px 0}
+#rcpt .l{display:flex;justify-content:space-between}
+#rcpt .tot{font-size:34px;font-weight:600;text-align:center;margin:10px 0 2px}
+/* ruler */
+#ruler{width:1000px;height:150px;background:#c8f04a;border-radius:6px;font-family:"Familjen Grotesk"}
+#ruler .ticks{position:absolute;left:40px;right:40px;top:0;height:150px}
+#ruler .ticks i{position:absolute;top:0;width:2px;background:#141826}
+#ruler .ticks b{position:absolute;top:44px;font-size:20px;font-weight:600;transform:translateX(-50%)}
+#ruler .name{position:absolute;right:44px;bottom:16px;font-size:17px;font-weight:700;letter-spacing:.08em}
+#ruler .mark{position:absolute;top:0;width:4px;height:150px;background:#e5341f}
+#ruler .tag{position:absolute;bottom:40px;background:#e5341f;color:#fff;font-weight:700;font-size:26px;padding:3px 12px;border-radius:4px}
+/* booklet */
+#book{width:640px;height:840px;background:#16224f;color:#f4efe2;padding:56px 54px}
+#book .k{font-family:"Familjen Grotesk";font-weight:700;letter-spacing:.2em;font-size:18px}
+#book h2{font-family:"Instrument Serif";font-weight:400;font-size:84px;line-height:.95;margin-top:28px}
+#book .big{font-family:"Familjen Grotesk";font-weight:700;font-size:200px;letter-spacing:-.05em;line-height:.9;color:#ffd23f;position:absolute;left:46px;bottom:150px}
+#book .sub{position:absolute;left:54px;bottom:62px;right:54px;font-size:24px;line-height:1.3}
+#book .rule{position:absolute;left:54px;right:54px;bottom:130px;border-top:2px solid #f4efe2;opacity:.5}
+/* tapes */
+.tape{height:110px;background:#151515;color:#fff;font-family:"Bebas Neue";font-size:86px;letter-spacing:.16em;display:flex;align-items:center;padding:6px 40px 0}
+.tape.h{background:#000}
+</style></head><body>
+<div class="t" id="pass"><div class="main"><div class="band">BOARDING PASS<small>FLORIDA FLIGHT DELAYS</small></div>
+<div class="route"><div><label>FLIGHTS</label><div class="code">635,459</div></div><div style="padding-bottom:8px"><label>PERIOD</label><div class="v">Aug 2025 to Jul 2026</div></div></div>
+<div class="row"><div><label>ON TIME</label><div class="v" style="font-size:40px;font-weight:700;color:#2747e8">75.5%</div></div><div><label>LATE AIRCRAFT</label><div class="v">42.5% of delay min</div></div><div><label>GATE</label><div class="v">Power BI</div></div></div>
+<div class="bars" id="bars"></div></div>
+<div class="stub"><div class="band">ON TIME</div><div class="in"><div class="big">75.5<span style="font-size:48px">%</span></div><div style="margin-top:16px"><label>PASSENGER</label><div class="v" style="font-size:18px">R. MATHUR</div></div><div style="margin-top:12px"><label>ROUTE</label><div class="v" style="font-size:18px">20 FL airports</div></div></div></div></div>
+
+<div class="t" id="rcpt"><h3>RETAIL PIPELINE</h3><div class="c">dbt build on a laptop</div><div class="c">1.07M invoice lines</div><hr>
+<div class="l"><span>DATA TESTS</span><span>31</span></div><div class="l"><span>PASSED</span><span>31</span></div><div class="l"><span>FAILED</span><span>0</span></div><hr>
+<div class="l"><span>CANCELLED</span><span>-£1.46M</span></div><div class="l" style="font-weight:600"><span>NET SALES</span><span>£18.18M</span></div><hr>
+<div class="l"><span>CHAMPIONS</span><span></span></div><div class="l"><span>&nbsp;customers</span><span>25.1%</span></div><div class="l"><span>&nbsp;revenue</span><span>70.8%</span></div><hr>
+<div class="c">TOTAL</div><div class="tot">31 / 31 PASS</div><div class="c">no scheduler, CI or warehouse</div><hr>
+<div class="c" style="margin-top:20px">THANK YOU FOR READING</div><div class="c">github.com/mrrishit909</div>
+<div class="bars" id="bars2" style="left:30px;right:30px;bottom:56px;height:60px"></div></div>
+
+<div class="t" id="ruler"><div class="ticks" id="ticks"></div><div class="name">US RETAIL FORECAST &nbsp; BACKTEST MAPE, %</div></div>
+
+<div class="t" id="book"><div class="k">FORM 10-K</div><h2>Every figure,<br>checked<br>against XBRL.</h2><div class="big">20/20</div><div class="rule"></div><div class="sub">within 0.5%. 5 of 5 refusals<br>when the answer is absent.</div></div>
+
+<div class="t tape" id="tape1">RISHIT MATHUR</div>
+<div class="t tape" id="tape2" style="width:max-content">DATA ANALYST</div>
+<div class="t tape h" id="tape1h" style="width:max-content">RISHIT MATHUR</div>
+<div class="t tape h" id="tape2h" style="width:max-content">DATA ANALYST</div>
+<script>
+let s=7;const r=()=>(s=(s*16807)%2147483647)/2147483647;
+for(const id of ['bars','bars2']){const el=document.getElementById(id);let h='';for(let i=0;i<70;i++)h+=`<i style="flex:${1+Math.floor(r()*4)}"></i><span style="flex:${1+Math.floor(r()*3)}"></span>`;el.innerHTML=h}
+document.getElementById('bars').style.right='240px';
+const t=document.getElementById('ticks');let h='';const W=920;
+for(let i=0;i<=100;i++){const x=i/100*W;const L=i%10==0?38:i%5==0?26:14;h+=`<i style="left:${x}px;height:${L}px"></i>`;if(i%10==0)h+=`<b style="left:${x}px">${i/10}</b>`}
+const mx=1.81/10*W;h+=`<div class="mark" style="left:${mx-2}px"></div><div class="tag" style="left:${mx+10}px">1.81%</div>`;t.innerHTML=h;
+document.getElementById('tape1').style.width='max-content';
+</script></body></html>

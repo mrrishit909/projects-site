@@ -225,41 +225,65 @@ def demo_url(p):
     return d if not d or d.startswith("http") else f'{p["slug"]}/{d}'
 
 
-def index_page(projects):
-    """The portfolio (index.template.html + portfolio.css + portfolio.js): one continuous page. build.py fills the
-    flagship chapters from featured.json (four slugs with a hand-written headline / problem / contribution / result / caption
-    each, numbers from that project's case study), the complete catalogue as static links, the kind filter, and the data the
-    detail dialog reads. A flagship may name a more legible project image than its cover in featured.json `figure`."""
+def unit_split(sc):
+    """'75.5', '%' / '31', 'of 31': the big number and its smaller unit."""
+    return f"{sc['value']:g}", sc["unit"].strip()
+
+
+def home_page(projects):
+    """The home (index.template.html + portfolio.css + home.js): hero, four Selected Work screens filled from featured.json
+    (each flagship's printed object, its number, one line from its result and what I did on the object's back), about +
+    experience, contact. The catalogue lives on all.html."""
     by_slug = {p["slug"]: p for p in projects}
-    order = {p["slug"]: i + 1 for i, p in enumerate(projects)}
     feats = []
     for i, f in enumerate(json.loads((ROOT / "featured.json").read_text()), 1):
-        p = by_slug[f["slug"]]
-        links = [f'<a href="{p["slug"]}/">Case study</a>', f'<a href="{escape(p["repo"])}" target="_blank" rel="noopener">Code</a>']
+        p, sc, scr = by_slug[f["slug"]], f["scale"], f["screen"]
+        big, unit = unit_split(sc)
+        obj = f"assets/desk/solo-{scr['object']}.webp"
+        w, h = webp_size(ROOT / obj)
+        line = f["result"].split(". ")[0].rstrip(".") + "."
+        links = [f'<a class="pill pill-ink" href="{p["slug"]}/">Read the case study</a>',
+                 f'<a class="pill" href="{escape(p["repo"])}" target="_blank" rel="noopener">Code</a>']
         if p.get("demo"):
-            links.append(f'<a href="{escape(demo_url(p))}">{escape(p.get("demo_label", "Demo"))}</a>')
-        tools = "".join(f"<li>{escape(t)}</li>" for t in p["tech"][:5])
-        fig = f.get("figure", p["cover"])   # a flagship may show a more legible image from its project than the cover
-        w, h = image_size(ROOT / p["slug"] / fig)
-        cover = f'{p["slug"]}/{p["cover"]}'
-        shot = f'{p["slug"]}/{fig}'
-        sc = f["scale"]
-        val = f"{sc['value']:g}{sc['unit']}" if sc["unit"].startswith("%") else f"{sc['value']:g}{sc['unit']}"
+            links.append(f'<a class="pill" href="{escape(demo_url(p))}">{escape(p.get("demo_label", "Demo"))}</a>')
+        stickers = "".join(f'<img class="st st-{n}" src="assets/stickers/{k}.svg" alt="" aria-hidden="true" loading="lazy" decoding="async">'
+                           for n, k in enumerate(scr["stickers"], 1))
         feats.append(
-            f'<article class="feature panel feature-{f.get("layout", "wide")}" id="feature-{p["slug"]}" data-scene="feature" data-slug="{p["slug"]}" data-cover="{cover}" '
-            f'data-title="{escape(p["title"], quote=True)}" data-area="{escape(f["area"], quote=True)}" data-date="{escape(p["date"], quote=True)}" data-no="{i:02d}" '
-            f'data-metric="{escape(sc["metric"], quote=True)}" data-unit="{escape(sc["unit"], quote=True)}" data-min="{sc["min"]}" data-max="{sc["max"]}" data-value="{sc["value"]}" '
-            f'data-evidence="{escape(sc["evidence"], quote=True)}" data-note="{escape(sc["note"], quote=True)}" data-layout="{f.get("layout", "wide")}">'
-            f'<span class="panel-no" aria-hidden="true">{i:02d}</span>'
-            f'<div class="feature-copy"><p class="feature-meta"><span class="no">{i:02d}</span><span>[ {escape(f["area"])} ]</span><span>{escape(p["date"])}</span></p>'
-            f'<h3><a href="{p["slug"]}/">{escape(p["title"])}</a></h3>'
-            f'<p class="reading"><span class="reading-value" data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}">{escape(val)}</span><span class="reading-label">{escape(sc["metric"])}, {escape(sc["note"])}</span></p>'
-            f'<p class="result">{f["result"]}</p>'
-            f'<details class="more-facts"><summary>The problem and what I did</summary><dl class="facts"><dt>Problem</dt><dd>{f["problem"]}</dd><dt>What I did</dt><dd>{f["contribution"]}</dd></dl></details>'
-            f'<ul class="tools" aria-label="Tools">{tools}</ul><p class="links">{"".join(links)}</p></div>'
-            f'<figure class="feature-figure"><a class="inspect" href="{shot}" data-inspect="{p["slug"]}" aria-label="Enlarge screenshot of {escape(p["title"], quote=True)}">'
-            f'<img src="{shot}" alt="" width="{w}" height="{h}" loading="lazy" decoding="async"><span class="inspect-label" aria-hidden="true">Enlarge</span></a>'
-            f'<figcaption>{escape(f["caption"])}</figcaption></figure></article>')
+            f'<article class="screen screen-{scr["object"]}" id="feature-{p["slug"]}" data-slug="{p["slug"]}" data-title="{escape(p["title"], quote=True)}" '
+            f'data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" style="--bg: var(--{scr["bg"]})" aria-labelledby="t-{p["slug"]}">'
+            f'<div class="screen-stage">{stickers}'
+            f'<div class="screen-copy"><p class="screen-kind">{i} of 4, {escape(f["area"])}</p>'
+            f'<h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3>'
+            f'<p class="num"><span class="num-v">{big}</span><span class="num-u">{escape(unit)}</span></p>'
+            f'<p class="num-label">{escape(sc["metric"])}, {escape(sc["note"])}</p>'
+            f'<p class="screen-line">{line}</p><p class="screen-links">{"".join(links)}</p></div>'
+            f'<div class="table"><div class="card card-{scr["object"]}">'
+            f'<img class="front" src="{obj}" alt="{escape(scr["alt"], quote=True)}" width="{w}" height="{h}" loading="lazy" decoding="async">'
+            f'<div class="back"><p class="back-label">What I did</p><p>{f["contribution"]}</p></div></div></div>'
+            f'</div></article>')
+    tpl = (ROOT / "index.template.html").read_text()
+    assert "{{FEATURED}}" in tpl
+    return (tpl.replace("{{FEATURED}}", "".join(feats)).replace("{{COUNT}}", str(len(projects)))
+               .replace("{{PORTFOLIO_CSS}}", asset_version("portfolio.css")).replace("{{HOME_JS}}", asset_version("home.js")))
+
+
+def webp_size(path):
+    """(width, height) of a .webp (VP8X / VP8 / VP8L)."""
+    d = path.read_bytes()
+    kind = d[12:16]
+    if kind == b"VP8X":
+        return 1 + int.from_bytes(d[24:27], "little"), 1 + int.from_bytes(d[27:30], "little")
+    if kind == b"VP8L":
+        bits = int.from_bytes(d[21:25], "little")
+        return (bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1
+    w, h = struct.unpack("<HH", d[26:30])
+    return w & 0x3FFF, h & 0x3FFF
+
+
+def all_page(projects):
+    """all.html (all.template.html + portfolio.css + catalog.js): every project as a real link carrying `data-w`, its place
+    in the cover atlas, plus search, the kind filter and the data the detail dialog reads."""
+    order = {p["slug"]: i + 1 for i, p in enumerate(projects)}
     heads = Counter(p["kind"].split("\u00b7")[0].strip() for p in projects)
     atlas = json.loads((ROOT / "assets" / "wall" / "atlas.json").read_text())   # tools/wall-atlas.cjs: every cover's place in the texture atlases
     tiles = []
@@ -272,24 +296,15 @@ def index_page(projects):
                      f'<span class="tile-title">{escape(p["title"])}</span><span class="tile-kind">{escape(p["kind"])}</span></a></li>')
     keys = ("slug", "title", "kind", "date", "cover", "tagline", "tech", "repo", "demo", "demo_label", "w")
     data = [{k: p.get(k) for k in keys if p.get(k) is not None} for p in projects]
-    feat_by = {f["slug"]: f for f in json.loads((ROOT / "featured.json").read_text())}
-    for d in data:
-        if d["slug"] in feat_by:
-            d["caption"] = feat_by[d["slug"]]["caption"]
-            d["figure"] = feat_by[d["slug"]].get("figure", d["cover"])
-            d["size"] = list(image_size(ROOT / d["slug"] / d["figure"]))
     kinds = ", ".join(escape(k) for k, _ in heads.most_common(5))
     options = "".join(f'<option value="{escape(k, quote=True)}">{escape(k)} ({n})</option>' for k, n in heads.most_common())
-    marquee = "".join(f'<span>{escape(k)}<i>{n}</i></span>' for k, n in heads.most_common())
     atlas_meta = json.dumps({k: atlas[k] for k in ("tile", "size", "cols", "atlases")})
     tabs = "".join(f'<button class="kind-tab" type="button" data-kind="{escape(k, quote=True)}" aria-pressed="false">{escape(k)}</button>' for k, _ in heads.most_common(5))
-    tpl = (ROOT / "index.template.html").read_text()
-    assert "{{FEATURED}}" in tpl and "{{CATALOG}}" in tpl and "/*DATA*/[]" in tpl
-    return (tpl.replace("{{FEATURED}}", "".join(feats)).replace("{{CATALOG}}", "".join(tiles))
-               .replace("/*DATA*/[]", json.dumps(data).replace("</", "<\\/"))
-               .replace("{{COUNT}}", str(len(projects))).replace("{{KINDS_OPTIONS}}", options).replace("{{KINDS_TABS}}", tabs).replace("{{KINDS}}", kinds).replace("{{KINDS_MARQUEE}}", marquee).replace("{{ATLAS}}", atlas_meta)
-               .replace("{{THEME}}", asset_version("theme.css")).replace("{{PORTFOLIO_CSS}}", asset_version("portfolio.css"))
-               .replace("{{PORTFOLIO_JS}}", asset_version("portfolio.js")))
+    tpl = (ROOT / "all.template.html").read_text()
+    assert "{{CATALOG}}" in tpl and "/*DATA*/[]" in tpl
+    return (tpl.replace("{{CATALOG}}", "".join(tiles)).replace("/*DATA*/[]", json.dumps(data).replace("</", "<\\/"))
+               .replace("{{COUNT}}", str(len(projects))).replace("{{KINDS_OPTIONS}}", options).replace("{{KINDS_TABS}}", tabs).replace("{{KINDS}}", kinds).replace("{{ATLAS}}", atlas_meta)
+               .replace("{{PORTFOLIO_CSS}}", asset_version("portfolio.css")).replace("{{CATALOG_JS}}", asset_version("catalog.js")))
 
 
 if __name__ == "__main__":
@@ -300,6 +315,7 @@ if __name__ == "__main__":
         if p.get("frozen"):   # page kept exactly as published; its old style.css stays too
             continue
         (ROOT / p["slug"] / "index.html").write_text(project_page(p, projects[(i + 1) % len(projects)]))
-    (ROOT / "index.html").write_text(index_page(projects))
+    (ROOT / "index.html").write_text(home_page(projects))
+    (ROOT / "all.html").write_text(all_page(projects))
     nfrozen = sum(bool(p.get("frozen")) for p in projects)
-    print(f"built {len(projects) - nfrozen} project pages (+{nfrozen} frozen) + index.html")
+    print(f"built {len(projects) - nfrozen} project pages (+{nfrozen} frozen) + index.html + all.html")

@@ -16,7 +16,17 @@
       "evidence": "Power BI report page",
       "note": "635,459 flights, Aug 2025 to Jul 2026"
     },
-    "layout": "wide"
+    "layout": "wide",
+    "screen": {
+      "object": "pass",
+      "bg": "butter",
+      "stickers": [
+        "plane",
+        "cloud",
+        "spark"
+      ],
+      "alt": "A boarding pass printed with 75.5% on time across 635,459 flights."
+    }
   },
   {
     "slug": "retail-dbt",
@@ -36,7 +46,17 @@
       "note": "1.07M invoice lines"
     },
     "layout": "bleed",
-    "figure": "charts/01_monthly.jpg"
+    "figure": "charts/01_monthly.jpg",
+    "screen": {
+      "object": "rcpt",
+      "bg": "sky",
+      "stickers": [
+        "bag",
+        "flower",
+        "spark"
+      ],
+      "alt": "A till receipt reading 31 of 31 data tests passed and net sales of 18.18 million pounds."
+    }
   },
   {
     "slug": "us-retail-forecast",
@@ -55,7 +75,17 @@
       "evidence": "Forecast chart",
       "note": "rolling origin, 14 origins x 12 months"
     },
-    "layout": "left"
+    "layout": "left",
+    "screen": {
+      "object": "ruler",
+      "bg": "tomato",
+      "stickers": [
+        "vine",
+        "leaf",
+        "spark"
+      ],
+      "alt": "A ruler marking a backtest error of 1.81% on a 0 to 10% scale."
+    }
   },
   {
     "slug": "sec-10k-rag",
@@ -74,6 +104,16 @@
       "evidence": "Recorded demo",
       "note": "5 of 5 refusals when the answer is absent"
     },
-    "layout": "stack"
+    "layout": "stack",
+    "screen": {
+      "object": "book",
+      "bg": "lilac",
+      "stickers": [
+        "magnifier",
+        "sun",
+        "spark-ink"
+      ],
+      "alt": "A Form 10-K booklet reading 20 of 20 figures within 0.5% of XBRL."
+    }
   }
 ]

@@ -48,41 +48,45 @@ A project's record sleeve on the home page, and the "Next project" link on the c
 
 ## How the site is laid out (so it can be changed safely)
 
-* **`/projects/` (index.html) is the whole portfolio** (redesigned 2026-10-23, "colour studio", from the owner's references
-  manayerbamate.com and kprverse.com): `index.template.html` + `portfolio.css` + `portfolio.js` (no build step, no GSAP or
-  Three.js; Lenis for smooth scroll). One page of colour-blocked sections: hero (sky), kinds band (tomato), selected work
-  (cream, four flagship cards that stack as you scroll), about (lilac), experience (butter), capabilities (mint), the complete
-  catalogue (cream) and contact (tomato), then the footer. Palette and type live at the top of `portfolio.css`: sky
-  `#9BD3FF`, tomato `#FF7759`, butter `#FFD84D`, mint `#BDEBC8`, lilac `#CDC6FF`, cream `#FFF7EA`, forest ink `#0E3B2C`;
-  display type Unbounded (vendor/fonts, OFL), text Geist. Professional facts come from the résumé at ~/portfolio/resume.pdf;
-  do not add claims not in it.
-* **The toy blocks** are Blender renders (`tools/blocks.py`, Blender 4.5: `Blender -b --factory-startup -P tools/blocks.py --
-  <outdir> <frames> <formation>`; formations chart, letter_r, stairs, hi, icon_bars, icon_pipe, icon_trend, icon_ai), encoded to
-  WebP with transparency. The hero plays `assets/blocks/000-071.webp` on a canvas as the hero scrolls (a pile stacking into a
-  bar chart; the hero is a 210svh sticky stage); About, Experience and Contact each play a 30-frame sequence
-  (`assets/blocks-letter_r|stairs|hi/`) as they come up the screen; capability cards show `assets/icons/*.webp`. Without
-  JavaScript or under reduced motion the finished render shows as a still image. Sculptures lean toward a fine pointer.
-* `build.py` fills `{{FEATURED}}` from `featured.json` (four slugs with headline / problem / contribution / result / caption,
-  a `scale` {metric, unit, min, max, value, evidence, note} whose value the card counts up to, and an optional `figure`, a
-  more legible image from the project than its cover). Cards show the number, the result and the image; the problem and
-  approach fold into a disclosure. `{{CATALOG}}` is every project as a real link carrying `data-w`, its place in the cover
-  atlas; `portfolio.js` cuts each tile's thumbnail from the atlas as a duotone in the tile's colour (light screenshots are
-  measured and not inverted; true colours on hover) and the same atlas feeds the cursor previews.
+* **`/projects/` (index.html) is the home** (redesigned 2026-10-23 from the owner's pick of three concepts: B's cinematic hero +
+  C's printed objects + A's stickers, colour and one-project-per-screen carousel; "bright but grown-up"):
+  `index.template.html` + `portfolio.css` + `home.js` (no build step; Lenis for smooth scroll). Sections: hero, Selected Work
+  (four full-colour screens), a band linking the catalogue, about + experience (mint, experience on a notebook page), contact
+  (ink, a business card), footer. Palette at the top of `portfolio.css`: sky `#9BD3FF`, butter `#FFD84D`, tomato `#FF7759`,
+  lilac `#CDC6FF`, mint `#BDEBC8`, cream `#FFF7EA`, ink `#15193A`; one typeface, Archivo (variable width + weight,
+  vendor/fonts, OFL). Professional facts come from the résumé at ~/portfolio/resume.pdf; do not add claims not in it.
+* **The hero** is a Blender render (`tools/towers.py`, Blender 4.5: `Blender -b --factory-startup -P tools/towers.py --
+  <out_prefix> <w> <h> <frames>`): a daylight corridor of bar-chart towers in the palette ending at a butter tower. Stills
+  `assets/towers/still-d.webp` (2880x1800) and `still-m.webp` (1170x2532, used under 4:5 aspect); the fly-through is 48 frames
+  each in `assets/towers/d/` (2304x1440) and `m/` (864x1872), drawn on a canvas as the 280svh sticky hero scrolls. The RISHIT
+  wordmark parts, "Clean. Model. Explain." passes, and the flight ends in butter, the first project's colour.
+* **Selected Work** is filled by `build.py` from `featured.json` (four slugs; area / result / contribution / caption, a `scale`
+  {metric, unit, value, note} and a `screen` {object, bg, stickers, alt}). Each screen shows a printed object
+  (`assets/desk/solo-{pass,rcpt,ruler,book}.webp`, cut-outs from concept C's Blender desk, sources in `tools/desk/`), the number,
+  the first sentence of the result and links; on scroll the object lifts, the number counts up (percentages only; "31 of 31"
+  never counts) and the object flips to "What I did" (the contribution). Stickers are flat SVGs from `tools/stickers.py`
+  (`python3 tools/stickers.py` writes `assets/stickers/`). A fixed pager (prev / project name / next) follows the screens.
+  Without JavaScript or under reduced motion: stills, objects upright, "What I did" printed under each object.
+* **`all.html` is the complete catalogue** (`all.template.html` + `portfolio.css` + `catalog.js`), every project as a real link
+  carrying `data-w`, its place in the cover atlas. Old addresses on the home (`#projects`, `#<slug>`, `?q=` / `?kind=`) are
+  forwarded there by an inline script in the home's head, so case studies' "All projects" link (`../#projects`) and the archive
+  redirect keep working.
 * **The cover atlas.** `tools/wall-atlas.cjs` crops every `<slug>/cover.jpg` to 320x183 (sips) and packs them 66 per
   2048x2048 JPEG into `assets/wall/atlas-N.jpg` + `atlas.json`. **Run it after adding a project** (`NODE_PATH=$(npm root -g)
   node tools/wall-atlas.cjs`), then `python3 build.py`, or the new project has no thumbnail or preview.
-* **The catalogue** is static HTML (219 links) in a 4 / 3 / 2 column grid, so 12 always fills whole rows; `portfolio.js` adds
+* **The catalogue** is static HTML (219 links) in a 4 / 3 / 2 column grid, so 12 always fills whole rows; `catalog.js` adds
   search + kind filter (five kind tabs with a sliding pill, synchronised with the full select; also from `?q=` / `?kind=`),
   reveal of 12 at a time on "Show more projects", and a `<dialog>` addressable as `#<slug>` with explicit history ownership
   (a click pushes one entry with `state.pushed`; Previous / Next replace it; Close steps back only over an entry this page
-  pushed). The flagship "Enlarge" opens a `<dialog>` viewer (full screen and pannable on phones). `/projects/archive/`
-  redirects to `/projects/#projects`. Cross-document View Transitions carry a flagship's image and title into its case study.
+  pushed). `/projects/archive/` redirects to `/projects/#projects`, which forwards to `all.html`. The atlases load after the
+  page's load event so they never hold back its first paint.
 * **Checks:** `python3 -m http.server 8800 --bind 127.0.0.1 &` then `NODE_PATH=$(npm root -g) node tests/portfolio-check.cjs`
-  (no-JS content, every internal link on disk, page order, the blocks following scroll, sticky cards and counters, viewer,
-  contrast on every colour field, cover previews, catalogue search / tabs / filter / reveal / dialog / history, deep links,
-  reduced motion, overflow at five widths, console errors).
+  (both pages without JS, every internal link on disk, page order, the fly-through following scroll, each screen's number /
+  flip / pager, contrast on every colour field, cover previews, catalogue search / tabs / filter / reveal / dialog / history,
+  deep links and forwards, reduced motion, overflow at five widths on both pages, console errors). Lighthouse with gzip
+  (`npx serve@14.2.4`): home mobile 99 / 100 / 100 / 100, LCP 2.1 s; all.html mobile 99 / 100.
 * `theme.css` and `site.css` style the case studies (unchanged by the home redesign); `vendor/` holds Lenis, Geist, Fraunces
-  and Unbounded with their licences.
+  and Archivo with their licences.
 * Case-study pages use `site.css`. A project marked `"frozen": true` in its `project.json` is never rebuilt.
 
 Evidence folders under ~/projects-site-evidence/ (earlier designs): perf-2026-10-19 (the first unified page), refine-2026-10-19,

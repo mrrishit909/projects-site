@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All {{COUNT}} projects, Rishit Mathur</title>
+<meta name="description" content="Every project Rishit Mathur has built, each with a written case study: {{KINDS}} and more. Search by title, technology or kind.">
+<meta name="theme-color" content="#FFF7EA">
+<link rel="stylesheet" href="portfolio.css?v={{PORTFOLIO_CSS}}">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%239BD3FF'/%3E%3Crect x='5' y='17' width='6' height='10' rx='1' fill='%23FF7759'/%3E%3Crect x='13' y='6' width='6' height='21' rx='1' fill='%23FFD84D'/%3E%3Crect x='21' y='12' width='6' height='15' rx='1' fill='%2315193A'/%3E%3C/svg%3E">
+<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Archivo-latin.woff2" crossorigin>
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body class="catalogue-page" data-atlas='{{ATLAS}}'>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav is-solid" id="nav">
+  <a class="wordmark" href="./">Rishit Raj Mathur</a>
+  <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+  <nav class="nav-links" id="nav-links" aria-label="Site"><a href="./#work">Work</a><a href="all.html" aria-current="page">All projects</a><a href="./#about">About</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="./#contact">Contact</a></nav>
+</header>
+
+<main id="main">
+<section class="projects" id="projects" aria-labelledby="projects-title">
+  <header class="catalog-head">
+    <h1 id="projects-title" class="display">All {{COUNT}} projects</h1>
+    <p class="section-lede">Every project has a written case study. Search by title, technology or kind; the most common kinds are {{KINDS}}.</p>
+  </header>
+  <form class="toolbar" id="toolbar" role="search" onsubmit="return false">
+    <div class="field"><label class="field-label" for="search">Search</label><input class="control" id="search" type="search" placeholder="Title, technology or kind" autocomplete="off"><button class="clear" id="clear" type="button" aria-label="Clear search" hidden>×</button></div>
+    <div class="kinds" id="kinds" role="group" aria-label="Filter by kind"><span class="kinds-pill" aria-hidden="true"></span><button class="kind-tab" type="button" data-kind="" aria-pressed="true">All kinds</button>{{KINDS_TABS}}</div>
+    <div class="field field-select"><label class="visually-hidden" for="kind">Filter by kind</label><select class="control" id="kind"><option value="">Any kind (full list)</option>{{KINDS_OPTIONS}}</select></div>
+    <p class="count" id="count"><b id="count-n">{{COUNT}}</b> of {{COUNT}} projects</p><button class="reset-all" id="reset-all" type="button" hidden>Reset all filters</button>
+    <p class="visually-hidden" id="announce" aria-live="polite"></p>
+  </form>
+  <ol class="tiles" id="tiles">{{CATALOG}}</ol>
+  <p class="empty" id="empty" hidden>No projects match. <button type="button" id="reset">Reset all filters</button></p>
+  <p class="more"><button class="pill pill-ink" id="more" type="button" hidden>Show more projects</button><span class="more-count" id="shown"></span></p>
+</section>
+</main>
+<footer class="foot"><span>© 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="./">Home</a><a href="./#contact">Contact</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
+
+<dialog class="detail" id="detail" aria-labelledby="detail-title">
+  <div class="detail-body">
+    <div class="detail-head"><span id="detail-catalog"></span><button class="icon-btn" id="detail-close" type="button" aria-label="Close project">×</button></div>
+    <div class="detail-grid">
+      <figure class="detail-figure"><img id="detail-cover" alt="" width="1400" height="800"></figure>
+      <div class="detail-info"><h2 id="detail-title" tabindex="-1"></h2><p class="detail-tagline" id="detail-tagline"></p><ul class="tools" id="detail-tech" aria-label="Built with"></ul>
+        <p class="detail-actions"><a class="pill pill-ink" id="detail-open">Open the case study</a><a class="pill" id="detail-demo" hidden>Live demo</a><a class="pill" id="detail-repo" target="_blank" rel="noopener">Code on GitHub</a></p>
+        <p class="detail-nav"><button type="button" id="detail-prev">Previous</button><span id="detail-pos"></span><button type="button" id="detail-next">Next</button></p></div>
+    </div>
+  </div>
+</dialog>
+<div class="peek" id="peek" aria-hidden="true"></div>
+<script type="application/json" id="projects-data">/*DATA*/[]</script>
+<script src="catalog.js?v={{CATALOG_JS}}" defer></script>
+</body>
+</html>
