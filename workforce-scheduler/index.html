@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A scheduling system for hourly staff. For one invented store it forecast next week&#x27;s demand, built a legal schedule for 61 people that cost 14% less than a careful first-fit schedule while covering 99.9% of demand against 92.8%, and when two people called in sick on the busiest evening it closed the gap in under half a second by changing 3 of 45 assignments.">
 <title>Who Works When? A Week&#x27;s Schedule That Obeys Every Rule, and Survives Two Sick Calls · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Who Works When? A Week&#x27;s Schedule That Obeys Every Rule, and Survives Two Sick Calls</h1>
     <p class="tagline">A scheduling system for hourly staff. For one invented store it forecast next week&#x27;s demand, built a legal schedule for 61 people that cost 14% less than a careful first-fit schedule while covering 99.9% of demand against 92.8%, and when two people called in sick on the busiest evening it closed the gap in under half a second by changing 3 of 45 assignments.</p>
     <div class="meta cap"><span class="tech">Python &middot; FastAPI &middot; PostgreSQL 16 (row-level security) &middot; OR-Tools CP-SAT &middot; Constraint programming &middot; Demand forecasting &middot; Postgres job queue &middot; Docker Compose &middot; 34 tests</span><span class="links"><a href="demo/">Run the seven-step demo &#8599;</a><a href="https://github.com/mrrishit909/workforce-scheduler" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Who Works When? A Week&#x27;s Schedule That Obeys Every Rule, and Survives Two Sick Calls"></figure>
   <p class="note">Built from a written blueprint as one vertical slice, on a <b>synthetic retailer</b>: 50 stores, 5,000 workers and two years of sales are generated. The labor rules are a generic pack (rest hours, weekly maximum, breaks), <b>not any real jurisdiction's law</b>. The 14% saving is against a simple first-fit schedule that an experienced manager would beat, so read it as an upper estimate. Only stores of 61 to 69 workers were solved. Not built: time zones, timeclock data, a worker app, Kafka, Terraform, single sign-on.</p>

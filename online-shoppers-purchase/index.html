@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="12,330 shopping sessions from one online shop: new visitors buy almost twice as often as returning ones, even after adjusting for season and browsing, and a purchase model&#x27;s score falls from an AUC of 0.93 to 0.78 once its leakiest feature is removed.">
 <title>Who Buys Online? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Who Buys Online?</h1>
     <p class="tagline">12,330 shopping sessions from one online shop: new visitors buy almost twice as often as returning ones, even after adjusting for season and browsing, and a purchase model&#x27;s score falls from an AUC of 0.93 to 0.78 once its leakiest feature is removed.</p>
     <div class="meta cap"><span class="tech">Python &middot; scikit-learn &middot; Gradient boosting &middot; Logistic regression &middot; statsmodels &middot; UCI data (CC BY 4.0) &middot; Hand-fitted recompute</span><span class="links"><a href="https://github.com/mrrishit909/online-shoppers-purchase" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Who Buys Online?"></figure>
   <p class="note">One shop for one year; January and April are not in the data. PageValues is treated as leaky because of how it is defined (the average value of the pages visited before a transaction); the data cannot show how it was computed for each session. "New against returning" is an association, not proof that being new makes a visitor more likely to buy. The models use default settings, a fixed seed and no tuning.</p>

@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A browser quantum circuit lab where every step of a gate is drawn as the real state partway through it: Bloch spheres that shrink as qubits entangle, pairwise entanglement drawn from the state, shots with exact noise, and a mock 5-qubit backend that needs 10 SWAPs for Grover search and drops it from 94.5% to 39.9%. The simulator is Rust compiled to WebAssembly, 2.5–2.8× faster than TypeScript.">
 <title>What Does Entanglement Look Like Gate by Gate? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>What Does Entanglement Look Like Gate by Gate?</h1>
     <p class="tagline">A browser quantum circuit lab where every step of a gate is drawn as the real state partway through it: Bloch spheres that shrink as qubits entangle, pairwise entanglement drawn from the state, shots with exact noise, and a mock 5-qubit backend that needs 10 SWAPs for Grover search and drops it from 94.5% to 39.9%. The simulator is Rust compiled to WebAssembly, 2.5–2.8× faster than TypeScript.</p>
     <div class="meta cap"><span class="tech">TypeScript &middot; Rust → WebAssembly &middot; Next.js 16 (static export) &middot; React 19 &middot; three.js / React Three Fiber &middot; Web Worker &middot; Fastify &middot; PostgreSQL 16 (row-level security) &middot; OpenAPI 3.1 &middot; OpenTelemetry &middot; Docker Compose &middot; Playwright &middot; 41 unit + API tests, 7 e2e journeys</span><span class="links"><a href="demo/">Open the live lab &#8599;</a><a href="https://github.com/mrrishit909/quantum-circuit-lab" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of What Does Entanglement Look Like Gate by Gate?"></figure>
   <p class="note">Built from blueprint 09 of a written build book (Volume V, motion-first products) as one vertical slice. <b>Everything is simulated</b>: there is no quantum hardware; the backend Linden-5 is invented, with made-up calibration numbers, and runs on the same density-matrix simulator. Tenants and tokens are demo data. Not built: real hardware or provider SDKs, tensor networks, trajectory noise, mid-circuit measurement, real-time collaboration, lessons, billing, single sign-on, Kafka, Redis, object storage, Terraform and cloud deployment.</p>

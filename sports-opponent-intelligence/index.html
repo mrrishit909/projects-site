@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A scouting system for a simulated basketball league: it names 89 of 96 plays in a match from tracking alone, learns an opponent&#x27;s late-clock habits with honest intervals, simulates which defensive lineup to use, lets an analyst correct a play, and writes a report that says what it cannot tell you.">
 <title>What Does the Opponent Run When the Clock Runs Down? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>What Does the Opponent Run When the Clock Runs Down?</h1>
     <p class="tagline">A scouting system for a simulated basketball league: it names 89 of 96 plays in a match from tracking alone, learns an opponent&#x27;s late-clock habits with honest intervals, simulates which defensive lineup to use, lets an analyst correct a play, and writes a report that says what it cannot tell you.</p>
     <div class="meta cap"><span class="tech">Python &middot; FastAPI &middot; PostgreSQL 16 (row-level security) &middot; Geometric play rules &middot; Wilson intervals &middot; Shrinkage estimates &middot; Monte Carlo simulation &middot; Docker Compose &middot; 13 tests</span><span class="links"><a href="demo/">Run the seven-step demo &#8599;</a><a href="https://github.com/mrrishit909/sports-opponent-intelligence" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of What Does the Opponent Run When the Clock Runs Down?"></figure>
   <p class="note">Built from a written blueprint as one vertical slice. <b>The league is simulated</b>: its logs and the tracking record come from a generator I wrote, which is what lets every play name and tendency be checked against the truth. There is no video: tracks are drawn, not detected, and the play rules were written for the generator's signatures, so their accuracy is a statement about the generator. No language model is used. Not built: video, detection and tracking, learned play recognition, Kafka, Terraform, single sign-on.</p>

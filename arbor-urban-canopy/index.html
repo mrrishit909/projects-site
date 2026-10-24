@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="An urban canopy planner on a synthetic district: $107,912 plants all 157 fitting sites with the greedy optimiser, taking the share of walkway cells that feel 36 °C or hotter on a July afternoon from 60.7 to 44.8 percent by 2050 and canopy cover from 5.7 to 16.0 percent. The hottest block, a residential one with a vulnerability index of 0.90, starts at 70.7 percent hot. The intro grows a seed through the pavement into a district.">
 <title>Where Do the Next 157 Trees Go to Cool the Hottest Blocks the Most? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Where Do the Next 157 Trees Go to Cool the Hottest Blocks the Most?</h1>
     <p class="tagline">An urban canopy planner on a synthetic district: $107,912 plants all 157 fitting sites with the greedy optimiser, taking the share of walkway cells that feel 36 °C or hotter on a July afternoon from 60.7 to 44.8 percent by 2050 and canopy cover from 5.7 to 16.0 percent. The hottest block, a residential one with a vulnerability index of 0.90, starts at 70.7 percent hot. The intro grows a seed through the pavement into a district.</p>
     <div class="meta cap"><span class="tech">Blender 4.5 (Python, headless) &middot; glTF / GLB &middot; TypeScript &middot; Next.js 16 (static export) &middot; React Three Fiber / three.js &middot; GLSL ground, reveal and heat shaders &middot; GSAP &middot; Node (http) &middot; OpenAPI 3.1 &middot; Playwright &middot; 34 unit/API tests, 25 e2e tests</span><span class="links"><a href="demo/">Plant a tree &#8599;</a><a href="https://github.com/mrrishit909/arbor-urban-canopy" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Where Do the Next 157 Trees Go to Cool the Hottest Blocks the Most?"></figure>
   <p class="note">Built from blueprint 10 of a written build book (Advanced Engineering Build Book, Volume VII) as one vertical slice. <b>The district (Linden Quarter), its 88 trees, 265 planting sites, heat and costs are synthetic, and the growth, shade and heat models are simplified. Not for real planning decisions.</b> Species numbers are invented, handbook-order values; temperatures are a model, not a measurement. Not built: PostGIS and a Python optimisation library, MapLibre or deck.gl, real parcel, canopy or heat data, wind, soil volume and root conflicts, dragging the 3D camera, touch testing beyond a phone layout, and a measurement on a physical GPU. The twelve agent roles are committed as Claude Code configuration, but this repository was produced by one session playing them in sequence, not by parallel subagents.</p>

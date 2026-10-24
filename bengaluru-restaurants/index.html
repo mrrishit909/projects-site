@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Of 6,681 food places on OpenStreetMap in Bengaluru, density falls from 47 per km² within 2 km of the centre to 4 beyond 15 km; a place&#x27;s nearest neighbour is 60 m away against 165 m for random points (115 m allowing for 1 km density), and 45% say what they serve.">
 <title>Where Do Bengaluru&#x27;s Food Places Cluster? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Where Do Bengaluru&#x27;s Food Places Cluster?</h1>
     <p class="tagline">Of 6,681 food places on OpenStreetMap in Bengaluru, density falls from 47 per km² within 2 km of the centre to 4 beyond 15 km; a place&#x27;s nearest neighbour is 60 m away against 165 m for random points (115 m allowing for 1 km density), and 45% say what they serve.</p>
     <div class="meta cap"><span class="tech">Python &middot; OpenStreetMap &middot; Overpass API &middot; Nearest-neighbour test &middot; Ripley&#x27;s K &middot; Monte Carlo baselines &middot; ODbL licence &middot; Plain-Python ray casting &middot; Hand-written recompute</span><span class="links"><a href="https://github.com/mrrishit909/bengaluru-restaurants" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Where Do Bengaluru&#x27;s Food Places Cluster?"></figure>
   <p class="note">OpenStreetMap is volunteer-mapped and uneven: a missing place is not a missing restaurant, so density mixes mapping effort with eating out. There are no ratings or prices, and the scraped Zomato file of the original task is not used. Only seven amenity types as nodes and ways; chain counts are exact name repeats (a lower bound). Data: (c) OpenStreetMap contributors, ODbL 1.0, via the Overpass API, snapshot 2026-10-04; aggregates only.</p>

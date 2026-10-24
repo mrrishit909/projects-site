@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A crop intelligence system for a simulated farm: it finds a nine-zone disease patch from satellite images two weeks after it starts and never flags healthy ground, forecasts each field&#x27;s yield with a band, and under a 25% water restriction spreads the water so the farm keeps $8,000 more margin than cutting every field equally.">
 <title>Which Patch of the Field Is Sick, and Where Should a Quarter Less Water Go? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Which Patch of the Field Is Sick, and Where Should a Quarter Less Water Go?</h1>
     <p class="tagline">A crop intelligence system for a simulated farm: it finds a nine-zone disease patch from satellite images two weeks after it starts and never flags healthy ground, forecasts each field&#x27;s yield with a band, and under a 25% water restriction spreads the water so the farm keeps $8,000 more margin than cutting every field equally.</p>
     <div class="meta cap"><span class="tech">Python &middot; FastAPI &middot; PostgreSQL 16 (row-level security) &middot; scikit-learn gradient boosting &middot; Soil-water balance model &middot; NDVI anomaly detection &middot; Search over sampled weather &middot; Docker Compose &middot; 14 tests</span><span class="links"><a href="demo/">Run the eight-step demo &#8599;</a><a href="https://github.com/mrrishit909/farm-crop-intelligence" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Which Patch of the Field Is Sick, and Where Should a Quarter Less Water Go?"></figure>
   <p class="note">Built from a written blueprint as one vertical slice. <b>The farm is simulated</b>: its weather, images, probes and yields come from a generator I wrote, which is what lets every answer be checked against the truth. The soil-water model used for planning is the same one that generated the data, so the planning result is a best case. Prices and the water cost are my assumptions. No language model is used. Not built: real satellite or drone feeds, segmentation models, nutrient plans, map tiles, Kafka, Terraform, single sign-on.</p>

@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Of 703,300 Hacker News stories in 27 sampled months, 5.0% reach 100+ points (a proxy for the front page) and the top 1% hold 30% of all points. Known at submission, little separates them: AUC 0.63 on later months; the comment count would give 0.99, but only afterwards.">
 <title>What Makes a Hacker News Story Reach 100 Points? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>What Makes a Hacker News Story Reach 100 Points?</h1>
     <p class="tagline">Of 703,300 Hacker News stories in 27 sampled months, 5.0% reach 100+ points (a proxy for the front page) and the top 1% hold 30% of all points. Known at submission, little separates them: AUC 0.63 on later months; the comment count would give 0.99, but only afterwards.</p>
     <div class="meta cap"><span class="tech">Python &middot; pandas &middot; scikit-learn &middot; Logistic regression (Newton, ridge) &middot; Gradient-boosted trees &middot; Time-ordered split &middot; HN Search API by Algolia (no data licence stated) &middot; Live points probe &middot; Hand-written recompute</span><span class="links"><a href="https://github.com/mrrishit909/hn-front-page" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of What Makes a Hacker News Story Reach 100 Points?"></figure>
   <p class="note">'Front page' is a points threshold (100+): the API has no rank. Points are a snapshot of 2026-10-04 (late September 2026 stories are four days old); deleted and flagged stories are missing; three months a year are sampled; titles are the current, moderator-edited ones. Associations, not advice. Source: HN Search API (Algolia), public, no key; Y Combinator's terms forbid scraping the website, so only the API is read, and only aggregates are published (no titles, links or authors); no data licence is stated.</p>

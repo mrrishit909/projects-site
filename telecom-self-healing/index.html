@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Self-healing for an invented metro radio network: a microwave backhaul degrades and a bad change breaks handovers, 403 alarms become 11 incidents with the degraded link and the changed cell ranked first, the forecast says the link will hit 113% at the evening peak, the digital twin finds the one reroute inside the policy envelope, a second person approves it, and the link peaks at 61% where the twin said 60%.">
 <title>Which Link Is Behind Four Hundred Alarms? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Which Link Is Behind Four Hundred Alarms?</h1>
     <p class="tagline">Self-healing for an invented metro radio network: a microwave backhaul degrades and a bad change breaks handovers, 403 alarms become 11 incidents with the degraded link and the changed cell ranked first, the forecast says the link will hit 113% at the evening peak, the digital twin finds the one reroute inside the policy envelope, a second person approves it, and the link peaks at 61% where the twin said 60%.</p>
     <div class="meta cap"><span class="tech">Python &middot; FastAPI &middot; PostgreSQL 16 (row-level security) &middot; Topology-based alarm correlation &middot; Multivariate anomaly detection &middot; Traffic forecasting &middot; Digital twin with a constrained optimiser &middot; NumPy and SciPy &middot; Metro RAN simulator &middot; Docker Compose &middot; 13 tests</span><span class="links"><a href="demo/">Run the seven-step demo &#8599;</a><a href="https://github.com/mrrishit909/telecom-self-healing" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Which Link Is Behind Four Hundred Alarms?"></figure>
   <p class="note">Built from a written blueprint as one vertical slice. <b>The network is simulated</b>: sites, cells, links, traffic, counters and alarms come from a generator in the repository, and the demo's faults are injected by telling the generator about them, which is what lets every incident and ranking be checked against the truth. The digital twin is the service's own model; the generator then shows what really happened. No operator data. Not built: a temporal graph neural network, bounded automation, vendor connectors, Kafka, ClickHouse, Neo4j, Kubernetes, single sign-on.</p>

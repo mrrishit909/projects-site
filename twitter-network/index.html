@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="On a crawl of 81,306 Twitter accounts published in 2012, followers, PageRank and betweenness pick top-100 lists that share only 60, 33 and 30 accounts, the most followed account is 10,848th by betweenness, and removing the 8,000 highest-betweenness accounts leaves 84% of the rest in one weak component, against 99% at random.">
 <title>Who Are the Influencers in a Twitter Network? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Who Are the Influencers in a Twitter Network?</h1>
     <p class="tagline">On a crawl of 81,306 Twitter accounts published in 2012, followers, PageRank and betweenness pick top-100 lists that share only 60, 33 and 30 accounts, the most followed account is 10,848th by betweenness, and removing the 8,000 highest-betweenness accounts leaves 84% of the rest in one weak component, against 99% at random.</p>
     <div class="meta cap"><span class="tech">Python &middot; NetworkX &middot; PageRank &middot; Betweenness centrality &middot; Louvain communities &middot; Percolation &middot; SNAP Twitter ego networks (no licence stated) &middot; Hand-written recompute</span><span class="links"><a href="https://github.com/mrrishit909/twitter-network" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Who Are the Influencers in a Twitter Network?"></figure>
   <p class="note">A sample of Twitter as it was around 2012, not Twitter: "followers" are followers inside the sample, most accounts' follows are only partly recorded, and the 973 accounts the crawl started from are over-represented among the top accounts. None of the three measures is influence (there is no tweet or engagement data), betweenness comes from 120 pivot accounts and is rough, and Louvain is one algorithm whose communities partly follow the ego networks. SNAP states no licence and the node ids are Twitter's own, so nothing from the data is published or committed, no account is named, and only counts and summaries appear. Source: McAuley and Leskovec (2012), Stanford SNAP.</p>

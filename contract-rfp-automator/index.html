@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Upload a contract; the service cuts it into its own clauses, scores each against a company playbook (Low / Medium / High), explains why and drafts a replacement with a side-by-side diff. A real 52-page SEC agreement took 32 seconds and $0.18. Nobody checked the answers: that is the open question.">
 <title>Can an LLM Review a 52-Page Contract? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Can an LLM Review a 52-Page Contract?</h1>
     <p class="tagline">Upload a contract; the service cuts it into its own clauses, scores each against a company playbook (Low / Medium / High), explains why and drafts a replacement with a side-by-side diff. A real 52-page SEC agreement took 32 seconds and $0.18. Nobody checked the answers: that is the open question.</p>
     <div class="meta cap"><span class="tech">Python + FastAPI (async) &middot; OpenAI structured outputs &middot; Qdrant + BM25 hybrid search &middot; pdfplumber, python-docx, Tesseract OCR &middot; React three-pane workspace &middot; CUAD contract (CC BY 4.0) &middot; 16 tests, 97% coverage</span><span class="links"><a href="demo/">Open the workspace &#8599;</a><a href="https://github.com/mrrishit909/contract-rfp-automator" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Can an LLM Review a 52-Page Contract?"></figure>
   <p class="note"><b>Not legal advice, and not validated.</b> The 74 clause reviews in the demo were produced by gpt-5.4-mini against an <b>invented example playbook</b>; no lawyer checked them and there is no labelled test set behind them. A read-through found one wrong statement and one issue counted eight times (see Results). The contract is a public SEC exhibit distributed in CUAD v1 (The Atticus Project, CC BY 4.0). Contract text is sent to the OpenAI API.</p>

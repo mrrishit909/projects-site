@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Fisher&#x27;s 150 iris flowers: setosa is set apart by one cut in petal length, petal width alone names 95.2% of all three species, and models that use all four measurements add at most 2.8 points, a gain 150 flowers cannot tell from chance.">
 <title>Can Four Measurements Name an Iris? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Can Four Measurements Name an Iris?</h1>
     <p class="tagline">Fisher&#x27;s 150 iris flowers: setosa is set apart by one cut in petal length, petal width alone names 95.2% of all three species, and models that use all four measurements add at most 2.8 points, a gain 150 flowers cannot tell from chance.</p>
     <div class="meta cap"><span class="tech">Python &middot; scikit-learn &middot; Linear discriminant analysis &middot; Cross-validation &middot; Learning curves &middot; UCI data (CC BY 4.0) &middot; Hand-fitted recompute</span><span class="links"><a href="https://github.com/mrrishit909/iris-fisher" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Can Four Measurements Name an Iris?"></figure>
   <p class="note">150 flowers of three species measured to 0.1 cm: the results say nothing about other irises. The best one-measurement rule was picked on the same folds it is compared on, which flatters it slightly, and intervals near 100% run past it and are cut there. LDA's 2.8-point lead is not distinguishable from chance (p = 0.097). "Hard" flowers (wrong in at least 20 of 50 out-of-fold predictions) are a cut-off of mine.</p>

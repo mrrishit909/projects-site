@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A reconciliation engine that pairs payment-processor payouts with bank deposits in four passes, books every movement in a double-entry Postgres ledger, and sends what it will not decide to a review queue. On a planted test month it matched 34 of 38 and flagged all 8 problems.">
 <title>Can Software Match Every Payout to the Bank? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Can Software Match Every Payout to the Bank?</h1>
     <p class="tagline">A reconciliation engine that pairs payment-processor payouts with bank deposits in four passes, books every movement in a double-entry Postgres ledger, and sends what it will not decide to a review queue. On a planted test month it matched 34 of 38 and flagged all 8 problems.</p>
     <div class="meta cap"><span class="tech">Python (typed, mypy strict) &middot; PostgreSQL &middot; FastAPI &middot; Double-entry ledger &middot; SERIALIZABLE transactions &middot; React + TanStack Table &middot; Docker Compose &middot; 55 tests, 98% coverage</span><span class="links"><a href="demo/">Open the control center &#8599;</a><a href="https://github.com/mrrishit909/recon-engine" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Can Software Match Every Payout to the Bank?"></figure>
   <p class="note">Built from a written blueprint as an MVP, on <b>synthetic data</b>: the month of payments is invented, with ten irregularities planted in it, so the numbers show that the engine finds what was planted, not how it does on real books. The Stripe, Plaid and QuickBooks connectors follow the documented API shapes and are tested against fake servers; they have never called the live services. One shared API token, no user accounts.</p>

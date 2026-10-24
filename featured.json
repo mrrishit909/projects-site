@@ -20,6 +20,11 @@
     "screen": {
       "object": "pass",
       "alt": "A boarding pass printed with 75.5% on time across 635,459 flights."
+    },
+    "sheet": {
+      "src": "report.png",
+      "alt": "The Power BI report page: KPI cards, on-time rate by month and hour, airlines ranked, delay causes.",
+      "dark": false
     }
   },
   {
@@ -44,6 +49,11 @@
     "screen": {
       "object": "rcpt",
       "alt": "A till receipt reading 31 of 31 data tests passed and net sales of 18.18 million pounds."
+    },
+    "sheet": {
+      "src": "charts/01_monthly.jpg",
+      "alt": "Monthly product sales from the pipeline: net plus cancelled equals gross.",
+      "dark": true
     }
   },
   {
@@ -67,6 +77,11 @@
     "screen": {
       "object": "ruler",
       "alt": "A ruler marking a backtest error of 1.81% on a 0 to 10% scale."
+    },
+    "sheet": {
+      "src": "charts/05_forecast.png",
+      "alt": "The next twelve months: actual sales, the ETS + SARIMA forecast and the calibrated 80% range.",
+      "dark": true
     }
   },
   {
@@ -90,6 +105,11 @@
     "screen": {
       "object": "book",
       "alt": "A Form 10-K booklet reading 20 of 20 figures within 0.5% of XBRL."
+    },
+    "sheet": {
+      "src": "cover.jpg",
+      "alt": "The recorded demo: a question, the answer from the filings and the cited 10-K passage.",
+      "dark": true
     }
   }
 ]

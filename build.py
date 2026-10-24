@@ -135,7 +135,7 @@ def contrast(a, b):
 
 
 def low_contrast_text():
-    css = (ROOT / "theme.css").read_text()
+    css = (ROOT / "theme.css").read_text() + (ROOT / "site.css").read_text()   # site.css defines its own tokens now
     tokens = dict(re.findall(r"--([\w-]+):\s*(#[0-9a-fA-F]{6})\b", css))
     aliases = dict(re.findall(r"--([\w-]+):\s*var\(--([\w-]+)\)", css))     # semantic -> primitive chains
 
@@ -149,7 +149,7 @@ def low_contrast_text():
                 continue
             for tok in re.findall(r"(?<![-\w])color:\s*var\(--([\w-]+)\)", decls):
                 hexv = resolve(tok)
-                if hexv and tok not in ("paper", "s-canvas", "s-text-inverse", "p-color-white") and contrast(hexv, paper) < 4.5:
+                if hexv and tok not in ("paper", "sheet", "s-canvas", "s-text-inverse", "p-color-white") and contrast(hexv, paper) < 4.5:
                     bad.append(f"{name}: {sel.strip()[-60:]} uses --{tok} ({contrast(hexv, paper):.2f}:1)")
     return bad
 
@@ -167,11 +167,10 @@ def page(title, desc, body):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{escape(desc)}">
 <title>{escape(title)}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v={asset_version("theme.css")}">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
 <link rel="stylesheet" href="../site.css?v={asset_version("site.css")}">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v={asset_version("case.js")}" defer></script>
 </head>
 <body>
@@ -179,6 +178,11 @@ def page(title, desc, body):
 </body>
 </html>
 """
+
+
+def featured():
+    """featured.json by slug: the four flagships whose printed object opens their case study."""
+    return {f["slug"]: f for f in json.loads((ROOT / "featured.json").read_text())}
 
 
 def project_page(p, nxt):
@@ -192,6 +196,14 @@ def project_page(p, nxt):
     cover = (f'<figure class="cover"><img src="{escape(p["cover"])}" alt="Screenshot of {escape(p["title"])}"></figure>'
              if p.get("cover") else "")
     note = f'<p class="note">{p["note"]}</p>' if p.get("note") else ""
+    # a flagship's case study opens with the printed object that carried it on the home (it travels in with a View Transition)
+    feat = featured().get(p["slug"])
+    obj = ""
+    if feat:
+        o = feat["screen"]["object"]
+        w, h = webp_size(ROOT / "assets" / "desk" / f"solo-{o}.webp")
+        obj = f'<img class="object object-{o}" src="../assets/desk/solo-{o}.webp" alt="{escape(feat["screen"]["alt"], quote=True)}" width="{w}" height="{h}" fetchpriority="high">'
+    home = f"../#feature-{p['slug']}" if feat else "../"
     # the next project's motion tile, played by case.js while the link is on screen
     peek = ("".join([f'<video muted loop playsinline preload="none" aria-hidden="true" poster="../{nxt["slug"]}/{escape(nxt["cover"])}">' if nxt.get("cover") else
                      '<video muted loop playsinline preload="none" aria-hidden="true">'] +
@@ -203,13 +215,14 @@ def project_page(p, nxt):
     ids = ["problem", "built", "how", "results", "next-steps"]
     secs = "".join(f'<section class="s" id="{ids[n - 1]}"><h2 class="cap">{n:02d} &mdash; {escape(t)}</h2><div class="body">{b}</div></section>'
                    for n, (t, b) in enumerate(sections, 1))
-    body = f"""<header class="bar cap"><a href="{PORTFOLIO}">Rishit Mathur</a><nav><a href="../">Portfolio</a><a href="../#projects">All projects</a><a href="{PORTFOLIO}resume.pdf">Resume</a></nav></header>
+    body = f"""<header class="bar cap"><a href="{PORTFOLIO}">Rishit Mathur</a><nav><a href="{home}">Portfolio</a><a href="../#projects">All projects</a><a href="{PORTFOLIO}resume.pdf">Resume</a></nav></header>
 <main class="wrap">
-  <div class="hero">
+  <div class="hero{" has-object" if obj else ""}">
     <p class="cap dim">{escape(p["kind"])} &middot; {escape(p["date"])}</p>
     <h1>{escape(p["title"])}</h1>
     <p class="tagline">{escape(p["tagline"])}</p>
     <div class="meta cap"><span class="tech">{" &middot; ".join(escape(t) for t in p["tech"])}</span><span class="links">{"".join(links)}</span></div>
+    {obj}
   </div>
   {cover}
   {note}
@@ -246,16 +259,24 @@ def home_page(projects):
                  f'<a class="pill" href="{escape(p["repo"])}" target="_blank" rel="noopener">Code</a>']
         if p.get("demo"):
             links.append(f'<a class="pill" href="{escape(demo_url(p))}">{escape(p.get("demo_label", "Demo"))}</a>')
+        # the screen is a camera position on the same desk (tools/desk/world.py), the object itself laid down as HTML so it
+        # can lift and flip; the project's printed artefact (its chart or report) lies under it as a second sheet
+        o = scr["object"]
+        bg = (f'<picture class="scene-bg" aria-hidden="true"><source media="(max-aspect-ratio: 4/5)" srcset="assets/world/m/shot-{o}.webp">'
+              f'<img src="assets/world/d/shot-{o}.webp" alt="" width="2560" height="1600" loading="lazy" decoding="async"></picture>')
+        sh = f.get("sheet")
+        sheet = (f'<span class="sheet{" is-dark" if sh.get("dark") else ""}"><img src="{p["slug"]}/{escape(sh["src"])}" alt="{escape(sh["alt"], quote=True)}" loading="lazy" decoding="async"></span>'
+                 if sh else "")
         feats.append(
-            f'<article class="screen screen-{scr["object"]}" id="feature-{p["slug"]}" data-slug="{p["slug"]}" data-title="{escape(p["title"], quote=True)}" '
-            f'data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" style="--bg: var(--t-{scr["object"]})" aria-labelledby="t-{p["slug"]}">'
-            f'<div class="screen-stage">'
-            f'<div class="screen-copy"><p class="screen-kind">{i} of 4, {escape(f["area"])}</p>'
+            f'<article class="screen screen-{o}" id="feature-{p["slug"]}" data-slug="{p["slug"]}" data-title="{escape(p["title"], quote=True)}" '
+            f'data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" aria-labelledby="t-{p["slug"]}">'
+            f'<div class="screen-stage">{bg}'
+            f'<div class="screen-copy paper"><p class="stamp">{i:02d} / 04</p><p class="screen-kind">{escape(f["area"])}</p>'
             f'<h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3>'
             f'<p class="num"><span class="num-v">{big}</span><span class="num-u">{escape(unit)}</span></p>'
             f'<p class="num-label">{escape(sc["metric"])}, {escape(sc["note"])}</p>'
             f'<p class="screen-line">{line}</p><p class="screen-links">{"".join(links)}</p></div>'
-            f'<div class="table"><div class="card card-{scr["object"]}">'
+            f'<div class="table">{sheet}<div class="card card-{o}">'
             f'<img class="front" src="{obj}" alt="{escape(scr["alt"], quote=True)}" width="{w}" height="{h}" loading="lazy" decoding="async">'
             f'<div class="back"><p class="back-label">What I did</p><p>{f["contribution"]}</p>'
             f'<p class="back-label">Built with</p><ul class="back-tools">{"".join(f"<li>{escape(t)}</li>" for t in p["tech"])}</ul></div></div></div>'

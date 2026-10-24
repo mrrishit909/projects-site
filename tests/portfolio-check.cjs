@@ -80,6 +80,11 @@ const contrastOf = sels => {
 
   // 2b. the intro: plays on a first load, faster on a repeat in the same session, never with a hash or under reduced motion
   p = await page({}, null, BASE, 0);
+  // the first frame is the camera close on the boarding pass (the wordmark still hidden); the camera lifts off, then the
+  // wordmark rises as the flight lands (html.intro-land)
+  const firstFrame = await p.evaluate(() => [document.documentElement.classList.contains("intro"), +getComputedStyle(document.querySelector(".wordmark-xl span")).opacity, getComputedStyle(document.querySelector(".hero-close")).display, document.getElementById("intro-skip").offsetParent !== null, +getComputedStyle(document.querySelector(".nav")).opacity]);
+  assert(firstFrame[0] && firstFrame[1] === 0 && firstFrame[2] !== "none" && firstFrame[3] && firstFrame[4] === 0, `the intro opens on the boarding pass close-up (wordmark and nav hidden) with a visible Skip button (${firstFrame})`);
+  await p.waitForFunction(() => document.documentElement.classList.contains("intro-land"), null, { timeout: 6000 });
   const firstIntro = await p.evaluate(() => [document.documentElement.classList.contains("intro"), document.documentElement.classList.contains("intro-again"), document.getAnimations().some(a => a.animationName === "rise")]);
   await p.reload({ waitUntil: "networkidle" });
   const againIntro = await p.evaluate(() => document.documentElement.classList.contains("intro-again"));
@@ -97,7 +102,8 @@ const contrastOf = sels => {
   assert(await p.evaluate(() => document.activeElement.className === "skip"), "first Tab lands on the skip link");
   await p.keyboard.press("Tab"); await p.keyboard.press("Tab");
   assert(await p.evaluate(() => document.activeElement.textContent === "Work"), "nav is reachable by keyboard");
-  await p.waitForFunction(() => document.documentElement.classList.contains("hero-live"), null, { timeout: 8000 });
+  await p.waitForFunction(() => document.documentElement.classList.contains("hero-live") && (!document.documentElement.classList.contains("intro") || document.documentElement.classList.contains("intro-done")), null, { timeout: 12000 });
+  await p.waitForTimeout(1000);   // the Tab above ended the intro early; let the wordmark finish rising
   const heroAt = async f => { await p.evaluate(v => { const h = document.querySelector(".hero"); scrollTo(0, v * (h.offsetHeight - innerHeight)); }, f); await p.waitForTimeout(700); return p.evaluate(() => [+getComputedStyle(document.querySelector(".hero")).getPropertyValue("--p"), +getComputedStyle(document.querySelector(".wordmark-xl span")).opacity, +getComputedStyle(document.querySelector(".hero-fade")).opacity]); };
   const h0 = await heroAt(0), hMid = await heroAt(0.5), hEnd = await heroAt(1);
   assert(h0[0] === 0 && h0[1] === 1 && hMid[0] > 0.3 && hMid[0] < 0.7 && hMid[1] === 0 && hEnd[0] === 1 && hEnd[2] >= 0.99, `the fly-through follows the hero's scroll: wordmark parts, the flight ends in the tint of the first project (p ${h0[0]} > ${hMid[0]} > ${hEnd[0]})`);
@@ -117,7 +123,7 @@ const contrastOf = sels => {
   await jump(p, "#about"); await p.waitForTimeout(600);
   assert(await p.evaluate(() => !document.getElementById("work-pager").classList.contains("is-on")), "the pager leaves with the work section");
   assert(await p.evaluate(async () => { const btn = document.getElementById("copy-mail"); if (btn.hidden) return false; btn.click(); await new Promise(r => setTimeout(r, 500)); return btn.textContent.trim() === "Copied" && document.getElementById("copy-status").textContent.length > 0; }), "Copy e-mail copies and confirms");
-  const homeContrast = await p.evaluate(contrastOf, [".hero-tag", ".screen-kind", ".num-label", ".screen-line", ".screen-book .screen-line", ".screen-ruler .screen-line", ".screen-rcpt .num-label", ".back-label", ".card-book .back p:nth-of-type(2)", ".more-band .display", ".about-lead", ".about-facts dt", ".about-facts dd", ".timeline .tl-when", ".timeline p:last-child", ".contact-lede", ".biz-role", ".biz-mail", ".foot", ".pager-name", ".nav-links a", ".num-v", ".card-ruler .back p:nth-of-type(2)", ".card-rcpt .back-tools li"]);
+  const homeContrast = await p.evaluate(contrastOf, [".hero-tag", ".screen-kind", ".num-label", ".screen-line", ".screen-book .screen-line", ".screen-ruler .screen-line", ".screen-rcpt .num-label", ".back-label", ".card-book .back p:nth-of-type(2)", ".more-count", ".more-line", ".about-lead", ".about-facts dt", ".about-facts dd", ".timeline .tl-when", ".timeline p:last-child", ".contact-lede", ".biz-role", ".biz-mail", ".foot", ".pager-name", ".nav-links a", ".num-v", ".card-ruler .back p:nth-of-type(2)", ".card-rcpt .back-tools li"]);
   assert(homeContrast.every(([, v]) => +v >= 4.5), "home text clears 4.5:1 on its own colour field: " + homeContrast.map(x => x.join(" ")).join(", "));
   await p.close();
 
@@ -212,7 +218,7 @@ const contrastOf = sels => {
   await p.close();
   p = await page({}, null, BASE + featured[0].slug + "/", 0);
   const nav = await p.$$eval("header.bar nav a", as => as.map(a => a.getAttribute("href")));
-  assert(nav.includes("../") && nav.includes("../#projects"), "case studies link back to the portfolio and (through the forward) the catalogue");
+  assert(nav.includes("../#feature-" + featured[0].slug) && nav.includes("../#projects"), "a flagship's case study links back to its own card on the portfolio and (through the forward) the catalogue");
   await p.close();
 
   // 6. reduced motion: no smooth scroll, no running animations, the finished stills, objects upright with what I did under them

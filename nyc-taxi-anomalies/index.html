@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="On 1,339 test days of NYC taxi pickups, a seasonal z-score at z = 3 finds 96% of 48 labelled days but cries wolf 3.0 days a week (F1 0.14). A threshold set on 2022 (z = 8) cuts that to 0.4 and lifts F1 to 0.44; ignoring the weekly cycle scores 0.02.">
 <title>Can Simple Detectors Find NYC&#x27;s Unusual Taxi Days? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Can Simple Detectors Find NYC&#x27;s Unusual Taxi Days?</h1>
     <p class="tagline">On 1,339 test days of NYC taxi pickups, a seasonal z-score at z = 3 finds 96% of 48 labelled days but cries wolf 3.0 days a week (F1 0.14). A threshold set on 2022 (z = 8) cuts that to 0.4 and lifts F1 to 0.44; ignoring the weekly cycle scores 0.02.</p>
     <div class="meta cap"><span class="tech">Python &middot; pandas &middot; scikit-learn &middot; Isolation forest &middot; Seasonal z-score and IQR &middot; NAB-style scoring &middot; NYC TLC trip records (no licence stated) &middot; NOAA GHCN-Daily &middot; Hand-written recompute</span><span class="links"><a href="https://github.com/mrrishit909/nyc-taxi-anomalies" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Can Simple Detectors Find NYC&#x27;s Unusual Taxi Days?"></figure>
   <p class="note">Yellow taxis only, whole city as one series. The labels (federal holidays, the marathon, snow of 4 in or more and rain of 2.5 in or more at Central Park) leave out observed holidays, Christmas Eve, outages and the 2025 congestion fee, so true precision is higher than shown; only 9 disruptions fall in the test period. The seasonal baseline is a causal stand-in for STL. Sources: NYC Taxi and Limousine Commission trip records (its page states no licence, only an accuracy disclaimer) and NOAA GHCN-Daily (no licence beyond citation).</p>

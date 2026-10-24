@@ -21,10 +21,16 @@
 (function () { var h = location.hash.slice(1), q = location.search;
   if (/[?&](q|kind)=/.test(q) || (h && !/^(top|main|work|about|experience|contact|feature-[\w-]+)$/.test(h))) location.replace("all.html" + q + (h && h !== "projects" ? "#" + h : "")); })();
 document.documentElement.classList.add("js");
-// the intro plays on a first load that starts at the top; again in this session it plays faster
+// the intro (the camera lifts off the boarding pass onto the whole desk) plays on a first load that starts at the top;
+// again in this session it plays faster; never with a hash, under reduced motion, or coming back from a case study
 if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  document.documentElement.classList.add("intro");
-  try { if (sessionStorage.getItem("intro")) document.documentElement.classList.add("intro-again"); sessionStorage.setItem("intro", "1"); } catch (_) {}
+  var back = false; try { back = !!sessionStorage.getItem("vt"); } catch (_) {}
+  if (!back) {
+    document.documentElement.classList.add("intro");
+    try { if (sessionStorage.getItem("intro")) document.documentElement.classList.add("intro-again"); sessionStorage.setItem("intro", "1"); } catch (_) {}
+    var l = document.createElement("link"); l.rel = "preload"; l.as = "image"; l.setAttribute("fetchpriority", "high");
+    l.href = matchMedia("(max-aspect-ratio: 4/5)").matches ? "assets/world/m/print-00.webp" : "assets/world/d/print-00.webp"; document.head.appendChild(l);
+  }
 }
 </script>
 </head>
@@ -44,6 +50,10 @@ if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
       <source media="(max-aspect-ratio: 4/5)" srcset="assets/flight/still-m.webp" width="1080" height="2340">
       <img class="hero-still" src="assets/flight/still-d.webp" alt="" width="2560" height="1600" fetchpriority="high">
     </picture>
+    <picture class="hero-media hero-close" aria-hidden="true">
+      <source media="(max-aspect-ratio: 4/5)" srcset="assets/world/m/print-00.webp" width="1080" height="2340">
+      <img src="assets/world/d/print-00.webp" alt="" width="2560" height="1600" loading="lazy">
+    </picture>
     <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
     <div class="hero-veil" aria-hidden="true"></div>
     <div class="hero-fade" aria-hidden="true"></div>
@@ -51,6 +61,7 @@ if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
     <h1 id="hero-name" class="wordmark-xl" aria-label="Rishit Mathur, data analyst"><span>R</span><span>I</span><span>S</span><span>H</span><span>I</span><span>T</span></h1>
     <p class="hero-tag" aria-hidden="true">Data analyst<br>Tampa, Florida</p>
     <p class="hero-scroll" aria-hidden="true">Scroll</p>
+    <button class="intro-skip" id="intro-skip" type="button">Skip intro</button>
     <p class="beat" aria-hidden="true"><span>Clean.</span><span>Model.</span><span>Explain.</span></p>
   </div>
 </section>
@@ -65,13 +76,13 @@ if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
   </nav>
 </section>
 
-<section class="more-band" aria-labelledby="more-title">
-  <h2 id="more-title" class="display">{{COUNT}} projects, each with a written case study.</h2>
-  <p><a class="pill pill-ink" href="all.html">Browse all {{COUNT}} projects</a></p>
-</section>
-
 <section class="about" id="about" aria-labelledby="about-title">
-  <div class="about-main">
+  <picture class="scene-bg" aria-hidden="true">
+    <source media="(max-aspect-ratio: 4/5)" srcset="assets/world/m/shot-about.webp">
+    <img src="assets/world/d/shot-about.webp" alt="" width="2560" height="1600" loading="lazy" decoding="async">
+  </picture>
+  <div class="about-main paper">
+    <p class="stamp">About</p>
     <h2 id="about-title" class="display">Analyst first, builder second.</h2>
     <p class="about-lead">A data analyst in Tampa with hands-on SQL and Python, trained at USF's Muma College of Business.</p>
     <dl class="about-facts">
@@ -90,10 +101,21 @@ if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
       <li><p class="tl-when">Jan to Apr 2025</p><p class="tl-role">Sales forecasting course project</p><p>100K+ records cleaned and merged in Python and R.</p></li>
     </ol>
   </div>
+  <a class="more-card paper" href="all.html" aria-labelledby="more-title">
+    <p class="stamp">Index</p>
+    <h2 id="more-title" class="more-count"><span class="more-n">{{COUNT}}</span> case studies</h2>
+    <p class="more-line">Every project on this desk has a written case study: the problem, what was built, the checks, the limits.</p>
+    <p class="more-cta">Browse all {{COUNT}} &rarr;</p>
+  </a>
 </section>
 
 <section class="contact" id="contact" aria-labelledby="contact-title">
-  <div class="contact-copy">
+  <picture class="scene-bg" aria-hidden="true">
+    <source media="(max-aspect-ratio: 4/5)" srcset="assets/world/m/shot-contact.webp">
+    <img src="assets/world/d/shot-contact.webp" alt="" width="2560" height="1600" loading="lazy" decoding="async">
+  </picture>
+  <div class="contact-copy paper">
+    <p class="stamp">Contact</p>
     <h2 id="contact-title" class="display">Let's talk.</h2>
     <p class="contact-lede">Open to entry-level data and business analyst roles, US-wide and remote.</p>
   </div>
@@ -108,7 +130,7 @@ if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
   </div>
 </section>
 </main>
-<footer class="foot"><span>© 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="all.html">All projects</a><a href="#about">About</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
+<footer class="foot"><span>© 2026 Rishit Raj Mathur, Tampa, FL <span class="foot-clock" id="clock" aria-label="Local time in Tampa"></span></span><nav aria-label="Footer"><a href="all.html">All projects</a><a href="#about">About</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
 <script src="vendor/lenis/lenis.min.js" defer></script>
 <script src="home.js?v={{HOME_JS}}" defer></script>
 </body>

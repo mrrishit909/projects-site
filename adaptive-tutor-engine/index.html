@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A tutoring engine that tracks how well a learner knows each concept, spots when wrong answers follow a pattern, and picks the next activity. A simulated student who kept getting &#x27;minus a negative&#x27; wrong was diagnosed from six answers and fixed in a day. Against a fixed lesson order, 300 simulated students mastered 10.6 concepts instead of 4.4.">
 <title>What Should This Student Do Next? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>What Should This Student Do Next?</h1>
     <p class="tagline">A tutoring engine that tracks how well a learner knows each concept, spots when wrong answers follow a pattern, and picks the next activity. A simulated student who kept getting &#x27;minus a negative&#x27; wrong was diagnosed from six answers and fixed in a day. Against a fixed lesson order, 300 simulated students mastered 10.6 concepts instead of 4.4.</p>
     <div class="meta cap"><span class="tech">Python &middot; FastAPI &middot; PostgreSQL 16 (row-level security) &middot; Bayesian Knowledge Tracing &middot; Misconception diagnosis (buggy rules) &middot; Spaced repetition &middot; Thompson-sampling bandit &middot; Parametric item generation &middot; Docker Compose &middot; 48 tests</span><span class="links"><a href="demo/">Run the seven-step demo &#8599;</a><a href="https://github.com/mrrishit909/adaptive-tutor-engine" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of What Should This Student Do Next?"></figure>
   <p class="note">Built from a written blueprint as one vertical slice. <b>The students are simulated</b>, and they learn and forget in the way the tutor's own model assumes, so the experiment shows the engine doing what it was designed to do, not that it helps real children. The 18-concept course and its hints were written by me for this project. No language model is used: the tutor only repeats lines from the course content. Not built: real learner data, free-text answers, teacher tools, Kafka, Terraform, single sign-on.</p>

@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A digital twin of a manufacturer&#x27;s supply network. It turns a port slowdown into shipment delays, follows them through the bill of materials to plant stock-outs and lost sales, simulates 1,000 futures, and solves for a recovery plan. On an invented network the optimized plan cost $0.22M where the usual reaction, flying everything late, cost $5.39M.">
 <title>What Does a Three-Week Port Slowdown Cost, and What Is the Cheapest Way Out? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>What Does a Three-Week Port Slowdown Cost, and What Is the Cheapest Way Out?</h1>
     <p class="tagline">A digital twin of a manufacturer&#x27;s supply network. It turns a port slowdown into shipment delays, follows them through the bill of materials to plant stock-outs and lost sales, simulates 1,000 futures, and solves for a recovery plan. On an invented network the optimized plan cost $0.22M where the usual reaction, flying everything late, cost $5.39M.</p>
     <div class="meta cap"><span class="tech">Python &middot; FastAPI &middot; PostgreSQL 16 (row-level security) &middot; NumPy simulation &middot; Monte Carlo &middot; Mixed-integer programming (HiGHS) &middot; scikit-learn quantile models &middot; Leaflet map &middot; Docker Compose &middot; 17 tests, 90% coverage</span><span class="links"><a href="demo/">Run the seven-step demo &#8599;</a><a href="https://github.com/mrrishit909/supply-chain-twin" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of What Does a Three-Week Port Slowdown Cost, and What Is the Cheapest Way Out?"></figure>
   <p class="note">Built from a written blueprint as one vertical slice, on a <b>synthetic network</b>: port and city locations are real, but all 500 suppliers, 5,000 parts, 294,897 shipments and every dollar are invented. The network was generated with enough safety stock that an undisturbed run loses nothing, so all losses shown come from the injected event. Only one kind of disruption (a port capacity cut) is modelled, and it is injected by hand: there are no live weather, vessel or news feeds. Not built: Kafka, Terraform, single sign-on, optimization over many scenarios.</p>

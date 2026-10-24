@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Before COVID, SARIMA cut the error of &#x27;same month last year&#x27; by 36% for furniture stores (26% even 12 months ahead) but not at all for office and gift stores (-3%). In 2020-21 SARIMA&#x27;s 80% range held in only 37% and 24% of months, and from 2022 last year&#x27;s number won again.">
 <title>Does ARIMA Beat &#x27;Same Month Last Year&#x27;? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Does ARIMA Beat &#x27;Same Month Last Year&#x27;?</h1>
     <p class="tagline">Before COVID, SARIMA cut the error of &#x27;same month last year&#x27; by 36% for furniture stores (26% even 12 months ahead) but not at all for office and gift stores (-3%). In 2020-21 SARIMA&#x27;s 80% range held in only 37% and 24% of months, and from 2022 last year&#x27;s number won again.</p>
     <div class="meta cap"><span class="tech">Python &middot; statsmodels &middot; SARIMA and ETS &middot; Walk-forward test &middot; Diebold-Mariano test &middot; US Census Bureau retail sales (public domain) &middot; FRED &middot; Hand-written recompute</span><span class="links"><a href="https://github.com/mrrishit909/furniture-office-sales" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Does ARIMA Beat &#x27;Same Month Last Year&#x27;?"></figure>
   <p class="note">Nominal dollars and today's vintage of the estimates (they are revised), not what was published at each forecast origin. The model orders came from AIC on 1992-2009 only; the lockdown-gap model uses hindsight (March-June 2020, picked by eye) and the 60-month regression window was chosen after seeing the all-history version fail. The office series is now mostly gift stores. No holiday or Easter effects. Source: US Census Bureau Monthly Retail Trade Survey via FRED, public domain.</p>

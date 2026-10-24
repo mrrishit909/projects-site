@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Gold took 45 years to regain its 1980 real peak. Real yields, the dollar, inflation expectations and fear explain 35% of its monthly moves, real yields alone explain 31% less since 2022, and none of them forecasts next month&#x27;s return (-1.5% out of sample).">
 <title>What Moves the Price of Gold? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>What Moves the Price of Gold?</h1>
     <p class="tagline">Gold took 45 years to regain its 1980 real peak. Real yields, the dollar, inflation expectations and fear explain 35% of its monthly moves, real yields alone explain 31% less since 2022, and none of them forecasts next month&#x27;s return (-1.5% out of sample).</p>
     <div class="meta cap"><span class="tech">Python &middot; pandas &middot; OLS with Newey-West errors &middot; Chow test &middot; Rolling regression &middot; Expanding-window forecasts &middot; World Bank Pink Sheet (CC BY 4.0) &middot; FRED &middot; Hand-written recompute</span><span class="links"><a href="https://github.com/mrrishit909/gold-price-drivers" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of What Moves the Price of Gold?"></figure>
   <p class="note">Same-month associations are not forecasts, and gold here is a monthly average of daily prices, as are the drivers (which creates apparent forecastability from averaging alone). The World Bank changed the gold series' definition in June 2025 and the October 2025 CPI was never published; neither was adjusted for. One break date (2022) was chosen after the fact; linear, constant-coefficient models only. Sources: World Bank Pink Sheet (CC BY 4.0) and FRED (Board of Governors, CBOE, BLS).</p>

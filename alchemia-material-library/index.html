@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A materials library you can break, on 44 synthetic records: a 0.5 m beam stiff enough for 2,000 N·m² needs 18.5 mm of carbon steel (1.34 kg, 2.55 kgCO₂e) or 24.3 mm of aluminium 6061 (0.80 kg but 6.53 kgCO₂e). Pick a material from the constellation and it travels into a virtual machine that stretches, bends or strikes it, and the graph grows out of the machine&#x27;s gauge.">
 <title>Which Material Makes the Lightest Part That Is Just as Stiff, and What Does It Cost the Planet? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Which Material Makes the Lightest Part That Is Just as Stiff, and What Does It Cost the Planet?</h1>
     <p class="tagline">A materials library you can break, on 44 synthetic records: a 0.5 m beam stiff enough for 2,000 N·m² needs 18.5 mm of carbon steel (1.34 kg, 2.55 kgCO₂e) or 24.3 mm of aluminium 6061 (0.80 kg but 6.53 kgCO₂e). Pick a material from the constellation and it travels into a virtual machine that stretches, bends or strikes it, and the graph grows out of the machine&#x27;s gauge.</p>
     <div class="meta cap"><span class="tech">Blender 4.5 (Python, headless) &middot; glTF / GLB &middot; TypeScript &middot; Next.js 16 (static export) &middot; React Three Fiber / three.js &middot; GLSL melt, microstructure and deformation shaders &middot; GSAP &middot; Node (http) &middot; OpenAPI 3.1 &middot; Playwright &middot; 32 unit/API tests, 26 e2e tests</span><span class="links"><a href="demo/">Break a material &#8599;</a><a href="https://github.com/mrrishit909/alchemia-material-library" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Which Material Makes the Lightest Part That Is Just as Stiff, and What Does It Cost the Planet?"></figure>
   <p class="note">Built from blueprint 09 of a written build book (Advanced Engineering Build Book, Volume VII) as one vertical slice. <b>Every material record and supplier is synthetic, and the tests are simplified models: not datasheet values and not a test report.</b> The records are rounded, handbook-order numbers; the virtual tests are the formulas described below. One synthetic supplier is labelled Sponsored to show how a sponsored catalogue would be marked; it is not a real sponsorship. Not built: PostgreSQL and vector search, real or licensed data, anisotropy, temperature-dependent properties, finite element tests, dragging the 3D camera, touch testing beyond a phone layout, and a measurement on a physical GPU. The twelve agent roles are committed as Claude Code configuration, but this repository was produced by one session playing them in sequence, not by parallel subagents.</p>

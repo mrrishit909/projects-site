@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A motorsport telemetry and vehicle-dynamics experience: one real (simplified) circular-motion formula drives the lap&#x27;s speed, lateral g and longitudinal g, the chase camera&#x27;s position, and its field of view, from a single track-progress value, and three real rendering bugs (scale, a missing Suspense boundary, a camera lerp that a throttled headless test loop could never finish) were found by actually looking at the screenshots.">
 <title>What Happens When the Camera Loop Only Fires Twice? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>What Happens When the Camera Loop Only Fires Twice?</h1>
     <p class="tagline">A motorsport telemetry and vehicle-dynamics experience: one real (simplified) circular-motion formula drives the lap&#x27;s speed, lateral g and longitudinal g, the chase camera&#x27;s position, and its field of view, from a single track-progress value, and three real rendering bugs (scale, a missing Suspense boundary, a camera lerp that a throttled headless test loop could never finish) were found by actually looking at the screenshots.</p>
     <div class="meta cap"><span class="tech">Blender 4.5 (Python, headless) &middot; glTF / GLB &middot; TypeScript &middot; Next.js 16 (static export) &middot; React Three Fiber / three.js &middot; Catmull-Rom track curve &middot; GSAP &middot; Node (http + ws) &middot; OpenAPI 3.1 &middot; Playwright &middot; 14 unit/API tests, 19 e2e tests</span><span class="links"><a href="demo/">Open the live lap &#8599;</a><a href="https://github.com/mrrishit909/vantage" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of What Happens When the Camera Loop Only Fires Twice?"></figure>
   <p class="note">Built from blueprint 10 of a written build book (Advanced Engineering Build Book, Volume VIII) as one vertical slice, using the five-tool-design-pipeline skill: an Awesome Design file for type/spacing scale, the Taste/Impeccable checklist, Playwright including a pixel-sample check that the car actually moves, Three.js as the product. <b>Everything is synthetic</b>: the lap log and the track layout come from a seeded generator and a hand-authored waypoint list, not a real car's telemetry. Not built: drivable controls, a multi-car field, a real telemetry feed, auth.</p>

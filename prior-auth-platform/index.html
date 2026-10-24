@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A case system that reads the insurer&#x27;s policy, checks each rule against the patient&#x27;s chart, shows what is missing, and drafts an appeal in which every sentence cites its source. A doctor must sign before anything is sent. On an invented clinic it took one MRI request from 3 of 4 rules met to an overturned denial.">
 <title>Can Software Carry a Prior Authorization From Order to Appeal? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Can Software Carry a Prior Authorization From Order to Appeal?</h1>
     <p class="tagline">A case system that reads the insurer&#x27;s policy, checks each rule against the patient&#x27;s chart, shows what is missing, and drafts an appeal in which every sentence cites its source. A doctor must sign before anything is sent. On an invented clinic it took one MRI request from 3 of 4 rules met to an overturned denial.</p>
     <div class="meta cap"><span class="tech">Python &middot; FastAPI &middot; PostgreSQL 16 (row-level security) &middot; FHIR R4 ingestion &middot; Rules engine &middot; BM25 + dense retrieval &middot; scikit-learn &middot; Postgres job queue &middot; Docker Compose &middot; 30 tests, 91% coverage</span><span class="links"><a href="demo/">Run the six-step demo &#8599;</a><a href="https://github.com/mrrishit909/prior-auth-platform" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Can Software Carry a Prior Authorization From Order to Appeal?"></figure>
   <p class="note">Built from a written blueprint as one vertical slice, on <b>synthetic data</b>: 4,201 invented patients, three fictional insurers and policies written for the demo. The insurer is a simulator. The numbers show the parts recover structure that was planted; they are not evidence about real insurers or real charts, and nothing here is medical or coverage advice. No language model is used: the appeal is assembled from templates. Not built: Kafka, Terraform, single sign-on, a real payer connection.</p>

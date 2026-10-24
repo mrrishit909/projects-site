@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Half of the 12,185 new Iowa liquor items are gone within 21 months and 39% last three years; launched in 18+ stores the median is 32 months, in 1-2 stores 18 months. Items under two years old are 6%-10% of revenue, and a month with no sale mostly means a store skipped an order.">
 <title>How Long Does a New Iowa Liquor Item Last? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>How Long Does a New Iowa Liquor Item Last?</h1>
     <p class="tagline">Half of the 12,185 new Iowa liquor items are gone within 21 months and 39% last three years; launched in 18+ stores the median is 32 months, in 1-2 stores 18 months. Items under two years old are 6%-10% of revenue, and a month with no sale mostly means a store skipped an order.</p>
     <div class="meta cap"><span class="tech">Python &middot; DuckDB &middot; pandas &middot; Kaplan-Meier survival &middot; Pareto analysis &middot; Cohort analysis &middot; Iowa Liquor Sales, State of Iowa (CC BY 4.0) &middot; Hand-written recompute</span><span class="links"><a href="https://github.com/mrrishit909/iowa-product-lifecycle" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of How Long Does a New Iowa Liquor Item Last?"></figure>
   <p class="note">Items are item numbers in the state's sales to stores (Class E, off-premises licensees), not shoppers' purchases; a repackaged product gets a new number. The data starts in January 2012, so earlier items are left out of introductions and survival, and discontinuation needs 12 silent months, so none is recorded for 2025 (items are censored). Survival depends on that gap rule. The ramp study covers survivors only. Source: Iowa Liquor Sales, State of Iowa, Alcohol Operations Bureau, via the Iowa Data Hub (data.iowa.gov), licence CC BY 4.0 as stated in the dataset metadata.</p>

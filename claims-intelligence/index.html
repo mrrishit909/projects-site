@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A claims pipeline: read the photos, measure the damage, price the repair, work out who the claimant is connected to, and route the claim with reasons. On an invented insurer with 25 planted fraud rings, sending the top 2% of claims to investigators caught 55% of all fraud; a red-flag checklist with the same workload caught 17%.">
 <title>Who Is Really Behind This Insurance Claim? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Who Is Really Behind This Insurance Claim?</h1>
     <p class="tagline">A claims pipeline: read the photos, measure the damage, price the repair, work out who the claimant is connected to, and route the claim with reasons. On an invented insurer with 25 planted fraud rings, sending the top 2% of claims to investigators caught 55% of all fraud; a red-flag checklist with the same workload caught 17%.</p>
     <div class="meta cap"><span class="tech">Python &middot; FastAPI &middot; PostgreSQL 16 (row-level security) &middot; PyTorch U-Net (training) &middot; NumPy inference &middot; Entity resolution &middot; Gradient boosting with monotone constraints &middot; Postgres job queue &middot; Docker Compose &middot; 22 tests, 77% coverage</span><span class="links"><a href="demo/">Run the six-step demo &#8599;</a><a href="https://github.com/mrrishit909/claims-intelligence" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Who Is Really Behind This Insurance Claim?"></figure>
   <p class="note">Built from a written blueprint as one vertical slice, on <b>synthetic data</b>: 100,000 invented policies, 50,000 claims and 25 planted fraud rings. The "photos" are <b>drawings made by a script</b> and the damage model has only ever seen such drawings, so its score says the pipeline works, nothing about real vehicle damage. Half the planted fraud has no links to anyone and no graph can find it. The parts catalogue is a mock. No real person or business is involved. Not built: OCR, object storage, retraining from corrections, Kafka, Terraform, single sign-on.</p>

@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="An exoplanet lab on synthetic worlds with the science kept separate and tested: a Jupiter-size planet on a 5-day orbit gives an 11,734 ppm, 3.4-hour transit at 89.9 degrees and no transit at 84, because the impact parameter (1.29) passes 1 plus the radius ratio (1.10). Eight systems, 26 planets, six scripted Blender planet bases, and an intro in which a planet&#x27;s atmosphere becomes the navigation.">
 <title>How Tilted Can an Orbit Be Before the Shadow Disappears? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>How Tilted Can an Orbit Be Before the Shadow Disappears?</h1>
     <p class="tagline">An exoplanet lab on synthetic worlds with the science kept separate and tested: a Jupiter-size planet on a 5-day orbit gives an 11,734 ppm, 3.4-hour transit at 89.9 degrees and no transit at 84, because the impact parameter (1.29) passes 1 plus the radius ratio (1.10). Eight systems, 26 planets, six scripted Blender planet bases, and an intro in which a planet&#x27;s atmosphere becomes the navigation.</p>
     <div class="meta cap"><span class="tech">Blender 4.5 (Python, headless) &middot; glTF / GLB &middot; TypeScript &middot; Next.js 16 (static export) &middot; React Three Fiber / three.js &middot; GLSL planet, atmosphere and star shaders &middot; GSAP &middot; Node (http) &middot; OpenAPI 3.1 &middot; Playwright &middot; 30 unit/API tests, 21 e2e tests</span><span class="links"><a href="demo/">Cross the star &#8599;</a><a href="https://github.com/mrrishit909/nebula-exoplanet-lab" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of How Tilted Can an Orbit Be Before the Shadow Disappears?"></figure>
   <p class="note">Built from blueprint 05 of a written build book (Advanced Engineering Build Book, Volume VII) as one vertical slice. <b>Every star, planet, atmosphere and discovery is synthetic</b>. The formulas are standard textbook relations (Kepler's third law, equilibrium temperature, a simple habitable zone, a limb-darkened circular-orbit transit, scale-height spectra); no object is real and no accuracy for any real planet is claimed. The planet in the intro moves on a stylised orbit with exaggerated dimming; its readouts (11.6 days, 1.9 Earth radii) are its catalog values. Not built: PostgreSQL, adapters for public catalogs, real spectra, eccentric orbits, touch testing, tablet and large-desktop checks, and a measurement on a physical GPU. The twelve agent roles are committed as Claude Code configuration, but this repository was produced by one session playing them in sequence, not by parallel subagents.</p>

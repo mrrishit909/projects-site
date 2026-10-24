@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="10 Walmart stores over 5.3 years ($191.6M), analysed in SQL: foods are 58% of revenue, weekends run 21% above an average day, SNAP days lift foods 11% to 33% by state, and 60% of on-sale item-days sell nothing.">
 <title>Where Does Walmart&#x27;s Revenue Actually Come From? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Where Does Walmart&#x27;s Revenue Actually Come From?</h1>
     <p class="tagline">10 Walmart stores over 5.3 years ($191.6M), analysed in SQL: foods are 58% of revenue, weekends run 21% above an average day, SNAP days lift foods 11% to 33% by state, and 60% of on-sale item-days sell nothing.</p>
     <div class="meta cap"><span class="tech">SQL &middot; DuckDB &middot; UNPIVOT + window functions &middot; Weekday-matched comparison &middot; Pareto concentration &middot; M5 Walmart sales (Zenodo, CC BY 4.0) &middot; 59M-row long table &middot; Hand-written recompute</span><span class="links"><a href="https://github.com/mrrishit909/m5-sales-sql" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Where Does Walmart&#x27;s Revenue Actually Come From?"></figure>
   <p class="note">This is 10 stores of one retailer in 3 states, Jan 2011 to May 2016, with hashed item names. Revenue = units x the weekly list price: coupons and SNAP tender are not in it and there are no costs, so it is sales, not profit. The SNAP comparison is an association (SNAP days fall early in the month, with paydays). Data: M5 Forecasting dataset, Makridakis Open Forecasting Center and Walmart, via Zenodo (DOI 10.5281/zenodo.12636070), CC BY 4.0.</p>

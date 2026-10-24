@@ -58,10 +58,20 @@ A project's record sleeve on the home page, and the "Next project" link on the c
   colour printed on its object (`--t-pass|rcpt|ruler|book`). The printed objects keep their own colours. One typeface, Archivo
   (variable width + weight, vendor/fonts, OFL). Professional facts come from the résumé at ~/portfolio/resume.pdf; do not add
   claims not in it.
-* **The intro** (first load at the top of the page, CSS only, `html.intro` set in the head): the desk settles, the frame draws in,
-  RISHIT rises letter by letter, then the nav and labels (about 1.6 s; transform / opacity, starting at opacity 0.01 so the text
-  still counts for LCP at first paint). A repeat visit in the same session plays it at 0.45x (`intro-again`, sessionStorage);
-  never with a hash or under reduced motion.
+* **The concept: one desk.** Every section of the home is a camera position on the same Blender desk (`tools/desk/scene.py`
+  builds it; `flight.py` renders the hero's camera flight from it, `world.py` the section backgrounds and the print beat:
+  `Blender -b --factory-startup -P tools/desk/world.py -- <out_dir> <w> <h> [name_prefix]`, then `cwebp -q 78` into
+  `assets/world/{d,m}/`). Everything the visitor reads is a sheet of paper on it (`.paper`, one upper-left light, one shadow
+  `--paper-shadow`; labels are `.stamp`). Section backgrounds are `<picture class="scene-bg">` (lazy, `d/` 2560x1600 under
+  `(min-aspect-ratio: 4/5)`, `m/` 1080x2340 otherwise). The spec is `BRIEF.md`; the evidence folders are listed at the bottom.
+* **The intro** (first load at the top of the page; `html.intro` set in the head, never with a hash, under reduced motion, or
+  when `sessionStorage.vt` says we are returning from a case study): the first frame is a blank boarding pass close to the
+  camera (`assets/world/{d,m}/print-00.webp`, the `.hero-close` picture, also the LCP element: a pixel short of the viewport
+  because Chrome ignores a full-viewport image). home.js prints the figures onto it (`print-01..06`, 0.8 s), holds a beat, then
+  plays the flight frames backwards 47 -> 0 over 2.6 s so the camera lifts off onto the whole desk; at 55% of the lift
+  `html.intro-land` lets the frame, RISHIT (letter by letter), nav and labels rise (CSS). A Skip button, any wheel, key or tap
+  ends it at once; a repeat visit in the session plays at 0.45x (`intro-again`); after 7 s it ends regardless. `intro-done`
+  hides the close-up and hands the hero to scroll.
 * **The hero** is a Blender render (`tools/desk/flight.py`, Blender 4.5, EEVEE: `Blender -b --factory-startup -P
   tools/desk/flight.py -- <out_prefix> <w> <h> <frames> [only_frame]`; textures in `tools/desk/tex/`, printed by
   `tools/desk/tex.html` + `shoot.cjs`): the four printed objects on a pale oak desk, the camera high and wide at first, gliding
@@ -71,13 +81,27 @@ A project's record sleeve on the home page, and the "Next project" link on the c
   The RISHIT wordmark parts, "Clean. Model. Explain." passes over a veil that quiets the desk, and the flight ends in the
   boarding pass screen's tint. The nav steps away while scrolling down and returns on any scroll up (both pages).
 * **Selected Work** is filled by `build.py` from `featured.json` (four slugs; area / result / contribution / caption, a `scale`
-  {metric, unit, value, note} and a `screen` {object, alt}). Each screen shows a printed object
-  (`assets/desk/solo-{pass,rcpt,ruler,book}.webp`, cut-outs from concept C's Blender desk, `tools/desk/desk.py`), the number,
-  the first sentence of the result and links; on scroll the object lifts, the number counts up (percentages only; "31 of 31"
-  never counts) and the object flips to "What I did" (the contribution) and "Built with" (the project's tech). The receipt's
-  back prints like a till roll (a wider slip at tablet / phone widths); the ruler's back is an index card behind it. A fixed
-  pager (prev / project name / next) follows the screens. Without JavaScript or under reduced motion: stills, objects upright,
-  the back printed under each object.
+  {metric, unit, value, note}, a `screen` {object, alt} and a `sheet` {src, alt, dark}). Each screen's background is
+  `assets/world/{d,m}/shot-<object>.webp` (the camera low over that object's place on the desk, the object itself hidden);
+  the copy sits on an index card (`.screen-copy.paper`, stamp "01 / 04"); the printed object
+  (`assets/desk/solo-{pass,rcpt,ruler,book}.webp`, cut-outs from concept C's Blender desk, `tools/desk/desk.py`) lies as HTML
+  so it can lift, count up (percentages only; "31 of 31" never counts) and flip to "What I did" and "Built with"; the project's
+  real chart or report (`sheet`, dark screenshots inverted to paper) slides out from under it (`--slide`) while the background
+  breathes (`--kb`, 6% scale). Per-object sheet positions are in portfolio.css. The receipt's back prints like a till roll (a
+  wider slip at tablet / phone widths); the ruler's back is an index card behind it. A fixed pager (prev / project name / next)
+  follows the screens. Without JavaScript or under reduced motion: stills, objects upright, the sheet beside the object, the
+  back printed under it.
+* **Into a case study and back** (cross-document View Transitions, Chrome / Edge / Safari 18.2+; Firefox cuts): home.js names
+  the clicked card's visible face `object` and its title `title` on `pageswap`, the case page's `.object` and `h1` carry the
+  same names, and on `pagereveal` the home hands them back to the card `sessionStorage.vt` remembers. Flagship case studies
+  open with the printed object beside the title and link back to `../#feature-<slug>`.
+* **About + experience + the index card** sit on `shot-about`; **contact** sits on `shot-contact` (the desk from the other side
+  of the table, the visitor's seat) with the copy on a card and the business card that leans to a fine pointer. The footer
+  shows Tampa time. `404.html` (absolute `/projects/` paths; GitHub Pages serves it for any missing path) is a card on the
+  about shot.
+* **Case studies** (`site.css`, self-contained tokens, Archivo + Geist Mono self-hosted; theme.css is no longer loaded by
+  them): the same paper, ink and cobalt; stamps for labels and step numbers; every figure a mounted plate; the next project a
+  sheet. case.js is unchanged.
 * **`all.html` is the complete catalogue** (`all.template.html` + `portfolio.css` + `catalog.js`): every project as a real link
   with its own thumbnail. Old addresses on the home (`#projects`, `#<slug>`, `?q=` / `?kind=`) are forwarded there by an inline
   script in the home's head, so case studies' "All projects" link (`../#projects`) and the archive redirect keep working.
@@ -102,5 +126,6 @@ A project's record sleeve on the home page, and the "Next project" link on the c
 * Case-study pages use `site.css`. A project marked `"frozen": true` in its `project.json` is never rebuilt.
 
 Evidence folders under ~/projects-site-evidence/ (earlier designs): perf-2026-10-19 (the first unified page), refine-2026-10-19,
-redesign-2026-10-19 (the instrument), transform-2026-10-19 (the lens), **statement-2026-10-20 (the corridor: brief,
-decisions, captures, recording, scripts for posters / shots / WebKit smoke)**.
+redesign-2026-10-19 (the instrument), transform-2026-10-19 (the lens), statement-2026-10-20 (the corridor),
+proof-2026-10-24 (the approval proof: opening + object transition, plus INSTAGRAM-LESSONS.md), **world-2026-10-24 (the
+desk, whole: storyboards, every screen at both sizes, recordings, suite log, Lighthouse, README with the rubric)**.

@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="US federal staff quit at 13 per 100 in their first year and retire at 28 per 100 after 40; separations hit 17.8 per 100 in 2025 (earlier high 12.7). Agencies whose staff say they might leave lose more to quits next year (r 0.48), but only r 0.26 weighted by size.">
 <title>Who Leaves the Federal Workforce, and When? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Who Leaves the Federal Workforce, and When?</h1>
     <p class="tagline">US federal staff quit at 13 per 100 in their first year and retire at 28 per 100 after 40; separations hit 17.8 per 100 in 2025 (earlier high 12.7). Agencies whose staff say they might leave lose more to quits next year (r 0.48), but only r 0.26 weighted by size.</p>
     <div class="meta cap"><span class="tech">Python &middot; DuckDB + pandas &middot; Survival-style tenure curves &middot; Panel regression, year effects &middot; Cluster bootstrap &middot; OPM Federal Workforce Data (US gov. work) &middot; OPM FEVS public files (US gov. work) &middot; Hand-written recompute</span><span class="links"><a href="https://github.com/mrrishit909/hr-analytics" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Who Leaves the Federal Workforce, and When?"></figure>
   <p class="note">Aggregates only; OPM's files are record-level without names and none is published. No cause is claimed: the survey link is across agencies, 83 agency-waves, nothing ties a survey answer to a person who left. 'Involuntary' cannot be separated (OPM withholds removals), service years include military credit, eligibility is a proxy from 5-year age bands, pay is 47% redacted, the 2024 survey file is 87% NUL bytes, 2025 is a lower bound. Sources: OPM Federal Workforce Data (data.opm.gov) and Federal Employee Viewpoint Survey public data files; US government works, no terms of use stated.</p>

@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Ten large stocks and SPY over 2,702 days: direction has almost no memory (lag-1 autocorrelation -0.06), size has plenty (0.24); tails are fat (tail index 2.3 to 3.3); GARCH beats a constant on all 11 series; trend forecasts lose to &quot;no change&quot; on all 11.">
 <title>What part of a stock&#x27;s move is predictable? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>What part of a stock&#x27;s move is predictable?</h1>
     <p class="tagline">Ten large stocks and SPY over 2,702 days: direction has almost no memory (lag-1 autocorrelation -0.06), size has plenty (0.24); tails are fat (tail index 2.3 to 3.3); GARCH beats a constant on all 11 series; trend forecasts lose to &quot;no change&quot; on all 11.</p>
     <div class="meta cap"><span class="tech">Python &middot; pandas · numpy · scipy &middot; GARCH by quasi-ML &middot; Walk-forward tests &middot; matplotlib &middot; Alpaca Markets daily bars (aggregates only) &middot; FRED: S&amp;P 500, VIX (cited) &middot; Hand-written recompute</span><span class="links"><a href="https://github.com/mrrishit909/stock-time-series" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of What part of a stock&#x27;s move is predictable?"></figure>
   <p class="note">Historical description, not investment advice. Ten large stocks picked in 2026 (selection bias inflates drift), one decade, 11 correlated series. Prices: Alpaca Markets consolidated daily bars, adjusted; Alpaca's terms forbid redistribution, so only our statistics are published. FRED's SP500 (S&P Dow Jones Indices, pre-approval required) and VIXCLS (CBOE, citation required) yield only one correlation and one slope. The GARCH fits are verified by properties, not refitted, in the check.</p>

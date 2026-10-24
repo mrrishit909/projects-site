@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Four recommenders on MovieLens 1M, tested by hiding one rating per user: with the last rating hidden PureSVD hits 8.9% against 3.5% for the most popular movies (2.5 times), hiding a random rating instead would have made it 3.4 times, and the most popular ten movies fill 55% of the popularity recommender&#x27;s slots against 9% for PureSVD.">
 <title>Does Any Recommender Beat &#x27;Most Popular&#x27;? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Does Any Recommender Beat &#x27;Most Popular&#x27;?</h1>
     <p class="tagline">Four recommenders on MovieLens 1M, tested by hiding one rating per user: with the last rating hidden PureSVD hits 8.9% against 3.5% for the most popular movies (2.5 times), hiding a random rating instead would have made it 3.4 times, and the most popular ten movies fill 55% of the popularity recommender&#x27;s slots against 9% for PureSVD.</p>
     <div class="meta cap"><span class="tech">Python &middot; NumPy &middot; SciPy &middot; Item neighbours &middot; PureSVD &middot; Hit rate and NDCG &middot; MovieLens 1M (GroupLens, research use) &middot; Hand-written recompute</span><span class="links"><a href="https://github.com/mrrishit909/movie-recommender" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Does Any Recommender Beat &#x27;Most Popular&#x27;?"></figure>
   <p class="note">An offline test that predicts which movie a user will rate next, not which they will like: nobody saw the recommendations. One hidden rating per user (6,040 cases); settings fixed, not tuned; old data (2000 to 2003) from a site that was itself recommending movies. MovieLens 1M is licensed for research use, may not be redistributed or used commercially without permission, and GroupLens does not endorse this work: only counts and rankings are published. Cite: Harper and Konstan, 2015, doi 10.1145/2827872.</p>

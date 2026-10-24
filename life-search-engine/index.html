@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A private search engine over one invented person&#x27;s photos, receipts, e-mail, calendar and messages. It answers questions that no single record holds by walking from trip to photo to receipt to people, showing every step. On 291 such questions it found the right receipt 93% of the time; ordinary vector search managed 9%.">
 <title>Where Did I Eat in Chicago, and Who Was There? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Where Did I Eat in Chicago, and Who Was There?</h1>
     <p class="tagline">A private search engine over one invented person&#x27;s photos, receipts, e-mail, calendar and messages. It answers questions that no single record holds by walking from trip to photo to receipt to people, showing every step. On 291 such questions it found the right receipt 93% of the time; ordinary vector search managed 9%.</p>
     <div class="meta cap"><span class="tech">Python &middot; FastAPI &middot; PostgreSQL 16 + pgvector &middot; Row-level security &middot; Hybrid search (vectors + full text) &middot; Entity resolution &middot; scikit-learn (LSA) &middot; Postgres job queue &middot; Docker Compose &middot; 29 tests</span><span class="links"><a href="demo/">Run the seven-step demo &#8599;</a><a href="https://github.com/mrrishit909/life-search-engine" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Where Did I Eat in Chicago, and Who Was There?"></figure>
   <p class="note">Built from a written blueprint as one vertical slice, on a <b>generated archive</b>: the person, their contacts and all 2,549 records are invented, so every step can be checked against a known answer. There are <b>no image files</b>: a "photo" is the time, GPS and tags a phone's tagger would produce, and receipts arrive as already-scanned text. No language model and no outside service is used. Not built: real app connectors, image or face recognition, encrypted sync, Kafka, Terraform, single sign-on.</p>

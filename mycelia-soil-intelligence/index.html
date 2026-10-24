@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A soil-intelligence demo built on a Blender cutaway: a raindrop falls into a crack and the camera follows it into a fungal network that spells its own name and becomes the farm map. On a fictional 12-field farm, a regenerative practice lifts average projected soil health from 42 to 54 and cuts the runoff in a 180 mm storm on Stone Close from 40.2 mm to 22.5 mm (invented parameters, direction not forecast).">
 <title>What Happens to a Farm&#x27;s Water When Its Soil Carbon Rises? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>What Happens to a Farm&#x27;s Water When Its Soil Carbon Rises?</h1>
     <p class="tagline">A soil-intelligence demo built on a Blender cutaway: a raindrop falls into a crack and the camera follows it into a fungal network that spells its own name and becomes the farm map. On a fictional 12-field farm, a regenerative practice lifts average projected soil health from 42 to 54 and cuts the runoff in a 180 mm storm on Stone Close from 40.2 mm to 22.5 mm (invented parameters, direction not forecast).</p>
     <div class="meta cap"><span class="tech">Blender 4.5 (Python, headless) &middot; glTF / GLB + guide-curve JSON &middot; TypeScript &middot; Next.js 16 (static export) &middot; React Three Fiber / three.js &middot; GLSL strand morph shader &middot; GSAP &middot; Node (http) &middot; OpenAPI 3.1 &middot; Playwright &middot; 33 unit/API tests, 22 e2e tests</span><span class="links"><a href="demo/">Follow the raindrop &#8599;</a><a href="https://github.com/mrrishit909/mycelia-soil-intelligence" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of What Happens to a Farm&#x27;s Water When Its Soil Carbon Rises?"></figure>
   <p class="note">Built from blueprint 03 of a written build book (Advanced Engineering Build Book, Volume VII) as one vertical slice. <b>Everything is synthetic</b>: the farm, the fields, the soil measurements and every parameter of the water, carbon, rotation and health models are invented to show direction and rough size, not agronomy. Not built: PostGIS/TimescaleDB (the demo reads JSON), MapLibre/deck.gl, real weather or sensor adapters, auth, touch testing, tablet and large-desktop checks, and a measurement on a physical GPU. The twelve agent roles are committed as Claude Code configuration, but this repository was produced by one session playing them in sequence, not by parallel subagents.</p>

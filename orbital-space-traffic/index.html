@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A motion-first space-traffic sandbox: 18,050 synthetic objects propagated with SGP4 in your browser, a 24-hour conjunction screen of one operator&#x27;s fleet, a 41 m close approach with Pc 3.0 × 10⁻⁴, and an avoidance planner that re-screens every candidate burn (8 of the 10 it checked would have moved a later pass with the same rocket body to 73–1,063 m).">
 <title>Which Burn Actually Makes the Satellite Safe? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Which Burn Actually Makes the Satellite Safe?</h1>
     <p class="tagline">A motion-first space-traffic sandbox: 18,050 synthetic objects propagated with SGP4 in your browser, a 24-hour conjunction screen of one operator&#x27;s fleet, a 41 m close approach with Pc 3.0 × 10⁻⁴, and an avoidance planner that re-screens every candidate burn (8 of the 10 it checked would have moved a later pass with the same rocket body to 73–1,063 m).</p>
     <div class="meta cap"><span class="tech">TypeScript &middot; Next.js 16 (static export) &middot; React 19 &middot; three.js / React Three Fiber &middot; WASM SGP4 in a Web Worker &middot; Fastify &middot; PostgreSQL 16 (row-level security) &middot; OpenAPI 3.1 &middot; OpenTelemetry &middot; Docker Compose &middot; Playwright &middot; 72 unit + API tests, 7 e2e journeys</span><span class="links"><a href="demo/">Open the live sandbox &#8599;</a><a href="https://github.com/mrrishit909/orbital-space-traffic" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Which Burn Actually Makes the Satellite Safe?"></figure>
   <p class="note">Built from blueprint 01 of a written build book (Volume V, motion-first products) as one vertical slice. <b>Everything is synthetic</b>: the catalog, operators, orbits, covariances and conjunctions come from a generator in the repository; catalog numbers start at 70001 so none matches a real object. The only outside data are the SGP4 verification vectors published with Vallado et al. (AIAA 2006-6753), used as tests. Not built: real element sets, the ten-service split, Kafka, Redis, object storage, Terraform and cloud deployment, single sign-on, billing, residual-based anomaly detection, long-encounter Pc.</p>

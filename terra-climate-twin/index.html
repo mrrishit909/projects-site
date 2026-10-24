@@ -5,11 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A motion-first climate digital twin on synthetic climate cubes: scroll down from orbit through temperature, ocean and wildfire, scrub 1950 to 2100 under three scenarios, dive to a coastal city, compare present and future with a split shader, and export a risk summary. Four hazard models are scored on years they never saw; the heat model&#x27;s 80% interval missed the generator&#x27;s true future in 111 of 336 projections, because the past it learned from was too gentle to show the curve.">
 <title>Can a Model Fitted to the Past See the Heat Coming? · Rishit Mathur</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono&display=swap">
-<link rel="stylesheet" href="../theme.css?v=3f5c700cd6">
-<link rel="stylesheet" href="../site.css?v=4d3375c6ff">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../site.css?v=5b7b6188bc">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
 <script src="../case.js?v=b6bd6114a1" defer></script>
 </head>
 <body>
@@ -20,6 +19,7 @@
     <h1>Can a Model Fitted to the Past See the Heat Coming?</h1>
     <p class="tagline">A motion-first climate digital twin on synthetic climate cubes: scroll down from orbit through temperature, ocean and wildfire, scrub 1950 to 2100 under three scenarios, dive to a coastal city, compare present and future with a split shader, and export a risk summary. Four hazard models are scored on years they never saw; the heat model&#x27;s 80% interval missed the generator&#x27;s true future in 111 of 336 projections, because the past it learned from was too gentle to show the curve.</p>
     <div class="meta cap"><span class="tech">TypeScript &middot; Next.js 16 (static export) &middot; React 19 &middot; three.js / React Three Fiber &middot; GPGPU particle advection &middot; Web Worker climate cubes &middot; Fastify &middot; PostgreSQL 16 + PostGIS (row-level security) &middot; XYZ Web Mercator tiles &middot; OpenAPI 3.1 &middot; OpenTelemetry &middot; Docker Compose &middot; Playwright &middot; 28 unit + API tests, 7 e2e journeys</span><span class="links"><a href="demo/">Open the live twin &#8599;</a><a href="https://github.com/mrrishit909/terra-climate-twin" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
+    
   </div>
   <figure class="cover"><img src="cover.jpg" alt="Screenshot of Can a Model Fitted to the Past See the Heat Coming?"></figure>
   <p class="note">Built from blueprint 03 of a written build book (Volume V, motion-first products) as one vertical slice. <b>The climate is synthetic</b>: every field comes from a generator in the repository with realistic shapes (polar amplification, land warming faster than ocean, wet-get-wetter, accelerating sea level), and the values attached to real city names are not projections for those cities. The only outside data are Natural Earth land polygons (public domain). Not built: real reanalysis or model data, CesiumJS, deck.gl and MapLibre, Zarr/COG storage, Dask/Ray, the nine-service split, Terraform and cloud deployment, single sign-on, custom-parameter scenarios.</p>
