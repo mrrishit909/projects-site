@@ -135,7 +135,7 @@ def load():
 # ---- text contrast ------------------------------------------------------------------------------------------
 # Readable text must clear WCAG AA (4.5:1) on the paper. theme.css keeps --faint, --wood and --accent for decorative marks;
 # a case-study footer shipped in --faint at 1.95:1, so the build refuses page CSS that sets a text `color:` to any token
-# under 4.5:1 against --paper. (--paper itself is allowed: it is the text colour on --deep buttons. ::marker is decoration.)
+# under 4.5:1 against --paper. (--paper/--ink are allowed: ink is the text colour on the hot button. ::marker is decoration.)
 def contrast(a, b):
     def lum(h):
         c = [int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)]
@@ -160,7 +160,7 @@ def low_contrast_text():
                 continue
             for tok in re.findall(r"(?<![-\w])color:\s*var\(--([\w-]+)\)", decls):
                 hexv = resolve(tok)
-                if hexv and tok not in ("paper", "sheet", "s-canvas", "s-text-inverse", "p-color-white") and contrast(hexv, paper) < 4.5:
+                if hexv and tok not in ("paper", "ink", "sheet", "s-canvas", "s-text-inverse", "p-color-white") and contrast(hexv, paper) < 4.5:
                     bad.append(f"{name}: {sel.strip()[-60:]} uses --{tok} ({contrast(hexv, paper):.2f}:1)")
     return bad
 
@@ -178,10 +178,10 @@ def page(title, desc, body):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="{escape(desc)}">
 <title>{escape(title)}</title>
-<meta name="theme-color" content="#f7f5f0">
-<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Archivo-latin.woff2" crossorigin>
+<meta name="theme-color" content="#07070c">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Bricolage-latin.woff2" crossorigin>
 <link rel="stylesheet" href="../site.css?v={asset_version("site.css")}">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2307070c'/%3E%3Crect x='7' y='9' width='18' height='14' fill='%23ff4d00'/%3E%3C/svg%3E">
 <script src="../case.js?v={asset_version("case.js")}" defer></script>
 </head>
 <body>
@@ -204,7 +204,7 @@ def project_page(p, nxt):
     links = [f'<a href="{escape(p["repo"])}" target="_blank" rel="noopener">Code on GitHub &#8599;</a>']
     if p.get("demo"):
         links.insert(0, f'<a href="{escape(p["demo"])}">{escape(p.get("demo_label", "See it"))} &#8599;</a>')
-    cover = (f'<figure class="cover"><img src="{escape(p["cover"])}" alt="Screenshot of {escape(p["title"])}" width="1400" height="{round(1400 / (p.get("aspect") or 1.75))}" fetchpriority="high" decoding="async"></figure>'
+    cover = (f'<figure class="cover"><img src="{escape(p["cover"])}" srcset="cover-800.webp 800w, {escape(p["cover"])} 1400w" sizes="(max-width: 900px) calc(100vw - 40px), 1068px" alt="Screenshot of {escape(p["title"])}" width="1400" height="{round(1400 / (p.get("aspect") or 1.75))}" fetchpriority="high" decoding="async"></figure>'
              if p.get("cover") else "")
     note = f'<p class="note">{p["note"]}</p>' if p.get("note") else ""
     feat = featured().get(p["slug"])
@@ -230,7 +230,7 @@ def project_page(p, nxt):
                  + '</dl>')
     field = ' class="is-flagship"' if feat else ""
     # the next project's motion tile, played by case.js while the link is on screen
-    peek = ("".join([f'<video muted loop playsinline preload="none" aria-hidden="true" poster="../{nxt["slug"]}/{escape(nxt["cover"])}">' if nxt.get("cover") else
+    peek = ("".join([f'<video muted loop playsinline preload="none" aria-hidden="true" poster="../{nxt["slug"]}/cover-800.webp">' if nxt.get("cover") else
                      '<video muted loop playsinline preload="none" aria-hidden="true">'] +
                     [f'<source src="../{nxt["slug"]}/{f}" type="video/{f.split(".")[1]}">' for f in sorted(nxt["loops"], reverse=True)] + ["</video>"])
             if nxt.get("loops") else "")
@@ -243,7 +243,7 @@ def project_page(p, nxt):
     body = f"""<header class="bar"><a href="{PORTFOLIO}">Rishit Raj Mathur</a><nav><a href="{home}">Home</a><a href="../all.html">Index</a><a href="{PORTFOLIO}resume.pdf">Résumé</a></nav></header>
 <main class="wrap">
   <div class="hero"{field}>
-    <p class="cap dim">{escape(p["kind"])} &middot; {escape(p["date"])}</p>
+    <p class="cap dim"><span>{escape(p["kind"])}</span> &middot; {escape(p["date"])}</p>
     <h1>{escape(p["title"])}</h1>
     <p class="tagline">{escape(p["tagline"])}</p>
     <div class="meta cap"><span class="tech">{" &middot; ".join(escape(t) for t in p["tech"])}</span><span class="links">{"".join(links)}</span></div>
@@ -269,14 +269,12 @@ def unit_split(sc):
 
 
 def home_page(projects):
-    """The home (index.template.html + portfolio.css + home.js): the 219 repositories as a live field. The page gets the
-    field data (one record per public repository) and the four flagships from featured.json."""
+    """The home (index.template.html + portfolio.css + home.js): a rendered world. Every case study is one screen in a tower
+    (assets/atlas/atlas.json, built by tools/atlas.py from the thumbnails); the four flagships from featured.json each get a
+    scene; the repository inventory supplies the live counts."""
     by_slug = {p["slug"]: p for p in projects}
     gh = github()
-    field = []
-    for r in sorted(gh.values(), key=lambda r: r["created_at"]):
-        slug = r["name"] if r["name"] in by_slug else None
-        field.append({"n": r["name"], "l": r["language"] or "Other", "t": r["created_at"][:10], "m": r["pushed_at"][:10], "c": r["commits"], "s": r["size"], "p": bool(r.get("homepage")), "k": (by_slug[slug]["kind"].split("\u00b7")[0].strip() if slug else ""), "u": slug})
+    atlas = json.loads((ROOT / "assets" / "atlas" / "atlas.json").read_text())
     feats = []
     for i, f in enumerate(json.loads((ROOT / "featured.json").read_text()), 1):
         p, sc = by_slug[f["slug"]], f["scale"]
@@ -286,7 +284,7 @@ def home_page(projects):
         if p.get("demo"):
             links.append(f'<a class="btn" href="{escape(demo_url(p))}">{escape(p.get("demo_label", "Demo"))}</a>')
         feats.append(
-            f'<section class="scene project" id="feature-{p["slug"]}" data-state="{f["state"]}" data-slug="{p["slug"]}" data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" '
+            f'<section class="scene project" id="feature-{p["slug"]}" data-state="flagship" data-slug="{p["slug"]}" data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" '
             f'data-title="{escape(p["title"], quote=True)}" aria-labelledby="t-{p["slug"]}">'
             f'<div class="scene-in">'
             f'<p class="mono meta"><span>{i:02d} / 04</span><span>{escape(f["area"])}</span><span>{escape(sc["metric"])}</span></p>'
@@ -294,15 +292,15 @@ def home_page(projects):
             f'<h2 class="display">{escape(f["word"])}</h2>'
             f'<div class="copy"><h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3><p class="line">{line}</p>'
             f'<p class="mono small">{escape(sc["note"])}</p><p class="btns">{"".join(links)}</p></div>'
+            f'<img class="still" src="assets/thumbs/{p["slug"]}.webp" alt="Screenshot of {escape(p["title"], quote=True)}" width="880" height="503" loading="lazy" decoding="async">'
             f'</div></section>')
-    langs = Counter(r["l"] for r in field).most_common()
-    lang_rows = "".join(f'<div><dt>{escape(k)}</dt><dd class="mono">{v}</dd></div>' for k, v in langs[:6])
-    commits = sum(r["c"] for r in field)
+    commits = sum(r["commits"] for r in gh.values())
+    last = max((r["pushed_at"][:10] for r in gh.values()), default="")
     tpl = (ROOT / "index.template.html").read_text()
-    assert "{{FEATURED}}" in tpl and "/*FIELD*/[]" in tpl
-    return (tpl.replace("{{FEATURED}}", "".join(feats)).replace("{{COUNT}}", str(len(projects))).replace("{{REPOS}}", str(len(field)))
-               .replace("{{COMMITS}}", f"{commits:,}").replace("{{LAST_PUSH}}", max(r["t"] for r in field)).replace("{{LANG_ROWS}}", lang_rows).replace("{{PAGES}}", str(sum(1 for r in field if r["p"])))
-               .replace("/*FIELD*/[]", json.dumps(field, separators=(",", ":")).replace("</", "<\\/"))
+    assert "{{FEATURED}}" in tpl and "/*ATLAS*/{}" in tpl
+    return (tpl.replace("{{FEATURED}}", "".join(feats)).replace("{{COUNT}}", str(len(projects))).replace("{{REPOS}}", str(len(gh)))
+               .replace("{{COMMITS}}", f"{commits:,}").replace("{{LAST_PUSH}}", last).replace("{{PAGES}}", str(sum(1 for r in gh.values() if r.get("homepage"))))
+               .replace("/*ATLAS*/{}", json.dumps(atlas, separators=(",", ":")).replace("</", "<\\/"))
                .replace("{{PORTFOLIO_CSS}}", asset_version("portfolio.css")).replace("{{HOME_JS}}", asset_version("home.js")))
 
 
