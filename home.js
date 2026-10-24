@@ -103,7 +103,7 @@ import * as THREE from "three";
   const sizeOf = r => 4 + Math.min(22, Math.sqrt(r.c) * 3.2);
   const STATES = {
     hero() {   // a ribbon: x = the order the repository was created in, y = its language row; size by commits; case studies lit
-      const R0 = region(), R = phone() ? { ...R0, y0: -0.2, y1: 0.12 } : R0, rows = LANGS.length, used = {}, per = {};   // on phones the count sits above the ribbon
+      const R0 = region(), R = phone() ? { ...R0, y0: -0.3, y1: 0.0 } : R0, rows = LANGS.length, used = {}, per = {};   // on phones the count sits above the ribbon
       DATA.forEach(r => { per[r.l] = (per[r.l] || 0) + 1; });
       DATA.forEach((r, i) => {
         const li = Math.max(0, LANGS.indexOf(r.l)), n = used[r.l] = (used[r.l] || 0) + 1, cols = Math.min(per[r.l], phone() ? 14 : 26);
