@@ -275,7 +275,7 @@ def home_page(projects):
     by_slug = {p["slug"]: p for p in projects}
     gh = github()
     atlas = json.loads((ROOT / "assets" / "atlas" / "atlas.json").read_text())
-    feats = []
+    feats, scenes = [], []
     for i, f in enumerate(json.loads((ROOT / "featured.json").read_text()), 1):
         p, sc = by_slug[f["slug"]], f["scale"]
         big, unit = unit_split(sc)
@@ -283,8 +283,12 @@ def home_page(projects):
         links = [f'<a class="btn btn-fill" href="{p["slug"]}/">Read the case study</a>', f'<a class="btn" href="{escape(p["repo"])}" target="_blank" rel="noopener">Code</a>']
         if p.get("demo"):
             links.append(f'<a class="btn" href="{escape(demo_url(p))}">{escape(p.get("demo_label", "Demo"))}</a>')
+        side = "right" if i % 2 else "left"   # the screen hangs on the left wall for odd rooms, so the copy sits right
         feats.append(
-            f'<section class="scene project" id="feature-{p["slug"]}" data-state="flagship" data-slug="{p["slug"]}" data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" '
+            f'<section class="scene card" data-cam="card" data-n="{i}" aria-hidden="true"><div class="scene-in">'
+            f'<p class="mono meta"><span>{i:02d} / 04</span><span>{escape(f["area"])}</span></p>'
+            f'<p class="display card-line">{escape(f["card"])}</p></div></section>'
+            f'<section class="scene room" id="feature-{p["slug"]}" data-cam="room" data-n="{i}" data-side="{side}" data-slug="{p["slug"]}" data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" '
             f'data-title="{escape(p["title"], quote=True)}" aria-labelledby="t-{p["slug"]}">'
             f'<div class="scene-in">'
             f'<p class="mono meta"><span>{i:02d} / 04</span><span>{escape(f["area"])}</span><span>{escape(sc["metric"])}</span></p>'
@@ -292,13 +296,14 @@ def home_page(projects):
             f'<h2 class="display">{escape(f["word"])}</h2>'
             f'<div class="copy"><h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3><p class="line">{line}</p>'
             f'<p class="mono small">{escape(sc["note"])}</p><p class="btns">{"".join(links)}</p></div>'
-            f'<img class="still" src="assets/thumbs/{p["slug"]}.webp" alt="Screenshot of {escape(p["title"], quote=True)}" width="880" height="503" loading="lazy" decoding="async">'
+            f'<img class="still" src="{p["slug"]}/cover-800.webp" alt="Screenshot of {escape(p["title"], quote=True)}" width="{webp_size(ROOT / p["slug"] / "cover-800.webp")[0]}" height="{webp_size(ROOT / p["slug"] / "cover-800.webp")[1]}" loading="lazy" decoding="async">'
             f'</div></section>')
+        scenes.append(f'<script src="motion/scenes/{p["slug"]}.js?v={asset_version("motion/scenes/" + p["slug"] + ".js")}" defer></script>')
     commits = sum(r["commits"] for r in gh.values())
     last = max((r["pushed_at"][:10] for r in gh.values()), default="")
     tpl = (ROOT / "index.template.html").read_text()
-    assert "{{FEATURED}}" in tpl and "/*ATLAS*/{}" in tpl
-    return (tpl.replace("{{FEATURED}}", "".join(feats)).replace("{{COUNT}}", str(len(projects))).replace("{{REPOS}}", str(len(gh)))
+    assert "{{FEATURED}}" in tpl and "{{SCENES}}" in tpl and "/*ATLAS*/{}" in tpl
+    return (tpl.replace("{{FEATURED}}", "".join(feats)).replace("{{SCENES}}", "".join(scenes)).replace("{{COUNT}}", str(len(projects))).replace("{{REPOS}}", str(len(gh)))
                .replace("{{COMMITS}}", f"{commits:,}").replace("{{LAST_PUSH}}", last).replace("{{PAGES}}", str(sum(1 for r in gh.values() if r.get("homepage"))))
                .replace("/*ATLAS*/{}", json.dumps(atlas, separators=(",", ":")).replace("</", "<\\/"))
                .replace("{{PORTFOLIO_CSS}}", asset_version("portfolio.css")).replace("{{HOME_JS}}", asset_version("home.js")))

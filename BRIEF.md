@@ -1,6 +1,9 @@
-# Portfolio brief (2026-10-24, fourth direction: THE TOWER)
+# Portfolio brief (2026-10-24, fifth direction: THE HALL)
 
-Everything before this is history: no printed objects, no desk, no paper, no boarding pass, no colour fields, no dots.
+Everything before this is history: no printed objects, no desk, no paper, no boarding pass, no colour fields, no dots, no
+cylinder tower. The owner's references for this pass: riseof.digital (a building you walk through, one room per service,
+an elevator between), kprverse.com (huge type, bordered frames, chapters), persepolis.getty.edu (a scroll-driven film with
+an Enter gate, a sound choice, one line of copy per scene, no gaps).
 This file is the spec; the research behind it is in `~/projects-site-evidence/tower-2026-10-24/RESEARCH.md` (the Awwwards
 crawl and the 690 Webflow templates) and `~/projects-site-evidence/index-2026-10-24/RESEARCH.md` (the earlier passes).
 
@@ -11,20 +14,19 @@ for data and business analyst roles. The first screen must show, in under five s
 that it is real. Desired actions: open a flagship case study, query the index, download the résumé, contact.
 
 ## The one idea
-**The work is the world.** Every one of the 224 case studies is one screen in a tower of screens standing in a dark hall on
-a reflecting floor. The visitor does not read about the work; they stand in front of it and fly through it.
-- The opening is the tower assembling: the screens fly in from the dark in order while a counter runs 000 to 224. The
-  statement rises almost at once; the count and the assembly continue behind it. Skip, wheel, key or touch ends it. A repeat
-  visit plays it at 0.45x; a hash, reduced motion, or coming back from a case study skips it.
-- Scroll is a camera flight, not a page: the hero stands before the tower; at each of the four flagships, that project's own
-  screen leaves the tower and comes to a stage in front of the camera (real cover, real number); the about section looks down
-  into the tower from above; the index unwraps the tower into a flat wall of all 224 with a reflection; the contact pulls far
-  back across the floor.
-- The HUD is thin instrumentation: name and role, three nav items, Tampa time, the counts, the last push. Mono for data,
-  Bricolage for words. The page copy sits bottom-left so the object owns the frame.
-- The index is a real query over the inventory (`language:`, `kind:`, `year:`, `commits>`, `live:yes`, free words), with
-  Covers and Table views. Every case study carries a facts strip from its repository (commits, last push, created, languages,
-  live site, topics, licence).
+**The work is a hall you walk down, and the walk is a film.** Every one of the 224 case studies is a screen on the hall's
+walls; the four showcased projects are rooms where their own dashboard plays live on the wall.
+- The gate: a ring fills as the 224 screens load (real bytes), then "Enter with sound" or "Enter in silence". Nothing
+  else on screen. This is the first frame.
+- The flight: 4.6 s from above the hall down to eye level, the screens coming on ahead of the camera, grain and
+  aberration settling, the statement rising as the camera lands. Wheel, touch or key skips it.
+- The walk: scroll scrubs the camera (GSAP ScrollTrigger over Lenis). Between rooms a title card asks the project's
+  question in one line, letters rising; in the room the camera turns to the wall where the project's screen hangs,
+  drawn live from its motion scene with a CRT pass; the number counts up, the word and copy rise. Four rooms, alternating
+  walls. Then Method (three beats under a sweeping light), About, the end wall (every wall screen leaves the wall and
+  assembles into one grid; point at any screen to see its name, click to open it), and Contact with the lights going down.
+- Sound is a choice: a low bed, a riser for the flight, a ping per chapter. Off by default; the choice is remembered.
+- The HUD: name and role, three nav items, the live strip, a chapter counter with the chapter's name, a cursor ring.
 
 ## Art direction
 - Colour: **ink #07070C**, **white #FFFFFF**, one hot accent **#FF4D00** for the first meta word, underlines and the one

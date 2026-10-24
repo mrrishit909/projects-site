@@ -49,36 +49,34 @@ A project's record sleeve on the home page, and the "Next project" link on the c
 
 ## How the site is laid out (so it can be changed safely)
 
-* **`/projects/` (index.html) is the home: THE TOWER** (2026-10-24, the fourth direction; see `BRIEF.md`). The work is the
-  world: every one of the 224 case studies is one screen in a tower of screens in a dark hall over a reflecting floor.
-  `tools/github.sh` pulls every public repository (description, topics, homepage, languages, README head, commit count)
-  into `data/github.json` (`data/repos.tsv` is the `gh repo list` it reads); `build.py` `github()` keys it by name,
-  `GH_ALIAS` maps the eleven `*-crm` case studies to `crm-showcases`, and every project gets `p["gh"]`. **Re-run
-  `tools/github.sh` then `python3 build.py` after pushing new repositories.** The screens' textures are two 4096 px WebP
-  atlases in `assets/atlas/` (`atlas.json` lists every item's slug, atlas, column and row; rebuild them from
-  `assets/thumbs/` with the Pillow venv `~/.venvs/bp2/bin/python` when projects are added, see the atlas note in
-  `~/projects-site-evidence/tower-2026-10-24/README.md`); `build.py` `home_page()` injects `atlas.json` into
-  `<script id="atlas-data">`. `index.template.html` + `portfolio.css` + `home.js` (ES module; Three.js r170 vendored at
-  `vendor/three/`, import map in the head; Lenis). home.js: the statement paints first, then (400 ms after load) Three.js and
-  the atlases load (`ImageBitmapLoader`, off-thread decode); two `InstancedMesh`es (one per atlas) with a custom shader
-  (frame, back-face dimming, scan-line, fog, `aLit`/`aSel` attributes), mirror copies under a floor whose material does not
-  write depth, a floor shader (grid, glow), dust `Points`, one post pass (grain, vignette, chromatic aberration by scroll
-  speed); `LAYOUT.tower` / `LAYOUT.wall` give every screen a target, `CAM` gives each section `data-state` (tower,
-  flagship(k), inside, wall, far) an eye, aim and fov, with phone variants; a flagship's screen lerps to a "stage" in front
-  of the camera; scroll blends into the next section over its last 45% with a per-screen delay; frame-rate-independent
-  lerps; adaptive DPR. The opening counts 000 to 224 over 2.6 s while the screens fly in (0.45x on a repeat; Skip, wheel,
-  key or touch ends it; none with a hash, under reduced motion, or returning from a case study via `sessionStorage.vt`);
-  `intro-land` (the lines rise) is a 350 ms timer in the head, `intro-done` is set by home.js. Without WebGL each flagship
-  shows its `.still` cover. Palette: ink #07070C, white, hot #FF4D00 (accent only), dim white 62%. Type: Bricolage
-  Grotesque (words), JetBrains Mono (data), self-hosted in `vendor/fonts/`. Nav: Work, Index, Contact plus a live strip
-  (Tampa time, counts, days since the last push). Professional facts come from the résumé at ~/portfolio/resume.pdf; do
-  not add claims not in it.
+* **`/projects/` (index.html) is the home: THE HALL** (2026-10-24, the fifth direction; see `BRIEF.md`). A rendered hall
+  of 224 screens, one per case study, that the visitor walks down like a film: a gate (loading ring counting the atlas
+  bytes to 224, then "Enter with sound" / "Enter in silence"), a 4.6 s flight in from above, the statement, then for each
+  of the four flagships a title card (one line, characters rising on scroll) and a room where that project's own screen
+  hangs large on a wall, drawn LIVE every frame from its motion-tile scene (`motion/scenes/<slug>.js`, the same scene that
+  renders its loop video) through a CRT pass (curvature, scanlines, phosphor halo, rolling bar), then Method (three beats
+  under a light sweep), About, Index (the wall screens leave the walls and assemble into one grid at the end of the hall)
+  and Contact (the lights go down). `tools/github.sh` pulls every public repository into `data/github.json` (`GH_ALIAS`
+  maps the eleven `*-crm` case studies to `crm-showcases`); **re-run it then `python3 build.py` after pushing new
+  repositories.** The wall screens' textures are two 4096 px WebP atlases in `assets/atlas/` plus 2048 px copies for
+  phones (`atlas.json` lists each item's slug, atlas, column, row; rebuild from `assets/thumbs/` with
+  `~/.venvs/bp2/bin/python`, see `~/projects-site-evidence/tower-2026-10-24/README.md`); `build.py` `home_page()` injects
+  it into `<script id="atlas-data">` and emits one title card + room per `featured.json` entry (`card` is the card's line,
+  `word` the room's headline) plus a `<script>` per flagship scene. Files: `index.template.html` + `portfolio.css` +
+  `home.js` (gate, sound bed and pings via WebAudio, cursor ring, pick label, poses per section, GSAP ScrollTrigger scrub
+  over Lenis, chapter HUD) + `world.js` (Three.js r170 tree-shaken in `vendor/three/`: instanced wall screens with mirror
+  copies under a depth-less floor, ceiling rail, light shafts, dust, the four live CRT screens, raycast picking, post pass
+  with grain / vignette / aberration by scroll speed, `hall` and `grid` layouts). GSAP 3.13 + ScrollTrigger are vendored
+  in `vendor/gsap/` (Standard License, free). Reduced motion: gate and Enter, no flight, poses without easing. No WebGL:
+  the copy and each room's `cover-800.webp` still. Palette: ink #07070C, white, hot #FF4D00 (accent only), dim white 62%.
+  Type: Bricolage Grotesque (words), JetBrains Mono (data), Geist inside the live screens; all self-hosted in
+  `vendor/fonts/`. Professional facts come from the résumé at ~/portfolio/resume.pdf; do not add claims not in it.
 * **Selected Work** is filled by `build.py` from `featured.json` (four slugs; `area`, `headline`, `result`, `contribution`,
-  `scale` {metric, unit, value, note}, `state` (the field state), `word` (the one-word headline)). Each is a `.scene.project` with `data-state="flagship"` and `data-slug`:
-  meta line, the number (counts up when entered; "31 of 31" never counts), the word, title, one line, note, links, and a
-  `.still` fallback image.
+  `scale` {metric, unit, value, note}, `card` (the title card line), `word` (the room headline)). Each becomes a
+  `.scene.card` and a `.scene.room[data-cam=room][data-slug][data-side]`: meta line, the number (counts up when entered;
+  "31 of 31" never counts), the word, title, one line, note, links, and a `.still` fallback image.
 * **About** lists repositories by language from the inventory; **Index** on the home is a form that submits `?q=` to
-  `all.html`; **Contact** is the second hero (the far view). `404.html` is a plain ink page in the same type.
+  `all.html`; **Method** is three beats on one screen; **Contact** is the second hero (lights down). `404.html` is a plain ink page in the same type.
 * **Into a case study and back**: cross-document View Transitions carry the clicked title (`pageswap` / `pagereveal`).
   Flagship case pages link back to `../#feature-<slug>`.
 * **Case studies** (`site.css`, self-contained tokens in the tower palette; Bricolage + JetBrains Mono): an ink hero
@@ -101,10 +99,13 @@ A project's record sleeve on the home page, and the "Next project" link on the c
   (a click pushes one entry with `state.pushed`; Previous / Next replace it; Close steps back only over an entry this page
   pushed). `/projects/archive/` redirects to `/projects/#projects`, which forwards to `all.html`.
 * **Checks:** `python3 -m http.server 8800 --bind 127.0.0.1 &` then `NODE_PATH=$(npm root -g) node tests/portfolio-check.cjs`
-  (88 checks: both pages without JS, every internal link on disk, page order and scene states, the atlas data, the opening
-  (count, land, skip, repeat, reduced motion, `vt`), the world rendering (non-ink pixels), each flagship's number, the nav stepping away and back, sharp thumbnails, contrast on every colour field,
-  catalogue search / tabs / filter / reveal / dialog / history, deep links and forwards, reduced motion, overflow at five widths
-  on both pages, console errors). Lighthouse 12.8.2 mobile with gzip (`npx serve@14.2.4`, port 8801): see
+  (101 checks: both pages without JS, every internal link on disk, page order hero > cards and rooms > method > about >
+  index > contact, the gate (count to 224, ready, Enter, the flight and its skip, `vt` and reduced motion), the world
+  rendering, the chapter HUD per section, each room's number landing on its figure and `is-in`, the beats taking turns, the
+  sound toggle, the pick label, contrast from tokens, the nav stepping away and back, the catalogue's search / tabs /
+  reveal / dialog / history, deep links and forwards, keyboard order, copy e-mail, overflow at five widths, console
+  errors). The suite launches Chromium on the GPU (`--use-angle=metal`); `SOFTGL=1` forces the software renderer. A full
+  run takes over ten minutes; run it in the background. Lighthouse 12.8.2 mobile with gzip (`npx serve@14.2.4`, port 8801): see
   `~/projects-site-evidence/tower-2026-10-24/README.md` for the measured numbers (the home carries a WebGL world and
   1.8 MB of atlases, loaded after the statement paints).
 * `theme.css` and `site.css` style the case studies; `vendor/` holds Lenis, Three.js and the fonts with their licences.
