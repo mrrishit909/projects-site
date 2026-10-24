@@ -49,15 +49,11 @@ A project's record sleeve on the home page, and the "Next project" link on the c
 
 ## How the site is laid out (so it can be changed safely)
 
-* **`/projects/` (index.html) is the home** (redesigned 2026-10-23 from the owner's pick of three concepts, then calmed the same
-  day at the owner's request: "colour scheme a bit too much", no blocks, add an intro, keep the scroll animation):
-  `index.template.html` + `portfolio.css` + `home.js` (no build step; Lenis for smooth scroll). Sections: hero, Selected Work
-  (four faintly tinted screens), a band linking the catalogue, about + experience (experience on a notebook page), contact
-  (ink, a business card), footer. Palette at the top of `portfolio.css`: off-white `#F7F5F0`, ink `#15193A`, ONE accent, cobalt
-  `#3B5BFF` (`#2B45D6` for text), used sparingly (numbers, hover, focus); each project screen gets a faint tint after the
-  colour printed on its object (`--t-pass|rcpt|ruler|book`). The printed objects keep their own colours. One typeface, Archivo
+* **`/projects/` (index.html) is the home**: `index.template.html` + `portfolio.css` + `home.js` (ES module, no build step;
+  Lenis for smooth scroll). Sections: hero, four project scenes, about + experience, contact, footer. One typeface, Archivo
   (variable width + weight, vendor/fonts, OFL). Professional facts come from the résumé at ~/portfolio/resume.pdf; do not add
-  claims not in it.
+  claims not in it. (Earlier homes: the desk with the Blender flight, 2026-10-23; `assets/flight/` stills still back the 404
+  and OG image.)
 * **The concept: colour fields and a live scene** (2026-10-24, after the owner rejected the desk as "generic"). The home is
   six full-screen colour blocks (`.scene`, each with `data-field` / `data-ink` / `data-state`), type at a quarter of the
   screen (`.giant`, Archivo 900 at 125% width), one line per screen, and ONE live Three.js scene (`vendor/three/`, r170,
