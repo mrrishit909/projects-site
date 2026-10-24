@@ -1,218 +1,127 @@
-/* The home (index.html) and the catalogue (all.html). One desk, one afternoon: every section of the home is a camera position
-   on the same pale oak table rendered in Blender (tools/desk/scene.py); everything the visitor reads is a piece of paper
-   lying on it. Off-white paper, ink, one cobalt accent. Case studies keep site.css and theme.css. */
+/* The home (index.html) and the catalogue (all.html). The home is a run of full-screen colour fields that wipe into each
+   other as you scroll, type at a quarter of the screen, one line per screen, and one live 3D scene (home.js, Three.js) of
+   the four printed project objects that reforms for every section and leans toward the pointer. Case studies: site.css. */
 @font-face { font-family: "Archivo"; src: url(vendor/fonts/Archivo-latin.woff2) format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
 
 :root {
   --bg: #f7f5f0; --paper: #fffdf8; --ink: #15193a; --ink-2: #464a66; --line: rgb(21 25 58 / 0.13);
   --accent: #3b5bff; --accent-ink: #2b45d6; --accent-tint: #e8ecff;
-  --oak: #e6dcc9;
   --sans: "Archivo", "Helvetica Neue", Arial, system-ui, sans-serif;
-  --gutter: clamp(16px, 4vw, 56px);
+  --gutter: clamp(18px, 4vw, 64px);
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --ease-travel: cubic-bezier(0.65, 0, 0.35, 1);
-  /* one sun, upper left: every shadow on the page falls down and to the right like the rendered ones */
-  --lift: 0 1px 0 rgb(21 25 58 / 0.08), 6px 10px 20px -12px rgb(60 40 10 / 0.5);
-  --paper-shadow: 0 1px 0 rgb(21 25 58 / 0.06), 1px 2px 3px rgb(60 40 10 / 0.08), 22px 30px 40px -22px rgb(60 40 10 / 0.55);
+  --slam: cubic-bezier(0.16, 1, 0.3, 1);
+  --lift: 0 1px 0 rgb(0 0 0 / 0.06), 0 10px 24px -14px rgb(0 0 0 / 0.5);
   color-scheme: light;
 }
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: 80px; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 0; }
 html.lenis-on { scroll-behavior: auto; }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 17px; line-height: 1.5; -webkit-font-smoothing: antialiased; overflow-x: clip; }
-/* paper grain over everything: one tiny SVG noise, four percent, no blend mode so it stays a single cheap layer */
-body.home::after { content: ""; position: fixed; inset: 0; z-index: 90; pointer-events: none; opacity: 0.045; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.15 0 0 0 0 0.1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 240px 240px; }
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; }
 h1, h2, h3, p, dl, dd, ol, ul, figure { margin: 0; }
 ol, ul { padding: 0; list-style: none; }
 button, input, select { font: inherit; color: inherit; }
-:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+:focus-visible { outline: 3px solid currentColor; outline-offset: 4px; border-radius: 6px; }
 .visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.skip { position: fixed; z-index: 100; left: 12px; top: -80px; padding: 12px 18px; border-radius: 999px; background: var(--ink); color: var(--paper); font-weight: 600; text-decoration: none; }
+.skip { position: fixed; z-index: 100; left: 12px; top: -80px; padding: 12px 18px; border-radius: 999px; background: var(--ink); color: #fff; font-weight: 600; text-decoration: none; }
 .skip:focus { top: 12px; }
 
-.display { font-weight: 850; font-stretch: 100%; letter-spacing: -0.035em; line-height: 0.95; font-size: clamp(40px, 6vw, 104px); text-wrap: balance; }
-.section-lede { max-width: 56ch; font-size: clamp(17px, 1.3vw, 20px); color: var(--ink-2); }
-
-/* paper: anything you read lies on the desk as a sheet, lit from the upper left */
-.paper { position: relative; background: var(--paper); border-radius: 3px; box-shadow: var(--paper-shadow); }
-.stamp { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 14px; padding: 3px 10px; border: 1.5px solid var(--accent-ink); border-radius: 4px; color: var(--accent-ink); font-weight: 750; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; transform: rotate(-2deg); transform-origin: left center; }
-.scene-bg, .scene-bg img { position: absolute; inset: 0; width: 100%; height: 100%; }
-.scene-bg img { object-fit: cover; object-position: 50% 50%; }
-.scene-bg { z-index: 0; overflow: hidden; background: var(--oak); }
-.scene-bg img { transform: scale(calc(1 + var(--kb, 0) * 0.06)); transform-origin: 50% 60%; will-change: transform; }   /* the camera breathes as the screen scrolls */
-
-/* pills: white with a hairline and a soft shadow, ink for the main action */
-.pill { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 10px 20px; border: 0; border-radius: 999px; background: var(--paper); color: var(--ink); font-weight: 600; font-size: 16px; text-decoration: none; cursor: pointer; box-shadow: inset 0 0 0 1px var(--line), var(--lift); transition: transform 180ms var(--ease), background-color 180ms, color 180ms, box-shadow 180ms; }
-.pill:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px var(--line), 0 1px 0 rgb(21 25 58 / 0.08), 8px 14px 24px -12px rgb(60 40 10 / 0.55); }
+/* type: one family, two voices. The giant voice is 900 weight at 125% width, the widest Archivo goes */
+.giant { font-weight: 900; font-stretch: 125%; line-height: 0.82; letter-spacing: -0.045em; text-transform: uppercase; text-wrap: balance; font-size: clamp(60px, 15vw, 300px); }
+.tag { display: inline-flex; align-items: center; gap: 10px; font-weight: 750; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; }
+.tag .idx { padding: 2px 8px; border: 2px solid currentColor; border-radius: 4px; }
+.line { max-width: 28ch; font-size: clamp(18px, 1.5vw, 24px); line-height: 1.3; font-weight: 500; text-wrap: pretty; }
+.line.small { font-size: clamp(15px, 1.1vw, 18px); max-width: 34ch; }
+.pill { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 10px 22px; border: 0; border-radius: 999px; background: #fff; color: var(--ink); font-weight: 700; font-size: 16px; text-decoration: none; cursor: pointer; box-shadow: var(--lift); transition: transform 180ms var(--ease), background-color 180ms, color 180ms; }
+.pill:hover { transform: translateY(-3px) rotate(-1deg); }
 .pill:active { transform: translateY(0); transition-duration: 80ms; }
-.pill-ink { background: var(--ink); color: var(--paper); box-shadow: var(--lift); }
-.pill-ink:hover { background: var(--accent-ink); }
+.pill-ink { background: var(--ink); color: #fff; }
 .pill[hidden] { display: none; }
+.links { display: flex; flex-wrap: wrap; gap: 10px; }
 
-/* nav: wordmark and links as pills; it steps out of the way while you scroll down and comes back when you scroll up */
+/* the field and the live scene: both fixed, the page scrolls over them */
+.home .field { position: fixed; inset: 0; z-index: 0; background: var(--field-now, #6b4cff); overflow: hidden; }
+.wipe { position: absolute; inset: 0; background: var(--field-next, #6b4cff); transform: translateY(-101%); }
+.wipe.is-on { transition: transform 620ms var(--slam); transform: translateY(0); }
+.gl { position: fixed; inset: 0; z-index: 3; width: 100%; height: 100%; pointer-events: none; }   /* over the blocks, under the nav */
+html:not(.gl-on) .gl { display: none; }
+
+/* nav: white pills over whatever field is showing; it steps away on scroll down and returns on scroll up */
 .nav { position: fixed; z-index: 50; inset: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px var(--gutter); pointer-events: none; transition: transform 420ms var(--ease), opacity 300ms; }
 .nav.is-away { transform: translateY(-120%); opacity: 0; }
 .menu-open .nav.is-away, .nav.is-away:focus-within { transform: none; opacity: 1; }
 .nav > * { pointer-events: auto; }
-.wordmark, .nav-links a, .menu-btn { display: inline-flex; align-items: center; min-height: 40px; padding: 6px 16px; border: 0; border-radius: 999px; background: rgb(255 253 248 / 0.92); color: var(--ink); font-weight: 600; font-size: 15px; text-decoration: none; box-shadow: inset 0 0 0 1px var(--line), var(--lift); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: background-color 160ms, color 160ms, transform 160ms var(--ease); }
-.wordmark { font-weight: 750; letter-spacing: -0.01em; }
+.wordmark, .nav-links a, .menu-btn { display: inline-flex; align-items: center; min-height: 42px; padding: 6px 16px; border: 0; border-radius: 999px; background: #fff; color: var(--ink); font-weight: 700; font-size: 15px; text-decoration: none; box-shadow: var(--lift); transition: background-color 160ms, color 160ms, transform 160ms var(--ease); }
+.wordmark { font-weight: 800; letter-spacing: -0.01em; }
 .menu-btn { display: none; cursor: pointer; }
 .nav-links { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
-.nav-links a:hover { transform: translateY(-1px); }
-.nav-links a[aria-current] { background: var(--ink); color: var(--paper); }
+.nav-links a:hover { transform: translateY(-2px) rotate(-1.5deg); }
 
-/* hero: the desk, the wordmark over it, thin frame lines; a sticky stage the camera flight scrolls through */
-.hero { --p: 0; position: relative; height: 280svh; background: var(--oak); }
-.hero-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; background: #e3d8c5; }
-.hero-media, .hero-still, .hero-close img, .hero-canvas, .hero-fade, .hero-veil { position: absolute; inset: 0; width: 100%; height: 100%; }
-.hero-still, .hero-close img { object-fit: cover; object-position: 50% 30%; }   /* the canvas crops the same way (home.js) */
-.hero-live .hero-still { visibility: hidden; }
-/* the intro's first frame: the camera close on a blank boarding pass; the pass prints, then the canvas lifts off */
-html:not(.intro) .hero-close, html.intro-done .hero-close { display: none; }
-.hero-close { top: 1px; height: calc(100% - 1px); }   /* a pixel short of the viewport: Chrome ignores a full-viewport image for LCP */
-.hero-veil { background: var(--bg); opacity: calc(var(--veil, 0) * 0.66); pointer-events: none; }   /* quiets the desk while the beat passes */
-.hero-fade { background: var(--oak); opacity: calc((var(--p) - 0.88) * 9); pointer-events: none; }
-.frame { position: absolute; inset: 22px; border: 1px solid rgb(21 25 58 / 0.28); pointer-events: none; opacity: calc(1 - var(--p) * 3); }
-.frame i { position: absolute; width: 18px; height: 18px; }
-.frame i::before, .frame i::after { content: ""; position: absolute; background: var(--ink); }
-.frame i::before { left: 8px; top: 0; width: 2px; height: 18px; }
-.frame i::after { top: 8px; left: 0; height: 2px; width: 18px; }
-.frame i:nth-child(1) { left: -9px; top: calc(50% - 9px); }
-.frame i:nth-child(2) { right: -9px; top: calc(50% - 9px); }
-.frame i:nth-child(3) { left: calc(50% - 9px); top: -9px; }
-.frame i:nth-child(4) { left: calc(50% - 9px); bottom: -9px; }
-.wordmark-xl { position: absolute; left: 0; right: 0; top: 17%; display: flex; justify-content: center; font-weight: 900; font-stretch: 112%; font-size: 19.5vw; line-height: 0.8; letter-spacing: -0.045em; color: var(--ink); white-space: nowrap; }
-.wordmark-xl span { display: inline-block; will-change: transform, opacity; }
-.hero-tag, .hero-scroll { position: absolute; bottom: 44px; font-weight: 600; font-size: 15px; line-height: 1.25; color: var(--ink); opacity: calc(1 - var(--p) * 4); }
-.hero-tag { left: 48px; }
-.hero-scroll { right: 48px; display: flex; align-items: center; gap: 10px; }
-.hero-scroll::after { content: ""; width: 1px; height: 34px; background: var(--ink); transform-origin: top; animation: drop 1.8s var(--ease) infinite; }
+/* scenes: each one is a full screen of one colour; the copy lives in the left column on desktop, the object in the right */
+main { position: relative; z-index: 2; }
+.scene { position: relative; min-height: 100svh; color: var(--on); background: var(--field); }   /* hard colour blocks, cut at the boundary */
+.scene-in { position: relative; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); grid-template-rows: auto 1fr auto; min-height: 100svh; padding: 110px var(--gutter) 56px; gap: 16px 24px; }
+.scene-in > * { grid-column: 1; }
+.scene .tag { align-self: start; }
+.scene .giant { align-self: end; }
+.scene .line { align-self: end; }
+.still { display: none; }   /* the no-JS / no-WebGL object: the still cut-out in the right column */
+html:not(.gl-on) .still { display: block; grid-column: 2; grid-row: 1 / span 3; align-self: center; justify-self: center; width: min(100%, 560px); height: auto; max-height: 70svh; object-fit: contain; filter: drop-shadow(0 30px 40px rgb(0 0 0 / 0.35)); transform: rotate(-6deg); }
+
+/* hero: the name as big as the screen allows, the scroll hint, and the line */
+.hero .scene-in { grid-template-rows: 1fr auto auto; padding-bottom: 44px; }
+.name { grid-column: 1 / -1; align-self: center; display: flex; justify-content: center; font-size: clamp(76px, 24vw, 520px); line-height: 0.8; letter-spacing: -0.05em; }
+.name span { display: inline-block; overflow: hidden; padding: 0.04em 0 0.02em; }
+.name i { display: inline-block; font-style: normal; will-change: transform; }
+.hero-line { grid-column: 1; }
+.hero-scroll { grid-column: 2; grid-row: 3; justify-self: end; align-self: end; gap: 12px; }
+.hero-scroll i { display: inline-block; width: 2px; height: 36px; background: currentColor; transform-origin: top; animation: drop 1.8s var(--ease) infinite; }
 @keyframes drop { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
-.beat { position: absolute; left: var(--gutter); right: var(--gutter); top: 38%; transform: translateY(-50%); display: grid; justify-items: center; font-weight: 900; font-stretch: 112%; font-size: clamp(56px, 10.5vw, 190px); line-height: 0.88; letter-spacing: -0.045em; color: var(--ink); pointer-events: none; }
-.beat span { opacity: 0; }
-html:not(.is-moving) .beat { display: none; }
 
-/* intro (first load): the first frame is the camera close on a blank boarding pass; home.js prints the figures onto it,
-   then plays the flight backwards so the camera lifts off onto the whole desk, and as it lands (html.intro-land) the frame
-   draws in, the wordmark rises letter by letter, then the nav and labels. Transform and opacity only. html.intro is set in
-   the head unless reduced motion is on; a second visit in the same session plays it faster (--k). A skip button, any
-   scroll, key or tap ends it at once. */
+/* the opening: the field is already there; the objects fly in (home.js), then the letters slam up out of their clips, then the
+   line, the nav and the hint. Transform and opacity only. html.intro is set in the head unless reduced motion is on; a second
+   visit in the session plays at 0.45x (--k). A skip button, any wheel, key or tap ends it at once. */
 html.intro { --k: 1; }
 html.intro.intro-again { --k: 0.45; }
-html.intro:not(.intro-land) .frame, html.intro:not(.intro-land) .wordmark-xl span, html.intro:not(.intro-land) .nav,
-html.intro:not(.intro-land) .hero-tag, html.intro:not(.intro-land) .hero-scroll { opacity: 0; }
-html.intro-land .frame { animation: frame-in calc(900ms * var(--k)) var(--ease) backwards; }
-html.intro-land .wordmark-xl span { animation: rise calc(800ms * var(--k)) var(--ease) backwards; }
-html.intro-land .wordmark-xl span:nth-child(2) { animation-delay: calc(60ms * var(--k)); }
-html.intro-land .wordmark-xl span:nth-child(3) { animation-delay: calc(120ms * var(--k)); }
-html.intro-land .wordmark-xl span:nth-child(4) { animation-delay: calc(180ms * var(--k)); }
-html.intro-land .wordmark-xl span:nth-child(5) { animation-delay: calc(240ms * var(--k)); }
-html.intro-land .wordmark-xl span:nth-child(6) { animation-delay: calc(300ms * var(--k)); }
-html.intro-land .nav { animation: drop-in calc(700ms * var(--k)) var(--ease) calc(500ms * var(--k)) backwards; }
-html.intro-land .hero-tag, html.intro-land .hero-scroll { animation: fade-in calc(700ms * var(--k)) var(--ease) calc(700ms * var(--k)) backwards; }
-.intro-skip { position: absolute; right: 48px; bottom: 44px; z-index: 3; display: none; align-items: center; min-height: 40px; padding: 6px 16px; border: 0; border-radius: 999px; background: rgb(255 253 248 / 0.92); color: var(--ink); font-weight: 600; font-size: 15px; cursor: pointer; box-shadow: inset 0 0 0 1px var(--line), var(--lift); }
+html.intro:not(.intro-land) .name i { transform: translateY(115%); }
+html.intro:not(.intro-land) .nav, html.intro:not(.intro-land) .hero-line, html.intro:not(.intro-land) .hero-scroll { opacity: 0; }
+html.intro-land .name i { animation: slam calc(900ms * var(--k)) var(--slam) backwards; }
+html.intro-land .name span:nth-child(2) i { animation-delay: calc(50ms * var(--k)); }
+html.intro-land .name span:nth-child(3) i { animation-delay: calc(100ms * var(--k)); }
+html.intro-land .name span:nth-child(4) i { animation-delay: calc(150ms * var(--k)); }
+html.intro-land .name span:nth-child(5) i { animation-delay: calc(200ms * var(--k)); }
+html.intro-land .name span:nth-child(6) i { animation-delay: calc(250ms * var(--k)); }
+html.intro-land .hero-line { animation: fade-up calc(700ms * var(--k)) var(--ease) calc(600ms * var(--k)) backwards; }
+html.intro-land .nav { animation: drop-in calc(700ms * var(--k)) var(--ease) calc(750ms * var(--k)) backwards; }
+html.intro-land .hero-scroll { animation: fade-up calc(700ms * var(--k)) var(--ease) calc(900ms * var(--k)) backwards; }
+.intro-skip { position: fixed; z-index: 60; right: var(--gutter); bottom: 28px; display: none; align-items: center; min-height: 42px; padding: 6px 16px; border: 0; border-radius: 999px; background: #fff; color: var(--ink); font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: var(--lift); }
 html.intro:not(.intro-land) .intro-skip { display: inline-flex; }
-@keyframes frame-in { from { opacity: 0.01; transform: scale(1.03); } }
-@keyframes rise { from { opacity: 0.01; transform: translateY(0.35em); } }
+@keyframes slam { from { transform: translateY(115%); } }
+@keyframes fade-up { from { opacity: 0.01; transform: translateY(18px); } }
 @keyframes drop-in { from { opacity: 0.01; transform: translateY(-16px); } }
-@keyframes fade-in { from { opacity: 0.01; } }   /* not 0: text that starts fully transparent paints late for LCP */
 
-/* selected work: four camera positions on the desk. The copy is an index card, the printed artefact a sheet that slides out
-   from under the object as the screen scrolls, the object lifts, counts and flips. */
-.work { position: relative; }
-.screen { position: relative; height: 230svh; background: var(--oak); }
-.screen-stage { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: 3vw; padding: 96px var(--gutter) 110px; }
-.screen-copy { z-index: 2; display: grid; gap: 8px; align-content: center; justify-items: start; max-width: 540px; padding: clamp(22px, 2.4vw, 34px) clamp(22px, 2.6vw, 38px); transform: rotate(-0.8deg); }
-.screen-copy .stamp { margin-bottom: 4px; }
-.screen-kind { font-weight: 600; font-size: 14px; letter-spacing: 0.02em; color: var(--ink-2); }
-.screen h3 { font-weight: 800; font-size: clamp(26px, 2.5vw, 40px); line-height: 1.02; letter-spacing: -0.02em; }
-.screen h3 a { text-decoration: none; }
-.screen h3 a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 5px; }
-.num { color: var(--accent-ink); display: flex; align-items: baseline; gap: 0.06em; margin: 10px 0 0; font-weight: 900; font-stretch: 105%; font-size: clamp(76px, 9vw, 160px); line-height: 0.82; letter-spacing: -0.055em; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.num-u { font-size: 0.38em; letter-spacing: -0.02em; color: var(--ink); }
-.num-label { font-weight: 600; font-size: 14px; }
-.screen-line { margin-top: 6px; font-size: clamp(16px, 1.2vw, 19px); line-height: 1.4; max-width: 34em; }
-.screen-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
-.table { position: relative; z-index: 1; height: 100%; display: grid; place-items: center; perspective: 1800px; }
-.sheet { position: absolute; z-index: 0; left: 6%; top: 50%; width: min(52%, 640px); padding: 10px; background: #fff; border-radius: 2px; box-shadow: var(--paper-shadow); transform: translate(calc(var(--slide, 0) * 22%), calc(-50% + var(--slide, 0) * -14%)) rotate(calc(2deg + var(--slide, 0) * 5deg)); transform-origin: 50% 50%; will-change: transform; }
-.sheet img { width: 100%; height: auto; border-radius: 1px; }
-.sheet.is-dark img { filter: invert(0.93) hue-rotate(180deg) saturate(1.1); }   /* dark screenshots printed on paper */
-.card { position: relative; z-index: 1; transform-style: preserve-3d; will-change: transform; }
-.card .front { max-width: none; backface-visibility: hidden; -webkit-backface-visibility: hidden; filter: drop-shadow(18px 26px 24px rgb(60 40 10 / 0.35)); }
-.card .back { position: absolute; display: grid; align-content: center; gap: 0.55em; padding: 6% 7%; backface-visibility: hidden; -webkit-backface-visibility: hidden; transform: rotateY(180deg); background: var(--paper); color: var(--ink); box-shadow: var(--paper-shadow); font-size: clamp(15px, 1.15vw, 19px); line-height: 1.4; }
-.back-label { font-weight: 700; font-size: 0.78em; color: var(--ink-2); }
-.back-label + p + .back-label { margin-top: 0.5em; }
-.back-tools { display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.82em; font-weight: 600; }
-.back-tools li { padding: 1px 9px; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--line); }
-.card-pass .front { width: min(56vw, 1000px); }
-.card-pass .back { left: 5.8%; top: 10.7%; width: 76.9%; height: 57.1%; border-radius: 6px; }
-.card-rcpt .front { height: min(82svh, 900px); width: auto; }
-/* the receipt's back prints like a till roll: top-aligned, the tools as lines, the blank tail below */
-.card-rcpt .back { left: 11.1%; top: 4.8%; width: 55.6%; height: 80.6%; align-content: start; padding: 10% 8%; background: #fffefa; box-shadow: none; font-size: clamp(14px, 1.05vw, 17px); }
-.card-rcpt .back-tools { display: grid; gap: 0; border-top: 1px dashed rgb(21 25 58 / 0.4); }
-.card-rcpt .back-tools li { padding: 4px 0; border-radius: 0; box-shadow: none; border-bottom: 1px dashed rgb(21 25 58 / 0.4); }
-.card-ruler .front { width: min(54vw, 980px); }
-/* the ruler is too slim to print on: its back is an index card clipped behind it */
-.card-ruler .back { left: 9%; top: -30%; width: 82%; height: 160%; border-radius: 8px; padding: 3% 5%; font-size: clamp(15px, 1.2vw, 20px); }
-.card-book .front { height: min(78svh, 860px); width: auto; }
-.card-book .back { left: 6.3%; top: 5.6%; width: 67.2%; height: 77.8%; background: #16224f; color: #f4efe2; }
-.card-book .back-label { color: #cfd3ec; }
-.card-book .back-tools li { box-shadow: inset 0 0 0 1px rgb(244 239 226 / 0.35); }
-/* where each artefact ends up once it has slid out: clear of the object's flipped back */
-.screen-pass .sheet { left: auto; right: 2%; top: 74%; width: min(46%, 560px); }
-.screen-rcpt .sheet { left: auto; right: 2%; top: 42%; width: min(46%, 560px); }
-.screen-ruler .sheet { left: auto; right: -2%; top: 80%; width: min(44%, 540px); }
-.screen-book .sheet { left: auto; right: 0; top: 76%; width: min(44%, 540px); }
-.work-pager { position: fixed; z-index: 40; left: 50%; bottom: 26px; display: flex; align-items: center; gap: 10px; transform: translate(-50%, 140%); opacity: 0; transition: transform 380ms var(--ease), opacity 280ms; }
-.work-pager.is-on { transform: translate(-50%, 0); opacity: 1; }
-.pager-btn { width: 52px; height: 52px; border: 0; border-radius: 50%; background: var(--paper); color: var(--ink); font-size: 22px; cursor: pointer; box-shadow: var(--lift); transition: transform 160ms var(--ease), opacity 160ms; }
-.pager-btn:hover:not(:disabled) { transform: translateY(-2px); }
-.pager-btn:disabled { opacity: 0.45; cursor: default; }
-.pager-name { display: inline-flex; align-items: center; min-height: 52px; padding: 8px 24px; border-radius: 999px; background: var(--ink); color: var(--paper); font-weight: 650; font-size: 17px; text-decoration: none; white-space: nowrap; box-shadow: var(--lift); }
-html:not(.js) .work-pager { display: none; }
+/* projects: number, word, title, line, links; the object is in the scene, right column */
+.project .num { grid-row: 2; align-self: end; display: flex; align-items: baseline; gap: 0.04em; font-weight: 900; font-stretch: 110%; font-size: clamp(96px, 20vw, 400px); line-height: 0.8; letter-spacing: -0.06em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.project .num-u { font-size: 0.3em; letter-spacing: -0.02em; }
+.project .word { grid-row: 3; font-size: clamp(44px, 7.5vw, 150px); }
+.project .copy { grid-row: 4; display: grid; gap: 10px; justify-items: start; }
+.project .scene-in { grid-template-rows: auto 1fr auto auto; }
+.project h3 { font-weight: 800; font-size: clamp(20px, 1.8vw, 28px); line-height: 1.1; letter-spacing: -0.02em; }
+.project h3 a { text-decoration: none; }
+.project h3 a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+.project .line { max-width: 44ch; font-size: clamp(16px, 1.25vw, 20px); }
 
-/* about + experience + the index card: three sheets on the open desk */
-.about { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 4vw, 64px) clamp(32px, 5vw, 80px); align-items: center; min-height: 100svh; padding: clamp(100px, 11vw, 160px) var(--gutter); background: var(--oak); overflow: hidden; }
-.about > :not(.scene-bg) { position: relative; z-index: 1; }
-.about-main { display: grid; gap: 22px; align-content: start; justify-items: start; padding: clamp(24px, 2.8vw, 40px); transform: rotate(-1deg); }
-.about-lead { max-width: 30ch; font-size: clamp(21px, 1.9vw, 28px); line-height: 1.3; font-weight: 500; }
-.about-facts { display: grid; gap: 14px; max-width: 520px; }
-.about-facts div { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 2px 16px; }
-.about-facts dt { font-weight: 700; }
-.about-facts dd { grid-column: 2; margin: 0; color: var(--ink-2); }
-.notebook { position: relative; padding: 34px 36px 34px 72px; border-radius: 6px 14px 14px 6px; background: repeating-linear-gradient(to bottom, transparent 0 33px, rgb(110 150 210 / 0.35) 33px 34px) 0 27px / 100% calc(100% - 61px) no-repeat, var(--paper); box-shadow: var(--paper-shadow); transform: rotate(1.4deg); }
-.notebook::before { content: ""; position: absolute; left: 50px; top: 0; bottom: 0; width: 2px; background: rgb(255 119 89 / 0.6); }
-.notebook::after { content: ""; position: absolute; left: 16px; top: 22px; bottom: 22px; width: 14px; background: radial-gradient(circle at 7px 7px, var(--oak) 0 6px, transparent 6.5px) 0 0 / 14px 46px repeat-y; }
-.notebook-title { font-weight: 800; font-size: 24px; letter-spacing: -0.01em; line-height: 34px; }
-.timeline { display: grid; gap: 0; }
-.timeline li { padding: 0 0 34px; line-height: 34px; }
-.timeline li:last-child { padding-bottom: 0; }
-.timeline p { line-height: 34px; font-size: 16px; }
-.timeline .tl-when { font-weight: 600; font-size: 14px; color: var(--ink-2); }
-.timeline .tl-role { font-weight: 750; font-size: 18px; }
-.more-card { grid-column: 1 / -1; justify-self: start; display: grid; gap: 6px; max-width: 560px; padding: clamp(22px, 2.4vw, 32px) clamp(24px, 2.8vw, 40px); text-decoration: none; transform: rotate(0.8deg); transition: transform 260ms var(--ease), box-shadow 260ms var(--ease); }
-.more-card:hover { transform: rotate(0.8deg) translateY(-4px); box-shadow: 0 1px 0 rgb(21 25 58 / 0.06), 26px 36px 46px -22px rgb(60 40 10 / 0.6); }
-.more-count { font-weight: 850; font-size: clamp(30px, 3vw, 46px); line-height: 1; letter-spacing: -0.03em; }
-.more-n { color: var(--accent-ink); font-variant-numeric: tabular-nums; }
-.more-line { max-width: 40ch; color: var(--ink-2); }
-.more-cta { margin-top: 10px; font-weight: 700; }
-
-/* contact: the same desk at the end of the day, a business card */
-.contact { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: center; min-height: 100svh; padding: clamp(80px, 9vw, 140px) var(--gutter); background: var(--oak); color: var(--ink); overflow: hidden; }
-.contact > :not(.scene-bg) { position: relative; z-index: 1; }
-.contact-copy { justify-self: start; padding: clamp(24px, 3vw, 44px) clamp(26px, 3.2vw, 48px); transform: rotate(-1deg); }
-.contact .display { font-size: clamp(48px, 7vw, 132px); }
-.contact-lede { margin-top: 20px; max-width: 30ch; font-size: clamp(18px, 1.5vw, 22px); color: var(--ink-2); }
-.card-wrap { display: grid; place-items: center; perspective: 1200px; }
-.biz-card { width: min(100%, 520px); aspect-ratio: 1.75; display: grid; align-content: space-between; padding: clamp(22px, 2.6vw, 36px); border-radius: 10px; background: var(--paper); color: var(--ink); box-shadow: var(--paper-shadow), 40px 60px 70px -30px rgb(40 25 5 / 0.6); transform: rotate(-3deg); transition: transform 300ms var(--ease); }
-.biz-name { font-weight: 850; font-size: clamp(22px, 2.2vw, 32px); letter-spacing: -0.02em; line-height: 1; }
-.biz-role { color: var(--ink-2); font-weight: 500; margin-top: 6px; }
-.biz-mail { font-weight: 650; font-size: clamp(17px, 1.5vw, 22px); text-underline-offset: 5px; overflow-wrap: anywhere; }
-.biz-links { display: flex; flex-wrap: wrap; gap: 8px; }
-.biz-links .pill { min-height: 40px; padding: 6px 14px; font-size: 14px; background: var(--bg); box-shadow: inset 0 0 0 1px var(--line); }
-.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 24px var(--gutter); background: var(--ink); color: #d7d9ea; font-size: 15px; }
+/* about and contact */
+.facts { display: grid; gap: 6px; max-width: 560px; font-size: clamp(15px, 1.15vw, 18px); }
+.facts div { display: grid; grid-template-columns: 4.5em minmax(0, 1fr); gap: 12px; padding: 8px 0; border-top: 2px solid currentColor; }
+.facts dt { font-weight: 800; }
+.facts dd { margin: 0; font-weight: 500; }
+.about .scene-in, .contact .scene-in { grid-template-rows: auto auto auto auto auto; }
+.about .giant, .contact .giant { align-self: start; }
+.mail { display: inline-block; font-weight: 900; font-stretch: 100%; font-size: clamp(22px, 3.3vw, 60px); letter-spacing: -0.03em; line-height: 1; text-decoration-thickness: 0.06em; text-underline-offset: 0.12em; overflow-wrap: anywhere; transition: transform 240ms var(--ease); }
+.mail:hover { transform: translateX(10px) rotate(-1deg); }
+.foot { position: relative; z-index: 2; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 24px var(--gutter); background: var(--ink); color: #d7d9ea; font-size: 15px; }
 .foot nav { display: flex; gap: 18px; }
 .foot-clock { margin-left: 14px; padding-left: 14px; border-left: 1px solid rgb(255 255 255 / 0.25); font-variant-numeric: tabular-nums; }
 .foot-clock:empty { display: none; }
@@ -221,8 +130,11 @@ html:not(.js) .work-pager { display: none; }
 .catalogue-page { background: var(--bg); }
 .projects { display: grid; gap: 28px; padding: clamp(110px, 10vw, 150px) var(--gutter) clamp(64px, 7vw, 100px); }
 .catalog-head { display: grid; gap: 16px; }
+.catalogue-page .nav-links a, .catalogue-page .wordmark, .catalogue-page .menu-btn { box-shadow: inset 0 0 0 1px var(--line), var(--lift); }
+.display { font-weight: 850; font-stretch: 100%; letter-spacing: -0.035em; line-height: 0.95; font-size: clamp(40px, 6vw, 104px); text-wrap: balance; }
+.section-lede { max-width: 56ch; font-size: clamp(17px, 1.3vw, 20px); color: var(--ink-2); }
 .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
-.field { position: relative; display: flex; align-items: center; gap: 10px; }
+.catalogue-page .field { position: relative; display: flex; align-items: center; gap: 10px; }
 .field-label { font-weight: 700; }
 .control { min-height: 48px; padding: 8px 16px; border-radius: 999px; border: 1px solid rgb(21 25 58 / 0.25); background: var(--paper); }
 #search { width: min(340px, 70vw); }
@@ -265,90 +177,47 @@ dialog::backdrop { background: rgb(21 25 58 / 0.6); }
 .detail-nav { display: flex; align-items: center; gap: 12px; font-weight: 600; }
 .detail-nav button { min-height: 40px; padding: 4px 14px; border-radius: 999px; border: 1px solid rgb(21 25 58 / 0.3); background: var(--paper); font-weight: 600; cursor: pointer; }
 .detail-nav button:disabled { opacity: 0.4; cursor: default; }
+.catalogue-page .foot { position: static; }
 
 /* tablet */
 @media (max-width: 1100px) {
   .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .detail-grid { grid-template-columns: minmax(0, 1fr); }
-  .screen-stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); align-items: start; gap: 8px; padding: 92px var(--gutter) 100px; }
-  .screen-copy { max-width: 600px; }
-  .num { font-size: clamp(72px, 14vw, 140px); }
-  .card-pass .front { width: min(104vw, 820px); max-width: none; }
-  .card-ruler .front { width: min(100vw, 900px); max-width: none; }
-  .card-rcpt .front { height: min(44svh, 580px); }
-  /* too narrow here to print on: its back becomes a slip wider than the roll */
-  .card-rcpt .back { left: -42%; width: 184%; top: 10%; height: 80%; align-content: center; padding: 6% 8%; border-radius: 8px; box-shadow: var(--paper-shadow); }
-  .card-book .front { height: min(48svh, 600px); }
-  .sheet, .screen-rcpt .sheet, .screen-book .sheet { left: auto; right: 0; top: 56%; width: min(58%, 520px); }
-  .about, .contact { grid-template-columns: minmax(0, 1fr); }
-  .notebook { max-width: 640px; }
+  .scene-in { grid-template-columns: minmax(0, 1fr); }
+  .scene-in > * { grid-column: 1; }
+  html:not(.gl-on) .still { grid-column: 1; grid-row: auto; max-height: 40svh; }
 }
-/* portrait tablets: the wordmark sits higher, over the open desk */
-@media (max-aspect-ratio: 4/5) and (min-aspect-ratio: 3/5) { .wordmark-xl { top: 8%; } }
-/* phone: composed for a portrait frame. One object fills the width, the index card sits under it, the sheet peeks from behind */
+/* phone: a portrait composition. The object sits in the upper half of the screen (home.js), the words in the lower half */
 @media (max-width: 720px) {
-  html { scroll-padding-top: 72px; }
   .nav { padding: 12px var(--gutter); }
   .menu-btn { display: inline-flex; }
-  .nav-links { position: absolute; left: 12px; right: 12px; top: 64px; display: none; flex-direction: column; gap: 8px; padding: 14px; border-radius: 22px; background: var(--paper); box-shadow: var(--paper-shadow); }
+  .nav-links { position: absolute; left: 12px; right: 12px; top: 64px; display: none; flex-direction: column; gap: 8px; padding: 14px; border-radius: 22px; background: #fff; box-shadow: 0 30px 50px -20px rgb(0 0 0 / 0.5); }
   .menu-open .nav-links { display: flex; }
   .nav-links a { justify-content: center; min-height: 48px; font-size: 17px; box-shadow: none; background: var(--bg); }
-  .hero { height: 240svh; }
-  .frame { inset: 12px; }
-  .wordmark-xl { top: 15%; font-size: 21vw; font-stretch: 100%; }
-  .hero-tag { left: 28px; bottom: 30px; }
-  .hero-scroll, .intro-skip { right: 28px; bottom: 30px; }
-  .beat { font-size: 19vw; }
-  .screen { height: 210svh; }
-  .screen-stage { padding: 72px var(--gutter) 92px; gap: 0; }
-  .screen-copy { padding: 18px 20px 20px; max-width: none; width: 100%; }
-  .screen h3 { font-size: 24px; }
-  .num { margin-top: 6px; font-size: 22vw; }
-  .screen-line { font-size: 15px; margin-top: 4px; }
-  .screen-links .pill:not(.pill-ink) { display: none; }
-  .screen-links { margin-top: 8px; }
-  .sheet, .screen-rcpt .sheet, .screen-book .sheet { right: -6%; top: 50%; width: 72%; padding: 6px; }
-  .card .back { font-size: 13px; }
-  .card-ruler .back { font-size: 12px; }
-  .card-rcpt .back { font-size: 13px; }
-  .card-book .front { height: min(40svh, 500px); }
-  .work-pager { bottom: 16px; gap: 6px; }
-  .pager-btn { width: 46px; height: 46px; }
-  .pager-name { min-height: 46px; padding: 6px 16px; font-size: 15px; max-width: 58vw; overflow: hidden; text-overflow: ellipsis; }
-  .about { padding: 90px var(--gutter) 70px; gap: 28px; }
-  .about-main { padding: 22px 20px; transform: rotate(-0.6deg); }
-  .about-facts div { grid-template-columns: minmax(0, 1fr); }
-  .about-facts dd { grid-column: 1; }
-  .notebook { padding: 30px 18px 30px 56px; transform: rotate(0.6deg); }
-  .timeline p { font-size: 15px; }
-  .notebook::before { left: 40px; }
-  .notebook::after { left: 10px; }
-  .more-card { padding: 20px 22px; }
-  .contact { padding: 80px var(--gutter) 60px; }
-  .biz-card { aspect-ratio: auto; gap: 18px; transform: rotate(-1.5deg); }
+  .scene-in { padding: 92px var(--gutter) 40px; gap: 10px; }
+  .giant { font-size: clamp(44px, 16vw, 120px); }
+  .name { font-size: 24vw; }
+  .hero-scroll { grid-column: 1; justify-self: start; }
+  .project .num { font-size: clamp(80px, 26vw, 160px); }
+  .project .word { font-size: clamp(36px, 11vw, 80px); }
+  .project .scene-in { grid-template-rows: auto minmax(42svh, 1fr) auto auto; }
+  .project .copy .pill:not(.pill-ink) { display: none; }
+  .about .scene-in, .contact .scene-in { grid-template-rows: auto auto auto auto auto; }
+  .about .giant, .contact .giant { margin-top: 34svh; }
+  .facts { font-size: 15px; }
+  .mail { font-size: 6.3vw; }
   .tiles { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .intro-skip { bottom: 20px; }
 }
 
-/* into a case study and back: the clicked project's printed object and title travel between the pages (cross-document View
-   Transitions; home.js names them on the way out and on the way back). This sheet styles the return trip; site.css the way in. */
+/* into a case study and back: the clicked project's title travels (cross-document View Transitions, home.js names it) */
 @view-transition { navigation: auto; }
-::view-transition-group(object), ::view-transition-group(title) { animation-duration: 760ms; animation-timing-function: var(--ease-travel); }
-::view-transition-old(object), ::view-transition-new(object) { animation: none; mix-blend-mode: normal; height: 100%; object-fit: contain; }
+::view-transition-group(title) { animation-duration: 700ms; animation-timing-function: var(--slam); }
 @media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
 
-/* reduced motion, and no JavaScript: finished stills, objects upright, the sheet beside the object, what I did printed under it */
+/* reduced motion: no opening, no wipe animation, the scene holds its pose; no JavaScript or no WebGL: the still objects */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0ms !important; animation: none !important; }
+  .wipe.is-on { transition: none; }
 }
-html:not(.is-moving) .hero { height: auto; }
-html:not(.is-moving) .hero-stage { position: relative; }
-html:not(.is-moving) .hero-fade, html:not(.is-moving) .hero-veil { display: none; }
-html:not(.is-moving) .screen { height: auto; }
-html:not(.is-moving) .screen-stage { position: relative; height: auto; min-height: 100svh; }
-html:not(.is-moving) .scene-bg img { transform: none; }
-html:not(.is-moving) .sheet { --slide: 1; }
-html:not(.is-moving) .card { transform: rotate(-3deg); }
-html:not(.is-moving) .card .back { position: relative; left: auto; top: auto; width: auto; height: auto; transform: none; margin-top: 24px; border-radius: 10px; }
-html:not(.is-moving) .card-ruler .back, html:not(.is-moving) .card-book .back { background: var(--paper); color: var(--ink); }
-html:not(.is-moving) .card-book .back-label { color: var(--ink-2); }
-html:not(.is-moving) .card-book .back-tools li { box-shadow: inset 0 0 0 1px var(--line); }
+html:not(.js) .field, html:not(.js) .intro-skip { display: none; }

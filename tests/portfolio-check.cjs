@@ -48,18 +48,17 @@ const contrastOf = sels => {
   let p = await page({ javaScriptEnabled: false }, null, BASE, 0);
   assert(await p.$eval("h1", h => h.getAttribute("aria-label")) === "Rishit Mathur, data analyst" && await p.$eval("h1", h => h.textContent.trim()) === "RISHIT", "the wordmark is the h1, named for screen readers");
   assert(await p.$$eval(".nav-links a", as => as.map(a => a.textContent)).then(t => ["Work", "All projects", "About", "Résumé", "Contact"].every(x => t.includes(x))), "persistent nav: Work / All projects / About / Résumé / Contact");
-  const order = await p.$$eval("main > section[id]", els => els.map(e => e.id));
+  const order = await p.$$eval("main > section[id], main > div[id]", els => els.map(e => e.id));
   assert(JSON.stringify(order) === JSON.stringify(["top", "work", "about", "contact"]), `page order: hero, work, about + experience, contact (${order.join(" > ")})`);
-  assert(await p.$eval(".hero-still", i => i.naturalWidth > 0 && getComputedStyle(i).visibility === "visible"), "no-JS: the hero shows the desk render as an image");
-  assert(featured.length === 4 && await p.$$eval(".screen", els => els.length) === 4, "four flagship projects rendered as static HTML");
-  assert(await p.$$eval(".card .front", imgs => imgs.length === 4 && imgs.every(i => i.alt.length > 20)), "each project's printed object is an image with a description");
-  assert(await p.$$eval(".card .back", bs => bs.length === 4 && bs.every(b => getComputedStyle(b).position === "relative" && b.textContent.includes("What I did"))), "no-JS: what I did is printed under each object, not hidden on a back face");
-  assert(await p.$$eval(".screen", els => els.map(e => e.querySelector(".num").textContent.replace(/\s/g, ""))).then(t => t.every((x, i) => x === `${featured[i].scale.value}${featured[i].scale.unit}`.replace(/\s/g, ""))), "each project shows the figure in featured.json");
-  assert(fs.readdirSync(path.join(root, "assets", "flight", "d")).length === 48 && fs.readdirSync(path.join(root, "assets", "flight", "m")).length === 48, "the 48 + 48 camera-flight frames are on disk");
+  assert(featured.length === 4 && await p.$$eval(".project", els => els.length) === 4, "four flagship projects rendered as static HTML");
+  assert(await p.$$eval(".project .still", imgs => imgs.length === 4 && imgs.every(i => i.alt.length > 20 && getComputedStyle(i).display === "block")), "no-JS: each project's printed object is a visible image with a description");
+  assert(await p.$$eval(".scene", els => els.every(e => getComputedStyle(e).backgroundColor !== "rgba(0, 0, 0, 0)")), "no-JS: every scene paints its own colour field");
+  assert(await p.$$eval(".project", els => els.map(e => e.querySelector(".num").textContent.replace(/\s/g, ""))).then(t => t.every((x, i) => x === `${featured[i].scale.value}${featured[i].scale.unit}`.replace(/\s/g, ""))), "each project shows the figure in featured.json");
+  assert(await p.$$eval(".project .word", els => els.map(e => e.textContent)).then(t => t.every((x, i) => x === featured[i].word)), "each project carries its one-word headline");
   assert(await p.$$eval("a[href$='resume.pdf']", as => as.length) >= 2, "résumé link present (nav, about, contact)");
   assert(await p.$$eval("a[href^='mailto:rishit.mathur@yahoo.com']", as => as.length) === 1, "verified e-mail link present");
   assert(await p.$eval("a[href*='linkedin.com/in/rishitrajmathur']", a => !!a), "verified LinkedIn link present");
-  assert(await p.$$eval("a[href='all.html']", as => as.length) >= 3, "the catalogue is linked from the nav, the band after the work and the footer");
+  assert(await p.$$eval("a[href='all.html']", as => as.length) >= 3, "the catalogue is linked from the nav, the about scene and the footer");
   let [n, missing] = await linksOnDisk(p);
   assert(missing.length === 0, `home: all ${n} internal links resolve on disk` + (missing.length ? ": missing " + missing.join(", ") : ""));
   await p.close();
@@ -80,51 +79,53 @@ const contrastOf = sels => {
 
   // 2b. the intro: plays on a first load, faster on a repeat in the same session, never with a hash or under reduced motion
   p = await page({}, null, BASE, 0);
-  // the first frame is the camera close on the boarding pass (the wordmark still hidden); the camera lifts off, then the
-  // wordmark rises as the flight lands (html.intro-land)
-  const firstFrame = await p.evaluate(() => [document.documentElement.classList.contains("intro"), +getComputedStyle(document.querySelector(".wordmark-xl span")).opacity, getComputedStyle(document.querySelector(".hero-close")).display, document.getElementById("intro-skip").offsetParent !== null, +getComputedStyle(document.querySelector(".nav")).opacity]);
-  assert(firstFrame[0] && firstFrame[1] === 0 && firstFrame[2] !== "none" && firstFrame[3] && firstFrame[4] === 0, `the intro opens on the boarding pass close-up (wordmark and nav hidden) with a visible Skip button (${firstFrame})`);
+  // the first frame is the colour field with the letters still below their clips and the nav hidden; the objects fly in,
+  // then the letters slam up (html.intro-land)
+  const firstFrame = await p.evaluate(() => [document.documentElement.classList.contains("intro"), getComputedStyle(document.querySelector(".name i")).transform !== "none", document.getElementById("intro-skip").getBoundingClientRect().width > 0, +getComputedStyle(document.querySelector(".nav")).opacity, document.documentElement.classList.contains("gl-on")]);
+  assert(firstFrame[0] && firstFrame[1] && firstFrame[2] && firstFrame[3] === 0 && firstFrame[4], `the opening starts with the letters clipped, the nav hidden, a visible Skip button and the live scene on (${firstFrame})`);
   await p.waitForFunction(() => document.documentElement.classList.contains("intro-land"), null, { timeout: 6000 });
-  const firstIntro = await p.evaluate(() => [document.documentElement.classList.contains("intro"), document.documentElement.classList.contains("intro-again"), document.getAnimations().some(a => a.animationName === "rise")]);
+  const firstIntro = await p.evaluate(() => [document.documentElement.classList.contains("intro"), document.documentElement.classList.contains("intro-again"), document.getAnimations().some(a => a.animationName === "slam")]);
   await p.reload({ waitUntil: "networkidle" });
   const againIntro = await p.evaluate(() => document.documentElement.classList.contains("intro-again"));
-  await p.waitForTimeout(2200);
-  const settled = await p.evaluate(() => [+getComputedStyle(document.querySelector(".wordmark-xl span:last-child")).opacity, document.getAnimations().filter(a => a.playState === "running" && a.animationName !== "drop").length]);
-  assert(firstIntro[0] && !firstIntro[1] && firstIntro[2] && againIntro && settled[0] === 1 && settled[1] === 0, `the intro plays on first load, faster on a repeat visit, and settles (${firstIntro}, ${againIntro}, ${settled})`);
+  await p.waitForTimeout(2600);
+  const settled = await p.evaluate(() => [getComputedStyle(document.querySelector(".name span:last-child i")).transform, document.getAnimations().filter(a => a.playState === "running" && a.animationName !== "drop").length]);
+  assert(firstIntro[0] && !firstIntro[1] && firstIntro[2] && againIntro && /^(none|matrix\(1, 0, 0, 1, 0, 0\))$/.test(settled[0]) && settled[1] === 0, `the opening plays on first load, faster on a repeat visit, and settles (${firstIntro}, ${againIntro}, ${settled})`);
   await p.close();
   p = await page({ reducedMotion: "reduce" }, null, BASE, 0);
   assert(await p.evaluate(() => !document.documentElement.classList.contains("intro")), "no intro under reduced motion");
   await p.close();
 
-  // 3. home with JavaScript: keyboard order, the fly-through follows scroll, the screens lift / count / flip, the pager
+  // 3. home with JavaScript: keyboard order, the field wipes to each section's colour, the numbers count up, the live scene
   p = await page();
   await p.keyboard.press("Tab");
   assert(await p.evaluate(() => document.activeElement.className === "skip"), "first Tab lands on the skip link");
   await p.keyboard.press("Tab"); await p.keyboard.press("Tab");
   assert(await p.evaluate(() => document.activeElement.textContent === "Work"), "nav is reachable by keyboard");
-  await p.waitForFunction(() => document.documentElement.classList.contains("hero-live") && (!document.documentElement.classList.contains("intro") || document.documentElement.classList.contains("intro-done")), null, { timeout: 12000 });
-  await p.waitForTimeout(1000);   // the Tab above ended the intro early; let the wordmark finish rising
-  const heroAt = async f => { await p.evaluate(v => { const h = document.querySelector(".hero"); scrollTo(0, v * (h.offsetHeight - innerHeight)); }, f); await p.waitForTimeout(700); return p.evaluate(() => [+getComputedStyle(document.querySelector(".hero")).getPropertyValue("--p"), +getComputedStyle(document.querySelector(".wordmark-xl span")).opacity, +getComputedStyle(document.querySelector(".hero-fade")).opacity]); };
-  const h0 = await heroAt(0), hMid = await heroAt(0.5), hEnd = await heroAt(1);
-  assert(h0[0] === 0 && h0[1] === 1 && hMid[0] > 0.3 && hMid[0] < 0.7 && hMid[1] === 0 && hEnd[0] === 1 && hEnd[2] >= 0.99, `the fly-through follows the hero's scroll: wordmark parts, the flight ends in the tint of the first project (p ${h0[0]} > ${hMid[0]} > ${hEnd[0]})`);
-  assert(await p.evaluate(() => getComputedStyle(document.querySelector(".hero-still")).visibility === "hidden"), "once the frames are live the still image steps aside");
-  const screenAt = async (i, f) => { await p.evaluate(([k, v]) => { const s = document.querySelectorAll(".screen")[k]; scrollTo(0, s.getBoundingClientRect().top + scrollY + v * (s.offsetHeight - innerHeight)); }, [i, f]); await p.waitForTimeout(900); };
+  await p.waitForFunction(() => document.documentElement.classList.contains("intro-done"), null, { timeout: 12000 });
+  await p.waitForTimeout(1200);
+  assert(await p.evaluate(() => { const c = document.getElementById("gl"); return document.documentElement.classList.contains("gl-on") && c.width > 0 && getComputedStyle(c).display !== "none" && getComputedStyle(document.querySelector(".still")).display === "none"; }), "the live scene is on and the still objects step aside");
+  const fieldAt = async id => { await jump(p, "#" + id); await p.waitForTimeout(1300); return p.evaluate(() => getComputedStyle(document.getElementById("field")).backgroundColor); };
+  const hex2rgb = h => `rgb(${parseInt(h.slice(1, 3), 16)}, ${parseInt(h.slice(3, 5), 16)}, ${parseInt(h.slice(5, 7), 16)})`;
   for (let i = 0; i < 4; i++) {
-    await screenAt(i, 0.1);
-    const mid = await p.evaluate(k => { const s = document.querySelectorAll(".screen")[k]; return [s.querySelector(".num").textContent.replace(/\s/g, ""), s.querySelector(".card").classList.contains("is-flipped"), document.getElementById("pager-name").textContent, getComputedStyle(s.querySelector(".screen-stage")).position]; }, i);
-    await screenAt(i, 0.95);
-    const end = await p.evaluate(k => document.querySelectorAll(".screen")[k].querySelector(".card").classList.contains("is-flipped"), i);
+    const f = await fieldAt("feature-" + featured[i].slug);
     const want = `${featured[i].scale.value}${featured[i].scale.unit}`.replace(/\s/g, "");
-    assert(mid[0] === want && !mid[1] && end && mid[2] === (await p.evaluate(k => document.querySelectorAll(".screen")[k].dataset.title, i)) && mid[3] === "sticky", `screen ${i + 1}: number lands on ${want}, the object flips to what I did, the pager names it`);
+    const num = await p.evaluate(k => document.querySelectorAll(".project")[k].querySelector(".num").textContent.replace(/\s/g, ""), i);
+    assert(f === hex2rgb(featured[i].field) && num === want, `screen ${i + 1}: the field wipes to ${featured[i].field} and the number lands on ${want} (${f}, ${num})`);
   }
-  await screenAt(1, 0.2);
-  await p.click("#pager-next"); await p.waitForTimeout(1600);
-  assert(await p.evaluate(() => document.getElementById("pager-name").getAttribute("href")) === featured[2].slug + "/", "the pager's next arrow moves to the next project");
-  await jump(p, "#about"); await p.waitForTimeout(600);
-  assert(await p.evaluate(() => !document.getElementById("work-pager").classList.contains("is-on")), "the pager leaves with the work section");
+  await jump(p, "#contact"); await p.waitForTimeout(900);
   assert(await p.evaluate(async () => { const btn = document.getElementById("copy-mail"); if (btn.hidden) return false; btn.click(); await new Promise(r => setTimeout(r, 500)); return btn.textContent.trim() === "Copied" && document.getElementById("copy-status").textContent.length > 0; }), "Copy e-mail copies and confirms");
-  const homeContrast = await p.evaluate(contrastOf, [".hero-tag", ".screen-kind", ".num-label", ".screen-line", ".screen-book .screen-line", ".screen-ruler .screen-line", ".screen-rcpt .num-label", ".back-label", ".card-book .back p:nth-of-type(2)", ".more-count", ".more-line", ".about-lead", ".about-facts dt", ".about-facts dd", ".timeline .tl-when", ".timeline p:last-child", ".contact-lede", ".biz-role", ".biz-mail", ".foot", ".pager-name", ".nav-links a", ".num-v", ".card-ruler .back p:nth-of-type(2)", ".card-rcpt .back-tools li"]);
-  assert(homeContrast.every(([, v]) => +v >= 4.5), "home text clears 4.5:1 on its own colour field: " + homeContrast.map(x => x.join(" ")).join(", "));
+  // text on every field clears 4.5:1 against that field (the field is fixed behind the page, so compare against the scene's --field)
+  const fieldContrast = await p.evaluate(() => {
+    const lum = c => { const [r, g, b] = c.match(/\d+/g).map(Number).map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+    const ratio = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+    const probe = document.createElement("div"); document.body.append(probe);
+    const out = [];
+    for (const s of document.querySelectorAll(".scene")) { probe.style.color = s.dataset.field; const bg = getComputedStyle(probe).color; for (const sel of [".tag", ".line", ".giant", ".num", "h3", ".facts dd", ".mail"]) { const el = s.querySelector(sel); if (el) out.push([s.id + " " + sel, ratio(lum(getComputedStyle(el).color), lum(bg)).toFixed(2)]); } }
+    probe.remove(); return out;
+  });
+  assert(fieldContrast.every(([, v]) => +v >= 4.5), "home text clears 4.5:1 on its own colour field: " + fieldContrast.filter(([, v]) => +v < 4.5).map(x => x.join(" ")).join(", "));
+  const pillContrast = await p.evaluate(contrastOf, [".nav-links a", ".pill", ".pill-ink", ".foot"]);
+  assert(pillContrast.every(([, v]) => +v >= 4.5), "pills and footer clear 4.5:1: " + pillContrast.map(x => x.join(" ")).join(", "));
   await p.close();
 
   // 4. the catalogue with JavaScript
@@ -221,10 +222,10 @@ const contrastOf = sels => {
   assert(nav.includes("../#feature-" + featured[0].slug) && nav.includes("../#projects"), "a flagship's case study links back to its own card on the portfolio and (through the forward) the catalogue");
   await p.close();
 
-  // 6. reduced motion: no smooth scroll, no running animations, the finished stills, objects upright with what I did under them
+  // 6. reduced motion: no smooth scroll, no opening, no running animations; the scene holds its pose and the field cuts
   p = await page({ reducedMotion: "reduce" }, null, BASE, 1500);
-  const still = await p.evaluate(() => [document.documentElement.classList.contains("lenis-on"), document.getAnimations().filter(a => a.playState === "running").length, document.documentElement.classList.contains("hero-live"), getComputedStyle(document.querySelector(".hero-stage")).position, getComputedStyle(document.querySelector(".card .back")).position]);
-  assert(!still[0] && still[1] === 0 && !still[2] && still[3] === "relative" && still[4] === "relative", `reduced motion: no smooth scroll, no running animation, the still render, no sticky scrubbing, what I did printed (${still.join(", ")})`);
+  const still = await p.evaluate(() => [document.documentElement.classList.contains("lenis-on"), document.getAnimations().filter(a => a.playState === "running").length, document.documentElement.classList.contains("intro"), document.documentElement.classList.contains("gl-on")]);
+  assert(!still[0] && still[1] === 0 && !still[2] && still[3], `reduced motion: no smooth scroll, no running animation, no opening, the scene still on (${still.join(", ")})`);
   await p.close();
 
   // 7. no horizontal overflow at the required breakpoints, on both pages

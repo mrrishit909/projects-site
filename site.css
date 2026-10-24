@@ -40,7 +40,12 @@ a{color:inherit}
 .links a:hover{transform:translateY(-2px)}
 .links a:first-child:hover{background:var(--accent-ink)}
 /* a flagship opens with the printed object from the home beside its title; it flies in from the card the visitor clicked */
-.hero.has-object{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.75fr);gap:0 56px;align-items:center}
+.hero.has-object{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.75fr);gap:0 56px;align-items:center;margin:0 calc(50% - 50vw) 48px;padding:120px max(var(--gutter),calc(50vw - 590px)) 64px;background:var(--field);color:var(--field-ink)}
+.hero.has-object .cap.dim,.hero.has-object .tagline,.hero.has-object .meta .tech{color:inherit;border-color:currentColor}
+.hero.has-object .meta{border-top-color:currentColor}
+.hero.has-object .links a{background:#fff;color:#15193a}
+.hero.has-object .links a:first-child:hover{background:#15193a;color:#fff}
+.hero.has-object .object{filter:drop-shadow(0 30px 40px rgb(0 0 0 / .35))}
 .hero.has-object>:not(.object){grid-column:1}
 .object{grid-column:2;grid-row:1 / span 4;align-self:center;justify-self:center;width:100%;height:auto;max-height:54vh;object-fit:contain;filter:drop-shadow(18px 26px 24px rgb(60 40 10 / .35));transform:rotate(-4deg);view-transition-name:object}
 .object-rcpt,.object-book{width:auto;max-height:62vh}

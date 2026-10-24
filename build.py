@@ -204,6 +204,7 @@ def project_page(p, nxt):
         w, h = webp_size(ROOT / "assets" / "desk" / f"solo-{o}.webp")
         obj = f'<img class="object object-{o}" src="../assets/desk/solo-{o}.webp" alt="{escape(feat["screen"]["alt"], quote=True)}" width="{w}" height="{h}" fetchpriority="high">'
     home = f"../#feature-{p['slug']}" if feat else "../"
+    field = f' style="--field: {feat["field"]}; --field-ink: {feat["field_ink"]}"' if feat else ""
     # the next project's motion tile, played by case.js while the link is on screen
     peek = ("".join([f'<video muted loop playsinline preload="none" aria-hidden="true" poster="../{nxt["slug"]}/{escape(nxt["cover"])}">' if nxt.get("cover") else
                      '<video muted loop playsinline preload="none" aria-hidden="true">'] +
@@ -217,7 +218,7 @@ def project_page(p, nxt):
                    for n, (t, b) in enumerate(sections, 1))
     body = f"""<header class="bar cap"><a href="{PORTFOLIO}">Rishit Mathur</a><nav><a href="{home}">Portfolio</a><a href="../#projects">All projects</a><a href="{PORTFOLIO}resume.pdf">Resume</a></nav></header>
 <main class="wrap">
-  <div class="hero{" has-object" if obj else ""}">
+  <div class="hero{" has-object" if obj else ""}"{field}>
     <p class="cap dim">{escape(p["kind"])} &middot; {escape(p["date"])}</p>
     <h1>{escape(p["title"])}</h1>
     <p class="tagline">{escape(p["tagline"])}</p>
@@ -259,28 +260,21 @@ def home_page(projects):
                  f'<a class="pill" href="{escape(p["repo"])}" target="_blank" rel="noopener">Code</a>']
         if p.get("demo"):
             links.append(f'<a class="pill" href="{escape(demo_url(p))}">{escape(p.get("demo_label", "Demo"))}</a>')
-        # the screen is a camera position on the same desk (tools/desk/world.py), the object itself laid down as HTML so it
-        # can lift and flip; the project's printed artefact (its chart or report) lies under it as a second sheet
+        # one screen per flagship on its own colour field: the giant number, the one-word headline, one line, two links;
+        # the object itself is the live 3D model in the fixed canvas (home.js), the still image is the no-JS fallback
         o = scr["object"]
-        bg = (f'<picture class="scene-bg" aria-hidden="true"><source media="(max-aspect-ratio: 4/5)" srcset="assets/world/m/shot-{o}.webp">'
-              f'<img src="assets/world/d/shot-{o}.webp" alt="" width="2560" height="1600" loading="lazy" decoding="async"></picture>')
-        sh = f.get("sheet")
-        sheet = (f'<span class="sheet{" is-dark" if sh.get("dark") else ""}"><img src="{p["slug"]}/{escape(sh["src"])}" alt="{escape(sh["alt"], quote=True)}" loading="lazy" decoding="async"></span>'
-                 if sh else "")
         feats.append(
-            f'<article class="screen screen-{o}" id="feature-{p["slug"]}" data-slug="{p["slug"]}" data-title="{escape(p["title"], quote=True)}" '
-            f'data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" aria-labelledby="t-{p["slug"]}">'
-            f'<div class="screen-stage">{bg}'
-            f'<div class="screen-copy paper"><p class="stamp">{i:02d} / 04</p><p class="screen-kind">{escape(f["area"])}</p>'
-            f'<h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3>'
+            f'<section class="scene project" id="feature-{p["slug"]}" data-state="{o}" data-field="{f["field"]}" data-ink="{f["field_ink"]}" '
+            f'data-slug="{p["slug"]}" data-title="{escape(p["title"], quote=True)}" data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" '
+            f'style="--field: {f["field"]}; --on: {f["field_ink"]}" aria-labelledby="t-{p["slug"]}">'
+            f'<div class="scene-in">'
+            f'<p class="tag"><span class="idx">{i:02d}</span> {escape(f["area"])}</p>'
             f'<p class="num"><span class="num-v">{big}</span><span class="num-u">{escape(unit)}</span></p>'
-            f'<p class="num-label">{escape(sc["metric"])}, {escape(sc["note"])}</p>'
-            f'<p class="screen-line">{line}</p><p class="screen-links">{"".join(links)}</p></div>'
-            f'<div class="table">{sheet}<div class="card card-{o}">'
-            f'<img class="front" src="{obj}" alt="{escape(scr["alt"], quote=True)}" width="{w}" height="{h}" loading="lazy" decoding="async">'
-            f'<div class="back"><p class="back-label">What I did</p><p>{f["contribution"]}</p>'
-            f'<p class="back-label">Built with</p><ul class="back-tools">{"".join(f"<li>{escape(t)}</li>" for t in p["tech"])}</ul></div></div></div>'
-            f'</div></article>')
+            f'<h2 class="giant word">{escape(f["word"])}</h2>'
+            f'<div class="copy"><h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3>'
+            f'<p class="line">{line}</p><p class="links">{"".join(links)}</p></div>'
+            f'<img class="still" src="{obj}" alt="{escape(scr["alt"], quote=True)}" width="{w}" height="{h}" loading="lazy" decoding="async">'
+            f'</div></section>')
     tpl = (ROOT / "index.template.html").read_text()
     assert "{{FEATURED}}" in tpl
     return (tpl.replace("{{FEATURED}}", "".join(feats)).replace("{{COUNT}}", str(len(projects)))

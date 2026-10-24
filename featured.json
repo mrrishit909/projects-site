@@ -25,7 +25,10 @@
       "src": "report.png",
       "alt": "The Power BI report page: KPI cards, on-time rate by month and hour, airlines ranked, delay causes.",
       "dark": false
-    }
+    },
+    "field": "#2747e8",
+    "field_ink": "#ffffff",
+    "word": "On time"
   },
   {
     "slug": "retail-dbt",
@@ -54,7 +57,10 @@
       "src": "charts/01_monthly.jpg",
       "alt": "Monthly product sales from the pipeline: net plus cancelled equals gross.",
       "dark": true
-    }
+    },
+    "field": "#ff5a3c",
+    "field_ink": "#15193a",
+    "word": "Tested"
   },
   {
     "slug": "us-retail-forecast",
@@ -82,7 +88,10 @@
       "src": "charts/05_forecast.png",
       "alt": "The next twelve months: actual sales, the ETS + SARIMA forecast and the calibrated 80% range.",
       "dark": true
-    }
+    },
+    "field": "#d8f56a",
+    "field_ink": "#15193a",
+    "word": "Forecast"
   },
   {
     "slug": "sec-10k-rag",
@@ -110,6 +119,9 @@
       "src": "cover.jpg",
       "alt": "The recorded demo: a question, the answer from the filings and the cited 10-K passage.",
       "dark": true
-    }
+    },
+    "field": "#ffd23c",
+    "field_ink": "#15193a",
+    "word": "Verified"
   }
 ]

@@ -5,31 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rishit Mathur, data analyst</title>
 <meta name="description" content="Rishit Mathur, data analyst in Tampa: Power BI, SQL, Python, data pipelines, forecasting and AI-enabled tools. Four flagship projects and {{COUNT}} case studies.">
-<meta name="theme-color" content="#F7F5F0">
+<meta name="theme-color" content="#6b4cff">
 <meta property="og:title" content="Rishit Mathur, data analyst">
 <meta property="og:description" content="Four flagship projects, each with the number its case study reports, and {{COUNT}} case studies in all.">
 <meta property="og:image" content="https://mrrishit909.github.io/projects/assets/og-desk.jpg">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="portfolio.css?v={{PORTFOLIO_CSS}}">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315193A'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23F7F5F0'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%233B5BFF'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236b4cff'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23ffffff'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%2315193A'/%3E%3C/svg%3E">
 <link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Archivo-latin.woff2" crossorigin>
-<link rel="preload" as="image" href="assets/flight/still-d.webp" media="(min-aspect-ratio: 4/5)">
-<link rel="preload" as="image" href="assets/flight/still-m.webp" media="(max-aspect-ratio: 4/5)">
+<link rel="modulepreload" href="vendor/three/three.module.min.js">
+<script type="importmap">{ "imports": { "three": "./vendor/three/three.module.min.js" } }</script>
 <script>
 // the catalogue moved to all.html: old links (#projects, #<slug>, ?q= / ?kind=) are forwarded there
 (function () { var h = location.hash.slice(1), q = location.search;
   if (/[?&](q|kind)=/.test(q) || (h && !/^(top|main|work|about|experience|contact|feature-[\w-]+)$/.test(h))) location.replace("all.html" + q + (h && h !== "projects" ? "#" + h : "")); })();
 document.documentElement.classList.add("js");
-// the intro (the camera lifts off the boarding pass onto the whole desk) plays on a first load that starts at the top;
-// again in this session it plays faster; never with a hash, under reduced motion, or coming back from a case study
+// the opening plays on a first load at the top of the page; again in this session it plays faster; never with a hash,
+// under reduced motion, or coming back from a case study
 if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
   var back = false; try { back = !!sessionStorage.getItem("vt"); } catch (_) {}
   if (!back) {
     document.documentElement.classList.add("intro");
     try { if (sessionStorage.getItem("intro")) document.documentElement.classList.add("intro-again"); sessionStorage.setItem("intro", "1"); } catch (_) {}
-    var l = document.createElement("link"); l.rel = "preload"; l.as = "image"; l.setAttribute("fetchpriority", "high");
-    l.href = matchMedia("(max-aspect-ratio: 4/5)").matches ? "assets/world/m/print-00.webp" : "assets/world/d/print-00.webp"; document.head.appendChild(l);
+    // the name slams up on a clock of its own, so the first paint never waits for the 3D library
+    setTimeout(function () { document.documentElement.classList.add("intro-land"); }, document.documentElement.classList.contains("intro-again") ? 850 : 1900);
   }
 }
 </script>
@@ -37,101 +37,58 @@ if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
 <body class="home">
 <a class="skip" href="#main">Skip to content</a>
 
+<div class="field" id="field" aria-hidden="true"><div class="wipe" id="wipe"></div></div>
+<canvas class="gl" id="gl" aria-hidden="true"></canvas>
+
 <header class="nav" id="nav">
   <a class="wordmark" href="#top">Rishit Raj Mathur</a>
   <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
   <nav class="nav-links" id="nav-links" aria-label="Site"><a href="#work">Work</a><a href="all.html">All projects</a><a href="#about">About</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="#contact">Contact</a></nav>
 </header>
+<button class="intro-skip" id="intro-skip" type="button">Skip intro</button>
 
 <main id="main">
-<section class="hero" id="top" aria-labelledby="hero-name">
-  <div class="hero-stage">
-    <picture class="hero-media">
-      <source media="(max-aspect-ratio: 4/5)" srcset="assets/flight/still-m.webp" width="1080" height="2340">
-      <img class="hero-still" src="assets/flight/still-d.webp" alt="" width="2560" height="1600" fetchpriority="high">
-    </picture>
-    <picture class="hero-media hero-close" aria-hidden="true">
-      <source media="(max-aspect-ratio: 4/5)" srcset="assets/world/m/print-00.webp" width="1080" height="2340">
-      <img src="assets/world/d/print-00.webp" alt="" width="2560" height="1600" loading="lazy">
-    </picture>
-    <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
-    <div class="hero-veil" aria-hidden="true"></div>
-    <div class="hero-fade" aria-hidden="true"></div>
-    <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-    <h1 id="hero-name" class="wordmark-xl" aria-label="Rishit Mathur, data analyst"><span>R</span><span>I</span><span>S</span><span>H</span><span>I</span><span>T</span></h1>
-    <p class="hero-tag" aria-hidden="true">Data analyst<br>Tampa, Florida</p>
-    <p class="hero-scroll" aria-hidden="true">Scroll</p>
-    <button class="intro-skip" id="intro-skip" type="button">Skip intro</button>
-    <p class="beat" aria-hidden="true"><span>Clean.</span><span>Model.</span><span>Explain.</span></p>
+<section class="scene hero" id="top" data-state="cluster" data-field="#6b4cff" data-ink="#ffffff" style="--field: #6b4cff; --on: #ffffff" aria-labelledby="hero-name">
+  <div class="scene-in">
+    <h1 id="hero-name" class="giant name" aria-label="Rishit Mathur, data analyst"><span><i>R</i></span><span><i>I</i></span><span><i>S</i></span><span><i>H</i></span><span><i>I</i></span><span><i>T</i></span></h1>
+    <p class="line hero-line">Data analyst in Tampa. Four projects, every number checked against the source.</p>
+    <p class="tag hero-scroll" aria-hidden="true">Scroll<i></i></p>
   </div>
 </section>
 
-<section class="work" id="work" aria-labelledby="work-title">
-  <h2 id="work-title" class="visually-hidden">Selected work</h2>
-  {{FEATURED}}
-  <nav class="work-pager" id="work-pager" aria-label="Selected work">
-    <button class="pager-btn" id="pager-prev" type="button" aria-label="Previous project">&#8592;</button>
-    <a class="pager-name" id="pager-name" href="florida-flight-delays/">Florida flight delays</a>
-    <button class="pager-btn" id="pager-next" type="button" aria-label="Next project">&#8594;</button>
-  </nav>
-</section>
+<div class="work" id="work">
+{{FEATURED}}
+</div>
 
-<section class="about" id="about" aria-labelledby="about-title">
-  <picture class="scene-bg" aria-hidden="true">
-    <source media="(max-aspect-ratio: 4/5)" srcset="assets/world/m/shot-about.webp">
-    <img src="assets/world/d/shot-about.webp" alt="" width="2560" height="1600" loading="lazy" decoding="async">
-  </picture>
-  <div class="about-main paper">
-    <p class="stamp">About</p>
-    <h2 id="about-title" class="display">Analyst first, builder second.</h2>
-    <p class="about-lead">A data analyst in Tampa with hands-on SQL and Python, trained at USF's Muma College of Business.</p>
-    <dl class="about-facts">
-      <div><dt>Education</dt><dd>M.S. Business and Enterprise Integration, USF, expected May 2028</dd><dd>B.S. Business Analytics and Information Systems, USF, May 2026</dd></div>
-      <div><dt>Certification</dt><dd>Microsoft Power BI Data Analyst Associate</dd></div>
-      <div><dt>Tools</dt><dd>SQL, Python, R, Power BI, DAX, Excel, Tableau, PostgreSQL, Oracle, SQL Server</dd></div>
+<section class="scene about" id="about" data-state="stack" data-field="#ff4fa3" data-ink="#15193a" style="--field: #ff4fa3; --on: #15193a" aria-labelledby="about-title">
+  <div class="scene-in">
+    <p class="tag">About</p>
+    <h2 id="about-title" class="giant">Analyst first.</h2>
+    <p class="line">Hands-on SQL and Python, trained at USF's Muma College of Business. Power BI Data Analyst Associate.</p>
+    <dl class="facts" id="experience">
+      <div><dt>Now</dt><dd>Research Assistant, USF REACH Lab</dd></div>
+      <div><dt>Now</dt><dd>Ticketing Operations, USF Athletics</dd></div>
+      <div><dt>2025</dt><dd>Business Analyst, TraceRT: report turnaround cut 22%</dd></div>
+      <div><dt>M.S.</dt><dd>Business and Enterprise Integration, USF, 2028</dd></div>
+      <div><dt>B.S.</dt><dd>Business Analytics and Information Systems, USF, 2026</dd></div>
     </dl>
-    <p><a class="pill pill-ink" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a></p>
+    <p class="links"><a class="pill pill-ink" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a><a class="pill" href="all.html">All {{COUNT}} case studies</a></p>
   </div>
-  <div class="notebook" id="experience">
-    <h3 class="notebook-title">Experience</h3>
-    <ol class="timeline">
-      <li><p class="tl-when">Sep 2025 to now</p><p class="tl-role">Research Assistant, USF REACH Lab</p><p>End-to-end data workflows and dashboards for experimental findings.</p></li>
-      <li><p class="tl-when">May 2025 to now</p><p class="tl-role">Ticketing Operations, USF Athletics</p><p>Ticket sales, attendance and entry data analysed for event planning.</p></li>
-      <li><p class="tl-when">May to Aug 2025</p><p class="tl-role">Business Analyst, TraceRT</p><p>Power BI dashboards that cut report turnaround time by 22%.</p></li>
-      <li><p class="tl-when">Jan to Apr 2025</p><p class="tl-role">Sales forecasting course project</p><p>100K+ records cleaned and merged in Python and R.</p></li>
-    </ol>
-  </div>
-  <a class="more-card paper" href="all.html" aria-labelledby="more-title">
-    <p class="stamp">Index</p>
-    <h2 id="more-title" class="more-count"><span class="more-n">{{COUNT}}</span> case studies</h2>
-    <p class="more-line">Every project on this desk has a written case study: the problem, what was built, the checks, the limits.</p>
-    <p class="more-cta">Browse all {{COUNT}} &rarr;</p>
-  </a>
 </section>
 
-<section class="contact" id="contact" aria-labelledby="contact-title">
-  <picture class="scene-bg" aria-hidden="true">
-    <source media="(max-aspect-ratio: 4/5)" srcset="assets/world/m/shot-contact.webp">
-    <img src="assets/world/d/shot-contact.webp" alt="" width="2560" height="1600" loading="lazy" decoding="async">
-  </picture>
-  <div class="contact-copy paper">
-    <p class="stamp">Contact</p>
-    <h2 id="contact-title" class="display">Let's talk.</h2>
-    <p class="contact-lede">Open to entry-level data and business analyst roles, US-wide and remote.</p>
-  </div>
-  <div class="card-wrap">
-    <div class="biz-card" id="biz-card">
-      <p class="biz-name">Rishit Raj Mathur</p>
-      <p class="biz-role">Data analyst, Tampa, FL</p>
-      <a class="biz-mail" href="mailto:rishit.mathur@yahoo.com">rishit.mathur@yahoo.com</a>
-      <p class="biz-links"><button class="pill" id="copy-mail" type="button" data-mail="rishit.mathur@yahoo.com" hidden><span class="copy-text">Copy e-mail</span></button><a class="pill" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="pill" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a><a class="pill" href="https://mrrishit909.github.io/resume.pdf">Résumé</a></p>
-      <p class="visually-hidden" id="copy-status" aria-live="polite"></p>
-    </div>
+<section class="scene contact" id="contact" data-state="scatter" data-field="#ff7a1a" data-ink="#15193a" style="--field: #ff7a1a; --on: #15193a" aria-labelledby="contact-title">
+  <div class="scene-in">
+    <p class="tag">Contact</p>
+    <h2 id="contact-title" class="giant">Let's talk.</h2>
+    <a class="mail" href="mailto:rishit.mathur@yahoo.com">rishit.mathur@yahoo.com</a>
+    <p class="links"><button class="pill" id="copy-mail" type="button" data-mail="rishit.mathur@yahoo.com" hidden><span class="copy-text">Copy e-mail</span></button><a class="pill" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="pill" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a><a class="pill" href="https://mrrishit909.github.io/resume.pdf">Résumé</a></p>
+    <p class="visually-hidden" id="copy-status" aria-live="polite"></p>
+    <p class="line small">Open to entry-level data and business analyst roles, US-wide and remote.</p>
   </div>
 </section>
 </main>
 <footer class="foot"><span>© 2026 Rishit Raj Mathur, Tampa, FL <span class="foot-clock" id="clock" aria-label="Local time in Tampa"></span></span><nav aria-label="Footer"><a href="all.html">All projects</a><a href="#about">About</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
 <script src="vendor/lenis/lenis.min.js" defer></script>
-<script src="home.js?v={{HOME_JS}}" defer></script>
+<script type="module" src="home.js?v={{HOME_JS}}"></script>
 </body>
 </html>

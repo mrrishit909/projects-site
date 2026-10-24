@@ -73,7 +73,15 @@ presented together and judged on identity, composition, legibility, continuity a
 approval do the remaining sections extend the same rules. Evidence for the current proof:
 `~/projects-site-evidence/proof-2026-10-24/`.
 
-## Status (2026-10-24, the full build)
+## Status (2026-10-24, late): the colour fields
+
+The owner rejected the desk build as generic. The direction is now: six saturated colour fields that wipe between
+sections, type at a quarter of the screen, one line per screen, and one live Three.js scene of the four printed objects
+that flies in, reforms per section, floats and tilts to the pointer. Palette per section: violet hero, blue / red-orange /
+lime / yellow projects, pink about, orange contact; white or ink type, every pairing 4.5:1. Evidence:
+`~/projects-site-evidence/field-2026-10-24/`. The desk section below is history.
+
+## Status (2026-10-24, the desk build, superseded)
 
 The gate was passed and the rules were extended across the site: every section is a camera position on the same desk
 (`tools/desk/world.py`), the opening prints the pass before the lift, the case studies share the language, and the 404,
