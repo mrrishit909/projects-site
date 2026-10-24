@@ -1,0 +1,52 @@
+{
+  "title": "Incident Loom",
+  "tagline": "A replayable security-log investigation: six synthetic append-only batches, eight correlation rules, and incident timelines where every hypothesis cites its evidence and every gap lowers confidence.",
+  "kind": "Python · Security analytics",
+  "tech": [
+    "Python",
+    "Log normalization",
+    "Correlation rules",
+    "Held-out evaluation",
+    "GitHub Actions",
+    "React",
+    "Vite",
+    "TypeScript"
+  ],
+  "date": "2026-10",
+  "order": 302,
+  "repo": "https://github.com/mrrishit909/incident-loom",
+  "demo": "https://mrrishit909.github.io/incident-loom/",
+  "demo_label": "Browse the investigations",
+  "cover": "cover.jpg",
+  "note": "Every log record, user, host and address is synthetic (documentation address ranges, a fictional organisation). The precision and recall figures are against labels written by the same author as the detectors, so they show the evaluation works, not how the rules would do on real logs.",
+  "problem": "<p>A security investigation is a story told from logs, and a story is only as good as its evidence. Logs arrive late, out of order, duplicated across deliveries and with each source's clock a little off; a source can go silent for an hour and nobody notices. The question here is whether an investigation can be made <em>replayable</em>: every incident linked to the exact events behind it, alternatives stated, and silence treated as a gap that lowers confidence rather than as good news.</p>",
+  "built": "<p>A Python investigation engine, a GitHub-native run harness and a static workspace:</p><ul><li><b>Six synthetic daily batches</b> from four sources (identity sign-ins, cloud audit, host authentication, resource access) with injected anomalies, benign admin activity, duplicates, out-of-order records, clock skew, a declared gap and malformed records; labelled development and held-out scenarios.</li><li><b>Ingestion:</b> parsing, normalization to one event schema, clock-skew correction per source, deduplication across deliveries, quarantine with reasons, checkpoint and restart.</li><li><b>Eight correlation rules</b> with documented thresholds.</li><li><b>Investigation:</b> incidents with evidence-linked timelines, causal and temporal links, hypotheses, alternatives, gaps and a correlation graph.</li><li><b>Held-out evaluation</b>, the only code that reads the labels.</li><li><b>The loom:</b> a workspace that draws one thread per entity, a knot per event group, solid links for shared ids, dashed links for order only, and frayed threads where a source was silent.</li></ul>",
+  "steps": [
+    {
+      "title": "Generate batches that misbehave on purpose",
+      "body": "<p><code>python -m incidentloom fixtures</code> writes six append-only daily batches with the problems real pipelines meet: duplicate deliveries, out-of-order records, a declared host-log gap, a silent resource-log window, malformed lines and a per-source clock offset. Scenarios are split into development (used to set thresholds) and held-out (used only to score).</p>"
+    },
+    {
+      "title": "Normalize, correct the clocks, deduplicate, quarantine",
+      "body": "<p>Every record is parsed to one event schema and shifted by its source's declared clock offset. Deduplication keeps the first delivery; a later delivery that reuses a record id with different content is quarantined as a conflict, not merged. Records more than 72 hours late or more than 30 minutes early for their batch are quarantined too, and every window is stated in <code>ingest.json</code>.</p>"
+    },
+    {
+      "title": "Flag patterns with eight rules",
+      "body": "<p>Eight correlation rules with documented thresholds turn events into detections. Thresholds were chosen by inspecting the development scenarios, not by an automated sweep, and the README says so; four rules have a single development case.</p>"
+    },
+    {
+      "title": "Weave detections into incidents",
+      "body": "<p>Detections are grouped by primary entity within 24 hours into incidents. Each gets an evidence-linked timeline, links between events (same actor, within 24 hours by session or request id, or 8 hours by process or parent id), hypotheses that cite their events, alternative explanations, and the evidence gaps that lower confidence.</p>"
+    },
+    {
+      "title": "Stop after any batch, resume without changing a byte",
+      "body": "<p>A run checkpoints after each batch and can be resumed from there. The replay view and the ingest accounting show that resuming changes no evidence.</p>"
+    },
+    {
+      "title": "Score only on held-out scenarios",
+      "body": "<p><code>evaluate.py</code> is the one module allowed to read the labels. It scores the detectors on eight held-out synthetic scenarios and reports the misses by name: one designed false positive, one slow password spray not caught.</p>"
+    }
+  ],
+  "results": "<table><tr><th>All six batches, skew correction on</th><th class=\"num\">Count</th></tr><tr><td>Records received</td><td class=\"num\">1,534</td></tr><tr><td>Events accepted</td><td class=\"num\">1,502</td></tr><tr><td>Duplicate deliveries merged</td><td class=\"num\">19</td></tr><tr><td>Records quarantined</td><td class=\"num\">13</td></tr><tr><td>Out of order</td><td class=\"num\">9</td></tr><tr><td>Detections</td><td class=\"num\">20</td></tr><tr><td>Incidents (2 critical, 5 high, 3 medium)</td><td class=\"num\">10</td></tr><tr><td>Evidence gaps</td><td class=\"num\">2</td></tr><tr><td>Held-out precision</td><td class=\"num\">0.8</td></tr><tr><td>Held-out recall</td><td class=\"num\">0.8</td></tr></table><p>The two gaps (one declared host-log gap, one silent resource-log window) each lower the confidence of the hypotheses that depend on them. The held-out scores come from labels written by the detectors' author: they show that the evaluation pipeline works, not how the rules would perform on real logs.</p>",
+  "next": "<ul><li>Sweep thresholds automatically against a larger set of development scenarios instead of choosing them by inspection.</li><li>Calibrate the confidence rule, which is a documented but uncalibrated point rule today.</li><li>Group incidents so that a spray address and its targets can share one incident, and run the optional AI grader once an inference secret is configured.</li></ul>"
+}

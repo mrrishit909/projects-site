@@ -1,0 +1,53 @@
+{
+  "title": "Quant Foundry",
+  "tagline": "An adversarial research lab for trading strategies: deterministic walk-forward backtests on synthetic markets, a sealed holdout, explicit costs, and rejections published as prominently as wins.",
+  "kind": "Python · Quantitative research",
+  "tech": [
+    "Python",
+    "uv",
+    "Walk-forward backtesting",
+    "GitHub Actions",
+    "React",
+    "Vite",
+    "TypeScript",
+    "GSAP"
+  ],
+  "date": "2026-10",
+  "order": 300,
+  "repo": "https://github.com/mrrishit909/quant-foundry",
+  "demo": "https://mrrishit909.github.io/quant-foundry/",
+  "demo_label": "Browse the research lab",
+  "cover": "cover.jpg",
+  "note": "Every price series is synthetic, generated from a committed seed. Nothing here is market data, no broker is connected, and no profit is claimed.",
+  "problem": "<p>Most backtests flatter their author: the strategy is tuned on the same data it is scored on, costs are left out, and the losers quietly disappear. The question here is whether a research lab can be built so that cheating is structurally hard: <em>every experiment recorded, the final test data sealed before any strategy sees it, fees and slippage charged, and a rejection treated as a result worth publishing.</em></p>",
+  "built": "<p>A Python research engine plus a GitHub-native harness and a static React site:</p><ul><li><b>Synthetic markets:</b> a seeded price generator and bounded CSV ingestion with validation, so every run is reproducible.</li><li><b>Three strategy families:</b> trend, mean reversion and volatility breakout, each with a small parameter grid.</li><li><b>An event-driven simulator:</b> signal on the close, fill at the next open, with fees, slippage and position limits.</li><li><b>Walk-forward selection with a sealed holdout:</b> parameters are chosen on rolling windows, then scored once on data that was locked away, with sensitivity analysis, benchmarks and a verdict.</li><li><b>A GitHub-native harness:</b> run requests arrive as issues, results live on a <code>state</code> branch, and an outcome loop keeps memory across runs.</li><li><b>A public site</b> with in-browser cost sensitivity, built with React, Vite, TypeScript, GSAP and Lenis.</li></ul>",
+  "steps": [
+    {
+      "title": "Generate markets nobody can overfit to by memory",
+      "body": "<p>Prices are synthetic, generated from a committed seed on a Monday to Friday calendar. That removes any chance of a strategy \"knowing\" a famous crash, and it means the adversarial check can run on pure random walks, where any accepted strategy is a false positive by definition.</p>"
+    },
+    {
+      "title": "Simulate like a broker would charge you",
+      "body": "<p>The simulator is event-driven: a signal computed on the close fills at the next open, never the same bar. Fees and a fixed slippage are charged on every trade and position limits are enforced, so a strategy that only works with free, instant fills does not survive.</p>"
+    },
+    {
+      "title": "Seal the holdout, then select walk-forward",
+      "body": "<p>A final slice of each series is sealed before any strategy runs. Parameters are chosen on rolling in-sample windows and checked on the following out-of-sample window; only the surviving configuration is scored once on the holdout. A t-statistic rule on the result decides accept or reject.</p>"
+    },
+    {
+      "title": "Publish rejections, not just wins",
+      "body": "<p>Every experiment is recorded on the <code>state</code> branch with a release record in <code>releases/current.json</code>. Verdicts, sensitivity tables and benchmarks are shown for rejected strategies with the same prominence as accepted ones.</p>"
+    },
+    {
+      "title": "Run everything through GitHub",
+      "body": "<p>A run is requested by opening a <em>Research run request</em> issue form. The owner's requests run automatically on Actions; anyone else's wait for a <code>job:approved</code> label. Locally the same engine runs with one command.</p>",
+      "code": "uv sync --frozen\nuv run python -m quantfoundry run --request req.json --out out/"
+    },
+    {
+      "title": "Prove the replay is byte-identical",
+      "body": "<p>Same-machine byte-identical replay is a release gate. One request was also replayed across macOS and GitHub's Ubuntu runner: every analytic output matched byte for byte, and the only difference was the gzip container of <code>dataset.csv.gz</code>, whose decompressed content still matched the sha256 in <code>manifest.json</code>.</p>"
+    }
+  ],
+  "results": "<ul><li><b>Adversarial check:</b> on pure random walks, 1 of 30 default-size runs accepted a strategy. The t-statistic rule cut false acceptances sharply but does not remove them.</li><li><b>Cross-platform replay:</b> every analytic output byte-identical between macOS and Ubuntu for the one request tested; the dataset archive differed only in its gzip container.</li><li><b>Release gate:</b> same-machine byte-identical replay is required before a release record is published.</li></ul><p>The README publishes no return, Sharpe or win-rate figures, and that is the point: daily bars make Sharpe estimates noisy, and the lab's job is to reject strategies, not to advertise them.</p>",
+  "next": "<ul><li>Add holidays, corporate actions and a market-impact model beyond fixed slippage.</li><li>Allow short positions and widen the strategy grids once the false-acceptance rate is better characterised.</li><li>Run the optional AI grader once an inference secret is configured, and record in each release whether it ran.</li></ul>"
+}

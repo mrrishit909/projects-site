@@ -1,0 +1,53 @@
+{
+  "title": "Minimal Motion Studio",
+  "tagline": "A brand brief becomes a small website: contrast-checked OKLCH tokens, type and spacing scales, Web Animations motion, a three-width preview, and an export that builds byte-identical to the preview with no dependencies.",
+  "kind": "TypeScript · Design system",
+  "tech": [
+    "TypeScript",
+    "OKLCH / culori",
+    "JSON Schema",
+    "Web Animations API",
+    "Vite",
+    "Playwright",
+    "axe-core",
+    "GitHub Actions"
+  ],
+  "date": "2026-10",
+  "order": 304,
+  "repo": "https://github.com/mrrishit909/minimal-motion-studio",
+  "demo": "https://mrrishit909.github.io/minimal-motion-studio/",
+  "demo_label": "Open the studio",
+  "cover": "cover.jpg",
+  "note": "Example brands are fictional. The studio is deterministic: the same brief always gives the same files. AI-proposed briefs are an owner-only workflow that needs an inference secret, and as of this release none is configured, so no AI-proposed generation has run.",
+  "problem": "<p>Turning a brand into a website usually means a designer hand-picks colours, someone checks contrast at the end (if at all), and the exported code depends on a build chain that rots within a year. The question here is whether a <em>structured brief</em> can be compiled into a site deterministically: every colour pairing checked on the background it actually sits on, motion that respects reduced-motion settings, and an export anyone can rebuild with Node alone and get the same bytes.</p>",
+  "built": "<p>A browser-based studio, a shared zero-dependency build core and a GitHub-native run harness:</p><ul><li><b>One brief contract</b> (JSON Schema 2020-12), validated by Ajv in the browser and jsonschema in the harness.</li><li><b>Tokens:</b> OKLCH palette derivation with lightness-only contrast adjustments (culori), type and spacing scales, radii and motion timing; seven system font voices and four motion presets.</li><li><b>Composition</b> into a source package with one text escaper, three templates and an original SVG motif.</li><li><b>A zero-dependency build</b> shared by the studio and the exported <code>build.mjs</code>: tokens CSS from <code>tokens.json</code>, a contrast re-check, and a hash-based CSP.</li><li><b>A deterministic zip</b> and a CLI for Actions (<code>run</code>, <code>verify-candidate</code>, <code>compose</code>).</li><li><b>The studio:</b> preview at phone, tablet and desktop widths, reduced-motion preview, download, import and export of briefs, all in browser memory.</li></ul>",
+  "steps": [
+    {
+      "title": "Define the brief as a schema",
+      "body": "<p>Everything the studio can make is described by <code>schemas/request.schema.json</code>: brand name, voice, palette seed, templates, up to six items and five questions. The same schema validates in the browser (Ajv) and in the harness (jsonschema), so a brief that passes in one place passes in the other.</p>"
+    },
+    {
+      "title": "Derive a palette and check every pairing where it sits",
+      "body": "<p>Colours are derived in OKLCH. Each text-on-background pairing is checked against the background it will actually sit on, and when a pairing fails only lightness is adjusted, so hue and chroma stay the brand's. Every adjustment is listed in the studio and in <code>adjustments.json</code>.</p>"
+    },
+    {
+      "title": "Compose the site with one escaper",
+      "body": "<p>Tokens, scales, one of three templates and an original SVG motif are composed into a source package. A single text escaper handles every string that reaches HTML, which keeps the hash-based Content Security Policy honest.</p>"
+    },
+    {
+      "title": "Build the same way in the studio and in the export",
+      "body": "<p><code>build-core.js</code> has no dependencies and is used both by the studio's preview and by the exported package's <code>build.mjs</code>. Change a colour in <code>tokens.json</code> and rebuild: every use changes, and the build refuses a value that breaks a contrast pairing.</p>",
+      "code": "unzip fieldnote-studio-site.zip -d site && cd site\nnpm run build          # Node 18+, no install: writes dist/index.html"
+    },
+    {
+      "title": "Preview at three widths, with motion that can be turned off",
+      "body": "<p>The studio previews the page at phone, tablet and desktop widths and offers a reduced-motion preview. Motion runs on the Web Animations API with four presets; the collapse animation keeps the answer painted while folding only where <code>::details-content</code> is supported.</p>"
+    },
+    {
+      "title": "Publish a generation run through GitHub and review it in a real browser",
+      "body": "<p>A <em>Generation run request</em> issue makes Actions compose the package independently, build it, and review it with Playwright and axe at 390, 768 and 1440 px. The result is kept on the <code>state</code> branch with a release record.</p>"
+    }
+  ],
+  "results": "<table><tr><th>Check (committed sample brief, a fictional garden design studio)</th><th class=\"num\">Result</th></tr><tr><td>Contrast pairings passing</td><td class=\"num\">16 / 16</td></tr><tr><td>axe violations at 390, 768 and 1440 px</td><td class=\"num\">0</td></tr><tr><td>Exported package vs studio preview</td><td class=\"num\">byte-identical</td></tr><tr><td>Colour adjustments needed by the dark launch example</td><td class=\"num\">2</td></tr><tr><td>Lighthouse accessibility / best practices / SEO</td><td class=\"num\">1.0 / 1.0 / 1.0</td></tr><tr><td>Lighthouse performance, phone / desktop</td><td class=\"num\">0.96 / 1.0</td></tr><tr><td>LCP, phone / desktop</td><td class=\"num\">1.8 s / 0.48 s</td></tr><tr><td>CLS</td><td class=\"num\">0</td></tr><tr><td>Defects found by independent review, all fixed as regression tests</td><td class=\"num\">16 (5 major, 11 minor)</td></tr></table><p>Lighthouse figures are medians of three runs on the live site with default simulated throttling.</p>",
+  "next": "<ul><li>Use the derived success, warning and danger roles in the templates (they are checked today but unused).</li><li>Add image handling and more than three templates.</li><li>Configure an inference secret so the owner-only AI-proposed brief workflow can run, with its result recorded in the release.</li></ul>"
+}

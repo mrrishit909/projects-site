@@ -3,56 +3,54 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rishit Mathur, data analyst</title>
-<meta name="description" content="Rishit Mathur, data analyst in Tampa: Power BI, SQL, Python, data pipelines, forecasting and AI-enabled tools. Four flagship projects and {{COUNT}} case studies.">
-<meta name="theme-color" content="#6b4cff">
-<meta property="og:title" content="Rishit Mathur, data analyst">
-<meta property="og:description" content="Four flagship projects, each with the number its case study reports, and {{COUNT}} case studies in all.">
-<meta property="og:image" content="https://mrrishit909.github.io/projects/assets/og-desk.jpg">
+<title>Rishit Raj Mathur, data analyst</title>
+<meta name="description" content="Rishit Raj Mathur, data analyst in Tampa. {{REPOS}} public repositories on GitHub, {{COUNT}} written case studies, every number checked against its source. SQL, Python, Power BI, dbt, forecasting, retrieval.">
+<meta name="theme-color" content="#2400FF">
+<meta property="og:title" content="Rishit Raj Mathur, data analyst">
+<meta property="og:description" content="{{REPOS}} public repositories, {{COUNT}} case studies, every number checked against its source.">
+<meta property="og:image" content="https://mrrishit909.github.io/projects/assets/og-index.jpg">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="portfolio.css?v={{PORTFOLIO_CSS}}">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236b4cff'/%3E%3Crect x='5' y='9' width='22' height='14' rx='2' fill='%23ffffff'/%3E%3Crect x='5' y='9' width='22' height='4' rx='1' fill='%2315193A'/%3E%3C/svg%3E">
-<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Archivo-latin.woff2" crossorigin>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%232400FF'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23D4FF3A'/%3E%3C/svg%3E">
+<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Bricolage-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/JetBrainsMono-latin.woff2" crossorigin>
 <link rel="modulepreload" href="vendor/three/three.module.min.js">
 <script type="importmap">{ "imports": { "three": "./vendor/three/three.module.min.js" } }</script>
 <script>
-// the catalogue moved to all.html: old links (#projects, #<slug>, ?q= / ?kind=) are forwarded there
 (function () { var h = location.hash.slice(1), q = location.search;
-  if (/[?&](q|kind)=/.test(q) || (h && !/^(top|main|work|about|experience|contact|feature-[\w-]+)$/.test(h))) location.replace("all.html" + q + (h && h !== "projects" ? "#" + h : "")); })();
+  if (/[?&](q|kind)=/.test(q) || (h && !/^(top|main|work|about|index|contact|feature-[\w-]+)$/.test(h))) location.replace("all.html" + q + (h && h !== "projects" ? "#" + h : "")); })();
 document.documentElement.classList.add("js");
-// the opening plays on a first load at the top of the page; again in this session it plays faster; never with a hash,
-// under reduced motion, or coming back from a case study
+// the count plays on a first load at the top of the page; faster again in this session; never with a hash, under reduced
+// motion, or coming back from a case study
 if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
   var back = false; try { back = !!sessionStorage.getItem("vt"); } catch (_) {}
   if (!back) {
     document.documentElement.classList.add("intro");
     try { if (sessionStorage.getItem("intro")) document.documentElement.classList.add("intro-again"); sessionStorage.setItem("intro", "1"); } catch (_) {}
-    // the name slams up on a clock of its own, so the first paint never waits for the 3D library
-    setTimeout(function () { document.documentElement.classList.add("intro-land"); }, document.documentElement.classList.contains("intro-again") ? 850 : 1900);
+    setTimeout(function () { document.documentElement.classList.add("intro-land"); }, document.documentElement.classList.contains("intro-again") ? 900 : 2100);
   }
 }
 </script>
 </head>
 <body class="home">
 <a class="skip" href="#main">Skip to content</a>
-
-<div class="field" id="field" aria-hidden="true"><div class="wipe" id="wipe"></div></div>
-<canvas class="gl" id="gl" aria-hidden="true"></canvas>
+<canvas class="field" id="field" aria-hidden="true"></canvas>
 
 <header class="nav" id="nav">
   <a class="wordmark" href="#top">Rishit Raj Mathur</a>
-  <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
-  <nav class="nav-links" id="nav-links" aria-label="Site"><a href="#work">Work</a><a href="all.html">All projects</a><a href="#about">About</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="#contact">Contact</a></nav>
+  <nav class="nav-links" aria-label="Site"><a href="#work">Work</a><a href="all.html">Index</a><a href="#contact">Contact</a></nav>
+  <p class="strip mono" aria-label="Live"><span id="clock"></span><span>{{REPOS}} repos</span><span id="pushed">last push {{LAST_PUSH}}</span></p>
 </header>
-<button class="intro-skip" id="intro-skip" type="button">Skip intro</button>
+<button class="skip-intro mono" id="intro-skip" type="button">Skip</button>
 
 <main id="main">
-<section class="scene hero" id="top" data-state="cluster" data-field="#6b4cff" data-ink="#ffffff" style="--field: #6b4cff; --on: #ffffff" aria-labelledby="hero-name">
+<section class="scene hero" id="top" data-state="hero" aria-labelledby="hero-title">
   <div class="scene-in">
-    <h1 id="hero-name" class="giant name" aria-label="Rishit Mathur, data analyst"><span><i>R</i></span><span><i>I</i></span><span><i>S</i></span><span><i>H</i></span><span><i>I</i></span><span><i>T</i></span></h1>
-    <p class="line hero-line">Data analyst in Tampa. Four projects, every number checked against the source.</p>
-    <p class="tag hero-scroll" aria-hidden="true">Scroll<i></i></p>
+    <h1 id="hero-title" class="hero-count mono" aria-label="{{REPOS}} public repositories on GitHub"><span id="counter">{{REPOS}}</span></h1>
+    <p class="display hero-line"><span class="w">public repositories on GitHub.</span> <span class="w">Every number checked against its source.</span></p>
+    <p class="line hero-sub">Rishit Raj Mathur is a data analyst in Tampa. SQL, Python, Power BI, dbt, forecasting, retrieval. {{COUNT}} written case studies.</p>
+    <p class="mono small hero-hint" aria-hidden="true">Scroll</p>
   </div>
 </section>
 
@@ -60,34 +58,43 @@ if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
 {{FEATURED}}
 </div>
 
-<section class="scene about" id="about" data-state="stack" data-field="#ff4fa3" data-ink="#15193a" style="--field: #ff4fa3; --on: #15193a" aria-labelledby="about-title">
+<section class="scene about" id="about" data-state="stack" aria-labelledby="about-title">
   <div class="scene-in">
-    <p class="tag">About</p>
-    <h2 id="about-title" class="giant">Analyst first.</h2>
-    <p class="line">Hands-on SQL and Python, trained at USF's Muma College of Business. Power BI Data Analyst Associate.</p>
-    <dl class="facts" id="experience">
-      <div><dt>Now</dt><dd>Research Assistant, USF REACH Lab</dd></div>
-      <div><dt>Now</dt><dd>Ticketing Operations, USF Athletics</dd></div>
-      <div><dt>2025</dt><dd>Business Analyst, TraceRT: report turnaround cut 22%</dd></div>
-      <div><dt>M.S.</dt><dd>Business and Enterprise Integration, USF, 2028</dd></div>
-      <div><dt>B.S.</dt><dd>Business Analytics and Information Systems, USF, 2026</dd></div>
-    </dl>
-    <p class="links"><a class="pill pill-ink" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a><a class="pill" href="all.html">All {{COUNT}} case studies</a></p>
+    <p class="mono meta"><span>About</span><span>{{COMMITS}} commits</span><span>{{PAGES}} live sites</span></p>
+    <h2 id="about-title" class="display">Analyst first.</h2>
+    <p class="line">Hands-on SQL and Python, trained at USF's Muma College of Business. Microsoft Power BI Data Analyst Associate. Research Assistant at the USF REACH Lab; Ticketing Operations at USF Athletics; Business Analyst at TraceRT, where new Power BI dashboards cut report turnaround by 22%.</p>
+    <dl class="langs" aria-label="Repositories by language">{{LANG_ROWS}}</dl>
+    <p class="btns"><a class="btn btn-fill" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a><a class="btn" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></p>
   </div>
 </section>
 
-<section class="scene contact" id="contact" data-state="scatter" data-field="#ff7a1a" data-ink="#15193a" style="--field: #ff7a1a; --on: #15193a" aria-labelledby="contact-title">
+<section class="scene index" id="index" data-state="grid" aria-labelledby="index-title">
   <div class="scene-in">
-    <p class="tag">Contact</p>
-    <h2 id="contact-title" class="giant">Let's talk.</h2>
+    <p class="mono meta"><span>Index</span><span>{{COUNT}} case studies</span></p>
+    <h2 id="index-title" class="display">All of it, queryable.</h2>
+    <form class="query" action="all.html" method="get" role="search">
+      <label class="visually-hidden" for="q">Query the index</label>
+      <span class="mono prompt" aria-hidden="true">WHERE</span>
+      <input class="mono" id="q" name="q" type="search" placeholder="language:python year:2026 commits>10" autocomplete="off" spellcheck="false">
+      <button class="btn btn-fill" type="submit">Run</button>
+    </form>
+    <p class="mono small">Filters: language, kind, year, commits, live, or any word in a title or tool. Example: <code>kind:sql year:2026</code></p>
+  </div>
+</section>
+
+<section class="scene contact" id="contact" data-state="ring" aria-labelledby="contact-title">
+  <div class="scene-in">
+    <p class="mono meta"><span>Contact</span><span id="clock2"></span></p>
+    <h2 id="contact-title" class="display">Let's talk.</h2>
     <a class="mail" href="mailto:rishit.mathur@yahoo.com">rishit.mathur@yahoo.com</a>
-    <p class="links"><button class="pill" id="copy-mail" type="button" data-mail="rishit.mathur@yahoo.com" hidden><span class="copy-text">Copy e-mail</span></button><a class="pill" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="pill" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a><a class="pill" href="https://mrrishit909.github.io/resume.pdf">Résumé</a></p>
+    <p class="btns"><button class="btn" id="copy-mail" type="button" data-mail="rishit.mathur@yahoo.com" hidden><span class="copy-text">Copy e-mail</span></button><a class="btn" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="btn" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a><a class="btn" href="https://mrrishit909.github.io/resume.pdf">Résumé</a></p>
     <p class="visually-hidden" id="copy-status" aria-live="polite"></p>
     <p class="line small">Open to entry-level data and business analyst roles, US-wide and remote.</p>
   </div>
 </section>
 </main>
-<footer class="foot"><span>© 2026 Rishit Raj Mathur, Tampa, FL <span class="foot-clock" id="clock" aria-label="Local time in Tampa"></span></span><nav aria-label="Footer"><a href="all.html">All projects</a><a href="#about">About</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
+<footer class="foot mono"><span>© 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="all.html">Index</a><a href="#about">About</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
+<script type="application/json" id="field-data">/*FIELD*/[]</script>
 <script src="vendor/lenis/lenis.min.js" defer></script>
 <script type="module" src="home.js?v={{HOME_JS}}"></script>
 </body>

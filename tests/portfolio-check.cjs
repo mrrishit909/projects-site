@@ -44,21 +44,24 @@ const contrastOf = sels => {
     return [internal.length, missing];
   };
 
-  // 1. home without JavaScript: identity, navigation, the four projects with their objects and what I did, about, contact
+  // 1. home without JavaScript: identity, navigation, the count, the four projects, about, index, contact
   let p = await page({ javaScriptEnabled: false }, null, BASE, 0);
-  assert(await p.$eval("h1", h => h.getAttribute("aria-label")) === "Rishit Mathur, data analyst" && await p.$eval("h1", h => h.textContent.trim()) === "RISHIT", "the wordmark is the h1, named for screen readers");
-  assert(await p.$$eval(".nav-links a", as => as.map(a => a.textContent)).then(t => ["Work", "All projects", "About", "Résumé", "Contact"].every(x => t.includes(x))), "persistent nav: Work / All projects / About / Résumé / Contact");
+  assert(await p.$eval("h1", h => /public repositories/.test(h.getAttribute("aria-label")) && /^\d{3}$/.test(h.textContent.trim())), "the count is the h1, named for screen readers");
+  assert(await p.$$eval(".nav-links a", as => as.map(a => a.textContent)).then(t => ["Work", "Index", "Contact"].every(x => t.includes(x))), "nav: Work / Index / Contact");
   const order = await p.$$eval("main > section[id], main > div[id]", els => els.map(e => e.id));
-  assert(JSON.stringify(order) === JSON.stringify(["top", "work", "about", "contact"]), `page order: hero, work, about + experience, contact (${order.join(" > ")})`);
+  assert(JSON.stringify(order) === JSON.stringify(["top", "work", "about", "index", "contact"]), `page order: hero, work, about, index, contact (${order.join(" > ")})`);
   assert(featured.length === 4 && await p.$$eval(".project", els => els.length) === 4, "four flagship projects rendered as static HTML");
-  assert(await p.$$eval(".project .still", imgs => imgs.length === 4 && imgs.every(i => i.alt.length > 20 && getComputedStyle(i).display === "block")), "no-JS: each project's printed object is a visible image with a description");
-  assert(await p.$$eval(".scene", els => els.every(e => getComputedStyle(e).backgroundColor !== "rgba(0, 0, 0, 0)")), "no-JS: every scene paints its own colour field");
+  assert(await p.$$eval(".scene", els => els.every(e => getComputedStyle(e).color === "rgb(255, 255, 255)")), "no-JS: every scene is readable white on the field");
   assert(await p.$$eval(".project", els => els.map(e => e.querySelector(".num").textContent.replace(/\s/g, ""))).then(t => t.every((x, i) => x === `${featured[i].scale.value}${featured[i].scale.unit}`.replace(/\s/g, ""))), "each project shows the figure in featured.json");
-  assert(await p.$$eval(".project .word", els => els.map(e => e.textContent)).then(t => t.every((x, i) => x === featured[i].word)), "each project carries its one-word headline");
-  assert(await p.$$eval("a[href$='resume.pdf']", as => as.length) >= 2, "résumé link present (nav, about, contact)");
+  assert(await p.$$eval(".project .display", els => els.map(e => e.textContent)).then(t => t.every((x, i) => x === featured[i].word)), "each project carries its one-word headline");
+  const fieldData = JSON.parse(await p.$eval("#field-data", e => e.textContent));
+  assert(fieldData.length >= 200 && fieldData.every(r => r.n && r.t && typeof r.c === "number"), `the field carries one record per public repository (${fieldData.length})`);
+  assert(await p.$eval("#counter", e => e.textContent.trim()) === String(fieldData.length), "the headline count equals the number of repositories");
+  assert(await p.$eval("form.query", f => f.getAttribute("action") === "all.html" && f.querySelector("input[name=q]") !== null), "no-JS: the home query form submits to the index");
+  assert(await p.$$eval("a[href$='resume.pdf']", as => as.length) >= 2, "résumé link present (about, contact)");
   assert(await p.$$eval("a[href^='mailto:rishit.mathur@yahoo.com']", as => as.length) === 1, "verified e-mail link present");
   assert(await p.$eval("a[href*='linkedin.com/in/rishitrajmathur']", a => !!a), "verified LinkedIn link present");
-  assert(await p.$$eval("a[href='all.html']", as => as.length) >= 3, "the catalogue is linked from the nav, the about scene and the footer");
+  assert(await p.$$eval("a[href='all.html']", as => as.length) >= 2, "the index is linked from the nav and the footer");
   let [n, missing] = await linksOnDisk(p);
   assert(missing.length === 0, `home: all ${n} internal links resolve on disk` + (missing.length ? ": missing " + missing.join(", ") : ""));
   await p.close();
@@ -77,25 +80,23 @@ const contrastOf = sels => {
   assert(missing.length === 0, `catalogue: all ${n} internal links resolve on disk` + (missing.length ? ": missing " + missing.join(", ") : ""));
   await p.close();
 
-  // 2b. the intro: plays on a first load, faster on a repeat in the same session, never with a hash or under reduced motion
+  // 2b. the opening: the count runs 000 to the total while the points arrive; skip ends it; faster on a repeat; never under reduced motion
   p = await page({}, null, BASE, 0);
-  // the first frame is the colour field with the letters still below their clips and the nav hidden; the objects fly in,
-  // then the letters slam up (html.intro-land)
-  const firstFrame = await p.evaluate(() => [document.documentElement.classList.contains("intro"), getComputedStyle(document.querySelector(".name i")).transform !== "none", document.getElementById("intro-skip").getBoundingClientRect().width > 0, +getComputedStyle(document.querySelector(".nav")).opacity, document.documentElement.classList.contains("gl-on")]);
-  assert(firstFrame[0] && firstFrame[1] && firstFrame[2] && firstFrame[3] === 0 && firstFrame[4], `the opening starts with the letters clipped, the nav hidden, a visible Skip button and the live scene on (${firstFrame})`);
-  await p.waitForFunction(() => document.documentElement.classList.contains("intro-land"), null, { timeout: 6000 });
-  const firstIntro = await p.evaluate(() => [document.documentElement.classList.contains("intro"), document.documentElement.classList.contains("intro-again"), document.getAnimations().some(a => a.animationName === "slam")]);
+  const firstFrame = await p.evaluate(() => [document.documentElement.classList.contains("intro"), document.getElementById("counter").textContent, document.getElementById("intro-skip").getBoundingClientRect().width > 0, +getComputedStyle(document.querySelector(".nav")).opacity, document.documentElement.classList.contains("gl-on")]);
+  assert(firstFrame[0] && /^\d{3}$/.test(firstFrame[1]) && firstFrame[2] && firstFrame[3] === 0 && firstFrame[4], `the opening starts counting with the nav hidden, a Skip button and the field on (${firstFrame})`);
+  await p.waitForFunction(() => document.documentElement.classList.contains("intro-done"), null, { timeout: 8000 });
+  const landed = await p.evaluate(() => [document.getElementById("counter").textContent, document.documentElement.classList.contains("intro-again"), document.getAnimations().some(a => a.animationName === "up")]);
   await p.reload({ waitUntil: "networkidle" });
   const againIntro = await p.evaluate(() => document.documentElement.classList.contains("intro-again"));
   await p.waitForTimeout(2600);
-  const settled = await p.evaluate(() => [getComputedStyle(document.querySelector(".name span:last-child i")).transform, document.getAnimations().filter(a => a.playState === "running" && a.animationName !== "drop").length]);
-  assert(firstIntro[0] && !firstIntro[1] && firstIntro[2] && againIntro && /^(none|matrix\(1, 0, 0, 1, 0, 0\))$/.test(settled[0]) && settled[1] === 0, `the opening plays on first load, faster on a repeat visit, and settles (${firstIntro}, ${againIntro}, ${settled})`);
+  const settled = await p.evaluate(() => [+getComputedStyle(document.querySelector(".nav")).opacity, document.getAnimations().filter(a => a.playState === "running" && a.animationName !== "sweep").length]);
+  assert(/^\d{3}$/.test(landed[0]) && !landed[1] && landed[2] && againIntro && settled[0] === 1 && settled[1] === 0, `the count lands on the total, the lines rise, a repeat visit is faster and settles (${landed}, ${againIntro}, ${settled})`);
   await p.close();
   p = await page({ reducedMotion: "reduce" }, null, BASE, 0);
-  assert(await p.evaluate(() => !document.documentElement.classList.contains("intro")), "no intro under reduced motion");
+  assert(await p.evaluate(() => !document.documentElement.classList.contains("intro")), "no opening under reduced motion");
   await p.close();
 
-  // 3. home with JavaScript: keyboard order, the field wipes to each section's colour, the numbers count up, the live scene
+  // 3. home with JavaScript: keyboard order, the field re-forms per section, the numbers count, copy e-mail, contrast
   p = await page();
   await p.keyboard.press("Tab");
   assert(await p.evaluate(() => document.activeElement.className === "skip"), "first Tab lands on the skip link");
@@ -103,34 +104,25 @@ const contrastOf = sels => {
   assert(await p.evaluate(() => document.activeElement.textContent === "Work"), "nav is reachable by keyboard");
   await p.waitForFunction(() => document.documentElement.classList.contains("intro-done"), null, { timeout: 12000 });
   await p.waitForTimeout(1200);
-  assert(await p.evaluate(() => { const c = document.getElementById("gl"); return document.documentElement.classList.contains("gl-on") && c.width > 0 && getComputedStyle(c).display !== "none" && getComputedStyle(document.querySelector(".still")).display === "none"; }), "the live scene is on and the still objects step aside");
-  const fieldAt = async id => { await jump(p, "#" + id); await p.waitForTimeout(1300); return p.evaluate(() => getComputedStyle(document.getElementById("field")).backgroundColor); };
-  const hex2rgb = h => `rgb(${parseInt(h.slice(1, 3), 16)}, ${parseInt(h.slice(3, 5), 16)}, ${parseInt(h.slice(5, 7), 16)})`;
+  assert(await p.evaluate(() => { const c = document.getElementById("field"); return document.documentElement.classList.contains("gl-on") && c.width > 0 && getComputedStyle(c).display !== "none"; }), "the field is live");
+  const sample = async () => p.evaluate(() => { const c = document.getElementById("field"), gl = c.getContext("webgl2"); const px = new Uint8Array(4 * 64 * 64); gl.readPixels(Math.floor(c.width * 0.6), Math.floor(c.height * 0.3), 64, 64, gl.RGBA, gl.UNSIGNED_BYTE, px); let lit = 0; for (let i = 0; i < px.length; i += 4) if (px[i + 3] > 0) lit++; return lit; });
   for (let i = 0; i < 4; i++) {
-    const f = await fieldAt("feature-" + featured[i].slug);
+    await jump(p, "#feature-" + featured[i].slug); await p.waitForTimeout(1500);
     const want = `${featured[i].scale.value}${featured[i].scale.unit}`.replace(/\s/g, "");
     const num = await p.evaluate(k => document.querySelectorAll(".project")[k].querySelector(".num").textContent.replace(/\s/g, ""), i);
-    assert(f === hex2rgb(featured[i].field) && num === want, `screen ${i + 1}: the field wipes to ${featured[i].field} and the number lands on ${want} (${f}, ${num})`);
+    assert(num === want, `screen ${i + 1}: the number lands on ${want} (${num})`);
   }
+  await jump(p, "#index"); await p.waitForTimeout(1500);
+  assert(await p.evaluate(() => document.querySelector("#index").getBoundingClientRect().top <= 1), "the index section is reachable by anchor");
   await jump(p, "#contact"); await p.waitForTimeout(900);
   assert(await p.evaluate(async () => { const btn = document.getElementById("copy-mail"); if (btn.hidden) return false; btn.click(); await new Promise(r => setTimeout(r, 500)); return btn.textContent.trim() === "Copied" && document.getElementById("copy-status").textContent.length > 0; }), "Copy e-mail copies and confirms");
-  // text on every field clears 4.5:1 against that field (the field is fixed behind the page, so compare against the scene's --field)
-  const fieldContrast = await p.evaluate(() => {
-    const lum = c => { const [r, g, b] = c.match(/\d+/g).map(Number).map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
-    const ratio = (a, b) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-    const probe = document.createElement("div"); document.body.append(probe);
-    const out = [];
-    for (const s of document.querySelectorAll(".scene")) { probe.style.color = s.dataset.field; const bg = getComputedStyle(probe).color; for (const sel of [".tag", ".line", ".giant", ".num", "h3", ".facts dd", ".mail"]) { const el = s.querySelector(sel); if (el) out.push([s.id + " " + sel, ratio(lum(getComputedStyle(el).color), lum(bg)).toFixed(2)]); } }
-    probe.remove(); return out;
-  });
-  assert(fieldContrast.every(([, v]) => +v >= 4.5), "home text clears 4.5:1 on its own colour field: " + fieldContrast.filter(([, v]) => +v < 4.5).map(x => x.join(" ")).join(", "));
-  const pillContrast = await p.evaluate(contrastOf, [".nav-links a", ".pill", ".pill-ink", ".foot"]);
-  assert(pillContrast.every(([, v]) => +v >= 4.5), "pills and footer clear 4.5:1: " + pillContrast.map(x => x.join(" ")).join(", "));
+  const homeContrast = await p.evaluate(contrastOf, [".hero-line", ".hero-sub", ".project .num", ".project .line", ".project .mono.small", ".meta", ".langs dd", ".query input", ".mail", ".foot", ".nav-links a", ".btn", ".btn-fill"]);
+  assert(homeContrast.every(([, v]) => +v >= 4.5), "home text clears 4.5:1 on the field: " + homeContrast.filter(([, v]) => +v < 4.5).map(x => x.join(" ")).join(", "));
   await p.close();
 
   // 4. the catalogue with JavaScript
   p = await page({}, null, ALL);
-  const catContrast = await p.evaluate(contrastOf, [".section-lede", ".tile-kind", ".tile-title", ".tile:nth-child(4) .tile-kind", ".count", ".kind-tab[aria-pressed=false]", ".field-label", ".foot"]);
+  const catContrast = await p.evaluate(contrastOf, [".section-lede", ".tile-kind", ".tile-title", ".tile-gh", ".count", ".kind-tab[aria-pressed=false]", ".view-btn[aria-pressed=false]", ".foot", "#search"]);
   assert(catContrast.every(([, v]) => +v >= 4.5), "catalogue text clears 4.5:1: " + catContrast.map(x => x.join(" ")).join(", "));
   // thumbnails are sharp: the first batch has loaded at least twice its displayed width, in true colour (no filter)
   await p.evaluate(() => scrollTo(0, 400)); await p.waitForTimeout(1200);
@@ -158,7 +150,15 @@ const contrastOf = sels => {
   await p.selectOption("#kind", "SQL"); await p.waitForTimeout(150);
   assert(await p.$$eval(".tile:not([hidden])", els => els.every(e => e.dataset.kind === "SQL")) && await p.$eval(".kind-tab[data-kind='SQL']", btn => btn.getAttribute("aria-pressed") === "true"), "the kind filter keeps only that kind and the kind tab follows the select");
   await p.click(".kind-tab[data-kind='Python']"); await p.waitForTimeout(400);
-  assert(await p.$eval("#kind", s => s.value) === "Python" && await p.$$eval(".tile:not([hidden])", els => els.every(e => e.dataset.kind === "Python")) && await p.evaluate(() => { const pill = document.querySelector(".kinds-pill"), tab = document.querySelector(".kind-tab[data-kind='Python']"); return pill.classList.contains("is-on") && Math.abs(pill.offsetWidth - tab.offsetWidth) < 2; }), "a kind tab sets the select and the pill slides under it");
+  assert(await p.$eval("#kind", s => s.value) === "Python" && await p.$$eval(".tile:not([hidden])", els => els.every(e => e.dataset.kind === "Python")), "a kind tab sets the select");
+  // the query language: clauses over the repository facts
+  await p.selectOption("#kind", ""); await p.fill("#search", "language:python year:2026 commits>8"); await p.waitForTimeout(200);
+  assert(await p.$$eval(".tile:not([hidden])", els => els.length > 0 && els.every(e => e.dataset.lang === "Python" && e.dataset.year === "2026" && +e.dataset.commits > 8)), "a clause query keeps only matching repositories");
+  await p.fill("#search", "kind:sql live:yes"); await p.waitForTimeout(200);
+  assert(await p.$$eval(".tile:not([hidden])", els => els.length > 0 && els.every(e => /^sql/i.test(e.dataset.kind) && e.dataset.live === "1")), "kind and live clauses combine");
+  await p.click("#view-table"); await p.waitForTimeout(300);
+  assert(await p.evaluate(() => document.getElementById("tiles").classList.contains("is-table") && getComputedStyle(document.querySelector(".tile:not([hidden]) .tile-thumb")).display === "none"), "the table view drops the covers");
+  await p.click("#view-grid"); await p.waitForTimeout(300);
   await p.selectOption("#kind", "SQL"); await p.waitForTimeout(150);
   await p.fill("#search", "zzzz-nothing"); await p.waitForTimeout(150);
   assert(await p.$eval("#empty", e => !e.hidden) && await p.$eval("#reset", btn => btn.textContent.trim()) === "Reset all filters", "zero results shows the empty state with a 'Reset all filters' action");
@@ -219,13 +219,14 @@ const contrastOf = sels => {
   await p.close();
   p = await page({}, null, BASE + featured[0].slug + "/", 0);
   const nav = await p.$$eval("header.bar nav a", as => as.map(a => a.getAttribute("href")));
-  assert(nav.includes("../#feature-" + featured[0].slug) && nav.includes("../#projects"), "a flagship's case study links back to its own card on the portfolio and (through the forward) the catalogue");
+  assert(nav.includes("../#feature-" + featured[0].slug) && nav.includes("../all.html"), "a flagship's case study links back to its own screen on the home and to the index");
+  assert(await p.$eval(".facts-strip", d => d.textContent.includes("Commits") && d.textContent.includes("Last push")), "the case study carries the repository facts strip");
   await p.close();
 
-  // 6. reduced motion: no smooth scroll, no opening, no running animations; the scene holds its pose and the field cuts
+  // 6. reduced motion: no smooth scroll, no opening, no running animations; the field holds its pose
   p = await page({ reducedMotion: "reduce" }, null, BASE, 1500);
   const still = await p.evaluate(() => [document.documentElement.classList.contains("lenis-on"), document.getAnimations().filter(a => a.playState === "running").length, document.documentElement.classList.contains("intro"), document.documentElement.classList.contains("gl-on")]);
-  assert(!still[0] && still[1] === 0 && !still[2] && still[3], `reduced motion: no smooth scroll, no running animation, no opening, the scene still on (${still.join(", ")})`);
+  assert(!still[0] && still[1] === 0 && !still[2] && still[3], `reduced motion: no smooth scroll, no running animation, no opening, the field still on (${still.join(", ")})`);
   await p.close();
 
   // 7. no horizontal overflow at the required breakpoints, on both pages

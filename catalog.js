@@ -71,11 +71,33 @@
     $("shown").textContent = visible.length ? `${n} of ${visible.length} shown` : "";
     thumbs();
   }
+  /* the query: free words match title, kind and tools; clauses filter the repository facts:
+     language:python  kind:sql  year:2026  commits>10  commits<5  live:yes  (case-insensitive, any order) */
+  function parse(q) {
+    const words = [], clauses = [];
+    for (const tok of q.toLowerCase().split(/\s+/).filter(Boolean)) {
+      const m = tok.match(/^(language|lang|kind|year|commits|live)(:|>=|<=|>|<|=)(.+)$/);
+      if (m) clauses.push({ key: m[1] === "lang" ? "language" : m[1], op: m[2] === ":" ? "=" : m[2], val: m[3] }); else words.push(tok);
+    }
+    return { words, clauses };
+  }
+  const cmp = (a, op, b) => op === "=" ? a === b : op === ">" ? a > b : op === "<" ? a < b : op === ">=" ? a >= b : a <= b;
+  function matches(t, { words, clauses }) {
+    if (!words.every(w => t.dataset.search.includes(w))) return false;
+    return clauses.every(c => {
+      if (c.key === "language") return (t.dataset.lang || "").toLowerCase().startsWith(c.val);
+      if (c.key === "kind") return (t.dataset.kind || "").toLowerCase().startsWith(c.val);
+      if (c.key === "year") return cmp(+t.dataset.year, c.op, +c.val);
+      if (c.key === "commits") return cmp(+t.dataset.commits, c.op, +c.val);
+      if (c.key === "live") return (t.dataset.live === "1") === /^(y|yes|1|true)$/.test(c.val);
+      return true;
+    });
+  }
   function applyFilter(resetPage = true) {
-    const q = search.value.trim().toLowerCase(), k = kind.value;
+    const q = search.value.trim(), k = kind.value, parsed = parse(q);
     visible = [];
     for (const t of tiles) {
-      const show = (!k || t.dataset.kind === k) && (!q || t.dataset.search.includes(q));
+      const show = (!k || t.dataset.kind === k) && (!q || matches(t, parsed));
       t.hidden = !show;
       if (show) visible.push(t);
     }
@@ -96,6 +118,10 @@
   resetAll.addEventListener("click", resetFilters);
   $("reset").addEventListener("click", resetFilters);
   more.addEventListener("click", () => { const first = visible[shown], fresh = visible.slice(shown, shown + PAGE); shown += PAGE; paint(fresh); first?.querySelector("a")?.focus({ preventScroll: true }); });
+  /* two views of the same list: covers, or a dense table */
+  const tilesEl = $("tiles"), vGrid = $("view-grid"), vTable = $("view-table");
+  const setView = table => { tilesEl.classList.toggle("is-table", table); vGrid.setAttribute("aria-pressed", String(!table)); vTable.setAttribute("aria-pressed", String(table)); try { localStorage.setItem("view", table ? "table" : "grid"); } catch (_) {} };
+  if (vGrid && vTable) { vGrid.addEventListener("click", () => setView(false)); vTable.addEventListener("click", () => setView(true)); let v = null; try { v = localStorage.getItem("view"); } catch (_) {} if (v === "table") setView(true); }
   const params = new URLSearchParams(location.search);
   if (params.get("q")) search.value = params.get("q");
   if (params.get("kind") && [...kind.options].some(o => o.value === params.get("kind"))) kind.value = params.get("kind");
@@ -113,6 +139,7 @@
     $("detail-cover").alt = "Screenshot of " + p.title;
     $("detail-title").textContent = p.title;
     $("detail-tagline").textContent = p.tagline || "";
+    const g = p.gh; $("detail-gh").textContent = g ? [g.language, `${g.commits} commits`, `last push ${g.pushed}`, g.homepage ? "live site" : ""].filter(Boolean).join(" · ") : "";
     $("detail-tech").replaceChildren(...(p.tech || []).map(t => Object.assign(document.createElement("li"), { textContent: t })));
     $("detail-open").href = p.slug + "/";
     $("detail-repo").href = p.repo;

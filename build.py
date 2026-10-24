@@ -99,7 +99,17 @@ def tile_media(folder, p):
     return loops, round(aspect or 1.7, 3)
 
 
+GH_ALIAS = {s: "crm-showcases" for s in ("akaunting-crm", "dolibarr-crm", "erpnext-crm", "huly-crm", "idurar-crm", "krayin-crm", "monica-crm", "nocobase-crm", "suitecrm-crm", "twenty-crm")}
+
+
+def github():
+    """data/github.json: one record per public repository (tools/github.sh), keyed by name."""
+    f = ROOT / "data" / "github.json"
+    return {r["name"]: r for r in json.loads(f.read_text())} if f.exists() else {}
+
+
 def load():
+    gh = github()
     projects = []
     for f in sorted(ROOT.glob("*/project.json")):
         p = json.loads(f.read_text())
@@ -116,6 +126,7 @@ def load():
         assert not bad, f"{f}: text fields can't carry their own styling or scripts ({', '.join(sorted(set(bad)))}); theme.css sets the look"
         if not p["loops"]:
             print(f"warning: {p['slug']} has no motion tile yet (loop.mp4/loop.webm); every project should get one, see CLAUDE.md")
+        p["gh"] = gh.get(GH_ALIAS.get(p["slug"], p["slug"]))
         projects.append(p)
     # newest first; "order" breaks ties / pins
     return sorted(projects, key=lambda p: (p["date"], -p.get("order", 0)), reverse=True)
@@ -193,18 +204,31 @@ def project_page(p, nxt):
     links = [f'<a href="{escape(p["repo"])}" target="_blank" rel="noopener">Code on GitHub &#8599;</a>']
     if p.get("demo"):
         links.insert(0, f'<a href="{escape(p["demo"])}">{escape(p.get("demo_label", "See it"))} &#8599;</a>')
-    cover = (f'<figure class="cover"><img src="{escape(p["cover"])}" alt="Screenshot of {escape(p["title"])}"></figure>'
+    cover = (f'<figure class="cover"><img src="{escape(p["cover"])}" alt="Screenshot of {escape(p["title"])}" width="1400" height="{round(1400 / (p.get("aspect") or 1.75))}" fetchpriority="high" decoding="async"></figure>'
              if p.get("cover") else "")
     note = f'<p class="note">{p["note"]}</p>' if p.get("note") else ""
-    # a flagship's case study opens with the printed object that carried it on the home (it travels in with a View Transition)
     feat = featured().get(p["slug"])
     obj = ""
-    if feat:
-        o = feat["screen"]["object"]
-        w, h = webp_size(ROOT / "assets" / "desk" / f"solo-{o}.webp")
-        obj = f'<img class="object object-{o}" src="../assets/desk/solo-{o}.webp" alt="{escape(feat["screen"]["alt"], quote=True)}" width="{w}" height="{h}" fetchpriority="high">'
     home = f"../#feature-{p['slug']}" if feat else "../"
-    field = f' style="--field: {feat["field"]}; --field-ink: {feat["field_ink"]}"' if feat else ""
+    g = p.get("gh")
+    facts = ""
+    if g:
+        langs = sorted(g.get("languages", {}).items(), key=lambda kv: -kv[1])
+        tot = sum(v for _, v in langs) or 1
+        lang_s = ", ".join(f"{k} {round(100 * v / tot)}%" for k, v in langs[:3])
+        pages = f'<a href="{escape(g["homepage"])}" target="_blank" rel="noopener">{escape(g["homepage"].replace("https://", ""))}</a>' if g.get("homepage") else ""
+        topics = ", ".join(escape(t) for t in g.get("topics", [])[:6])
+        facts = ('<dl class="facts-strip" aria-label="From the repository">'
+                 f'<div><dt>Repository</dt><dd><a href="{escape(p["repo"])}" target="_blank" rel="noopener">github.com/mrrishit909/{escape(g["name"])}</a></dd></div>'
+                 f'<div><dt>Commits</dt><dd>{g["commits"]}</dd></div>'
+                 f'<div><dt>Last push</dt><dd>{g["pushed_at"][:10]}</dd></div>'
+                 f'<div><dt>Created</dt><dd>{g["created_at"][:10]}</dd></div>'
+                 f'<div><dt>Languages</dt><dd>{escape(lang_s) if lang_s else escape(g.get("language") or "")}</dd></div>'
+                 + (f'<div><dt>Live</dt><dd>{pages}</dd></div>' if pages else "")
+                 + (f'<div><dt>Topics</dt><dd>{topics}</dd></div>' if topics else "")
+                 + (f'<div><dt>Licence</dt><dd>{escape(g["license"])}</dd></div>' if g.get("license") else "")
+                 + '</dl>')
+    field = ' class="is-flagship"' if feat else ""
     # the next project's motion tile, played by case.js while the link is on screen
     peek = ("".join([f'<video muted loop playsinline preload="none" aria-hidden="true" poster="../{nxt["slug"]}/{escape(nxt["cover"])}">' if nxt.get("cover") else
                      '<video muted loop playsinline preload="none" aria-hidden="true">'] +
@@ -214,18 +238,18 @@ def project_page(p, nxt):
                 ("How it was built", f'<ol class="steps">{"".join(steps)}</ol>'),
                 ("Results", p["results"]), ("What I'd do next", p["next"])]
     ids = ["problem", "built", "how", "results", "next-steps"]
-    secs = "".join(f'<section class="s" id="{ids[n - 1]}"><h2 class="cap">{n:02d} &mdash; {escape(t)}</h2><div class="body">{b}</div></section>'
+    secs = "".join(f'<section class="s" id="{ids[n - 1]}"><h2 class="cap">{n:02d} / {escape(t)}</h2><div class="body">{b}</div></section>'
                    for n, (t, b) in enumerate(sections, 1))
-    body = f"""<header class="bar cap"><a href="{PORTFOLIO}">Rishit Mathur</a><nav><a href="{home}">Portfolio</a><a href="../#projects">All projects</a><a href="{PORTFOLIO}resume.pdf">Resume</a></nav></header>
+    body = f"""<header class="bar"><a href="{PORTFOLIO}">Rishit Raj Mathur</a><nav><a href="{home}">Home</a><a href="../all.html">Index</a><a href="{PORTFOLIO}resume.pdf">Résumé</a></nav></header>
 <main class="wrap">
-  <div class="hero{" has-object" if obj else ""}"{field}>
+  <div class="hero"{field}>
     <p class="cap dim">{escape(p["kind"])} &middot; {escape(p["date"])}</p>
     <h1>{escape(p["title"])}</h1>
     <p class="tagline">{escape(p["tagline"])}</p>
     <div class="meta cap"><span class="tech">{" &middot; ".join(escape(t) for t in p["tech"])}</span><span class="links">{"".join(links)}</span></div>
-    {obj}
   </div>
   {cover}
+  {facts}
   {note}
   {secs}
   <a class="next" href="../{nxt["slug"]}/"><span class="cap">Next project</span><span class="t">{escape(nxt["title"])} &rarr;</span>{peek}</a>
@@ -245,39 +269,40 @@ def unit_split(sc):
 
 
 def home_page(projects):
-    """The home (index.template.html + portfolio.css + home.js): hero, four Selected Work screens filled from featured.json
-    (each flagship's printed object, its number, one line from its result and what I did on the object's back), about +
-    experience, contact. The catalogue lives on all.html."""
+    """The home (index.template.html + portfolio.css + home.js): the 219 repositories as a live field. The page gets the
+    field data (one record per public repository) and the four flagships from featured.json."""
     by_slug = {p["slug"]: p for p in projects}
+    gh = github()
+    field = []
+    for r in sorted(gh.values(), key=lambda r: r["created_at"]):
+        slug = r["name"] if r["name"] in by_slug else None
+        field.append({"n": r["name"], "l": r["language"] or "Other", "t": r["created_at"][:10], "m": r["pushed_at"][:10], "c": r["commits"], "s": r["size"], "p": bool(r.get("homepage")), "k": (by_slug[slug]["kind"].split("\u00b7")[0].strip() if slug else ""), "u": slug})
     feats = []
     for i, f in enumerate(json.loads((ROOT / "featured.json").read_text()), 1):
-        p, sc, scr = by_slug[f["slug"]], f["scale"], f["screen"]
+        p, sc = by_slug[f["slug"]], f["scale"]
         big, unit = unit_split(sc)
-        obj = f"assets/desk/solo-{scr['object']}.webp"
-        w, h = webp_size(ROOT / obj)
         line = f["result"].split(". ")[0].rstrip(".") + "."
-        links = [f'<a class="pill pill-ink" href="{p["slug"]}/">Read the case study</a>',
-                 f'<a class="pill" href="{escape(p["repo"])}" target="_blank" rel="noopener">Code</a>']
+        links = [f'<a class="btn btn-fill" href="{p["slug"]}/">Read the case study</a>', f'<a class="btn" href="{escape(p["repo"])}" target="_blank" rel="noopener">Code</a>']
         if p.get("demo"):
-            links.append(f'<a class="pill" href="{escape(demo_url(p))}">{escape(p.get("demo_label", "Demo"))}</a>')
-        # one screen per flagship on its own colour field: the giant number, the one-word headline, one line, two links;
-        # the object itself is the live 3D model in the fixed canvas (home.js), the still image is the no-JS fallback
-        o = scr["object"]
+            links.append(f'<a class="btn" href="{escape(demo_url(p))}">{escape(p.get("demo_label", "Demo"))}</a>')
         feats.append(
-            f'<section class="scene project" id="feature-{p["slug"]}" data-state="{o}" data-field="{f["field"]}" data-ink="{f["field_ink"]}" '
-            f'data-slug="{p["slug"]}" data-title="{escape(p["title"], quote=True)}" data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" '
-            f'style="--field: {f["field"]}; --on: {f["field_ink"]}" aria-labelledby="t-{p["slug"]}">'
+            f'<section class="scene project" id="feature-{p["slug"]}" data-state="{f["state"]}" data-slug="{p["slug"]}" data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" '
+            f'data-title="{escape(p["title"], quote=True)}" aria-labelledby="t-{p["slug"]}">'
             f'<div class="scene-in">'
-            f'<p class="tag"><span class="idx">{i:02d}</span> {escape(f["area"])}</p>'
-            f'<p class="num"><span class="num-v">{big}</span><span class="num-u">{escape(unit)}</span></p>'
-            f'<h2 class="giant word">{escape(f["word"])}</h2>'
-            f'<div class="copy"><h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3>'
-            f'<p class="line">{line}</p><p class="links">{"".join(links)}</p></div>'
-            f'<img class="still" src="{obj}" alt="{escape(scr["alt"], quote=True)}" width="{w}" height="{h}" loading="lazy" decoding="async">'
+            f'<p class="mono meta"><span>{i:02d} / 04</span><span>{escape(f["area"])}</span><span>{escape(sc["metric"])}</span></p>'
+            f'<p class="num mono"><span class="num-v">{big}</span><span class="num-u">{escape(unit)}</span></p>'
+            f'<h2 class="display">{escape(f["word"])}</h2>'
+            f'<div class="copy"><h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3><p class="line">{line}</p>'
+            f'<p class="mono small">{escape(sc["note"])}</p><p class="btns">{"".join(links)}</p></div>'
             f'</div></section>')
+    langs = Counter(r["l"] for r in field).most_common()
+    lang_rows = "".join(f'<div><dt>{escape(k)}</dt><dd class="mono">{v}</dd></div>' for k, v in langs[:6])
+    commits = sum(r["c"] for r in field)
     tpl = (ROOT / "index.template.html").read_text()
-    assert "{{FEATURED}}" in tpl
-    return (tpl.replace("{{FEATURED}}", "".join(feats)).replace("{{COUNT}}", str(len(projects)))
+    assert "{{FEATURED}}" in tpl and "/*FIELD*/[]" in tpl
+    return (tpl.replace("{{FEATURED}}", "".join(feats)).replace("{{COUNT}}", str(len(projects))).replace("{{REPOS}}", str(len(field)))
+               .replace("{{COMMITS}}", f"{commits:,}").replace("{{LAST_PUSH}}", max(r["t"] for r in field)).replace("{{LANG_ROWS}}", lang_rows).replace("{{PAGES}}", str(sum(1 for r in field if r["p"])))
+               .replace("/*FIELD*/[]", json.dumps(field, separators=(",", ":")).replace("</", "<\\/"))
                .replace("{{PORTFOLIO_CSS}}", asset_version("portfolio.css")).replace("{{HOME_JS}}", asset_version("home.js")))
 
 
@@ -312,18 +337,26 @@ def all_page(projects):
         else:
             print(f'warning: {p["slug"]} has no thumbnail yet (run python3 tools/thumbs.py)')
             thumb = '<span class="tile-thumb" aria-hidden="true"></span>'
-        tiles.append(f'<li class="tile" data-slug="{p["slug"]}" data-kind="{escape(head, quote=True)}" data-search="{search}">'
-                     f'<a class="tile-link" href="{p["slug"]}/">{thumb}<span class="tile-no">{order[p["slug"]]:03d}</span>'
-                     f'<span class="tile-title">{escape(p["title"])}</span><span class="tile-kind">{escape(p["kind"])}</span></a></li>')
+        g = p.get("gh") or {}
+        lang, commits, year = g.get("language") or "", g.get("commits") or 0, p["date"][:4]
+        tiles.append(f'<li class="tile" data-slug="{p["slug"]}" data-kind="{escape(head, quote=True)}" data-lang="{escape(lang, quote=True)}" data-year="{year}" data-commits="{commits}" data-live="{"1" if (p.get("demo") or g.get("homepage")) else "0"}" data-search="{search}">'
+                     f'<a class="tile-link" href="{p["slug"]}/">{thumb}<span class="tile-no mono">{order[p["slug"]]:03d}</span>'
+                     f'<span class="tile-title">{escape(p["title"])}</span><span class="tile-kind">{escape(p["kind"])}</span>'
+                     f'<span class="tile-gh mono">{escape(lang)} · {year} · {commits} commits</span></a></li>')
     keys = ("slug", "title", "kind", "date", "cover", "tagline", "tech", "repo", "demo", "demo_label")
-    data = [{k: p.get(k) for k in keys if p.get(k) is not None} for p in projects]
+    data = []
+    for p in projects:
+        d = {k: p.get(k) for k in keys if p.get(k) is not None}
+        g = p.get("gh")
+        if g: d["gh"] = {"language": g.get("language"), "commits": g.get("commits"), "pushed": g.get("pushed_at", "")[:10], "homepage": g.get("homepage"), "topics": g.get("topics", [])}
+        data.append(d)
     kinds = ", ".join(escape(k) for k, _ in heads.most_common(5))
     options = "".join(f'<option value="{escape(k, quote=True)}">{escape(k)} ({n})</option>' for k, n in heads.most_common())
     tabs = "".join(f'<button class="kind-tab" type="button" data-kind="{escape(k, quote=True)}" aria-pressed="false">{escape(k)}</button>' for k, _ in heads.most_common(5))
     tpl = (ROOT / "all.template.html").read_text()
     assert "{{CATALOG}}" in tpl and "/*DATA*/[]" in tpl
     return (tpl.replace("{{CATALOG}}", "".join(tiles)).replace("/*DATA*/[]", json.dumps(data).replace("</", "<\\/"))
-               .replace("{{COUNT}}", str(len(projects))).replace("{{KINDS_OPTIONS}}", options).replace("{{KINDS_TABS}}", tabs).replace("{{KINDS}}", kinds)
+               .replace("{{COUNT}}", str(len(projects))).replace("{{REPOS}}", str(len(github()))).replace("{{KINDS_OPTIONS}}", options).replace("{{KINDS_TABS}}", tabs).replace("{{KINDS}}", kinds)
                .replace("{{PORTFOLIO_CSS}}", asset_version("portfolio.css")).replace("{{CATALOG_JS}}", asset_version("catalog.js")))
 
 

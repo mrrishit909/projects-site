@@ -49,36 +49,37 @@ A project's record sleeve on the home page, and the "Next project" link on the c
 
 ## How the site is laid out (so it can be changed safely)
 
-* **`/projects/` (index.html) is the home**: `index.template.html` + `portfolio.css` + `home.js` (ES module, no build step;
-  Lenis for smooth scroll). Sections: hero, four project scenes, about + experience, contact, footer. One typeface, Archivo
-  (variable width + weight, vendor/fonts, OFL). Professional facts come from the résumé at ~/portfolio/resume.pdf; do not add
-  claims not in it. (Earlier homes: the desk with the Blender flight, 2026-10-23; `assets/flight/` stills still back the 404
-  and OG image.)
-* **The concept: colour fields and a live scene** (2026-10-24, after the owner rejected the desk as "generic"). The home is
-  six full-screen colour blocks (`.scene`, each with `data-field` / `data-ink` / `data-state`), type at a quarter of the
-  screen (`.giant`, Archivo 900 at 125% width), one line per screen, and ONE live Three.js scene (`vendor/three/`, r170,
-  MIT; `home.js` is an ES module with an import map) of the four printed project objects built from
-  `assets/objects/*.webp` (the textures in `tools/desk/tex/`). `POSE[state]()` in home.js gives each object a place per
-  section (right column on desktop, upper half on phones; the other three park in corners); scroll picks the state and
-  blends into the next over the last 45% of a section; everything eases with a heavy frame-rate-independent lerp, floats,
-  and tilts to the pointer. The fixed `#field` behind the page wipes (`.wipe`, 620 ms) to the next section's colour; the
-  canvas sits over the blocks, under the nav. Spec: `BRIEF.md`. Earlier desk renders were removed (see the evidence
-  folders for what was tried).
-* **The opening** (first load at the top; `html.intro` set in the head, never with a hash, under reduced motion, or when
-  `sessionStorage.vt` says we are returning from a case study): the objects fly in from far away (1.7 s, home.js) and the
-  letters slam up out of their clips on a CSS timer set in the head (`intro-land` after 1.9 s, 0.85 s on a repeat visit
-  `intro-again`) so first paint never waits for Three.js. Skip button, wheel, key or tap ends it; 4 s hard stop.
+* **`/projects/` (index.html) is the home: THE INDEX** (2026-10-24, the third direction; see `BRIEF.md`). The body of work
+  is a dataset: `tools/github.sh` pulls every public repository (description, topics, homepage, languages, README head,
+  commit count) into `data/github.json` (`data/repos.tsv` is the `gh repo list` it reads); `build.py` `github()` keys it by
+  name, `GH_ALIAS` maps the eleven `*-crm` case studies to `crm-showcases`, and every project gets `p["gh"]`. **Re-run
+  `tools/github.sh` then `python3 build.py` after pushing new repositories.** `index.template.html` + `portfolio.css` +
+  `home.js` (ES module; Three.js r170 vendored at `vendor/three/`, import map in the head; Lenis). The field: one `Points`
+  draw call, one point per repository, a custom shader (`uCount` gates how many have arrived); `STATES` in home.js give
+  each point a target (x, y, size, lit) per section `data-state` (hero ribbon, ratio, tests, curve, lock, stack, grid, ring);
+  scroll blends into the next state over the last 45% of a section with a per-point delay; everything eases with a
+  frame-rate-independent lerp; the pointer drifts the field; adaptive DPR. The opening counts 000 to the total over 1.9 s
+  while the points arrive; the lines rise on a CSS timer set in the head (`intro-land`); Skip, wheel, key or touch ends it;
+  0.45x on a repeat; none with a hash, under reduced motion, or returning from a case study (`sessionStorage.vt`).
+  Palette: field #2400FF, ink #0B0B14, signal #D4FF3A (data only), white. Type: Bricolage Grotesque (words), JetBrains Mono
+  (data); both self-hosted in `vendor/fonts/` with their OFL files. Nav: Work, Index, Contact plus a live strip (Tampa time,
+  repo count, days since the last push). Professional facts come from the résumé at ~/portfolio/resume.pdf; do not add
+  claims not in it. Earlier homes (desk, colour fields) are gone; `assets/flight/` stills remain for the 404 fallback.
 * **Selected Work** is filled by `build.py` from `featured.json` (four slugs; `area`, `headline`, `result`, `contribution`,
-  `scale` {metric, unit, value, note}, `screen` {object, alt}, `field`, `field_ink`, `word`, `sheet`). Each is a `.scene.project`:
-  tag with index, the number (counts up when entered; "31 of 31" never counts), the one-word headline, title, one line,
-  links, and the still cut-out (`.still`, shown only without JavaScript / WebGL).
-* **About and contact** are scenes too (pink and orange, ink type). Footer shows Tampa time. `404.html` is a pink scene.
-* **Into a case study and back**: cross-document View Transitions carry the clicked title (`pageswap` / `pagereveal` in
-  home.js; `sessionStorage.vt`). Flagship case pages open with the printed object beside the title on the project's field
-  colour (`.hero.has-object`, inline `--field` / `--field-ink` from build.py) and link back to `../#feature-<slug>`.
-* **Case studies** (`site.css`, self-contained tokens, Archivo + Geist Mono self-hosted; theme.css is not loaded by them).
-* **`all.html` is the complete catalogue** (`all.template.html` + `portfolio.css` + `catalog.js`): every project as a real link
-  with its own thumbnail. Old addresses on the home (`#projects`, `#<slug>`, `?q=` / `?kind=`) are forwarded there by an inline
+  `scale` {metric, unit, value, note}, `state` (the field state), `word` (the one-word headline)). Each is a `.scene.project`:
+  meta line, the number (counts up when entered; "31 of 31" never counts), the word, title, one line, note, links.
+* **About** lists repositories by language from the inventory; **Index** on the home is a form that submits `?q=` to
+  `all.html`; **Contact** is the second hero. `404.html` is the same scene on the field.
+* **Into a case study and back**: cross-document View Transitions carry the clicked title (`pageswap` / `pagereveal`).
+  Flagship case pages link back to `../#feature-<slug>`.
+* **Case studies** (`site.css`, self-contained tokens in the same palette; Bricolage + JetBrains Mono): an ultramarine hero
+  block, the cover, the **facts strip** from the repository (commits, last push, created, languages, live, topics,
+  licence), the sections, the next project as an ultramarine block. case.js is unchanged.
+* **`all.html` is the index** (`all.template.html` + `portfolio.css` + `catalog.js`): every project as a real link with its
+  thumbnail and its repository's language, year and commit count (`data-lang`, `data-year`, `data-commits`, `data-live`).
+  The query bar accepts free words and clauses (`language:`, `kind:`, `year:`, `commits>`, `commits<`, `live:yes`) in any
+  order (`parse` / `matches` in catalog.js); two views, Covers and Table (`#view-grid` / `#view-table`, remembered in
+  localStorage). Old addresses on the home (`#projects`, `#<slug>`, `?q=` / `?kind=`) are forwarded there by an inline
   script in the home's head, so case studies' "All projects" link (`../#projects`) and the archive redirect keep working.
 * **Catalogue thumbnails.** `python3 tools/thumbs.py` (sips + cwebp) writes `assets/thumbs/<slug>.webp` at 880x503, twice the
   widest tile, cropped to the top-left 72% of the cover so its headline or chart title stays legible. True colours, no filter.
@@ -102,5 +103,5 @@ A project's record sleeve on the home page, and the "Next project" link on the c
 
 Evidence folders under ~/projects-site-evidence/ (earlier designs): perf-2026-10-19 (the first unified page), refine-2026-10-19,
 redesign-2026-10-19 (the instrument), transform-2026-10-19 (the lens), statement-2026-10-20 (the corridor),
-proof-2026-10-24 (the approval proof: opening + object transition, plus INSTAGRAM-LESSONS.md), world-2026-10-24 (the desk, whole), **field-2026-10-24 (the colour fields + live scene, CURRENT: storyboards, every
-screen at both sizes, recordings, suite log, Lighthouse, README)**.
+proof-2026-10-24 (the approval proof: opening + object transition, plus INSTAGRAM-LESSONS.md), world-2026-10-24 (the desk, whole), field-2026-10-24 (the colour fields), **index-2026-10-24 (THE INDEX, CURRENT:
+RESEARCH.md, storyboards, every screen at three sizes, recordings, capture-report.json, suite log, Lighthouse, README)**.
