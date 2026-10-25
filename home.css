@@ -17,6 +17,7 @@ html[data-pal="red"] { --bg: var(--red); --fg: var(--on-red); --fg-2: var(--on-r
 html[data-pal="paper"] { --bg: var(--paper); --fg: var(--ink); --fg-2: var(--red); --btn-bg: var(--red); --btn-fg: var(--on-red); color-scheme: light; }
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; background: var(--bg); transition: background-color 600ms var(--travel); }
+html.cut, html.cut body, html.cut .top { transition: none !important; }
 body { margin: 0; background: transparent; color: var(--fg); font-family: var(--sans); font-size: var(--body); line-height: 1.45; -webkit-font-smoothing: antialiased; overflow-x: clip; transition: color 600ms var(--travel); }
 ::selection { background: var(--fg); color: var(--bg); }
 img { max-width: 100%; height: auto; display: block; }
@@ -37,13 +38,17 @@ html.gl-on .poster, html:not(.gl-on) canvas.block { display: none; }
 html.opening:not(.entered) .poster { opacity: 0; }
 
 /* the top bar: the name as a stub once the hero has scrolled away, four links, the sound toggle */
-.top { position: fixed; inset: 0 0 auto; z-index: 50; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px; padding: 16px var(--gutter); background: var(--bg); transition: background-color 600ms var(--travel); pointer-events: none; }
+.top { position: fixed; inset: 0 0 auto; z-index: 50; display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 24px; padding: 16px var(--gutter); background: var(--bg); transition: background-color 600ms var(--travel); pointer-events: none; }
 .top a, .top button { pointer-events: auto; }
 .brand { font-weight: 700; font-size: var(--body); letter-spacing: -0.02em; text-decoration: none; opacity: 0; visibility: hidden; transform: translateY(-8px); transition: opacity 400ms var(--out), transform 400ms var(--out), visibility 0s 400ms; }
 html.past-hero .brand { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
 .links { display: flex; gap: 6px; justify-self: end; }
 .links a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; font-weight: 500; font-size: var(--body); text-decoration: none; }
 .links a:hover, .links a:focus-visible { text-decoration: underline; }
+.replay { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border: 0; background: transparent; font-size: var(--small); cursor: pointer; visibility: hidden; }
+html.entered .replay { visibility: visible; }
+html.opening .replay { opacity: 0; visibility: hidden; }
+.replay:hover, .replay:focus-visible { text-decoration: underline; }
 .sound { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px; border: 0; background: transparent; font-size: var(--small); cursor: pointer; }
 .bars { display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; }
 .bars i { display: block; width: 2px; height: 4px; background: currentColor; }
@@ -80,8 +85,8 @@ section { position: relative; }
 .card .role { font-weight: 700; font-size: var(--lead); line-height: 1.1; }
 .facts { display: grid; gap: 6px; margin: 14px 0 18px; font-size: var(--body); line-height: 1.35; }
 .facts .count { font-weight: 700; font-size: var(--lead); font-variant-numeric: tabular-nums; }
-.skip-intro { position: fixed; z-index: 60; right: var(--gutter); bottom: 24px; min-height: 44px; padding: 0 16px; border: 0; background: var(--paper); color: var(--ink); font-weight: 500; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 300ms; }
-html.opening:not(.entered) .skip-intro { opacity: 1; pointer-events: auto; }
+.skip-intro { position: fixed; z-index: 60; right: var(--gutter); bottom: 24px; min-height: 44px; padding: 0 16px; border: 0; background: var(--paper); color: var(--ink); font-weight: 500; cursor: pointer; opacity: 0; visibility: hidden; pointer-events: none; }
+html.opening:not(.entered) .skip-intro { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity 300ms; }
 
 /* the work: each project is a panel of 150svh whose words hold for a screen while the block performs */
 .work { padding-top: 0; }
@@ -90,7 +95,10 @@ html.opening:not(.entered) .skip-intro { opacity: 1; pointer-events: auto; }
 .panel-in > * { grid-column: 1; }
 .panel .q { max-width: 13ch; font-size: clamp(34px, 4.8vw, 82px); }
 .panel .fig { margin-top: 4px; font-size: clamp(52px, 6.4vw, 108px); }
-.panel .frag { grid-column: 2; grid-row: 1 / span 7; align-self: end; justify-self: end; width: min(100%, 400px); margin: 0; background: #101014; }
+.panel .frag { grid-column: 2; grid-row: 1 / span 8; align-self: end; justify-self: end; width: min(100%, 540px); margin: 0; background: #101014; }
+.frag-link { display: block; }
+.frag-link:focus-visible { outline-offset: 2px; }
+.op { max-width: 44ch; font-size: var(--body); line-height: 1.4; }
 .frag canvas, .frag img { display: block; width: 100%; height: auto; }
 html.js .frag img { display: none; }
 html:not(.js) .frag canvas { display: none; }
@@ -102,7 +110,7 @@ html:not(.js) section[data-pal="paper"] { background: var(--paper); color: var(-
 @media (prefers-reduced-motion: no-preference) {
   html.js .panel-in > * { opacity: 0; transform: translateY(18px); transition: opacity 700ms var(--out), transform 900ms var(--out); }
   html.js .panel.is-in .panel-in > * { opacity: 1; transform: none; }
-  .panel.is-in .panel-in > :nth-child(2) { transition-delay: 60ms; } .panel.is-in .panel-in > :nth-child(3) { transition-delay: 120ms; } .panel.is-in .panel-in > :nth-child(4) { transition-delay: 180ms; } .panel.is-in .panel-in > :nth-child(5) { transition-delay: 240ms; } .panel.is-in .panel-in > :nth-child(6) { transition-delay: 300ms; } .panel.is-in .panel-in > :nth-child(7) { transition-delay: 360ms; }
+  .panel.is-in .panel-in > :nth-child(2) { transition-delay: 60ms; } .panel.is-in .panel-in > :nth-child(3) { transition-delay: 120ms; } .panel.is-in .panel-in > :nth-child(4) { transition-delay: 180ms; } .panel.is-in .panel-in > :nth-child(5) { transition-delay: 240ms; } .panel.is-in .panel-in > :nth-child(6) { transition-delay: 300ms; } .panel.is-in .panel-in > :nth-child(7) { transition-delay: 360ms; } .panel.is-in .panel-in > :nth-child(8) { transition-delay: 420ms; }
 }
 
 /* the check: one bounded input with a visible consequence */
@@ -154,18 +162,20 @@ html.past-hero .hud-chapter { opacity: 1; }
 /* tablet */
 @media (max-width: 1100px) {
   .panel-in, .check-in { grid-template-columns: minmax(0, 1fr); }
+  .panel .frag { grid-column: 1; grid-row: auto; justify-self: start; width: min(100%, 460px); }
   .lineup td:nth-child(4) { display: none; }
 }
 /* phone: the block owns the top of each screen, the words the bottom */
 @media (max-width: 720px) {
   :root { --xl: 15vw; --lg: 9.4vw; --lead: 19px; }
-  .top { grid-template-columns: 1fr auto; gap: 8px; padding: 10px 12px; }
+  .top { grid-template-columns: 1fr auto auto; gap: 8px; padding: 10px 12px; }
+  .replay { padding: 0 8px; }
   .brand { display: none; }
   .links { justify-self: start; gap: 0; }
   .links a { padding: 0 9px; font-size: 15px; }
   .sound .sound-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   .hero { padding: 70px var(--gutter) 24px; grid-template-rows: auto auto minmax(30svh, 1fr) auto; }
-  .role-line { font-size: 17px; }
+  .role-line { font-size: 18px; }
   .card { width: 100%; padding: 18px 18px 20px; }
   .facts li:last-child { display: none; }
   .chapter-title { top: 60px; }

@@ -21,7 +21,8 @@
   "state": "ratio",
   "card": "When does a flight run late?",
   "stage": "wall",
-  "op": "slice"
+  "op": "slice",
+  "op_label": "The block cut into the star schema: one fact table in the middle, four dimensions stepping out of its corners."
  },
  {
   "slug": "retail-dbt",
@@ -46,7 +47,8 @@
   "state": "tests",
   "card": "Can a pipeline prove itself?",
   "stage": "floor",
-  "op": "layer"
+  "op": "layer",
+  "op_label": "The block split into dbt’s three layers, staging, intermediate and marts; 31 slips light as the tests pass."
  },
  {
   "slug": "us-retail-forecast",
@@ -70,7 +72,50 @@
   "state": "curve",
   "card": "How wrong is a forecast?",
   "stage": "ahead",
-  "op": "bend"
+  "op": "bend",
+  "op_label": "The block laid out as the last 24 months of the real series (Aug 2024 to Jul 2026, US Census via FRED, $ millions), then 12 months that follow last year’s shape and fan out by the backtest’s error at each horizon.",
+  "series": [
+   622421,
+   579083,
+   622738,
+   630399,
+   691312,
+   566662,
+   543970,
+   624954,
+   623756,
+   647306,
+   616031,
+   644493,
+   640803,
+   611277,
+   642315,
+   640201,
+   716924,
+   582287,
+   564663,
+   657586,
+   654070,
+   685550,
+   671109,
+   677249
+  ],
+  "series_from": "Aug 2024",
+  "series_to": "Jul 2026",
+  "fan": [
+   1.67,
+   1.01,
+   1.96,
+   1.47,
+   1.09,
+   2.44,
+   1.61,
+   1.4,
+   2.67,
+   2.09,
+   1.66,
+   2.59
+  ]
  },
  {
   "slug": "sec-10k-rag",
@@ -94,6 +139,7 @@
   "state": "lock",
   "card": "Can an answer cite its source?",
   "stage": "float",
-  "op": "open"
+  "op": "open",
+  "op_label": "The stack opened at the cited passage: one slip lifted out and turned to face you."
  }
 ]

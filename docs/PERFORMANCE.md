@@ -1,33 +1,62 @@
-# Performance: THE BLOCK (measured 2026-10-25)
+# Performance: THE BLOCK (measured 2026-10-25, second pass)
 
-Conditions: MacBook (Apple Silicon, macOS 27), Playwright Chromium 1.64 with ANGLE Metal, local servers (`python3 -m
-http.server 8800` for the suite and captures; `npx serve@14.2.4 -l 8801 -s .` with gzip for Lighthouse). Lighthouse
-12.8.2, mobile preset (simulated Moto G Power, slow 4G throttling). Laboratory numbers; no field data and no real phone
-were measured. Build: the working tree at the commit named in the README.
+Conditions: MacBook (Apple Silicon, macOS 27, 60 Hz display), Playwright Chromium 1.64 with ANGLE Metal, local servers
+(`python3 -m http.server 8800` for the suite, captures and pacing; `npx serve@14.2.4 -l 8801 -s .` with gzip for
+Lighthouse). Lighthouse 12.8.2, mobile preset (simulated Moto G Power, slow 4G, 4x CPU throttle). Laboratory numbers; no
+field data and no real phone were measured. Pacing samples requestAnimationFrame deltas in the page, warm cache, over
+the stated windows. Build: the working tree committed as the second THE BLOCK commit (see README).
 
-## Budgets and what was measured
+## Budgets
 
-| Budget | Target | Measured | Evidence |
-|---|---|---|---|
-| First view transferred (HTML, CSS, JS, fonts, poster, module) | about 1.5 MB | 420 KiB on the home (gzip); 394 KiB on the archive | lh-index-mobile.json, lh-all-mobile.json (`total-byte-weight`) |
-| Largest requests | | three.module.min.js 121 KiB, Geist faces 44 to 49 KiB each (loaded for the fragments), General Sans 22 to 23 KiB each, poster 30 KiB, GSAP 28 KiB | network-requests audit |
-| Lighthouse mobile, home | 90+ / 95+ / 90+ / 90+ | performance 98, accessibility 100, best practices 100, SEO 100 | lh-index-mobile.json |
-| Lighthouse mobile, archive | same | performance 87, accessibility 96 (one colour-contrast node, fixed after this run), best practices 100, SEO 100 | lh-all-mobile.json |
-| LCP / CLS / TBT, home | 2.5 s / 0.1 / low | 2.0 s / 0.003 / 0 ms (FCP 1.8 s, TTI 2.0 s) | same |
-| Frame pacing, desktop 1440x900 at device scale 2 | near 16.7 ms, no stalls | opening 16.7 ms median (one 130 ms frame at the first paint, the module compiling), scroll down 14 s 16.7 median / 16.8 p95 / 0 over 33 ms, flick 0 over 33, reverse 0 over 33, hour input 0 over 33, return from a case study one 64 ms frame | pace.json |
-| Frame pacing, phone viewport 390x844 at device scale 2 (emulated on the Mac GPU, not a phone) | 30+ fps | 16.7 ms median on every path, one 114 ms frame at the first paint | pace.json |
-| Scene budget | one draw call, bounded instances | 1 InstancedMesh of 1,440 slips (1,008 on phones), 1 BoxGeometry, 1 Lambert material, 2 directional lights and 1 hemisphere light, no post pass, no shadows, no textures | block.js |
-| Pixel ratio | start 1, raise to 1.5 only with headroom, hysteresis | starts at 1; after 90 fast frames rises to min(1.5, device); steps down to 1 after 40 slow frames and locks for 20 s | block.js `update` |
-| Idle cost | no draw when nothing moves | the frame skips `renderer.render` after 12 settled frames; the fragments draw only while on screen and stop at the end of their loop | block.js, home.js |
-| Texture memory | none | the fragments are 2D canvases in the DOM at device resolution, not GPU textures | |
+| Budget | Target | Before (2d0763a) | After | Evidence |
+|---|---|---|---|---|
+| First view transferred | about 1.5 MB | 420 KiB | 430 KiB (the poster grew with the shadow) | lh-index-mobile.json |
+| Lighthouse mobile, home | 90 / 95 / 90 / 90 | 98 / 100 / 100 / 100 | 98 / 100 / 100 / 100 | lh-index-mobile.json (a run with another Chrome session open scored 76 with TBT 1,000 ms; two clean reruns gave 98, TBT 30 and 50 ms) |
+| Lighthouse mobile, archive | same | 97 / 100 / 100 / 100 | unchanged (not retouched this pass) | lh-all-mobile.json |
+| LCP / CLS / TBT, home | 2.5 s / 0.1 / low | 2.0 s / 0.003 / 0 ms | 2.0 s / 0.004 / 50 ms | same |
+
+## Frame pacing (pace.json; before in pace-before-2d0763a.json)
+
+Desktop 1440x900, device scale 2:
+
+| Path | Window | Median | p95 | p99 | Max | Over 33 ms |
+|---|---|---|---|---|---|---|
+| Opening (from first paint) | 3 s | 16.7 | 16.7 | 33.3 | 130 | 2 (the first rendered frame: shader and shadow-map compile) |
+| Scroll down | 14 s | 16.7 | 16.8 | 16.8 | 16.8 | 0 |
+| Fast flick | 0.9 s | 16.7 | 16.7 | 16.8 | 16.8 | 0 |
+| Reverse scroll | 6 s | 16.7 | 16.7 | 16.8 | 183 | 1 (one frame; not reproduced in the earlier run of the same build, nor on the phone viewport) |
+| Hour sweep | 4 s | 16.7 | 16.8 | 16.8 | 16.8 | 0 |
+| Return from a case study | 2 s | 16.7 | 16.8 | 16.8 | 16.8 | 0 |
+| Project jumps (four panels, 700 ms apart) | 5.6 s | 16.7 | 16.8 | 16.8 | 16.8 | 0 |
+| Replay | 3 s | 16.7 | 16.8 | 16.8 | 16.8 | 0 |
+
+Phone viewport 390x844 (emulated on this Mac, not a device): identical medians; the opening's first frame 114 ms; no
+other frame over 20 ms. JS heap after the whole run: 5 to 6 MB.
+
+Visible recordings (recordings/final/*.webm) were read as contact sheets; no visible hitch beyond the first frame.
+
+## Scene budget
+
+| Item | Value |
+|---|---|
+| Draw calls | 2 (the instanced slips and the shadow-only ground), plus the shadow pass |
+| Instances | 1,440 desktop, 1,008 phone; 1 BoxGeometry, 1 Lambert material, 1 ShadowMaterial |
+| Lights | 1 hemisphere, 1 directional key with a 1024 px PCF shadow map, 1 directional fill |
+| Textures | none on the GPU (the fragments are DOM canvases) |
+| Pixel ratio | starts at 1; rises to min(1.5, device) after 90 fast frames; drops to 1 after 40 slow frames and locks 20 s |
+| Idle | the draw is skipped after 12 settled frames outside the opening; fragments draw only while on screen |
+| Per frame on the CPU | 1,440 x 10 lerps, one matrix compose and one colour per slip; during the opening two more evaluations per slip |
+
+## Graphics failure (gl-loss.json)
+
+Five forced losses and restores: poster shown on loss, canvas back on restore, one render loop throughout, heap flat
+at 6 MB, no errors. WebGL unavailable: poster, counts final, Replay harmless. Poster missing: no error. Module delayed
+4 s: the HTML frame is readable at once and the sequence runs when the module arrives.
 
 ## Deviations and limits
 
-- INP was not measured in the field; the lab proxy is TBT 0 ms and the hour input's pacing (0 frames over 33 ms while
-  the value sweeps).
-- A real mid-range phone was not available; the phone numbers are a phone viewport on this Mac's GPU.
-- The archive page's performance score (87) is the thumbnail grid's first row of three 880 px images on slow 4G; it was
-  not changed in this pass.
-- The one long frame at the opening is the Three.js module compiling and the first shader compile; the poster covers it.
-- Context loss: the canvas listens for `webglcontextlost` (poster shown) and `webglcontextrestored` (canvas back); tested by
-  code reading only, not by forcing a loss.
+- INP is not measured in the field; the proxies are TBT 50 ms and the hour sweep's pacing.
+- No real phone; the phone numbers are a phone viewport on this Mac's GPU.
+- One long frame at the first render (shader compile with the shadow map) is covered by the poster; it could be moved
+  earlier with a warm-up render behind the poster, not done.
+- One 183 ms frame appeared once during the reverse scroll on one desktop run and not on the others; cause not found.

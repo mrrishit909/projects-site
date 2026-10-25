@@ -54,10 +54,11 @@ A project's record sleeve on the home page, and the "Next project" link on the c
   `block.js`) on a loud red field, that each flagship machines as the visitor scrolls (SLICE, LAYER, BEND, OPEN), that the
   check chapter cuts at the published on-time rate for a chosen departure hour (HOUR), that the archive spreads into a
   sheet (SHEET). Files: `index.template.html` + `home.css` + `home.js` (chapters from scroll, the field colour on
-  `html[data-pal]`, the opening timeline with GSAP, the live interface fragments drawn by `motion/scenes/<slug>.js` into
+  `html[data-pal]`, the opening sequence with GSAP (loosen, the band collects, settle; Skip and Replay), the live interface fragments drawn by `motion/scenes/<slug>.js` into
   DOM canvases at device resolution, the hour input, sound, copy e-mail, View Transitions into the case studies) +
-  `block.js` (Three.js r170 tree-shaken in `vendor/three/`; states as target arrays lerped per frame; adaptive pixel
-  ratio; context loss). `build.py` `home_page()` emits one `.panel` per `featured.json` entry (`card` the question, `op`
+  `block.js` (Three.js r170 tree-shaken in `vendor/three/`; states as target arrays lerped per frame; a shadow-casting
+  key light over a shadow-only ground; adaptive pixel ratio; context loss). The forecast state reads the project's real
+  series and backtest fan from `featured.json` (`series`, `fan`, `op_label`). `build.py` `home_page()` emits one `.panel` per `featured.json` entry (`card` the question, `op`
   the block's operation, `scale` the figure and range), the hourly rates from `florida-flight-delays/preview/data.json`,
   the twelve most recent case studies, and the counts from `data/github.json` (`tools/github.sh` refreshes it; **re-run it
   then `python3 build.py` after pushing new repositories**). The poster for the first paint and for browsers without

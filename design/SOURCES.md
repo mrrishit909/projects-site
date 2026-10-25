@@ -56,3 +56,11 @@ into the session scratchpad; page counts from mdls. "Affects" names where a find
 | everswap.lusion.co | captured; a dark hero with a 3D figure and large type (stills in refs/) | large object, large type, nothing else | headless capture only |
 | blink.capital | a black field with a glowing planet edge, the name spaced letter by letter across the top, a violet message card, a bottom chip navigation | the name as a frame; one glowing form; a chip nav at the bottom | |
 | enpower.trading | UNAVAILABLE: the host does not resolve (ERR_NAME_NOT_RESOLVED on 2026-10-25) | | the URL was unresolved; no other address was found |
+
+## Second pass additions (2026-10-25, later)
+
+| Source | Status | Use |
+|---|---|---|
+| mrrishit909/us-retail-forecast `data/retail_sales.csv` and `results/backtest_by_horizon.csv` (via gh api) | READ | the forecast operation's columns are the last 24 real months; the fan is the backtest's MAPE by horizon |
+| Google Chrome 156 (the owner's browser, through the Claude in Chrome extension) | USED | interactive verification of the cross-document transitions, Back/Forward, focus, rapid clicks, the Home link, Replay |
+| WEBGL_lose_context (Chromium) | USED | forced context loss and recovery |

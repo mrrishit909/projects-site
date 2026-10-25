@@ -1,7 +1,8 @@
 /* The home: THE BLOCK. Scroll decides the chapter; the chapter decides the field colour, where the block sits and which
-   operation it performs; block.js draws it. The opening (once per session): the slips fly into the block, the check
-   sweeps through it, the two counts roll. Four live interface fragments are drawn by the projects' own scenes at device
-   resolution. One bounded input (the departure hour) cuts the block at the published on-time rate. Sound is optional. */
+   operation it performs; block.js draws it. The opening (once per session, and on Replay): the slips loosen, a plane of
+   light passes down through them and collects each row (the check), the block settles, the two counts roll. Four live
+   interface fragments are drawn by the projects' own scenes at device resolution. One bounded input (the departure hour)
+   cuts the block at the published on-time rate. Sound is optional. */
 import { createBlock } from "./block.js";
 
 (() => {
@@ -45,7 +46,7 @@ import { createBlock } from "./block.js";
   const drawFrag = (f, t) => { if (!f.def || !f.S) return; sizeFrag(f); if (f.on && !f.t0) f.t0 = t; const u = f.t0 ? Math.min(0.92, (t - f.t0) / 1000 / (f.def.seconds || 6)) : 0.92; if (u === f.u && u >= 0.92) return; f.u = u;
     const g = f.g, W = f.cv.width, H = f.cv.height, grad = g.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, Math.max(W, H) * 0.75); grad.addColorStop(0, f.def.bg[0]); grad.addColorStop(1, f.def.bg[1]);
     g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; g.fillStyle = grad; g.fillRect(0, 0, W, H); f.def.draw(g, reduced ? 0.92 : u, W, H, f.S, window.T); };
-  Promise.all([document.fonts.load("500 20px Geist"), document.fonts.load("400 20px Geist"), document.fonts.load('400 20px "Geist Mono"')]).catch(() => 0).then(() => frags.forEach(f => { if (f.def) { sizeFrag(f); f.S = f.def.init ? f.def.init(f.cv.width, f.cv.height, window.T) : {}; } }));
+  Promise.all([document.fonts.load("500 20px Geist"), document.fonts.load("400 20px Geist"), document.fonts.load('400 20px "Geist Mono"')] /* taste-skill-ignore: the fragments' own code labels */).catch(() => 0).then(() => frags.forEach(f => { if (f.def) { sizeFrag(f); f.S = f.def.init ? f.def.init(f.cv.width, f.cv.height, window.T) : {}; } }));
   const fragIO = new IntersectionObserver(es => es.forEach(e => { const f = frags.find(f => f.cv === e.target); if (!f) return; f.on = e.isIntersecting; if (!f.on) { f.t0 = 0; f.u = 0; } }), { threshold: 0.2 });
   frags.forEach(f => fragIO.observe(f.cv));
 
@@ -65,27 +66,38 @@ import { createBlock } from "./block.js";
   const HOURS = JSON.parse($("hours-data").textContent), hourIn = $("hour"), hourOut = $("hour-out"), checkV = $("check-v"), checkN = $("check-n");
   const h12 = h => `${(h + 11) % 12 + 1} ${h < 12 ? "a.m." : "p.m."}`;
   const hourOf = () => HOURS.find(x => x.h === +hourIn.value) || HOURS[0];
-  const showHour = () => { const d = hourOf(); hourOut.textContent = h12(d.h); checkV.textContent = (d.otp * 100).toFixed(1); checkN.textContent = `${d.n.toLocaleString("en-US")} flights left between ${h12(d.h)} and ${h12(d.h + 1)}.`; };
+  const showHour = () => { const d = hourOf(); hourOut.textContent = h12(d.h); checkV.textContent = (d.otp * 100).toFixed(1); checkN.textContent = `${d.n.toLocaleString("en-US")} flights left between ${h12(d.h)} and ${h12(d.h + 1)}`; };
   hourIn.addEventListener("input", showHour); showHour();
 
   /* ---- the block ---- */
-  let block = null; try { block = createBlock({ canvas: $("block"), phone, reduced, hours: HOURS }); } catch (e) { console.error(e); }
+  const bendData = (() => { const p = panels.find(p => p.dataset.series); try { return p ? JSON.parse(p.dataset.series) : {}; } catch (_) { return {}; } })();
+  let block = null; try { block = createBlock({ canvas: $("block"), phone, reduced, series: bendData.series, fan: bendData.fan }); } catch (e) { console.error(e); }
   if (block) root.classList.add("gl-on");
   const counts = [...document.querySelectorAll(".count")];
-  const intro = { k: 1, sweep: 999, running: false };
-  const opening = root.classList.contains("opening") && block && hasGsap;
+  const intro = { k: 1, running: false, still: false, tl: null, abort: null };
   const landCounts = () => counts.forEach(c => { c.textContent = c.dataset.count; });
-  const enter = () => { root.classList.add("entered"); try { sessionStorage.setItem("seen", "1"); } catch (_) {} };
-  if (opening) {
-    intro.k = 0; counts.forEach(c => { c.textContent = "0"; });
-    const tl = gsap.timeline({ onComplete: () => { intro.running = false; enter(); } }); intro.running = true;
-    tl.to(intro, { k: 1, duration: 1.7, ease: "power3.inOut" }, 0.1).fromTo(intro, { sweep: -4.5 }, { sweep: 4.5, duration: 0.9, ease: "none" }, 1.3).call(() => { intro.sweep = 999; });
-    counts.forEach(c => { const o = { v: 0 }; tl.to(o, { v: +c.dataset.count, duration: 0.9, ease: "power2.out", onUpdate: () => { c.textContent = String(Math.round(o.v)); } }, 1.4); });
-    const skip = () => { if (!intro.running) return; tl.progress(1); intro.sweep = 999; landCounts(); };
-    for (const ev of ["wheel", "touchstart", "keydown"]) addEventListener(ev, skip, { passive: true, once: true });
-    $("skip").addEventListener("click", skip);
-    try { sound.on && sound.ping(0); } catch (_) {}
-  } else { enter(); landCounts(); }
+  const enter = () => { root.classList.add("entered"); root.classList.remove("opening"); try { sessionStorage.setItem("seen", "1"); } catch (_) {} };
+  /* the opening: 0 to 0.8 s the slips loosen (anticipation), 0.8 to 2.2 s the light passes down and collects them (the
+     check) while the counts roll, 2.2 to 2.6 s the block settles. Replay reuses this and tears the previous run down. */
+  const playOpening = () => {
+    if (!block || !hasGsap) { enter(); landCounts(); return; }
+    if (intro.tl) intro.tl.kill(); if (intro.abort) intro.abort.abort();
+    intro.abort = new AbortController(); const sig = intro.abort.signal;
+    scrollTo({ top: 0, behavior: "instant" });
+    // the field cuts to red at once on Replay instead of travelling through pink
+    root.classList.add("cut"); if (root.dataset.pal !== "red") { curPal = "red"; root.dataset.pal = "red"; } setTimeout(() => root.classList.remove("cut"), 80);
+    root.classList.add("opening"); root.classList.remove("entered");
+    intro.k = 0; intro.running = true; intro.still = reduced;
+    if (!reduced) counts.forEach(c => { c.textContent = "0"; });
+    const tl = intro.tl = gsap.timeline({ onComplete: () => { intro.running = false; intro.k = 1; landCounts(); enter(); } });
+    tl.to(intro, { k: 1, duration: reduced ? 1.4 : 2.6, ease: "none" }, 0);
+    if (!reduced) counts.forEach(c => { const o = { v: 0 }; tl.to(o, { v: +c.dataset.count, duration: 1.1, ease: "power2.out", onUpdate: () => { c.textContent = String(Math.round(o.v)); } }, 1.0); });
+    const skip = () => { if (!intro.running) return; tl.progress(1); };
+    for (const ev of ["wheel", "touchstart", "keydown"]) addEventListener(ev, skip, { passive: true, once: true, signal: sig });
+    $("skip").addEventListener("click", skip, { signal: sig });
+    sound.ping(0); };
+  if (root.classList.contains("opening") && block && hasGsap) playOpening(); else { enter(); landCounts(); }
+  $("replay").addEventListener("click", () => { playOpening(); $("replay").blur(); });
 
   /* pointer tilt and drag (fine pointers): the one optional exploration; never required */
   const ptr = { nx: 0, ny: 0, down: false, lx: 0, spin: 0, vel: 0 };
@@ -96,14 +108,14 @@ import { createBlock } from "./block.js";
   }
 
   /* ---- the loop: scroll to chapter, chapter to pose ---- */
-  const stageFor = (ch, p) => { const ph = phone();
+  const stageFor = ch => { const ph = phone();
     if (ch === "hero") return ph ? { x: 0.5, y: 0.47, s: 0.95 } : { x: 0.7, y: 0.56, s: 1 };
-    if (ch === "work") return ph ? { x: 0.5, y: 0.22, s: 0.72 } : { x: 0.72, y: 0.4, s: innerWidth < 1100 ? 0.78 : 1 };
-    if (ch === "check") return ph ? { x: 0.5, y: 0.2, s: 0.68 } : { x: 0.7, y: 0.5, s: 1 };
-    if (ch === "experience") return ph ? { x: 0.8, y: 0.86, s: 0.32 } : { x: 0.9, y: 0.86, s: 0.34 };
+    if (ch === "work") return ph ? { x: 0.5, y: 0.22, s: 0.6 } : innerWidth < 1100 ? { x: 0.72, y: 0.3, s: 0.6 } : { x: 0.7, y: 0.33, s: 0.9 };
+    if (ch === "check") return ph ? { x: 0.5, y: 0.2, s: 0.68 } : innerWidth < 1000 ? { x: 0.78, y: 0.5, s: 0.62 } : { x: 0.7, y: 0.5, s: 1 };
+    if (ch === "experience") return ph ? { x: 0.8, y: 0.86, s: 0.32 } : { x: 0.84, y: 0.28, s: 0.4 };
     if (ch === "archive") return ph ? { x: 0.82, y: 0.9, s: 0.3 } : { x: 0.8, y: 0.5, s: 0.62 };
     return ph ? { x: 0.78, y: 0.4, s: 0.4 } : { x: 0.82, y: 0.42, s: 0.5 }; };
-  let lastY = scrollY, lastChapterPing = -1;
+  let lastChapterPing = -1;
   const tick = t => {
     requestAnimationFrame(tick);
     const ch = where(), name = ch.dataset.chapter;
@@ -111,7 +123,7 @@ import { createBlock } from "./block.js";
     if (ch.dataset.pal !== curPal) { curPal = ch.dataset.pal; root.dataset.pal = curPal; }
     root.classList.toggle("past-hero", scrollY > innerHeight * 0.55);
     // the pose
-    let pose = { state: "block", u: 0, stage: stageFor(name), pal: curPal === "paper" ? 1 : 0, introK: intro.k, sweep: intro.sweep, tilt: { x: ptr.nx, y: ptr.ny }, spin: ptr.spin, ry: -0.42, rx: 0.16, force: intro.running };
+    let pose = { state: "block", u: 0, stage: stageFor(name), pal: curPal === "paper" ? 1 : 0, introK: intro.k, introStill: intro.still, tilt: { x: ptr.nx, y: ptr.ny }, spin: ptr.spin, ry: -0.42, rx: 0.16, force: intro.running };
     if (name === "work") { let p = panels[0], u = 0; for (const q of panels) { const t0 = tops.get(q); if (t0 <= scrollY + 1) { p = q; u = cl((scrollY - t0) / Math.max(1, q.offsetHeight - innerHeight)); } }
       const st = panelState(p); pose.state = "block"; pose.next = st; pose.u = cl((u - 0.12) / 0.55); if (st === "layer") pose.nextArg = Math.round(31 * cl((u - 0.3) / 0.6)); }
     else if (name === "check") { pose.state = "hour"; pose.arg = +hourOf().otp.toFixed(3); pose.ry = -0.3; pose.rx = 0.12; }
@@ -120,7 +132,6 @@ import { createBlock } from "./block.js";
     if (block) block.update(t, pose);
     ptr.spin *= 0.985;
     for (const f of frags) if (f.on) drawFrag(f, t);
-    lastY = scrollY;
   };
   requestAnimationFrame(tick);
 })();

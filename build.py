@@ -286,15 +286,16 @@ def home_page(projects):
         rng = f'{sc.get("min", 0):g} to {sc["max"]:g}{"" if unit.startswith("of") else unit}'
         w, h = webp_size(ROOT / p["slug"] / "cover-800.webp")
         feats.append(
-            f'<article class="panel" id="feature-{p["slug"]}" data-state="{f["op"]}" data-slug="{p["slug"]}" aria-labelledby="t-{p["slug"]}"><div class="panel-in">'
+            f'<article class="panel" id="feature-{p["slug"]}" data-state="{f["op"]}" data-slug="{p["slug"]}"{" data-series=" + chr(39) + json.dumps({"series": f["series"], "fan": f["fan"]}, separators=(",", ":")) + chr(39) if f.get("series") else ""} aria-labelledby="t-{p["slug"]}"><div class="panel-in">'
             f'<h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3>'
             f'<p class="q">{escape(f["card"])}</p>'
             f'<p class="fig"><b class="fig-v">{big}</b><span class="fig-u">{escape(unit)}</span><span class="fig-m">{escape(sc["metric"])}</span></p>'
             f'<p class="src">{escape(sc["evidence"])}, {escape(rng)}, checked. {escape(sc["note"])}.</p>'
+            f'<p class="op">{escape(f["op_label"])}</p>'
             f'<p class="line">{escape(line)}</p>'
             f'<p class="btns">{"".join(links)}</p>'
-            f'<figure class="frag" data-ui><canvas data-slug="{p["slug"]}" width="840" height="{round(840 / (featured_aspect(p["slug"])))}" role="img" aria-label="{escape(f["caption"], quote=True)}"></canvas>'
-            f'<img src="{p["slug"]}/cover-800.webp" alt="{escape(f["caption"], quote=True)}" width="{w}" height="{h}" loading="lazy" decoding="async"></figure>'
+            f'<figure class="frag" data-ui><a class="frag-link" href="{p["slug"]}/" aria-label="Open the case study. {escape(f["caption"], quote=True)}"><canvas data-slug="{p["slug"]}" width="840" height="{round(840 / (featured_aspect(p["slug"])))}" role="img" aria-label="{escape(f["caption"], quote=True)}"></canvas>'
+            f'<img src="{p["slug"]}/cover-800.webp" alt="{escape(f["caption"], quote=True)}" width="{w}" height="{h}" loading="lazy" decoding="async"></a></figure>'
             f'</div></article>')
         scenes.append(f'<script src="motion/scenes/{p["slug"]}.js?v={asset_version("motion/scenes/" + p["slug"] + ".js")}" defer></script>')
     hours = json.loads((ROOT / "florida-flight-delays" / "preview" / "data.json").read_text())["slices"]["ALL"]["hours"]
