@@ -269,47 +269,53 @@ def unit_split(sc):
 
 
 def home_page(projects):
-    """The home (index.template.html + portfolio.css + home.js): a rendered world. Every case study is one screen in a tower
-    (assets/atlas/atlas.json, built by tools/atlas.py from the thumbnails); the four flagships from featured.json each get a
-    scene; the repository inventory supplies the live counts."""
+    """The home (index.template.html + home.css + home.js + block.js): THE BLOCK. One object; each flagship from
+    featured.json is a panel with its question, its figure and range, one line, its links and a live fragment of its own
+    interface (motion/scenes/<slug>.js); the check reads the published hourly on-time rates from the Florida preview data;
+    the archive lists the twelve most recent case studies; the counts come from the repository inventory."""
     by_slug = {p["slug"]: p for p in projects}
     gh = github()
-    atlas = json.loads((ROOT / "assets" / "atlas" / "atlas.json").read_text())
     feats, scenes = [], []
     for i, f in enumerate(json.loads((ROOT / "featured.json").read_text()), 1):
         p, sc = by_slug[f["slug"]], f["scale"]
         big, unit = unit_split(sc)
         line = f["result"].split(". ")[0].rstrip(".") + "."
-        links = [f'<a class="btn btn-fill" href="{p["slug"]}/">Read the case study</a>', f'<a class="btn" href="{escape(p["repo"])}" target="_blank" rel="noopener">Code</a>']
+        links = [f'<a class="btn fill" href="{p["slug"]}/">Open the case study</a>', f'<a class="btn" href="{escape(p["repo"])}" target="_blank" rel="noopener">Code</a>']
         if p.get("demo"):
             links.append(f'<a class="btn" href="{escape(demo_url(p))}">{escape(p.get("demo_label", "Demo"))}</a>')
-        side = "right" if i % 2 else "left"   # the screen hangs on the left wall for odd rooms, so the copy sits right
-        first = lambda t: t.split(". ")[0].rstrip(".") + "."
-        facts = [first(f["problem"]), first(f["contribution"].replace("Solo project. ", "")), (f["result"].split(". ") + [""])[1].rstrip(".") + "." if len(f["result"].split(". ")) > 1 else sc["note"]]
-        facts_html = "".join(f'<p class="fact line" data-at="{0.3 + k * 0.22:.2f}">{escape(t)}</p>' for k, t in enumerate(facts))
-        frac = (sc["value"] - sc.get("min", 0)) / max(1e-9, sc["max"] - sc.get("min", 0))
+        rng = f'{sc.get("min", 0):g} to {sc["max"]:g}{"" if unit.startswith("of") else unit}'
+        w, h = webp_size(ROOT / p["slug"] / "cover-800.webp")
         feats.append(
-            f'<section class="scene card" data-cam="card" data-n="{i}" aria-hidden="true"><div class="scene-in">'
-            f'<p class="display card-line">{escape(f["card"])}</p><p class="line card-sub">{escape(f["area"])}: {escape(p["title"])}</p></div></section>'
-            f'<section class="scene room" id="feature-{p["slug"]}" data-cam="room" data-n="{i}" data-side="{side}" data-stage="{f["stage"]}" data-slug="{p["slug"]}" data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" '
-            f'data-frac="{frac:.4f}" data-evidence="{escape(sc["evidence"], quote=True)}" data-min="{sc.get("min", 0)}" data-max="{sc["max"]}" data-title="{escape(p["title"], quote=True)}" aria-labelledby="t-{p["slug"]}">'
-            f'<div class="scene-in">'
-            f'<p class="num mono" style="--frac:{frac:.4f}"><span class="num-v">{big}</span><span class="num-u">{escape(unit)}</span><span class="num-metric">{escape(sc["metric"])}</span></p>'
-            f'<h2 class="display">{escape(f["word"])}</h2>'
-            f'<div class="copy"><h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3><p class="line">{line}</p>'
-            f'<div class="facts">{facts_html}</div>'
-            f'<p class="small note">{escape(sc["note"])}</p><p class="btns">{"".join(links)}</p></div>'
-            f'<img class="still" src="{p["slug"]}/cover-800.webp" alt="Screenshot of {escape(p["title"], quote=True)}" width="{webp_size(ROOT / p["slug"] / "cover-800.webp")[0]}" height="{webp_size(ROOT / p["slug"] / "cover-800.webp")[1]}" loading="lazy" decoding="async">'
-            f'</div></section>')
+            f'<article class="panel" id="feature-{p["slug"]}" data-state="{f["op"]}" data-slug="{p["slug"]}" aria-labelledby="t-{p["slug"]}"><div class="panel-in">'
+            f'<h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3>'
+            f'<p class="q">{escape(f["card"])}</p>'
+            f'<p class="fig"><b class="fig-v">{big}</b><span class="fig-u">{escape(unit)}</span><span class="fig-m">{escape(sc["metric"])}</span></p>'
+            f'<p class="src">{escape(sc["evidence"])}, {escape(rng)}, checked. {escape(sc["note"])}.</p>'
+            f'<p class="line">{escape(line)}</p>'
+            f'<p class="btns">{"".join(links)}</p>'
+            f'<figure class="frag" data-ui><canvas data-slug="{p["slug"]}" width="840" height="{round(840 / (featured_aspect(p["slug"])))}" role="img" aria-label="{escape(f["caption"], quote=True)}"></canvas>'
+            f'<img src="{p["slug"]}/cover-800.webp" alt="{escape(f["caption"], quote=True)}" width="{w}" height="{h}" loading="lazy" decoding="async"></figure>'
+            f'</div></article>')
         scenes.append(f'<script src="motion/scenes/{p["slug"]}.js?v={asset_version("motion/scenes/" + p["slug"] + ".js")}" defer></script>')
-    commits = sum(r["commits"] for r in gh.values())
+    hours = json.loads((ROOT / "florida-flight-delays" / "preview" / "data.json").read_text())["slices"]["ALL"]["hours"]
+    hours = [{"h": x["h"], "n": x["n"], "otp": round(x["otp"], 4)} for x in hours if 5 <= x["h"] <= 23]
+    recent = []
+    for p in projects[:12]:
+        g = p.get("gh") or {}
+        recent.append(f'<tr><td><a href="{p["slug"]}/">{escape(p["title"])}</a></td><td>{escape(p["kind"].split(chr(183))[0].strip())}</td><td class="n">{p["date"][:4]}</td><td class="n">{g.get("commits") or 0} commits</td></tr>')
     last = max((r["pushed_at"][:10] for r in gh.values()), default="")
     tpl = (ROOT / "index.template.html").read_text()
-    assert "{{FEATURED}}" in tpl and "{{SCENES}}" in tpl and "/*ATLAS*/{}" in tpl
-    return (tpl.replace("{{FEATURED}}", "".join(feats)).replace("{{SCENES}}", "".join(scenes)).replace("{{COUNT}}", str(len(projects))).replace("{{REPOS}}", str(len(gh)))
-               .replace("{{COMMITS}}", f"{commits:,}").replace("{{LAST_PUSH}}", last).replace("{{PAGES}}", str(sum(1 for r in gh.values() if r.get("homepage"))))
-               .replace("/*ATLAS*/{}", json.dumps(atlas, separators=(",", ":")).replace("</", "<\\/"))
-               .replace("{{PORTFOLIO_CSS}}", asset_version("portfolio.css")).replace("{{HOME_JS}}", asset_version("home.js")))
+    assert "{{FEATURED}}" in tpl and "{{SCENES}}" in tpl and "/*HOURS*/[]" in tpl and "{{RECENT}}" in tpl
+    return (tpl.replace("{{FEATURED}}", "\n".join(feats)).replace("{{SCENES}}", "".join(scenes)).replace("{{RECENT}}", "\n".join(recent))
+               .replace("{{COUNT}}", str(len(projects))).replace("{{REPOS}}", str(len(gh))).replace("{{LAST_PUSH}}", last)
+               .replace("/*HOURS*/[]", json.dumps(hours, separators=(",", ":")))
+               .replace("{{HOME_CSS}}", asset_version("home.css")).replace("{{HOME_JS}}", asset_version("home.js")))
+
+
+def featured_aspect(slug):
+    """The aspect of a flagship's motion scene, read from its scene file (the canvas is sized to it)."""
+    m = re.search(r"aspect:\s*([\d.]+)", (ROOT / "motion" / "scenes" / f"{slug}.js").read_text())
+    return float(m.group(1)) if m else 1.614
 
 
 def webp_size(path):

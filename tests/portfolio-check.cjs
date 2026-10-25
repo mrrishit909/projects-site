@@ -1,15 +1,13 @@
-/* Regression checks for the portfolio home (index.html) and the catalogue (all.html). Run against a local server of the built site:
-     python3 -m http.server 8800 --bind 127.0.0.1 &  NODE_PATH=$(npm root -g) node tests/portfolio-check.cjs
-   Covers THE HALL home: content and links without JavaScript on both pages, every internal link resolving to a real file, the
-   home's page order (hero, then a title card and a room per flagship, method, about, index, contact), the atlas data, the HUD,
-   the gate (loading ring and byte counter to the total, ready, Enter in silence, the 4.6 s camera flight, a wheel skipping it,
-   none back from a case study, Enter without a flight under reduced motion), the WebGL world rendering (screenshot pixels), the
-   chapter number per section, rooms toggling is-in, each room's number landing on the figure in featured.json, the three method
-   beats taking turns, the sound toggle, the pick label, the still fallback only without WebGL, palette contrast from
-   portfolio.css tokens, the nav stepping away on scroll down and back on scroll up, the catalogue's sharp thumbnails (one lazy image per project, at least twice its displayed width) and its search / filter /
-   twelve-at-a-time reveal / detail dialog (#<slug>, Previous / Next keeping the URL and history in step), old addresses
-   forwarding to all.html, keyboard order, copy e-mail, reduced motion, contrast from computed styles on every colour field,
-   overflow at five breakpoints, console errors. */
+/* Regression checks for the portfolio home (index.html, THE BLOCK) and the archive (all.html). Run against a local server of the
+   built site:   python3 -m http.server 8800 --bind 127.0.0.1 &  NODE_PATH=$(npm root -g) node tests/portfolio-check.cjs
+   Covers: both pages without JavaScript (identity, nav, the four panels in featured.json order with their figures and links,
+   the check's data, experience and archive line-ups, contact links, every internal link on disk, the poster standing in for
+   the object); the opening (html.opening on a first top arrival, the counts rolling to the totals, a wheel skipping it, none
+   on a return from a case study or with a hash, none under reduced motion); WebGL on (canvas rendering pixels, the poster
+   hidden) and off (the poster shown); the chapter and field colour following scroll; panels toggling is-in; the live fragments
+   drawing; the hour input changing the figure and the block; keyboard order, the skip link, the sound toggle, copy e-mail; the
+   catalogue's thumbnails, search, filter, reveal, dialog and history; deep links and forwards; overflow at five widths; palette
+   contrast from the tokens; console errors. */
 const { chromium } = require("playwright");
 const fs = require("fs"), path = require("path");
 const BASE = process.env.BASE || "http://127.0.0.1:8800/";
@@ -19,27 +17,27 @@ const assert = (ok, msg) => { if (!ok) { console.error("FAIL:", msg); process.ex
 const contrastOf = sels => {
   const lum = c => { const v = c.match(/[\d.]+/g).slice(0, 3).map(x => x / 255).map(x => x <= .03928 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4); return .2126 * v[0] + .7152 * v[1] + .0722 * v[2]; };
   const r = (a, c) => ((Math.max(a, c) + .05) / (Math.min(a, c) + .05));
-  const bgOf = el => { for (let e = el; e; e = e.parentElement) { const c = getComputedStyle(e).backgroundColor; if (!/rgba\(0, 0, 0, 0\)|transparent/.test(c) && !/, 0\)$/.test(c)) return c; } return "rgb(255,255,255)"; };
+  const bgOf = el => { for (let e = el; e; e = e.parentElement) { const c = getComputedStyle(e).backgroundColor; if (!/rgba\(0, 0, 0, 0\)|transparent/.test(c) && !/, 0\)$/.test(c)) return c; } return getComputedStyle(document.documentElement).backgroundColor; };
   return sels.map(s => { const el = document.querySelector(s); return [s, el ? r(lum(getComputedStyle(el).color), lum(bgOf(el))).toFixed(2) : "missing"]; });
 };
 
 (async () => {
-  // the hall is a WebGL world: render it on the machine's GPU (headless Chromium otherwise falls back to SwiftShader, a CPU
-  // renderer that stalls the page for seconds to minutes under load). SOFTGL=1 keeps the software renderer.
-  const b = await chromium.launch(process.env.SOFTGL ? {} : { args: ["--use-angle=metal", "--enable-gpu"] });
+  // the object is a WebGL scene: render it on the machine's GPU (headless Chromium otherwise falls back to SwiftShader). SOFTGL=1 keeps the software renderer.
+  const b = await chromium.launch(process.env.SOFTGL ? {} : { args: ["--use-angle=metal", "--ignore-gpu-blocklist"] });
   const errors = [];
   const page = async (opts = {}, init, url = BASE, settle = 1200, waitUntil = "networkidle") => {
-    const ctx = await b.newContext({ viewport: { width: 1440, height: 900 }, permissions: ["clipboard-write"], ...opts });   // the copy-e-mail check needs the clipboard
+    const ctx = await b.newContext({ viewport: { width: 1440, height: 900 }, permissions: ["clipboard-write"], ...opts });
     if (init) await ctx.addInitScript(init);
     const p = await ctx.newPage();
     p.on("pageerror", e => errors.push(String(e)));
-    p.on("console", m => { if (m.type() === "error") errors.push(m.text()); });
+    p.on("console", m => { if (m.type() === "error" && !/fontshare|ERR_INTERNET|net::/.test(m.text())) errors.push(m.text()); });
     await p.goto(url, { waitUntil });
     await p.waitForTimeout(settle);
     return p;
   };
   const featured = JSON.parse(fs.readFileSync(path.join(root, "featured.json"), "utf8"));
   const slugs = fs.readdirSync(root).filter(d => fs.existsSync(path.join(root, d, "project.json")));
+  const gh = JSON.parse(fs.readFileSync(path.join(root, "data", "github.json"), "utf8"));
   const jump = (p, sel, block = "start") => p.evaluate(([s, bl]) => document.querySelector(s).scrollIntoView({ block: bl, behavior: "instant" }), [sel, block]);
   const linksOnDisk = async p => {
     const hrefs = await p.$$eval("a[href]", as => as.map(a => a.getAttribute("href")));
@@ -48,187 +46,152 @@ const contrastOf = sels => {
     return [internal.length, missing];
   };
   const has = (p, c) => p.evaluate(k => document.documentElement.classList.contains(k), c);
-  // the opening flight is the one GSAP timeline that is not scroll-driven and lasts longer than 4 s (4.6 s)
-  const flightOn = p => p.evaluate(() => typeof gsap !== "undefined" && gsap.globalTimeline.getChildren(false, false, true).some(t => !t.scrollTrigger && t.duration() > 4 && t.isActive()));
-  const enterQuiet = async p => { await p.waitForFunction(() => document.documentElement.classList.contains("ready"), null, { timeout: 15000 }); await p.waitForTimeout(700);
-    // a real mouse click at the button's centre once its 600 ms reveal has finished (Playwright's own stability wait counts
-    // animation frames, which a busy software-WebGL renderer can starve)
-    const r = await p.$eval("#enter-quiet", b => { const q = b.getBoundingClientRect(); return [q.x + q.width / 2, q.y + q.height / 2]; }); await p.mouse.click(r[0], r[1]); return Date.now(); };
-  const chapter = p => p.$eval("#chapter-n", e => e.textContent);
+  const openingOn = p => p.evaluate(() => typeof gsap !== "undefined" && gsap.globalTimeline.getChildren(false, false, true).some(t => t.duration() > 2 && t.isActive()));
+  const counts = p => p.$$eval(".count", es => es.map(e => e.textContent));
 
-  // 1. home without JavaScript: identity, navigation, the hall's sections in order, the four rooms, about, index, contact
+  // 1. home without JavaScript: identity, navigation, the panels in order, the check, experience, archive, contact
   let p = await page({ javaScriptEnabled: false }, null, BASE, 0);
-  assert(await p.$eval("#hero-title", h => h.tagName === "H1" && /checked against/.test(h.textContent) && !!h.closest(".scene.hero#top[data-cam=hero]")), "the hero scene carries the statement h1");
-  assert(await p.evaluate(() => !document.documentElement.classList.contains("gated") && getComputedStyle(document.getElementById("gate")).display === "none"), "no-JS: no gate, the page is open");
-  assert(await p.$$eval(".nav-links a", as => as.map(a => a.textContent)).then(t => ["Work", "Index", "Contact"].every(x => t.includes(x))), "nav: Work / Index / Contact");
-  const order = await p.$$eval("main .scene", els => els.map(e => e.dataset.cam + (e.dataset.n || "") + (e.id ? "#" + e.id : "")));
-  const want = ["hero#top", ...featured.flatMap((f, i) => [`card${i + 1}`, `room${i + 1}#feature-${f.slug}`]), "method#method", "about#about", "index#index", "contact#contact"];
-  assert(JSON.stringify(order) === JSON.stringify(want), `page order: hero > card 1 > room 1 > ... > card 4 > room 4 > method > about > index > contact (${order.join(" > ")})`);
-  assert(featured.length === 4 && await p.$$eval(".scene.room", els => els.map(e => [e.dataset.slug, e.dataset.side, +e.dataset.value, e.dataset.unit])).then(r => r.every((x, i) => x[0] === featured[i].slug && x[1] === (i % 2 ? "left" : "right") && x[2] === featured[i].scale.value && x[3] === featured[i].scale.unit)), "four rooms in featured.json order, sides alternating, data-value / data-unit from featured.json");
-  assert(await p.$$eval(".scene.card", els => els.map(e => [e.getAttribute("aria-hidden"), e.querySelector(".card-line").textContent])).then(c => c.length === 4 && c.every((x, i) => x[0] === "true" && x[1] === featured[i].card)), "a title card before each room, aria-hidden, with its line from featured.json");
-  assert(await p.$$eval(".scene.room", els => els.every(e => e.querySelector(".num-v") && e.querySelector(".display") && e.querySelector("h3 a") && e.querySelector(".btns a") && e.querySelector("h3 a").getAttribute("href") === e.dataset.slug + "/" && e.dataset.title === e.querySelector("h3 a").textContent)), "each room has its number, headline, title link to its case study and buttons");
-  assert(await p.$$eval(".scene", els => els.every(e => getComputedStyle(e).color === "rgb(255, 255, 255)")), "no-JS: every scene is readable white on ink");
-  assert(await p.$$eval(".room .scene-in > *, .beat", els => els.every(e => getComputedStyle(e).opacity === "1")), "no-JS: room copy and all three method beats are visible");
-  assert(await p.$$eval(".room", els => els.map(e => (e.querySelector(".num-v").textContent + e.querySelector(".num-u").textContent).replace(/\s/g, ""))).then(t => t.every((x, i) => x === `${featured[i].scale.value}${featured[i].scale.unit}`.replace(/\s/g, ""))), "each room shows the figure in featured.json");
-  assert(await p.$$eval(".room .display", els => els.map(e => e.textContent)).then(t => t.every((x, i) => x === featured[i].word)), "each room carries its one-word headline");
-  assert(await p.$$eval(".scene.room .still", is => is.length === 4 && is.every(i => getComputedStyle(i).display !== "none" && i.getAttribute("src") === i.closest(".room").dataset.slug + "/cover-800.webp")) && featured.every(f => fs.existsSync(path.join(root, f.slug, "cover-800.webp"))), "no-JS (no WebGL): each room shows its still, <slug>/cover-800.webp, and the file exists");
-  assert(await p.$$eval("#method .beat", bs => bs.length === 3), "the method has three beats");
-  const atlas = JSON.parse((await p.$eval("#atlas-data", e => e.textContent)).replace("/*ATLAS*/", ""));
-  assert(atlas.items.length === slugs.length && atlas.cols > 0 && atlas.rows > 0 && atlas.items.every(it => it.slug && it.title && typeof it.a === "number" && typeof it.c === "number" && typeof it.r === "number" && it.c < atlas.cols && it.r < atlas.rows && fs.existsSync(path.join(root, `assets/atlas/atlas-${it.a}.webp`))) && new Set(atlas.items.map(it => it.slug)).size === slugs.length, `the atlas carries one screen per case study (${atlas.items.length}, ${atlas.cols}x${atlas.rows} per sheet)`);
-  assert(await p.evaluate(n => { const $ = id => document.getElementById(id); return $("gate-n").textContent === "000" && $("gate").querySelector(".of").textContent.replace(/\D/g, "") === String(n) && !!$("ring") && !!$("gate-label") && $("enter-sound").tagName === "BUTTON" && $("enter-quiet").tagName === "BUTTON"; }, atlas.items.length), "the gate: ring, counter 000 of the total, label, Enter with sound / in silence");
-  assert(await p.evaluate(() => { const $ = id => document.getElementById(id); return $("chapter-n").textContent === "00" && $("chapter-name").textContent === "Entrance" && $("hint").textContent.trim() === "Scroll to walk" && $("sound").tagName === "BUTTON" && $("sound").getAttribute("aria-pressed") === "false" && $("pick").tagName === "P" && $("pick").getAttribute("aria-hidden") === "true" && !!$("cursor") && !!document.querySelector("#nav .wordmark") && !!document.querySelector("#nav .strip"); }), "the HUD: wordmark and strip, chapter 00 Entrance, 'Scroll to walk', a sound button (off), the pick label, the cursor ring");
-  assert(await p.$eval("form.query", f => f.getAttribute("action") === "all.html" && f.querySelector("input[name=q]") !== null), "no-JS: the home query form submits to the index");
-  assert(await p.$$eval("a[href$='resume.pdf']", as => as.length) >= 2, "résumé link present (about, contact)");
+  assert(await p.$eval("h1#name", h => /Rishit Raj\s*Mathur/.test(h.textContent) && !!h.closest(".hero#top[data-chapter=hero]")), "the hero carries the name as the one h1");
+  assert(await p.$eval(".role-line", e => /Data analyst in Tampa/.test(e.textContent) && /checked against its source/.test(e.textContent)), "the line under the name says what this is");
+  assert(await p.$$eval(".lineup", ts => ts.every(t => t.querySelector("thead th[scope=col]"))), "the line-ups are tables with column headers");
+  assert(await p.$$eval(".top .links a", as => as.map(a => a.textContent)).then(t => ["Work", "Archive", "Contact", "Résumé"].every(x => t.includes(x))), "nav: Work / Archive / Contact / Résumé");
+  assert(await p.evaluate(() => !document.documentElement.classList.contains("js") && getComputedStyle(document.querySelector(".poster")).display !== "none" && getComputedStyle(document.querySelector("canvas.block")).display === "none"), "no-JS: the poster stands in for the object, the canvas is hidden");
+  assert(await p.$eval(".poster img", i => i.getAttribute("src")).then(s => s === "assets/block-poster.webp" && fs.existsSync(path.join(root, s))), "the poster image exists");
+  const order = await p.$$eval("main [data-chapter]", els => els.map(e => e.dataset.chapter + "#" + e.id));
+  assert(JSON.stringify(order) === JSON.stringify(["hero#top", "work#work", "check#check", "experience#experience", "archive#archive", "contact#contact"]), `chapter order: hero > work > check > experience > archive > contact (${order.join(" > ")})`);
+  const panels = await p.$$eval(".panel", els => els.map(e => ({ slug: e.dataset.slug, state: e.dataset.state, q: e.querySelector(".q").textContent, fig: (e.querySelector(".fig-v").textContent + e.querySelector(".fig-u").textContent).replace(/\s/g, ""), href: e.querySelector("h3 a").getAttribute("href"), open: e.querySelector(".btns a.fill").getAttribute("href"), canvas: !!e.querySelector(".frag canvas[data-slug]"), still: e.querySelector(".frag img").getAttribute("src"), stillShown: getComputedStyle(e.querySelector(".frag img")).display !== "none", src: e.querySelector(".src").textContent })));
+  assert(panels.length === 4 && panels.every((x, i) => x.slug === featured[i].slug && x.state === featured[i].op && x.q === featured[i].card && x.fig === `${featured[i].scale.value}${featured[i].scale.unit}`.replace(/\s/g, "") && x.href === x.slug + "/" && x.open === x.slug + "/" && x.canvas && x.still === x.slug + "/cover-800.webp" && x.stillShown && x.src.includes(featured[i].scale.evidence)), "four panels in featured.json order: operation, question, figure with unit, source line, title and button to the case study, a live canvas with its still shown without JavaScript");
+  assert(featured.every(f => fs.existsSync(path.join(root, f.slug, "cover-800.webp")) && fs.existsSync(path.join(root, "motion", "scenes", f.slug + ".js"))), "each flagship has its still and its scene");
+  const hours = JSON.parse(await p.$eval("#hours-data", e => e.textContent));
+  assert(hours.length === 19 && hours[0].h === 5 && hours[hours.length - 1].h === 23 && hours.every(h => h.otp > 0 && h.otp < 1 && h.n > 0) && Math.abs(hours.find(h => h.h === 6).otp - 0.92) < 0.01 && Math.abs(hours.find(h => h.h === 20).otp - 0.63) < 0.01, "the check carries the published hourly on-time rates (5 a.m. to 11 p.m.; 6 a.m. about 92%, 8 p.m. about 63%)");
+  assert(await p.evaluate(() => { const i = document.getElementById("hour"); return i.type === "range" && i.min === "5" && i.max === "23" && document.querySelector("label[for=hour]") !== null && document.getElementById("hour-out").tagName === "OUTPUT"; }), "the hour input is a labelled native range with an output");
+  assert(await p.$$eval("#experience .lineup tbody tr", rs => rs.length) === 6 && await p.$eval("#experience", e => /TraceRT/.test(e.textContent) && /22%/.test(e.textContent) && /Power BI Data Analyst Associate/.test(e.textContent) && /REACH Lab/.test(e.textContent)), "experience lists the résumé's roles, certification and degrees");
+  const recent = await p.$$eval("#archive .lineup tbody tr", rs => rs.map(r => [r.querySelector("a").getAttribute("href"), r.querySelector("a").textContent]));
+  assert(recent.length === 12 && recent.every(([h]) => /\/$/.test(h) && fs.existsSync(path.join(root, h, "index.html"))), "the archive lists twelve case studies that exist");
+  assert(await p.$eval("form.query", f => f.getAttribute("action") === "all.html" && f.querySelector("input[name=q]") !== null), "no-JS: the home query form submits to the archive");
+  assert(await p.$$eval("a[href$='resume.pdf']", as => as.length) >= 3, "résumé links present (nav, hero, experience, contact)");
   assert(await p.$$eval("a[href^='mailto:rishit.mathur@yahoo.com']", as => as.length) === 1, "verified e-mail link present");
   assert(await p.$eval("a[href*='linkedin.com/in/rishitrajmathur']", a => !!a), "verified LinkedIn link present");
-  assert(await p.$$eval("a[href='all.html']", as => as.length) >= 2, "the index is linked from the nav and the footer");
+  assert(await p.$$eval("a[href='all.html']", as => as.length) >= 2, "the archive is linked from the nav and the footer");
+  assert(await p.evaluate(() => [...document.querySelectorAll("main section")].every(s => s.querySelector("h1, h2"))), "every section has a heading");
+  assert(await counts(p).then(c => c.join("/") === `${slugs.length}/${Object.keys(gh).length}`), `no-JS: the counts read ${slugs.length} and ${Object.keys(gh).length} from the data`);
   let [n, missing] = await linksOnDisk(p);
   assert(missing.length === 0, `home: all ${n} internal links resolve on disk` + (missing.length ? ": missing " + missing.join(", ") : ""));
   await p.close();
 
-  // 2. the catalogue without JavaScript: every project is a real link
+  // 2. the archive without JavaScript: every project is a real link
   p = await page({ javaScriptEnabled: false }, null, ALL, 0);
-  // without JavaScript the first row is a plain image and the rest are lazy images inside <noscript>, which then render
   const thumbs = await p.$$eval(".tile", els => els.map(e => { const i = e.querySelector("img.tile-thumb[src]"); return i && [e.dataset.slug, i.getAttribute("src"), i.loading, +i.getAttribute("width")]; }));
-  assert(thumbs.every((t, i) => t && t[1] === `assets/thumbs/${t[0]}.webp` && (i < 3 ? t[2] !== "lazy" : t[2] === "lazy") && t[3] === 880 && fs.existsSync(path.join(root, t[1]))), "every catalogue entry has its own 880px thumbnail (the first row at once, the rest lazy), and the file exists");
+  assert(thumbs.every((t, i) => t && t[1] === `assets/thumbs/${t[0]}.webp` && (i < 3 ? t[2] !== "lazy" : t[2] === "lazy") && t[3] === 880 && fs.existsSync(path.join(root, t[1]))), "every archive entry has its own 880px thumbnail (the first row at once, the rest lazy), and the file exists");
   const tiles = await p.$$eval(".tile", els => els.map(e => ({ slug: e.dataset.slug, href: e.querySelector("a").getAttribute("href"), shown: getComputedStyle(e).display !== "none" })));
-  assert(tiles.length === slugs.length, `${tiles.length} catalogue entries rendered for ${slugs.length} project folders`);
-  assert(tiles.every(t => t.href === t.slug + "/"), "every catalogue entry links to its own project folder");
-  assert(tiles.every(t => t.shown), "no-JS: the whole catalogue is visible");
+  assert(tiles.length === slugs.length, `${tiles.length} archive entries rendered for ${slugs.length} project folders`);
+  assert(tiles.every(t => t.href === t.slug + "/"), "every archive entry links to its own project folder");
+  assert(tiles.every(t => t.shown), "no-JS: the whole archive is visible");
   assert(new Set(tiles.map(t => t.slug)).size === tiles.length, "no duplicate entries");
   [n, missing] = await linksOnDisk(p);
-  assert(missing.length === 0, `catalogue: all ${n} internal links resolve on disk` + (missing.length ? ": missing " + missing.join(", ") : ""));
+  assert(missing.length === 0, `archive: all ${n} internal links resolve on disk` + (missing.length ? ": missing " + missing.join(", ") : ""));
   await p.close();
 
-  // 2b. the gate: loading (ring, a real byte counter to the total), ready, Enter; the 4.6 s camera flight; a wheel skips it;
-  // none coming back from a case study; under reduced motion the gate still asks but nothing flies
-  const TOTAL = String(slugs.length).padStart(3, "0");
+  // 3. the opening on a first top arrival: html.opening, the counts roll to the totals, the skip button shows, the object renders
   p = await page({}, null, BASE, 0, "domcontentloaded");
-  const gate0 = await p.evaluate(() => { const h = document.documentElement.classList; return [h.contains("gated"), h.contains("ready"), h.contains("entered"), getComputedStyle(document.getElementById("gate")).display !== "none"]; });
-  assert(gate0[0] && !gate0[1] && !gate0[2] && gate0[3], `first load: html.gated, the gate is up, not ready, not entered (${gate0})`);
-  await p.waitForFunction(() => document.documentElement.classList.contains("ready"), null, { timeout: 15000 });
-  const ready = await p.evaluate(() => [document.getElementById("gate-n").textContent, document.getElementById("gate-label").textContent, document.getElementById("ring").style.strokeDashoffset, document.getElementById("enter-quiet").getBoundingClientRect().width > 0]);
-  assert(ready[0] === TOTAL && /screens ready/.test(ready[1]) && +ready[2] === 0 && ready[3], `the counter reaches ${TOTAL}, the ring closes, html.ready shows the Enter buttons (${ready})`);
-  let t0 = await enterQuiet(p);
+  assert(await has(p, "opening") && await has(p, "js"), "first load: html.opening");
+  await p.waitForFunction(() => document.documentElement.classList.contains("gl-on"), null, { timeout: 15000 });
   await p.waitForTimeout(300);
-  const flying = await p.evaluate(() => [document.documentElement.classList.contains("entered"), document.getElementById("sound").getAttribute("aria-pressed")]);
-  assert(flying[0] && flying[1] === "false" && await flightOn(p), `Enter in silence: html.entered, sound stays off, the flight runs (${flying})`);
-  await p.waitForFunction(() => !document.documentElement.classList.contains("gated"), null, { timeout: 2000 });
-  assert(Date.now() - t0 < 2000, "html.gated is removed about 1 s after Enter");
-  await p.waitForFunction(() => !(gsap.globalTimeline.getChildren(false, false, true).some(t => !t.scrollTrigger && t.duration() > 4 && t.isActive())), null, { timeout: 7000, polling: 50 });
-  const flew = Date.now() - t0;
-  await p.waitForTimeout(400);
-  const landedHud = await p.evaluate(() => [getComputedStyle(document.getElementById("hint")).opacity, getComputedStyle(document.getElementById("hint")).visibility, document.getElementById("chapter-n").textContent, getComputedStyle(document.getElementById("gate")).display]);
-  assert(flew > 4000 && flew < 6500 && +landedHud[0] > 0.9 && landedHud[1] === "visible" && landedHud[2] === "00" && landedHud[3] === "none", `the flight ends within ~6 s (${flew} ms): #hint visible, chapter 00, the gate gone (${landedHud})`);
-  await p.mouse.move(720, 450); await p.mouse.wheel(0, 600); await p.waitForTimeout(1200);
-  assert(await p.evaluate(() => scrollY) > 0, "after the flight, the wheel walks the page");
-  // the WebGL world renders: hide the page copy and HUD, screenshot, and count pixels clearly brighter than ink (#07070c plus grain)
-  await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(1500);
-  assert(await p.evaluate(() => { const c = document.getElementById("world"), h = document.documentElement.classList; return c.matches("canvas.world") && h.contains("gl-on") && c.width > 0 && getComputedStyle(c).display !== "none"; }), "the world is live: canvas.world, html.gl-on");
-  assert(await p.$$eval(".scene.room .still", is => is.every(i => getComputedStyle(i).display === "none")), "with WebGL on, the still fallback images stay hidden");
-  await p.addStyleTag({ content: "main, .hud, .foot, .cursor, .gate { visibility: hidden !important; }" }); await p.waitForTimeout(300);
+  const mid = await p.evaluate(() => [getComputedStyle(document.getElementById("skip")).opacity, document.querySelector(".count").textContent, getComputedStyle(document.querySelector(".poster")).display]);
+  assert(+mid[0] > 0.5 && +mid[1] < slugs.length && mid[2] === "none" && await openingOn(p), `during the opening: the skip button is visible, the count is rolling (${mid[1]}), the poster is gone, the timeline runs`);
+  await p.waitForFunction(() => document.documentElement.classList.contains("entered"), null, { timeout: 8000 });
+  await p.waitForTimeout(300);
+  assert(await counts(p).then(c => c.join("/") === `${slugs.length}/${Object.keys(gh).length}`) && !(await openingOn(p)) && +(await p.$eval("#skip", e => getComputedStyle(e).opacity)) < 0.1, "after the opening: html.entered, the counts land on the totals, the skip button is gone");
+  assert(await p.evaluate(() => { const c = document.getElementById("block"); return c.width > 0 && getComputedStyle(c).display !== "none"; }), "the canvas is live");
+  await p.addStyleTag({ content: "main, header, footer, .hud-chapter, .skip-intro { visibility: hidden !important; }" }); await p.waitForTimeout(400);
   const shot = (await p.screenshot()).toString("base64");
-  const lit = await p.evaluate(async b64 => { const img = new Image(); img.src = "data:image/png;base64," + b64; await img.decode(); const c = document.createElement("canvas"); c.width = img.width; c.height = img.height; const x = c.getContext("2d"); x.drawImage(img, 0, 0); const d = x.getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 0; i < d.length; i += 4) if (Math.max(d[i], d[i + 1], d[i + 2]) > 60) n++; return n / (d.length / 4); }, shot);
-  assert(lit > 0.01, `after entering, the rendered hall is visible: ${(lit * 100).toFixed(1)}% of pixels are brighter than ink`);
+  const lit = await p.evaluate(async b64 => { const img = new Image(); img.src = "data:image/png;base64," + b64; await img.decode(); const c = document.createElement("canvas"); c.width = img.width; c.height = img.height; const x = c.getContext("2d"); x.drawImage(img, 0, 0); const d = x.getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 0; i < d.length; i += 4) if (d[i] > 150 && d[i + 1] > 150 && d[i + 2] > 150) n++; return n / (d.length / 4); }, shot);
+  assert(lit > 0.04, `the object renders on the red field: ${(lit * 100).toFixed(1)}% of pixels are the block's paper`);
   await p.evaluate(() => document.querySelectorAll("style").forEach(s => /visibility: hidden !important/.test(s.textContent) && s.remove()));
-
-  // 3. the walk (same page, after the flight): the chapter number per section, rooms is-in, each number lands, the beats, sound, pick
+  assert(await p.$$eval(".frag img", is => is.every(i => getComputedStyle(i).display === "none")), "with JavaScript, the stills give way to the live fragments");
+  // 4. the walk: chapter label and field colour per section, panels is-in, the fragments draw, the hour input
   const seen = [];
-  for (const [k, id] of (await p.$$eval("main .scene", els => els.map((e, k) => [k, e.id]))).entries()) {
-    await p.evaluate(k => document.querySelectorAll("main .scene")[k].scrollIntoView({ block: "start", behavior: "instant" }), id[0]); await p.waitForTimeout(400);
-    seen.push(await chapter(p));
-  }
-  const wantCh = ["00", "01", "01", "02", "02", "03", "03", "04", "04", "05", "06", "07", "08"];
-  assert(JSON.stringify(seen) === JSON.stringify(wantCh), `the chapter number follows every section (${seen.join(" ")})`);
-  await jump(p, "#top"); await p.waitForTimeout(500);
+  for (const id of ["top", "work", "check", "experience", "archive", "contact"]) { await jump(p, "#" + id); await p.waitForTimeout(700); seen.push(await p.evaluate(() => document.documentElement.dataset.pal + ":" + document.getElementById("chapter").textContent)); }
+  assert(JSON.stringify(seen) === JSON.stringify(["red:", "paper:Selected work", "red:The check", "paper:Experience", "paper:Archive", "red:Contact"]), `the field colour and the chapter label follow every section (${seen.join(" ")})`);
   for (let i = 0; i < 4; i++) {
-    await jump(p, "#feature-" + featured[i].slug); await p.waitForTimeout(1900);
-    const wantN = `${featured[i].scale.value}${featured[i].scale.unit}`.replace(/\s/g, "");
-    const [num, inRooms, ch] = await p.evaluate(k => [(r => (r.querySelector(".num-v").textContent + r.querySelector(".num-u").textContent).replace(/\s/g, ""))(document.querySelectorAll(".room")[k]), [...document.querySelectorAll(".room")].map(r => r.classList.contains("is-in")), document.getElementById("chapter-n").textContent], i);
-    assert(num === wantN && inRooms.every((v, j) => v === (j === i)) && ch === String(i + 1).padStart(2, "0"), `room ${i + 1}: the number lands on ${wantN} (${num}), only this room is-in (${inRooms}), chapter ${ch}`);
+    await jump(p, "#feature-" + featured[i].slug); await p.waitForTimeout(1500);
+    const [inP, drawn] = await p.evaluate(k => { const ps = [...document.querySelectorAll(".panel")]; const cv = ps[k].querySelector(".frag canvas"); const g = cv.getContext("2d"); const d = g.getImageData(0, 0, cv.width, cv.height).data; let n = 0; for (let j = 0; j < d.length; j += 4 * 97) if (d[j] + d[j + 1] + d[j + 2] > 60) n++; return [ps.map(x => x.classList.contains("is-in")), n]; }, i);
+    assert(inP[i] && inP.filter(Boolean).length === 1 && drawn > 0, `panel ${i + 1}: is-in on this panel only (${inP}), its fragment is drawing (${drawn} lit samples)`);
   }
-  await jump(p, "#method"); await p.waitForTimeout(600);
-  assert(await p.$$eval(".room", rs => rs.every(r => !r.classList.contains("is-in"))), "leaving the rooms clears is-in");
-  const beatsAt = [];
-  for (const u of [0.15, 0.5, 0.85]) {
-    await p.evaluate(u => { const m = document.getElementById("method"); scrollTo({ top: m.offsetTop + u * (m.offsetHeight - innerHeight), behavior: "instant" }); }, u); await p.waitForTimeout(700);
-    beatsAt.push(await p.$$eval(".beat", bs => bs.map(b => b.classList.contains("is-on") ? 1 : 0).join("")));
-  }
-  assert(JSON.stringify(beatsAt) === JSON.stringify(["100", "010", "001"]), `the three beats take turns through #method (${beatsAt.join(" ")})`);
-  await jump(p, "#index"); await p.waitForTimeout(800);
-  assert(await p.evaluate(() => document.querySelector("#index").getBoundingClientRect().top <= 1) && await chapter(p) === "07", "#index is reachable by anchor and shows chapter 07");
+  await jump(p, "#check"); await p.waitForTimeout(500);
+  const h8 = await p.$eval("#check-v", e => e.textContent);
+  await p.evaluate(() => { const i = document.getElementById("hour"); i.value = "20"; i.dispatchEvent(new Event("input", { bubbles: true })); }); await p.waitForTimeout(100);
+  const h20 = await p.evaluate(() => [document.getElementById("check-v").textContent, document.getElementById("hour-out").textContent, document.getElementById("check-n").textContent]);
+  assert(h8 === (hours.find(h => h.h === 8).otp * 100).toFixed(1) && h20[0] === (hours.find(h => h.h === 20).otp * 100).toFixed(1) && h20[1] === "8 p.m." && /33,337 flights/.test(h20[2]), `the hour input changes the figure: 8 a.m. ${h8}%, 8 p.m. ${h20[0]}% (${h20[2]})`);
   const snd = [];
   for (let i = 0; i < 2; i++) { await p.click("#sound"); await p.waitForTimeout(150); snd.push(await p.$eval("#sound", b => b.getAttribute("aria-pressed") + "/" + b.textContent.trim())); }
   assert(snd[0] === "true/Sound on" && snd[1] === "false/Sound off", `the sound button toggles aria-pressed and its label (${snd.join(", ")})`);
-  assert(await p.$eval("#pick", e => e.tagName === "P" && getComputedStyle(e).position === "fixed"), "the pick label is in place for screens under the pointer");
-  await jump(p, "#contact"); await p.waitForTimeout(900);
+  await jump(p, "#contact"); await p.waitForTimeout(600);
   assert(await p.evaluate(async () => { const btn = document.getElementById("copy-mail"); if (btn.hidden) return false; btn.click(); await new Promise(r => setTimeout(r, 500)); return btn.textContent.trim() === "Copied" && document.getElementById("copy-status").textContent.length > 0; }), "Copy e-mail copies and confirms");
   await p.close();
 
-  // a wheel during the flight skips it: the timeline ends at once and the walk is free well before 4.6 s
+  // 5. a wheel during the opening skips it
   p = await page({}, null, BASE, 0, "domcontentloaded");
-  t0 = await enterQuiet(p);
-  await p.waitForTimeout(400);
-  const before = await flightOn(p);
-  await p.mouse.move(720, 450); await p.mouse.wheel(0, 120); await p.waitForTimeout(150);
-  const after = await flightOn(p);
-  await p.waitForFunction(() => !document.documentElement.classList.contains("gated"), null, { timeout: 2000 });
-  await p.mouse.wheel(0, 600); await p.waitForTimeout(800);
-  const freeAt = Date.now() - t0, y = await p.evaluate(() => scrollY);
-  assert(before && !after && y > 0 && freeAt < 4000, `a wheel during the flight skips it (running ${before}, then ${after}); the page scrolls ${y}px at ${freeAt} ms`);
+  await p.waitForFunction(() => document.documentElement.classList.contains("gl-on"), null, { timeout: 15000 }); await p.waitForTimeout(250);
+  const before = await openingOn(p);
+  await p.mouse.move(720, 450); await p.mouse.wheel(0, 120); await p.waitForTimeout(200);
+  const after = await openingOn(p);
+  assert(before && !after && await has(p, "entered") && await counts(p).then(c => c[0] === String(slugs.length)), "a wheel during the opening ends it at once: html.entered, the counts land");
   await p.close();
 
-  // coming back from a case study (sessionStorage vt): no gate at all; keyboard order from the top
+  // 6. a return from a case study (sessionStorage vt), a hash, a second visit: no opening; keyboard order from the top
   p = await page({}, () => { try { sessionStorage.setItem("vt", "retail-dbt"); } catch (_) {} }, BASE, 0, "domcontentloaded");
-  assert(await p.evaluate(() => { const h = document.documentElement.classList; return !h.contains("gated") && getComputedStyle(document.getElementById("gate")).display === "none"; }), "with sessionStorage vt set before load there is no gate");
-  await p.waitForFunction(() => document.documentElement.classList.contains("entered") && document.documentElement.classList.contains("quick"), null, { timeout: 10000 });
-  assert(!(await flightOn(p)), "coming back from a case study: html.entered quick, no flight");
+  assert(!(await has(p, "opening")) && await has(p, "entered"), "coming back from a case study: no opening");
   await p.keyboard.press("Tab");
   assert(await p.evaluate(() => document.activeElement.className === "skip"), "first Tab lands on the skip link");
-  await p.keyboard.press("Tab"); await p.keyboard.press("Tab");
-  assert(await p.evaluate(() => document.activeElement.textContent === "Work"), "nav is reachable by keyboard");
+  await p.keyboard.press("Tab");
+  assert(await p.evaluate(() => document.activeElement.textContent === "Work"), "then the nav");
+  await p.close();
+  p = await page({}, () => { try { sessionStorage.setItem("seen", "1"); } catch (_) {} }, BASE, 0, "domcontentloaded");
+  assert(!(await has(p, "opening")), "a second visit in the session: no opening");
+  await p.close();
+  p = await page({}, null, BASE + "#work", 800, "domcontentloaded");
+  assert(!(await has(p, "opening")) && await p.evaluate(() => scrollY > 100 && document.documentElement.dataset.pal === "paper"), "a #work deep link: no opening, lands on the work on the paper field");
   await p.close();
 
-  // reduced motion: the gate still appears and Enter works, but nothing flies; no smooth scroll; the world still on
+  // 7. reduced motion: no opening, the counts shown final, no running animation, the object still on
   p = await page({ reducedMotion: "reduce" }, null, BASE, 0, "domcontentloaded");
-  assert(await has(p, "gated"), "reduced motion: the gate still appears");
-  await enterQuiet(p);
-  await p.waitForTimeout(50);
-  const rm = await p.evaluate(() => [document.documentElement.classList.contains("entered"), document.documentElement.classList.contains("quick")]);
-  const rmFlight = await flightOn(p);
   await p.waitForTimeout(1500);
-  const still = await p.evaluate(() => [document.documentElement.classList.contains("gated"), document.documentElement.classList.contains("lenis-on"), document.documentElement.classList.contains("gl-on"), document.getAnimations().filter(a => a.playState === "running").length]);
-  assert(rm[0] && rm[1] && !rmFlight && !still[0] && !still[1] && still[2] && still[3] === 0, `reduced motion: Enter adds entered quick, no flight, the gate lifts, no smooth scroll, the world on, no running animation (${rm}, ${rmFlight}, ${still})`);
+  const rm = await p.evaluate(() => [document.documentElement.classList.contains("opening"), document.documentElement.classList.contains("entered"), document.documentElement.classList.contains("gl-on"), document.getAnimations().filter(a => a.playState === "running").length, document.querySelector(".count").textContent]);
+  assert(!rm[0] && rm[1] && rm[2] && rm[3] === 0 && rm[4] === String(slugs.length), `reduced motion: no opening, entered, the object on, no running animation, the count final (${rm})`);
+  await jump(p, "#feature-" + featured[1].slug); await p.waitForTimeout(500);
+  assert(await p.$$eval(".panel:nth-of-type(2) .panel-in > *", els => els.every(e => getComputedStyle(e).opacity === "1")), "reduced motion: panel content is visible without entrances");
   await p.close();
-  // contrast from the palette in portfolio.css: ink, white, hot, dim (white at alpha, composited over its background)
-  const css = fs.readFileSync(path.join(root, "portfolio.css"), "utf8");
+
+  // 8. without WebGL: the poster shows, nothing errors, everything reads
+  p = await page({}, null, BASE, 1500, "domcontentloaded");
+  await p.close();
+  const ctxNoGl = await b.newContext({ viewport: { width: 1440, height: 900 } });
+  await ctxNoGl.addInitScript(() => { const g = HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function (t, ...a) { return /webgl/.test(t) ? null : g.call(this, t, ...a); }; });
+  const q = await ctxNoGl.newPage(); q.on("pageerror", e => errors.push(String(e))); await q.goto(BASE, { waitUntil: "domcontentloaded" }); await q.waitForTimeout(1500);
+  assert(await q.evaluate(() => !document.documentElement.classList.contains("gl-on") && document.documentElement.classList.contains("entered") && getComputedStyle(document.querySelector(".poster")).display !== "none" && document.querySelector(".count").textContent !== "0"), "no WebGL: the poster stays, the page is entered, the counts are final");
+  await ctxNoGl.close();
+
+  // contrast from the tokens in home.css
+  const css = fs.readFileSync(path.join(root, "home.css"), "utf8");
   const tok = name => { const m = css.match(new RegExp(`--${name}:\\s*([^;]+);`)); return m && m[1].trim(); };
-  const rgb = v => v.startsWith("#") ? [1, 3, 5].map(i => parseInt(v.slice(i, i + 2), 16)).concat(1) : v.match(/[\d.]+/g).map(Number).concat(1).slice(0, 4);
-  const over = (fg, bg) => fg.slice(0, 3).map((c, i) => c * fg[3] + bg[i] * (1 - fg[3]));
+  const rgb = v => [1, 3, 5].map(i => parseInt(v.slice(i, i + 2), 16));
   const L = c => { const v = c.map(x => x / 255).map(x => x <= .03928 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4); return .2126 * v[0] + .7152 * v[1] + .0722 * v[2]; };
-  const ratio = (fg, bg) => { const b = rgb(tok(bg)), a = L(over(rgb(tok(fg)), b)), c = L(b); return (Math.max(a, c) + .05) / (Math.min(a, c) + .05); };
-  assert(tok("ink") === "#07070c" && tok("white") === "#ffffff" && tok("hot") === "#ff4d00", `palette tokens: ink ${tok("ink")}, white ${tok("white")}, hot ${tok("hot")}`);
-  const pairs = [["white", "ink"], ["dim", "ink"], ["dim", "ink-2"], ["hot", "ink"], ["ink", "hot"], ["ink", "white"], ["white", "ink-2"]].map(([f, g]) => [f + " on " + g, ratio(f, g)]);
+  const ratio = (fg, bg) => { const a = L(rgb(tok(fg))), c = L(rgb(tok(bg))); return (Math.max(a, c) + .05) / (Math.min(a, c) + .05); };
+  const pairs = [["on-red", "red"], ["ink", "paper"], ["ink", "paper-2"]].map(([f, g]) => [f + " on " + g, ratio(f, g)]);
   assert(pairs.every(([, v]) => v >= 4.5), "every text pairing in the palette clears 4.5:1: " + pairs.map(([k, v]) => k + " " + v.toFixed(2)).join(", "));
 
-  // 4. the catalogue with JavaScript
+  // 9. the archive with JavaScript
   p = await page({}, null, ALL);
   const catContrast = await p.evaluate(contrastOf, [".section-lede", ".tile-kind", ".tile-title", ".tile-gh", ".count", ".kind-tab[aria-pressed=false]", ".view-btn[aria-pressed=false]", ".foot", "#search"]);
-  assert(catContrast.every(([, v]) => +v >= 4.5), "catalogue text clears 4.5:1: " + catContrast.map(x => x.join(" ")).join(", "));
-  // thumbnails are sharp: the first batch has loaded at least twice its displayed width, in true colour (no filter)
+  assert(catContrast.every(([, v]) => +v >= 4.5), "archive text clears 4.5:1: " + catContrast.map(x => x.join(" ")).join(", "));
   await p.evaluate(() => scrollTo(0, 400)); await p.waitForTimeout(1200);
   const sharp = await p.$$eval(".tile:not(.is-beyond) img.tile-thumb", is => is.filter(i => i.getBoundingClientRect().top < innerHeight).map(i => [i.complete && i.naturalWidth, i.getBoundingClientRect().width, getComputedStyle(i).filter]));
-  assert(sharp.length >= 3 && sharp.every(([nw, w, f]) => nw >= 2 * w - 2 && f === "none"), `catalogue thumbnails load at 2x their size with no filter (${sharp.map(x => x[0] + "/" + Math.round(x[1])).join(", ")})`);
-  // the nav steps away while scrolling down and returns on scroll up
-  await p.evaluate(() => scrollTo(0, 1200)); await p.waitForTimeout(500);
-  const away = await p.evaluate(() => document.getElementById("nav").classList.contains("is-away"));
-  await p.evaluate(() => scrollTo(0, 900)); await p.waitForTimeout(500);
-  assert(away && await p.evaluate(() => !document.getElementById("nav").classList.contains("is-away")), "the nav steps away on scroll down and comes back on scroll up");
+  assert(sharp.length >= 3 && sharp.every(([nw, w, f]) => nw >= 2 * w - 2 && f === "none"), `archive thumbnails load at 2x their size with no filter (${sharp.map(x => x[0] + "/" + Math.round(x[1])).join(", ")})`);
   await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(300);
-  // the catalogue: progressive reveal, search, filter, detail dialog with history and focus restoration
   const visibleTiles = () => p.$$eval(".tile", els => els.filter(e => getComputedStyle(e).display !== "none").length);
   const firstShown = await visibleTiles();
-  assert(firstShown === 12 && !(await p.$eval("#more", btn => btn.hidden)) && await p.$eval("#shown", e => e.textContent) === `12 of ${slugs.length} shown`, `catalogue starts with ${firstShown} projects and an accurate count`);
+  assert(firstShown === 12 && !(await p.$eval("#more", btn => btn.hidden)) && await p.$eval("#shown", e => e.textContent) === `12 of ${slugs.length} shown`, `archive starts with ${firstShown} projects and an accurate count`);
   const cols = await p.evaluate(() => getComputedStyle(document.getElementById("tiles")).gridTemplateColumns.split(" ").length);
   assert(12 % cols === 0, `the first batch fills complete rows at this width (${cols} columns)`);
   await jump(p, "#more", "center"); await p.evaluate(() => scrollBy(0, 300)); await p.waitForTimeout(800);
@@ -242,7 +205,6 @@ const contrastOf = sels => {
   assert(await p.$$eval(".tile:not([hidden])", els => els.every(e => e.dataset.kind === "SQL")) && await p.$eval(".kind-tab[data-kind='SQL']", btn => btn.getAttribute("aria-pressed") === "true"), "the kind filter keeps only that kind and the kind tab follows the select");
   await p.click(".kind-tab[data-kind='Python']"); await p.waitForTimeout(400);
   assert(await p.$eval("#kind", s => s.value) === "Python" && await p.$$eval(".tile:not([hidden])", els => els.every(e => e.dataset.kind === "Python")), "a kind tab sets the select");
-  // the query language: clauses over the repository facts
   await p.selectOption("#kind", ""); await p.fill("#search", "language:python year:2026 commits>8"); await p.waitForTimeout(200);
   assert(await p.$$eval(".tile:not([hidden])", els => els.length > 0 && els.every(e => e.dataset.lang === "Python" && e.dataset.year === "2026" && +e.dataset.commits > 8)), "a clause query keeps only matching repositories");
   await p.fill("#search", "kind:sql live:yes"); await p.waitForTimeout(200);
@@ -286,7 +248,7 @@ const contrastOf = sels => {
   assert(!prevented.meta && prevented.plain, "cmd-click stays a native link; a plain click opens the detail");
   await p.close();
 
-  // 5. deep links and old addresses: #<slug> on all.html opens that project; the home's old #<slug>, #projects, ?kind= forward to all.html
+  // 10. deep links and old addresses
   p = await page({}, null, ALL + "#sec-10k-rag", 1500);
   assert(await p.evaluate(() => document.getElementById("detail").open) && await p.$eval("#detail-title", e => e.textContent) === "Ask the 10-K", "a direct link all.html#sec-10k-rag opens that project");
   const urlBefore = p.url().split("#")[0], lenDirect = await p.evaluate(() => history.length);
@@ -297,29 +259,32 @@ const contrastOf = sels => {
   assert(steppedFrom[1] === lenDirect && !steppedFrom[2] && !afterClose[0] && afterClose[1] === "" && afterClose[2].split("#")[0] === urlBefore, `a direct link, then Next (${steppedFrom[0]}), then Close stays on the page and closes in place (history ${lenDirect})`);
   await p.close();
   p = await page({}, null, BASE + "#sec-10k-rag", 1500);
-  assert(/all\.html#sec-10k-rag$/.test(p.url()) && await p.evaluate(() => document.getElementById("detail").open), `an old home link #sec-10k-rag forwards to the catalogue with the project open (${p.url()})`);
+  assert(/all\.html#sec-10k-rag$/.test(p.url()) && await p.evaluate(() => document.getElementById("detail").open), `an old home link #sec-10k-rag forwards to the archive with the project open (${p.url()})`);
   await p.close();
   p = await page({}, null, BASE + "#projects", 1000);
   assert(/all\.html$/.test(p.url()), `the old #projects address forwards to all.html (${p.url()})`);
   await p.close();
-  p = await page({}, null, BASE + "archive/?q=spark", 1500);
-  assert(/all\.html/.test(p.url()), `the archive address forwards to the catalogue (${p.url()})`);
-  await p.close();
   p = await page({}, null, BASE + "?kind=SQL", 1500);
-  assert(/all\.html\?kind=SQL$/.test(p.url()) && await p.$eval("#kind", s => s.value) === "SQL" && await p.$$eval(".tile:not([hidden])", els => els.length > 0 && els.every(e => e.dataset.kind === "SQL")), "?kind=SQL forwards to the catalogue and arrives filtered");
+  assert(/all\.html\?kind=SQL$/.test(p.url()) && await p.$eval("#kind", s => s.value) === "SQL" && await p.$$eval(".tile:not([hidden])", els => els.length > 0 && els.every(e => e.dataset.kind === "SQL")), "?kind=SQL forwards to the archive and arrives filtered");
   await p.close();
   p = await page({}, null, BASE + featured[0].slug + "/", 0);
   const nav = await p.$$eval("header.bar nav a", as => as.map(a => a.getAttribute("href")));
-  assert(nav.includes("../#feature-" + featured[0].slug) && nav.includes("../all.html"), "a flagship's case study links back to its own room on the home and to the index");
+  assert(nav.includes("../#feature-" + featured[0].slug) && nav.includes("../all.html"), "a flagship's case study links back to its own panel on the home and to the archive");
   assert(await p.$eval(".facts-strip", d => d.textContent.includes("Commits") && d.textContent.includes("Last push")), "the case study carries the repository facts strip");
   await p.close();
+  p = await page({}, null, BASE, 1500, "domcontentloaded");
+  await p.click(".panel:nth-of-type(1) h3 a"); await p.waitForLoadState("load"); await p.goBack(); await p.waitForLoadState("load"); await p.waitForTimeout(800);
+  assert(/index\.html$|\/$/.test(p.url().split("#")[0]) && await has(p, "entered") && !(await has(p, "opening")), "Back from a case study returns to the home without replaying the opening");
+  await p.close();
 
-  // 6. (reduced motion is checked with the gate, in 2b)
-  // 7. no horizontal overflow at the required breakpoints, on both pages
-  for (const url of [BASE, ALL]) for (const [w, h] of [[1440, 900], [1280, 800], [768, 1024], [390, 844], [360, 800]]) {
+  // 11. no horizontal overflow at the required breakpoints, on both pages; the phone composition keeps the panel copy on screen
+  for (const url of [BASE, ALL]) for (const [w, h] of [[1440, 900], [1280, 720], [768, 1024], [390, 844], [360, 800]]) {
     p = await page({ viewport: { width: w, height: h } }, null, url, 500);
     const sw = await p.evaluate(() => document.documentElement.scrollWidth);
-    assert(sw <= w, `${url.endsWith("all.html") ? "catalogue" : "home"} ${w}x${h}: no horizontal overflow (scrollWidth ${sw})`);
+    assert(sw <= w, `${url.endsWith("all.html") ? "archive" : "home"} ${w}x${h}: no horizontal overflow (scrollWidth ${sw})`);
+    if (url === BASE && w <= 390) { await jump(p, ".panel:nth-of-type(1)"); await p.waitForTimeout(900);
+      const r = await p.$eval(".panel:nth-of-type(1) .btns a.fill", a => { const q = a.getBoundingClientRect(); return [q.top, q.bottom, q.height]; });
+      assert(r[0] > 0 && r[1] <= h && r[2] >= 44, `${w}x${h}: the panel's primary button is on screen and at least 44px tall (${r.map(Math.round)})`); }
     await p.close();
   }
   await b.close();

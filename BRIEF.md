@@ -1,54 +1,45 @@
-# Portfolio brief (2026-10-24, fifth direction: THE HALL)
+# Portfolio brief (2026-10-25, sixth direction: THE BLOCK)
 
-Everything before this is history: no printed objects, no desk, no paper, no boarding pass, no colour fields, no dots, no
-cylinder tower. The owner's references for this pass: riseof.digital (a building you walk through, one room per service,
-an elevator between), kprverse.com (huge type, bordered frames, chapters), persepolis.getty.edu (a scroll-driven film with
-an Enter gate, a sound choice, one line of copy per scene, no gaps).
-This file is the spec; the research behind it is in `~/projects-site-evidence/tower-2026-10-24/RESEARCH.md` (the Awwwards
-crawl and the 690 Webflow templates) and `~/projects-site-evidence/index-2026-10-24/RESEARCH.md` (the earlier passes).
+Everything before this is history: no printed objects, no desk, no colour fields with objects, no dots field, no cylinder
+tower, no hall of screens. The owner's rules for this pass: LOUD COLOUR, ONE DOMINANT 3D OBJECT, HUGE TYPE, LITTLE TEXT,
+NO BLUR, NO THUMBNAILS. The references: riseof.digital, kprverse.com, persepolis.getty.edu, en.manayerbamate.com, lusion.co
+(principles only). The method: `design/art-direction.md` (thesis, candidates, tokens), `design/storyboard.md` (the
+entrance's five states, the chapters, the motion score), `design/SOURCES.md` (the source and skill ledger),
+`docs/REVIEW.md` (the review pass), `docs/EVIDENCE.md` (the requirements matrix), `docs/PERFORMANCE.md`.
 
 ## Positioning
-Rishit Raj Mathur, data analyst, Tampa. The claim the site makes in one line: **Every number, checked against its source.**
-Below it, the facts: 224 case studies, 219 public repositories. Audience: recruiters, hiring managers and technical reviewers
-for data and business analyst roles. The first screen must show, in under five seconds, the size of the body of work and
-that it is real. Desired actions: open a flagship case study, query the index, download the résumé, contact.
+Rishit Raj Mathur, data analyst, Tampa. The line under the name: data analyst in Tampa, every number on this site was
+checked against its source. The facts: 224 case studies, 219 public repositories (read from the data at build time).
+Audience: recruiters, hiring managers and technical reviewers for data and business analyst roles. Desired actions: open
+a flagship case study, search the archive, download the résumé, write.
 
 ## The one idea
-**The work is a hall you walk down, and the walk is a film.** Every one of the 224 case studies is a screen on the hall's
-walls; the four showcased projects are rooms where their own dashboard plays live on the wall.
-- The gate: a ring fills as the 224 screens load (real bytes), then "Enter with sound" or "Enter in silence". Nothing
-  else on screen. This is the first frame.
-- The flight: 4.6 s from above the hall down to eye level, the screens coming on ahead of the camera, grain and
-  aberration settling, the statement rising as the camera lands. Wheel, touch or key skips it.
-- The walk: scroll scrubs the camera (GSAP ScrollTrigger over Lenis). Between rooms a title card asks the project's
-  question in one line, letters rising; in the room the camera turns to the wall where the project's screen hangs,
-  drawn live from its motion scene with a CRT pass; the number counts up, the word and copy rise. Four rooms, alternating
-  walls. Then Method (three beats under a sweeping light), About, the end wall (every wall screen leaves the wall and
-  assembles into one grid; point at any screen to see its name, click to open it), and Contact with the lights going down.
-- Sound is a choice: a low bed, a riser for the flight, a ping per chapter. Off by default; the choice is remembered.
-- The HUD: name and role, three nav items, the live strip, a chapter counter with the chapter's name, a cursor ring.
+**The body of work is one block of record slips, and each project machines it.** 1,440 thin slips stand as one solid on
+a loud red field with the name above it. Scrolling into each flagship performs that project's method on the block:
+the flight-delay star schema cuts it (SLICE), the dbt pipeline delaminates it into strata and lights 31 tests (LAYER),
+the forecast bends it into a monthly series with a fanned range (BEND), the 10-K retrieval opens it and lifts the cited
+slip (OPEN). The check chapter cuts the block at the published on-time rate for a departure hour the visitor picks (HOUR).
+The archive spreads it into a sheet with 224 lit (SHEET). Contact rests it. The field alternates red and grey paper by
+chapter and the block inverts with it.
 
-## The signature: the source line
-One hot line (#FF4D00) and nothing else in that colour. It runs down the ceiling of the hall, drops beside each room's
-screen into a physical gauge (min to max, a marker that rides to the figure, a plate naming the evidence), and is drawn
-under every number in the copy to the fraction it proves. Four rooms, four stagings: wall, floor, ahead, float. Wall
-screens turn to face the visitor as they pass. Each room shows its facts one at a time. House rules from the taste
-skill: no eyebrows, no index numbers, no glass, no gradients, no hairlines, no tracked caps, five type sizes, mono for
-data only. The phone is its own cut: screen in the top half, words below.
+The entrance: the HTML first frame (name, line, card with the counts and two actions, the poster of the block), then the
+slips fly in, a plane of light sweeps through them once (the check) and the two counts roll; wheel, touch, key or the
+Skip button ends it; it plays once per session and never under reduced motion.
 
 ## Art direction
-- Colour: **ink #07070C**, **white #FFFFFF**, one hot accent **#FF4D00** for the first meta word, underlines and the one
-  filled button. Dim white at 62% for secondary data. Nothing else; the screens carry all the colour.
-- Type: **Bricolage Grotesque** (variable) for words, display at wdth 75, wght 800; **JetBrains Mono** for data. Self-hosted.
-- The world: Three.js r170, two instanced meshes (one per 4096 px atlas), a custom shader (frame, back-face dimming,
-  scan-line, fog), a mirror copy under a floor with a grid and a glow, dust, and one post pass (grain, vignette, chromatic
-  aberration that grows with scroll speed). Adaptive DPR; a still of each flagship's cover is shown without WebGL.
-- Motion: one easing for entrances `cubic-bezier(0.16, 1, 0.3, 1)`, one for travel `cubic-bezier(0.65, 0, 0.35, 1)`; the
-  world eases with a frame-rate-independent lerp; nothing animates layout. Reduced motion: no opening, poses only.
-- Banned: cards, gradients, glass, device mock-ups, marquees, stock photography, the six-section template, custom cursors,
-  autoplay sound, em dashes, "leverage/seamless/unlock" copy, claims not in the résumé.
+- Colour: paper #e4e4e4 and #d6d6d6; red #cf2419 (the field, the block on paper, the one filled button); oxblood #7d0c14
+  text on paper; #f0f0f0 text and block on red. Nothing else.
+- Type: General Sans (Fontshare, ITF Free Font License) for everything; Archivo vendored as the fallback; Geist only
+  inside the projects' own interface fragments. Steps: --xl, --lg, --lead, --body 16px, --small 14px.
+- The object: Three.js r170, one InstancedMesh, Lambert, no post pass, transparent canvas; pixel ratio 1 rising to 1.5
+  with headroom; the poster (`assets/block-poster.webp`, rendered by `tools/poster.cjs`) stands in before WebGL and
+  without it.
+- Motion: one owner per property (block.js the instances, CSS the DOM, GSAP the opening only); native scroll, no Lenis,
+  no ScrollTrigger; entrances cubic-bezier(0.16, 1, 0.3, 1), travel cubic-bezier(0.65, 0, 0.35, 1).
+- Banned: gradients, glass, blur, thumbnails, cards as structure, eyebrows, numbering, monospace outside the fragments,
+  custom cursors, autoplay sound, em dashes, claims not in the résumé or a repository.
 
 ## Gate
-Real screenshots at 1440x900, 768x1024 and 390x844 of every scene, read by a person; recordings of the opening and the
-flight; zero console errors; 60 fps pacing on desktop; the suite green; Lighthouse measured, not invented; the owner's
-visual approval before anything is published.
+Real screenshots at 1440x900, 768 or 1024 wide, 390x844 and 844x390, reduced motion, no JavaScript, no WebGL, read by a
+person; frame pacing on a stated machine; the suite green; Lighthouse measured; the owner's visual approval before
+anything is published.
