@@ -284,18 +284,21 @@ def home_page(projects):
         if p.get("demo"):
             links.append(f'<a class="btn" href="{escape(demo_url(p))}">{escape(p.get("demo_label", "Demo"))}</a>')
         side = "right" if i % 2 else "left"   # the screen hangs on the left wall for odd rooms, so the copy sits right
+        first = lambda t: t.split(". ")[0].rstrip(".") + "."
+        facts = [first(f["problem"]), first(f["contribution"].replace("Solo project. ", "")), (f["result"].split(". ") + [""])[1].rstrip(".") + "." if len(f["result"].split(". ")) > 1 else sc["note"]]
+        facts_html = "".join(f'<p class="fact line" data-at="{0.3 + k * 0.22:.2f}">{escape(t)}</p>' for k, t in enumerate(facts))
+        frac = (sc["value"] - sc.get("min", 0)) / max(1e-9, sc["max"] - sc.get("min", 0))
         feats.append(
             f'<section class="scene card" data-cam="card" data-n="{i}" aria-hidden="true"><div class="scene-in">'
-            f'<p class="mono meta"><span>{i:02d} / 04</span><span>{escape(f["area"])}</span></p>'
-            f'<p class="display card-line">{escape(f["card"])}</p></div></section>'
-            f'<section class="scene room" id="feature-{p["slug"]}" data-cam="room" data-n="{i}" data-side="{side}" data-slug="{p["slug"]}" data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" '
-            f'data-title="{escape(p["title"], quote=True)}" aria-labelledby="t-{p["slug"]}">'
+            f'<p class="display card-line">{escape(f["card"])}</p><p class="line card-sub">{escape(f["area"])}: {escape(p["title"])}</p></div></section>'
+            f'<section class="scene room" id="feature-{p["slug"]}" data-cam="room" data-n="{i}" data-side="{side}" data-stage="{f["stage"]}" data-slug="{p["slug"]}" data-value="{sc["value"]}" data-unit="{escape(sc["unit"], quote=True)}" '
+            f'data-frac="{frac:.4f}" data-evidence="{escape(sc["evidence"], quote=True)}" data-min="{sc.get("min", 0)}" data-max="{sc["max"]}" data-title="{escape(p["title"], quote=True)}" aria-labelledby="t-{p["slug"]}">'
             f'<div class="scene-in">'
-            f'<p class="mono meta"><span>{i:02d} / 04</span><span>{escape(f["area"])}</span><span>{escape(sc["metric"])}</span></p>'
-            f'<p class="num mono"><span class="num-v">{big}</span><span class="num-u">{escape(unit)}</span></p>'
+            f'<p class="num mono" style="--frac:{frac:.4f}"><span class="num-v">{big}</span><span class="num-u">{escape(unit)}</span><span class="num-metric">{escape(sc["metric"])}</span></p>'
             f'<h2 class="display">{escape(f["word"])}</h2>'
             f'<div class="copy"><h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3><p class="line">{line}</p>'
-            f'<p class="mono small">{escape(sc["note"])}</p><p class="btns">{"".join(links)}</p></div>'
+            f'<div class="facts">{facts_html}</div>'
+            f'<p class="small note">{escape(sc["note"])}</p><p class="btns">{"".join(links)}</p></div>'
             f'<img class="still" src="{p["slug"]}/cover-800.webp" alt="Screenshot of {escape(p["title"], quote=True)}" width="{webp_size(ROOT / p["slug"] / "cover-800.webp")[0]}" height="{webp_size(ROOT / p["slug"] / "cover-800.webp")[1]}" loading="lazy" decoding="async">'
             f'</div></section>')
         scenes.append(f'<script src="motion/scenes/{p["slug"]}.js?v={asset_version("motion/scenes/" + p["slug"] + ".js")}" defer></script>')

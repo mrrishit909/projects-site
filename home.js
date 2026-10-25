@@ -59,7 +59,7 @@ import { createWorld } from "./world.js";
   /* ---- the world ---- */
   const ATLAS = JSON.parse($("atlas-data").textContent), ITEMS = ATLAS.items;
   const roomEls = scenes.filter(s => s.dataset.cam === "room");
-  const flagships = roomEls.map((s, i) => ({ slug: s.dataset.slug, side: s.dataset.side === "right" ? -1 : 1, z: -9 - i * 12, el: s }));
+  const flagships = roomEls.map((s, i) => ({ slug: s.dataset.slug, side: s.dataset.side === "right" ? -1 : 1, stage: s.dataset.stage, z: -9 - i * 12, el: s, frac: +s.dataset.frac || 1, evidence: s.dataset.evidence || "", min: s.dataset.min, max: s.dataset.max, unit: s.dataset.unit || "" }));
   const gated = root.classList.contains("gated");
   const gateN = $("gate-n"), ring = $("ring"), gateLabel = $("gate-label");
   const RING = 351.86;
@@ -85,9 +85,15 @@ import { createWorld } from "./world.js";
 
   /* ---- poses ---- */
   const V = (x, y, z) => ({ x, y, z });
+  /* each room is staged differently, and the camera keeps moving inside it as the visitor scrolls (u is 0..1 through the room) */
+  const roomPose = (f, u) => { const ph = phone(), z = f.z, s = f.side, e = sm(cl(u));
+    if (f.stage === "floor") return ph ? { eye: V(0, 5.6 - e * 0.6, z + 6.2 - e * 1.5), aim: V(0, 0, z + 1.5), fov: 72 } : { eye: V(-1.6, 6.4 - e * 1.0, z + 4.8 - e * 2.2), aim: V(0.6, 0.2, z - 0.6), fov: 56 };
+    if (f.stage === "ahead") return ph ? { eye: V(0, 3.2, z + 10 - e * 4.5), aim: V(0, 1.2, z - 4), fov: 70 } : { eye: V(1.4, 3.5, z + 10 - e * 6), aim: V(-0.6, 3.6, z - 4), fov: 50 };
+    if (f.stage === "float") { const a = -0.7 + e * 1.4, r = ph ? 7.6 : 5.4; return { eye: V(Math.sin(a) * r, (ph ? 3.6 : 3.9) + e * 0.5, z + Math.cos(a) * r), aim: V(0, ph ? 1.6 : 3.9, z), fov: ph ? 74 : 52, spin: -a * 0.35 }; }
+    return ph ? { eye: V(-s * 0.3, 4.6, z + 5.6 - e * 1.2), aim: V(s * 5.2, 1.8, z - 0.4), fov: 72 } : { eye: V(-s * 1.2, 3.3, z + 4.2 - e * 1.5), aim: V(s * 5.2, 3.5, z - 0.1 - e * 0.6), fov: wide() ? 50 : 58 }; };
   const POSE = () => { const ph = phone(), H = world ? world.HALL : { w: 11 };
-    const R = flagships.map(f => ph ? { eye: V(-f.side * 0.3, 4.4, f.z + 4.8), aim: V(f.side * 5.2, 2.6, f.z - 0.4), fov: 70 } : { eye: V(-f.side * 1.2, 3.3, f.z + 4.2), aim: V(f.side * 5.2, 3.5, f.z - 0.1), fov: wide() ? 50 : 58 });
-    return { H0: ph ? { eye: V(0, 3.3, 8), aim: V(0, 3.6, -40), fov: 64 } : { eye: V(0, 3.3, 7), aim: V(0, 3.4, -40), fov: 50 }, R,
+    const R = flagships.map(f => roomPose(f, 0)), RE = flagships.map(f => roomPose(f, 1));
+    return { RE, H0: ph ? { eye: V(0, 3.3, 8), aim: V(0, 3.6, -40), fov: 64 } : { eye: V(0, 3.3, 7), aim: V(0, 3.4, -40), fov: 50 }, R,
       M: ph ? { eye: V(0, 2.4, -50), aim: V(0, 6.4, -64), fov: 72 } : { eye: V(0, 2.4, -50), aim: V(0, 6.2, -64), fov: 56 },
       A: ph ? { eye: V(0, 3.4, -55), aim: V(0, 3.4, -75), fov: 60 } : { eye: V(0, 3.4, -55), aim: V(0, 3.4, -75), fov: 46 },
       I: ph ? { eye: V(0, 8.8, -24), aim: V(0, 9.4, -70), fov: 66 } : { eye: V(0, 8.5, -34), aim: V(0, 9.2, -70), fov: 50 },
@@ -97,21 +103,21 @@ import { createWorld } from "./world.js";
   const keysFor = (s, i) => { const k = s.dataset.cam, n = +s.dataset.n - 1; const prev = i ? lastPose(scenes[i - 1]) : "H0";
     if (k === "hero") return [[0, "H0"], [1, "H0"]]; if (k === "card") return [[0, prev], [1, "R" + n]]; if (k === "room") return [[0, "R" + n], [1, "R" + n]];
     if (k === "method") return [[0, prev], [0.62, "M"], [1, "A"]]; if (k === "about") return [[0, "A"], [1, "A"]]; if (k === "index") return [[0, "A"], [0.55, "I"], [1, "I"]]; return [[0, "I"], [0.55, "C"], [1, "C"]]; };
-  const lastPose = s => { const k = s.dataset.cam, n = +s.dataset.n - 1; return k === "hero" ? "H0" : k === "card" || k === "room" ? "R" + n : k === "method" ? "A" : k === "about" ? "A" : k === "index" ? "I" : "C"; };
-  const P = name => name[0] === "R" ? poses.R[+name.slice(1)] : poses[name];
+  const lastPose = s => { const k = s.dataset.cam, n = +s.dataset.n - 1; return k === "hero" ? "H0" : k === "card" ? "R" + n : k === "room" ? "E" + n : k === "method" ? "A" : k === "about" ? "A" : k === "index" ? "I" : "C"; };
+  const P = name => name[0] === "R" ? poses.R[+name.slice(1)] : name[0] === "E" ? poses.RE[+name.slice(1)] : poses[name];
   const blend = (a, b, t) => ({ eye: V(lerp(a.eye.x, b.eye.x, t), lerp(a.eye.y, b.eye.y, t), lerp(a.eye.z, b.eye.z, t)), aim: V(lerp(a.aim.x, b.aim.x, t), lerp(a.aim.y, b.aim.y, t), lerp(a.aim.z, b.aim.z, t)), fov: lerp(a.fov, b.fov, t) });
 
   /* where in the walk the scroll is: section index and 0..1 within its sticky span */
   const where = () => { const y = scrollY; let i = 0, u = 0;
     for (let k = 0; k < scenes.length; k++) { const s = scenes[k]; if (s.offsetTop <= y + 1) { i = k; u = cl((y - s.offsetTop) / Math.max(1, s.offsetHeight - innerHeight)); } }
     return { i, u }; };
-  const poseAt = (i, u) => { const ks = keysFor(scenes[i], i); let seg = 0; while (seg < ks.length - 2 && u > ks[seg + 1][0]) seg++; const [u0, a] = ks[seg], [u1, b] = ks[seg + 1]; const t = u1 > u0 ? sm(cl((u - u0) / (u1 - u0))) : 1; return a === b ? P(a) : blend(P(a), P(b), t); };
+  const poseAt = (i, u) => { if (scenes[i].dataset.cam === "room") return roomPose(flagships[+scenes[i].dataset.n - 1], u); const ks = keysFor(scenes[i], i); let seg = 0; while (seg < ks.length - 2 && u > ks[seg + 1][0]) seg++; const [u0, a] = ks[seg], [u1, b] = ks[seg + 1]; const t = u1 > u0 ? sm(cl((u - u0) / (u1 - u0))) : 1; return a === b ? P(a) : blend(P(a), P(b), t); };
 
   /* ---- chapters, cards, rooms, beats ---- */
   const chapterN = $("chapter-n"), chapterName = $("chapter-name"), hint = $("hint"), nav = $("nav");
   const chapterOf = s => { const k = s.dataset.cam; if (k === "hero") return ["00", "Entrance"]; if (k === "card" || k === "room") return [s.dataset.n.padStart(2, "0"), k === "card" ? "Next" : s.dataset.title]; return { method: ["05", "Method"], about: ["06", "About"], index: ["07", "Index"], contact: ["08", "Contact"] }[k]; };
   let curChapter = -1;
-  const setChapter = i => { if (i === curChapter) return; const [n, name] = chapterOf(scenes[i]); chapterN.textContent = n; chapterName.textContent = name; if (curChapter >= 0 && scenes[i].dataset.cam !== "card") sound.ping(i); curChapter = i; };
+  const setChapter = i => { if (i === curChapter) return; const [n, name] = chapterOf(scenes[i]); chapterN.textContent = n; chapterName.textContent = name; const tk = document.querySelector("#chapter .tick"); if (tk) { tk.style.transform = "scaleX(0)"; requestAnimationFrame(() => { tk.style.transform = "scaleX(" + (0.25 + 0.75 * (i / (scenes.length - 1))) + ")"; }); } if (curChapter >= 0 && scenes[i].dataset.cam !== "card") sound.ping(i); curChapter = i; };
   // title cards: characters rise as the camera walks, then fall away before the room
   document.querySelectorAll(".card .card-line").forEach(el => { const words = el.textContent.split(" "); el.textContent = ""; words.forEach((w, wi) => { const ws = document.createElement("span"); ws.style.whiteSpace = "nowrap"; [...w].forEach(c => { const cs = document.createElement("span"); cs.className = "ch"; cs.textContent = c; ws.appendChild(cs); }); el.appendChild(ws); if (wi < words.length - 1) el.appendChild(document.createTextNode(" ")); }); });
   if (hasGsap && !reduced) scenes.filter(s => s.dataset.cam === "card").forEach(card => {
@@ -156,7 +162,7 @@ import { createWorld } from "./world.js";
   const tick = t => {
     requestAnimationFrame(tick);
     const { i, u } = where(); const s = scenes[i], k = s.dataset.cam;
-    if (i !== cur) { cur = i; setChapter(i); if (k === "room") { const c = counters[roomEls.indexOf(s)]; if (c && c.counts && !c.t0) c.t0 = t; } }
+    if (i !== cur) { cur = i; setChapter(i); if (k === "room") { const c = counters[roomEls.indexOf(s)]; if (c && !c.t0) c.t0 = t; } }
     const y = scrollY; vel = lerp(vel, Math.abs(y - lastY), 0.3); if (Math.abs(y - lastY) > 6) { nav.classList.toggle("is-away", y > lastY && y > innerHeight * 0.6); lastY = y; }
     hint.style.opacity = y > 60 ? "0" : "";
     let pose = poseAt(i, u);
@@ -168,9 +174,11 @@ import { createWorld } from "./world.js";
     const gridMix = k === "index" ? sm(cl((u - 0.08) / 0.5)) : k === "contact" ? 1 : 0;
     const dim = k === "contact" ? sm(cl((u - 0.15) / 0.7)) : 0;
     const sweepZ = k === "method" ? -36 - u * 36 : 999;
-    world.update(t, { eye, aim, fov: pose.fov, gridMix, wallLit: k === "room" ? 0.5 : 1, roomOn, dim, sweepZ, lightZ: intro.lightZ, sel: picked, ab: Math.min(0.012, vel * 0.0003) + (intro.running ? 0.008 : 0), fade: intro.fade });
+    const gauge = counters.map(c => c.t0 ? cl((t - c.t0) / 1500) : 0);
+    world.update(t, { eye, aim, fov: pose.fov, gridMix, wallLit: k === "room" ? 0.5 : 1, roomOn, dim, sweepZ, lightZ: intro.lightZ, sel: picked, ab: Math.min(0.012, vel * 0.0003) + (intro.running ? 0.008 : 0), fade: intro.fade, gauge, spin: pose.spin || 0 });
     if (k === "method") beats.forEach((b, bi) => b.classList.toggle("is-on", Math.min(2, Math.floor(u * 3)) === bi));
-    for (const c of counters) if (c.counts && c.t0 && !c.done) { const q = cl((t - c.t0) / 1500), e = 1 - Math.pow(1 - q, 3); c.v.textContent = q < 1 ? (c.end * e).toFixed(c.dec) : c.final; if (q >= 1) c.done = true; }
+    if (k === "room") s.querySelectorAll(".fact").forEach(f => f.classList.toggle("is-on", u >= +f.dataset.at));
+    for (const c of counters) if (c.t0 && !c.done) { const q = cl((t - c.t0) / 1500), e = 1 - Math.pow(1 - q, 3); if (c.counts) c.v.textContent = q < 1 ? (c.end * e).toFixed(c.dec) : c.final; if (q >= 1) c.done = true; }
     if (fine) { ptr.x = lerp(ptr.x, ptr.tx, 0.35); ptr.y = lerp(ptr.y, ptr.ty, 0.35); cursor.style.transform = `translate(${ptr.x}px, ${ptr.y}px)`; }
   };
   requestAnimationFrame(tick);

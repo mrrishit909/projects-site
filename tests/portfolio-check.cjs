@@ -69,7 +69,7 @@ const contrastOf = sels => {
   assert(await p.$$eval(".scene.room", els => els.every(e => e.querySelector(".num-v") && e.querySelector(".display") && e.querySelector("h3 a") && e.querySelector(".btns a") && e.querySelector("h3 a").getAttribute("href") === e.dataset.slug + "/" && e.dataset.title === e.querySelector("h3 a").textContent)), "each room has its number, headline, title link to its case study and buttons");
   assert(await p.$$eval(".scene", els => els.every(e => getComputedStyle(e).color === "rgb(255, 255, 255)")), "no-JS: every scene is readable white on ink");
   assert(await p.$$eval(".room .scene-in > *, .beat", els => els.every(e => getComputedStyle(e).opacity === "1")), "no-JS: room copy and all three method beats are visible");
-  assert(await p.$$eval(".room", els => els.map(e => e.querySelector(".num").textContent.replace(/\s/g, ""))).then(t => t.every((x, i) => x === `${featured[i].scale.value}${featured[i].scale.unit}`.replace(/\s/g, ""))), "each room shows the figure in featured.json");
+  assert(await p.$$eval(".room", els => els.map(e => (e.querySelector(".num-v").textContent + e.querySelector(".num-u").textContent).replace(/\s/g, ""))).then(t => t.every((x, i) => x === `${featured[i].scale.value}${featured[i].scale.unit}`.replace(/\s/g, ""))), "each room shows the figure in featured.json");
   assert(await p.$$eval(".room .display", els => els.map(e => e.textContent)).then(t => t.every((x, i) => x === featured[i].word)), "each room carries its one-word headline");
   assert(await p.$$eval(".scene.room .still", is => is.length === 4 && is.every(i => getComputedStyle(i).display !== "none" && i.getAttribute("src") === i.closest(".room").dataset.slug + "/cover-800.webp")) && featured.every(f => fs.existsSync(path.join(root, f.slug, "cover-800.webp"))), "no-JS (no WebGL): each room shows its still, <slug>/cover-800.webp, and the file exists");
   assert(await p.$$eval("#method .beat", bs => bs.length === 3), "the method has three beats");
@@ -144,7 +144,7 @@ const contrastOf = sels => {
   for (let i = 0; i < 4; i++) {
     await jump(p, "#feature-" + featured[i].slug); await p.waitForTimeout(1900);
     const wantN = `${featured[i].scale.value}${featured[i].scale.unit}`.replace(/\s/g, "");
-    const [num, inRooms, ch] = await p.evaluate(k => [document.querySelectorAll(".room")[k].querySelector(".num").textContent.replace(/\s/g, ""), [...document.querySelectorAll(".room")].map(r => r.classList.contains("is-in")), document.getElementById("chapter-n").textContent], i);
+    const [num, inRooms, ch] = await p.evaluate(k => [(r => (r.querySelector(".num-v").textContent + r.querySelector(".num-u").textContent).replace(/\s/g, ""))(document.querySelectorAll(".room")[k]), [...document.querySelectorAll(".room")].map(r => r.classList.contains("is-in")), document.getElementById("chapter-n").textContent], i);
     assert(num === wantN && inRooms.every((v, j) => v === (j === i)) && ch === String(i + 1).padStart(2, "0"), `room ${i + 1}: the number lands on ${wantN} (${num}), only this room is-in (${inRooms}), chapter ${ch}`);
   }
   await jump(p, "#method"); await p.waitForTimeout(600);

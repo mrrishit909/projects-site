@@ -143,21 +143,48 @@ export function createWorld({ canvas, ATLAS, ITEMS, flagships, phone, reduced })
     vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
     fragmentShader: `precision highp float; uniform float uOn; uniform float uDim; varying vec2 vUv; void main() { vec2 d = abs(vUv - 0.5) * 2.0; float a = (1.0 - smoothstep(0.55, 1.0, max(d.x, d.y))) * 0.16 * uOn * (1.0 - uDim); gl_FragColor = vec4(0.6, 0.6, 0.8, a); }`,
   });
+  /* the gauge: the source line made physical. A long orange bar from min to max, ticks, a white marker that rides to the
+     project's figure, and a plate naming the evidence. Built from primitives (the img2threejs way), one per room. */
+  const HOT = new THREE.Color(0xff4d00);
+  const makeGauge = (f, len) => {
+    const g = new THREE.Group();
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(len, 0.05, 0.05), new THREE.MeshBasicMaterial({ color: 0x2a2a33 })); g.add(bar);
+    const lit = new THREE.Mesh(new THREE.BoxGeometry(len, 0.07, 0.07), new THREE.MeshBasicMaterial({ color: HOT })); lit.position.x = -len / 2; lit.scale.x = 0.001; g.add(lit);
+    for (let k = 0; k <= 10; k++) { const t = new THREE.Mesh(new THREE.BoxGeometry(0.02, k % 5 ? 0.14 : 0.26, 0.02), new THREE.MeshBasicMaterial({ color: 0x8a8a95 })); t.position.set(-len / 2 + (k / 10) * len, -0.16, 0); g.add(t); }
+    const marker = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.34, 0.08), new THREE.MeshBasicMaterial({ color: 0xffffff })); marker.position.x = -len / 2; g.add(marker);
+    const cv = document.createElement("canvas"); cv.width = 1024; cv.height = 128; const c2 = cv.getContext("2d");
+    c2.fillStyle = "#0a0a10"; c2.fillRect(0, 0, 1024, 128); c2.fillStyle = "#ff4d00"; c2.fillRect(0, 0, 10, 128);
+    c2.font = "500 44px Geist, Helvetica, Arial, sans-serif"; c2.fillStyle = "#ffffff"; c2.fillText(f.evidence, 40, 58);
+    c2.font = "400 34px Geist, Helvetica, Arial, sans-serif"; c2.fillStyle = "#9d9da6"; c2.fillText(`${f.min} to ${f.max}${f.unit.trim().startsWith("of") ? "" : f.unit}, checked`, 40, 104);
+    const pt = new THREE.CanvasTexture(cv); pt.colorSpace = THREE.SRGBColorSpace;
+    const plate = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 0.3), new THREE.MeshBasicMaterial({ map: pt })); plate.position.set(-len / 2 + 1.2, -0.62, 0); g.add(plate);
+    g.userData = { lit, marker, len }; return g;
+  };
   const rooms = flagships.map((f, i) => {
     const def = (window.SCENES || {})[f.slug] || null, aspect = def ? def.aspect : 1.614;
     const W = phone() ? 1024 : 1536, H = Math.round(W / aspect);
     const cv = document.createElement("canvas"); cv.width = W; cv.height = H; const g = cv.getContext("2d");
     const texC = new THREE.CanvasTexture(cv); texC.colorSpace = THREE.SRGBColorSpace; texC.anisotropy = 8; texC.generateMipmaps = false; texC.minFilter = THREE.LinearFilter;
     const mat = CRT.clone(); mat.uniforms.uMap.value = texC; mat.uniforms.uDim = uni.dim;
-    const sw = phone() ? 6.0 : 7.4, sh = sw / aspect;
+    const stage = f.stage || "wall", sw = stage === "ahead" ? (phone() ? 7.6 : 9.2) : stage === "floor" ? (phone() ? 5.6 : 7.8) : (phone() ? 6.0 : 7.4), sh = sw / aspect;
     const mesh = new THREE.Mesh(new THREE.PlaneGeometry(sw, sh), mat);
     const back = new THREE.Mesh(new THREE.PlaneGeometry(sw + 1.4, sh + 1.4), new THREE.MeshBasicMaterial({ color: 0x0a0a10 }));
     const glow = new THREE.Mesh(new THREE.PlaneGeometry(sw * 1.5, sh * 1.6), glowMat.clone()); glow.material.uniforms.uDim = uni.dim;
     const grp = new THREE.Group(); grp.add(back, glow, mesh); back.position.z = -0.05; glow.position.z = -0.03;
+    const gauge = makeGauge(f, sw); gauge.position.set(0, -sh / 2 - 0.55, 0.02); grp.add(gauge);
     const side = f.side, z = f.z;
-    grp.position.set(side < 0 ? -HALL.w / 2 + 0.3 : HALL.w / 2 - 0.3, 3.6, z); grp.rotation.y = side < 0 ? Math.PI / 2 : -Math.PI / 2;
+    if (stage === "wall") { grp.position.set(side < 0 ? -HALL.w / 2 + 0.3 : HALL.w / 2 - 0.3, 3.6, z); grp.rotation.y = side < 0 ? Math.PI / 2 : -Math.PI / 2; }
+    else if (stage === "floor") { grp.position.set(0, 0.06, z - 0.5); grp.rotation.x = -Math.PI / 2; back.visible = false; }
+    else if (stage === "ahead") { grp.position.set(0, 3.6, z - 4); }
+    else { grp.position.set(0, 3.9, z); mesh.material.side = THREE.DoubleSide; back.material.side = THREE.DoubleSide; }
     scene.add(grp);
-    const r = { slug: f.slug, def, g, cv, W, H, texC, mesh, mat, glow, grp, z, S: null, ready: false, last: -1, t0: 0 };
+    // the drop: the ceiling's hot line comes down to this room's gauge
+    const gw = new THREE.Vector3(); grp.updateMatrixWorld(true); gauge.getWorldPosition(gw);
+    const dropH = stage === "floor" ? HALL.ceiling : HALL.ceiling - gw.y, drop = new THREE.Mesh(new THREE.BoxGeometry(0.035, dropH, 0.035), new THREE.MeshBasicMaterial({ color: HOT }));
+    // the drop hangs beside the screen's edge, never through it
+    const edge = stage === "wall" ? { x: gw.x - side * 0.05, z: gw.z + sw / 2 + 0.45 } : stage === "floor" ? { x: gw.x - sw / 2 - 0.5, z: gw.z } : stage === "ahead" ? { x: gw.x - sw / 2 - 0.5, z: gw.z + 0.1 } : { x: gw.x - sw / 2 - 0.6, z: gw.z };
+    drop.position.set(edge.x, HALL.ceiling - dropH / 2, edge.z); drop.scale.y = 0.001; scene.add(drop);
+    const r = { slug: f.slug, def, g, cv, W, H, texC, mesh, mat, glow, grp, gauge, drop, stage, z, S: null, ready: false, last: -1, t0: 0, frac: f.frac, spin0: grp.rotation.y };
     if (def) Promise.all([document.fonts.load("500 20px Geist"), document.fonts.load("400 20px Geist"), document.fonts.load('400 20px "Geist Mono"')]).catch(() => 0)
       .then(() => def.init ? def.init(W, H, window.T) : {}).then(S => { r.S = S || {}; r.ready = true; });
     return r;
@@ -216,17 +243,26 @@ export function createWorld({ canvas, ATLAS, ITEMS, flagships, phone, reduced })
     const ease = reduced ? 1 : 1 - Math.pow(0.004, dt);
     camera.position.set(pose.eye.x, pose.eye.y, pose.eye.z); AIM.set(pose.aim.x, pose.aim.y, pose.aim.z); camera.lookAt(AIM); if (Math.abs(camera.fov - pose.fov) > 0.01) { camera.fov = pose.fov; camera.updateProjectionMatrix(); }
     const A = layoutFor("hall"), B = layoutFor("grid"), mix = pose.gridMix;
+    const cz = camera.position.z, cx = camera.position.x;
     for (let i = 0; i < N; i++) {
       const o = i * 5, d = seed[i] * 0.35, m = sm(cl((mix - d) / 0.65));
-      for (let j = 0; j < 5; j++) now[o + j] = lerp(now[o + j], lerp(A[o + j], B[o + j], m), ease);
+      for (let j = 0; j < 5; j++) if (j !== 3) now[o + j] = lerp(now[o + j], lerp(A[o + j], B[o + j], m), ease);
+      // a wall screen turns to face the visitor as they pass, and settles back once they have gone by
+      let yaw = lerp(A[o + 3], B[o + 3], m);
+      if (m < 0.5) { const dz = now[o + 2] - cz, near = 1 - cl((Math.abs(dz + 2.5) - 1.5) / 5); if (near > 0) yaw = lerp(yaw, Math.atan2(cx - now[o], cz - now[o + 2]), near * 0.55); }
+      now[o + 3] = lerp(now[o + 3], yaw, ease);
       const a = ITEMS[i].a, kk = slot[i];
       P.set(now[o], now[o + 1] + (reduced ? 0 : Math.sin(time * 0.7 + seed[i] * 6.28) * 0.01 * mix), now[o + 2]);
       Q.setFromAxisAngle(UP, now[o + 3]); S.setScalar(now[o + 4]); M.compose(P, Q, S); meshes[a].setMatrixAt(kk, M); mirrors[a].setMatrixAt(kk, M);
       sels[a][kk] = lerp(sels[a][kk], i === pose.sel ? 1 : 0, ease);
     }
     for (let a = 0; a < atlasCount; a++) { meshes[a].instanceMatrix.needsUpdate = true; mirrors[a].instanceMatrix.needsUpdate = true; meshes[a].geometry.attributes.aSel.needsUpdate = true; meshes[a].material.uniforms.uTime.value = time; mirrors[a].material.uniforms.uTime.value = time; }
-    uni.wallLit.value = lerp(uni.wallLit.value, pose.wallLit, ease); uni.dim.value = lerp(uni.dim.value, pose.dim, ease); uni.sweepZ.value = pose.sweepZ; uni.lightZ.value = pose.lightZ;
-    rooms.forEach((r, i) => { const near = Math.abs(camera.position.z - r.z) < 26 && mix < 0.9; r.grp.visible = near; if (near && (frames % 2 === i % 2)) drawRoom(r, time, pose.roomOn === i); r.mat.uniforms.uTime.value = time; r.mat.uniforms.uOn.value = lerp(r.mat.uniforms.uOn.value, pose.roomOn === i ? 1 : 0.55, ease); r.glow.material.uniforms.uOn.value = r.mat.uniforms.uOn.value; });
+    uni.wallLit.value = lerp(uni.wallLit.value, pose.wallLit, ease); uni.dim.value = lerp(uni.dim.value, pose.dim, ease); uni.sweepZ.value = pose.sweepZ === 999 ? cz - 4 : pose.sweepZ; uni.lightZ.value = pose.lightZ;
+    rooms.forEach((r, i) => { const near = Math.abs(camera.position.z - r.z) < 26 && mix < 0.9; r.grp.visible = r.drop.visible = near; if (near && (frames % 2 === i % 2)) drawRoom(r, time, pose.roomOn === i); r.mat.uniforms.uTime.value = time; r.mat.uniforms.uOn.value = lerp(r.mat.uniforms.uOn.value, pose.roomOn === i ? 1 : 0.55, ease); r.glow.material.uniforms.uOn.value = r.mat.uniforms.uOn.value;
+      const gp = pose.gauge && pose.gauge[i] != null ? pose.gauge[i] : 0, u = r.gauge.userData, x = u.len * gp * r.frac;
+      u.lit.scale.x = lerp(u.lit.scale.x, Math.max(0.001, x / u.len), ease); u.lit.position.x = -u.len / 2 + (u.lit.scale.x * u.len) / 2; u.marker.position.x = lerp(u.marker.position.x, -u.len / 2 + x, ease);
+      r.drop.scale.y = lerp(r.drop.scale.y, pose.roomOn === i ? 1 : 0.001, ease);
+      if (r.stage === "float") r.grp.rotation.y = lerp(r.grp.rotation.y, (pose.spin || 0), ease); });
     dust.material.uniforms.uTime.value = time; shaftMat.uniforms.uTime.value = time;
     post.uniforms.uTime.value = time; post.uniforms.uAb.value = lerp(post.uniforms.uAb.value, pose.ab, 0.1); post.uniforms.uFade.value = pose.fade;
     renderer.setRenderTarget(rt); renderer.render(scene, camera); renderer.setRenderTarget(null); renderer.render(postScene, postCam);

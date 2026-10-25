@@ -63,16 +63,21 @@ A project's record sleeve on the home page, and the "Next project" link on the c
   `~/.venvs/bp2/bin/python`, see `~/projects-site-evidence/tower-2026-10-24/README.md`); `build.py` `home_page()` injects
   it into `<script id="atlas-data">` and emits one title card + room per `featured.json` entry (`card` is the card's line,
   `word` the room's headline) plus a `<script>` per flagship scene. Files: `index.template.html` + `portfolio.css` +
-  `home.js` (gate, sound bed and pings via WebAudio, cursor ring, pick label, poses per section, GSAP ScrollTrigger scrub
-  over Lenis, chapter HUD) + `world.js` (Three.js r170 tree-shaken in `vendor/three/`: instanced wall screens with mirror
-  copies under a depth-less floor, ceiling rail, light shafts, dust, the four live CRT screens, raycast picking, post pass
+  `home.js` (gate, sound bed and pings via WebAudio, cursor ring, pick label, poses per section with `roomPose(f, u)`
+  moving the camera inside each room by its `stage`, GSAP ScrollTrigger scrub over Lenis, chapter HUD, facts revealed per
+  `data-at`) + `world.js` (Three.js r170 tree-shaken in `vendor/three/`: instanced wall screens with mirror
+  copies under a depth-less floor, ceiling rail, light shafts, dust, the four live CRT screens placed by `featured.json` `stage` (wall / floor / ahead / float), each with a
+  primitive-built gauge (the source line: bar min to max, ticks, marker riding to the figure, evidence plate) and a hot
+  drop from the ceiling rail, wall screens turning toward the camera as it passes, raycast picking, post pass
   with grain / vignette / aberration by scroll speed, `hall` and `grid` layouts). GSAP 3.13 + ScrollTrigger are vendored
   in `vendor/gsap/` (Standard License, free). Reduced motion: gate and Enter, no flight, poses without easing. No WebGL:
   the copy and each room's `cover-800.webp` still. Palette: ink #07070C, white, hot #FF4D00 (accent only), dim white 62%.
-  Type: Bricolage Grotesque (words), JetBrains Mono (data), Geist inside the live screens; all self-hosted in
-  `vendor/fonts/`. Professional facts come from the résumé at ~/portfolio/resume.pdf; do not add claims not in it.
+  Type: Bricolage Grotesque (words), JetBrains Mono (data only), Geist inside the live screens; all self-hosted in
+  `vendor/fonts/`. Five type tokens (`--xl --lg --lead --body --small`); the taste skill's house rules apply (no
+  eyebrows, index numbers, glass, gradients, hairlines or tracked caps on the home). Professional facts come from the résumé at ~/portfolio/resume.pdf; do not add claims not in it.
 * **Selected Work** is filled by `build.py` from `featured.json` (four slugs; `area`, `headline`, `result`, `contribution`,
-  `scale` {metric, unit, value, note}, `card` (the title card line), `word` (the room headline)). Each becomes a
+  `scale` {metric, unit, min, max, value, evidence, note}, `card` (the title card line), `word` (the room headline),
+  `stage` (wall / floor / ahead / float)). Each becomes a
   `.scene.card` and a `.scene.room[data-cam=room][data-slug][data-side]`: meta line, the number (counts up when entered;
   "31 of 31" never counts), the word, title, one line, note, links, and a `.still` fallback image.
 * **About** lists repositories by language from the inventory; **Index** on the home is a form that submits `?q=` to

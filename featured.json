@@ -19,7 +19,8 @@
     "layout": "wide",
     "word": "On time",
     "state": "ratio",
-    "card": "When does a flight run late?"
+    "card": "When does a flight run late?",
+    "stage": "wall"
   },
   {
     "slug": "retail-dbt",
@@ -42,7 +43,8 @@
     "figure": "charts/01_monthly.jpg",
     "word": "Tests pass",
     "state": "tests",
-    "card": "Can a pipeline prove itself?"
+    "card": "Can a pipeline prove itself?",
+    "stage": "floor"
   },
   {
     "slug": "us-retail-forecast",
@@ -64,7 +66,8 @@
     "layout": "left",
     "word": "Backtested",
     "state": "curve",
-    "card": "How wrong is a forecast, usually?"
+    "card": "How wrong is a forecast, usually?",
+    "stage": "ahead"
   },
   {
     "slug": "sec-10k-rag",
@@ -86,6 +89,7 @@
     "layout": "stack",
     "word": "Verified",
     "state": "lock",
-    "card": "Can an answer cite its source?"
+    "card": "Can an answer cite its source?",
+    "stage": "float"
   }
 ]

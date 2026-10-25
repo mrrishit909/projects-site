@@ -35,7 +35,7 @@ if (!location.hash) { var back = false; try { back = !!sessionStorage.getItem("v
     <svg class="ring" viewBox="0 0 120 120" aria-hidden="true"><circle class="ring-bg" cx="60" cy="60" r="56"/><circle class="ring-fg" id="ring" cx="60" cy="60" r="56"/></svg>
     <p class="mono gate-count"><span id="gate-n">000</span><span class="of"> / {{COUNT}}</span></p>
     <p class="mono gate-label" id="gate-label">Loading the screens</p>
-    <h1 id="gate-title" class="gate-title">Rishit Raj Mathur<span>Data analyst, Tampa</span></h1>
+    <p id="gate-title" class="gate-title">Rishit Raj Mathur<span>Data analyst, Tampa</span></p>
     <div class="gate-actions" id="gate-actions">
       <button class="btn btn-fill" id="enter-sound" type="button">Enter with sound</button>
       <button class="btn" id="enter-quiet" type="button">Enter in silence</button>
@@ -48,7 +48,7 @@ if (!location.hash) { var back = false; try { back = !!sessionStorage.getItem("v
   <nav class="nav-links" aria-label="Site"><a href="#work">Work</a><a href="all.html">Index</a><a href="#contact">Contact</a></nav>
   <p class="strip mono" aria-label="Live"><span id="clock"></span><span>{{COUNT}} case studies</span><span>{{REPOS}} repos</span><span id="pushed">last push {{LAST_PUSH}}</span></p>
 </header>
-<p class="hud hud-chapter mono" id="chapter" aria-hidden="true"><span id="chapter-n">00</span><span id="chapter-name">Entrance</span></p>
+<p class="hud hud-chapter mono" id="chapter" aria-hidden="true"><span class="tick" aria-hidden="true"></span><span id="chapter-n">00</span><span id="chapter-name">Entrance</span></p>
 <p class="hud hud-hint mono" id="hint" aria-hidden="true">Scroll to walk</p>
 <button class="hud hud-sound mono" id="sound" type="button" aria-pressed="false"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sound-label">Sound off</span></button>
 <p class="hud hud-pick mono" id="pick" aria-hidden="true"></p>
@@ -57,8 +57,7 @@ if (!location.hash) { var back = false; try { back = !!sessionStorage.getItem("v
 <main id="main">
 <section class="scene hero" id="top" data-cam="hero" aria-labelledby="hero-title">
   <div class="scene-in">
-    <p class="mono meta hero-meta"><span>Entrance</span><span>{{COUNT}} screens</span><span>{{REPOS}} repositories</span></p>
-    <h1 id="hero-title" class="display hero-title"><span class="w">Every number,</span> <span class="w">checked against</span> <span class="w">its source.</span></h1>
+    <h1 id="hero-title" class="display hero-title"><span class="w">Every number,</span> <span class="w">checked against its source.</span></h1>
     <p class="line hero-sub">A hall of {{COUNT}} screens, one per case study. Walk it. Data analyst in Tampa: SQL, Python, Power BI, dbt, forecasting, retrieval.</p>
   </div>
 </section>
@@ -69,20 +68,19 @@ if (!location.hash) { var back = false; try { back = !!sessionStorage.getItem("v
 
 <section class="scene method" id="method" data-cam="method" aria-labelledby="method-title">
   <div class="scene-in">
-    <p class="mono meta"><span>Method</span><span>Every case study</span></p>
     <h2 id="method-title" class="visually-hidden">How every project is built</h2>
     <ol class="beats">
-      <li class="beat"><span class="beat-n mono">01</span><span class="display">Source.</span><span class="line">Public data, pulled by a script you can run again: BTS, FRED, SEC, Census, city portals.</span></li>
-      <li class="beat"><span class="beat-n mono">02</span><span class="display">Check.</span><span class="line">Every figure on a page is recomputed by a second, plainer script before it is written down.</span></li>
-      <li class="beat"><span class="beat-n mono">03</span><span class="display">Ship.</span><span class="line">A repository, a case study, a live demo where one makes sense. {{COMMITS}} commits so far.</span></li>
+      <li class="beat"><span class="display">Source.</span><span class="line">Public data, pulled by a script you can run again: BTS, FRED, SEC, Census, city portals.</span></li>
+      <li class="beat"><span class="display">Check.</span><span class="line">Every figure on a page is recomputed by a second, plainer script before it is written down.</span></li>
+      <li class="beat"><span class="display">Ship.</span><span class="line">A repository, a case study, a live demo where one makes sense. {{COMMITS}} commits so far.</span></li>
     </ol>
   </div>
 </section>
 
 <section class="scene about" id="about" data-cam="about" aria-labelledby="about-title">
   <div class="scene-in">
-    <p class="mono meta"><span>About</span><span>{{COMMITS}} commits</span><span>{{PAGES}} live sites</span></p>
     <h2 id="about-title" class="display">Analyst first.</h2>
+    <p class="line about-facts"><span class="fig">{{COMMITS}}</span> commits, <span class="fig">{{PAGES}}</span> live sites, <span class="fig">{{REPOS}}</span> public repositories.</p>
     <p class="line">Hands-on SQL and Python, trained at USF's Muma College of Business. Microsoft Power BI Data Analyst Associate. Research Assistant at the USF REACH Lab; Ticketing Operations at USF Athletics; Business Analyst at TraceRT, where new Power BI dashboards cut report turnaround by 22%.</p>
     <p class="btns"><a class="btn btn-fill" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a><a class="btn" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></p>
   </div>
@@ -90,7 +88,6 @@ if (!location.hash) { var back = false; try { back = !!sessionStorage.getItem("v
 
 <section class="scene index" id="index" data-cam="index" aria-labelledby="index-title">
   <div class="scene-in">
-    <p class="mono meta"><span>Index</span><span>{{COUNT}} screens</span><span>Point at one</span></p>
     <h2 id="index-title" class="display">All of it.</h2>
     <form class="query" action="all.html" method="get" role="search">
       <label class="visually-hidden" for="q">Query the index</label>
@@ -98,17 +95,16 @@ if (!location.hash) { var back = false; try { back = !!sessionStorage.getItem("v
       <input class="mono" id="q" name="q" type="search" placeholder="language:python year:2026 commits>10" autocomplete="off" spellcheck="false">
       <button class="btn btn-fill" type="submit">Run</button>
     </form>
-    <p class="mono small">language, kind, year, commits, live, or any word in a title or tool</p>
+    <p class="small note">language, kind, year, commits, live, or any word in a title or tool. Or point at any screen on the wall and click it.</p>
   </div>
 </section>
 
 <section class="scene contact" id="contact" data-cam="contact" aria-labelledby="contact-title">
   <div class="scene-in">
-    <p class="mono meta"><span>Contact</span><span id="clock2"></span></p>
     <h2 id="contact-title" class="display">Let's talk.</h2>
     <a class="mail" href="mailto:rishit.mathur@yahoo.com">rishit.mathur@yahoo.com</a>
     <p class="btns"><button class="btn" id="copy-mail" type="button" data-mail="rishit.mathur@yahoo.com" hidden><span class="copy-text">Copy e-mail</span></button><a class="btn" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="btn" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a><a class="btn" href="https://mrrishit909.github.io/resume.pdf">Résumé</a></p>
-    <p class="visually-hidden" id="copy-status" aria-live="polite"></p>
+    <p class="visually-hidden" id="copy-status" aria-live="polite"></p><p class="small note" id="clock2"></p>
     <p class="line small">Open to entry-level data and business analyst roles, US-wide and remote.</p>
   </div>
 </section>

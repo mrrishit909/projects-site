@@ -28,6 +28,14 @@ walls; the four showcased projects are rooms where their own dashboard plays liv
 - Sound is a choice: a low bed, a riser for the flight, a ping per chapter. Off by default; the choice is remembered.
 - The HUD: name and role, three nav items, the live strip, a chapter counter with the chapter's name, a cursor ring.
 
+## The signature: the source line
+One hot line (#FF4D00) and nothing else in that colour. It runs down the ceiling of the hall, drops beside each room's
+screen into a physical gauge (min to max, a marker that rides to the figure, a plate naming the evidence), and is drawn
+under every number in the copy to the fraction it proves. Four rooms, four stagings: wall, floor, ahead, float. Wall
+screens turn to face the visitor as they pass. Each room shows its facts one at a time. House rules from the taste
+skill: no eyebrows, no index numbers, no glass, no gradients, no hairlines, no tracked caps, five type sizes, mono for
+data only. The phone is its own cut: screen in the top half, words below.
+
 ## Art direction
 - Colour: **ink #07070C**, **white #FFFFFF**, one hot accent **#FF4D00** for the first meta word, underlines and the one
   filled button. Dim white at 62% for secondary data. Nothing else; the screens carry all the colour.
