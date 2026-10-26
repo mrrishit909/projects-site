@@ -84,3 +84,29 @@ jobs:
           name: live-${{ env.SLUG }}-${{ github.run_id }}
           path: live-evidence
           retention-days: 90
+
+  portfolio-link:
+    # The main portfolio's case study must link to the live site and the site back to the
+    # portfolio (P01-REL-18, master 21 "test the portfolio link in both directions").
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Runner identity (must be GitHub-hosted)
+        run: test "${{ runner.environment }}" = "github-hosted"
+      - name: Case study links to the site; the site links back
+        run: |
+          mkdir -p link-evidence
+          case_url="https://mrrishit909.github.io/projects-site/$SLUG/"
+          code=$(curl -sS -o link-evidence/case.html -w '%{http_code}' "$case_url"); echo "$code $case_url" | tee link-evidence/http.txt
+          test "$code" = "200"
+          grep -c "labs/$SLUG/" link-evidence/case.html | tee -a link-evidence/http.txt
+          grep -q "labs/$SLUG/" link-evidence/case.html
+          curl -sS -o link-evidence/site.html "$BASE"
+          grep -q "mrrishit909.github.io/projects-site/" link-evidence/site.html
+          echo "both directions ok" | tee -a link-evidence/http.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: portfolio-link-${{ env.SLUG }}-${{ github.run_id }}
+          path: link-evidence
+          retention-days: 90
