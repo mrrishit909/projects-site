@@ -57,6 +57,38 @@ summary cells flush to their rule (padded). Numbered section labels: the concept
     throttled JavaScript cost is about 250 ms (docs/PERFORMANCE.md). Phones now run the lite quality with smaller
     textures anyway.
 
+## Round 4 (2026-10-26 audit, review candidate 9ecf79b): the owner's findings, reproduced and corrected
+
+The findings were treated as defects to verify (docs/DEFECTS.md D-01 to D-10), not as claims to defend.
+
+12. The posters carried the lab's controls on an opaque ground (D-01): reproduced by decoding the webp; the lab's hidden
+    attribute had been overridden by its own display rule and the ground was painted by the html element. Corrected at
+    the source (the lab's poster mode), in the tool (export refused unless clean, pixels checked) and in the suite
+    (every poster and still decoded and checked). Anchored description of the result: a transparent ground, the object
+    with its contact shadow, no control strip, no corner artefact.
+13. The archive was a thumbnail wall (D-02): replaced by an editorial index of rows (number, title as the link, kind,
+    tools, year and status). The dialog preview, search, clause queries, tabs, empty state, reset, deep links and the
+    old-address forwards are unchanged. The thumbnail assertions were replaced, not weakened (the reason is in the
+    ledger).
+14. Case pages without WebGL left the hero's right half empty (D-03): every page now carries a transparent still of
+    its own arrangement, rendered by the same clean-export workflow, visible until the first frame and whenever
+    WebGL, the module or JavaScript is missing; verified on four page types under seven conditions (fallbacks/).
+15. The sound control changed before audio existed (D-04): the control now reports "on" only when the context runs,
+    says when audio is unavailable, stores no preference on failure, and never resumes while paused; the suite stubs a
+    failing constructor and a refused resume and dispatches visibility changes while paused.
+16. Gate statuses were overstated (D-05): the matrix uses VERIFIED PASS, FAIL, PARTIAL, NOT TESTED, BLOCKED and NOT
+    APPLICABLE, with code inspection recorded apart from runtime; the progress summary follows the detailed rows.
+17. Mobile LCP and the compile frame (D-06, D-07): the display font instanced to its roles and subset (131 to 40 KB),
+    the Geist preload dropped, the module fetched at low priority, the textures prepared in yielded tasks, the shaders
+    compiled once before the first frame, the case still loaded eagerly. The before and after figures are in
+    docs/PERFORMANCE.md; where a target is still missed it is recorded as FAIL against that target.
+18. Phones hid the chapter lead and secondary buttons at tight heights (responsive audit): nothing is hidden now; on
+    short phones the chapter is unpinned so every line and button is reached by scrolling, and the register leaves
+    after the hero so the fixed object never crosses the words.
+19. The previous review archive referenced evidence outside itself (D-09): tools/package.sh bundles the site at the
+    tested commit, the evidence folder, the scripts (tests/evidence), conditions, a manifest and checksums, and diffs
+    the packaged site against the commit.
+
 ## The website-playbook rubric (graded on r3 and the recordings)
 
 | Criterion | Intended outcome | Implementation decision | Evidence inspected | Status | Remaining correction |

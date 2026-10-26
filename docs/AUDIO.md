@@ -43,16 +43,16 @@ Runtime verification (the suite exercised the path) is kept apart from code insp
 | Case | Runtime | Code inspected | Evidence |
 |---|---|---|---|
 | first visit muted | VERIFIED PASS (suite: the control starts aria-pressed=false) | yes | portfolio-check.txt |
-| enable on a gesture; the label changes only once the context runs | PENDING (suite audio block on the candidate) | yes | |
-| AudioContext creation throwing | PENDING (suite: stubbed constructor) | yes | |
-| resume refused | PENDING (suite: stubbed resume) | yes | |
+| enable on a gesture; the label changes only once the context runs | VERIFIED PASS (suite on 9ecf79b) | yes | portfolio-check.txt |
+| AudioContext creation throwing | VERIFIED PASS (suite: stubbed constructor; the control stays off, the note reads, no preference stored) | yes | portfolio-check.txt |
+| resume refused | VERIFIED PASS (suite: stubbed resume) | yes | portfolio-check.txt |
 | disable during sound (fade, then suspend) | PARTIAL (the suite toggles and reads the control; the fade is not measured) | yes | |
 | replay, skip midway (no duplicate voices) | code inspected only | yes: the click is guarded once per run; Skip jumps the timeline | |
-| rapid repeated toggling and selection | PENDING (suite: six rapid toggles end consistent); cue spacing and the four-voice cap are code inspected | yes | |
+| rapid repeated toggling and selection | PARTIAL: six rapid toggles end consistent (suite); cue spacing and the four-voice cap are code inspected only | yes | portfolio-check.txt |
 | reverse scroll (ticks only on a rising count) | code inspected only | yes | |
 | route return (a new document has no context) | code inspected only | yes | |
-| background then foreground; foreground while paused does not resume | PENDING (suite dispatches visibilitychange while paused) | yes | |
-| audio unavailable (no AudioContext) | PENDING (suite) | yes | |
+| background then foreground; foreground while paused does not resume | VERIFIED PASS (suite dispatches visibilitychange while paused; the page stays paused) | yes | portfolio-check.txt |
+| audio unavailable (no AudioContext) | VERIFIED PASS (suite) | yes | portfolio-check.txt |
 | reduced motion | code inspected only (cues still gated by the control) | yes | |
-| mute effective, state communicated | PENDING (suite: aria-pressed and the label; the live-region note) | yes | |
+| mute effective, state communicated | VERIFIED PASS (suite: aria-pressed, the label, the live-region note) | yes | portfolio-check.txt |
 | AUDITORY REVIEW | NOT PERFORMED | | no listening pass was possible in this environment; the envelope was checked numerically; taste, synchronisation, harshness, clicks and interference with reading were not heard. The site ships muted by default. |
