@@ -1,0 +1,85 @@
+# ProductSignal — business contracts, version 1 (2026-10-26)
+
+Decision owner: coordinator (Fable 5.1). Spec: `projects/06-productsignal.md`, SHA-256
+`ed0d0941…cfbd6` at pack commit `fe5f7981` (verified against `docs/program/source-pack.json`). Rules cite the
+requirement they satisfy; changing one bumps `CONTRACT_VERSION`, this file, the golden fixture and the tests together.
+
+## Decision the product supports
+Should an onboarding change ship, stop, or receive more investigation? (P06-GOAL-01). Primary users: a product analyst
+and an experimentation analyst. Non-goals: no automatic product release from a decision (P06-FLOW-10), no causal claims
+from observational feature correlations (P06-DOMAIN-05), no chatbot and no paid inference (P06-GOAL-11).
+
+## D-01 Events, identity and tracking quality
+* Canonical events are deduplicated on `event_id`; a re-sent event with a different `event_id` but the same
+  (`user_id`, `event_name`, `event_at`) and identical properties is a duplicate, dropped and counted (P06-FLOW-01,
+  P06-TEST-05). `event_at` is the business instant (UTC); `received_at` is when the log accepted it. A run at cutoff
+  `C` uses only events with `received_at` ≤ C; a late event changes a later run, never a published one: results carry
+  the cutoff and `config_hash`, and a revision is disclosed as such (P06-TEST-06, P06-MET-xx-R27).
+* Identity resolution is time-aware and deterministic (P06-FLOW-02, P06-TEST-07): an `identity_link` attributes the
+  anonymous events of `anonymous_id` to `user_id` only for events with `event_at` ≥ `linked_at`; events before the
+  link stay anonymous. Signup conversion (P06-MET-01) is therefore measured on the visitor unit: distinct
+  `anonymous_id`s with a `visit` event in the window are the denominator, those with a `signup` event (same
+  `anonymous_id`) within the window the numerator; the identity denominator is documented beside the figure.
+* Excluded everywhere: users with `bot_flag`, accounts with `internal`, events whose `user_id` is unknown (no user and
+  no link); each exclusion is counted and shown when it changes a figure materially (P06-MET-xx-R11/R12). A delayed
+  event is one with `received_at` − `event_at` > 24 h; delayed, duplicate and unknown-identity counts are the
+  tracking-quality figures (P06-UI-04).
+
+## D-02 Units, cohorts and maturity
+* The experiment and retention unit is the **account** (P06-DOMAIN-01): user-level events roll up to the account
+  before any ratio; a metric over accounts never counts users (P06-MET-07-R04, P06-TEST-01). Signup of an account =
+  the earliest `signup` event of its non-bot users; `signup_at` is that instant.
+* Activation (P06-MET-02): an account with an `activated` event within 7 × 24 h of `signup_at`, half-open
+  [signup_at, signup_at + 7 d). A signup is **mature** when `signup_at` + 7 d ≤ cutoff; immature signups are excluded
+  and counted (P06-TEST-04). Golden (P06-GOLD-01): 20/100 and 30/100 mature assigned accounts.
+* Day-7 retention (P06-MET-04): an account is retained on day 7 when a session of one of its users starts on the
+  seventh calendar day after the signup day **in the account's IANA timezone** (day 0 = signup day); "on or after day
+  7" is a separate figure, never mixed in (P06-TEST-12). Maturity: day 8 has begun in that timezone at the cutoff.
+  Golden: 5 of 20 mature accounts = 0.2500. Week-4 retention (P06-MET-05): a session on any of calendar days 28–34
+  in the account timezone; mature when day 35 has begun.
+* Funnel (P06-FLOW-03, P06-MET-03): a versioned definition of ordered steps with a maximum gap; a unit reaches step
+  k only if it reached step k − 1 earlier (strict order, same unit) and within the gap; step conversion = units at k ÷
+  units at k − 1; the window applies to the first step; exclusions are listed with the result.
+* Feature adoption (P06-MET-06): eligible active accounts (a session in the window, eligibility decided without any
+  treatment outcome) using the feature ÷ eligible active accounts.
+
+## D-03 Experiments
+* Assignment is by account, idempotent per (`experiment_version_id`, `unit_id`): the first assignment fixes the
+  variant; a later assignment of the same unit to another variant is rejected `ASSIGNMENT_CONFLICT` (P06-FLOW-04).
+  An exposure must reference an assignment and satisfy `exposed_at` ≥ `assigned_at`; otherwise it is rejected
+  `EXPOSURE_BEFORE_ASSIGNMENT` (P06-FLOW-05, P06-TEST-11).
+* Primary analysis is intention-to-treat (P06-DOMAIN-02): every assigned mature unit counts in its assigned variant
+  whether or not exposed; exposure rate (P06-MET-09) = exposed assigned units ÷ assigned units and is reported beside
+  the ITT result; an exposed-only analysis is labelled exploratory and never a decision basis (P06-TEST-02 covers
+  treatment-dependent exclusion: exclusions must be decided from pre-assignment facts only).
+* Sample ratio (P06-MET-10): a chi-square goodness-of-fit statistic of observed assignments against the prespecified
+  allocation, with p-value; verdict `MISMATCH` when p < 0.001, `INSUFFICIENT` when any expected cell < 5, else `OK`;
+  a `MISMATCH` result is shown before any lift and blocks a `ship` decision (P06-DOMAIN-04, P06-TEST-08).
+* Lift (P06-MET-07/08): conversion per variant = activated mature assigned units ÷ mature assigned units (proportions
+  in [0,1], 6 dp); absolute lift = treatment − control in percentage points (signed); relative lift = absolute ÷
+  control, **null when control is 0** (P06-TEST-10). Interval: Newcombe hybrid score interval at 95 % (z = 1.959964)
+  on the difference, square roots exact to 1e-8; a result is `conclusive` only when the interval excludes 0 and the
+  analysis run is at or after `planned_end` of a frozen plan. Golden: 0.2000 vs 0.3000, absolute 0.1000 (10.00 pp),
+  relative 0.500000, interval includes 0, so not conclusive (P06-GOLD-01).
+* The analysis plan (primary outcome, guardrails, horizon = `planned_end`, allocation) is frozen before any outcome
+  is read: `config_hash` is written by C06 and every analysis run cites it; a run before the freeze is refused
+  (P06-FLOW-06, P06-DOMAIN-03). Every run is logged; a run before `planned_end` is `interim` and cannot support
+  `ship`; the count of prior runs is shown with every result (P06-TEST-03).
+* Guardrail error rate (P06-MET-11): assigned units with a `product_error` event inside the prespecified window ÷
+  eligible assigned units, per variant. Revenue per assigned account (P06-MET-12): eligible subscription revenue
+  (USD, Decimal, subscriptions with `starts_at` in the window, status active or ended) ÷ assigned accounts, per
+  variant, with a t-interval over account-level values (the account is the cluster).
+* Segment analysis (P06-UI-08) is exploratory: every segment result carries the label, the number of segments tested
+  and a Bonferroni-adjusted threshold; no decision cites a segment (P06-DOMAIN-06, P06-TEST-09).
+* A decision (C10) is `ship`, `stop` or `inconclusive`, cites one analysis run and the guardrail review, requires a
+  frozen plan and a non-`MISMATCH` sample ratio, and never changes any product state (P06-FLOW-09/10).
+
+## D-04 Numbers, time and absence
+Proportions are decimal strings with 6 places in [0,1]; percentage points with 2 places, signed; counts nonnegative
+integers; money Decimal strings with 2 places (USD); null means unknown or zero denominator, never 0. Instants are UTC
+with `Z`; calendars use the account's IANA timezone. Windows are half-open [from, to) on the metric's stated timestamp.
+Empty population: every count 0, every ratio null, `empty_population` true.
+
+## Mode disclosure
+Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners. Mode B: TypeScript mirror over the
+published snapshot; the registry and decision screens' actions are browser-memory simulations and say so.
