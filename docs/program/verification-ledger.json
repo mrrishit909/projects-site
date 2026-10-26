@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:33:42Z",
+  "updated_at": "2026-10-26T14:35:13Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -612,7 +612,7 @@
       "exit_code": 0,
       "expected": "position 60, raw 60, MOQ 60, order 72; position 80 -> 0; fill 0.950000; stockout 0.032258; WC 500.00",
       "actual": "ALL OK (184 checks)",
-      "code_sha": "pending-commit",
+      "code_sha": "8a35c0b (hosted Mode A run 40340745348 success)",
       "ts": "2026-10-26T14:12:22Z"
     },
     {
@@ -633,7 +633,7 @@
       "command": "pytest -q (apps/supplyscope, DATABASE_URL set)",
       "exit_code": 0,
       "actual": "110 passed",
-      "code_sha": "pending-commit",
+      "code_sha": "8a35c0b (hosted Mode A run 40340745348 success)",
       "ts": "2026-10-26T14:33:42Z"
     },
     {
@@ -642,8 +642,20 @@
       "status": "verified",
       "command": "pytest tests/test_adversarial.py tests/test_rules.py",
       "exit_code": 0,
-      "code_sha": "pending-commit",
+      "code_sha": "8a35c0b (hosted Mode A run 40340745348 success)",
       "ts": "2026-10-26T14:33:42Z"
+    },
+    {
+      "requirement": "P03-REL-05 backend and relational suite on GitHub Actions with transient PostgreSQL",
+      "project": "03-supplyscope",
+      "status": "verified",
+      "command": "supplyscope-ci.yml job Mode A",
+      "exit_code": 0,
+      "expected": "reference check ALL OK; 110 tests with postgres:16 service",
+      "actual": "success",
+      "code_sha": "8a35c0b",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40340745348",
+      "ts": "2026-10-26T14:35:13Z"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T14:33:42Z",
+  "updated_at": "2026-10-26T14:35:13Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -71,13 +71,13 @@
     },
     "03-supplyscope": {
       "slug": "supplyscope",
-      "stage": "gate-B (local): domain/API verified; CI pending; generator next",
+      "stage": "gate-B passed (Mode A verified on hosted runner); generator (A-022) in progress",
       "built": false,
       "verified": false,
       "published": false,
       "integrated": false,
-      "last_verified_sha": null,
-      "latest_run_url": null,
+      "last_verified_sha": "8a35c0b",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40340745348",
       "site_url": null,
       "blockers": [],
       "next_task": "T-03-04a generator (A-022)"
