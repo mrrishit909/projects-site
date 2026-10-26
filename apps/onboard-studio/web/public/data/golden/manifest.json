@@ -1,0 +1,47 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "c7572675de2fbdd51e8af4279cc4971446b8041bc6ee959d93e4b026234f750a",
+  "dataset_version": "golden-v1",
+  "generated_at": "2026-10-26T00:00:00Z",
+  "generator": {
+    "name": "tests/fixtures/golden (hand-derived, no generator)",
+    "seed": 0,
+    "parameters": {}
+  },
+  "designed_relationships": [],
+  "fixture_id": "onboard-studio-golden-v1",
+  "cutoffs": [
+    "2026-03-07T12:00:00Z",
+    "2026-03-09T12:00:00Z"
+  ],
+  "states": {
+    "pause_eligible": {
+      "sla-001": {
+        "pause_policy": [
+          "customer_info_requested"
+        ]
+      }
+    },
+    "pause_not_eligible": {
+      "sla-001": {
+        "pause_policy": []
+      }
+    }
+  },
+  "row_counts": {
+    "organizations": 1,
+    "cases": 1,
+    "workflow_versions": 1,
+    "step_definitions": 2,
+    "dependencies": 1,
+    "step_instances": 2,
+    "assignments": 2,
+    "document_versions": 1,
+    "approvals": 2,
+    "sla_rules": 1,
+    "calendar_intervals": 10,
+    "waiting_intervals": 1,
+    "case_events": 10,
+    "workflow_requirements": 1
+  }
+}

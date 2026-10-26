@@ -6,6 +6,7 @@ business hours are reported separately by ``compute_with_flags`` (P02-TEST-03).
 from __future__ import annotations
 
 from datetime import datetime
+from fractions import Fraction
 from decimal import Decimal
 from typing import Any, Callable, Iterable, Mapping
 
@@ -132,7 +133,7 @@ def compute_with_flags(pop: Population, pause_policy: Any = None, cutoffs: Itera
     handoffs = sum(len(v) - 1 for v in per_step.values())
 
     case_wv = {c.case_id: c.workflow_version_id for c in cases}
-    step_waits: dict[str, list[Decimal]] = {s.step_definition_id: [] for s in pop.step_definitions}
+    step_waits: dict[str, list[Fraction]] = {s.step_definition_id: [] for s in pop.step_definitions}
     for si in pop.step_instances:
         rule = sla.get(case_wv.get(si.case_id, ""))
         if si.started_at is None or si.ready_at is None or rule is None or rule.calendar_id not in calendars:

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T12:46:43Z",
+  "updated_at": "2026-10-26T12:59:46Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -478,6 +478,26 @@
       "actual": "hash 3c20d296bcf178065e9178cae04f763994b4d7197026af2c021ab55b4cc2bc6a both runs; v2/v1 0.64; enterprise 0.290 vs 0.172; reg-north 59.1 h",
       "code_sha": "pending-commit",
       "ts": "2026-10-26T12:46:43Z"
+    },
+    {
+      "requirement": "P02-MET-*-R20 browser calculation consistent with contract and fixture (TS golden check) + Python/TS parity over the snapshot",
+      "project": "02-onboard-studio",
+      "status": "verified",
+      "command": "npm run check; scratch py_run.py vs ts_run.ts diff",
+      "exit_code": 0,
+      "expected": "150 golden checks OK; 0 cell diffs across 4 pause policies \u00d7 groupings",
+      "actual": "ALL OK (150); 5,112 cells, 0 diffs",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T12:59:46Z"
+    },
+    {
+      "requirement": "P02 defect D-01 (rounding): Python mean of hours accumulated Decimal error below a half-up tie",
+      "project": "02-onboard-studio",
+      "status": "verified after fix",
+      "defect": "timeutil.hours/mean used Decimal division per case; exact rationals (Fraction) now; d4/d6 convert once",
+      "command": "pytest -q (279 passed)",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T12:59:46Z"
     }
   ]
 }

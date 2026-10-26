@@ -1,0 +1,13 @@
+{
+ "entity": "dependencies",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "dependency_id": "dep-001",
+   "step_definition_id": "sd-002",
+   "prerequisite_id": "sd-001",
+   "dependency_type": "mandatory",
+   "created_at": "2026-03-01T00:00:00Z"
+  }
+ ]
+}

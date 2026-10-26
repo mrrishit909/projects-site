@@ -1,0 +1,16 @@
+{
+ "entity": "document_versions",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "document_version_id": "doc-001",
+   "case_id": "case-001",
+   "document_type": "identity_proof",
+   "version_number": 1,
+   "content_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000001",
+   "review_status": "accepted",
+   "submitted_at": "2026-03-06T16:10:00Z",
+   "reviewed_at": "2026-03-09T09:35:00Z"
+  }
+ ]
+}

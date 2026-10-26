@@ -1,0 +1,76 @@
+{
+ "entity": "case_events",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "event_id": "ev-001",
+   "case_id": "case-001",
+   "event_type": "case_opened",
+   "actor_id": "ops-001",
+   "occurred_at": "2026-03-06T16:00:00Z"
+  },
+  {
+   "event_id": "ev-002",
+   "case_id": "case-001",
+   "event_type": "step_started",
+   "actor_id": "ops-001",
+   "occurred_at": "2026-03-06T16:05:00Z"
+  },
+  {
+   "event_id": "ev-003",
+   "case_id": "case-001",
+   "event_type": "document_submitted",
+   "actor_id": "ops-001",
+   "occurred_at": "2026-03-06T16:10:00Z"
+  },
+  {
+   "event_id": "ev-004",
+   "case_id": "case-001",
+   "event_type": "waiting_started",
+   "actor_id": "ops-001",
+   "occurred_at": "2026-03-06T16:30:00Z"
+  },
+  {
+   "event_id": "ev-005",
+   "case_id": "case-001",
+   "event_type": "waiting_ended",
+   "actor_id": "ops-001",
+   "occurred_at": "2026-03-09T09:30:00Z"
+  },
+  {
+   "event_id": "ev-006",
+   "case_id": "case-001",
+   "event_type": "document_accepted",
+   "actor_id": "rev-001",
+   "occurred_at": "2026-03-09T09:35:00Z"
+  },
+  {
+   "event_id": "ev-007",
+   "case_id": "case-001",
+   "event_type": "step_approved",
+   "actor_id": "rev-001",
+   "occurred_at": "2026-03-09T09:40:00Z"
+  },
+  {
+   "event_id": "ev-008",
+   "case_id": "case-001",
+   "event_type": "step_started",
+   "actor_id": "ops-002",
+   "occurred_at": "2026-03-09T09:45:00Z"
+  },
+  {
+   "event_id": "ev-009",
+   "case_id": "case-001",
+   "event_type": "step_approved",
+   "actor_id": "rev-002",
+   "occurred_at": "2026-03-09T10:00:00Z"
+  },
+  {
+   "event_id": "ev-010",
+   "case_id": "case-001",
+   "event_type": "case_completed",
+   "actor_id": "rev-002",
+   "occurred_at": "2026-03-09T10:00:00Z"
+  }
+ ]
+}
