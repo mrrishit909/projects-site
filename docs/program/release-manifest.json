@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T16:19:21Z",
+  "updated_at": "2026-10-26T16:21:38Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -14,11 +14,9 @@
       "dataset_hash": "40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444",
       "publication_status": "published and verified live from a GitHub-hosted runner (release f2605bb; case study text updated at f03b26f)",
       "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40320891807",
-        "http": "200 for /, overview/, bridge/, evidence/, case-study/, data/manifest.json, routes.json",
-        "browser": "overview and bridge screenshots at 360 and 1280, 0 console errors",
-        "portfolio_link": "both directions verified",
-        "verified_at": "2026-10-26T12:14:37Z"
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40358131147",
+        "verified_at": "2026-10-26T16:21:38Z",
+        "live_code_sha_matched": "50e72e15ae1ea350f4fe5c7d3a7e54efc9baf427"
       },
       "previous_release_commit": "92b9c66",
       "contract_version": "v1.1"
@@ -37,8 +35,9 @@
       "contract_version": "v1",
       "publication_status": "published and verified live from a GitHub-hosted runner (release 239950e after reviewer fixes); integrated, links verified both ways",
       "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40337325817",
-        "verified_at": "2026-10-26T14:13:20Z"
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40358131147",
+        "verified_at": "2026-10-26T16:21:38Z",
+        "live_code_sha_matched": "1a27a0e44a610adfd1139a0e01c0bbc9f2c82d73"
       },
       "previous_release_commit": "a614136"
     },
@@ -54,12 +53,11 @@
       "dataset_version": "ss-20261026-20261026",
       "dataset_hash": "5bdabb50eea4b192e3b17e1e5b1a79dc6b26feb4a2b8b78ad094acde9f8bcc8c",
       "contract_version": "v1",
-      "publication_status": "republished after T-03-07 reviewer fixes (13af835; CI 40357396048 green on ca3e626); live run 40357746398 passed but fetched 2 s before the Pages deployment of 13af835 completed (16:18:12Z), so it is re-run",
+      "publication_status": "republished after T-03-07 reviewer fixes (13af835; CI 40357396048 green on ca3e626); live-verified with the release commit on the live manifest (run 40358131147); integrated",
       "live_verification": {
-        "run_url": null,
-        "verified_at": null,
-        "provisional_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40357746398",
-        "pages_deploy_completed_at": "2026-10-26T16:18:12Z"
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40358131147",
+        "verified_at": "2026-10-26T16:21:38Z",
+        "live_code_sha_matched": "ca3e626ae395592987dfb2cc647fd177f95adc8c"
       }
     }
   ]

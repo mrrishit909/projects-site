@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T16:19:21Z",
+  "updated_at": "2026-10-26T16:21:38Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -71,7 +71,7 @@
     },
     "03-supplyscope": {
       "slug": "supplyscope",
-      "stage": "built, verified (reviewer findings R3-01..R3-07, S-02, S-03 fixed and regression-tested at ca3e626), republished 22e92a6 (live check pending), integrated; artifacts regenerated",
+      "stage": "built, verified (reviewer findings fixed and regression-tested at ca3e626, CI green), published and live-verified (run 40358131147), integrated; artifacts regenerated",
       "built": true,
       "verified": true,
       "published": true,
@@ -80,7 +80,7 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40357396048",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/supplyscope/",
       "blockers": [],
-      "next_task": "confirm supplyscope-ci.yml on ca3e626 and live-check on the manifest commit; then nothing open except deferred extensions (C04, five stub screens)",
+      "next_task": "none open; deferred extensions: C04 classification, five stub screens, INT columns on stock_snapshots/draft_orders",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/supplyscope/",
       "verified_note": "Entry journey + 12 adversarial cases + reviewer pass; all nine findings fixed in T-03-07 with tests in Python, SQL and TypeScript"
     },
@@ -178,7 +178,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 04 ServiceFlow: verify serviceflow-ci.yml Mode A on 99e219b; A-029 generator hand-back -> web worker -> publish labs/serviceflow -> integrate. Project 03: A-026 fix hand-back -> rerun -> republish.",
+    "next_concrete_task": "Project 04 ServiceFlow: A-029 generator hand-back -> verify -> web worker -> publish labs/serviceflow -> integrate -> reviewer -> artifacts. Then project 05 InvoiceBridge fixture worker.",
     "acceptance": "see task-queue.json"
   }
 }

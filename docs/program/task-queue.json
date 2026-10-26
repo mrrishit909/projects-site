@@ -251,7 +251,7 @@
       "id": "T-03-03",
       "project": "03-supplyscope",
       "title": "Domain + Postgres + FastAPI slice + CI",
-      "status": "done (local); CI pending",
+      "status": "done",
       "prereqs": [
         "T-03-02"
       ],
@@ -262,7 +262,7 @@
       "id": "T-03-04",
       "project": "03-supplyscope",
       "title": "Generator + web + e2e + publish + integrate",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-03-03"
       ],
@@ -273,7 +273,7 @@
       "id": "T-03-07",
       "project": "03-supplyscope",
       "title": "Fix S-02, S-03, R3-01 (SKU-day stockout metric), R3-02, R3-03, R3-04, R3-05, R3-06 (+R3-07 flags); regression tests; re-review",
-      "status": "done (local + republished); CI and live check pending",
+      "status": "done",
       "prereqs": [
         "T-03-04"
       ],

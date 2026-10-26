@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T16:17:46Z",
+  "updated_at": "2026-10-26T16:21:38Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -803,6 +803,17 @@
       "code_sha": "ca3e626",
       "evidence": "apps/supplyscope/docs/uat-evidence.md; tests/test_review_findings.py; web/scripts/review-check.ts",
       "ts": "2026-10-26T16:17:46Z"
+    },
+    {
+      "requirement": "P03-REL-09/17/18 after the reviewer-fix republish; live manifest code_sha == release commit for all three sites (new deployment-wait step)",
+      "project": "03-supplyscope",
+      "status": "verified",
+      "command": "live-check.yml run 40358131147 (matrix, github-hosted)",
+      "exit_code": 0,
+      "actual": "all jobs success; supplyscope live code_sha ca3e626 matched",
+      "code_sha": "ca3e626 / portfolio 13af835",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40358131147",
+      "ts": "2026-10-26T16:21:38Z"
     }
   ]
 }
