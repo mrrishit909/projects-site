@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T15:22:44Z",
+  "updated_at": "2026-10-26T15:23:27Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -728,6 +728,17 @@
       ],
       "code_sha": "12f866f",
       "ts": "2026-10-26T15:22:44Z"
+    },
+    {
+      "requirement": "P03-REL-02/09/17 deployed site verified from hosted compute (matrix: 3 sites)",
+      "project": "03-supplyscope",
+      "status": "verified",
+      "command": "live-check.yml run 40347873614",
+      "exit_code": 0,
+      "actual": "all jobs success",
+      "code_sha": "site from 12f866f",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40347873614",
+      "ts": "2026-10-26T15:23:27Z"
     }
   ]
 }
