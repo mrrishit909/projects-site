@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T23:00:36Z",
+  "updated_at": "2026-10-26T23:12:14Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -41,7 +41,7 @@
       "id": "BLK-003",
       "ts": "2026-10-26T22:45:05Z",
       "what": "cloud container restarted mid-run; two background workers (A-040 InvoiceBridge fixes, A-041 ProductSignal backend) were lost before hand-back; the worktree, databases and tools survived; resume workers A-042/A-043 dispatched",
-      "status": "recovered for P06 (A-043 accepted); P05 resume A-042 running"
+      "status": "recovered (A-042 and A-043 accepted)"
     }
   ],
   "projects": {
@@ -107,18 +107,18 @@
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
-      "stage": "built, verified (provisional: reviewer findings R5-01..R5-09 open, fixes A-040 running), published and live-verified, integrated (case study corrected ce6e02e)",
+      "stage": "built, verified (reviewer findings fixed and regression-tested at 2dcc460), republished 188e409 (CI and live check pending), integrated (case study updated); artifacts A-045 running",
       "built": true,
       "verified": true,
       "published": true,
       "integrated": true,
-      "last_verified_sha": "be20031",
+      "last_verified_sha": "2dcc460 (local)",
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40405870287",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/invoicebridge/",
       "blockers": [],
-      "next_task": "A-040 fixes -> republish -> live check -> artifacts",
+      "next_task": "confirm CI and live check; A-045 artifacts",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/invoicebridge/",
-      "verified_note": "Entry journey + reviewer disproof pass; 9 rule defects open (the snapshot does not exercise them by the generator's construction); published money now per currency; straight-through definition stated"
+      "verified_note": "Entry journey + reviewer disproof pass; all 22 findings fixed in T-05-07 with tests in Python, SQL, TypeScript and the API"
     },
     "06-productsignal": {
       "slug": "productsignal",
@@ -127,8 +127,8 @@
       "verified": false,
       "published": false,
       "integrated": false,
-      "last_verified_sha": null,
-      "latest_run_url": null,
+      "last_verified_sha": "a3f8f74 (Mode A)",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40416593132",
       "site_url": null,
       "blockers": [],
       "next_task": "T-06-04 (A-044 generator -> web -> publish -> integrate)"
@@ -188,7 +188,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 05: A-042 fix hand-back -> verify -> commit -> republish -> manifest -> live check -> artifacts. Project 06: confirm productsignal-ci.yml Mode A on a3f8f74; A-044 generator hand-back -> verify -> commit -> web worker -> publish -> integrate -> review -> artifacts.",
+    "next_concrete_task": "Project 05: confirm invoicebridge-ci.yml on 2dcc460 and live-check; A-045 artifacts hand-back -> verify -> commit. Project 06: A-044 generator hand-back -> verify -> commit -> web worker -> publish -> integrate -> review -> artifacts.",
     "acceptance": "see task-queue.json"
   }
 }

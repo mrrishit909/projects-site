@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T21:44:10Z",
+  "updated_at": "2026-10-26T23:12:14Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -83,19 +83,19 @@
       "slug": "invoicebridge",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/invoicebridge/",
       "site_path": "labs/invoicebridge/ on unified-portfolio",
-      "release_commit_unified_portfolio": "3cff603",
-      "rollback_commit_unified_portfolio": "c535aa0",
-      "source_commit_business_data_lab": "be200319e132adc9b9213bc81b9ccea56a9f4b8b",
-      "published_tree_sha256": "0f1850ca01dddf6b510c28a70bbb1bc461bc1dc6c992390bdfb4e20aa567bf2f",
+      "release_commit_unified_portfolio": "188e409",
+      "rollback_commit_unified_portfolio": "3cff603",
+      "source_commit_business_data_lab": "2dcc460d2d5d1528151fda8bc2d22ef2f1e58d2a",
+      "published_tree_sha256": "b475a570b3006f2e90e3eb4211f2d96a971f210a8b4881d72a5fe571454036d2",
       "files": 44,
       "dataset_version": "ib-20261026-20261026",
       "dataset_hash": "1f001a43a7031d4260f5abb3b9f7a83f6e1b48397e85cf8b04e0b4d9e052162e",
       "contract_version": "v1",
-      "publication_status": "published, live-verified (11 routes 200, live code_sha matched, case study links both ways, browser journey clean; run 40406631388) and integrated (3cff603)",
+      "publication_status": "republished after T-05-07 reviewer fixes (188e409); CI and live check pending",
       "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40406631388",
-        "verified_at": "2026-10-26T21:44:10Z",
-        "live_code_sha_matched": "be200319e132adc9b9213bc81b9ccea56a9f4b8b"
+        "run_url": null,
+        "verified_at": null,
+        "previous_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40406631388"
       }
     }
   ]

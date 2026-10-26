@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T23:00:36Z",
+  "updated_at": "2026-10-26T23:12:14Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1045,6 +1045,28 @@
       "code_sha": "a3f8f74",
       "evidence": "apps/productsignal/tests/",
       "ts": "2026-10-26T23:00:36Z"
+    },
+    {
+      "requirement": "P05 reviewer findings R5-01..R5-22 fixed (T-05-07); reviewer harness agrees Py/SQL/TS on 15 cases; fuzz 60 seeds clean",
+      "project": "05-invoicebridge",
+      "status": "verified",
+      "command": "reference_check.py; DATABASE_URL=... pytest -q; npm run check; npm run build:pages; npm run e2e",
+      "exit_code": 0,
+      "actual": "ALL OK (412); 402 passed; 227 golden + 41 review; 71 e2e",
+      "code_sha": "2dcc460",
+      "evidence": "apps/invoicebridge/docs/uat-evidence.md; tests/test_review_findings.py; web/scripts/review-check.ts",
+      "ts": "2026-10-26T23:12:14Z"
+    },
+    {
+      "requirement": "P06 Mode A on the backend commit (reference check, domain, postgres:16 service, API, adversarial; 277 tests) github-hosted",
+      "project": "06-productsignal",
+      "status": "verified",
+      "command": "productsignal-ci.yml run 40416593132 job 'Mode A'",
+      "exit_code": 0,
+      "actual": "Mode A success; Mode B failing until the site source exists",
+      "code_sha": "a3f8f74",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40416593132",
+      "ts": "2026-10-26T23:12:14Z"
     }
   ]
 }

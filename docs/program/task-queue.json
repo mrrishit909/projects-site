@@ -417,7 +417,7 @@
       "id": "T-06-03",
       "project": "06-productsignal",
       "title": "Domain + Postgres + FastAPI slice + CI",
-      "status": "done (local); CI pending",
+      "status": "done",
       "prereqs": [
         "T-06-02"
       ],
@@ -439,12 +439,23 @@
       "id": "T-05-07",
       "project": "05-invoicebridge",
       "title": "Fix reviewer findings R5-01..R5-22; regression tests; republish",
-      "status": "in_progress",
+      "status": "done (local + republished); CI and live check pending",
       "prereqs": [
         "T-05-04"
       ],
       "retries": 0,
       "acceptance": "hand/py/sql/ts agree on every review case; tests pass; CI green; republished and live-verified"
+    },
+    {
+      "id": "T-05-05",
+      "project": "05-invoicebridge",
+      "title": "Artifacts P05-ART-*",
+      "status": "in_progress",
+      "prereqs": [
+        "T-05-07"
+      ],
+      "retries": 0,
+      "acceptance": "tests/test_artifacts.py passes; checksums OK"
     }
   ]
 }
