@@ -7,7 +7,7 @@ from typing import Any, Mapping
 
 from .errors import UNKNOWN_STATE, DomainError
 from .ingest import IngestResult, validate_batch
-from .metrics import Window, compute_metrics, negative_stock_flags
+from .metrics import Window, availability_flags, compute_metrics, negative_stock_flags
 from .models import Population, parse_ts
 
 
@@ -49,4 +49,4 @@ def run_pipeline(inputs: Mapping[str, Any], state: Any = None, as_of: str | date
     cut = parse_ts(as_of if as_of is not None else inputs["as_of"])
     win = window if window is not None else (parse_ts(inputs["window_start"]) if inputs.get("window_start") else None, None)
     metrics = compute_metrics(pop, cut, win, resolve_state(inputs, state))
-    return PipelineResult(ing, pop, metrics, cut, win, negative_stock_flags(pop, cut))
+    return PipelineResult(ing, pop, metrics, cut, win, negative_stock_flags(pop, cut) + availability_flags(pop, cut))

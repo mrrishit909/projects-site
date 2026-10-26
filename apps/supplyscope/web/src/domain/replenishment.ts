@@ -6,6 +6,8 @@ import { decAdd, decCeil, decInt, fmtScaled, parseDec, pow10, type Dec, type Rat
 import { parseDay } from "./time";
 import type { Closure } from "./types";
 
+/** R3-06: the target position must be at least the reorder point. */
+export const paramsValid = (reorderPoint: number, target: number): boolean => target >= reorderPoint;
 export const inventoryPosition = (onHand: number, onOrder: number, backorders: number): number => onHand + onOrder - backorders;
 export const isTriggered = (position: number, reorderPoint: number): boolean => position < reorderPoint;
 export const rawOrder = (target: number, position: number): number => Math.max(target - position, 0);

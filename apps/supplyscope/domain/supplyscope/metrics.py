@@ -2,14 +2,15 @@
 aggregated numerators and denominators (never an average of rates), money is a 2 dp string, rates 6 dp."""
 from __future__ import annotations
 
+from dataclasses import replace
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from fractions import Fraction
 from typing import Any, Iterable, Mapping
 
 from . import demand, ledger, replenishment
-from .contract import GROUP_KEYS, METRIC_KEYS
-from .errors import INVALID_WINDOW, DomainError
+from .contract import EXTRA_METRIC_KEYS, GROUP_KEYS, METRIC_KEYS
+from .errors import INVALID_WINDOW, NEGATIVE_AVAILABLE, DomainError
 from .models import Population, PoLine, parse_row, iso_z
 from .money import cost_in_force, d2, d6, on_hand_value, ratio, utc_date
 from .suppliers import open_quantity
@@ -21,6 +22,14 @@ def check_window(window: Window) -> None:
     lo, hi = window
     if lo is not None and hi is not None and lo >= hi:
         raise DomainError(INVALID_WINDOW, "window start must be before end", details={"from": iso_z(lo), "to": iso_z(hi)})
+
+
+def scoped(pop: Population, scenario_id: str | None = None) -> Population:
+    """D-04 (amended, R3-02): the canonical population holds only unmet-demand rows that carry no scenario; a row recorded
+    under a scenario (C07) belongs to that scenario's what-if and is visible only when that scenario is requested."""
+    keep = lambda s: s is None or s == scenario_id  # noqa: E731
+    return replace(pop, backorders=[b for b in pop.backorders if keep(b.scenario_id)],
+                   lost_sales=[l for l in pop.lost_sales if keep(l.scenario_id)])
 
 
 def state_lines(pop: Population, state: Mapping[str, Any] | None) -> list[PoLine]:
@@ -77,10 +86,14 @@ def default_start(pop: Population, as_of: datetime) -> datetime:
 
 
 def compute_metrics(pop: Population, as_of: datetime, window: Window = (None, None), state: Mapping[str, Any] | None = None,
-                    *, products: Iterable[str] | None = None, locations: Iterable[str] | None = None) -> dict[str, Any]:
+                    *, products: Iterable[str] | None = None, locations: Iterable[str] | None = None,
+                    scenario_id: str | None = None) -> dict[str, Any]:
     """The metric set at ``as_of`` over the window [start, end) (an absent end means up to and including as_of).
-    ``products`` / ``locations`` narrow the scope (used by ``group_metrics``). ``state`` may add purchase order lines."""
+    ``products`` / ``locations`` narrow the scope (used by ``group_metrics``). ``state`` may add purchase order lines.
+    ``scenario_id`` adds that scenario's unmet-demand rows to the canonical ones (default: canonical only).
+    Returns METRIC_KEYS (exactly the keys of expected.json) followed by EXTRA_METRIC_KEYS."""
     check_window(window)
+    pop = scoped(pop, scenario_id)
     extra = state_lines(pop, state)
     if extra:
         pop = pop.with_lines(extra)
@@ -106,7 +119,10 @@ def compute_metrics(pop: Population, as_of: datetime, window: Window = (None, No
     backorders = sum(open_bo.values())
     reserved = sum(r.quantity for r in pop.reservations if inp(r.product_id, r.location_id) and r.reserved_at <= as_of
                    and (r.released_at is None or r.released_at > as_of))
-    position = replenishment.inventory_position(on_hand, on_order, backorders)  # reserved is NOT subtracted
+    # D-01 (amended, R3-07): the position uses the UNCLAMPED ledger value (a negative reconstruction is flagged
+    # NEGATIVE_STOCK) and is the sum over every (product, location) of the scope: R3-04, never one pair's own figure.
+    on_hand_raw = sum(s.on_hand_raw for s in stocks.values())
+    position = replenishment.inventory_position(on_hand_raw, on_order, backorders)  # reserved is NOT subtracted
 
     out: dict[str, Any] = {}
     params = [p for p in pop.replenishment_params if inp(p.product_id, p.location_id)]
@@ -116,14 +132,12 @@ def compute_metrics(pop: Population, as_of: datetime, window: Window = (None, No
             prod = pop.product(p.product_id)
             st = stocks.get((p.product_id, p.location_id))
             oo = open_by_product.get(p.product_id, 0) if alloc.get(p.product_id) == p.location_id else 0
-            rows.append(replenishment.replenish(st.on_hand if st else 0, oo, open_bo.get((p.product_id, p.location_id), 0),
+            rows.append(replenishment.replenish(st.on_hand_raw if st else 0, oo, open_bo.get((p.product_id, p.location_id), 0),
                                                 p.reorder_point, p.target_position, prod.minimum_order_quantity,
                                                 prod.pack_size))
         out.update(reorder_point=sum(r.reorder_point for r in rows), target_position=sum(r.target_position for r in rows),
                    reorder_triggered=any(r.triggered for r in rows), raw_order=sum(r.raw_order for r in rows),
                    order_after_moq=sum(r.order_after_moq for r in rows), order_quantity=sum(r.order_quantity for r in rows))
-        if len(rows) == 1:  # one parameter row: the position is that row's own
-            position = rows[0].position
     else:
         out.update(reorder_point=None, target_position=None, reorder_triggered=None, raw_order=None,
                    order_after_moq=None, order_quantity=None)
@@ -132,6 +146,11 @@ def compute_metrics(pop: Population, as_of: datetime, window: Window = (None, No
                           (b for b in pop.backorders if inp(b.product_id, b.location_id)),
                           (l for l in pop.lost_sales if inp(l.product_id, l.location_id)), start, end, as_of)
     empty = not moves and not any(inp(s.product_id, s.location_id) for s in pop.sales)
+    # D-04 (amended, R3-01): the active pairs of the scope at as_of (a movement, a sale or an unmet-demand row by then)
+    pairs = {(m.product_id, m.location_id) for m in moves if m.event_at <= as_of}
+    pairs |= {(s.product_id, s.location_id) for s in pop.sales if inp(s.product_id, s.location_id) and s.sold_at <= as_of}
+    pairs |= {(b.product_id, b.location_id) for b in pop.backorders if inp(b.product_id, b.location_id) and b.opened_at <= as_of}
+    pairs |= {(l.product_id, l.location_id) for l in pop.lost_sales if inp(l.product_id, l.location_id) and l.occurred_at <= as_of}
     prods = {p.product_id: p for p in pop.products}
     versions: dict[str, list] = {}
     for v in pop.cost_versions:
@@ -141,16 +160,35 @@ def compute_metrics(pop: Population, as_of: datetime, window: Window = (None, No
     out.update(on_hand=on_hand, on_order=on_order, backorders=backorders, reserved=reserved, available=on_hand - reserved,
                inventory_position=position, working_capital=d2(capital), requested_units=ds.requested,
                fulfilled_units=ds.fulfilled, unmet_units=ds.unmet, fill_rate=d6(ds.fill_rate),
-               observed_days=ds.observed_days, stockout_day_count=len(ds.stockout_dates),
-               stockout_days=None if empty else d6(ds.stockout_day_ratio), running_stock_min=running_min,
+               observed_days=ds.observed_days, stockout_day_count=len(ds.stockout_pair_days),
+               stockout_days=None if empty else d6(ds.stockout_sku_day_rate(len(pairs))), running_stock_min=running_min,
                timestamp_order_stock_min=naive_min, negative_stock=any(s.negative for s in stocks.values()),
-               empty_population=empty)
-    return {k: out[k] for k in METRIC_KEYS}
+               empty_population=empty,
+               stockout_calendar_days_share=None if empty else d6(ds.stockout_calendar_share),
+               observed_sku_days=len(pairs) * ds.observed_days)
+    return {k: out[k] for k in (*METRIC_KEYS, *EXTRA_METRIC_KEYS)}
 
 
 def negative_stock_flags(pop: Population, as_of: datetime) -> list[dict[str, Any]]:
     return [{"flag": f, "product_id": s.product_id, "location_id": s.location_id, "on_hand_raw": s.on_hand_raw}
             for s in ledger.reconstruct(pop.inventory_movements, as_of).values() for f in s.flags]
+
+
+def availability_flags(pop: Population, as_of: datetime) -> list[dict[str, Any]]:
+    """R3-07: NEGATIVE_AVAILABLE for every (product, location) whose available (clamped on hand - reserved) is below 0."""
+    stocks = ledger.reconstruct(pop.inventory_movements, as_of)
+    reserved: dict[tuple[str, str], int] = {}
+    for r in pop.reservations:
+        if r.reserved_at <= as_of and (r.released_at is None or r.released_at > as_of):
+            reserved[(r.product_id, r.location_id)] = reserved.get((r.product_id, r.location_id), 0) + r.quantity
+    out = []
+    for (p, l), res in sorted(reserved.items()):
+        st = stocks.get((p, l))
+        on_hand = st.on_hand if st else 0
+        if on_hand - res < 0:
+            out.append({"flag": NEGATIVE_AVAILABLE, "product_id": p, "location_id": l, "on_hand": on_hand,
+                        "reserved": res, "available": on_hand - res})
+    return out
 
 
 def group_values(pop: Population, key: str) -> dict[str, dict[str, Any]]:
@@ -169,8 +207,9 @@ def group_values(pop: Population, key: str) -> dict[str, dict[str, Any]]:
 
 
 def group_metrics(pop: Population, key: str, as_of: datetime, window: Window = (None, None),
-                  state: Mapping[str, Any] | None = None) -> dict[str, dict[str, Any]]:
-    return {g: compute_metrics(pop, as_of, window, state, **scope) for g, scope in group_values(pop, key).items()}
+                  state: Mapping[str, Any] | None = None, scenario_id: str | None = None) -> dict[str, dict[str, Any]]:
+    return {g: compute_metrics(pop, as_of, window, state, scenario_id=scenario_id, **scope)
+            for g, scope in group_values(pop, key).items()}
 
 
 def supplementary(pop: Population, as_of: datetime, window: Window = (None, None)) -> dict[str, Any]:

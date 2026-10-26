@@ -1,17 +1,22 @@
 // End to end: ingest -> population -> metrics (D-01..D-06). Returns the same keys as domain/supplyscope/pipeline.py.
 import { DomainError, UNKNOWN_STATE } from "./errors";
 import { populationOf, validateBatch } from "./ingest";
-import { computeMetrics, negativeStockFlags, type Window } from "./metrics";
+import { availabilityFlags, computeMetricsFull, negativeStockFlags, type Window } from "./metrics";
 import { parseTs } from "./time";
-import type { IngestResult, Metrics, PipelineInputs, Population, RejectedRecord, StateSpec } from "./types";
+import { METRIC_KEYS } from "./contract";
+import type { ExtraMetrics, IngestResult, Metrics, PipelineInputs, Population, RejectedRecord, StateSpec } from "./types";
 
 export interface PipelineResult {
   ingest: IngestResult;
   population: Population;
+  /** Exactly the keys of expected.json. */
   metrics: Metrics;
+  /** The metrics added after the fixture (R3-01), next to `metrics`. */
+  extraMetrics: ExtraMetrics;
   asOf: number;
   window: Window;
-  flags: { flag: string; product_id: string; location_id: string; on_hand_raw: number }[];
+  /** NEGATIVE_STOCK flags, then NEGATIVE_AVAILABLE flags (R3-07). */
+  flags: { flag: string; product_id: string; location_id: string; [k: string]: unknown }[];
   counts: IngestResult["counts"];
   rejected: RejectedRecord[];
 }
@@ -31,6 +36,8 @@ export function runPipeline(inputs: PipelineInputs, state: string | StateSpec | 
   const population = populationOf(ingest);
   const cut = asOf === null ? parseTs(inputs.as_of) : typeof asOf === "number" ? asOf : parseTs(asOf);
   const win: Window = window ?? [inputs.window_start ? parseTs(inputs.window_start) : null, null];
-  const metrics = computeMetrics(population, cut, win, resolveState(inputs, state));
-  return { ingest, population, metrics, asOf: cut, window: win, flags: negativeStockFlags(population, cut), counts: ingest.counts, rejected: ingest.rejected };
+  const full = computeMetricsFull(population, cut, win, resolveState(inputs, state));
+  const metrics = Object.fromEntries(METRIC_KEYS.map((k) => [k, full[k]])) as Metrics;
+  const extraMetrics: ExtraMetrics = { stockout_calendar_days_share: full.stockout_calendar_days_share, observed_sku_days: full.observed_sku_days };
+  return { ingest, population, metrics, extraMetrics, asOf: cut, window: win, flags: [...negativeStockFlags(population, cut), ...availabilityFlags(population, cut)], counts: ingest.counts, rejected: ingest.rejected };
 }

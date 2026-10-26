@@ -77,13 +77,23 @@ def count(conn: psycopg.Connection[Any], table: str) -> int:
 _seq = {"n": 0}
 
 
+def current_dataset_version() -> str:
+    """The dataset_version a well-behaved client sends (D-07): the newest dataset_versions row, else 'ds-test'."""
+    with psycopg.connect(os.environ["DATABASE_URL"], row_factory=dict_row, autocommit=True) as c:
+        row = c.execute("SELECT dataset_version FROM dataset_versions ORDER BY created_at DESC, dataset_version DESC "
+                        "LIMIT 1").fetchone()
+    return row["dataset_version"] if row else "ds-test"
+
+
 def command(client, name: str, input_: dict[str, Any], key: str | None = None,
-            headers: dict[str, str] | None = None, request_id: str = "req-test"):
-    """POST one command with a fresh idempotency key unless ``key`` is given (default actor: plan-1, planner)."""
+            headers: dict[str, str] | None = None, request_id: str = "req-test", dataset_version: str | None = None):
+    """POST one command with a fresh idempotency key unless ``key`` is given (default actor: plan-1, planner). The
+    request carries the current dataset_version unless ``dataset_version`` says otherwise."""
     if key is None:
         _seq["n"] += 1
         key = f"key-{os.getpid()}-{_seq['n']}"
-    body = {"request_id": request_id, "dataset_version": "ds-test", "idempotency_key": key, "input": input_}
+    body = {"request_id": request_id, "dataset_version": dataset_version or current_dataset_version(),
+            "idempotency_key": key, "input": input_}
     return client.post(f"{PREFIX}/commands/{name}", json=body, headers=PLANNER if headers is None else headers)
 
 

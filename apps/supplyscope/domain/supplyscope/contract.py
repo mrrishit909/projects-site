@@ -18,6 +18,11 @@ METRIC_KEYS = ("fill_rate", "requested_units", "fulfilled_units", "unmet_units",
                "reserved", "available", "inventory_position", "reorder_point", "target_position",
                "reorder_triggered", "raw_order", "order_after_moq", "order_quantity")
 
+#: Metrics added after the golden fixture (R3-01): reported next to METRIC_KEYS, never part of expected.json.
+#: ``stockout_calendar_days_share`` = calendar dates with any unmet demand / calendar days observed;
+#: ``observed_sku_days`` = the denominator of ``stockout_days`` (active pairs x calendar days observed).
+EXTRA_METRIC_KEYS = ("stockout_calendar_days_share", "observed_sku_days")
+
 GROUP_KEYS = ("product", "location", "supplier", "abc_class")
 MOVEMENT_TYPES = ("receipt", "sale", "adjustment", "review", "return")
 PO_STATUSES = ("confirmed", "cancelled", "closed")

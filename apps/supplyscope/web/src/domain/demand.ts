@@ -1,6 +1,8 @@
 // Demand, unmet demand and common random numbers (D-03, D-04, D-05, D-06).
 // Requested = immediately fulfilled sales + unmet demand opened in the window; unmet is a backorder (backlog policy) or a
-// lost sale (lost_sale policy), never both. A stockout day is a date on which unmet demand opened.
+// lost sale (lost_sale policy), never both. A stockout day of a (product, location) pair is a date on which unmet demand
+// opened for it. `stockout_days` is the SKU-day rate: sum of pair stockout days / sum of pair observed days (R3-01); the
+// calendar share (dates with any unmet demand / calendar days) is reported separately.
 import { UNMET_POLICIES } from "./contract";
 import { DomainError, POLICY_SEED_MISMATCH, UNKNOWN_POLICY } from "./errors";
 import { ratio, type Rat } from "./money";
@@ -8,25 +10,39 @@ import { packRoundUp } from "./replenishment";
 import { dayOf, parseDay } from "./time";
 import type { Backorder, Latent, LostSale, Sale, Scenario } from "./types";
 
+/** One microsecond in epoch milliseconds (instants carry whole microseconds, R3-05). */
+export const ONE_US = 0.001;
 /** start <= t < end, and never after the information cutoff `asOf` (an absent end means "up to asOf"). */
 export const inWindow = (t: number, start: number | null, end: number | null, asOf: number): boolean =>
   t <= asOf && (start === null || t >= start) && (end === null || t < end);
 /** The last UTC day observed: asOf, or just before the window end, whichever is earlier. */
-export const lastObservedDay = (end: number | null, asOf: number): number => dayOf(end === null ? asOf : Math.min(asOf, end - 1));
+export const lastObservedDay = (end: number | null, asOf: number): number => dayOf(end === null ? asOf : Math.min(asOf, end - ONE_US));
 export const observedDays = (start: number, end: number | null, asOf: number): number => Math.max(lastObservedDay(end, asOf) - dayOf(start) + 1, 0);
 
-export interface DemandSummary { requested: number; fulfilled: number; unmet: number; stockoutDates: Set<number>; observedDays: number }
+export interface DemandSummary {
+  requested: number; fulfilled: number; unmet: number;
+  /** Calendar days on which any pair had unmet demand. */
+  stockoutDates: Set<number>;
+  /** Calendar days in the window (per pair). */
+  observedDays: number;
+  /** (product, location, day) SKU-days with unmet demand. */
+  stockoutPairDays: Set<string>;
+}
 export const fillRate = (s: DemandSummary): Rat | null => ratio(s.fulfilled, s.requested);
-export const stockoutDayRatio = (s: DemandSummary): Rat | null => ratio(s.stockoutDates.size, s.observedDays);
+/** Calendar dates with any unmet demand / calendar days observed (R3-01: the calendar-day figure). */
+export const stockoutCalendarShare = (s: DemandSummary): Rat | null => ratio(s.stockoutDates.size, s.observedDays);
+/** Sum of pair stockout days / (active pairs x calendar days observed): groups reconcile to the total (R3-01). */
+export const stockoutSkuDayRate = (s: DemandSummary, pairs: number): Rat | null => ratio(s.stockoutPairDays.size, pairs * s.observedDays);
 
 export function summarise(sales: Iterable<Sale>, backorders: Iterable<Backorder>, lostSales: Iterable<LostSale>,
   start: number, end: number | null, asOf: number): DemandSummary {
   let fulfilled = 0, unmet = 0;
   const dates = new Set<number>();
+  const pairDays = new Set<string>();
   for (const s of sales) if (inWindow(s.sold_at, start, end, asOf)) fulfilled += s.quantity;
-  for (const b of backorders) if (inWindow(b.opened_at, start, end, asOf)) { unmet += b.quantity; dates.add(dayOf(b.opened_at)); }
-  for (const l of lostSales) if (inWindow(l.occurred_at, start, end, asOf)) { unmet += l.quantity; dates.add(dayOf(l.occurred_at)); }
-  return { requested: fulfilled + unmet, fulfilled, unmet, stockoutDates: dates, observedDays: observedDays(start, end, asOf) };
+  for (const b of backorders) if (inWindow(b.opened_at, start, end, asOf)) { unmet += b.quantity; dates.add(dayOf(b.opened_at)); pairDays.add(`${b.product_id}\u0000${b.location_id}\u0000${dayOf(b.opened_at)}`); }
+  for (const l of lostSales) if (inWindow(l.occurred_at, start, end, asOf)) { unmet += l.quantity; dates.add(dayOf(l.occurred_at)); pairDays.add(`${l.product_id}\u0000${l.location_id}\u0000${dayOf(l.occurred_at)}`); }
+  return { requested: fulfilled + unmet, fulfilled, unmet, stockoutDates: dates, observedDays: observedDays(start, end, asOf), stockoutPairDays: pairDays };
 }
 
 /** Exactly one of backorder / lost sale takes the shortfall (P03-TEST-08). */

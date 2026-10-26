@@ -1,7 +1,11 @@
 -- SupplyScope reference metrics: an independent SQL recomputation of the golden numbers (no code shared with the
 -- Python domain). Parameters: %(as_of)s, %(window_start)s, %(window_end)s (NULL = up to and including as_of).
 -- D-01 day order inside a date: receipts (0), then sales (1), then review and the rest (2), then event_at, id.
--- One row, the keys of expected.json. Money is numeric(14,2) text, rates are numeric text at 6 dp (ROUND half up).
+-- One row: the keys of expected.json, then the extra keys stockout_calendar_days_share and observed_sku_days (R3-01).
+-- Money is numeric(14,2) text, rates are numeric text at 6 dp (ROUND half up). Sums and the integer outputs are BIGINT
+-- (R3-07: an int4 cast overflowed on large ledgers). Unmet-demand rows recorded under a scenario (scenario_id not null)
+-- are not canonical and are excluded (R3-02). The position sums the unclamped ledger over every location (R3-04, R3-07).
+-- stockout_days = sum of pair stockout days / (active pairs x calendar days observed), pairs active by as_of (R3-01).
 WITH p AS (
     SELECT %(as_of)s::timestamptz AS as_of, %(window_start)s::timestamptz AS ws, %(window_end)s::timestamptz AS we
 ), day_ord AS (
@@ -40,10 +44,11 @@ WITH p AS (
       FROM products pr
 ), open_bo AS (
     SELECT b.product_id, b.location_id, sum(b.quantity) AS q
-      FROM backorders b, p WHERE b.opened_at <= p.as_of AND (b.closed_at IS NULL OR b.closed_at > p.as_of) GROUP BY 1, 2
+      FROM backorders b, p WHERE b.scenario_id IS NULL AND b.opened_at <= p.as_of
+       AND (b.closed_at IS NULL OR b.closed_at > p.as_of) GROUP BY 1, 2
 ), rep AS (
     SELECT rp.product_id, rp.location_id, rp.reorder_point, rp.target_position, pr.minimum_order_quantity AS moq, pr.pack_size,
-           COALESCE(s.on_hand, 0) AS oh,
+           COALESCE(s.raw, 0) AS oh,
            CASE WHEN a.location_id = rp.location_id
                 THEN COALESCE((SELECT sum(open_q) FROM open_lines o WHERE o.product_id = rp.product_id), 0) ELSE 0 END AS oo,
            COALESCE(b.q, 0) AS bo
@@ -59,22 +64,40 @@ WITH p AS (
 ), rep4 AS (
     SELECT *, CASE WHEN trig THEN GREATEST(raw_q, moq) ELSE 0 END AS after_moq FROM rep3
 ), rep5 AS (
-    SELECT *, CASE WHEN trig THEN CEIL(after_moq::numeric / pack_size)::int * pack_size ELSE 0 END AS qty FROM rep4
+    SELECT *, CASE WHEN trig THEN CEIL(after_moq::numeric / pack_size)::bigint * pack_size ELSE 0 END AS qty FROM rep4
 ), demand AS (
     SELECT (SELECT COALESCE(sum(s.quantity), 0) FROM sales s, p
              WHERE s.sold_at <= p.as_of AND s.sold_at >= p.ws AND (p.we IS NULL OR s.sold_at < p.we)) AS fulfilled,
            (SELECT COALESCE(sum(q), 0) FROM (
                 SELECT b.quantity AS q FROM backorders b, p
-                 WHERE b.opened_at <= p.as_of AND b.opened_at >= p.ws AND (p.we IS NULL OR b.opened_at < p.we)
+                 WHERE b.scenario_id IS NULL AND b.opened_at <= p.as_of AND b.opened_at >= p.ws AND (p.we IS NULL OR b.opened_at < p.we)
                 UNION ALL
                 SELECT l.quantity FROM lost_sales l, p
-                 WHERE l.occurred_at <= p.as_of AND l.occurred_at >= p.ws AND (p.we IS NULL OR l.occurred_at < p.we)) u) AS unmet,
+                 WHERE l.scenario_id IS NULL AND l.occurred_at <= p.as_of AND l.occurred_at >= p.ws
+                   AND (p.we IS NULL OR l.occurred_at < p.we)) u) AS unmet,
            (SELECT count(DISTINCT d) FROM (
                 SELECT (b.opened_at AT TIME ZONE 'UTC')::date AS d FROM backorders b, p
-                 WHERE b.opened_at <= p.as_of AND b.opened_at >= p.ws AND (p.we IS NULL OR b.opened_at < p.we)
+                 WHERE b.scenario_id IS NULL AND b.opened_at <= p.as_of AND b.opened_at >= p.ws
+                   AND (p.we IS NULL OR b.opened_at < p.we)
                 UNION ALL
                 SELECT (l.occurred_at AT TIME ZONE 'UTC')::date FROM lost_sales l, p
-                 WHERE l.occurred_at <= p.as_of AND l.occurred_at >= p.ws AND (p.we IS NULL OR l.occurred_at < p.we)) u) AS so_days,
+                 WHERE l.scenario_id IS NULL AND l.occurred_at <= p.as_of AND l.occurred_at >= p.ws
+                   AND (p.we IS NULL OR l.occurred_at < p.we)) u) AS so_days,
+           (SELECT count(*) FROM (
+                SELECT b.product_id, b.location_id, (b.opened_at AT TIME ZONE 'UTC')::date AS d FROM backorders b, p
+                 WHERE b.scenario_id IS NULL AND b.opened_at <= p.as_of AND b.opened_at >= p.ws
+                   AND (p.we IS NULL OR b.opened_at < p.we)
+                UNION
+                SELECT l.product_id, l.location_id, (l.occurred_at AT TIME ZONE 'UTC')::date FROM lost_sales l, p
+                 WHERE l.scenario_id IS NULL AND l.occurred_at <= p.as_of AND l.occurred_at >= p.ws
+                   AND (p.we IS NULL OR l.occurred_at < p.we)) u) AS so_pair_days,
+           (SELECT count(*) FROM (
+                SELECT m.product_id, m.location_id FROM inventory_movements m, p WHERE m.event_at <= p.as_of
+                UNION SELECT s.product_id, s.location_id FROM sales s, p WHERE s.sold_at <= p.as_of
+                UNION SELECT b.product_id, b.location_id FROM backorders b, p
+                       WHERE b.scenario_id IS NULL AND b.opened_at <= p.as_of
+                UNION SELECT l.product_id, l.location_id FROM lost_sales l, p
+                       WHERE l.scenario_id IS NULL AND l.occurred_at <= p.as_of) a) AS n_pairs,
            GREATEST(((LEAST(p.as_of, COALESCE(p.we - interval '1 microsecond', p.as_of)) AT TIME ZONE 'UTC')::date
                      - (p.ws AT TIME ZONE 'UTC')::date) + 1, 0) AS obs_days
       FROM p
@@ -87,6 +110,7 @@ WITH p AS (
       FROM stock s JOIN products pr ON pr.product_id = s.product_id
 ), t AS (
     SELECT (SELECT COALESCE(sum(on_hand), 0) FROM stock) AS on_hand,
+           (SELECT COALESCE(sum(raw), 0) FROM stock) AS on_hand_raw,
            (SELECT COALESCE(sum(open_q), 0) FROM open_lines) AS on_order,
            (SELECT COALESCE(sum(q), 0) FROM open_bo) AS backorders,
            (SELECT COALESCE(sum(r.quantity), 0) FROM reservations r, p
@@ -95,27 +119,30 @@ WITH p AS (
 )
 SELECT CASE WHEN d.fulfilled + d.unmet = 0 THEN NULL
             ELSE round(d.fulfilled::numeric / (d.fulfilled + d.unmet), 6)::text END AS fill_rate,
-       (d.fulfilled + d.unmet)::int AS requested_units,
-       d.fulfilled::int AS fulfilled_units,
-       d.unmet::int AS unmet_units,
-       d.obs_days::int AS observed_days,
-       d.so_days::int AS stockout_day_count,
+       (d.fulfilled + d.unmet)::bigint AS requested_units,
+       d.fulfilled::bigint AS fulfilled_units,
+       d.unmet::bigint AS unmet_units,
+       d.obs_days::bigint AS observed_days,
+       d.so_pair_days::bigint AS stockout_day_count,
        CASE WHEN NOT EXISTS (SELECT 1 FROM inventory_movements) AND NOT EXISTS (SELECT 1 FROM sales) THEN NULL
-            WHEN d.obs_days = 0 THEN NULL
-            ELSE round(d.so_days::numeric / d.obs_days, 6)::text END AS stockout_days,
-       LEAST(0, COALESCE((SELECT min(low) FROM stock), 0))::int AS running_stock_min,
-       LEAST(0, COALESCE((SELECT min(naive_low) FROM stock), 0))::int AS timestamp_order_stock_min,
+            WHEN d.obs_days = 0 OR d.n_pairs = 0 THEN NULL
+            ELSE round(d.so_pair_days::numeric / (d.n_pairs::numeric * d.obs_days), 6)::text END AS stockout_days,
+       LEAST(0, COALESCE((SELECT min(low) FROM stock), 0))::bigint AS running_stock_min,
+       LEAST(0, COALESCE((SELECT min(naive_low) FROM stock), 0))::bigint AS timestamp_order_stock_min,
        COALESCE((SELECT bool_or(raw < 0 OR low < 0) FROM stock), false) AS negative_stock,
        round(c.value, 2)::text AS working_capital,
        (NOT EXISTS (SELECT 1 FROM inventory_movements) AND NOT EXISTS (SELECT 1 FROM sales)) AS empty_population,
-       t.on_hand::int AS on_hand, t.on_order::int AS on_order, t.backorders::int AS backorders, t.reserved::int AS reserved,
-       (t.on_hand - t.reserved)::int AS available,
-       CASE WHEN t.n_params = 1 THEN (SELECT pos FROM rep5)::int
-            ELSE (t.on_hand + t.on_order - t.backorders)::int END AS inventory_position,
-       (SELECT CASE WHEN count(*) = 0 THEN NULL ELSE sum(reorder_point) END FROM rep5)::int AS reorder_point,
-       (SELECT CASE WHEN count(*) = 0 THEN NULL ELSE sum(target_position) END FROM rep5)::int AS target_position,
+       t.on_hand::bigint AS on_hand, t.on_order::bigint AS on_order, t.backorders::bigint AS backorders,
+       t.reserved::bigint AS reserved, (t.on_hand - t.reserved)::bigint AS available,
+       (t.on_hand_raw + t.on_order - t.backorders)::bigint AS inventory_position,
+       (SELECT CASE WHEN count(*) = 0 THEN NULL ELSE sum(reorder_point) END FROM rep5)::bigint AS reorder_point,
+       (SELECT CASE WHEN count(*) = 0 THEN NULL ELSE sum(target_position) END FROM rep5)::bigint AS target_position,
        (SELECT CASE WHEN count(*) = 0 THEN NULL ELSE bool_or(trig) END FROM rep5) AS reorder_triggered,
-       (SELECT CASE WHEN count(*) = 0 THEN NULL ELSE sum(raw_q) END FROM rep5)::int AS raw_order,
-       (SELECT CASE WHEN count(*) = 0 THEN NULL ELSE sum(after_moq) END FROM rep5)::int AS order_after_moq,
-       (SELECT CASE WHEN count(*) = 0 THEN NULL ELSE sum(qty) END FROM rep5)::int AS order_quantity
+       (SELECT CASE WHEN count(*) = 0 THEN NULL ELSE sum(raw_q) END FROM rep5)::bigint AS raw_order,
+       (SELECT CASE WHEN count(*) = 0 THEN NULL ELSE sum(after_moq) END FROM rep5)::bigint AS order_after_moq,
+       (SELECT CASE WHEN count(*) = 0 THEN NULL ELSE sum(qty) END FROM rep5)::bigint AS order_quantity,
+       CASE WHEN NOT EXISTS (SELECT 1 FROM inventory_movements) AND NOT EXISTS (SELECT 1 FROM sales) THEN NULL
+            WHEN d.obs_days = 0 THEN NULL
+            ELSE round(d.so_days::numeric / d.obs_days, 6)::text END AS stockout_calendar_days_share,
+       (d.n_pairs * d.obs_days)::bigint AS observed_sku_days
   FROM t, demand d, capital c;

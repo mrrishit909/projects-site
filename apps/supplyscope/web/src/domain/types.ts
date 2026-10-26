@@ -59,6 +59,14 @@ export type Metrics = {
   target_position: number | null; reorder_triggered: boolean | null; raw_order: number | null; order_after_moq: number | null;
   order_quantity: number | null;
 } & Record<MetricKey, string | number | boolean | null>;
+/** The metrics added after the golden fixture (R3-01), reported next to `Metrics` by `computeMetricsFull`. */
+export interface ExtraMetrics {
+  /** Dates with any unmet demand / calendar days observed (the calendar-day figure; `stockout_days` is the SKU-day rate). */
+  stockout_calendar_days_share: string | null;
+  /** Active (product, location) pairs x calendar days observed: the denominator of `stockout_days`. */
+  observed_sku_days: number;
+}
+export type FullMetrics = Metrics & ExtraMetrics;
 
 export interface Manifest {
   contract_version: string; dataset_hash: string; dataset_version: string; generated_at: string;

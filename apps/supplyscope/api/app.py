@@ -80,8 +80,9 @@ def create_app() -> FastAPI:
 
     @router.get("/metrics", response_model=ReadResponse, tags=["reads"])
     def read_metrics(as_of: str | None = None, from_: str | None = Query(default=None, alias="from"),
-                     to: str | None = None, state: str | None = None, group_by: str = "none") -> dict[str, Any]:
-        return reads.read_metrics(as_of, from_, to, state, group_by)
+                     to: str | None = None, state: str | None = None, group_by: str = "none",
+                     scenario: str | None = None) -> dict[str, Any]:
+        return reads.read_metrics(as_of, from_, to, state, group_by, scenario)
 
     app.include_router(router)
     return app

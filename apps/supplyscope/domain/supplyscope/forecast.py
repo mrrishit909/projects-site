@@ -71,13 +71,13 @@ def ewma_level(history: list[int]) -> Fraction:
 
 
 def promo_factor(promotions: Iterable[Promotion], product_id: str, day: date, known_at: datetime) -> Fraction:
-    """Planned uplift of promotions whose schedule was announced by ``known_at`` and which cover ``day``.
+    """Factor 1 + planned uplift of promotions whose schedule was announced by ``known_at`` and which cover ``day``.
     ``realised_uplift`` (an outcome) is deliberately never read here."""
     f = Fraction(1)
     for p in promotions:
         if p.product_id == product_id and p.announced_at <= known_at and \
                 p.starts_at.astimezone(timezone.utc).date() <= day <= p.ends_at.astimezone(timezone.utc).date():
-            f *= Fraction(p.planned_uplift)
+            f *= 1 + Fraction(p.planned_uplift)   # S-03: an uplift of 0.35 is a factor of 1.35, not 0.35
     return f
 
 

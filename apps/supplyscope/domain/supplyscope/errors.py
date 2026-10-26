@@ -19,8 +19,14 @@ UNMET_POLICY_CONFLICT = "UNMET_POLICY_CONFLICT"
 POLICY_SEED_MISMATCH = "POLICY_SEED_MISMATCH"
 UNKNOWN_STATE = "UNKNOWN_STATE"
 UNKNOWN_POLICY = "UNKNOWN_POLICY"
+#: R3-06: a parameter row whose target position is below its reorder point (D-02: a triggered order would be 0 or negative).
+REPLENISHMENT_PARAMS_INVALID = "REPLENISHMENT_PARAMS_INVALID"
+#: D-07: the request's dataset_version is not the current one (API).
+STALE_DATASET_VERSION = "STALE_DATASET_VERSION"
 #: A flag (a warning on a reconstruction), not an error.
 NEGATIVE_STOCK = "NEGATIVE_STOCK"
+#: R3-07: available (clamped on hand - reserved) is below zero for a (product, location): a flag, not an error.
+NEGATIVE_AVAILABLE = "NEGATIVE_AVAILABLE"
 
 
 class DomainError(Exception):

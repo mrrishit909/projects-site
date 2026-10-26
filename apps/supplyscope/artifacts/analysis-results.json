@@ -2146,8 +2146,8 @@
    "sku": "prod-002",
    "option": "derived from the forecast at 0.90",
    "position": 118,
-   "reorder_point": 99,
-   "target_position": 142,
+   "reorder_point": 102,
+   "target_position": 145,
    "triggered": false,
    "order_quantity": 0,
    "order_value": "0.00"
@@ -2156,8 +2156,8 @@
    "sku": "prod-002",
    "option": "derived from the forecast at 0.95",
    "position": 118,
-   "reorder_point": 107,
-   "target_position": 150,
+   "reorder_point": 109,
+   "target_position": 152,
    "triggered": false,
    "order_quantity": 0,
    "order_value": "0.00"
@@ -2176,8 +2176,8 @@
    "sku": "prod-005",
    "option": "derived from the forecast at 0.90",
    "position": 48,
-   "reorder_point": 47,
-   "target_position": 95,
+   "reorder_point": 48,
+   "target_position": 96,
    "triggered": false,
    "order_quantity": 0,
    "order_value": "0.00"
@@ -2263,12 +2263,12 @@
   {
    "measure": "Stockout SKU Day Share",
    "expected": "0.013108",
-   "source": "431 / 32880, query 03 ALL"
+   "source": "431 / 32880, query 03 ALL, reference_metrics.sql stockout_days"
   },
   {
    "measure": "Stockout Calendar Day Share",
    "expected": "0.529197",
-   "source": "290 / 548, reference_metrics.sql stockout_days"
+   "source": "290 / 548, reference_metrics.sql stockout_calendar_days_share"
   },
   {
    "measure": "On Hand Units (2026-09-30)",
@@ -2504,10 +2504,34 @@
    "equal": true
   },
   {
-   "check": "B stockout days (distinct dates with unmet demand, all pairs): SQL vs reference vs domain",
-   "analysis_sql": "290",
-   "second_source": "290",
-   "third_source": "290",
+   "check": "B stockout calendar dates (distinct dates with unmet demand, all pairs): SQL vs reference vs domain",
+   "analysis_sql": "0.529197",
+   "second_source": "0.529197",
+   "third_source": "0.529197",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B stockout SKU-days (pair x date cells, R3-01): query 03 ALL vs reference stockout_day_count vs domain",
+   "analysis_sql": "431",
+   "second_source": "431",
+   "third_source": "431",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B stockout SKU-day rate = pair-days / (60 pairs x 548 days): query 03 ALL vs reference vs domain",
+   "analysis_sql": "0.013108",
+   "second_source": "0.013108",
+   "third_source": "0.013108",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B observed SKU-days (60 pairs x 548 days): reference vs domain",
+   "analysis_sql": "32880",
+   "second_source": "32880",
+   "third_source": "32880",
    "fourth_source": "",
    "equal": true
   },
@@ -2568,9 +2592,17 @@
    "equal": true
   },
   {
-   "check": "B bi Stockout Calendar Day Share (facts) vs reference_metrics.sql stockout_days",
+   "check": "B bi Stockout Calendar Day Share (facts) vs reference_metrics.sql stockout_calendar_days_share",
    "analysis_sql": "0.529197",
    "second_source": "0.529197",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B bi Stockout SKU Day Share (facts) vs reference_metrics.sql stockout_days",
+   "analysis_sql": "0.013108",
+   "second_source": "0.013108",
    "third_source": "",
    "fourth_source": "",
    "equal": true
@@ -3353,8 +3385,8 @@
    "fulfilled_units": 36076,
    "unmet_units": 2612,
    "observed_days": 548,
-   "stockout_day_count": 290,
-   "stockout_days": "0.529197",
+   "stockout_day_count": 431,
+   "stockout_days": "0.013108",
    "running_stock_min": 0,
    "timestamp_order_stock_min": 0,
    "negative_stock": false,
@@ -3371,7 +3403,9 @@
    "reorder_triggered": true,
    "raw_order": 230,
    "order_after_moq": 230,
-   "order_quantity": 240
+   "order_quantity": 240,
+   "stockout_calendar_days_share": "0.529197",
+   "observed_sku_days": 32880
   }
  ],
  "python_domain_snapshot": [
@@ -3381,8 +3415,8 @@
    "fulfilled_units": 36076,
    "unmet_units": 2612,
    "observed_days": 548,
-   "stockout_day_count": 290,
-   "stockout_days": "0.529197",
+   "stockout_day_count": 431,
+   "stockout_days": "0.013108",
    "running_stock_min": 0,
    "timestamp_order_stock_min": 0,
    "negative_stock": false,
@@ -3399,7 +3433,9 @@
    "reorder_triggered": true,
    "raw_order": 230,
    "order_after_moq": 230,
-   "order_quantity": 240
+   "order_quantity": 240,
+   "stockout_calendar_days_share": "0.529197",
+   "observed_sku_days": 32880
   }
  ]
 }

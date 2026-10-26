@@ -14,6 +14,12 @@ from .errors import UNSUPPORTED_SERVICE_TARGET, DomainError
 from .models import Closure
 
 
+def params_valid(reorder_point: int, target_position: int) -> bool:
+    """R3-06: the target position must be at least the reorder point (otherwise a triggered order cannot restore the
+    position to the reorder point)."""
+    return target_position >= reorder_point
+
+
 def inventory_position(on_hand: int, on_order: int, backorders: int) -> int:
     return on_hand + on_order - backorders
 

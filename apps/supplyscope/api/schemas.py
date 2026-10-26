@@ -104,7 +104,7 @@ class UnmetInput(Instants):
     product_id: Id
     location_id: Id
     quantity: StrictInt = Field(ge=1, le=10**9)
-    occurred_at: StrictStr | None = None
+    occurred_at: StrictStr               # required (R3-02): never defaulted to the server clock
     demand_ref: Id | None = None
     policy: StrictStr | None = None
 

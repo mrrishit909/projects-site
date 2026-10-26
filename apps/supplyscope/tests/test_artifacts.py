@@ -370,8 +370,9 @@ def test_stored_results_equal_the_python_domain_over_the_snapshot_files(domain_r
     assert (str(a03["fill_rate"]), a03["fulfilled_units"], a03["unmet_units"]) == (m["fill_rate"], m["fulfilled_units"], m["unmet_units"])
     assert str(next(r for r in RES["06_working_capital_by_location"] if r["month"] == "2026-09")["end_total"]) == m["working_capital"]
     assert RES["reference_metrics_snapshot"][0]["fill_rate"] == m["fill_rate"] and RES["reference_metrics_snapshot"][0]["on_hand"] == m["on_hand"]
-    # the two stockout-day metrics of R3-01
-    assert (m["stockout_day_count"], m["observed_days"], m["stockout_days"]) == (290, 548, "0.529197")
+    # the two stockout-day metrics of R3-01 (fixed in T-03-07: stockout_days is the SKU-day rate, the calendar share its own key)
+    assert (m["stockout_day_count"], m["observed_days"], m["stockout_days"]) == (431, 548, "0.013108")
+    assert (m["stockout_calendar_days_share"], m["observed_sku_days"]) == ("0.529197", 60 * 548)
     assert a03["stockout_pair_days"] == 431 and str(a03["stockout_pair_day_share"]) == "0.013108"
     for r in RES["03_fill_rate_stockout_by_location_abc"]:
         locs = None if r["location_id"] == "ALL" else {r["location_id"]}

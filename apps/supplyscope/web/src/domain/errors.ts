@@ -15,8 +15,12 @@ export const UNMET_POLICY_CONFLICT = "UNMET_POLICY_CONFLICT";
 export const POLICY_SEED_MISMATCH = "POLICY_SEED_MISMATCH";
 export const UNKNOWN_STATE = "UNKNOWN_STATE";
 export const UNKNOWN_POLICY = "UNKNOWN_POLICY";
+/** R3-06: a parameter row whose target position is below its reorder point. */
+export const REPLENISHMENT_PARAMS_INVALID = "REPLENISHMENT_PARAMS_INVALID";
 /** A flag (a warning on a reconstruction), not an error. */
 export const NEGATIVE_STOCK = "NEGATIVE_STOCK";
+/** R3-07: available (clamped on hand - reserved) is below zero for a (product, location): a flag, not an error. */
+export const NEGATIVE_AVAILABLE = "NEGATIVE_AVAILABLE";
 
 /** A business-rule violation with a stable machine-readable code. */
 export class DomainError extends Error {

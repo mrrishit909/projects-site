@@ -1,7 +1,9 @@
 """Demand, unmet demand and common random numbers (D-03, D-04, D-05, D-06).
 
 Requested = immediately fulfilled sales + unmet demand opened in the window; unmet is a backorder (backlog policy) or
-a lost sale (lost_sale policy), never both. A stockout day is a date on which unmet demand opened."""
+a lost sale (lost_sale policy), never both. A stockout day of a (product, location) pair is a date on which unmet demand
+opened for it. ``stockout_days`` is the SKU-day rate: sum of pair stockout days / sum of pair observed days (R3-01); the
+calendar share (dates with any unmet demand / calendar days) is reported separately."""
 from __future__ import annotations
 
 import math
@@ -38,27 +40,36 @@ class DemandSummary:
     requested: int
     fulfilled: int
     unmet: int
-    stockout_dates: frozenset[date]
-    observed_days: int
+    stockout_dates: frozenset[date]        # calendar dates on which any pair had unmet demand
+    observed_days: int                     # calendar days in the window (per pair)
+    stockout_pair_days: frozenset[tuple[str, str, date]] = frozenset()   # (product, location, date) SKU-days
 
     @property
     def fill_rate(self) -> Fraction | None:
         return ratio(self.fulfilled, self.requested)
 
     @property
-    def stockout_day_ratio(self) -> Fraction | None:
+    def stockout_calendar_share(self) -> Fraction | None:
+        """Calendar dates with any unmet demand / calendar days observed (R3-01: the calendar-day figure)."""
         return ratio(len(self.stockout_dates), self.observed_days)
+
+    def stockout_sku_day_rate(self, pairs: int) -> Fraction | None:
+        """Sum of pair stockout days / (active pairs x calendar days observed): groups reconcile to the total."""
+        return ratio(len(self.stockout_pair_days), pairs * self.observed_days)
 
 
 def summarise(sales: Iterable[Sale], backorders: Iterable[Backorder], lost_sales: Iterable[LostSale],
               start: datetime, end: datetime | None, as_of: datetime) -> DemandSummary:
     fulfilled = sum(s.quantity for s in sales if in_window(s.sold_at, start, end, as_of))
-    unmet_rows = [(b.opened_at, b.quantity) for b in backorders if in_window(b.opened_at, start, end, as_of)]
-    unmet_rows += [(l.occurred_at, l.quantity) for l in lost_sales if in_window(l.occurred_at, start, end, as_of)]
-    unmet = sum(q for _, q in unmet_rows)
+    unmet_rows = [(b.opened_at, b.quantity, b.product_id, b.location_id) for b in backorders
+                  if in_window(b.opened_at, start, end, as_of)]
+    unmet_rows += [(l.occurred_at, l.quantity, l.product_id, l.location_id) for l in lost_sales
+                   if in_window(l.occurred_at, start, end, as_of)]
+    unmet = sum(q for _, q, _, _ in unmet_rows)
     return DemandSummary(fulfilled + unmet, fulfilled, unmet,
-                         frozenset(t.astimezone(timezone.utc).date() for t, _ in unmet_rows),
-                         observed_days(start, end, as_of))
+                         frozenset(t.astimezone(timezone.utc).date() for t, _, _, _ in unmet_rows),
+                         observed_days(start, end, as_of),
+                         frozenset((p, l, t.astimezone(timezone.utc).date()) for t, _, p, l in unmet_rows))
 
 
 def apply_unmet_policy(policy: str, unmet_quantity: int) -> dict[str, int]:

@@ -20,6 +20,11 @@ export const METRIC_KEYS = [
   "reorder_point", "target_position", "reorder_triggered", "raw_order", "order_after_moq", "order_quantity",
 ] as const;
 export type MetricKey = (typeof METRIC_KEYS)[number];
+/** Metrics added after the golden fixture (R3-01): reported next to METRIC_KEYS, never part of expected.json.
+ * `stockout_calendar_days_share` = calendar dates with any unmet demand / calendar days observed;
+ * `observed_sku_days` = the denominator of `stockout_days` (active pairs x calendar days observed). */
+export const EXTRA_METRIC_KEYS = ["stockout_calendar_days_share", "observed_sku_days"] as const;
+export type ExtraMetricKey = (typeof EXTRA_METRIC_KEYS)[number];
 
 export const GROUP_KEYS = ["product", "location", "supplier", "abc_class"] as const;
 export type GroupKey = (typeof GROUP_KEYS)[number];

@@ -2,7 +2,8 @@
 
 Reasons: MALFORMED_RECORD, DUPLICATE_ID (any entity), DUPLICATE_MOVEMENT_ID (an exact replay of a movement id: the first
 occurrence is kept), DUPLICATE_MOVEMENT_CONFLICT (the same id with different payloads: EVERY occurrence is rejected),
-UNKNOWN_REFERENCE, RECEIPT_BEFORE_ORDER, RECEIPT_EXCEEDS_ORDERED (a receipt that would take received above ordered).
+UNKNOWN_REFERENCE, RECEIPT_BEFORE_ORDER, RECEIPT_EXCEEDS_ORDERED (a receipt that would take received above ordered),
+REPLENISHMENT_PARAMS_INVALID (a parameter row whose target position is below its reorder point, R3-06).
 """
 from __future__ import annotations
 
@@ -12,11 +13,13 @@ from typing import Any, Iterable, Mapping
 
 from .contract import ACCEPTED_INPUT_CONTRACTS, ENTITIES, EXTRA_ENTITIES
 from .errors import (CONTRACT_MISMATCH, DUPLICATE_ID, DUPLICATE_MOVEMENT_CONFLICT, DUPLICATE_MOVEMENT_ID,
-                     MALFORMED_RECORD, RECEIPT_BEFORE_ORDER, RECEIPT_EXCEEDS_ORDERED, UNKNOWN_REFERENCE, DomainError)
+                     MALFORMED_RECORD, RECEIPT_BEFORE_ORDER, RECEIPT_EXCEEDS_ORDERED, REPLENISHMENT_PARAMS_INVALID,
+                     UNKNOWN_REFERENCE, DomainError)
+from .replenishment import params_valid
 from .models import (Movement, Population, PoLine, PurchaseOrder, Receipt, ATTR, iso_z, parse_row, row_id)
 
-#: Parents before children.
-ORDER = ("products", "locations", "suppliers", "calendar_closures", "policy_scenarios", "cost_versions",
+#: Parents before children (S-02: suppliers load before products, which may reference one).
+ORDER = ("suppliers", "products", "locations", "calendar_closures", "policy_scenarios", "cost_versions",
          "purchase_orders", "purchase_order_lines", "receipts", "inventory_movements", "sales", "promotions",
          "backorders", "reservations", "replenishment_params", "lost_sales", "latent_demand", "forecast_runs",
          "forecast_points")
@@ -174,6 +177,10 @@ def validate_batch(inputs: Mapping[str, Any]) -> IngestResult:
                     res.rejected.append(RejectedRecord(ent, row_id(ent, row), MALFORMED_RECORD, row, str(exc)))
                     continue
                 rid = row_id(ent, row)
+                if ent == "replenishment_params" and not params_valid(obj.reorder_point, obj.target_position):
+                    res.rejected.append(RejectedRecord(ent, rid, REPLENISHMENT_PARAMS_INVALID, row,
+                                                       "target_position must be at least reorder_point"))
+                    continue
                 if ent == "replenishment_params":
                     key = f"{obj.product_id}:{obj.location_id}"
                 elif ent == "latent_demand":   # grain is product x location x day (D-03), not product

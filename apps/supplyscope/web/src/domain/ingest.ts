@@ -1,16 +1,17 @@
 // Batch validation (D-01, D-04, D-06). Pure: the same input gives an equal result. Raw rows of rejected records are kept.
 // Reasons: MALFORMED_RECORD, DUPLICATE_ID (any entity), DUPLICATE_MOVEMENT_ID (an exact replay of a movement id: the first
 // occurrence is kept), DUPLICATE_MOVEMENT_CONFLICT (the same id with different payloads: EVERY occurrence is rejected),
-// UNKNOWN_REFERENCE, RECEIPT_BEFORE_ORDER, RECEIPT_EXCEEDS_ORDERED. Mirrors domain/supplyscope/{models,ingest}.py,
-// including its parent-before-child ORDER (see README: products are checked against suppliers before suppliers load).
+// UNKNOWN_REFERENCE, RECEIPT_BEFORE_ORDER, RECEIPT_EXCEEDS_ORDERED, REPLENISHMENT_PARAMS_INVALID (target below reorder
+// point, R3-06). Mirrors domain/supplyscope/{models,ingest}.py, including its parent-before-child ORDER (suppliers first, S-02).
 import {
   ACCEPTED_INPUT_CONTRACTS, ENTITIES, EXTRA_ENTITIES, MOVEMENT_TYPES, PO_STATUSES, UNMET_POLICIES, type EntityName,
 } from "./contract";
 import {
   CONTRACT_MISMATCH, DUPLICATE_ID, DUPLICATE_MOVEMENT_CONFLICT, DUPLICATE_MOVEMENT_ID, DomainError, MALFORMED_RECORD,
-  RECEIPT_BEFORE_ORDER, RECEIPT_EXCEEDS_ORDERED, UNKNOWN_REFERENCE,
+  RECEIPT_BEFORE_ORDER, RECEIPT_EXCEEDS_ORDERED, REPLENISHMENT_PARAMS_INVALID, UNKNOWN_REFERENCE,
 } from "./errors";
 import { parseMoney, parseDec, pow10 } from "./money";
+import { paramsValid } from "./replenishment";
 import { isoZ, parseDay, parseTs } from "./time";
 import type { IngestResult, Movement, PipelineInputs, PoLine, PurchaseOrder, Population, Receipt, RejectedRecord, Row } from "./types";
 
@@ -118,9 +119,9 @@ export function rowId(entity: EntityName, row: unknown): string {
   return "?";
 }
 
-/** Parents before children. */
+/** Parents before children (S-02: suppliers load before products, which may reference one). */
 const ORDER: readonly EntityName[] = [
-  "products", "locations", "suppliers", "calendar_closures", "policy_scenarios", "cost_versions", "purchase_orders",
+  "suppliers", "locations", "products", "calendar_closures", "policy_scenarios", "cost_versions", "purchase_orders",
   "purchase_order_lines", "receipts", "inventory_movements", "sales", "promotions", "backorders", "reservations",
   "replenishment_params", "lost_sales", "latent_demand", "forecast_runs", "forecast_points",
 ];
@@ -221,6 +222,10 @@ export function validateBatch(inputs: PipelineInputs): IngestResult {
         try { obj = parseRow(ent, row); }
         catch (e) { res.rejected.push(reject(ent, rowId(ent, row), MALFORMED_RECORD, row, (e as Error).message)); continue; }
         const rid = rowId(ent, row);
+        if (ent === "replenishment_params" && !paramsValid(obj["reorder_point"] as number, obj["target_position"] as number)) {
+          res.rejected.push(reject(ent, rid, REPLENISHMENT_PARAMS_INVALID, row, "target_position must be at least reorder_point"));
+          continue;
+        }
         const key = ent === "replenishment_params" ? `${obj["product_id"]}:${obj["location_id"]}`
           : ent === "latent_demand" ? `${obj["product_id"]}:${obj["location_id"]}:${row["demand_date"]}` : rid;
         if (seen.has(key)) { res.rejected.push(reject(ent, rid, DUPLICATE_ID, row, "duplicate id; the first kept")); continue; }

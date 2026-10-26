@@ -1,5 +1,8 @@
-// Instants are UTC epoch milliseconds; dates are "YYYY-MM-DD" strings or whole day numbers (days since 1970-01-01).
-// A fraction of a second finer than a millisecond is truncated (the published data has whole seconds).
+// Instants are UTC epoch milliseconds, carried as a number that may have a fractional part of whole MICROseconds (R3-05):
+// at today's epoch a double resolves 0.24 microseconds, so every microsecond instant is a distinct number, equal
+// instants are the same number and comparisons order at microsecond resolution like Python's datetime and PostgreSQL.
+// Digits finer than a microsecond are truncated (Python's fromisoformat). Dates are "YYYY-MM-DD" strings or whole day
+// numbers (days since 1970-01-01).
 export const DAY_MS = 86_400_000;
 export const SECOND_MS = 1000;
 
@@ -33,16 +36,20 @@ export function parseTs(value: unknown): number {
   const day = parseDay(`${m[1]}-${m[2]}-${m[3]}`);
   const [h, mi, s] = [Number(m[4]), Number(m[5]), Number(m[6] ?? 0)];
   if (h > 23 || mi > 59 || s > 59) throw new Error("time out of range");
-  const ms = m[7] ? Number(m[7].padEnd(3, "0").slice(0, 3)) : 0;
+  const micro = m[7] ? Number(m[7].padEnd(6, "0").slice(0, 6)) : 0;
   let offset = 0;
   if (m[8] !== "Z") {
     const sign = m[8]![0] === "-" ? -1 : 1;
     const digits = m[8]!.slice(1).replace(":", "");
     offset = sign * (Number(digits.slice(0, 2)) * 60 + Number(digits.slice(2) || 0));
   }
-  return day * DAY_MS + ((h * 60 + mi - offset) * 60 + s) * 1000 + ms;
+  // whole microseconds as an exact integer (< 2^53), then one division: the same instant is always the same double
+  return (( day * DAY_MS + ((h * 60 + mi - offset) * 60 + s) * 1000) * 1000 + micro) / 1000;
 }
+/** UTC ISO-8601 with Z; microseconds as six digits when not zero (Python iso_z). */
 export function isoZ(ms: number): string {
-  const iso = new Date(ms).toISOString(); // YYYY-MM-DDTHH:MM:SS.mmmZ
-  return ms % 1000 === 0 ? `${iso.slice(0, 19)}Z` : iso;
+  const us = Math.round(ms * 1000);
+  const micro = ((us % 1_000_000) + 1_000_000) % 1_000_000;
+  const head = new Date(Math.floor(us / 1_000_000) * 1000).toISOString().slice(0, 19);
+  return micro === 0 ? `${head}Z` : `${head}.${String(micro).padStart(6, "0")}Z`;
 }

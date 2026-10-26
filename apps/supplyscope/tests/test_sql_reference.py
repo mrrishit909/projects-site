@@ -5,6 +5,7 @@ import pytest
 
 from data import seed
 from supplyscope import run_pipeline
+from supplyscope.contract import EXTRA_METRIC_KEYS
 
 from support_db import AS_OF, conn, db_url, golden_expected, golden_inputs, seeded  # noqa: F401
 
@@ -19,7 +20,7 @@ def reference(conn, as_of=AS_OF, start=START, end=None):
 def test_sql_equals_golden_key_by_key(seeded):
     want = golden_expected()["states"]["golden"]["metrics"]
     row = reference(seeded)
-    assert set(row) == set(want)
+    assert set(row) == set(want) | set(EXTRA_METRIC_KEYS)           # R3-01: extras beside the fixture keys
     for k, v in want.items():
         assert row[k] == v and type(row[k]) is type(v), k
 
@@ -59,7 +60,7 @@ def test_sql_day_order_and_cutoff(seeded):
 
 def test_sql_agrees_with_the_domain_on_moq_and_pack_rounding(seeded):
     """raw 20, MOQ 50, pack 24 -> 72, as SQL expressions."""
-    seeded.execute("UPDATE replenishment_params SET reorder_point = 150, target_position = 80")
+    seeded.execute("UPDATE replenishment_params SET reorder_point = 70, target_position = 80")
     row = reference(seeded)
     assert (row["inventory_position"], row["raw_order"], row["order_after_moq"], row["order_quantity"]) == (60, 20, 50, 72)
     seeded.execute("UPDATE products SET minimum_order_quantity = 0")

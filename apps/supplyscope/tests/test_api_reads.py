@@ -9,6 +9,12 @@ from support_db import (AS_OF, client, conn, count, db_url, get, golden_expected
 FROM = {"from": "2026-03-01T00:00:00Z"}
 
 
+def _fixture_keys(metrics):
+    """The keys of expected.json (R3-01 adds extra keys beside them)."""
+    from supplyscope.contract import EXTRA_METRIC_KEYS
+    return {k: v for k, v in metrics.items() if k not in EXTRA_METRIC_KEYS}
+
+
 def add_products(conn, n):
     for i in range(n):
         conn.execute("INSERT INTO products VALUES (%s, %s, 1.00, 1, 1, %s, NULL)", (f"p-{i + 10:03d}", f"SKU-X{i}", "A" if i % 2 else "B"))
@@ -95,7 +101,7 @@ def test_metrics_golden_states_over_http(client, seeded, state):
     r = get(client, "/metrics", as_of=AS_OF, state=state, **FROM)
     assert r.status_code == 200
     want = golden_expected()["states"][state]["metrics"]
-    assert r.json()["data"]["metrics"] == want
+    assert _fixture_keys(r.json()["data"]["metrics"]) == want
     assert r.json()["meta"]["applied_filters"]["state"] == state and r.json()["data"]["supplementary"]["inventory_turnover"] is not None
 
 
@@ -106,14 +112,14 @@ def test_metrics_without_a_state_and_default_window(client, seeded):
 
 def test_metrics_variants_over_http(client, conn):
     seed.seed(conn, golden_inputs("variant-rejected"))
-    assert get(client, "/metrics", as_of=AS_OF, state="golden", **FROM).json()["data"]["metrics"] == \
+    assert _fixture_keys(get(client, "/metrics", as_of=AS_OF, state="golden", **FROM).json()["data"]["metrics"]) == \
         golden_expected()["states"]["golden"]["metrics"]
 
 
 def test_metrics_empty_dataset(client, conn):
     seed.seed(conn, golden_inputs("variant-empty"))
     m = get(client, "/metrics", as_of=AS_OF, state="empty", **FROM).json()["data"]["metrics"]
-    assert m == golden_expected("variant-empty")["states"]["empty"]["metrics"]
+    assert _fixture_keys(m) == golden_expected("variant-empty")["states"]["empty"]["metrics"]
 
 
 def test_metrics_group_by(client, seeded, conn):

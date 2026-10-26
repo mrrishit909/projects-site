@@ -119,7 +119,7 @@ function Detail({ row }: { row: Row }) {
           { id: "wape", label: "WAPE", value: (r) => r4(wapeOf(r.e)), num: true, render: (r) => cell(wapeOf(r.e), "the actual demand sums to 0") },
           { id: "beats", label: "Beats baseline", value: (r) => (r.m === "ewma" ? `${flag(beats(r.e, base))} (vs seasonal naive)` : "baseline"), render: (r) => <span data-testid={`beats-${r.m}`}>{r.m === "ewma" ? `${flag(beats(r.e, base))} (vs seasonal naive)` : "baseline"}</span> },
         ]} rows={modelRows} />
-      <p className="small muted">Selected for this SKU: <strong>{res.selected_model.replace("_", " ")}</strong>. The model's promotion adjustment multiplies its level by the planned uplift ratio exactly as the Python reference does.</p>
+      <p className="small muted">Selected for this SKU: <strong>{res.selected_model.replace("_", " ")}</strong>. The model's promotion adjustment multiplies its level by 1 plus the planned uplift of the promotions announced by the cutoff, as the Python domain does.</p>
       <details className="definition" open>
         <summary>Fold errors: {folds.length} rolling folds</summary>
         {folds.length === 0 ? <Empty title="No rolling fold">Fewer than 21 days of history: nothing can be scored, so no error is shown.</Empty> : (

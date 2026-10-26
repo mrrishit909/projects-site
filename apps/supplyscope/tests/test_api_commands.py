@@ -206,12 +206,16 @@ def test_c07_the_scenario_policy_chooses_exactly_one_kind(client, seeded, conn):
     add_scenario(conn, "sc-lost", policy="lost_sale")
     base = {"product_id": "prod-001", "location_id": "loc-001", "quantity": 4, "occurred_at": "2026-03-15T10:00:00Z"}
     a = command(client, "record-unmet-demand", {**base, "scenario_id": "sc-backlog"})
-    b = command(client, "record-unmet-demand", {**base, "scenario_id": "sc-lost", "quantity": 6})
+    b = command(client, "record-unmet-demand", {**base, "scenario_id": "sc-lost", "quantity": 6,
+                                                "occurred_at": "2026-03-16T10:00:00Z"})      # another event (R3-02)
     assert a.json()["result"]["kind"] == "backorder" and b.json()["result"]["kind"] == "lost_sale"
     assert count(conn, "backorders") == 3 and count(conn, "lost_sales") == 1
     m = get(client, "/metrics", as_of=AS_OF, **{"from": "2026-03-01T00:00:00Z"}).json()["data"]["metrics"]
-    assert m["unmet_units"] == 15 and m["requested_units"] == 110                      # 5 + 4 backorder + 6 lost
-    assert m["backorders"] == 14                                                         # the lost sale is not a backorder
+    assert m["unmet_units"] == 5 and m["backorders"] == 10 and m["inventory_position"] == 60   # scenario rows are not canonical
+    ms = get(client, "/metrics", as_of=AS_OF, scenario="sc-backlog", **{"from": "2026-03-01T00:00:00Z"}).json()["data"]["metrics"]
+    assert ms["unmet_units"] == 9 and ms["requested_units"] == 104 and ms["backorders"] == 14   # 5 + 4 backorder
+    ml = get(client, "/metrics", as_of=AS_OF, scenario="sc-lost", **{"from": "2026-03-01T00:00:00Z"}).json()["data"]["metrics"]
+    assert ml["unmet_units"] == 11 and ml["backorders"] == 10                                    # 5 + 6 lost; not a backorder
     r = command(client, "record-unmet-demand", {**base, "scenario_id": "sc-lost", "policy": "backlog"})
     assert r.status_code == 422 and rule_ids(r) == ["POLICY_MISMATCH"]
     assert command(client, "record-unmet-demand", {**base, "scenario_id": "nope"}).status_code == 404
@@ -258,9 +262,10 @@ def test_c10_export_carries_the_header_rows_and_never_a_real_po(client, seeded, 
     assert lines[0] == "# contract_version: v1" and lines[1].startswith("# dataset_version: ds-")
     assert lines[2] == f"# as_of: {AS_OF}" and lines[3] == "# scenario: sc-1"
     assert lines[4] == '# filters: {"as_of":"2026-03-31T23:59:59Z","scenario_id":"sc-1"}' and lines[5] == "# rows: 1"
-    assert "not purchase orders" in lines[6]
-    header = lines[7].split(",")
-    row = dict(zip(header, lines[8].split(",")))
+    assert lines[6] == "# stale_rows: 0" and lines[7].startswith("# ledger_latest_movement_at: 2026-")
+    assert "not purchase orders" in lines[8]
+    header = lines[9].split(",")
+    row = dict(zip(header, lines[10].split(",")))
     assert row["order_quantity"] == "72" and row["status"] == "draft" and row["raw_order"] == "60" and row["pack_size"] == "24"
     assert r.json()["result"]["row_count"] == 1 and r.json()["result"]["contract_version"] == "v1"
     assert count(conn, "draft_orders") == 1                       # exporting changes nothing

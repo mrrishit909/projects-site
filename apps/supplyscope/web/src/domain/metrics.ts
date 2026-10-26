@@ -1,14 +1,14 @@
 // Metric aggregation (D-01..D-06). `computeMetrics` returns EXACTLY the keys of expected.json; rates come from aggregated
 // numerators and denominators (never an average of rates), money is a 2 dp string, rates 6 dp. Mirrors metrics.py.
-import { GROUP_KEYS, type GroupKey } from "./contract";
-import { fillRate, inWindow, lastObservedDay, stockoutDayRatio, summarise } from "./demand";
-import { DomainError, INVALID_WINDOW, UNKNOWN_REFERENCE } from "./errors";
+import { GROUP_KEYS, METRIC_KEYS, type GroupKey } from "./contract";
+import { fillRate, inWindow, lastObservedDay, stockoutCalendarShare, stockoutSkuDayRate, summarise } from "./demand";
+import { DomainError, INVALID_WINDOW, NEGATIVE_AVAILABLE, UNKNOWN_REFERENCE } from "./errors";
 import { endOfDayOnHand, pairKey, reconstruct, type Stock } from "./ledger";
 import { cents, costInForce, d2, d6, fmtCents, onHandValue, ratio } from "./money";
 import { parseRow } from "./ingest";
 import { replenish, inventoryPosition, type Replenishment } from "./replenishment";
 import { dayEnd, dayOf, dayStart, isoZ } from "./time";
-import type { Backorder, CostVersion, Metrics, Param, Population, PoLine, Product, PurchaseOrder, Receipt, StateSpec } from "./types";
+import type { Backorder, CostVersion, ExtraMetrics, FullMetrics, Metrics, Param, Population, PoLine, Product, PurchaseOrder, Receipt, StateSpec } from "./types";
 
 export type Window = readonly [number | null, number | null];
 export interface Scope { products?: ReadonlySet<string>; locations?: ReadonlySet<string> }
@@ -45,6 +45,14 @@ function indexOf(pop: Population): Index {
   for (const m of pop.inventory_movements) { const c = ix.moveLoc.get(m.product_id); if (c === undefined || m.location_id < c) ix.moveLoc.set(m.product_id, m.location_id); }
   cache.set(pop, ix);
   return ix;
+}
+
+/** D-04 (amended, R3-02): the canonical population holds only unmet-demand rows that carry no scenario; a row recorded under
+ * a scenario (C07) belongs to that scenario's what-if and is visible only when that scenario is requested. */
+export function scoped(pop: Population, scenarioId: string | null = null): Population {
+  const keep = (s: string | null): boolean => s === null || s === scenarioId;
+  if (pop.backorders.every((b) => keep(b.scenario_id)) && pop.lost_sales.every((l) => keep(l.scenario_id))) return pop;
+  return { ...pop, backorders: pop.backorders.filter((b) => keep(b.scenario_id)), lost_sales: pop.lost_sales.filter((l) => keep(l.scenario_id)) };
 }
 
 /** A copy with extra purchase order lines (a fixture state's `add_purchase_order_lines`). */
@@ -132,11 +140,12 @@ function core(pop: Population, asOf: number, scope: Scope): Core {
     const prod = ix.productById.get(p.product_id)!;
     const k = pairKey(p.product_id, p.location_id);
     const onHand = stocks.get(k)?.on_hand ?? 0;
+    const onHandRaw = stocks.get(k)?.on_hand_raw ?? 0; // the position uses the unclamped ledger value (D-01 amended, R3-07)
     const onOrder = alloc.get(p.product_id) === p.location_id ? openByProduct.get(p.product_id) ?? 0 : 0;
     const bo = openBo.get(k) ?? 0;
     const reserved = reservedBy.get(k) ?? 0;
     rows.push({
-      ...replenish(onHand, onOrder, bo, p.reorder_point, p.target_position, prod.minimum_order_quantity, prod.pack_size),
+      ...replenish(onHandRaw, onOrder, bo, p.reorder_point, p.target_position, prod.minimum_order_quantity, prod.pack_size),
       product_id: p.product_id, sku: prod.sku, location_id: p.location_id, supplier_id: p.supplier_id ?? supplierOf(pop, p.product_id),
       abc_class: prod.abc_class, unit_cost: prod.unit_cost, on_hand: onHand, on_order: onOrder, backorders: bo, reserved, available: onHand - reserved,
       moq: prod.minimum_order_quantity, pack_size: prod.pack_size, status: "draft",
@@ -148,24 +157,32 @@ function core(pop: Population, asOf: number, scope: Scope): Core {
 /** One draft row per replenishment parameter row (SKU x location) at `asOf`, in parameter order. */
 export function reorderRows(pop: Population, asOf: number, state: StateSpec | null = null): PairRow[] {
   const extra = stateLines(pop, state);
-  return core(extra.length ? withLines(pop, extra) : pop, asOf, {}).rows;
+  return core(scoped(extra.length ? withLines(pop, extra) : pop), asOf, {}).rows;
 }
 
-/** The metric set at `asOf` over the window [start, end) (an absent end means up to and including asOf). `scope` narrows
- * products / locations (used by `groupMetrics`). `state` may add purchase order lines. */
-export function computeMetrics(pop0: Population, asOf: number, window: Window = [null, null], state: StateSpec | null = null, scope: Scope = {}): Metrics {
+/** The metric set at `asOf` over the window [start, end) (an absent end means up to and including asOf): EXACTLY the keys of
+ * expected.json. `scope` narrows products / locations (used by `groupMetrics`). `state` may add purchase order lines.
+ * `scenarioId` adds that scenario's unmet-demand rows to the canonical ones (default: canonical only). */
+export function computeMetrics(pop0: Population, asOf: number, window: Window = [null, null], state: StateSpec | null = null, scope: Scope = {}, scenarioId: string | null = null): Metrics {
+  const full = computeMetricsFull(pop0, asOf, window, state, scope, scenarioId);
+  return Object.fromEntries(METRIC_KEYS.map((k) => [k, full[k]])) as Metrics;
+}
+
+/** `computeMetrics` plus the metrics added after the fixture (R3-01), in the order of `EXTRA_METRIC_KEYS`. */
+export function computeMetricsFull(pop0: Population, asOf: number, window: Window = [null, null], state: StateSpec | null = null, scope: Scope = {}, scenarioId: string | null = null): FullMetrics {
   checkWindow(window);
   const extra = stateLines(pop0, state);
-  const pop = extra.length ? withLines(pop0, extra) : pop0;
+  const pop = scoped(extra.length ? withLines(pop0, extra) : pop0, scenarioId);
   const ix = indexOf(pop);
   const start = window[0] ?? defaultStart(pop, asOf);
   const end = window[1];
   const inp = (p: string, l: string): boolean => (!scope.products || scope.products.has(p)) && (!scope.locations || scope.locations.has(l));
   const c = core(pop, asOf, scope);
 
-  let onHand = 0, runningMin = 0, naiveMin = 0, negative = false, capital = 0n;
+  let onHand = 0, onHandRaw = 0, runningMin = 0, naiveMin = 0, negative = false, capital = 0n;
   for (const s of c.stocks.values()) {
     onHand += s.on_hand;
+    onHandRaw += s.on_hand_raw;
     runningMin = Math.min(runningMin, s.running_min);
     naiveMin = Math.min(naiveMin, s.timestamp_order_min);
     negative = negative || s.negative;
@@ -177,26 +194,50 @@ export function computeMetrics(pop0: Population, asOf: number, window: Window = 
   for (const q of c.openBo.values()) backorders += q;
   let reserved = 0;
   for (const r of pop.reservations) if (inp(r.product_id, r.location_id) && r.reserved_at <= asOf && (r.released_at === null || r.released_at > asOf)) reserved += r.quantity;
-  let position = inventoryPosition(onHand, onOrder, backorders); // reserved is NOT subtracted
+  // D-01 (amended, R3-07, R3-04): the position uses the UNCLAMPED ledger value (a negative reconstruction is flagged
+  // NEGATIVE_STOCK) and is the sum over every (product, location) of the scope, never one pair's own figure.
+  const position = inventoryPosition(onHandRaw, onOrder, backorders); // reserved is NOT subtracted
 
   const rows = c.rows;
   let rep: Pick<Metrics, "reorder_point" | "target_position" | "reorder_triggered" | "raw_order" | "order_after_moq" | "order_quantity">;
   if (rows.length) {
     const sum = (f: (r: PairRow) => number): number => rows.reduce((a, r) => a + f(r), 0);
     rep = { reorder_point: sum((r) => r.reorder_point), target_position: sum((r) => r.target_position), reorder_triggered: rows.some((r) => r.triggered), raw_order: sum((r) => r.raw_order), order_after_moq: sum((r) => r.order_after_moq), order_quantity: sum((r) => r.order_quantity) };
-    if (rows.length === 1) position = rows[0]!.position; // one parameter row: the position is that row's own
   } else {
     rep = { reorder_point: null, target_position: null, reorder_triggered: null, raw_order: null, order_after_moq: null, order_quantity: null };
   }
 
   const ds = summarise(pop.sales.filter((s) => inp(s.product_id, s.location_id)), pop.backorders.filter((b) => inp(b.product_id, b.location_id)), pop.lost_sales.filter((l) => inp(l.product_id, l.location_id)), start, end, asOf);
   const empty = !pop.inventory_movements.some((m) => inp(m.product_id, m.location_id)) && !pop.sales.some((s) => inp(s.product_id, s.location_id));
+  // D-04 (amended, R3-01): the active pairs of the scope at asOf (a movement, a sale or an unmet-demand row by then)
+  const pairs = new Set<string>();
+  for (const m of pop.inventory_movements) if (inp(m.product_id, m.location_id) && m.event_at <= asOf) pairs.add(pairKey(m.product_id, m.location_id));
+  for (const s of pop.sales) if (inp(s.product_id, s.location_id) && s.sold_at <= asOf) pairs.add(pairKey(s.product_id, s.location_id));
+  for (const b of pop.backorders) if (inp(b.product_id, b.location_id) && b.opened_at <= asOf) pairs.add(pairKey(b.product_id, b.location_id));
+  for (const l of pop.lost_sales) if (inp(l.product_id, l.location_id) && l.occurred_at <= asOf) pairs.add(pairKey(l.product_id, l.location_id));
+  const extras: ExtraMetrics = {
+    stockout_calendar_days_share: empty ? null : d6(stockoutCalendarShare(ds)), observed_sku_days: pairs.size * ds.observedDays,
+  };
   return {
     fill_rate: d6(fillRate(ds)), requested_units: ds.requested, fulfilled_units: ds.fulfilled, unmet_units: ds.unmet, observed_days: ds.observedDays,
-    stockout_day_count: ds.stockoutDates.size, stockout_days: empty ? null : d6(stockoutDayRatio(ds)), running_stock_min: runningMin,
+    stockout_day_count: ds.stockoutPairDays.size, stockout_days: empty ? null : d6(stockoutSkuDayRate(ds, pairs.size)), running_stock_min: runningMin,
     timestamp_order_stock_min: naiveMin, negative_stock: negative, working_capital: fmtCents(capital), empty_population: empty,
     on_hand: onHand, on_order: onOrder, backorders, reserved, available: onHand - reserved, inventory_position: position, ...rep,
-  } as Metrics;
+    ...extras,
+  } as FullMetrics;
+}
+
+/** R3-07: NEGATIVE_AVAILABLE for every (product, location) whose available (clamped on hand - reserved) is below 0. */
+export function availabilityFlags(pop: Population, asOf: number): { flag: string; product_id: string; location_id: string; on_hand: number; reserved: number; available: number }[] {
+  const stocks = reconstruct(pop.inventory_movements, asOf);
+  const reserved = new Map<string, number>();
+  for (const r of pop.reservations) if (r.reserved_at <= asOf && (r.released_at === null || r.released_at > asOf)) { const k = pairKey(r.product_id, r.location_id); reserved.set(k, (reserved.get(k) ?? 0) + r.quantity); }
+  const out: { flag: string; product_id: string; location_id: string; on_hand: number; reserved: number; available: number }[] = [];
+  for (const [k, res] of [...reserved].sort((a, b) => cmp(a[0], b[0]))) {
+    const onHand = stocks.get(k)?.on_hand ?? 0;
+    if (onHand - res < 0) { const [p, l] = k.split("\u0000") as [string, string]; out.push({ flag: NEGATIVE_AVAILABLE, product_id: p, location_id: l, on_hand: onHand, reserved: res, available: onHand - res }); }
+  }
+  return out;
 }
 
 export function negativeStockFlags(pop: Population, asOf: number): { flag: string; product_id: string; location_id: string; on_hand_raw: number }[] {
@@ -221,8 +262,8 @@ export function groupValues(pop: Population, key: GroupKey): Map<string, Scope> 
   }
   return out;
 }
-export function groupMetrics(pop: Population, key: GroupKey, asOf: number, window: Window = [null, null], state: StateSpec | null = null): Map<string, Metrics> {
-  return new Map([...groupValues(pop, key)].map(([g, scope]) => [g, computeMetrics(pop, asOf, window, state, scope)] as const));
+export function groupMetrics(pop: Population, key: GroupKey, asOf: number, window: Window = [null, null], state: StateSpec | null = null, scenarioId: string | null = null): Map<string, FullMetrics> {
+  return new Map([...groupValues(pop, key)].map(([g, scope]) => [g, computeMetricsFull(pop, asOf, window, state, scope, scenarioId)] as const));
 }
 
 /** Average daily inventory value and turnover (annualised COGS / average inventory value, D-05). Each day is valued at the
@@ -259,12 +300,13 @@ export interface PairSeries {
 /** End-of-day on hand, on order, backorders and position for each day first..last, by the rules `computeMetrics` uses. */
 export function pairSeries(pop0: Population, productId: string, locationId: string, first: number, last: number, state: StateSpec | null = null): PairSeries {
   const extra = stateLines(pop0, state);
-  const pop = extra.length ? withLines(pop0, extra) : pop0;
+  const pop = scoped(extra.length ? withLines(pop0, extra) : pop0);
   const ix = indexOf(pop);
   const n = Math.max(last - first + 1, 0);
   const days = Array.from({ length: n }, (_, i) => first + i);
   const eod = endOfDayOnHand(pop.inventory_movements.filter((m) => m.product_id === productId && m.location_id === locationId), first, last).get(pairKey(productId, locationId));
   const onHand = days.map((_, i) => Math.max(eod?.[i] ?? 0, 0));
+  const onHandRaw = days.map((_, i) => eod?.[i] ?? 0); // the position uses the unclamped ledger value (R3-07)
   const counted = allocationLocation(pop, productId) === locationId;
   const lines = counted ? pop.purchase_order_lines.filter((l) => l.product_id === productId && ix.orderById.get(l.purchase_order_id)?.status === "confirmed") : [];
   const onOrder = days.map((d) => {
@@ -281,7 +323,7 @@ export function pairSeries(pop0: Population, productId: string, locationId: stri
   const so = new Set<number>();
   for (const b of bos) so.add(dayOf(b.opened_at));
   for (const l of pop.lost_sales) if (l.product_id === productId && l.location_id === locationId) so.add(dayOf(l.occurred_at));
-  return { days, on_hand: onHand, on_order: onOrder, backorders, position: days.map((_, i) => onHand[i]! + onOrder[i]! - backorders[i]!), receipts, stockout_days: days.filter((d) => so.has(d)) };
+  return { days, on_hand: onHand, on_order: onOrder, backorders, position: days.map((_, i) => onHandRaw[i]! + onOrder[i]! - backorders[i]!), receipts, stockout_days: days.filter((d) => so.has(d)) };
 }
 
 export const paramOf = (pop: Population, productId: string, locationId: string): Param | undefined =>

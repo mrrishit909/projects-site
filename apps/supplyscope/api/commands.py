@@ -30,14 +30,15 @@ from psycopg.types.json import Jsonb
 from supplyscope import CONTRACT_VERSION, DomainError, ledger, suppliers
 from supplyscope import metrics as dm
 from supplyscope.demand import compare_policies
-from supplyscope.errors import (RECEIPT_BEFORE_LEAD_TIME, RECEIPT_BEFORE_ORDER, RECEIPT_EXCEEDS_ORDERED,
+from supplyscope.errors import (NEGATIVE_AVAILABLE, RECEIPT_BEFORE_LEAD_TIME, RECEIPT_BEFORE_ORDER,
+                                RECEIPT_EXCEEDS_ORDERED, REPLENISHMENT_PARAMS_INVALID, STALE_DATASET_VERSION,
                                 UNMET_POLICY_CONFLICT)
 from supplyscope.forecast import dataset_end, forecast_demand, last_complete_day
 from supplyscope.ingest import movement_payload, screen_movements
 from supplyscope.models import iso_z, parse_row, parse_ts
 from supplyscope.money import d2, d6
-from supplyscope.replenishment import (derived_parameters, effective_lead_days, lead_time_demand, replenish,
-                                       safety_stock, z_value)
+from supplyscope.replenishment import (derived_parameters, effective_lead_days, lead_time_demand, params_valid,
+                                       replenish, safety_stock, z_value)
 
 from data.seed import canonical_json, insert_rejected, sha256_hex
 
@@ -169,6 +170,20 @@ def execute(name: str, req: Envelope, actor: Actor, handler: Handler) -> tuple[d
     raise _conflict("CONCURRENT_UPDATE", f"the command lost a concurrent update {MAX_ATTEMPTS} times; retry it", "input")
 
 
+def _check_dataset_version(conn: Conn, req: Envelope) -> None:
+    """D-07: the request names the dataset it was prepared against; a different current version is a 409 and nothing is
+    written. A database with no dataset_versions row has nothing to be stale against (the request is accepted)."""
+    row = conn.execute("SELECT dataset_version FROM dataset_versions ORDER BY created_at DESC, dataset_version DESC "
+                       "LIMIT 1").fetchone()
+    if row is not None and row["dataset_version"] != req.dataset_version:
+        raise ApiError(409, STALE_DATASET_VERSION,
+                       f"the request was prepared against dataset {req.dataset_version!r}; the current dataset is "
+                       f"{row['dataset_version']!r}",
+                       [{**detail("dataset_version", STALE_DATASET_VERSION, "re-read the data and retry with the "
+                                                                              "current dataset_version"),
+                         "context": {"current": row["dataset_version"], "requested": req.dataset_version}}])
+
+
 def _execute_once(name: str, req: Envelope, actor: Actor, handler: Handler,
                   payload_hash: str) -> tuple[dict[str, Any], bool]:
     with db.transaction() as conn:
@@ -184,6 +199,7 @@ def _execute_once(name: str, req: Envelope, actor: Actor, handler: Handler,
                                [detail("idempotency_key", "IDEMPOTENCY_PAYLOAD_MISMATCH",
                                        "same key, different payload_hash")])
             return prior["result"], True
+        _check_dataset_version(conn, req)
         try:
             out = handler(conn, req, actor)
         except psycopg.errors.UniqueViolation as exc:
@@ -309,7 +325,10 @@ def reconstruct_stock(conn: Conn, req: Any, actor: Actor) -> Outcome:
                      "reserved": reserved, "available": s.on_hand - reserved, "running_stock_min": s.running_min,
                      "negative_stock": s.negative, "flags": flags})
         if s.negative:
-            warnings.append(warning("NEGATIVE_STOCK", "the reconstruction is negative: flagged, valued at zero",
+            warnings.append(warning("NEGATIVE_STOCK", "the reconstruction is negative: flagged, valued at zero "
+                                    "(the position uses the unclamped value)", f"stock[{p}:{l}]"))
+        if s.on_hand - reserved < 0:
+            warnings.append(warning(NEGATIVE_AVAILABLE, "reserved exceeds the on-hand stock: available is below zero",
                                     f"stock[{p}:{l}]"))
     return Outcome("reconstructed", {"as_of": iso_z(as_of), "snapshots": rows}, warnings=warnings,
                    audit=Audit("stock_snapshot", iso_z(as_of) or "", "reconstruct-stock"))
@@ -362,56 +381,83 @@ def forecast_demand_command(conn: Conn, req: Any, actor: Actor) -> Outcome:
 
 # --- C05 calculate-replenishment --------------------------------------------------------------------------------
 
+@dataclass
+class _Eval:
+    """What a replenishment evaluation of one as-of instant needs (built once per instant and scenario)."""
+    pop: Any
+    as_of: datetime
+    z: Any
+    stocks: dict
+    open_by_product: dict
+    params: dict
+    sup_by_id: dict
+    end: datetime | None
+
+
+def _eval_context(conn: Conn, as_of: datetime, scenario: Any, pop: Any = None) -> _Eval:
+    z = _domain(lambda: z_value(scenario["service_target"] if scenario else DEFAULT_SERVICE_TARGET), "input.scenario_id")
+    pop = dm.scoped(pop if pop is not None else db.load_population(conn))      # canonical: no scenario-scoped rows (R3-02)
+    return _Eval(pop, as_of, z, ledger.reconstruct(pop.inventory_movements, as_of), dm.on_order_by_product(pop, as_of),
+                 {(p.product_id, p.location_id): p for p in pop.replenishment_params},
+                 {s.supplier_id: s for s in pop.suppliers}, dataset_end(pop.sales, pop.inventory_movements, pop.receipts))
+
+
+def _evaluate_pair(ev: _Eval, p: str, l: str) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    """The replenishment row of one (product, location) at ``ev.as_of``, or ``(None, warning)`` when it cannot be sized.
+    Raises DomainError(REPLENISHMENT_PARAMS_INVALID) for a parameter row whose target is below its reorder point (R3-06).
+    The position uses the unclamped ledger value (D-01 amended, R3-07)."""
+    pop, as_of = ev.pop, ev.as_of
+    prod = pop.product(p)
+    st = ev.stocks.get((p, l))
+    oo = ev.open_by_product.get(p, 0) if dm.allocation_location(pop, p) == l else 0
+    bo = sum(b.quantity for b in pop.backorders if (b.product_id, b.location_id) == (p, l) and b.opened_at <= as_of
+             and (b.closed_at is None or b.closed_at > as_of))
+    supplier_id = dm.supplier_of(pop, p)
+    param = ev.params.get((p, l))
+    if param is not None:
+        rop, target, source = param.reorder_point, param.target_position, "params"
+    else:
+        sup = ev.sup_by_id.get(supplier_id)
+        if sup is None:
+            return None, warning("NOT_EVALUATED_NO_SUPPLIER", "no parameters and no supplier to size the lead time",
+                                 f"replenishment[{p}:{l}]")
+        lead = effective_lead_days(as_of.astimezone(timezone.utc).date(), sup.quoted_lead_days,
+                                   pop.calendar_closures, sup.calendar_id)
+        fc = forecast_demand(pop.sales, pop.promotions, p, l, as_of, max(lead, 7), ev.end)
+        series = fc.points[fc.selected_model]
+        rop, target = derived_parameters(lead_time_demand(series, lead), safety_stock(ev.z, fc.sigma_variance, lead),
+                                         sum(series[:7]))
+        source = "forecast"
+    if not params_valid(rop, target):
+        raise DomainError(REPLENISHMENT_PARAMS_INVALID, f"target_position {target} is below reorder_point {rop} for "
+                          f"{p}:{l}", path=f"replenishment_params[{p}:{l}]")
+    r = replenish(st.on_hand_raw if st else 0, oo, bo, rop, target, prod.minimum_order_quantity, prod.pack_size)
+    return {"product_id": p, "location_id": l, "supplier_id": supplier_id, "inventory_position": r.position,
+            "reorder_point": r.reorder_point, "target_position": r.target_position, "triggered": r.triggered,
+            "raw_order": r.raw_order, "minimum_order_quantity": prod.minimum_order_quantity,
+            "order_after_moq": r.order_after_moq, "pack_size": prod.pack_size, "order_quantity": r.order_quantity,
+            "parameter_source": source, "draft_order_id": None}, None
+
+
 def calculate_replenishment(conn: Conn, req: Any, actor: Actor) -> Outcome:
     inp = req.input
     as_of = parse_ts(inp.as_of)
     scenario = None
     if inp.scenario_id:
         scenario = _need(conn, "policy_scenarios", "scenario_id", inp.scenario_id, "input.scenario_id", "scenario")
-    z = _domain(lambda: z_value(scenario["service_target"] if scenario else DEFAULT_SERVICE_TARGET),
-                "input.scenario_id")
     _check_scope(conn, inp.product_id, inp.location_id)
-    pop = db.load_population(conn)
-    pairs = _scope_pairs(pop, inp.product_id, inp.location_id)
+    ev = _eval_context(conn, as_of, scenario)
+    pairs = _scope_pairs(ev.pop, inp.product_id, inp.location_id)
     _lock_pairs(conn, pairs)
-    stocks = ledger.reconstruct(pop.inventory_movements, as_of)
-    open_by_product = dm.on_order_by_product(pop, as_of)
-    params = {(p.product_id, p.location_id): p for p in pop.replenishment_params}
-    sup_by_id = {s.supplier_id: s for s in pop.suppliers}
-    end = dataset_end(pop.sales, pop.inventory_movements, pop.receipts)
     evaluated, warnings, created = [], [], 0
     for (p, l) in pairs:
-        prod = pop.product(p)
-        st = stocks.get((p, l))
-        oo = open_by_product.get(p, 0) if dm.allocation_location(pop, p) == l else 0
-        bo = sum(b.quantity for b in pop.backorders if (b.product_id, b.location_id) == (p, l) and b.opened_at <= as_of
-                 and (b.closed_at is None or b.closed_at > as_of))
-        supplier_id = dm.supplier_of(pop, p)
-        param = params.get((p, l))
-        if param is not None:
-            rop, target, source = param.reorder_point, param.target_position, "params"
-        else:
-            sup = sup_by_id.get(supplier_id)
-            if sup is None:
-                warnings.append(warning("NOT_EVALUATED_NO_SUPPLIER", "no parameters and no supplier to size the lead time",
-                                        f"replenishment[{p}:{l}]"))
-                continue
-            lead = effective_lead_days(as_of.astimezone(timezone.utc).date(), sup.quoted_lead_days,
-                                       pop.calendar_closures, sup.calendar_id)
-            fc = _domain(lambda: forecast_demand(pop.sales, pop.promotions, p, l, as_of, max(lead, 7), end),
-                         "input.as_of")
-            series = fc.points[fc.selected_model]
-            rop, target = derived_parameters(lead_time_demand(series, lead), safety_stock(z, fc.sigma_variance, lead),
-                                             sum(series[:7]))
-            source = "forecast"
-        r = replenish(st.on_hand if st else 0, oo, bo, rop, target, prod.minimum_order_quantity, prod.pack_size)
+        row, warn = _domain(lambda: _evaluate_pair(ev, p, l), f"input.product_id[{p}:{l}]")
+        if row is None:
+            warnings.append(warn)
+            continue
+        prod_moq, prod_pack = row["minimum_order_quantity"], row["pack_size"]
         draft_id = f"do-{_short(iso_z(as_of), inp.scenario_id or '-', p, l)}"
-        row = {"product_id": p, "location_id": l, "supplier_id": supplier_id, "inventory_position": r.position,
-               "reorder_point": r.reorder_point, "target_position": r.target_position, "triggered": r.triggered,
-               "raw_order": r.raw_order, "minimum_order_quantity": prod.minimum_order_quantity,
-               "order_after_moq": r.order_after_moq, "pack_size": prod.pack_size, "order_quantity": r.order_quantity,
-               "parameter_source": source, "draft_order_id": None}
-        if r.triggered and r.order_quantity > 0:
+        if row["triggered"] and row["order_quantity"] > 0:
             conn.execute(
                 "INSERT INTO draft_orders (draft_order_id, as_of, scenario_id, product_id, location_id, supplier_id, "
                 "inventory_position, reorder_point, target_position, raw_order, minimum_order_quantity, order_after_moq, "
@@ -423,9 +469,9 @@ def calculate_replenishment(conn: Conn, req: Any, actor: Actor) -> Outcome:
                 "minimum_order_quantity = EXCLUDED.minimum_order_quantity, order_after_moq = EXCLUDED.order_after_moq, "
                 "pack_size = EXCLUDED.pack_size, order_quantity = EXCLUDED.order_quantity, "
                 "parameter_source = EXCLUDED.parameter_source, dataset_version = EXCLUDED.dataset_version",
-                (draft_id, as_of, inp.scenario_id, p, l, supplier_id, r.position, r.reorder_point, r.target_position,
-                 r.raw_order, prod.minimum_order_quantity, r.order_after_moq, prod.pack_size, r.order_quantity, source,
-                 db.dataset_version(conn)))
+                (draft_id, as_of, inp.scenario_id, p, l, row["supplier_id"], row["inventory_position"],
+                 row["reorder_point"], row["target_position"], row["raw_order"], prod_moq, row["order_after_moq"],
+                 prod_pack, row["order_quantity"], row["parameter_source"], db.dataset_version(conn)))
             row["draft_order_id"] = draft_id
             created += 1
         else:  # no longer triggered: a draft left by an earlier run of the same as-of is withdrawn
@@ -489,8 +535,11 @@ def record_unmet_demand(conn: Conn, req: Any, actor: Actor) -> Outcome:
     if inp.policy is not None and inp.policy != sc["unmet_policy"]:
         raise _invalid("POLICY_MISMATCH", f"scenario {inp.scenario_id} uses the {sc['unmet_policy']} policy",
                        "input.policy", {"scenario_policy": sc["unmet_policy"]})
-    at = parse_ts(inp.occurred_at) if inp.occurred_at else datetime.now(timezone.utc)
-    ref = inp.demand_ref or f"ud-{_short(inp.scenario_id, inp.product_id, inp.location_id, iso_z(at), inp.quantity)}"
+    at = parse_ts(inp.occurred_at)          # required (schema): the event time is never defaulted to the server clock
+    # R3-02: the event is identified by (product, location, occurred_at); the scenario and the quantity are NOT part of
+    # it, so the same event under two scenarios is the same demand: the other kind is a 409 UNMET_POLICY_CONFLICT and
+    # the same kind is a 409 UNMET_ALREADY_RECORDED (lost sale XOR backlog holds across scenarios).
+    ref = inp.demand_ref or f"ud-{_short(inp.product_id, inp.location_id, iso_z(at))}"
     conn.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))", (f"unmet:{ref}",))
     other = "lost_sales" if sc["unmet_policy"] == "backlog" else "backorders"
     if conn.execute(f"SELECT 1 FROM {other} WHERE demand_ref = %s", (ref,)).fetchone():  # constants
@@ -568,10 +617,15 @@ def neutralise(cell: Any) -> Any:
 
 PLAN_COLUMNS = ("draft_order_id", "as_of", "scenario_id", "product_id", "location_id", "supplier_id",
                 "inventory_position", "reorder_point", "target_position", "raw_order", "minimum_order_quantity",
-                "order_after_moq", "pack_size", "order_quantity", "parameter_source", "status")
+                "order_after_moq", "pack_size", "order_quantity", "parameter_source", "status",
+                "current_inventory_position", "current_order_quantity")
 
 
 def export_buying_plan(conn: Conn, req: Any, actor: Actor) -> Outcome:
+    """D-07: every draft is re-validated against the CURRENT ledger at export. A draft whose recomputed position, trigger
+    or quantity no longer equals what it stored is exported with status ``stale`` (its own figures kept, the current ones
+    in ``current_*``): it is a recommendation that must be recalculated (C05), not an order to place. The header carries
+    the latest movement instant of the ledger the check ran against."""
     inp = req.input
     where, params = ["status = 'draft'"], []
     filters: dict[str, Any] = {}
@@ -591,20 +645,49 @@ def export_buying_plan(conn: Conn, req: Any, actor: Actor) -> Outcome:
     rows = conn.execute(f"SELECT * FROM draft_orders WHERE {' AND '.join(where)} ORDER BY as_of, product_id, location_id, "
                         "draft_order_id", params).fetchall()  # column names are constants above
     dv = db.dataset_version(conn)
-    out = io.StringIO()
+    latest = conn.execute("SELECT max(event_at) AS t FROM inventory_movements").fetchone()["t"]
+    base_pop = db.load_population(conn) if rows else None
+    scenarios = {r["scenario_id"]: r for r in conn.execute("SELECT * FROM policy_scenarios").fetchall()}
+    contexts: dict[tuple[datetime, str | None], _Eval] = {}
+    plan: list[dict[str, Any]] = []
+    stale_ids: list[str] = []
+    for r in rows:
+        key = (r["as_of"], r["scenario_id"])
+        if key not in contexts:
+            contexts[key] = _eval_context(conn, r["as_of"], scenarios.get(r["scenario_id"]), base_pop)
+        try:
+            now, _ = _evaluate_pair(contexts[key], r["product_id"], r["location_id"])
+        except DomainError:
+            now = None
+        cur_pos = None if now is None else now["inventory_position"]
+        cur_qty = None if now is None else (now["order_quantity"] if now["triggered"] else 0)
+        fresh = now is not None and now["triggered"] and (cur_pos, cur_qty) == (r["inventory_position"], r["order_quantity"])
+        out = {c: r[c] for c in PLAN_COLUMNS if c in r}
+        out["status"] = "draft" if fresh else "stale"
+        out["current_inventory_position"], out["current_order_quantity"] = cur_pos, cur_qty
+        if not fresh:
+            stale_ids.append(r["draft_order_id"])
+        plan.append(out)
+    out_io = io.StringIO()
     scen = ",".join(sorted({r["scenario_id"] or "-" for r in rows})) or (inp.scenario_id or "-")
     asofs = ",".join(sorted({iso_z(r["as_of"]) or "" for r in rows})) or (filters.get("as_of") or "-")
     for line in (f"# contract_version: {CONTRACT_VERSION}", f"# dataset_version: {dv}", f"# as_of: {asofs}",
                  f"# scenario: {scen}", f"# filters: {json.dumps(filters, sort_keys=True, separators=(',', ':'))}",
-                 f"# rows: {len(rows)}", "# status: DRAFT RECOMMENDATIONS ONLY - not purchase orders, no supplier commitment"):
-        out.write(line.replace("\r", " ").replace("\n", " ") + "\n")
-    w = csv.writer(out, lineterminator="\n")
+                 f"# rows: {len(rows)}", f"# stale_rows: {len(stale_ids)}",
+                 f"# ledger_latest_movement_at: {iso_z(latest) or '-'}",
+                 "# status: DRAFT RECOMMENDATIONS ONLY - not purchase orders, no supplier commitment; "
+                 "a row marked stale must be recalculated before use"):
+        out_io.write(line.replace("\r", " ").replace("\n", " ") + "\n")
+    w = csv.writer(out_io, lineterminator="\n")
     w.writerow(PLAN_COLUMNS)
-    for r in rows:
-        w.writerow([neutralise(db.jsonable(r[c])) for c in PLAN_COLUMNS])
-    text = out.getvalue()
-    return Outcome("exported", {"csv": text, "row_count": len(rows), "filters": filters, "dataset_version": dv,
-                                "contract_version": CONTRACT_VERSION, "draft_order_ids": [r["draft_order_id"] for r in rows],
-                                "sha256": sha256_hex(text)},
-                   warnings=[] if rows else [warning("NO_DRAFTS", "no draft orders match the filters", "input")],
-                   audit=Audit("buying_plan", sha256_hex(text)[:16], "export-buying-plan"))
+    for r in plan:
+        w.writerow([neutralise(db.jsonable(r[c])) if r[c] is not None else "" for c in PLAN_COLUMNS])
+    text = out_io.getvalue()
+    warnings = [] if rows else [warning("NO_DRAFTS", "no draft orders match the filters", "input")]
+    warnings += [warning("STALE_DRAFT", "the ledger changed since this draft was calculated: recalculate (C05)",
+                         f"draft_orders[{d}]") for d in stale_ids]
+    return Outcome("exported", {"csv": text, "row_count": len(rows), "stale_count": len(stale_ids),
+                                "stale_draft_order_ids": stale_ids, "filters": filters, "dataset_version": dv,
+                                "ledger_latest_movement_at": iso_z(latest), "contract_version": CONTRACT_VERSION,
+                                "draft_order_ids": [r["draft_order_id"] for r in rows], "sha256": sha256_hex(text)},
+                   warnings=warnings, audit=Audit("buying_plan", sha256_hex(text)[:16], "export-buying-plan"))

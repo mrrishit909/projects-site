@@ -55,12 +55,12 @@ export function ewmaLevels(history: readonly number[]): Dec[] {
   return out;
 }
 
-/** Planned uplift of promotions whose schedule was announced by `knownAt` and which cover `day`. `realised_uplift` (an
- * outcome) is deliberately never read here. As in the Python reference the uplift multiplies the level as published. */
+/** Factor 1 + planned uplift of promotions whose schedule was announced by `knownAt` and which cover `day` (S-03: an uplift
+ * of 0.35 is a factor of 1.35). `realised_uplift` (an outcome) is deliberately never read here. */
 export function promoFactor(promotions: readonly Promotion[], productId: string, day: number, knownAt: number): Dec {
   let f = decInt(1);
   for (const p of promotions) {
-    if (p.product_id === productId && p.announced_at <= knownAt && dayOf(p.starts_at) <= day && day <= dayOf(p.ends_at)) f = decMul(f, parseDec(p.planned_uplift));
+    if (p.product_id === productId && p.announced_at <= knownAt && dayOf(p.starts_at) <= day && day <= dayOf(p.ends_at)) f = decMul(f, decAdd(decInt(1), parseDec(p.planned_uplift)));
   }
   return f;
 }

@@ -2,6 +2,7 @@
 import pytest
 
 from supplyscope import run_pipeline
+from supplyscope.contract import EXTRA_METRIC_KEYS
 
 from support_db import golden_expected, golden_inputs
 
@@ -14,7 +15,7 @@ def test_variants_key_by_key(sub, states):
         assert r.counts == exp["ingest"]["counts"]
         assert r.rejected == exp["ingest"]["rejected_records"]
         want = exp["states"][state]["metrics"]
-        assert set(r.metrics) == set(want)
+        assert set(r.metrics) - set(EXTRA_METRIC_KEYS) == set(want)      # R3-01: extras sit beside the fixture keys
         for k, v in want.items():
             assert r.metrics[k] == v and type(r.metrics[k]) is type(v), (sub, state, k)
 
@@ -22,7 +23,8 @@ def test_variants_key_by_key(sub, states):
 def test_rejected_variant_totals_equal_golden():
     gold = golden_expected()["states"]
     for state in ("golden", "position_80"):
-        assert run_pipeline(golden_inputs("variant-rejected"), state).metrics == gold[state]["metrics"]
+        got = run_pipeline(golden_inputs("variant-rejected"), state).metrics
+        assert {k: v for k, v in got.items() if k not in EXTRA_METRIC_KEYS} == gold[state]["metrics"]
 
 
 def test_rejected_rows_keep_their_raw_payload():

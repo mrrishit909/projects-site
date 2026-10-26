@@ -145,8 +145,13 @@ def main(argv: list[str]) -> int:
     rec.add("B on hand 02 TOTAL vs 01 month-end 2026-09", t02["on_hand"], mine["on_hand"], ref["on_hand"])
     rec.add("B on order (contract, confirmed only) 02 TOTAL vs 01 column on_order_confirmed_only", t02["on_order"], mine["on_order"], ref["on_order"])
     rec.add("B observed days 548 (03 pair-days / 60 pairs) vs reference vs domain", 548, ref["observed_days"], dom["observed_days"])
-    rec.add("B stockout days (distinct dates with unmet demand, all pairs): SQL vs reference vs domain", so_days_ref, ref["stockout_day_count"],
-            dom["stockout_day_count"])
+    rec.add("B stockout calendar dates (distinct dates with unmet demand, all pairs): SQL vs reference vs domain",
+            q6(Fraction(so_days_ref, 548)), ref["stockout_calendar_days_share"], dom["stockout_calendar_days_share"])
+    rec.add("B stockout SKU-days (pair x date cells, R3-01): query 03 ALL vs reference stockout_day_count vs domain",
+            a03["stockout_pair_days"], ref["stockout_day_count"], dom["stockout_day_count"])
+    rec.add("B stockout SKU-day rate = pair-days / (60 pairs x 548 days): query 03 ALL vs reference vs domain",
+            fmt(a03["stockout_pair_day_share"]), ref["stockout_days"], dom["stockout_days"])
+    rec.add("B observed SKU-days (60 pairs x 548 days): reference vs domain", 60 * 548, ref["observed_sku_days"], dom["observed_sku_days"])
     sup = supplementary(pop, as_of, window)
     rec.add("B average daily inventory value 06 row ALL vs domain supplementary()", fmt(all06["avg_daily_total"]),
             sup["average_inventory_value"])
@@ -170,8 +175,8 @@ def main(argv: list[str]) -> int:
         {"measure": "Requested Units", "expected": sum(r["fulfilled_units"] + r["unmet_units"] for r in bi_day), "source": "fulfilled + unmet"},
         {"measure": "Fill Rate", "expected": q6(Fraction(sum(r["fulfilled_units"] for r in bi_day), sum(r["fulfilled_units"] + r["unmet_units"] for r in bi_day))),
          "source": "query 03 ALL"},
-        {"measure": "Stockout SKU Day Share", "expected": q6(Fraction(sku_day_cells, len(bi_day))), "source": f"{sku_day_cells} / {len(bi_day)}, query 03 ALL"},
-        {"measure": "Stockout Calendar Day Share", "expected": q6(Fraction(so_dates, cal_days)), "source": f"{so_dates} / {cal_days}, reference_metrics.sql stockout_days"},
+        {"measure": "Stockout SKU Day Share", "expected": q6(Fraction(sku_day_cells, len(bi_day))), "source": f"{sku_day_cells} / {len(bi_day)}, query 03 ALL, reference_metrics.sql stockout_days"},
+        {"measure": "Stockout Calendar Day Share", "expected": q6(Fraction(so_dates, cal_days)), "source": f"{so_dates} / {cal_days}, reference_metrics.sql stockout_calendar_days_share"},
         {"measure": "On Hand Units (2026-09-30)", "expected": sum(r["closing_on_hand"] for r in last_day), "source": "query 01, 2026-09"},
         {"measure": "Working Capital (2026-09-30)", "expected": fmt(sum(Decimal(r["stock_value"]) for r in last_day)), "source": "query 06, 2026-09 end_total"},
         {"measure": "Average Inventory Value", "expected": format((value_sum / cal_days).quantize(Decimal("0.01"), ROUND_HALF_UP), "f"), "source": "query 06 row ALL"},
@@ -182,7 +187,8 @@ def main(argv: list[str]) -> int:
         {"measure": "Triggered Pairs", "expected": sum(1 for r in bi_draft if r["triggered"]), "source": "query 02"},
     ]
     rec.add("B bi Inventory Turnover (facts) vs domain supplementary()", turnover, sup["inventory_turnover"])
-    rec.add("B bi Stockout Calendar Day Share (facts) vs reference_metrics.sql stockout_days", results["bi_expected_measures"][5]["expected"], ref["stockout_days"])
+    rec.add("B bi Stockout Calendar Day Share (facts) vs reference_metrics.sql stockout_calendar_days_share", results["bi_expected_measures"][5]["expected"], ref["stockout_calendar_days_share"])
+    rec.add("B bi Stockout SKU Day Share (facts) vs reference_metrics.sql stockout_days", results["bi_expected_measures"][4]["expected"], ref["stockout_days"])
     rec.add("B bi Inventory Position (facts) vs reference_metrics.sql", results["bi_expected_measures"][10]["expected"], ref["inventory_position"])
     rec.add("B bi Draft Order Units (facts) vs reference_metrics.sql order_quantity", results["bi_expected_measures"][11]["expected"], ref["order_quantity"])
     rec.add("B draft_orders rows persisted in the seeded snapshot (derived table, written by the API)", n_draft_rows, 0)

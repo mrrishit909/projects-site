@@ -143,7 +143,7 @@ Window 2025-04-01 .. 2026-09-30. fill rate = fulfilled / (fulfilled + unmet), un
 <!-- END:03_fill_rate_stockout_by_location_abc -->
 
 Observed: overall fill rate 0.932486 (36,076 of 38,688 requested). `loc-02` is lowest (0.888281; class A 0.877842, with 205 stockout pair-days of 1,644, a 12.47 % share), against 0.964655 at `loc-01` and 0.955627 at `loc-03`, matching the designed relationship (0.888 against 0.96).
-**Two stockout-day figures exist and must not be mixed up (reviewer finding R3-01).** The contract's `stockout_days` is distinct calendar dates with any unmet demand over observed days: 290 / 548 = 0.529197. The SKU x location x day share is 431 / (60 x 548) = 0.013108. Both are computed here and agree with `reference_metrics.sql` and the domain (section 10); the case-study text that called the first one SKU-days is the defect.
+**Two stockout-day figures exist and must not be mixed up (reviewer finding R3-01, fixed in T-03-07, decision in `contracts.md` D-04).** The contract's `stockout_days` is now the SKU-day rate: 431 stockout pair-days over 60 pairs x 548 days = 32,880 SKU-days = 0.013108, so groups reconcile to the total. The share of calendar dates with any unmet demand, 290 / 548 = 0.529197, is the separate key `stockout_calendar_days_share`. Both are computed here and agree with `reference_metrics.sql` and the domain (section 10).
 
 ## 04 Supplier on-time rate by month, no future leakage (`04_supplier_on_time_by_month.sql`)
 Promised date = order date + quoted lead days counted on the supplier calendar (closure days do not count). A receipt is on time when its UTC date is on or before the promised date. `on_time_rate` uses only receipts dated inside the month; `cum_*` uses only receipts dated up to that month-end; `overdue_open_lines` counts lines promised on or before the cutoff and not fully received by it (censored: neither on time nor late yet). The `ALL` rows are the whole history.
@@ -302,7 +302,7 @@ Observed: working capital at the cutoff is 29,090.64 (loc-01 13,078.47, loc-02 7
 <!-- END:07_forecast_wape_by_sku -->
 
 Observed: `ewma` beats `seasonal_naive` for 11 of 14 SKUs, including all 8 class A (WAPE 0.447020 to 0.629220 against 0.510055 to 0.759465). The three where it does not (`prod-012`, `prod-037`, `prod-046`) are slow SKUs with WAPE of 1.0 or more, i.e. no better than forecasting zero; the intermittent SKUs `prod-037`, `prod-043`, `prod-046` have 1, 3 and 2 zero-demand windows, disclosed rather than dropped (P03-TEST-06). No forecast point is dated on or before its cutoff (`leaky_points` is 0 everywhere).
-Caveat, open defect S-03: the domain's promotion factor applies `planned_uplift` instead of `1 + uplift` (mirrored in the TypeScript domain), so `ewma` on promoted SKUs is suspect and these WAPE values would change after the fix (T-03-07). These points are the stored ones; the queries do not recompute them.
+Note on S-03 (fixed in T-03-07): the domain's promotion factor is now `1 + planned_uplift` (Python and TypeScript). These forecast points are the stored ones written by `data/generate.py` with its own models, not by the domain's forecast, so they are not regenerated and the queries do not recompute them; only the domain-derived parameters (the options of section 11) changed.
 
 ## 08 Rejections and planted defects by reason (`08_rejections_and_defects_by_reason.sql`)
 
@@ -373,7 +373,7 @@ Position and order for the golden fixture from the analysis SQL (`09_golden_posi
 | position_80 | stockout_days | 0.032258 | 0.032258 | 0.032258 | 0.032258 |
 <!-- END:golden_three_sources -->
 
-Snapshot totals and cell-by-cell checks (`run_all.py`; 87 checks; exit code 0 only if every row is equal):
+Snapshot totals and cell-by-cell checks (`run_all.py`; 91 checks; exit code 0 only if every row is equal):
 
 <!-- BEGIN:reconciliation -->
 | check | analysis_sql | second_source | third_source | fourth_source | equal |
@@ -396,7 +396,10 @@ Snapshot totals and cell-by-cell checks (`run_all.py`; 87 checks; exit code 0 on
 | B on hand 02 TOTAL vs 01 month-end 2026-09 | 1020 | 1020 | 1020 |  | True |
 | B on order (contract, confirmed only) 02 TOTAL vs 01 column on_order_confirmed_only | 608 | 608 | 608 |  | True |
 | B observed days 548 (03 pair-days / 60 pairs) vs reference vs domain | 548 | 548 | 548 |  | True |
-| B stockout days (distinct dates with unmet demand, all pairs): SQL vs reference vs domain | 290 | 290 | 290 |  | True |
+| B stockout calendar dates (distinct dates with unmet demand, all pairs): SQL vs reference vs domain | 0.529197 | 0.529197 | 0.529197 |  | True |
+| B stockout SKU-days (pair x date cells, R3-01): query 03 ALL vs reference stockout_day_count vs domain | 431 | 431 | 431 |  | True |
+| B stockout SKU-day rate = pair-days / (60 pairs x 548 days): query 03 ALL vs reference vs domain | 0.013108 | 0.013108 | 0.013108 |  | True |
+| B observed SKU-days (60 pairs x 548 days): reference vs domain | 32880 | 32880 | 32880 |  | True |
 | B average daily inventory value 06 row ALL vs domain supplementary() | 21881.18 | 21881.18 |  |  | True |
 | B on-order difference as-of rule vs confirmed only at the final month-end (S-04: closed orders with a partial line) | 72 | 72 |  |  | True |
 | B bi_fact_movement_day rows (60 pairs x 548 days) | 32880 | 32880 |  |  | True |
@@ -404,7 +407,8 @@ Snapshot totals and cell-by-cell checks (`run_all.py`; 87 checks; exit code 0 on
 | B bi_fact_movement_day fulfilled units vs reference | 36076 | 36076 |  |  | True |
 | B bi_fact_movement_day unmet units vs reference | 2612 | 2612 |  |  | True |
 | B bi Inventory Turnover (facts) vs domain supplementary() | 40.487277 | 40.487277 |  |  | True |
-| B bi Stockout Calendar Day Share (facts) vs reference_metrics.sql stockout_days | 0.529197 | 0.529197 |  |  | True |
+| B bi Stockout Calendar Day Share (facts) vs reference_metrics.sql stockout_calendar_days_share | 0.529197 | 0.529197 |  |  | True |
+| B bi Stockout SKU Day Share (facts) vs reference_metrics.sql stockout_days | 0.013108 | 0.013108 |  |  | True |
 | B bi Inventory Position (facts) vs reference_metrics.sql | 1628 | 1628 |  |  | True |
 | B bi Draft Order Units (facts) vs reference_metrics.sql order_quantity | 240 | 240 |  |  | True |
 | B draft_orders rows persisted in the seeded snapshot (derived table, written by the API) | 0 | 0 |  |  | True |
@@ -470,9 +474,9 @@ Snapshot totals and cell-by-cell checks (`run_all.py`; 87 checks; exit code 0 on
 `reference_metrics.sql` over the whole snapshot (cross-check of queries 01, 02, 03 and 06):
 
 <!-- BEGIN:reference_metrics_snapshot -->
-| fill_rate | requested_units | fulfilled_units | unmet_units | observed_days | stockout_day_count | stockout_days | running_stock_min | timestamp_order_stock_min | negative_stock | working_capital | empty_population | on_hand | on_order | backorders | reserved | available | inventory_position | reorder_point | target_position | reorder_triggered | raw_order | order_after_moq | order_quantity |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 0.932486 | 38688 | 36076 | 2612 | 548 | 290 | 0.529197 | 0 | 0 | False | 29090.64 | False | 1020 | 608 | 0 | 123 | 897 | 1628 | 1198 | 2336 | True | 230 | 230 | 240 |
+| fill_rate | requested_units | fulfilled_units | unmet_units | observed_days | stockout_day_count | stockout_days | running_stock_min | timestamp_order_stock_min | negative_stock | working_capital | empty_population | on_hand | on_order | backorders | reserved | available | inventory_position | reorder_point | target_position | reorder_triggered | raw_order | order_after_moq | order_quantity | stockout_calendar_days_share | observed_sku_days |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0.932486 | 38688 | 36076 | 2612 | 548 | 431 | 0.013108 | 0 | 0 | False | 29090.64 | False | 1020 | 608 | 0 | 123 | 897 | 1628 | 1198 | 2336 | True | 230 | 230 | 240 | 0.529197 | 32880 |
 <!-- END:reference_metrics_snapshot -->
 
 ## 11 Decision options, computed with the domain (`options.py`)
@@ -491,10 +495,10 @@ Unmet policy: `sc-95-lost` against `sc-95-backlog` (stored scenarios, seed 20261
 | sku | option | position | reorder_point | target_position | triggered | order_quantity | order_value |
 |---|---|---|---|---|---|---|---|
 | prod-002 | params of record (generator z 1.28, about 0.90) | 118 | 128 | 252 | True | 144 | 6010.56 |
-| prod-002 | derived from the forecast at 0.90 | 118 | 99 | 142 | False | 0 | 0.00 |
-| prod-002 | derived from the forecast at 0.95 | 118 | 107 | 150 | False | 0 | 0.00 |
+| prod-002 | derived from the forecast at 0.90 | 118 | 102 | 145 | False | 0 | 0.00 |
+| prod-002 | derived from the forecast at 0.95 | 118 | 109 | 152 | False | 0 | 0.00 |
 | prod-005 | params of record (generator z 1.28, about 0.90) | 48 | 51 | 144 | True | 96 | 5104.32 |
-| prod-005 | derived from the forecast at 0.90 | 48 | 47 | 95 | False | 0 | 0.00 |
+| prod-005 | derived from the forecast at 0.90 | 48 | 48 | 96 | False | 0 | 0.00 |
 | prod-005 | derived from the forecast at 0.95 | 48 | 51 | 99 | True | 60 | 3190.20 |
 <!-- END:10_options_service_target_sku_detail -->
 
@@ -509,5 +513,5 @@ Unmet policy: `sc-95-lost` against `sc-95-backlog` (stored scenarios, seed 20261
 
 ## What the queries do not show
 * Nothing here is a measured effect on a business; the company, suppliers, demand and costs are generated.
-* Query 07 uses stored forecast points produced with the open S-03 promotion-factor defect; query 02 and option 11 follow open decision S-04 (closed orders with a partly received line are not on order) and open finding R3-04 (position of a product with parameters at one of several locations; the snapshot has one home location per product, so no figure here is affected).
+* Query 07 uses the stored forecast points written by the generator's own models (S-03 concerns the domain's forecast only); query 02 and option 11 follow decision S-04 (closed orders with a partly received line are not on order); R3-04 (position of a product with parameters at one of several locations) is fixed and the snapshot has one home location per product, so no figure here is affected.
 * The derived-parameter plan in section 11 differs from the plan of record because the generator's parameters are a formula, not the domain's forecast; the data cannot say which is right.

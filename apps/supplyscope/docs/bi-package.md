@@ -87,7 +87,7 @@ Supplier Draft Order Units =
 ```
 
 Notes on the choices:
-* **Two stockout-day measures on purpose (reviewer finding R3-01).** The contract's `stockout_days` is distinct calendar dates with any unmet demand over observed days (`Stockout Calendar Day Share`: 290 / 548). The share of SKU x location x day cells (`Stockout SKU Day Share`: 431 / 32,880) is a different, smaller number. A visual must label which one it shows; the two do not reconcile across groups.
+* **Two stockout-day measures on purpose (reviewer finding R3-01, fixed in T-03-07).** The contract's `stockout_days` is the SKU-day rate (`Stockout SKU Day Share`: 431 / 32,880) and groups reconcile to the total. The share of calendar dates with any unmet demand (`Stockout Calendar Day Share`: 290 / 548, the key `stockout_calendar_days_share`) is a different, larger number. A visual must label which one it shows; only the SKU-day rate reconciles across groups.
 * **`Inventory Turnover`** equals annualised cost of goods sold over average inventory value (D-05): `SUM(cogs) * 365 / days` divided by `SUM(stock_value) / days`, the days cancel, so it is `SUM(cogs) * 365 / SUM(stock_value)` over the selected dates.
 * **`Inventory Position`** is read at the as-of date of the draft facts (one date in the snapshot, 2026-09-30); with no date selection `LASTDATE` is the last date of the date table, which is that date. Reserved stock is not part of it (P03-TEST-10).
 * **`stock_value` and `cogs_value`** are already valued at the cost in force on each day by the SQL export (D-05), so the cost step of 2026-02-01 cannot be averaged away by the model.
@@ -157,8 +157,8 @@ From the two exports, `run_all.py` (Python exact rationals) and the analysis que
 | Unmet Units | 2612 | fact_movement_day, sum |
 | Requested Units | 38688 | fulfilled + unmet |
 | Fill Rate | 0.932486 | query 03 ALL |
-| Stockout SKU Day Share | 0.013108 | 431 / 32880, query 03 ALL |
-| Stockout Calendar Day Share | 0.529197 | 290 / 548, reference_metrics.sql stockout_days |
+| Stockout SKU Day Share | 0.013108 | 431 / 32880, query 03 ALL, reference_metrics.sql stockout_days |
+| Stockout Calendar Day Share | 0.529197 | 290 / 548, reference_metrics.sql stockout_calendar_days_share |
 | On Hand Units (2026-09-30) | 1020 | query 01, 2026-09 |
 | Working Capital (2026-09-30) | 29090.64 | query 06, 2026-09 end_total |
 | Average Inventory Value | 21881.18 | query 06 row ALL |

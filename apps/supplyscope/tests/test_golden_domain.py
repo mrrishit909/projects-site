@@ -2,7 +2,7 @@
 import pytest
 
 from supplyscope import run_pipeline
-from supplyscope.contract import METRIC_KEYS
+from supplyscope.contract import EXTRA_METRIC_KEYS, METRIC_KEYS
 
 from support_db import golden_expected, golden_inputs
 
@@ -13,7 +13,9 @@ STATES = ["golden", "position_80"]
 def test_metrics_equal_expected_key_by_key(state):
     want = golden_expected()["states"][state]["metrics"]
     got = run_pipeline(golden_inputs(), state).metrics
-    assert set(got) == set(want) == set(METRIC_KEYS)
+    # R3-01: the metrics added after the fixture follow the expected.json keys; the fixture's own keys stay exact
+    assert set(want) == set(METRIC_KEYS) and set(got) == set(METRIC_KEYS) | set(EXTRA_METRIC_KEYS)
+    assert list(got) == [*METRIC_KEYS, *EXTRA_METRIC_KEYS]
     for key, value in want.items():
         assert got[key] == value and type(got[key]) is type(value), key
 

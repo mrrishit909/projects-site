@@ -5,6 +5,9 @@
   ``[from, to)``; other filters are equality on a whitelist of columns (unknown filter: 422 INVALID_FILTER).
 * Metrics run the domain over the population assembled from the tables at ``as_of`` over the half-open window
   ``[from, to)``; ``state`` names a stored fixture state; ``group_by`` is product, location, supplier or abc_class.
+* Canonical reads (R3-02): unmet-demand rows recorded under a scenario (C07) are excluded from the metrics and from
+  ``/data/backorders`` and ``/data/lost_sales``, unless that scenario is asked for (``/metrics?scenario=<id>`` adds its
+  rows to the canonical ones; ``/data/backorders?scenario_id=<id>`` lists them).
 """
 from __future__ import annotations
 
@@ -19,7 +22,8 @@ from typing import Any
 import psycopg
 from supplyscope import CONTRACT_VERSION, DomainError
 from supplyscope.contract import GROUP_KEYS
-from supplyscope.metrics import check_window, compute_metrics, group_metrics, negative_stock_flags, supplementary
+from supplyscope.metrics import (availability_flags, check_window, compute_metrics, group_metrics,
+                                 negative_stock_flags, supplementary)
 from supplyscope.models import iso_z
 
 from . import db
@@ -35,6 +39,7 @@ class EntitySpec:
     key: tuple[str, ...]
     time_field: str | None = None
     filters: tuple[str, ...] = field(default_factory=tuple)
+    canonical: bool = False     # rows with a scenario_id are hidden unless a scenario_id filter is given (R3-02)
 
 
 ENTITIES: dict[str, EntitySpec] = {s.table: s for s in (
@@ -53,8 +58,8 @@ ENTITIES: dict[str, EntitySpec] = {s.table: s for s in (
     EntitySpec("latent_demand", ("product_id", "location_id", "demand_date"), None, ("product_id", "location_id")),
     EntitySpec("forecast_runs", ("forecast_run_id",), "cutoff", ("product_id", "location_id", "selected_model")),
     EntitySpec("forecast_points", ("forecast_point_id",), None, ("forecast_run_id", "model")),
-    EntitySpec("backorders", ("backorder_id",), "opened_at", ("product_id", "location_id", "scenario_id")),
-    EntitySpec("lost_sales", ("lost_sale_id",), "occurred_at", ("product_id", "location_id", "scenario_id")),
+    EntitySpec("backorders", ("backorder_id",), "opened_at", ("product_id", "location_id", "scenario_id"), True),
+    EntitySpec("lost_sales", ("lost_sale_id",), "occurred_at", ("product_id", "location_id", "scenario_id"), True),
     EntitySpec("reservations", ("reservation_id",), "reserved_at", ("product_id", "location_id")),
     EntitySpec("replenishment_params", ("product_id", "location_id"), None, ("product_id", "location_id")),
     EntitySpec("stock_snapshots", ("as_of", "product_id", "location_id"), "as_of", ("product_id", "location_id")),
@@ -144,6 +149,8 @@ def read_entity(entity: str, limit: int, cursor: str | None, lo: str | None, hi:
     if spec.time_field and window[1] is not None:
         where.append(f"{spec.time_field} < %s")
         params.append(window[1])
+    if spec.canonical and "scenario_id" not in filters:
+        where.append("scenario_id IS NULL")
     for name, value in sorted(filters.items()):
         if name in _BOOL_COLUMNS:
             if value not in ("true", "false"):
@@ -178,7 +185,8 @@ def read_entity(entity: str, limit: int, cursor: str | None, lo: str | None, hi:
                 "meta": meta(conn, applied, total, next_cursor, _counts(conn)), "warnings": []}
 
 
-def read_metrics(as_of: str | None, lo: str | None, hi: str | None, state: str | None, group_by: str) -> dict[str, Any]:
+def read_metrics(as_of: str | None, lo: str | None, hi: str | None, state: str | None, group_by: str,
+                 scenario: str | None = None) -> dict[str, Any]:
     if group_by != "none" and group_by not in GROUP_KEYS:
         raise ApiError(422, "VALIDATION_FAILED", "unsupported group_by",
                        [detail("group_by", "INVALID_GROUP_BY", f"use none, {', '.join(GROUP_KEYS)}")])
@@ -193,19 +201,26 @@ def read_metrics(as_of: str | None, lo: str | None, hi: str | None, state: str |
                 raise ApiError(422, "VALIDATION_FAILED", "unsupported state",
                                [detail("state", "INVALID_STATE", f"known: {', '.join(known) or 'none'}")])
             spec = row["payload"]
+        if scenario is not None and conn.execute("SELECT 1 FROM policy_scenarios WHERE scenario_id = %s",
+                                                 (scenario,)).fetchone() is None:
+            raise ApiError(422, "VALIDATION_FAILED", "unknown scenario",
+                           [detail("scenario", "INVALID_SCENARIO", f"scenario {scenario!r} does not exist")])
         pop = db.load_population(conn)
         try:
             if group_by == "none":
-                data: dict[str, Any] = {"group_by": "none", "state": state, "as_of": iso_z(cut),
-                                        "metrics": compute_metrics(pop, cut, window, spec),
+                data: dict[str, Any] = {"group_by": "none", "state": state, "scenario": scenario, "as_of": iso_z(cut),
+                                        "metrics": compute_metrics(pop, cut, window, spec, scenario_id=scenario),
                                         "supplementary": supplementary(pop, cut, window)}
             else:
-                data = {"group_by": group_by, "state": state, "as_of": iso_z(cut),
-                        "groups": group_metrics(pop, group_by, cut, window, spec)}
+                data = {"group_by": group_by, "state": state, "scenario": scenario, "as_of": iso_z(cut),
+                        "groups": group_metrics(pop, group_by, cut, window, spec, scenario_id=scenario)}
         except DomainError as err:
             raise from_domain(err, "state") from None
-        warnings = [{"code": f["flag"], "message": "the reconstruction is negative: flagged, valued at zero",
+        warnings = [{"code": f["flag"], "message": "the reconstruction is negative: flagged, valued at zero "
+                                                   "(the position uses the unclamped value)",
                      "path": f"stock[{f['product_id']}:{f['location_id']}]"} for f in negative_stock_flags(pop, cut)]
+        warnings += [{"code": f["flag"], "message": "reserved exceeds the on-hand stock: available is below zero",
+                      "path": f"stock[{f['product_id']}:{f['location_id']}]"} for f in availability_flags(pop, cut)]
         applied = {"as_of": iso_z(cut), "from": iso_z(window[0]), "to": iso_z(window[1]), "state": state,
-                   "group_by": group_by}
+                   "group_by": group_by, "scenario": scenario}
         return {"data": data, "meta": meta(conn, applied, len(pop.products), None, _counts(conn)), "warnings": warnings}
