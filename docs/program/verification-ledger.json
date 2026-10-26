@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T13:25:24Z",
+  "updated_at": "2026-10-26T13:44:39Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -582,6 +582,15 @@
       ],
       "code_sha": "eac63b9",
       "ts": "2026-10-26T13:25:24Z"
+    },
+    {
+      "requirement": "P02-ART-04 SQL reconciled (37 rows equal; 712 completed cases to 4 dp); P02-ART-05 workbook recalculated (LibreOffice, Excel not run); P02-ART-06 BI documented (no .pbix); P02-ART-07/09/10",
+      "project": "02-onboard-studio",
+      "status": "verified",
+      "command": "run_all.py; psql ON_ERROR_STOP 00..09; pytest tests/test_artifacts.py",
+      "exit_code": 0,
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T13:44:39Z"
     }
   ]
 }

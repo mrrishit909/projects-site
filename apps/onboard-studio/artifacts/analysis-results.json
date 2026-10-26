@@ -1,0 +1,1506 @@
+{
+ "01_cycle_time_by_opening_month": [
+  {
+   "period": "2025-04",
+   "completed_cases": 48,
+   "calendar_h": "79.3858",
+   "business_h": "19.5469",
+   "cal_to_bus": "4.06",
+   "active_h": "9.1330"
+  },
+  {
+   "period": "2025-05",
+   "completed_cases": 43,
+   "calendar_h": "100.6601",
+   "business_h": "22.2647",
+   "cal_to_bus": "4.52",
+   "active_h": "9.4512"
+  },
+  {
+   "period": "2025-06",
+   "completed_cases": 42,
+   "calendar_h": "82.3552",
+   "business_h": "18.8683",
+   "cal_to_bus": "4.36",
+   "active_h": "8.9230"
+  },
+  {
+   "period": "2025-07",
+   "completed_cases": 43,
+   "calendar_h": "89.8244",
+   "business_h": "22.1333",
+   "cal_to_bus": "4.06",
+   "active_h": "9.6740"
+  },
+  {
+   "period": "2025-08",
+   "completed_cases": 36,
+   "calendar_h": "78.3065",
+   "business_h": "17.3954",
+   "cal_to_bus": "4.50",
+   "active_h": "8.8218"
+  },
+  {
+   "period": "2025-09",
+   "completed_cases": 40,
+   "calendar_h": "88.0121",
+   "business_h": "20.2433",
+   "cal_to_bus": "4.35",
+   "active_h": "9.2867"
+  },
+  {
+   "period": "2025-10",
+   "completed_cases": 34,
+   "calendar_h": "79.4838",
+   "business_h": "18.3074",
+   "cal_to_bus": "4.34",
+   "active_h": "6.5716"
+  },
+  {
+   "period": "2025-11",
+   "completed_cases": 35,
+   "calendar_h": "76.8433",
+   "business_h": "17.2624",
+   "cal_to_bus": "4.45",
+   "active_h": "7.0233"
+  },
+  {
+   "period": "2025-12",
+   "completed_cases": 40,
+   "calendar_h": "74.5975",
+   "business_h": "17.1975",
+   "cal_to_bus": "4.34",
+   "active_h": "6.5600"
+  },
+  {
+   "period": "2026-01",
+   "completed_cases": 43,
+   "calendar_h": "85.3535",
+   "business_h": "18.4484",
+   "cal_to_bus": "4.63",
+   "active_h": "7.2535"
+  },
+  {
+   "period": "2026-02",
+   "completed_cases": 32,
+   "calendar_h": "66.8760",
+   "business_h": "16.3729",
+   "cal_to_bus": "4.08",
+   "active_h": "6.9604"
+  },
+  {
+   "period": "2026-03",
+   "completed_cases": 40,
+   "calendar_h": "73.6108",
+   "business_h": "17.0958",
+   "cal_to_bus": "4.31",
+   "active_h": "7.3067"
+  },
+  {
+   "period": "2026-04",
+   "completed_cases": 43,
+   "calendar_h": "81.2508",
+   "business_h": "18.3671",
+   "cal_to_bus": "4.42",
+   "active_h": "7.3721"
+  },
+  {
+   "period": "2026-05",
+   "completed_cases": 42,
+   "calendar_h": "69.1893",
+   "business_h": "16.4083",
+   "cal_to_bus": "4.22",
+   "active_h": "6.9956"
+  },
+  {
+   "period": "2026-06",
+   "completed_cases": 45,
+   "calendar_h": "72.0448",
+   "business_h": "17.1744",
+   "cal_to_bus": "4.19",
+   "active_h": "7.5315"
+  },
+  {
+   "period": "2026-07",
+   "completed_cases": 29,
+   "calendar_h": "100.0540",
+   "business_h": "21.2994",
+   "cal_to_bus": "4.70",
+   "active_h": "7.7989"
+  },
+  {
+   "period": "2026-08",
+   "completed_cases": 36,
+   "calendar_h": "69.2806",
+   "business_h": "17.2657",
+   "cal_to_bus": "4.01",
+   "active_h": "7.1569"
+  },
+  {
+   "period": "2026-09",
+   "completed_cases": 41,
+   "calendar_h": "72.1634",
+   "business_h": "16.8679",
+   "cal_to_bus": "4.28",
+   "active_h": "7.5492"
+  },
+  {
+   "period": "TOTAL",
+   "completed_cases": 712,
+   "calendar_h": "79.9529",
+   "business_h": "18.5028",
+   "cal_to_bus": "4.32",
+   "active_h": "7.9020"
+  }
+ ],
+ "02_version_comparison_comparable_window": [
+  {
+   "window": "all (2025-04..2026-09)",
+   "version": "wfv-001",
+   "completed_cases": 430,
+   "open_cases": 13,
+   "business_h": "19.5686",
+   "paused_business_h": "10.3334",
+   "active_h": "9.2352",
+   "active_sd_h": "1.7442",
+   "handoffs_per_case": "1.1093",
+   "sla_attainment": "0.260465",
+   "sla_if_no_pause": "0.074419",
+   "rework_rate": "0.180995",
+   "first_pass_rate": "0.920849",
+   "pct_enterprise": "24.7",
+   "pct_reg_north": "22.1"
+  },
+  {
+   "window": "all (2025-04..2026-09)",
+   "version": "wfv-002",
+   "completed_cases": 282,
+   "open_cases": 8,
+   "business_h": "16.8776",
+   "paused_business_h": "11.0086",
+   "active_h": "5.8690",
+   "active_sd_h": "1.2797",
+   "handoffs_per_case": "0.8865",
+   "sla_attainment": "0.950355",
+   "sla_if_no_pause": "0.290780",
+   "rework_rate": "0.193772",
+   "first_pass_rate": "0.941718",
+   "pct_enterprise": "18.4",
+   "pct_reg_north": "21.6"
+  },
+  {
+   "window": "overlap (2025-10..2026-09)",
+   "version": "wfv-001",
+   "completed_cases": 178,
+   "open_cases": 10,
+   "business_h": "18.7568",
+   "paused_business_h": "9.5066",
+   "active_h": "9.2503",
+   "active_sd_h": "1.7311",
+   "handoffs_per_case": "1.2135",
+   "sla_attainment": "0.258427",
+   "sla_if_no_pause": "0.056180",
+   "rework_rate": "0.160428",
+   "first_pass_rate": "0.933036",
+   "pct_enterprise": "20.2",
+   "pct_reg_north": "22.5"
+  },
+  {
+   "window": "overlap (2025-10..2026-09)",
+   "version": "wfv-002",
+   "completed_cases": 282,
+   "open_cases": 8,
+   "business_h": "16.8776",
+   "paused_business_h": "11.0086",
+   "active_h": "5.8690",
+   "active_sd_h": "1.2797",
+   "handoffs_per_case": "0.8865",
+   "sla_attainment": "0.950355",
+   "sla_if_no_pause": "0.290780",
+   "rework_rate": "0.193772",
+   "first_pass_rate": "0.941718",
+   "pct_enterprise": "18.4",
+   "pct_reg_north": "21.6"
+  }
+ ],
+ "03_sla_by_segment_region": [
+  {
+   "segment": "enterprise",
+   "region": "reg-east",
+   "completed_cases": 50,
+   "within_sla": 25,
+   "sla_attainment": "0.500000",
+   "open_cases_not_in_rate": 2,
+   "active_h": "8.0280",
+   "pct_v2": "34.0"
+  },
+  {
+   "segment": "enterprise",
+   "region": "reg-north",
+   "completed_cases": 29,
+   "within_sla": 15,
+   "sla_attainment": "0.517241",
+   "open_cases_not_in_rate": 1,
+   "active_h": "8.1408",
+   "pct_v2": "37.9"
+  },
+  {
+   "segment": "enterprise",
+   "region": "reg-south",
+   "completed_cases": 43,
+   "within_sla": 20,
+   "sla_attainment": "0.465116",
+   "open_cases_not_in_rate": 1,
+   "active_h": "8.3554",
+   "pct_v2": "30.2"
+  },
+  {
+   "segment": "enterprise",
+   "region": "reg-west",
+   "completed_cases": 36,
+   "within_sla": 19,
+   "sla_attainment": "0.527778",
+   "open_cases_not_in_rate": 0,
+   "active_h": "7.9074",
+   "pct_v2": "30.6"
+  },
+  {
+   "segment": "enterprise",
+   "region": "ALL",
+   "completed_cases": 158,
+   "within_sla": 79,
+   "sla_attainment": "0.500000",
+   "open_cases_not_in_rate": 4,
+   "active_h": "8.1103",
+   "pct_v2": "32.9"
+  },
+  {
+   "segment": "mid_market",
+   "region": "reg-east",
+   "completed_cases": 64,
+   "within_sla": 38,
+   "sla_attainment": "0.593750",
+   "open_cases_not_in_rate": 1,
+   "active_h": "7.6661",
+   "pct_v2": "46.9"
+  },
+  {
+   "segment": "mid_market",
+   "region": "reg-north",
+   "completed_cases": 61,
+   "within_sla": 25,
+   "sla_attainment": "0.409836",
+   "open_cases_not_in_rate": 1,
+   "active_h": "8.1500",
+   "pct_v2": "31.1"
+  },
+  {
+   "segment": "mid_market",
+   "region": "reg-south",
+   "completed_cases": 66,
+   "within_sla": 32,
+   "sla_attainment": "0.484848",
+   "open_cases_not_in_rate": 3,
+   "active_h": "8.3442",
+   "pct_v2": "37.9"
+  },
+  {
+   "segment": "mid_market",
+   "region": "reg-west",
+   "completed_cases": 71,
+   "within_sla": 40,
+   "sla_attainment": "0.563380",
+   "open_cases_not_in_rate": 0,
+   "active_h": "7.6885",
+   "pct_v2": "45.1"
+  },
+  {
+   "segment": "mid_market",
+   "region": "ALL",
+   "completed_cases": 262,
+   "within_sla": 135,
+   "sla_attainment": "0.515267",
+   "open_cases_not_in_rate": 5,
+   "active_h": "7.9557",
+   "pct_v2": "40.5"
+  },
+  {
+   "segment": "smb",
+   "region": "reg-east",
+   "completed_cases": 81,
+   "within_sla": 48,
+   "sla_attainment": "0.592593",
+   "open_cases_not_in_rate": 5,
+   "active_h": "7.6617",
+   "pct_v2": "45.7"
+  },
+  {
+   "segment": "smb",
+   "region": "reg-north",
+   "completed_cases": 66,
+   "within_sla": 45,
+   "sla_attainment": "0.681818",
+   "open_cases_not_in_rate": 3,
+   "active_h": "7.2793",
+   "pct_v2": "47.0"
+  },
+  {
+   "segment": "smb",
+   "region": "reg-south",
+   "completed_cases": 77,
+   "within_sla": 34,
+   "sla_attainment": "0.441558",
+   "open_cases_not_in_rate": 3,
+   "active_h": "8.1045",
+   "pct_v2": "39.0"
+  },
+  {
+   "segment": "smb",
+   "region": "reg-west",
+   "completed_cases": 68,
+   "within_sla": 39,
+   "sla_attainment": "0.573529",
+   "open_cases_not_in_rate": 1,
+   "active_h": "7.8721",
+   "pct_v2": "38.2"
+  },
+  {
+   "segment": "smb",
+   "region": "ALL",
+   "completed_cases": 292,
+   "within_sla": 166,
+   "sla_attainment": "0.568493",
+   "open_cases_not_in_rate": 12,
+   "active_h": "7.7410",
+   "pct_v2": "42.5"
+  },
+  {
+   "segment": "ALL",
+   "region": "reg-east",
+   "completed_cases": 195,
+   "within_sla": 111,
+   "sla_attainment": "0.569231",
+   "open_cases_not_in_rate": 8,
+   "active_h": "7.7571",
+   "pct_v2": "43.1"
+  },
+  {
+   "segment": "ALL",
+   "region": "reg-north",
+   "completed_cases": 156,
+   "within_sla": 85,
+   "sla_attainment": "0.544872",
+   "open_cases_not_in_rate": 5,
+   "active_h": "7.7799",
+   "pct_v2": "39.1"
+  },
+  {
+   "segment": "ALL",
+   "region": "reg-south",
+   "completed_cases": 186,
+   "within_sla": 86,
+   "sla_attainment": "0.462366",
+   "open_cases_not_in_rate": 7,
+   "active_h": "8.2476",
+   "pct_v2": "36.6"
+  },
+  {
+   "segment": "ALL",
+   "region": "reg-west",
+   "completed_cases": 175,
+   "within_sla": 98,
+   "sla_attainment": "0.560000",
+   "open_cases_not_in_rate": 1,
+   "active_h": "7.8049",
+   "pct_v2": "39.4"
+  },
+  {
+   "segment": "ALL",
+   "region": "ALL",
+   "completed_cases": 712,
+   "within_sla": 380,
+   "sla_attainment": "0.533708",
+   "open_cases_not_in_rate": 21,
+   "active_h": "7.9020",
+   "pct_v2": "39.6"
+  }
+ ],
+ "04_step_waiting_by_step_assignee": [
+  {
+   "lens": "step",
+   "step_name": "approve_account",
+   "who": "ALL",
+   "step_instances": 718,
+   "wait_bh": "1.0491",
+   "started_to_decision_bh": "1.4059",
+   "started_to_decision_cal_h": "4.5903"
+  },
+  {
+   "lens": "step",
+   "step_name": "compliance_review",
+   "who": "ALL",
+   "step_instances": 725,
+   "wait_bh": "0.5163",
+   "started_to_decision_bh": "4.7131",
+   "started_to_decision_cal_h": "22.6184"
+  },
+  {
+   "lens": "step",
+   "step_name": "verify_identity",
+   "who": "ALL",
+   "step_instances": 441,
+   "wait_bh": "0.4992",
+   "started_to_decision_bh": "3.2435",
+   "started_to_decision_cal_h": "13.2986"
+  },
+  {
+   "lens": "step",
+   "step_name": "collect_documents",
+   "who": "ALL",
+   "step_instances": 733,
+   "wait_bh": "0.3788",
+   "started_to_decision_bh": "6.0432",
+   "started_to_decision_cal_h": "28.6076"
+  },
+  {
+   "lens": "step",
+   "step_name": "collect_address_proof",
+   "who": "ALL",
+   "step_instances": 290,
+   "wait_bh": "0.3339",
+   "started_to_decision_bh": "4.7291",
+   "started_to_decision_cal_h": "21.1443"
+  },
+  {
+   "lens": "step",
+   "step_name": "activate_account",
+   "who": "ALL",
+   "step_instances": 716,
+   "wait_bh": "0.2989",
+   "started_to_decision_bh": "0.6023",
+   "started_to_decision_cal_h": "2.4450"
+  },
+  {
+   "lens": "assignee",
+   "step_name": "approve_account",
+   "who": "acc-002",
+   "step_instances": 162,
+   "wait_bh": "1.1281",
+   "started_to_decision_bh": "1.4202",
+   "started_to_decision_cal_h": "5.4695"
+  },
+  {
+   "lens": "assignee",
+   "step_name": "approve_account",
+   "who": "acc-003",
+   "step_instances": 181,
+   "wait_bh": "1.0848",
+   "started_to_decision_bh": "1.4078",
+   "started_to_decision_cal_h": "4.8995"
+  },
+  {
+   "lens": "assignee",
+   "step_name": "approve_account",
+   "who": "acc-004",
+   "step_instances": 183,
+   "wait_bh": "1.0259",
+   "started_to_decision_bh": "1.3978",
+   "started_to_decision_cal_h": "3.9473"
+  },
+  {
+   "lens": "assignee",
+   "step_name": "approve_account",
+   "who": "acc-001",
+   "step_instances": 192,
+   "wait_bh": "0.9711",
+   "started_to_decision_bh": "1.3998",
+   "started_to_decision_cal_h": "4.1642"
+  },
+  {
+   "lens": "reviewer",
+   "step_name": "approve_account",
+   "who": "rev-004",
+   "step_instances": 292,
+   "wait_bh": "1.7855",
+   "started_to_decision_bh": "1.9605",
+   "started_to_decision_cal_h": "7.6865"
+  },
+  {
+   "lens": "reviewer",
+   "step_name": "approve_account",
+   "who": "undecided",
+   "step_instances": 2,
+   "wait_bh": "0.9583",
+   "started_to_decision_bh": null,
+   "started_to_decision_cal_h": null
+  },
+  {
+   "lens": "reviewer",
+   "step_name": "approve_account",
+   "who": "rev-006",
+   "step_instances": 212,
+   "wait_bh": "0.5451",
+   "started_to_decision_bh": "1.0287",
+   "started_to_decision_cal_h": "2.0098"
+  },
+  {
+   "lens": "reviewer",
+   "step_name": "approve_account",
+   "who": "rev-005",
+   "step_instances": 212,
+   "wait_bh": "0.5398",
+   "started_to_decision_bh": "1.0193",
+   "started_to_decision_cal_h": "2.9061"
+  }
+ ],
+ "05_rework_first_pass_by_segment": [
+  {
+   "lens": "segment",
+   "segment": "enterprise",
+   "document_type": "ALL",
+   "cases_with_submission": 162,
+   "cases_reworked": 47,
+   "rework_rate": "0.290123",
+   "first_reviewed": 424,
+   "first_accepted": 377,
+   "first_pass_rate": "0.889151"
+  },
+  {
+   "lens": "segment",
+   "segment": "mid_market",
+   "document_type": "ALL",
+   "cases_with_submission": 267,
+   "cases_reworked": 46,
+   "rework_rate": "0.172285",
+   "first_reviewed": 740,
+   "first_accepted": 692,
+   "first_pass_rate": "0.935135"
+  },
+  {
+   "lens": "segment",
+   "segment": "smb",
+   "document_type": "ALL",
+   "cases_with_submission": 302,
+   "cases_reworked": 43,
+   "rework_rate": "0.142384",
+   "first_reviewed": 850,
+   "first_accepted": 806,
+   "first_pass_rate": "0.948235"
+  },
+  {
+   "lens": "segment",
+   "segment": "ALL",
+   "document_type": "ALL",
+   "cases_with_submission": 731,
+   "cases_reworked": 136,
+   "rework_rate": "0.186047",
+   "first_reviewed": 2014,
+   "first_accepted": 1875,
+   "first_pass_rate": "0.930983"
+  },
+  {
+   "lens": "document_type",
+   "segment": "enterprise",
+   "document_type": "address_proof",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 54,
+   "first_accepted": 53,
+   "first_pass_rate": "0.981481"
+  },
+  {
+   "lens": "document_type",
+   "segment": "mid_market",
+   "document_type": "address_proof",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 107,
+   "first_accepted": 100,
+   "first_pass_rate": "0.934579"
+  },
+  {
+   "lens": "document_type",
+   "segment": "smb",
+   "document_type": "address_proof",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 128,
+   "first_accepted": 119,
+   "first_pass_rate": "0.929688"
+  },
+  {
+   "lens": "document_type",
+   "segment": "ALL",
+   "document_type": "address_proof",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 289,
+   "first_accepted": 272,
+   "first_pass_rate": "0.941176"
+  },
+  {
+   "lens": "document_type",
+   "segment": "enterprise",
+   "document_type": "approval_form",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 46,
+   "first_accepted": 46,
+   "first_pass_rate": "1.000000"
+  },
+  {
+   "lens": "document_type",
+   "segment": "mid_market",
+   "document_type": "approval_form",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 99,
+   "first_accepted": 99,
+   "first_pass_rate": "1.000000"
+  },
+  {
+   "lens": "document_type",
+   "segment": "smb",
+   "document_type": "approval_form",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 118,
+   "first_accepted": 118,
+   "first_pass_rate": "1.000000"
+  },
+  {
+   "lens": "document_type",
+   "segment": "ALL",
+   "document_type": "approval_form",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 263,
+   "first_accepted": 263,
+   "first_pass_rate": "1.000000"
+  },
+  {
+   "lens": "document_type",
+   "segment": "enterprise",
+   "document_type": "business_registration",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 162,
+   "first_accepted": 155,
+   "first_pass_rate": "0.956790"
+  },
+  {
+   "lens": "document_type",
+   "segment": "mid_market",
+   "document_type": "business_registration",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 267,
+   "first_accepted": 261,
+   "first_pass_rate": "0.977528"
+  },
+  {
+   "lens": "document_type",
+   "segment": "smb",
+   "document_type": "business_registration",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 302,
+   "first_accepted": 298,
+   "first_pass_rate": "0.986755"
+  },
+  {
+   "lens": "document_type",
+   "segment": "ALL",
+   "document_type": "business_registration",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 731,
+   "first_accepted": 714,
+   "first_pass_rate": "0.976744"
+  },
+  {
+   "lens": "document_type",
+   "segment": "enterprise",
+   "document_type": "identity_proof",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 162,
+   "first_accepted": 123,
+   "first_pass_rate": "0.759259"
+  },
+  {
+   "lens": "document_type",
+   "segment": "mid_market",
+   "document_type": "identity_proof",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 267,
+   "first_accepted": 232,
+   "first_pass_rate": "0.868914"
+  },
+  {
+   "lens": "document_type",
+   "segment": "smb",
+   "document_type": "identity_proof",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 302,
+   "first_accepted": 271,
+   "first_pass_rate": "0.897351"
+  },
+  {
+   "lens": "document_type",
+   "segment": "ALL",
+   "document_type": "identity_proof",
+   "cases_with_submission": null,
+   "cases_reworked": null,
+   "rework_rate": null,
+   "first_reviewed": 731,
+   "first_accepted": 626,
+   "first_pass_rate": "0.856361"
+  }
+ ],
+ "06_paused_time_by_reason_region": [
+  {
+   "lens": "region",
+   "reason": "ALL eligible",
+   "region": "reg-east",
+   "in_pause_policy": "true",
+   "waits": null,
+   "completed_cases": 195,
+   "cases_with_wait": 137,
+   "wait_h": null,
+   "wait_business_h": null,
+   "paused_h_per_case": "29.6538"
+  },
+  {
+   "lens": "region",
+   "reason": "ALL eligible",
+   "region": "reg-north",
+   "in_pause_policy": "true",
+   "waits": null,
+   "completed_cases": 156,
+   "cases_with_wait": 132,
+   "wait_h": null,
+   "wait_business_h": null,
+   "paused_h_per_case": "59.0534"
+  },
+  {
+   "lens": "region",
+   "reason": "ALL eligible",
+   "region": "reg-south",
+   "in_pause_policy": "true",
+   "waits": null,
+   "completed_cases": 186,
+   "cases_with_wait": 130,
+   "wait_h": null,
+   "wait_business_h": null,
+   "paused_h_per_case": "30.5270"
+  },
+  {
+   "lens": "region",
+   "reason": "ALL eligible",
+   "region": "reg-west",
+   "in_pause_policy": "true",
+   "waits": null,
+   "completed_cases": 175,
+   "cases_with_wait": 119,
+   "wait_h": null,
+   "wait_business_h": null,
+   "paused_h_per_case": "26.2899"
+  },
+  {
+   "lens": "region",
+   "reason": "ALL eligible",
+   "region": "ALL",
+   "in_pause_policy": "true",
+   "waits": null,
+   "completed_cases": 712,
+   "cases_with_wait": 518,
+   "wait_h": null,
+   "wait_business_h": null,
+   "paused_h_per_case": "35.4966"
+  },
+  {
+   "lens": "reason_region",
+   "reason": "customer_info_requested",
+   "region": "reg-east",
+   "in_pause_policy": "true",
+   "waits": 176,
+   "completed_cases": null,
+   "cases_with_wait": null,
+   "wait_h": "28.9410",
+   "wait_business_h": "8.6705",
+   "paused_h_per_case": null
+  },
+  {
+   "lens": "reason_region",
+   "reason": "customer_info_requested",
+   "region": "reg-north",
+   "in_pause_policy": "true",
+   "waits": 210,
+   "completed_cases": null,
+   "cases_with_wait": null,
+   "wait_h": "38.8533",
+   "wait_business_h": "11.1670",
+   "paused_h_per_case": null
+  },
+  {
+   "lens": "reason_region",
+   "reason": "customer_info_requested",
+   "region": "reg-south",
+   "in_pause_policy": "true",
+   "waits": 173,
+   "completed_cases": null,
+   "cases_with_wait": null,
+   "wait_h": "28.2356",
+   "wait_business_h": "8.4372",
+   "paused_h_per_case": null
+  },
+  {
+   "lens": "reason_region",
+   "reason": "customer_info_requested",
+   "region": "reg-west",
+   "in_pause_policy": "true",
+   "waits": 149,
+   "completed_cases": null,
+   "cases_with_wait": null,
+   "wait_h": "27.0348",
+   "wait_business_h": "7.5117",
+   "paused_h_per_case": null
+  },
+  {
+   "lens": "reason_region",
+   "reason": "external_verification",
+   "region": "reg-east",
+   "in_pause_policy": "true",
+   "waits": 33,
+   "completed_cases": null,
+   "cases_with_wait": null,
+   "wait_h": "20.8753",
+   "wait_business_h": "6.8677",
+   "paused_h_per_case": null
+  },
+  {
+   "lens": "reason_region",
+   "reason": "external_verification",
+   "region": "reg-north",
+   "in_pause_policy": "true",
+   "waits": 41,
+   "completed_cases": null,
+   "cases_with_wait": null,
+   "wait_h": "25.6862",
+   "wait_business_h": "8.3431",
+   "paused_h_per_case": null
+  },
+  {
+   "lens": "reason_region",
+   "reason": "external_verification",
+   "region": "reg-south",
+   "in_pause_policy": "true",
+   "waits": 36,
+   "completed_cases": null,
+   "cases_with_wait": null,
+   "wait_h": "22.0347",
+   "wait_business_h": "8.2181",
+   "paused_h_per_case": null
+  },
+  {
+   "lens": "reason_region",
+   "reason": "external_verification",
+   "region": "reg-west",
+   "in_pause_policy": "true",
+   "waits": 31,
+   "completed_cases": null,
+   "cases_with_wait": null,
+   "wait_h": "18.4694",
+   "wait_business_h": "7.5253",
+   "paused_h_per_case": null
+  }
+ ],
+ "07_backlog_month_ends": [
+  {
+   "month": "2025-04",
+   "cutoff": "2025-05-01T00:00Z",
+   "opened": 48,
+   "completed": 43,
+   "open_at_end": 5,
+   "open_v1": 5,
+   "open_v2": 0
+  },
+  {
+   "month": "2025-05",
+   "cutoff": "2025-06-01T00:00Z",
+   "opened": 44,
+   "completed": 40,
+   "open_at_end": 9,
+   "open_v1": 9,
+   "open_v2": 0
+  },
+  {
+   "month": "2025-06",
+   "cutoff": "2025-07-01T00:00Z",
+   "opened": 43,
+   "completed": 47,
+   "open_at_end": 5,
+   "open_v1": 5,
+   "open_v2": 0
+  },
+  {
+   "month": "2025-07",
+   "cutoff": "2025-08-01T00:00Z",
+   "opened": 44,
+   "completed": 42,
+   "open_at_end": 7,
+   "open_v1": 7,
+   "open_v2": 0
+  },
+  {
+   "month": "2025-08",
+   "cutoff": "2025-09-01T00:00Z",
+   "opened": 36,
+   "completed": 39,
+   "open_at_end": 4,
+   "open_v1": 4,
+   "open_v2": 0
+  },
+  {
+   "month": "2025-09",
+   "cutoff": "2025-10-01T00:00Z",
+   "opened": 40,
+   "completed": 37,
+   "open_at_end": 7,
+   "open_v1": 7,
+   "open_v2": 0
+  },
+  {
+   "month": "2025-10",
+   "cutoff": "2025-11-01T00:00Z",
+   "opened": 35,
+   "completed": 34,
+   "open_at_end": 8,
+   "open_v1": 4,
+   "open_v2": 4
+  },
+  {
+   "month": "2025-11",
+   "cutoff": "2025-12-01T00:00Z",
+   "opened": 35,
+   "completed": 34,
+   "open_at_end": 9,
+   "open_v1": 6,
+   "open_v2": 3
+  },
+  {
+   "month": "2025-12",
+   "cutoff": "2026-01-01T00:00Z",
+   "opened": 41,
+   "completed": 42,
+   "open_at_end": 8,
+   "open_v1": 6,
+   "open_v2": 2
+  },
+  {
+   "month": "2026-01",
+   "cutoff": "2026-02-01T00:00Z",
+   "opened": 45,
+   "completed": 44,
+   "open_at_end": 9,
+   "open_v1": 5,
+   "open_v2": 4
+  },
+  {
+   "month": "2026-02",
+   "cutoff": "2026-03-01T00:00Z",
+   "opened": 32,
+   "completed": 33,
+   "open_at_end": 8,
+   "open_v1": 5,
+   "open_v2": 3
+  },
+  {
+   "month": "2026-03",
+   "cutoff": "2026-04-01T00:00Z",
+   "opened": 43,
+   "completed": 34,
+   "open_at_end": 17,
+   "open_v1": 8,
+   "open_v2": 9
+  },
+  {
+   "month": "2026-04",
+   "cutoff": "2026-05-01T00:00Z",
+   "opened": 44,
+   "completed": 44,
+   "open_at_end": 17,
+   "open_v1": 11,
+   "open_v2": 6
+  },
+  {
+   "month": "2026-05",
+   "cutoff": "2026-06-01T00:00Z",
+   "opened": 44,
+   "completed": 42,
+   "open_at_end": 19,
+   "open_v1": 12,
+   "open_v2": 7
+  },
+  {
+   "month": "2026-06",
+   "cutoff": "2026-07-01T00:00Z",
+   "opened": 46,
+   "completed": 47,
+   "open_at_end": 18,
+   "open_v1": 12,
+   "open_v2": 6
+  },
+  {
+   "month": "2026-07",
+   "cutoff": "2026-08-01T00:00Z",
+   "opened": 29,
+   "completed": 29,
+   "open_at_end": 18,
+   "open_v1": 11,
+   "open_v2": 7
+  },
+  {
+   "month": "2026-08",
+   "cutoff": "2026-09-01T00:00Z",
+   "opened": 37,
+   "completed": 38,
+   "open_at_end": 17,
+   "open_v1": 11,
+   "open_v2": 6
+  },
+  {
+   "month": "2026-09",
+   "cutoff": "2026-10-01T00:00Z",
+   "opened": 47,
+   "completed": 43,
+   "open_at_end": 21,
+   "open_v1": 13,
+   "open_v2": 8
+  }
+ ],
+ "08_flags_and_rejections_by_reason": [
+  {
+   "lens": "rejection",
+   "reason": "DECISION_CONFLICT",
+   "cases": 0,
+   "approvals": 2,
+   "other_child_rows": 0,
+   "total_rows": 2,
+   "ids": "apr-000623, apr-003152"
+  },
+  {
+   "lens": "rejection",
+   "reason": "MISSING_REQUIRED_DOCUMENT",
+   "cases": 2,
+   "approvals": 10,
+   "other_child_rows": 58,
+   "total_rows": 70,
+   "ids": "case-000218, case-000545"
+  },
+  {
+   "lens": "rejection",
+   "reason": "PAUSE_REASON_NOT_CONFIGURED",
+   "cases": 3,
+   "approvals": 15,
+   "other_child_rows": 95,
+   "total_rows": 113,
+   "ids": "case-000138, case-000473, case-000541"
+  },
+  {
+   "lens": "rejection",
+   "reason": "SELF_APPROVAL",
+   "cases": 2,
+   "approvals": 10,
+   "other_child_rows": 72,
+   "total_rows": 84,
+   "ids": "case-000075, case-000685"
+  },
+  {
+   "lens": "flag",
+   "reason": "PAUSE_OUTSIDE_WORKING_INTERVAL",
+   "cases": 3,
+   "approvals": 0,
+   "other_child_rows": 0,
+   "total_rows": 3,
+   "ids": "wi-00396, wi-00704, wi-00753"
+  }
+ ],
+ "09_golden_case_business_hours": [
+  {
+   "case_id": "case-001",
+   "calendar_h": "66.0000",
+   "business_h": "2.0000",
+   "paused_h": "65.0000",
+   "paused_business_overlap_h": "1.0000",
+   "active_h_pause_eligible": "1.0000",
+   "active_h_pause_not_eligible": "2.0000",
+   "within_sla": true
+  }
+ ],
+ "reconciliation": [
+  {
+   "check": "B snapshot population: completed_eligible_cases",
+   "sql_view": 712,
+   "second_source": 712,
+   "third_source": 712,
+   "equal": true
+  },
+  {
+   "check": "B snapshot population: calendar_cycle_time_hours",
+   "sql_view": "79.9529",
+   "second_source": "79.9529",
+   "third_source": "79.9529",
+   "equal": true
+  },
+  {
+   "check": "B snapshot population: business_cycle_time_hours",
+   "sql_view": "18.5028",
+   "second_source": "18.5028",
+   "third_source": "18.5028",
+   "equal": true
+  },
+  {
+   "check": "B snapshot population: paused_time_hours",
+   "sql_view": "35.4966",
+   "second_source": "35.4966",
+   "third_source": "35.4966",
+   "equal": true
+  },
+  {
+   "check": "B snapshot population: paused_business_overlap_hours",
+   "sql_view": "10.6008",
+   "second_source": "10.6008",
+   "third_source": "10.6008",
+   "equal": true
+  },
+  {
+   "check": "B snapshot population: active_elapsed_hours",
+   "sql_view": "7.9020",
+   "second_source": "7.9020",
+   "third_source": "7.9020",
+   "equal": true
+  },
+  {
+   "check": "B snapshot population: within_sla_cases",
+   "sql_view": 380,
+   "second_source": 380,
+   "third_source": 380,
+   "equal": true
+  },
+  {
+   "check": "B per-case calendar/business/paused/active hours, cases differing (domain, 712 cases)",
+   "sql_view": 0,
+   "second_source": 0,
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "B completed cases compared per case",
+   "sql_view": 712,
+   "second_source": 712,
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C workflow_version=wfv-001: n / active / SLA / handoffs / paused",
+   "sql_view": "430 / 9.2352 / 0.260465 / 484 / 34.5585",
+   "second_source": "430 / 9.2352 / 0.260465 / 484 / 34.5585",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C workflow_version=wfv-002: n / active / SLA / handoffs / paused",
+   "sql_view": "282 / 5.8690 / 0.950355 / 255 / 36.9271",
+   "second_source": "282 / 5.8690 / 0.950355 / 255 / 36.9271",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C segment=enterprise: n / active / SLA / handoffs / paused",
+   "sql_view": "158 / 8.1103 / 0.500000 / 160 / 39.7320",
+   "second_source": "158 / 8.1103 / 0.500000 / 160 / 39.7320",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C segment=mid_market: n / active / SLA / handoffs / paused",
+   "sql_view": "262 / 7.9557 / 0.515267 / 263 / 34.8602",
+   "second_source": "262 / 7.9557 / 0.515267 / 263 / 34.8602",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C segment=smb: n / active / SLA / handoffs / paused",
+   "sql_view": "292 / 7.7410 / 0.568493 / 316 / 33.7759",
+   "second_source": "292 / 7.7410 / 0.568493 / 316 / 33.7759",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C region=reg-east: n / active / SLA / handoffs / paused",
+   "sql_view": "195 / 7.7571 / 0.569231 / 217 / 29.6538",
+   "second_source": "195 / 7.7571 / 0.569231 / 217 / 29.6538",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C region=reg-north: n / active / SLA / handoffs / paused",
+   "sql_view": "156 / 7.7799 / 0.544872 / 142 / 59.0534",
+   "second_source": "156 / 7.7799 / 0.544872 / 142 / 59.0534",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C region=reg-south: n / active / SLA / handoffs / paused",
+   "sql_view": "186 / 8.2476 / 0.462366 / 204 / 30.5270",
+   "second_source": "186 / 8.2476 / 0.462366 / 204 / 30.5270",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C region=reg-west: n / active / SLA / handoffs / paused",
+   "sql_view": "175 / 7.8049 / 0.560000 / 176 / 26.2899",
+   "second_source": "175 / 7.8049 / 0.560000 / 176 / 26.2899",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02 wfv-001 (all window): rework / first-pass vs domain",
+   "sql_view": "0.180995 / 0.920849",
+   "second_source": "0.180995 / 0.920849",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02 wfv-002 (all window): rework / first-pass vs domain",
+   "sql_view": "0.193772 / 0.941718",
+   "second_source": "0.193772 / 0.941718",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C backlog at 18 month-end cutoffs (sum of open_at_end)",
+   "sql_view": 206,
+   "second_source": 206,
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C backlog per cutoff, cutoffs differing",
+   "sql_view": 0,
+   "second_source": 0,
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C step waiting per step_definition (10), differing",
+   "sql_view": 0,
+   "second_source": 0,
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "C rework rate / first-pass approval (all cases)",
+   "sql_view": "0.186047 / 0.930983",
+   "second_source": "0.186047 / 0.930983",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-01 MISSING_REQUIRED_DOCUMENT cases",
+   "sql_view": "case-000218, case-000545",
+   "second_source": "case-000218, case-000545",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-02 DECISION_CONFLICT approvals",
+   "sql_view": "apr-000623, apr-003152",
+   "second_source": "apr-000623, apr-003152",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-03 PAUSE_OUTSIDE_WORKING_INTERVAL waits",
+   "sql_view": "wi-00396, wi-00704, wi-00753",
+   "second_source": "wi-00396, wi-00704, wi-00753",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-09 PAUSE_REASON_NOT_CONFIGURED cases",
+   "sql_view": "case-000138, case-000473, case-000541",
+   "second_source": "case-000138, case-000473, case-000541",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-10 SELF_APPROVAL cases",
+   "sql_view": "case-000075, case-000685",
+   "second_source": "case-000075, case-000685",
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "D domain flags equal SQL flags",
+   "sql_view": 3,
+   "second_source": 3,
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "D rejected rows kept (domain vs table)",
+   "sql_view": 269,
+   "second_source": 269,
+   "third_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden calendar hours",
+   "sql_view": "66.0000",
+   "second_source": "66.0000",
+   "third_source": "66.0000",
+   "equal": true
+  },
+  {
+   "check": "A golden BUSINESS hours",
+   "sql_view": "2.0000",
+   "second_source": "2.0000",
+   "third_source": "2.0000",
+   "equal": true
+  },
+  {
+   "check": "A golden paused hours",
+   "sql_view": "65.0000",
+   "second_source": "65.0000",
+   "third_source": "65.0000",
+   "equal": true
+  },
+  {
+   "check": "A golden paused business overlap",
+   "sql_view": "1.0000",
+   "second_source": "1.0000",
+   "third_source": "1.0000",
+   "equal": true
+  },
+  {
+   "check": "A golden active, pause eligible",
+   "sql_view": "1.0000",
+   "second_source": "1.0000",
+   "third_source": "1.0000",
+   "equal": true
+  },
+  {
+   "check": "A golden active, not eligible",
+   "sql_view": "2.0000",
+   "second_source": "",
+   "third_source": "2.0000",
+   "equal": true
+  }
+ ],
+ "golden_three_sources": [
+  {
+   "quantity": "calendar hours",
+   "analysis_sql_09": "66.0000",
+   "reference_metrics_sql": "66.0000",
+   "python_domain": "66.0000",
+   "expected_json": "66.0000"
+  },
+  {
+   "quantity": "BUSINESS hours",
+   "analysis_sql_09": "2.0000",
+   "reference_metrics_sql": "2.0000",
+   "python_domain": "2.0000",
+   "expected_json": "2.0000"
+  },
+  {
+   "quantity": "paused hours",
+   "analysis_sql_09": "65.0000",
+   "reference_metrics_sql": "65.0000",
+   "python_domain": "65.0000",
+   "expected_json": "65.0000"
+  },
+  {
+   "quantity": "paused business overlap",
+   "analysis_sql_09": "1.0000",
+   "reference_metrics_sql": "1.0000",
+   "python_domain": "1.0000",
+   "expected_json": "1.0000"
+  },
+  {
+   "quantity": "active, pause eligible",
+   "analysis_sql_09": "1.0000",
+   "reference_metrics_sql": "1.0000",
+   "python_domain": "1.0000",
+   "expected_json": "1.0000"
+  },
+  {
+   "quantity": "active, not eligible",
+   "analysis_sql_09": "2.0000",
+   "reference_metrics_sql": "n/a (policy fixed in the rule)",
+   "python_domain": "2.0000",
+   "expected_json": "2.0000"
+  }
+ ],
+ "reference_metrics_snapshot": [
+  {
+   "completed_eligible_cases": 712,
+   "calendar_cycle_time_hours": "79.9529",
+   "business_cycle_time_hours": "18.5028",
+   "paused_time_hours": "35.4966",
+   "paused_business_overlap_hours": "10.6008",
+   "active_elapsed_hours": "7.9020",
+   "within_sla_cases": 380
+  }
+ ],
+ "python_domain_snapshot": [
+  {
+   "calendar_cycle_time_hours": "79.9529",
+   "business_cycle_time_hours": "18.5028",
+   "paused_time_hours": "35.4966",
+   "paused_business_overlap_hours": "10.6008",
+   "active_elapsed_hours": "7.9020",
+   "sla_attainment": "0.533708",
+   "completed_eligible_cases": 712,
+   "within_sla_cases": 380,
+   "rework_rate": "0.186047",
+   "handoff_count": 739,
+   "first_pass_approval": "0.930983",
+   "document_completeness": "0.997153",
+   "empty_population": false
+  }
+ ],
+ "python_domain_step_waiting": [
+  {
+   "sd-001": "0.4043",
+   "sd-002": "0.4992",
+   "sd-003": "0.5625",
+   "sd-004": "1.1623",
+   "sd-005": "0.3151",
+   "sd-006": "0.3398",
+   "sd-007": "0.3339",
+   "sd-008": "0.4464",
+   "sd-009": "0.8763",
+   "sd-010": "0.2743"
+  }
+ ]
+}
