@@ -123,3 +123,17 @@ defects are replay-only (INJ-06, 07, 08, 10, 12); EV-01..07 behave as recorded. 
 approvals against the run at the cutoff, not at `decided_at`; `Population.exceptions` ids are last-wins while the SQL
 prefers the open record (they agree under the load order the tests use); the SQL reference takes about 80 s per query
 on 2,800 invoices.
+
+## D-08 Static site (2026-10-26, adopted from A-037)
+The site reads the stored exception ids and assignments (the API read path), so "unowned" counts stored assignments
+(29 on the snapshot) while a bare `run_pipeline` without stored records reports every open exception as unowned
+(232); the golden check verifies both modes against Python digests in `scripts/snapshot-reference.json`. `?dataset=golden`
+is a full reload; `/invoices/` shows the golden pair under it and otherwise the canonical copy of the first merge.
+The approval trail labels a later valid approval that does not count as SUPERSEDED, and match lines show "previously
+invoiced" (consumed, including earlier lines of the same invoice); both are additions beyond the contract figures. The
+audit timeline is derived from recorded facts (no stored event log); lineage states that no correction versions exist
+and that C06 returns 501. Parser limits: decimals as strings or safe integers (non-integer JSON numbers and exponent
+notation rejected); timestamps with a non-zero sub-second part rejected (Python keeps microseconds; the data has none);
+tolerances stored at 6 decimals and compared against cents × 10^4. Intake is a position slider with a re-send button in
+browser memory. Per-vendor totals are in each vendor's own currency, never converted. The exports page treats the stored
+`export_batches` as a cross-check, not a source. No dark mode.

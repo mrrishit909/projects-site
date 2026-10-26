@@ -1,0 +1,360 @@
+{
+ "as_of": "2026-10-01T02:00:00Z",
+ "dataset_hash": "1f001a43a7031d4260f5abb3b9f7a83f6e1b48397e85cf8b04e0b4d9e052162e",
+ "dataset_version": "ib-20261026-20261026",
+ "generated_by": "web/scripts/make-snapshot-reference.py (domain/invoicebridge, Python) run once over web/public/data",
+ "pipeline": {
+  "approvals": {
+   "invalid_by_code": {},
+   "invalid_count": 0,
+   "valid_count": 2299
+  },
+  "documents_digest": "efab3f80656c876d619cc926e6e2ff7cf2fb8f6c7cd6c1bbecfe3c42ef852b10",
+  "exceptions": {
+   "by_reason": {
+    "CURRENCY_MISMATCH": 3,
+    "NO_PO_LINE": 0,
+    "PRICE_VARIANCE": 32,
+    "QUANTITY_BLOCKED": 193,
+    "ROUNDING_EXCEPTION": 4
+   },
+   "open_count": 232,
+   "unowned_count": 232
+  },
+  "export": {
+   "accepted_export_total": "2191870.02",
+   "batches_created": 52,
+   "difference": "0.00",
+   "eligible_approved_total": "2191870.02",
+   "exclusion_count": 346,
+   "repeat_requests_returned_prior": 7,
+   "requests_received": 59,
+   "row_count": 2299
+  },
+  "ingest_counts": {
+   "approval_policies": {
+    "accepted": 2,
+    "merged": 0,
+    "rejected": 0
+   },
+   "approvals": {
+    "accepted": 2356,
+    "merged": 0,
+    "rejected": 0
+   },
+   "credit_notes": {
+    "accepted": 117,
+    "merged": 0,
+    "rejected": 0
+   },
+   "invoice_lines": {
+    "accepted": 5142,
+    "merged": 180,
+    "rejected": 0
+   },
+   "invoices": {
+    "accepted": 2702,
+    "merged": 98,
+    "rejected": 0
+   },
+   "po_lines": {
+    "accepted": 3000,
+    "merged": 0,
+    "rejected": 0
+   },
+   "purchase_orders": {
+    "accepted": 1200,
+    "merged": 0,
+    "rejected": 0
+   },
+   "receipts": {
+    "accepted": 5067,
+    "merged": 0,
+    "rejected": 0
+   },
+   "vendors": {
+    "accepted": 40,
+    "merged": 0,
+    "rejected": 0
+   }
+  },
+  "merged_records_digest": "c2100222bfa8b062b65791702c6707c04581f46aaca97bab0f9a1b52ff005b27",
+  "metric_digests": {
+   "approvals": "3b5bca1e6b087a63cde7693ef07be1eadef9781921f728c80778864361c835b7",
+   "duplicates": "e8fd4900c6185ffe614589dd3d528da4a69cfcf3f3dc6801bd9d9623a53d81b5",
+   "exceptions": "a7e99829e4d9807ceb3462a083ab8161f0695c4c5b251ca44b779b9ae37c0e7a",
+   "export": "c5d822eefc132fcfcf55ddcbd92878c675053d11dcaead5be43ab279640b4c48",
+   "matched": "161f535bad6bc65ea924fe3f00245b8923c3b6165f68b9e17750b57368c51c4f",
+   "obligations": "e8c7afda84925871c794eb8330420c34b6c61f229b5822481aacd095be1b71ab",
+   "payable": "41a293a7446564b0e82a3c9ada0bad6243590e102879012e90b8f0ece819cac2",
+   "processing": "c3197cce74d5a7b70f442bc3b58113a29c27328bea7e87bf13a9def9dc118638",
+   "quantities": "319329cbcdf31eca2e20ee725097cd602305778959073c426d8d1deb6c9baf04",
+   "rates": "f768b27013a355be08a79fc391908baf8c0789df204f96d8c7f6036573a614aa",
+   "snapshots": "5907acaee2fba294a35d94ba96f4b9b265e5a0616cb9d11eefc006403497c71b"
+  },
+  "rejected_count": 0,
+  "small_metrics": {
+   "duplicates": {
+    "groups_detected": 98,
+    "rows_merged": 98,
+    "unresolved_groups": 0
+   },
+   "matched": {
+    "amount_before_tax": "2225544.64",
+    "invoice_count": 2413,
+    "tax": "244119.37",
+    "total": "2487522.24"
+   },
+   "obligations": {
+    "count": 2299,
+    "total": "2191870.02"
+   },
+   "payable": {
+    "approved_payable": "2147731.19",
+    "approved_total": "2191870.02",
+    "credit_total": "44138.83"
+   },
+   "processing": {
+    "approved_count": 2299,
+    "mean_minutes": "5466.7066",
+    "pending_count": 346
+   },
+   "quantities": {
+    "accepted_invoiced_quantity": "176112.2500",
+    "invoiced_not_received_quantity": "9085.7500",
+    "invoiced_not_received_value": "116771.18",
+    "net_received_quantity": "191431.0000",
+    "open_to_invoice_quantity": "26198.0000",
+    "open_to_receive_quantity": "10879.2500",
+    "ordered_quantity": "202310.2500",
+    "received_not_invoiced_quantity": "15318.7500",
+    "received_not_invoiced_value": "223346.01"
+   },
+   "rates": {
+    "eligible_invoices": 2645,
+    "exception_rate": "0.087713",
+    "straight_through_rate": "0.912287"
+   },
+   "snapshots": {
+    "2026-03-31T23:59:59Z": {
+     "accepted_invoiced_quantity": "78554.5000",
+     "invoiced_not_received_quantity": "6256.0000",
+     "invoiced_not_received_value": "84442.14",
+     "net_received_quantity": "89156.2500",
+     "open_to_invoice_quantity": "26688.7500",
+     "open_to_receive_quantity": "16087.0000",
+     "ordered_quantity": "105243.2500",
+     "received_not_invoiced_quantity": "10601.7500",
+     "received_not_invoiced_value": "151365.51"
+    },
+    "2026-06-30T23:59:59Z": {
+     "accepted_invoiced_quantity": "129745.5000",
+     "invoiced_not_received_quantity": "10214.0000",
+     "invoiced_not_received_value": "112842.23",
+     "net_received_quantity": "147243.5000",
+     "open_to_invoice_quantity": "40482.5000",
+     "open_to_receive_quantity": "22984.5000",
+     "ordered_quantity": "170228.0000",
+     "received_not_invoiced_quantity": "17498.0000",
+     "received_not_invoiced_value": "218571.09"
+    },
+    "2026-10-01T02:00:00Z": {
+     "accepted_invoiced_quantity": "176112.2500",
+     "invoiced_not_received_quantity": "9085.7500",
+     "invoiced_not_received_value": "116771.18",
+     "net_received_quantity": "191431.0000",
+     "open_to_invoice_quantity": "26198.0000",
+     "open_to_receive_quantity": "10879.2500",
+     "ordered_quantity": "202310.2500",
+     "received_not_invoiced_quantity": "15318.7500",
+     "received_not_invoiced_value": "223346.01"
+    }
+   }
+  },
+  "status_counts": {
+   "adjusted": 112,
+   "exception": 232,
+   "exported": 2187,
+   "matched": 114,
+   "merged": 98,
+   "rejected": 57
+  }
+ },
+ "stored": {
+  "approvals": {
+   "invalid_by_code": {},
+   "invalid_count": 0,
+   "valid_count": 2299
+  },
+  "documents_digest": "efab3f80656c876d619cc926e6e2ff7cf2fb8f6c7cd6c1bbecfe3c42ef852b10",
+  "exceptions": {
+   "by_reason": {
+    "CURRENCY_MISMATCH": 3,
+    "NO_PO_LINE": 0,
+    "PRICE_VARIANCE": 32,
+    "QUANTITY_BLOCKED": 193,
+    "ROUNDING_EXCEPTION": 4
+   },
+   "open_count": 232,
+   "unowned_count": 29
+  },
+  "export": {
+   "accepted_export_total": "2191870.02",
+   "batches_created": 52,
+   "difference": "0.00",
+   "eligible_approved_total": "2191870.02",
+   "exclusion_count": 346,
+   "repeat_requests_returned_prior": 7,
+   "requests_received": 59,
+   "row_count": 2299
+  },
+  "ingest_counts": {
+   "approval_policies": {
+    "accepted": 2,
+    "merged": 0,
+    "rejected": 0
+   },
+   "approvals": {
+    "accepted": 2356,
+    "merged": 0,
+    "rejected": 0
+   },
+   "credit_notes": {
+    "accepted": 117,
+    "merged": 0,
+    "rejected": 0
+   },
+   "invoice_lines": {
+    "accepted": 5142,
+    "merged": 180,
+    "rejected": 0
+   },
+   "invoices": {
+    "accepted": 2702,
+    "merged": 98,
+    "rejected": 0
+   },
+   "po_lines": {
+    "accepted": 3000,
+    "merged": 0,
+    "rejected": 0
+   },
+   "purchase_orders": {
+    "accepted": 1200,
+    "merged": 0,
+    "rejected": 0
+   },
+   "receipts": {
+    "accepted": 5067,
+    "merged": 0,
+    "rejected": 0
+   },
+   "vendors": {
+    "accepted": 40,
+    "merged": 0,
+    "rejected": 0
+   }
+  },
+  "merged_records_digest": "c2100222bfa8b062b65791702c6707c04581f46aaca97bab0f9a1b52ff005b27",
+  "metric_digests": {
+   "approvals": "3b5bca1e6b087a63cde7693ef07be1eadef9781921f728c80778864361c835b7",
+   "duplicates": "e8fd4900c6185ffe614589dd3d528da4a69cfcf3f3dc6801bd9d9623a53d81b5",
+   "exceptions": "eebaa25ac98a34cc9fbfc5029b184d6894066862dc2a7e19200cca2af4f8f6a1",
+   "export": "c5d822eefc132fcfcf55ddcbd92878c675053d11dcaead5be43ab279640b4c48",
+   "matched": "161f535bad6bc65ea924fe3f00245b8923c3b6165f68b9e17750b57368c51c4f",
+   "obligations": "e8c7afda84925871c794eb8330420c34b6c61f229b5822481aacd095be1b71ab",
+   "payable": "41a293a7446564b0e82a3c9ada0bad6243590e102879012e90b8f0ece819cac2",
+   "processing": "c3197cce74d5a7b70f442bc3b58113a29c27328bea7e87bf13a9def9dc118638",
+   "quantities": "319329cbcdf31eca2e20ee725097cd602305778959073c426d8d1deb6c9baf04",
+   "rates": "f768b27013a355be08a79fc391908baf8c0789df204f96d8c7f6036573a614aa",
+   "snapshots": "5907acaee2fba294a35d94ba96f4b9b265e5a0616cb9d11eefc006403497c71b"
+  },
+  "rejected_count": 0,
+  "small_metrics": {
+   "duplicates": {
+    "groups_detected": 98,
+    "rows_merged": 98,
+    "unresolved_groups": 0
+   },
+   "matched": {
+    "amount_before_tax": "2225544.64",
+    "invoice_count": 2413,
+    "tax": "244119.37",
+    "total": "2487522.24"
+   },
+   "obligations": {
+    "count": 2299,
+    "total": "2191870.02"
+   },
+   "payable": {
+    "approved_payable": "2147731.19",
+    "approved_total": "2191870.02",
+    "credit_total": "44138.83"
+   },
+   "processing": {
+    "approved_count": 2299,
+    "mean_minutes": "5466.7066",
+    "pending_count": 346
+   },
+   "quantities": {
+    "accepted_invoiced_quantity": "176112.2500",
+    "invoiced_not_received_quantity": "9085.7500",
+    "invoiced_not_received_value": "116771.18",
+    "net_received_quantity": "191431.0000",
+    "open_to_invoice_quantity": "26198.0000",
+    "open_to_receive_quantity": "10879.2500",
+    "ordered_quantity": "202310.2500",
+    "received_not_invoiced_quantity": "15318.7500",
+    "received_not_invoiced_value": "223346.01"
+   },
+   "rates": {
+    "eligible_invoices": 2645,
+    "exception_rate": "0.087713",
+    "straight_through_rate": "0.912287"
+   },
+   "snapshots": {
+    "2026-03-31T23:59:59Z": {
+     "accepted_invoiced_quantity": "78554.5000",
+     "invoiced_not_received_quantity": "6256.0000",
+     "invoiced_not_received_value": "84442.14",
+     "net_received_quantity": "89156.2500",
+     "open_to_invoice_quantity": "26688.7500",
+     "open_to_receive_quantity": "16087.0000",
+     "ordered_quantity": "105243.2500",
+     "received_not_invoiced_quantity": "10601.7500",
+     "received_not_invoiced_value": "151365.51"
+    },
+    "2026-06-30T23:59:59Z": {
+     "accepted_invoiced_quantity": "129745.5000",
+     "invoiced_not_received_quantity": "10214.0000",
+     "invoiced_not_received_value": "112842.23",
+     "net_received_quantity": "147243.5000",
+     "open_to_invoice_quantity": "40482.5000",
+     "open_to_receive_quantity": "22984.5000",
+     "ordered_quantity": "170228.0000",
+     "received_not_invoiced_quantity": "17498.0000",
+     "received_not_invoiced_value": "218571.09"
+    },
+    "2026-10-01T02:00:00Z": {
+     "accepted_invoiced_quantity": "176112.2500",
+     "invoiced_not_received_quantity": "9085.7500",
+     "invoiced_not_received_value": "116771.18",
+     "net_received_quantity": "191431.0000",
+     "open_to_invoice_quantity": "26198.0000",
+     "open_to_receive_quantity": "10879.2500",
+     "ordered_quantity": "202310.2500",
+     "received_not_invoiced_quantity": "15318.7500",
+     "received_not_invoiced_value": "223346.01"
+    }
+   }
+  },
+  "status_counts": {
+   "adjusted": 112,
+   "exception": 232,
+   "exported": 2187,
+   "matched": 114,
+   "merged": 98,
+   "rejected": 57
+  }
+ }
+}
