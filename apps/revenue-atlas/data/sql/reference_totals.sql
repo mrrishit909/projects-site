@@ -7,7 +7,10 @@
 -- Population: shipment lines of 'shipped' / 'partially_returned' orders that have a
 -- cost_version_id (set by C02) valid for the shipped UTC date and an FX rate for that date
 -- (USD->USD needs no row). Everything else is quarantined, i.e. excluded (D-01..D-03).
--- Returns are recognised via their line's shipment (same population rule as the domain).
+-- Window semantics (docs/contracts.md D-01a): shipment lines are selected by shipped_at (gross,
+-- discounts, COGS before returns, freight); return credits are selected by credit_date (taken as
+-- 00:00 UTC of that date) for credits, recoverable cost, from lines in the population whatever
+-- their shipped_at. No window (both NULL): everything counts.
 --
 -- Largest remainder, per group G with total T cents and integer weights w_i, W = sum(w):
 --   floor_i = div(T * w_i, W);  rem_i = mod(T * w_i, W);  leftover = T - sum(floor_i)
@@ -104,7 +107,7 @@ ret_run AS (
     FROM returns r
 ),
 ret AS (
-    SELECT rr.shipment_line_id, rr.returned_quantity,
+    SELECT rr.shipment_line_id, rr.returned_quantity, rr.credit_date,
            rr.credit_amount * COALESCE(fx.rate, CASE WHEN o.currency = 'USD' THEN 1 END) AS credit_usd,
            rr.returned_quantity * k.unit_cost AS recoverable
     FROM ret_run rr
@@ -114,23 +117,23 @@ ret AS (
                                AND fx.rate_date = rr.credit_date
     WHERE rr.cum_qty <= k.shipped_quantity AND rr.credit_amount >= 0
 ),
-ret_by_line AS (
-    SELECT shipment_line_id, SUM(credit_usd) AS credits, SUM(recoverable) AS recov
-    FROM ret WHERE credit_usd IS NOT NULL GROUP BY shipment_line_id
+ret_w AS (  -- credits recognised on credit_date inside the window (D-01a)
+    SELECT SUM(credit_usd) AS credits, SUM(recoverable) AS recov
+    FROM ret
+    WHERE credit_usd IS NOT NULL
+      AND (%(lo)s::timestamptz IS NULL OR (credit_date::timestamp AT TIME ZONE 'UTC') >= %(lo)s::timestamptz)
+      AND (%(hi)s::timestamptz IS NULL OR (credit_date::timestamp AT TIME ZONE 'UTC') <  %(hi)s::timestamptz)
 ),
 
-lines AS (  -- one row per kept line inside the window
+lines AS (  -- one row per kept line SHIPPED inside the window
     SELECT k.shipment_line_id, k.shipment_id,
            k.native_gross * k.order_rate AS gross,
            COALESCE(d.usd, 0) AS disc,
-           COALESCE(rb.credits, 0) AS credits,
-           COALESCE(rb.recov, 0) AS recov,
            k.shipped_quantity * k.unit_cost AS cogs_gross,
            COALESCE(f.usd, 0) AS freight
     FROM kept k
     LEFT JOIN disc d ON d.shipment_line_id = k.shipment_line_id
     LEFT JOIN frt f ON f.shipment_line_id = k.shipment_line_id
-    LEFT JOIN ret_by_line rb ON rb.shipment_line_id = k.shipment_line_id
     WHERE (%(lo)s::timestamptz IS NULL OR k.shipped_at >= %(lo)s::timestamptz)
       AND (%(hi)s::timestamptz IS NULL OR k.shipped_at <  %(hi)s::timestamptz)
 ),
@@ -145,8 +148,8 @@ ship_in_window AS (  -- one row per shipment that has lines in the window
 totals AS (
     SELECT COALESCE((SELECT SUM(gross) FROM lines), 0)      AS gross,
            COALESCE((SELECT SUM(disc) FROM lines), 0)       AS disc,
-           COALESCE((SELECT SUM(credits) FROM lines), 0)    AS credits,
-           COALESCE((SELECT SUM(recov) FROM lines), 0)      AS recov,
+           COALESCE((SELECT credits FROM ret_w), 0)         AS credits,
+           COALESCE((SELECT recov FROM ret_w), 0)           AS recov,
            COALESCE((SELECT SUM(cogs_gross) FROM lines), 0) AS cogs_gross,
            COALESCE((SELECT SUM(freight) FROM lines), 0)
              + COALESCE((SELECT SUM(t_cents / 100.0 * ship_rate) FROM ship_in_window WHERE wsum = 0), 0)

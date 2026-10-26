@@ -137,3 +137,14 @@ class ShipmentLineFact:
     returned_quantity: int
     merchandise_credit: Decimal
     recoverable_return_cost: Decimal
+
+
+@dataclass(frozen=True)
+class ReturnEvent:
+    """One accepted return credit, recognised on ``credit_date`` (D-01a), reporting currency."""
+    return_id: str
+    shipment_line_id: str
+    credit_date: str  # YYYY-MM-DD, UTC
+    returned_quantity: int
+    merchandise_credit: Decimal
+    recoverable_return_cost: Decimal

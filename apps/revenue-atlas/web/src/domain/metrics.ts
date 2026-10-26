@@ -2,7 +2,7 @@
 import { UNASSIGNED_REGION } from "./contract";
 import * as D from "./decimal";
 import { DomainError, INVALID_WINDOW, cmpStr } from "./errors";
-import type { Metrics, ShipmentLineFact } from "./types";
+import type { Metrics, ReturnEvent, ShipmentLineFact } from "./types";
 
 /** Half-open [from, to) on shipped_at, UTC epoch milliseconds; null is unbounded (D-01). */
 export interface Window { from: number | null; to: number | null }
@@ -20,6 +20,9 @@ export function inWindow(shippedAt: number, w: Window): boolean {
   return (w.from === null || shippedAt >= w.from) && (w.to === null || shippedAt < w.to);
 }
 
+/** Return credits are recognised on credit_date, read as 00:00 UTC of that date (D-01a). */
+export const creditInWindow = (creditDate: string, w: Window): boolean => inWindow(utcMidnight(creditDate), w);
+
 const m2 = (x: D.Dec): string => D.fixed(x, 2);
 const ratio = (num: D.Dec, den: D.Dec): string | null => (D.isZero(den) ? null : D.fixed(D.divToScale(num, den, 6), 6));
 
@@ -28,6 +31,12 @@ export interface MetricOptions {
   unallocatedFreight?: D.Dec;
   /** Sum of shipment shipping costs; makes allocation_residual a real check (else 0.00). */
   declaredShippingCost?: D.Dec | null;
+  /**
+   * D-01a: accepted return credits. Shipment lines are selected by shipped_at, credits by credit_date
+   * (for lines present in `facts`). Omitted: the facts' own return columns are used, which is exact
+   * only for an unwindowed call.
+   */
+  returns?: readonly ReturnEvent[];
 }
 
 export function computeMetrics(facts: readonly ShipmentLineFact[], window: Window = NO_WINDOW, opts: MetricOptions = {}): Metrics {
@@ -40,8 +49,23 @@ export function computeMetrics(facts: readonly ShipmentLineFact[], window: Windo
   };
   const gross = sum((f) => f.gross_sales);
   const disc = sum((f) => f.allocated_discount);
-  const credits = sum((f) => f.merchandise_credit);
-  const recov = sum((f) => f.recoverable_return_cost);
+  let credits = D.ZERO;
+  let recov = D.ZERO;
+  let returned = 0;
+  if (opts.returns === undefined) {
+    credits = sum((f) => f.merchandise_credit);
+    recov = sum((f) => f.recoverable_return_cost);
+    for (const f of fs) returned += f.returned_quantity;
+  } else {
+    const known = new Set<string>();
+    for (const f of facts) known.add(f.shipment_line_id);
+    for (const r of opts.returns) {
+      if (!known.has(r.shipment_line_id) || !creditInWindow(r.credit_date, window)) continue;
+      credits = D.add(credits, r.merchandise_credit);
+      recov = D.add(recov, r.recoverable_return_cost);
+      returned += r.returned_quantity;
+    }
+  }
   const cogs = D.sub(sum((f) => f.cogs), recov);
   const shipCost = D.add(sum((f) => f.freight), opts.unallocatedFreight ?? D.ZERO);
   const shipRev = D.ZERO;
@@ -51,11 +75,9 @@ export function computeMetrics(facts: readonly ShipmentLineFact[], window: Windo
   const cm = D.sub(D.sub(D.add(gp, shipRev), shipCost), other);
   const eligRev = D.add(net, shipRev);
   let units = 0;
-  let returned = 0;
   const orders = new Set<string>();
   for (const f of fs) {
     units += f.shipped_quantity;
-    returned += f.returned_quantity;
     orders.add(f.order_id);
   }
   const declared = opts.declaredShippingCost ?? null;
@@ -91,6 +113,7 @@ export const regionKey = (f: ShipmentLineFact): string => f.region_id || UNASSIG
 /** Metrics per group, ascending key order; empty/missing keys become UNASSIGNED (as in Python). */
 export function groupMetrics(
   facts: readonly ShipmentLineFact[], keyFn: (f: ShipmentLineFact) => string | null | undefined, window: Window = NO_WINDOW,
+  returns?: readonly ReturnEvent[],
 ): Map<string, Metrics> {
   checkWindow(window);
   const groups = new Map<string, ShipmentLineFact[]>();
@@ -101,6 +124,6 @@ export function groupMetrics(
     else groups.set(k, [f]);
   }
   const out = new Map<string, Metrics>();
-  for (const k of [...groups.keys()].sort(cmpStr)) out.set(k, computeMetrics(groups.get(k)!, window));
+  for (const k of [...groups.keys()].sort(cmpStr)) out.set(k, computeMetrics(groups.get(k)!, window, returns === undefined ? {} : { returns }));
   return out;
 }

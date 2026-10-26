@@ -1,5 +1,5 @@
 // Mirrors domain/revenue_atlas/ingest.py (D-06 C01). Pure: same input gives an equal result.
-import { CONTRACT_VERSION, CURRENCY_RE, KNOWN_CURRENCIES } from "./contract";
+import { ACCEPTED_INPUT_CONTRACTS, CONTRACT_VERSION, CURRENCY_RE, KNOWN_CURRENCIES } from "./contract";
 import * as D from "./decimal";
 import {
   CONTRACT_MISMATCH, CURRENCY_NOT_ISO4217, DomainError, MALFORMED_RECORD, ORPHAN_REFERENCE, cmpStr,
@@ -88,7 +88,7 @@ export interface IngestResult {
  * shipment currency rejects the shipment and its lines and returns. Raw rows are kept.
  */
 export function validateBatch(raw: PipelineInputs): IngestResult {
-  if ((raw.contract ?? CONTRACT_VERSION) !== CONTRACT_VERSION) {
+  if (!ACCEPTED_INPUT_CONTRACTS.has(raw.contract ?? CONTRACT_VERSION)) {
     throw new DomainError(CONTRACT_MISMATCH, `expected contract ${CONTRACT_VERSION}`, { got: raw.contract });
   }
   const parsed = {} as Record<EntityName, Array<{ row: Row; rec: any }>>;

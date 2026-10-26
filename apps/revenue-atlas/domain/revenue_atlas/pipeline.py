@@ -14,7 +14,7 @@ from .errors import SHIPMENT_LINE_UNKNOWN, DomainError
 from .fx import rate_for
 from .ingest import IngestResult, validate_batch
 from .metrics import Window, compute_metrics, in_window
-from .models import Customer, RejectedRecord, ShipmentLineFact
+from .models import Customer, RejectedRecord, ReturnEvent, ShipmentLineFact
 from .money import ZERO
 from .returns import recoverable_cost, validate_return
 
@@ -29,6 +29,7 @@ class PipelineResult:
     metrics: dict
     unallocated_freight: Decimal = ZERO
     excluded_shipment_lines: list[str] = field(default_factory=list)
+    returns: list[ReturnEvent] = field(default_factory=list)  # accepted credits, for credit_date windows (D-01a)
 
 
 def _raw(obj: Any) -> dict[str, Any]:
@@ -119,6 +120,7 @@ def run_pipeline(inputs: dict, include_returns: bool,
              for k, f in base.items()}
 
     # Returns (D-06 C03), recognised at the credit-date rate (D-02).
+    events: list[ReturnEvent] = []
     if include_returns:
         prior: dict[str, list] = {}
         sl_by_id = {sl.shipment_line_id: sl for sl in acc["shipment_lines"]}
@@ -135,18 +137,21 @@ def run_pipeline(inputs: dict, include_returns: bool,
                 quarantine("returns", ret.return_id, err, ret)
                 continue
             prior.setdefault(ret.shipment_line_id, []).append(ret)
+            rec = recoverable_cost(fact, ret.returned_quantity)
+            events.append(ReturnEvent(ret.return_id, ret.shipment_line_id, ret.credit_date,
+                                      ret.returned_quantity, credit, rec))
             facts[fact.shipment_line_id] = dataclasses.replace(
                 fact, returned_quantity=fact.returned_quantity + ret.returned_quantity,
                 merchandise_credit=fact.merchandise_credit + credit,
                 recoverable_return_cost=fact.recoverable_return_cost
-                + recoverable_cost(fact, ret.returned_quantity))
+                + rec)
 
     fact_list = [facts[k] for k in sorted(facts)]
     in_win = [f for f in fact_list if in_window(f.shipped_at, window)]
     in_win_ids = {f.shipment_id for f in in_win}
     unalloc_w = sum((v for k, v in unalloc_by_shp.items() if k in in_win_ids), ZERO)
     metrics = compute_metrics(fact_list, window, unallocated_freight=unalloc_w,
-                              declared_shipping_cost=declared)
+                              declared_shipping_cost=declared, returns=events)
     return PipelineResult(ing, fact_list, freight_by_line, discount_by_line,
                           sorted(quarantined, key=lambda q: (q.entity, q.id)), metrics,
-                          unallocated_freight=sum(unalloc_by_shp.values(), ZERO), excluded_shipment_lines=sorted(excluded))
+                          unallocated_freight=sum(unalloc_by_shp.values(), ZERO), excluded_shipment_lines=sorted(excluded), returns=events)

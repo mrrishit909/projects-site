@@ -2,6 +2,7 @@
 // two variants exactly, then run the full published snapshot under a time budget.
 import { readFileSync } from "node:fs";
 import { toString } from "../src/domain/decimal";
+import { utcMidnight } from "../src/domain/metrics";
 import { runPipeline } from "../src/domain/pipeline";
 import { ENTITIES, METRIC_KEYS, type PipelineInputs } from "../src/domain/types";
 
@@ -54,6 +55,25 @@ function checkFixture(name: string, inputs: PipelineInputs, expected: any): void
 
 for (const [name, dir] of [["golden", ""], ["variant-rejected", "variant-rejected/"], ["variant-empty", "variant-empty/"]] as const) {
   checkFixture(name, readJson(new URL(`${dir}inputs.json`, GOLDEN)), readJson(new URL(`${dir}expected.json`, GOLDEN)));
+}
+
+// ---- D-01a: shipment lines windowed by shipped_at, return credits by credit_date -------------
+{
+  const inputs = readJson(new URL("inputs.json", GOLDEN));
+  const win = (a: string, b: string) => ({ from: utcMidnight(a), to: utcMidnight(b) });
+  const early = runPipeline(inputs, true, win("2026-03-01", "2026-03-15")).metrics; // shipped 03-10, credited 03-20
+  const late = runPipeline(inputs, true, win("2026-03-15", "2026-04-01")).metrics;
+  const all = runPipeline(inputs, true);
+  expectEq("D-01a shipment window: credit dated later does not change it (net)", early.net_merchandise_sales, "225.00");
+  expectEq("D-01a shipment window: credits", early.merchandise_credits, "0.00");
+  expectEq("D-01a shipment window: returned units", early.returned_units, 0);
+  expectEq("D-01a credit window: credit appears (credits)", late.merchandise_credits, "90.00");
+  expectEq("D-01a credit window: gross is zero", late.gross_sales, "0.00");
+  expectEq("D-01a credit window: net", late.net_merchandise_sales, "-90.00");
+  expectEq("D-01a credit window: return rate has no shipped units", late.return_rate, null);
+  expectEq("D-01a no window equals both windows summed (credits)", all.metrics.merchandise_credits, "90.00");
+  const re = runPipeline(inputs, true).returns;
+  expectEq("D-01a pipeline exposes the accepted credit", re.map((r) => [r.shipment_line_id, r.credit_date]), [["sl-001", "2026-03-20"]]);
 }
 
 // ---- published snapshot: invariants and time budget -----------------------------------------

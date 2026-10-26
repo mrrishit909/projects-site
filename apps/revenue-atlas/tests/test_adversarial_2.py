@@ -137,8 +137,6 @@ def _post_late_return(client, credit_date: str):
                     "reason": "customer return after period close"}, key="ret-late-1")
 
 
-@pytest.mark.xfail(strict=True, reason="DEFECT G-01: credits windowed by shipped_at, "
-                   "contract D-01 requires credit_date")
 def test_P01_TEST_02_DETECT_late_return_does_not_change_closed_window_net_sales(client, conn):
     lo, hi, credit_date, base = _seed_period_close(client, conn)
     before_rows = snapshot_counts(conn)
@@ -157,17 +155,19 @@ def test_P01_TEST_02_DETECT_late_return_does_not_change_closed_window_net_sales(
     assert after == base
 
 
-def test_P01_TEST_02_DETECT_observed_behaviour_credit_follows_shipped_at(client, conn):
-    """Characterises G-01: today the credit lands in the shipment's window (March), not its credit month."""
+def test_P01_TEST_02_DETECT_observed_behaviour_credit_follows_credit_date(client, conn):
+    """Characterises D-01a: the credit lands in its credit month (next month), not the shipment's window."""
     lo, hi, credit_date, base = _seed_period_close(client, conn)
     assert _post_late_return(client, credit_date).status_code == 200
     march = totals(client, **{"from": lo, "to": hi})
-    assert march["merchandise_credits"] == "90.00"            # reference: 1 unit credited at 90.00
-    assert march["net_merchandise_sales"] == "135.00"         # 225.00 - 90.00
+    assert march["merchandise_credits"] == "0.00"             # closed window unchanged
+    assert march["net_merchandise_sales"] == "225.00"
+    assert march == base
     next_month = totals(client, **{"from": hi, "to": (date.fromisoformat(hi) + timedelta(days=31)).isoformat()})
-    assert next_month["merchandise_credits"] == "0.00"        # ...and the credit month sees nothing
-    assert next_month["eligible_shipment_lines"] == 0
-    # the all-time view matches the golden hand-derived after-return state
+    assert next_month["merchandise_credits"] == "90.00"       # the credit month carries it
+    assert next_month["net_merchandise_sales"] == "-90.00"
+    assert next_month["eligible_shipment_lines"] == 0 and next_month["gross_sales"] == "0.00"
+    # the all-time view still matches the golden hand-derived after-return state
     assert totals(client) == expected()["states"]["after_return"]["metrics"]
 
 
@@ -190,8 +190,6 @@ def test_P01_TEST_02_RECOVER_audit_event_and_returns_read_carry_the_late_credit(
     assert entity(client, "returns", **{"from": lo, "to": hi})["data"] == []
 
 
-@pytest.mark.xfail(strict=True, reason="DEFECT G-01: credits windowed by shipped_at, "
-                   "contract D-01 requires credit_date")
 def test_P01_TEST_02_RECOVER_metrics_over_the_later_window_include_the_credit(client, conn):
     lo, hi, credit_date, _ = _seed_period_close(client, conn)
     assert _post_late_return(client, credit_date).status_code == 200
@@ -234,9 +232,6 @@ def test_P01_TEST_04_DETECT_missing_rate_quarantines_line_and_totals_stay_golden
     assert alloc == {"sl-001": "12.00", "sl-002": "3.00"}
 
 
-@pytest.mark.xfail(strict=True, reason="DEFECT-1: FX_RATE_MISSING is quarantined only inside the pipeline "
-                   "run; C02 persists COST_* quarantines only, so GET /data/quarantined_records "
-                   "does not list the line")
 def test_P01_TEST_04_DETECT_quarantined_records_read_lists_fx_rate_missing(client, conn):
     seed_db(conn, _eur_inputs())
     settle(client, "shp-001")
@@ -245,6 +240,12 @@ def test_P01_TEST_04_DETECT_quarantined_records_read_lists_fx_rate_missing(clien
     rows = entity(client, "quarantined_records")["data"]
     assert [(r["entity"], r["id"], r["reason_code"]) for r in rows] == \
         [("shipment_lines", "sl-eur-1", "FX_RATE_MISSING")]
+    # /metrics exclusions agree with the persisted table
+    ex = metrics(client)["meta"]["exclusions"]
+    assert ex["quarantined"] == {"shipment_lines": 1} and ex["quarantined_records"] == 1
+    # re-running C02 is idempotent: still exactly one row
+    command(client, "resolve-historical-cost", {"shipment_id": "shp-eur"})
+    assert len(entity(client, "quarantined_records")["data"]) == 1
 
 
 def test_P01_TEST_04_RECOVER_ingesting_the_rate_via_c01_admits_the_line(client, conn):
@@ -273,6 +274,9 @@ def test_P01_TEST_04_RECOVER_ingesting_the_rate_via_c01_admits_the_line(client, 
     assert D(m["contribution_margin"]) == net - cogs - freight == D("93.60")
     assert m["eligible_shipment_lines"] == 3 and m["eligible_orders"] == 2
     assert body["meta"]["exclusions"]["quarantined"] == {} and body["warnings"] == []
+    # the persisted FX quarantine was cleared by the rate ingest, so table and metrics still agree
+    assert entity(client, "quarantined_records")["data"] == []
+    assert body["meta"]["exclusions"]["quarantined_records"] == 0
     # the original rate row (2026-03-11) was never used for the 03-12 shipment
     assert D(m["gross_sales"]) != D("250.00") + D("80.00") * D("1.05")
 

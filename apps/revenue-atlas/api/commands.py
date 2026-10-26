@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from decimal import Decimal
 from typing import Any, Callable
 
@@ -19,7 +19,8 @@ from revenue_atlas import DomainError, run_pipeline
 from revenue_atlas.allocation import allocate_discounts, allocate_freight
 from revenue_atlas.costing import resolve_cost_version
 from revenue_atlas.ingest import ENTITIES, validate_batch
-from revenue_atlas.models import (CostVersion, Discount, OrderLine, Return, Shipment,
+from revenue_atlas.fx import rate_for
+from revenue_atlas.models import (CostVersion, Discount, ExchangeRate, OrderLine, Return, Shipment,
                                   ShipmentLine)
 from revenue_atlas.returns import expected_credit, validate_return
 
@@ -169,6 +170,8 @@ def ingest_sales(conn: Conn, req: Any, actor: Actor) -> Outcome:
                      (rej.entity, rej.id, rej.reason_code, Jsonb(rej.raw_row), batch_id))
     inserted = insert_rows(conn, {ent: [row_from_record(r) for r in recs]
                                   for ent, recs in ing.accepted.items()})
+    if inserted.get("exchange_rates"):
+        _refresh_fx_quarantine(conn)  # a new rate may make quarantined lines resolvable (D-02)
     counts = {ent: {**c, "inserted": inserted.get(ent, 0)} for ent, c in ing.counts.items()}
     warnings = [_warning(r.reason_code, f"{r.entity} {r.id!r} rejected; raw row preserved",
                          f"{r.entity}[{r.id}]") for r in ing.rejected]
@@ -182,6 +185,66 @@ def ingest_sales(conn: Conn, req: Any, actor: Actor) -> Outcome:
 
 # --- C02 resolve-historical-cost --------------------------------------------------
 
+def _line_error(conn: Conn, ln: Any, shipped_at: datetime, order_currency: str,
+                shipment_currency: str, versions: list[CostVersion]) -> DomainError | None:
+    """The reason the pipeline would quarantine this line, or None. Same order as the pipeline:
+    FX for the order and shipment currency on the shipped UTC date first, then the cost version."""
+    day = shipped_at.astimezone(timezone.utc).date().isoformat()
+    cur = sorted({order_currency, shipment_currency})
+    rates = [ExchangeRate(r["rate_id"], r["currency"], r["reporting_currency"],
+                          r["rate_date"].isoformat(), r["rate"])
+             for r in conn.execute("SELECT * FROM exchange_rates WHERE currency = ANY(%s) AND rate_date = %s",
+                                   (cur, day)).fetchall()]
+    try:
+        for c in (order_currency, shipment_currency):
+            rate_for(c, day, rates)
+        resolve_cost_version(ln["product_id"], shipped_at, versions)
+    except DomainError as err:
+        return err
+    return None
+
+
+def _put_quarantine(conn: Conn, sid: str, shipment_id: str, ln: Any, err: DomainError) -> bool:
+    raw = {"shipment_line_id": sid, "shipment_id": shipment_id, "line_id": ln["line_id"],
+           "product_id": ln["product_id"], "shipped_quantity": ln["shipped_quantity"],
+           "details": err.details}
+    cur = conn.execute(
+        "INSERT INTO quarantined_records (entity, id, reason_code, raw_row) "
+        "VALUES ('shipment_lines', %s, %s, %s) ON CONFLICT (entity, id) DO UPDATE "
+        "SET reason_code = EXCLUDED.reason_code, raw_row = EXCLUDED.raw_row "
+        "WHERE (quarantined_records.reason_code, quarantined_records.raw_row) "
+        "IS DISTINCT FROM (EXCLUDED.reason_code, EXCLUDED.raw_row)",
+        (sid, err.code, Jsonb(raw)))
+    return cur.rowcount > 0
+
+
+def _cost_versions(conn: Conn, products: list[str]) -> list[CostVersion]:
+    return [CostVersion(r["cost_version_id"], r["product_id"], r["unit_cost"],
+                        r["valid_from"].isoformat(),
+                        None if r["valid_to"] is None else r["valid_to"].isoformat())
+            for r in conn.execute("SELECT * FROM cost_versions WHERE product_id = ANY(%s)",
+                                  (products,)).fetchall()]
+
+
+def _refresh_fx_quarantine(conn: Conn) -> None:
+    """After a rate ingest: re-evaluate persisted FX_RATE_MISSING rows; clear the ones that now
+    resolve (or replace them with the cost reason the pipeline would report next)."""
+    rows = conn.execute(
+        "SELECT q.id, sl.line_id, sl.shipped_quantity, sl.shipment_id, ol.product_id, s.shipped_at, "
+        "s.currency AS ship_cur, o.currency AS order_cur FROM quarantined_records q "
+        "JOIN shipment_lines sl ON sl.shipment_line_id = q.id "
+        "JOIN order_lines ol ON ol.line_id = sl.line_id JOIN orders o ON o.order_id = ol.order_id "
+        "JOIN shipments s ON s.shipment_id = sl.shipment_id "
+        "WHERE q.entity = 'shipment_lines' AND q.reason_code = 'FX_RATE_MISSING' ORDER BY q.id").fetchall()
+    for r in rows:
+        err = _line_error(conn, r, r["shipped_at"], r["order_cur"], r["ship_cur"],
+                          _cost_versions(conn, [r["product_id"]]))
+        if err is None:
+            conn.execute("DELETE FROM quarantined_records WHERE entity = 'shipment_lines' AND id = %s",
+                         (r["id"],))
+        elif err.code != "FX_RATE_MISSING":
+            _put_quarantine(conn, r["id"], r["shipment_id"], r, err)
+
 def resolve_historical_cost(conn: Conn, req: Any, actor: Actor) -> Outcome:
     """C02: set cost_version_id per line; 0 or >1 versions quarantine the line (D-03)."""
     inp = req.input
@@ -191,47 +254,44 @@ def resolve_historical_cost(conn: Conn, req: Any, actor: Actor) -> Outcome:
         raise _not_found("input.shipment_id", "SHIPMENT_UNKNOWN", "shipment")
     lines = conn.execute(
         "SELECT sl.shipment_line_id, sl.line_id, sl.shipped_quantity, sl.cost_version_id, sl.version, "
-        "ol.product_id FROM shipment_lines sl JOIN order_lines ol ON ol.line_id = sl.line_id "
+        "ol.product_id, o.currency AS order_cur, s.currency AS ship_cur FROM shipment_lines sl "
+        "JOIN order_lines ol ON ol.line_id = sl.line_id JOIN orders o ON o.order_id = ol.order_id "
+        "JOIN shipments s ON s.shipment_id = sl.shipment_id "
         "WHERE sl.shipment_id = %s ORDER BY sl.shipment_line_id FOR UPDATE OF sl",
         (inp.shipment_id,)).fetchall()
-    products = sorted({ln["product_id"] for ln in lines})
-    versions = [CostVersion(r["cost_version_id"], r["product_id"], r["unit_cost"],
-                            r["valid_from"].isoformat(),
-                            None if r["valid_to"] is None else r["valid_to"].isoformat())
-                for r in conn.execute("SELECT * FROM cost_versions WHERE product_id = ANY(%s)",
-                                      (products,)).fetchall()]
+    versions = _cost_versions(conn, sorted({ln["product_id"] for ln in lines}))
     outcomes: list[dict[str, Any]] = []
     warnings: list[dict[str, Any]] = []
     changed = False
     for ln in lines:
         sid = ln["shipment_line_id"]
-        if ln["cost_version_id"] is not None:  # immutable once set (D-03)
-            outcomes.append({"shipment_line_id": sid, "outcome": "unchanged",
-                             "cost_version_id": ln["cost_version_id"]})
-            continue
-        try:
-            cv = resolve_cost_version(ln["product_id"], shipment["shipped_at"], versions)
-        except DomainError as err:
-            raw = {"shipment_line_id": sid, "shipment_id": inp.shipment_id, "line_id": ln["line_id"],
-                   "product_id": ln["product_id"], "shipped_quantity": ln["shipped_quantity"],
-                   "details": err.details}
-            cur = conn.execute(
-                "INSERT INTO quarantined_records (entity, id, reason_code, raw_row) "
-                "VALUES ('shipment_lines', %s, %s, %s) ON CONFLICT (entity, id) DO UPDATE "
-                "SET reason_code = EXCLUDED.reason_code, raw_row = EXCLUDED.raw_row "
-                "WHERE (quarantined_records.reason_code, quarantined_records.raw_row) "
-                "IS DISTINCT FROM (EXCLUDED.reason_code, EXCLUDED.raw_row)",
-                (sid, err.code, Jsonb(raw)))
-            changed = changed or cur.rowcount > 0
+        # DEFECT-1: the FX rate for the shipped date is evaluated here too, so FX_RATE_MISSING is
+        # persisted like the cost quarantines; the pipeline reports the same reason (FX first).
+        err = _line_error(conn, ln, shipment["shipped_at"], ln["order_cur"], ln["ship_cur"], versions)
+        resolved_now = None
+        if ln["cost_version_id"] is None:  # immutable once set (D-03)
+            try:
+                resolved_now = resolve_cost_version(ln["product_id"], shipment["shipped_at"], versions)
+            except DomainError:
+                resolved_now = None
+            if resolved_now is not None:
+                conn.execute("UPDATE shipment_lines SET cost_version_id = %s WHERE shipment_line_id = %s "
+                             "AND cost_version_id IS NULL", (resolved_now.cost_version_id, sid))
+                changed = True
+        if err is not None:
+            changed = _put_quarantine(conn, sid, inp.shipment_id, ln, err) or changed
             outcomes.append({"shipment_line_id": sid, "outcome": "quarantined", "reason_code": err.code})
             warnings.append(_warning(err.code, err.message, f"shipment_lines[{sid}]"))
             continue
-        conn.execute("UPDATE shipment_lines SET cost_version_id = %s WHERE shipment_line_id = %s "
-                     "AND cost_version_id IS NULL", (cv.cost_version_id, sid))
-        conn.execute("DELETE FROM quarantined_records WHERE entity = 'shipment_lines' AND id = %s", (sid,))
-        changed = True
-        outcomes.append({"shipment_line_id": sid, "outcome": "resolved",
-                         "cost_version_id": cv.cost_version_id})
+        cleared = conn.execute("DELETE FROM quarantined_records WHERE entity = 'shipment_lines' AND id = %s",
+                               (sid,)).rowcount > 0
+        changed = changed or cleared
+        if resolved_now is None:
+            outcomes.append({"shipment_line_id": sid, "outcome": "unchanged",
+                             "cost_version_id": ln["cost_version_id"]})
+        else:
+            outcomes.append({"shipment_line_id": sid, "outcome": "resolved",
+                             "cost_version_id": resolved_now.cost_version_id})
     quarantined = sum(1 for o in outcomes if o["outcome"] == "quarantined")
     counts = {k: sum(1 for o in outcomes if o["outcome"] == k)
               for k in ("resolved", "unchanged", "quarantined")}

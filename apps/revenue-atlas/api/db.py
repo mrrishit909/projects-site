@@ -13,6 +13,7 @@ from typing import Any, Iterator
 
 import psycopg
 from psycopg.rows import dict_row
+from revenue_atlas import CONTRACT_VERSION
 
 Row = dict[str, Any]
 
@@ -67,7 +68,7 @@ def load_batch(conn: psycopg.Connection[Row]) -> dict[str, Any]:
         return [_plain(r) for r in conn.execute(sql).fetchall()]
 
     return {
-        "contract": "v1",
+        "contract": CONTRACT_VERSION,
         "customers": rows("SELECT customer_id, customer_name, region_id, segment, effective_from "
                           "FROM customers ORDER BY customer_id, effective_from"),
         "products": rows("SELECT product_id, sku, category_id, unit_of_measure, active "

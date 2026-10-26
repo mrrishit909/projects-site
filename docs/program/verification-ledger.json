@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:10:40Z",
+  "updated_at": "2026-10-26T11:14:47Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -200,26 +200,26 @@
     {
       "requirement": "P01-TEST-02-DETECT/RECOVER (late return after period close)",
       "project": "01-revenue-atlas",
-      "status": "failed",
-      "defect": "G-01 credits windowed by shipped_at; contract D-01 requires credit_date",
+      "status": "verified",
+      "defect": "G-01 fixed (contract v1.1, D-01a)",
       "command": "pytest tests/test_adversarial_2.py -k TEST_02",
       "exit_code": 0,
       "expected": "closed-window net stays 225.00; later window shows credit 90.00",
-      "actual": "net 135.00 in the shipment window; 0.00 credits in the credit month; audit row verified",
+      "actual": "closed window net 225.00, credits 0.00; later window credits 90.00, net -90.00",
       "code_sha": "pending-commit",
-      "ts": "2026-10-26T11:01:58Z"
+      "ts": "2026-10-26T11:14:47Z"
     },
     {
       "requirement": "P01-TEST-04-DETECT/RECOVER (missing FX rate)",
       "project": "01-revenue-atlas",
       "status": "verified",
-      "defect": "DEFECT-1: /data/quarantined_records does not list FX_RATE_MISSING (computed per run, not persisted) \u2014 xfail kept",
+      "defect": "DEFECT-1 fixed: /data/quarantined_records lists FX_RATE_MISSING; cleared after rate ingest",
       "command": "pytest tests/test_adversarial_2.py -k TEST_04",
       "exit_code": 0,
       "expected": "line quarantined, totals equal golden; rate ingest admits line",
       "actual": "as expected; after rate: gross 338.00, CM 93.60",
       "code_sha": "pending-commit",
-      "ts": "2026-10-26T11:01:58Z"
+      "ts": "2026-10-26T11:14:47Z"
     },
     {
       "requirement": "P01-TEST-05-DETECT/RECOVER (zero revenue, nonzero costs)",
@@ -229,7 +229,7 @@
       "exit_code": 0,
       "expected": "CM negative, rates null, freight by quantity",
       "actual": "CM -207.00, rates null, freight 5.25/1.75",
-      "code_sha": "pending-commit",
+      "code_sha": "7fd885c",
       "ts": "2026-10-26T11:01:58Z"
     },
     {
@@ -240,7 +240,7 @@
       "exit_code": 0,
       "expected": "region by version effective at shipped_at; regions sum to total",
       "actual": "as expected (net 325.00, CM 105.00)",
-      "code_sha": "pending-commit",
+      "code_sha": "7fd885c",
       "ts": "2026-10-26T11:01:58Z"
     },
     {
@@ -250,7 +250,7 @@
       "reason": "no quota attainment calculation in the slice; absence verified (no table, 404, no metric key)",
       "command": "pytest -k TEST_08",
       "exit_code": 0,
-      "code_sha": "pending-commit",
+      "code_sha": "7fd885c",
       "ts": "2026-10-26T11:01:58Z"
     },
     {
@@ -261,7 +261,7 @@
       "exit_code": 0,
       "expected": "UNASSIGNED group present; groups sum to total",
       "actual": "as expected (UNASSIGNED net 80.00)",
-      "code_sha": "pending-commit",
+      "code_sha": "7fd885c",
       "ts": "2026-10-26T11:01:58Z"
     },
     {
@@ -272,7 +272,7 @@
       "exit_code": 0,
       "expected": "baseline metrics unchanged after scenario; snapshot hash equals recomputation",
       "actual": "as expected (scenario CM 40.50 vs actual 40.00)",
-      "code_sha": "pending-commit",
+      "code_sha": "7fd885c",
       "ts": "2026-10-26T11:01:58Z"
     },
     {
@@ -283,7 +283,7 @@
       "exit_code": 0,
       "expected": "no writes; 409/422 with rule ids",
       "actual": "as expected; duplicate line batch rejected ORPHAN_REFERENCE without parents, no-op with parents",
-      "code_sha": "pending-commit",
+      "code_sha": "7fd885c",
       "ts": "2026-10-26T11:01:58Z"
     },
     {

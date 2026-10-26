@@ -55,7 +55,7 @@ def test_seed_twice_keeps_same_counts_and_records_dataset_version(conn):
     assert first["dataset_hash"] == second["dataset_hash"]
     assert counts == {t: count(conn, t) for t in counts}
     row = conn.execute("SELECT * FROM dataset_versions").fetchone()
-    assert len(row["dataset_hash"]) == 64 and row["contract_version"] == "v1"
+    assert len(row["dataset_hash"]) == 64 and row["contract_version"] == "v1.1"
     assert row["dataset_version"] == first["dataset_version"]
 
 

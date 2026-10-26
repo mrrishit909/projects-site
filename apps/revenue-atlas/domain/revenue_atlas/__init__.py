@@ -1,4 +1,4 @@
-"""Revenue Atlas domain package (contract v1). Standard library only."""
+"""Revenue Atlas domain package (contract v1.1). Standard library only."""
 from .contract import CONTRACT_VERSION
 from .errors import DomainError
 from .metrics import compute_metrics, group_metrics

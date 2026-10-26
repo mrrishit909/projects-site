@@ -89,3 +89,26 @@ def test_sql_reference_largest_remainder_matches_domain_on_split_amounts(client,
     for key in KEYS:
         assert got[key] == want[key], key
     assert got["allocated_discounts"] == "10.00" and got["allocation_residual"] == "0.00"
+
+
+def test_sql_reference_windows_credits_by_credit_date_d01a(client, conn):
+    """D-01a: lines by shipped_at, credits by credit_date; matches the Python domain window by window."""
+    seed_db(conn, golden_inputs())
+    _prepare_shp001(client)
+    assert command(client, "post-a-partial-return",
+                   {"shipment_line_id": "sl-001", "returned_quantity": 1, "credit_amount": "90.00",
+                    "credit_date": "2026-03-20", "expected_version": 1}).status_code == 200
+    utc = timezone.utc
+    early = (datetime(2026, 3, 1, tzinfo=utc), datetime(2026, 3, 15, tzinfo=utc))   # shipped 03-10, credited 03-20
+    late = (datetime(2026, 3, 15, tzinfo=utc), datetime(2026, 4, 1, tzinfo=utc))
+    got_early, got_late = sql_totals(conn, *early), sql_totals(conn, *late)
+    assert (got_early["merchandise_credits"], got_early["net_merchandise_sales"]) == ("0.00", "225.00")
+    assert (got_late["gross_sales"], got_late["merchandise_credits"], got_late["net_merchandise_sales"]) == \
+        ("0.00", "90.00", "-90.00")
+    batch = golden_inputs(returns=False)
+    batch["returns"] = [{"return_id": "r1", "shipment_line_id": "sl-001", "returned_quantity": 1,
+                         "credit_amount": "90.00", "credit_date": "2026-03-20"}]
+    for w, got in ((early, got_early), (late, got_late)):
+        want = run_pipeline(batch, include_returns=True, window=w).metrics
+        for key in KEYS:
+            assert got[key] == want[key], (w, key)

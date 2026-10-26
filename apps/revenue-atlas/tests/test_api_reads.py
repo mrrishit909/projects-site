@@ -34,7 +34,7 @@ def test_read_no_records_returns_empty_page_with_full_envelope(client):
     assert set(body["meta"]) == META_KEYS
     assert body["meta"]["total_count"] == 0 and body["meta"]["next_cursor"] is None
     assert body["meta"]["dataset_version"] == "unversioned"
-    assert body["meta"]["contract_version"] == "v1" and body["meta"]["code_sha"] == os.environ.get("CODE_SHA", "dev")
+    assert body["meta"]["contract_version"] == "v1.1" and body["meta"]["code_sha"] == os.environ.get("CODE_SHA", "dev")
     assert body["meta"]["applied_filters"]["limit"] == 50
 
 

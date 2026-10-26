@@ -1,4 +1,4 @@
-# Revenue Atlas — business contracts, version 1 (2026-10-26)
+# Revenue Atlas — business contracts, version 1.1 (2026-10-26)
 
 Decision owner: coordinator (Fable 5.1). Spec: `projects/01-revenue-atlas.md` at pack
 commit `fe5f7981`. Every rule below cites the requirement ID it satisfies. Changing a
@@ -23,6 +23,26 @@ Non-goals: statutory revenue recognition, bookings, invoicing, cash (P01-DOMAIN-
 * Returns are recognised on `credit_date` (credit timing is "credit date", not shipment
   date). A window's net sales therefore include credits dated in the window even when the
   shipment is older; the returns desk discloses cohort maturity (P01-MET-08, MET-09).
+
+### D-01a (2026-10-26): window semantics for returns (contract v1.1)
+Decision note, supersedes the unspecified windowing of v1 (UAT defect G-01). A window selects
+shipment lines by `shipped_at` and return credits by `credit_date`; the return_rate denominator
+is shipped units in the window, its numerator returned units with credit_date in the window
+(disclosed as cohort-mixing on the returns desk).
+
+Exact rule for a window `[from, to)` (a missing bound is unbounded; no window means everything counts):
+* gross sales, allocated discounts, COGS before returns, shipping cost, shipped units, eligible
+  orders and shipment lines: lines whose shipment `shipped_at` is in the window;
+* merchandise credits, recoverable return cost and returned units: accepted returns whose
+  `credit_date` is in the window, read as 00:00 UTC of that date, whatever the shipped_at of their
+  line (the line must be in the population, i.e. not quarantined or excluded);
+* a credit dated after a window therefore does not change that window (a closed period stays
+  closed) and appears in the window that contains its credit date, even when that window has no
+  shipments (gross 0.00, net equal to minus the credit; return rate null while shipped units are 0);
+* the return is still validated and costed at its line's own cost version and credit-date FX (D-02, D-03);
+* implemented identically in `metrics.compute_metrics`, `data/sql/reference_totals.sql` and
+  `web/src/domain/metrics.ts`; `CONTRACT_VERSION` is `v1.1`. Input batches that declare `"contract": "v1"` keep
+  loading (same shape).
 
 ## D-02 Money, currency and rounding
 * All money is `Decimal`; JSON carries decimal strings; database columns are
@@ -78,7 +98,10 @@ Non-goals: statutory revenue recognition, bookings, invoicing, cash (P01-DOMAIN-
 | Year-over-year | (current − prior) ÷ \|prior\| | null when prior 0 or absent |
 | Allocation residual | shipping total − Σ allocated | must be 0.00 |
 
-Rates are proportions in `[0, 1]` carried to six decimals. Ratios are computed from the
+Contribution margin rate and year-over-year may be negative (contribution below zero, or a fall
+against the prior period). Discount rate and return rate are proportions in `[0, 1]`
+(return rate can exceed 1 only in a window whose credits belong to earlier cohorts, D-01a).
+All rates are carried to six decimals. Ratios are computed from the
 aggregated numerator and denominator, never averaged over rows (P01-MET-07-R04).
 
 ## D-06 Workflow invariants (P01-FLOW-01..10 R03)

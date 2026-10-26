@@ -90,6 +90,16 @@ export interface ShipmentLineFact {
   recoverable_return_cost: Dec;
 }
 
+/** One accepted return credit, recognised on credit_date (D-01a), reporting currency. */
+export interface ReturnEvent {
+  return_id: string;
+  shipment_line_id: string;
+  credit_date: string;
+  returned_quantity: number;
+  merchandise_credit: Dec;
+  recoverable_return_cost: Dec;
+}
+
 /** The 21 contract metrics: money as 2dp strings, rates as 6dp strings or null, counts as ints. */
 export interface Metrics {
   gross_sales: string;

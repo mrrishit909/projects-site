@@ -10,7 +10,7 @@ import { type IngestResult, utcDate, validateBatch } from "./ingest";
 import { NO_WINDOW, type Window, computeMetrics, inWindow } from "./metrics";
 import { recoverableCost, validateReturn } from "./returns";
 import type {
-  Customer, Metrics, PipelineInputs, RejectedRecord, Return, Shipment, ShipmentLine, ShipmentLineFact,
+  Customer, Metrics, PipelineInputs, RejectedRecord, Return, ReturnEvent, Shipment, ShipmentLine, ShipmentLineFact,
 } from "./types";
 
 export interface PipelineResult {
@@ -26,6 +26,8 @@ export interface PipelineResult {
   unallocatedFreightInWindow: D.Dec;
   /** Shipment lines excluded by order status (cancelled etc.), not quarantined. */
   excluded: string[];
+  /** Accepted return credits, for credit_date windows (D-01a). */
+  returns: ReturnEvent[];
 }
 
 /** Customer version with the greatest effective_from <= UTC shipped date, else UNASSIGNED (D-06). */
@@ -133,6 +135,7 @@ export function runPipeline(inputs: PipelineInputs, includeReturns: boolean, win
   }
 
   // Returns (D-06 C03), recognised at the credit-date rate (D-02).
+  const events: ReturnEvent[] = [];
   if (includeReturns) {
     const prior = new Map<string, Return[]>();
     const slById = new Map<string, ShipmentLine>(acc.shipment_lines.map((s) => [s.shipment_line_id, s]));
@@ -154,11 +157,16 @@ export function runPipeline(inputs: PipelineInputs, includeReturns: boolean, win
       const list = prior.get(ret.shipment_line_id);
       if (list) list.push(ret);
       else prior.set(ret.shipment_line_id, [ret]);
+      const rec = recoverableCost(fact!, ret.returned_quantity);
+      events.push({
+        return_id: ret.return_id, shipment_line_id: ret.shipment_line_id, credit_date: ret.credit_date,
+        returned_quantity: ret.returned_quantity, merchandise_credit: credit, recoverable_return_cost: rec,
+      });
       facts.set(fact!.shipment_line_id, {
         ...fact!,
         returned_quantity: fact!.returned_quantity + ret.returned_quantity,
         merchandise_credit: D.add(fact!.merchandise_credit, credit),
-        recoverable_return_cost: D.add(fact!.recoverable_return_cost, recoverableCost(fact!, ret.returned_quantity)),
+        recoverable_return_cost: D.add(fact!.recoverable_return_cost, rec),
       });
     }
   }
@@ -167,11 +175,11 @@ export function runPipeline(inputs: PipelineInputs, includeReturns: boolean, win
   const inWinShipments = new Set(factList.filter((f) => inWindow(f.shipped_at, window)).map((f) => f.shipment_id));
   let unallocW = D.ZERO;
   for (const [k, v] of unallocByShp) if (inWinShipments.has(k)) unallocW = D.add(unallocW, v);
-  const metrics = computeMetrics(factList, window, { unallocatedFreight: unallocW, declaredShippingCost: declared });
+  const metrics = computeMetrics(factList, window, { unallocatedFreight: unallocW, declaredShippingCost: declared, returns: events });
   quarantined.sort((a, b) => cmpStr(a.entity, b.entity) || cmpStr(a.id, b.id));
   return {
     ingest: ing, facts: factList, freightByLine, discountByLine, quarantined, metrics,
     unallocatedFreight: D.sum(unallocByShp.values()), unallocatedFreightInWindow: unallocW,
-    excluded: excluded.sort(cmpStr),
+    excluded: excluded.sort(cmpStr), returns: events,
   };
 }

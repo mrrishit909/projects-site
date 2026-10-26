@@ -169,7 +169,7 @@ def read_metrics(lo: str | None, hi: str | None, group_by: str) -> dict[str, Any
             data: dict[str, Any] = {"group_by": "none", "metrics": res.metrics}
         else:
             data = {"group_by": group_by,
-                    "groups": group_metrics(res.facts, GROUP_BY[group_by], window)}
+                    "groups": group_metrics(res.facts, GROUP_BY[group_by], window, res.returns)}
         quarantined: dict[str, int] = {}
         for q in res.quarantined:
             quarantined[q.entity] = quarantined.get(q.entity, 0) + 1

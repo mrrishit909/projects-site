@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Callable
 
-from .contract import CONTRACT_VERSION, CURRENCY_RE, KNOWN_CURRENCIES
+from .contract import ACCEPTED_INPUT_CONTRACTS, CONTRACT_VERSION, CURRENCY_RE, KNOWN_CURRENCIES
 from .errors import (CONTRACT_MISMATCH, CURRENCY_NOT_ISO4217, MALFORMED_RECORD,
                      ORPHAN_REFERENCE, DomainError)
 from .models import (CostVersion, Customer, Discount, ExchangeRate, Order, OrderLine,
@@ -102,7 +102,7 @@ def validate_batch(raw: dict) -> IngestResult:
     shipments, shipment lines, returns) with CURRENCY_NOT_ISO4217; a bad shipment
     currency rejects the shipment and its lines and returns. Raw rows are kept.
     """
-    if raw.get("contract", CONTRACT_VERSION) != CONTRACT_VERSION:
+    if raw.get("contract", CONTRACT_VERSION) not in ACCEPTED_INPUT_CONTRACTS:
         raise DomainError(CONTRACT_MISMATCH, f"expected contract {CONTRACT_VERSION}",
                           details={"got": raw.get("contract")})
     parsers = _parsers()
