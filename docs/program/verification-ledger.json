@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T13:18:08Z",
+  "updated_at": "2026-10-26T13:19:43Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -542,6 +542,17 @@
       "code_sha": "site from eac63b9",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40329082960",
       "ts": "2026-10-26T13:18:08Z"
+    },
+    {
+      "requirement": "P02-REL-18 portfolio case study links to the site and the site links back (after integration b642b24)",
+      "project": "02-onboard-studio",
+      "status": "verified",
+      "command": "live-check.yml run 40329407956 (matrix)",
+      "exit_code": 0,
+      "actual": "all jobs success (case study 200 with labs link; site back-link present)",
+      "code_sha": "a18f12e",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40329407956",
+      "ts": "2026-10-26T13:19:43Z"
     }
   ]
 }
