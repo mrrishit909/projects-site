@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T16:37:17Z",
+  "updated_at": "2026-10-26T16:38:28Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -825,6 +825,17 @@
       "code_sha": "dd40fdf",
       "evidence": "apps/serviceflow/data/README-generator.md; tests/test_generator.py",
       "ts": "2026-10-26T16:37:17Z"
+    },
+    {
+      "requirement": "P04 Mode A on the generator commit (333 tests incl. 32 generator tests against postgres:16 service on github-hosted)",
+      "project": "04-serviceflow",
+      "status": "verified",
+      "command": "serviceflow-ci.yml run 40360702938 job 'Mode A'",
+      "exit_code": 0,
+      "actual": "Mode A success; Mode B failing until the site source exists (A-030 running)",
+      "code_sha": "dd40fdf",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40360702938",
+      "ts": "2026-10-26T16:38:28Z"
     }
   ]
 }
