@@ -1,0 +1,1121 @@
+{
+ "01_margin_bridge_by_month": [
+  {
+   "period": "2024-10",
+   "gross_sales": "261575.89",
+   "discounts": "5067.70",
+   "credits": "2357.53",
+   "net_sales": "254150.66",
+   "cogs": "148894.49",
+   "gross_profit": "105256.17",
+   "freight": "1427.36",
+   "contribution": "103828.82",
+   "cm_rate": "0.4085"
+  },
+  {
+   "period": "2024-11",
+   "gross_sales": "374858.99",
+   "discounts": "10581.16",
+   "credits": "6096.40",
+   "net_sales": "358181.43",
+   "cogs": "211585.17",
+   "gross_profit": "146596.26",
+   "freight": "1827.94",
+   "contribution": "144768.32",
+   "cm_rate": "0.4042"
+  },
+  {
+   "period": "2024-12",
+   "gross_sales": "384823.58",
+   "discounts": "9789.30",
+   "credits": "19839.68",
+   "net_sales": "355194.60",
+   "cogs": "207231.56",
+   "gross_profit": "147963.04",
+   "freight": "2121.75",
+   "contribution": "145841.29",
+   "cm_rate": "0.4106"
+  },
+  {
+   "period": "2025-01",
+   "gross_sales": "396984.20",
+   "discounts": "7677.47",
+   "credits": "17532.58",
+   "net_sales": "371774.15",
+   "cogs": "219372.09",
+   "gross_profit": "152402.06",
+   "freight": "2171.32",
+   "contribution": "150230.74",
+   "cm_rate": "0.4041"
+  },
+  {
+   "period": "2025-02",
+   "gross_sales": "389210.70",
+   "discounts": "7668.08",
+   "credits": "8450.23",
+   "net_sales": "373092.39",
+   "cogs": "218408.40",
+   "gross_profit": "154683.99",
+   "freight": "2124.24",
+   "contribution": "152559.75",
+   "cm_rate": "0.4089"
+  },
+  {
+   "period": "2025-03",
+   "gross_sales": "300740.38",
+   "discounts": "6688.56",
+   "credits": "29852.07",
+   "net_sales": "264199.75",
+   "cogs": "156247.93",
+   "gross_profit": "107951.82",
+   "freight": "1858.88",
+   "contribution": "106092.94",
+   "cm_rate": "0.4016"
+  },
+  {
+   "period": "2025-04",
+   "gross_sales": "282971.47",
+   "discounts": "6530.65",
+   "credits": "2931.66",
+   "net_sales": "273509.16",
+   "cogs": "165882.39",
+   "gross_profit": "107626.77",
+   "freight": "1623.55",
+   "contribution": "106003.23",
+   "cm_rate": "0.3876"
+  },
+  {
+   "period": "2025-05",
+   "gross_sales": "333697.12",
+   "discounts": "7226.17",
+   "credits": "10452.40",
+   "net_sales": "316018.55",
+   "cogs": "188269.22",
+   "gross_profit": "127749.33",
+   "freight": "1800.37",
+   "contribution": "125948.96",
+   "cm_rate": "0.3985"
+  },
+  {
+   "period": "2025-06",
+   "gross_sales": "393338.19",
+   "discounts": "10178.44",
+   "credits": "19882.59",
+   "net_sales": "363277.15",
+   "cogs": "221056.57",
+   "gross_profit": "142220.58",
+   "freight": "2142.34",
+   "contribution": "140078.24",
+   "cm_rate": "0.3856"
+  },
+  {
+   "period": "2025-07",
+   "gross_sales": "374168.86",
+   "discounts": "9957.94",
+   "credits": "4511.86",
+   "net_sales": "359699.05",
+   "cogs": "216820.02",
+   "gross_profit": "142879.03",
+   "freight": "1770.39",
+   "contribution": "141108.64",
+   "cm_rate": "0.3923"
+  },
+  {
+   "period": "2025-08",
+   "gross_sales": "391070.60",
+   "discounts": "11675.87",
+   "credits": "11265.66",
+   "net_sales": "368129.07",
+   "cogs": "224610.17",
+   "gross_profit": "143518.90",
+   "freight": "2120.16",
+   "contribution": "141398.74",
+   "cm_rate": "0.3841"
+  },
+  {
+   "period": "2025-09",
+   "gross_sales": "453982.64",
+   "discounts": "10901.40",
+   "credits": "5922.10",
+   "net_sales": "437159.14",
+   "cogs": "263721.83",
+   "gross_profit": "173437.31",
+   "freight": "2355.34",
+   "contribution": "171081.97",
+   "cm_rate": "0.3913"
+  },
+  {
+   "period": "2025-10",
+   "gross_sales": "409125.91",
+   "discounts": "11368.36",
+   "credits": "11167.39",
+   "net_sales": "386590.17",
+   "cogs": "241086.42",
+   "gross_profit": "145503.75",
+   "freight": "2042.09",
+   "contribution": "143461.66",
+   "cm_rate": "0.3711"
+  },
+  {
+   "period": "2025-11",
+   "gross_sales": "401926.70",
+   "discounts": "10633.34",
+   "credits": "22630.45",
+   "net_sales": "368662.91",
+   "cogs": "228497.19",
+   "gross_profit": "140165.72",
+   "freight": "2215.52",
+   "contribution": "137950.20",
+   "cm_rate": "0.3742"
+  },
+  {
+   "period": "2025-12",
+   "gross_sales": "566863.84",
+   "discounts": "14503.56",
+   "credits": "22759.49",
+   "net_sales": "529600.79",
+   "cogs": "323408.19",
+   "gross_profit": "206192.60",
+   "freight": "3026.47",
+   "contribution": "203166.13",
+   "cm_rate": "0.3836"
+  },
+  {
+   "period": "2026-01",
+   "gross_sales": "470439.07",
+   "discounts": "13681.91",
+   "credits": "31927.64",
+   "net_sales": "424829.52",
+   "cogs": "278228.38",
+   "gross_profit": "146601.14",
+   "freight": "2438.28",
+   "contribution": "144162.86",
+   "cm_rate": "0.3393"
+  },
+  {
+   "period": "2026-02",
+   "gross_sales": "404949.28",
+   "discounts": "10917.35",
+   "credits": "5668.42",
+   "net_sales": "388363.51",
+   "cogs": "257713.37",
+   "gross_profit": "130650.14",
+   "freight": "2109.97",
+   "contribution": "128540.17",
+   "cm_rate": "0.3310"
+  },
+  {
+   "period": "2026-03",
+   "gross_sales": "467224.52",
+   "discounts": "13133.80",
+   "credits": "29966.29",
+   "net_sales": "424124.43",
+   "cogs": "273501.35",
+   "gross_profit": "150623.08",
+   "freight": "2356.08",
+   "contribution": "148267.00",
+   "cm_rate": "0.3496"
+  },
+  {
+   "period": "2026-04",
+   "gross_sales": "319340.34",
+   "discounts": "5678.17",
+   "credits": "23927.38",
+   "net_sales": "289734.79",
+   "cogs": "192945.28",
+   "gross_profit": "96789.51",
+   "freight": "1556.15",
+   "contribution": "95233.36",
+   "cm_rate": "0.3287"
+  },
+  {
+   "period": "2026-05",
+   "gross_sales": "475070.19",
+   "discounts": "11974.18",
+   "credits": "7804.65",
+   "net_sales": "455291.37",
+   "cogs": "309456.81",
+   "gross_profit": "145834.56",
+   "freight": "2426.62",
+   "contribution": "143407.94",
+   "cm_rate": "0.3150"
+  },
+  {
+   "period": "2026-06",
+   "gross_sales": "448204.50",
+   "discounts": "13233.40",
+   "credits": "12992.75",
+   "net_sales": "421978.34",
+   "cogs": "285550.63",
+   "gross_profit": "136427.71",
+   "freight": "2171.65",
+   "contribution": "134256.06",
+   "cm_rate": "0.3182"
+  },
+  {
+   "period": "2026-07",
+   "gross_sales": "440017.93",
+   "discounts": "12825.53",
+   "credits": "14647.03",
+   "net_sales": "412545.37",
+   "cogs": "281500.05",
+   "gross_profit": "131045.32",
+   "freight": "2268.84",
+   "contribution": "128776.48",
+   "cm_rate": "0.3122"
+  },
+  {
+   "period": "2026-08",
+   "gross_sales": "466660.92",
+   "discounts": "13755.25",
+   "credits": "11768.87",
+   "net_sales": "441136.80",
+   "cogs": "295740.09",
+   "gross_profit": "145396.71",
+   "freight": "2258.95",
+   "contribution": "143137.76",
+   "cm_rate": "0.3245"
+  },
+  {
+   "period": "2026-09",
+   "gross_sales": "443961.07",
+   "discounts": "13222.72",
+   "credits": "26961.04",
+   "net_sales": "403777.30",
+   "cogs": "270859.46",
+   "gross_profit": "132917.84",
+   "freight": "2392.88",
+   "contribution": "130524.96",
+   "cm_rate": "0.3233"
+  },
+  {
+   "period": "TOTAL",
+   "gross_sales": "9651206.89",
+   "discounts": "248870.31",
+   "credits": "361316.17",
+   "net_sales": "9041020.42",
+   "cogs": "5680587.06",
+   "gross_profit": "3360433.36",
+   "freight": "50607.14",
+   "contribution": "3309826.22",
+   "cm_rate": "0.3661"
+  },
+  {
+   "period": "SUBTOTAL 2024-10..2025-12",
+   "gross_sales": "5715339.08",
+   "discounts": "140448.00",
+   "credits": "195652.08",
+   "net_sales": "5379238.99",
+   "cogs": "3235091.64",
+   "gross_profit": "2144147.35",
+   "freight": "30627.71",
+   "contribution": "2113519.64",
+   "cm_rate": "0.3929"
+  },
+  {
+   "period": "SUBTOTAL 2026-01..2026-09",
+   "gross_sales": "3935867.82",
+   "discounts": "108422.30",
+   "credits": "165664.08",
+   "net_sales": "3661781.43",
+   "cogs": "2445495.42",
+   "gross_profit": "1216286.01",
+   "freight": "19979.42",
+   "contribution": "1196306.59",
+   "cm_rate": "0.3267"
+  }
+ ],
+ "02_contribution_by_region": [
+  {
+   "region_id": "UNASSIGNED",
+   "shipment_lines": "8",
+   "gross_sales": "2503.37",
+   "net_sales": "2411.97",
+   "contribution": "961.43",
+   "cm_rate": "0.3986"
+  },
+  {
+   "region_id": "reg-east",
+   "shipment_lines": "1192",
+   "gross_sales": "1232751.95",
+   "net_sales": "1159426.95",
+   "contribution": "423813.87",
+   "cm_rate": "0.3655"
+  },
+  {
+   "region_id": "reg-north",
+   "shipment_lines": "2287",
+   "gross_sales": "4415286.57",
+   "net_sales": "4112856.72",
+   "contribution": "1496108.16",
+   "cm_rate": "0.3638"
+  },
+  {
+   "region_id": "reg-south",
+   "shipment_lines": "2014",
+   "gross_sales": "3259116.50",
+   "net_sales": "3079326.90",
+   "contribution": "1141427.20",
+   "cm_rate": "0.3707"
+  },
+  {
+   "region_id": "reg-west",
+   "shipment_lines": "1087",
+   "gross_sales": "741548.51",
+   "net_sales": "686997.89",
+   "contribution": "247515.56",
+   "cm_rate": "0.3603"
+  },
+  {
+   "region_id": "TOTAL",
+   "shipment_lines": "6588",
+   "gross_sales": "9651206.89",
+   "net_sales": "9041020.42",
+   "contribution": "3309826.22",
+   "cm_rate": "0.3661"
+  }
+ ],
+ "03_discount_rate_by_region_before_after_2026_03": [
+  {
+   "region": "UNASSIGNED",
+   "rate_before": "0.0092",
+   "rate_after": null,
+   "delta_pp": null,
+   "gross_before": "2503.37",
+   "gross_after": null,
+   "extra_discount_usd": null
+  },
+  {
+   "region": "reg-east",
+   "rate_before": "0.0263",
+   "rate_after": "0.0251",
+   "delta_pp": "-0.11",
+   "gross_before": "862711.54",
+   "gross_after": "370040.40",
+   "extra_discount_usd": "-416.37"
+  },
+  {
+   "region": "reg-north",
+   "rate_before": "0.0252",
+   "rate_after": "0.0260",
+   "delta_pp": "0.08",
+   "gross_before": "2860569.01",
+   "gross_after": "1554717.56",
+   "extra_discount_usd": "1288.97"
+  },
+  {
+   "region": "reg-south",
+   "rate_before": "0.0242",
+   "rate_after": "0.0238",
+   "delta_pp": "-0.04",
+   "gross_before": "2335322.94",
+   "gross_after": "923793.56",
+   "extra_discount_usd": "-383.50"
+  },
+  {
+   "region": "reg-west",
+   "rate_before": "0.0263",
+   "rate_after": "0.0574",
+   "delta_pp": "3.11",
+   "gross_before": "529620.56",
+   "gross_after": "211927.95",
+   "extra_discount_usd": "6592.14"
+  },
+  {
+   "region": "ALL REGIONS",
+   "rate_before": "0.0250",
+   "rate_after": "0.0274",
+   "delta_pp": "0.23",
+   "gross_before": "6590727.43",
+   "gross_after": "3060479.47",
+   "extra_discount_usd": "7181.47"
+  }
+ ],
+ "04_fixtures_cost_vs_price_by_month": [
+  {
+   "month": "2024-10",
+   "fixtures_units": "712",
+   "fixtures_unit_price": "127.69",
+   "fixtures_unit_cost": "74.22",
+   "cost_to_price": "0.5813",
+   "other_cost_to_price": "0.5711",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2024-11",
+   "fixtures_units": "728",
+   "fixtures_unit_price": "143.18",
+   "fixtures_unit_cost": "82.33",
+   "cost_to_price": "0.5750",
+   "other_cost_to_price": "0.5742",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2024-12",
+   "fixtures_units": "624",
+   "fixtures_unit_price": "189.94",
+   "fixtures_unit_cost": "107.55",
+   "cost_to_price": "0.5662",
+   "other_cost_to_price": "0.5704",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2025-01",
+   "fixtures_units": "830",
+   "fixtures_unit_price": "157.64",
+   "fixtures_unit_cost": "92.27",
+   "cost_to_price": "0.5853",
+   "other_cost_to_price": "0.5741",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2025-02",
+   "fixtures_units": "833",
+   "fixtures_unit_price": "142.66",
+   "fixtures_unit_cost": "83.74",
+   "cost_to_price": "0.5870",
+   "other_cost_to_price": "0.5679",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2025-03",
+   "fixtures_units": "696",
+   "fixtures_unit_price": "128.94",
+   "fixtures_unit_cost": "75.90",
+   "cost_to_price": "0.5886",
+   "other_cost_to_price": "0.5727",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2025-04",
+   "fixtures_units": "542",
+   "fixtures_unit_price": "115.42",
+   "fixtures_unit_cost": "69.17",
+   "cost_to_price": "0.5993",
+   "other_cost_to_price": "0.5906",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2025-05",
+   "fixtures_units": "595",
+   "fixtures_unit_price": "144.19",
+   "fixtures_unit_cost": "86.60",
+   "cost_to_price": "0.6006",
+   "other_cost_to_price": "0.5767",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2025-06",
+   "fixtures_units": "1118",
+   "fixtures_unit_price": "126.51",
+   "fixtures_unit_cost": "75.43",
+   "cost_to_price": "0.5963",
+   "other_cost_to_price": "0.5877",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2025-07",
+   "fixtures_units": "742",
+   "fixtures_unit_price": "143.15",
+   "fixtures_unit_cost": "84.56",
+   "cost_to_price": "0.5908",
+   "other_cost_to_price": "0.5857",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2025-08",
+   "fixtures_units": "1101",
+   "fixtures_unit_price": "136.98",
+   "fixtures_unit_cost": "82.60",
+   "cost_to_price": "0.6030",
+   "other_cost_to_price": "0.5834",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2025-09",
+   "fixtures_units": "866",
+   "fixtures_unit_price": "135.67",
+   "fixtures_unit_cost": "81.27",
+   "cost_to_price": "0.5990",
+   "other_cost_to_price": "0.5852",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2025-10",
+   "fixtures_units": "1193",
+   "fixtures_unit_price": "146.10",
+   "fixtures_unit_cost": "88.07",
+   "cost_to_price": "0.6028",
+   "other_cost_to_price": "0.6090",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2025-11",
+   "fixtures_units": "1188",
+   "fixtures_unit_price": "144.35",
+   "fixtures_unit_cost": "87.86",
+   "cost_to_price": "0.6086",
+   "other_cost_to_price": "0.5962",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2025-12",
+   "fixtures_units": "1208",
+   "fixtures_unit_price": "162.10",
+   "fixtures_unit_cost": "98.41",
+   "cost_to_price": "0.6071",
+   "other_cost_to_price": "0.5906",
+   "extra_cost_usd": null
+  },
+  {
+   "month": "2026-01",
+   "fixtures_units": "935",
+   "fixtures_unit_price": "152.05",
+   "fixtures_unit_cost": "109.65",
+   "cost_to_price": "0.7212",
+   "other_cost_to_price": "0.5991",
+   "extra_cost_usd": "18033.81"
+  },
+  {
+   "month": "2026-02",
+   "fixtures_units": "981",
+   "fixtures_unit_price": "161.73",
+   "fixtures_unit_cost": "116.01",
+   "cost_to_price": "0.7173",
+   "other_cost_to_price": "0.5980",
+   "extra_cost_usd": "19517.57"
+  },
+  {
+   "month": "2026-03",
+   "fixtures_units": "1026",
+   "fixtures_unit_price": "153.18",
+   "fixtures_unit_cost": "108.45",
+   "cost_to_price": "0.7080",
+   "other_cost_to_price": "0.5862",
+   "extra_cost_usd": "17864.73"
+  },
+  {
+   "month": "2026-04",
+   "fixtures_units": "586",
+   "fixtures_unit_price": "169.67",
+   "fixtures_unit_cost": "124.62",
+   "cost_to_price": "0.7345",
+   "other_cost_to_price": "0.6156",
+   "extra_cost_usd": "13940.10"
+  },
+  {
+   "month": "2026-05",
+   "fixtures_units": "1349",
+   "fixtures_unit_price": "147.10",
+   "fixtures_unit_cost": "108.89",
+   "cost_to_price": "0.7403",
+   "other_cost_to_price": "0.6066",
+   "extra_cost_usd": "28966.97"
+  },
+  {
+   "month": "2026-06",
+   "fixtures_units": "989",
+   "fixtures_unit_price": "161.98",
+   "fixtures_unit_cost": "118.75",
+   "cost_to_price": "0.7331",
+   "other_cost_to_price": "0.6126",
+   "extra_cost_usd": "22239.93"
+  },
+  {
+   "month": "2026-07",
+   "fixtures_units": "1116",
+   "fixtures_unit_price": "141.45",
+   "fixtures_unit_cost": "104.54",
+   "cost_to_price": "0.7391",
+   "other_cost_to_price": "0.6176",
+   "extra_cost_usd": "22853.05"
+  },
+  {
+   "month": "2026-08",
+   "fixtures_units": "1093",
+   "fixtures_unit_price": "146.72",
+   "fixtures_unit_cost": "107.85",
+   "cost_to_price": "0.7351",
+   "other_cost_to_price": "0.6051",
+   "extra_cost_usd": "22573.03"
+  },
+  {
+   "month": "2026-09",
+   "fixtures_units": "1182",
+   "fixtures_unit_price": "138.46",
+   "fixtures_unit_cost": "100.42",
+   "cost_to_price": "0.7252",
+   "other_cost_to_price": "0.6065",
+   "extra_cost_usd": "21427.21"
+  },
+  {
+   "month": "SUM 2026-01..2026-09",
+   "fixtures_units": "9257",
+   "fixtures_unit_price": null,
+   "fixtures_unit_cost": null,
+   "cost_to_price": "0.7284",
+   "other_cost_to_price": "0.6048",
+   "extra_cost_usd": "187416.40"
+  },
+  {
+   "month": "SUM 2024-10..2025-12",
+   "fixtures_units": "12976",
+   "fixtures_unit_price": null,
+   "fixtures_unit_cost": null,
+   "cost_to_price": "0.5943",
+   "other_cost_to_price": "0.5826",
+   "extra_cost_usd": null
+  }
+ ],
+ "05_return_rate_by_segment_category": [
+  {
+   "segment": "enterprise",
+   "category_id": "cat-apparel",
+   "shipped_units": "13904",
+   "returned_units": "1197",
+   "return_rate": "0.0861",
+   "mature_units": "12449",
+   "mature_rate": "0.0866"
+  },
+  {
+   "segment": "smb",
+   "category_id": "cat-office",
+   "shipped_units": "1256",
+   "returned_units": "90",
+   "return_rate": "0.0717",
+   "mature_units": "1173",
+   "mature_rate": "0.0665"
+  },
+  {
+   "segment": "smb",
+   "category_id": "cat-safety",
+   "shipped_units": "1219",
+   "returned_units": "76",
+   "return_rate": "0.0623",
+   "mature_units": "1121",
+   "mature_rate": "0.0633"
+  },
+  {
+   "segment": "mid_market",
+   "category_id": "cat-safety",
+   "shipped_units": "3673",
+   "returned_units": "181",
+   "return_rate": "0.0493",
+   "mature_units": "3355",
+   "mature_rate": "0.0539"
+  },
+  {
+   "segment": "enterprise",
+   "category_id": "cat-office",
+   "shipped_units": "15810",
+   "returned_units": "825",
+   "return_rate": "0.0522",
+   "mature_units": "14539",
+   "mature_rate": "0.0508"
+  },
+  {
+   "segment": "mid_market",
+   "category_id": "cat-fixtures",
+   "shipped_units": "4528",
+   "returned_units": "193",
+   "return_rate": "0.0426",
+   "mature_units": "4158",
+   "mature_rate": "0.0464"
+  },
+  {
+   "segment": "smb",
+   "category_id": "cat-packaging",
+   "shipped_units": "4669",
+   "returned_units": "204",
+   "return_rate": "0.0437",
+   "mature_units": "4338",
+   "mature_rate": "0.0415"
+  },
+  {
+   "segment": "mid_market",
+   "category_id": "cat-packaging",
+   "shipped_units": "16004",
+   "returned_units": "614",
+   "return_rate": "0.0384",
+   "mature_units": "14825",
+   "mature_rate": "0.0414"
+  },
+  {
+   "segment": "enterprise",
+   "category_id": "cat-packaging",
+   "shipped_units": "54467",
+   "returned_units": "1897",
+   "return_rate": "0.0348",
+   "mature_units": "51010",
+   "mature_rate": "0.0372"
+  },
+  {
+   "segment": "mid_market",
+   "category_id": "cat-apparel",
+   "shipped_units": "3725",
+   "returned_units": "126",
+   "return_rate": "0.0338",
+   "mature_units": "3419",
+   "mature_rate": "0.0369"
+  },
+  {
+   "segment": "enterprise",
+   "category_id": "cat-tools",
+   "shipped_units": "13448",
+   "returned_units": "488",
+   "return_rate": "0.0363",
+   "mature_units": "12680",
+   "mature_rate": "0.0356"
+  },
+  {
+   "segment": "smb",
+   "category_id": "cat-fixtures",
+   "shipped_units": "1320",
+   "returned_units": "45",
+   "return_rate": "0.0341",
+   "mature_units": "1242",
+   "mature_rate": "0.0354"
+  },
+  {
+   "segment": "ALL OTHER",
+   "category_id": "all other cells",
+   "shipped_units": "158897",
+   "returned_units": "5691",
+   "return_rate": "0.0358",
+   "mature_units": "147560",
+   "mature_rate": "0.0368"
+  },
+  {
+   "segment": "ALL",
+   "category_id": "all cells",
+   "shipped_units": "172801",
+   "returned_units": "6888",
+   "return_rate": "0.0399",
+   "mature_units": "160009",
+   "mature_rate": "0.0407"
+  }
+ ],
+ "06_top10_customers_contribution_decline": [
+  {
+   "rank": 1,
+   "customer_id": "cust-0017",
+   "customer_name": "Umberfield Foundry Trading Company",
+   "latest_region": "reg-south",
+   "contribution_a": "105429.60",
+   "contribution_b": "62073.12",
+   "decline": "43356.48",
+   "pct_of_total_decline": "33.3",
+   "all_customers_a": "905548.02",
+   "all_customers_b": "775336.56"
+  },
+  {
+   "rank": 2,
+   "customer_id": "cust-0009",
+   "customer_name": "Fenwick Meadow Fabrication Ltd",
+   "latest_region": "reg-south",
+   "contribution_a": "85987.98",
+   "contribution_b": "48497.24",
+   "decline": "37490.74",
+   "pct_of_total_decline": "28.8",
+   "all_customers_a": "905548.02",
+   "all_customers_b": "775336.56"
+  },
+  {
+   "rank": 3,
+   "customer_id": "cust-0007",
+   "customer_name": "Northern Territories Mining, Forestry and Heavy Equipment Contractors Purchasing Consortium Limited",
+   "latest_region": "reg-north",
+   "contribution_a": "92749.95",
+   "contribution_b": "63191.30",
+   "decline": "29558.65",
+   "pct_of_total_decline": "22.7",
+   "all_customers_a": "905548.02",
+   "all_customers_b": "775336.56"
+  },
+  {
+   "rank": 4,
+   "customer_id": "cust-0032",
+   "customer_name": "International Association of Municipal Facilities Maintenance and Public Works Procurement Cooperatives",
+   "latest_region": "reg-south",
+   "contribution_a": "20779.38",
+   "contribution_b": "10012.57",
+   "decline": "10766.80",
+   "pct_of_total_decline": "8.3",
+   "all_customers_a": "905548.02",
+   "all_customers_b": "775336.56"
+  },
+  {
+   "rank": 5,
+   "customer_id": "cust-0039",
+   "customer_name": "Moorfield Lakeside Works Partners",
+   "latest_region": "reg-north",
+   "contribution_a": "24448.14",
+   "contribution_b": "15388.62",
+   "decline": "9059.52",
+   "pct_of_total_decline": "7.0",
+   "all_customers_a": "905548.02",
+   "all_customers_b": "775336.56"
+  },
+  {
+   "rank": 6,
+   "customer_id": "cust-0048",
+   "customer_name": "Fenwick Lakeside Fabrication Ltd",
+   "latest_region": "reg-south",
+   "contribution_a": "22939.22",
+   "contribution_b": "15619.74",
+   "decline": "7319.48",
+   "pct_of_total_decline": "5.6",
+   "all_customers_a": "905548.02",
+   "all_customers_b": "775336.56"
+  },
+  {
+   "rank": 7,
+   "customer_id": "cust-0024",
+   "customer_name": "Consolidated Regional Wholesale Distribution and Industrial Supply Partnership of the Great Lakes",
+   "latest_region": "reg-west",
+   "contribution_a": "12190.51",
+   "contribution_b": "5448.58",
+   "decline": "6741.93",
+   "pct_of_total_decline": "5.2",
+   "all_customers_a": "905548.02",
+   "all_customers_b": "775336.56"
+  },
+  {
+   "rank": 8,
+   "customer_id": "cust-0036",
+   "customer_name": "Thornley Foundry Trading Company",
+   "latest_region": "reg-east",
+   "contribution_a": "76856.45",
+   "contribution_b": "70325.00",
+   "decline": "6531.45",
+   "pct_of_total_decline": "5.0",
+   "all_customers_a": "905548.02",
+   "all_customers_b": "775336.56"
+  },
+  {
+   "rank": 9,
+   "customer_id": "cust-0005",
+   "customer_name": "Valewood Harbor Works Partners",
+   "latest_region": "reg-west",
+   "contribution_a": "5551.27",
+   "contribution_b": "443.61",
+   "decline": "5107.66",
+   "pct_of_total_decline": "3.9",
+   "all_customers_a": "905548.02",
+   "all_customers_b": "775336.56"
+  },
+  {
+   "rank": 10,
+   "customer_id": "cust-0040",
+   "customer_name": "Umberfield Foundry Logistics Corp",
+   "latest_region": "reg-east",
+   "contribution_a": "3913.92",
+   "contribution_b": "-88.11",
+   "decline": "4002.03",
+   "pct_of_total_decline": "3.1",
+   "all_customers_a": "905548.02",
+   "all_customers_b": "775336.56"
+  }
+ ],
+ "07_quarantine_reasons": [
+  {
+   "kind": "rejected",
+   "entity": "order_lines",
+   "reason_code": "CURRENCY_NOT_ISO4217",
+   "records": 5,
+   "shipments": null,
+   "gross_usd_at_stake": null
+  },
+  {
+   "kind": "rejected",
+   "entity": "orders",
+   "reason_code": "CURRENCY_NOT_ISO4217",
+   "records": 3,
+   "shipments": null,
+   "gross_usd_at_stake": null
+  },
+  {
+   "kind": "rejected",
+   "entity": "returns",
+   "reason_code": "CURRENCY_NOT_ISO4217",
+   "records": 1,
+   "shipments": null,
+   "gross_usd_at_stake": null
+  },
+  {
+   "kind": "rejected",
+   "entity": "shipment_lines",
+   "reason_code": "CURRENCY_NOT_ISO4217",
+   "records": 5,
+   "shipments": null,
+   "gross_usd_at_stake": null
+  },
+  {
+   "kind": "rejected",
+   "entity": "shipments",
+   "reason_code": "CURRENCY_NOT_ISO4217",
+   "records": 3,
+   "shipments": null,
+   "gross_usd_at_stake": null
+  },
+  {
+   "kind": "quarantined",
+   "entity": "shipment_lines",
+   "reason_code": "COST_VERSION_AMBIGUOUS",
+   "records": 31,
+   "shipments": 30,
+   "gross_usd_at_stake": "42742.55"
+  },
+  {
+   "kind": "quarantined",
+   "entity": "shipment_lines",
+   "reason_code": "COST_VERSION_MISSING",
+   "records": 15,
+   "shipments": 15,
+   "gross_usd_at_stake": "5205.01"
+  },
+  {
+   "kind": "quarantined",
+   "entity": "shipment_lines",
+   "reason_code": "FX_RATE_MISSING",
+   "records": 10,
+   "shipments": 5,
+   "gross_usd_at_stake": null
+  }
+ ],
+ "08_allocation_residual_check": [
+  {
+   "shipments_checked": 2724,
+   "shipments_nonzero_residual": 0,
+   "freight_abs_residual": "0.000000",
+   "shipments_without_allocation": 0,
+   "order_lines_checked": 6152,
+   "order_lines_nonzero_residual": 0,
+   "discount_abs_residual": "0.000000",
+   "failures": 0
+  }
+ ],
+ "09_stored_vs_contract_freight": [
+  {
+   "shipments_in_population": 2715,
+   "partially_quarantined_shipments": 41,
+   "contract_freight": "50607.14",
+   "stored_c04_freight_on_kept_lines": "50319.35",
+   "gap": "287.78",
+   "stored_on_quarantined_siblings": "287.78"
+  }
+ ],
+ "memo_arithmetic": [
+  {
+   "cm_rate_pre": "0.3929",
+   "cm_rate_post": "0.3267",
+   "rate_drop_pp": "6.62",
+   "contribution_lost_to_rate_drop_usd": "242418.66",
+   "fixtures_extra_cost_usd": "187416.40",
+   "west_extra_discount_usd": "6592.14",
+   "fixtures_share_of_lost": "77.3",
+   "west_share_of_lost": "2.7"
+  }
+ ],
+ "python_domain_metrics": [
+  {
+   "gross_sales": "9651206.89",
+   "allocated_discounts": "248870.31",
+   "merchandise_credits": "361316.17",
+   "net_merchandise_sales": "9041020.42",
+   "cogs": "5680587.06",
+   "recoverable_return_cost": "224072.38",
+   "gross_profit": "3360433.36",
+   "shipping_revenue": "0.00",
+   "shipping_cost": "50607.14",
+   "other_variable_costs": "0.00",
+   "contribution_margin": "3309826.22",
+   "eligible_net_revenue": "9041020.42",
+   "contribution_margin_rate": "0.366090",
+   "discount_rate": "0.025786",
+   "return_rate": "0.039861",
+   "average_order_value": "3789.20",
+   "allocation_residual": "0.00",
+   "eligible_orders": 2386,
+   "eligible_shipment_lines": 6588,
+   "shipped_units": 172801,
+   "returned_units": 6888
+  }
+ ],
+ "reconciliation": [
+  {
+   "field": "gross_sales",
+   "bridge_total": "9651206.89",
+   "reference_totals_sql": "9651206.89",
+   "equal": true
+  },
+  {
+   "field": "allocated_discounts",
+   "bridge_total": "248870.31",
+   "reference_totals_sql": "248870.31",
+   "equal": true
+  },
+  {
+   "field": "merchandise_credits",
+   "bridge_total": "361316.17",
+   "reference_totals_sql": "361316.17",
+   "equal": true
+  },
+  {
+   "field": "net_merchandise_sales",
+   "bridge_total": "9041020.42",
+   "reference_totals_sql": "9041020.42",
+   "equal": true
+  },
+  {
+   "field": "cogs",
+   "bridge_total": "5680587.06",
+   "reference_totals_sql": "5680587.06",
+   "equal": true
+  },
+  {
+   "field": "gross_profit",
+   "bridge_total": "3360433.36",
+   "reference_totals_sql": "3360433.36",
+   "equal": true
+  },
+  {
+   "field": "shipping_cost",
+   "bridge_total": "50607.14",
+   "reference_totals_sql": "50607.14",
+   "equal": true
+  },
+  {
+   "field": "contribution_margin",
+   "bridge_total": "3309826.22",
+   "reference_totals_sql": "3309826.22",
+   "equal": true
+  },
+  {
+   "field": "regions TOTAL contribution vs bridge",
+   "bridge_total": "3309826.22",
+   "reference_totals_sql": "3309826.22",
+   "equal": true
+  },
+  {
+   "field": "python domain run_pipeline (all 8 money fields)",
+   "bridge_total": "3309826.22",
+   "reference_totals_sql": "3309826.22",
+   "equal": true
+  }
+ ],
+ "reference_totals": [
+  {
+   "gross_sales": "9651206.89",
+   "allocated_discounts": "248870.31",
+   "merchandise_credits": "361316.17",
+   "net_merchandise_sales": "9041020.42",
+   "cogs": "5680587.06",
+   "recoverable_return_cost": "224072.38",
+   "gross_profit": "3360433.36",
+   "shipping_cost": "50607.14",
+   "contribution_margin": "3309826.22",
+   "allocation_residual": "0.00"
+  }
+ ]
+}

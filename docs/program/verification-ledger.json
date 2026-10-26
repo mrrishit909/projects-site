@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:30:43Z",
+  "updated_at": "2026-10-26T11:36:16Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -358,6 +358,26 @@
       "code_sha": "a3ec7d2 (site built from a9d7d21)",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40313778038/artifacts/12646761607",
       "ts": "2026-10-26T11:30:43Z"
+    },
+    {
+      "requirement": "P01-ART-04 SQL analysis reconciled; P01-ART-05 workbook formulas recalculated (LibreOffice 24.2 headless, not Excel); P01-ART-06 BI package documented (no .pbix); P01-ART-07/09/10 memo, case study, release package",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "pytest tests/test_artifacts.py; data/sql/analysis/run_all.py; psql -v ON_ERROR_STOP=1 00..09",
+      "exit_code": 0,
+      "expected": "bridge 9,651,206.89 / 9,041,020.42 / 3,309,826.22 equal across SQL view, reference_totals.sql and run_pipeline; workbook golden 250/25/0/225/140/85/15/70 and 90/135/80/55/40",
+      "actual": "equal to the cent; 10 tests pass; 26 checksums",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T11:36:16Z"
+    },
+    {
+      "requirement": "R-08 (artifacts worker finding): stored freight_allocations include C02-quarantined lines",
+      "project": "01-revenue-atlas",
+      "status": "failed",
+      "defect": "R-08 stored allocations sum 50,319.35 vs 50,607.14 over population lines (41 shipments); API metrics unaffected",
+      "command": "data/sql/analysis/09_stored_vs_contract_freight.sql",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T11:36:16Z"
     }
   ]
 }
