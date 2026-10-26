@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T18:20:47Z",
+  "updated_at": "2026-10-26T19:28:15Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -902,6 +902,17 @@
       "code_sha": "43de7f8 / portfolio e44d15d",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40376659299",
       "ts": "2026-10-26T18:20:47Z"
+    },
+    {
+      "requirement": "P04-ART-01..10 (business case, requirements, dictionary+ERD, 8 SQL investigations reconciled to the domain and SQL reference on three windows, golden reconciliation, LibreOffice-recalculated workbook, BI CSVs + measures, memo with replication intervals, uat-evidence, technical case study, release package, r\u00e9sum\u00e9 bullets)",
+      "project": "04-serviceflow",
+      "status": "verified",
+      "command": "run_all.py; sha256sum -c artifacts/CHECKSUMS.txt; pytest tests/test_artifacts.py; pytest -q (all)",
+      "exit_code": 0,
+      "actual": "RESULT: OK (185/185); 51 OK; 36 passed 1 skipped; 413 passed 1 skipped. Excel and Power BI not run (disclosed in the docs)",
+      "code_sha": "2a6578e",
+      "evidence": "apps/serviceflow/docs/*.md; artifacts/CHECKSUMS.txt",
+      "ts": "2026-10-26T19:28:15Z"
     }
   ]
 }

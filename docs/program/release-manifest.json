@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T18:20:47Z",
+  "updated_at": "2026-10-26T19:28:15Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -64,19 +64,19 @@
       "slug": "serviceflow",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/serviceflow/",
       "site_path": "labs/serviceflow/ on unified-portfolio",
-      "release_commit_unified_portfolio": "e44d15d",
-      "rollback_commit_unified_portfolio": "e3bd4a4",
-      "source_commit_business_data_lab": "43de7f8ce1636c8b301bf70165ced156e3f3a9b3",
-      "published_tree_sha256": "b5a33b9681eb0319a9c092bfc83e29b37d333c4bc836e784815eaab7a614f445",
+      "release_commit_unified_portfolio": "fec6758",
+      "rollback_commit_unified_portfolio": "e44d15d",
+      "source_commit_business_data_lab": "2a6578e684362b9e5b54039619df927fe4f30757",
+      "published_tree_sha256": "a7936dd7664f4342b1ad216ecdfc2925bc12bcec75e34465951dfb54e656969a",
       "files": 45,
       "dataset_version": "sf-20261026-20261026",
       "dataset_hash": "944ef91b3dc17c04c6bb601e0faac94f956d121877de2b9864988cf7c5d5cba4",
       "contract_version": "v1",
-      "publication_status": "republished after T-04-07 reviewer fixes (e44d15d; CI 40375493599 green both modes on 43de7f8); live-verified with the release commit on the live manifest (run 40376659299); integrated",
+      "publication_status": "republished with the artifacts commit (fec6758, code 2a6578e: dated skill-count caveat); CI and live check pending; artifacts P04-ART-01..10 verified locally (185 reconciliation rows equal, 36 artifact tests, 51 checksums)",
       "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40376659299",
-        "verified_at": "2026-10-26T18:20:47Z",
-        "live_code_sha_matched": "43de7f8ce1636c8b301bf70165ced156e3f3a9b3"
+        "run_url": null,
+        "verified_at": null,
+        "previous_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40376659299"
       }
     }
   ]

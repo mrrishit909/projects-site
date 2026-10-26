@@ -344,7 +344,7 @@
       "id": "T-04-05",
       "project": "04-serviceflow",
       "title": "Artifacts P04-ART-*",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-04-07"
       ],

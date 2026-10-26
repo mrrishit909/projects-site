@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T18:20:47Z",
+  "updated_at": "2026-10-26T19:28:15Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -86,7 +86,7 @@
     },
     "04-serviceflow": {
       "slug": "serviceflow",
-      "stage": "built, verified (reviewer findings fixed and regression-tested; CI green on 43de7f8), published and live-verified (run 40376659299), integrated (case study live); artifacts A-033 running",
+      "stage": "built, verified (reviewer findings fixed; CI green on 43de7f8), published (republished fec6758 with the artifacts commit; CI and live check pending), integrated, artifacts verified",
       "built": true,
       "verified": true,
       "published": true,
@@ -95,7 +95,7 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40375493599",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/serviceflow/",
       "blockers": [],
-      "next_task": "A-033 artifacts -> then project 05",
+      "next_task": "confirm CI on 2a6578e and live check; then project 05",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/serviceflow/",
       "verified_note": "Entry journey + reviewer disproof pass; all 18 findings fixed in T-04-07 with tests in Python, SQL and TypeScript"
     },
@@ -180,7 +180,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 04 ServiceFlow: confirm serviceflow-ci.yml on 43de7f8 and live-check on the manifest commit; A-033 artifacts hand-back -> verify -> commit. Then project 05 InvoiceBridge: fixture worker (contracts/tooling at 75aa6bd).",
+    "next_concrete_task": "Confirm serviceflow-ci.yml on 2a6578e and live-check on the manifest commit. Then project 05 InvoiceBridge: fixture worker (PO 10 x $20, receipt 6, invoice 6 -> 120/132 with 10% tax; second invoice quantity-blocked; duplicate import leaves one obligation), then backend, generator, web, publish, integrate, review, artifacts.",
     "acceptance": "see task-queue.json"
   }
 }
