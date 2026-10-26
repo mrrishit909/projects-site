@@ -257,7 +257,7 @@ def validate_batch(raw: dict[str, Any]) -> IngestResult:
             continue                                  # not an ingest entity: a malformed request is ignored here
     rej.sort(key=lambda r: (r.entity, r.id))
 
-    merged_into, merged_records, groups = detect_duplicates(acc["invoices"])
+    merged_into, merged_records, groups, _review = detect_duplicates(acc["invoices"])
     counts = {e: {"accepted": len(acc[e]), "rejected": sum(1 for r in rej if r.entity == e), "merged": 0} for e in ENTITIES}
     counts["invoices"]["accepted"] -= len(merged_into)
     counts["invoices"]["merged"] = len(merged_into)

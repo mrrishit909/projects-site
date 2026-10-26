@@ -1,7 +1,7 @@
 export const short = (s: string, n = 12): string => (s.length > n ? `${s.slice(0, n)}…` : s);
 /** "2026-10-01T02:00:00Z" as "2026-10-01 02:00Z". */
 export const stamp = (iso: string): string => `${iso.slice(0, 10)} ${iso.slice(11, 16)}Z`;
-export const cmp = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
+export { cmp } from "../domain/order";
 /** Share of two integers as a percentage with one decimal, from integer arithmetic (no float). */
 export function pct(num: number, den: number): string {
   if (den === 0) return "no value";

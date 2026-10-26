@@ -3,6 +3,11 @@
 ``derive(pop, cutoff)`` is a pure function of the FACTS in the population (invoices, lines, receipts, approvals,
 export requests, credit notes, exception assignments). Nothing stored as a status is read, so the Python domain, the SQL
 reference and the API's metrics read agree on any population. ``cutoff`` is inclusive: a fact stamped at the cutoff counts.
+
+D-09 (committed outcomes are facts): an invoice with a policy-valid approval (``first_valid``) is COMMITTED. Committed
+invoices keep the received quantity they consume ahead of every uncommitted one (consumption order: committed by commit
+instant, then book order), are never displaced as the canonical copy of a duplicate group, and an invoice named by a valid
+export row stays exported when a receipt is reversed afterwards (the reversal shows as an exception on it).
 """
 from __future__ import annotations
 
@@ -12,11 +17,13 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Any
 
+from .amounts import invoice_amounts
 from .duplicates import detect_duplicates
-from .errors import NOT_MATCHED, NOT_REVIEWABLE, REJECT_AFTER_APPROVAL, ROLE_OR_LIMIT, SELF_APPROVAL
+from .errors import (BEFORE_IMPORT, NOT_MATCHED, NOT_REVIEWABLE, REJECT_AFTER_APPROVAL, ROLE_OR_LIMIT, SELF_APPROVAL,
+                     SELF_DECISION)
 from .match import MatchRun, match_run
 from .money import D0, exact, s2
-from .models import Invoice, Policy, Population
+from .models import Approval, ExportRequest, Invoice, Policy, Population
 from .timeutil import FAR_FUTURE, iso_z
 
 CREDITED = ("approved", "exported", "adjusted")
@@ -61,34 +68,76 @@ class Book:
     status: dict[str, str]
     exceptions: list[dict[str, Any]]
     in_book: list[str] = field(default_factory=list)
+    review: dict[str, str] = field(default_factory=dict)             # byte-twin held for review -> its canonical
+    first_valid: dict[str, Approval] = field(default_factory=dict)   # policy-valid first approval of each committed invoice
+    export_log: list[tuple[ExportRequest, bool]] = field(default_factory=list)    # every request at the cutoff, with its repeat flag
+    export_late: dict[str, datetime] = field(default_factory=dict)   # approved, but a request named it before its approval
 
     @property
     def obligations(self) -> list[str]:
         return [i for i in sorted(self.run.invoices) if self.status[i] in CREDITED]
 
 
-def reject_decisions(pop: Population, cutoff: datetime, merged_into: dict[str, str],
-                     inv_by_id: dict[str, Invoice]) -> tuple[set[str], list[dict[str, str]]]:
-    """Valid reject decisions (C08): the actor's role is allowed by the policy in force, the invoice is a validated,
-    non-merged one and has no earlier approve decision. The first valid reject per invoice wins."""
-    decisions = sorted((a for a in pop.approvals if a.decided_at <= cutoff), key=lambda a: (a.decided_at, a.approval_id))
-    first_approve: dict[str, tuple[datetime, str]] = {}
-    for a in decisions:
-        if a.decision == "approve":
-            first_approve.setdefault(a.invoice_id, (a.decided_at, a.approval_id))
+def policy_verdict(pop: Population, a: Approval, inv: Invoice, total: Decimal) -> str | None:
+    """The rules of an approval that do not depend on the book: timing, separation of duties, the policy at decision time."""
+    if a.actor_id == inv.created_by:
+        return SELF_APPROVAL
+    if not role_may_approve(effective_policy(pop.approval_policies, a.decided_at), a.actor_role, total):
+        return ROLE_OR_LIMIT
+    if a.decided_at < inv.imported_at:
+        return BEFORE_IMPORT
+    return None
+
+
+def first_valid_approvals(pop: Population, cutoff: datetime, inv_by_id: dict[str, Invoice]) -> dict[str, Approval]:
+    """The first policy-valid approve decision of every invoice (decided by the cutoff, invoice imported by then and not
+    failed by C02): the committed invoices. Independent of duplicates, rejections and the match."""
+    out: dict[str, Approval] = {}
+    for a in sorted((a for a in pop.approvals if a.decided_at <= cutoff and a.decision == "approve"),
+                    key=lambda a: (a.decided_at, a.approval_id)):
+        inv = inv_by_id.get(a.invoice_id)
+        if inv is None or inv.valid is False or inv.imported_at > cutoff or a.invoice_id in out:
+            continue
+        if policy_verdict(pop, a, inv, invoice_amounts(inv)[2]) is None:
+            out[a.invoice_id] = a
+    return out
+
+
+def duplicate_groups(pop: Population, cutoff: datetime, inv_by_id: dict[str, Invoice] | None = None):
+    """Duplicate detection over the invoices imported by the cutoff and not failed by C02 (an invalid invoice is never
+    a canonical copy), committed invoices first. Returns ``(merged_into, records, groups, review, first_valid)``."""
+    inv_by_id = inv_by_id or {i.invoice_id: i for i in pop.invoices}
+    first = first_valid_approvals(pop, cutoff, inv_by_id)
+    eligible = [i for i in pop.invoices if i.valid is not False and i.imported_at <= cutoff]
+    merged_into, records, groups, review = detect_duplicates(eligible, {k: (a.decided_at, a.approval_id) for k, a in first.items()})
+    return merged_into, records, groups, review, first
+
+
+def reject_decisions(pop: Population, cutoff: datetime, merged_into: dict[str, str], inv_by_id: dict[str, Invoice],
+                     first_valid: dict[str, Approval], review: dict[str, str] | None = None
+                     ) -> tuple[set[str], list[dict[str, str]]]:
+    """Valid reject decisions (C08): the invoice is a validated, non-merged one, the actor's role is allowed by the policy in
+    force, the creator is not the rejecter, the decision is not before the import and no earlier VALID approval exists
+    (an invalid approval does not block a rejection, D-09). The first valid reject per invoice wins."""
+    review = review or {}
+    decisions = sorted((a for a in pop.approvals if a.decided_at <= cutoff and a.decision == "reject"),
+                       key=lambda a: (a.decided_at, a.approval_id))
     rejected: set[str] = set()
     invalid: list[dict[str, str]] = []
     for a in decisions:
-        if a.decision != "reject":
-            continue
         inv = inv_by_id.get(a.invoice_id)
         pol = effective_policy(pop.approval_policies, a.decided_at)
+        fa = first_valid.get(a.invoice_id)
         code = None
-        if inv is None or inv.invoice_id in merged_into or inv.valid is not True or inv.imported_at > cutoff:
+        if inv is None or inv.invoice_id in merged_into or inv.invoice_id in review or inv.valid is not True or inv.imported_at > cutoff:
             code = NOT_REVIEWABLE
         elif pol is None or a.actor_role not in {pol.reviewer_role, pol.escalation_role}:
             code = ROLE_OR_LIMIT
-        elif a.invoice_id in first_approve and first_approve[a.invoice_id] < (a.decided_at, a.approval_id):
+        elif a.actor_id == inv.created_by:
+            code = SELF_DECISION
+        elif a.decided_at < inv.imported_at:
+            code = BEFORE_IMPORT
+        elif fa is not None and (fa.decided_at, fa.approval_id) < (a.decided_at, a.approval_id):
             code = REJECT_AFTER_APPROVAL
         if code:
             invalid.append({"approval_id": a.approval_id, "reason_code": code})
@@ -97,9 +146,11 @@ def reject_decisions(pop: Population, cutoff: datetime, merged_into: dict[str, s
     return rejected, invalid
 
 
-def candidates(pop: Population, cutoff: datetime, merged_into: dict[str, str], rejected: set[str]) -> list[Invoice]:
-    """The invoices in the book at ``cutoff``: validated, not merged, not rejected, imported by then."""
-    return [i for i in pop.invoices if i.valid is True and i.invoice_id not in merged_into
+def candidates(pop: Population, cutoff: datetime, merged_into: dict[str, str], rejected: set[str],
+               review: dict[str, str] | None = None) -> list[Invoice]:
+    """The invoices in the book at ``cutoff``: validated, not merged, not held for review, not rejected, imported by then."""
+    review = review or {}
+    return [i for i in pop.invoices if i.valid is True and i.invoice_id not in merged_into and i.invoice_id not in review
             and i.invoice_id not in rejected and i.imported_at <= cutoff]
 
 
@@ -107,11 +158,50 @@ def candidates(pop: Population, cutoff: datetime, merged_into: dict[str, str], r
 def derive(pop: Population, cutoff: datetime | None = None) -> Book:
     c = cutoff or FAR_FUTURE
     inv_by_id = {i.invoice_id: i for i in pop.invoices}
-    merged_into, merged_records, groups = detect_duplicates(pop.invoices)
-    rejected, invalid = reject_decisions(pop, c, merged_into, inv_by_id)
-    run = match_run(pop, candidates(pop, c, merged_into, rejected), c)
+    merged_into, merged_records, groups, review, first_valid = duplicate_groups(pop, c, inv_by_id)
+    rejected, invalid = reject_decisions(pop, c, merged_into, inv_by_id, first_valid, review)
+    cands = candidates(pop, c, merged_into, rejected, review)
+    cand_ids = {i.invoice_id for i in cands}
+    committed = {k: (a.decided_at, a.approval_id) for k, a in first_valid.items() if k in cand_ids}
+    run = match_run(pop, cands, c, committed)
+    a1 = {k: first_valid[k] for k in committed}                    # the committed invoices of the book
 
-    # approvals (D-04): matched at the cutoff, separation of duties, the policy in force at decision time
+    # export (D-04, D-09): an idempotent batch, one row per (invoice, batch); a repeated key or batch id returns the prior
+    # batch; a row needs a valid approval at or before its exported_at, otherwise it is invalid and listed
+    reqs = [r for r in pop.export_requests if r.exported_at <= c]
+    seen_keys: set[str] = set()
+    seen_batches: set[str] = set()
+    rows: list[dict[str, Any]] = []
+    exported: dict[str, str] = {}
+    late: dict[str, datetime] = {}
+    log: list[tuple[ExportRequest, bool]] = []
+    batches = repeats = 0
+    for r in reqs:
+        repeat = r.idempotency_key in seen_keys or r.batch_id in seen_batches
+        seen_keys.add(r.idempotency_key)
+        seen_batches.add(r.batch_id)
+        log.append((r, repeat))
+        if repeat:
+            repeats += 1
+            continue
+        batches += 1
+        for iid in sorted(r.invoice_ids):
+            ap = a1.get(iid)
+            if ap is None or iid in exported:
+                continue
+            if ap.decided_at > r.exported_at:
+                late[iid] = ap.decided_at
+                continue
+            i = inv_by_id[iid]
+            amt = s2(run.invoices[iid].total)
+            rows.append({"export_id": f"exp-{r.batch_id}-{iid}", "invoice_id": iid, "batch_id": r.batch_id,
+                         "exported_at": iso_z(r.exported_at), "vendor_id": i.vendor_id,
+                         "invoice_number": i.invoice_number, "invoice_date": i.invoice_date.isoformat(),
+                         "currency": i.currency, "amount": amt, "content_hash": content_hash(i, amt)})
+            exported[iid] = r.batch_id
+
+    # approvals (D-04): timing, matched at the cutoff (unless an export row commits the invoice), separation of duties,
+    # the policy in force at decision time
     approved: dict[str, datetime] = {}
     for a in sorted((a for a in pop.approvals if a.decided_at <= c and a.decision == "approve"),
                     key=lambda a: (a.decided_at, a.approval_id)):
@@ -119,43 +209,20 @@ def derive(pop: Population, cutoff: datetime | None = None) -> Book:
         inv = inv_by_id[a.invoice_id]
         pol = effective_policy(pop.approval_policies, a.decided_at)
         code = None
-        if st is None or not st.matched:
+        if st is None or (not st.matched and a.invoice_id not in exported):
             code = NOT_MATCHED
         elif a.actor_id == inv.created_by:
             code = SELF_APPROVAL
         elif not role_may_approve(pol, a.actor_role, st.total):
             code = ROLE_OR_LIMIT
+        elif a.decided_at < inv.imported_at:
+            code = BEFORE_IMPORT
         if code:
             invalid.append({"approval_id": a.approval_id, "reason_code": code})
         else:
             approved.setdefault(a.invoice_id, a.decided_at)
     when = {a.approval_id: a.decided_at for a in pop.approvals}
     invalid.sort(key=lambda r: (when[r["approval_id"]], r["approval_id"]))
-
-    # export: an idempotent batch, one row per (invoice, batch); a repeated key or batch id returns the prior batch
-    reqs = [r for r in pop.export_requests if r.exported_at <= c]
-    seen_keys: set[str] = set()
-    seen_batches: set[str] = set()
-    rows: list[dict[str, Any]] = []
-    exported: dict[str, str] = {}
-    batches = repeats = 0
-    for r in reqs:
-        repeat = r.idempotency_key in seen_keys or r.batch_id in seen_batches
-        seen_keys.add(r.idempotency_key)
-        seen_batches.add(r.batch_id)
-        if repeat:
-            repeats += 1
-            continue
-        batches += 1
-        for iid in sorted(r.invoice_ids):
-            if iid in approved and iid not in exported:
-                i = inv_by_id[iid]
-                amt = s2(run.invoices[iid].total)
-                rows.append({"export_id": f"exp-{r.batch_id}-{iid}", "invoice_id": iid, "batch_id": r.batch_id,
-                             "exported_at": iso_z(r.exported_at), "vendor_id": i.vendor_id,
-                             "invoice_number": i.invoice_number, "invoice_date": i.invoice_date.isoformat(),
-                             "currency": i.currency, "amount": amt, "content_hash": content_hash(i, amt)})
-                exported[iid] = r.batch_id
 
     # credit notes: once per credit_id, only against an approved (or exported) invoice, no cash movement
     credits: dict[str, Decimal] = {}
@@ -167,6 +234,8 @@ def derive(pop: Population, cutoff: datetime | None = None) -> Book:
     for iid, i in inv_by_id.items():
         if iid in merged_into:
             status[iid] = "merged"
+        elif iid in review:
+            status[iid] = "needs_review"
         elif iid in rejected:
             status[iid] = "rejected"
         elif i.valid is False:
@@ -196,4 +265,4 @@ def derive(pop: Population, cutoff: datetime | None = None) -> Book:
                         "status": "open" if o is None else "assigned"})
     return Book(c, inv_by_id, merged_into, merged_records, groups, rejected, run, approved, invalid, rows,
                 {"requests_received": len(reqs), "batches_created": batches, "repeat_requests_returned_prior": repeats},
-                exported, credits, status, exc, sorted(run.invoices))
+                exported, credits, status, exc, sorted(run.invoices), review, first_valid, log, late)

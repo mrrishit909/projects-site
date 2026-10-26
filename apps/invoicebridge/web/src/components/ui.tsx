@@ -14,6 +14,7 @@ const KIND: Record<string, string> = {
   matched: "ok", approved: "ok", exported: "ok", adjusted: "ok", COUNTED: "ok", new: "plain", assigned: "plain",
   exception: "bad", open: "bad", rejected: "bad", invalid: "bad", QUANTITY_BLOCKED: "bad", PRICE_VARIANCE: "bad", NO_PO_LINE: "bad", CURRENCY_MISMATCH: "bad", ROUNDING_EXCEPTION: "bad",
   SELF_APPROVAL: "bad", ROLE_OR_LIMIT: "bad", NOT_MATCHED: "bad", NOT_REVIEWABLE: "bad", REJECT_AFTER_APPROVAL: "bad",
+  BEFORE_IMPORT: "bad", SELF_DECISION: "bad", EXPORT_BEFORE_APPROVAL: "bad", APPROVED_NOT_EXPORTED: "warn", needs_review: "warn", BYTES_FIELDS_CONFLICT: "warn",
   merged: "warn", DUPLICATE_IDENTITY: "warn", DUPLICATE_SOURCE_BYTES: "warn", SUPERSEDED: "warn", received: "plain",
 };
 /** A stamp-like status label; the colour is never the only signal (the word is always printed). */

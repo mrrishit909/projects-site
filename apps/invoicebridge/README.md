@@ -1,13 +1,14 @@
 # InvoiceBridge — backend (Mode A: Python domain + PostgreSQL + FastAPI)
 
-Contract v1 (`docs/contracts.md`, D-01..D-05), routes in `docs/api-contract.md`. The domain is standard library only (Decimal and Fraction, **no float
+Contract v1 (`docs/contracts.md`, D-01..D-09; D-09 is the review A-038 fix), routes in `docs/api-contract.md`, evidence in `docs/uat-evidence.md`. The domain is standard library only (Decimal and Fraction, **no float
 anywhere**); the API adds FastAPI, pydantic and psycopg. Nothing here imports another lab app. The Mode B web mirror (`web/`) is separate.
 
 ```
 domain/invoicebridge/  contract, errors, timeutil, money, models, amounts, duplicates, ingest, match, book, metrics, pipeline
-data/                  migrate.py, seed.py, migrations/0001_schema.sql, 0002_constraints.sql, sql/reference_metrics.sql   (see data/README.md)
-api/                   app, db, schemas, commands, reads, errors     (prefix /api/v1/invoicebridge)
-tests/                 golden, variants, rules, migrations, SQL reference, API commands and reads, adversarial; reference_check.py (stdlib only)
+data/                  migrate.py, seed.py, migrations/0001_schema.sql, 0002_constraints.sql, 0003_review_status.sql, sql/reference_metrics.sql   (see data/README.md)
+api/                   app, clock, db, schemas, commands, reads, errors     (prefix /api/v1/invoicebridge)
+tests/                 golden, variants, rules, migrations, SQL reference, API commands and reads, adversarial, review findings (review_cases.json,
+                       shared by Python, SQL and TypeScript); reference_check.py (stdlib only)
 ```
 
 ## Run
@@ -32,6 +33,9 @@ The CI job (`.github/workflows/invoicebridge-ci.yml`, Mode A) runs exactly the f
   them (`PipelineResult.snapshot_cutoffs`, API `data.snapshot_cutoffs`). `run_pipeline(inputs)` returns `PipelineResult(ingest, population, metrics,
   snapshot_cutoffs, book, warnings)` and `.golden()` is the shape of `expected.json` (ingest counts, rejected and merged records, per-invoice
   documents, match results, metrics).
+* **Committed outcomes (D-09).** An invoice with a policy-valid approval is committed: it consumes received quantity before every uncommitted invoice, is never displaced
+  as the canonical copy of a duplicate group, and an invoice named by a valid export row stays exported when a receipt is reversed afterwards (the reversal is an
+  exception on it). Duplicates are detected at the cutoff; a byte-twin with other extracted fields is `needs_review`, not merged.
 * **Ingest** (`ingest.py`): D-05 codes UNKNOWN_PO_LINE, UNKNOWN_VENDOR, UNKNOWN_PO, NON_POSITIVE_QUANTITY, DEPENDENT_REJECTED. An invoice is atomic: one bad
   line, an unknown vendor or a malformed header rejects the header, every sibling line and any approval or credit note naming it.
 * **Money**: ROUND_HALF_UP to 2 dp, tax once per invoice on the unrounded subtotal, total = subtotal + tax + freight - discount; quantities 4 dp, unit
@@ -70,20 +74,22 @@ audit_events, dataset_versions; filters on a whitelist, `from`/`to` half-open, o
    lines), `DUPLICATE_ID`, `UNKNOWN_INVOICE` (an orphan line, credit or approval), `NON_POSITIVE_AMOUNT`, `CREDIT_EXCEEDS_INVOICE`.
    Precision: quantities 4 dp, unit prices and rates 6 dp, money 2 dp; every amount below 10^12; `tax_rate` in [0,1]; freight and discount >= 0.
 4. Duplicates: the SAME SOURCE BYTES (`source_sha256`) are checked before the identity (vendor, normalised number, invoice date, computed total); the
-   merge reason is `DUPLICATE_SOURCE_BYTES` / `DUPLICATE_IDENTITY`; the earliest `(imported_at, invoice_id)` is canonical; a duplicate of a duplicate merges
-   into the canonical; the group key of a bytes merge is `sha256:<hex>`. An invoice rejected by decision still anchors the identity.
+   merge reason is `DUPLICATE_SOURCE_BYTES` / `DUPLICATE_IDENTITY`; the canonical copy is a committed (approved) one, else the earliest `(imported_at, invoice_id)`; a duplicate of a
+   duplicate merges into the canonical; the group key of a bytes merge is `sha256:<hex>`. An invoice rejected by decision still anchors the identity; an invalid
+   invoice never does. Same bytes with other extracted fields are held for review (`needs_review`, `BYTES_FIELDS_CONFLICT`), not merged (D-09).
 5. Per-line rounding: an input line may carry `line_amount` (the extracted line amount); |line_amount - round(quantity x unit_price)| above
    `rounding_per_line` is a `ROUNDING_EXCEPTION`, up to it is tolerated and disclosed. Per invoice: |declared_total - computed total| against
    `rounding_per_invoice`. Tolerated differences are listed in `disclosures`.
-6. Order of reasons per line: NO_PO_LINE, CURRENCY_MISMATCH (invoice currency against the PO currency, no rate is ever applied), QUANTITY_BLOCKED, then
-   PRICE_VARIANCE. A line of the same PO line earlier in the same invoice consumes first; an invoice with any exception consumes nothing.
+6. Order of reasons per line: NO_PO_LINE (no such line, or its purchase order belongs to another vendor), CURRENCY_MISMATCH (invoice currency against the PO
+   currency, no rate is ever applied), QUANTITY_BLOCKED, then PRICE_VARIANCE. A line of the same PO line earlier in the same invoice consumes first; an invoice with any exception consumes nothing.
 7. Rejection (C08) is a decision row (`approvals.decision = 'reject'`, reason required). A valid rejection (role allowed by the policy in force, invoice
-   validated, no earlier approve decision) removes the invoice from the book and frees its quantity; invalid decisions are listed in
-   `approvals.invalid_records` with NOT_REVIEWABLE, ROLE_OR_LIMIT or REJECT_AFTER_APPROVAL. Only the first valid approval of an invoice counts.
+   validated, decider is not the creator (403 `SELF_DECISION`), no earlier VALID approval) removes the invoice from the book and frees its quantity; invalid decisions are listed in
+   `approvals.invalid_records` with NOT_REVIEWABLE, ROLE_OR_LIMIT, SELF_DECISION, BEFORE_IMPORT or REJECT_AFTER_APPROVAL. Only the first valid approval of an invoice counts.
 8. Policy: the version in force at `decided_at` is the latest `effective_from` (then version, then id); an optional `escalation_role` may approve any
    amount; no policy in force means no approval. The seeded test policy names `admin` as the escalation role.
 9. Status vocabulary adds a precedence: adjusted > exported > approved. Obligations are approved, exported and adjusted invoices. Export reconciliation uses
-   invoice totals (gross); credits only reduce `approved_payable`. An adjusted invoice may still be exported (at its total).
+   invoice totals (gross); credits only reduce `approved_payable`; an approved invoice that was not exported is an exclusion (APPROVED_NOT_EXPORTED, or
+   EXPORT_BEFORE_APPROVAL), so the difference is always explained. An adjusted invoice may still be exported (at its total).
 10. Export: `batch_id` names one set of invoices. A repeated idempotency key replays the stored batch; another key with the same batch id and the same
     invoices returns the prior batch (`status: returned_prior`); another set of invoices is 409 `BATCH_CONFLICT`; an invoice already exported in another
     batch is 409. `exported_at` is excluded from the payload hash (a retry has another clock). Every request that reaches the handler or replays is recorded
@@ -100,7 +106,8 @@ audit_events, dataset_versions; filters on a whitelist, `from`/`to` half-open, o
     stored as a `merged` invoice (200, `duplicate_of`); the same invoice id and bytes again is a 200 `duplicate`; same id with other bytes is 409
     `DUPLICATE_ID`. C02 returns 200 with status `valid` or `invalid` and the failed rules (VENDOR_INACTIVE, NO_LINES, NEGATIVE_TOTAL,
     INVOICE_DATE_IN_FUTURE). C03 merges every non-canonical member of the group (refusing an approved or exported copy with 409) and may be run on an
-    already merged invoice. C04 may be re-run from valid, matched or exception. C07 re-checks the match (409 `STALE_MATCH` when a receipt was reversed).
+    already merged invoice. C04 may be re-run from valid, matched or exception. C07, C09 and C10 re-check the match (409 `STALE_MATCH` when a receipt was reversed; 409 `DUPLICATE_PENDING` for a merged copy). The server stamps
+    every decision (`decided_at` is not an input) and clamps a later `imported_at` to its clock.
 16. Error codes: 403 `SELF_APPROVAL` carries its own top-level code, other 403s are `FORBIDDEN` with the `rule_id` in `details`; refused approvals are
     audited as `approve-invoice-refused` in their own transaction.
 17. Receipts, vendors, purchase orders and policies are reference data loaded by `data/seed.py`; there is no command for them. A receipt is reversed by

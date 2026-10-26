@@ -91,7 +91,7 @@ export function InvoiceDesk({ v, result }: { v: InvoiceView; result: PipelineRes
         </section>
         <section className="decision" aria-label="Decision: the derived result">
           <h3><span className="tag tag--decision">Decision</span> derived, not stored</h3>
-          <h4>Three-way match per line <Def term="how a line is matched">Available = net received (receipts minus reversals) minus quantity already consumed by earlier matched invoices, in (invoice date, imported at, invoice id) order. A line matches when invoiced quantity does not exceed available and the unit price is within tolerance ({tol.price_per_unit}). Reason order: NO_PO_LINE, CURRENCY_MISMATCH, QUANTITY_BLOCKED, PRICE_VARIANCE.</Def></h4>
+          <h4>Three-way match per line <Def term="how a line is matched">Available = net received (receipts minus reversals) minus quantity already consumed by invoices ahead of this one in the consumption order (approved invoices first, by approval instant, then (invoice date, imported at, invoice id) order). A line matches when invoiced quantity does not exceed available and the unit price is within tolerance ({tol.price_per_unit}). Reason order: NO_PO_LINE (no such line, or another vendor's), CURRENCY_MISMATCH, QUANTITY_BLOCKED, PRICE_VARIANCE.</Def></h4>
           <Scroll label="Match per line">
             <table className="grid" data-testid="match-lines">
               <caption className="sr">Match result per line of {v.invoice_id}</caption>

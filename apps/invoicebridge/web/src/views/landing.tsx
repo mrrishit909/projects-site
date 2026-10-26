@@ -35,11 +35,13 @@ export function Landing() {
                 {" "}Every figure below was computed in your browser by a TypeScript mirror of the Python domain, over {Object.values(snapshot.manifest.row_counts).reduce((a, b) => a + b, 0).toLocaleString("en-US")} rows, with integer arithmetic only.
               </p>
               <dl className="glance" data-testid="glance">
-                <div data-figure="glance.matched"><dt>Matched or later</dt><dd>{m.matched.invoice_count.toLocaleString("en-US")}<small>total {m.matched.total}</small></dd></div>
-                <div data-figure="glance.obligations"><dt>Obligations</dt><dd>{m.obligations.count.toLocaleString("en-US")}<small>total {m.obligations.total}</small></dd></div>
+                <div data-figure="glance.matched"><dt>Matched or later</dt><dd>{m.matched.invoice_count.toLocaleString("en-US")}<small>{m.matched.by_currency ? <>{Object.entries(m.matched.by_currency).map(([c, v]) => `${c} ${v.total}`).join(" · ")} <span className="muted">(per currency, never converted; the sum {m.matched.total} is not a money figure)</span></> : <>total {m.matched.total}</>}</small></dd></div>
+                <div data-figure="glance.obligations"><dt>Obligations</dt><dd>{m.obligations.count.toLocaleString("en-US")}<small>{m.obligations.by_currency ? <>{Object.entries(m.obligations.by_currency).map(([c, v]) => `${c} ${v.total}`).join(" · ")} <span className="muted">(per currency, never converted)</span></> : <>total {m.obligations.total}</>}</small></dd></div>
                 <div data-figure="glance.exceptions"><dt>Open exceptions</dt><dd>{m.exceptions.open_count}<small>{m.exceptions.unowned_count} unowned</small></dd></div>
-                <div data-figure="glance.stp"><dt>Straight-through</dt><dd>{m.rates.straight_through_rate ?? "no value"}<small>exception rate {m.rates.exception_rate ?? "no value"}</small></dd></div>
-                <div data-figure="glance.payable"><dt>Approved payable</dt><dd>{m.payable.approved_payable}<small>after {m.payable.credit_total} credits</small></dd></div>
+                <div data-figure="glance.stp"><dt>Not blocked at the cutoff <span className="muted small">(the straight-through rate)</span></dt><dd>{m.rates.straight_through_rate ?? "no value"}<small>exception rate {m.rates.exception_rate ?? "no value"}{m.rates.straight_through_never_excepted_rate ? <> · never excepted in the stored history {m.rates.straight_through_never_excepted_rate}</> : null}</small></dd></div>
+                <div data-figure="glance.payable"><dt>Approved payable</dt>{m.payable.by_currency
+                  ? <dd>{Object.entries(m.payable.by_currency).map(([c, v]) => <span key={c} className="mono" style={{ display: "block" }}>{c} {v.approved_payable}</span>)}<small>after credits, per currency: never converted, never summed ({m.payable.approved_payable} would add unlike currencies)</small></dd>
+                  : <dd>{m.payable.approved_payable}<small>after {m.payable.credit_total} credits</small></dd>}</div>
               </dl>
             </section>
             <section className="panel" aria-labelledby="sheet-h">

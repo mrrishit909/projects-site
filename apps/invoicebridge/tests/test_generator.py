@@ -643,7 +643,7 @@ def loaded(inputs, built):
         migrate.reset(c)
         migrate.apply_migrations(c)
     with psycopg.connect(url, row_factory=dict_row, autocommit=True) as c:
-        out = seed.seed(c, inputs)
+        out = seed.seed(c, inputs, dataset_version=built["manifest"]["dataset_version"])      # the version the replay events carry
         yield c, out
 
 
@@ -732,11 +732,11 @@ def test_replay_events_behave_as_recorded(loaded, inputs, built):
     from api.app import PREFIX, create_app
     conn, _ = loaded
     version = lambda: conn.execute("SELECT dataset_version FROM dataset_versions ORDER BY created_at DESC, dataset_version DESC LIMIT 1").fetchone()["dataset_version"]
+    assert version() == built["manifest"]["dataset_version"] == VERSION       # D-09: the seed names the dataset as published
 
     def post(client, step):
-        # the replay carries the dataset_version a client has just read from the API, not the generator's label
-        body = {**step["input"], "dataset_version": version()}
-        return client.post(f"{PREFIX}/commands/{step['command']}", json=body, headers=step["headers"])
+        # the events replay AS PUBLISHED: the dataset_version they carry is the one the seeded database names
+        return client.post(f"{PREFIX}/commands/{step['command']}", json=step["input"], headers=step["headers"])
 
     def n(sql, *args):
         return conn.execute(sql, args).fetchone()["n"]
@@ -750,7 +750,7 @@ def test_replay_events_behave_as_recorded(loaded, inputs, built):
                 assert r.status_code == 200, (eid, r.text)
             if k > 1:
                 tail = _race(k, lambda i, c: c.post(f"{PREFIX}/commands/{steps[-k + i]['command']}", headers=steps[-k + i]["headers"],
-                                                    json={**steps[-k + i]["input"], "dataset_version": version()}))
+                                                    json=steps[-k + i]["input"]))
                 assert sorted(r.status_code for r in tail) == ev["expected"]["concurrent_statuses"], (eid, [r.text for r in tail])
                 last = next(r for r in tail if r.status_code != 200)
             else:

@@ -521,7 +521,7 @@
           "returned_prior"
         ]
       },
-      "expected_handling": "the retry (same key, later exported_at) returns the stored batch (Idempotent-Replay), is counted as returned_prior and adds no row",
+      "expected_handling": "the retry (same key, the server stamps its own clock, which the payload hash excludes) returns the stored batch (Idempotent-Replay), is counted as returned_prior and adds no row",
       "expected_reason": "returned_prior",
       "expected_status": 200,
       "injection": "INJ-11",
@@ -617,7 +617,6 @@
             "idempotency_key": "ev-06e",
             "input": {
               "batch_id": "bat-ev06",
-              "exported_at": "2026-10-02T16:00:00Z",
               "invoice_ids": [
                 "inv-ev06a"
               ]
@@ -636,7 +635,6 @@
             "idempotency_key": "ev-06e",
             "input": {
               "batch_id": "bat-ev06",
-              "exported_at": "2026-10-02T16:00:40Z",
               "invoice_ids": [
                 "inv-ev06a"
               ]
@@ -749,7 +747,6 @@
             "idempotency_key": "ev-07e",
             "input": {
               "batch_id": "bat-ev07",
-              "exported_at": "2026-10-02T16:00:00Z",
               "invoice_ids": [
                 "inv-ev07a"
               ],

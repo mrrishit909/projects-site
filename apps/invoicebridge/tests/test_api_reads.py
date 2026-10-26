@@ -95,7 +95,7 @@ def test_the_invoice_audit_and_lineage_gather_everything_about_one_invoice(desk)
     desk.ready("inv-1")
     desk.approve("inv-1")
     desk.post("export-payable", {"batch_id": "b", "invoice_ids": ["inv-1"]}, REVIEWER)
-    desk.imp("inv-1b", [("lb", "pol-1", "6", "20.00")], source_sha256=sha("bytes-inv-1"))             # the same bytes under another id
+    desk.imp("inv-1b", [("lb", "pol-1", "6", "20.00")], source_sha256=sha("bytes-inv-1"), invoice_number="INV-1")             # the same bytes under another id
     for path in ("audit", "lineage"):
         body = get(desk.client, f"/data/invoices/inv-1/{path}").json()["data"]
         assert body["invoice"]["status"] == "exported" and [l["invoice_line_id"] for l in body["lines"]] == ["inv-1-1"]

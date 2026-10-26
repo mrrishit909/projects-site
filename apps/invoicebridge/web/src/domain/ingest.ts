@@ -8,6 +8,7 @@ import {
 } from "./contract";
 import { detectDuplicates, type MergedRecord } from "./duplicates";
 import { DomainError, MALFORMED_RECORD } from "./num";
+import { cmp } from "./order";
 import { parseApproval, parseCredit, parseExportRequest, parseInvoice, parseLine, parsePo, parsePoLine, parsePolicy, parseReceipt, parseTolerances, parseVendor } from "./models";
 import type { Approval, CreditNote, ExportRequest, Invoice, InvoiceLine, PipelineInputs, Policy, PoLine, Population, PurchaseOrder, Receipt, Row, Tolerances, Vendor } from "./types";
 
@@ -25,7 +26,6 @@ export interface IngestResult {
 
 const isRow = (v: unknown): v is Row => typeof v === "object" && v !== null && !Array.isArray(v);
 const rid = (row: unknown, key: string): string => (isRow(row) && typeof row[key] === "string" ? (row[key] as string) : "");
-const cmp = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
 const codeOf = (e: unknown): string => (e instanceof DomainError ? e.code : MALFORMED_RECORD);
 
 export function validateBatch(raw: PipelineInputs): IngestResult {

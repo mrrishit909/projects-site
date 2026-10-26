@@ -17,7 +17,8 @@ from pydantic_core import PydanticCustomError
 _TOKEN = re.compile(r"^[A-Za-z0-9._:\-]{1,128}$")
 
 Id = Annotated[StrictStr, Field(min_length=1, max_length=128)]
-Decimal_ = Annotated[StrictStr, Field(min_length=1, max_length=40, pattern=r"^-?\d+(\.\d+)?$")]
+#: ASCII digits only (D-09): in this regex engine ``\d`` would also accept non-ASCII digits.
+Decimal_ = Annotated[StrictStr, Field(min_length=1, max_length=40, pattern=r"^-?[0-9]+(\.[0-9]+)?$")]
 
 
 class Strict(BaseModel):
@@ -62,7 +63,7 @@ class ImportInvoiceInput(Strict):
     invoice_id: Id
     vendor_id: Id
     invoice_number: Id
-    invoice_date: StrictStr = Field(pattern=r"^\d{4}-\d{2}-\d{2}$")
+    invoice_date: StrictStr = Field(pattern=r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
     currency: StrictStr = Field(pattern=r"^[A-Z]{3}$")
     tax_rate: Decimal_
     freight: Decimal_ = "0.00"
@@ -108,19 +109,14 @@ class AssignExceptionInput(Strict):
 
 
 class ApproveInput(InvoiceRef):
+    """C07. There is no ``decided_at``: the server stamps the decision (D-09, R5-04)."""
     approval_id: Id | None = None
-    decided_at: StrictStr | None = None
-
-    @field_validator("decided_at")
-    @classmethod
-    def _at(cls, v: str | None) -> str | None:
-        return _instant(v)
 
 
 class RejectInput(InvoiceRef):
+    """C08. There is no ``decided_at``: the server stamps the decision (D-09, R5-04)."""
     reason: StrictStr = Field(max_length=500)
     approval_id: Id | None = None
-    decided_at: StrictStr | None = None
 
     @field_validator("reason")
     @classmethod
@@ -128,11 +124,6 @@ class RejectInput(InvoiceRef):
         if not v.strip():
             raise PydanticCustomError("REASON_REQUIRED", "a rejection needs a reason")
         return v
-
-    @field_validator("decided_at")
-    @classmethod
-    def _at(cls, v: str | None) -> str | None:
-        return _instant(v)
 
 
 class ExportInput(Strict):

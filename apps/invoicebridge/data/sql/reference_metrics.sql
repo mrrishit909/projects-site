@@ -7,6 +7,9 @@
 -- (imported_at, invoice_id) order), reject decisions, the three-way match with cumulative consumption (a recursive CTE
 -- over the invoices in (invoice_date, imported_at, invoice_id) order, one chain per cutoff), approvals with separation
 -- of duties and the policy in force, idempotent export, credits, open quantities and the snapshots.
+-- D-09: an invoice with a policy-valid approval is COMMITTED: it is never displaced as the canonical copy of a duplicate group
+-- and it consumes received quantity before every uncommitted invoice (consumption order: committed by commit instant, then
+-- book order); duplicates are detected per cutoff; an invoice named by a valid export row stays exported.
 --
 -- Parameters: %(as_of)s timestamptz (inclusive cutoff of every fact), %(cutoffs)s timestamptz[] (snapshot cutoffs).
 -- Returns ONE row with a jsonb column per metric key; strings carry the exact scale (money 2 dp, quantities 4, rates 6).
@@ -42,29 +45,6 @@ inv AS (
                || '|' || (round(raw, 2) + round(raw * tax_rate, 2) + freight - invoice_discount)::text AS ident
     FROM inv_raw
 ),
--- ---- duplicate merge: greedy chain over the invoices in import order ------------------------------------------
-dord AS (
-    SELECT invoice_id, source_sha256 AS sha, ident AS key,
-           row_number() OVER (ORDER BY imported_at, invoice_id COLLATE "C") AS rn
-    FROM inv
-),
-dchain (rn, invoice_id, canon, reason, sha_map, key_map) AS (
-    SELECT 0::bigint, NULL::text, NULL::text, NULL::text, '{}'::jsonb, '{}'::jsonb
-    UNION ALL
-    SELECT o.rn, o.invoice_id, k.canon, k.reason,
-           jsonb_build_object(o.sha, k.canon) || d.sha_map,
-           jsonb_build_object(o.key, k.canon) || d.key_map
-    FROM dchain d
-    JOIN dord o ON o.rn = d.rn + 1
-    CROSS JOIN LATERAL (
-        SELECT coalesce(d.sha_map ->> o.sha, d.key_map ->> o.key, o.invoice_id) AS canon,
-               CASE WHEN d.sha_map ? o.sha THEN 'DUPLICATE_SOURCE_BYTES'
-                    WHEN d.key_map ? o.key THEN 'DUPLICATE_IDENTITY' END AS reason
-    ) k
-),
-merged AS (
-    SELECT invoice_id, canon AS merged_into, reason FROM dchain WHERE rn > 0 AND reason IS NOT NULL
-),
 -- ---- policies and decisions ---------------------------------------------------------------------------------
 dec AS (
     SELECT a.approval_id, a.invoice_id, a.actor_id, a.actor_role, a.decision, a.decided_at,
@@ -75,33 +55,79 @@ dec AS (
         ORDER BY ap.effective_from DESC, ap.version_number DESC, ap.policy_id COLLATE "C" DESC LIMIT 1
     ) p ON TRUE
 ),
-first_approve AS (
-    SELECT DISTINCT ON (invoice_id) invoice_id, decided_at, approval_id
-    FROM approvals WHERE decision = 'approve'
-    ORDER BY invoice_id, decided_at, approval_id COLLATE "C"
+-- the first POLICY-VALID approve decision of each invoice per cutoff (separation of duties, role and limit at decision time,
+-- not before the import): the committed invoices. Independent of duplicates, rejections and the match.
+pol_ok AS (
+    SELECT DISTINCT ON (cu.c, d.invoice_id) cu.c, d.invoice_id, d.approval_id, d.decided_at
+    FROM cuts cu
+    JOIN dec d ON d.decision = 'approve' AND d.decided_at <= cu.c
+    JOIN inv i ON i.invoice_id = d.invoice_id AND i.validity IS DISTINCT FROM FALSE AND i.imported_at <= cu.c
+    WHERE d.actor_id <> i.created_by
+      AND d.has_policy
+      AND (coalesce(d.actor_role = d.escalation_role, FALSE) OR (d.actor_role = d.reviewer_role AND i.total <= d.amount_limit))
+      AND d.decided_at >= i.imported_at
+    ORDER BY cu.c, d.invoice_id, d.decided_at, d.approval_id COLLATE "C"
 ),
--- reject decisions per cutoff: valid ones take the invoice out of the book at that cutoff
+-- ---- duplicate merge per cutoff: greedy chain, committed invoices first, then import order --------------------------
+dord AS (
+    SELECT cu.c, i.invoice_id, i.source_sha256 AS sha, i.ident AS key,
+           row_number() OVER (PARTITION BY cu.c ORDER BY (po.invoice_id IS NULL), po.decided_at, po.approval_id COLLATE "C",
+                              i.imported_at, i.invoice_id COLLATE "C") AS rn
+    FROM cuts cu
+    JOIN inv i ON i.validity IS DISTINCT FROM FALSE AND i.imported_at <= cu.c
+    LEFT JOIN pol_ok po ON po.c = cu.c AND po.invoice_id = i.invoice_id
+),
+dchain (c, rn, invoice_id, canon, reason, conflict, sha_map, key_map) AS (
+    SELECT c, 0::bigint, NULL::text, NULL::text, NULL::text, FALSE, '{}'::jsonb, '{}'::jsonb FROM cuts
+    UNION ALL
+    SELECT o.c, o.rn, o.invoice_id, k.canon, k.reason, k.conflict,
+           CASE WHEN k.conflict THEN d.sha_map ELSE jsonb_build_object(o.sha, k.canon) || d.sha_map END,
+           CASE WHEN k.conflict THEN d.key_map ELSE jsonb_build_object(o.key, k.canon) || d.key_map END
+    FROM dchain d
+    JOIN dord o ON o.c = d.c AND o.rn = d.rn + 1
+    CROSS JOIN LATERAL (
+        SELECT coalesce(d.sha_map ->> o.sha, d.key_map ->> o.key, o.invoice_id) AS canon,
+               CASE WHEN d.sha_map ? o.sha THEN 'DUPLICATE_SOURCE_BYTES'
+                    WHEN d.key_map ? o.key THEN 'DUPLICATE_IDENTITY' END AS reason,
+               -- same bytes, other extracted fields: held for review, merged into nothing, seeds neither map
+               (d.sha_map ? o.sha AND (SELECT x.ident FROM inv x WHERE x.invoice_id = d.sha_map ->> o.sha) IS DISTINCT FROM o.key) AS conflict
+    ) k
+),
+merged AS (
+    SELECT c, invoice_id, canon AS merged_into, reason FROM dchain WHERE rn > 0 AND reason IS NOT NULL AND NOT conflict
+),
+review AS (
+    SELECT c, invoice_id, canon FROM dchain WHERE rn > 0 AND conflict
+),
 rej AS (
     SELECT cu.c, cu.main, d.approval_id, d.invoice_id, d.decided_at,
-           CASE WHEN i.invoice_id IS NULL OR m.invoice_id IS NOT NULL OR i.validity IS NOT TRUE OR i.imported_at > cu.c
-                     THEN 'NOT_REVIEWABLE'
+           CASE WHEN i.invoice_id IS NULL OR m.invoice_id IS NOT NULL OR rv.invoice_id IS NOT NULL OR i.validity IS NOT TRUE
+                     OR i.imported_at > cu.c THEN 'NOT_REVIEWABLE'
                 WHEN NOT d.has_policy OR NOT (d.actor_role = d.reviewer_role OR coalesce(d.actor_role = d.escalation_role, FALSE))
                      THEN 'ROLE_OR_LIMIT'
+                WHEN d.actor_id = i.created_by THEN 'SELF_DECISION'
+                WHEN d.decided_at < i.imported_at THEN 'BEFORE_IMPORT'
                 WHEN fa.invoice_id IS NOT NULL AND (fa.decided_at, fa.approval_id COLLATE "C") < (d.decided_at, d.approval_id COLLATE "C")
                      THEN 'REJECT_AFTER_APPROVAL' END AS code
     FROM cuts cu
     JOIN dec d ON d.decision = 'reject' AND d.decided_at <= cu.c
     LEFT JOIN inv i ON i.invoice_id = d.invoice_id
-    LEFT JOIN merged m ON m.invoice_id = d.invoice_id
-    LEFT JOIN first_approve fa ON fa.invoice_id = d.invoice_id
+    LEFT JOIN merged m ON m.c = cu.c AND m.invoice_id = d.invoice_id
+    LEFT JOIN review rv ON rv.c = cu.c AND rv.invoice_id = d.invoice_id
+    LEFT JOIN pol_ok fa ON fa.c = cu.c AND fa.invoice_id = d.invoice_id
 ),
+-- reject decisions per cutoff: valid ones take the invoice out of the book at that cutoff
 rejected AS (SELECT DISTINCT c, invoice_id FROM rej WHERE code IS NULL),
 -- ---- the book per cutoff -------------------------------------------------------------------------------------
 cand AS (
-    SELECT cu.c, i.invoice_id, i.currency, i.total, i.declared_total, i.sub, i.tax, i.created_by,
-           row_number() OVER (PARTITION BY cu.c ORDER BY i.invoice_date, i.imported_at, i.invoice_id COLLATE "C") AS rn
-    FROM cuts cu JOIN inv i ON i.validity IS TRUE AND i.imported_at <= cu.c
-    WHERE NOT EXISTS (SELECT 1 FROM merged m WHERE m.invoice_id = i.invoice_id)
+    SELECT cu.c, i.invoice_id, i.currency, i.vendor_id, i.total, i.declared_total, i.sub, i.tax, i.created_by,
+           row_number() OVER (PARTITION BY cu.c ORDER BY (po.invoice_id IS NULL), po.decided_at, po.approval_id COLLATE "C",
+                              i.invoice_date, i.imported_at, i.invoice_id COLLATE "C") AS rn
+    FROM cuts cu
+    JOIN inv i ON i.validity IS TRUE AND i.imported_at <= cu.c
+    LEFT JOIN pol_ok po ON po.c = cu.c AND po.invoice_id = i.invoice_id
+    WHERE NOT EXISTS (SELECT 1 FROM merged m WHERE m.c = cu.c AND m.invoice_id = i.invoice_id)
+      AND NOT EXISTS (SELECT 1 FROM review v WHERE v.c = cu.c AND v.invoice_id = i.invoice_id)
       AND NOT EXISTS (SELECT 1 FROM rejected r WHERE r.c = cu.c AND r.invoice_id = i.invoice_id)
 ),
 pl AS (
@@ -122,10 +148,10 @@ mchain (c, rn, invoice_id, matched, state, reasons, line_res) AS (
     CROSS JOIN LATERAL (
         WITH ln AS (
             SELECT l.invoice_line_id, l.po_line_id, l.quantity AS q, l.unit_price AS pr, l.line_amount,
-                   p.po_line_id IS NOT NULL AS has_po, p.currency AS po_cur, p.unit_price AS po_price,
-                   (p.po_line_id IS NOT NULL AND p.currency = i.currency) AS comparable,
+                   (p.po_line_id IS NOT NULL AND p.vendor_id = i.vendor_id) AS has_po, p.currency AS po_cur, p.unit_price AS po_price,
+                   (p.po_line_id IS NOT NULL AND p.vendor_id = i.vendor_id AND p.currency = i.currency) AS comparable,
                    coalesce(p.net, 0) - coalesce((m.state ->> l.po_line_id)::numeric, 0)
-                     - coalesce(sum(l.quantity) FILTER (WHERE p.po_line_id IS NOT NULL AND p.currency = i.currency)
+                     - coalesce(sum(l.quantity) FILTER (WHERE p.po_line_id IS NOT NULL AND p.vendor_id = i.vendor_id AND p.currency = i.currency)
                                 OVER (PARTITION BY l.po_line_id ORDER BY l.invoice_line_id COLLATE "C"
                                       ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING), 0) AS avail
             FROM invoice_lines l
@@ -161,7 +187,7 @@ mchain (c, rn, invoice_id, matched, state, reasons, line_res) AS (
     ) r
 ),
 run_inv AS (
-    SELECT mc.c, mc.invoice_id, mc.matched, mc.reasons, ca.total, ca.sub, ca.tax, ca.created_by, ca.rn
+    SELECT mc.c, mc.invoice_id, mc.matched, mc.reasons, ca.total, ca.sub, ca.tax, ca.created_by, ca.currency, ca.rn
     FROM mchain mc JOIN cand ca ON ca.c = mc.c AND ca.invoice_id = mc.invoice_id
     WHERE mc.rn > 0
 ),
@@ -212,15 +238,35 @@ qty_json AS (
         'invoiced_not_received_value', round(blk_v, 2)::text) AS j
     FROM qty
 ),
--- ---- approvals at the main cutoff ---------------------------------------------------------------------------
 main_run AS (SELECT ri.* FROM run_inv ri JOIN params p ON ri.c = p.as_of),
+-- ---- export: an idempotent batch; a repeated key or batch id returns the prior batch; a row needs a valid (policy-valid)
+-- approval at or before its exported_at, otherwise it is invalid (the invoice is listed as EXPORT_BEFORE_APPROVAL) ---------
+req AS (
+    SELECT r.*, EXISTS (SELECT 1 FROM export_requests e WHERE e.request_seq < r.request_seq AND e.exported_at <= (SELECT as_of FROM params)
+                        AND (e.idempotency_key = r.idempotency_key OR e.batch_id = r.batch_id)) AS repeat
+    FROM export_requests r WHERE r.exported_at <= (SELECT as_of FROM params)
+),
+a1 AS (
+    SELECT ca.invoice_id, po.approval_id, po.decided_at
+    FROM cand ca JOIN pol_ok po ON po.c = ca.c AND po.invoice_id = ca.invoice_id
+    WHERE ca.c = (SELECT as_of FROM params)
+),
+exp_first AS (
+    SELECT DISTINCT ON (iid) iid, r.request_seq, r.batch_id, r.exported_at
+    FROM req r, unnest(r.invoice_ids) AS iid
+    WHERE NOT r.repeat AND EXISTS (SELECT 1 FROM a1 WHERE a1.invoice_id = iid AND a1.decided_at <= r.exported_at)
+    ORDER BY iid, r.request_seq
+),
+-- ---- approvals at the main cutoff (matched, unless an export row commits the invoice) ------------------------------------
 approve_verdict AS (
     SELECT d.approval_id, d.invoice_id, d.decided_at,
-           CASE WHEN r.invoice_id IS NULL OR NOT r.matched THEN 'NOT_MATCHED'
+           CASE WHEN r.invoice_id IS NULL OR (NOT r.matched AND NOT EXISTS (SELECT 1 FROM exp_first x WHERE x.iid = d.invoice_id))
+                     THEN 'NOT_MATCHED'
                 WHEN d.actor_id = i.created_by THEN 'SELF_APPROVAL'
                 WHEN NOT d.has_policy
                      OR NOT (coalesce(d.actor_role = d.escalation_role, FALSE)
-                             OR (d.actor_role = d.reviewer_role AND r.total <= d.amount_limit)) THEN 'ROLE_OR_LIMIT' END AS code
+                             OR (d.actor_role = d.reviewer_role AND r.total <= d.amount_limit)) THEN 'ROLE_OR_LIMIT'
+                WHEN d.decided_at < i.imported_at THEN 'BEFORE_IMPORT' END AS code
     FROM dec d
     JOIN params p ON d.decided_at <= p.as_of AND d.decision = 'approve'
     JOIN inv i ON i.invoice_id = d.invoice_id
@@ -234,18 +280,6 @@ invalid AS (
     SELECT approval_id, code, decided_at FROM approve_verdict WHERE code IS NOT NULL
     UNION ALL
     SELECT approval_id, code, decided_at FROM rej WHERE main AND code IS NOT NULL
-),
--- ---- export: an idempotent batch; a repeated key or batch id returns the prior batch ---------------------------------
-req AS (
-    SELECT r.*, EXISTS (SELECT 1 FROM export_requests e WHERE e.request_seq < r.request_seq AND e.exported_at <= (SELECT as_of FROM params)
-                        AND (e.idempotency_key = r.idempotency_key OR e.batch_id = r.batch_id)) AS repeat
-    FROM export_requests r WHERE r.exported_at <= (SELECT as_of FROM params)
-),
-exp_first AS (
-    SELECT DISTINCT ON (iid) iid, r.request_seq, r.batch_id, r.exported_at
-    FROM req r, unnest(r.invoice_ids) AS iid
-    WHERE NOT r.repeat AND EXISTS (SELECT 1 FROM approved a WHERE a.invoice_id = iid)
-    ORDER BY iid, r.request_seq
 ),
 exp_rows AS (
     SELECT x.request_seq, x.iid, i.invoice_number, i.invoice_date, i.vendor_id, i.currency, i.total, x.batch_id, x.exported_at,
@@ -275,31 +309,52 @@ exc AS (
     LEFT JOIN exc_s s ON s.invoice_id = d.invoice_id AND s.exception_type = d.etype
     LEFT JOIN exc_o o ON o.exception_id = coalesce(s.exception_id, 'exc-' || lpad(d.pos::text, 3, '0'))
 ),
-good AS (SELECT * FROM main_run WHERE matched),
+good AS (SELECT * FROM main_run WHERE matched OR EXISTS (SELECT 1 FROM approved a WHERE a.invoice_id = main_run.invoice_id)),
 oblig AS (SELECT g.* FROM good g JOIN approved a ON a.invoice_id = g.invoice_id),
 cred AS (
     SELECT coalesce(sum(cn.credit_amount), 0) AS total
     FROM credit_notes cn JOIN approved a ON a.invoice_id = cn.invoice_id
     WHERE cn.credited_at IS NULL OR cn.credited_at <= (SELECT as_of FROM params)
 ),
-elig AS (SELECT count(*) AS n, count(*) FILTER (WHERE cardinality(reasons) > 0) AS flagged FROM main_run),
+elig AS (
+    SELECT count(*) AS n, count(*) FILTER (WHERE cardinality(reasons) > 0) AS flagged,
+           count(*) FILTER (WHERE cardinality(reasons) > 0 OR EXISTS (SELECT 1 FROM exceptions e WHERE e.invoice_id = main_run.invoice_id)) AS ever
+    FROM main_run
+),
+cur_ob AS (SELECT currency, count(*) AS n, sum(total) AS tot FROM oblig GROUP BY currency),
+cur_cr AS (
+    SELECT i.currency, sum(cn.credit_amount) AS tot
+    FROM credit_notes cn JOIN approved a ON a.invoice_id = cn.invoice_id JOIN inv i ON i.invoice_id = cn.invoice_id
+    WHERE cn.credited_at IS NULL OR cn.credited_at <= (SELECT as_of FROM params)
+    GROUP BY i.currency
+),
+cur_ex AS (SELECT currency, sum(total) AS tot FROM exp_rows GROUP BY currency),
+cur_good AS (SELECT currency, count(*) AS n, sum(sub) AS sub, sum(tax) AS tax, sum(total) AS tot FROM good GROUP BY currency),
 proc AS (
     SELECT count(*) AS n,
            sum(extract(epoch FROM (a.decided_at - i.imported_at))) AS secs
     FROM approved a JOIN inv i ON i.invoice_id = a.invoice_id
 ),
 dups AS (
-    SELECT count(*) AS merged_rows, count(DISTINCT merged_into) AS groups FROM merged
+    SELECT count(*) AS merged_rows, count(DISTINCT merged_into) AS groups,
+           (SELECT count(DISTINCT canon) FROM review WHERE c = (SELECT as_of FROM params)) AS unresolved
+    FROM merged WHERE c = (SELECT as_of FROM params)
 )
 SELECT
     jsonb_build_object(
         'invoice_count', (SELECT count(*) FROM good),
         'amount_before_tax', round((SELECT coalesce(sum(sub), 0) FROM good), 2)::text,
         'tax', round((SELECT coalesce(sum(tax), 0) FROM good), 2)::text,
-        'total', round((SELECT coalesce(sum(total), 0) FROM good), 2)::text) AS matched,
+        'total', round((SELECT coalesce(sum(total), 0) FROM good), 2)::text)
+    || CASE WHEN (SELECT count(*) FROM cur_good) > 1 THEN jsonb_build_object('by_currency',
+           (SELECT jsonb_object_agg(currency, jsonb_build_object('invoice_count', n, 'amount_before_tax', round(sub, 2)::text,
+                                                                   'tax', round(tax, 2)::text, 'total', round(tot, 2)::text))
+            FROM cur_good)) ELSE '{}'::jsonb END AS matched,
     jsonb_build_object(
         'count', (SELECT count(*) FROM oblig),
-        'total', round((SELECT coalesce(sum(total), 0) FROM oblig), 2)::text) AS obligations,
+        'total', round((SELECT coalesce(sum(total), 0) FROM oblig), 2)::text)
+    || CASE WHEN (SELECT count(*) FROM cur_ob) > 1 THEN jsonb_build_object('by_currency',
+           (SELECT jsonb_object_agg(currency, jsonb_build_object('count', n, 'total', round(tot, 2)::text)) FROM cur_ob)) ELSE '{}'::jsonb END AS obligations,
     jsonb_build_object(
         'open_count', (SELECT count(*) FROM exc),
         'unowned_count', (SELECT count(*) FROM exc WHERE owner_id IS NULL),
@@ -313,7 +368,7 @@ SELECT
                         'exception_type', etype, 'owner_id', owner_id,
                         'status', CASE WHEN owner_id IS NULL THEN 'open' ELSE 'assigned' END) ORDER BY pos) FROM exc), '[]'::jsonb)) AS exceptions,
     jsonb_build_object('groups_detected', (SELECT groups FROM dups), 'rows_merged', (SELECT merged_rows FROM dups),
-                       'unresolved_groups', 0) AS duplicates,
+                       'unresolved_groups', (SELECT unresolved FROM dups)) AS duplicates,
     (SELECT j FROM qty_json WHERE main) AS quantities,
     coalesce((SELECT jsonb_object_agg(
                   to_char(c AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS')
@@ -325,7 +380,11 @@ SELECT
         'straight_through_rate', CASE WHEN (SELECT n FROM elig) = 0 THEN NULL
             ELSE to_jsonb(round(((SELECT n - flagged FROM elig))::numeric / (SELECT n FROM elig), 6)::text) END,
         'exception_rate', CASE WHEN (SELECT n FROM elig) = 0 THEN NULL
-            ELSE to_jsonb(round(((SELECT flagged FROM elig))::numeric / (SELECT n FROM elig), 6)::text) END) AS rates,
+            ELSE to_jsonb(round(((SELECT flagged FROM elig))::numeric / (SELECT n FROM elig), 6)::text) END)
+    -- D-09: the history pair is published only where the stored exception history adds invoices beyond the flagged ones
+    || CASE WHEN (SELECT ever FROM elig) > (SELECT flagged FROM elig) THEN jsonb_build_object(
+           'straight_through_never_excepted_rate', round(((SELECT n - ever FROM elig))::numeric / (SELECT n FROM elig), 6)::text,
+           'ever_excepted_rate', round(((SELECT ever FROM elig))::numeric / (SELECT n FROM elig), 6)::text) ELSE '{}'::jsonb END AS rates,
     jsonb_build_object(
         'approved_count', (SELECT n FROM proc),
         'mean_minutes', CASE WHEN (SELECT n FROM proc) = 0 THEN NULL
@@ -338,7 +397,11 @@ SELECT
     jsonb_build_object(
         'approved_total', round((SELECT coalesce(sum(total), 0) FROM oblig), 2)::text,
         'credit_total', round((SELECT total FROM cred), 2)::text,
-        'approved_payable', round((SELECT coalesce(sum(total), 0) FROM oblig) - (SELECT total FROM cred), 2)::text) AS payable,
+        'approved_payable', round((SELECT coalesce(sum(total), 0) FROM oblig) - (SELECT total FROM cred), 2)::text)
+    || CASE WHEN (SELECT count(*) FROM cur_ob) > 1 THEN jsonb_build_object('by_currency',
+           (SELECT jsonb_object_agg(o.currency, jsonb_build_object('approved_total', round(o.tot, 2)::text,
+                        'credit_total', round(coalesce(c.tot, 0), 2)::text, 'approved_payable', round(o.tot - coalesce(c.tot, 0), 2)::text))
+            FROM cur_ob o LEFT JOIN cur_cr c USING (currency))) ELSE '{}'::jsonb END AS payable,
     jsonb_build_object(
         'requests_received', (SELECT count(*) FROM req),
         'batches_created', (SELECT count(*) FROM req WHERE NOT repeat),
@@ -351,9 +414,20 @@ SELECT
                                            || to_char(invoice_date, 'YYYY-MM-DD') || '|' || currency || '|' || round(total, 2)::text, 'UTF8')), 'hex'))
                     ORDER BY request_seq, iid COLLATE "C") FROM exp_rows), '[]'::jsonb),
         'exclusions', coalesce((SELECT jsonb_agg(jsonb_build_object('invoice_id', mr.invoice_id,
-                        'reason_code', CASE WHEN NOT mr.matched THEN 'EXCEPTION_OPEN' ELSE 'NOT_APPROVED' END)
+                        'reason_code', CASE WHEN a.invoice_id IS NULL AND NOT mr.matched THEN 'EXCEPTION_OPEN'
+                                            WHEN a.invoice_id IS NULL THEN 'NOT_APPROVED'
+                                            WHEN EXISTS (SELECT 1 FROM req r1 WHERE NOT r1.repeat AND mr.invoice_id = ANY(r1.invoice_ids))
+                                                 THEN 'EXPORT_BEFORE_APPROVAL'
+                                            ELSE 'APPROVED_NOT_EXPORTED' END)
                         ORDER BY mr.invoice_id COLLATE "C")
-                     FROM main_run mr WHERE (NOT mr.matched) OR (mr.matched AND NOT EXISTS (SELECT 1 FROM approved a WHERE a.invoice_id = mr.invoice_id))), '[]'::jsonb),
+                     FROM main_run mr LEFT JOIN approved a ON a.invoice_id = mr.invoice_id
+                     WHERE NOT EXISTS (SELECT 1 FROM exp_first x WHERE x.iid = mr.invoice_id)), '[]'::jsonb),
         'accepted_export_total', round((SELECT coalesce(sum(total), 0) FROM exp_rows), 2)::text,
         'eligible_approved_total', round((SELECT coalesce(sum(total), 0) FROM oblig), 2)::text,
-        'difference', round((SELECT coalesce(sum(total), 0) FROM exp_rows) - (SELECT coalesce(sum(total), 0) FROM oblig), 2)::text) AS export
+        'difference', round((SELECT coalesce(sum(total), 0) FROM exp_rows) - (SELECT coalesce(sum(total), 0) FROM oblig), 2)::text)
+    || CASE WHEN (SELECT count(*) FROM (SELECT currency FROM cur_ex UNION SELECT currency FROM cur_ob) z) > 1 THEN jsonb_build_object('by_currency',
+           (SELECT jsonb_object_agg(k.currency, jsonb_build_object('accepted_export_total', round(coalesce(e.tot, 0), 2)::text,
+                        'eligible_approved_total', round(coalesce(o.tot, 0), 2)::text,
+                        'difference', round(coalesce(e.tot, 0) - coalesce(o.tot, 0), 2)::text))
+            FROM (SELECT currency FROM cur_ex UNION SELECT currency FROM cur_ob) k
+            LEFT JOIN cur_ex e USING (currency) LEFT JOIN cur_ob o USING (currency))) ELSE '{}'::jsonb END AS export

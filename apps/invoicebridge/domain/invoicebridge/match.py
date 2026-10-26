@@ -1,6 +1,8 @@
 """Three-way match (D-03) with cumulative consumption, rounding tolerances and exceptions (D-02).
 
-``match_run`` evaluates the invoices of the book at one cutoff in (invoice_date, imported_at, invoice_id) order.
+``match_run`` evaluates the invoices of the book at one cutoff in CONSUMPTION order (D-09): invoices with a committed
+approval first, by their commit instant, then the others in (invoice_date, imported_at, invoice_id) order, so a later
+fact cannot displace a committed one.
 A line matches when quantity variance <= 0 and |price variance| <= the price tolerance; otherwise it carries the specific
 reason (QUANTITY_BLOCKED, PRICE_VARIANCE, NO_PO_LINE, CURRENCY_MISMATCH). An invoice matches when no line has a reason and
 its rounding differences are within tolerance (ROUNDING_EXCEPTION otherwise). Only a MATCHED invoice consumes received
@@ -11,7 +13,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
 from decimal import Decimal
-from typing import Sequence
+from typing import Mapping, Sequence
 
 from .amounts import invoice_amounts, line_extended
 from .contract import RULE_VERSION
@@ -67,13 +69,17 @@ def book_order(inv: Invoice) -> tuple:
 
 
 @exact
-def match_run(pop: Population, candidates: Sequence[Invoice], cutoff: datetime) -> MatchRun:
+def match_run(pop: Population, candidates: Sequence[Invoice], cutoff: datetime,
+              committed: Mapping[str, tuple] | None = None) -> MatchRun:
     """D-03 at ``cutoff``: PO lines whose PO was ordered by then, non-reversed receipts received by then, the given
-    candidate invoices (already filtered to the book) in canonical order."""
+    candidate invoices (already filtered to the book) in consumption order: ``committed`` (invoice id -> commit instant
+    key) first, then book order."""
+    committed = committed or {}
     tol_price = pop.tolerances.price_per_unit
     tol_line = pop.tolerances.rounding_per_line
     tol_inv = pop.tolerances.rounding_per_invoice
     po_cur = {p.po_id: p.currency for p in pop.purchase_orders}
+    po_vendor = {p.po_id: p.vendor_id for p in pop.purchase_orders}
     ordered = {p.po_id for p in pop.purchase_orders if p.ordered_at <= cutoff}
     pol = {l.po_line_id: l for l in pop.po_lines if l.po_id in ordered}
     net = {k: D0 for k in pol}
@@ -83,7 +89,8 @@ def match_run(pop: Population, candidates: Sequence[Invoice], cutoff: datetime) 
     consumed = {k: D0 for k in pol}
     results: list[LineResult] = []
     invs: dict[str, InvoiceResult] = {}
-    for inv in sorted(candidates, key=book_order):
+    for inv in sorted(candidates, key=lambda i: (0, committed[i.invoice_id], i.invoice_id) if i.invoice_id in committed
+                      else (1, book_order(i), i.invoice_id)):
         sub, tax, total = invoice_amounts(inv)
         reasons: set[str] = set()
         local: dict[str, Decimal] = {}
@@ -96,6 +103,10 @@ def match_run(pop: Population, candidates: Sequence[Invoice], cutoff: datetime) 
             if p is None:
                 row.status, row.reason_code = "exception", "NO_PO_LINE"
                 row.explanation = f"no purchase-order line {l.po_line_id} exists at the cutoff"
+            elif po_vendor[p.po_id] != inv.vendor_id:
+                row.status, row.reason_code = "exception", "NO_PO_LINE"      # D-09: another vendor's PO line is no PO line of this invoice
+                row.explanation = (f"purchase-order line {l.po_line_id} belongs to a purchase order of vendor "
+                                   f"{po_vendor[p.po_id]}, not of {inv.vendor_id}")
             elif po_cur[p.po_id] != inv.currency:
                 row.status, row.reason_code = "exception", "CURRENCY_MISMATCH"
                 row.explanation = (f"invoice currency {inv.currency} differs from the PO currency {po_cur[p.po_id]} and "

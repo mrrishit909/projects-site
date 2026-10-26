@@ -1,6 +1,6 @@
 """Load a fixture ``inputs.json`` into the tables (idempotent: ``ON CONFLICT DO NOTHING``, guarded appends).
 
-Usage:  DATABASE_URL=postgresql://... python data/seed.py tests/fixtures/golden/inputs.json [--reference-only]
+Usage:  DATABASE_URL=postgresql://... python data/seed.py tests/fixtures/golden/inputs.json [--reference-only] [--dataset-version V]
 
 Rows go through the domain's ``validate_batch`` (the same rules as the API): rejected rows are kept in
 ``rejected_records`` with the raw row, merged invoices are stored with status ``merged`` and their lineage, and the
@@ -78,18 +78,21 @@ def insert_reference(conn: psycopg.Connection, pop: Any) -> None:
                  "EXCLUDED.rounding_per_invoice", (t.price_per_unit, t.rounding_per_line, t.rounding_per_invoice))
 
 
-def seed(conn: psycopg.Connection, inputs: dict[str, Any], reference_only: bool = False) -> dict[str, Any]:
-    """Seed one fixture; return ``{dataset_version, dataset_hash, inserted, skipped}``."""
+def seed(conn: psycopg.Connection, inputs: dict[str, Any], reference_only: bool = False,
+         dataset_version: str | None = None) -> dict[str, Any]:
+    """Seed one fixture; return ``{dataset_version, dataset_hash, inserted, skipped}``. ``dataset_version`` names the
+    dataset as published (the generator's manifest ``dataset_version``, which the replay events carry); without it the
+    version is ``ds-`` + the first 12 hex digits of the hash of the inputs."""
     res = run_pipeline(inputs)
     ing, pop, book = res.ingest, res.population, res.book
     dataset_hash = sha256_hex(canonical_json(inputs))
-    version = f"ds-{dataset_hash[:12]}"
+    version = dataset_version or f"ds-{dataset_hash[:12]}"
     insert_reference(conn, pop)
     inserted = {"invoices": 0, "invoice_lines": 0, "approvals": 0, "credit_notes": 0, "export_batches": 0,
                 "export_rows": 0, "export_requests": 0, "exceptions": 0, "match_results": 0}
     if not reference_only:
         vendors = {v.vendor_id: v for v in pop.vendors}
-        merge_reason = {r["id"]: r["reason_code"] for r in ing.merged_records}
+        merge_reason = {r["id"]: r["reason_code"] for r in book.merged_records}    # the book at the as-of, not the batch's
         for inv in pop.invoices:
             sub, tax, total = invoice_amounts(inv)
             rules = validate_invoice(inv, vendors.get(inv.vendor_id))
@@ -102,7 +105,7 @@ def seed(conn: psycopg.Connection, inputs: dict[str, Any], reference_only: bool 
                  inv.currency, inv.tax_rate, inv.freight, inv.invoice_discount, inv.declared_total, sub, tax, total,
                  inv.created_by, inv.source_sha256, inv.source_filename, inv.idempotency_key, inv.imported_at,
                  book.status[inv.invoice_id], inv.valid, Jsonb([{"rule_id": r, "message": m} for r, m in rules]),
-                 ing.merged_into.get(inv.invoice_id), merge_reason.get(inv.invoice_id))).rowcount
+                 book.merged_into.get(inv.invoice_id), merge_reason.get(inv.invoice_id))).rowcount
             for l in inv.lines:
                 inserted["invoice_lines"] += conn.execute(
                     "INSERT INTO invoice_lines VALUES (%s, %s, %s, %s, %s, %s) ON CONFLICT DO NOTHING",
@@ -112,8 +115,9 @@ def seed(conn: psycopg.Connection, inputs: dict[str, Any], reference_only: bool 
                 "actor_id, import_status, reason_code, merged_into) SELECT %s,%s,%s,%s,%s,%s,%s,%s,%s WHERE NOT EXISTS "
                 "(SELECT 1 FROM import_lineage WHERE invoice_id = %s AND idempotency_key = %s)",
                 (inv.invoice_id, inv.source_sha256, inv.source_filename, inv.idempotency_key, inv.imported_at,
-                 inv.created_by, "merged" if inv.invoice_id in ing.merged_into else "accepted",
-                 merge_reason.get(inv.invoice_id), ing.merged_into.get(inv.invoice_id), inv.invoice_id, inv.idempotency_key))
+                 inv.created_by, "merged" if inv.invoice_id in book.merged_into else "accepted",
+                 merge_reason.get(inv.invoice_id) or ("BYTES_FIELDS_CONFLICT" if inv.invoice_id in book.review else None),
+                 book.merged_into.get(inv.invoice_id), inv.invoice_id, inv.idempotency_key))
         for a in pop.approvals:
             pol = effective_policy(pop.approval_policies, a.decided_at)
             inserted["approvals"] += conn.execute(
@@ -174,13 +178,18 @@ def seed(conn: psycopg.Connection, inputs: dict[str, Any], reference_only: bool 
 
 def main(argv: list[str]) -> int:
     url = os.environ.get("DATABASE_URL")
+    version = None
+    if "--dataset-version" in argv:
+        k = argv.index("--dataset-version")
+        version = argv[k + 1] if k + 1 < len(argv) else None
+        argv = argv[:k] + argv[k + 2:]
     args = [a for a in argv if not a.startswith("--")]
     if not url or len(args) != 1:
-        print("usage: DATABASE_URL=... python data/seed.py <inputs.json> [--reference-only]", file=sys.stderr)
+        print("usage: DATABASE_URL=... python data/seed.py <inputs.json> [--reference-only] [--dataset-version V]", file=sys.stderr)
         return 2
     inputs = json.loads(Path(args[0]).read_text())
     with psycopg.connect(url) as conn:
-        print(json.dumps(seed(conn, inputs, "--reference-only" in argv), indent=2))
+        print(json.dumps(seed(conn, inputs, "--reference-only" in argv, version), indent=2))
     return 0
 
 

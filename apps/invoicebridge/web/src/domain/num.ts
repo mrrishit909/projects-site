@@ -43,7 +43,8 @@ export function fracStr(num: bigint, den: bigint, places: number): string {
   return `${neg ? "-" : ""}${fmt(q, places)}`;
 }
 
-const DEC = /^([+-]?)(\d*)(?:\.(\d*))?$/;
+// ASCII digits only (R5-17): no underscores, exponents or non-ASCII digits, the same spelling as money.DECIMAL_TEXT in Python.
+const DEC = /^([+-]?)([0-9]*)(?:\.([0-9]*))?$/;
 /** A JSON string (or integer) as a fixed-point BigInt at `dp` decimals. Over-long non-zero fractions, floats and
  *  out-of-range values are refused, not rounded (money.dec). */
 export function parseDec(value: unknown, name: string, dp: number): bigint {

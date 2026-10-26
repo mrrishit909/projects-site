@@ -35,15 +35,18 @@ delivered in 1-4 shipments (a receipt per line and shipment: 5,067 receipt rows,
 later), one invoice per shipment: exactly 2,800 invoices (5,322 lines) = 2,699 shipment invoices + 95 re-sent PDFs + 3 same-bytes
 copies + 3 cumulative second invoices. Matching is a nightly run at 02:00Z (365 runs, the last is the dataset `as_of`); exceptions
 open at the run that first flags them and resolve at the run where the pair disappears (receipt arrives) or at a rejection;
-2,356 approval rows (2,299 approvals, 57 rejections), weekly Friday export batches plus a period-close batch, 117 credit notes on 112 invoices (4.0 %).
+2,356 approval rows (2,299 approvals, 57 rejections), weekly Friday export batches plus a period-close batch, 117 credit notes on 112 invoices (112 of 2,800 invoices = 4.0 %; 112 of the 2,299 approved invoices = 4.9 %: the share depends on the denominator).
 Approval policy pol-v1 (reviewer up to 5000.00 from 2025-10-01) and pol-v2 (8000.00 from 2026-04-01).
 
 ## Designed relationships (realised numbers in `manifest.designed_relationships`)
 
 * DR-01 ven-020..ven-029 invoice 3-25 days before delivery and 40 % of their lines never get their last delivery fully received:
-  QUANTITY_BLOCKED on 163 of 538 invoices (30.3 %) against 30 of 2,107 (1.4 %) elsewhere; every ven-02x vendor is above 25 %, every other below 4 %.
+  QUANTITY_BLOCKED **open at the as-of** on 163 of 538 invoices (30.3 %) against 30 of 2,107 (1.4 %) elsewhere; every ven-02x vendor is above 25 %, every other below 4 %.
+  Over the stored history (open and resolved exception rows) 524 of the 538 ven-02x invoices (97.4 %) were blocked at some run, against 39 of 2,107 (1.9 %) elsewhere:
+  "open now" and "ever" are different shares of the same invoices (D-09).
 * DR-02 ven-007 bills +7.5 % from 2026-03-01 on POs still carrying old prices (catalogue updated 2026-04-15): 30 of its invoices raise
-  PRICE_VARIANCE, the first on the run of 2026-03-04, none before March; 93.8 % of all PRICE_VARIANCE (4 noise invoices elsewhere).
+  PRICE_VARIANCE, the first on the run of 2026-03-04, none before March; 93.8 % (30 of 32) of the PRICE_VARIANCE invoices **open at the as-of**, 93.0 % (53 of 57) of
+  those that ever raised it, history included (4 noise invoices elsewhere).
 * DR-03 71 of 95 re-sent PDFs (74.7 %) are imported in the last three days of a month against 19 % of all invoices.
 * DR-04 limit change: 20 approvals of 5000.00 < total <= 8000.00 after 2026-04-01; 28 matched invoices above the limit stay unapproved.
 
@@ -73,7 +76,9 @@ The clean files produce no ingest rejection at all (`expected_rejections` is emp
 * `exceptions` / `exception_assignments` / `export_batches` are generator records (ids `exc-NNN` in creation order, integer `assignment_id`); the domain derives its own positional ids unless the stored ones are supplied (the SQL reference reads them). `match_results`, `export_rows`, `import_lineage`, `audit_events` are derived and not written (size).
 * `as_of` is the final nightly run 2026-10-01T02:00:00Z; "monthly windows" for the SQL comparison are as-of cutoffs 2026-03-31 and 2026-06-30 (the SQL has no from-parameter).
 * A reversed receipt is excluded at every instant (no `reversed_at` in the fixture shape); 70 % are re-entered.
-* Rejections are decided only on invoices that were exceptions in every run; credit notes only on approved invoices; one close batch exports everything approved so reconciliation is 0.00.
+* Approvals and rejections are **selected after the outcome** (D-09): approvals only on invoices that match, rejections only on invoices that were exceptions in
+  every run, credit notes only on approved invoices. The approval and rejection rates are therefore a property of the generator, not evidence about the matching rules.
+* One close batch exports everything approved, so export reconciliation is 0.00 **by construction** of the generator: it checks the code, it is not a finding about the data.
 * The volume cap did not bind: all spec volumes are met exactly at 3.75 MB.
 
 ## Domain behaviours noted (unchanged)

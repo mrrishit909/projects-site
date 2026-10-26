@@ -22,13 +22,28 @@ for _p in (ROOT / "domain", ROOT):
         sys.path.insert(0, str(_p))
 
 from api.app import PREFIX, create_app  # noqa: E402
+from api import clock as _clock  # noqa: E402
 from data import migrate, seed  # noqa: E402
+
+_REAL_NOW = _clock.now
 
 GOLDEN = ROOT / "tests" / "fixtures" / "golden"
 CLERK = {"X-Actor-Id": "usr-clerk01", "X-Actor-Role": "clerk"}
 REVIEWER = {"X-Actor-Id": "usr-rev01", "X-Actor-Role": "reviewer"}
 ADMIN = {"X-Actor-Id": "usr-adm01", "X-Actor-Role": "admin"}
 VARIANTS = ["", "variant-rejected", "variant-empty"]
+
+
+def set_now(ts: str | None) -> None:
+    """Pin the server clock (``api.clock.now``) to an instant, or (None) release it: the server stamps decisions, a client
+    cannot (D-09). The ``conftest`` autouse fixture restores the real clock after each test."""
+    from api import clock
+    from invoicebridge.timeutil import parse_ts
+    if ts is None:
+        clock.now = _REAL_NOW
+        return
+    fixed = parse_ts(ts)
+    clock.now = lambda: fixed
 
 
 def golden_inputs(sub: str = "") -> dict[str, Any]:
@@ -225,10 +240,12 @@ def drive(client, conn, inputs: dict[str, Any]) -> dict[str, Any]:
     known = {i["invoice_id"] for i in imported}
     for a in sorted(inputs["approvals"], key=lambda a: (a["decided_at"], a["approval_id"])):
         if a["invoice_id"] in known and a["decision"] == "approve":
-            r = command(client, "approve-invoice", {"invoice_id": a["invoice_id"], "approval_id": a["approval_id"], "decided_at": a["decided_at"]},
+            set_now(a["decided_at"])
+            r = command(client, "approve-invoice", {"invoice_id": a["invoice_id"], "approval_id": a["approval_id"]},
                         headers=actor(a["actor_id"], a["actor_role"]))
             log[f"approve:{a['approval_id']}"] = r.status_code
     for e in inputs["export_requests"]:
+        set_now(e["exported_at"])
         r = command(client, "export-payable", {"batch_id": e["batch_id"], "invoice_ids": e["invoice_ids"], "exported_at": e["exported_at"]},
                     key=e["idempotency_key"], headers=REVIEWER)
         log[f"export:{e['idempotency_key']}:{e['exported_at']}"] = r.status_code
@@ -340,6 +357,9 @@ class Desk:
         return m.json()["result"]
 
     def approve(self, iid: str, who: dict[str, str] | None = None, **kw):
+        """C07. ``decided_at`` pins the SERVER clock to that instant (it is not part of the request: the server stamps it)."""
+        if "decided_at" in kw:
+            set_now(kw.pop("decided_at"))
         return self.post("approve-invoice", {"invoice_id": iid, **kw}, who or REVIEWER)
 
     def status(self, iid: str) -> str:

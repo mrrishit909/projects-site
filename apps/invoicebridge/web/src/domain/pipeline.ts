@@ -6,6 +6,7 @@ import { populationOf, validateBatch, type IngestResult } from "./ingest";
 import { asRow } from "./match";
 import { metricsFromBook, type Metrics } from "./metrics";
 import { s2 } from "./num";
+import { cmp } from "./order";
 import { isoZ, parseTs } from "./time";
 import type { PipelineInputs, Population, Row } from "./types";
 
@@ -32,7 +33,6 @@ export function runPipeline(inputs: PipelineInputs, opts: RunOptions = {}): Pipe
   return { ingest: ing, population: pop, metrics, snapshotCutoffs: cuts.map(isoZ), book, asOf, exceptionRows: opts.stored ? (inputs.exceptions ?? []) : [] };
 }
 
-const cmp = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
 /** Per-invoice documents and the match results of the book (the shape of expected.json ``documents``). */
 export function documents(r: PipelineResult): { invoices: Record<string, Row>; match_results: Row[] } {
   const { book } = r, run = book.run;

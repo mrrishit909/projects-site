@@ -31,13 +31,22 @@ function Exports({ result, stored }: { result: PipelineResult; stored: Row[] }) 
         <div data-figure="export.rows"><dt>Export rows</dt><dd>{e.rows.length.toLocaleString("en-US")}</dd></div>
       </dl>
       <section className="panel" aria-labelledby="rec-h">
-        <h2 id="rec-h">Export reconciliation <Def term="the check">Accepted export total minus the eligible approved total must be 0.00, with every excluded invoice named. Eligible approved means approved, exported or adjusted at the as-of instant.</Def></h2>
+        <h2 id="rec-h">Export reconciliation <Def term="the check">Difference = accepted export total minus the eligible approved total (approved, exported or adjusted at the as-of instant). It is a check, not an identity: an export row needs a valid approval at or before its export instant, and every approved invoice that was not exported is listed as an exclusion (APPROVED_NOT_EXPORTED, or EXPORT_BEFORE_APPROVAL when a request named it before its approval), so a non-zero difference is always explained. On this snapshot it is 0.00 because the generator closes the period with one batch that exports everything approved, not because the rule forces it.</Def></h2>
         <dl className="sums" data-testid="export-recon">
-          <div data-figure="export.accepted_export_total"><dt>Accepted export total</dt><dd>{e.accepted_export_total}</dd></div>
-          <div data-figure="export.eligible_approved_total"><dt>Eligible approved total</dt><dd>{e.eligible_approved_total}</dd></div>
-          <div className="sums__total" data-figure="export.difference"><dt>Difference</dt><dd>{e.difference}</dd></div>
+          <div data-figure="export.accepted_export_total"><dt>Accepted export total{e.by_currency ? " (sum across currencies, not converted)" : ""}</dt><dd>{e.accepted_export_total}</dd></div>
+          <div data-figure="export.eligible_approved_total"><dt>Eligible approved total{e.by_currency ? " (sum across currencies, not converted)" : ""}</dt><dd>{e.eligible_approved_total}</dd></div>
+          <div className="sums__total" data-figure="export.difference"><dt>Difference{e.by_currency ? " (sum across currencies, not converted)" : ""}</dt><dd>{e.difference}</dd></div>
         </dl>
-        <p data-testid="exclusions">Excluded from the export: {e.exclusions.length.toLocaleString("en-US")} invoices, {excl("EXCEPTION_OPEN").toLocaleString("en-US")} <Chip v="EXCEPTION_OPEN" /> and {excl("NOT_APPROVED").toLocaleString("en-US")} <Chip v="NOT_APPROVED" /> (matched, waiting for a reviewer). Amounts are summed across currencies as recorded; the grouping by currency is a backend option this site does not draw.</p>
+        {e.by_currency && (
+          <Scroll label="Export reconciliation by currency">
+            <table className="grid" data-testid="export-by-currency">
+              <caption>The same reconciliation per currency (never converted)</caption>
+              <thead><tr><th scope="col">Currency</th><th scope="col" className="num">Accepted export total</th><th scope="col" className="num">Eligible approved total</th><th scope="col" className="num">Difference</th></tr></thead>
+              <tbody>{Object.entries(e.by_currency).map(([c, v]) => <tr key={c} data-currency={c}><th scope="row" className="mono">{c}</th><td className="num">{v.accepted_export_total}</td><td className="num">{v.eligible_approved_total}</td><td className="num">{v.difference}</td></tr>)}</tbody>
+            </table>
+          </Scroll>
+        )}
+        <p data-testid="exclusions">Excluded from the export: {e.exclusions.length.toLocaleString("en-US")} invoices, {excl("EXCEPTION_OPEN").toLocaleString("en-US")} <Chip v="EXCEPTION_OPEN" /> and {excl("NOT_APPROVED").toLocaleString("en-US")} <Chip v="NOT_APPROVED" /> (matched, waiting for a reviewer){excl("APPROVED_NOT_EXPORTED") + excl("EXPORT_BEFORE_APPROVAL") > 0 && <>, {excl("APPROVED_NOT_EXPORTED")} <Chip v="APPROVED_NOT_EXPORTED" /> and {excl("EXPORT_BEFORE_APPROVAL")} <Chip v="EXPORT_BEFORE_APPROVAL" /></>}. The totals above are sums across currencies, not converted; the per-currency table is the figure to read.</p>
       </section>
       <section className="panel" aria-labelledby="b-h">
         <h2 id="b-h">Batches</h2>

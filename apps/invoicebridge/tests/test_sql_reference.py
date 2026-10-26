@@ -91,7 +91,8 @@ def rich_world() -> dict:
     w.invoice("inv-08", [("h1", "p1", "6", "20.00")], number="a 1", at="2026-10-07T09:00:00Z", date="2026-10-05")             # identity duplicate of inv-01? no: other total
     w.invoice("inv-09", [("i1", "p1", "4", "20.00"), ("i2", "p1", "4", "20.00")], number="A-9", at="2026-10-07T10:00:00Z", date="2026-10-07")
     w.invoice("inv-10", [("j1", "p1", "1", "20.00")], number="A-10", at="2026-10-08T10:00:00Z", date="2026-10-08", digest=sha("dupe"))
-    w.invoice("inv-11", [("k1", "p1", "1", "20.00")], number="ZZZ", at="2026-10-08T11:00:00Z", date="2026-10-08", digest=sha("dupe"))   # same bytes
+    w.invoice("inv-11", [("k1", "p1", "1", "20.00")], number="A-10", at="2026-10-08T11:00:00Z", date="2026-10-08", digest=sha("dupe"))   # same bytes and identity: merged
+    w.invoice("inv-13", [("n1", "p2", "1", "100.125")], number="M-9", at="2026-10-09T10:00:00Z", date="2026-10-09", digest=sha("bytes-inv-12"))   # the bytes of inv-12, other fields: held for review
     w.invoice("inv-12", [("m1", "p2", "9", "100.125")], number="M-1", at="2026-10-09T09:00:00Z", date="2026-10-09")           # quantity blocked
     w.approve("inv-01", actor="usr-clerk01", role="reviewer", at="2026-10-06T10:00:00Z")      # self-approval
     w.approve("inv-01", actor="usr-rev01", at="2026-10-06T11:00:00Z")
@@ -153,3 +154,43 @@ def test_sql_collation_independent_ordering(conn):
     row = reference(conn, d)
     assert [r["invoice_id"] for r in row["exceptions"]["records"]] == [r["invoice_id"] for r in res.metrics["exceptions"]["records"]] == ["inv-B", "inv-Z", "inv-a", "inv_c"]
     assert row["exceptions"] == res.metrics["exceptions"]
+
+
+# --- the review cases (A-038, findings R5-xx): one set of hand-derived expectations for Python, SQL and TypeScript ------------
+
+from test_review_findings import CASES as REVIEW_CASES, subset  # noqa: E402
+
+
+@pytest.mark.parametrize("name", sorted(REVIEW_CASES))
+def test_sql_meets_the_hand_derived_review_expectations_and_equals_the_domain(conn, name):
+    """D-09: committed-first consumption, per-cutoff duplicates, held byte-twins, vendor mismatch, SELF_DECISION, BEFORE_IMPORT,
+    EXPORT_BEFORE_APPROVAL / APPROVED_NOT_EXPORTED, by_currency and the history rates, each as the SQL reference recomputes them."""
+    case = REVIEW_CASES[name]
+    d = case["inputs"]
+    seed.seed(conn, d)
+    for e in (case.get("stored") or {}).get("exceptions", []):             # the stored history (a resolved exception is history, not backlog)
+        conn.execute("INSERT INTO exceptions (exception_id, invoice_id, exception_type, status) VALUES (%s, %s, %s, %s) ON CONFLICT DO NOTHING",
+                     (e["exception_id"], e["invoice_id"], e["exception_type"], e["status"]))
+    row = reference(conn, d)
+    subset(dict(row), case["expect"].get("metrics", {}), "sql")
+    if not case.get("stored"):
+        res = run_pipeline(d)
+        for k in METRIC_KEYS:
+            assert row[k] == res.metrics[k], k
+    for path, keys in case.get("exact_keys", {}).items():
+        node = dict(row)
+        for part in path.split(".")[1:]:
+            node = node[part]
+        assert sorted(node) == keys, path
+
+
+def test_sql_by_currency_is_absent_for_one_currency_and_present_for_two(conn):
+    seed.seed(conn, golden_inputs())
+    one = reference(conn, golden_inputs())
+    assert all("by_currency" not in one[k] for k in ("matched", "obligations", "payable", "export"))
+    d = REVIEW_CASES["byte_twin_with_other_fields_and_two_currencies"]["inputs"]
+    with conn.transaction():
+        seed.seed(conn, d)
+        two = reference(conn, d)
+        assert sorted(two["matched"]["by_currency"]) == ["EUR", "USD"] and sorted(two["export"]["by_currency"]) == ["EUR", "USD"]
+        raise psycopg.Rollback()

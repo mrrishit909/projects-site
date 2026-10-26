@@ -262,15 +262,27 @@ def test_a_different_vendor_date_or_number_is_not_a_duplicate(override):
     assert res.metrics["duplicates"]["rows_merged"] == 0 and doc(res, "inv-2")["status"] != "merged"
 
 
-def test_same_source_bytes_are_one_obligation_even_under_another_number_and_filename():
+def test_same_source_bytes_are_one_obligation_under_another_filename():
     w = three()
     w.invoice("inv-1", [("l1", "p1", "6", "20.00")], number="INV-1", digest=sha("same pdf"))
-    w.invoice("inv-2", [("l2", "p1", "6", "20.00")], number="TOTALLY-OTHER", digest=sha("same pdf"), at="2026-10-08T09:00:00Z")
+    w.invoice("inv-2", [("l2", "p1", "6", "20.00")], number="INV-1", digest=sha("same pdf"), at="2026-10-08T09:00:00Z")
     w.approve("inv-1")
     res = one(w)
     rec = res.ingest.merged_records[0]
     assert (rec["id"], rec["reason_code"], rec["merged_into"], rec["group_key"]) == ("inv-2", "DUPLICATE_SOURCE_BYTES", "inv-1", f"sha256:{sha('same pdf')}")
     assert res.metrics["obligations"]["count"] == 1 and res.metrics["quantities"]["accepted_invoiced_quantity"] == "6.0000"
+
+
+def test_same_source_bytes_with_other_extracted_fields_are_held_for_review_not_merged():
+    """D-09 (R5-20): a byte-twin whose number differs is a conflicting extraction: needs_review, outside the book."""
+    w = three()
+    w.invoice("inv-1", [("l1", "p1", "6", "20.00")], number="INV-1", digest=sha("same pdf"))
+    w.invoice("inv-2", [("l2", "p1", "6", "20.00")], number="TOTALLY-OTHER", digest=sha("same pdf"), at="2026-10-08T09:00:00Z")
+    w.approve("inv-1")
+    res = one(w)
+    assert res.metrics["duplicates"] == {"groups_detected": 0, "rows_merged": 0, "unresolved_groups": 1}
+    assert doc(res, "inv-2")["status"] == "needs_review" and res.metrics["quantities"]["accepted_invoiced_quantity"] == "6.0000"
+    assert res.metrics["rates"]["eligible_invoices"] == 1
 
 
 def test_a_merged_duplicate_consumes_no_received_quantity_and_is_not_eligible():

@@ -18,29 +18,30 @@ C06 correct-extraction is an extension and answers 501 NOT_IMPLEMENTED.
 """
 from __future__ import annotations
 
+import dataclasses
 import random
 import time
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime
 from decimal import Decimal
 from typing import Any, Callable
 
 import psycopg
 from invoicebridge.amounts import identity_key, invoice_amounts, normalise_number, validate_invoice
-from invoicebridge.book import content_hash, derive, effective_policy, role_may_approve
+from invoicebridge.book import content_hash, derive, duplicate_groups, effective_policy, role_may_approve
 from invoicebridge.contract import RULE_VERSION
-from invoicebridge.duplicates import detect_duplicates
-from invoicebridge.errors import CREDIT_EXCEEDS_INVOICE, DUPLICATE_SOURCE_BYTES, INVALID_STATE, NON_POSITIVE_AMOUNT
+from invoicebridge.errors import (BYTES_FIELDS_CONFLICT, CREDIT_EXCEEDS_INVOICE, DUPLICATE_SOURCE_BYTES, INVALID_STATE,
+                                  NON_POSITIVE_AMOUNT)
 from invoicebridge.ingest import validate_batch
-from invoicebridge.models import Invoice
+from invoicebridge.models import Approval, Invoice
 from invoicebridge.money import s2
-from invoicebridge.timeutil import iso_z, parse_ts
+from invoicebridge.timeutil import FAR_FUTURE, iso_z, parse_ts
 from psycopg.types.json import Jsonb
 
 from data.seed import canonical_json, insert_rejected, sha256_hex
 
-from . import db
+from . import clock, db
 from .errors import ApiError, detail
 from .schemas import Envelope
 
@@ -105,7 +106,7 @@ def _invalid(code: str, message: str, path: str, context: dict[str, Any] | None 
 
 
 def _forbidden(code: str, message: str, path: str, context: dict[str, Any] | None = None) -> ApiError:
-    return _err(403, code if code in ("SELF_APPROVAL",) else "FORBIDDEN", code, message, path, context)
+    return _err(403, code if code in ("SELF_APPROVAL", "SELF_DECISION") else "FORBIDDEN", code, message, path, context)
 
 
 def _need_role(actor: Actor, allowed: frozenset[str], what: str) -> None:
@@ -114,7 +115,9 @@ def _need_role(actor: Actor, allowed: frozenset[str], what: str) -> None:
 
 
 def _at(value: str | None) -> datetime:
-    return parse_ts(value) if value else datetime.now(timezone.utc).replace(microsecond=0)
+    """An optional client instant (assigned_at, credited_at, exported_at), else the server clock. Decisions and imports never
+    take a client instant (``clock.now()`` / a clamp)."""
+    return parse_ts(value) if value else clock.now()
 
 
 # --- idempotent execution ---------------------------------------------------------------------------------------
@@ -138,14 +141,16 @@ def _normalise(value: Any, key: str = "") -> Any:
 _HASH_EXCLUDE = {"export-payable": {"exported_at"}}
 
 
-def _payload_hash(name: str, req: Envelope) -> str:
-    """sha256 over the canonical command name + dataset_version + input (request_id and key excluded; instants
-    normalised). The dataset_version is part of the payload: the same key with another version is a different request."""
+def _payload_hash(name: str, req: Envelope, actor: "Actor | None" = None) -> str:
+    """sha256 over the canonical command name + dataset_version + the actor's ROLE + input (request_id and key excluded;
+    instants normalised). The dataset_version and the role are part of the payload (D-09, R5-19): the same key from the same
+    actor under another role is a different request, so a replay cannot launder a decision into a role that may not take it."""
     body = _normalise(req.input.model_dump())  # type: ignore[attr-defined]
     for k in _HASH_EXCLUDE.get(name, ()):
         body.pop(k, None)
     try:
-        text = canonical_json({"command": name, "dataset_version": req.dataset_version, "input": body})
+        text = canonical_json({"command": name, "dataset_version": req.dataset_version,
+                               **({} if actor is None else {"actor_role": actor.role}), "input": body})
     except ValueError:
         raise _invalid("JSON_NON_FINITE", "input contains a non-finite number", "input") from None
     if "\\u0000" in text:
@@ -162,7 +167,7 @@ def execute(name: str, req: Envelope, actor: Actor, handler: Handler,
             on_replay: Callable[[Conn, Any, Actor], None] | None = None) -> tuple[dict[str, Any], bool]:
     """Run ``handler`` once per idempotency key. Returns ``(response body, replayed)``. A deadlock is retried
     (``MAX_ATTEMPTS`` attempts in all, short randomised back-off); the last failure is 409 CONCURRENT_UPDATE, never a 500."""
-    payload_hash = _payload_hash(name, req)
+    payload_hash = _payload_hash(name, req, actor)
     for attempt in range(1, MAX_ATTEMPTS + 1):
         try:
             return _execute_once(name, req, actor, handler, payload_hash, on_replay)
@@ -208,7 +213,7 @@ def _execute_once(name: str, req: Envelope, actor: Actor, handler: Handler, payl
             if prior["payload_hash"] != payload_hash:
                 raise ApiError(409, "IDEMPOTENCY_KEY_REUSED", "this idempotency_key was used with a different payload",
                                [detail("idempotency_key", "IDEMPOTENCY_PAYLOAD_MISMATCH",
-                                       "same key, different payload_hash")])
+                                       "same key, different payload (or role)")])
             if on_replay is not None:
                 on_replay(conn, req, actor)
             return prior["result"], True
@@ -305,7 +310,12 @@ def _lineage(conn: Conn, invoice_id: str, sha: str, filename: str, key: str, imp
 def import_invoice(conn: Conn, req: Any, actor: Actor) -> Outcome:
     _need_role(actor, IMPORT_ROLES, "import-invoice")
     inp = req.input
-    imported_at = _at(inp.imported_at)
+    # D-09: an import is never stamped later than the server clock (a client that could pick the instant could place an invoice
+    # anywhere in the import order); a later value is clamped and said so.
+    now = clock.now()
+    asked = parse_ts(inp.imported_at) if inp.imported_at else None
+    imported_at = now if asked is None else min(asked, now)
+    clamped = asked is not None and asked > now
     # A row that does not exist yet cannot be locked: serialise imports of one invoice id and of one set of source bytes
     # with advisory locks (taken in sorted order, after the idempotency key and before any invoice row).
     for name in sorted((f"invoice:{inp.invoice_id}", f"sha256:{inp.source_sha256}")):
@@ -346,9 +356,19 @@ def import_invoice(conn: Conn, req: Any, actor: Actor) -> Outcome:
         raise ApiError(422, "VALIDATION_FAILED", "the invoice was rejected at import", details)
     inv = batch.accepted["invoices"][0]
     sub, tax, total = invoice_amounts(inv)
-    canon = conn.execute("SELECT invoice_id, merged_into FROM invoices WHERE source_sha256 = %s ORDER BY imported_at, invoice_id "
-                         "LIMIT 1", (inp.source_sha256,)).fetchone()
-    merged_into = (canon["merged_into"] or canon["invoice_id"]) if canon else None
+    # The same bytes under another invoice id. The canonical copy is the first stored one that can be canonical (not invalid,
+    # not held for review). Same bytes AND the same identity is one obligation (merged); same bytes with other extracted fields is
+    # a conflicting extraction, held for review and merged into nothing (D-09, R5-20). The stored canonical of concurrent
+    # same-bytes imports can differ from the derived one (D-06: warned, counts agree); the derivation is what the metrics use.
+    canon = conn.execute("SELECT invoice_id, merged_into FROM invoices WHERE source_sha256 = %s AND status <> 'needs_review' "
+                         "AND validity IS DISTINCT FROM FALSE ORDER BY imported_at, invoice_id LIMIT 1", (inp.source_sha256,)).fetchone()
+    merged_into = review_of = None
+    if canon is not None:
+        root = conn.execute("SELECT invoice_id, vendor_id, invoice_number_norm, invoice_date, total FROM invoices WHERE invoice_id = %s",
+                            (canon["merged_into"] or canon["invoice_id"],)).fetchone()
+        same = (root["vendor_id"], root["invoice_number_norm"], root["invoice_date"].isoformat(), root["total"]) == (
+            inv.vendor_id, normalise_number(inv.invoice_number), inv.invoice_date.isoformat(), total)
+        merged_into, review_of = (root["invoice_id"], None) if same else (None, root["invoice_id"])
     conn.execute(
         "INSERT INTO invoices (invoice_id, vendor_id, invoice_number, invoice_number_norm, invoice_date, currency, tax_rate, "
         "freight, invoice_discount, declared_total, subtotal, tax, total, created_by, source_sha256, source_filename, "
@@ -357,24 +377,34 @@ def import_invoice(conn: Conn, req: Any, actor: Actor) -> Outcome:
         (inv.invoice_id, inv.vendor_id, inv.invoice_number, normalise_number(inv.invoice_number), inv.invoice_date, inv.currency,
          inv.tax_rate, inv.freight, inv.invoice_discount, inv.declared_total, sub, tax, total, actor.actor_id,
          inv.source_sha256, inv.source_filename, req.idempotency_key, imported_at,
-         "merged" if merged_into else "received", merged_into, DUPLICATE_SOURCE_BYTES if merged_into else None))
+         "merged" if merged_into else "needs_review" if review_of else "received", merged_into,
+         DUPLICATE_SOURCE_BYTES if merged_into else None))
     for l in inv.lines:
         conn.execute("INSERT INTO invoice_lines VALUES (%s, %s, %s, %s, %s, %s)",
                      (l.invoice_line_id, l.invoice_id, l.po_line_id, l.quantity, l.unit_price, l.line_amount))
     lid = _lineage(conn, inv.invoice_id, inv.source_sha256, inv.source_filename, req.idempotency_key,
                    imported_at, actor, "merged" if merged_into else "accepted",
-                   DUPLICATE_SOURCE_BYTES if merged_into else None, merged_into)
-    result = {"invoice_id": inv.invoice_id, "status": "merged" if merged_into else "received",
+                   DUPLICATE_SOURCE_BYTES if merged_into else BYTES_FIELDS_CONFLICT if review_of else None, merged_into)
+    status = "merged" if merged_into else "needs_review" if review_of else "received"
+    result = {"invoice_id": inv.invoice_id, "status": status,
               "import_status": "merged" if merged_into else "accepted", "created_by": actor.actor_id, "lineage_id": lid,
               "imported_at": iso_z(imported_at), **_amounts_json(inv), "lines": len(inv.lines)}
     warnings = []
+    if clamped:
+        warnings.append(_warning("IMPORTED_AT_CLAMPED", f"imported_at was later than the server clock and was set to {iso_z(imported_at)}",
+                                 "input.imported_at"))
+    if review_of:
+        result.update(reason_code=BYTES_FIELDS_CONFLICT, review_against=review_of)
+        warnings.append(_warning(BYTES_FIELDS_CONFLICT, f"the same source bytes were imported as {review_of} with other extracted "
+                                 "fields: held for review, not merged, nothing is consumed", "input.source_sha256"))
     if merged_into:
         result.update(reason_code=DUPLICATE_SOURCE_BYTES, duplicate_of=merged_into)
         warnings.append(_warning(DUPLICATE_SOURCE_BYTES, f"the same source bytes were imported as {merged_into}: one "
                                  "obligation, no received quantity is consumed", "input.source_sha256"))
     return Outcome(result["status"], result, 1, warnings,
                    Audit("invoice", inv.invoice_id, "import-invoice", None, 1, invoice_id=inv.invoice_id,
-                         details={"import_status": result["import_status"], "source_sha256": inv.source_sha256}))
+                         details={"import_status": result["import_status"], "source_sha256": inv.source_sha256,
+                                  **({"review": BYTES_FIELDS_CONFLICT} if review_of else {})}))
 
 
 def _persist_rejection(req: Any, actor: Actor, inp: Any, imported_at: datetime, rejected: list[Any], line_clash: bool) -> None:
@@ -415,11 +445,13 @@ def validate_invoice_cmd(conn: Conn, req: Any, actor: Actor) -> Outcome:
 
 # --- C03 find-duplicates ----------------------------------------------------------------------------------------
 
-def _group_of(pop: Any, invoice_id: str) -> tuple[str, list[str], dict[str, str]]:
-    merged_into, _records, _g = detect_duplicates(pop.invoices)
+def _group_of(pop: Any, invoice_id: str) -> tuple[str, list[str], dict[str, str], dict[str, str]]:
+    """The duplicate group of an invoice as the derivation sees it (committed copy first, then the earliest import; an invalid
+    invoice is never canonical). Returns ``(canonical, members, merged_into, held_for_review)``."""
+    merged_into, _records, _g, review, _first = duplicate_groups(pop, FAR_FUTURE)
     canon = merged_into.get(invoice_id, invoice_id)
     members = sorted({canon} | {i for i, c in merged_into.items() if c == canon})
-    return canon, members, merged_into
+    return canon, members, merged_into, review
 
 
 def find_duplicates(conn: Conn, req: Any, actor: Actor) -> Outcome:
@@ -427,14 +459,27 @@ def find_duplicates(conn: Conn, req: Any, actor: Actor) -> Outcome:
     iid = req.input.invoice_id
     if conn.execute("SELECT 1 FROM invoices WHERE invoice_id = %s", (iid,)).fetchone() is None:
         raise _not_found("input.invoice_id", "INVOICE_UNKNOWN", "invoice")
-    canon, members, _ = _group_of(db.load_population(conn), iid)           # find the group, then lock it (sorted) ...
+    canon, members, _, _ = _group_of(db.load_population(conn), iid)        # find the group, then lock it (sorted) ...
     locked = _lock_invoices(conn, members + [iid])
     pop = db.load_population(conn)                                         # ... and read it again under the locks
-    canon, members, merged_into = _group_of(pop, iid)
+    canon, members, merged_into, review = _group_of(pop, iid)
     if set(members) - set(locked):                                          # a new member appeared: lock it too
         locked.update(_lock_invoices(conn, members))
     target = locked[iid]
-    _need_status(target, ("valid", "matched", "exception", "merged"), "find-duplicates")
+    _need_status(target, ("valid", "matched", "exception", "merged", "needs_review"), "find-duplicates")
+    if iid in review:                                                       # same bytes, other fields: held for review (D-09)
+        version = target["version"]
+        if target["status"] != "needs_review":
+            if target["status"] in ("approved", "exported", "adjusted"):
+                raise _conflict(INVALID_STATE, f"{iid} is {target['status']} and cannot be held for review", "input.invoice_id",
+                                {"invoice_id": iid, "status": target["status"]})
+            version = _set_status(conn, iid, "needs_review")
+        return Outcome("needs_review", {"invoice_id": iid, "status": "needs_review", "reason_code": BYTES_FIELDS_CONFLICT,
+                                        "review_against": review[iid], "canonical_id": review[iid], "is_canonical": False,
+                                        "candidates": [], "merged": [], "review": "a person decides: same bytes, other fields"},
+                       version, [_warning(BYTES_FIELDS_CONFLICT, f"{iid} has the source bytes of {review[iid]} but other extracted fields",
+                                          "input.invoice_id")],
+                       Audit("invoice", iid, "find-duplicates", invoice_id=iid, details={"review": BYTES_FIELDS_CONFLICT}))
     by_id = {i.invoice_id: i for i in pop.invoices}
     me = by_id[iid]
     candidates = []
@@ -568,6 +613,21 @@ def assign_exception(conn: Conn, req: Any, actor: Actor) -> Outcome:
 
 # --- C07 approve-invoice ----------------------------------------------------------------------------------------
 
+def _need_current_match(book: Any, iid: str) -> None:
+    """C07, C09 and C10 re-derive the match from the facts: a receipt reversed since the match, or a copy of an invoice that is
+    already committed, refuses the command (409), whatever the stored workflow state says (D-09)."""
+    if iid in book.merged_into:
+        raise _conflict("DUPLICATE_PENDING", f"{iid} is a duplicate of {book.merged_into[iid]}: only the canonical copy can advance",
+                        "input.invoice_id", {"merged_into": book.merged_into[iid]})
+    if iid in book.review:
+        raise _conflict("DUPLICATE_PENDING", f"{iid} has the source bytes of {book.review[iid]} with other extracted fields: it is held "
+                        "for review", "input.invoice_id", {"review_against": book.review[iid]})
+    st = book.run.invoices.get(iid)
+    if st is None or not st.matched:                                       # a receipt may have been reversed since the match
+        raise _conflict("STALE_MATCH", "the invoice no longer matches (receipts or invoices changed); match it again",
+                        "input.invoice_id", {"rule_id": "NOT_MATCHED"}, rule_id="NOT_MATCHED")
+
+
 def approve_invoice(conn: Conn, req: Any, actor: Actor) -> Outcome:
     _need_role(actor, DECISION_ROLES, "approve-invoice")
     inp = req.input
@@ -578,7 +638,7 @@ def approve_invoice(conn: Conn, req: Any, actor: Actor) -> Outcome:
         _refusal(actor, req, "approve-invoice", iid, "SELF_APPROVAL", "the approver created or imported this invoice")
         raise _forbidden("SELF_APPROVAL", "the approver must differ from the person who created the invoice",
                          "header.X-Actor-Id", {"created_by": inv_row["created_by"]})
-    at = _at(inp.decided_at)
+    at = clock.now()                                                         # the server stamps the decision (D-09, R5-04)
     pop = db.load_population(conn)
     policy = effective_policy(pop.approval_policies, at)
     total = inv_row["total"]
@@ -588,11 +648,10 @@ def approve_invoice(conn: Conn, req: Any, actor: Actor) -> Outcome:
                          "no approval policy is in force at that instant" if policy is None else
                          f"the policy v{policy.version_number} does not allow role {actor.role} to approve {s2(total)}",
                          "header.X-Actor-Role", {"policy_id": getattr(policy, "policy_id", None), "total": s2(total)})
-    st = derive(pop, None).run.invoices.get(iid)
-    if st is None or not st.matched:                                       # a receipt may have been reversed since the match
-        raise _conflict("STALE_MATCH", "the invoice no longer matches (receipts or invoices changed); match it again",
-                        "input.invoice_id", {"rule_id": "NOT_MATCHED"}, rule_id="NOT_MATCHED")
     aid = inp.approval_id or f"ap-{uuid.uuid4().hex[:12]}"
+    # re-derive WITH this approval: it commits the invoice, so it is matched ahead of every uncommitted invoice (D-09)
+    book = derive(dataclasses.replace(pop, approvals=[*pop.approvals, Approval(aid, iid, actor.actor_id, actor.role, "approve", at)]), None)
+    _need_current_match(book, iid)
     conn.execute("INSERT INTO approvals (approval_id, invoice_id, actor_id, actor_role, decision, decided_at, policy_id, "
                  "policy_version) VALUES (%s,%s,%s,%s,'approve',%s,%s,%s)",
                  (aid, iid, actor.actor_id, actor.role, at, policy.policy_id, policy.version_number))
@@ -612,7 +671,11 @@ def reject_invoice(conn: Conn, req: Any, actor: Actor) -> Outcome:
     inv_row = _invoice(conn, inp.invoice_id)
     _need_status(inv_row, ("valid", "matched", "exception"), "reject-invoice")
     iid = inv_row["invoice_id"]
-    at = _at(inp.decided_at)
+    if actor.actor_id == inv_row["created_by"]:                              # separation of duties covers rejection too (D-09, R5-19)
+        _refusal(actor, req, "reject-invoice", iid, "SELF_DECISION", "the rejecter created or imported this invoice")
+        raise _forbidden("SELF_DECISION", "the rejecter must differ from the person who created the invoice",
+                         "header.X-Actor-Id", {"created_by": inv_row["created_by"]})
+    at = clock.now()
     pop = db.load_population(conn)
     policy = effective_policy(pop.approval_policies, at)
     if policy is None or actor.role not in {policy.reviewer_role, policy.escalation_role}:
@@ -680,6 +743,13 @@ def export_payable(conn: Conn, req: Any, actor: Actor) -> Outcome:
         raise _conflict(INVALID_STATE, "some invoices cannot be exported", "input.invoice_ids", {"exclusions": problems})
     at = _at(inp.exported_at)
     pop = db.load_population(conn)
+    book = derive(pop, None)
+    for iid in ids:                                                        # re-derive the match like C07 does (D-09)
+        _need_current_match(book, iid)
+    early = [i for i in ids if i in book.approved and at < book.approved[i]]
+    if early:                                                              # an export row needs a valid approval at or before it
+        raise _invalid("EXPORTED_BEFORE_APPROVAL", f"exported_at {iso_z(at)} is before the approval of {', '.join(early)}",
+                       "input.exported_at", {"invoices": early, "approved_at": {i: iso_z(book.approved[i]) for i in early}})
     total = sum((locked[i]["total"] for i in ids), Decimal(0))
     conn.execute("INSERT INTO export_batches (batch_id, idempotency_key, requested_by, exported_at, row_count, total) "
                  "VALUES (%s,%s,%s,%s,%s,%s)", (inp.batch_id, req.idempotency_key, actor.actor_id, at, len(ids), total))
@@ -705,6 +775,7 @@ def apply_credit_note(conn: Conn, req: Any, actor: Actor) -> Outcome:
     inv_row = _invoice(conn, inp.invoice_id)
     _need_status(inv_row, ("approved", "exported", "adjusted"), "apply-credit-note")
     iid = inv_row["invoice_id"]
+    _need_current_match(derive(db.load_population(conn), None), iid)      # re-derive the match like C07 does (D-09)
     try:
         amount = Decimal(inp.credit_amount)
     except Exception:

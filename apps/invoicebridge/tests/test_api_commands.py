@@ -7,7 +7,7 @@ from api import commands
 from api.app import PREFIX
 
 from support_db import (ADMIN, CLERK, REVIEWER, VARIANTS, Desk, actor, client, command, conn, count, db_url, drive,  # noqa: F401
-                        golden_expected, golden_inputs, rule_ids, sha, current_dataset_version)
+                        golden_expected, golden_inputs, rule_ids, set_now, sha, current_dataset_version)
 from test_golden_domain import flat
 
 
@@ -191,7 +191,7 @@ def test_a_line_id_that_exists_is_refused_and_the_same_id_with_other_bytes_is_40
 
 def test_same_bytes_under_another_invoice_id_is_one_obligation(desk):
     desk.ready("inv-1")
-    r = desk.imp("inv-1b", [("l-b", "pol-1", "6", "20.00")], source_sha256=sha("bytes-inv-1"), source_filename="renamed.pdf", invoice_number="OTHER")
+    r = desk.imp("inv-1b", [("l-b", "pol-1", "6", "20.00")], source_sha256=sha("bytes-inv-1"), source_filename="renamed.pdf", invoice_number="INV-1")
     res = r.json()
     assert r.status_code == 200 and res["status"] == "merged" and res["result"]["duplicate_of"] == "inv-1"
     assert res["result"]["reason_code"] == "DUPLICATE_SOURCE_BYTES" and res["warnings"][0]["code"] == "DUPLICATE_SOURCE_BYTES"
@@ -265,13 +265,28 @@ def test_run_on_the_canonical_it_merges_the_later_copies_and_a_different_vendor_
     assert desk.post("find-duplicates", {"invoice_id": "inv-3"}).json()["result"]["candidates"] == []
 
 
-def test_a_copy_that_is_already_approved_cannot_be_merged(desk):
+def test_an_approved_canonical_copy_is_never_displaced_by_an_earlier_stamped_import(desk):
+    """D-09 (R5-02): the committed copy is the canonical one; the later-arriving copy, even stamped earlier, merges into it."""
     desk.ready("inv-2", [("l2", "pol-1", "6", "20.00")], invoice_number="SAME", imported_at="2026-10-07T09:00:00Z")
     desk.approve("inv-2")
-    desk.imp("inv-1", [("l1", "pol-1", "6", "20.00")], invoice_number="SAME", imported_at="2026-10-06T09:00:00Z")     # earlier import: canonical
+    desk.imp("inv-1", [("l1", "pol-1", "6", "20.00")], invoice_number="SAME", imported_at="2026-10-06T09:00:00Z")     # stamped earlier
     desk.post("validate-invoice", {"invoice_id": "inv-1"})
+    assert desk.post("match-three-way", {"invoice_id": "inv-1"}).status_code == 409          # the derivation merges it: run find-duplicates
     r = desk.post("find-duplicates", {"invoice_id": "inv-1"})
-    assert r.status_code == 409 and r.json()["error"]["code"] == "INVALID_STATE" and desk.status("inv-2") == "approved"
+    assert r.status_code == 200 and r.json()["result"]["canonical_id"] == "inv-2" and r.json()["result"]["merged"] == ["inv-1"]
+    assert desk.status("inv-2") == "approved" and desk.status("inv-1") == "merged"
+
+
+def test_a_derived_duplicate_cannot_advance_even_when_its_stored_state_says_matched(desk):
+    """D-09 (R5-02): C07 re-derives; a copy the derivation merges into a committed invoice is refused (409 DUPLICATE_PENDING)."""
+    desk.ready("inv-1", [("l1", "pol-1", "3", "20.00")], invoice_number="TWIN")
+    desk.approve("inv-1", decided_at="2026-10-08T00:00:00Z")
+    desk.imp("inv-2", [("l2", "pol-1", "3", "20.00")], invoice_number="TWIN", imported_at="2026-10-09T09:00:00Z")
+    desk.post("validate-invoice", {"invoice_id": "inv-2"})
+    assert desk.post("match-three-way", {"invoice_id": "inv-2"}).status_code == 409           # the derivation merges it: find-duplicates first
+    desk.conn.execute("UPDATE invoices SET status = 'matched' WHERE invoice_id = 'inv-2'")    # a stale stored state
+    r = desk.approve("inv-2", who=actor("usr-rev02", "reviewer"), decided_at="2026-10-09T10:00:00Z")
+    assert r.status_code == 409 and rule_ids(r) == ["DUPLICATE_PENDING"] and count(desk.conn, "approvals") == 1
 
 
 # --- C04 match-three-way ----------------------------------------------------------------------------------------
@@ -388,8 +403,9 @@ def test_the_escalation_role_approves_over_the_limit_and_no_policy_means_no_appr
     d = Desk(client, conn, w)
     d.ready("inv-1")
     assert d.approve("inv-1").status_code == 403
-    nop = d.approve("inv-1", who=ADMIN, decided_at="2025-01-01T00:00:00Z")
+    nop = d.approve("inv-1", who=ADMIN, decided_at="2025-01-01T00:00:00Z")      # the server clock is pinned before any policy
     assert nop.status_code == 403 and rule_ids(nop) == ["NO_POLICY"]
+    set_now(None)
     assert d.approve("inv-1", who=ADMIN).status_code == 200
 
 
@@ -445,7 +461,7 @@ def test_an_approved_invoice_cannot_be_rejected(desk):
 def test_export_writes_a_batch_with_a_content_hash_and_moves_approved_to_exported(desk):
     import hashlib
     desk.ready("inv-1")
-    desk.approve("inv-1")
+    desk.approve("inv-1", decided_at="2026-10-06T15:30:00Z")
     r = desk.post("export-payable", {"batch_id": "bat-1", "invoice_ids": ["inv-1"], "exported_at": "2026-10-07T08:00:00Z"}, REVIEWER)
     res = r.json()["result"]
     assert r.status_code == 200 and res["returned_prior"] is False and res["total"] == "132.00" and "nothing is paid" in res["payments"]
@@ -567,3 +583,162 @@ def test_a_deadlock_is_retried_and_after_three_attempts_is_409_concurrent_update
     r = desk.imp("inv-2")
     assert r.status_code == 409 and r.json()["error"]["code"] == "CONCURRENT_UPDATE" and calls["n"] == -97
     assert commands.MAX_ATTEMPTS == 3 and count(desk.conn, "invoices") == 1
+
+
+# --- the independent review A-038 (D-09): decisions are stamped by the server, committed outcomes are facts -------------------
+
+def test_a_decision_instant_chosen_by_the_client_is_refused(desk):
+    """R5-04: decided_at is not part of C07 or C08; the server stamps it (a client could pick the policy version in force)."""
+    desk.ready("inv-1")
+    r = desk.post("approve-invoice", {"invoice_id": "inv-1", "decided_at": "2026-09-01T00:00:00Z"}, REVIEWER)
+    assert r.status_code == 422 and rule_ids(r) == ["FIELD_UNEXPECTED"]
+    r = desk.post("reject-invoice", {"invoice_id": "inv-1", "reason": "x", "decided_at": "2026-09-01T00:00:00Z"}, actor("usr-rev02", "reviewer"))
+    assert r.status_code == 422 and rule_ids(r) == ["FIELD_UNEXPECTED"] and count(desk.conn, "approvals") == 0
+
+
+def test_the_server_stamps_the_decision_and_the_processing_time_follows_it(desk):
+    desk.ready("inv-1")
+    set_now("2026-10-06T15:30:00Z")
+    r = desk.post("approve-invoice", {"invoice_id": "inv-1"}, REVIEWER)
+    assert r.status_code == 200 and r.json()["result"]["decided_at"] == "2026-10-06T15:30:00Z"
+    p = desk.client.get(f"{PREFIX}/metrics").json()["data"]["metrics"]["processing"]
+    assert p["mean_minutes"] == "390.0000" and p["approved_count"] == 1
+
+
+def test_a_back_dated_invoice_cannot_take_the_quantity_of_an_exported_one(desk):
+    """R5-01 / R5-09 (the reviewer's B1): inv-late is approved and exported; inv-back (earlier invoice date, imported later) is blocked."""
+    desk.ready("inv-late", [("l1", "pol-1", "6", "20.00")], invoice_date="2026-10-06", imported_at="2026-10-06T09:00:00Z")
+    assert desk.approve("inv-late").status_code == 200
+    assert desk.post("export-payable", {"batch_id": "bat-1", "invoice_ids": ["inv-late"]}, REVIEWER).status_code == 200
+    r = desk.ready("inv-back", [("l2", "pol-1", "6", "20.00")], invoice_number="B-0", invoice_date="2026-10-05", imported_at="2026-10-08T09:00:00Z")
+    assert r["status"] == "exception" and r["lines"][0]["reason_code"] == "QUANTITY_BLOCKED"
+    assert desk.approve("inv-back").status_code == 409
+    assert desk.post("export-payable", {"batch_id": "bat-2", "invoice_ids": ["inv-back"]}, REVIEWER).status_code == 409
+    assert (desk.status("inv-late"), desk.status("inv-back")) == ("exported", "exception") and count(desk.conn, "export_rows") == 1
+    m = desk.client.get(f"{PREFIX}/metrics").json()
+    ex = m["data"]["metrics"]["export"]
+    assert (ex["accepted_export_total"], ex["eligible_approved_total"], ex["difference"]) == ("132.00", "132.00", "0.00")
+    assert ex["exclusions"] == [{"invoice_id": "inv-back", "reason_code": "EXCEPTION_OPEN"}]
+    assert m["data"]["metrics"]["quantities"]["accepted_invoiced_quantity"] == "6.0000" and m["warnings"] == []
+
+
+def test_a_reversed_receipt_refuses_export_and_credit_and_never_un_exports(desk):
+    """R5-03 (the reviewer's B2): C09 and C10 re-derive the match like C07 (409 STALE_MATCH); an exported invoice stays exported."""
+    desk.ready("inv-1")
+    desk.approve("inv-1")
+    desk.conn.execute("UPDATE receipts SET reversed = TRUE")
+    for name, body in (("export-payable", {"batch_id": "bat-1", "invoice_ids": ["inv-1"]}),
+                       ("apply-credit-note", {"credit_id": "cn-1", "invoice_id": "inv-1", "credit_amount": "10.00"})):
+        r = desk.post(name, body, REVIEWER)
+        assert r.status_code == 409 and r.json()["error"]["code"] == "STALE_MATCH" and rule_ids(r) == ["NOT_MATCHED"], name
+    assert count(desk.conn, "export_rows") == 0 and count(desk.conn, "credit_notes") == 0
+    m = desk.client.get(f"{PREFIX}/metrics").json()["data"]["metrics"]
+    assert m["obligations"]["count"] == 0 and m["approvals"]["invalid_records"][0]["reason_code"] == "NOT_MATCHED"
+
+
+def test_an_exported_invoice_stays_exported_when_its_receipt_is_reversed_afterwards(desk):
+    desk.ready("inv-1")
+    desk.approve("inv-1")
+    assert desk.post("export-payable", {"batch_id": "bat-1", "invoice_ids": ["inv-1"]}, REVIEWER).status_code == 200
+    desk.conn.execute("UPDATE receipts SET reversed = TRUE")
+    body = desk.client.get(f"{PREFIX}/metrics").json()
+    m = body["data"]["metrics"]
+    assert (m["obligations"]["count"], m["export"]["accepted_export_total"], m["export"]["difference"]) == (1, "132.00", "0.00")
+    assert [(e["invoice_id"], e["exception_type"]) for e in m["exceptions"]["records"]] == [("inv-1", "QUANTITY_BLOCKED")]
+    assert body["warnings"] == [] and body["data"]["export_reconciliation"]["stored_minus_derived"] == "0.00"
+    r = desk.post("apply-credit-note", {"credit_id": "cn-1", "invoice_id": "inv-1", "credit_amount": "10.00"}, REVIEWER)
+    assert r.status_code == 409 and r.json()["error"]["code"] == "STALE_MATCH"
+
+
+def test_an_export_cannot_be_stamped_before_the_approval(desk):
+    desk.ready("inv-1")
+    desk.approve("inv-1", decided_at="2026-10-08T00:00:00Z")
+    r = desk.post("export-payable", {"batch_id": "bat-1", "invoice_ids": ["inv-1"], "exported_at": "2026-10-07T08:00:00Z"}, REVIEWER)
+    assert r.status_code == 422 and rule_ids(r) == ["EXPORTED_BEFORE_APPROVAL"] and count(desk.conn, "export_rows") == 0
+    assert desk.post("export-payable", {"batch_id": "bat-1", "invoice_ids": ["inv-1"], "exported_at": "2026-10-08T00:00:00Z"}, REVIEWER).status_code == 200
+
+
+def test_the_creator_cannot_reject_their_own_invoice_and_the_refusal_is_audited(desk):
+    """R5-19 (the reviewer's B5): separation of duties covers rejection."""
+    desk.ready("inv-1")
+    r = desk.post("reject-invoice", {"invoice_id": "inv-1", "reason": "mine"}, actor("usr-clerk01", "reviewer"))
+    assert r.status_code == 403 and r.json()["error"]["code"] == "SELF_DECISION" and rule_ids(r) == ["SELF_DECISION"]
+    assert desk.status("inv-1") == "matched" and count(desk.conn, "approvals") == 0
+    audit = [x["action"] for x in desk.conn.execute("SELECT action FROM audit_events WHERE invoice_id = 'inv-1' ORDER BY occurred_at, event_id").fetchall()]
+    assert audit[-1] == "reject-invoice-refused"
+    assert desk.post("reject-invoice", {"invoice_id": "inv-1", "reason": "wrong goods"}, actor("usr-rev02", "reviewer")).status_code == 200
+
+
+def test_the_idempotency_key_is_bound_to_the_role_as_well_as_the_actor(desk):
+    """R5-19: the same key and payload from the same actor under another role is not a replay."""
+    desk.ready("inv-1")
+    first = desk.post("approve-invoice", {"invoice_id": "inv-1"}, actor("usr-rev01", "reviewer"), key="k-role")
+    again = desk.post("approve-invoice", {"invoice_id": "inv-1"}, actor("usr-rev01", "reviewer"), key="k-role")
+    other = desk.post("approve-invoice", {"invoice_id": "inv-1"}, actor("usr-rev01", "admin"), key="k-role")
+    assert first.status_code == 200 and again.status_code == 200 and again.headers["Idempotent-Replay"] == "true"
+    assert other.status_code == 409 and other.json()["error"]["code"] == "IDEMPOTENCY_KEY_REUSED" and "Idempotent-Replay" not in other.headers
+
+
+def test_same_bytes_with_other_extracted_fields_are_held_for_review(desk):
+    """R5-20: not merged (it would seed the identity map); needs_review, a warning, nothing consumed, no command advances it."""
+    desk.ready("inv-1")
+    r = desk.imp("inv-1b", [("l-b", "pol-1", "6", "20.00")], source_sha256=sha("bytes-inv-1"), invoice_number="OTHER")
+    body = r.json()
+    assert r.status_code == 200 and body["status"] == "needs_review" and body["result"]["reason_code"] == "BYTES_FIELDS_CONFLICT"
+    assert body["result"]["review_against"] == "inv-1" and body["warnings"][0]["code"] == "BYTES_FIELDS_CONFLICT"
+    assert desk.status("inv-1b") == "needs_review"
+    assert desk.post("validate-invoice", {"invoice_id": "inv-1b"}).status_code == 409
+    assert desk.post("match-three-way", {"invoice_id": "inv-1b"}).status_code == 409
+    m = desk.client.get(f"{PREFIX}/metrics").json()
+    assert m["data"]["metrics"]["duplicates"] == {"groups_detected": 0, "rows_merged": 0, "unresolved_groups": 1}
+    assert m["warnings"] == [] and m["data"]["metrics"]["quantities"]["accepted_invoiced_quantity"] == "6.0000"
+
+
+def test_an_earlier_stamped_copy_cannot_displace_an_exported_canonical_and_cannot_advance(desk):
+    """R5-02 (the reviewer's api_attacks4): the committed copy stays canonical; the copy is merged, matched never, exported never."""
+    desk.ready("inv-a", [("la", "pol-1", "6", "20.00")], invoice_number="INV-77", invoice_date="2026-10-05", imported_at="2026-10-06T09:00:00Z")
+    desk.approve("inv-a")
+    assert desk.post("export-payable", {"batch_id": "bat-1", "invoice_ids": ["inv-a"]}, REVIEWER).status_code == 200
+    desk.imp("inv-b", [("lb", "pol-1", "6", "20.00")], invoice_number="inv 77", invoice_date="2026-10-05", imported_at="2026-10-05T09:00:00Z")
+    assert desk.post("validate-invoice", {"invoice_id": "inv-b"}).status_code == 200
+    assert desk.post("match-three-way", {"invoice_id": "inv-b"}).status_code == 409                 # the derivation merges it already
+    r = desk.post("find-duplicates", {"invoice_id": "inv-b"})
+    assert r.status_code == 200 and r.json()["result"]["canonical_id"] == "inv-a" and r.json()["result"]["merged"] == ["inv-b"]
+    assert desk.approve("inv-b").status_code == 409 and desk.post("export-payable", {"batch_id": "bat-2", "invoice_ids": ["inv-b"]}, REVIEWER).status_code == 409
+    assert (desk.status("inv-a"), desk.status("inv-b")) == ("exported", "merged") and count(desk.conn, "export_rows") == 1
+    m = desk.client.get(f"{PREFIX}/metrics").json()
+    assert m["data"]["metrics"]["obligations"] == {"count": 1, "total": "132.00"} and m["warnings"] == []
+
+
+def test_an_invalid_earlier_stamped_copy_never_becomes_canonical_or_advances(desk):
+    desk.ready("inv-a", [("la", "pol-1", "6", "20.00")], invoice_number="INV-77", invoice_date="2026-10-05", imported_at="2026-10-06T09:00:00Z")
+    desk.approve("inv-a")
+    desk.post("export-payable", {"batch_id": "bat-1", "invoice_ids": ["inv-a"]}, REVIEWER)
+    desk.imp("inv-b", [("lb", "pol-1", "6", "20.00")], invoice_number="inv 77", invoice_date="2026-10-05", imported_at="2026-10-04T09:00:00Z")
+    assert desk.post("validate-invoice", {"invoice_id": "inv-b"}).json()["status"] == "invalid"           # dated after its import
+    for r in (desk.post("find-duplicates", {"invoice_id": "inv-b"}), desk.post("match-three-way", {"invoice_id": "inv-b"}), desk.approve("inv-b"),
+              desk.post("export-payable", {"batch_id": "bat-2", "invoice_ids": ["inv-b"]}, REVIEWER)):
+        assert r.status_code == 409
+    m = desk.client.get(f"{PREFIX}/metrics").json()
+    assert m["data"]["metrics"]["duplicates"]["rows_merged"] == 0 and m["warnings"] == []                 # inv-a is not displaced into an invalid canonical
+
+
+def test_a_future_imported_at_is_clamped_to_the_server_clock(desk):
+    r = desk.imp("inv-1", imported_at="2999-01-01T00:00:00Z")
+    assert r.status_code == 200 and r.json()["result"]["imported_at"] < "2999" and r.json()["warnings"][0]["code"] == "IMPORTED_AT_CLAMPED"
+
+
+def test_non_ascii_digits_in_a_decimal_are_refused_by_the_schema(desk):
+    r = desk.imp("inv-1", [("l1", "pol-1", "١٠", "20.00")])
+    assert r.status_code == 422 and rule_ids(r)[0] == "FIELD_INVALID" and count(desk.conn, "invoice_lines") == 0
+
+
+def test_the_export_is_reconciled_against_the_stored_rows_too(desk):
+    """R5-13: a stored export row the facts do not support is reported (EXPORT_ROWS_DIFFER) beside the derived reconciliation."""
+    desk.ready("inv-1")
+    desk.conn.execute("INSERT INTO export_batches (batch_id, idempotency_key, requested_by, exported_at, row_count, total) VALUES ('bat-x', 'k', 'u', now(), 1, 132.00)")
+    desk.conn.execute("INSERT INTO export_rows VALUES ('exp-bat-x-inv-1', 'bat-x', 'inv-1', now(), 'ven-1', 'INV-1', '2026-10-06', 'USD', 132.00, repeat('a', 64))")
+    body = desk.client.get(f"{PREFIX}/metrics").json()
+    rec = body["data"]["export_reconciliation"]
+    assert rec["only_in_stored_rows"] == ["inv-1"] and rec["stored_total"] == "132.00" and rec["derived_total"] == "0.00"
+    assert "EXPORT_ROWS_DIFFER" in [w["code"] for w in body["warnings"]]

@@ -9,9 +9,10 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "golden": "tsx scripts/golden-check.ts",
-    "check": "npm run typecheck && npm run golden",
+    "check": "npm run typecheck && npm run golden && npm run review",
     "e2e": "playwright test",
-    "build:pages": "SITE_BASE=/projects-site/labs/invoicebridge/ npm run build"
+    "build:pages": "SITE_BASE=/projects-site/labs/invoicebridge/ npm run build",
+    "review": "tsx scripts/review-check.ts"
   },
   "dependencies": {
     "react": "18.3.1",

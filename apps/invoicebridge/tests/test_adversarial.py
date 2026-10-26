@@ -42,7 +42,7 @@ def post(client, name, input_, headers, key, version):
 def test_same_bytes_under_two_filenames_leave_one_obligation(desk):
     """The injected defect: the same PDF under two filenames. One obligation, one received quantity consumed."""
     desk.ready("inv-1", source_filename="a.pdf")
-    dup = desk.imp("inv-2", [("l2", "pol-1", "6", "20.00")], source_sha256=sha("bytes-inv-1"), source_filename="b-copy.pdf")
+    dup = desk.imp("inv-2", [("l2", "pol-1", "6", "20.00")], source_sha256=sha("bytes-inv-1"), source_filename="b-copy.pdf", invoice_number="INV-1")
     assert dup.json()["status"] == "merged"
     desk.approve("inv-1")
     m = metrics(desk)
@@ -274,7 +274,7 @@ def test_the_same_invoice_bytes_imported_concurrently_under_different_keys_make_
 
 def test_export_batch_idempotency_under_concurrency_same_key(desk):
     desk.ready("inv-1")
-    desk.approve("inv-1")
+    desk.approve("inv-1", decided_at="2026-10-06T15:30:00Z")
     version = current_dataset_version()
     results = race(6, lambda i, c: post(c, "export-payable", {"batch_id": "bat-1", "invoice_ids": ["inv-1"], "exported_at": f"2026-10-07T08:00:{i:02d}Z"},
                                          REVIEWER, "exp-key", version))
@@ -374,7 +374,7 @@ def test_the_same_bytes_under_different_invoice_ids_imported_concurrently_make_o
     version = current_dataset_version()
 
     def body(i):
-        return {"invoice_id": f"inv-{i}", "vendor_id": "ven-1", "invoice_number": f"N-{i}", "invoice_date": "2026-10-06", "currency": "USD",
+        return {"invoice_id": f"inv-{i}", "vendor_id": "ven-1", "invoice_number": "N-1", "invoice_date": "2026-10-06", "currency": "USD",
                 "tax_rate": "0.10", "declared_total": "132.00", "source_sha256": sha("race3"), "source_filename": f"copy-{i}.pdf",
                 "imported_at": f"2026-10-06T09:00:0{i}Z", "lines": [{"invoice_line_id": f"l{i}", "po_line_id": "pol-1", "quantity": "6", "unit_price": "20.00"}]}
     results = race(4, lambda i, c: post(c, "import-invoice", body(i), CLERK, f"sha-{i}", version))

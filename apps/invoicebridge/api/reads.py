@@ -15,6 +15,7 @@ import json
 import os
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 from typing import Any
 
 import psycopg
@@ -219,6 +220,29 @@ def read_metrics(lo: str | None, hi: str | None, cutoff: str | None, group_by: s
                  for r in conn.execute("SELECT invoice_id, status FROM invoices WHERE validity IS NOT NULL OR status = 'merged' "
                                        "ORDER BY invoice_id").fetchall()
                  if r["status"] != book.status.get(r["invoice_id"]) and r["status"] not in ("valid", "invalid")][:50]
+        # D-09: the export is also reconciled against the STORED export rows (what the commands wrote), not only the derived ones
+        stored = conn.execute("SELECT invoice_id, batch_id, amount FROM export_rows WHERE exported_at <= %s ORDER BY invoice_id COLLATE \"C\"",
+                              (book.cutoff,)).fetchall()
+        s_rows = {r["invoice_id"]: (r["batch_id"], r["amount"]) for r in stored}
+        d_rows = {r["invoice_id"]: (r["batch_id"], Decimal(r["amount"])) for r in book.export_rows}
+        only_stored = sorted(set(s_rows) - set(d_rows))
+        only_derived = sorted(set(d_rows) - set(s_rows))
+        other = sorted(i for i in set(s_rows) & set(d_rows) if s_rows[i] != d_rows[i])
+        stored_total = sum((r["amount"] for r in stored), Decimal("0.00"))
+        derived_total = sum((v[1] for v in d_rows.values()), Decimal("0.00"))
+        m2 = lambda x: format(x.quantize(Decimal("0.01")), "f")      # noqa: E731
+        eligible = Decimal(out["metrics"]["export"]["eligible_approved_total"]) if "metrics" in out else None
+        data["export_reconciliation"] = {
+            "stored_rows": len(stored), "derived_rows": len(d_rows), "stored_total": m2(stored_total),
+            "derived_total": m2(derived_total), "stored_minus_derived": m2(stored_total - derived_total),
+            "stored_minus_eligible_approved": None if eligible is None else m2(stored_total - eligible),
+            "only_in_stored_rows": only_stored, "only_in_derived_rows": only_derived, "different": other,
+            "explanation": "difference = export rows - approved obligations; every approved invoice not exported is an exclusion "
+                           "(APPROVED_NOT_EXPORTED or EXPORT_BEFORE_APPROVAL), so the difference is always explained"}
+        if only_stored or only_derived or other:
+            warns.append({"code": "EXPORT_ROWS_DIFFER", "message": "the stored export rows and the derived export rows differ for "
+                          f"{len(only_stored) + len(only_derived) + len(other)} invoice(s): " + ", ".join((only_stored + only_derived + other)[:5]),
+                          "path": "export"})
         applied = {"from": iso_z(start), "to": iso_z(end), "cutoff": [iso_z(c) for c in cutoffs], "group_by": group_by}
         total = sum(1 for i in pop.invoices if (start is None or i.imported_at >= start) and (end is None or i.imported_at < end))
         return {"data": data, "meta": meta(conn, applied, total, None, _counts(conn)), "warnings": warns}

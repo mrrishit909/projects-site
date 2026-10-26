@@ -4,6 +4,7 @@
 import { invoiceAmounts, lineMoney } from "./amounts";
 import { RULE_VERSION } from "./contract";
 import { absB, fmt, maxB, money10, rescale, s2, s4q, sumB } from "./num";
+import { cmp } from "./order";
 import type { Invoice, PoLine, Population } from "./types";
 
 export interface LineResult {
@@ -19,7 +20,6 @@ export interface InvoiceResult {
 export interface MatchRun {
   cutoff: number; po_lines: Map<string, PoLine>; net: Map<string, bigint>; consumed: Map<string, bigint>; lines: LineResult[]; invoices: Map<string, InvoiceResult>;
 }
-const cmp = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
 export const bookOrder = (a: Invoice, b: Invoice): number => cmp(a.invoice_date, b.invoice_date) || a.imported_at - b.imported_at || cmp(a.invoice_id, b.invoice_id);
 
 /** The canonical row of expected.json["documents"]["match_results"]. */
@@ -32,9 +32,11 @@ export function asRow(r: LineResult): Record<string, unknown> {
   };
 }
 
-export function matchRun(pop: Population, candidates: readonly Invoice[], cutoff: number): MatchRun {
+/** Consumption order (D-09): committed invoices (invoice id -> commit instant) first, by that instant, then book order. */
+export function matchRun(pop: Population, candidates: readonly Invoice[], cutoff: number, committed: ReadonlyMap<string, readonly [number, string]> = new Map()): MatchRun {
   const tolPrice = pop.tolerances.price_per_unit, tolLine = pop.tolerances.rounding_per_line, tolInv = pop.tolerances.rounding_per_invoice;
   const poCur = new Map(pop.purchase_orders.map((p) => [p.po_id, p.currency]));
+  const poVendor = new Map(pop.purchase_orders.map((p) => [p.po_id, p.vendor_id]));
   const ordered = new Set(pop.purchase_orders.filter((p) => p.ordered_at <= cutoff).map((p) => p.po_id));
   const pol = new Map(pop.po_lines.filter((l) => ordered.has(l.po_id)).map((l) => [l.po_line_id, l]));
   const net = new Map<string, bigint>([...pol.keys()].map((k) => [k, 0n]));
@@ -42,7 +44,14 @@ export function matchRun(pop: Population, candidates: readonly Invoice[], cutoff
   const consumed = new Map<string, bigint>([...pol.keys()].map((k) => [k, 0n]));
   const results: LineResult[] = [];
   const invs = new Map<string, InvoiceResult>();
-  for (const inv of [...candidates].sort(bookOrder)) {
+  const consumptionOrder = (a: Invoice, b: Invoice): number => {
+    const ca = committed.get(a.invoice_id), cb = committed.get(b.invoice_id);
+    if (ca && cb) return ca[0] - cb[0] || cmp(ca[1], cb[1]) || cmp(a.invoice_id, b.invoice_id);
+    if (ca) return -1;
+    if (cb) return 1;
+    return bookOrder(a, b);
+  };
+  for (const inv of [...candidates].sort(consumptionOrder)) {
     const [sub, tax, total] = invoiceAmounts(inv);
     const reasons = new Set<string>();
     const local = new Map<string, bigint>();
@@ -57,6 +66,9 @@ export function matchRun(pop: Population, candidates: readonly Invoice[], cutoff
       if (!p) {
         row.status = "exception"; row.reason_code = "NO_PO_LINE";
         row.explanation = `no purchase-order line ${l.po_line_id} exists at the cutoff`;
+      } else if (poVendor.get(p.po_id) !== inv.vendor_id) {
+        row.status = "exception"; row.reason_code = "NO_PO_LINE";      // D-09: another vendor's PO line is no PO line of this invoice
+        row.explanation = `purchase-order line ${l.po_line_id} belongs to a purchase order of vendor ${poVendor.get(p.po_id)}, not of ${inv.vendor_id}`;
       } else if (poCur.get(p.po_id) !== inv.currency) {
         row.status = "exception"; row.reason_code = "CURRENCY_MISMATCH";
         row.explanation = `invoice currency ${inv.currency} differs from the PO currency ${poCur.get(p.po_id)} and no dated conversion rate exists`;

@@ -24,9 +24,15 @@ SELF_APPROVAL = "SELF_APPROVAL"
 ROLE_OR_LIMIT = "ROLE_OR_LIMIT"
 NOT_REVIEWABLE = "NOT_REVIEWABLE"
 REJECT_AFTER_APPROVAL = "REJECT_AFTER_APPROVAL"
+BEFORE_IMPORT = "BEFORE_IMPORT"                 # D-09: a decision stamped before the invoice was imported
+SELF_DECISION = "SELF_DECISION"                 # D-09: the creator may not reject their own invoice either
+# A byte-twin whose extracted fields differ is held for review, never merged (D-09).
+BYTES_FIELDS_CONFLICT = "BYTES_FIELDS_CONFLICT"
 # Export exclusions.
 EXCEPTION_OPEN = "EXCEPTION_OPEN"
 NOT_APPROVED = "NOT_APPROVED"
+APPROVED_NOT_EXPORTED = "APPROVED_NOT_EXPORTED"     # D-09: approved and not (yet) exported: explains a negative difference
+EXPORT_BEFORE_APPROVAL = "EXPORT_BEFORE_APPROVAL"   # D-09: a request named the invoice before its approval: the row is invalid
 # Command and metric reasons.
 INVALID_WINDOW = "INVALID_WINDOW"
 INVALID_STATE = "INVALID_STATE"

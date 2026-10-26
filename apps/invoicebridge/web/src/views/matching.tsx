@@ -41,9 +41,9 @@ function Matching({ result }: { result: PipelineResult }) {
   const obl = A.filter((x) => ["approved", "exported", "adjusted"].includes(x.status));
   const recon: [string, string, string][] = [
     ["Matched or later: invoices", String(adv.length), String(m.matched.invoice_count)],
-    ["Matched or later: total", s2(sum(adv)), m.matched.total],
+    [`Matched or later: total${m.matched.by_currency ? " (sum across currencies, not converted)" : ""}`, s2(sum(adv)), m.matched.total],
     ["Obligations (approved, exported, adjusted): invoices", String(obl.length), String(m.obligations.count)],
-    ["Obligations: total", s2(sum(obl)), m.obligations.total],
+    [`Obligations: total${m.obligations.by_currency ? " (sum across currencies, not converted)" : ""}`, s2(sum(obl)), m.obligations.total],
     ["Exception records (one per invoice and reason)", String(A.reduce((t, x) => t + x.reasons.length, 0)), String(m.exceptions.open_count)],
     ["Merged invoices", String(A.filter((x) => x.status === "merged").length), String(m.duplicates.rows_merged)],
     ["In the book (eligible)", String(A.filter((x) => x.inBook).length), String(m.rates.eligible_invoices)],
@@ -55,6 +55,12 @@ function Matching({ result }: { result: PipelineResult }) {
   const dr1a = g(is02x), dr1b = g((v) => !is02x(v));
   const pv = A.filter((x) => x.reasons.includes("PRICE_VARIANCE"));
   const pvMonths = [...new Set(pv.map((x) => x.month))].sort();
+  // the stored exception history (open AND resolved rows): "open at the as-of" and "ever raised" are different shares (D-09)
+  const hist = (type: string): Set<string> => new Set(result.population.exceptions.filter((e) => e.exception_type === type).map((e) => e.invoice_id));
+  const qbEver = hist("QUANTITY_BLOCKED"), pvEver = hist("PRICE_VARIANCE");
+  const hasHistory = result.population.exceptions.length > 0;
+  const ever = (xs: Row[], set: Set<string>): number => xs.filter((x) => set.has(x.id)).length;
+  const pvEverRows = A.filter((x) => pvEver.has(x.id));
 
   return (
     <>
@@ -106,12 +112,14 @@ function Matching({ result }: { result: PipelineResult }) {
         <div className="two">
           <div data-testid="dr-02x">
             <h3>ven-02x invoice before they deliver</h3>
-            <p>Vendors ven-020 to ven-029 invoice days before the goods arrive. QUANTITY_BLOCKED on <strong data-figure="dr1.02x">{dr1a[0]} of {dr1a[1]}</strong> of their in-book invoices ({pct(dr1a[0], dr1a[1])}) against <strong data-figure="dr1.other">{dr1b[0]} of {dr1b[1]}</strong> elsewhere ({pct(dr1b[0], dr1b[1])}).</p>
+            <p>Vendors ven-020 to ven-029 invoice days before the goods arrive. QUANTITY_BLOCKED <em>open at the as-of</em> on <strong data-figure="dr1.02x">{dr1a[0]} of {dr1a[1]}</strong> of their in-book invoices ({pct(dr1a[0], dr1a[1])}) against <strong data-figure="dr1.other">{dr1b[0]} of {dr1b[1]}</strong> elsewhere ({pct(dr1b[0], dr1b[1])}).</p>
+            {hasHistory && <p className="muted small" data-testid="dr-02x-history">Definition: the shares above count the exceptions still open at the last run. Over the stored history (open and resolved rows) {ever(inBook.filter((x) => is02x(x.vendor)), qbEver)} of {dr1a[1]} ({pct(ever(inBook.filter((x) => is02x(x.vendor)), qbEver), dr1a[1])}) of the ven-02x invoices were quantity-blocked at some run, against {ever(inBook.filter((x) => !is02x(x.vendor)), qbEver)} of {dr1b[1]} ({pct(ever(inBook.filter((x) => !is02x(x.vendor)), qbEver), dr1b[1])}) elsewhere: almost every ven-02x invoice is blocked until the goods arrive, and most are resolved by the as-of.</p>}
             <button type="button" onClick={() => { setVendor("ven-02x"); setReason("QUANTITY_BLOCKED"); setMonth("all"); }}>Show ven-02x blocked invoices</button>
           </div>
           <div data-testid="dr-007">
             <h3>ven-007 price list change</h3>
-            <p>ven-007 bills a new price list from 2026-03 on purchase orders still carrying the old prices (the catalogue is updated on 2026-04-15). PRICE_VARIANCE invoices by invoice month: {pvMonths.map((mm) => `${mm}: ${pv.filter((x) => x.month === mm).length}`).join(", ") || "none"}. ven-007 holds <strong data-figure="dr2.share">{pv.filter((x) => x.vendor === "ven-007").length} of {pv.length}</strong> ({pct(pv.filter((x) => x.vendor === "ven-007").length, pv.length)}).</p>
+            <p>ven-007 bills a new price list from 2026-03 on purchase orders still carrying the old prices (the catalogue is updated on 2026-04-15). PRICE_VARIANCE invoices by invoice month: {pvMonths.map((mm) => `${mm}: ${pv.filter((x) => x.month === mm).length}`).join(", ") || "none"}. ven-007 holds <strong data-figure="dr2.share">{pv.filter((x) => x.vendor === "ven-007").length} of {pv.length}</strong> ({pct(pv.filter((x) => x.vendor === "ven-007").length, pv.length)}) of the PRICE_VARIANCE invoices <em>open at the as-of</em>.</p>
+            {hasHistory && <p className="muted small" data-testid="dr-007-history">Definition: over the stored history (open and resolved rows) ven-007 holds {pvEverRows.filter((x) => x.vendor === "ven-007").length} of {pvEverRows.length} ({pct(pvEverRows.filter((x) => x.vendor === "ven-007").length, pvEverRows.length)}) of the invoices that ever raised PRICE_VARIANCE; the share open now and the share ever raised differ because the other vendors' variances resolve sooner.</p>}
             <button type="button" onClick={() => { setVendor("ven-007"); setReason("PRICE_VARIANCE"); setMonth("all"); }}>Show ven-007 price variances</button>
           </div>
         </div>
@@ -124,7 +132,7 @@ export function MatchingView() {
   return (
     <>
       <ViewHead eyebrow="Entry: the matching panel" title="Three-way matching">
-        <p className="lede">Every invoice's derived state against purchase orders and receipts, cumulative in (invoice date, imported at, invoice id) order: an invoice consumes received quantity only once it is matched. Filter by vendor, reason or month; the totals reconcile to the overview.</p>
+        <p className="lede">Every invoice's derived state against purchase orders and receipts, cumulative, approved invoices first and then in (invoice date, imported at, invoice id) order: an invoice consumes received quantity only once it is matched. Filter by vendor, reason or month; the totals reconcile to the overview.</p>
       </ViewHead>
       <WithData>{({ result }) => <Matching result={result} />}</WithData>
     </>

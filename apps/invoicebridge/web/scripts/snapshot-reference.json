@@ -9,7 +9,7 @@
    "invalid_count": 0,
    "valid_count": 2299
   },
-  "documents_digest": "efab3f80656c876d619cc926e6e2ff7cf2fb8f6c7cd6c1bbecfe3c42ef852b10",
+  "documents_digest": "5e5cb9a484f3e56c29c32c6cfa9c1d1124cbdeb392d05065bde847ea32bbaeed",
   "exceptions": {
    "by_reason": {
     "CURRENCY_MISMATCH": 3,
@@ -83,14 +83,14 @@
    "approvals": "3b5bca1e6b087a63cde7693ef07be1eadef9781921f728c80778864361c835b7",
    "duplicates": "e8fd4900c6185ffe614589dd3d528da4a69cfcf3f3dc6801bd9d9623a53d81b5",
    "exceptions": "a7e99829e4d9807ceb3462a083ab8161f0695c4c5b251ca44b779b9ae37c0e7a",
-   "export": "c5d822eefc132fcfcf55ddcbd92878c675053d11dcaead5be43ab279640b4c48",
-   "matched": "161f535bad6bc65ea924fe3f00245b8923c3b6165f68b9e17750b57368c51c4f",
-   "obligations": "e8c7afda84925871c794eb8330420c34b6c61f229b5822481aacd095be1b71ab",
-   "payable": "41a293a7446564b0e82a3c9ada0bad6243590e102879012e90b8f0ece819cac2",
+   "export": "c673d02f54ca5176cf68a3e27129f8530a56786dcdee104acd4973175afd2c43",
+   "matched": "b1475bd72b2158ed5d342cd58e61f91baac8baef1bd89e0c1c2360246992affa",
+   "obligations": "d2540c2e989910514ca6966493613c636fee21be26238150fc71c30d4675be76",
+   "payable": "03577ef402b2bcdb5581e55ee30d835743ca96d7a98494b96d94a28e7ea7d39d",
    "processing": "c3197cce74d5a7b70f442bc3b58113a29c27328bea7e87bf13a9def9dc118638",
-   "quantities": "319329cbcdf31eca2e20ee725097cd602305778959073c426d8d1deb6c9baf04",
+   "quantities": "f70ca91b32cd0124435388e77fa04f59c25a48e8eec578046a159b47ac509bff",
    "rates": "f768b27013a355be08a79fc391908baf8c0789df204f96d8c7f6036573a614aa",
-   "snapshots": "5907acaee2fba294a35d94ba96f4b9b265e5a0616cb9d11eefc006403497c71b"
+   "snapshots": "4ddb58bfbe99c50bab6a8d6962587ebc8e3bef689cd19fe8e2d27bf100a230be"
   },
   "rejected_count": 0,
   "small_metrics": {
@@ -101,17 +101,68 @@
    },
    "matched": {
     "amount_before_tax": "2225544.64",
+    "by_currency": {
+     "EUR": {
+      "amount_before_tax": "444550.35",
+      "invoice_count": 474,
+      "tax": "83806.51",
+      "total": "531691.91"
+     },
+     "GBP": {
+      "amount_before_tax": "287388.50",
+      "invoice_count": 324,
+      "tax": "57477.64",
+      "total": "347369.86"
+     },
+     "USD": {
+      "amount_before_tax": "1493605.79",
+      "invoice_count": 1615,
+      "tax": "102835.22",
+      "total": "1608460.47"
+     }
+    },
     "invoice_count": 2413,
     "tax": "244119.37",
     "total": "2487522.24"
    },
    "obligations": {
+    "by_currency": {
+     "EUR": {
+      "count": 447,
+      "total": "457320.65"
+     },
+     "GBP": {
+      "count": 305,
+      "total": "286543.12"
+     },
+     "USD": {
+      "count": 1547,
+      "total": "1448006.25"
+     }
+    },
     "count": 2299,
     "total": "2191870.02"
    },
    "payable": {
     "approved_payable": "2147731.19",
     "approved_total": "2191870.02",
+    "by_currency": {
+     "EUR": {
+      "approved_payable": "450586.03",
+      "approved_total": "457320.65",
+      "credit_total": "6734.62"
+     },
+     "GBP": {
+      "approved_payable": "281108.17",
+      "approved_total": "286543.12",
+      "credit_total": "5434.95"
+     },
+     "USD": {
+      "approved_payable": "1416036.99",
+      "approved_total": "1448006.25",
+      "credit_total": "31969.26"
+     }
+    },
     "credit_total": "44138.83"
    },
    "processing": {
@@ -121,8 +172,8 @@
    },
    "quantities": {
     "accepted_invoiced_quantity": "176112.2500",
-    "invoiced_not_received_quantity": "9085.7500",
-    "invoiced_not_received_value": "116771.18",
+    "invoiced_not_received_quantity": "9256.7500",
+    "invoiced_not_received_value": "118382.45",
     "net_received_quantity": "191431.0000",
     "open_to_invoice_quantity": "26198.0000",
     "open_to_receive_quantity": "10879.2500",
@@ -138,8 +189,8 @@
    "snapshots": {
     "2026-03-31T23:59:59Z": {
      "accepted_invoiced_quantity": "78554.5000",
-     "invoiced_not_received_quantity": "6256.0000",
-     "invoiced_not_received_value": "84442.14",
+     "invoiced_not_received_quantity": "6344.0000",
+     "invoiced_not_received_value": "85281.24",
      "net_received_quantity": "89156.2500",
      "open_to_invoice_quantity": "26688.7500",
      "open_to_receive_quantity": "16087.0000",
@@ -149,8 +200,8 @@
     },
     "2026-06-30T23:59:59Z": {
      "accepted_invoiced_quantity": "129745.5000",
-     "invoiced_not_received_quantity": "10214.0000",
-     "invoiced_not_received_value": "112842.23",
+     "invoiced_not_received_quantity": "10304.0000",
+     "invoiced_not_received_value": "113708.00",
      "net_received_quantity": "147243.5000",
      "open_to_invoice_quantity": "40482.5000",
      "open_to_receive_quantity": "22984.5000",
@@ -160,8 +211,8 @@
     },
     "2026-10-01T02:00:00Z": {
      "accepted_invoiced_quantity": "176112.2500",
-     "invoiced_not_received_quantity": "9085.7500",
-     "invoiced_not_received_value": "116771.18",
+     "invoiced_not_received_quantity": "9256.7500",
+     "invoiced_not_received_value": "118382.45",
      "net_received_quantity": "191431.0000",
      "open_to_invoice_quantity": "26198.0000",
      "open_to_receive_quantity": "10879.2500",
@@ -186,7 +237,7 @@
    "invalid_count": 0,
    "valid_count": 2299
   },
-  "documents_digest": "efab3f80656c876d619cc926e6e2ff7cf2fb8f6c7cd6c1bbecfe3c42ef852b10",
+  "documents_digest": "5e5cb9a484f3e56c29c32c6cfa9c1d1124cbdeb392d05065bde847ea32bbaeed",
   "exceptions": {
    "by_reason": {
     "CURRENCY_MISMATCH": 3,
@@ -260,14 +311,14 @@
    "approvals": "3b5bca1e6b087a63cde7693ef07be1eadef9781921f728c80778864361c835b7",
    "duplicates": "e8fd4900c6185ffe614589dd3d528da4a69cfcf3f3dc6801bd9d9623a53d81b5",
    "exceptions": "eebaa25ac98a34cc9fbfc5029b184d6894066862dc2a7e19200cca2af4f8f6a1",
-   "export": "c5d822eefc132fcfcf55ddcbd92878c675053d11dcaead5be43ab279640b4c48",
-   "matched": "161f535bad6bc65ea924fe3f00245b8923c3b6165f68b9e17750b57368c51c4f",
-   "obligations": "e8c7afda84925871c794eb8330420c34b6c61f229b5822481aacd095be1b71ab",
-   "payable": "41a293a7446564b0e82a3c9ada0bad6243590e102879012e90b8f0ece819cac2",
+   "export": "c673d02f54ca5176cf68a3e27129f8530a56786dcdee104acd4973175afd2c43",
+   "matched": "b1475bd72b2158ed5d342cd58e61f91baac8baef1bd89e0c1c2360246992affa",
+   "obligations": "d2540c2e989910514ca6966493613c636fee21be26238150fc71c30d4675be76",
+   "payable": "03577ef402b2bcdb5581e55ee30d835743ca96d7a98494b96d94a28e7ea7d39d",
    "processing": "c3197cce74d5a7b70f442bc3b58113a29c27328bea7e87bf13a9def9dc118638",
-   "quantities": "319329cbcdf31eca2e20ee725097cd602305778959073c426d8d1deb6c9baf04",
-   "rates": "f768b27013a355be08a79fc391908baf8c0789df204f96d8c7f6036573a614aa",
-   "snapshots": "5907acaee2fba294a35d94ba96f4b9b265e5a0616cb9d11eefc006403497c71b"
+   "quantities": "f70ca91b32cd0124435388e77fa04f59c25a48e8eec578046a159b47ac509bff",
+   "rates": "e94424aa852b1d90d5684b74d2b4c4415d893534777cedce4b6cd5af52c4768c",
+   "snapshots": "4ddb58bfbe99c50bab6a8d6962587ebc8e3bef689cd19fe8e2d27bf100a230be"
   },
   "rejected_count": 0,
   "small_metrics": {
@@ -278,17 +329,68 @@
    },
    "matched": {
     "amount_before_tax": "2225544.64",
+    "by_currency": {
+     "EUR": {
+      "amount_before_tax": "444550.35",
+      "invoice_count": 474,
+      "tax": "83806.51",
+      "total": "531691.91"
+     },
+     "GBP": {
+      "amount_before_tax": "287388.50",
+      "invoice_count": 324,
+      "tax": "57477.64",
+      "total": "347369.86"
+     },
+     "USD": {
+      "amount_before_tax": "1493605.79",
+      "invoice_count": 1615,
+      "tax": "102835.22",
+      "total": "1608460.47"
+     }
+    },
     "invoice_count": 2413,
     "tax": "244119.37",
     "total": "2487522.24"
    },
    "obligations": {
+    "by_currency": {
+     "EUR": {
+      "count": 447,
+      "total": "457320.65"
+     },
+     "GBP": {
+      "count": 305,
+      "total": "286543.12"
+     },
+     "USD": {
+      "count": 1547,
+      "total": "1448006.25"
+     }
+    },
     "count": 2299,
     "total": "2191870.02"
    },
    "payable": {
     "approved_payable": "2147731.19",
     "approved_total": "2191870.02",
+    "by_currency": {
+     "EUR": {
+      "approved_payable": "450586.03",
+      "approved_total": "457320.65",
+      "credit_total": "6734.62"
+     },
+     "GBP": {
+      "approved_payable": "281108.17",
+      "approved_total": "286543.12",
+      "credit_total": "5434.95"
+     },
+     "USD": {
+      "approved_payable": "1416036.99",
+      "approved_total": "1448006.25",
+      "credit_total": "31969.26"
+     }
+    },
     "credit_total": "44138.83"
    },
    "processing": {
@@ -298,8 +400,8 @@
    },
    "quantities": {
     "accepted_invoiced_quantity": "176112.2500",
-    "invoiced_not_received_quantity": "9085.7500",
-    "invoiced_not_received_value": "116771.18",
+    "invoiced_not_received_quantity": "9256.7500",
+    "invoiced_not_received_value": "118382.45",
     "net_received_quantity": "191431.0000",
     "open_to_invoice_quantity": "26198.0000",
     "open_to_receive_quantity": "10879.2500",
@@ -309,14 +411,16 @@
    },
    "rates": {
     "eligible_invoices": 2645,
+    "ever_excepted_rate": "0.227599",
     "exception_rate": "0.087713",
+    "straight_through_never_excepted_rate": "0.772401",
     "straight_through_rate": "0.912287"
    },
    "snapshots": {
     "2026-03-31T23:59:59Z": {
      "accepted_invoiced_quantity": "78554.5000",
-     "invoiced_not_received_quantity": "6256.0000",
-     "invoiced_not_received_value": "84442.14",
+     "invoiced_not_received_quantity": "6344.0000",
+     "invoiced_not_received_value": "85281.24",
      "net_received_quantity": "89156.2500",
      "open_to_invoice_quantity": "26688.7500",
      "open_to_receive_quantity": "16087.0000",
@@ -326,8 +430,8 @@
     },
     "2026-06-30T23:59:59Z": {
      "accepted_invoiced_quantity": "129745.5000",
-     "invoiced_not_received_quantity": "10214.0000",
-     "invoiced_not_received_value": "112842.23",
+     "invoiced_not_received_quantity": "10304.0000",
+     "invoiced_not_received_value": "113708.00",
      "net_received_quantity": "147243.5000",
      "open_to_invoice_quantity": "40482.5000",
      "open_to_receive_quantity": "22984.5000",
@@ -337,8 +441,8 @@
     },
     "2026-10-01T02:00:00Z": {
      "accepted_invoiced_quantity": "176112.2500",
-     "invoiced_not_received_quantity": "9085.7500",
-     "invoiced_not_received_value": "116771.18",
+     "invoiced_not_received_quantity": "9256.7500",
+     "invoiced_not_received_value": "118382.45",
      "net_received_quantity": "191431.0000",
      "open_to_invoice_quantity": "26198.0000",
      "open_to_receive_quantity": "10879.2500",

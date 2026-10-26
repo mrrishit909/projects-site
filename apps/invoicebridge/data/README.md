@@ -3,7 +3,8 @@
 * `python data/migrate.py [--reset]` applies `migrations/*.sql` in order (idempotent; a changed applied file is refused; `--reset` drops only this
   project's tables, functions and the `exception_seq` sequence). `python data/seed.py tests/fixtures/golden/inputs.json [--reference-only]` loads a
   fixture through the domain's `validate_batch` (rejected rows go to `rejected_records` with the raw row), stores the workflow state the domain derives
-  at the inputs' `as_of` and records a `dataset_versions` row (`ds-` + the first 12 hex digits of the sha256 of the canonical JSON). Loading twice
+  at the inputs' `as_of` and records a `dataset_versions` row (`ds-` + the first 12 hex digits of the sha256 of the canonical JSON, or the name given with
+  `--dataset-version`: the generator's published `ib-20261026-20261026`, which the replay events carry). Loading twice
   changes nothing. `--reference-only` loads vendors, purchase orders and lines, receipts, policies and tolerances only, so the API commands bring the
   invoices, approvals, credits and exports (this is how `tests/support_db.py::drive` replays a fixture through C01..C09).
 * **Schema** (`0001`): `vendors`, `purchase_orders`, `po_lines`, `receipts` (a reversal flips `reversed`), `approval_policies` (with an optional
@@ -24,3 +25,4 @@
   quantities and snapshots. Parameters: `%(as_of)s` (timestamptz, inclusive) and `%(cutoffs)s` (timestamptz[]). It returns one row with a jsonb column
   per metric. `tests/test_sql_reference.py` checks it against the three fixtures, the domain on a rich population and on 120 seeded random
   populations, and that it is unaffected by scrambling the stored state.
+* **`0003_review_status.sql`** (D-09): adds the invoice status `needs_review` (a byte-twin whose extracted fields differ is held, not merged).

@@ -1,4 +1,5 @@
 // Quick picks for the invoice desk, found in the derived data (never hard-coded ids for the snapshot).
+import { cmp } from "../domain/order";
 import type { PipelineResult } from "../domain/pipeline";
 
 export interface Pick { label: string; id: string }
@@ -6,7 +7,7 @@ export function picks(r: PipelineResult): Pick[] {
   const b = r.book;
   const out: Pick[] = [];
   const add = (label: string, id: string | undefined): void => { if (id && !out.some((p) => p.id === id)) out.push({ label, id }); };
-  const sorted = (xs: Iterable<string>): string[] => [...xs].sort();
+  const sorted = (xs: Iterable<string>): string[] => [...xs].sort(cmp);
   add("a merged duplicate", b.mergedRecords[0]?.id);
   add("its canonical copy", b.mergedRecords[0]?.merged_into);
   add("an adjusted (credited) invoice", sorted(b.status.keys()).find((i) => b.status.get(i) === "adjusted"));
@@ -23,5 +24,5 @@ export function picks(r: PipelineResult): Pick[] {
 export function defaultInvoice(r: PipelineResult, golden: boolean): string[] {
   if (golden && r.book.invoices.has("inv-001")) return r.book.invoices.has("inv-002") ? ["inv-001", "inv-002"] : ["inv-001"];
   const canon = r.book.mergedRecords[0]?.merged_into;
-  return [canon ?? [...r.book.invoices.keys()].sort()[0] ?? ""].filter(Boolean);
+  return [canon ?? [...r.book.invoices.keys()].sort(cmp)[0] ?? ""].filter(Boolean);
 }

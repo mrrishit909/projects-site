@@ -32,6 +32,7 @@ import random
 import sys
 import time
 from datetime import date, datetime, timedelta, timezone
+from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace as NS
 from typing import Any
@@ -1029,10 +1030,13 @@ class World:
     def parameters(self) -> dict[str, Any]:
         return {"window": ["2025-10-01", "2026-09-30"], "vendors": N_VENDORS, "currencies": ["USD", "EUR", "GBP"],
                 "purchase_orders": N_POS, "po_lines": N_PO_LINES, "invoices": N_INVOICES, "resent_pdf_duplicates": N_DUPLICATES,
-                "credit_share": CREDIT_SHARE_PERMILLE / 1000, "reversal_share_of_first_entry_receipts": REVERSAL_PERMILLE / 1000,
-                "group_02x": ["ven-020", "ven-029"], "p_short_02x_line": P_SHORT_02X, "p_duplicate_month_end": P_DUP_MONTH_END,
+                # no float is ever written (D-09, R5-21): shares and probabilities are decimal STRINGS
+                "credit_share": f"{Decimal(CREDIT_SHARE_PERMILLE) / 1000:.3f}",
+                "reversal_share_of_first_entry_receipts": f"{Decimal(str(REVERSAL_PERMILLE)) / 1000:.4f}",
+                "group_02x": ["ven-020", "ven-029"], "p_short_02x_line": f"{Decimal(str(P_SHORT_02X)):.2f}",
+                "p_duplicate_month_end": f"{Decimal(str(P_DUP_MONTH_END)):.2f}",
                 "price_list_vendor": f"ven-{PRICE_VENDOR:03d}", "price_change_from": PRICE_CHANGE.isoformat(),
-                "price_uplift": 0.075, "catalogue_updated": ts(PO_CATALOGUE_UPDATED),
+                "price_uplift": "0.075", "catalogue_updated": ts(PO_CATALOGUE_UPDATED),
                 "policy_limits": {"pol-v1": fm(LIMIT_V1), "pol-v2": fm(LIMIT_V2), "v2_from": ts(V2_FROM)},
                 "tolerances": TOLERANCES, "as_of": ts(AS_OF), "nightly_match": "02:00:00Z",
                 "snapshot_cutoffs": SNAPSHOT_CUTOFFS, "export_batches": "Fridays 16:00Z"}
@@ -1291,8 +1295,10 @@ def build_events(w: World, ver: str) -> tuple[list[dict[str, Any]], dict[str, st
                    "expected_handling": "refused: an invoice id with different bytes is never overwritten; the original extraction is unchanged (a correction is a versioned row, C06 answers 501)"})
     # EV-06 repeated export after a timeout (INJ-11)
     st, iid, total = flow(6, lines[5], CLERK)
-    exp1 = {"batch_id": "bat-ev06", "invoice_ids": [iid], "exported_at": "2026-10-02T16:00:00Z"}
-    exp2 = {**exp1, "exported_at": "2026-10-02T16:00:40Z"}
+    # no exported_at: the server stamps the export (an instant chosen by the client could precede the approval, D-09); the retry
+    # carries its own clock, which the payload hash excludes
+    exp1 = {"batch_id": "bat-ev06", "invoice_ids": [iid]}
+    exp2 = dict(exp1)
     s_exp1 = step(6, "export-payable", REV1, exp1, "e")
     s_exp2 = step(6, "export-payable", REV1, exp2, "e")
     events.append({"event_id": "EV-06", "injection": "INJ-11", "command": "export-payable", "requires": [],
@@ -1300,10 +1306,10 @@ def build_events(w: World, ver: str) -> tuple[list[dict[str, Any]], dict[str, st
                    "expected_status": 200, "expected_reason": "returned_prior",
                    "expected": {"idempotent_replay": True, "export_rows": 1, "export_requests": 2,
                                 "outcomes": ["created", "returned_prior"], "amount": fm(total)},
-                   "expected_handling": "the retry (same key, later exported_at) returns the stored batch (Idempotent-Replay), is counted as returned_prior and adds no row"})
+                   "expected_handling": "the retry (same key, the server stamps its own clock, which the payload hash excludes) returns the stored batch (Idempotent-Replay), is counted as returned_prior and adds no row"})
     # EV-07 a paid flag (INJ-12)
     st, iid, _ = flow(7, lines[6], CLERK)
-    paid = {"batch_id": "bat-ev07", "invoice_ids": [iid], "exported_at": "2026-10-02T16:00:00Z", "paid": True}
+    paid = {"batch_id": "bat-ev07", "invoice_ids": [iid], "paid": True}
     events.append({"event_id": "EV-07", "injection": "INJ-12", "command": "export-payable", "requires": [],
                    "steps": st + [step(7, "approve-invoice", REV1, {"invoice_id": iid}, "d"),
                                   step(7, "export-payable", REV1, paid, "e")],

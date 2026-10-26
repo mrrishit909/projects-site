@@ -7,6 +7,7 @@ never rounded by the default 28-digit context.
 from __future__ import annotations
 
 import functools
+import re
 from decimal import ROUND_HALF_UP, Context, Decimal, InvalidOperation, localcontext
 from fractions import Fraction
 from typing import Any, Callable, TypeVar
@@ -16,6 +17,8 @@ from .errors import MALFORMED_RECORD, DomainError
 
 CTX = Context(prec=60, rounding=ROUND_HALF_UP)
 D0 = Decimal(0)
+#: ASCII-only decimal spelling (D-09): no underscores, exponents, signs other than one leading +/-, no non-ASCII digits.
+DECIMAL_TEXT = re.compile(r"^[+-]?(?:[0-9]+\.?[0-9]*|\.[0-9]+)$", re.ASCII)
 C2, C4, C6 = Decimal("0.01"), Decimal("0.0001"), Decimal("0.000001")
 F = TypeVar("F", bound=Callable[..., Any])
 
@@ -34,6 +37,8 @@ def dec(value: object, name: str, max_dp: int | None = None, bound: bool = True)
     (MALFORMED_RECORD): a float has already lost the digits the rule is about."""
     if isinstance(value, bool) or not isinstance(value, (str, int, Decimal)):
         raise DomainError(MALFORMED_RECORD, f"{name} must be a decimal string", name)
+    if isinstance(value, str) and not DECIMAL_TEXT.match(value.strip()):
+        raise DomainError(MALFORMED_RECORD, f"{name} is not a decimal number", name)
     try:
         d = Decimal(value.strip() if isinstance(value, str) else value)
     except InvalidOperation:

@@ -5,8 +5,8 @@ import re
 from datetime import date, datetime, timezone
 from fractions import Fraction
 
-TS_FORM = re.compile(r"^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(Z|[+-]\d{2}:\d{2})$")
-DATE_FORM = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+TS_FORM = re.compile(r"^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(Z|[+-]\d{2}:\d{2})$", re.ASCII)
+DATE_FORM = re.compile(r"^\d{4}-\d{2}-\d{2}$", re.ASCII)
 #: "No cutoff": every recorded fact counts.
 FAR_FUTURE = datetime(9999, 12, 31, 23, 59, 59, tzinfo=timezone.utc)
 
