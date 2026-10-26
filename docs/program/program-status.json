@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T22:02:27Z",
+  "updated_at": "2026-10-26T22:45:05Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -36,6 +36,12 @@
       "exact_error": "Agent proxy: gateway answered 403 to CONNECT for mrrishit909.github.io:443; WebFetch: getaddrinfo ENOTFOUND",
       "effect": "Live-URL curl and live screenshots must run on a GitHub-hosted Actions runner and be uploaded as artifacts; local verification uses a localhost server",
       "resolution_needed": "Add *.github.io to the environment network allowlist (optional)"
+    },
+    {
+      "id": "BLK-003",
+      "ts": "2026-10-26T22:45:05Z",
+      "what": "cloud container restarted mid-run; two background workers (A-040 InvoiceBridge fixes, A-041 ProductSignal backend) were lost before hand-back; the worktree, databases and tools survived; resume workers A-042/A-043 dispatched",
+      "status": "recovering"
     }
   ],
   "projects": {
