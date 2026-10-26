@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T16:38:28Z",
+  "updated_at": "2026-10-26T17:16:37Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -836,6 +836,28 @@
       "code_sha": "dd40fdf",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40360702938",
       "ts": "2026-10-26T16:38:28Z"
+    },
+    {
+      "requirement": "P04 Mode B (static build, 296 TS golden checks, 65 Playwright tests at 360/768/1280/1920 + 200% zoom) and Mode A on the site commit, github-hosted",
+      "project": "04-serviceflow",
+      "status": "verified",
+      "command": "serviceflow-ci.yml run 40364940392",
+      "exit_code": 0,
+      "actual": "both jobs success; evidence artifact uploaded",
+      "code_sha": "6a753e8",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40364940392",
+      "ts": "2026-10-26T17:16:37Z"
+    },
+    {
+      "requirement": "P04 publication: labs/serviceflow on unified-portfolio with code_sha stamped; case study serviceflow/ added (build.py)",
+      "project": "04-serviceflow",
+      "status": "verified",
+      "command": "tools/publish-site.sh serviceflow; python3 build.py; git push origin unified-portfolio",
+      "exit_code": 0,
+      "actual": "45 files, tree sha256 8c62a021...; portfolio e3bd4a4",
+      "code_sha": "6a753e8",
+      "evidence": "docs/program/release-manifest.json",
+      "ts": "2026-10-26T17:16:37Z"
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T16:21:38Z",
+  "updated_at": "2026-10-26T17:16:37Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -58,6 +58,24 @@
         "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40358131147",
         "verified_at": "2026-10-26T16:21:38Z",
         "live_code_sha_matched": "ca3e626ae395592987dfb2cc647fd177f95adc8c"
+      }
+    },
+    {
+      "slug": "serviceflow",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/serviceflow/",
+      "site_path": "labs/serviceflow/ on unified-portfolio",
+      "release_commit_unified_portfolio": "e3bd4a4",
+      "rollback_commit_unified_portfolio": "13af835",
+      "source_commit_business_data_lab": "6a753e8d4e0b3159effdc207112403cc86186d44",
+      "published_tree_sha256": "8c62a0212bb85a0c312e3485eb54e2d014beff5f8f5aae7584a898750696ce16",
+      "files": 45,
+      "dataset_version": "sf-20261026-20261026",
+      "dataset_hash": "944ef91b3dc17c04c6bb601e0faac94f956d121877de2b9864988cf7c5d5cba4",
+      "contract_version": "v1",
+      "publication_status": "published with the case study (e3bd4a4; CI 40364940392 green both modes on 6a753e8); live check pending",
+      "live_verification": {
+        "run_url": null,
+        "verified_at": null
       }
     }
   ]

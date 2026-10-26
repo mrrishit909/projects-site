@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T16:38:28Z",
+  "updated_at": "2026-10-26T17:16:37Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -86,16 +86,17 @@
     },
     "04-serviceflow": {
       "slug": "serviceflow",
-      "stage": "gate-A passed; backend slice CI-green (99e219b); generator committed dd40fdf (333 tests); web A-030 running",
-      "built": false,
-      "verified": false,
-      "published": false,
+      "stage": "built, verified (CI green both modes on 6a753e8), published e3bd4a4 (live check pending), integrated (case study pushed; link check pending)",
+      "built": true,
+      "verified": true,
+      "published": true,
       "integrated": false,
-      "last_verified_sha": "dd40fdf (Mode A)",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40360702938",
-      "site_url": null,
+      "last_verified_sha": "6a753e8",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40364940392",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/serviceflow/",
       "blockers": [],
-      "next_task": "T-04-04 (A-030 web -> CI Mode B -> publish -> integrate)"
+      "next_task": "live check -> reviewer disproof pass -> fixes -> artifacts",
+      "portfolio_case_study": "https://mrrishit909.github.io/projects-site/serviceflow/"
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
@@ -178,7 +179,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 04 ServiceFlow: A-030 web hand-back -> verify (check/build:pages/e2e) -> commit -> CI Mode B -> publish-site.sh serviceflow -> release manifest -> live check -> portfolio integration (serviceflow/project.json, cover, shots; tile exists) -> reviewer -> fixes -> artifacts. Then project 05.",
+    "next_concrete_task": "Project 04 ServiceFlow: confirm live-check on the manifest commit; dispatch opus reviewer (disproof pass); fix worker; artifacts worker. Then project 05 InvoiceBridge fixture worker.",
     "acceptance": "see task-queue.json"
   }
 }
