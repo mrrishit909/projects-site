@@ -1,0 +1,125 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "5bdabb50eea4b192e3b17e1e5b1a79dc6b26feb4a2b8b78ad094acde9f8bcc8c",
+  "dataset_version": "ss-20261026-20261026",
+  "designed_relationships": [
+    "class A SKUs with promotions show censoring during stockouts: observed sales fall below the published latent demand on stockout days (a lost_sale row records the gap); stockout days of the class A promoted pairs at lost-sale locations: {\"prod-001\": 5, \"prod-002\": 74, \"prod-004\": 10, \"prod-005\": 82, \"prod-007\": 27, \"prod-008\": 49} (synthetic).",
+    "supplier sup-03 is late on about 30 % of receipts (31.9% of 254), against sup-01 17.1%, sup-02 13.5%, sup-04 15.8% (late = received after the promised date counted on the supplier calendar; synthetic).",
+    "location loc-02 is capacity-bound: storage_capacity is 62% of the summed target positions, so orders are cut to the room left (609 reviews blocked; on hand + on order was at least 90 % of capacity on 548 of 548 days vs 0 at loc-01 and 0 at loc-03; peak on-hand 65% of capacity vs 38% and 38%; synthetic)."
+  ],
+  "generated_at": "2026-10-26T14:48:05Z",
+  "generator": {
+    "name": "generate.py",
+    "parameters": {
+      "abc_split": {
+        "A": 8,
+        "B": 16,
+        "C": 36
+      },
+      "as_of": "2026-09-30T23:59:59Z",
+      "backlog_location": "loc-03",
+      "capacity_factor": {
+        "loc-01": 2.0,
+        "loc-02": 0.62,
+        "loc-03": 2.0
+      },
+      "capacity_location": "loc-02",
+      "closure": {
+        "calendar_id": "cal-02",
+        "from": "2026-01-05",
+        "to": "2026-01-18"
+      },
+      "cost_step": {
+        "effective_from": "2026-02-01",
+        "supplier_id": "sup-04",
+        "uplift": 0.06
+      },
+      "days": 548,
+      "dow_profile": [
+        1.1,
+        1.05,
+        1.0,
+        1.0,
+        1.15,
+        0.9,
+        0.8
+      ],
+      "forecast_cutoffs": [
+        "2026-06-30",
+        "2026-07-31",
+        "2026-08-31",
+        "2026-09-16"
+      ],
+      "forecast_horizon_days": 14,
+      "intermittent_skus": 12,
+      "locations": 3,
+      "promoted_skus": 15,
+      "promotion_days": 10,
+      "reorder_z": 1.28,
+      "seed": 20261026,
+      "service_targets": [
+        "0.95",
+        "0.98"
+      ],
+      "size_budget_bytes": 5000000,
+      "skus": 60,
+      "suppliers": {
+        "sup-01": {
+          "late_probability": 0.08,
+          "quoted_lead_days": 5
+        },
+        "sup-02": {
+          "late_probability": 0.1,
+          "quoted_lead_days": 12
+        },
+        "sup-03": {
+          "late_probability": 0.3,
+          "quoted_lead_days": 9
+        },
+        "sup-04": {
+          "late_probability": 0.1,
+          "quoted_lead_days": 21
+        }
+      },
+      "unmet_policies": [
+        "lost_sale",
+        "backlog"
+      ],
+      "volume_cap": "one sale row and one sale movement per SKU x location x day with sales; each SKU is stocked at one home location (60 pairs); only the 8 class-A pairs sell on almost every day, class B/C pairs sell on about 5-60 % of days (rates chosen to stay under the 5 MB budget); latent demand is published for class A, promoted and intermittent pairs, positive days only",
+      "window": [
+        "2025-04-01",
+        "2026-09-30"
+      ]
+    },
+    "seed": 20261026
+  },
+  "injection_manifest": "injection-manifest.json",
+  "row_counts": {
+    "backorders": 70,
+    "calendar_closures": 1,
+    "cost_versions": 15,
+    "forecast_points": 2352,
+    "forecast_runs": 56,
+    "inventory_movements": 10916,
+    "latent_demand": 6380,
+    "locations": 3,
+    "lost_sales": 361,
+    "policy_scenarios": 4,
+    "products": 60,
+    "promotions": 45,
+    "purchase_order_lines": 1282,
+    "purchase_orders": 998,
+    "receipts": 1309,
+    "replenishment_params": 60,
+    "reservations": 16,
+    "sales": 9475,
+    "suppliers": 4
+  },
+  "stats": {
+    "capacity_blocked_orders": {
+      "loc-01": 0,
+      "loc-02": 609,
+      "loc-03": 0
+    }
+  }
+}

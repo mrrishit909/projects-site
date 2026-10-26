@@ -1,0 +1,17 @@
+{"entity":"cost_versions","dataset_version":"ss-20261026-20261026","rows":[
+{"cost_version_id":"cv-001","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-004","unit_cost":"50.91"},
+{"cost_version_id":"cv-002","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-008","unit_cost":"60.59"},
+{"cost_version_id":"cv-003","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-012","unit_cost":"22.64"},
+{"cost_version_id":"cv-004","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-016","unit_cost":"19.40"},
+{"cost_version_id":"cv-005","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-020","unit_cost":"23.50"},
+{"cost_version_id":"cv-006","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-024","unit_cost":"18.01"},
+{"cost_version_id":"cv-007","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-028","unit_cost":"9.37"},
+{"cost_version_id":"cv-008","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-032","unit_cost":"13.56"},
+{"cost_version_id":"cv-009","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-036","unit_cost":"14.49"},
+{"cost_version_id":"cv-010","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-040","unit_cost":"4.78"},
+{"cost_version_id":"cv-011","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-044","unit_cost":"9.49"},
+{"cost_version_id":"cv-012","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-048","unit_cost":"14.74"},
+{"cost_version_id":"cv-013","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-052","unit_cost":"6.81"},
+{"cost_version_id":"cv-014","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-056","unit_cost":"10.01"},
+{"cost_version_id":"cv-015","effective_from":"2026-02-01T00:00:00Z","product_id":"prod-060","unit_cost":"8.84"}
+]}

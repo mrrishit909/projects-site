@@ -174,7 +174,12 @@ def validate_batch(inputs: Mapping[str, Any]) -> IngestResult:
                     res.rejected.append(RejectedRecord(ent, row_id(ent, row), MALFORMED_RECORD, row, str(exc)))
                     continue
                 rid = row_id(ent, row)
-                key = f"{obj.product_id}:{obj.location_id}" if ent == "replenishment_params" else rid
+                if ent == "replenishment_params":
+                    key = f"{obj.product_id}:{obj.location_id}"
+                elif ent == "latent_demand":   # grain is product x location x day (D-03), not product
+                    key = f"{obj.product_id}:{obj.location_id}:{row.get('demand_date')}"
+                else:
+                    key = rid
                 if key in seen:
                     res.rejected.append(RejectedRecord(ent, rid, DUPLICATE_ID, row, "duplicate id; the first kept"))
                     continue

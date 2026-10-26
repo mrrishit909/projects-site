@@ -1,0 +1,253 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "5bdabb50eea4b192e3b17e1e5b1a79dc6b26feb4a2b8b78ad094acde9f8bcc8c",
+  "dataset_version": "ss-20261026-20261026",
+  "designed_relationships": [
+    "class A SKUs with promotions show censoring during stockouts: observed sales fall below the published latent demand on stockout days (a lost_sale row records the gap); stockout days of the class A promoted pairs at lost-sale locations: {\"prod-001\": 5, \"prod-002\": 74, \"prod-004\": 10, \"prod-005\": 82, \"prod-007\": 27, \"prod-008\": 49} (synthetic).",
+    "supplier sup-03 is late on about 30 % of receipts (31.9% of 254), against sup-01 17.1%, sup-02 13.5%, sup-04 15.8% (late = received after the promised date counted on the supplier calendar; synthetic).",
+    "location loc-02 is capacity-bound: storage_capacity is 62% of the summed target positions, so orders are cut to the room left (609 reviews blocked; on hand + on order was at least 90 % of capacity on 548 of 548 days vs 0 at loc-01 and 0 at loc-03; peak on-hand 65% of capacity vs 38% and 38%; synthetic)."
+  ],
+  "events_file": "data/injection-events.json",
+  "injections": [
+    {
+      "description": "3 exact replays of already posted movement ids (2 sales, 1 receipt) appended at the end of inventory_movements.",
+      "entity": "inventory_movements",
+      "expected_handling": "ingest rejects each replay with DUPLICATE_MOVEMENT_ID and keeps the first occurrence; on hand is unchanged.",
+      "id": "INJ-01",
+      "location": "entity_files",
+      "record_ids": [
+        "mv-002230",
+        "mv-006574",
+        "mv-005418"
+      ],
+      "test": "P03-TEST-04"
+    },
+    {
+      "description": "receipt rcpt-01309 is dated 2026-09-12T08:00:00Z, ten days before its order po-0998 (2026-09-22T09:00:00Z); no movement was posted.",
+      "entity": "receipts",
+      "expected_handling": "ingest rejects it with RECEIPT_BEFORE_ORDER; the line stays open and on order.",
+      "id": "INJ-02",
+      "location": "entity_files",
+      "record_ids": [
+        "rcpt-01309"
+      ],
+      "test": "P03-TEST-11"
+    },
+    {
+      "description": "2 sup-03 purchase orders are status closed although a line was only partly received (about 65 % of the ordered quantity, the remainder never arrived).",
+      "detail": [
+        {
+          "ordered": 96,
+          "po_line_id": "pol-00795",
+          "purchase_order_id": "po-0627",
+          "received": 60
+        },
+        {
+          "ordered": 96,
+          "po_line_id": "pol-00840",
+          "purchase_order_id": "po-0665",
+          "received": 60
+        }
+      ],
+      "entity": "purchase_orders",
+      "expected_handling": "the line stays open (ordered - received > 0) and is listed in partially_received_open_lines; the status flag does not complete it.",
+      "id": "INJ-03",
+      "location": "entity_files+events",
+      "record_ids": [
+        "pol-00795",
+        "pol-00840"
+      ],
+      "test": "P03-TEST-07"
+    },
+    {
+      "description": "sup-02 (calendar cal-02) is closed 2026-01-05 .. 2026-01-18; 8 receipts of orders placed before the closure arrive after it, so their calendar lead time spans the closure.",
+      "detail": [
+        {
+          "calendar_days": 26,
+          "ordered": "2025-12-24",
+          "po_line_id": "pol-00641",
+          "promised": "2026-01-19",
+          "purchase_order_id": "po-0496",
+          "received": "2026-01-19"
+        },
+        {
+          "calendar_days": 26,
+          "ordered": "2025-12-27",
+          "po_line_id": "pol-00644",
+          "promised": "2026-01-22",
+          "purchase_order_id": "po-0499",
+          "received": "2026-01-22"
+        },
+        {
+          "calendar_days": 26,
+          "ordered": "2026-01-02",
+          "po_line_id": "pol-00657",
+          "promised": "2026-01-28",
+          "purchase_order_id": "po-0511",
+          "received": "2026-01-28"
+        },
+        {
+          "calendar_days": 26,
+          "ordered": "2026-01-02",
+          "po_line_id": "pol-00658",
+          "promised": "2026-01-28",
+          "purchase_order_id": "po-0511",
+          "received": "2026-01-28"
+        },
+        {
+          "calendar_days": 26,
+          "ordered": "2026-01-02",
+          "po_line_id": "pol-00659",
+          "promised": "2026-01-28",
+          "purchase_order_id": "po-0511",
+          "received": "2026-01-28"
+        },
+        {
+          "calendar_days": 26,
+          "ordered": "2026-01-02",
+          "po_line_id": "pol-00660",
+          "promised": "2026-01-28",
+          "purchase_order_id": "po-0511",
+          "received": "2026-01-28"
+        }
+      ],
+      "entity": "calendar_closures",
+      "expected_handling": "the promised date counts only open days, so a receipt on the extended date is on time; counting calendar days would call it late.",
+      "id": "INJ-04",
+      "location": "entity_files",
+      "record_ids": [
+        "clo-001",
+        "po-0496",
+        "po-0499",
+        "po-0511",
+        "po-0512"
+      ],
+      "test": "P03-TEST-05"
+    },
+    {
+      "description": "12 intermittent SKUs sell on only about 5-10 % of days, so most rolling-origin folds have zero actual demand.",
+      "detail": {
+        "zero_demand_day_share": {
+          "prod-034": 0.898,
+          "prod-037": 0.927,
+          "prod-043": 0.907,
+          "prod-046": 0.953,
+          "prod-047": 0.914,
+          "prod-051": 0.922,
+          "prod-052": 0.931,
+          "prod-053": 0.88,
+          "prod-055": 0.927,
+          "prod-056": 0.909,
+          "prod-058": 0.916,
+          "prod-060": 0.942
+        }
+      },
+      "entity": "sales",
+      "expected_handling": "WAPE is null on a fold whose actuals sum to 0; the zero-demand folds are disclosed.",
+      "id": "INJ-05",
+      "location": "entity_files",
+      "record_ids": [
+        "prod-034",
+        "prod-037",
+        "prod-043",
+        "prod-046",
+        "prod-047",
+        "prod-051",
+        "prod-052",
+        "prod-053",
+        "prod-055",
+        "prod-056",
+        "prod-058",
+        "prod-060"
+      ],
+      "test": "P03-TEST-06"
+    },
+    {
+      "description": "one unit-cost step: +6% on every sup-04 product effective 2026-02-01, inside any valuation period that spans it (for example 2026-01-01 .. 2026-03-31).",
+      "entity": "cost_versions",
+      "expected_handling": "each day is valued at the cost in force that day; PO line costs carry the cost at order.",
+      "id": "INJ-06",
+      "location": "entity_files",
+      "record_ids": [
+        "cv-001",
+        "cv-002",
+        "cv-003",
+        "cv-004",
+        "cv-005",
+        "cv-006",
+        "cv-007",
+        "cv-008",
+        "cv-009",
+        "cv-010",
+        "cv-011",
+        "cv-012",
+        "cv-013",
+        "cv-014",
+        "cv-015"
+      ],
+      "test": "P03-TEST-12"
+    },
+    {
+      "description": "6 open reservations of 25 % of closing stock; a naive position would subtract them twice (once in available, once in the position).",
+      "entity": "reservations",
+      "expected_handling": "position = on hand + on order - backorders; reserved only reduces available.",
+      "id": "INJ-07",
+      "location": "entity_files+events",
+      "record_ids": [
+        "res-001",
+        "res-002",
+        "res-003",
+        "res-004",
+        "res-005",
+        "res-006"
+      ],
+      "test": "P03-TEST-10"
+    },
+    {
+      "description": "a movement id re-posted with a different quantity.",
+      "entity": "inventory_movements",
+      "expected_handling": "DUPLICATE_MOVEMENT_CONFLICT: every occurrence is rejected.",
+      "id": "INJ-08",
+      "location": "events",
+      "record_ids": [
+        "EV-01"
+      ],
+      "test": "P03-TEST-04"
+    },
+    {
+      "description": "an arrival before the order date and an arrival before the quoted lead time (replay).",
+      "entity": "receipts",
+      "expected_handling": "RECEIPT_BEFORE_ORDER (422) and RECEIPT_BEFORE_LEAD_TIME (422).",
+      "id": "INJ-09",
+      "location": "events",
+      "record_ids": [
+        "EV-02",
+        "EV-06"
+      ],
+      "test": "P03-TEST-05"
+    },
+    {
+      "description": "two policies with different seeds are compared (attempt).",
+      "entity": "policy_scenarios",
+      "expected_handling": "POLICY_SEED_MISMATCH: common random numbers need one seed.",
+      "id": "INJ-10",
+      "location": "events",
+      "record_ids": [
+        "EV-05"
+      ],
+      "test": "P03-TEST-09"
+    },
+    {
+      "description": "pack rounding applied before the minimum order quantity gives an order below MOQ.",
+      "entity": "replenishment_params",
+      "expected_handling": "MOQ first, then pack rounding: max(raw, MOQ) rounded up to a whole pack.",
+      "id": "INJ-11",
+      "location": "events",
+      "record_ids": [
+        "EV-07"
+      ],
+      "test": "P03-TEST-03"
+    }
+  ],
+  "seed": 20261026
+}

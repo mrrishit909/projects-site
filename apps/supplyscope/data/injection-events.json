@@ -1,0 +1,191 @@
+{
+  "dataset_version": "ss-20261026-20261026",
+  "events": [
+    {
+      "command": "load-movements",
+      "event_id": "EV-01",
+      "expected_handling": "both rows are rejected (same id, different payloads); nothing is posted",
+      "expected_reason": "DUPLICATE_MOVEMENT_CONFLICT",
+      "headers": {
+        "X-Actor-Id": "plan-1",
+        "X-Actor-Role": "planner"
+      },
+      "injection": "INJ-08",
+      "input": {
+        "dataset_version": "ss-20261026-20261026",
+        "idempotency_key": "ev-01",
+        "input": {
+          "movements": [
+            {
+              "event_at": "2025-07-17T12:00:00Z",
+              "location_id": "loc-03",
+              "movement_id": "mv-002230",
+              "movement_type": "sale",
+              "product_id": "prod-006",
+              "quantity_delta": -12
+            },
+            {
+              "event_at": "2025-07-17T12:00:00Z",
+              "location_id": "loc-03",
+              "movement_id": "mv-002230",
+              "movement_type": "sale",
+              "product_id": "prod-006",
+              "quantity_delta": -13
+            }
+          ]
+        },
+        "request_id": "ev-01"
+      }
+    },
+    {
+      "command": "simulate-arrival",
+      "event_id": "EV-02",
+      "expected_handling": "refused: a receipt cannot be dated before its order",
+      "expected_reason": "RECEIPT_BEFORE_ORDER",
+      "expected_status": 422,
+      "headers": {
+        "X-Actor-Id": "plan-1",
+        "X-Actor-Role": "planner"
+      },
+      "injection": "INJ-09",
+      "input": {
+        "dataset_version": "ss-20261026-20261026",
+        "idempotency_key": "ev-02",
+        "input": {
+          "at": "2026-09-03T08:00:00Z",
+          "location_id": "loc-02",
+          "po_line_id": "pol-01227",
+          "quantity": 12
+        },
+        "request_id": "ev-02"
+      }
+    },
+    {
+      "command": "sql",
+      "event_id": "EV-03",
+      "expected_handling": "the status flag is a label only: line_status stays 'open' because ordered - received > 0, and the line is listed in partially_received_open_lines",
+      "expected_reason": "PARTIAL_RECEIPT_NOT_COMPLETE",
+      "injection": "INJ-03",
+      "input": {
+        "ordered": 96,
+        "po_line_id": "pol-00795",
+        "received": 60
+      },
+      "statement": "UPDATE purchase_orders SET status = 'closed' WHERE purchase_order_id = 'po-0627'"
+    },
+    {
+      "command": "reserved-double-subtraction-attempt",
+      "event_id": "EV-04",
+      "expected": {
+        "available": 102,
+        "backorders": 0,
+        "inventory_position": 291,
+        "on_hand": 135,
+        "on_order": 156,
+        "reserved": 33
+      },
+      "expected_handling": "position does not subtract reserved; only available does (P03-TEST-10)",
+      "forbidden": {
+        "inventory_position": 258
+      },
+      "injection": "INJ-07",
+      "input": {
+        "as_of": "2026-09-30T23:59:59Z",
+        "location_id": "loc-01",
+        "product_id": "prod-004"
+      }
+    },
+    {
+      "command": "compare-policies",
+      "event_id": "EV-05",
+      "expected_handling": "refused: scenarios compared on common random numbers must declare one seed",
+      "expected_reason": "POLICY_SEED_MISMATCH",
+      "expected_status": 422,
+      "headers": {
+        "X-Actor-Id": "plan-1",
+        "X-Actor-Role": "planner"
+      },
+      "injection": "INJ-10",
+      "input": {
+        "dataset_version": "ss-20261026-20261026",
+        "idempotency_key": "ev-05",
+        "input": {
+          "location_id": "loc-01",
+          "product_id": "prod-004",
+          "scenario_ids": [
+            "sc-x-seed-a",
+            "sc-x-seed-b"
+          ]
+        },
+        "request_id": "ev-05"
+      },
+      "setup": {
+        "policy_scenarios": [
+          {
+            "replications": 100,
+            "scenario_id": "sc-x-seed-a",
+            "scenario_name": "service 0.95 / lost sale",
+            "seed": 20261026,
+            "service_target": "0.95",
+            "unmet_policy": "lost_sale",
+            "warmup_days": 28
+          },
+          {
+            "replications": 100,
+            "scenario_id": "sc-x-seed-b",
+            "scenario_name": "service 0.95 / backlog",
+            "seed": 20261027,
+            "service_target": "0.95",
+            "unmet_policy": "backlog",
+            "warmup_days": 28
+          }
+        ]
+      }
+    },
+    {
+      "command": "simulate-arrival",
+      "event_id": "EV-06",
+      "expected_handling": "refused: sup-01 quotes 5 days; the earliest receipt is the 5th open day",
+      "expected_reason": "RECEIPT_BEFORE_LEAD_TIME",
+      "expected_status": 422,
+      "headers": {
+        "X-Actor-Id": "plan-1",
+        "X-Actor-Role": "planner"
+      },
+      "injection": "INJ-09",
+      "input": {
+        "dataset_version": "ss-20261026-20261026",
+        "idempotency_key": "ev-06",
+        "input": {
+          "at": "2026-09-24T08:00:00Z",
+          "location_id": "loc-02",
+          "po_line_id": "pol-01267",
+          "quantity": 12
+        },
+        "request_id": "ev-06"
+      }
+    },
+    {
+      "command": "calculate-replenishment-check",
+      "event_id": "EV-07",
+      "expected": {
+        "order_after_moq": 50,
+        "order_quantity": 72,
+        "raw_order": 10
+      },
+      "expected_handling": "MOQ before pack rounding: max(10, 50) = 50, rounded up to 72; never 24 (below MOQ)",
+      "injection": "INJ-11",
+      "input": {
+        "moq": 50,
+        "pack_size": 24,
+        "position": 105,
+        "reorder_point": 110,
+        "target_position": 115
+      },
+      "wrong": {
+        "how": "pack rounding of the raw 10 without applying the MOQ",
+        "order_quantity": 24
+      }
+    }
+  ]
+}

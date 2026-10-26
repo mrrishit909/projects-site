@@ -1,0 +1,6 @@
+{"entity":"policy_scenarios","dataset_version":"ss-20261026-20261026","rows":[
+{"replications":100,"scenario_id":"sc-95-lost","scenario_name":"service 0.95 / lost sale","seed":20261026,"service_target":"0.95","unmet_policy":"lost_sale","warmup_days":28},
+{"replications":100,"scenario_id":"sc-95-backlog","scenario_name":"service 0.95 / backlog","seed":20261026,"service_target":"0.95","unmet_policy":"backlog","warmup_days":28},
+{"replications":100,"scenario_id":"sc-98-lost","scenario_name":"service 0.98 / lost sale","seed":20261026,"service_target":"0.98","unmet_policy":"lost_sale","warmup_days":28},
+{"replications":100,"scenario_id":"sc-98-backlog","scenario_name":"service 0.98 / backlog","seed":20261026,"service_target":"0.98","unmet_policy":"backlog","warmup_days":28}
+]}

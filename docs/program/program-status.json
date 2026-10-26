@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T14:35:13Z",
+  "updated_at": "2026-10-26T14:51:27Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -71,7 +71,7 @@
     },
     "03-supplyscope": {
       "slug": "supplyscope",
-      "stage": "gate-B passed (Mode A verified on hosted runner); generator (A-022) in progress",
+      "stage": "gate-B passed; generator verified; web (A-023) in progress",
       "built": false,
       "verified": false,
       "published": false,
@@ -80,7 +80,7 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40340745348",
       "site_url": null,
       "blockers": [],
-      "next_task": "T-03-04a generator (A-022)"
+      "next_task": "T-03-04b web part 1 then part 2, publish, integrate"
     },
     "04-serviceflow": {
       "slug": "serviceflow",

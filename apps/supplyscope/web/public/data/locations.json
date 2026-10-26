@@ -1,0 +1,5 @@
+{"entity":"locations","dataset_version":"ss-20261026-20261026","rows":[
+{"active":true,"location_id":"loc-01","location_name":"Main DC","storage_capacity":1944,"timezone":"America/New_York"},
+{"active":true,"location_id":"loc-02","location_name":"Overflow DC","storage_capacity":561,"timezone":"America/Chicago"},
+{"active":true,"location_id":"loc-03","location_name":"East Cross-dock","storage_capacity":920,"timezone":"America/New_York"}
+]}
