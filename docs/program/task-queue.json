@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:17:30Z",
+  "updated_at": "2026-10-26T11:22:52Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
@@ -197,6 +197,17 @@
       ],
       "retries": 0,
       "acceptance": "live-check green; case study live"
+    },
+    {
+      "id": "T-01-13",
+      "project": "01-revenue-atlas",
+      "title": "Fix reviewer findings R-01..R-04 (+R-06 validation, R-07 '-0.00'); add regression tests; re-review",
+      "status": "pending",
+      "prereqs": [
+        "T-01-09"
+      ],
+      "retries": 0,
+      "acceptance": "regression tests for each finding pass in Python, SQL where applicable and TS; group sums equal totals including an UNALLOCATED freight row; overview months use D-01a; CI green"
     }
   ]
 }

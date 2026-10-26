@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:21:51Z",
+  "updated_at": "2026-10-26T11:22:52Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -310,6 +310,30 @@
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40313628128",
       "ts": "2026-10-26T11:18:47Z",
       "note": "Mode B job failed on the runner: Playwright preview webServer timeout (passes locally, 24 tests); diagnosis in progress"
+    },
+    {
+      "requirement": "master 18 reviewer disproof pass (key metric, workflow invariant, recommendation)",
+      "project": "01-revenue-atlas",
+      "status": "failed",
+      "defects": [
+        "R-01 shipped_quantity > ordered accepted (ingest/DB), discount over-allocated 45.00 vs 25.00",
+        "R-02 discount_allocations table drifts when a line ships across several C04 calls (0.04 vs 0.03)",
+        "R-03 group_metrics omits unallocated freight: grouped CM 206.81 vs 201.80",
+        "R-04 overview/bridge months count credits by shipment month (2024-11 credits 15,266.75 vs 6,096.40 under D-01a)",
+        "R-05 cent drift in grouped sums after FX conversion (product gross \u03a3 9,651,206.92 vs 9,651,206.89)",
+        "R-06 cross-order shipment line accepted",
+        "R-07 idempotency payload hashed as text; replay not bound to actor; '-0.00' credit accepted"
+      ],
+      "could_not_disprove": [
+        "additivity and residual 0.00 on adversarial inputs",
+        "Python == TypeScript on all inputs; 3,000-case largest-remainder fuzz identical",
+        "atomic rollback of business write + audit + command result",
+        "concurrent C03/C04: exactly one success",
+        "planted relationships detectable; enterprise apparel return rate 1.2x on units (site) vs 3x on lines"
+      ],
+      "command": "scratch scripts under scratchpad/review/",
+      "code_sha": "a9d7d21",
+      "ts": "2026-10-26T11:22:52Z"
     }
   ]
 }

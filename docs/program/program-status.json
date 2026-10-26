@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T11:18:47Z",
+  "updated_at": "2026-10-26T11:22:52Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -51,7 +51,7 @@
       "site_url": "https://mrrishit909.github.io/projects-site/labs/revenue-atlas/",
       "blockers": [],
       "next_task": "after A-008: rebuild web, publish-site.sh, push unified-portfolio, rerun live-check (both jobs green), then reviewer disproof pass",
-      "verified_note": "Entry journey verified: golden in browser, 63 backend tests on hosted runner, 24 Playwright tests locally; adversarial P01-TEST-02/04/05/07/08/11/12 application-path tests and reviewer disproof pass still pending (T-01-07)",
+      "verified_note": "Entry journey verified end to end (golden in browser, 100 backend tests on hosted runner, 24 browser tests). Reviewer disproof pass found R-01..R-07 (ledger); R-01..R-04 are open defects queued as T-01-13, so \"verified\" is provisional until they are fixed and re-reviewed.",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/revenue-atlas/"
     },
     "02-onboard-studio": {
