@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T17:16:37Z",
+  "updated_at": "2026-10-26T17:18:16Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -86,16 +86,16 @@
     },
     "04-serviceflow": {
       "slug": "serviceflow",
-      "stage": "built, verified (CI green both modes on 6a753e8), published e3bd4a4 (live check pending), integrated (case study pushed; link check pending)",
+      "stage": "built, verified (CI green both modes on 6a753e8), published and live-verified (run 40367109366), integrated (case study live, links verified both ways); reviewer A-031 running",
       "built": true,
       "verified": true,
       "published": true,
-      "integrated": false,
+      "integrated": true,
       "last_verified_sha": "6a753e8",
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40364940392",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/serviceflow/",
       "blockers": [],
-      "next_task": "live check -> reviewer disproof pass -> fixes -> artifacts",
+      "next_task": "A-031 reviewer -> fixes -> artifacts",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/serviceflow/"
     },
     "05-invoicebridge": {

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T17:16:37Z",
+  "updated_at": "2026-10-26T17:18:16Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -858,6 +858,17 @@
       "code_sha": "6a753e8",
       "evidence": "docs/program/release-manifest.json",
       "ts": "2026-10-26T17:16:37Z"
+    },
+    {
+      "requirement": "P04-REL-09/17/18: live site on github-hosted runner (deploy-wait matched code_sha 6a753e8 on attempt 2, 11 routes 200, manifest served, case study links to the site and the site links back, 360/1280 browser journey with no console errors); all four sites green",
+      "project": "04-serviceflow",
+      "status": "verified",
+      "command": "live-check.yml run 40367109366 (matrix)",
+      "exit_code": 0,
+      "actual": "all jobs success",
+      "code_sha": "6a753e8 / portfolio e3bd4a4",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40367109366",
+      "ts": "2026-10-26T17:18:16Z"
     }
   ]
 }
