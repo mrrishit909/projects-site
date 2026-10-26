@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T19:36:24Z",
+  "updated_at": "2026-10-26T20:28:36Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -101,7 +101,7 @@
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
-      "stage": "gate-A passed (fixture verified, 412 checks, dc96dbe); backend A-035 running",
+      "stage": "gate-A passed; backend slice committed a381e53 (285 tests local); CI Mode A pending; generator A-036 running",
       "built": false,
       "verified": false,
       "published": false,
@@ -110,7 +110,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": "T-05-03 (A-035)"
+      "next_task": "T-05-04 (A-036 generator -> web -> publish -> integrate)"
     },
     "06-productsignal": {
       "slug": "productsignal",
@@ -180,7 +180,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 05 InvoiceBridge: A-035 backend hand-back -> verify -> commit -> CI Mode A -> generator -> web -> publish labs/invoicebridge -> integrate -> reviewer -> fixes -> artifacts. Then project 06.",
+    "next_concrete_task": "Project 05 InvoiceBridge: confirm invoicebridge-ci.yml Mode A on a381e53; A-036 generator hand-back -> verify -> commit -> web worker -> publish labs/invoicebridge -> release manifest + live check -> portfolio case study (project.json, cover, shots, motion tile motion/scenes/invoicebridge.js) -> reviewer -> fixes -> artifacts. Then project 06.",
     "acceptance": "see task-queue.json"
   }
 }

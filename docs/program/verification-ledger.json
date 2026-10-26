@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T19:36:24Z",
+  "updated_at": "2026-10-26T20:28:36Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -946,6 +946,17 @@
       "code_sha": "dc96dbe",
       "evidence": "apps/invoicebridge/tests/fixtures/golden/",
       "ts": "2026-10-26T19:36:24Z"
+    },
+    {
+      "requirement": "P05 domain/API slice: golden and variants key by key through domain, SQL and API; adversarial cases (same-bytes duplicate, document-level tax, rounding ties, price variance, currency mismatch, NO_PO_LINE, self-approval, credit once, racing approvals, export idempotency under concurrency, stale dataset_version, reversed receipt); 120-seed SQL-vs-domain random comparison",
+      "project": "05-invoicebridge",
+      "status": "verified",
+      "command": "reference_check.py; DATABASE_URL=... pytest -q; env -u DATABASE_URL pytest -q",
+      "exit_code": 0,
+      "actual": "ALL OK (412); 285 passed; 127 passed 158 skipped (local; CI Mode A pending)",
+      "code_sha": "a381e53",
+      "evidence": "apps/invoicebridge/tests/",
+      "ts": "2026-10-26T20:28:36Z"
     }
   ]
 }
