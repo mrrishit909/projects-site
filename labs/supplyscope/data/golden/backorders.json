@@ -1,0 +1,22 @@
+{
+ "entity": "backorders",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "backorder_id": "bo-001",
+   "product_id": "prod-001",
+   "location_id": "loc-001",
+   "quantity": 5,
+   "opened_at": "2026-03-12T09:00:00Z",
+   "closed_at": "2026-03-13T10:00:00Z"
+  },
+  {
+   "backorder_id": "bo-002",
+   "product_id": "prod-001",
+   "location_id": "loc-001",
+   "quantity": 10,
+   "opened_at": "2026-02-27T12:00:00Z",
+   "closed_at": null
+  }
+ ]
+}

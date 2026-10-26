@@ -1,0 +1,12 @@
+{
+ "entity": "replenishment_params",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "product_id": "prod-001",
+   "location_id": "loc-001",
+   "reorder_point": 70,
+   "target_position": 120
+  }
+ ]
+}

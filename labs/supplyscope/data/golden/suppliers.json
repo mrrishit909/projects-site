@@ -1,0 +1,13 @@
+{
+ "entity": "suppliers",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "supplier_id": "sup-001",
+   "supplier_name": "Supplier One",
+   "calendar_id": "cal-001",
+   "quoted_lead_days": 7,
+   "active": true
+  }
+ ]
+}

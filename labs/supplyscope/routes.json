@@ -1,0 +1,16 @@
+{
+  "routes": [
+    "",
+    "overview/",
+    "skus/",
+    "locations/",
+    "suppliers/",
+    "forecast/",
+    "reorder/",
+    "simulator/",
+    "capital/",
+    "draft/",
+    "case-study/"
+  ],
+  "generated_at": "2026-10-26T15:13:02.785Z"
+}

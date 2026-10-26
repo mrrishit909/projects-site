@@ -1,0 +1,6 @@
+{"entity":"suppliers","dataset_version":"ss-20261026-20261026","rows":[
+{"active":true,"calendar_id":"cal-01","quoted_lead_days":5,"supplier_id":"sup-01","supplier_name":"Northwind Components"},
+{"active":true,"calendar_id":"cal-02","quoted_lead_days":12,"supplier_id":"sup-02","supplier_name":"Harbor Industrial Supply"},
+{"active":true,"calendar_id":"cal-03","quoted_lead_days":9,"supplier_id":"sup-03","supplier_name":"Summit Wholesale"},
+{"active":true,"calendar_id":"cal-04","quoted_lead_days":21,"supplier_id":"sup-04","supplier_name":"Pacific Trade Partners"}
+]}

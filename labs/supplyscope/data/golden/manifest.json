@@ -1,0 +1,52 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "0327b1cc7d1e1420cb36afd90500268e16e1423bc02aa54738e4a96157e0f289",
+  "dataset_version": "golden-v1",
+  "generated_at": "2026-10-26T00:00:00Z",
+  "generator": {
+    "name": "tests/fixtures/golden (hand-derived, no generator)",
+    "seed": 0,
+    "parameters": {}
+  },
+  "designed_relationships": [],
+  "fixture_id": "supplyscope-golden-v1",
+  "as_of": "2026-03-31T23:59:59Z",
+  "window_start": "2026-03-01T00:00:00Z",
+  "states": {
+    "golden": {
+      "add_purchase_order_lines": []
+    },
+    "position_80": {
+      "add_purchase_order_lines": [
+        {
+          "po_line_id": "pol-002",
+          "purchase_order_id": "po-001",
+          "product_id": "prod-001",
+          "ordered_quantity": 20,
+          "unit_cost": "12.50"
+        }
+      ]
+    }
+  },
+  "row_counts": {
+    "products": 1,
+    "locations": 1,
+    "sales": 4,
+    "inventory_movements": 7,
+    "purchase_orders": 1,
+    "purchase_order_lines": 1,
+    "receipts": 0,
+    "suppliers": 1,
+    "promotions": 0,
+    "forecast_runs": 0,
+    "forecast_points": 0,
+    "policy_scenarios": 0,
+    "backorders": 2,
+    "reservations": 0,
+    "replenishment_params": 1,
+    "cost_versions": 0,
+    "lost_sales": 0,
+    "calendar_closures": 0,
+    "latent_demand": 0
+  }
+}
