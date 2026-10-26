@@ -333,7 +333,7 @@
       "id": "T-04-07",
       "project": "04-serviceflow",
       "title": "Fix reviewer findings R4-01..R4-18; regression tests; re-review",
-      "status": "done (local + republished); CI and live check pending",
+      "status": "done",
       "prereqs": [
         "T-04-04"
       ],

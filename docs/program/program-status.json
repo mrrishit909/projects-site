@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T18:12:13Z",
+  "updated_at": "2026-10-26T18:20:47Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -86,16 +86,16 @@
     },
     "04-serviceflow": {
       "slug": "serviceflow",
-      "stage": "built, verified (reviewer findings fixed and regression-tested at 43de7f8), republished e44d15d (CI and live check pending), integrated (case study updated); artifacts A-033 next",
+      "stage": "built, verified (reviewer findings fixed and regression-tested; CI green on 43de7f8), published and live-verified (run 40376659299), integrated (case study live); artifacts A-033 running",
       "built": true,
       "verified": true,
       "published": true,
       "integrated": true,
-      "last_verified_sha": "43de7f8 (local)",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40364940392",
+      "last_verified_sha": "43de7f8",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40375493599",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/serviceflow/",
       "blockers": [],
-      "next_task": "confirm CI and live check; A-033 artifacts",
+      "next_task": "A-033 artifacts -> then project 05",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/serviceflow/",
       "verified_note": "Entry journey + reviewer disproof pass; all 18 findings fixed in T-04-07 with tests in Python, SQL and TypeScript"
     },

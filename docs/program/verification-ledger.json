@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T18:12:13Z",
+  "updated_at": "2026-10-26T18:20:47Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -880,6 +880,28 @@
       "code_sha": "43de7f8",
       "evidence": "apps/serviceflow/docs/uat-evidence.md; tests/test_review_findings.py; web/scripts/review-check.ts",
       "ts": "2026-10-26T18:12:13Z"
+    },
+    {
+      "requirement": "P04 CI after the reviewer fixes (377 tests Mode A; 303 golden + 54 review checks, 70 Playwright tests Mode B) on github-hosted",
+      "project": "04-serviceflow",
+      "status": "verified",
+      "command": "serviceflow-ci.yml run 40375493599",
+      "exit_code": 0,
+      "actual": "both jobs success",
+      "code_sha": "43de7f8",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40375493599",
+      "ts": "2026-10-26T18:20:47Z"
+    },
+    {
+      "requirement": "P04-REL-09/17/18 after the republish: live manifest code_sha == 43de7f8..., 11 routes 200, case study links both ways, browser journey clean; all four sites green (a first run 40375648141 failed only because the manifest carried a short hash; corrected)",
+      "project": "04-serviceflow",
+      "status": "verified",
+      "command": "live-check.yml run 40376659299 (matrix)",
+      "exit_code": 0,
+      "actual": "all jobs success",
+      "code_sha": "43de7f8 / portfolio e44d15d",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40376659299",
+      "ts": "2026-10-26T18:20:47Z"
     }
   ]
 }
