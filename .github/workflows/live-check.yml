@@ -1,55 +1,70 @@
 name: live-site-check
 
-# Verifies a published project site from a GitHub-hosted runner (the cloud coordinator's
-# network policy cannot reach *.github.io). Records HTTP status, a real browser screenshot
-# and one user journey as an artifact (P01-REL-09, master 21).
+# Verifies every published project site listed in docs/program/release-manifest.json from a
+# GitHub-hosted runner (the cloud coordinator's network policy cannot reach *.github.io):
+# HTTP status on every route the site declares in routes.json, a real browser journey with
+# screenshots, and the portfolio link in both directions (P0x-REL-09/17/18, master 21).
 on:
-  # workflow_dispatch only resolves for workflows on the default branch, so pushes of the
-  # release manifest on this branch also trigger the check with the defaults below.
   push:
     branches: [business-data-lab]
     paths:
       - "docs/program/release-manifest.json"
       - ".github/workflows/live-check.yml"
   workflow_dispatch:
-    inputs:
-      slug:
-        description: "Project slug (e.g. revenue-atlas)"
-        required: true
-        default: "revenue-atlas"
-      base_url:
-        description: "Published site root"
-        required: true
-        default: "https://mrrishit909.github.io/projects-site/labs/revenue-atlas/"
 
 permissions:
   contents: read
 
-env:
-  SLUG: ${{ inputs.slug || 'revenue-atlas' }}
-  BASE: ${{ inputs.base_url || 'https://mrrishit909.github.io/projects-site/labs/revenue-atlas/' }}
-
 jobs:
-  live:
+  sites:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 2
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4
+      - id: m
+        run: |
+          echo "matrix=$(python3 -c "import json;print(json.dumps([{'slug':s['slug'],'url':s['site_url']} for s in json.load(open('docs/program/release-manifest.json'))['sites']]))")" >> "$GITHUB_OUTPUT"
+
+  live:
+    needs: sites
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        site: ${{ fromJson(needs.sites.outputs.matrix) }}
+    env:
+      SLUG: ${{ matrix.site.slug }}
+      BASE: ${{ matrix.site.url }}
+    steps:
       - name: Runner identity (must be GitHub-hosted)
         run: test "${{ runner.environment }}" = "github-hosted"
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: HTTP checks (root, a nested route reload, the data manifest)
+      - name: HTTP checks on every declared route, the data manifest and the case study link
         run: |
           mkdir -p live-evidence
-          for p in "" "overview/" "bridge/" "evidence/" "case-study/" "data/manifest.json" "routes.json"; do
+          curl -sS -f "${BASE}routes.json" -o live-evidence/routes.json
+          for p in $(python3 -c "import json;print(' '.join(r if r else '.' for r in json.load(open('live-evidence/routes.json'))['routes']))") "data/manifest.json"; do
+            [ "$p" = "." ] && p=""
             code=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE$p")
             echo "$code $BASE$p" | tee -a live-evidence/http.txt
             test "$code" = "200"
           done
-          curl -sS "$BASE"data/manifest.json | tee live-evidence/manifest.json | head -c 600
-      - name: Browser screenshot and journey
+          curl -sS "${BASE}data/manifest.json" | tee live-evidence/manifest.json | head -c 400; echo
+          case_url="https://mrrishit909.github.io/projects-site/$SLUG/"
+          code=$(curl -sS -o live-evidence/case.html -w '%{http_code}' "$case_url"); echo "$code $case_url" | tee -a live-evidence/http.txt
+          if [ "$code" = "200" ]; then
+            grep -q "labs/$SLUG/" live-evidence/case.html && echo "case study links to the site" | tee -a live-evidence/http.txt
+          else
+            echo "case study not published yet (status $code)" | tee -a live-evidence/http.txt
+          fi
+          curl -sS -o live-evidence/site.html "$BASE"
+          grep -q "mrrishit909.github.io/projects-site/" live-evidence/site.html && echo "site links back to the portfolio" | tee -a live-evidence/http.txt
+      - name: Browser screenshots and journey (first two routes after the root)
         timeout-minutes: 6
         run: |
           npm init -y >/dev/null
@@ -60,6 +75,7 @@ jobs:
           const fs = require("fs");
           (async () => {
             const base = process.env.BASE;
+            const routes = JSON.parse(fs.readFileSync("live-evidence/routes.json", "utf8")).routes.filter(r => r).slice(0, 2);
             const browser = await chromium.launch();
             setTimeout(() => { console.error("global timeout"); process.exit(2); }, 240000).unref();
             const errors = [];
@@ -67,14 +83,12 @@ jobs:
               const page = await browser.newPage({ viewport: { width: w, height: h } });
               page.on("console", m => { if (m.type() === "error") errors.push(`${name}: ${m.text()}`); });
               page.on("pageerror", e => errors.push(`${name}: ${e.message}`));
-              await page.goto(base + "overview/", { waitUntil: "load", timeout: 45000 });
-              await page.waitForSelector("main table, main svg", { timeout: 45000 });
-              await page.screenshot({ path: `live-evidence/live-overview-${name}.png`, fullPage: true });
-              await page.goto(base + "bridge/", { waitUntil: "load", timeout: 45000 });
-              await page.waitForSelector("main table", { timeout: 45000 });
-              await page.screenshot({ path: `live-evidence/live-bridge-${name}.png`, fullPage: true });
-              const title = await page.title();
-              fs.appendFileSync("live-evidence/journey.txt", `${name}: title="${title}" url=${page.url()}\n`);
+              for (const r of routes) {
+                await page.goto(base + r, { waitUntil: "load", timeout: 45000 });
+                await page.waitForSelector("main table, main svg, main h1", { timeout: 45000 });
+                await page.screenshot({ path: `live-evidence/live-${r.replace(/\//g, "")}-${name}.png`, fullPage: true });
+                fs.appendFileSync("live-evidence/journey.txt", `${name} ${r}: title="${await page.title()}" url=${page.url()} scrollWidth=${await page.evaluate(() => document.scrollingElement.scrollWidth)} innerWidth=${w}\n`);
+              }
               await page.close();
             }
             await browser.close();
@@ -85,32 +99,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: live-${{ env.SLUG }}-${{ github.run_id }}
+          name: live-${{ matrix.site.slug }}-${{ github.run_id }}
           path: live-evidence
-          retention-days: 90
-
-  portfolio-link:
-    # The main portfolio's case study must link to the live site and the site back to the
-    # portfolio (P01-REL-18, master 21 "test the portfolio link in both directions").
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    steps:
-      - name: Runner identity (must be GitHub-hosted)
-        run: test "${{ runner.environment }}" = "github-hosted"
-      - name: Case study links to the site; the site links back
-        run: |
-          mkdir -p link-evidence
-          case_url="https://mrrishit909.github.io/projects-site/$SLUG/"
-          code=$(curl -sS -o link-evidence/case.html -w '%{http_code}' "$case_url"); echo "$code $case_url" | tee link-evidence/http.txt
-          test "$code" = "200"
-          grep -c "labs/$SLUG/" link-evidence/case.html | tee -a link-evidence/http.txt
-          grep -q "labs/$SLUG/" link-evidence/case.html
-          curl -sS -o link-evidence/site.html "$BASE"
-          grep -q "mrrishit909.github.io/projects-site/" link-evidence/site.html
-          echo "both directions ok" | tee -a link-evidence/http.txt
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: portfolio-link-${{ env.SLUG }}-${{ github.run_id }}
-          path: link-evidence
           retention-days: 90

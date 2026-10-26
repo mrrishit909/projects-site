@@ -12,11 +12,11 @@ lab_sha=$(git -C "$(dirname "$0")/.." rev-parse HEAD)
 cd "$portfolio"
 test "$(git rev-parse --abbrev-ref HEAD)" = "unified-portfolio"
 rm -rf "labs/$slug"; mkdir -p "labs/$slug"; cp -R "$dist/." "labs/$slug/"
-python3 - "labs/$slug/data/manifest.json" "$lab_sha" <<'PY2'
+python3 - "labs/$slug/data/manifest.json" "$lab_sha" "$slug" <<'PY2'
 import json,sys,datetime
 p,sha=sys.argv[1],sys.argv[2]; m=json.load(open(p))
 m["code_sha"]=sha; m["published_at"]=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-m["source"]="https://github.com/mrrishit909/projects-site/tree/"+sha+"/apps/revenue-atlas"
+m["source"]="https://github.com/mrrishit909/projects-site/tree/"+sha+"/apps/"+sys.argv[3]
 json.dump(m,open(p,"w"),indent=2)
 PY2
 sha=$(sha256sum $(find "labs/$slug" -type f | sort) | sha256sum | cut -c1-64)
