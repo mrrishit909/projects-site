@@ -103,3 +103,23 @@ Windows are [from, to) on imported_at with `to` as the as-of instant; snapshot c
 vendor / currency. C06 is 501; there is no receipt command (receipts are reference data; reversal is the one UPDATE
 the schema allows). Known: the stored canonical copy of concurrent same-bytes imports can differ from the derived
 earliest-import canonical (warned, counts agree); metrics can run ahead of the workflow (warned).
+
+## D-07 Synthetic world (2026-10-26, adopted from A-036)
+Seed 20261026, 12 months 2025-10-01..2026-09-30, `as_of` 2026-10-01T02:00:00Z (the last nightly matching run at
+02:00Z; no fact is later than 2026-09-30T23:59:59Z); `snapshot_cutoffs` 2026-03-31T23:59:59Z, 2026-06-30T23:59:59Z
+and the as_of. 40 vendors (25 USD, 10 EUR, 5 GBP; ven-040 dormant), 1,200 purchase orders with 3,000 lines, 5,067
+receipts (2.0 % reversed, 70 % of those re-entered a day later; a reversed receipt is excluded at every instant because
+the fixture shape has no `reversed_at`), 2,800 invoices with 5,322 lines, 117 credit notes on 112 approved invoices,
+policies pol-v1 (limit 5000.00) and pol-v2 (8000.00 from 2026-04-01) without `escalation_role` (matched invoices above
+the limit stay unapproved), 2,356 approvals (every row carries `reason`, null for approvals), 59 export requests and
+52 batches, 660 exceptions with 698 assignments. "ven-02x" means ven-020..ven-029 (quantity blocks on 30.3 % of their
+invoices against 1.4 % elsewhere); ven-007's price-list change produces PRICE_VARIANCE from 2026-03-04 (93.8 % of all
+price variances); 74.7 % of re-sent PDFs land in the last three days of a month. Rejections are decided only on
+invoices that were exceptions in every run; injected exception invoices are never rejected. `exceptions`,
+`exception_assignments`, `export_batches` and `credit_notes` take their columns from 0001_schema.sql; match results,
+export rows, lineage and audit events are derived and not written. Clean files: 0 rejections, 98 merges (95 identity,
+3 same bytes), empty `invalid_records`, export reconciliation 0.00, 232 open exceptions. Five of the twelve injected
+defects are replay-only (INJ-06, 07, 08, 10, 12); EV-01..07 behave as recorded. Known: `book.derive` validates
+approvals against the run at the cutoff, not at `decided_at`; `Population.exceptions` ids are last-wins while the SQL
+prefers the open record (they agree under the load order the tests use); the SQL reference takes about 80 s per query
+on 2,800 invoices.

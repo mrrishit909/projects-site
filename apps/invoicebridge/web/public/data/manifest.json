@@ -1,0 +1,154 @@
+{
+  "as_of": "2026-10-01T02:00:00Z",
+  "contract_version": "v1",
+  "dataset_hash": "1f001a43a7031d4260f5abb3b9f7a83f6e1b48397e85cf8b04e0b4d9e052162e",
+  "dataset_version": "ib-20261026-20261026",
+  "designed_relationships": [
+    {
+      "id": "DR-01",
+      "name": "ven-02x invoices before receipts",
+      "realised": {
+        "other_invoices": 2107,
+        "other_quantity_blocked": 30,
+        "other_rate": "0.0142",
+        "ven_02x_invoices": 538,
+        "ven_02x_quantity_blocked": 163,
+        "ven_02x_rate": "0.3030",
+        "ven_02x_share_of_blocked": "0.8446"
+      },
+      "statement": "Vendors ven-020..ven-029 invoice 3-25 days before they deliver and a third of their lines are never fully received in the window: their invoices carry by far the highest QUANTITY_BLOCKED rate."
+    },
+    {
+      "id": "DR-02",
+      "name": "price-list change from 2026-03",
+      "realised": {
+        "all_price_variance_invoices": 32,
+        "first_flagged_at": "2026-03-04T02:00:00Z",
+        "price_variance_invoices": 30,
+        "vendor": "ven-007",
+        "vendor_invoices": 184,
+        "vendor_share_of_price_variance": "0.9375"
+      },
+      "statement": "ven-007 bills a new price list (+7.5 %) from 2026-03-01 on purchase orders still carrying the old prices (the catalogue is updated on 2026-04-15): PRICE_VARIANCE exceptions begin in 2026-03."
+    },
+    {
+      "id": "DR-03",
+      "name": "re-sent PDFs cluster at month ends",
+      "realised": {
+        "all_invoices_in_last_three_days_share": "0.1904",
+        "in_last_three_days_of_month": 71,
+        "resent_duplicates": 95,
+        "share": "0.7474"
+      },
+      "statement": "A re-sent PDF (different bytes, same vendor, number, date and total) is imported in the last three days of the month far more often than invoices in general."
+    },
+    {
+      "id": "DR-04",
+      "name": "approval limit change on 2026-04-01",
+      "realised": {
+        "approvals_between_limits_after_change": 20,
+        "matched_unapproved_over_limit": 28
+      },
+      "statement": "Reviewers may approve up to 5000.00 under pol-v1 and up to 8000.00 from 2026-04-01 (pol-v2); invoices above the limit in force are matched but never approved (no escalation role is carried by the fixture shape)."
+    }
+  ],
+  "generated_at": "2026-10-26T21:04:26Z",
+  "generator": {
+    "name": "generate.py",
+    "parameters": {
+      "as_of": "2026-10-01T02:00:00Z",
+      "catalogue_updated": "2026-04-15T00:00:00Z",
+      "credit_share": 0.04,
+      "currencies": [
+        "USD",
+        "EUR",
+        "GBP"
+      ],
+      "export_batches": "Fridays 16:00Z",
+      "group_02x": [
+        "ven-020",
+        "ven-029"
+      ],
+      "invoices": 2800,
+      "nightly_match": "02:00:00Z",
+      "p_duplicate_month_end": 0.74,
+      "p_short_02x_line": 0.4,
+      "po_lines": 3000,
+      "policy_limits": {
+        "pol-v1": "5000.00",
+        "pol-v2": "8000.00",
+        "v2_from": "2026-04-01T00:00:00Z"
+      },
+      "price_change_from": "2026-03-01",
+      "price_list_vendor": "ven-007",
+      "price_uplift": 0.075,
+      "purchase_orders": 1200,
+      "resent_pdf_duplicates": 95,
+      "reversal_share_of_first_entry_receipts": 0.0202,
+      "snapshot_cutoffs": [
+        "2026-03-31T23:59:59Z",
+        "2026-06-30T23:59:59Z",
+        "2026-10-01T02:00:00Z"
+      ],
+      "tolerances": {
+        "price_per_unit": "0.00",
+        "rounding_per_invoice": "0.02",
+        "rounding_per_line": "0.01"
+      },
+      "vendors": 40,
+      "window": [
+        "2025-10-01",
+        "2026-09-30"
+      ]
+    },
+    "seed": 20261026
+  },
+  "injection_manifest": "injection-manifest.json",
+  "row_counts": {
+    "approval_policies": 2,
+    "approvals": 2356,
+    "credit_notes": 117,
+    "exception_assignments": 698,
+    "exceptions": 660,
+    "export_batches": 52,
+    "export_requests": 59,
+    "invoice_lines": 5322,
+    "invoices": 2800,
+    "po_lines": 3000,
+    "purchase_orders": 1200,
+    "receipts": 5067,
+    "vendors": 40
+  },
+  "snapshot_cutoffs": [
+    "2026-03-31T23:59:59Z",
+    "2026-06-30T23:59:59Z",
+    "2026-10-01T02:00:00Z"
+  ],
+  "stats": {
+    "approvals_over_limit_pending": 28,
+    "base_invoices": 2699,
+    "designed": {
+      "others_qb": [
+        30,
+        2107
+      ],
+      "ven02x_qb": [
+        163,
+        538
+      ]
+    },
+    "exported_invoices": 2299,
+    "h0_flagged": 270,
+    "plan_calibration_steps": 96,
+    "plan_invoices_before_calibration": 2604,
+    "reentered_receipts": 70,
+    "reversed_receipts": 101
+  },
+  "tolerances": {
+    "price_per_unit": "0.00",
+    "rounding_per_invoice": "0.02",
+    "rounding_per_line": "0.01"
+  },
+  "window_end": "2026-09-30T23:59:59Z",
+  "window_start": "2025-10-01T00:00:00Z"
+}

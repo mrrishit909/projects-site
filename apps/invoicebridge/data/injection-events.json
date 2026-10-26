@@ -1,0 +1,764 @@
+{
+  "dataset_version": "ib-20261026-20261026",
+  "events": [
+    {
+      "command": "import-invoice",
+      "event_id": "EV-01",
+      "expected": {
+        "duplicate_of": "inv-ev01a",
+        "import_status": "merged",
+        "reason_code": "DUPLICATE_SOURCE_BYTES",
+        "status": "merged"
+      },
+      "expected_handling": "accepted as a merged import: same bytes under a second filename is one obligation (warning DUPLICATE_SOURCE_BYTES), nothing consumed",
+      "expected_reason": "DUPLICATE_SOURCE_BYTES",
+      "expected_status": 200,
+      "injection": "INJ-01",
+      "requires": [],
+      "steps": [
+        {
+          "command": "import-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-01a",
+            "input": {
+              "currency": "USD",
+              "declared_total": "4.52",
+              "freight": "0.00",
+              "imported_at": "2026-09-30T23:51:00Z",
+              "invoice_date": "2026-09-30",
+              "invoice_discount": "0.00",
+              "invoice_id": "inv-ev01a",
+              "invoice_number": "EV-01A",
+              "lines": [
+                {
+                  "invoice_line_id": "il-ev01a",
+                  "po_line_id": "pol-2362",
+                  "quantity": "1.0000",
+                  "unit_price": "4.110000"
+                }
+              ],
+              "source_filename": "EV-01.pdf",
+              "source_sha256": "8024d59da2daf5de08498faa057cf23abbdd358054e79f8f8207d2f4cc974935",
+              "tax_rate": "0.100000",
+              "vendor_id": "ven-001"
+            },
+            "request_id": "ev-01a"
+          }
+        },
+        {
+          "command": "import-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-01b",
+            "input": {
+              "currency": "USD",
+              "declared_total": "4.52",
+              "freight": "0.00",
+              "imported_at": "2026-09-30T23:51:00Z",
+              "invoice_date": "2026-09-30",
+              "invoice_discount": "0.00",
+              "invoice_id": "inv-ev01b",
+              "invoice_number": "EV-01A",
+              "lines": [
+                {
+                  "invoice_line_id": "il-ev01b",
+                  "po_line_id": "pol-2362",
+                  "quantity": "1.0000",
+                  "unit_price": "4.110000"
+                }
+              ],
+              "source_filename": "scan_EV-01 (1).pdf",
+              "source_sha256": "8024d59da2daf5de08498faa057cf23abbdd358054e79f8f8207d2f4cc974935",
+              "tax_rate": "0.100000",
+              "vendor_id": "ven-001"
+            },
+            "request_id": "ev-01b"
+          }
+        }
+      ]
+    },
+    {
+      "command": "approve-invoice",
+      "event_id": "EV-02",
+      "expected": {
+        "approvals_rows": 0,
+        "invoice_status_after": "matched"
+      },
+      "expected_handling": "refused: the approver imported the invoice (usr-rev02 created it); the invoice stays matched",
+      "expected_reason": "SELF_APPROVAL",
+      "expected_status": 403,
+      "injection": "INJ-06",
+      "requires": [],
+      "steps": [
+        {
+          "command": "import-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-rev02",
+            "X-Actor-Role": "reviewer"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-02a",
+            "input": {
+              "currency": "USD",
+              "declared_total": "3.84",
+              "freight": "0.00",
+              "imported_at": "2026-09-30T23:52:00Z",
+              "invoice_date": "2026-09-30",
+              "invoice_discount": "0.00",
+              "invoice_id": "inv-ev02a",
+              "invoice_number": "EV-02A",
+              "lines": [
+                {
+                  "invoice_line_id": "il-ev02a",
+                  "po_line_id": "pol-1577",
+                  "quantity": "1.0000",
+                  "unit_price": "3.840000"
+                }
+              ],
+              "source_filename": "EV-02A.pdf",
+              "source_sha256": "62e14ef394b00defffbeb1f2f32f5ebbf1eff1c82dae2177488d5f474ff3ed57",
+              "tax_rate": "0.000000",
+              "vendor_id": "ven-003"
+            },
+            "request_id": "ev-02a"
+          }
+        },
+        {
+          "command": "validate-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-02b",
+            "input": {
+              "invoice_id": "inv-ev02a"
+            },
+            "request_id": "ev-02b"
+          }
+        },
+        {
+          "command": "match-three-way",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-02c",
+            "input": {
+              "invoice_id": "inv-ev02a"
+            },
+            "request_id": "ev-02c"
+          }
+        },
+        {
+          "command": "approve-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-rev02",
+            "X-Actor-Role": "reviewer"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-02d",
+            "input": {
+              "invoice_id": "inv-ev02a"
+            },
+            "request_id": "ev-02d"
+          }
+        }
+      ]
+    },
+    {
+      "command": "approve-invoice",
+      "concurrent_last": 2,
+      "event_id": "EV-03",
+      "expected": {
+        "approvals_rows": 1,
+        "concurrent_statuses": [
+          200,
+          409
+        ],
+        "invoice_status_after": "approved"
+      },
+      "expected_handling": "exactly one of the two simultaneous approvals succeeds; the loser is refused 409 INVALID_STATE; one approval row",
+      "expected_reason": "INVALID_STATE",
+      "expected_status": 409,
+      "injection": "INJ-07",
+      "requires": [],
+      "steps": [
+        {
+          "command": "import-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-03a",
+            "input": {
+              "currency": "USD",
+              "declared_total": "62.33",
+              "freight": "0.00",
+              "imported_at": "2026-09-30T23:53:00Z",
+              "invoice_date": "2026-09-30",
+              "invoice_discount": "0.00",
+              "invoice_id": "inv-ev03a",
+              "invoice_number": "EV-03A",
+              "lines": [
+                {
+                  "invoice_line_id": "il-ev03a",
+                  "po_line_id": "pol-1218",
+                  "quantity": "1.0000",
+                  "unit_price": "57.580000"
+                }
+              ],
+              "source_filename": "EV-03A.pdf",
+              "source_sha256": "1e8a869cee8886450683974e3b0022031ac91c0d3115a7eb4b248d25f61a0660",
+              "tax_rate": "0.082500",
+              "vendor_id": "ven-017"
+            },
+            "request_id": "ev-03a"
+          }
+        },
+        {
+          "command": "validate-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-03b",
+            "input": {
+              "invoice_id": "inv-ev03a"
+            },
+            "request_id": "ev-03b"
+          }
+        },
+        {
+          "command": "match-three-way",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-03c",
+            "input": {
+              "invoice_id": "inv-ev03a"
+            },
+            "request_id": "ev-03c"
+          }
+        },
+        {
+          "command": "approve-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-rev01",
+            "X-Actor-Role": "reviewer"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-03d",
+            "input": {
+              "invoice_id": "inv-ev03a"
+            },
+            "request_id": "ev-03d"
+          }
+        },
+        {
+          "command": "approve-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-rev02",
+            "X-Actor-Role": "reviewer"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-03e",
+            "input": {
+              "invoice_id": "inv-ev03a"
+            },
+            "request_id": "ev-03e"
+          }
+        }
+      ]
+    },
+    {
+      "command": "apply-credit-note",
+      "event_id": "EV-04",
+      "expected": {
+        "cash_movement": false,
+        "credit_rows": 1,
+        "credit_total": "6.21"
+      },
+      "expected_handling": "second application refused: a credit note applies once per credit_id; one credit row; no cash movement",
+      "expected_reason": "CREDIT_ALREADY_APPLIED",
+      "expected_status": 409,
+      "injection": "INJ-08",
+      "requires": [],
+      "steps": [
+        {
+          "command": "import-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-04a",
+            "input": {
+              "currency": "USD",
+              "declared_total": "62.16",
+              "freight": "0.00",
+              "imported_at": "2026-09-30T23:54:00Z",
+              "invoice_date": "2026-09-30",
+              "invoice_discount": "0.00",
+              "invoice_id": "inv-ev04a",
+              "invoice_number": "EV-04A",
+              "lines": [
+                {
+                  "invoice_line_id": "il-ev04a",
+                  "po_line_id": "pol-1110",
+                  "quantity": "1.0000",
+                  "unit_price": "56.510000"
+                }
+              ],
+              "source_filename": "EV-04A.pdf",
+              "source_sha256": "39e1b95b31618a6bb97ca8fbd31bb9ee19e46fb0925e7c6998404a10854cc61d",
+              "tax_rate": "0.100000",
+              "vendor_id": "ven-004"
+            },
+            "request_id": "ev-04a"
+          }
+        },
+        {
+          "command": "validate-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-04b",
+            "input": {
+              "invoice_id": "inv-ev04a"
+            },
+            "request_id": "ev-04b"
+          }
+        },
+        {
+          "command": "match-three-way",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-04c",
+            "input": {
+              "invoice_id": "inv-ev04a"
+            },
+            "request_id": "ev-04c"
+          }
+        },
+        {
+          "command": "approve-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-rev01",
+            "X-Actor-Role": "reviewer"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-04d",
+            "input": {
+              "invoice_id": "inv-ev04a"
+            },
+            "request_id": "ev-04d"
+          }
+        },
+        {
+          "command": "apply-credit-note",
+          "headers": {
+            "X-Actor-Id": "usr-rev01",
+            "X-Actor-Role": "reviewer"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-04e",
+            "input": {
+              "credit_amount": "6.21",
+              "credit_id": "cn-ev04",
+              "invoice_id": "inv-ev04a",
+              "reason": "pricing correction"
+            },
+            "request_id": "ev-04e"
+          }
+        },
+        {
+          "command": "apply-credit-note",
+          "headers": {
+            "X-Actor-Id": "usr-rev01",
+            "X-Actor-Role": "reviewer"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-04f",
+            "input": {
+              "credit_amount": "6.21",
+              "credit_id": "cn-ev04",
+              "invoice_id": "inv-ev04a",
+              "reason": "pricing correction"
+            },
+            "request_id": "ev-04f"
+          }
+        }
+      ]
+    },
+    {
+      "command": "import-invoice",
+      "event_id": "EV-05",
+      "expected": {
+        "lines_after": 1,
+        "source_sha256_after": "89f46f26cf1946bad7f4fa730d684f084697e2aeb801d5e93a9667e3b69c59db"
+      },
+      "expected_handling": "refused: an invoice id with different bytes is never overwritten; the original extraction is unchanged (a correction is a versioned row, C06 answers 501)",
+      "expected_reason": "DUPLICATE_ID",
+      "expected_status": 409,
+      "injection": "INJ-10",
+      "requires": [],
+      "steps": [
+        {
+          "command": "import-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-05a",
+            "input": {
+              "currency": "USD",
+              "declared_total": "31.46",
+              "freight": "0.00",
+              "imported_at": "2026-09-30T23:55:00Z",
+              "invoice_date": "2026-09-30",
+              "invoice_discount": "0.00",
+              "invoice_id": "inv-ev05a",
+              "invoice_number": "EV-05A",
+              "lines": [
+                {
+                  "invoice_line_id": "il-ev05a",
+                  "po_line_id": "pol-2854",
+                  "quantity": "1.0000",
+                  "unit_price": "28.600000"
+                }
+              ],
+              "source_filename": "EV-05A.pdf",
+              "source_sha256": "89f46f26cf1946bad7f4fa730d684f084697e2aeb801d5e93a9667e3b69c59db",
+              "tax_rate": "0.100000",
+              "vendor_id": "ven-006"
+            },
+            "request_id": "ev-05a"
+          }
+        },
+        {
+          "command": "import-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-05b",
+            "input": {
+              "currency": "USD",
+              "declared_total": "62.92",
+              "freight": "0.00",
+              "imported_at": "2026-09-30T23:55:00Z",
+              "invoice_date": "2026-09-30",
+              "invoice_discount": "0.00",
+              "invoice_id": "inv-ev05a",
+              "invoice_number": "EV-05A",
+              "lines": [
+                {
+                  "invoice_line_id": "il-ev05a",
+                  "po_line_id": "pol-2854",
+                  "quantity": "2.0000",
+                  "unit_price": "28.600000"
+                }
+              ],
+              "source_filename": "EV-05A_corrected.pdf",
+              "source_sha256": "cde927ec402b67fa92becceeb7c5c1cd24de91529f637abbf7846becec789880",
+              "tax_rate": "0.100000",
+              "vendor_id": "ven-006"
+            },
+            "request_id": "ev-05b"
+          }
+        }
+      ]
+    },
+    {
+      "command": "export-payable",
+      "event_id": "EV-06",
+      "expected": {
+        "amount": "2.95",
+        "export_requests": 2,
+        "export_rows": 1,
+        "idempotent_replay": true,
+        "outcomes": [
+          "created",
+          "returned_prior"
+        ]
+      },
+      "expected_handling": "the retry (same key, later exported_at) returns the stored batch (Idempotent-Replay), is counted as returned_prior and adds no row",
+      "expected_reason": "returned_prior",
+      "expected_status": 200,
+      "injection": "INJ-11",
+      "requires": [],
+      "steps": [
+        {
+          "command": "import-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-06a",
+            "input": {
+              "currency": "USD",
+              "declared_total": "2.95",
+              "freight": "0.00",
+              "imported_at": "2026-09-30T23:56:00Z",
+              "invoice_date": "2026-09-30",
+              "invoice_discount": "0.00",
+              "invoice_id": "inv-ev06a",
+              "invoice_number": "EV-06A",
+              "lines": [
+                {
+                  "invoice_line_id": "il-ev06a",
+                  "po_line_id": "pol-2077",
+                  "quantity": "1.0000",
+                  "unit_price": "2.750000"
+                }
+              ],
+              "source_filename": "EV-06A.pdf",
+              "source_sha256": "577e00fb99dc68c75a79065fe92db0d818c9aec0b79c15a8db4e12a800d5c873",
+              "tax_rate": "0.072500",
+              "vendor_id": "ven-014"
+            },
+            "request_id": "ev-06a"
+          }
+        },
+        {
+          "command": "validate-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-06b",
+            "input": {
+              "invoice_id": "inv-ev06a"
+            },
+            "request_id": "ev-06b"
+          }
+        },
+        {
+          "command": "match-three-way",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-06c",
+            "input": {
+              "invoice_id": "inv-ev06a"
+            },
+            "request_id": "ev-06c"
+          }
+        },
+        {
+          "command": "approve-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-rev01",
+            "X-Actor-Role": "reviewer"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-06d",
+            "input": {
+              "invoice_id": "inv-ev06a"
+            },
+            "request_id": "ev-06d"
+          }
+        },
+        {
+          "command": "export-payable",
+          "headers": {
+            "X-Actor-Id": "usr-rev01",
+            "X-Actor-Role": "reviewer"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-06e",
+            "input": {
+              "batch_id": "bat-ev06",
+              "exported_at": "2026-10-02T16:00:00Z",
+              "invoice_ids": [
+                "inv-ev06a"
+              ]
+            },
+            "request_id": "ev-06e"
+          }
+        },
+        {
+          "command": "export-payable",
+          "headers": {
+            "X-Actor-Id": "usr-rev01",
+            "X-Actor-Role": "reviewer"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-06e",
+            "input": {
+              "batch_id": "bat-ev06",
+              "exported_at": "2026-10-02T16:00:40Z",
+              "invoice_ids": [
+                "inv-ev06a"
+              ]
+            },
+            "request_id": "ev-06e"
+          }
+        }
+      ]
+    },
+    {
+      "command": "export-payable",
+      "event_id": "EV-07",
+      "expected": {
+        "export_rows": 0,
+        "invoice_status_after": "approved"
+      },
+      "expected_handling": "refused: the contract has no paid flag and no paid status; nothing is exported and the invoice stays approved",
+      "expected_reason": "FIELD_UNEXPECTED",
+      "expected_status": 422,
+      "injection": "INJ-12",
+      "requires": [],
+      "steps": [
+        {
+          "command": "import-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-07a",
+            "input": {
+              "currency": "USD",
+              "declared_total": "6.82",
+              "freight": "0.00",
+              "imported_at": "2026-09-30T23:57:00Z",
+              "invoice_date": "2026-09-30",
+              "invoice_discount": "0.00",
+              "invoice_id": "inv-ev07a",
+              "invoice_number": "EV-07A",
+              "lines": [
+                {
+                  "invoice_line_id": "il-ev07a",
+                  "po_line_id": "pol-2216",
+                  "quantity": "1.0000",
+                  "unit_price": "6.430000"
+                }
+              ],
+              "source_filename": "EV-07A.pdf",
+              "source_sha256": "fe634d09c04c6d26ae42004fe950ac42127740a96523afb2cff81d46e5549b9f",
+              "tax_rate": "0.060000",
+              "vendor_id": "ven-018"
+            },
+            "request_id": "ev-07a"
+          }
+        },
+        {
+          "command": "validate-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-07b",
+            "input": {
+              "invoice_id": "inv-ev07a"
+            },
+            "request_id": "ev-07b"
+          }
+        },
+        {
+          "command": "match-three-way",
+          "headers": {
+            "X-Actor-Id": "usr-clerk01",
+            "X-Actor-Role": "clerk"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-07c",
+            "input": {
+              "invoice_id": "inv-ev07a"
+            },
+            "request_id": "ev-07c"
+          }
+        },
+        {
+          "command": "approve-invoice",
+          "headers": {
+            "X-Actor-Id": "usr-rev01",
+            "X-Actor-Role": "reviewer"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-07d",
+            "input": {
+              "invoice_id": "inv-ev07a"
+            },
+            "request_id": "ev-07d"
+          }
+        },
+        {
+          "command": "export-payable",
+          "headers": {
+            "X-Actor-Id": "usr-rev01",
+            "X-Actor-Role": "reviewer"
+          },
+          "input": {
+            "dataset_version": "ib-20261026-20261026",
+            "idempotency_key": "ev-07e",
+            "input": {
+              "batch_id": "bat-ev07",
+              "exported_at": "2026-10-02T16:00:00Z",
+              "invoice_ids": [
+                "inv-ev07a"
+              ],
+              "paid": true
+            },
+            "request_id": "ev-07e"
+          }
+        }
+      ]
+    }
+  ]
+}

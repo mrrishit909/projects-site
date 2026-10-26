@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T20:30:41Z",
+  "updated_at": "2026-10-26T21:11:16Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -968,6 +968,17 @@
       "code_sha": "a381e53",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40395845883",
       "ts": "2026-10-26T20:30:41Z"
+    },
+    {
+      "requirement": "P05-WORK-03 generator: determinism (3 PYTHONHASHSEED), size, designed relationships, 12 injections (7 replay events through the API), SQL reference equals domain at three cutoffs",
+      "project": "05-invoicebridge",
+      "status": "verified",
+      "command": "python data/generate.py (x2); reference_check.py; DATABASE_URL=... pytest -q",
+      "exit_code": 0,
+      "actual": "byte-identical; 3,735,251 bytes; ALL OK (412); 320 passed",
+      "code_sha": "pending-commit",
+      "evidence": "apps/invoicebridge/data/README-generator.md; tests/test_generator.py",
+      "ts": "2026-10-26T21:11:16Z"
     }
   ]
 }

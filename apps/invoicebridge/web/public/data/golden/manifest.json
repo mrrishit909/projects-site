@@ -1,0 +1,38 @@
+{
+  "as_of": "2026-10-26T00:00:00Z",
+  "contract_version": "v1",
+  "dataset_hash": "368b158a5c53f375e3106956a7355999b917a18b8be7074fe90bbd85e7b39d83",
+  "dataset_version": "golden-v1",
+  "designed_relationships": [],
+  "expected": "expected.json",
+  "fixture_id": "invoicebridge-golden-v1",
+  "generated_at": "2026-10-26T00:00:00Z",
+  "generator": {
+    "name": "tests/fixtures/golden (hand-derived, no generator)",
+    "parameters": {},
+    "seed": 0
+  },
+  "row_counts": {
+    "approval_policies": 1,
+    "approvals": 1,
+    "credit_notes": 0,
+    "exception_assignments": 0,
+    "exceptions": 0,
+    "export_batches": 0,
+    "export_requests": 2,
+    "invoice_lines": 3,
+    "invoices": 3,
+    "po_lines": 1,
+    "purchase_orders": 1,
+    "receipts": 1,
+    "vendors": 1
+  },
+  "snapshot_cutoffs": [
+    "2026-10-05T23:00:00Z"
+  ],
+  "tolerances": {
+    "price_per_unit": "0.00",
+    "rounding_per_invoice": "0.02",
+    "rounding_per_line": "0.01"
+  }
+}

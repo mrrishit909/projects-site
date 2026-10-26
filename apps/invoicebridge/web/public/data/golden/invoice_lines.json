@@ -1,0 +1,5 @@
+{"entity":"invoice_lines","dataset_version":"golden-v1","rows":[
+{"invoice_id":"inv-001","invoice_line_id":"il-001","po_line_id":"pol-001","quantity":"6","unit_price":"20.00"},
+{"invoice_id":"inv-002","invoice_line_id":"il-002","po_line_id":"pol-001","quantity":"4","unit_price":"20.00"},
+{"invoice_id":"inv-003","invoice_line_id":"il-003","po_line_id":"pol-001","quantity":"6","unit_price":"20.00"}
+]}

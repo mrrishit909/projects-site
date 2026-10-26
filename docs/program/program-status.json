@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T20:30:41Z",
+  "updated_at": "2026-10-26T21:11:16Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -101,7 +101,7 @@
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
-      "stage": "gate-A passed; backend slice CI-green Mode A (a381e53, run 40395845883); motion tile committed to the portfolio (c535aa0); generator A-036 running",
+      "stage": "gate-A passed; backend CI-green Mode A; generator committed (320 tests); web A-037 running",
       "built": false,
       "verified": false,
       "published": false,
@@ -110,7 +110,7 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40395845883",
       "site_url": null,
       "blockers": [],
-      "next_task": "T-05-04 (A-036 generator -> web -> publish -> integrate)"
+      "next_task": "T-05-04 (A-037 web -> CI Mode B -> publish -> integrate)"
     },
     "06-productsignal": {
       "slug": "productsignal",

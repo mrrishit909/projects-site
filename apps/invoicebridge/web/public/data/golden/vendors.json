@@ -1,0 +1,3 @@
+{"entity":"vendors","dataset_version":"golden-v1","rows":[
+{"active":true,"currency":"USD","tax_reference":"US-TAX-0001","vendor_id":"ven-001","vendor_name":"Northwind Supply Co"}
+]}
