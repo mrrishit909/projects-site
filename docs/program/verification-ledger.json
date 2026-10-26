@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:18:47Z",
+  "updated_at": "2026-10-26T11:21:51Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -289,14 +289,14 @@
     {
       "requirement": "P01-REL-18 portfolio case study links to the live site; site links back",
       "project": "01-revenue-atlas",
-      "status": "partially verified",
-      "command": "live-check.yml run 40311533558 job portfolio-link",
-      "exit_code": 1,
+      "status": "verified",
+      "command": "live-check.yml run 40313778038 job portfolio-link",
+      "exit_code": 0,
       "expected": "case page 200 and contains labs/revenue-atlas/; site HTML contains the portfolio URL",
-      "actual": "case page 200, 1 link to labs/revenue-atlas/ (verified); site static HTML lacked the back-link (rendered by JS only) -> static noscript/author link added in web/index.html, republish pending",
-      "code_sha": "41d2aa5",
-      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40311533558/artifacts/12644997594",
-      "ts": "2026-10-26T11:10:40Z"
+      "actual": "case page 200 with link to labs/revenue-atlas/; site HTML contains the portfolio URL; both directions ok",
+      "code_sha": "a3ec7d2",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40313778038/job/121541147043",
+      "ts": "2026-10-26T11:21:51Z"
     },
     {
       "requirement": "P01-REL-05 Mode A on hosted runner after contract v1.1",
