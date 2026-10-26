@@ -302,7 +302,7 @@
       "id": "T-04-03",
       "project": "04-serviceflow",
       "title": "Domain + Postgres + FastAPI slice + CI",
-      "status": "in_progress",
+      "status": "done (local); CI pending",
       "prereqs": [
         "T-04-02"
       ],
@@ -313,7 +313,7 @@
       "id": "T-04-04",
       "project": "04-serviceflow",
       "title": "Generator + web + e2e + publish + integrate",
-      "status": "pending",
+      "status": "in_progress",
       "prereqs": [
         "T-04-03"
       ],
