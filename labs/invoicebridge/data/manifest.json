@@ -52,13 +52,13 @@
       "statement": "Reviewers may approve up to 5000.00 under pol-v1 and up to 8000.00 from 2026-04-01 (pol-v2); invoices above the limit in force are matched but never approved (no escalation role is carried by the fixture shape)."
     }
   ],
-  "generated_at": "2026-10-26T21:04:26Z",
+  "generated_at": "2026-10-26T23:01:13Z",
   "generator": {
     "name": "generate.py",
     "parameters": {
       "as_of": "2026-10-01T02:00:00Z",
       "catalogue_updated": "2026-04-15T00:00:00Z",
-      "credit_share": 0.04,
+      "credit_share": "0.040",
       "currencies": [
         "USD",
         "EUR",
@@ -71,8 +71,8 @@
       ],
       "invoices": 2800,
       "nightly_match": "02:00:00Z",
-      "p_duplicate_month_end": 0.74,
-      "p_short_02x_line": 0.4,
+      "p_duplicate_month_end": "0.74",
+      "p_short_02x_line": "0.40",
       "po_lines": 3000,
       "policy_limits": {
         "pol-v1": "5000.00",
@@ -81,10 +81,10 @@
       },
       "price_change_from": "2026-03-01",
       "price_list_vendor": "ven-007",
-      "price_uplift": 0.075,
+      "price_uplift": "0.075",
       "purchase_orders": 1200,
       "resent_pdf_duplicates": 95,
-      "reversal_share_of_first_entry_receipts": 0.0202,
+      "reversal_share_of_first_entry_receipts": "0.0202",
       "snapshot_cutoffs": [
         "2026-03-31T23:59:59Z",
         "2026-06-30T23:59:59Z",
@@ -151,7 +151,7 @@
   },
   "window_end": "2026-09-30T23:59:59Z",
   "window_start": "2025-10-01T00:00:00Z",
-  "code_sha": "be200319e132adc9b9213bc81b9ccea56a9f4b8b",
-  "published_at": "2026-10-26T21:42:00Z",
-  "source": "https://github.com/mrrishit909/projects-site/tree/be200319e132adc9b9213bc81b9ccea56a9f4b8b/apps/invoicebridge"
+  "code_sha": "2dcc460d2d5d1528151fda8bc2d22ef2f1e58d2a",
+  "published_at": "2026-10-26T23:11:14Z",
+  "source": "https://github.com/mrrishit909/projects-site/tree/2dcc460d2d5d1528151fda8bc2d22ef2f1e58d2a/apps/invoicebridge"
 }
