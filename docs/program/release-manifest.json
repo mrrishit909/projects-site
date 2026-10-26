@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T13:19:43Z",
+  "updated_at": "2026-10-26T14:11:22Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -27,21 +27,22 @@
       "slug": "onboard-studio",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/onboard-studio/",
       "site_path": "labs/onboard-studio/ on unified-portfolio",
-      "release_commit_unified_portfolio": "a614136",
-      "rollback_commit_unified_portfolio": "f03b26f",
-      "source_commit_business_data_lab": "eac63b911dd73e98f1e5afa43e7a68298f10ba57",
-      "published_tree_sha256": "8b7bfab0e61562eff771364e355aa19fc5879cbcf2a1e7227d998aae1d28f47e",
+      "release_commit_unified_portfolio": "239950e",
+      "rollback_commit_unified_portfolio": "a9d6b1d",
+      "source_commit_business_data_lab": "1a27a0e44a610adfd1139a0e01c0bbc9f2c82d73",
+      "published_tree_sha256": "dc0d7c38efef833b2cad183f9007e0fcc353162fb8497e2f2a6fc0406da13a66",
       "files": 45,
       "dataset_version": "os-20261026-20261026",
       "dataset_hash": "3c20d296bcf178065e9178cae04f763994b4d7197026af2c021ab55b4cc2bc6a",
       "contract_version": "v1",
-      "publication_status": "published, live-verified and integrated (case study live, links verified both ways, run 40329407956)",
+      "publication_status": "republished after reviewer fixes; live verification pending",
       "live_verification": {
         "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40329082960",
         "http": "200 on every route in routes.json + data/manifest.json",
         "browser": "first two routes at 360 and 1280, 0 console errors",
         "verified_at": "2026-10-26T13:18:08Z"
-      }
+      },
+      "previous_release_commit": "a614136"
     }
   ]
 }

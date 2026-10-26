@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T14:10:14Z",
+  "updated_at": "2026-10-26T14:11:22Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -56,17 +56,17 @@
     },
     "02-onboard-studio": {
       "slug": "onboard-studio",
-      "stage": "built, published (live-verified), integrated (links verified both ways); verified provisional pending reviewer pass A-017; artifacts A-018 running",
+      "stage": "COMPLETE for entry + mid-level milestones pending live check of release 239950e: built, verified (reviewer findings fixed), published, integrated, artifacts delivered. Extensions not built: C07/C10, 5 screens",
       "built": true,
       "verified": true,
       "published": true,
       "integrated": true,
-      "last_verified_sha": "eac63b9",
+      "last_verified_sha": "1a27a0e",
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40336881726",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/onboard-studio/",
       "blockers": [],
-      "next_task": "link check -> reviewer findings -> fixes -> artifacts -> project 03",
-      "verified_note": "Entry journey + 8 adversarial cases; no independent reviewer pass yet; C07/C10 and 5 screens are extensions",
+      "next_task": "live-check of 239950e; then project 03",
+      "verified_note": "Entry journey + adversarial + reviewer pass with fixes; Q-07 sub-ms divergence documented",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/onboard-studio/"
     },
     "03-supplyscope": {
@@ -176,7 +176,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "If apps/onboard-studio/web/src/domain exists and `npm run check` passes: dispatch web part 2 (cases timeline, workflow canvas, SLA explorer, case study + Playwright evidence); else re-dispatch A-015",
-    "acceptance": "onboard-studio-ci.yml Mode B green with screenshots; live-check green at labs/onboard-studio"
+    "next_concrete_task": "Project 03 SupplyScope: A-020 golden fixture (position 60 -> order 72), then domain/API slice (T-03-03), generator, web, publish, integrate",
+    "acceptance": "see task-queue.json"
   }
 }
