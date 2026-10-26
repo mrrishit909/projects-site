@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T12:59:46Z",
+  "updated_at": "2026-10-26T13:08:34Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -476,7 +476,7 @@
       "exit_code": 0,
       "expected": "identical hash; designed relationships: v2 active < 0.75x v1, enterprise rework > 1.5x, reg-north paused highest",
       "actual": "hash 3c20d296bcf178065e9178cae04f763994b4d7197026af2c021ab55b4cc2bc6a both runs; v2/v1 0.64; enterprise 0.290 vs 0.172; reg-north 59.1 h",
-      "code_sha": "pending-commit",
+      "code_sha": "2a60c40 (hosted Mode A run 40326858638 success)",
       "ts": "2026-10-26T12:46:43Z"
     },
     {
@@ -487,7 +487,7 @@
       "exit_code": 0,
       "expected": "150 golden checks OK; 0 cell diffs across 4 pause policies \u00d7 groupings",
       "actual": "ALL OK (150); 5,112 cells, 0 diffs",
-      "code_sha": "pending-commit",
+      "code_sha": "2a60c40 (hosted Mode A run 40326858638 success)",
       "ts": "2026-10-26T12:59:46Z"
     },
     {
@@ -496,7 +496,7 @@
       "status": "verified after fix",
       "defect": "timeutil.hours/mean used Decimal division per case; exact rationals (Fraction) now; d4/d6 convert once",
       "command": "pytest -q (279 passed)",
-      "code_sha": "pending-commit",
+      "code_sha": "2a60c40 (hosted Mode A run 40326858638 success)",
       "ts": "2026-10-26T12:59:46Z"
     }
   ]
