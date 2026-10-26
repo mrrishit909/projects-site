@@ -12,7 +12,7 @@ Repository: ~/projects-site, remote `private` (mrrishit909/projects-site), branc
 - Specification revised: yes (v2, 2026-10-25).
 - Prototype implemented: yes (f48d7ca, 2026-10-25).
 - Review candidate corrected: yes, 9ecf79b (2026-10-26) after the owner's audit (D-01 to D-11).
-- Refinement candidate built: yes, **the commit named below** (2026-10-26): the instrument rebuilt (41 parts, five
+- Refinement candidate built: yes, commit **115fe73** (2026-10-26): the instrument rebuilt (41 parts, five
   assemblies, the dial), the authored opening, the representative journey recomposed (hero, Selected work close-up,
   chapter 1 wide with the hour event, the case page holding the arrangement, Back). Ledger D-12 to D-18.
 - Representative experience accepted by the owner: **NO, PENDING** (gate D). Nothing here is accepted.

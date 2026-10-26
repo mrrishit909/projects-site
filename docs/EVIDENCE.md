@@ -14,7 +14,7 @@ Conditions: Apple M3 Pro, macOS; Playwright Chromium with ANGLE Metal (behaviour
 through the extension (interactive transition checks on 2969d25); Lighthouse 12.8.2 headless Chrome (software GL);
 local `http.server` on 8800 and `serve` with gzip on 8801. Tested build: the candidate commit named in
 docs/ATELIER_PROGRESS.md; the review candidate was **9ecf79b**; the refinement candidate (2026-10-26, the rebuilt
-instrument and the representative journey) is the commit named in docs/ATELIER_PROGRESS.md (suite: 113 checks, all
+instrument and the representative journey) is **115fe73** (suite: 113 checks, all
 passed). Rows marked "round 5" were re-run on the refinement candidate; the others carry over from 9ecf79b where the
 code they exercise did not change.
 
