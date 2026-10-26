@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T13:15:48Z",
+  "updated_at": "2026-10-26T13:18:08Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -531,6 +531,17 @@
       "code_sha": "eac63b9",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40328738179",
       "ts": "2026-10-26T13:15:48Z"
+    },
+    {
+      "requirement": "P02-REL-02/09/17 deployed site verified from hosted compute (matrix live check); P01 re-verified",
+      "project": "02-onboard-studio",
+      "status": "verified",
+      "command": "live-check.yml run 40329082960 (matrix: onboard-studio, revenue-atlas)",
+      "exit_code": 0,
+      "actual": "all jobs success",
+      "code_sha": "site from eac63b9",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40329082960",
+      "ts": "2026-10-26T13:18:08Z"
     }
   ]
 }

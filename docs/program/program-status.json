@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T13:15:48Z",
+  "updated_at": "2026-10-26T13:18:08Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -56,17 +56,18 @@
     },
     "02-onboard-studio": {
       "slug": "onboard-studio",
-      "stage": "built and verified (CI green both jobs); published to labs/onboard-studio (live check running); portfolio record prepared",
+      "stage": "built, verified (reviewer pass A-017 running), published (live-verified), integrated (b642b24; link check pending); artifacts A-018 running",
       "built": true,
       "verified": true,
-      "published": false,
-      "integrated": false,
+      "published": true,
+      "integrated": true,
       "last_verified_sha": "eac63b9",
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40328738179",
-      "site_url": null,
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/onboard-studio/",
       "blockers": [],
-      "next_task": "live-check green -> push portfolio integration (project.json, cover, loop) -> reviewer pass -> artifacts",
-      "verified_note": "Entry journey + 8 adversarial cases; no independent reviewer pass yet; C07/C10 and 5 screens are extensions"
+      "next_task": "link check -> reviewer findings -> fixes -> artifacts -> project 03",
+      "verified_note": "Entry journey + 8 adversarial cases; no independent reviewer pass yet; C07/C10 and 5 screens are extensions",
+      "portfolio_case_study": "https://mrrishit909.github.io/projects-site/onboard-studio/"
     },
     "03-supplyscope": {
       "slug": "supplyscope",
