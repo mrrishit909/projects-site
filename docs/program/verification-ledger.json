@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T15:46:50Z",
+  "updated_at": "2026-10-26T16:03:03Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -781,6 +781,17 @@
       "exit_code": 0,
       "code_sha": "pending-commit",
       "ts": "2026-10-26T15:46:50Z"
+    },
+    {
+      "requirement": "P04 domain/API slice (Mode A: reference check, domain, PostgreSQL migrations+seed, SQL reference, API commands/reads, adversarial)",
+      "project": "04-serviceflow",
+      "status": "verified",
+      "command": "local: DATABASE_URL=... pytest -q (301 passed); CI serviceflow-ci.yml run 40354858820 job 'Mode A' success on 99e219b (Mode B failed on typecheck shim, fixed db2dd49; site not yet built)",
+      "exit_code": 0,
+      "actual": "301 passed locally; Mode A success on github-hosted runner",
+      "code_sha": "99e219b",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40354858820",
+      "ts": "2026-10-26T16:03:03Z"
     }
   ]
 }
