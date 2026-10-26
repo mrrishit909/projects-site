@@ -1,0 +1,234 @@
+{
+  "contract_version": 1,
+  "ingest": {
+    "counts": {
+      "vendors": {
+        "accepted": 1,
+        "rejected": 0,
+        "merged": 0
+      },
+      "purchase_orders": {
+        "accepted": 1,
+        "rejected": 0,
+        "merged": 0
+      },
+      "po_lines": {
+        "accepted": 1,
+        "rejected": 0,
+        "merged": 0
+      },
+      "receipts": {
+        "accepted": 1,
+        "rejected": 0,
+        "merged": 0
+      },
+      "invoices": {
+        "accepted": 2,
+        "rejected": 0,
+        "merged": 1
+      },
+      "invoice_lines": {
+        "accepted": 2,
+        "rejected": 0,
+        "merged": 1
+      },
+      "credit_notes": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "approval_policies": {
+        "accepted": 1,
+        "rejected": 0,
+        "merged": 0
+      },
+      "approvals": {
+        "accepted": 1,
+        "rejected": 0,
+        "merged": 0
+      }
+    },
+    "rejected_records": [],
+    "merged_records": [
+      {
+        "entity": "invoices",
+        "id": "inv-003",
+        "status": "merged",
+        "reason_code": "DUPLICATE_IDENTITY",
+        "merged_into": "inv-001",
+        "group_key": "ven-001|INV1001|2026-10-06|132.00",
+        "source_sha256": "3ccdec1f40078d08adffbefe342b727cc023fbe5e59c7090cb9723e205e31357"
+      }
+    ]
+  },
+  "documents": {
+    "invoices": {
+      "inv-001": {
+        "status": "exported",
+        "subtotal": "120.00",
+        "tax": "12.00",
+        "freight": "0.00",
+        "invoice_discount": "0.00",
+        "total": "132.00",
+        "declared_total": "132.00",
+        "rounding_difference": "0.00",
+        "exception_types": []
+      },
+      "inv-002": {
+        "status": "exception",
+        "subtotal": "80.00",
+        "tax": "8.00",
+        "freight": "0.00",
+        "invoice_discount": "0.00",
+        "total": "88.00",
+        "declared_total": "88.00",
+        "rounding_difference": "0.00",
+        "exception_types": [
+          "QUANTITY_BLOCKED"
+        ]
+      },
+      "inv-003": {
+        "status": "merged",
+        "subtotal": "120.00",
+        "tax": "12.00",
+        "freight": "0.00",
+        "invoice_discount": "0.00",
+        "total": "132.00",
+        "declared_total": "132.00",
+        "rounding_difference": "0.00",
+        "exception_types": [],
+        "merged_into": "inv-001"
+      }
+    },
+    "match_results": [
+      {
+        "invoice_line_id": "il-001",
+        "invoice_id": "inv-001",
+        "rule_version": "1",
+        "status": "matched",
+        "reason_code": null,
+        "available_quantity": "6.0000",
+        "quantity_variance": "0.0000",
+        "price_variance": "0.0000"
+      },
+      {
+        "invoice_line_id": "il-002",
+        "invoice_id": "inv-002",
+        "rule_version": "1",
+        "status": "exception",
+        "reason_code": "QUANTITY_BLOCKED",
+        "available_quantity": "0.0000",
+        "quantity_variance": "4.0000",
+        "price_variance": "0.0000"
+      }
+    ]
+  },
+  "metrics": {
+    "matched": {
+      "invoice_count": 1,
+      "amount_before_tax": "120.00",
+      "tax": "12.00",
+      "total": "132.00"
+    },
+    "obligations": {
+      "count": 1,
+      "total": "132.00"
+    },
+    "exceptions": {
+      "open_count": 1,
+      "unowned_count": 1,
+      "by_reason": {
+        "QUANTITY_BLOCKED": 1,
+        "PRICE_VARIANCE": 0,
+        "NO_PO_LINE": 0,
+        "ROUNDING_EXCEPTION": 0,
+        "CURRENCY_MISMATCH": 0
+      },
+      "records": [
+        {
+          "exception_id": "exc-001",
+          "invoice_id": "inv-002",
+          "exception_type": "QUANTITY_BLOCKED",
+          "owner_id": null,
+          "status": "open"
+        }
+      ]
+    },
+    "duplicates": {
+      "groups_detected": 1,
+      "rows_merged": 1,
+      "unresolved_groups": 0
+    },
+    "quantities": {
+      "ordered_quantity": "10.0000",
+      "net_received_quantity": "6.0000",
+      "accepted_invoiced_quantity": "6.0000",
+      "open_to_receive_quantity": "4.0000",
+      "open_to_invoice_quantity": "4.0000",
+      "received_not_invoiced_quantity": "0.0000",
+      "invoiced_not_received_quantity": "4.0000",
+      "received_not_invoiced_value": "0.00",
+      "invoiced_not_received_value": "80.00"
+    },
+    "snapshots": {
+      "2026-10-05T23:00:00Z": {
+        "ordered_quantity": "10.0000",
+        "net_received_quantity": "6.0000",
+        "accepted_invoiced_quantity": "0.0000",
+        "open_to_receive_quantity": "4.0000",
+        "open_to_invoice_quantity": "10.0000",
+        "received_not_invoiced_quantity": "6.0000",
+        "invoiced_not_received_quantity": "0.0000",
+        "received_not_invoiced_value": "120.00",
+        "invoiced_not_received_value": "0.00"
+      }
+    },
+    "rates": {
+      "eligible_invoices": 2,
+      "straight_through_rate": "0.500000",
+      "exception_rate": "0.500000"
+    },
+    "processing": {
+      "approved_count": 1,
+      "mean_minutes": "390.0000",
+      "pending_count": 1
+    },
+    "approvals": {
+      "valid_count": 1,
+      "invalid_records": []
+    },
+    "payable": {
+      "approved_total": "132.00",
+      "credit_total": "0.00",
+      "approved_payable": "132.00"
+    },
+    "export": {
+      "requests_received": 2,
+      "batches_created": 1,
+      "repeat_requests_returned_prior": 1,
+      "rows": [
+        {
+          "export_id": "exp-bat-001-inv-001",
+          "invoice_id": "inv-001",
+          "batch_id": "bat-001",
+          "exported_at": "2026-10-07T08:00:00Z",
+          "vendor_id": "ven-001",
+          "invoice_number": "INV-1001",
+          "invoice_date": "2026-10-06",
+          "currency": "USD",
+          "amount": "132.00",
+          "content_hash": "7776efc65bc163e1b9a09ab336a0fcd12b52aba6ccfdefe49c06baf0b3df6779"
+        }
+      ],
+      "exclusions": [
+        {
+          "invoice_id": "inv-002",
+          "reason_code": "EXCEPTION_OPEN"
+        }
+      ],
+      "accepted_export_total": "132.00",
+      "eligible_approved_total": "132.00",
+      "difference": "0.00"
+    }
+  }
+}

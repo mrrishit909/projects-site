@@ -1,0 +1,16 @@
+{
+  "routes": [
+    "",
+    "intake/",
+    "invoices/",
+    "matching/",
+    "duplicates/",
+    "exceptions/",
+    "approvals/",
+    "vendors/",
+    "exports/",
+    "audit/",
+    "case-study/"
+  ],
+  "generated_at": "2026-10-26T21:34:59.338Z"
+}

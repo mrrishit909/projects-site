@@ -1,0 +1,3 @@
+{"entity":"receipts","dataset_version":"golden-v1","rows":[
+{"po_line_id":"pol-001","receipt_id":"rc-001","received_at":"2026-10-05T10:00:00Z","received_quantity":"6","reversed":false}
+]}

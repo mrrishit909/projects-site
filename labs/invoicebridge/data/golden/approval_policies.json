@@ -1,0 +1,3 @@
+{"entity":"approval_policies","dataset_version":"golden-v1","rows":[
+{"amount_limit":"5000.00","effective_from":"2026-01-01T00:00:00Z","policy_id":"pol-v1","reviewer_role":"reviewer","version_number":1}
+]}

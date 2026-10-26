@@ -1,0 +1,3 @@
+{"entity":"purchase_orders","dataset_version":"golden-v1","rows":[
+{"currency":"USD","ordered_at":"2026-10-01T09:00:00Z","po_id":"po-001","status":"open","vendor_id":"ven-001"}
+]}

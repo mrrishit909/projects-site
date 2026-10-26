@@ -1,0 +1,4 @@
+{"entity":"approval_policies","dataset_version":"ib-20261026-20261026","rows":[
+{"amount_limit":"5000.00","effective_from":"2025-10-01T00:00:00Z","policy_id":"pol-v1","reviewer_role":"reviewer","version_number":1},
+{"amount_limit":"8000.00","effective_from":"2026-04-01T00:00:00Z","policy_id":"pol-v2","reviewer_role":"reviewer","version_number":2}
+]}

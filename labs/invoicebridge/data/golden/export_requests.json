@@ -1,0 +1,4 @@
+{"entity":"export_requests","dataset_version":"golden-v1","rows":[
+{"batch_id":"bat-001","exported_at":"2026-10-07T08:00:00Z","idempotency_key":"exp-key-001","invoice_ids":["inv-001"]},
+{"batch_id":"bat-001","exported_at":"2026-10-07T08:00:30Z","idempotency_key":"exp-key-001","invoice_ids":["inv-001"]}
+]}

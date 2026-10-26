@@ -1,0 +1,592 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "1f001a43a7031d4260f5abb3b9f7a83f6e1b48397e85cf8b04e0b4d9e052162e",
+  "dataset_version": "ib-20261026-20261026",
+  "designed_relationships": [
+    {
+      "id": "DR-01",
+      "name": "ven-02x invoices before receipts",
+      "realised": {
+        "other_invoices": 2107,
+        "other_quantity_blocked": 30,
+        "other_rate": "0.0142",
+        "ven_02x_invoices": 538,
+        "ven_02x_quantity_blocked": 163,
+        "ven_02x_rate": "0.3030",
+        "ven_02x_share_of_blocked": "0.8446"
+      },
+      "statement": "Vendors ven-020..ven-029 invoice 3-25 days before they deliver and a third of their lines are never fully received in the window: their invoices carry by far the highest QUANTITY_BLOCKED rate."
+    },
+    {
+      "id": "DR-02",
+      "name": "price-list change from 2026-03",
+      "realised": {
+        "all_price_variance_invoices": 32,
+        "first_flagged_at": "2026-03-04T02:00:00Z",
+        "price_variance_invoices": 30,
+        "vendor": "ven-007",
+        "vendor_invoices": 184,
+        "vendor_share_of_price_variance": "0.9375"
+      },
+      "statement": "ven-007 bills a new price list (+7.5 %) from 2026-03-01 on purchase orders still carrying the old prices (the catalogue is updated on 2026-04-15): PRICE_VARIANCE exceptions begin in 2026-03."
+    },
+    {
+      "id": "DR-03",
+      "name": "re-sent PDFs cluster at month ends",
+      "realised": {
+        "all_invoices_in_last_three_days_share": "0.1904",
+        "in_last_three_days_of_month": 71,
+        "resent_duplicates": 95,
+        "share": "0.7474"
+      },
+      "statement": "A re-sent PDF (different bytes, same vendor, number, date and total) is imported in the last three days of the month far more often than invoices in general."
+    },
+    {
+      "id": "DR-04",
+      "name": "approval limit change on 2026-04-01",
+      "realised": {
+        "approvals_between_limits_after_change": 20,
+        "matched_unapproved_over_limit": 28
+      },
+      "statement": "Reviewers may approve up to 5000.00 under pol-v1 and up to 8000.00 from 2026-04-01 (pol-v2); invoices above the limit in force are matched but never approved (no escalation role is carried by the fixture shape)."
+    }
+  ],
+  "events_file": "data/injection-events.json",
+  "injections": [
+    {
+      "description": "The same PDF bytes imported twice under two filenames (and two invoice ids): one obligation, not two.",
+      "detail": [
+        {
+          "filenames": [
+            "EVE-8136.pdf",
+            "EVE-8136_copy.pdf"
+          ],
+          "invoice_id": "inv-0641",
+          "same_bytes_as": "inv-0616",
+          "source_sha256": "c5890f93e04030d50fe0abc85a07cacfd3032ba1aebef2fc95ca586a913ab82f"
+        },
+        {
+          "filenames": [
+            "SIL-4310.pdf",
+            "scan_SIL-4310.pdf"
+          ],
+          "invoice_id": "inv-2387",
+          "same_bytes_as": "inv-2362",
+          "source_sha256": "2f78431141aca924a002f430d389b3d4f19d5e7b705b78c1277b67a4cdb75d1c"
+        },
+        {
+          "filenames": [
+            "DEL-3417.pdf",
+            "DEL-3417 (1).pdf"
+          ],
+          "invoice_id": "inv-0995",
+          "same_bytes_as": "inv-0945",
+          "source_sha256": "bf62cff313c35943d92b9835ccc0b087003711501ef83c853cae24a87a9a552d"
+        }
+      ],
+      "entity": "invoices",
+      "expected_exceptions": [],
+      "expected_handling": "ingest merges the later import into the earlier one, reason DUPLICATE_SOURCE_BYTES (bytes are checked before the identity); lineage and hash kept, no received quantity consumed.",
+      "expected_merges": [
+        {
+          "entity": "invoices",
+          "id": "inv-0641",
+          "merged_into": "inv-0616",
+          "reason_code": "DUPLICATE_SOURCE_BYTES"
+        },
+        {
+          "entity": "invoices",
+          "id": "inv-2387",
+          "merged_into": "inv-2362",
+          "reason_code": "DUPLICATE_SOURCE_BYTES"
+        },
+        {
+          "entity": "invoices",
+          "id": "inv-0995",
+          "merged_into": "inv-0945",
+          "reason_code": "DUPLICATE_SOURCE_BYTES"
+        }
+      ],
+      "expected_rejections": [],
+      "handling_kind": "merged",
+      "id": "INJ-01",
+      "location": "entity_files+events",
+      "record_count": 3,
+      "record_ids": [
+        "inv-0641",
+        "inv-2387",
+        "inv-0995"
+      ],
+      "test": "P05-TEST-01"
+    },
+    {
+      "description": "Four pairs of invoices from different vendors carry the same invoice number (two pairs differ only in case).",
+      "detail": [
+        {
+          "invoice_number": "HAR-6441",
+          "invoices": [
+            "inv-0520",
+            "inv-0369"
+          ],
+          "vendors": [
+            "ven-002",
+            "ven-038"
+          ]
+        },
+        {
+          "invoice_number": "FAL-8545",
+          "invoices": [
+            "inv-1326",
+            "inv-1359"
+          ],
+          "vendors": [
+            "ven-013",
+            "ven-011"
+          ]
+        },
+        {
+          "invoice_number": "BLU-4775",
+          "invoices": [
+            "inv-0777",
+            "inv-1227"
+          ],
+          "vendors": [
+            "ven-012",
+            "ven-035"
+          ]
+        },
+        {
+          "invoice_number": "WES-8970",
+          "invoices": [
+            "inv-2618",
+            "inv-2235"
+          ],
+          "vendors": [
+            "ven-030",
+            "ven-015"
+          ]
+        }
+      ],
+      "entity": "invoices",
+      "expected_exceptions": [],
+      "expected_handling": "not duplicates: identity includes the vendor (D-01), so both invoices of each pair are accepted and none is merged.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "accepted_distinct",
+      "id": "INJ-02",
+      "location": "entity_files",
+      "record_count": 8,
+      "record_ids": [
+        "inv-0520",
+        "inv-0369",
+        "inv-1326",
+        "inv-1359",
+        "inv-0777",
+        "inv-1227",
+        "inv-2618",
+        "inv-2235"
+      ],
+      "test": "P05-TEST-02"
+    },
+    {
+      "description": "Five invoices bill a quantity the delivery receipt does not cover: the receipt was booked at 60-85 % of the invoiced quantity and nothing followed.",
+      "detail": [
+        {
+          "invoice_id": "inv-1522",
+          "invoice_line_id": "il-02866",
+          "invoiced_quantity": "20.0000",
+          "po_line_id": "pol-1518",
+          "received_quantity": "16.0000"
+        },
+        {
+          "invoice_id": "inv-2397",
+          "invoice_line_id": "il-04549",
+          "invoiced_quantity": "28.0000",
+          "po_line_id": "pol-2685",
+          "received_quantity": "21.0000"
+        },
+        {
+          "invoice_id": "inv-0326",
+          "invoice_line_id": "il-00606",
+          "invoiced_quantity": "39.0000",
+          "po_line_id": "pol-0229",
+          "received_quantity": "31.0000"
+        },
+        {
+          "invoice_id": "inv-2351",
+          "invoice_line_id": "il-04456",
+          "invoiced_quantity": "10.0000",
+          "po_line_id": "pol-2250",
+          "received_quantity": "7.0000"
+        },
+        {
+          "invoice_id": "inv-0622",
+          "invoice_line_id": "il-01151",
+          "invoiced_quantity": "32.2500",
+          "po_line_id": "pol-0687",
+          "received_quantity": "22.0000"
+        }
+      ],
+      "entity": "receipts",
+      "expected_exceptions": [
+        {
+          "invoice_id": "inv-1522",
+          "reason_code": "QUANTITY_BLOCKED"
+        },
+        {
+          "invoice_id": "inv-2397",
+          "reason_code": "QUANTITY_BLOCKED"
+        },
+        {
+          "invoice_id": "inv-0326",
+          "reason_code": "QUANTITY_BLOCKED"
+        },
+        {
+          "invoice_id": "inv-2351",
+          "reason_code": "QUANTITY_BLOCKED"
+        },
+        {
+          "invoice_id": "inv-0622",
+          "reason_code": "QUANTITY_BLOCKED"
+        }
+      ],
+      "expected_handling": "match raises QUANTITY_BLOCKED on the line (invoiced above the available received quantity); the invoice consumes nothing and stays an open exception.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "exception",
+      "id": "INJ-03",
+      "location": "entity_files",
+      "record_count": 5,
+      "record_ids": [
+        "inv-1522",
+        "inv-2397",
+        "inv-0326",
+        "inv-2351",
+        "inv-0622"
+      ],
+      "test": "P05-TEST-03"
+    },
+    {
+      "description": "Three vendors bill a second invoice against a line whose full received quantity the first invoice already consumed; each invoice is within the received quantity on its own.",
+      "detail": [
+        {
+          "first_invoice": "inv-1695",
+          "first_quantity": "108.0000",
+          "invoice_id": "inv-1728",
+          "po_line_id": "pol-1955",
+          "second_quantity": "71.0000"
+        },
+        {
+          "first_invoice": "inv-2531",
+          "first_quantity": "34.0000",
+          "invoice_id": "inv-2590",
+          "po_line_id": "pol-2814",
+          "second_quantity": "20.0000"
+        },
+        {
+          "first_invoice": "inv-1946",
+          "first_quantity": "19.0000",
+          "invoice_id": "inv-1994",
+          "po_line_id": "pol-2182",
+          "second_quantity": "9.0000"
+        }
+      ],
+      "entity": "invoices",
+      "expected_exceptions": [
+        {
+          "invoice_id": "inv-1728",
+          "reason_code": "QUANTITY_BLOCKED"
+        },
+        {
+          "invoice_id": "inv-2590",
+          "reason_code": "QUANTITY_BLOCKED"
+        },
+        {
+          "invoice_id": "inv-1994",
+          "reason_code": "QUANTITY_BLOCKED"
+        }
+      ],
+      "expected_handling": "match is cumulative (D-03): the available quantity is net received minus quantity on earlier matched invoices, so the second invoice is QUANTITY_BLOCKED.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "exception",
+      "id": "INJ-04",
+      "location": "entity_files",
+      "record_count": 3,
+      "record_ids": [
+        "inv-1728",
+        "inv-2590",
+        "inv-1994"
+      ],
+      "test": "P05-TEST-04"
+    },
+    {
+      "description": "Four invoices declare a total that differs from the computed total by 0.03, 0.05, 0.10 and 0.37, beyond the 0.02 per-invoice tolerance.",
+      "detail": [
+        {
+          "computed_total": "790.87",
+          "declared_total": "790.90",
+          "difference": "0.03",
+          "invoice_id": "inv-2613"
+        },
+        {
+          "computed_total": "125.80",
+          "declared_total": "125.75",
+          "difference": "0.05",
+          "invoice_id": "inv-0728"
+        },
+        {
+          "computed_total": "1869.12",
+          "declared_total": "1869.22",
+          "difference": "0.10",
+          "invoice_id": "inv-0801"
+        },
+        {
+          "computed_total": "2503.11",
+          "declared_total": "2503.48",
+          "difference": "0.37",
+          "invoice_id": "inv-2352"
+        }
+      ],
+      "entity": "invoices",
+      "expected_exceptions": [
+        {
+          "invoice_id": "inv-2613",
+          "reason_code": "ROUNDING_EXCEPTION"
+        },
+        {
+          "invoice_id": "inv-0728",
+          "reason_code": "ROUNDING_EXCEPTION"
+        },
+        {
+          "invoice_id": "inv-0801",
+          "reason_code": "ROUNDING_EXCEPTION"
+        },
+        {
+          "invoice_id": "inv-2352",
+          "reason_code": "ROUNDING_EXCEPTION"
+        }
+      ],
+      "expected_handling": "raises ROUNDING_EXCEPTION (gap beyond tolerance); differences up to 0.02 elsewhere in the data are tolerated and disclosed.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "exception",
+      "id": "INJ-05",
+      "location": "entity_files",
+      "record_count": 4,
+      "record_ids": [
+        "inv-2613",
+        "inv-0728",
+        "inv-0801",
+        "inv-2352"
+      ],
+      "test": "P05-TEST-05"
+    },
+    {
+      "description": "A reviewer who imported an invoice tries to approve it himself.",
+      "entity": "approvals",
+      "events": [
+        "EV-02"
+      ],
+      "expected_exceptions": [],
+      "expected_handling": "refused 403 SELF_APPROVAL (the approver must differ from created_by); the refusal is audited and the invoice stays matched.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "replay_only",
+      "id": "INJ-06",
+      "location": "events",
+      "record_count": 0,
+      "record_ids": [],
+      "test": "P05-TEST-06"
+    },
+    {
+      "description": "Two reviewers approve the same matched invoice at the same moment.",
+      "entity": "approvals",
+      "events": [
+        "EV-03"
+      ],
+      "expected_exceptions": [],
+      "expected_handling": "exactly one approval succeeds (200); the other is refused 409 INVALID_STATE (the invoice is no longer matched); one approval row exists.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "replay_only",
+      "id": "INJ-07",
+      "location": "events",
+      "record_count": 0,
+      "record_ids": [],
+      "test": "P05-TEST-07"
+    },
+    {
+      "description": "The same credit note id is applied twice (a client retry with a fresh idempotency key).",
+      "entity": "credit_notes",
+      "events": [
+        "EV-04"
+      ],
+      "expected_exceptions": [],
+      "expected_handling": "the second application is refused 409 CREDIT_ALREADY_APPLIED; the approved payable is reduced once; no cash movement.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "replay_only",
+      "id": "INJ-08",
+      "location": "events",
+      "record_count": 0,
+      "record_ids": [],
+      "test": "P05-TEST-08"
+    },
+    {
+      "description": "Three invoices are denominated in a currency other than their purchase order's and no dated conversion rate exists.",
+      "detail": [
+        {
+          "invoice_currency": "EUR",
+          "invoice_id": "inv-1924",
+          "po_currency": "USD",
+          "po_id": "po-0834"
+        },
+        {
+          "invoice_currency": "GBP",
+          "invoice_id": "inv-1191",
+          "po_currency": "USD",
+          "po_id": "po-0493"
+        },
+        {
+          "invoice_currency": "EUR",
+          "invoice_id": "inv-2267",
+          "po_currency": "USD",
+          "po_id": "po-0813"
+        }
+      ],
+      "entity": "invoices",
+      "expected_exceptions": [
+        {
+          "invoice_id": "inv-1924",
+          "reason_code": "CURRENCY_MISMATCH"
+        },
+        {
+          "invoice_id": "inv-1191",
+          "reason_code": "CURRENCY_MISMATCH"
+        },
+        {
+          "invoice_id": "inv-2267",
+          "reason_code": "CURRENCY_MISMATCH"
+        }
+      ],
+      "expected_handling": "never compared without a dated conversion: CURRENCY_MISMATCH on every line (D-02); the invoice consumes nothing.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "exception",
+      "id": "INJ-09",
+      "location": "entity_files",
+      "record_count": 3,
+      "record_ids": [
+        "inv-1924",
+        "inv-1191",
+        "inv-2267"
+      ],
+      "test": "P05-TEST-09"
+    },
+    {
+      "description": "A corrected extraction is re-imported under the id of the original invoice with different bytes.",
+      "entity": "invoices",
+      "events": [
+        "EV-05"
+      ],
+      "expected_exceptions": [],
+      "expected_handling": "refused 409 DUPLICATE_ID: the source of an import is immutable, corrections are versioned rows (C06, an extension, answers 501), the original row never changes.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "replay_only",
+      "id": "INJ-10",
+      "location": "events",
+      "record_count": 0,
+      "record_ids": [],
+      "test": "P05-TEST-10"
+    },
+    {
+      "description": "7 export batches were requested a second time seconds after the first request (a retry after a timeout): same batch id, same idempotency key, later exported_at.",
+      "detail": [
+        {
+          "batch_id": "bat-003",
+          "first_exported_at": "2025-10-24T16:00:00Z",
+          "idempotency_key": "exp-key-003",
+          "repeat_exported_at": "2025-10-24T16:00:57Z"
+        },
+        {
+          "batch_id": "bat-008",
+          "first_exported_at": "2025-11-28T16:00:00Z",
+          "idempotency_key": "exp-key-008",
+          "repeat_exported_at": "2025-11-28T16:00:44Z"
+        },
+        {
+          "batch_id": "bat-022",
+          "first_exported_at": "2026-03-06T16:00:00Z",
+          "idempotency_key": "exp-key-022",
+          "repeat_exported_at": "2026-03-06T16:00:35Z"
+        },
+        {
+          "batch_id": "bat-032",
+          "first_exported_at": "2026-05-15T16:00:00Z",
+          "idempotency_key": "exp-key-032",
+          "repeat_exported_at": "2026-05-15T16:00:52Z"
+        },
+        {
+          "batch_id": "bat-034",
+          "first_exported_at": "2026-05-29T16:00:00Z",
+          "idempotency_key": "exp-key-034",
+          "repeat_exported_at": "2026-05-29T16:00:23Z"
+        },
+        {
+          "batch_id": "bat-046",
+          "first_exported_at": "2026-08-21T16:00:00Z",
+          "idempotency_key": "exp-key-046",
+          "repeat_exported_at": "2026-08-21T16:00:31Z"
+        },
+        {
+          "batch_id": "bat-049",
+          "first_exported_at": "2026-09-11T16:00:00Z",
+          "idempotency_key": "exp-key-049",
+          "repeat_exported_at": "2026-09-11T16:01:01Z"
+        }
+      ],
+      "entity": "export_requests",
+      "events": [
+        "EV-06"
+      ],
+      "expected_exceptions": [],
+      "expected_handling": "the repeat returns the prior batch (API: status returned_prior with warning BATCH_RETURNED_PRIOR, or a stored replay for the same key); export.repeat_requests_returned_prior counts it, no second row, reconciliation stays 0.00.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "warned",
+      "id": "INJ-11",
+      "location": "entity_files+events",
+      "record_count": 7,
+      "record_ids": [
+        "bat-003",
+        "bat-008",
+        "bat-022",
+        "bat-032",
+        "bat-034",
+        "bat-046",
+        "bat-049"
+      ],
+      "test": "P05-TEST-11"
+    },
+    {
+      "description": "A request carries a paid flag (paid: true) on an export.",
+      "entity": "export_batches",
+      "events": [
+        "EV-07"
+      ],
+      "expected_exceptions": [],
+      "expected_handling": "refused 422 FIELD_UNEXPECTED: nothing in the contract marks an invoice paid and there is no paid status; the invoice stays approved.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "replay_only",
+      "id": "INJ-12",
+      "location": "events",
+      "record_count": 0,
+      "record_ids": [],
+      "test": "P05-TEST-12"
+    }
+  ],
+  "seed": 20261026
+}
