@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T10:02:07Z",
+  "updated_at": "2026-10-26T10:15:32Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -39,6 +39,94 @@
         "G-01 credit-date windowing of returns not yet implemented (D-01)",
         "G-02 posted credit not validated against expected_credit"
       ]
+    },
+    {
+      "requirement": "P01-MET-01..05,12 R19 independent SQL reference",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "pytest tests/test_sql_reference.py (DATABASE_URL set, local PostgreSQL 16.15)",
+      "exit_code": 0,
+      "expected": "baseline 250/25/0/225/140/0/85/15/70/0.00; after return 90/135/80/60/55/40",
+      "actual": "equal as 2dp strings",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T10:15:32Z"
+    },
+    {
+      "requirement": "P01-FLOW-01..04 commands C01-C04, request tests (valid, malformed, unknown, stale, repeated, unsupported), reads (none, one, pages, invalid filter, ordering)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "pytest tests/test_api_commands.py tests/test_api_reads.py tests/test_migrations.py",
+      "exit_code": 0,
+      "expected": "status codes per api-contract.md; migrations idempotent",
+      "actual": "passed",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T10:15:32Z"
+    },
+    {
+      "requirement": "P01-TEST-01-DETECT/RECOVER (double freight allocation)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "pytest tests/test_adversarial.py -k TEST_01",
+      "exit_code": 0,
+      "expected": "second allocation rejected by PRIMARY KEY, 409 FREIGHT_ALREADY_ALLOCATED, no partial write; idempotent rerun returns same allocations",
+      "actual": "passed",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T10:15:32Z"
+    },
+    {
+      "requirement": "P01-TEST-03-DETECT/RECOVER (overlapping cost versions)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "pytest tests/test_adversarial.py -k TEST_03",
+      "exit_code": 0,
+      "expected": "quarantine COST_VERSION_AMBIGUOUS then recovery after valid_to fix",
+      "actual": "passed",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T10:15:32Z"
+    },
+    {
+      "requirement": "P01-TEST-06-DETECT (negative credit)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "pytest tests/test_adversarial.py -k TEST_06",
+      "exit_code": 0,
+      "expected": "422 CREDIT_SIGN_REVERSED",
+      "actual": "passed",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T10:15:32Z"
+    },
+    {
+      "requirement": "P01-TEST-09-DETECT (cancelled before shipment)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "pytest tests/test_adversarial.py -k TEST_09",
+      "exit_code": 0,
+      "expected": "no facts, totals unchanged",
+      "actual": "passed",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T10:15:32Z"
+    },
+    {
+      "requirement": "P01-TEST-10-DETECT/RECOVER (return exceeds remaining)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "pytest tests/test_adversarial.py -k TEST_10",
+      "exit_code": 0,
+      "expected": "422 RETURN_EXCEEDS_REMAINING; smaller valid return accepted",
+      "actual": "passed",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T10:15:32Z"
+    },
+    {
+      "requirement": "P01-TEST-02,04,05,07,08,11,12",
+      "project": "01-revenue-atlas",
+      "status": "not_checked",
+      "command": null,
+      "exit_code": null,
+      "expected": "see spec",
+      "actual": "domain-level rules exist for 04,05,07,11 (tests/test_rules.py); application-path tests pending T-01-07",
+      "code_sha": null,
+      "ts": "2026-10-26T10:15:32Z"
     }
   ]
 }

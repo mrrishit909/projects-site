@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T10:02:07Z",
+  "updated_at": "2026-10-26T10:15:32Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
@@ -50,7 +50,7 @@
       "id": "T-01-04",
       "project": "01-revenue-atlas",
       "title": "Postgres migrations + seed + SQL reference totals",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-01-03"
       ],
@@ -61,12 +61,23 @@
       "id": "T-01-05",
       "project": "01-revenue-atlas",
       "title": "FastAPI commands C01-C04 + reads + request tests + CI with postgres service",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-01-04"
       ],
       "retries": 0,
       "acceptance": "GitHub Actions run green on business-data-lab; run URL recorded"
+    },
+    {
+      "id": "T-01-05b",
+      "project": "01-revenue-atlas",
+      "title": "Synthetic data generator + published snapshot + injection manifest (P01-WORK-03)",
+      "status": "in_progress",
+      "prereqs": [
+        "T-01-03"
+      ],
+      "retries": 0,
+      "acceptance": "generate.py deterministic (same seed -> same dataset_hash); snapshot < 5 MB; seeded into Postgres and pipeline runs without error; injection manifest lists every defect"
     },
     {
       "id": "T-01-06",
