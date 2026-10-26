@@ -50,6 +50,7 @@ jobs:
           done
           curl -sS "$BASE"data/manifest.json | tee live-evidence/manifest.json | head -c 600
       - name: Browser screenshot and journey
+        timeout-minutes: 6
         run: |
           npm init -y >/dev/null
           npm i --no-audit --no-fund playwright@1.55.0 >/dev/null
@@ -60,14 +61,17 @@ jobs:
           (async () => {
             const base = process.env.BASE;
             const browser = await chromium.launch();
+            setTimeout(() => { console.error("global timeout"); process.exit(2); }, 240000).unref();
             const errors = [];
             for (const [w, h, name] of [[360, 780, "mobile"], [1280, 800, "desktop"]]) {
               const page = await browser.newPage({ viewport: { width: w, height: h } });
               page.on("console", m => { if (m.type() === "error") errors.push(`${name}: ${m.text()}`); });
               page.on("pageerror", e => errors.push(`${name}: ${e.message}`));
-              await page.goto(base + "overview/", { waitUntil: "networkidle" });
+              await page.goto(base + "overview/", { waitUntil: "load", timeout: 45000 });
+              await page.waitForSelector("main table, main svg", { timeout: 45000 });
               await page.screenshot({ path: `live-evidence/live-overview-${name}.png`, fullPage: true });
-              await page.goto(base + "bridge/", { waitUntil: "networkidle" });
+              await page.goto(base + "bridge/", { waitUntil: "load", timeout: 45000 });
+              await page.waitForSelector("main table", { timeout: 45000 });
               await page.screenshot({ path: `live-evidence/live-bridge-${name}.png`, fullPage: true });
               const title = await page.title();
               fs.appendFileSync("live-evidence/journey.txt", `${name}: title="${title}" url=${page.url()}\n`);
