@@ -106,3 +106,28 @@ Wilson control [0.133367, 0.288829], treatment [0.218949, 0.395849], Newcombe di
 Provenance note: expected.json was emitted by the reference script after agreeing with a separate float cross-check
 and the hand arithmetic in CALCULATION.md; the independence rests on those two. Unpinned: DST edges, three or more
 variants, segment analysis, a run before the freeze, interim presented as final, a Welch difference of revenue means.
+
+## D-06 Backend clarifications (2026-10-26, adopted from A-041/A-043; the 16 numbered assumptions are in README.md)
+The event log is append-only; C01 stamps `received_at` with the API clock (admin may backfill); a re-sent `event_id`
+is idempotent when the content matches and rejected when it differs. Extra rejection codes: MALFORMED_RECORD,
+DUPLICATE_ID, UNKNOWN_ACCOUNT, UNKNOWN_USER, UNKNOWN_EVENT, UNKNOWN_EXPERIMENT_VERSION, UNKNOWN_UNIT, UNKNOWN_VARIANT,
+INELIGIBLE_UNIT, INVALID_INTERVAL, IDENTITY_CONFLICT, UNSUPPORTED_UNIT_TYPE; rejected rows are kept raw. Default
+windows: signup conversion, funnel and feature adoption the 7 days before the cutoff; activation 28 days; retention
+cohort the seven local dates ending 35 days before the cutoff date; feature adoption uses `export` for plans team and
+business. Internal accounts are ineligible for assignment (422); exactly two variants with allocation summing to 1.
+Only `active` and `ended` subscriptions carry revenue (USD). C06: one frozen plan per version, never edited
+(PLAN_ALREADY_FROZEN); unit_type, planned_end and primary_metric must match the version; frozen_at defaults to now and
+may not be in the future; refused once any run exists (OUTCOME_ALREADY_READ); a plan with unit_type "user" is 422
+UNIT_MISMATCH. C08 refuses a non-account unit, a non-ITT analysis and exclusions outside plan, segment, timezone and
+internal; a pre-assignment exclusion is applied, disclosed and blocks ship (PLAN_DEVIATION); a later run that includes
+late events carries a `revision` block and never rewrites the earlier result. Segments: only those with both arms,
+`segments_tested` counted, threshold alpha ÷ count, pooled-z p-value, Newcombe at the adjusted z. C09: HARMFUL when the
+whole Newcombe interval of the error-rate difference is above 0, INSUFFICIENT when a variant has no eligible unit, else
+OK. C10: one decision per run; the review must belong to the run; ship is blocked by an interim run, SRM MISMATCH, a
+HARMFUL guardrail, a plan deviation or a config-hash mismatch; **coordinator decision:** SRM MISMATCH also blocks `stop`
+(the data cannot support either direction; only `inconclusive` is allowed); a ship on a non-conclusive final run is
+allowed with a NOT_CONCLUSIVE warning; a refused decision leaves a `record-decision-refused` audit row. The Student t
+table covers df 1..2000 at 95 % (the SQL interval is null outside it). GET /metrics defaults the cutoff to the API clock;
+group_by splits account-based metrics only; `dataset_version` is the latest `dataset_versions` row ("unversioned" if
+none). Known: the DB suite takes about 3 minutes; the deadlock retry is tested by injection, not a real deadlock;
+variant-empty is covered through the domain and SQL, not the API replay; DST edges are unpinned.
