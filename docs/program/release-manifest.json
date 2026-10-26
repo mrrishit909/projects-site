@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T12:14:37Z",
+  "updated_at": "2026-10-26T13:15:50Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -22,6 +22,20 @@
       },
       "previous_release_commit": "92b9c66",
       "contract_version": "v1.1"
+    },
+    {
+      "slug": "onboard-studio",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/onboard-studio/",
+      "site_path": "labs/onboard-studio/ on unified-portfolio",
+      "release_commit_unified_portfolio": "a614136",
+      "rollback_commit_unified_portfolio": "f03b26f",
+      "source_commit_business_data_lab": "eac63b911dd73e98f1e5afa43e7a68298f10ba57",
+      "published_tree_sha256": "8b7bfab0e61562eff771364e355aa19fc5879cbcf2a1e7227d998aae1d28f47e",
+      "files": 45,
+      "dataset_version": "os-20261026-20261026",
+      "dataset_hash": "3c20d296bcf178065e9178cae04f763994b4d7197026af2c021ab55b4cc2bc6a",
+      "contract_version": "v1",
+      "publication_status": "pushed; live verification pending"
     }
   ]
 }
