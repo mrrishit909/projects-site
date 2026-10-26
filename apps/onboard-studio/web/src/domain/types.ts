@@ -67,7 +67,7 @@ export interface Metrics {
   empty_population: boolean;
 }
 
-export interface Flag { waiting_interval_id: string; case_id: string; flag: string }
+export interface Flag { waiting_interval_id?: string; case_id: string; flag: string }
 
 /** Per completed eligible case: the exact figures behind the means (hours, 4 dp). */
 export interface CaseFigures {

@@ -4,10 +4,15 @@
 // BigInt ratios (time.ts). Mirrors domain/onboard_studio/metrics.py.
 import { effectiveIntervals, merge, overlapMs, type Interval } from "./calendar";
 import { DomainError, INVALID_WINDOW } from "./errors";
+import { acceptedTypesLatest } from "./workflow";
 import { hoursFixed, isoZ, msBetween, parseTs, rate6 } from "./time";
 import type { CaseFigures, Flag, Metrics, PausePolicyOverride, Population, SlaRule, Window } from "./types";
 
 export const FLAG_PAUSE_OUTSIDE_WORKING = "PAUSE_OUTSIDE_WORKING_INTERVAL";
+/** D-09: a completed case whose SLA calendar has no working interval cannot be evaluated against the SLA. */
+export const FLAG_SLA_UNEVALUATED = "SLA_UNEVALUATED_NO_WORKING_TIME";
+/** D-09: completed cases excluded from the SLA denominator because their calendar has no working interval. */
+export const slaUnevaluatedCases = (flags: readonly Flag[]): number => flags.filter((f) => f.flag === FLAG_SLA_UNEVALUATED).length;
 export const GROUP_KEYS = ["organization", "segment", "region", "workflow_version"] as const;
 export type GroupKey = (typeof GROUP_KEYS)[number];
 export const NO_WINDOW: Window = [null, null];
@@ -32,7 +37,6 @@ export function buildCalendars(pop: Population): Map<string, Interval[]> {
   for (const ci of pop.calendar_intervals) {
     const into = ci.kind === "holiday" ? holidays : working;
     (into.get(ci.calendar_id) ?? into.set(ci.calendar_id, []).get(ci.calendar_id)!).push([ci.starts_at, ci.ends_at]);
-    if (!working.has(ci.calendar_id)) working.set(ci.calendar_id, []);
   }
   const out = new Map<string, Interval[]>();
   for (const [cid, w] of working) out.set(cid, effectiveIntervals(w, holidays.get(cid) ?? []));
@@ -72,10 +76,11 @@ export function computeWithFlags(popIn: Population, pausePolicy: PausePolicyOver
   const flags: Flag[] = [];
   const perCase: CaseFigures[] = [];
 
-  const completed = cases.filter((c) => {
-    const r = sla.get(c.workflow_version_id);
-    return c.completed_at !== null && r !== undefined && calendars.has(r.calendar_id);
-  });
+  const doneWithRule = cases.filter((c) => c.completed_at !== null && sla.has(c.workflow_version_id));
+  const completed = doneWithRule.filter((c) => calendars.has(sla.get(c.workflow_version_id)!.calendar_id));
+  for (const c of doneWithRule) { // D-09: unevaluated, excluded from every mean and from the SLA denominator
+    if (!calendars.has(sla.get(c.workflow_version_id)!.calendar_id)) flags.push({ case_id: c.case_id, flag: FLAG_SLA_UNEVALUATED });
+  }
   const waitsByCase = group(pop.waiting_intervals, (w) => w.case_id);
 
   const calMs: number[] = [], busMs: number[] = [], pausedMs: number[] = [], povMs: number[] = [], actMs: number[] = [];
@@ -131,7 +136,7 @@ export function computeWithFlags(popIn: Population, pausePolicy: PausePolicyOver
   let reqTotal = 0, reqOk = 0;
   for (const c of cases) {
     const required = pop.requirements[c.workflow_version_id] ?? [];
-    const accepted = new Set((docsByCase.get(c.case_id) ?? []).filter((d) => d.review_status === "accepted").map((d) => d.document_type));
+    const accepted = acceptedTypesLatest(docsByCase.get(c.case_id) ?? []); // D-06: the latest version decides
     reqTotal += required.length;
     reqOk += required.filter((t) => accepted.has(t)).length;
   }

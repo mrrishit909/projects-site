@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .ingest import IngestResult, validate_batch
-from .metrics import Window, compute_with_flags
+from .metrics import Window, compute_with_flags, sla_unevaluated_cases
 from .models import Population
 
 
@@ -15,6 +15,11 @@ class PipelineResult:
     population: Population
     metrics: dict[str, Any]
     flags: list[dict[str, str]] = field(default_factory=list)
+
+    @property
+    def sla_unevaluated_cases(self) -> int:
+        """D-09: completed cases excluded from the SLA denominator (calendar without working intervals)."""
+        return sla_unevaluated_cases(self.flags)
 
     @property
     def counts(self) -> dict[str, dict[str, int]]:

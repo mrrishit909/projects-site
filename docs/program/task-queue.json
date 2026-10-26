@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T13:44:39Z",
+  "updated_at": "2026-10-26T14:08:32Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
@@ -213,7 +213,7 @@
       "id": "T-02-07",
       "project": "02-onboard-studio",
       "title": "Fix reviewer findings Q-01..Q-06; regression tests; re-review",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-02-05"
       ],

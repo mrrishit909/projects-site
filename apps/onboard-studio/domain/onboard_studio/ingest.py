@@ -79,8 +79,7 @@ def _case_reasons(raw_case: Any, ctx: dict[str, Any]) -> set[str]:
     if done:
         required_steps = {sid: (inst_by_def[sid].status if sid in inst_by_def else "missing")
                           for sid, s in steps.items() if s.required}
-        accepted_types = {d.document_type for d in ctx["docs_by_case"].get(c.case_id, [])
-                          if d.review_status == "accepted"}
+        accepted_types = workflow.accepted_types_latest(ctx["docs_by_case"].get(c.case_id, []))  # D-06: latest version
         required_types = ctx["requirements"].get(c.workflow_version_id, ())
         m = workflow.missing_for_completion(required_steps, required_types, accepted_types)
         if m["steps"] or m["document_types"]:

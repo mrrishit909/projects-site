@@ -11,6 +11,8 @@ C07 reassign-work and C10 migrate-workflow answer 501 NOT_IMPLEMENTED (extension
 from __future__ import annotations
 
 import hashlib
+import random
+import time
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -74,8 +76,11 @@ def _conflict(code: str, message: str, path: str) -> ApiError:
     return ApiError(409, code, message, [detail(path, code, message)])
 
 
-def _invalid(code: str, message: str, path: str) -> ApiError:
-    return ApiError(422, "VALIDATION_FAILED", message, [detail(path, code, message)])
+def _invalid(code: str, message: str, path: str, context: dict[str, Any] | None = None) -> ApiError:
+    item = detail(path, code, message)
+    if context:
+        item["context"] = context
+    return ApiError(422, "VALIDATION_FAILED", message, [item])
 
 
 def _forbidden(code: str, message: str, path: str) -> ApiError:
@@ -89,10 +94,24 @@ def _at(inp: Any, name: str = "occurred_at") -> datetime:
 
 # --- idempotent execution ---------------------------------------------------------
 
+_INSTANT_FIELDS = ("occurred_at", "starts_at", "ends_at")
+
+
+def _normalise_instants(value: dict[str, Any]) -> dict[str, Any]:
+    """Q-06: an instant is hashed as the UTC instant it names, re-serialised with Z, so ``+00:00``, ``Z`` and
+    ``+01:00`` spellings of the same instant are the same payload."""
+    out = dict(value)
+    for name in _INSTANT_FIELDS:
+        if isinstance(out.get(name), str):
+            out[name] = iso_z(parse_ts(out[name]))
+    return out
+
+
 def _payload_hash(name: str, req: Envelope) -> str:
-    """sha256 over the canonical command name + input (request_id and key excluded)."""
+    """sha256 over the canonical command name + input (request_id and key excluded; instants normalised)."""
     try:
-        text = canonical_json({"command": name, "input": req.input.model_dump()})  # type: ignore[attr-defined]
+        body = _normalise_instants(req.input.model_dump())  # type: ignore[attr-defined]
+        text = canonical_json({"command": name, "input": body})
     except ValueError:  # NaN / Infinity are not JSON
         raise _invalid("JSON_NON_FINITE", "input contains a non-finite number", "input") from None
     if "\\u0000" in text:
@@ -106,15 +125,40 @@ _UNIQUE_CODES = {
     "workflow_versions_template_id_version_number_key": ("VERSION_EXISTS", "this template version number exists"),
 }
 
+#: D-08: a deadlock or serialization failure rolls the whole command back; it is retried this many times in all.
+MAX_ATTEMPTS = 3
+_RETRYABLE = (psycopg.errors.DeadlockDetected, psycopg.errors.SerializationFailure)
+
 
 def execute(name: str, req: Envelope, actor: Actor, handler: Handler) -> tuple[dict[str, Any], bool]:
-    """Run ``handler`` once per idempotency key. Returns ``(response body, replayed)``."""
+    """Run ``handler`` once per idempotency key. Returns ``(response body, replayed)``.
+
+    D-08: every attempt is one whole transaction. A deadlock or serialization failure is rolled back and retried
+    (at most ``MAX_ATTEMPTS`` attempts, short randomised back-off); if the last attempt fails too the answer is
+    409 CONCURRENT_UPDATE, never a 500."""
     payload_hash = _payload_hash(name, req)
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            return _execute_once(name, req, actor, handler, payload_hash)
+        except _RETRYABLE:
+            if attempt < MAX_ATTEMPTS:
+                time.sleep(random.uniform(0.005, 0.03) * attempt)
+    raise _conflict("CONCURRENT_UPDATE", f"the command lost a concurrent update {MAX_ATTEMPTS} times; retry it",
+                    "input")
+
+
+def _execute_once(name: str, req: Envelope, actor: Actor, handler: Handler,
+                  payload_hash: str) -> tuple[dict[str, Any], bool]:
     with db.transaction() as conn:
         conn.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))", (req.idempotency_key,))
-        prior = conn.execute("SELECT payload_hash, result FROM command_results "
+        prior = conn.execute("SELECT payload_hash, actor_id, result FROM command_results "
                              "WHERE idempotency_key = %s", (req.idempotency_key,)).fetchone()
         if prior is not None:
+            if prior["actor_id"] is not None and prior["actor_id"] != actor.actor_id:  # Q-06: bound to the actor
+                raise ApiError(409, "IDEMPOTENCY_KEY_REUSED",
+                               "this idempotency_key was used by a different actor",
+                               [detail("idempotency_key", "IDEMPOTENCY_ACTOR_MISMATCH",
+                                       "same key, different X-Actor-Id")])
             if prior["payload_hash"] != payload_hash:
                 raise ApiError(409, "IDEMPOTENCY_KEY_REUSED",
                                "this idempotency_key was used with a different payload",
@@ -139,9 +183,9 @@ def execute(name: str, req: Envelope, actor: Actor, handler: Handler) -> tuple[d
                  a.before_version, a.after_version, a.reason, req.request_id))
         body = {"command_id": command_id, "status": out.status, "result": out.result,
                 "warnings": out.warnings, "version": out.version}
-        conn.execute("INSERT INTO command_results (idempotency_key, payload_hash, command_id, status, result) "
-                     "VALUES (%s, %s, %s, %s, %s)",
-                     (req.idempotency_key, payload_hash, command_id, out.status, Jsonb(body)))
+        conn.execute("INSERT INTO command_results (idempotency_key, payload_hash, actor_id, command_id, status, result) "
+                     "VALUES (%s, %s, %s, %s, %s, %s)",
+                     (req.idempotency_key, payload_hash, actor.actor_id, command_id, out.status, Jsonb(body)))
         return body, False
 
 
@@ -178,6 +222,17 @@ def _step(conn: Conn, step_instance_id: str, path: str = "input.step_instance_id
     if row is None:
         raise _not_found(path, "STEP_INSTANCE_UNKNOWN", "step instance")
     return row
+
+
+def _step_and_case(conn: Conn, step_instance_id: str) -> tuple[db.Row, db.Row]:
+    """D-08: lock the case FIRST, then the step instance, like every other command. The step's case id never
+    changes, so it is read without a lock to know which case to lock."""
+    owner = conn.execute("SELECT case_id FROM step_instances WHERE step_instance_id = %s",
+                         (step_instance_id,)).fetchone()
+    if owner is None:
+        raise _not_found("input.step_instance_id", "STEP_INSTANCE_UNKNOWN", "step instance")
+    case = _case(conn, owner["case_id"])
+    return _step(conn, step_instance_id), case
 
 
 def _step_of_case(conn: Conn, step_instance_id: str, case_id: str) -> db.Row:
@@ -384,8 +439,7 @@ def accept_document(conn: Conn, req: Any, actor: Actor) -> Outcome:
 def unlock_step(conn: Conn, req: Any, actor: Actor) -> Outcome:
     inp = req.input
     at = _at(inp)
-    step = _step(conn, inp.step_instance_id)
-    case = _case(conn, step["case_id"])
+    step, case = _step_and_case(conn, inp.step_instance_id)
     _require_open(case)
     if inp.expected_version is not None and inp.expected_version != step["version_number"]:
         raise _conflict("STALE_VERSION", f"the step is at version {step['version_number']}", "input.expected_version")
@@ -408,8 +462,7 @@ def unlock_step(conn: Conn, req: Any, actor: Actor) -> Outcome:
 def approve_step(conn: Conn, req: Any, actor: Actor) -> Outcome:
     inp = req.input
     at = _at(inp)
-    step = _step(conn, inp.step_instance_id)
-    case = _case(conn, step["case_id"])
+    step, case = _step_and_case(conn, inp.step_instance_id)
     _require_open(case)
     assignees = [r["assignee_id"] for r in conn.execute(
         "SELECT assignee_id FROM assignments WHERE step_instance_id = %s", (step["step_instance_id"],)).fetchall()]
@@ -453,6 +506,16 @@ def _calendar(conn: Conn, calendar_id: str) -> list[cal.Interval]:
                                    [(r["starts_at"], r["ends_at"]) for r in rows if r["kind"] == "holiday"])
 
 
+def _require_inside_case_span(case: db.Row, start: datetime, end: datetime | None) -> None:
+    """D-07 / Q-01: a pause lies inside the case span [opened_at, completed_at). An open case has no upper bound
+    (completion later closes or refuses what is open); a completed case never gets here (409 CASE_ALREADY_COMPLETE)."""
+    done = case["completed_at"]
+    if start < case["opened_at"] or (done is not None and (start >= done or (end is not None and end > done))):
+        raise _invalid("PAUSE_OUTSIDE_CASE_SPAN", "a pause must lie inside the case span (after it opened, "
+                       "before it completed)", "input.starts_at",
+                       {"opened_at": iso_z(case["opened_at"]), "completed_at": iso_z(done)})
+
+
 def pause_sla(conn: Conn, req: Any, actor: Actor) -> Outcome:
     inp = req.input
     at = _at(inp)
@@ -464,10 +527,9 @@ def pause_sla(conn: Conn, req: Any, actor: Actor) -> Outcome:
     _domain(lambda: workflow.check_pause_reason(inp.reason_code, rule["pause_policy"]), "input.reason_code")
     start = parse_ts(inp.starts_at) if inp.starts_at else at
     end = parse_ts(inp.ends_at) if inp.ends_at else None
-    if start < case["opened_at"]:
-        raise _invalid("INVALID_INTERVAL", "a pause cannot start before the case opened", "input.starts_at")
     if end is not None and end <= start:
         raise _invalid("INVALID_INTERVAL", "ends_at must be after starts_at", "input.ends_at")
+    _require_inside_case_span(case, start, end)
     if conn.execute("SELECT 1 FROM waiting_intervals WHERE case_id = %s AND ends_at IS NULL",
                     (inp.case_id,)).fetchone():
         raise _conflict("ALREADY_PAUSED", "the case already has an open waiting interval", "input.case_id")
@@ -499,6 +561,12 @@ def complete_case(conn: Conn, req: Any, actor: Actor) -> Outcome:
         raise _conflict("STALE_VERSION", f"the case is at version {case['version']}", "input.expected_version")
     if at < case["opened_at"]:
         raise _invalid("INVALID_TIMESTAMP", "completed_at cannot precede opened_at", "input.occurred_at")
+    latest = _latest_recorded(conn, inp.case_id)
+    if latest is not None and at < latest:  # D-07: never complete before work already recorded on the case
+        raise _invalid("COMPLETION_BEFORE_RECORDED_WORK",
+                       "a case cannot complete before the latest recorded event, approval, document review, "
+                       "assignment end or waiting interval on it", "input.occurred_at",
+                       {"latest_recorded_at": iso_z(latest), "occurred_at": iso_z(at)})
     required = {r["step_definition_id"]: r["status"] or "missing" for r in conn.execute(
         "SELECT sd.step_definition_id, si.status FROM step_definitions sd "
         "LEFT JOIN step_instances si ON si.step_definition_id = sd.step_definition_id AND si.case_id = %s "
@@ -506,10 +574,11 @@ def complete_case(conn: Conn, req: Any, actor: Actor) -> Outcome:
     types = [r["document_type"] for r in conn.execute(
         "SELECT document_type FROM workflow_requirements WHERE workflow_version_id = %s",
         (case["workflow_version_id"],)).fetchall()]
-    accepted = [t for t in types if _any_accepted(conn, inp.case_id, t)]
+    accepted = [t for t in types if _latest_accepted(conn, inp.case_id, t)]
     _domain(lambda: workflow.require_completable(required, types, accepted), "input.case_id")
-    conn.execute("UPDATE waiting_intervals SET ends_at = %s WHERE case_id = %s AND ends_at IS NULL AND starts_at <= %s",
-                 (at, inp.case_id, at))
+    # D-07: open waiting is closed at the completion instant. None can start after it (the ordering check above).
+    conn.execute("UPDATE waiting_intervals SET ends_at = %s WHERE case_id = %s AND ends_at IS NULL",
+                 (at, inp.case_id))
     conn.execute("UPDATE cases SET status = 'completed', completed_at = %s, version = version + 1 "
                  "WHERE case_id = %s", (at, inp.case_id))
     _event(conn, inp.case_id, "case_completed", actor.actor_id, at)
@@ -518,14 +587,27 @@ def complete_case(conn: Conn, req: Any, actor: Actor) -> Outcome:
                    audit=Audit("case", inp.case_id, "complete-case", case["version"], version))
 
 
-def _any_accepted(conn: Conn, case_id: str, document_type: str) -> bool:
-    """True when any version of the type has the effective status accepted (an accepted version stays accepted)."""
-    row = conn.execute(
-        "SELECT 1 FROM document_versions dv WHERE dv.case_id = %s AND dv.document_type = %s AND "
-        "COALESCE((SELECT r.decision FROM document_reviews r WHERE r.document_version_id = dv.document_version_id "
-        "ORDER BY r.decided_at DESC, r.review_id DESC LIMIT 1), dv.review_status) = 'accepted' LIMIT 1",
-        (case_id, document_type)).fetchone()
-    return row is not None
+def _latest_accepted(conn: Conn, case_id: str, document_type: str) -> bool:
+    """D-06 / Q-04: True when the LATEST version of the type has the effective status accepted (the latest review
+    of that version, else the status it was inserted with). v1 accepted + v2 rejected or submitted is False."""
+    doc = _latest_doc(conn, case_id, document_type)
+    return doc is not None and doc["effective_status"] == "accepted"
+
+
+def _latest_recorded(conn: Conn, case_id: str) -> datetime | None:
+    """The latest instant of work recorded on the case: events, approvals, document reviews, assignment ends and
+    waiting intervals (starts and ends). ``GREATEST`` ignores the NULL of an empty table."""
+    return conn.execute(
+        "SELECT GREATEST("
+        " (SELECT max(occurred_at) FROM case_events WHERE case_id = %(c)s),"
+        " (SELECT max(a.decided_at) FROM approvals a JOIN step_instances si ON si.step_instance_id = a.step_instance_id"
+        "   WHERE si.case_id = %(c)s),"
+        " (SELECT max(r.decided_at) FROM document_reviews r JOIN document_versions d"
+        "   ON d.document_version_id = r.document_version_id WHERE d.case_id = %(c)s),"
+        " (SELECT max(g.ended_at) FROM assignments g JOIN step_instances si ON si.step_instance_id = g.step_instance_id"
+        "   WHERE si.case_id = %(c)s),"
+        " (SELECT max(GREATEST(w.starts_at, w.ends_at)) FROM waiting_intervals w WHERE w.case_id = %(c)s)"
+        ") AS latest", {"c": case_id}).fetchone()["latest"]
 
 
 # --- P publish-workflow-version ------------------------------------------------------
@@ -551,6 +633,10 @@ def publish_workflow_version(conn: Conn, req: Any, actor: Actor) -> Outcome:
         steps = conn.execute("SELECT * FROM step_definitions WHERE workflow_version_id = %s", (wv["workflow_version_id"],)).fetchall()
         deps = conn.execute("SELECT * FROM dependencies WHERE step_definition_id = ANY(%s)",
                             ([s["step_definition_id"] for s in steps],)).fetchall()
+    if inp.sla_rule is not None and conn.execute(
+            "SELECT 1 FROM calendars WHERE calendar_id = %s", (inp.sla_rule.calendar_id,)).fetchone() is None:
+        raise _invalid("CALENDAR_UNKNOWN", f"calendar {inp.sla_rule.calendar_id!r} does not exist",
+                       "input.sla_rule.calendar_id")
     order = _domain(lambda: workflow.check_publishable(
         [s["step_definition_id"] for s in steps], [(d["step_definition_id"], d["prerequisite_id"]) for d in deps]),
         "input.dependencies")

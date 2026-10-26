@@ -1,6 +1,6 @@
 // End to end: ingest -> population -> metrics (D-01..D-05). Mirrors domain/onboard_studio/pipeline.py.
 import { populationOf, validateBatch, type IngestResult } from "./ingest";
-import { computeWithFlags, NO_WINDOW } from "./metrics";
+import { computeWithFlags, NO_WINDOW, slaUnevaluatedCases } from "./metrics";
 import type { Case, CaseFigures, Flag, Metrics, PausePolicyOverride, PipelineInputs, Population, RejectedRecord, Window } from "./types";
 
 /** A state is a name in inputs.states, a policy list for every rule, a {rule: policy | {pause_policy}} map, or null. */
@@ -14,6 +14,8 @@ export interface PipelineResult {
   cases: Case[];
   rejected: RejectedRecord[];
   flags: Flag[];
+  /** D-09: completed cases left out of the SLA denominator (their calendar has no working interval). */
+  sla_unevaluated_cases: number;
   metrics: Metrics;
   /** Exact per-case figures behind the means (completed eligible cases). */
   perCase: CaseFigures[];
@@ -49,5 +51,5 @@ export function runPipeline(inputs: PipelineInputs, state: StateSpec = null, opt
 /** Metrics over an already-ingested population (used by the simulation to recompute after an action). */
 export function runOnPopulation(ingest: IngestResult, population: Population, override: PausePolicyOverride, cutoffs: readonly string[] = [], window: Window = NO_WINDOW): PipelineResult {
   const { metrics, flags, perCase } = computeWithFlags(population, override, cutoffs, window);
-  return { ingest, population, cases: population.cases, rejected: ingest.rejected, flags, metrics, perCase };
+  return { ingest, population, cases: population.cases, rejected: ingest.rejected, flags, sla_unevaluated_cases: slaUnevaluatedCases(flags), metrics, perCase };
 }

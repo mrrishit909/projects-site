@@ -17,7 +17,8 @@ from typing import Any
 
 import psycopg
 from onboard_studio import CONTRACT_VERSION, DomainError
-from onboard_studio.metrics import GROUP_KEYS, check_window, compute_with_flags, group_metrics, in_window
+from onboard_studio.metrics import (FLAG_SLA_UNEVALUATED, GROUP_KEYS, check_window, compute_with_flags, group_metrics,
+                                    in_window, sla_unevaluated_cases)
 from onboard_studio.timeutil import iso_z
 
 from . import db
@@ -192,9 +193,13 @@ def read_metrics(lo: str | None, hi: str | None, cutoff: str | None, state: str 
         else:
             data = {"group_by": group_by, "state": state,
                     "groups": group_metrics(pop, group_by, override, cutoffs, window)}
+        data["sla_unevaluated_cases"] = sla_unevaluated_cases(flags)  # D-09: beside the metrics, never inside
         total = sum(1 for c in pop.cases if in_window(c.opened_at, window))
-        warnings = [{"code": f["flag"], "message": "a paused interval contributes 0 business hours",
-                     "path": f"waiting_intervals[{f['waiting_interval_id']}]"} for f in flags]
+        warnings = [({"code": f["flag"], "message": "the case's calendar has no working interval: it is not evaluated "
+                      "against the SLA and is excluded from the SLA denominator", "path": f"cases[{f['case_id']}]"}
+                     if f["flag"] == FLAG_SLA_UNEVALUATED else
+                     {"code": f["flag"], "message": "a paused interval contributes 0 business hours",
+                      "path": f"waiting_intervals[{f['waiting_interval_id']}]"}) for f in flags]
         applied = {"from": iso_z(window[0]), "to": iso_z(window[1]), "cutoff": [iso_z(c) for c in cutoffs],
                    "state": state, "group_by": group_by}
         return {"data": data, "meta": meta(conn, applied, total, None, _counts(conn)), "warnings": warnings}

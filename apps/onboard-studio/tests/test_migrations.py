@@ -18,9 +18,9 @@ def test_migrations_are_idempotent(db_url):
     with psycopg.connect(db_url) as c:
         assert migrate.apply_migrations(c) == []                      # fixture already applied them
         migrate.reset(c)
-        assert migrate.apply_migrations(c) == ["0001_schema.sql", "0002_constraints.sql"]
+        assert migrate.apply_migrations(c) == ["0001_schema.sql", "0002_constraints.sql", "0003_review_findings.sql"]
         assert migrate.apply_migrations(c) == []
-    for name in ("0001_schema.sql", "0002_constraints.sql"):          # each file also re-runs cleanly
+    for name in ("0001_schema.sql", "0002_constraints.sql", "0003_review_findings.sql"):          # each file also re-runs cleanly
         with psycopg.connect(db_url) as c:
             c.execute((migrate.MIGRATIONS_DIR / name).read_text())
 

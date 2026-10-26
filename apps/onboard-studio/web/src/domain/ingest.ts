@@ -18,7 +18,7 @@ import type {
   Organization, PipelineInputs, Population, RawRow, RejectedRecord, Requirements, SlaRule, StepDefinition,
   StepInstance, WaitingInterval, WorkflowVersion,
 } from "./types";
-import { missingForCompletion, topologicalOrder } from "./workflow";
+import { acceptedTypesLatest, missingForCompletion, topologicalOrder } from "./workflow";
 
 export const ID_FIELD: Record<EntityName, string> = {
   organizations: "organization_id", cases: "case_id", workflow_versions: "workflow_version_id",
@@ -230,7 +230,7 @@ function caseReasons(c: Case, ctx: Ctx): Set<string> {
   if (c.status === "completed" || c.completed_at !== null) {
     const requiredSteps = new Map<string, string>();
     for (const [sid, s] of steps) if (s.required) requiredSteps.set(sid, instByDef.get(sid)?.status ?? "missing");
-    const accepted = new Set((ctx.docsByCase.get(c.case_id) ?? []).filter((d) => d.review_status === "accepted").map((d) => d.document_type));
+    const accepted = acceptedTypesLatest(ctx.docsByCase.get(c.case_id) ?? []); // D-06: the latest version decides
     const m = missingForCompletion(requiredSteps, ctx.requirements[c.workflow_version_id] ?? [], accepted);
     if (m.steps.length || m.document_types.length) out.add(MISSING_REQUIRED_DOCUMENT);
   }

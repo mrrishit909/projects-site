@@ -65,13 +65,13 @@ Use `git revert`, not a reset or force push, so history stays auditable.
 | `data/sql/analysis/prepare_snapshot.py` | `7b76172e2e382d764778d3dde60ed5e64ee6ffdec3bda7f46d39fd791bb724f9` |
 | `data/sql/analysis/run_all.py` | `f5d32b2ae1f8f712fd4e952adc9879603889a96991f5e1a12393f9308826132f` |
 | `tests/test_artifacts.py` | `724dc0cc371a3c22476617a12952774ec4813cb7994b84636fec6af00014b4a0` |
-| `docs/data-dictionary.md` | `67508cc8ca1ec0312ae22ac12dc47416a5d45a3a39a3fd19518f45babf58c9bd` |
+| `docs/data-dictionary.md` | `83df10c03b56b57cf95d0163a27b20988e12edde972314dfa8e127e8264be494` |
 | `docs/erd.md` | `b0ecbecec826360ba606dc06f59a5b5026bfd145ac96d40b5dc7d21dcfe1b676` |
 | `docs/sql-analysis.md` | `a6eb7c95f8f923469383e180db2d6f26d8ab2b36db1fe69889d8785b34662085` |
 | `docs/workbook.md` | `f43e9b7dadc084ac0411b92991064fb5dea3cbb5867094e6010ee2442c2acd0f` |
 | `docs/bi-package.md` | `a1aac2e6e7eee5b4c68c68593f99a2a45cb8d2cae411906ebd2ac764dafbeb69` |
 | `docs/executive-memo.md` | `ac8e5f8f40cb407e190bb1b9e0f0035e3ebe31c2b6fba9bdfa7b12d3dc8e599a` |
-| `docs/technical-case-study.md` | `525e6bda3b51a1666664c4d3da42e6f77d18eccda35dd5eec4fcaadeffdbe363` |
+| `docs/technical-case-study.md` | `cf7c350e38c97e3f626ea9a07f74c096aac241ebcff3d22b4c14d158bd2003d7` |
 | `docs/resume-bullets.md` | `54d4e4a531a1c850d7ad51b5fa7f71f0269c9d75a24921383d1311459866fd30` |
 
 `docs/release-package.md` is not listed: it carries these checksums, so it cannot contain its own. `artifacts/CHECKSUMS.txt` cannot list itself. `tests/test_artifacts.py` checks every line of `CHECKSUMS.txt` against the file and that this table contains the same digests.

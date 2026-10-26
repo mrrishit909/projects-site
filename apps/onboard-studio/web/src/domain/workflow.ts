@@ -135,6 +135,16 @@ export function missingForCompletion(requiredSteps: ReadonlyMap<string, string>,
   };
 }
 
+/** D-06 / Q-04: types whose LATEST version (highest version_number) has the effective status accepted. */
+export function acceptedTypesLatest(documents: Iterable<{ document_type: string; version_number: number; review_status: string }>): Set<string> {
+  const latest = new Map<string, { version_number: number; review_status: string }>();
+  for (const d of documents) {
+    const cur = latest.get(d.document_type);
+    if (cur === undefined || d.version_number > cur.version_number) latest.set(d.document_type, d);
+  }
+  return new Set([...latest].filter(([, d]) => d.review_status === "accepted").map(([t]) => t));
+}
+
 export function requireCompletable(requiredSteps: ReadonlyMap<string, string>, requiredTypes: Iterable<string>, acceptedTypes: Iterable<string>): void {
   const m = missingForCompletion(requiredSteps, requiredTypes, acceptedTypes);
   if (m.steps.length || m.document_types.length) {

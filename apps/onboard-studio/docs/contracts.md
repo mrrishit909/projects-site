@@ -28,6 +28,10 @@ real stakeholder interviews or measured adoption (P02-DOMAIN-06).
   reason is pause-eligible, 2 h when it is not.
 * Customer waiting (`waiting_external`) is never counted as employee processing
   (P02-DOMAIN-03, P02-TEST-09).
+* Known limitation (Q-07, documented, not fixed): instants are exact to the microsecond in Python and to the
+  millisecond in the TypeScript domain (epoch milliseconds). Sub-millisecond timestamps can therefore differ by up to
+  0.999 ms between the two implementations; the generator, the fixtures and the API's own clock all work in whole
+  seconds or milliseconds, so no published figure is affected.
 
 ## D-02 Workflow versions and cases
 * A `workflow_versions` row is immutable once `published_at` is set; its `definition_hash` is
@@ -51,7 +55,7 @@ real stakeholder interviews or measured adoption (P02-DOMAIN-06).
   step version conflict: the second is rejected with `DECISION_CONFLICT` unless it carries
   the new version number (P02-TEST-02).
 * Case completion requires every `required` step `approved` and every required document
-  type `accepted` (P02-FLOW-09, P02-TEST-01). A completed case cannot be reopened; a
+  type `accepted` on its latest version (D-06; P02-FLOW-09, P02-TEST-01). A completed case cannot be reopened; a
   correction opens a linked new case (P02-TEST-11).
 * Reassignment closes the prior assignment interval (`ended_at`) and never deletes it,
   so waiting time is preserved (P02-FLOW-07, P02-TEST-07). Handoff count = number of
@@ -96,3 +100,53 @@ required document types per version; `document_reviews` is a separate append-onl
 unique (step_instance_id, version_number) makes a second decision a `DECISION_CONFLICT`;
 `cases.linked_case_id` records the correction case opened instead of a reopen. Waiting
 intervals are clipped to the case span and merged before deduction; active hours floor at 0.
+
+## D-06 amendment: the latest version decides (2026-10-26, finding Q-04)
+A document type counts as `accepted` only when its latest version (highest `version_number`) has the effective status
+`accepted`. Accepted on v1 and rejected or still submitted on v2 means the type is not accepted: the case cannot
+complete (API `MISSING_REQUIRED_DOCUMENT`, ingest rejects a completed case with that reason) and `document_completeness`
+does not count the type. This is the same in Python ingest/metrics, the API and the TypeScript domain. Rework rate
+(any rejected version) and first-pass approval (the first version) are unchanged. The golden fixture has one version
+per type, so its numbers are unchanged and `CONTRACT_VERSION` stays `v1`.
+
+## D-07 Completion ordering and pause bounds (2026-10-26, finding Q-01)
+* `complete-case` rejects an `occurred_at` earlier than the latest instant recorded on the case, with 422
+  `COMPLETION_BEFORE_RECORDED_WORK` (`details[].context.latest_recorded_at`). "Recorded" means any `case_events.occurred_at`,
+  approval `decided_at`, document review `decided_at`, assignment `ended_at` and waiting interval start or end. Equality is
+  allowed (`occurred_at >= latest`).
+* Open waiting at completion: **choose close**. Every waiting interval still open when the case completes is closed at
+  the completion instant (`ends_at = completed_at`). Because completion cannot precede any waiting start, none can start
+  after the completion instant, so nothing stays open on a completed case.
+* `pause-sla` on an open case rejects an interval that starts before `opened_at` with 422 `PAUSE_OUTSIDE_CASE_SPAN`
+  (`details[].context` carries `opened_at`, `completed_at`). The same rule refuses an interval that starts at or after
+  `completed_at` or ends after it. A pause on an already completed case is refused first by the case state, 409
+  `CASE_ALREADY_COMPLETE` (P02-TEST-11).
+* Database backstop: a trigger refuses to set `cases.completed_at` earlier than any `case_events.occurred_at` of the
+  case, and refuses a `case_events` row later than the case's `completed_at` (`integrity_constraint_violation`, mapped by
+  the API to 409 `INTEGRITY_RULE`). Ingest already rejects the same shape with `CASE_ALREADY_COMPLETE`.
+
+## D-08 Concurrency (2026-10-26, finding Q-02)
+* Lock order is the same for every command: advisory lock on the idempotency key, then the **case row**, then the
+  **step instance row** (`FOR UPDATE`). Commands that start from a step (`approve-step`, `unlock-dependent-step`) find the
+  step's case first and lock it before the step, so they cannot deadlock with `submit`, `reject`, `resubmit` or `complete`.
+* A command is one transaction. A PostgreSQL deadlock (`40P01`) or serialization failure (`40001`) rolls the whole
+  attempt back and the command is retried, at most 3 attempts in all with a short randomised back-off. If the third
+  attempt fails too the answer is 409 `CONCURRENT_UPDATE`; the client may retry with the same idempotency key. No
+  concurrent pair of commands produces a 500.
+* Idempotency is bound to the actor (Q-06): the same key from a different `X-Actor-Id` is 409 `IDEMPOTENCY_KEY_REUSED`
+  (rule `IDEMPOTENCY_ACTOR_MISMATCH`). The payload hash normalises every instant (`occurred_at`, `starts_at`, `ends_at`) to
+  UTC with `Z`, so `...10:00:00+00:00`, `...10:00:00Z` and `...11:00:00+01:00` are one payload.
+
+## D-09 Unevaluated SLA cases (2026-10-26, finding Q-05)
+* `calendars` is a table; `sla_rules.calendar_id` and `calendar_intervals.calendar_id` are foreign keys to it.
+  `publish-workflow-version` with an unknown `sla_rule.calendar_id` is 422 `CALENDAR_UNKNOWN` and writes nothing.
+* A calendar with no `working` interval (none at all, or only holidays) cannot measure business time. A completed case
+  whose SLA rule points at such a calendar is **unevaluated**: it is excluded from `completed_eligible_cases`, from every
+  mean and from the SLA denominator, and it is counted in `sla_unevaluated_cases`. It is never "met with 0 hours".
+* The count is reported beside the metrics, not inside the golden metric set: `PipelineResult.sla_unevaluated_cases`
+  (Python) and `.sla_unevaluated_cases` (TypeScript), one flag `SLA_UNEVALUATED_NO_WORKING_TIME` per case in `flags`, the
+  `sla_unevaluated_cases` column of `data/sql/reference_metrics.sql`, and `data.sla_unevaluated_cases` plus one warning
+  per case in `GET /metrics`. Python, SQL and TypeScript apply the same rule.
+* SQL reference (Q-03): per-case seconds are summed first and divided once per metric (`SUM(seconds) / (3600 * cases)`,
+  numeric, rounded half-up to 4 decimals), and the waiting intervals of a case are clipped and merged (gaps and islands)
+  before deduction, which is the D-06 merge rule.

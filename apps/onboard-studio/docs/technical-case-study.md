@@ -47,6 +47,10 @@ flowchart LR
 | Publish a version with a dependency cycle (Kahn) | 422 `DEPENDENCY_CYCLE`; publishing a published version is 409 `ALREADY_PUBLISHED`; an UPDATE of a published definition is refused by the trigger | `test_p02_test_05_*`, `test_publish_workflow_version_then_it_is_immutable` |
 | Resubmit over an accepted document, or UPDATE a document row | refused (`NOT_IN_CHANGES_REQUESTED`; append-only trigger); the prior version is intact | `test_p02_test_06_*`, `test_resubmit_requires_a_rejection_and_keeps_the_prior_version` |
 | Approve as the step's own (even past) assignee, or with the wrong role | 403 `SELF_APPROVAL` / `ROLE_MISMATCH` | `test_p02_test_10_*`, `test_approve_step_role_must_match_the_step` |
+| Complete a case earlier than work already recorded on it | 422 `COMPLETION_BEFORE_RECORDED_WORK`; open waiting is closed at the completion instant; a pause before the case opened is 422 `PAUSE_OUTSIDE_CASE_SPAN` (D-07) | `test_q01_*` |
+| Two commands race on one case (approve vs reject) | one lock order (case, then step); a deadlock is retried up to 3 times, then 409 `CONCURRENT_UPDATE`, never 500 (D-08) | `test_q02_*` |
+| Same idempotency key from another actor, or the same instant spelled `+00:00` instead of `Z` | another actor: 409 `IDEMPOTENCY_KEY_REUSED`; an equal instant is the same payload and replays | `test_q06_*` |
+| Publish with an unknown calendar; a calendar without working intervals | 422 `CALENDAR_UNKNOWN`; the case is unevaluated and counted in `sla_unevaluated_cases` (D-09) | `test_q05_*` |
 | Reopen a completed case | 409 `CASE_REOPEN_FORBIDDEN`; a correction opens a linked new case | `test_p02_test_11_*` |
 | Reassign work (C07) or migrate a workflow (C10) | 501 `NOT_IMPLEMENTED` (extension milestone) | `test_extension_commands_are_501_not_implemented` |
 | Same idempotency key and payload | the stored result is returned with `Idempotent-Replay: true` | `test_same_key_same_payload_replays_the_stored_response` |

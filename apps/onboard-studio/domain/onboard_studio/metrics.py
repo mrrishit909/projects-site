@@ -13,12 +13,15 @@ from typing import Any, Callable, Iterable, Mapping
 from . import calendar as cal
 from .errors import INVALID_WINDOW, DomainError
 from .models import Case, Population
+from .workflow import accepted_types_latest
 from .timeutil import ZERO, d4, d6, hours, iso_z, mean, parse_ts, ratio, seconds_between
 
 Window = tuple[datetime | None, datetime | None]
 PausePolicy = "list[str] | tuple[str, ...] | Mapping[str, list[str]] | None"
 
 FLAG_PAUSE_OUTSIDE_WORKING = "PAUSE_OUTSIDE_WORKING_INTERVAL"
+#: D-09: a completed case whose SLA calendar has no working interval cannot be evaluated against the SLA.
+FLAG_SLA_UNEVALUATED = "SLA_UNEVALUATED_NO_WORKING_TIME"
 GROUP_KEYS = ("organization", "segment", "region", "workflow_version")
 
 
@@ -44,13 +47,18 @@ def _policy_for(rule: Any, override: Any) -> tuple[str, ...]:
 
 
 def _calendars(pop: Population) -> dict[str, list[cal.Interval]]:
+    """Effective working intervals per calendar. A calendar with no ``working`` interval is absent (D-09)."""
     working: dict[str, list[cal.Interval]] = {}
     holidays: dict[str, list[cal.Interval]] = {}
     for ci in pop.calendar_intervals:
         (holidays if ci.kind == "holiday" else working).setdefault(ci.calendar_id, []).append(
             (ci.starts_at, ci.ends_at))
-        working.setdefault(ci.calendar_id, working.get(ci.calendar_id, []))
     return {cid: cal.effective_intervals(w, holidays.get(cid)) for cid, w in working.items()}
+
+
+def sla_unevaluated_cases(flags: Iterable[Mapping[str, str]]) -> int:
+    """D-09: completed cases left out of the SLA denominator because their calendar has no working interval."""
+    return sum(1 for f in flags if f.get("flag") == FLAG_SLA_UNEVALUATED)
 
 
 def compute_with_flags(pop: Population, pause_policy: Any = None, cutoffs: Iterable[Any] = (),
@@ -63,8 +71,11 @@ def compute_with_flags(pop: Population, pause_policy: Any = None, cutoffs: Itera
     sla = {r.workflow_version_id: r for r in pop.sla_rules}
     flags: list[dict[str, str]] = []
 
-    completed = [c for c in cases if c.completed_at is not None
-                 and c.workflow_version_id in sla and sla[c.workflow_version_id].calendar_id in calendars]
+    done_with_rule = [c for c in cases if c.completed_at is not None and c.workflow_version_id in sla]
+    completed = [c for c in done_with_rule if sla[c.workflow_version_id].calendar_id in calendars]
+    for c in done_with_rule:  # D-09: unevaluated, excluded from every mean and from the SLA denominator
+        if sla[c.workflow_version_id].calendar_id not in calendars:
+            flags.append({"case_id": c.case_id, "flag": FLAG_SLA_UNEVALUATED})
     waits_by_case: dict[str, list[Any]] = {}
     for w in pop.waiting_intervals:
         waits_by_case.setdefault(w.case_id, []).append(w)
@@ -123,7 +134,7 @@ def compute_with_flags(pop: Population, pause_policy: Any = None, cutoffs: Itera
     req_total = req_ok = 0
     for c in cases:
         required = pop.requirements.get(c.workflow_version_id, ())
-        accepted = {d.document_type for d in docs_by_case.get(c.case_id, []) if d.review_status == "accepted"}
+        accepted = accepted_types_latest(docs_by_case.get(c.case_id, []))  # D-06: the latest version decides
         req_total += len(required)
         req_ok += sum(1 for t in required if t in accepted)
 

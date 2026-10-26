@@ -132,3 +132,14 @@ def require_completable(required_steps: Mapping[str, str], required_types: Itera
         raise DomainError(MISSING_REQUIRED_DOCUMENT,
                           "required steps or documents are missing for completion",
                           path="input.case_id", details=missing)
+
+
+def accepted_types_latest(documents: Iterable[Any]) -> set[str]:
+    """D-06 / Q-04: document types whose LATEST version (highest ``version_number``) has the effective status
+    ``accepted``. A type accepted on v1 and rejected or still submitted on v2 is not accepted."""
+    latest: dict[str, Any] = {}
+    for d in documents:
+        cur = latest.get(d.document_type)
+        if cur is None or d.version_number > cur.version_number:
+            latest[d.document_type] = d
+    return {t for t, d in latest.items() if d.review_status == "accepted"}

@@ -21,7 +21,7 @@ contract relies on that the database does not enforce. Constraint names are thos
 | `step_definitions` | one step of one version | `step_definition_id`; unique `(workflow_version_id, sequence)` | 10 | Insert-only while the version is a draft; any INSERT/UPDATE/DELETE after publication is refused (`step_definitions_immutable`). |
 | `dependencies` | one prerequisite edge between two steps of a version | `dependency_id`; unique `(step_definition_id, prerequisite_id)` | 8 | Same immutability as `step_definitions` (`dependencies_immutable`). `dependencies_self_ck` forbids a self edge; cycles are rejected at publish (Kahn, `DEPENDENCY_CYCLE`), not by a constraint. |
 | `workflow_requirements` | one required document type of one version | `(workflow_version_id, document_type)` | 5 | The D-05 block turned into a table (D-06); immutable after publication (`workflow_requirements_immutable`). |
-| `sla_rules` | the SLA of one version | `sla_rule_id`; unique `workflow_version_id` | 2 | Insert-only in the slice. Carries `business_minutes`, the versioned `pause_policy` and the calendar. `calendar_id` has no FK (logical join to `calendar_intervals`). |
+| `sla_rules` | the SLA of one version | `sla_rule_id`; unique `workflow_version_id` | 2 | Insert-only in the slice. Carries `business_minutes`, the versioned `pause_policy` and the calendar. `calendar_id` is a foreign key to `calendars` (`sla_rules_calendar_fk`, D-09). |
 | `calendar_intervals` | one working or holiday interval of a calendar | `calendar_interval_id` | 398 (392 working, 6 holiday) | Insert-only. Half-open `[starts_at, ends_at)`, `ends_at > starts_at` (`calendar_intervals_range_ck`). A holiday is subtracted from the working set; a holiday on a weekend subtracts nothing (D-01). |
 | `cases` | one onboarding case | `case_id` | 733 (712 completed, 21 open) | `workflow_version_id` is fixed at creation (trigger `cases_no_reopen` refuses a change). A completed case cannot change `status`, `completed_at` or version: no reopen, a correction opens a new case linked by `linked_case_id` (D-03, P02-TEST-11). `version` is the optimistic-concurrency counter of the commands. |
 | `step_instances` | one step of one case | `step_instance_id`; unique `(case_id, step_definition_id)` | 3,665 (3,623 started) | Updated by commands along `blocked, ready, in_progress, in_review, approved or changes_requested` (D-03); `version_number` increases when a rejected document sends the step back. |
@@ -98,7 +98,7 @@ Types are PostgreSQL types as declared in `0001_schema.sql`. "Null" is whether t
 | `workflow_version_id` | TEXT | no | FK, unique: one rule per version | |
 | `business_minutes` | NUMERIC(12,4) | no | Greater than 0 (`sla_rules_minutes_ck`); 480 in the fixture and snapshot | |
 | `pause_policy` | TEXT[] | no | Reasons that pause the SLA (default empty); `customer_info_requested`, `external_verification` in the snapshot | |
-| `calendar_id` | TEXT | no | Working calendar of the SLA (logical join to `calendar_intervals`; no FK) | |
+| `calendar_id` | TEXT | no | Working calendar of the SLA (FK to `calendars`, D-09; a calendar with no working interval leaves its completed cases unevaluated) | |
 
 ### calendar_intervals
 | Field | Type | Null | Meaning and rule | Source |

@@ -23,11 +23,11 @@ OWNED_TABLES = (
     "command_results", "audit_events", "quarantined_records", "rejected_records", "raw_batches",
     "dataset_versions", "case_events", "waiting_intervals", "approvals", "document_reviews",
     "document_versions", "assignments", "step_instances", "cases", "calendar_intervals", "sla_rules",
-    "workflow_requirements", "dependencies", "step_definitions", "workflow_versions", "organizations",
+    "calendars", "workflow_requirements", "dependencies", "step_definitions", "workflow_versions", "organizations",
     "schema_migrations",
 )
 OWNED_FUNCTIONS = ("os_forbid_mutation", "os_workflow_version_immutable", "os_definition_immutable",
-                   "os_case_no_reopen")
+                   "os_case_no_reopen", "os_case_completion_order", "os_event_not_after_completion")
 
 
 def reset(conn: psycopg.Connection) -> None:

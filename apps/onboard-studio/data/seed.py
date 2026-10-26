@@ -80,6 +80,8 @@ def seed(conn: psycopg.Connection, inputs: dict[str, Any]) -> dict[str, Any]:
     step_versions = {s["step_definition_id"]: s["workflow_version_id"] for s in rows["step_definitions"]}
     inst_version = {s["step_instance_id"]: s.get("version_number", 1) for s in rows["step_instances"]}
     inserted: dict[str, int] = {}
+    for cid in sorted({r["calendar_id"] for ent in ("sla_rules", "calendar_intervals") for r in rows[ent]}):
+        conn.execute("INSERT INTO calendars (calendar_id) VALUES (%s) ON CONFLICT DO NOTHING", (cid,))  # Q-05 (FK target)
     for ent in INSERT_ORDER:
         cols = COLUMNS[ent]
         sql = (f"INSERT INTO {ent} ({', '.join(cols)}) "  # ent/cols are constants above

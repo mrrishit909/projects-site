@@ -54,7 +54,8 @@ function CasesBody({ s }: { s: Ready }) {
       steps: sis.map((si) => ({ si, name: defs.get(si.step_definition_id)?.step_name ?? si.step_definition_id, sequence: defs.get(si.step_definition_id)?.sequence ?? 0 })),
     });
     const fig = shown.perCase.find((f) => f.case_id === c.case_id);
-    const flags = shown.flags.filter((f) => f.case_id === c.case_id);
+    const flags = shown.flags.filter((f) => f.case_id === c.case_id && f.flag === "PAUSE_OUTSIDE_WORKING_INTERVAL");
+    const unevaluated = shown.flags.some((f) => f.case_id === c.case_id && f.flag === "SLA_UNEVALUATED_NO_WORKING_TIME");
     const policyText = view.pause === "none" ? "none (view setting: no reason pauses the clock)" : `configured: ${policyList.length ? policyList.join(", ") : "none"}`;
     const na = c.completed_at === null ? "n/a, case open" : "n/a";
     const minutes = fig ? (Number(fig.active_hours) * 60).toFixed(2) : null;
@@ -87,6 +88,9 @@ function CasesBody({ s }: { s: Ready }) {
           <p className="small" data-testid="sla-rule">
             SLA rule {rule?.sla_rule_id ?? "none"}: {rule?.business_minutes ?? "n/a"} business minutes on calendar {rule?.calendar_id ?? "n/a"}. Pause policy shown: <strong>{policyText}</strong>. Hours are exact decimals from the domain, 4 places.
           </p>
+          {unevaluated && (
+            <div className="notice" role="note"><p>This case is not evaluated against the SLA: its calendar has no working interval, so it is excluded from the SLA denominator (D-09).</p></div>
+          )}
           {flags.length > 0 && (
             <div className="notice" role="note"><p>{flags.length} pause-eligible waiting {flags.length === 1 ? "interval lies" : "intervals lie"} wholly outside working time ({flags.map((f) => f.waiting_interval_id).join(", ")}): {flags.length === 1 ? "it contributes" : "they contribute"} 0 business hours (flag {flags[0]!.flag}).</p></div>
           )}
