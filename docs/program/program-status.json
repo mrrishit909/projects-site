@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T09:52:16Z",
+  "updated_at": "2026-10-26T10:03:26Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -39,20 +39,140 @@
     }
   ],
   "projects": {
-    "01-revenue-atlas": {"slug": "revenue-atlas", "stage": "gate-A", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": "T-01-02 golden fixture + independent reference check"},
-    "02-onboard-studio": {"slug": "onboard-studio", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
-    "03-supplyscope": {"slug": "supplyscope", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
-    "04-serviceflow": {"slug": "serviceflow", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
-    "05-invoicebridge": {"slug": "invoicebridge", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
-    "06-productsignal": {"slug": "productsignal", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
-    "07-trustledger": {"slug": "trustledger", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
-    "08-pipeline-observatory": {"slug": "pipeline-observatory", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
-    "09-changeworks": {"slug": "changeworks", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
-    "10-retentionlab": {"slug": "retentionlab", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null}
+    "01-revenue-atlas": {
+      "slug": "revenue-atlas",
+      "stage": "gate-B (domain verified in CI; db/api in progress)",
+      "built": false,
+      "verified": false,
+      "published": false,
+      "integrated": false,
+      "last_verified_sha": "b473464b30ded6736c27eb890823c3d2a1bae359",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40304221309",
+      "site_url": null,
+      "blockers": [],
+      "next_task": "T-01-04/05 migrations, SQL reference, FastAPI commands (worker A-003 running)"
+    },
+    "02-onboard-studio": {
+      "slug": "onboard-studio",
+      "stage": "queued",
+      "built": false,
+      "verified": false,
+      "published": false,
+      "integrated": false,
+      "last_verified_sha": null,
+      "latest_run_url": null,
+      "site_url": null,
+      "blockers": [],
+      "next_task": null
+    },
+    "03-supplyscope": {
+      "slug": "supplyscope",
+      "stage": "queued",
+      "built": false,
+      "verified": false,
+      "published": false,
+      "integrated": false,
+      "last_verified_sha": null,
+      "latest_run_url": null,
+      "site_url": null,
+      "blockers": [],
+      "next_task": null
+    },
+    "04-serviceflow": {
+      "slug": "serviceflow",
+      "stage": "queued",
+      "built": false,
+      "verified": false,
+      "published": false,
+      "integrated": false,
+      "last_verified_sha": null,
+      "latest_run_url": null,
+      "site_url": null,
+      "blockers": [],
+      "next_task": null
+    },
+    "05-invoicebridge": {
+      "slug": "invoicebridge",
+      "stage": "queued",
+      "built": false,
+      "verified": false,
+      "published": false,
+      "integrated": false,
+      "last_verified_sha": null,
+      "latest_run_url": null,
+      "site_url": null,
+      "blockers": [],
+      "next_task": null
+    },
+    "06-productsignal": {
+      "slug": "productsignal",
+      "stage": "queued",
+      "built": false,
+      "verified": false,
+      "published": false,
+      "integrated": false,
+      "last_verified_sha": null,
+      "latest_run_url": null,
+      "site_url": null,
+      "blockers": [],
+      "next_task": null
+    },
+    "07-trustledger": {
+      "slug": "trustledger",
+      "stage": "queued",
+      "built": false,
+      "verified": false,
+      "published": false,
+      "integrated": false,
+      "last_verified_sha": null,
+      "latest_run_url": null,
+      "site_url": null,
+      "blockers": [],
+      "next_task": null
+    },
+    "08-pipeline-observatory": {
+      "slug": "pipeline-observatory",
+      "stage": "queued",
+      "built": false,
+      "verified": false,
+      "published": false,
+      "integrated": false,
+      "last_verified_sha": null,
+      "latest_run_url": null,
+      "site_url": null,
+      "blockers": [],
+      "next_task": null
+    },
+    "09-changeworks": {
+      "slug": "changeworks",
+      "stage": "queued",
+      "built": false,
+      "verified": false,
+      "published": false,
+      "integrated": false,
+      "last_verified_sha": null,
+      "latest_run_url": null,
+      "site_url": null,
+      "blockers": [],
+      "next_task": null
+    },
+    "10-retentionlab": {
+      "slug": "retentionlab",
+      "stage": "queued",
+      "built": false,
+      "verified": false,
+      "published": false,
+      "integrated": false,
+      "last_verified_sha": null,
+      "latest_run_url": null,
+      "site_url": null,
+      "blockers": [],
+      "next_task": null
+    }
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "T-01-02: write apps/revenue-atlas/tests/fixtures/golden/{inputs.json,expected.json,CALCULATION.md} and apps/revenue-atlas/tests/reference_check.py (stdlib decimal only), run it, record result in verification-ledger.json",
-    "acceptance": "reference_check.py exits 0 reproducing P01-GOLD-01 exactly: net 225.00, cogs 140.00, gross profit 85.00, freight 12.00/3.00, contribution 70.00, after one-unit return contribution 40.00"
+    "next_concrete_task": "If apps/revenue-atlas/api and data/migrations exist: run DATABASE_URL=... pytest; commit; else re-dispatch A-003 per task-queue T-01-04/05",
+    "acceptance": "CI Mode A green with SQL reference totals equal to expected.json"
   }
 }
