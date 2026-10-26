@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T12:05:40Z",
+  "updated_at": "2026-10-26T12:14:37Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -415,6 +415,18 @@
       "actual": "ALL OK (155 checks)",
       "code_sha": "pending-commit",
       "ts": "2026-10-26T12:05:40Z"
+    },
+    {
+      "requirement": "P01-REL-09/17/18 live verification of release f2605bb (reviewer fixes) and the portfolio link both ways",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "live-check.yml run 40320891807",
+      "exit_code": 0,
+      "expected": "both jobs success",
+      "actual": "success",
+      "code_sha": "site from 50e72e1; portfolio f03b26f",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40320891807",
+      "ts": "2026-10-26T12:14:37Z"
     }
   ]
 }

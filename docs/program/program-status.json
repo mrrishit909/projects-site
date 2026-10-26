@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T12:13:28Z",
+  "updated_at": "2026-10-26T12:14:37Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -41,7 +41,7 @@
   "projects": {
     "01-revenue-atlas": {
       "slug": "revenue-atlas",
-      "stage": "built, verified (reviewer findings fixed and regression-tested), published (release f2605bb, live check pending), integrated; artifacts delivered",
+      "stage": "COMPLETE for entry + mid-level milestones: built, verified (incl. reviewer pass and fixes), published (live-verified release f2605bb), integrated (case study live, links verified both ways), artifacts delivered. Extensions not built: UI-03..07/09 screens, C05-C10 scenario/export/publish commands as backend routes, .pbix",
       "built": true,
       "verified": true,
       "published": true,
@@ -50,7 +50,7 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40319480592",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/revenue-atlas/",
       "blockers": [],
-      "next_task": "live-check of f2605bb; then project 02",
+      "next_task": "none active; extensions queued after projects 02-10 reach the same state",
       "verified_note": "Entry journey + adversarial + reviewer pass; open low items G-10 (idempotency text hash/actor binding), G-11 (persisted discount split over quarantined lines), G-09 (web windowed views: credit rows), extension screens UI-03..07,09 and C05-C10 not built",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/revenue-atlas/"
     },
@@ -174,7 +174,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 02 Onboard Studio: T-02-02 golden fixture worker (A-012) then domain/API slice; Revenue Atlas: confirm live-check green for release f2605bb",
-    "acceptance": "see task-queue.json"
+    "next_concrete_task": "Project 02 Onboard Studio: A-013 domain/API worker in progress (T-02-03); then generator, web, e2e, publish, integrate",
+    "acceptance": "onboard-studio-ci.yml Mode A green; then Mode B; then live-check green; then case study live"
   }
 }
