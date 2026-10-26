@@ -107,3 +107,10 @@ Mode A (verified): the Python domain, PostgreSQL migrations and FastAPI commands
 GitHub Actions against a transient PostgreSQL service. Mode B (public): the static site
 recomputes the same contract in TypeScript over a published synthetic snapshot and keeps
 all mutations in browser memory; a reload restores the published fixture.
+
+## D-07 Scenario deltas (added 2026-10-26 with the web slice)
+A scenario holds signed decimal fractions `discount_delta` and `shipping_delta`. They apply
+to a copy of the baseline facts as `allocated_discount × (1 + discount_delta)` and
+`freight × (1 + shipping_delta)`; merchandise credits and costs are not rescaled. Scenario
+results are always labelled estimates and shown beside, never instead of, observed results
+(P01-MET-*-R24, P01-FLOW-07/08).

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T10:28:57Z",
+  "updated_at": "2026-10-26T10:37:36Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -150,6 +150,17 @@
       "actual": "hash 40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444 both runs; 16 passed",
       "code_sha": "pending-commit",
       "ts": "2026-10-26T10:28:57Z"
+    },
+    {
+      "requirement": "P01-MET-*-R20 browser calculation consistent with contract and fixture (TS golden check)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "npm run check (tsc strict + tsx scripts/golden-check.ts)",
+      "exit_code": 0,
+      "expected": "all golden and variant metrics, allocations, ingest counts equal expected.json",
+      "actual": "ALL OK (166 checks); runPipeline over 6,649 lines in ~0.3 s",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T10:37:36Z"
     }
   ]
 }

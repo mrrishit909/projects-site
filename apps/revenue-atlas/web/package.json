@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/postbuild-routes.mjs",
+    "build": "vite build --base=${SITE_BASE:-/} && node scripts/postbuild-routes.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "golden": "tsx scripts/golden-check.ts",
     "check": "npm run typecheck && npm run golden",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "build:pages": "SITE_BASE=/projects-site/labs/revenue-atlas/ npm run build"
   },
   "dependencies": {
     "react": "18.3.1",

@@ -100,7 +100,7 @@ jobs:
         run: npm run check
       - name: Build with the Pages base path
         working-directory: apps/revenue-atlas/web
-        run: npm run build -- --base=/projects-site/labs/revenue-atlas/
+        run: npm run build:pages
       - name: Install Chromium
         working-directory: apps/revenue-atlas/web
         run: npx playwright install --with-deps chromium
