@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T12:26:29Z",
+  "updated_at": "2026-10-26T12:47:34Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -56,7 +56,7 @@
     },
     "02-onboard-studio": {
       "slug": "onboard-studio",
-      "stage": "gate-B passed (Mode A verified on hosted runner); generator (A-014) in progress",
+      "stage": "gate-B passed; generator verified (hash 3c20d296...); web part 1 (TS domain + shell, A-015) in progress",
       "built": false,
       "verified": false,
       "published": false,
@@ -65,7 +65,7 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40322386220",
       "site_url": null,
       "blockers": [],
-      "next_task": "T-02-04: generator, then web (TS domain + timeline-first screens), e2e, publish, integrate"
+      "next_task": "T-02-04b web part 1 (A-015) then part 2 screens + e2e (A-016), publish, integrate"
     },
     "03-supplyscope": {
       "slug": "supplyscope",
@@ -174,7 +174,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 02 Onboard Studio: A-013 domain/API worker in progress (T-02-03); then generator, web, e2e, publish, integrate",
-    "acceptance": "onboard-studio-ci.yml Mode A green; then Mode B; then live-check green; then case study live"
+    "next_concrete_task": "If apps/onboard-studio/web/src/domain exists and `npm run check` passes: dispatch web part 2 (cases timeline, workflow canvas, SLA explorer, case study + Playwright evidence); else re-dispatch A-015",
+    "acceptance": "onboard-studio-ci.yml Mode B green with screenshots; live-check green at labs/onboard-studio"
   }
 }
