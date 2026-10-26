@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:11:22Z",
+  "updated_at": "2026-10-26T14:13:20Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -35,12 +35,10 @@
       "dataset_version": "os-20261026-20261026",
       "dataset_hash": "3c20d296bcf178065e9178cae04f763994b4d7197026af2c021ab55b4cc2bc6a",
       "contract_version": "v1",
-      "publication_status": "republished after reviewer fixes; live verification pending",
+      "publication_status": "published and verified live from a GitHub-hosted runner (release 239950e after reviewer fixes); integrated, links verified both ways",
       "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40329082960",
-        "http": "200 on every route in routes.json + data/manifest.json",
-        "browser": "first two routes at 360 and 1280, 0 console errors",
-        "verified_at": "2026-10-26T13:18:08Z"
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40337325817",
+        "verified_at": "2026-10-26T14:13:20Z"
       },
       "previous_release_commit": "a614136"
     }
