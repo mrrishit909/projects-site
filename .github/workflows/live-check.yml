@@ -1,0 +1,79 @@
+name: live-site-check
+
+# Verifies a published project site from a GitHub-hosted runner (the cloud coordinator's
+# network policy cannot reach *.github.io). Records HTTP status, a real browser screenshot
+# and one user journey as an artifact (P01-REL-09, master 21).
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: "Project slug (e.g. revenue-atlas)"
+        required: true
+        default: "revenue-atlas"
+      base_url:
+        description: "Published site root"
+        required: true
+        default: "https://mrrishit909.github.io/projects-site/labs/revenue-atlas/"
+
+permissions:
+  contents: read
+
+jobs:
+  live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Runner identity (must be GitHub-hosted)
+        run: test "${{ runner.environment }}" = "github-hosted"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: HTTP checks (root, a nested route reload, the data manifest)
+        env:
+          BASE: ${{ inputs.base_url }}
+        run: |
+          mkdir -p live-evidence
+          for p in "" "overview/" "bridge/" "evidence/" "case-study/" "data/manifest.json" "routes.json"; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE$p")
+            echo "$code $BASE$p" | tee -a live-evidence/http.txt
+            test "$code" = "200"
+          done
+          curl -sS "$BASE"data/manifest.json | tee live-evidence/manifest.json | head -c 600
+      - name: Browser screenshot and journey
+        env:
+          BASE: ${{ inputs.base_url }}
+        run: |
+          npm init -y >/dev/null
+          npm i --no-audit --no-fund playwright@1.55.0 >/dev/null
+          npx playwright install --with-deps chromium >/dev/null
+          node - <<'JS'
+          const { chromium } = require("playwright");
+          const fs = require("fs");
+          (async () => {
+            const base = process.env.BASE;
+            const browser = await chromium.launch();
+            const errors = [];
+            for (const [w, h, name] of [[360, 780, "mobile"], [1280, 800, "desktop"]]) {
+              const page = await browser.newPage({ viewport: { width: w, height: h } });
+              page.on("console", m => { if (m.type() === "error") errors.push(`${name}: ${m.text()}`); });
+              page.on("pageerror", e => errors.push(`${name}: ${e.message}`));
+              await page.goto(base + "overview/", { waitUntil: "networkidle" });
+              await page.screenshot({ path: `live-evidence/live-overview-${name}.png`, fullPage: true });
+              await page.goto(base + "bridge/", { waitUntil: "networkidle" });
+              await page.screenshot({ path: `live-evidence/live-bridge-${name}.png`, fullPage: true });
+              const title = await page.title();
+              fs.appendFileSync("live-evidence/journey.txt", `${name}: title="${title}" url=${page.url()}\n`);
+              await page.close();
+            }
+            await browser.close();
+            fs.writeFileSync("live-evidence/console-errors.json", JSON.stringify(errors, null, 2));
+            if (errors.length) { console.error(errors); process.exit(1); }
+          })();
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-${{ inputs.slug }}-${{ github.run_id }}
+          path: live-evidence
+          retention-days: 90
