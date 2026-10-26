@@ -176,12 +176,13 @@ asg AS (
            (sg.at IS NOT NULL AND sg.at + make_interval(days => pl.win) <= p.cutoff) AS mature,
            (sg.at IS NOT NULL AND EXISTS (SELECT 1 FROM ev WHERE ev.acct = a.unit_id AND ev.name = 'activated' AND ev.at >= sg.at
                                            AND ev.at < sg.at + make_interval(days => pl.win))) AS activated,
-           EXISTS (SELECT 1 FROM exposures x WHERE x.assignment_id = a.assignment_id) AS exposed,
+           EXISTS (SELECT 1 FROM exposures x WHERE x.assignment_id = a.assignment_id AND x.exposed_at <= p.cutoff) AS exposed,
            EXISTS (SELECT 1 FROM ev WHERE ev.acct = a.unit_id AND ev.name = 'product_error' AND ev.at >= a.assigned_at
                    AND ev.at < a.assigned_at + make_interval(days => pl.g_days)) AS errored,
            coalesce((SELECT sum(s.amount_usd) FROM subscriptions s WHERE s.account_id = a.unit_id AND s.status IN ('active', 'ended')
-                     AND s.starts_at >= pl.rev_from AND s.starts_at < pl.rev_to), 0) AS revenue
+                     AND s.starts_at >= pl.rev_from AND s.starts_at < pl.rev_to AND s.starts_at <= p.cutoff), 0) AS revenue
     FROM assignments a JOIN pl ON a.experiment_version_id = pl.xv LEFT JOIN signup sg ON sg.acct = a.unit_id, p
+    WHERE a.assigned_at <= p.cutoff   -- D-08: the cutoff rule
 ),
 cnt AS (
     SELECT vs.v, vs.share,
@@ -265,7 +266,7 @@ run AS (
 runs_of AS (SELECT r.* FROM analysis_runs r, pl WHERE r.experiment_version_id = pl.xv),
 obs AS (
     SELECT o.*, a.signup_at, a.activated, a.assignment_id AS aid
-    FROM metric_observations o JOIN asg a ON a.assignment_id = o.assignment_id
+    FROM metric_observations o JOIN asg a ON a.assignment_id = o.assignment_id, p WHERE o.window_end <= p.cutoff   -- D-08
 ),
 
 -- ---- the experiment block ----------------------------------------------------------------------------------------------------

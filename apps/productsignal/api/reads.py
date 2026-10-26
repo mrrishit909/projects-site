@@ -257,7 +257,7 @@ def read_metrics(lo: str | None, hi: str | None, cutoff: str | None, xv: str | N
         plan = select_plan(pop, xv)
         if group_by != "none":
             try:
-                groups = group_values(pop, group_by, plan.experiment_version_id if plan else xv)
+                groups = group_values(pop, group_by, plan.experiment_version_id if plan else xv, cut)
             except DomainError as err:
                 raise from_domain(err, "group_by") from None
             out = {}

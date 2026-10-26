@@ -598,14 +598,14 @@ def check_maturity(conn: Conn, req: Any, actor: Actor) -> Outcome:
     ver = _lock_version(conn, inp.experiment_version_id, exclusive=False)
     plan = _plan(conn, inp.experiment_version_id)
     cutoff = _at(inp.cutoff)
-    units = sorted({r["unit_id"] for r in conn.execute("SELECT unit_id FROM assignments WHERE experiment_version_id = %s",
-                                                        (inp.experiment_version_id,)).fetchall()})
+    units = sorted({r["unit_id"] for r in conn.execute(           # D-08: assigned by the cutoff only
+        "SELECT unit_id FROM assignments WHERE experiment_version_id = %s AND assigned_at <= %s", (inp.experiment_version_id, cutoff)).fetchall()})
     _lock_accounts(conn, units)                                                       # lock order: unit rows by id
     pop = db.load_population(conn)
     canon = canonicalise(pop, cutoff)
     ctx = Ctx(pop, cutoff, canon, set(units))
     win = plan.activation_window_days
-    asg = {a.unit_id: a for a in pop.assignments if a.experiment_version_id == inp.experiment_version_id}
+    asg = {a.unit_id: a for a in pop.assignments if a.experiment_version_id == inp.experiment_version_id and a.assigned_at <= cutoff}
     have = {r["assignment_id"] for r in conn.execute(
         "SELECT assignment_id FROM metric_observations WHERE metric_name = 'activation_7d' AND assignment_id IN "
         "(SELECT assignment_id FROM assignments WHERE experiment_version_id = %s)", (inp.experiment_version_id,)).fetchall()}

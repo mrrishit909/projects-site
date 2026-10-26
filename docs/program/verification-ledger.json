@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T23:35:20Z",
+  "updated_at": "2026-10-26T23:57:02Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1111,6 +1111,17 @@
       "code_sha": "bfe9849",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40420419373",
       "ts": "2026-10-26T23:35:20Z"
+    },
+    {
+      "requirement": "P06 D-08 cutoff rule: hand-built world and the snapshot interim cutoff (155 assigned, SRM 77/78) through domain, SQL and API; golden unchanged; stdlib reference carries the rule",
+      "project": "06-productsignal",
+      "status": "verified",
+      "command": "reference_check.py; DATABASE_URL=... pytest -q",
+      "exit_code": 0,
+      "actual": "ALL OK (706); full suite passed (see commit)",
+      "code_sha": "pending-commit",
+      "evidence": "apps/productsignal/tests/test_review_findings.py; docs/contracts.md D-08",
+      "ts": "2026-10-26T23:57:02Z"
     }
   ]
 }

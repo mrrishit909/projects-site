@@ -31,7 +31,7 @@ for _p in (Path(__file__).resolve().parents[1] / "domain",):
         sys.path.insert(0, str(_p))
 from productsignal import CONTRACT_VERSION, run_pipeline  # noqa: E402
 from productsignal.contract import ENTITIES  # noqa: E402
-from productsignal.models import Plan  # noqa: E402
+from productsignal.models import Plan, parse_plan  # noqa: E402
 
 REFERENCE_ENTITIES = ("accounts", "users", "sessions", "subscriptions", "experiment_versions")
 T_TABLE = Path(__file__).parent / "sql" / "t_quantiles.csv"
@@ -92,12 +92,21 @@ def load_t_table(conn: psycopg.Connection) -> int:
     return len(rows)
 
 
-def seed(conn: psycopg.Connection, inputs: dict[str, Any], reference_only: bool = False) -> dict[str, Any]:
-    """Seed one fixture; return ``{dataset_version, dataset_hash, inserted, skipped}``."""
+def seed(conn: psycopg.Connection, inputs: dict[str, Any], reference_only: bool = False, dataset_version: str | None = None,
+         dataset_hash: str | None = None) -> dict[str, Any]:
+    """Seed one fixture; return ``{dataset_version, dataset_hash, inserted, skipped}``.
+
+    ``dataset_version`` names the load (default ``ds-<first 12 of the hash>``): pass the name a published dataset carries (the
+    generator's manifest ``dataset_version``) so commands prepared against it match the database's current dataset.
+    ``dataset_hash`` defaults to the sha256 of the canonical JSON of the inputs. ``inputs["analysis_plan"]`` is the plan of record
+    (the single-plan shape); ``inputs["analysis_plans"]`` (the manifest's ``{experiment_version_id: plan}`` map, or a list) adds
+    every further plan, each stored once."""
     res = run_pipeline(inputs)
     pop, ing = res.population, res.ingest
-    dataset_hash = sha256_hex(canonical_json(inputs))
-    version = f"ds-{dataset_hash[:12]}"
+    dataset_hash = dataset_hash or sha256_hex(canonical_json(inputs))
+    version = dataset_version or f"ds-{dataset_hash[:12]}"
+    extra = inputs.get("analysis_plans") or []
+    extra_plans = [parse_plan(p) for p in (extra.values() if isinstance(extra, dict) else extra)]
     load_t_table(conn)
     ents = REFERENCE_ENTITIES if reference_only else ENTITIES
     inserted = {e: 0 for e in ENTITIES}
@@ -133,7 +142,7 @@ def seed(conn: psycopg.Connection, inputs: dict[str, Any], reference_only: bool 
         inserted["experiment_versions"] += conn.execute("INSERT INTO experiment_versions VALUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
                                                         (v.experiment_version_id, v.name, v.unit_type, v.primary_metric, v.planned_end)).rowcount
     if not reference_only:
-        for plan in pop.plans.values():
+        for plan in [*pop.plans.values(), *(p for p in extra_plans if p.experiment_version_id not in pop.plans)]:
             insert_plan(conn, plan, "seed")
         for a in rows("assignments"):
             inserted["assignments"] += conn.execute(

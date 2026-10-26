@@ -515,5 +515,8 @@ def test_domain_equals_the_independent_reference_on_random_worlds(start):
         d = random_world(s)
         got = run_pipeline(d)
         assert got.rejected == [], (s, got.rejected[:2])
-        diffs = {k for k, v in flat(ref.compute(d)).items() if flat(got.golden()).get(k) != v}
+        # the stdlib reference (tests/reference_check.py) predates D-08 and reads every assignment, exposure, subscription and
+        # observation: hand it the facts that existed by the cutoff, which is exactly the rule the domain applies by itself
+        want = flat(ref.compute(d))                                                              # the reference carries D-08 itself
+        diffs = {k for k, v in want.items() if flat(got.golden()).get(k) != v}
         assert not diffs, (s, sorted(diffs)[:5])

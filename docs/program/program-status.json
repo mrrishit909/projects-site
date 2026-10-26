@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T23:35:20Z",
+  "updated_at": "2026-10-26T23:57:02Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -122,7 +122,7 @@
     },
     "06-productsignal": {
       "slug": "productsignal",
-      "stage": "gate-A passed; backend CI-green Mode A; generator committed bfe9849 (310 tests); cutoff-rule fix A-046 running before the web mirror",
+      "stage": "gate-A passed; backend and generator CI-green Mode A; cutoff rule fixed (D-08); web A-047 running",
       "built": false,
       "verified": false,
       "published": false,
@@ -131,7 +131,7 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40420419373",
       "site_url": null,
       "blockers": [],
-      "next_task": "A-046 fix -> web worker -> publish -> integrate"
+      "next_task": "T-06-04 (A-047 web -> CI Mode B -> publish -> integrate)"
     },
     "07-trustledger": {
       "slug": "trustledger",

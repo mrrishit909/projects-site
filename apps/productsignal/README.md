@@ -33,6 +33,9 @@ service. `pytest.ini` puts `domain` and the app root on the path. Tests use a fi
 * `run_pipeline(inputs, cutoff=...)` returns `PipelineResult(ingest, population, metrics, warnings)`; `metrics` has exactly the keys of `expected.json`
   (`METRIC_KEYS`, names and nesting per D-P6-15): `signup_conversion`, `funnel`, `activation`, `retention` (`day7`, `on_or_after_day7`, `week4`),
   `feature_adoption`, `experiment`; `tracking_quality` and `identity` travel beside them.
+* **Cutoff rule (D-08):** a run at cutoff C sees only facts that existed by C: assignments with `assigned_at <= C`, exposures with
+  `exposed_at <= C`, subscriptions with `starts_at <= C` (inside the plan's revenue window), observations with `window_end <= C`,
+  in the domain, the SQL reference and the API (`GET /metrics`, C07, C08). An interim run therefore counts only the accounts assigned by then.
 * **Events** are canonicalised per run: received by the cutoff, deduplicated (earliest `received_at` wins), unknown identity, bot, internal; events
   received after the cutoff are reported apart from delayed ones (> 24 h strictly). Identity is time-aware: a link attributes anonymous events with
   `event_at` >= `linked_at` only, never backward, and the earliest link of an anonymous id fixes its user.

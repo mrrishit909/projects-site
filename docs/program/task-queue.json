@@ -461,7 +461,7 @@
       "id": "T-06-03b",
       "project": "06-productsignal",
       "title": "Cutoff rule fix (assignments/exposures/subscriptions) before the web mirror",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-06-03"
       ],

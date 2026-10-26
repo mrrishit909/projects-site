@@ -677,18 +677,15 @@ def loaded(built, inputs):
     import psycopg
     from psycopg.rows import dict_row
     from data import migrate, seed
-    from productsignal.models import parse_plan as pp
     with psycopg.connect(url) as c:
         migrate.reset(c)
         migrate.apply_migrations(c)
     with psycopg.connect(url, row_factory=dict_row, autocommit=True) as c:
         with c.transaction():
-            out = seed.seed(c, inputs)
-            seed.insert_plan(c, pp(built["manifest"]["analysis_plans"][XV2]), "seed")          # seed.py loads the one plan of the inputs
-            # the replay events carry the dataset_version the generator published; seed.py names a load ds-<hash12>: record the
-            # published name too so the API's "current dataset" is the one the events were prepared against
-            c.execute("INSERT INTO dataset_versions (dataset_version, dataset_hash, contract_version) VALUES (%s, %s, %s)",
-                      (VERSION, built["manifest"]["dataset_hash"], "1"))
+            # the replay events carry the dataset_version the generator published: name the load by it so the API's "current
+            # dataset" is the one the events were prepared against; the manifest carries both plans
+            out = seed.seed(c, {**inputs, "analysis_plans": built["manifest"]["analysis_plans"]}, dataset_version=VERSION,
+                            dataset_hash=built["manifest"]["dataset_hash"])
         yield c, out
 
 
@@ -700,7 +697,7 @@ def test_seed_loads_the_generated_files(loaded, inputs, result, built):
         assert conn.execute(f"SELECT count(*) AS n FROM {name}").fetchone()["n"] == len(inputs[name]), name
     n = lambda t: conn.execute(f"SELECT count(*) AS n FROM {t}").fetchone()["n"]                # noqa: E731
     assert n("rejected_records") == 0 and n("analysis_plans") == 2 and n("funnel_definitions") == 1
-    assert n("dataset_versions") == 2
+    assert n("dataset_versions") == 1
 
 
 def _sql(conn, cutoff: str, xv: str):

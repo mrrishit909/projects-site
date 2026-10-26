@@ -416,7 +416,10 @@ def compute(data):
 
     # --- D-03 experiment, ITT
     variants = list(plan["allocation"])
-    assigned = {v: [a for a in accepted_unit.values() if a["variant"] == v] for v in variants}
+    # D-08 cutoff rule: dated facts after the cutoff do not count in the metrics (ingest counts above use every row)
+    exposures_ok = {k: x for k, x in exposures_ok.items() if ts(x["exposed_at"]) <= cutoff}
+    obs_ok = [o for o in obs_ok if ts(o["window_end"]) <= cutoff]
+    assigned = {v: [a for a in accepted_unit.values() if a["variant"] == v and ts(a["assigned_at"]) <= cutoff] for v in variants}
     n_assigned = {v: len(assigned[v]) for v in variants}
     mat = {v: [a for a in assigned[v] if a["unit_id"] in signup_at and mature7d(a["unit_id"])] for v in variants}
     n_total = sum(n_assigned.values())
@@ -496,7 +499,7 @@ def compute(data):
     rw_from, rw_to = ts(plan["revenue_window"]["from"]), ts(plan["revenue_window"]["to"])
     rev_by = defaultdict(lambda: D(0))
     for s in data["subscriptions"]:
-        if s["status"] in ("active", "ended") and rw_from <= ts(s["starts_at"]) < rw_to:
+        if s["status"] in ("active", "ended") and rw_from <= ts(s["starts_at"]) < rw_to and ts(s["starts_at"]) <= cutoff:
             rev_by[s["account_id"]] += D(s["amount_usd"])
     revenue = {}
     for v in variants:

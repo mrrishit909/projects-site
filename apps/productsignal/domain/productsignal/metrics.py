@@ -198,10 +198,13 @@ def feature_adoption(ctx: Ctx, w: Windows) -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------------------------------- the experiment
-def accepted_assignments(pop: Population, xv: str, allowed: set[str] | None) -> dict[str, Any]:
-    """The first accepted assignment per unit of the version (ingest keeps one; a loaded population is trusted)."""
+def accepted_assignments(pop: Population, xv: str, allowed: set[str] | None, cutoff: datetime | None = None) -> dict[str, Any]:
+    """The first accepted assignment per unit of the version (ingest keeps one; a loaded population is trusted). D-08: with a
+    ``cutoff`` only assignments with ``assigned_at <= cutoff`` exist for the run."""
     out: dict[str, Any] = {}
     for a in sorted((a for a in pop.assignments if a.experiment_version_id == xv), key=lambda a: (a.assigned_at, a.assignment_id)):
+        if cutoff is not None and a.assigned_at > cutoff:
+            continue
         if allowed is None or a.unit_id in allowed:
             out.setdefault(a.unit_id, a)
     return out
@@ -232,7 +235,7 @@ def experiment(ctx: Ctx, plan: Plan, run_id: str | None = None) -> dict[str, Any
     xv = plan.experiment_version_id
     variants = plan.variants
     z = F(plan.z)
-    accepted = accepted_assignments(pop, xv, ctx.allowed)
+    accepted = accepted_assignments(pop, xv, ctx.allowed, cutoff)
     assigned = {v: [a for a in accepted.values() if a.variant == v] for v in variants}
     n_assigned = {v: len(assigned[v]) for v in variants}
     win = plan.activation_window_days
@@ -276,7 +279,7 @@ def experiment(ctx: Ctx, plan: Plan, run_id: str | None = None) -> dict[str, Any
                  "config_hash": plan.config_hash,
                  "config_hash_matches_plan": hash_ok and run_row is not None and run_row.config_hash == plan.config_hash}
 
-    exposed_ids = {x.assignment_id for x in pop.exposures}
+    exposed_ids = {x.assignment_id for x in pop.exposures if x.exposed_at <= cutoff}  # D-08
     exposed = {v: sum(1 for a in mat[v] if a.assignment_id in exposed_ids) for v in variants}
     n_m_all = sum(n_m.values())
     exposure_block = {"definition": "exposed mature assigned accounts / mature assigned accounts",
@@ -296,7 +299,7 @@ def experiment(ctx: Ctx, plan: Plan, run_id: str | None = None) -> dict[str, Any
 
     rev_by: dict[str, D] = defaultdict(lambda: D(0))
     for s in pop.subscriptions:
-        if s.status in ("active", "ended") and plan.revenue_from <= s.starts_at < plan.revenue_to:
+        if s.status in ("active", "ended") and plan.revenue_from <= s.starts_at < plan.revenue_to and s.starts_at <= cutoff:  # D-08
             rev_by[s.account_id] += s.amount_usd
     revenue = {}
     for v in variants:
@@ -317,7 +320,7 @@ def experiment(ctx: Ctx, plan: Plan, run_id: str | None = None) -> dict[str, Any
                       "interval": {"df": n - 1, "t": q(tc, 6), "low": q(mean - half, 2), "high": q(mean + half, 2)}}
 
     obs_ids = {a.assignment_id: a for a in accepted.values()}
-    obs_ok = [o for o in pop.metric_observations if o.assignment_id in obs_ids]
+    obs_ok = [o for o in pop.metric_observations if o.assignment_id in obs_ids and o.window_end <= cutoff]  # D-08
     obs_match = 0
     for o in obs_ok:
         u = obs_ids[o.assignment_id].unit_id
@@ -406,7 +409,7 @@ def compute(pop: Population, cutoff: datetime, windows: Windows, funnel_def: Fun
 
 
 # ---------------------------------------------------------------------------------------------------- groups and segments
-def group_values(pop: Population, by: str, xv: str | None) -> dict[str, set[str]]:
+def group_values(pop: Population, by: str, xv: str | None, cutoff: datetime | None = None) -> dict[str, set[str]]:
     """Account ids per value of ``by``: plan, segment, timezone, or (variant) the variant of the version's assignment."""
     if by not in GROUPS or by == "none":
         raise DomainError(INVALID_GROUP, f"group_by must be one of {', '.join(GROUPS)}", "group_by")
@@ -414,7 +417,7 @@ def group_values(pop: Population, by: str, xv: str | None) -> dict[str, set[str]
     if by == "variant":
         if xv is None:
             raise DomainError(INVALID_GROUP, "group_by=variant needs an experiment_version_id", "group_by")
-        for a in accepted_assignments(pop, xv, None).values():
+        for a in accepted_assignments(pop, xv, None, cutoff).values():
             out[a.variant].add(a.unit_id)
     else:
         for a in pop.accounts:
@@ -431,7 +434,7 @@ def segment_analysis(pop: Population, cutoff: datetime, plan: Plan, by: str, can
     base = Ctx(pop, cutoff, canon, None)
     alpha = 1 - F(plan.confidence)
     groups = {k: v for k, v in group_values(pop, by, None).items()}
-    tested = [k for k in groups if _has_both_arms(pop, plan, groups[k])]
+    tested = [k for k in groups if _has_both_arms(pop, plan, groups[k], cutoff)]
     k_n = max(len(tested), 1)
     thr = alpha / k_n
     zadj = z_crit(q(1 - thr, 6)) if len(tested) > 0 else None
@@ -439,7 +442,7 @@ def segment_analysis(pop: Population, cutoff: datetime, plan: Plan, by: str, can
     segs = []
     for val in groups:
         ctx = Ctx(pop, cutoff, canon, groups[val])
-        acc = accepted_assignments(pop, plan.experiment_version_id, groups[val])
+        acc = accepted_assignments(pop, plan.experiment_version_id, groups[val], cutoff)
         cells: dict[str, tuple[int, int]] = {}
         for v in plan.variants:
             m = [a for a in acc.values() if a.variant == v and a.unit_id in ctx.signup_at and ctx.mature(a.unit_id, win)]
@@ -471,8 +474,8 @@ def segment_analysis(pop: Population, cutoff: datetime, plan: Plan, by: str, can
             "segments": segs}
 
 
-def _has_both_arms(pop: Population, plan: Plan, accounts: set[str]) -> bool:
-    acc = accepted_assignments(pop, plan.experiment_version_id, accounts)
+def _has_both_arms(pop: Population, plan: Plan, accounts: set[str], cutoff: datetime | None = None) -> bool:
+    acc = accepted_assignments(pop, plan.experiment_version_id, accounts, cutoff)
     return {"control", "treatment"} <= {a.variant for a in acc.values()}
 
 

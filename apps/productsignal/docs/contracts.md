@@ -151,3 +151,29 @@ hair); week-4 retention −4.50 pp with an interval including 0; guardrail −0.
 an unrealistic guardrail gap; v2 enrolment start and bounce-visitor counts were tuned; the INJ-06 candidate window was
 widened. Everything else is reported as drawn. **Domain finding (fixed in D-08):** assignments, exposures and
 subscriptions were not filtered by the cutoff, so an interim run counted rows dated after it.
+
+## D-08 Cutoff rule (2026-10-26, A-046)
+Found by the generator worker (A-044, D-07): assignments, exposures and subscriptions were not filtered by the analysis
+cutoff, so an interim run counted rows dated after it. On the published snapshot at cutoff 2026-05-18 `assigned_units`
+was 400 and the SRM observed counts 200/200 although only 155 accounts had been assigned (77 control, 78 treatment; SRM
+OK, chi-square 0.006452); revenue totals included subscriptions that start later (control 7,710.00 / treatment 6,573.00,
+means 118.62 / 102.70; by the cutoff 5,322.00 / 5,481.00, means 81.88 / 85.64). Events (received by the cutoff), sessions
+and maturity were already cutoff-aware.
+
+**Rule: a run at cutoff C sees only the facts that existed by C**, in the Python domain, in `data/sql/reference_metrics.sql`
+and in the API (`GET /metrics`, C07 check-maturity, C08 analyze-experiment; C09 and C10 recompute through the domain):
+* assignments: `assigned_at <= C` (the unit's first such assignment is its assignment; a unit first assigned after C is not
+  an assigned unit, so it is in neither `assigned_units`, the SRM observed counts, nor any arm);
+* exposures: `exposed_at <= C` (the exposure rate and the exploratory exposed-only block);
+* subscriptions: `starts_at <= C` in addition to the plan's half-open revenue window `[from, to)` (revenue per account);
+* metric observations: `window_end <= C`;
+* the boundary is inclusive (`<=`), as for events received at the cutoff; sessions keep their own `started_at < C`.
+* C07 counts and writes observations for the units assigned by its cutoff only.
+
+**Decisions.** (1) The rule applies to dated facts, not to configuration: the frozen plan, analysis runs and decisions are
+records of what was decided and logged, not measurements of the world, so they are not cut by instant. A run is still
+found by `cutoff_at` and its prior runs by `created_at`; a plan frozen after C does not change a figure computed with it
+(the plan hash and `plan_frozen` report that). (2) `group_by=variant` and the segment analysis use the same cutoff-filtered
+assignments. (3) A later cutoff includes the rows (they are facts that arrived in time), as a disclosed revision like late
+events. (4) Nothing generated changes: the golden cutoff and the published as-of are after every fact, so the golden
+fixtures, both variants and the 706 reference checks are unchanged. Regression tests: `tests/test_review_findings.py`.
