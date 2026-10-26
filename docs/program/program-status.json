@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T16:17:46Z",
+  "updated_at": "2026-10-26T16:19:21Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -76,8 +76,8 @@
       "verified": true,
       "published": true,
       "integrated": true,
-      "last_verified_sha": "a4a4364",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40348560761",
+      "last_verified_sha": "ca3e626",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40357396048",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/supplyscope/",
       "blockers": [],
       "next_task": "confirm supplyscope-ci.yml on ca3e626 and live-check on the manifest commit; then nothing open except deferred extensions (C04, five stub screens)",
