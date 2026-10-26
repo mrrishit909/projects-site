@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T23:32:49Z",
+  "updated_at": "2026-10-26T23:35:20Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1100,6 +1100,17 @@
       "code_sha": "bfe9849",
       "evidence": "apps/productsignal/data/README-generator.md; tests/test_generator.py",
       "ts": "2026-10-26T23:32:49Z"
+    },
+    {
+      "requirement": "P06 Mode A on the generator commit (310 tests incl. 33 generator tests with replay events, postgres:16 service, github-hosted)",
+      "project": "06-productsignal",
+      "status": "verified",
+      "command": "productsignal-ci.yml run 40420419373 job 'Mode A'",
+      "exit_code": 0,
+      "actual": "Mode A success; Mode B failing until the site source exists",
+      "code_sha": "bfe9849",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40420419373",
+      "ts": "2026-10-26T23:35:20Z"
     }
   ]
 }
