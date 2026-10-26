@@ -1,0 +1,58 @@
+{
+  "program": "business-data-lab",
+  "updated_at": "2026-10-26T09:52:16Z",
+  "coordinator": {
+    "session": "session_018qazUm6EuWcx7grXhz8gRg",
+    "environment_kind": "anthropic_cloud",
+    "outer_model_configured": "claude-fable-5-1",
+    "outer_model_last_served": "claude-fable-5-1",
+    "outer_model_evidence": "claude-code-remote get_session: session_context.model and external_metadata.last_served_model, read 2026-10-26",
+    "supervisory_model": "same as outer session (Fable 5.1 is the outer session, so no separate supervisory agent)",
+    "github_identity": "mrrishit909 (github get_me)"
+  },
+  "working_repository": "mrrishit909/projects-site",
+  "working_branch": "business-data-lab (orphan; application source + program docs)",
+  "directive_branch": "claude-business-data-directive-2026-10-26 (read-only source of truth)",
+  "publishing_destination": {
+    "pages_host_repo": "mrrishit909/projects-site",
+    "pages_source": "legacy branch build of unified-portfolio (observed: workflow 'pages build and deployment', event dynamic, head_branch unified-portfolio)",
+    "site_root": "https://mrrishit909.github.io/projects-site/",
+    "project_site_path_pattern": "labs/<slug>/ on unified-portfolio",
+    "rationale": "Repository creation returned 403 from the GitHub integration; bootstrap section 4 says continue on an isolated branch of an authorized repository. projects-site is public and already serves Pages."
+  },
+  "blockers": [
+    {
+      "id": "BLK-001",
+      "scope": "program",
+      "what": "Creating a dedicated business-data-lab repository",
+      "exact_error": "github MCP create_repository: POST https://api.github.com/user/repos: 403 Resource not accessible by integration",
+      "effect": "Monorepo lives on orphan branch business-data-lab of projects-site instead; Pages sites publish under unified-portfolio/labs/<slug>/",
+      "resolution_needed": "Owner grants the Claude GitHub App repository-creation permission, or creates the repo and adds it to the session (optional; not required to proceed)"
+    },
+    {
+      "id": "BLK-002",
+      "scope": "verification",
+      "what": "Fetching https://mrrishit909.github.io/* from this cloud container",
+      "exact_error": "Agent proxy: gateway answered 403 to CONNECT for mrrishit909.github.io:443; WebFetch: getaddrinfo ENOTFOUND",
+      "effect": "Live-URL curl and live screenshots must run on a GitHub-hosted Actions runner and be uploaded as artifacts; local verification uses a localhost server",
+      "resolution_needed": "Add *.github.io to the environment network allowlist (optional)"
+    }
+  ],
+  "projects": {
+    "01-revenue-atlas": {"slug": "revenue-atlas", "stage": "gate-A", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": "T-01-02 golden fixture + independent reference check"},
+    "02-onboard-studio": {"slug": "onboard-studio", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
+    "03-supplyscope": {"slug": "supplyscope", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
+    "04-serviceflow": {"slug": "serviceflow", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
+    "05-invoicebridge": {"slug": "invoicebridge", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
+    "06-productsignal": {"slug": "productsignal", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
+    "07-trustledger": {"slug": "trustledger", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
+    "08-pipeline-observatory": {"slug": "pipeline-observatory", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
+    "09-changeworks": {"slug": "changeworks", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null},
+    "10-retentionlab": {"slug": "retentionlab", "stage": "queued", "built": false, "verified": false, "published": false, "integrated": false, "last_verified_sha": null, "latest_run_url": null, "site_url": null, "blockers": [], "next_task": null}
+  },
+  "RESUME": {
+    "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
+    "next_concrete_task": "T-01-02: write apps/revenue-atlas/tests/fixtures/golden/{inputs.json,expected.json,CALCULATION.md} and apps/revenue-atlas/tests/reference_check.py (stdlib decimal only), run it, record result in verification-ledger.json",
+    "acceptance": "reference_check.py exits 0 reproducing P01-GOLD-01 exactly: net 225.00, cogs 140.00, gross profit 85.00, freight 12.00/3.00, contribution 70.00, after one-unit return contribution 40.00"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "updated_at": "2026-10-26T09:52:16Z",
+  "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
+  "entries": [
+    {"requirement": "PACK-HASH-01", "project": "program", "status": "verified", "command": "git show origin/claude-business-data-directive-2026-10-26:build-directives/business-data-lab/projects/01-revenue-atlas.md | sha256sum", "exit_code": 0, "expected": "b145a4e24d55e4c7e97fd91ebfa0188ef7ef61c6655f019f614d3c6c86e70c80", "actual": "b145a4e24d55e4c7e97fd91ebfa0188ef7ef61c6655f019f614d3c6c86e70c80", "code_sha": "dc462761151c54ca88f1e09698fd7f709c54e72b", "ts": "2026-10-26T09:52:16Z"}
+  ]
+}
