@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T23:15:18Z",
+  "updated_at": "2026-10-26T23:32:49Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -122,7 +122,7 @@
     },
     "06-productsignal": {
       "slug": "productsignal",
-      "stage": "gate-A passed; backend slice committed a3f8f74 (277 tests local); CI Mode A pending; generator A-044 running",
+      "stage": "gate-A passed; backend CI-green Mode A; generator committed bfe9849 (310 tests); cutoff-rule fix A-046 running before the web mirror",
       "built": false,
       "verified": false,
       "published": false,
@@ -131,7 +131,7 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40416593132",
       "site_url": null,
       "blockers": [],
-      "next_task": "T-06-04 (A-044 generator -> web -> publish -> integrate)"
+      "next_task": "A-046 fix -> web worker -> publish -> integrate"
     },
     "07-trustledger": {
       "slug": "trustledger",
@@ -188,7 +188,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 05: confirm invoicebridge-ci.yml on 2dcc460 and live-check; A-045 artifacts hand-back -> verify -> commit. Project 06: A-044 generator hand-back -> verify -> commit -> web worker -> publish -> integrate -> review -> artifacts.",
+    "next_concrete_task": "Project 05: A-045 artifacts hand-back -> verify -> commit. Project 06: A-046 cutoff fix hand-back -> verify -> commit -> web worker -> publish labs/productsignal -> manifest -> live check -> portfolio case study (draft in scratchpad/p06/project.json; tile exists) -> review -> fixes -> artifacts. Then project 07 trustledger (contracts first).",
     "acceptance": "see task-queue.json"
   }
 }

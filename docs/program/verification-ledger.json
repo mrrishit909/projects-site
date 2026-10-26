@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T23:15:18Z",
+  "updated_at": "2026-10-26T23:32:49Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1089,6 +1089,17 @@
       "code_sha": "2dcc460 / portfolio 188e409",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40418131237",
       "ts": "2026-10-26T23:15:18Z"
+    },
+    {
+      "requirement": "P06-WORK-03 generator: determinism (3 PYTHONHASHSEED), size, designed relationships with intervals (activation +9.50 pp [0.000812, 0.186863]; week-4, guardrail and revenue intervals include 0; v1 SRM OK, v2 MISMATCH), twelve injections (seven replay events through the API), SQL reference equals the domain at the as-of and an earlier cutoff",
+      "project": "06-productsignal",
+      "status": "verified",
+      "command": "python data/generate.py (x2); reference_check.py; DATABASE_URL=... pytest -q",
+      "exit_code": 0,
+      "actual": "byte-identical; 3,619,384 bytes; ALL OK (706); 310 passed",
+      "code_sha": "bfe9849",
+      "evidence": "apps/productsignal/data/README-generator.md; tests/test_generator.py",
+      "ts": "2026-10-26T23:32:49Z"
     }
   ]
 }

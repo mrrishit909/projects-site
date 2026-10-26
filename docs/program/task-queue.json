@@ -456,6 +456,17 @@
       ],
       "retries": 0,
       "acceptance": "tests/test_artifacts.py passes; checksums OK"
+    },
+    {
+      "id": "T-06-03b",
+      "project": "06-productsignal",
+      "title": "Cutoff rule fix (assignments/exposures/subscriptions) before the web mirror",
+      "status": "in_progress",
+      "prereqs": [
+        "T-06-03"
+      ],
+      "retries": 0,
+      "acceptance": "interim cutoff counts only facts at or before it in Python, SQL and API; golden unchanged"
     }
   ]
 }
