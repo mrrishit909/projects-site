@@ -1,0 +1,3 @@
+{"entity":"queues","dataset_version":"golden-v1","rows":[
+{"active":true,"calendar_id":"cal-001","priority_policy":"fifo_within_priority","queue_id":"q-001","queue_name":"General support"}
+]}

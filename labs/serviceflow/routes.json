@@ -1,0 +1,16 @@
+{
+  "routes": [
+    "",
+    "overview/",
+    "queues/",
+    "tickets/",
+    "staffing/",
+    "sla/",
+    "simulation/",
+    "compare/",
+    "surveys/",
+    "evidence/",
+    "case-study/"
+  ],
+  "generated_at": "2026-10-26T17:00:38.774Z"
+}

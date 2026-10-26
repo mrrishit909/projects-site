@@ -1,0 +1,1682 @@
+{
+ "produced_by": "domain/serviceflow/simulation.py (Python 3.11 random.Random), run once; the browser re-simulates and compares",
+ "runs": [
+  {
+   "golden": {
+    "events": [
+     {
+      "event_at": "34.4681",
+      "event_type": "service_started",
+      "simulation_event_id": "se-001",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-001"
+     },
+     {
+      "event_at": "47.4796",
+      "event_type": "service_started",
+      "simulation_event_id": "se-002",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-002"
+     },
+     {
+      "event_at": "49.0967",
+      "event_type": "service_started",
+      "simulation_event_id": "se-003",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-003"
+     },
+     {
+      "event_at": "68.4378",
+      "event_type": "service_started",
+      "simulation_event_id": "se-004",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-004"
+     },
+     {
+      "event_at": "140.5176",
+      "event_type": "service_started",
+      "simulation_event_id": "se-005",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-005"
+     },
+     {
+      "event_at": "143.8639",
+      "event_type": "service_started",
+      "simulation_event_id": "se-006",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-006"
+     },
+     {
+      "event_at": "147.3869",
+      "event_type": "service_started",
+      "simulation_event_id": "se-007",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-007"
+     },
+     {
+      "event_at": "166.7815",
+      "event_type": "service_started",
+      "simulation_event_id": "se-008",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-008"
+     },
+     {
+      "event_at": "173.8157",
+      "event_type": "service_started",
+      "simulation_event_id": "se-009",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-009"
+     },
+     {
+      "event_at": "164.0886",
+      "event_type": "service_started",
+      "simulation_event_id": "se-010",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-010"
+     },
+     {
+      "event_at": "180.3008",
+      "event_type": "service_started",
+      "simulation_event_id": "se-011",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-011"
+     },
+     {
+      "event_at": "205.5988",
+      "event_type": "service_started",
+      "simulation_event_id": "se-012",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-012"
+     },
+     {
+      "event_at": "226.0489",
+      "event_type": "service_started",
+      "simulation_event_id": "se-013",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-013"
+     },
+     {
+      "event_at": "243.3403",
+      "event_type": "service_started",
+      "simulation_event_id": "se-014",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-014"
+     },
+     {
+      "event_at": "256.7453",
+      "event_type": "service_started",
+      "simulation_event_id": "se-015",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-015"
+     },
+     {
+      "event_at": "263.6229",
+      "event_type": "service_started",
+      "simulation_event_id": "se-016",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-016"
+     },
+     {
+      "event_at": "309.1200",
+      "event_type": "service_started",
+      "simulation_event_id": "se-017",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-017"
+     },
+     {
+      "event_at": "321.8403",
+      "event_type": "service_started",
+      "simulation_event_id": "se-018",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-018"
+     },
+     {
+      "event_at": "326.0751",
+      "event_type": "service_started",
+      "simulation_event_id": "se-019",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-019"
+     },
+     {
+      "event_at": "384.8738",
+      "event_type": "service_started",
+      "simulation_event_id": "se-020",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-020"
+     },
+     {
+      "event_at": "371.5534",
+      "event_type": "service_started",
+      "simulation_event_id": "se-021",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-021"
+     },
+     {
+      "event_at": "418.4683",
+      "event_type": "service_started",
+      "simulation_event_id": "se-022",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-022"
+     },
+     {
+      "event_at": "423.0996",
+      "event_type": "service_started",
+      "simulation_event_id": "se-023",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-023"
+     },
+     {
+      "event_at": "442.8019",
+      "event_type": "service_started",
+      "simulation_event_id": "se-024",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-024"
+     },
+     {
+      "event_at": "457.6070",
+      "event_type": "service_started",
+      "simulation_event_id": "se-025",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-025"
+     },
+     {
+      "event_at": "476.5751",
+      "event_type": "service_started",
+      "simulation_event_id": "se-026",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-026"
+     },
+     {
+      "event_at": "498.5743",
+      "event_type": "service_started",
+      "simulation_event_id": "se-027",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-027"
+     },
+     {
+      "event_at": "509.4564",
+      "event_type": "service_started",
+      "simulation_event_id": "se-028",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-028"
+     },
+     {
+      "event_at": "554.4748",
+      "event_type": "service_started",
+      "simulation_event_id": "se-029",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-029"
+     },
+     {
+      "event_at": "574.8566",
+      "event_type": "service_started",
+      "simulation_event_id": "se-030",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-030"
+     },
+     {
+      "event_at": "590.3025",
+      "event_type": "service_started",
+      "simulation_event_id": "se-031",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-031"
+     },
+     {
+      "event_at": "622.7068",
+      "event_type": "service_started",
+      "simulation_event_id": "se-032",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-032"
+     },
+     {
+      "event_at": "632.7174",
+      "event_type": "service_started",
+      "simulation_event_id": "se-033",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-033"
+     },
+     {
+      "event_at": "130.6349",
+      "event_type": "resolved",
+      "simulation_event_id": "se-034",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-001"
+     },
+     {
+      "event_at": "110.4811",
+      "event_type": "resolved",
+      "simulation_event_id": "se-035",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-002"
+     },
+     {
+      "event_at": "164.0886",
+      "event_type": "resolved",
+      "simulation_event_id": "se-036",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-003"
+     },
+     {
+      "event_at": "181.6115",
+      "event_type": "resolved",
+      "simulation_event_id": "se-037",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-004"
+     },
+     {
+      "event_at": "173.8157",
+      "event_type": "resolved",
+      "simulation_event_id": "se-038",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-005"
+     },
+     {
+      "event_at": "166.7815",
+      "event_type": "resolved",
+      "simulation_event_id": "se-039",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-006"
+     },
+     {
+      "event_at": "228.8824",
+      "event_type": "resolved",
+      "simulation_event_id": "se-040",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-007"
+     },
+     {
+      "event_at": "188.7697",
+      "event_type": "resolved",
+      "simulation_event_id": "se-041",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-008"
+     },
+     {
+      "event_at": "180.3008",
+      "event_type": "resolved",
+      "simulation_event_id": "se-042",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-009"
+     },
+     {
+      "event_at": "384.8738",
+      "event_type": "resolved",
+      "simulation_event_id": "se-043",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-010"
+     },
+     {
+      "event_at": "309.1200",
+      "event_type": "resolved",
+      "simulation_event_id": "se-044",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-011"
+     },
+     {
+      "event_at": "235.8974",
+      "event_type": "resolved",
+      "simulation_event_id": "se-045",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-012"
+     },
+     {
+      "event_at": "253.7273",
+      "event_type": "resolved",
+      "simulation_event_id": "se-046",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-013"
+     },
+     {
+      "event_at": "418.4683",
+      "event_type": "resolved",
+      "simulation_event_id": "se-047",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-014"
+     },
+     {
+      "event_at": "326.0751",
+      "event_type": "resolved",
+      "simulation_event_id": "se-048",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-015"
+     },
+     {
+      "event_at": "321.8403",
+      "event_type": "resolved",
+      "simulation_event_id": "se-049",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-016"
+     },
+     {
+      "event_at": "457.6070",
+      "event_type": "resolved",
+      "simulation_event_id": "se-050",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-017"
+     },
+     {
+      "event_at": "371.5534",
+      "event_type": "resolved",
+      "simulation_event_id": "se-051",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-018"
+     },
+     {
+      "event_at": "423.0996",
+      "event_type": "resolved",
+      "simulation_event_id": "se-052",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-019"
+     },
+     {
+      "event_at": "520.4550",
+      "event_type": "resolved",
+      "simulation_event_id": "se-053",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-020"
+     },
+     {
+      "event_at": "442.8019",
+      "event_type": "resolved",
+      "simulation_event_id": "se-054",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-021"
+     },
+     {
+      "event_at": "509.4564",
+      "event_type": "resolved",
+      "simulation_event_id": "se-055",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-022"
+     },
+     {
+      "event_at": "681.1362",
+      "event_type": "resolved",
+      "simulation_event_id": "se-056",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-023"
+     },
+     {
+      "event_at": "476.5751",
+      "event_type": "resolved",
+      "simulation_event_id": "se-057",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-024"
+     },
+     {
+      "event_at": "498.5743",
+      "event_type": "resolved",
+      "simulation_event_id": "se-058",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-025"
+     },
+     {
+      "event_at": "572.0976",
+      "event_type": "resolved",
+      "simulation_event_id": "se-059",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-026"
+     },
+     {
+      "event_at": "637.9038",
+      "event_type": "resolved",
+      "simulation_event_id": "se-060",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-027"
+     },
+     {
+      "event_at": "622.7068",
+      "event_type": "resolved",
+      "simulation_event_id": "se-061",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-028"
+     },
+     {
+      "event_at": "590.3025",
+      "event_type": "resolved",
+      "simulation_event_id": "se-062",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-029"
+     },
+     {
+      "event_at": "632.6420",
+      "event_type": "resolved",
+      "simulation_event_id": "se-063",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-030"
+     },
+     {
+      "event_at": "632.0727",
+      "event_type": "resolved",
+      "simulation_event_id": "se-064",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-031"
+     },
+     {
+      "event_at": "667.9537",
+      "event_type": "resolved",
+      "simulation_event_id": "se-065",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-032"
+     },
+     {
+      "event_at": "695.8341",
+      "event_type": "resolved",
+      "simulation_event_id": "se-066",
+      "simulation_id": "sim-001",
+      "ticket_id": "t-033"
+     }
+    ],
+    "final_completion_minute": "695.8341",
+    "mean_wait_minutes": "14.6140",
+    "simulation_id": "sim-001",
+    "waits_minutes": [
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "17.3472",
+     "23.9106",
+     "13.9919",
+     "29.3159",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "26.8727",
+     "33.7657",
+     "22.8971",
+     "28.5894",
+     "12.0029",
+     "27.8470",
+     "31.0387",
+     "26.8337",
+     "27.8844",
+     "16.9238",
+     "35.6664",
+     "27.1724",
+     "0.0000",
+     "0.0000",
+     "10.5212",
+     "11.2237",
+     "0.0000"
+    ]
+   },
+   "seed": 20261026,
+   "simulation_id": "sim-001",
+   "statistics": {
+    "censored_at_horizon": 0,
+    "horizon_minutes": "720.0000",
+    "label": "simulated estimate, not an observed result",
+    "max_wait_minutes": "35.6664",
+    "p90_wait_minutes": "31.0387",
+    "seed": 20261026,
+    "tickets_counted": 29,
+    "tickets_generated": 33,
+    "wait_by_priority": {
+     "P1": {
+      "count": 3,
+      "mean_wait_minutes": "4.6640",
+      "p90_wait_minutes": "13.9919"
+     },
+     "P2": {
+      "count": 5,
+      "mean_wait_minutes": "10.0742",
+      "p90_wait_minutes": "27.8470"
+     },
+     "P3": {
+      "count": 21,
+      "mean_wait_minutes": "17.1163",
+      "p90_wait_minutes": "31.0387"
+     }
+    },
+    "warmup_excluded": 4,
+    "warmup_minutes": "120.0000",
+    "warmup_ticket_ids": [
+     "t-001",
+     "t-002",
+     "t-003",
+     "t-004"
+    ]
+   }
+  },
+  {
+   "golden": {
+    "events": [
+     {
+      "event_at": "34.4681",
+      "event_type": "service_started",
+      "simulation_event_id": "se-001",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-001"
+     },
+     {
+      "event_at": "47.4796",
+      "event_type": "service_started",
+      "simulation_event_id": "se-002",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-002"
+     },
+     {
+      "event_at": "49.0967",
+      "event_type": "service_started",
+      "simulation_event_id": "se-003",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-003"
+     },
+     {
+      "event_at": "68.4378",
+      "event_type": "service_started",
+      "simulation_event_id": "se-004",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-004"
+     },
+     {
+      "event_at": "140.5176",
+      "event_type": "service_started",
+      "simulation_event_id": "se-005",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-005"
+     },
+     {
+      "event_at": "143.8639",
+      "event_type": "service_started",
+      "simulation_event_id": "se-006",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-006"
+     },
+     {
+      "event_at": "147.3869",
+      "event_type": "service_started",
+      "simulation_event_id": "se-007",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-007"
+     },
+     {
+      "event_at": "149.4343",
+      "event_type": "service_started",
+      "simulation_event_id": "se-008",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-008"
+     },
+     {
+      "event_at": "166.7815",
+      "event_type": "service_started",
+      "simulation_event_id": "se-009",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-009"
+     },
+     {
+      "event_at": "164.0886",
+      "event_type": "service_started",
+      "simulation_event_id": "se-010",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-010"
+     },
+     {
+      "event_at": "171.4225",
+      "event_type": "service_started",
+      "simulation_event_id": "se-011",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-011"
+     },
+     {
+      "event_at": "205.5988",
+      "event_type": "service_started",
+      "simulation_event_id": "se-012",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-012"
+     },
+     {
+      "event_at": "226.0489",
+      "event_type": "service_started",
+      "simulation_event_id": "se-013",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-013"
+     },
+     {
+      "event_at": "243.3403",
+      "event_type": "service_started",
+      "simulation_event_id": "se-014",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-014"
+     },
+     {
+      "event_at": "256.7453",
+      "event_type": "service_started",
+      "simulation_event_id": "se-015",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-015"
+     },
+     {
+      "event_at": "263.6229",
+      "event_type": "service_started",
+      "simulation_event_id": "se-016",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-016"
+     },
+     {
+      "event_at": "282.2473",
+      "event_type": "service_started",
+      "simulation_event_id": "se-017",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-017"
+     },
+     {
+      "event_at": "300.2417",
+      "event_type": "service_started",
+      "simulation_event_id": "se-018",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-018"
+     },
+     {
+      "event_at": "321.8403",
+      "event_type": "service_started",
+      "simulation_event_id": "se-019",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-019"
+     },
+     {
+      "event_at": "356.2844",
+      "event_type": "service_started",
+      "simulation_event_id": "se-020",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-020"
+     },
+     {
+      "event_at": "359.5505",
+      "event_type": "service_started",
+      "simulation_event_id": "se-021",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-021"
+     },
+     {
+      "event_at": "390.6213",
+      "event_type": "service_started",
+      "simulation_event_id": "se-022",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-022"
+     },
+     {
+      "event_at": "418.4683",
+      "event_type": "service_started",
+      "simulation_event_id": "se-023",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-023"
+     },
+     {
+      "event_at": "418.8648",
+      "event_type": "service_started",
+      "simulation_event_id": "se-024",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-024"
+     },
+     {
+      "event_at": "430.7343",
+      "event_type": "service_started",
+      "simulation_event_id": "se-025",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-025"
+     },
+     {
+      "event_at": "459.6513",
+      "event_type": "service_started",
+      "simulation_event_id": "se-026",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-026"
+     },
+     {
+      "event_at": "462.9079",
+      "event_type": "service_started",
+      "simulation_event_id": "se-027",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-027"
+     },
+     {
+      "event_at": "482.2840",
+      "event_type": "service_started",
+      "simulation_event_id": "se-028",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-028"
+     },
+     {
+      "event_at": "554.4748",
+      "event_type": "service_started",
+      "simulation_event_id": "se-029",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-029"
+     },
+     {
+      "event_at": "574.8566",
+      "event_type": "service_started",
+      "simulation_event_id": "se-030",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-030"
+     },
+     {
+      "event_at": "579.7813",
+      "event_type": "service_started",
+      "simulation_event_id": "se-031",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-031"
+     },
+     {
+      "event_at": "611.4831",
+      "event_type": "service_started",
+      "simulation_event_id": "se-032",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-032"
+     },
+     {
+      "event_at": "632.7174",
+      "event_type": "service_started",
+      "simulation_event_id": "se-033",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-033"
+     },
+     {
+      "event_at": "130.6349",
+      "event_type": "resolved",
+      "simulation_event_id": "se-034",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-001"
+     },
+     {
+      "event_at": "110.4811",
+      "event_type": "resolved",
+      "simulation_event_id": "se-035",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-002"
+     },
+     {
+      "event_at": "164.0886",
+      "event_type": "resolved",
+      "simulation_event_id": "se-036",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-003"
+     },
+     {
+      "event_at": "181.6115",
+      "event_type": "resolved",
+      "simulation_event_id": "se-037",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-004"
+     },
+     {
+      "event_at": "173.8157",
+      "event_type": "resolved",
+      "simulation_event_id": "se-038",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-005"
+     },
+     {
+      "event_at": "166.7815",
+      "event_type": "resolved",
+      "simulation_event_id": "se-039",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-006"
+     },
+     {
+      "event_at": "228.8824",
+      "event_type": "resolved",
+      "simulation_event_id": "se-040",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-007"
+     },
+     {
+      "event_at": "171.4225",
+      "event_type": "resolved",
+      "simulation_event_id": "se-041",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-008"
+     },
+     {
+      "event_at": "173.2666",
+      "event_type": "resolved",
+      "simulation_event_id": "se-042",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-009"
+     },
+     {
+      "event_at": "384.8738",
+      "event_type": "resolved",
+      "simulation_event_id": "se-043",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-010"
+     },
+     {
+      "event_at": "300.2417",
+      "event_type": "resolved",
+      "simulation_event_id": "se-044",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-011"
+     },
+     {
+      "event_at": "235.8974",
+      "event_type": "resolved",
+      "simulation_event_id": "se-045",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-012"
+     },
+     {
+      "event_at": "253.7273",
+      "event_type": "resolved",
+      "simulation_event_id": "se-046",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-013"
+     },
+     {
+      "event_at": "418.4683",
+      "event_type": "resolved",
+      "simulation_event_id": "se-047",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-014"
+     },
+     {
+      "event_at": "326.0751",
+      "event_type": "resolved",
+      "simulation_event_id": "se-048",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-015"
+     },
+     {
+      "event_at": "321.8403",
+      "event_type": "resolved",
+      "simulation_event_id": "se-049",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-016"
+     },
+     {
+      "event_at": "430.7343",
+      "event_type": "resolved",
+      "simulation_event_id": "se-050",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-017"
+     },
+     {
+      "event_at": "349.9548",
+      "event_type": "resolved",
+      "simulation_event_id": "se-051",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-018"
+     },
+     {
+      "event_at": "418.8648",
+      "event_type": "resolved",
+      "simulation_event_id": "se-052",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-019"
+     },
+     {
+      "event_at": "491.8656",
+      "event_type": "resolved",
+      "simulation_event_id": "se-053",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-020"
+     },
+     {
+      "event_at": "430.7990",
+      "event_type": "resolved",
+      "simulation_event_id": "se-054",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-021"
+     },
+     {
+      "event_at": "481.6094",
+      "event_type": "resolved",
+      "simulation_event_id": "se-055",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-022"
+     },
+     {
+      "event_at": "676.5049",
+      "event_type": "resolved",
+      "simulation_event_id": "se-056",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-023"
+     },
+     {
+      "event_at": "452.6380",
+      "event_type": "resolved",
+      "simulation_event_id": "se-057",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-024"
+     },
+     {
+      "event_at": "471.7016",
+      "event_type": "resolved",
+      "simulation_event_id": "se-058",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-025"
+     },
+     {
+      "event_at": "555.1738",
+      "event_type": "resolved",
+      "simulation_event_id": "se-059",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-026"
+     },
+     {
+      "event_at": "602.2374",
+      "event_type": "resolved",
+      "simulation_event_id": "se-060",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-027"
+     },
+     {
+      "event_at": "595.5344",
+      "event_type": "resolved",
+      "simulation_event_id": "se-061",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-028"
+     },
+     {
+      "event_at": "590.3025",
+      "event_type": "resolved",
+      "simulation_event_id": "se-062",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-029"
+     },
+     {
+      "event_at": "632.6420",
+      "event_type": "resolved",
+      "simulation_event_id": "se-063",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-030"
+     },
+     {
+      "event_at": "621.5515",
+      "event_type": "resolved",
+      "simulation_event_id": "se-064",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-031"
+     },
+     {
+      "event_at": "656.7300",
+      "event_type": "resolved",
+      "simulation_event_id": "se-065",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-032"
+     },
+     {
+      "event_at": "695.8341",
+      "event_type": "resolved",
+      "simulation_event_id": "se-066",
+      "simulation_id": "sim-002",
+      "ticket_id": "t-033"
+     }
+    ],
+    "final_completion_minute": "695.8341",
+    "mean_wait_minutes": "3.8776",
+    "simulation_id": "sim-002",
+    "waits_minutes": [
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "16.8764",
+     "13.9919",
+     "20.4376",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "12.1671",
+     "18.6623",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "26.4074",
+     "2.8966",
+     "1.0117",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000"
+    ]
+   },
+   "seed": 20261026,
+   "simulation_id": "sim-002",
+   "statistics": {
+    "censored_at_horizon": 0,
+    "horizon_minutes": "720.0000",
+    "label": "simulated estimate, not an observed result",
+    "max_wait_minutes": "26.4074",
+    "p90_wait_minutes": "18.6623",
+    "seed": 20261026,
+    "tickets_counted": 29,
+    "tickets_generated": 33,
+    "wait_by_priority": {
+     "P1": {
+      "count": 3,
+      "mean_wait_minutes": "4.6640",
+      "p90_wait_minutes": "13.9919"
+     },
+     "P2": {
+      "count": 5,
+      "mean_wait_minutes": "0.0000",
+      "p90_wait_minutes": "0.0000"
+     },
+     "P3": {
+      "count": 21,
+      "mean_wait_minutes": "4.6885",
+      "p90_wait_minutes": "18.6623"
+     }
+    },
+    "warmup_excluded": 4,
+    "warmup_minutes": "120.0000",
+    "warmup_ticket_ids": [
+     "t-001",
+     "t-002",
+     "t-003",
+     "t-004"
+    ]
+   }
+  },
+  {
+   "golden": {
+    "events": [
+     {
+      "event_at": "28.7541",
+      "event_type": "service_started",
+      "simulation_event_id": "se-001",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-001"
+     },
+     {
+      "event_at": "39.6086",
+      "event_type": "service_started",
+      "simulation_event_id": "se-002",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-002"
+     },
+     {
+      "event_at": "40.9576",
+      "event_type": "service_started",
+      "simulation_event_id": "se-003",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-003"
+     },
+     {
+      "event_at": "57.0925",
+      "event_type": "service_started",
+      "simulation_event_id": "se-004",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-004"
+     },
+     {
+      "event_at": "117.2232",
+      "event_type": "service_started",
+      "simulation_event_id": "se-005",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-005"
+     },
+     {
+      "event_at": "120.0148",
+      "event_type": "service_started",
+      "simulation_event_id": "se-006",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-006"
+     },
+     {
+      "event_at": "124.9209",
+      "event_type": "service_started",
+      "simulation_event_id": "se-007",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-007"
+     },
+     {
+      "event_at": "150.5213",
+      "event_type": "service_started",
+      "simulation_event_id": "se-008",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-008"
+     },
+     {
+      "event_at": "155.9495",
+      "event_type": "service_started",
+      "simulation_event_id": "se-009",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-009"
+     },
+     {
+      "event_at": "142.9324",
+      "event_type": "service_started",
+      "simulation_event_id": "se-010",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-010"
+     },
+     {
+      "event_at": "162.4346",
+      "event_type": "service_started",
+      "simulation_event_id": "se-011",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-011"
+     },
+     {
+      "event_at": "171.5154",
+      "event_type": "service_started",
+      "simulation_event_id": "se-012",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-012"
+     },
+     {
+      "event_at": "188.5753",
+      "event_type": "service_started",
+      "simulation_event_id": "se-013",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-013"
+     },
+     {
+      "event_at": "203.0002",
+      "event_type": "service_started",
+      "simulation_event_id": "se-014",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-014"
+     },
+     {
+      "event_at": "214.1830",
+      "event_type": "service_started",
+      "simulation_event_id": "se-015",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-015"
+     },
+     {
+      "event_at": "219.9205",
+      "event_type": "service_started",
+      "simulation_event_id": "se-016",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-016"
+     },
+     {
+      "event_at": "278.1379",
+      "event_type": "service_started",
+      "simulation_event_id": "se-017",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-017"
+     },
+     {
+      "event_at": "283.5128",
+      "event_type": "service_started",
+      "simulation_event_id": "se-018",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-018"
+     },
+     {
+      "event_at": "291.2538",
+      "event_type": "service_started",
+      "simulation_event_id": "se-019",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-019"
+     },
+     {
+      "event_at": "378.1282",
+      "event_type": "service_started",
+      "simulation_event_id": "se-020",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-020"
+     },
+     {
+      "event_at": "333.2259",
+      "event_type": "service_started",
+      "simulation_event_id": "se-021",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-021"
+     },
+     {
+      "event_at": "363.7176",
+      "event_type": "service_started",
+      "simulation_event_id": "se-022",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-022"
+     },
+     {
+      "event_at": "388.2783",
+      "event_type": "service_started",
+      "simulation_event_id": "se-023",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-023"
+     },
+     {
+      "event_at": "404.4744",
+      "event_type": "service_started",
+      "simulation_event_id": "se-024",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-024"
+     },
+     {
+      "event_at": "426.6249",
+      "event_type": "service_started",
+      "simulation_event_id": "se-025",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-025"
+     },
+     {
+      "event_at": "438.2476",
+      "event_type": "service_started",
+      "simulation_event_id": "se-026",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-026"
+     },
+     {
+      "event_at": "454.7057",
+      "event_type": "service_started",
+      "simulation_event_id": "se-027",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-027"
+     },
+     {
+      "event_at": "467.5922",
+      "event_type": "service_started",
+      "simulation_event_id": "se-028",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-028"
+     },
+     {
+      "event_at": "555.4796",
+      "event_type": "service_started",
+      "simulation_event_id": "se-029",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-029"
+     },
+     {
+      "event_at": "580.8426",
+      "event_type": "service_started",
+      "simulation_event_id": "se-030",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-030"
+     },
+     {
+      "event_at": "513.7094",
+      "event_type": "service_started",
+      "simulation_event_id": "se-031",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-031"
+     },
+     {
+      "event_at": "591.3073",
+      "event_type": "service_started",
+      "simulation_event_id": "se-032",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-032"
+     },
+     {
+      "event_at": "533.7701",
+      "event_type": "service_started",
+      "simulation_event_id": "se-033",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-033"
+     },
+     {
+      "event_at": "608.7005",
+      "event_type": "service_started",
+      "simulation_event_id": "se-034",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-034"
+     },
+     {
+      "event_at": "630.1779",
+      "event_type": "service_started",
+      "simulation_event_id": "se-035",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-035"
+     },
+     {
+      "event_at": "639.4144",
+      "event_type": "service_started",
+      "simulation_event_id": "se-036",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-036"
+     },
+     {
+      "event_at": "657.2617",
+      "event_type": "service_started",
+      "simulation_event_id": "se-037",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-037"
+     },
+     {
+      "event_at": "124.9209",
+      "event_type": "resolved",
+      "simulation_event_id": "se-038",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-001"
+     },
+     {
+      "event_at": "102.6101",
+      "event_type": "resolved",
+      "simulation_event_id": "se-039",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-002"
+     },
+     {
+      "event_at": "155.9495",
+      "event_type": "resolved",
+      "simulation_event_id": "se-040",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-003"
+     },
+     {
+      "event_at": "170.2662",
+      "event_type": "resolved",
+      "simulation_event_id": "se-041",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-004"
+     },
+     {
+      "event_at": "150.5213",
+      "event_type": "resolved",
+      "simulation_event_id": "se-042",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-005"
+     },
+     {
+      "event_at": "142.9324",
+      "event_type": "resolved",
+      "simulation_event_id": "se-043",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-006"
+     },
+     {
+      "event_at": "206.4164",
+      "event_type": "resolved",
+      "simulation_event_id": "se-044",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-007"
+     },
+     {
+      "event_at": "172.5095",
+      "event_type": "resolved",
+      "simulation_event_id": "se-045",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-008"
+     },
+     {
+      "event_at": "162.4346",
+      "event_type": "resolved",
+      "simulation_event_id": "se-046",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-009"
+     },
+     {
+      "event_at": "363.7176",
+      "event_type": "resolved",
+      "simulation_event_id": "se-047",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-010"
+     },
+     {
+      "event_at": "291.2538",
+      "event_type": "resolved",
+      "simulation_event_id": "se-048",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-011"
+     },
+     {
+      "event_at": "201.8140",
+      "event_type": "resolved",
+      "simulation_event_id": "se-049",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-012"
+     },
+     {
+      "event_at": "216.2537",
+      "event_type": "resolved",
+      "simulation_event_id": "se-050",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-013"
+     },
+     {
+      "event_at": "378.1282",
+      "event_type": "resolved",
+      "simulation_event_id": "se-051",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-014"
+     },
+     {
+      "event_at": "283.5128",
+      "event_type": "resolved",
+      "simulation_event_id": "se-052",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-015"
+     },
+     {
+      "event_at": "278.1379",
+      "event_type": "resolved",
+      "simulation_event_id": "se-053",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-016"
+     },
+     {
+      "event_at": "426.6249",
+      "event_type": "resolved",
+      "simulation_event_id": "se-054",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-017"
+     },
+     {
+      "event_at": "333.2259",
+      "event_type": "resolved",
+      "simulation_event_id": "se-055",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-018"
+     },
+     {
+      "event_at": "388.2783",
+      "event_type": "resolved",
+      "simulation_event_id": "se-056",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-019"
+     },
+     {
+      "event_at": "513.7094",
+      "event_type": "resolved",
+      "simulation_event_id": "se-057",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-020"
+     },
+     {
+      "event_at": "404.4744",
+      "event_type": "resolved",
+      "simulation_event_id": "se-058",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-021"
+     },
+     {
+      "event_at": "454.7057",
+      "event_type": "resolved",
+      "simulation_event_id": "se-059",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-022"
+     },
+     {
+      "event_at": "646.3149",
+      "event_type": "resolved",
+      "simulation_event_id": "se-060",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-023"
+     },
+     {
+      "event_at": "438.2476",
+      "event_type": "resolved",
+      "simulation_event_id": "se-061",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-024"
+     },
+     {
+      "event_at": "467.5922",
+      "event_type": "resolved",
+      "simulation_event_id": "se-062",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-025"
+     },
+     {
+      "event_at": "533.7701",
+      "event_type": "resolved",
+      "simulation_event_id": "se-063",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-026"
+     },
+     {
+      "event_at": "594.0352",
+      "event_type": "resolved",
+      "simulation_event_id": "se-064",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-027"
+     },
+     {
+      "event_at": "580.8426",
+      "event_type": "resolved",
+      "simulation_event_id": "se-065",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-028"
+     },
+     {
+      "event_at": "591.3073",
+      "event_type": "resolved",
+      "simulation_event_id": "se-066",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-029"
+     },
+     {
+      "event_at": "638.6280",
+      "event_type": "resolved",
+      "simulation_event_id": "se-067",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-030"
+     },
+     {
+      "event_at": "555.4796",
+      "event_type": "resolved",
+      "simulation_event_id": "se-068",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-031"
+     },
+     {
+      "event_at": "636.5542",
+      "event_type": "resolved",
+      "simulation_event_id": "se-069",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-032"
+     },
+     {
+      "event_at": "596.8868",
+      "event_type": "resolved",
+      "simulation_event_id": "se-070",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-033"
+     },
+     {
+      "event_at": "758.3049",
+      "event_type": "resolved",
+      "simulation_event_id": "se-071",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-034"
+     },
+     {
+      "event_at": "634.0705",
+      "event_type": "resolved",
+      "simulation_event_id": "se-072",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-035"
+     },
+     {
+      "event_at": "655.5937",
+      "event_type": "resolved",
+      "simulation_event_id": "se-073",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-036"
+     },
+     {
+      "event_at": "676.5995",
+      "event_type": "resolved",
+      "simulation_event_id": "se-074",
+      "simulation_id": "sim-003",
+      "ticket_id": "t-037"
+     }
+    ],
+    "final_completion_minute": "758.3049",
+    "mean_wait_minutes": "33.6237",
+    "simulation_id": "sim-003",
+    "waits_minutes": [
+     "0.0000",
+     "1.9671",
+     "25.8595",
+     "30.8950",
+     "17.7181",
+     "36.4794",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "42.6804",
+     "43.1940",
+     "38.3354",
+     "80.9071",
+     "33.2802",
+     "37.8519",
+     "61.2116",
+     "57.4637",
+     "68.1400",
+     "54.7954",
+     "68.5368",
+     "65.2593",
+     "92.9234",
+     "101.2834",
+     "30.0419",
+     "81.1934",
+     "5.9421",
+     "0.0000",
+     "0.0000",
+     "0.0000",
+     "0.0000"
+    ]
+   },
+   "seed": 20261026,
+   "simulation_id": "sim-003",
+   "statistics": {
+    "censored_at_horizon": 0,
+    "horizon_minutes": "720.0000",
+    "label": "simulated estimate, not an observed result",
+    "max_wait_minutes": "101.2834",
+    "p90_wait_minutes": "80.9071",
+    "seed": 20261026,
+    "tickets_counted": 32,
+    "tickets_generated": 37,
+    "wait_by_priority": {
+     "P1": {
+      "count": 4,
+      "mean_wait_minutes": "5.9151",
+      "p90_wait_minutes": "17.7181"
+     },
+     "P2": {
+      "count": 7,
+      "mean_wait_minutes": "14.7344",
+      "p90_wait_minutes": "37.8519"
+     },
+     "P3": {
+      "count": 21,
+      "mean_wait_minutes": "45.1980",
+      "p90_wait_minutes": "81.1934"
+     }
+    },
+    "warmup_excluded": 5,
+    "warmup_minutes": "120.0000",
+    "warmup_ticket_ids": [
+     "t-001",
+     "t-002",
+     "t-003",
+     "t-004",
+     "t-005"
+    ]
+   }
+  }
+ ]
+}

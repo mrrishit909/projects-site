@@ -1,0 +1,5 @@
+{"entity":"tickets","dataset_version":"golden-v1","rows":[
+{"channel":"email","created_at":"2026-07-06T09:00:00Z","customer_id":"c-001","priority":"P2","queue_id":"q-001","ticket_id":"t-001"},
+{"channel":"email","created_at":"2026-07-06T09:00:00Z","customer_id":"c-002","priority":"P2","queue_id":"q-001","ticket_id":"t-002"},
+{"channel":"email","created_at":"2026-07-06T09:00:00Z","customer_id":"c-003","priority":"P2","queue_id":"q-001","ticket_id":"t-003"}
+]}

@@ -1,0 +1,40 @@
+{
+  "abandonable_channels": [
+    "chat",
+    "phone"
+  ],
+  "backlog_cutoffs": [
+    "2026-07-06T09:05:00Z",
+    "2026-07-06T09:25:00Z",
+    "2026-07-06T10:00:00Z"
+  ],
+  "contract_version": "v1",
+  "dataset_hash": "3c2d5a65209997f50728f54405ddc539dbfd24a5b211a9f153b98cae35cfed4c",
+  "dataset_version": "golden-v1",
+  "designed_relationships": [],
+  "expected": "expected.json",
+  "fixture_id": "serviceflow-golden-v1",
+  "generated_at": "2026-10-26T00:00:00Z",
+  "generator": {
+    "name": "tests/fixtures/golden (hand-derived, no generator)",
+    "parameters": {},
+    "seed": 0
+  },
+  "row_counts": {
+    "agent_skills": 1,
+    "agents": 1,
+    "customers": 3,
+    "queue_skills": 1,
+    "queues": 1,
+    "shift_breaks": 0,
+    "shifts": 1,
+    "simulation_runs": 1,
+    "skills": 1,
+    "sla_policies": 1,
+    "surveys": 2,
+    "ticket_events": 18,
+    "tickets": 3
+  },
+  "window_end": "2026-07-06T10:00:00Z",
+  "window_start": "2026-07-06T09:00:00Z"
+}

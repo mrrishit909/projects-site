@@ -1,0 +1,5 @@
+{"entity":"customers","dataset_version":"golden-v1","rows":[
+{"created_at":"2026-01-01T00:00:00Z","customer_id":"c-001","segment":"smb","synthetic":true,"timezone":"America/New_York"},
+{"created_at":"2026-01-01T00:00:00Z","customer_id":"c-002","segment":"smb","synthetic":true,"timezone":"America/New_York"},
+{"created_at":"2026-01-01T00:00:00Z","customer_id":"c-003","segment":"smb","synthetic":true,"timezone":"America/New_York"}
+]}

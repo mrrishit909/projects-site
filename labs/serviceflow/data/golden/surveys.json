@@ -1,0 +1,4 @@
+{"entity":"surveys","dataset_version":"golden-v1","rows":[
+{"invited_at":"2026-07-06T09:11:00Z","response_at":null,"score":null,"survey_id":"sv-001","ticket_id":"t-001"},
+{"invited_at":"2026-07-06T09:31:00Z","response_at":"2026-07-06T09:40:00Z","score":5,"survey_id":"sv-002","ticket_id":"t-003"}
+]}

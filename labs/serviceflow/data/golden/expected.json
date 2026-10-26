@@ -1,0 +1,156 @@
+{
+  "contract_version": 1,
+  "ingest": {
+    "counts": {
+      "customers": {
+        "accepted": 3,
+        "rejected": 0
+      },
+      "queues": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "tickets": {
+        "accepted": 3,
+        "rejected": 0
+      },
+      "ticket_events": {
+        "accepted": 18,
+        "rejected": 0
+      },
+      "agents": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "skills": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "agent_skills": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "queue_skills": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "shifts": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "sla_policies": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "surveys": {
+        "accepted": 2,
+        "rejected": 0
+      },
+      "simulation_runs": {
+        "accepted": 1,
+        "rejected": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "metrics": {
+    "arrival_count": 3,
+    "completion_count": 3,
+    "arrival_rate_per_hour": "3.000000",
+    "completion_rate_per_hour": "3.000000",
+    "backlog": {
+      "2026-07-06T09:05:00Z": 3,
+      "2026-07-06T09:25:00Z": 1,
+      "2026-07-06T10:00:00Z": 0
+    },
+    "first_response_minutes": {
+      "t-001": "0.0000",
+      "t-002": "10.0000",
+      "t-003": "20.0000"
+    },
+    "mean_first_response_minutes": "10.0000",
+    "p90_first_response_minutes": "20.0000",
+    "wait_minutes": {
+      "t-001": "0.0000",
+      "t-002": "10.0000",
+      "t-003": "20.0000"
+    },
+    "mean_wait_minutes": "10.0000",
+    "resolution_minutes": {
+      "t-001": "10.0000",
+      "t-002": "20.0000",
+      "t-003": "30.0000"
+    },
+    "mean_resolution_minutes": "20.0000",
+    "handling_minutes_total": "30.0000",
+    "sla_first_response_compliance": "0.666667",
+    "sla_first_response_within": 2,
+    "sla_first_response_eligible": 3,
+    "sla_resolution_compliance": "1.000000",
+    "sla_resolution_within": 3,
+    "sla_resolution_eligible": 3,
+    "open_overdue_at_cutoff": 0,
+    "staffed_available_minutes": "60.0000",
+    "staffed_shift_minutes_whole": "450.0000",
+    "agent_occupancy": "0.500000",
+    "abandonment_rate": null,
+    "csat": "1.000000",
+    "survey_invitation_rate": "0.666667",
+    "survey_response_rate": "0.500000",
+    "empty_population": false
+  },
+  "simulation": {
+    "simulation_id": "sim-001",
+    "waits_minutes": [
+      "0.0000",
+      "10.0000",
+      "20.0000"
+    ],
+    "mean_wait_minutes": "10.0000",
+    "final_completion_minute": "30.0000",
+    "events": [
+      {
+        "simulation_event_id": "se-001",
+        "simulation_id": "sim-001",
+        "ticket_id": "t-001",
+        "event_type": "service_started",
+        "event_at": "0.0000"
+      },
+      {
+        "simulation_event_id": "se-002",
+        "simulation_id": "sim-001",
+        "ticket_id": "t-002",
+        "event_type": "service_started",
+        "event_at": "10.0000"
+      },
+      {
+        "simulation_event_id": "se-003",
+        "simulation_id": "sim-001",
+        "ticket_id": "t-003",
+        "event_type": "service_started",
+        "event_at": "20.0000"
+      },
+      {
+        "simulation_event_id": "se-004",
+        "simulation_id": "sim-001",
+        "ticket_id": "t-001",
+        "event_type": "resolved",
+        "event_at": "10.0000"
+      },
+      {
+        "simulation_event_id": "se-005",
+        "simulation_id": "sim-001",
+        "ticket_id": "t-002",
+        "event_type": "resolved",
+        "event_at": "20.0000"
+      },
+      {
+        "simulation_event_id": "se-006",
+        "simulation_id": "sim-001",
+        "ticket_id": "t-003",
+        "event_type": "resolved",
+        "event_at": "30.0000"
+      }
+    ]
+  }
+}

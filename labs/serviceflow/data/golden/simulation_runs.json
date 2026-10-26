@@ -1,0 +1,3 @@
+{"entity":"simulation_runs","dataset_version":"golden-v1","rows":[
+{"config":{"agents":1,"arrivals":[0,0,0],"discipline":"fifo","service_minutes":10},"horizon_minutes":60,"policy_version":"fifo-v1","seed":1,"simulation_id":"sim-001","warmup_minutes":0}
+]}
