@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T11:22:52Z",
+  "updated_at": "2026-10-26T11:25:31Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -41,13 +41,13 @@
   "projects": {
     "01-revenue-atlas": {
       "slug": "revenue-atlas",
-      "stage": "integrated (case study live, links verified from hosted runner); defect fix A-008 in progress; republish pending",
+      "stage": "published, live-verified, integrated; CI fully green on hosted runner; artifacts (A-010) and reviewer fixes (T-01-13) pending",
       "built": true,
       "verified": true,
       "published": true,
       "integrated": true,
-      "last_verified_sha": "a9d7d21",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40313628128",
+      "last_verified_sha": "fdd0789",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40314532665",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/revenue-atlas/",
       "blockers": [],
       "next_task": "after A-008: rebuild web, publish-site.sh, push unified-portfolio, rerun live-check (both jobs green), then reviewer disproof pass",

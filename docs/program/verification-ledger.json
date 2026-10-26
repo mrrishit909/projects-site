@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:22:52Z",
+  "updated_at": "2026-10-26T11:25:31Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -334,6 +334,18 @@
       "command": "scratch scripts under scratchpad/review/",
       "code_sha": "a9d7d21",
       "ts": "2026-10-26T11:22:52Z"
+    },
+    {
+      "requirement": "P01-UI R18/R23 Mode B on hosted runner: build, 175 TS golden checks, 24 Playwright tests, screenshots 360/768/1280/1920 + zoom uploaded",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "revenue-atlas-ci.yml jobs Mode A and Mode B",
+      "exit_code": 0,
+      "expected": "both jobs success; screenshot artifact present",
+      "actual": "success; artifacts: 12646636098 revenue-atlas-mode-a-fdd07891b5c124fb3561232d874a43dff255b306 3530 2026-11-25T11:23:23Z; 12646527115 revenue-atlas-mode-b-fdd07891b5c124fb3561232d874a43dff255b306 6812947 2026-11-25T11:24:58Z",
+      "code_sha": "fdd0789",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40314532665",
+      "ts": "2026-10-26T11:25:31Z"
     }
   ]
 }
