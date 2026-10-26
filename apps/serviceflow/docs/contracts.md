@@ -193,8 +193,9 @@ Every item names its finding. Where a finding allowed a choice, the choice is he
 published run on seeds `seed + r` with the mean of the replication means and a 95 % Student-t interval, and the paired
 difference sim-002 (plus one agent) minus sim-001 (baseline) on the same 50 seeds; the browser recomputes all of it and the
 golden check compares. sim-003 does NOT share the demand path, by design (another arrival intensity); the reference states
-it. The model gives the technical queue five dedicated servers; in the snapshot four of the five technical agents on shift at
-the first training Monday bind also hold another queue's skill, and about 29 % of the handling minutes started in the Monday
+it. The model gives the technical queue five dedicated servers; in the snapshot three of the five technical agents on shift at
+the first training Monday bind (2026-07-06 10:00Z) also hold another queue's skill (four of the five from 2026-08-03,
+when agt-005's onboarding skill takes effect; A-033 finding), and about 29 % of the handling minutes started in the Monday
 09:00-11:00 bind of the training weeks by technical-skilled agents went to other queues (`docs/uat-evidence.md`). Censored
 tickets (still waiting at the horizon) are EXCLUDED from the wait statistics and counted separately. The Student-t table now
 runs to 50 degrees of freedom (2.010 at 49, which 50 replications use) and uses 2.000 beyond; it used 1.96 above 30, which made a 50-replication

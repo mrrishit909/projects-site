@@ -1,0 +1,19 @@
+agent_id,agent_name,timezone,employment_type,active,max_concurrent
+agt-001,Ines Brandt,Europe/Berlin,full_time,1,1
+agt-002,Jonas Keller,Europe/Berlin,full_time,1,1
+agt-003,Mara Vogel,Europe/Berlin,full_time,1,1
+agt-004,Tilo Neumann,Europe/Berlin,full_time,1,1
+agt-005,Lena Fischer,Europe/Berlin,full_time,1,1
+agt-006,Pavel Novak,Europe/Berlin,full_time,1,1
+agt-007,Greta Lund,Europe/Berlin,part_time,1,1
+agt-008,Omar Haddad,Europe/Berlin,full_time,1,1
+agt-009,Sofia Ricci,Europe/Berlin,full_time,1,1
+agt-010,Camila Rojas,America/Santiago,full_time,1,1
+agt-011,Tomas Araya,America/Santiago,full_time,1,1
+agt-012,Valentina Soto,America/Santiago,full_time,1,1
+agt-013,Diego Pinto,America/Santiago,part_time,1,1
+agt-014,Javiera Munoz,America/Santiago,full_time,1,1
+agt-015,Matias Vega,America/Santiago,full_time,1,1
+agt-016,Fernanda Diaz,America/Santiago,full_time,1,1
+agt-017,Nicolas Reyes,America/Santiago,contractor,1,1
+agt-018,Paula Campos,America/Santiago,full_time,1,1

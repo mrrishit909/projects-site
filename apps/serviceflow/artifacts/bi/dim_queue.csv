@@ -1,0 +1,4 @@
+queue_id,queue_name,priority_policy,calendar_id,active
+q-001,Billing,fifo_within_priority,cal-001,1
+q-002,Technical,fifo_within_priority,cal-001,1
+q-003,Onboarding,fifo,cal-001,1

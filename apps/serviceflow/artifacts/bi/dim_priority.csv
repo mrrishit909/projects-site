@@ -1,0 +1,4 @@
+priority,sla_first_response_minutes,sla_resolution_minutes,calendar_id
+P1,15,240,cal-001
+P2,60,1440,cal-001
+P3,240,4320,cal-001

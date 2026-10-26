@@ -1,0 +1,4 @@
+simulation_id,policy_version,agents,arrival_rate_per_hour,service_minutes,discipline,warmup_minutes,horizon_minutes,seed,label
+sim-001,baseline-v1,5,3.12,69.1,fifo_within_priority,120,720,20261026,simulated
+sim-002,plus-one-agent-v1,6,3.12,69.1,fifo_within_priority,120,720,20261026,simulated
+sim-003,holdout-intensity-v1,5,3.74,69.1,fifo_within_priority,120,720,20261026,simulated

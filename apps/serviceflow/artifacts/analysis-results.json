@@ -1,0 +1,3612 @@
+{
+ "01_arrivals_by_hour_of_week": [
+  {
+   "note": "top 1",
+   "block_utc": "Mon 09-11",
+   "arrivals": 238,
+   "arrivals_training": 144,
+   "arrivals_holdout": 94,
+   "staffed_hours": "179.50",
+   "arrivals_per_staffed_hour": "1.3259",
+   "blocks_ranked": 124
+  },
+  {
+   "note": "top 2",
+   "block_utc": "Mon 10-12",
+   "arrivals": 183,
+   "arrivals_training": 108,
+   "arrivals_holdout": 75,
+   "staffed_hours": "187.94",
+   "arrivals_per_staffed_hour": "0.9737",
+   "blocks_ranked": 124
+  },
+  {
+   "note": "top 3",
+   "block_utc": "Mon 08-10",
+   "arrivals": 151,
+   "arrivals_training": 98,
+   "arrivals_holdout": 53,
+   "staffed_hours": "157.00",
+   "arrivals_per_staffed_hour": "0.9618",
+   "blocks_ranked": 124
+  },
+  {
+   "note": "top 4",
+   "block_utc": "Tue 14-16",
+   "arrivals": 139,
+   "arrivals_training": 93,
+   "arrivals_holdout": 46,
+   "staffed_hours": "152.90",
+   "arrivals_per_staffed_hour": "0.9091",
+   "blocks_ranked": 124
+  },
+  {
+   "note": "top 5",
+   "block_utc": "Mon 13-15",
+   "arrivals": 142,
+   "arrivals_training": 88,
+   "arrivals_holdout": 54,
+   "staffed_hours": "157.50",
+   "arrivals_per_staffed_hour": "0.9016",
+   "blocks_ranked": 124
+  },
+  {
+   "note": "top 6",
+   "block_utc": "Thu 14-16",
+   "arrivals": 129,
+   "arrivals_training": 77,
+   "arrivals_holdout": 52,
+   "staffed_hours": "145.25",
+   "arrivals_per_staffed_hour": "0.8881",
+   "blocks_ranked": 124
+  },
+  {
+   "note": "median of the blocks",
+   "block_utc": "(mean of the two middle blocks)",
+   "arrivals": null,
+   "arrivals_training": null,
+   "arrivals_holdout": null,
+   "staffed_hours": null,
+   "arrivals_per_staffed_hour": "0.4292",
+   "blocks_ranked": 124
+  },
+  {
+   "note": "lowest block",
+   "block_utc": "Sun 00-02",
+   "arrivals": 0,
+   "arrivals_training": 0,
+   "arrivals_holdout": 0,
+   "staffed_hours": "44.98",
+   "arrivals_per_staffed_hour": "0.0000",
+   "blocks_ranked": 124
+  }
+ ],
+ "02_wait_and_response_distributions__first_response_and_wait": [
+  {
+   "queue_id": "q-001",
+   "priority": "P1",
+   "arrivals": 45,
+   "with_human_reply": 44,
+   "mean_first_response_min": "9.1602",
+   "p90_first_response_min": "26.5833",
+   "served": 44,
+   "mean_wait_min": "6.8803",
+   "p90_wait_min": "22.6000"
+  },
+  {
+   "queue_id": "q-001",
+   "priority": "P2",
+   "arrivals": 431,
+   "with_human_reply": 419,
+   "mean_first_response_min": "21.7240",
+   "p90_first_response_min": "24.7500",
+   "served": 419,
+   "mean_wait_min": "19.2497",
+   "p90_wait_min": "23.5500"
+  },
+  {
+   "queue_id": "q-001",
+   "priority": "P3",
+   "arrivals": 846,
+   "with_human_reply": 801,
+   "mean_first_response_min": "18.0483",
+   "p90_first_response_min": "41.0333",
+   "served": 801,
+   "mean_wait_min": "15.5235",
+   "p90_wait_min": "37.9833"
+  },
+  {
+   "queue_id": "q-001",
+   "priority": "ALL",
+   "arrivals": 1322,
+   "with_human_reply": 1264,
+   "mean_first_response_min": "18.9573",
+   "p90_first_response_min": "34.6000",
+   "served": 1264,
+   "mean_wait_min": "16.4578",
+   "p90_wait_min": "32.0833"
+  },
+  {
+   "queue_id": "q-002",
+   "priority": "P1",
+   "arrivals": 148,
+   "with_human_reply": 142,
+   "mean_first_response_min": "22.8731",
+   "p90_first_response_min": "25.6000",
+   "served": 142,
+   "mean_wait_min": "20.4291",
+   "p90_wait_min": "23.1167"
+  },
+  {
+   "queue_id": "q-002",
+   "priority": "P2",
+   "arrivals": 586,
+   "with_human_reply": 545,
+   "mean_first_response_min": "38.2414",
+   "p90_first_response_min": "57.5833",
+   "served": 545,
+   "mean_wait_min": "35.7298",
+   "p90_wait_min": "55.6167"
+  },
+  {
+   "queue_id": "q-002",
+   "priority": "P3",
+   "arrivals": 809,
+   "with_human_reply": 747,
+   "mean_first_response_min": "51.9017",
+   "p90_first_response_min": "87.1167",
+   "served": 747,
+   "mean_wait_min": "49.4389",
+   "p90_wait_min": "85.1333"
+  },
+  {
+   "queue_id": "q-002",
+   "priority": "ALL",
+   "arrivals": 1543,
+   "with_human_reply": 1434,
+   "mean_first_response_min": "43.8355",
+   "p90_first_response_min": "68.4500",
+   "served": 1434,
+   "mean_wait_min": "41.3560",
+   "p90_wait_min": "66.2333"
+  },
+  {
+   "queue_id": "q-003",
+   "priority": "P1",
+   "arrivals": 43,
+   "with_human_reply": 41,
+   "mean_first_response_min": "12.4260",
+   "p90_first_response_min": "27.3000",
+   "served": 41,
+   "mean_wait_min": "9.9244",
+   "p90_wait_min": "23.9500"
+  },
+  {
+   "queue_id": "q-003",
+   "priority": "P2",
+   "arrivals": 370,
+   "with_human_reply": 356,
+   "mean_first_response_min": "14.6941",
+   "p90_first_response_min": "29.7667",
+   "served": 356,
+   "mean_wait_min": "12.1977",
+   "p90_wait_min": "28.6500"
+  },
+  {
+   "queue_id": "q-003",
+   "priority": "P3",
+   "arrivals": 539,
+   "with_human_reply": 521,
+   "mean_first_response_min": "16.7022",
+   "p90_first_response_min": "24.5167",
+   "served": 521,
+   "mean_wait_min": "14.1611",
+   "p90_wait_min": "22.5167"
+  },
+  {
+   "queue_id": "q-003",
+   "priority": "ALL",
+   "arrivals": 952,
+   "with_human_reply": 918,
+   "mean_first_response_min": "15.7325",
+   "p90_first_response_min": "26.7500",
+   "served": 918,
+   "mean_wait_min": "13.2105",
+   "p90_wait_min": "23.6000"
+  },
+  {
+   "queue_id": "ALL",
+   "priority": "P1",
+   "arrivals": 236,
+   "with_human_reply": 227,
+   "mean_first_response_min": "18.3282",
+   "p90_first_response_min": "26.9667",
+   "served": 227,
+   "mean_wait_min": "15.9056",
+   "p90_wait_min": "23.8833"
+  },
+  {
+   "queue_id": "ALL",
+   "priority": "P2",
+   "arrivals": 1387,
+   "with_human_reply": 1320,
+   "mean_first_response_min": "26.6477",
+   "p90_first_response_min": "37.6833",
+   "served": 1320,
+   "mean_wait_min": "24.1521",
+   "p90_wait_min": "35.4333"
+  },
+  {
+   "queue_id": "ALL",
+   "priority": "P3",
+   "arrivals": 2194,
+   "with_human_reply": 2069,
+   "mean_first_response_min": "29.9319",
+   "p90_first_response_min": "50.4833",
+   "served": 2069,
+   "mean_wait_min": "27.4254",
+   "p90_wait_min": "47.9833"
+  },
+  {
+   "queue_id": "ALL",
+   "priority": "ALL",
+   "arrivals": 3817,
+   "with_human_reply": 3616,
+   "mean_first_response_min": "28.0046",
+   "p90_first_response_min": "44.1500",
+   "served": 3616,
+   "mean_wait_min": "25.5073",
+   "p90_wait_min": "41.5167"
+  }
+ ],
+ "02_wait_and_response_distributions__resolution_tail": [
+  {
+   "queue_id": "q-001",
+   "priority": "P1",
+   "completions": 44,
+   "mean_resolution_min": "110.7451",
+   "p90_resolution_min": "109.7000",
+   "p90_over_mean": "0.991"
+  },
+  {
+   "queue_id": "q-001",
+   "priority": "P2",
+   "completions": 417,
+   "mean_resolution_min": "147.2024",
+   "p90_resolution_min": "249.0500",
+   "p90_over_mean": "1.692"
+  },
+  {
+   "queue_id": "q-001",
+   "priority": "P3",
+   "completions": 799,
+   "mean_resolution_min": "115.3849",
+   "p90_resolution_min": "137.3833",
+   "p90_over_mean": "1.191"
+  },
+  {
+   "queue_id": "q-001",
+   "priority": "ALL",
+   "completions": 1260,
+   "mean_resolution_min": "125.7529",
+   "p90_resolution_min": "152.9333",
+   "p90_over_mean": "1.216"
+  },
+  {
+   "queue_id": "q-002",
+   "priority": "P1",
+   "completions": 142,
+   "mean_resolution_min": "247.1852",
+   "p90_resolution_min": "619.4167",
+   "p90_over_mean": "2.506"
+  },
+  {
+   "queue_id": "q-002",
+   "priority": "P2",
+   "completions": 544,
+   "mean_resolution_min": "254.4592",
+   "p90_resolution_min": "621.7000",
+   "p90_over_mean": "2.443"
+  },
+  {
+   "queue_id": "q-002",
+   "priority": "P3",
+   "completions": 747,
+   "mean_resolution_min": "191.1319",
+   "p90_resolution_min": "368.2167",
+   "p90_over_mean": "1.927"
+  },
+  {
+   "queue_id": "q-002",
+   "priority": "ALL",
+   "completions": 1433,
+   "mean_resolution_min": "220.7269",
+   "p90_resolution_min": "531.4500",
+   "p90_over_mean": "2.408"
+  },
+  {
+   "queue_id": "q-003",
+   "priority": "P1",
+   "completions": 41,
+   "mean_resolution_min": "155.9711",
+   "p90_resolution_min": "256.7500",
+   "p90_over_mean": "1.646"
+  },
+  {
+   "queue_id": "q-003",
+   "priority": "P2",
+   "completions": 354,
+   "mean_resolution_min": "132.8001",
+   "p90_resolution_min": "188.4167",
+   "p90_over_mean": "1.419"
+  },
+  {
+   "queue_id": "q-003",
+   "priority": "P3",
+   "completions": 520,
+   "mean_resolution_min": "126.3225",
+   "p90_resolution_min": "173.3500",
+   "p90_over_mean": "1.372"
+  },
+  {
+   "queue_id": "q-003",
+   "priority": "ALL",
+   "completions": 915,
+   "mean_resolution_min": "130.1571",
+   "p90_resolution_min": "188.0500",
+   "p90_over_mean": "1.445"
+  },
+  {
+   "queue_id": "ALL",
+   "priority": "P1",
+   "completions": 227,
+   "mean_resolution_min": "204.2639",
+   "p90_resolution_min": "586.6667",
+   "p90_over_mean": "2.872"
+  },
+  {
+   "queue_id": "ALL",
+   "priority": "P2",
+   "completions": 1315,
+   "mean_resolution_min": "187.6961",
+   "p90_resolution_min": "349.3833",
+   "p90_over_mean": "1.861"
+  },
+  {
+   "queue_id": "ALL",
+   "priority": "P3",
+   "completions": 2066,
+   "mean_resolution_min": "145.5255",
+   "p90_resolution_min": "215.6833",
+   "p90_over_mean": "1.482"
+  },
+  {
+   "queue_id": "ALL",
+   "priority": "ALL",
+   "completions": 3608,
+   "mean_resolution_min": "164.5909",
+   "p90_resolution_min": "294.5833",
+   "p90_over_mean": "1.790"
+  }
+ ],
+ "03_sla_compliance_and_open_overdue__compliance_by_priority_and_window": [
+  {
+   "window_name": "full",
+   "priority": "P1",
+   "arrivals": 236,
+   "first_response_within": 187,
+   "first_response_eligible": 227,
+   "first_response_compliance": "0.823789",
+   "arrivals_without_human_reply": 9,
+   "if_no_reply_counted_as_miss": "0.792373",
+   "resolution_within": 187,
+   "resolution_eligible": 227,
+   "resolution_compliance": "0.823789",
+   "resolution_misses": 40,
+   "misses_that_were_reopened": 18
+  },
+  {
+   "window_name": "full",
+   "priority": "P2",
+   "arrivals": 1387,
+   "first_response_within": 1231,
+   "first_response_eligible": 1320,
+   "first_response_compliance": "0.932576",
+   "arrivals_without_human_reply": 67,
+   "if_no_reply_counted_as_miss": "0.887527",
+   "resolution_within": 1276,
+   "resolution_eligible": 1315,
+   "resolution_compliance": "0.970342",
+   "resolution_misses": 39,
+   "misses_that_were_reopened": 36
+  },
+  {
+   "window_name": "full",
+   "priority": "P3",
+   "arrivals": 2194,
+   "first_response_within": 2019,
+   "first_response_eligible": 2069,
+   "first_response_compliance": "0.975834",
+   "arrivals_without_human_reply": 125,
+   "if_no_reply_counted_as_miss": "0.920237",
+   "resolution_within": 2066,
+   "resolution_eligible": 2066,
+   "resolution_compliance": "1.000000",
+   "resolution_misses": 0,
+   "misses_that_were_reopened": 0
+  },
+  {
+   "window_name": "full",
+   "priority": "ALL",
+   "arrivals": 3817,
+   "first_response_within": 3437,
+   "first_response_eligible": 3616,
+   "first_response_compliance": "0.950498",
+   "arrivals_without_human_reply": 201,
+   "if_no_reply_counted_as_miss": "0.900445",
+   "resolution_within": 3529,
+   "resolution_eligible": 3608,
+   "resolution_compliance": "0.978104",
+   "resolution_misses": 79,
+   "misses_that_were_reopened": 54
+  },
+  {
+   "window_name": "training",
+   "priority": "P1",
+   "arrivals": 135,
+   "first_response_within": 108,
+   "first_response_eligible": 130,
+   "first_response_compliance": "0.830769",
+   "arrivals_without_human_reply": 5,
+   "if_no_reply_counted_as_miss": "0.800000",
+   "resolution_within": 110,
+   "resolution_eligible": 130,
+   "resolution_compliance": "0.846154",
+   "resolution_misses": 20,
+   "misses_that_were_reopened": 10
+  },
+  {
+   "window_name": "training",
+   "priority": "P2",
+   "arrivals": 859,
+   "first_response_within": 765,
+   "first_response_eligible": 817,
+   "first_response_compliance": "0.936353",
+   "arrivals_without_human_reply": 42,
+   "if_no_reply_counted_as_miss": "0.890570",
+   "resolution_within": 791,
+   "resolution_eligible": 813,
+   "resolution_compliance": "0.972940",
+   "resolution_misses": 22,
+   "misses_that_were_reopened": 20
+  },
+  {
+   "window_name": "training",
+   "priority": "P3",
+   "arrivals": 1392,
+   "first_response_within": 1295,
+   "first_response_eligible": 1320,
+   "first_response_compliance": "0.981061",
+   "arrivals_without_human_reply": 72,
+   "if_no_reply_counted_as_miss": "0.930316",
+   "resolution_within": 1317,
+   "resolution_eligible": 1317,
+   "resolution_compliance": "1.000000",
+   "resolution_misses": 0,
+   "misses_that_were_reopened": 0
+  },
+  {
+   "window_name": "training",
+   "priority": "ALL",
+   "arrivals": 2386,
+   "first_response_within": 2168,
+   "first_response_eligible": 2267,
+   "first_response_compliance": "0.956330",
+   "arrivals_without_human_reply": 119,
+   "if_no_reply_counted_as_miss": "0.908634",
+   "resolution_within": 2218,
+   "resolution_eligible": 2260,
+   "resolution_compliance": "0.981416",
+   "resolution_misses": 42,
+   "misses_that_were_reopened": 30
+  },
+  {
+   "window_name": "holdout",
+   "priority": "P1",
+   "arrivals": 101,
+   "first_response_within": 79,
+   "first_response_eligible": 97,
+   "first_response_compliance": "0.814433",
+   "arrivals_without_human_reply": 4,
+   "if_no_reply_counted_as_miss": "0.782178",
+   "resolution_within": 77,
+   "resolution_eligible": 97,
+   "resolution_compliance": "0.793814",
+   "resolution_misses": 20,
+   "misses_that_were_reopened": 8
+  },
+  {
+   "window_name": "holdout",
+   "priority": "P2",
+   "arrivals": 528,
+   "first_response_within": 466,
+   "first_response_eligible": 503,
+   "first_response_compliance": "0.926441",
+   "arrivals_without_human_reply": 25,
+   "if_no_reply_counted_as_miss": "0.882576",
+   "resolution_within": 485,
+   "resolution_eligible": 502,
+   "resolution_compliance": "0.966135",
+   "resolution_misses": 17,
+   "misses_that_were_reopened": 16
+  },
+  {
+   "window_name": "holdout",
+   "priority": "P3",
+   "arrivals": 802,
+   "first_response_within": 724,
+   "first_response_eligible": 749,
+   "first_response_compliance": "0.966622",
+   "arrivals_without_human_reply": 53,
+   "if_no_reply_counted_as_miss": "0.902743",
+   "resolution_within": 749,
+   "resolution_eligible": 749,
+   "resolution_compliance": "1.000000",
+   "resolution_misses": 0,
+   "misses_that_were_reopened": 0
+  },
+  {
+   "window_name": "holdout",
+   "priority": "ALL",
+   "arrivals": 1431,
+   "first_response_within": 1269,
+   "first_response_eligible": 1349,
+   "first_response_compliance": "0.940697",
+   "arrivals_without_human_reply": 82,
+   "if_no_reply_counted_as_miss": "0.886792",
+   "resolution_within": 1311,
+   "resolution_eligible": 1348,
+   "resolution_compliance": "0.972552",
+   "resolution_misses": 37,
+   "misses_that_were_reopened": 24
+  }
+ ],
+ "03_sla_compliance_and_open_overdue__compliance_by_queue_and_priority": [
+  {
+   "queue_id": "q-001",
+   "priority": "P1",
+   "first_response_within": 37,
+   "first_response_eligible": 44,
+   "first_response_compliance": "0.840909",
+   "resolution_within": 42,
+   "resolution_eligible": 44,
+   "resolution_compliance": "0.954545"
+  },
+  {
+   "queue_id": "q-001",
+   "priority": "P2",
+   "first_response_within": 397,
+   "first_response_eligible": 419,
+   "first_response_compliance": "0.947494",
+   "resolution_within": 408,
+   "resolution_eligible": 417,
+   "resolution_compliance": "0.978417"
+  },
+  {
+   "queue_id": "q-001",
+   "priority": "P3",
+   "first_response_within": 794,
+   "first_response_eligible": 801,
+   "first_response_compliance": "0.991261",
+   "resolution_within": 799,
+   "resolution_eligible": 799,
+   "resolution_compliance": "1.000000"
+  },
+  {
+   "queue_id": "q-001",
+   "priority": "ALL",
+   "first_response_within": 1228,
+   "first_response_eligible": 1264,
+   "first_response_compliance": "0.971519",
+   "resolution_within": 1249,
+   "resolution_eligible": 1260,
+   "resolution_compliance": "0.991270"
+  },
+  {
+   "queue_id": "q-002",
+   "priority": "P1",
+   "first_response_within": 117,
+   "first_response_eligible": 142,
+   "first_response_compliance": "0.823944",
+   "resolution_within": 109,
+   "resolution_eligible": 142,
+   "resolution_compliance": "0.767606"
+  },
+  {
+   "queue_id": "q-002",
+   "priority": "P2",
+   "first_response_within": 494,
+   "first_response_eligible": 545,
+   "first_response_compliance": "0.906422",
+   "resolution_within": 519,
+   "resolution_eligible": 544,
+   "resolution_compliance": "0.954044"
+  },
+  {
+   "queue_id": "q-002",
+   "priority": "P3",
+   "first_response_within": 713,
+   "first_response_eligible": 747,
+   "first_response_compliance": "0.954485",
+   "resolution_within": 747,
+   "resolution_eligible": 747,
+   "resolution_compliance": "1.000000"
+  },
+  {
+   "queue_id": "q-002",
+   "priority": "ALL",
+   "first_response_within": 1324,
+   "first_response_eligible": 1434,
+   "first_response_compliance": "0.923291",
+   "resolution_within": 1375,
+   "resolution_eligible": 1433,
+   "resolution_compliance": "0.959525"
+  },
+  {
+   "queue_id": "q-003",
+   "priority": "P1",
+   "first_response_within": 33,
+   "first_response_eligible": 41,
+   "first_response_compliance": "0.804878",
+   "resolution_within": 36,
+   "resolution_eligible": 41,
+   "resolution_compliance": "0.878049"
+  },
+  {
+   "queue_id": "q-003",
+   "priority": "P2",
+   "first_response_within": 340,
+   "first_response_eligible": 356,
+   "first_response_compliance": "0.955056",
+   "resolution_within": 349,
+   "resolution_eligible": 354,
+   "resolution_compliance": "0.985876"
+  },
+  {
+   "queue_id": "q-003",
+   "priority": "P3",
+   "first_response_within": 512,
+   "first_response_eligible": 521,
+   "first_response_compliance": "0.982726",
+   "resolution_within": 520,
+   "resolution_eligible": 520,
+   "resolution_compliance": "1.000000"
+  },
+  {
+   "queue_id": "q-003",
+   "priority": "ALL",
+   "first_response_within": 885,
+   "first_response_eligible": 918,
+   "first_response_compliance": "0.964052",
+   "resolution_within": 905,
+   "resolution_eligible": 915,
+   "resolution_compliance": "0.989071"
+  }
+ ],
+ "03_sla_compliance_and_open_overdue__open_overdue_at_monday_cutoffs": [
+  {
+   "week": 1,
+   "cutoff_utc": "2026-07-06T10:30:00Z",
+   "backlog": 15,
+   "open_overdue": 0
+  },
+  {
+   "week": 2,
+   "cutoff_utc": "2026-07-13T10:30:00Z",
+   "backlog": 7,
+   "open_overdue": 0
+  },
+  {
+   "week": 3,
+   "cutoff_utc": "2026-07-20T10:30:00Z",
+   "backlog": 1,
+   "open_overdue": 0
+  },
+  {
+   "week": 4,
+   "cutoff_utc": "2026-07-27T10:30:00Z",
+   "backlog": 12,
+   "open_overdue": 0
+  },
+  {
+   "week": 5,
+   "cutoff_utc": "2026-08-03T10:30:00Z",
+   "backlog": 9,
+   "open_overdue": 0
+  },
+  {
+   "week": 6,
+   "cutoff_utc": "2026-08-10T10:30:00Z",
+   "backlog": 7,
+   "open_overdue": 0
+  },
+  {
+   "week": 7,
+   "cutoff_utc": "2026-08-17T10:30:00Z",
+   "backlog": 12,
+   "open_overdue": 0
+  },
+  {
+   "week": 8,
+   "cutoff_utc": "2026-08-24T10:30:00Z",
+   "backlog": 9,
+   "open_overdue": 0
+  },
+  {
+   "week": 9,
+   "cutoff_utc": "2026-08-31T10:30:00Z",
+   "backlog": 8,
+   "open_overdue": 0
+  },
+  {
+   "week": 10,
+   "cutoff_utc": "2026-09-07T10:30:00Z",
+   "backlog": 13,
+   "open_overdue": 0
+  },
+  {
+   "week": 11,
+   "cutoff_utc": "2026-09-14T10:30:00Z",
+   "backlog": 16,
+   "open_overdue": 0
+  },
+  {
+   "week": 12,
+   "cutoff_utc": "2026-09-21T10:30:00Z",
+   "backlog": 7,
+   "open_overdue": 0
+  }
+ ],
+ "03_sla_compliance_and_open_overdue__overdue_exposure_by_priority": [
+  {
+   "priority": "P1",
+   "could_be_overdue": 40,
+   "tickets_open_overdue_at_a_sample": 31,
+   "hours_with_any": 165,
+   "peak_open_overdue_at_one_hour": 3
+  },
+  {
+   "priority": "P2",
+   "could_be_overdue": 39,
+   "tickets_open_overdue_at_a_sample": 31,
+   "hours_with_any": 93,
+   "peak_open_overdue_at_one_hour": 2
+  },
+  {
+   "priority": "P3",
+   "could_be_overdue": 0,
+   "tickets_open_overdue_at_a_sample": 0,
+   "hours_with_any": 0,
+   "peak_open_overdue_at_one_hour": 0
+  },
+  {
+   "priority": "ALL",
+   "could_be_overdue": 79,
+   "tickets_open_overdue_at_a_sample": 62,
+   "hours_with_any": 233,
+   "peak_open_overdue_at_one_hour": 3
+  }
+ ],
+ "04_occupancy_by_agent_and_shift__occupancy_by_agent": [
+  {
+   "agent_id": "agt-001",
+   "timezone": "Europe/Berlin",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26100.0000",
+   "declared_break_min": "1740.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 350,
+   "handling_min": "11912.6500",
+   "occupancy": "0.456423"
+  },
+  {
+   "agent_id": "agt-002",
+   "timezone": "Europe/Berlin",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26130.0000",
+   "declared_break_min": "1710.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 366,
+   "handling_min": "11568.5167",
+   "occupancy": "0.442729"
+  },
+  {
+   "agent_id": "agt-003",
+   "timezone": "Europe/Berlin",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26100.0000",
+   "declared_break_min": "1740.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 145,
+   "handling_min": "6180.4333",
+   "occupancy": "0.236798"
+  },
+  {
+   "agent_id": "agt-004",
+   "timezone": "Europe/Berlin",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26100.0000",
+   "declared_break_min": "1740.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 341,
+   "handling_min": "10039.7333",
+   "occupancy": "0.384664"
+  },
+  {
+   "agent_id": "agt-005",
+   "timezone": "Europe/Berlin",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26100.0000",
+   "declared_break_min": "1740.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 276,
+   "handling_min": "12430.8000",
+   "occupancy": "0.476276"
+  },
+  {
+   "agent_id": "agt-006",
+   "timezone": "Europe/Berlin",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26100.0000",
+   "declared_break_min": "1740.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 215,
+   "handling_min": "10572.8667",
+   "occupancy": "0.405091"
+  },
+  {
+   "agent_id": "agt-007",
+   "timezone": "Europe/Berlin",
+   "employment_type": "part_time",
+   "shifts": 46,
+   "staffed_available_min": "15180.0000",
+   "declared_break_min": "1380.0000",
+   "recorded_break_min": "1380.0000",
+   "service_intervals": 101,
+   "handling_min": "3146.9333",
+   "occupancy": "0.207308"
+  },
+  {
+   "agent_id": "agt-008",
+   "timezone": "Europe/Berlin",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26130.0000",
+   "declared_break_min": "1710.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 456,
+   "handling_min": "16282.1333",
+   "occupancy": "0.623120"
+  },
+  {
+   "agent_id": "agt-009",
+   "timezone": "Europe/Berlin",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26100.0000",
+   "declared_break_min": "1740.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 251,
+   "handling_min": "9520.6000",
+   "occupancy": "0.364774"
+  },
+  {
+   "agent_id": "agt-010",
+   "timezone": "America/Santiago",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26100.0000",
+   "declared_break_min": "1740.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 375,
+   "handling_min": "13374.6500",
+   "occupancy": "0.512439"
+  },
+  {
+   "agent_id": "agt-011",
+   "timezone": "America/Santiago",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26100.0000",
+   "declared_break_min": "1740.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 403,
+   "handling_min": "16586.9000",
+   "occupancy": "0.635513"
+  },
+  {
+   "agent_id": "agt-012",
+   "timezone": "America/Santiago",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26100.0000",
+   "declared_break_min": "1740.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 364,
+   "handling_min": "16949.5833",
+   "occupancy": "0.649409"
+  },
+  {
+   "agent_id": "agt-013",
+   "timezone": "America/Santiago",
+   "employment_type": "part_time",
+   "shifts": 46,
+   "staffed_available_min": "15180.0000",
+   "declared_break_min": "1380.0000",
+   "recorded_break_min": "1380.0000",
+   "service_intervals": 191,
+   "handling_min": "4558.1833",
+   "occupancy": "0.300276"
+  },
+  {
+   "agent_id": "agt-014",
+   "timezone": "America/Santiago",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26130.0000",
+   "declared_break_min": "1710.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 292,
+   "handling_min": "13323.4500",
+   "occupancy": "0.509891"
+  },
+  {
+   "agent_id": "agt-015",
+   "timezone": "America/Santiago",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26100.0000",
+   "declared_break_min": "1740.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 280,
+   "handling_min": "10684.1833",
+   "occupancy": "0.409356"
+  },
+  {
+   "agent_id": "agt-016",
+   "timezone": "America/Santiago",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "26100.0000",
+   "declared_break_min": "1740.0000",
+   "recorded_break_min": "1740.0000",
+   "service_intervals": 255,
+   "handling_min": "7293.5833",
+   "occupancy": "0.279448"
+  },
+  {
+   "agent_id": "agt-017",
+   "timezone": "America/Santiago",
+   "employment_type": "contractor",
+   "shifts": 58,
+   "staffed_available_min": "25770.0000",
+   "declared_break_min": "1710.0000",
+   "recorded_break_min": "1710.0000",
+   "service_intervals": 149,
+   "handling_min": "7336.8833",
+   "occupancy": "0.284706"
+  },
+  {
+   "agent_id": "agt-018",
+   "timezone": "America/Santiago",
+   "employment_type": "full_time",
+   "shifts": 58,
+   "staffed_available_min": "25830.0000",
+   "declared_break_min": "1710.0000",
+   "recorded_break_min": "1710.0000",
+   "service_intervals": 166,
+   "handling_min": "8074.1833",
+   "occupancy": "0.312589"
+  },
+  {
+   "agent_id": "ALL",
+   "timezone": "",
+   "employment_type": "",
+   "shifts": 1020,
+   "staffed_available_min": "447450.0000",
+   "declared_break_min": "30450.0000",
+   "recorded_break_min": "30540.0000",
+   "service_intervals": 4976,
+   "handling_min": "189836.2667",
+   "occupancy": "0.424263"
+  }
+ ],
+ "04_occupancy_by_agent_and_shift__breaks_declared_vs_recorded": [
+  {
+   "shift_min": "360",
+   "declared_break_min": 30,
+   "recorded_break_min": "30",
+   "shifts": 92,
+   "staffed_min_declared": "30360.0000",
+   "staffed_min_recorded": "30360.0000",
+   "capacity_overstated_by_declared_min": "0.0000",
+   "handling_min": "7705.1167",
+   "handling_inside_a_recorded_break_min": "0.0000"
+  },
+  {
+   "shift_min": "420",
+   "declared_break_min": 30,
+   "recorded_break_min": "30",
+   "shifts": 1,
+   "staffed_min_declared": "390.0000",
+   "staffed_min_recorded": "390.0000",
+   "capacity_overstated_by_declared_min": "0.0000",
+   "handling_min": "149.0000",
+   "handling_inside_a_recorded_break_min": "0.0000"
+  },
+  {
+   "shift_min": "480",
+   "declared_break_min": 0,
+   "recorded_break_min": "30",
+   "shifts": 3,
+   "staffed_min_declared": "1440.0000",
+   "staffed_min_recorded": "1350.0000",
+   "capacity_overstated_by_declared_min": "90.0000",
+   "handling_min": "785.2333",
+   "handling_inside_a_recorded_break_min": "0.0000"
+  },
+  {
+   "shift_min": "480",
+   "declared_break_min": 30,
+   "recorded_break_min": "0",
+   "shifts": 2,
+   "staffed_min_declared": "900.0000",
+   "staffed_min_recorded": "960.0000",
+   "capacity_overstated_by_declared_min": "-60.0000",
+   "handling_min": "232.6500",
+   "handling_inside_a_recorded_break_min": "0.0000"
+  },
+  {
+   "shift_min": "480",
+   "declared_break_min": 30,
+   "recorded_break_min": "30",
+   "shifts": 922,
+   "staffed_min_declared": "414900.0000",
+   "staffed_min_recorded": "414900.0000",
+   "capacity_overstated_by_declared_min": "0.0000",
+   "handling_min": "180964.2667",
+   "handling_inside_a_recorded_break_min": "0.0000"
+  }
+ ],
+ "04_occupancy_by_agent_and_shift__monday_bind_handling_by_queue": [
+  {
+   "queue_id": "q-001",
+   "intervals": 48,
+   "handling_min": "950.7500",
+   "share_pct": "27.8"
+  },
+  {
+   "queue_id": "q-002",
+   "intervals": 51,
+   "handling_min": "2434.7167",
+   "share_pct": "71.1"
+  },
+  {
+   "queue_id": "q-003",
+   "intervals": 1,
+   "handling_min": "36.6833",
+   "share_pct": "1.1"
+  },
+  {
+   "queue_id": "ALL",
+   "intervals": 100,
+   "handling_min": "3422.1500",
+   "share_pct": "100.0"
+  }
+ ],
+ "04_occupancy_by_agent_and_shift__occupancy_by_skill_set": [
+  {
+   "skill_set": "q-001",
+   "agents": 1,
+   "agent_ids": "agt-013",
+   "staffed_available_min": "15180.0000",
+   "handling_min": "4558.1833",
+   "occupancy": "0.300276"
+  },
+  {
+   "skill_set": "q-001 + q-002",
+   "agents": 4,
+   "agent_ids": "agt-001, agt-002, agt-008, agt-011",
+   "staffed_available_min": "104460.0000",
+   "handling_min": "56350.2000",
+   "occupancy": "0.539443"
+  },
+  {
+   "skill_set": "q-001 + q-003",
+   "agents": 4,
+   "agent_ids": "agt-004, agt-010, agt-015, agt-016",
+   "staffed_available_min": "104400.0000",
+   "handling_min": "41392.1500",
+   "occupancy": "0.396477"
+  },
+  {
+   "skill_set": "q-002",
+   "agents": 3,
+   "agent_ids": "agt-006, agt-014, agt-017",
+   "staffed_available_min": "78000.0000",
+   "handling_min": "31233.2000",
+   "occupancy": "0.400426"
+  },
+  {
+   "skill_set": "q-002 + q-003",
+   "agents": 3,
+   "agent_ids": "agt-005, agt-012, agt-018",
+   "staffed_available_min": "78030.0000",
+   "handling_min": "37454.5667",
+   "occupancy": "0.480002"
+  },
+  {
+   "skill_set": "q-003",
+   "agents": 3,
+   "agent_ids": "agt-003, agt-007, agt-009",
+   "staffed_available_min": "67380.0000",
+   "handling_min": "18847.9667",
+   "occupancy": "0.279726"
+  }
+ ],
+ "05_transfer_and_reopen_effects__by_transfer_and_reopen": [
+  {
+   "ticket_group": "neither",
+   "completions": 3095,
+   "share_of_completions_pct": "85.8",
+   "mean_resolution_min": "89.9202",
+   "p90_resolution_min": "171.9500",
+   "mean_wait_to_first_service_min": "26.2743",
+   "mean_handling_min": "50.7405",
+   "mean_dormant_gap_min": "0.0000"
+  },
+  {
+   "ticket_group": "transferred only",
+   "completions": 272,
+   "share_of_completions_pct": "7.5",
+   "mean_resolution_min": "93.1684",
+   "p90_resolution_min": "165.0667",
+   "mean_wait_to_first_service_min": "17.5408",
+   "mean_handling_min": "49.7816",
+   "mean_dormant_gap_min": "0.0000"
+  },
+  {
+   "ticket_group": "reopened only",
+   "completions": 222,
+   "share_of_completions_pct": "6.2",
+   "mean_resolution_min": "1188.3935",
+   "p90_resolution_min": "1887.4333",
+   "mean_wait_to_first_service_min": "26.9570",
+   "mean_handling_min": "79.8590",
+   "mean_dormant_gap_min": "932.8268"
+  },
+  {
+   "ticket_group": "transferred and reopened",
+   "completions": 19,
+   "share_of_completions_pct": "0.5",
+   "mean_resolution_min": "1388.2053",
+   "p90_resolution_min": "1933.6000",
+   "mean_wait_to_first_service_min": "6.9904",
+   "mean_handling_min": "76.5860",
+   "mean_dormant_gap_min": "1124.1509"
+  },
+  {
+   "ticket_group": "ALL",
+   "completions": 3608,
+   "share_of_completions_pct": "100.0",
+   "mean_resolution_min": "164.5909",
+   "p90_resolution_min": "294.5833",
+   "mean_wait_to_first_service_min": "25.5564",
+   "mean_handling_min": "52.5960",
+   "mean_dormant_gap_min": "63.3166"
+  }
+ ],
+ "05_transfer_and_reopen_effects__transfer_routes": [
+  {
+   "from_queue": "q-001",
+   "to_queue": "q-002",
+   "transfers": 81,
+   "mean_min_arrival_to_transfer": "20.6315",
+   "with_a_later_service": 80,
+   "mean_min_transfer_to_next_service": "24.1577"
+  },
+  {
+   "from_queue": "q-001",
+   "to_queue": "q-003",
+   "transfers": 42,
+   "mean_min_arrival_to_transfer": "21.1706",
+   "with_a_later_service": 39,
+   "mean_min_transfer_to_next_service": "9.1577"
+  },
+  {
+   "from_queue": "q-002",
+   "to_queue": "q-001",
+   "transfers": 48,
+   "mean_min_arrival_to_transfer": "30.3858",
+   "with_a_later_service": 47,
+   "mean_min_transfer_to_next_service": "25.4791"
+  },
+  {
+   "from_queue": "q-002",
+   "to_queue": "q-003",
+   "transfers": 66,
+   "mean_min_arrival_to_transfer": "37.3846",
+   "with_a_later_service": 66,
+   "mean_min_transfer_to_next_service": "21.1154"
+  },
+  {
+   "from_queue": "q-003",
+   "to_queue": "q-001",
+   "transfers": 36,
+   "mean_min_arrival_to_transfer": "17.3370",
+   "with_a_later_service": 33,
+   "mean_min_transfer_to_next_service": "6.6081"
+  },
+  {
+   "from_queue": "q-003",
+   "to_queue": "q-002",
+   "transfers": 26,
+   "mean_min_arrival_to_transfer": "11.1622",
+   "with_a_later_service": 26,
+   "mean_min_transfer_to_next_service": "19.1859"
+  }
+ ],
+ "06_abandonment_by_channel_and_patience__abandonment_by_channel": [
+  {
+   "channel": "chat",
+   "can_abandon": true,
+   "arrivals": 1196,
+   "abandoned": 138,
+   "abandonment_rate": "0.115385",
+   "abandoned_before_first_service": 133,
+   "abandoned_after_service_began": 5,
+   "of_which_transferred": 5,
+   "mean_patience_min": "18.8343",
+   "p90_patience_min": "42.4000"
+  },
+  {
+   "channel": "email",
+   "can_abandon": false,
+   "arrivals": 1496,
+   "abandoned": 0,
+   "abandonment_rate": null,
+   "abandoned_before_first_service": 0,
+   "abandoned_after_service_began": 0,
+   "of_which_transferred": 0,
+   "mean_patience_min": null,
+   "p90_patience_min": null
+  },
+  {
+   "channel": "phone",
+   "can_abandon": true,
+   "arrivals": 572,
+   "abandoned": 71,
+   "abandonment_rate": "0.124126",
+   "abandoned_before_first_service": 68,
+   "abandoned_after_service_began": 3,
+   "of_which_transferred": 3,
+   "mean_patience_min": "12.4519",
+   "p90_patience_min": "29.8000"
+  },
+  {
+   "channel": "web_form",
+   "can_abandon": false,
+   "arrivals": 553,
+   "abandoned": 0,
+   "abandonment_rate": null,
+   "abandoned_before_first_service": 0,
+   "abandoned_after_service_began": 0,
+   "of_which_transferred": 0,
+   "mean_patience_min": null,
+   "p90_patience_min": null
+  },
+  {
+   "channel": "ALL abandonable",
+   "can_abandon": true,
+   "arrivals": 1768,
+   "abandoned": 209,
+   "abandonment_rate": "0.118213",
+   "abandoned_before_first_service": 201,
+   "abandoned_after_service_began": 8,
+   "of_which_transferred": 8,
+   "mean_patience_min": "16.6661",
+   "p90_patience_min": "40.6000"
+  }
+ ],
+ "06_abandonment_by_channel_and_patience__abandonment_hazard_by_wait": [
+  {
+   "channel": "chat",
+   "wait_band_min": "0-5",
+   "at_risk": 1196,
+   "abandoned_in_band": 36,
+   "served_in_band": 810,
+   "abandonment_hazard": "0.030100"
+  },
+  {
+   "channel": "chat",
+   "wait_band_min": "5-10",
+   "at_risk": 350,
+   "abandoned_in_band": 18,
+   "served_in_band": 55,
+   "abandonment_hazard": "0.051429"
+  },
+  {
+   "channel": "chat",
+   "wait_band_min": "10-20",
+   "at_risk": 277,
+   "abandoned_in_band": 35,
+   "served_in_band": 72,
+   "abandonment_hazard": "0.126354"
+  },
+  {
+   "channel": "chat",
+   "wait_band_min": "20-40",
+   "at_risk": 170,
+   "abandoned_in_band": 28,
+   "served_in_band": 57,
+   "abandonment_hazard": "0.164706"
+  },
+  {
+   "channel": "chat",
+   "wait_band_min": "40-80",
+   "at_risk": 85,
+   "abandoned_in_band": 15,
+   "served_in_band": 37,
+   "abandonment_hazard": "0.176471"
+  },
+  {
+   "channel": "chat",
+   "wait_band_min": "80-more",
+   "at_risk": 33,
+   "abandoned_in_band": 1,
+   "served_in_band": 32,
+   "abandonment_hazard": "0.030303"
+  },
+  {
+   "channel": "phone",
+   "wait_band_min": "0-5",
+   "at_risk": 572,
+   "abandoned_in_band": 29,
+   "served_in_band": 392,
+   "abandonment_hazard": "0.050699"
+  },
+  {
+   "channel": "phone",
+   "wait_band_min": "5-10",
+   "at_risk": 151,
+   "abandoned_in_band": 13,
+   "served_in_band": 23,
+   "abandonment_hazard": "0.086093"
+  },
+  {
+   "channel": "phone",
+   "wait_band_min": "10-20",
+   "at_risk": 115,
+   "abandoned_in_band": 14,
+   "served_in_band": 27,
+   "abandonment_hazard": "0.121739"
+  },
+  {
+   "channel": "phone",
+   "wait_band_min": "20-40",
+   "at_risk": 74,
+   "abandoned_in_band": 8,
+   "served_in_band": 31,
+   "abandonment_hazard": "0.108108"
+  },
+  {
+   "channel": "phone",
+   "wait_band_min": "40-80",
+   "at_risk": 35,
+   "abandoned_in_band": 4,
+   "served_in_band": 11,
+   "abandonment_hazard": "0.114286"
+  },
+  {
+   "channel": "phone",
+   "wait_band_min": "80-more",
+   "at_risk": 20,
+   "abandoned_in_band": 0,
+   "served_in_band": 20,
+   "abandonment_hazard": "0.000000"
+  }
+ ],
+ "07_survey_response_skew__response_by_experience": [
+  {
+   "experience": "good experience",
+   "completions": 2923,
+   "invited": 1745,
+   "invitation_rate": "0.596989",
+   "valid_responses": 663,
+   "response_rate": "0.379943",
+   "positive": 585,
+   "csat": "0.882353"
+  },
+  {
+   "experience": "poor experience",
+   "completions": 685,
+   "invited": 402,
+   "invitation_rate": "0.586861",
+   "valid_responses": 87,
+   "response_rate": "0.216418",
+   "positive": 63,
+   "csat": "0.724138"
+  },
+  {
+   "experience": "ALL",
+   "completions": 3608,
+   "invited": 2147,
+   "invitation_rate": "0.595067",
+   "valid_responses": 750,
+   "response_rate": "0.349325",
+   "positive": 648,
+   "csat": "0.864000"
+  }
+ ],
+ "07_survey_response_skew__csat_and_its_bounds": [
+  {
+   "reading": "CSAT among valid responses (the contract figure)",
+   "positive": 648,
+   "denominator": 750,
+   "value": "0.864000"
+  },
+  {
+   "reading": "lower bound: every non-responder not positive",
+   "positive": 648,
+   "denominator": 2147,
+   "value": "0.301816"
+  },
+  {
+   "reading": "upper bound: every non-responder positive",
+   "positive": 2045,
+   "denominator": 2147,
+   "value": "0.952492"
+  }
+ ],
+ "07_survey_response_skew__score_distribution_by_queue": [
+  {
+   "queue_id": "q-001",
+   "invited": 741,
+   "valid_responses": 263,
+   "response_rate": "0.354926",
+   "score_1": 0,
+   "score_2": 2,
+   "score_3": 37,
+   "score_4": 121,
+   "score_5": 103,
+   "csat": "0.851711"
+  },
+  {
+   "queue_id": "q-002",
+   "invited": 858,
+   "valid_responses": 287,
+   "response_rate": "0.334499",
+   "score_1": 2,
+   "score_2": 3,
+   "score_3": 32,
+   "score_4": 129,
+   "score_5": 121,
+   "csat": "0.871080"
+  },
+  {
+   "queue_id": "q-003",
+   "invited": 548,
+   "valid_responses": 200,
+   "response_rate": "0.364964",
+   "score_1": 1,
+   "score_2": 4,
+   "score_3": 21,
+   "score_4": 89,
+   "score_5": 85,
+   "csat": "0.870000"
+  },
+  {
+   "queue_id": "ALL",
+   "invited": 2147,
+   "valid_responses": 750,
+   "response_rate": "0.349325",
+   "score_1": 3,
+   "score_2": 9,
+   "score_3": 90,
+   "score_4": 339,
+   "score_5": 309,
+   "csat": "0.864000"
+  }
+ ],
+ "08_rejections_and_defects_by_reason__rejected_by_reason": [
+  {
+   "entity": "tickets",
+   "reason_code": "AGENT_NOT_QUALIFIED",
+   "injected_defect": "INJ-03",
+   "rejected_rows": 3,
+   "distinct_ids": 3,
+   "first_and_last_id": "t-0630 .. t-2422"
+  },
+  {
+   "entity": "tickets",
+   "reason_code": "CONCURRENCY_EXCEEDED",
+   "injected_defect": "INJ-04",
+   "rejected_rows": 3,
+   "distinct_ids": 3,
+   "first_and_last_id": "t-1295 .. t-2799"
+  },
+  {
+   "entity": "tickets",
+   "reason_code": "TRANSFER_RESETS_ARRIVAL",
+   "injected_defect": "INJ-06",
+   "rejected_rows": 3,
+   "distinct_ids": 3,
+   "first_and_last_id": "t-1066 .. t-3206"
+  },
+  {
+   "entity": "ticket_events",
+   "reason_code": "BOT_AS_HUMAN_REPLY",
+   "injected_defect": "INJ-01",
+   "rejected_rows": 4,
+   "distinct_ids": 4,
+   "first_and_last_id": "e-00006 .. e-10283"
+  },
+  {
+   "entity": "ticket_events",
+   "reason_code": "TICKET_REJECTED",
+   "injected_defect": "dependants of INJ-03 / INJ-04 / INJ-06",
+   "rejected_rows": 51,
+   "distinct_ids": 51,
+   "first_and_last_id": "e-03624 .. e-18340"
+  },
+  {
+   "entity": "surveys",
+   "reason_code": "TICKET_REJECTED",
+   "injected_defect": "dependants of INJ-03 / INJ-04 / INJ-06",
+   "rejected_rows": 6,
+   "distinct_ids": 6,
+   "first_and_last_id": "sv-0576 .. sv-1793"
+  }
+ ],
+ "08_rejections_and_defects_by_reason__injected_defects_found": [
+  {
+   "injection_id": "INJ-01",
+   "defect": "bot acknowledgement typed as a human reply",
+   "sql_check": "rejected_records BOT_AS_HUMAN_REPLY",
+   "found": 4
+  },
+  {
+   "injection_id": "INJ-02",
+   "defect": "reopen recorded as a new ticket from a new customer",
+   "sql_check": "customers whose created_at equals the created_at of their earliest ticket",
+   "found": 4
+  },
+  {
+   "injection_id": "INJ-03",
+   "defect": "service by an agent without the queue skill",
+   "sql_check": "rejected_records AGENT_NOT_QUALIFIED",
+   "found": 3
+  },
+  {
+   "injection_id": "INJ-04",
+   "defect": "two simultaneous services for one agent",
+   "sql_check": "rejected_records CONCURRENCY_EXCEEDED",
+   "found": 3
+  },
+  {
+   "injection_id": "INJ-05",
+   "defect": "shift whose break is counted as available time",
+   "sql_check": "shifts with break_minutes 0 and a recorded break",
+   "found": 3
+  },
+  {
+   "injection_id": "INJ-06",
+   "defect": "transfer that resets the arrival",
+   "sql_check": "rejected_records TRANSFER_RESETS_ARRIVAL",
+   "found": 3
+  },
+  {
+   "injection_id": "INJ-07",
+   "defect": "simulation run with its warm-up included (replay-only)",
+   "sql_check": "simulation_runs rows with warmup_minutes = 0",
+   "found": 0
+  },
+  {
+   "injection_id": "INJ-08",
+   "defect": "shift across the clock change built with naive wall-clock arithmetic",
+   "sql_check": "shifts that cross a UTC-offset change of the agent zone and last 480 real minutes (a crossing shift of 8 wall-clock hours is 420)",
+   "found": 1
+  },
+  {
+   "injection_id": "INJ-09",
+   "defect": "survey nonresponse skewed by a poor experience",
+   "sql_check": "invitations without a valid response after a poor experience (completed tickets)",
+   "found": 315
+  }
+ ],
+ "08_rejections_and_defects_by_reason__published_vs_loaded": [
+  {
+   "entity": "tickets",
+   "loaded_rows": 3817,
+   "rejected_rows": 9,
+   "published_rows": 3826
+  },
+  {
+   "entity": "ticket_events",
+   "loaded_rows": 21893,
+   "rejected_rows": 55,
+   "published_rows": 21948
+  },
+  {
+   "entity": "surveys",
+   "loaded_rows": 2147,
+   "rejected_rows": 6,
+   "published_rows": 2153
+  }
+ ],
+ "09_golden_known_answer__golden_per_ticket": [
+  {
+   "ticket_id": "t-001",
+   "first_response_min": "0.0000",
+   "wait_min": "0.0000",
+   "resolution_min": "10.0000",
+   "handling_min": "10.0000"
+  },
+  {
+   "ticket_id": "t-002",
+   "first_response_min": "10.0000",
+   "wait_min": "10.0000",
+   "resolution_min": "20.0000",
+   "handling_min": "10.0000"
+  },
+  {
+   "ticket_id": "t-003",
+   "first_response_min": "20.0000",
+   "wait_min": "20.0000",
+   "resolution_min": "30.0000",
+   "handling_min": "10.0000"
+  }
+ ],
+ "09_golden_known_answer__golden_totals": [
+  {
+   "source": "event log (this directory)",
+   "mean_wait_min": "10.0000",
+   "handling_min_total": "30.0000",
+   "last_completion_min": "30.0000"
+  },
+  {
+   "source": "simulation sim-001 (simulation_events)",
+   "mean_wait_min": "10.0000",
+   "handling_min_total": null,
+   "last_completion_min": "30.0000"
+  }
+ ],
+ "bi_expected_measures": [
+  {
+   "measure": "Arrivals",
+   "expected": 3817,
+   "source": "COUNTROWS(fact_ticket) on the created date"
+  },
+  {
+   "measure": "Completions",
+   "expected": 3608,
+   "source": "tickets with a final resolution (resolved date)"
+  },
+  {
+   "measure": "Arrival Rate per Hour",
+   "expected": "1.893353",
+   "source": "Arrivals / (days x 24)"
+  },
+  {
+   "measure": "Completion Rate per Hour",
+   "expected": "1.789683",
+   "source": "Completions / (days x 24)"
+  },
+  {
+   "measure": "Mean First Response (min)",
+   "expected": "28.0046",
+   "source": "tickets with a human reply"
+  },
+  {
+   "measure": "P90 First Response (min)",
+   "expected": "44.1500",
+   "source": "nearest rank, index ceil(0.9 n)"
+  },
+  {
+   "measure": "Mean Wait to First Service (min)",
+   "expected": "25.5073",
+   "source": "tickets that were served"
+  },
+  {
+   "measure": "Mean Resolution (min)",
+   "expected": "164.5909",
+   "source": "completed tickets, from the original arrival"
+  },
+  {
+   "measure": "P90 Resolution (min)",
+   "expected": "294.5833",
+   "source": "nearest rank"
+  },
+  {
+   "measure": "SLA First Response Compliance",
+   "expected": "0.950498",
+   "source": "3437 / 3616"
+  },
+  {
+   "measure": "SLA Resolution Compliance",
+   "expected": "0.978104",
+   "source": "3529 / 3608"
+  },
+  {
+   "measure": "Open at End of Data",
+   "expected": 0,
+   "source": "not completed and not abandoned (open overdue = 0 of them)"
+  },
+  {
+   "measure": "Handling Minutes",
+   "expected": "189836.2667",
+   "source": "service intervals clipped to the selected dates"
+  },
+  {
+   "measure": "Staffed Available Minutes",
+   "expected": "447450.0000",
+   "source": "overlap of each shift with the selected dates, minus the declared break only for a shift inside them (D-05)"
+  },
+  {
+   "measure": "Staffed Shift Minutes (whole shifts)",
+   "expected": "447990.0000",
+   "source": "every shift net of its declared break, clipped by nothing"
+  },
+  {
+   "measure": "Agent Occupancy",
+   "expected": "0.424263",
+   "source": "Handling Minutes / Staffed Available Minutes"
+  },
+  {
+   "measure": "Abandonment Rate",
+   "expected": "0.118213",
+   "source": "209 / 1768 (chat and phone)"
+  },
+  {
+   "measure": "Survey Invitation Rate",
+   "expected": "0.595067",
+   "source": "2147 invited / 3608 completed"
+  },
+  {
+   "measure": "Survey Response Rate",
+   "expected": "0.349325",
+   "source": "750 valid / 2147 invited"
+  },
+  {
+   "measure": "CSAT",
+   "expected": "0.864000",
+   "source": "648 positive / 750 valid"
+  },
+  {
+   "measure": "Reopen Rate of Completions",
+   "expected": "0.066796",
+   "source": "241 / 3608 (an addition beyond the 28 published keys)"
+  },
+  {
+   "measure": "Transfer Share of Arrivals",
+   "expected": "0.078334",
+   "source": "299 / 3817 (an addition beyond the 28 published keys)"
+  },
+  {
+   "measure": "Simulated Mean Wait sim-001 (min, mean of 50 replications)",
+   "expected": "18.8435",
+   "source": "SIMULATED estimate"
+  },
+  {
+   "measure": "Simulated 95 % Half-width sim-001 (min)",
+   "expected": "8.2004",
+   "source": "SIMULATED estimate, Student-t"
+  },
+  {
+   "measure": "Simulated Mean Wait sim-002 (min, mean of 50 replications)",
+   "expected": "7.9502",
+   "source": "SIMULATED estimate"
+  },
+  {
+   "measure": "Simulated 95 % Half-width sim-002 (min)",
+   "expected": "5.2231",
+   "source": "SIMULATED estimate, Student-t"
+  },
+  {
+   "measure": "Simulated Mean Wait sim-003 (min, mean of 50 replications)",
+   "expected": "30.6253",
+   "source": "SIMULATED estimate"
+  },
+  {
+   "measure": "Simulated 95 % Half-width sim-003 (min)",
+   "expected": "8.3091",
+   "source": "SIMULATED estimate, Student-t"
+  },
+  {
+   "measure": "Simulated Paired Difference sim-002 minus sim-001 (min)",
+   "expected": "-10.8932",
+   "source": "SIMULATED estimate, same seeds"
+  },
+  {
+   "measure": "Simulated Paired 95 % Half-width (min)",
+   "expected": "3.4329",
+   "source": "SIMULATED estimate, Student-t"
+  }
+ ],
+ "meta": [
+  {
+   "dataset_hash": "944ef91b3dc17c04c6bb601e0faac94f956d121877de2b9864988cf7c5d5cba4",
+   "dataset_version": "sf-20261026-20261026",
+   "code_revision": "43de7f8",
+   "seeded_database_version": "ds-d5d7a5e1b7df",
+   "seeded_database_hash": "d5d7a5e1b7dffdec089785448e3ae1241fd12bdbce67f5c14eccad767c6c174c",
+   "seed": 20261026,
+   "analysis_window_utc": "[2026-07-06T00:00:00Z, 2026-09-28T00:00:00Z)",
+   "reconciliation_rows": 185
+  }
+ ],
+ "known_differences": [
+  {
+   "item": "INJ-09 unanswered invitations after a poor experience",
+   "this_package": 315,
+   "manifest": 318,
+   "why": "the manifest counts over all 2,153 published surveys (6 belong to rejected tickets) and its own definition of a poor experience; this package counts completed accepted tickets and the definition printed in 07"
+  },
+  {
+   "item": "01 next-best block",
+   "this_package": "Mon 10-12 0.9737 (accepted tickets)",
+   "manifest": "Mon 10-12 0.9844; over all published tickets here: Mon 10-12 0.9844",
+   "why": "the manifest counts the 3,826 published tickets; 9 are rejected at ingest, so the accepted arrivals of the block are fewer"
+  },
+  {
+   "item": "07 response rate after a poor experience",
+   "this_package": "0.216418",
+   "manifest": "0.2148 (invited 405)",
+   "why": "other population (all published tickets and surveys) and the generator's own definition of a poor experience"
+  }
+ ],
+ "reconciliation": [
+  {
+   "check": "B reference_metrics.sql vs Python domain, full window: metric keys differing (of 28)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference_metrics.sql vs Python domain, training window: metric keys differing (of 28)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference_metrics.sql vs Python domain, holdout window: metric keys differing (of 28)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot arrivals + rejected tickets = published tickets (manifest row_counts)",
+   "analysis_sql": "3826",
+   "second_source": "3826",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window arrival_count: query 02 ALL vs reference_metrics.sql vs domain",
+   "analysis_sql": "3817",
+   "second_source": "3817",
+   "third_source": "3817",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window mean_first_response_minutes: query 02 ALL vs reference_metrics.sql vs domain",
+   "analysis_sql": "28.0046",
+   "second_source": "28.0046",
+   "third_source": "28.0046",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window p90_first_response_minutes: query 02 ALL vs reference_metrics.sql vs domain",
+   "analysis_sql": "44.1500",
+   "second_source": "44.1500",
+   "third_source": "44.1500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window mean_wait_minutes: query 02 ALL vs reference_metrics.sql vs domain",
+   "analysis_sql": "25.5073",
+   "second_source": "25.5073",
+   "third_source": "25.5073",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window completion_count: query 02 ALL vs reference_metrics.sql vs domain",
+   "analysis_sql": "3608",
+   "second_source": "3608",
+   "third_source": "3608",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window mean_resolution_minutes: query 02 ALL vs reference_metrics.sql vs domain",
+   "analysis_sql": "164.5909",
+   "second_source": "164.5909",
+   "third_source": "164.5909",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window first-response tickets with a human reply (02) vs sla_first_response_eligible",
+   "analysis_sql": "3616",
+   "second_source": "3616",
+   "third_source": "3616",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B full window SLA first response within / eligible / compliance: query 03 vs reference vs domain",
+   "analysis_sql": "3437 / 3616 / 0.950498",
+   "second_source": "3437 / 3616 / 0.950498",
+   "third_source": "3437 / 3616 / 0.950498",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B full window SLA resolution within / eligible / compliance: query 03 vs reference vs domain",
+   "analysis_sql": "3529 / 3608 / 0.978104",
+   "second_source": "3529 / 3608 / 0.978104",
+   "third_source": "3529 / 3608 / 0.978104",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B full window arrivals: query 03 vs reference vs domain",
+   "analysis_sql": "3817",
+   "second_source": "3817",
+   "third_source": "3817",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B training window SLA first response within / eligible / compliance: query 03 vs reference vs domain",
+   "analysis_sql": "2168 / 2267 / 0.956330",
+   "second_source": "2168 / 2267 / 0.956330",
+   "third_source": "2168 / 2267 / 0.956330",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B training window SLA resolution within / eligible / compliance: query 03 vs reference vs domain",
+   "analysis_sql": "2218 / 2260 / 0.981416",
+   "second_source": "2218 / 2260 / 0.981416",
+   "third_source": "2218 / 2260 / 0.981416",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B training window arrivals: query 03 vs reference vs domain",
+   "analysis_sql": "2386",
+   "second_source": "2386",
+   "third_source": "2386",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B holdout window SLA first response within / eligible / compliance: query 03 vs reference vs domain",
+   "analysis_sql": "1269 / 1349 / 0.940697",
+   "second_source": "1269 / 1349 / 0.940697",
+   "third_source": "1269 / 1349 / 0.940697",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B holdout window SLA resolution within / eligible / compliance: query 03 vs reference vs domain",
+   "analysis_sql": "1311 / 1348 / 0.972552",
+   "second_source": "1311 / 1348 / 0.972552",
+   "third_source": "1311 / 1348 / 0.972552",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B holdout window arrivals: query 03 vs reference vs domain",
+   "analysis_sql": "1431",
+   "second_source": "1431",
+   "third_source": "1431",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window staffed_available_minutes: query 04 ALL vs reference_metrics.sql vs domain",
+   "analysis_sql": "447450.0000",
+   "second_source": "447450.0000",
+   "third_source": "447450.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window handling_minutes_total: query 04 ALL vs reference_metrics.sql vs domain",
+   "analysis_sql": "189836.2667",
+   "second_source": "189836.2667",
+   "third_source": "189836.2667",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window agent_occupancy: query 04 ALL vs reference_metrics.sql vs domain",
+   "analysis_sql": "0.424263",
+   "second_source": "0.424263",
+   "third_source": "0.424263",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window abandonment_rate: query 06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "0.118213",
+   "second_source": "0.118213",
+   "third_source": "0.118213",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window csat: query 07 vs reference_metrics.sql vs domain",
+   "analysis_sql": "0.864000",
+   "second_source": "0.864000",
+   "third_source": "0.864000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window survey_invitation_rate: query 07 vs reference_metrics.sql vs domain",
+   "analysis_sql": "0.595067",
+   "second_source": "0.595067",
+   "third_source": "0.595067",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B whole window survey_response_rate: query 07 vs reference_metrics.sql vs domain",
+   "analysis_sql": "0.349325",
+   "second_source": "0.349325",
+   "third_source": "0.349325",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B surveys invited / valid / positive among completions: query 07 vs disclosures()",
+   "analysis_sql": "2147 / 750",
+   "second_source": "2147 / 750",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B open overdue at the window end (the reference's one open-overdue figure) vs domain vs the last Monday cutoff query",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_arrivals_by_hour_of_week: 8 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_wait_and_response_distributions__first_response_and_wait: 16 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_wait_and_response_distributions__resolution_tail: 16 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_sla_compliance_and_open_overdue__compliance_by_priority_and_window: 12 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_sla_compliance_and_open_overdue__compliance_by_queue_and_priority: 12 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_sla_compliance_and_open_overdue__open_overdue_at_monday_cutoffs: 12 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_sla_compliance_and_open_overdue__overdue_exposure_by_priority: 4 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_occupancy_by_agent_and_shift__occupancy_by_agent: 19 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_occupancy_by_agent_and_shift__breaks_declared_vs_recorded: 5 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_occupancy_by_agent_and_shift__monday_bind_handling_by_queue: 4 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_occupancy_by_agent_and_shift__occupancy_by_skill_set: 6 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_transfer_and_reopen_effects__by_transfer_and_reopen: 5 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_transfer_and_reopen_effects__transfer_routes: 6 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_abandonment_by_channel_and_patience__abandonment_by_channel: 5 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_abandonment_by_channel_and_patience__abandonment_hazard_by_wait: 12 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_survey_response_skew__response_by_experience: 3 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_survey_response_skew__csat_and_its_bounds: 3 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_survey_response_skew__score_distribution_by_queue: 4 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_rejections_and_defects_by_reason__rejected_by_reason: 6 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_rejections_and_defects_by_reason__injected_defects_found: 9 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_rejections_and_defects_by_reason__published_vs_loaded: 3 rows, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D queue q-001: mean first response / P90 / mean wait / mean resolution (queue = final queue): queries 02 vs group_metrics",
+   "analysis_sql": "18.9573 / 34.6000 / 16.4578 / 125.7529",
+   "second_source": "18.9573 / 34.6000 / 16.4578 / 125.7529",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D queue q-002: mean first response / P90 / mean wait / mean resolution (queue = final queue): queries 02 vs group_metrics",
+   "analysis_sql": "43.8355 / 68.4500 / 41.3560 / 220.7269",
+   "second_source": "43.8355 / 68.4500 / 41.3560 / 220.7269",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D queue q-003: mean first response / P90 / mean wait / mean resolution (queue = final queue): queries 02 vs group_metrics",
+   "analysis_sql": "15.7325 / 26.7500 / 13.2105 / 130.1571",
+   "second_source": "15.7325 / 26.7500 / 13.2105 / 130.1571",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D priority P1: mean first response / P90 / mean wait / mean resolution (queue = final queue): queries 02 vs group_metrics",
+   "analysis_sql": "18.3282 / 26.9667 / 15.9056 / 204.2639",
+   "second_source": "18.3282 / 26.9667 / 15.9056 / 204.2639",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D priority P2: mean first response / P90 / mean wait / mean resolution (queue = final queue): queries 02 vs group_metrics",
+   "analysis_sql": "26.6477 / 37.6833 / 24.1521 / 187.6961",
+   "second_source": "26.6477 / 37.6833 / 24.1521 / 187.6961",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D priority P3: mean first response / P90 / mean wait / mean resolution (queue = final queue): queries 02 vs group_metrics",
+   "analysis_sql": "29.9319 / 50.4833 / 27.4254 / 145.5255",
+   "second_source": "29.9319 / 50.4833 / 27.4254 / 145.5255",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D priority P1: SLA first response and resolution within / eligible: query 03 vs group_metrics",
+   "analysis_sql": "187/227 187/227",
+   "second_source": "187/227 187/227",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D priority P2: SLA first response and resolution within / eligible: query 03 vs group_metrics",
+   "analysis_sql": "1231/1320 1276/1315",
+   "second_source": "1231/1320 1276/1315",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D priority P3: SLA first response and resolution within / eligible: query 03 vs group_metrics",
+   "analysis_sql": "2019/2069 2066/2066",
+   "second_source": "2019/2069 2066/2066",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D training priority P1: SLA within / eligible (first response, resolution): query 03 vs group_metrics",
+   "analysis_sql": "108/130 110/130",
+   "second_source": "108/130 110/130",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D training priority P2: SLA within / eligible (first response, resolution): query 03 vs group_metrics",
+   "analysis_sql": "765/817 791/813",
+   "second_source": "765/817 791/813",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D training priority P3: SLA within / eligible (first response, resolution): query 03 vs group_metrics",
+   "analysis_sql": "1295/1320 1317/1317",
+   "second_source": "1295/1320 1317/1317",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D holdout priority P1: SLA within / eligible (first response, resolution): query 03 vs group_metrics",
+   "analysis_sql": "79/97 77/97",
+   "second_source": "79/97 77/97",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D holdout priority P2: SLA within / eligible (first response, resolution): query 03 vs group_metrics",
+   "analysis_sql": "466/503 485/502",
+   "second_source": "466/503 485/502",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D holdout priority P3: SLA within / eligible (first response, resolution): query 03 vs group_metrics",
+   "analysis_sql": "724/749 749/749",
+   "second_source": "724/749 749/749",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D Monday cutoff 2026-07-06T10:30:00Z: backlog / open overdue: query 03 vs reference_metrics.sql vs domain",
+   "analysis_sql": "15 / 0",
+   "second_source": "15 / 0",
+   "third_source": "15 / 0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D Monday cutoff 2026-07-13T10:30:00Z: backlog / open overdue: query 03 vs reference_metrics.sql vs domain",
+   "analysis_sql": "7 / 0",
+   "second_source": "7 / 0",
+   "third_source": "7 / 0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D Monday cutoff 2026-07-20T10:30:00Z: backlog / open overdue: query 03 vs reference_metrics.sql vs domain",
+   "analysis_sql": "1 / 0",
+   "second_source": "1 / 0",
+   "third_source": "1 / 0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D Monday cutoff 2026-07-27T10:30:00Z: backlog / open overdue: query 03 vs reference_metrics.sql vs domain",
+   "analysis_sql": "12 / 0",
+   "second_source": "12 / 0",
+   "third_source": "12 / 0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D Monday cutoff 2026-08-03T10:30:00Z: backlog / open overdue: query 03 vs reference_metrics.sql vs domain",
+   "analysis_sql": "9 / 0",
+   "second_source": "9 / 0",
+   "third_source": "9 / 0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D Monday cutoff 2026-08-10T10:30:00Z: backlog / open overdue: query 03 vs reference_metrics.sql vs domain",
+   "analysis_sql": "7 / 0",
+   "second_source": "7 / 0",
+   "third_source": "7 / 0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D Monday cutoff 2026-08-17T10:30:00Z: backlog / open overdue: query 03 vs reference_metrics.sql vs domain",
+   "analysis_sql": "12 / 0",
+   "second_source": "12 / 0",
+   "third_source": "12 / 0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D Monday cutoff 2026-08-24T10:30:00Z: backlog / open overdue: query 03 vs reference_metrics.sql vs domain",
+   "analysis_sql": "9 / 0",
+   "second_source": "9 / 0",
+   "third_source": "9 / 0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D Monday cutoff 2026-08-31T10:30:00Z: backlog / open overdue: query 03 vs reference_metrics.sql vs domain",
+   "analysis_sql": "8 / 0",
+   "second_source": "8 / 0",
+   "third_source": "8 / 0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D Monday cutoff 2026-09-07T10:30:00Z: backlog / open overdue: query 03 vs reference_metrics.sql vs domain",
+   "analysis_sql": "13 / 0",
+   "second_source": "13 / 0",
+   "third_source": "13 / 0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D Monday cutoff 2026-09-14T10:30:00Z: backlog / open overdue: query 03 vs reference_metrics.sql vs domain",
+   "analysis_sql": "16 / 0",
+   "second_source": "16 / 0",
+   "third_source": "16 / 0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D Monday cutoff 2026-09-21T10:30:00Z: backlog / open overdue: query 03 vs reference_metrics.sql vs domain",
+   "analysis_sql": "7 / 0",
+   "second_source": "7 / 0",
+   "third_source": "7 / 0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-001: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26100.0000 / 11912.6500 / 0.456423",
+   "second_source": "26100.0000 / 11912.6500 / 0.456423",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-002: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26130.0000 / 11568.5167 / 0.442729",
+   "second_source": "26130.0000 / 11568.5167 / 0.442729",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-003: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26100.0000 / 6180.4333 / 0.236798",
+   "second_source": "26100.0000 / 6180.4333 / 0.236798",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-004: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26100.0000 / 10039.7333 / 0.384664",
+   "second_source": "26100.0000 / 10039.7333 / 0.384664",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-005: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26100.0000 / 12430.8000 / 0.476276",
+   "second_source": "26100.0000 / 12430.8000 / 0.476276",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-006: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26100.0000 / 10572.8667 / 0.405091",
+   "second_source": "26100.0000 / 10572.8667 / 0.405091",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-007: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "15180.0000 / 3146.9333 / 0.207308",
+   "second_source": "15180.0000 / 3146.9333 / 0.207308",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-008: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26130.0000 / 16282.1333 / 0.623120",
+   "second_source": "26130.0000 / 16282.1333 / 0.623120",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-009: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26100.0000 / 9520.6000 / 0.364774",
+   "second_source": "26100.0000 / 9520.6000 / 0.364774",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-010: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26100.0000 / 13374.6500 / 0.512439",
+   "second_source": "26100.0000 / 13374.6500 / 0.512439",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-011: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26100.0000 / 16586.9000 / 0.635513",
+   "second_source": "26100.0000 / 16586.9000 / 0.635513",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-012: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26100.0000 / 16949.5833 / 0.649409",
+   "second_source": "26100.0000 / 16949.5833 / 0.649409",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-013: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "15180.0000 / 4558.1833 / 0.300276",
+   "second_source": "15180.0000 / 4558.1833 / 0.300276",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-014: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26130.0000 / 13323.4500 / 0.509891",
+   "second_source": "26130.0000 / 13323.4500 / 0.509891",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-015: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26100.0000 / 10684.1833 / 0.409356",
+   "second_source": "26100.0000 / 10684.1833 / 0.409356",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-016: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "26100.0000 / 7293.5833 / 0.279448",
+   "second_source": "26100.0000 / 7293.5833 / 0.279448",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-017: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "25770.0000 / 7336.8833 / 0.284706",
+   "second_source": "25770.0000 / 7336.8833 / 0.284706",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D agent agt-018: staffed minutes / handling minutes / occupancy: query 04 vs group_metrics",
+   "analysis_sql": "25830.0000 / 8074.1833 / 0.312589",
+   "second_source": "25830.0000 / 8074.1833 / 0.312589",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D channel chat: abandonment rate: query 06 vs group_metrics",
+   "analysis_sql": "0.115385",
+   "second_source": "0.115385",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D channel email: abandonment rate: query 06 vs group_metrics",
+   "analysis_sql": "",
+   "second_source": "",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D channel phone: abandonment rate: query 06 vs group_metrics",
+   "analysis_sql": "0.124126",
+   "second_source": "0.124126",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D channel web_form: abandonment rate: query 06 vs group_metrics",
+   "analysis_sql": "",
+   "second_source": "",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D queue q-001: CSAT / response rate (completions by final queue): query 07 vs group_metrics",
+   "analysis_sql": "0.851711 / 0.354926",
+   "second_source": "0.851711 / 0.354926",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D queue q-002: CSAT / response rate (completions by final queue): query 07 vs group_metrics",
+   "analysis_sql": "0.871080 / 0.334499",
+   "second_source": "0.871080 / 0.334499",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D queue q-003: CSAT / response rate (completions by final queue): query 07 vs group_metrics",
+   "analysis_sql": "0.870000 / 0.364964",
+   "second_source": "0.870000 / 0.364964",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D transfers: query 05 routes total vs 'transferred' events vs tickets with a transfer (domain disclosures, arrivals)",
+   "analysis_sql": "299",
+   "second_source": "299",
+   "third_source": "299",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D reopened completions: query 05 groups with a reopen vs disclosures reopened_among_completions",
+   "analysis_sql": "241",
+   "second_source": "241",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D service intervals: query 04 ALL vs bi_fact_service_interval rows vs the domain replay",
+   "analysis_sql": "4976",
+   "second_source": "4976",
+   "third_source": "4976",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D Monday 09-11 bind, training weeks: share of the technical-skilled agents' started handling that went to other queues (1 dp): query 04 vs docs/uat-evidence.md (reviewer harness: 988 of 3,423 minutes, 28.9 %)",
+   "analysis_sql": "28.9",
+   "second_source": "28.9",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E rejected_records rows vs the manifest's expected_rejections (rows in the symmetric difference)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E rejected rows kept: table vs domain ingest",
+   "analysis_sql": "70",
+   "second_source": "70",
+   "third_source": "70",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E published tickets rows (loaded + rejected) vs manifest row_counts",
+   "analysis_sql": "3826",
+   "second_source": "3826",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E published ticket_events rows (loaded + rejected) vs manifest row_counts",
+   "analysis_sql": "21948",
+   "second_source": "21948",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E published surveys rows (loaded + rejected) vs manifest row_counts",
+   "analysis_sql": "2153",
+   "second_source": "2153",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-01 found by its SQL check vs the manifest's own count",
+   "analysis_sql": "4",
+   "second_source": "4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-02 found by its SQL check vs the manifest's own count",
+   "analysis_sql": "4",
+   "second_source": "4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-03 found by its SQL check vs the manifest's own count",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-04 found by its SQL check vs the manifest's own count",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-05 found by its SQL check vs the manifest's own count",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-06 found by its SQL check vs the manifest's own count",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-07 found by its SQL check vs the manifest's own count (replay-only: the cold-start run is not in simulation_runs)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-08 found by its SQL check vs the manifest's own count",
+   "analysis_sql": "1",
+   "second_source": "1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E Monday 09-11 block ratio: query 01 (accepted tickets) vs the same block over all published tickets vs manifest stats.designed",
+   "analysis_sql": "1.3259",
+   "second_source": "1.3259",
+   "third_source": "1.3259",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E median block ratio: query 01 (accepted tickets) vs the same over all published tickets vs manifest stats.designed.median_block_ratio",
+   "analysis_sql": "0.4292",
+   "second_source": "0.4292",
+   "third_source": "0.4292",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E response rate after a good experience: query 07 (4 dp) vs manifest stats.response_rate_after_good_experience",
+   "analysis_sql": "0.3799",
+   "second_source": "0.3799",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E CSAT among responders: query 07 vs manifest stats.csat_among_responders (3 dp)",
+   "analysis_sql": "0.864",
+   "second_source": "0.864",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden arrival_count: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "3",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden completion_count: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "3",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden arrival_rate_per_hour: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "3.000000",
+   "second_source": "3.000000",
+   "third_source": "3.000000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden completion_rate_per_hour: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "3.000000",
+   "second_source": "3.000000",
+   "third_source": "3.000000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden backlog: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "{'2026-07-06T09:05:00Z': 3, '2026-07-06T09:25:00Z': 1, '2026-07-06T10:00:00Z': 0}",
+   "second_source": "{'2026-07-06T09:05:00Z': 3, '2026-07-06T09:25:00Z': 1, '2026-07-06T10:00:00Z': 0}",
+   "third_source": "{'2026-07-06T09:05:00Z': 3, '2026-07-06T09:25:00Z': 1, '2026-07-06T10:00:00Z': 0}",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden first_response_minutes: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "{'t-001': '0.0000', 't-002': '10.0000', 't-003': '20.0000'}",
+   "second_source": "{'t-001': '0.0000', 't-002': '10.0000', 't-003': '20.0000'}",
+   "third_source": "{'t-001': '0.0000', 't-002': '10.0000', 't-003': '20.0000'}",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden mean_first_response_minutes: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "10.0000",
+   "second_source": "10.0000",
+   "third_source": "10.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden p90_first_response_minutes: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "20.0000",
+   "second_source": "20.0000",
+   "third_source": "20.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden wait_minutes: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "{'t-001': '0.0000', 't-002': '10.0000', 't-003': '20.0000'}",
+   "second_source": "{'t-001': '0.0000', 't-002': '10.0000', 't-003': '20.0000'}",
+   "third_source": "{'t-001': '0.0000', 't-002': '10.0000', 't-003': '20.0000'}",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden mean_wait_minutes: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "10.0000",
+   "second_source": "10.0000",
+   "third_source": "10.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden resolution_minutes: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "{'t-001': '10.0000', 't-002': '20.0000', 't-003': '30.0000'}",
+   "second_source": "{'t-001': '10.0000', 't-002': '20.0000', 't-003': '30.0000'}",
+   "third_source": "{'t-001': '10.0000', 't-002': '20.0000', 't-003': '30.0000'}",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden mean_resolution_minutes: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "20.0000",
+   "second_source": "20.0000",
+   "third_source": "20.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden handling_minutes_total: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "30.0000",
+   "second_source": "30.0000",
+   "third_source": "30.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden sla_first_response_compliance: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "0.666667",
+   "second_source": "0.666667",
+   "third_source": "0.666667",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden sla_first_response_within: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "2",
+   "second_source": "2",
+   "third_source": "2",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden sla_first_response_eligible: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "3",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden sla_resolution_compliance: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "1.000000",
+   "second_source": "1.000000",
+   "third_source": "1.000000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden sla_resolution_within: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "3",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden sla_resolution_eligible: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "3",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden open_overdue_at_cutoff: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden staffed_available_minutes: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "60.0000",
+   "second_source": "60.0000",
+   "third_source": "60.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden staffed_shift_minutes_whole: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "450.0000",
+   "second_source": "450.0000",
+   "third_source": "450.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden agent_occupancy: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "0.500000",
+   "second_source": "0.500000",
+   "third_source": "0.500000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden abandonment_rate: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "",
+   "second_source": "",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden csat: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "1.000000",
+   "second_source": "1.000000",
+   "third_source": "1.000000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden survey_invitation_rate: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "0.666667",
+   "second_source": "0.666667",
+   "third_source": "0.666667",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden survey_response_rate: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "0.500000",
+   "second_source": "0.500000",
+   "third_source": "0.500000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden empty_population: reference_metrics.sql vs Python domain vs expected.json",
+   "analysis_sql": "false",
+   "second_source": "false",
+   "third_source": "false",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden t-001: first response / wait / resolution / handling (09 vs expected.json vs CALCULATION.md)",
+   "analysis_sql": "0.0000 / 0.0000 / 10.0000 / 10.0000",
+   "second_source": "0.0000 / 0.0000 / 10.0000 / 10.0000",
+   "third_source": "0.0000 / 0.0000 / 10.0000 / 10.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden t-002: first response / wait / resolution / handling (09 vs expected.json vs CALCULATION.md)",
+   "analysis_sql": "10.0000 / 10.0000 / 20.0000 / 10.0000",
+   "second_source": "10.0000 / 10.0000 / 20.0000 / 10.0000",
+   "third_source": "10.0000 / 10.0000 / 20.0000 / 10.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden t-003: first response / wait / resolution / handling (09 vs expected.json vs CALCULATION.md)",
+   "analysis_sql": "20.0000 / 20.0000 / 30.0000 / 10.0000",
+   "second_source": "20.0000 / 20.0000 / 30.0000 / 10.0000",
+   "third_source": "20.0000 / 20.0000 / 30.0000 / 10.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden mean wait / handling total / last completion: event log (09) vs expected.json",
+   "analysis_sql": "10.0000 / 30.0000 / 30.0000",
+   "second_source": "10.0000 / 30.0000 / 30.0000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden simulation sim-001 mean wait / last completion: simulation_events (09) vs expected.json",
+   "analysis_sql": "10.0000 / 30.0000",
+   "second_source": "10.0000 / 30.0000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden simulation events (6): seeded rows vs expected.json (rows differing)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Arrivals: recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "3817",
+   "second_source": "3817",
+   "third_source": "3817",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Completions: recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "3608",
+   "second_source": "3608",
+   "third_source": "3608",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Arrival Rate per Hour: recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "1.893353",
+   "second_source": "1.893353",
+   "third_source": "1.893353",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Completion Rate per Hour: recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "1.789683",
+   "second_source": "1.789683",
+   "third_source": "1.789683",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Mean First Response (min): recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "28.0046",
+   "second_source": "28.0046",
+   "third_source": "28.0046",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure P90 First Response (min): recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "44.1500",
+   "second_source": "44.1500",
+   "third_source": "44.1500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Mean Wait to First Service (min): recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "25.5073",
+   "second_source": "25.5073",
+   "third_source": "25.5073",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Mean Resolution (min): recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "164.5909",
+   "second_source": "164.5909",
+   "third_source": "164.5909",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure SLA First Response Compliance: recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "0.950498",
+   "second_source": "0.950498",
+   "third_source": "0.950498",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure SLA Resolution Compliance: recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "0.978104",
+   "second_source": "0.978104",
+   "third_source": "0.978104",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Handling Minutes: recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "189836.2667",
+   "second_source": "189836.2667",
+   "third_source": "189836.2667",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Staffed Available Minutes: recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "447450.0000",
+   "second_source": "447450.0000",
+   "third_source": "447450.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Agent Occupancy: recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "0.424263",
+   "second_source": "0.424263",
+   "third_source": "0.424263",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Abandonment Rate: recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "0.118213",
+   "second_source": "0.118213",
+   "third_source": "0.118213",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Survey Invitation Rate: recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "0.595067",
+   "second_source": "0.595067",
+   "third_source": "0.595067",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Survey Response Rate: recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "0.349325",
+   "second_source": "0.349325",
+   "third_source": "0.349325",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure CSAT: recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "0.864000",
+   "second_source": "0.864000",
+   "third_source": "0.864000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Staffed Shift Minutes (whole shifts): recomputed from the CSV facts vs reference_metrics.sql staffed_shift_minutes_whole vs domain",
+   "analysis_sql": "447990.0000",
+   "second_source": "447990.0000",
+   "third_source": "447990.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Open at End of Data vs reference open_overdue_at_cutoff (nothing open, so nothing open and overdue)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Reopen Rate of Completions vs domain disclosures (reopened_among_completions / completion_count)",
+   "analysis_sql": "0.066796",
+   "second_source": "0.066796",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure Transfer Share of Arrivals vs domain disclosures (transferred_tickets / arrival_count)",
+   "analysis_sql": "0.078334",
+   "second_source": "0.078334",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure P90 Resolution vs query 02 ALL",
+   "analysis_sql": "294.5833",
+   "second_source": "294.5833",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI simulated sim-001 mean wait / 95 % half-width over 50 replications vs web/public/reference/simulation-runs.json",
+   "analysis_sql": "18.8435 / 8.2004",
+   "second_source": "18.8435 / 8.2004",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI simulated sim-002 mean wait / 95 % half-width over 50 replications vs web/public/reference/simulation-runs.json",
+   "analysis_sql": "7.9502 / 5.2231",
+   "second_source": "7.9502 / 5.2231",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI simulated sim-003 mean wait / 95 % half-width over 50 replications vs web/public/reference/simulation-runs.json",
+   "analysis_sql": "30.6253 / 8.3091",
+   "second_source": "30.6253 / 8.3091",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI simulated paired difference sim-002 minus sim-001 / half-width vs simulation-runs.json",
+   "analysis_sql": "-10.8932 / 3.4329",
+   "second_source": "-10.8932 / 3.4329",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measures over the training dates (15 measures: arrivals, completions, means, P90, SLA, handling, staffed, occupancy, abandonment, survey): recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "2386 / 2260 / 23.4036 / 37.5500 / 20.8904 / 155.2115 / 0.956330 / 0.981416 / 118965.3833 / 297870.0000 / 0.399387 / 0.112108 / 0.591150 / 0.352545 / 0.872611",
+   "second_source": "2386 / 2260 / 23.4036 / 37.5500 / 20.8904 / 155.2115 / 0.956330 / 0.981416 / 118965.3833 / 297870.0000 / 0.399387 / 0.112108 / 0.591150 / 0.352545 / 0.872611",
+   "third_source": "2386 / 2260 / 23.4036 / 37.5500 / 20.8904 / 155.2115 / 0.956330 / 0.981416 / 118965.3833 / 297870.0000 / 0.399387 / 0.112108 / 0.591150 / 0.352545 / 0.872611",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measures over the holdout dates (15 measures: arrivals, completions, means, P90, SLA, handling, staffed, occupancy, abandonment, survey): recomputed from the CSV facts vs reference_metrics.sql vs domain",
+   "analysis_sql": "1431 / 1348 / 35.7365 / 59.3833 / 33.2661 / 180.3161 / 0.940697 / 0.972552 / 70870.8833 / 149640.0000 / 0.473609 / 0.128637 / 0.601632 / 0.344020 / 0.849462",
+   "second_source": "1431 / 1348 / 35.7365 / 59.3833 / 33.2661 / 180.3161 / 0.940697 / 0.972552 / 70870.8833 / 149640.0000 / 0.473609 / 0.128637 / 0.601632 / 0.344020 / 0.849462",
+   "third_source": "1431 / 1348 / 35.7365 / 59.3833 / 33.2661 / 180.3161 / 0.940697 / 0.972552 / 70870.8833 / 149640.0000 / 0.473609 / 0.128637 / 0.601632 / 0.344020 / 0.849462",
+   "fourth_source": "",
+   "equal": true
+  }
+ ],
+ "golden_reference_metrics": [
+  {
+   "quantity": "arrival_count",
+   "reference_metrics_sql": "3",
+   "python_domain": "3",
+   "expected_json": "3"
+  },
+  {
+   "quantity": "completion_count",
+   "reference_metrics_sql": "3",
+   "python_domain": "3",
+   "expected_json": "3"
+  },
+  {
+   "quantity": "arrival_rate_per_hour",
+   "reference_metrics_sql": "3.000000",
+   "python_domain": "3.000000",
+   "expected_json": "3.000000"
+  },
+  {
+   "quantity": "completion_rate_per_hour",
+   "reference_metrics_sql": "3.000000",
+   "python_domain": "3.000000",
+   "expected_json": "3.000000"
+  },
+  {
+   "quantity": "backlog",
+   "reference_metrics_sql": "{\"2026-07-06T09:05:00Z\": 3, \"2026-07-06T09:25:00Z\": 1, \"2026-07-06T10:00:00Z\": 0}",
+   "python_domain": "{\"2026-07-06T09:05:00Z\": 3, \"2026-07-06T09:25:00Z\": 1, \"2026-07-06T10:00:00Z\": 0}",
+   "expected_json": "{\"2026-07-06T09:05:00Z\": 3, \"2026-07-06T09:25:00Z\": 1, \"2026-07-06T10:00:00Z\": 0}"
+  },
+  {
+   "quantity": "first_response_minutes",
+   "reference_metrics_sql": "{\"t-001\": \"0.0000\", \"t-002\": \"10.0000\", \"t-003\": \"20.0000\"}",
+   "python_domain": "{\"t-001\": \"0.0000\", \"t-002\": \"10.0000\", \"t-003\": \"20.0000\"}",
+   "expected_json": "{\"t-001\": \"0.0000\", \"t-002\": \"10.0000\", \"t-003\": \"20.0000\"}"
+  },
+  {
+   "quantity": "mean_first_response_minutes",
+   "reference_metrics_sql": "10.0000",
+   "python_domain": "10.0000",
+   "expected_json": "10.0000"
+  },
+  {
+   "quantity": "p90_first_response_minutes",
+   "reference_metrics_sql": "20.0000",
+   "python_domain": "20.0000",
+   "expected_json": "20.0000"
+  },
+  {
+   "quantity": "wait_minutes",
+   "reference_metrics_sql": "{\"t-001\": \"0.0000\", \"t-002\": \"10.0000\", \"t-003\": \"20.0000\"}",
+   "python_domain": "{\"t-001\": \"0.0000\", \"t-002\": \"10.0000\", \"t-003\": \"20.0000\"}",
+   "expected_json": "{\"t-001\": \"0.0000\", \"t-002\": \"10.0000\", \"t-003\": \"20.0000\"}"
+  },
+  {
+   "quantity": "mean_wait_minutes",
+   "reference_metrics_sql": "10.0000",
+   "python_domain": "10.0000",
+   "expected_json": "10.0000"
+  },
+  {
+   "quantity": "resolution_minutes",
+   "reference_metrics_sql": "{\"t-001\": \"10.0000\", \"t-002\": \"20.0000\", \"t-003\": \"30.0000\"}",
+   "python_domain": "{\"t-001\": \"10.0000\", \"t-002\": \"20.0000\", \"t-003\": \"30.0000\"}",
+   "expected_json": "{\"t-001\": \"10.0000\", \"t-002\": \"20.0000\", \"t-003\": \"30.0000\"}"
+  },
+  {
+   "quantity": "mean_resolution_minutes",
+   "reference_metrics_sql": "20.0000",
+   "python_domain": "20.0000",
+   "expected_json": "20.0000"
+  },
+  {
+   "quantity": "handling_minutes_total",
+   "reference_metrics_sql": "30.0000",
+   "python_domain": "30.0000",
+   "expected_json": "30.0000"
+  },
+  {
+   "quantity": "sla_first_response_compliance",
+   "reference_metrics_sql": "0.666667",
+   "python_domain": "0.666667",
+   "expected_json": "0.666667"
+  },
+  {
+   "quantity": "sla_first_response_within",
+   "reference_metrics_sql": "2",
+   "python_domain": "2",
+   "expected_json": "2"
+  },
+  {
+   "quantity": "sla_first_response_eligible",
+   "reference_metrics_sql": "3",
+   "python_domain": "3",
+   "expected_json": "3"
+  },
+  {
+   "quantity": "sla_resolution_compliance",
+   "reference_metrics_sql": "1.000000",
+   "python_domain": "1.000000",
+   "expected_json": "1.000000"
+  },
+  {
+   "quantity": "sla_resolution_within",
+   "reference_metrics_sql": "3",
+   "python_domain": "3",
+   "expected_json": "3"
+  },
+  {
+   "quantity": "sla_resolution_eligible",
+   "reference_metrics_sql": "3",
+   "python_domain": "3",
+   "expected_json": "3"
+  },
+  {
+   "quantity": "open_overdue_at_cutoff",
+   "reference_metrics_sql": "0",
+   "python_domain": "0",
+   "expected_json": "0"
+  },
+  {
+   "quantity": "staffed_available_minutes",
+   "reference_metrics_sql": "60.0000",
+   "python_domain": "60.0000",
+   "expected_json": "60.0000"
+  },
+  {
+   "quantity": "staffed_shift_minutes_whole",
+   "reference_metrics_sql": "450.0000",
+   "python_domain": "450.0000",
+   "expected_json": "450.0000"
+  },
+  {
+   "quantity": "agent_occupancy",
+   "reference_metrics_sql": "0.500000",
+   "python_domain": "0.500000",
+   "expected_json": "0.500000"
+  },
+  {
+   "quantity": "abandonment_rate",
+   "reference_metrics_sql": "",
+   "python_domain": "",
+   "expected_json": ""
+  },
+  {
+   "quantity": "csat",
+   "reference_metrics_sql": "1.000000",
+   "python_domain": "1.000000",
+   "expected_json": "1.000000"
+  },
+  {
+   "quantity": "survey_invitation_rate",
+   "reference_metrics_sql": "0.666667",
+   "python_domain": "0.666667",
+   "expected_json": "0.666667"
+  },
+  {
+   "quantity": "survey_response_rate",
+   "reference_metrics_sql": "0.500000",
+   "python_domain": "0.500000",
+   "expected_json": "0.500000"
+  },
+  {
+   "quantity": "empty_population",
+   "reference_metrics_sql": "false",
+   "python_domain": "false",
+   "expected_json": "false"
+  }
+ ],
+ "reference_metrics_snapshot": [
+  {
+   "window": "full",
+   "arrival_count": 3817,
+   "completion_count": 3608,
+   "arrival_rate_per_hour": "1.893353",
+   "completion_rate_per_hour": "1.789683",
+   "mean_first_response_minutes": "28.0046",
+   "p90_first_response_minutes": "44.1500",
+   "mean_wait_minutes": "25.5073",
+   "mean_resolution_minutes": "164.5909",
+   "handling_minutes_total": "189836.2667",
+   "sla_first_response_compliance": "0.950498",
+   "sla_first_response_within": 3437,
+   "sla_first_response_eligible": 3616,
+   "sla_resolution_compliance": "0.978104",
+   "sla_resolution_within": 3529,
+   "sla_resolution_eligible": 3608,
+   "open_overdue_at_cutoff": 0,
+   "staffed_available_minutes": "447450.0000",
+   "staffed_shift_minutes_whole": "447990.0000",
+   "agent_occupancy": "0.424263",
+   "abandonment_rate": "0.118213",
+   "csat": "0.864000",
+   "survey_invitation_rate": "0.595067",
+   "survey_response_rate": "0.349325",
+   "empty_population": false,
+   "backlog": "{\"2026-09-28T00:00:00Z\": 0}"
+  },
+  {
+   "window": "training",
+   "arrival_count": 2386,
+   "completion_count": 2260,
+   "arrival_rate_per_hour": "1.775298",
+   "completion_rate_per_hour": "1.681548",
+   "mean_first_response_minutes": "23.4036",
+   "p90_first_response_minutes": "37.5500",
+   "mean_wait_minutes": "20.8904",
+   "mean_resolution_minutes": "155.2115",
+   "handling_minutes_total": "118965.3833",
+   "sla_first_response_compliance": "0.956330",
+   "sla_first_response_within": 2168,
+   "sla_first_response_eligible": 2267,
+   "sla_resolution_compliance": "0.981416",
+   "sla_resolution_within": 2218,
+   "sla_resolution_eligible": 2260,
+   "open_overdue_at_cutoff": 0,
+   "staffed_available_minutes": "297870.0000",
+   "staffed_shift_minutes_whole": "447990.0000",
+   "agent_occupancy": "0.399387",
+   "abandonment_rate": "0.112108",
+   "csat": "0.872611",
+   "survey_invitation_rate": "0.591150",
+   "survey_response_rate": "0.352545",
+   "empty_population": false,
+   "backlog": "{\"2026-08-31T00:00:00Z\": 1}"
+  },
+  {
+   "window": "holdout",
+   "arrival_count": 1431,
+   "completion_count": 1348,
+   "arrival_rate_per_hour": "2.129464",
+   "completion_rate_per_hour": "2.005952",
+   "mean_first_response_minutes": "35.7365",
+   "p90_first_response_minutes": "59.3833",
+   "mean_wait_minutes": "33.2661",
+   "mean_resolution_minutes": "180.3161",
+   "handling_minutes_total": "70870.8833",
+   "sla_first_response_compliance": "0.940697",
+   "sla_first_response_within": 1269,
+   "sla_first_response_eligible": 1349,
+   "sla_resolution_compliance": "0.972552",
+   "sla_resolution_within": 1311,
+   "sla_resolution_eligible": 1348,
+   "open_overdue_at_cutoff": 0,
+   "staffed_available_minutes": "149640.0000",
+   "staffed_shift_minutes_whole": "447990.0000",
+   "agent_occupancy": "0.473609",
+   "abandonment_rate": "0.128637",
+   "csat": "0.849462",
+   "survey_invitation_rate": "0.601632",
+   "survey_response_rate": "0.344020",
+   "empty_population": false,
+   "backlog": "{\"2026-09-28T00:00:00Z\": 0}"
+  }
+ ]
+}
