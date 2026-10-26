@@ -392,6 +392,48 @@
       ],
       "retries": 0,
       "acceptance": "see T-04 equivalents"
+    },
+    {
+      "id": "T-06-01",
+      "project": "06-productsignal",
+      "title": "Contract decisions v1",
+      "status": "done",
+      "prereqs": [],
+      "retries": 0,
+      "acceptance": "see T-05 equivalents"
+    },
+    {
+      "id": "T-06-02",
+      "project": "06-productsignal",
+      "title": "Golden fixture + reference check",
+      "status": "in_progress",
+      "prereqs": [
+        "T-06-01"
+      ],
+      "retries": 0,
+      "acceptance": "see T-05 equivalents"
+    },
+    {
+      "id": "T-06-03",
+      "project": "06-productsignal",
+      "title": "Domain + Postgres + FastAPI slice + CI",
+      "status": "pending",
+      "prereqs": [
+        "T-06-02"
+      ],
+      "retries": 0,
+      "acceptance": "see T-05 equivalents"
+    },
+    {
+      "id": "T-06-04",
+      "project": "06-productsignal",
+      "title": "Generator + web + e2e + publish + integrate",
+      "status": "pending",
+      "prereqs": [
+        "T-06-03"
+      ],
+      "retries": 0,
+      "acceptance": "see T-05 equivalents"
     }
   ]
 }

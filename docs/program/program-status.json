@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T21:44:10Z",
+  "updated_at": "2026-10-26T21:48:10Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -115,7 +115,7 @@
     },
     "06-productsignal": {
       "slug": "productsignal",
-      "stage": "queued",
+      "stage": "contracts v1 and tooling committed (cce09da; spec hash ed0d0941 verified against the source pack); golden fixture A-039 running",
       "built": false,
       "verified": false,
       "published": false,
@@ -124,7 +124,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": null
+      "next_task": "T-06-02 (A-039)"
     },
     "07-trustledger": {
       "slug": "trustledger",
@@ -181,7 +181,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 05 InvoiceBridge: confirm live-check on the manifest commit; A-038 reviewer hand-back -> fix worker -> republish -> artifacts. Then project 06 productsignal (spec on the directive branch; contracts first).",
+    "next_concrete_task": "Project 05 InvoiceBridge: A-038 reviewer hand-back -> fix worker -> republish -> artifacts. Project 06 ProductSignal: A-039 fixture hand-back -> D-05 -> backend worker -> generator -> web -> publish -> integrate -> review -> artifacts.",
     "acceptance": "see task-queue.json"
   }
 }
