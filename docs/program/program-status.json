@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T12:14:37Z",
+  "updated_at": "2026-10-26T12:26:29Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -56,16 +56,16 @@
     },
     "02-onboard-studio": {
       "slug": "onboard-studio",
-      "stage": "gate-A passed (fixture verified); domain/API slice in progress",
+      "stage": "gate-B passed (Mode A verified on hosted runner); generator (A-014) in progress",
       "built": false,
       "verified": false,
       "published": false,
       "integrated": false,
-      "last_verified_sha": null,
-      "latest_run_url": null,
+      "last_verified_sha": "0a24202",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40322386220",
       "site_url": null,
       "blockers": [],
-      "next_task": "T-02-03 domain + Postgres + FastAPI + CI (A-013)"
+      "next_task": "T-02-04: generator, then web (TS domain + timeline-first screens), e2e, publish, integrate"
     },
     "03-supplyscope": {
       "slug": "supplyscope",

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T12:25:06Z",
+  "updated_at": "2026-10-26T12:26:29Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -413,7 +413,7 @@
       "exit_code": 0,
       "expected": "calendar 66.0000, business 2.0000, paused 65.0000 (business overlap 1.0000), active 1.0000 eligible / 2.0000 not; SLA 1.000000; backlog 1 then 0; step waits 0.0833",
       "actual": "ALL OK (155 checks)",
-      "code_sha": "pending-commit",
+      "code_sha": "0a24202 (hosted Mode A run 40322386220 success)",
       "ts": "2026-10-26T12:05:40Z"
     },
     {
@@ -436,7 +436,7 @@
       "exit_code": 0,
       "expected": "66.0000 / 2.0000 / 65.0000 / 1.0000 / 1.0000 (eligible) and 2.0000 (not); SLA 1.000000",
       "actual": "256 passed",
-      "code_sha": "pending-commit",
+      "code_sha": "0a24202 (hosted Mode A run 40322386220 success)",
       "ts": "2026-10-26T12:25:06Z"
     },
     {
@@ -445,7 +445,7 @@
       "status": "verified",
       "command": "pytest tests/test_adversarial.py",
       "exit_code": 0,
-      "code_sha": "pending-commit",
+      "code_sha": "0a24202 (hosted Mode A run 40322386220 success)",
       "ts": "2026-10-26T12:25:06Z"
     },
     {
@@ -453,8 +453,20 @@
       "project": "02-onboard-studio",
       "status": "blocked/not_checked",
       "reason": "C07 reassign-work and C10 migrate-workflow return 501 NOT_IMPLEMENTED in the slice (extension); TEST-08 weekend holiday covered at domain level only",
-      "code_sha": "pending-commit",
+      "code_sha": "0a24202 (hosted Mode A run 40322386220 success)",
       "ts": "2026-10-26T12:25:06Z"
+    },
+    {
+      "requirement": "P02-REL-05 backend and relational suite on GitHub Actions with transient PostgreSQL",
+      "project": "02-onboard-studio",
+      "status": "verified",
+      "command": "onboard-studio-ci.yml job Mode A",
+      "exit_code": 0,
+      "expected": "reference check ALL OK; 256 tests pass with postgres:16 service",
+      "actual": "success",
+      "code_sha": "0a24202",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40322386220",
+      "ts": "2026-10-26T12:26:29Z"
     }
   ]
 }
