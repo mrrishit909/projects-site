@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T19:28:15Z",
+  "updated_at": "2026-10-26T19:29:09Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -101,7 +101,7 @@
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
-      "stage": "queued",
+      "stage": "contracts v1 and tooling committed (75aa6bd); golden fixture A-034 running",
       "built": false,
       "verified": false,
       "published": false,
@@ -110,7 +110,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": null
+      "next_task": "T-05-02 (A-034)"
     },
     "06-productsignal": {
       "slug": "productsignal",

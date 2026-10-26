@@ -350,6 +350,48 @@
       ],
       "retries": 0,
       "acceptance": "tests/test_artifacts.py passes; checksums OK"
+    },
+    {
+      "id": "T-05-01",
+      "project": "05-invoicebridge",
+      "title": "Contract decisions v1",
+      "status": "done",
+      "prereqs": [],
+      "retries": 0,
+      "acceptance": "see T-04 equivalents"
+    },
+    {
+      "id": "T-05-02",
+      "project": "05-invoicebridge",
+      "title": "Golden fixture + reference check",
+      "status": "in_progress",
+      "prereqs": [
+        "T-05-01"
+      ],
+      "retries": 0,
+      "acceptance": "see T-04 equivalents"
+    },
+    {
+      "id": "T-05-03",
+      "project": "05-invoicebridge",
+      "title": "Domain + Postgres + FastAPI slice + CI",
+      "status": "pending",
+      "prereqs": [
+        "T-05-02"
+      ],
+      "retries": 0,
+      "acceptance": "see T-04 equivalents"
+    },
+    {
+      "id": "T-05-04",
+      "project": "05-invoicebridge",
+      "title": "Generator + web + e2e + publish + integrate",
+      "status": "pending",
+      "prereqs": [
+        "T-05-03"
+      ],
+      "retries": 0,
+      "acceptance": "see T-04 equivalents"
     }
   ]
 }
