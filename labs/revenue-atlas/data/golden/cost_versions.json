@@ -1,0 +1,20 @@
+{
+ "entity": "cost_versions",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "cost_version_id": "cv-001",
+   "product_id": "prod-001",
+   "unit_cost": "60.00",
+   "valid_from": "2026-01-01",
+   "valid_to": null
+  },
+  {
+   "cost_version_id": "cv-002",
+   "product_id": "prod-002",
+   "unit_cost": "20.00",
+   "valid_from": "2026-01-01",
+   "valid_to": null
+  }
+ ]
+}
