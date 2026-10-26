@@ -25,8 +25,7 @@ This is the whole workflow, and it is the same for every project:
    as `REQUIRED` in `build.py`). Text fields are trusted HTML fragments.
 2. Run `python3 build.py`. It writes `<slug>/index.html` (the case study) and rebuilds the home page, where the project appears as a
    new entry in the catalogue. Order is newest `date` first (`order` breaks ties).
-3. Make its motion tile (next section) and its catalogue thumbnail (`python3 tools/thumbs.py`), rebuild, and check its catalogue
-   entry and its case study in a browser.
+3. Make its motion tile (next section), rebuild, and check its row in the archive and its case study in a browser.
 4. Commit what the build changed, then publish (merge into `main`, see Publishing).
 
 Do **not** hand-edit `index.html` or any `<slug>/index.html`: they are generated. Don't touch other projects' files when adding one.
@@ -67,7 +66,9 @@ A project's record sleeve on the home page, and the "Next project" link on the c
   the counts from `data/github.json` (`tools/github.sh` refreshes it; **re-run it then `python3 build.py` after pushing new
   repositories**). The posters for the first paint and for browsers without WebGL are `assets/atelier-poster.webp` and
   `-m`, rendered by `NODE_PATH=$(npm root -g) node tools/poster.cjs` against the local server from
-  `motion/instrument-lab.html`; re-render them when the hero changes. Type: Bricolage Grotesque condensed for display,
+  `motion/instrument-lab.html` in its `poster=1` mode (controls hidden, ground transparent; the tool refuses an export
+  otherwise and checks the pixels); the case pages' arrangement stills `assets/config-<state>.webp` come from
+  `tools/config-posters.cjs` the same way. Re-render all of them when the instrument changes. Type: Bricolage Grotesque condensed for display,
   Geist for reading, JetBrains Mono for figures, all vendored (no Fontshare). Palette: deep #071d16, ivory #f0ebe1,
   champagne #c4ab7d (#7a6436 as text on ivory), muted #b8c7ba on green, ink #142e24 on ivory. Professional facts come
   from the résumé at ~/portfolio/resume.pdf; do not add claims not in it. The Florida figure is on-time ARRIVALS within
@@ -80,12 +81,11 @@ A project's record sleeve on the home page, and the "Next project" link on the c
   `case.js` adds the instrument after load (quality lite), reading progress, section chips, reveal, copy buttons, zoom,
   sortable tables, the next loop, and the title's View Transition. `trading-bot` stays frozen (its own `style.css` +
   `theme.css`) by the owner's rule; it is the one page outside the system.
-* **`all.html` is the archive** (`all.template.html` + `atelier.css` + `catalog.js`, unchanged behaviour): every project
-  as a real link with its thumbnail and its repository's language, year and commit count; the query bar with clauses;
-  Covers and Table views; a `<dialog>` addressable as `#<slug>` with explicit history ownership. Old home addresses
+* **`all.html` is the archive**, an editorial index (`all.template.html` + `atelier.css` + `catalog.js`): every project
+  as one row (number, the title as the link, kind, tools, year and status from the project record); no thumbnails (the
+  owner's brief forbids a thumbnail wall); the query bar with clauses; the kind tabs; a `<dialog>` addressable as
+  `#<slug>` with explicit history ownership. Old home addresses
   (`#projects`, `#<slug>`, `?q=`, `?kind=`) forward there from the home's inline script.
-* **Catalogue thumbnails.** `python3 tools/thumbs.py` (sips + cwebp) writes `assets/thumbs/<slug>.webp` at 880x503.
-  **Run it after adding a project**, then `python3 build.py`.
 * **Checks:** `python3 -m http.server 8800 --bind 127.0.0.1 &` then `NODE_PATH=$(npm root -g) node tests/portfolio-check.cjs`
   (the home and the archive without JavaScript, every internal link on disk, the chapters against featured.json, the hour
   data, the opening and its skip and replay, no opening on a return / hash / second visit / reduced motion, no WebGL, the
@@ -93,8 +93,9 @@ A project's record sleeve on the home page, and the "Next project" link on the c
   arrangement controls, pause, sound, copy e-mail, every case-study route's fields, a case page's instrument, chips and
   zoom, the archive's search / tabs / dialog / history, deep links and forwards, overflow at five widths on four pages,
   palette contrast, console errors). The suite launches Chromium on the GPU (`--use-angle=metal`); `SOFTGL=1` forces the
-  software renderer. Evidence scripts (pacing with p50/p95/p99, context loss, recordings, screenshots, Lighthouse) live in
-  `~/projects-site-evidence/atelier-2026-10-25/`; numbers in `docs/PERFORMANCE.md`, gates in `docs/EVIDENCE.md`, the
+  software renderer. Evidence scripts (pacing with p50/p95/p99, context loss, recordings, captures, fallbacks, responsive,
+  throttled CPU, Lighthouse) live in `tests/evidence/` and write to `$EVIDENCE_OUT` (default
+  `~/projects-site-evidence/atelier-2026-10-25/`); `tools/package.sh` bundles site, evidence and manifest for review; numbers in `docs/PERFORMANCE.md`, gates in `docs/EVIDENCE.md`, the
   rubric in `docs/REVIEW.md`.
 * `vendor/` holds GSAP, Lenis (unused by the home; native scrolling), Three.js and the fonts with their licences. The
   Three.js bundle is limited to the symbols instrument.js uses; rebuild it per `docs/BUILD-THREE.md` if a new `THREE.*`

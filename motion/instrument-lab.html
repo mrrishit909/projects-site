@@ -5,13 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Instrument lab</title>
 <style>
-@font-face{font-family:"Bricolage Grotesque";src:url(../vendor/fonts/Bricolage-latin.woff2) format("woff2");font-weight:200 800;font-stretch:75% 100%}
+@font-face{font-family:"Bricolage Grotesque";src:url(../vendor/fonts/Bricolage-display.woff2) format("woff2");font-weight:600 800;font-stretch:75% 85%}
 @font-face{font-family:"Geist";src:url(../vendor/fonts/Geist-Medium.woff2) format("woff2");font-weight:500}
 html,body{margin:0;height:100%;background:#071d16;color:#f0ebe1;font:15px/1.4 Geist,system-ui,sans-serif;overflow:hidden}
 canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
 .ui{position:fixed;left:16px;bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;z-index:2}
 .ui select,.ui input,.ui button{font:inherit;background:#0b3025;color:#f0ebe1;border:1px solid #c4ab7d;padding:6px 10px}
 .ui output{font-family:ui-monospace,monospace;font-size:13px}
+.ui[hidden]{display:none}
+html.poster,html.poster body{background:transparent}
 .ivory{background:#f0ebe1}
 </style>
 </head>
@@ -30,16 +32,16 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
   <output id="info"></output>
 </form>
 <script type="module">
-import { createInstrument } from "../instrument.js";
+import { createInstrument, prepareTextures } from "../instrument.js";
 const q = new URLSearchParams(location.search), $ = id => document.getElementById(id);
 const series = [622421,579083,622738,630399,691312,566662,543970,624954,623756,647306,616031,644493,640803,611277,642315,640201,716924,582287,564663,657586,654070,685550,671109,677249];
 const fan = [1.67,1.01,1.96,1.47,1.09,2.44,1.61,1.4,2.67,2.09,1.66,2.59];
 await Promise.all([document.fonts.load("800 20px 'Bricolage Grotesque'"), document.fonts.load("500 20px Geist")]).catch(() => 0);
-const inst = createInstrument({ canvas: $("c"), phone: () => innerWidth <= 720, reduced: false, series, fan });
+const inst = createInstrument({ canvas: $("c"), phone: () => innerWidth <= 720, reduced: false, series, fan, textures: await prepareTextures() });
 for (const s of inst.states) { $("state").add(new Option(s, s)); $("next").add(new Option(s, s)); }
 for (const k of ["state", "next", "u", "arg", "k", "ry", "rx"]) if (q.has(k)) $(k).value = q.get(k);
 if (q.get("ground") === "ivory") document.body.classList.add("ivory");
-if (q.get("poster")) { document.body.style.background = "transparent"; document.querySelector(".ui").hidden = true; }
+if (q.get("poster")) { document.documentElement.classList.add("poster"); document.querySelector(".ui").hidden = true; }
 $("ivory").addEventListener("click", () => document.body.classList.toggle("ivory"));
 const stageX = +(q.get("sx") || 0.5), stageY = +(q.get("sy") || 0.5), stageS = +(q.get("ss") || 1);
 const tick = t => { requestAnimationFrame(tick);

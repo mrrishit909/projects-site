@@ -85,14 +85,21 @@ const contrastOf = sels => {
   const homeContrast = await p.evaluate(contrastOf, [".hero .lead", ".hero .kicker", ".hero .foot-lines", ".figure .def", ".btn.fill", ".controls button", ".marks", ".system .legend"]);
   assert(homeContrast.every(([, v]) => +v >= 4.5), "home text on the green ground clears 4.5:1: " + homeContrast.map(x => x.join(" ")).join(", "));
   await p.close();
+  // the posters' pixels: transparent ground, no lab controls in the bottom-left strip, the object present; the same for the six arrangement stills
+  const pxPage = await page({}, null, ALL, 0);
+  const pix = await pxPage.evaluate(async srcs => { const out = {}; for (const s of srcs) { const img = new Image(); img.src = s; await img.decode(); const c = document.createElement("canvas"); c.width = img.width; c.height = img.height; const g = c.getContext("2d"); g.drawImage(img, 0, 0); const d = g.getImageData(0, 0, c.width, c.height).data; let strip = 0, opaque = 0, corner = 0, blue = 0; for (let y = 0; y < c.height; y += 2) for (let x = 0; x < c.width; x += 2) { const i = (y * c.width + x) * 4, a = d[i + 3]; if (a > 200) opaque++; if (y > c.height * 0.9 && x < c.width * 0.3 && a > 0) strip++; if (y < 40 && x < 40 && a > 0) corner++; if (a > 200 && d[i + 2] > 180 && d[i] < 80) blue++; } out[s] = { w: c.width, h: c.height, strip, opaque, corner, blue, total: Math.ceil(c.width / 2) * Math.ceil(c.height / 2) }; } return out; }, ["assets/atelier-poster.webp", "assets/atelier-poster-m.webp", ...["closed", "open", "network", "pipeline", "timeline", "documents"].map(s => `assets/config-${s}.webp`)]);
+  assert(Object.values(pix).every(v => v.strip === 0 && v.corner === 0 && v.blue === 0 && v.opaque > v.total * 0.02 && v.opaque < v.total * 0.6), "posters and arrangement stills: transparent ground, no control strip, no corner artefact, no blue slider pixels, the object present: " + Object.entries(pix).map(([k, v]) => k.replace("assets/", "") + " " + Math.round(100 * v.opaque / v.total) + "%").join(", "));
+  assert(pix["assets/atelier-poster.webp"].w === 1440 && pix["assets/atelier-poster-m.webp"].w === 390 && Object.keys(pix).filter(k => /config-/.test(k)).every(k => pix[k].w === 900), "posters are the stage sizes (1440, 390, 900)");
+  await pxPage.close();
 
-  // 2. the archive without JavaScript: every project is a real link
+  // 2. the archive without JavaScript: an editorial index, every project one row with its fields, no thumbnails anywhere
   p = await page({ javaScriptEnabled: false }, null, ALL, 0);
-  const thumbs = await p.$$eval(".tile", els => els.map(e => { const i = e.querySelector("img.tile-thumb[src]"); return i && [e.dataset.slug, i.getAttribute("src"), i.loading, +i.getAttribute("width")]; }));
-  assert(thumbs.every((t, i) => t && t[1] === `assets/thumbs/${t[0]}.webp` && (i < 3 ? t[2] !== "lazy" : t[2] === "lazy") && t[3] === 880 && fs.existsSync(path.join(root, t[1]))), "every archive entry has its own 880px thumbnail (the first row at once, the rest lazy), and the file exists");
-  const tiles = await p.$$eval(".tile", els => els.map(e => ({ slug: e.dataset.slug, href: e.querySelector("a").getAttribute("href"), shown: getComputedStyle(e).display !== "none" })));
+  const tiles = await p.$$eval(".tile", els => els.map(e => ({ slug: e.dataset.slug, href: e.querySelector("a").getAttribute("href"), shown: getComputedStyle(e).display !== "none", no: e.querySelector(".tile-no").textContent, title: e.querySelector(".tile-title").textContent, kind: e.querySelector(".tile-kind").textContent, tools: e.querySelector(".tile-tools").textContent, meta: e.querySelector(".tile-meta").textContent, img: e.querySelectorAll("img").length })));
   assert(tiles.length === slugs.length, `${tiles.length} archive entries rendered for ${slugs.length} project folders`);
   assert(tiles.every(t => t.href === t.slug + "/") && tiles.every(t => t.shown) && new Set(tiles.map(t => t.slug)).size === tiles.length, "every archive entry links to its own project folder, is visible without JavaScript, and is unique");
+  assert(tiles.every(t => /^\d{3}$/.test(t.no) && t.title.length > 0 && t.kind.length > 0 && t.tools.length > 0 && /^\d{4} · (Archived|Live demo|Live site|Repository)/.test(t.meta)), "every row carries its number, title, kind, tools, year and status");
+  assert(tiles.every(t => t.img === 0) && await p.$$eval("#tiles img, .tile-thumb", es => es.length) === 0, "no thumbnail wall: the index carries no images (the owner's brief forbids a thumbnail wall)");
+  assert(await p.$eval(".tile[data-slug='trading-bot'] .tile-meta", e => /Archived/.test(e.textContent)) && await p.$eval(".tile[data-slug='florida-flight-delays'] .tile-meta", e => /Live demo/.test(e.textContent)), "status reflects the project record: trading-bot archived, Florida a live demo");
   [n, missing] = await linksOnDisk(p);
   assert(missing.length === 0, `archive: all ${n} internal links resolve on disk` + (missing.length ? ": missing " + missing.join(", ") : ""));
   await p.close();
@@ -148,6 +155,27 @@ const contrastOf = sels => {
   const paused = await p.evaluate(() => [document.documentElement.classList.contains("paused"), document.getElementById("pause").getAttribute("aria-pressed"), typeof gsap !== "undefined" && gsap.globalTimeline.paused()]);
   await p.click("#pause"); await p.waitForTimeout(150);
   assert(paused[0] && paused[1] === "true" && paused[2] && !(await has(p, "paused")), "Pause stops the renderer, GSAP and the page's motion classes; Resume restores them");
+  await p.close();
+  // audio reflects real capability: a context that cannot be created, a resume that is refused, a foreground while paused
+  p = await page({}, () => { window.AudioContext = function () { throw new Error("no audio"); }; window.webkitAudioContext = undefined; }, BASE, 0, "domcontentloaded");
+  await p.waitForTimeout(400); await p.click("#sound"); await p.waitForTimeout(300);
+  assert(await p.evaluate(() => document.getElementById("sound").getAttribute("aria-pressed") === "false" && document.getElementById("sound").textContent.includes("Sound off") && /not available/.test(document.getElementById("copy-status").textContent) && sessionStorage.getItem("sound") !== "1"), "AudioContext creation failing: the control stays off, says so accessibly, stores no preference, throws nothing");
+  await p.close();
+  p = await page({}, () => { const R = window.AudioContext; window.AudioContext = function () { const c = new R(); c.resume = () => Promise.reject(new Error("denied")); Object.defineProperty(c, "state", { get: () => "suspended" }); return c; }; }, BASE, 0, "domcontentloaded");
+  await p.waitForTimeout(400); await p.click("#sound"); await p.waitForTimeout(300);
+  assert(await p.evaluate(() => document.getElementById("sound").getAttribute("aria-pressed") === "false" && /could not start/.test(document.getElementById("copy-status").textContent)), "a refused resume: the control stays off and says so");
+  await p.close();
+  p = await page({}, null, BASE, 0, "domcontentloaded"); await p.waitForTimeout(400);
+  await p.click("#sound"); await p.waitForTimeout(300);
+  const running = await p.evaluate(() => document.getElementById("sound").getAttribute("aria-pressed") === "true");
+  await p.click("#pause"); await p.waitForTimeout(200);
+  await p.evaluate(() => { Object.defineProperty(document, "hidden", { get: () => true, configurable: true }); document.dispatchEvent(new Event("visibilitychange")); Object.defineProperty(document, "hidden", { get: () => false, configurable: true }); document.dispatchEvent(new Event("visibilitychange")); }); await p.waitForTimeout(300);
+  const whilePaused = await p.evaluate(() => document.documentElement.classList.contains("paused"));
+  for (let i = 0; i < 6; i++) { await p.click("#sound"); }
+  await p.waitForTimeout(400);
+  const afterToggles = await p.evaluate(() => [document.getElementById("sound").getAttribute("aria-pressed"), sessionStorage.getItem("sound")]);
+  assert(running && whilePaused && afterToggles[0] === "true" && afterToggles[1] === "1", `sound started on a gesture (${running}); the foreground while paused left the page paused; six rapid toggles end consistent (${afterToggles})`);
+  await p.click("#pause");
   await jump(p, "#contact"); await p.waitForTimeout(600);
   assert(await p.evaluate(async () => { const btn = document.getElementById("copy-mail"); if (btn.hidden) return false; btn.click(); await new Promise(r => setTimeout(r, 500)); return btn.textContent.trim() === "Copied" && document.getElementById("copy-status").textContent.length > 0; }), "Copy e-mail copies and confirms");
   await p.close();
@@ -194,8 +222,12 @@ const contrastOf = sels => {
   const q = await ctxNoGl.newPage(); q.on("pageerror", e => errors.push(String(e))); await q.goto(BASE, { waitUntil: "domcontentloaded" }); await q.waitForTimeout(1500);
   assert(await q.evaluate(() => !document.documentElement.classList.contains("gl-on") && document.documentElement.classList.contains("entered") && getComputedStyle(document.querySelector(".poster")).display !== "none"), "no WebGL: the poster stays, the page is entered");
   await q.goto(BASE + featured[0].slug + "/", { waitUntil: "load" }); await q.waitForTimeout(800);
-  assert(await q.evaluate(() => !document.documentElement.classList.contains("gl-on") && document.querySelector("h1").textContent.length > 0 && document.querySelector(".summary").children.length === 5), "no WebGL on a case study: the words and the summary stand on their own");
+  assert(await q.evaluate(() => !document.documentElement.classList.contains("gl-on") && document.querySelector("h1").textContent.length > 0 && document.querySelector(".summary").children.length === 5 && getComputedStyle(document.querySelector(".object-still")).display !== "none" && document.querySelector(".object-still").naturalWidth === 900), "no WebGL on a case study: the words, the summary and the arrangement still stand on their own");
   await ctxNoGl.close();
+  const ctxNoMod = await b.newContext({ viewport: { width: 1440, height: 900 } }); const q2 = await ctxNoMod.newPage(); q2.on("pageerror", e => errors.push(String(e))); await q2.route("**/instrument.js*", r => r.abort());
+  await q2.goto(BASE + featured[1].slug + "/", { waitUntil: "load" }).catch(() => 0); await q2.waitForTimeout(1200);
+  assert(await q2.evaluate(() => !document.documentElement.classList.contains("gl-on") && getComputedStyle(document.querySelector(".object-still")).display !== "none" && document.querySelector(".toc") !== null), "a failed instrument import on a case study: the still stays, the page's own enhancements still run, no unhandled rejection");
+  await ctxNoMod.close();
 
   // 9. every case-study route: the file, one h1, the hero, the instrument, the five summary fields, metadata, neighbours
   const bad = [];
@@ -239,12 +271,9 @@ const contrastOf = sels => {
 
   // 11. the archive with JavaScript
   p = await page({}, null, ALL);
-  const catContrast = await p.evaluate(contrastOf, [".catalog-head .lead", ".tile-kind", ".tile-title", ".tile-gh", ".count", ".kind-tab[aria-pressed=false]", ".view-btn[aria-pressed=false]", ".foot", "#search"]);
+  const catContrast = await p.evaluate(contrastOf, [".catalog-head .lead", ".tile-kind", ".tile-title", ".tile-tools", ".tile-meta", ".tiles-head", ".count", ".kind-tab[aria-pressed=false]", ".foot", "#search"]);
   assert(catContrast.every(([, v]) => +v >= 4.5), "archive text clears 4.5:1: " + catContrast.map(x => x.join(" ")).join(", "));
-  await p.evaluate(() => scrollTo(0, 400)); await p.waitForTimeout(1200);
-  const sharp = await p.$$eval(".tile:not(.is-beyond) img.tile-thumb", is => is.filter(i => i.getBoundingClientRect().top < innerHeight).map(i => [i.complete && i.naturalWidth, i.getBoundingClientRect().width, getComputedStyle(i).filter]));
-  assert(sharp.length >= 3 && sharp.every(([nw, w, f]) => nw >= 2 * w - 2 && f === "none"), `archive thumbnails load at 2x their size with no filter (${sharp.map(x => x[0] + "/" + Math.round(x[1])).join(", ")})`);
-  await p.evaluate(() => scrollTo(0, 0)); await p.waitForTimeout(300);
+  assert(await p.$$eval("#tiles img", es => es.length) === 0 && !(await p.$("#view-grid")), "with JavaScript the index stays an index: no images, no cover view to switch to");
   const visibleTiles = () => p.$$eval(".tile", els => els.filter(e => getComputedStyle(e).display !== "none").length);
   assert(await visibleTiles() === 12 && !(await p.$eval("#more", btn => btn.hidden)) && await p.$eval("#shown", e => e.textContent) === `12 of ${slugs.length} shown`, "archive starts with 12 projects and an accurate count");
   await p.click("#more"); await p.waitForTimeout(200);
@@ -256,9 +285,7 @@ const contrastOf = sels => {
   assert(await p.$$eval(".tile:not([hidden])", els => els.every(e => e.dataset.kind === "SQL")) && await p.$eval(".kind-tab[data-kind='SQL']", btn => btn.getAttribute("aria-pressed") === "true"), "the kind filter keeps only that kind and the kind tab follows the select");
   await p.selectOption("#kind", ""); await p.fill("#search", "language:python year:2026 commits>8"); await p.waitForTimeout(200);
   assert(await p.$$eval(".tile:not([hidden])", els => els.length > 0 && els.every(e => e.dataset.lang === "Python" && e.dataset.year === "2026" && +e.dataset.commits > 8)), "a clause query keeps only matching repositories");
-  await p.click("#view-table"); await p.waitForTimeout(300);
-  assert(await p.evaluate(() => document.getElementById("tiles").classList.contains("is-table") && getComputedStyle(document.querySelector(".tile:not([hidden]) .tile-thumb")).display === "none"), "the table view drops the covers");
-  await p.click("#view-grid"); await p.fill("#search", "zzzz-nothing"); await p.waitForTimeout(150);
+  await p.fill("#search", "zzzz-nothing"); await p.waitForTimeout(150);
   assert(await p.$eval("#empty", e => !e.hidden), "zero results shows the empty state");
   await p.click("#reset"); await p.waitForTimeout(150);
   assert(await p.$$eval(".tile:not([hidden])", els => els.length) === slugs.length, "the empty state's reset shows the whole collection");

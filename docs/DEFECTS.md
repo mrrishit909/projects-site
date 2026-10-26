@@ -1,0 +1,28 @@
+# Defect ledger (Precision Atelier review candidate)
+
+Severity: BLOCKER (release-blocking per the v2 directive), MAJOR (a visible defect in the accepted composition or a
+misleading record), MINOR (a deviation without task impact), NOTE. Tested build: the commit named in the retest column;
+"candidate" means the working tree being corrected in this pass (committed at the end as the review candidate).
+Evidence paths are under `~/projects-site-evidence/atelier-2026-10-25/` unless absolute.
+
+| Id | Severity | Route / viewport / mode | Reproduction | Expected | Actual | Evidence | Correction | Retest |
+|---|---|---|---|---|---|---|---|---|
+| D-01 | BLOCKER | home, every viewport, before WebGL and without it | decode `assets/atelier-poster.webp` (2969d25) | the exploded instrument on a transparent ground | the instrument plus the lab's selects, sliders, "ivory ground" button and the draw-call readout on an opaque green ground; the phone poster the same | poster/d.png (scratch), reproduced 2026-10-26 | the lab's `.ui[hidden]` is now display:none and the ground transparent in poster mode; `tools/poster.cjs` refuses an export unless the controls are hidden and the ground transparent, then checks the pixels (bottom-left strip fully transparent, no blue slider pixels, the object present); the suite decodes every poster and still and checks the same | PENDING (suite run on the candidate) |
+| D-02 | BLOCKER | all.html, default view | open the archive | an editorial index (the brief forbids a thumbnail wall) | a three-column cover grid of 224 thumbnails, with a Covers/Table toggle; the suite required the thumbnails | r3/d-archive-page.png | rows with number, title (the link), kind, tools, year and status; thumbnails, `tools/thumbs.py`, `assets/thumbs` and the view toggle removed; suite section 2 now asserts the fields and that no image is in the index (see "why the assertions changed" below) | PENDING |
+| D-03 | MAJOR | every case page, no WebGL / failed import / before the first frame | open florida-flight-delays/ with WebGL disabled | a composed hero | the right half of the hero empty (the canvas region blank) | fallbacks/case-flagship-d-nowebgl.png (before) | a transparent still of the page's own arrangement (`assets/config-<state>.webp`, rendered by `tools/config-posters.cjs` through the same clean-export checks) sits in the hero until the first WebGL frame and stays without WebGL, JavaScript or the module; shared template, no per-page work | PENDING |
+| D-04 | MAJOR | home, Sound control | press Sound where AudioContext creation throws or resume is refused | the control stays "Sound off" and says why | the label switched to "Sound on" before any context existed; an exception on creation was unhandled; the preference was stored | home.js (2969d25) lines 29 to 31 read | `start()` returns false on failure; `set()` awaits resume and only reports "Sound on" when the context is running; a short note goes to the live region; the preference is stored only on success; `resume()` refuses while paused | PENDING (three suite checks) |
+| D-05 | MAJOR | docs/EVIDENCE.md, docs/ATELIER_PROGRESS.md | read the gate table | statuses that say what was exercised | "PASS by construction", "PASS by code path", "PASS with remainders", and a progress summary saying A to G done while rows were partial | the files at 2969d25 | gates reclassified into VERIFIED PASS / FAIL / PARTIAL / NOT TESTED / BLOCKED / NOT APPLICABLE with code inspection recorded separately; the summary rewritten to agree | PENDING (docs in this pass) |
+| D-06 | MAJOR | home, mobile preset | Lighthouse mobile | LCP <= 2.5 s | 3.0 to 4.1 s across pages (the display font's arrival repaints the largest text) | lh-home-mobile.json (2969d25) | investigation and corrections recorded in docs/PERFORMANCE.md (preload order, module priority); re-measured | PENDING |
+| D-07 | MINOR | home, opening | pace.cjs | no frame over 50 ms after the first paint | one compile frame of 100 to 200 ms during the opening | pace.json (2969d25) | shaders compiled once at creation (`renderer.compile`) before the first frame, textures timed; re-measured | PENDING |
+| D-08 | MINOR | all.html, phone | open the archive at 390 wide | the header clear of the content | the count strip in the header collided with the nav row and the kicker | poster/arch-m.png (scratch) | the count strip hidden on phones; the head padded under the two-row bar | PENDING |
+| D-09 | NOTE | review package | unzip the previous archive | self-contained evidence | the zip referenced evidence outside itself | the 2026-10-26 zip | the package script bundles the site, the evidence folder, the scripts (now in tests/evidence), the manifest and checksums | PENDING |
+| D-10 | NOTE | responsive coverage | gate F | 1024, 1920, landscape, 200% zoom, short phones, keyboard, screen reader | not exercised at 2969d25 | docs/EVIDENCE.md | tests/evidence/responsive.cjs; screen reader remains NOT TESTED (no tooling) | PENDING |
+
+## Why the archive assertions changed
+
+The previous suite asserted that every tile carried an 880 px thumbnail with the first row eager and the rest lazy,
+that thumbnails loaded at 2x with no filter, and that a table view dropped the covers. Those assertions enforced the
+thumbnail wall the owner's brief forbids; they were not weakened but replaced by assertions that enforce the intended
+index: every row is a real link with number, title, kind, tools, year and status; no image exists in the index with or
+without JavaScript; status reflects the project record. Search, the kind filter and tabs, clause queries, the empty
+state, reset, the detail dialog, deep links and the old-address forwards keep their checks unchanged.

@@ -29,18 +29,30 @@ Per-voice peaks above are below -1 dBTP by more than 20 dB; four voices at once 
 These are digital-signal limits, not proof of safe listening levels; playback is conservative and the visitor holds the
 control.
 
-## Checks (PASS / FAIL / BLOCKED)
+## Failure handling (corrected 2026-10-26, D-04)
 
-| Case | Status | How |
-|---|---|---|
-| first visit muted | PASS | tests/portfolio-check.cjs: the button starts aria-pressed=false, "Sound off" |
-| enable, disable during sound | PASS | the suite toggles twice and reads the label; the code fades the master before suspending |
-| replay, skip midway | PASS | click guarded once per run; Skip jumps the timeline so no voice is scheduled late |
-| rapid repeated project selection | PASS by construction | cue spacing 600 ms, 4 voices; pace.cjs clicks six arrangements in 3 s |
-| reverse scroll | PASS by construction | ticks only on a rising test count; chapter cues deduplicated by index |
-| route return | PASS | a new document: no context survives navigation; preference reapplied only after a gesture |
-| background / foreground | PASS by code path | visibilitychange suspends and resumes; not exercised by Playwright (cannot hide a tab) |
-| audio unavailable | PASS | AudioContext creation is inside the enable handler; failure leaves the button at off |
-| reduced motion | PASS | cues still gated by the control; the opening's click and texture fire in the short sequence |
-| mute remains effective, state communicated | PASS | aria-pressed and the visible label |
-| AUDITORY REVIEW | NOT PERFORMED | no listening pass happened in this session; the numeric envelope was checked, taste and synchronisation were not heard. The site ships muted by default, so this does not block the silent visual site. |
+`start()` creates the context inside a try and returns false on failure; `set(true)` awaits `resume()` and reports
+"Sound on" only when the context's state is running; otherwise the control stays "Sound off", a short note is written to
+the page's live region ("Sound is not available in this browser" or "Sound could not start; it stays off"), and no
+preference is stored. `resume()` on returning to the foreground is refused while the page is paused.
+
+## Checks
+
+Runtime verification (the suite exercised the path) is kept apart from code inspection (the path was read, not run).
+
+| Case | Runtime | Code inspected | Evidence |
+|---|---|---|---|
+| first visit muted | VERIFIED PASS (suite: the control starts aria-pressed=false) | yes | portfolio-check.txt |
+| enable on a gesture; the label changes only once the context runs | PENDING (suite audio block on the candidate) | yes | |
+| AudioContext creation throwing | PENDING (suite: stubbed constructor) | yes | |
+| resume refused | PENDING (suite: stubbed resume) | yes | |
+| disable during sound (fade, then suspend) | PARTIAL (the suite toggles and reads the control; the fade is not measured) | yes | |
+| replay, skip midway (no duplicate voices) | code inspected only | yes: the click is guarded once per run; Skip jumps the timeline | |
+| rapid repeated toggling and selection | PENDING (suite: six rapid toggles end consistent); cue spacing and the four-voice cap are code inspected | yes | |
+| reverse scroll (ticks only on a rising count) | code inspected only | yes | |
+| route return (a new document has no context) | code inspected only | yes | |
+| background then foreground; foreground while paused does not resume | PENDING (suite dispatches visibilitychange while paused) | yes | |
+| audio unavailable (no AudioContext) | PENDING (suite) | yes | |
+| reduced motion | code inspected only (cues still gated by the control) | yes | |
+| mute effective, state communicated | PENDING (suite: aria-pressed and the label; the live-region note) | yes | |
+| AUDITORY REVIEW | NOT PERFORMED | | no listening pass was possible in this environment; the envelope was checked numerically; taste, synchronisation, harshness, clicks and interference with reading were not heard. The site ships muted by default. |

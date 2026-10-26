@@ -1,6 +1,6 @@
 /* The catalogue page (all.html): every project, twelve at a time, with search, a kind filter (tabs + the full select,
-   also from ?q= / ?kind=), and a project dialog addressable as #<slug> with explicit history ownership. Thumbnails are
-   plain lazy images (assets/thumbs, tools/thumbs.py). One classic script, no build step. */
+   also from ?q= / ?kind=), and a project dialog addressable as #<slug> with explicit history ownership. An editorial
+   index of rows, no thumbnails (the owner's brief forbids a thumbnail wall). One classic script, no build step. */
 (() => {
   "use strict";
   const root = document.documentElement, $ = id => document.getElementById(id);
@@ -40,11 +40,6 @@
     st.raf = requestAnimationFrame(tick);
   }
 
-  /* ---- thumbnails past the first row get their source after the page has loaded (they are lazy images from then on) ---- */
-  let loaded = document.readyState === "complete";
-  const thumbs = () => loaded && document.querySelectorAll(".tile:not(.is-beyond):not([hidden]) img[data-src]").forEach(i => { i.src = i.dataset.src; i.removeAttribute("data-src"); });
-  addEventListener("load", () => setTimeout(() => { loaded = true; thumbs(); }, 300));
-
   /* ---- the catalogue: twelve at a time, more only on request ---- */
   const tiles = [...document.querySelectorAll(".tile")], total = tiles.length, PAGE = 12;
   const search = $("search"), kind = $("kind"), clear = $("clear"), more = $("more"), resetAll = $("reset-all");
@@ -69,7 +64,6 @@
     const n = Math.min(shown, visible.length);
     more.hidden = n >= visible.length;
     $("shown").textContent = visible.length ? `${n} of ${visible.length} shown` : "";
-    thumbs();
   }
   /* the query: free words match title, kind and tools; clauses filter the repository facts:
      language:python  kind:sql  year:2026  commits>10  commits<5  live:yes  (case-insensitive, any order) */
@@ -118,10 +112,6 @@
   resetAll.addEventListener("click", resetFilters);
   $("reset").addEventListener("click", resetFilters);
   more.addEventListener("click", () => { const first = visible[shown], fresh = visible.slice(shown, shown + PAGE); shown += PAGE; paint(fresh); first?.querySelector("a")?.focus({ preventScroll: true }); });
-  /* two views of the same list: covers, or a dense table */
-  const tilesEl = $("tiles"), vGrid = $("view-grid"), vTable = $("view-table");
-  const setView = table => { tilesEl.classList.toggle("is-table", table); vGrid.setAttribute("aria-pressed", String(!table)); vTable.setAttribute("aria-pressed", String(table)); try { localStorage.setItem("view", table ? "table" : "grid"); } catch (_) {} };
-  if (vGrid && vTable) { vGrid.addEventListener("click", () => setView(false)); vTable.addEventListener("click", () => setView(true)); let v = null; try { v = localStorage.getItem("view"); } catch (_) {} if (v === "table") setView(true); }
   const params = new URLSearchParams(location.search);
   if (params.get("q")) search.value = params.get("q");
   if (params.get("kind") && [...kind.options].some(o => o.value === params.get("kind"))) kind.value = params.get("kind");

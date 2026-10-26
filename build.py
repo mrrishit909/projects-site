@@ -183,7 +183,7 @@ def page(title, desc, body, slug, cover_url=None):
 {og}
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="{PORTFOLIO}projects/{slug}/">
-<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Bricolage-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Bricolage-display.woff2" crossorigin>
 <link rel="stylesheet" href="../atelier.css?v={asset_version("atelier.css")}">
 <link rel="icon" href="{ICON}">
 <script type="importmap">{{ "imports": {{ "three": "../vendor/three/three.module.min.js" }} }}</script>
@@ -289,7 +289,7 @@ def project_page(p, prev, nxt):
   <p class="kicker label"><span>{escape(p["kind"])} &middot; {escape(p["date"])}</span></p>
   <h1{long} id="title">{escape(p["title"])}</h1>
   <p class="tagline lead">{escape(p["tagline"])}</p>
-  <div class="object" aria-hidden="true"><canvas class="case-canvas" data-config="{state}" data-words="{words}"></canvas><p class="marks label">{marks_html}</p></div>
+  <div class="object" aria-hidden="true"><canvas class="case-canvas" data-config="{state}" data-words="{words}"></canvas><img class="object-still" src="../assets/config-{state}.webp" alt="" width="900" height="640" fetchpriority="high" decoding="async"><p class="marks label">{marks_html}</p></div>
   <dl class="summary">
     <div><dt>Problem</dt><dd>{escape(plain(p["problem"], 190))}</dd></div>
     <div><dt>Role</dt><dd>Built and written by Rishit Raj Mathur; the case study names its sources and checks.</dd></div>
@@ -400,30 +400,30 @@ def webp_size(path):
     return w & 0x3FFF, h & 0x3FFF
 
 
+def status_of(p):
+    """A short status for the index: archived, live demo, live site, or the repository, with the last push."""
+    g = p.get("gh") or {}
+    s = "Archived" if p.get("frozen") else "Live demo" if p.get("demo") else "Live site" if g.get("homepage") else "Repository"
+    return s + (f', pushed {g["pushed_at"][:10]}' if g.get("pushed_at") else "")
+
+
 def all_page(projects):
-    """all.html (all.template.html + portfolio.css + catalog.js): every project as a real link with its thumbnail
-    (assets/thumbs/<slug>.webp, made by tools/thumbs.py), plus search, the kind filter and the data the detail dialog reads."""
+    """all.html (all.template.html + atelier.css + catalog.js): every project as one editorial row (number, title as the
+    link into the case study, kind, tools, year, status), plus search, the kind filter and the data the detail dialog
+    reads. No thumbnails: the owner's brief forbids a thumbnail wall."""
     order = {p["slug"]: i + 1 for i, p in enumerate(projects)}
     heads = Counter(p["kind"].split("\u00b7")[0].strip() for p in projects)
-    tiles = []
-    for n, p in enumerate(projects):
+    rows = []
+    for p in projects:
         head = p["kind"].split("\u00b7")[0].strip()
         search = escape(" ".join([p["title"], p["kind"], *p["tech"]]).lower(), quote=True)
-        if (ROOT / "assets" / "thumbs" / f'{p["slug"]}.webp').exists():
-            src, attrs = f'assets/thumbs/{p["slug"]}.webp', 'alt="" width="880" height="503"'
-            if n < 3:   # the first row is above the fold: loads at once
-                thumb = f'<img class="tile-thumb" src="{src}" {attrs}{" fetchpriority=\"high\"" if n == 0 else ""}>'
-            else:       # the rest start after the page has loaded (catalog.js), so they never compete with the first paint
-                thumb = f'<img class="tile-thumb" data-src="{src}" {attrs} loading="lazy" decoding="async"><noscript><img class="tile-thumb" src="{src}" {attrs} loading="lazy"></noscript>'
-        else:
-            print(f'warning: {p["slug"]} has no thumbnail yet (run python3 tools/thumbs.py)')
-            thumb = '<span class="tile-thumb" aria-hidden="true"></span>'
         g = p.get("gh") or {}
         lang, commits, year = g.get("language") or "", g.get("commits") or 0, p["date"][:4]
-        tiles.append(f'<li class="tile" data-slug="{p["slug"]}" data-kind="{escape(head, quote=True)}" data-lang="{escape(lang, quote=True)}" data-year="{year}" data-commits="{commits}" data-live="{"1" if (p.get("demo") or g.get("homepage")) else "0"}" data-search="{search}">'
-                     f'<a class="tile-link" href="{p["slug"]}/">{thumb}<span class="tile-no mono">{order[p["slug"]]:03d}</span>'
-                     f'<span class="tile-title">{escape(p["title"])}</span><span class="tile-kind">{escape(p["kind"])}</span>'
-                     f'<span class="tile-gh mono">{escape(lang)} · {year} · {commits} commits</span></a></li>')
+        tools = ", ".join(escape(t) for t in p["tech"][:4]) + (f' and {len(p["tech"]) - 4} more' if len(p["tech"]) > 4 else "")
+        rows.append(f'<li class="tile" data-slug="{p["slug"]}" data-kind="{escape(head, quote=True)}" data-lang="{escape(lang, quote=True)}" data-year="{year}" data-commits="{commits}" data-live="{"1" if (p.get("demo") or g.get("homepage")) else "0"}" data-search="{search}">'
+                    f'<a class="tile-link" href="{p["slug"]}/"><span class="tile-no mono">{order[p["slug"]]:03d}</span>'
+                    f'<span class="tile-title">{escape(p["title"])}</span><span class="tile-kind">{escape(p["kind"])}</span>'
+                    f'<span class="tile-tools">{tools}</span><span class="tile-meta mono">{year} &middot; {escape(status_of(p))}</span></a></li>')
     keys = ("slug", "title", "kind", "date", "cover", "tagline", "tech", "repo", "demo", "demo_label")
     data = []
     for p in projects:
@@ -436,7 +436,7 @@ def all_page(projects):
     tabs = "".join(f'<button class="kind-tab" type="button" data-kind="{escape(k, quote=True)}" aria-pressed="false">{escape(k)}</button>' for k, _ in heads.most_common(5))
     tpl = (ROOT / "all.template.html").read_text()
     assert "{{CATALOG}}" in tpl and "/*DATA*/[]" in tpl
-    return (tpl.replace("{{CATALOG}}", "".join(tiles)).replace("/*DATA*/[]", json.dumps(data).replace("</", "<\\/"))
+    return (tpl.replace("{{CATALOG}}", "".join(rows)).replace("/*DATA*/[]", json.dumps(data).replace("</", "<\\/"))
                .replace("{{COUNT}}", str(len(projects))).replace("{{REPOS}}", str(len(github()))).replace("{{KINDS_OPTIONS}}", options).replace("{{KINDS_TABS}}", tabs).replace("{{KINDS}}", kinds)
                .replace("{{CSS}}", asset_version("atelier.css")).replace("{{CATALOG_JS}}", asset_version("catalog.js")))
 

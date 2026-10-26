@@ -17,10 +17,11 @@
   // the instrument, in this project's arrangement, once the page has loaded (never before the words)
   const cv = document.querySelector(".case-canvas");
   if (cv && !navigator.connection?.saveData) {
-    const start = () => import("../instrument.js").then(({ createInstrument }) => {
+    const start = () => import("../instrument.js").then(async ({ createInstrument, prepareTextures }) => {
       const words = (() => { try { return JSON.parse(cv.dataset.words); } catch (_) { return undefined; } })();
       const state = cv.dataset.config || "open", wide = state === "pipeline" || state === "timeline";
-      const inst = createInstrument({ canvas: cv, phone: () => innerWidth <= 760, reduced: reduce, words, quality: "lite", texSize: innerWidth <= 760 ? 256 : 384, onReady: () => document.documentElement.classList.add("gl-on") });
+      const texSize = innerWidth <= 760 ? 256 : 384; const textures = await prepareTextures({ texSize, words });
+      const inst = createInstrument({ canvas: cv, phone: () => innerWidth <= 760, reduced: reduce, words, quality: "lite", texSize, textures, onReady: () => document.documentElement.classList.add("gl-on") });
       if (!inst) return;
       let t0 = 0; const tick = t => { requestAnimationFrame(tick); if (document.hidden) return; if (!t0) t0 = t;
         const ph = innerWidth <= 760, u = Math.min(1, (t - t0) / 1400);

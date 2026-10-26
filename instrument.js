@@ -83,7 +83,20 @@ const railTicks = slot => { const c = canvas(1024, 160), g = c.getContext("2d");
   else for (let i = 0; i < 128; i++) { const h = i % 8 === 0 ? 40 : i % 4 === 0 ? 24 : 12; g.fillRect(8 + i * 8, 130 - h, 2, h); }
   return c; };
 
-export function createInstrument({ canvas: cv, phone, reduced, series, fan, words = ["Data", "Security", "Intelligence", "Impact"], quality = "full", startOut = false, texSize = 512, onReady }) {
+/* The procedural textures, drawn one per task (a yield between each) so no single main-thread task carries all of
+   them; pass the result to createInstrument as `textures`. */
+export async function prepareTextures({ texSize = 512, words = ["Data", "Security", "Intelligence", "Impact"] } = {}) {
+  const yieldNow = () => new Promise(r => setTimeout(r, 0)); const T = {};
+  T.rough = brushed(Math.min(512, texSize), 3); await yieldNow();
+  T.rail = railTicks(false); T.slot = railTicks(true); T.plate = engraved(words); await yieldNow();
+  T.green = marble(texSize, [0.04, 0.16, 0.11], [0.6, 0.66, 0.58], 0.05, 5, 1.6, 16); await yieldNow();
+  T.ivory = marble(texSize, [0.92, 0.88, 0.8], [0.58, 0.53, 0.47], 0.04, 9, 1.3, 11);
+  return T;
+}
+
+export function createInstrument({ canvas: cv, phone, reduced, series, fan, words = ["Data", "Security", "Intelligence", "Impact"], quality = "full", startOut = false, texSize = 512, textures = null, onReady }) {
+  const t0 = performance.now(), marks = {};
+  const TX = textures || { rough: brushed(Math.min(512, texSize), 3), rail: railTicks(false), slot: railTicks(true), plate: engraved(words), green: marble(texSize, [0.04, 0.16, 0.11], [0.6, 0.66, 0.58], 0.05, 5, 1.6, 16), ivory: marble(texSize, [0.92, 0.88, 0.8], [0.58, 0.53, 0.47], 0.04, 9, 1.3, 11) };
   let gl = null;
   try { gl = cv.getContext("webgl2", { antialias: true, alpha: true, premultipliedAlpha: true, powerPreference: "high-performance" }); } catch (_) {}
   if (!gl) return null;
@@ -104,7 +117,7 @@ export function createInstrument({ canvas: cv, phone, reduced, series, fan, word
     panel(10, 6, [0, 6.9, -2], [Math.PI / 2, 0, 0], 0xfff6e8, 3.0);          // skylight
     panel(14, 1.2, [0, -6.9, 3], [-Math.PI / 2, 0, 0], 0x1e4a38, 1.5);       // the green floor glow
     const pm = new THREE.PMREMGenerator(renderer); const t = pm.fromScene(s, 0.04).texture; pm.dispose(); return t; })();
-  scene.environment = env;
+  scene.environment = env; marks.env = Math.round(performance.now() - t0);
   const key = new THREE.DirectionalLight(0xfff0d8, 2.2); key.position.set(-7, 9, 8); key.castShadow = shadows;
   key.shadow.mapSize.set(1024, 1024); key.shadow.camera.left = -8; key.shadow.camera.right = 8; key.shadow.camera.top = 8; key.shadow.camera.bottom = -8; key.shadow.camera.near = 2; key.shadow.camera.far = 40; key.shadow.bias = -0.0006; key.shadow.normalBias = 0.02; key.shadow.radius = 3;
   scene.add(key); scene.add(key.target);
@@ -112,18 +125,19 @@ export function createInstrument({ canvas: cv, phone, reduced, series, fan, word
   scene.add(new THREE.AmbientLight(0x2a4a3c, 0.5));
 
   /* ---- materials ---- */
-  const rough = tex(brushed(Math.min(512, texSize), 3)); rough.repeat.set(2, 2);
+  const rough = tex(TX.rough); rough.repeat.set(2, 2);
   const metal = (extra) => new THREE.MeshPhysicalMaterial({ metalness: 1, roughness: 0.5, roughnessMap: rough, anisotropy: 0.6, envMapIntensity: 1.0, emissive: 0x6a4f22, emissiveIntensity: 0, ...extra });
   const M = {
     brass: metal({ color: 0xcbb084 }),
-    rail: metal({ map: tex(railTicks(false), true), roughness: 0.48 }),
-    slot: metal({ map: tex(railTicks(true), true), roughness: 0.48 }),
-    plate: metal({ map: tex(engraved(words), true), roughness: 0.46, anisotropy: 0.5 }),
+    rail: metal({ map: tex(TX.rail, true), roughness: 0.48 }),
+    slot: metal({ map: tex(TX.slot, true), roughness: 0.48 }),
+    plate: metal({ map: tex(TX.plate, true), roughness: 0.46, anisotropy: 0.5 }),
     pin: metal({ color: 0xcbb084 }),
     lacquer: new THREE.MeshPhysicalMaterial({ color: 0x0b3328, metalness: 0, roughness: 0.34, clearcoat: 0.7, clearcoatRoughness: 0.14, envMapIntensity: 0.7, emissive: 0x1a5a40, emissiveIntensity: 0 }),
-    green: new THREE.MeshPhysicalMaterial({ map: tex(marble(texSize, [0.04, 0.16, 0.11], [0.6, 0.66, 0.58], 0.05, 5, 1.6, 16), true), metalness: 0, roughness: 0.22, clearcoat: 0.5, clearcoatRoughness: 0.12, envMapIntensity: 0.7, emissive: 0x1a5a40, emissiveIntensity: 0 }),
-    ivory: new THREE.MeshPhysicalMaterial({ map: tex(marble(texSize, [0.92, 0.88, 0.8], [0.58, 0.53, 0.47], 0.04, 9, 1.3, 11), true), metalness: 0, roughness: 0.26, clearcoat: 0.45, clearcoatRoughness: 0.14, envMapIntensity: 0.65, emissive: 0x8a7a50, emissiveIntensity: 0 }),
+    green: new THREE.MeshPhysicalMaterial({ map: tex(TX.green, true), metalness: 0, roughness: 0.22, clearcoat: 0.5, clearcoatRoughness: 0.12, envMapIntensity: 0.7, emissive: 0x1a5a40, emissiveIntensity: 0 }),
+    ivory: new THREE.MeshPhysicalMaterial({ map: tex(TX.ivory, true), metalness: 0, roughness: 0.26, clearcoat: 0.45, clearcoatRoughness: 0.14, envMapIntensity: 0.65, emissive: 0x8a7a50, emissiveIntensity: 0 }),
   };
+  marks.textures = Math.round(performance.now() - t0);
   const geos = {};
   const geoFor = ([w, h, d], fam) => { const k = fam === "pin" ? `pin${h}` : [w, h, d].join("x"); if (!geos[k]) geos[k] = fam === "pin" ? new THREE.CylinderGeometry(w, w, h, 18) : new THREE.RoundedBoxGeometry(w, h, d, 3, Math.min(0.03, Math.min(w, h, d) * 0.3)); return geos[k]; };
 
@@ -241,6 +255,7 @@ export function createInstrument({ canvas: cv, phone, reduced, series, fan, word
   cv.addEventListener("webglcontextlost", e => { e.preventDefault(); lost.on = true; lost.count++; document.documentElement.classList.remove("gl-on"); });
   cv.addEventListener("webglcontextrestored", () => { lost.on = false; settled = 0; document.documentElement.classList.add("gl-on"); });
 
+  try { renderer.compile(scene, camera); } catch (_) {} marks.compile = Math.round(performance.now() - t0);
   const cur = { x: 0, y: 0, s: 1, rx: 0, ry: 0, tilt: { x: 0, y: 0 } };
   let lastT = performance.now(), fast = 0, slow = 0, lock = 0, settled = 0, paused = false, firstFrame = true;
   const EM = { brass: 0, rail: 0, slot: 0, plate: 0.8, pin: 1.0, lacquer: 0.5, green: 0.5, ivory: 0.6 };
@@ -275,7 +290,7 @@ export function createInstrument({ canvas: cv, phone, reduced, series, fan, word
     settled = moved < 0.0004 && !opening ? settled + 1 : 0;
     if (settled > 12 && !pose.force) return;
     renderer.render(scene, camera);
-    if (firstFrame) { firstFrame = false; if (onReady) onReady(); }
+    if (firstFrame) { firstFrame = false; marks.firstFrame = Math.round(performance.now() - t0); if (onReady) onReady(); }
     const maxDpr = Math.min(quality === "full" ? 1.75 : 1.5, devicePixelRatio || 1);
     if (t > lock) { if (dt < 0.0125) { fast++; slow = 0; } else if (dt > 0.024) { slow++; fast = 0; } else { fast = Math.max(0, fast - 1); slow = Math.max(0, slow - 1); }
       if (fast > 90 && dpr < maxDpr) { dpr = maxDpr; renderer.setPixelRatio(dpr); resize(); fast = 0; lock = t + 8000; }
@@ -283,5 +298,6 @@ export function createInstrument({ canvas: cv, phone, reduced, series, fan, word
   };
   const dispose = () => { Object.values(geos).forEach(g => g.dispose()); pinGeo.dispose(); headGeo.dispose(); capGeo.dispose(); Object.values(M).forEach(m => { if (m.map) m.map.dispose(); m.dispose(); }); rough.dispose(); env.dispose(); ground.geometry.dispose(); ground.material.dispose(); renderer.dispose(); };
   return { update, dispose, resize, parts, states: Object.keys(STATES), set paused(v) { paused = v; if (!v) { lastT = performance.now(); settled = 0; } }, get paused() { return paused; }, get dpr() { return dpr; }, get lost() { return lost; }, renderer, camera, scene,
+    marks,
     info: () => ({ calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries, dpr }) };
 }

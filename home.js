@@ -4,9 +4,9 @@
    the exploded hero (the signature), the words settle; a scroll hands the same object to the first chapter. One owner
    per property: GSAP owns the opening's clock, scroll owns the chapters, the instrument lerps every matrix; CSS owns
    only the type. Sound is off by default and synthesised on demand (docs/AUDIO.md). */
-import { createInstrument } from "./instrument.js";
+import { createInstrument, prepareTextures } from "./instrument.js";
 
-(() => {
+(async () => {
   "use strict";
   const root = document.documentElement, $ = id => document.getElementById(id);
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -26,10 +26,16 @@ import { createInstrument } from "./instrument.js";
 
   /* ---- the audio manager: one context, a master gain, four voices, deduplication, envelopes, mute, cleanup ---- */
   const audio = { ctx: null, master: null, on: false, voices: 0, last: {}, MIN: { click: 90, texture: 400, cue: 600, tick: 70 },
-    start() { if (this.ctx) return; const C = this.ctx = new (window.AudioContext || window.webkitAudioContext)(); const g = this.master = C.createGain(); g.gain.value = 0; g.connect(C.destination); },
-    set(on) { this.on = on; const b = $("sound"); b.setAttribute("aria-pressed", on ? "true" : "false"); b.querySelector(".sound-label").textContent = on ? "Sound on" : "Sound off"; try { sessionStorage.setItem("sound", on ? "1" : "0"); } catch (_) {}
-      if (on) { this.start(); if (this.ctx.state === "suspended") this.ctx.resume().catch(() => 0); this.master.gain.cancelScheduledValues(this.ctx.currentTime); this.master.gain.setTargetAtTime(0.5, this.ctx.currentTime, 0.15); }
-      else if (this.ctx) { this.master.gain.cancelScheduledValues(this.ctx.currentTime); this.master.gain.setTargetAtTime(0, this.ctx.currentTime, 0.08); setTimeout(() => { if (!this.on && this.ctx && this.ctx.state === "running") this.ctx.suspend().catch(() => 0); }, 400); } },
+    start() { if (this.ctx) return true; try { const C = this.ctx = new (window.AudioContext || window.webkitAudioContext)(); const g = this.master = C.createGain(); g.gain.value = 0; g.connect(C.destination); return true; } catch (_) { this.ctx = null; this.master = null; return false; } },
+    /* the control reflects actual capability: the button only reads "Sound on" once the context exists and is running */
+    ui(on, note) { const b = $("sound"); b.setAttribute("aria-pressed", on ? "true" : "false"); b.querySelector(".sound-label").textContent = on ? "Sound on" : "Sound off"; const s = $("copy-status"); if (s && note) s.textContent = note; },
+    async set(on) { if (!on) { this.on = false; this.ui(false); try { sessionStorage.setItem("sound", "0"); } catch (_) {}
+        if (this.ctx) { this.master.gain.cancelScheduledValues(this.ctx.currentTime); this.master.gain.setTargetAtTime(0, this.ctx.currentTime, 0.08); setTimeout(() => { if (!this.on && this.ctx && this.ctx.state === "running") this.ctx.suspend().catch(() => 0); }, 400); } return; }
+      if (!this.start()) { this.on = false; this.ui(false, "Sound is not available in this browser"); return; }
+      try { if (this.ctx.state !== "running") await this.ctx.resume(); } catch (_) {}
+      if (this.ctx.state !== "running") { this.on = false; this.ui(false, "Sound could not start; it stays off"); return; }
+      this.on = true; this.ui(true); try { sessionStorage.setItem("sound", "1"); } catch (_) {}
+      this.master.gain.cancelScheduledValues(this.ctx.currentTime); this.master.gain.setTargetAtTime(0.5, this.ctx.currentTime, 0.15); },
     play(name) { if (!this.on || !this.ctx || this.ctx.state !== "running" || root.classList.contains("paused")) return; const now = performance.now(); if (now - (this.last[name] || 0) < this.MIN[name]) return; if (this.voices >= 4) return; this.last[name] = now; this.voices++;
       const C = this.ctx, t = C.currentTime, g = C.createGain(); g.connect(this.master); let src, dur = 0.3;
       if (name === "click" || name === "tick") { src = C.createOscillator(); src.type = "sine"; const f = name === "click" ? 1900 : 1300; src.frequency.setValueAtTime(f, t); src.frequency.exponentialRampToValueAtTime(f * 0.45, t + 0.05); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(name === "click" ? 0.12 : 0.07, t + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.08); dur = 0.1; }
@@ -37,7 +43,7 @@ import { createInstrument } from "./instrument.js";
       else { src = C.createOscillator(); src.type = "sine"; src.frequency.setValueAtTime(523, t); const o2 = C.createOscillator(); o2.type = "sine"; o2.frequency.setValueAtTime(784, t); const g2 = C.createGain(); g2.gain.value = 0.5; o2.connect(g2); g2.connect(g); o2.start(t + 0.06); o2.stop(t + 0.5); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.06, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.45); dur = 0.5; }
       src.connect(g); src.start(t); src.stop(t + dur); src.onended = () => { this.voices--; }; },
     suspend() { if (this.ctx && this.ctx.state === "running") this.ctx.suspend().catch(() => 0); },
-    resume() { if (this.on && this.ctx && this.ctx.state === "suspended") this.ctx.resume().catch(() => 0); } };
+    resume() { if (this.on && !root.classList.contains("paused") && this.ctx && this.ctx.state === "suspended") this.ctx.resume().catch(() => 0); } };
   $("sound").addEventListener("click", () => audio.set(!audio.on));
   try { if (sessionStorage.getItem("sound") === "1") addEventListener("pointerdown", () => audio.set(true), { once: true }); } catch (_) {}
   document.addEventListener("visibilitychange", () => { if (document.hidden) audio.suspend(); else audio.resume(); });
@@ -80,7 +86,7 @@ import { createInstrument } from "./instrument.js";
   /* ---- the instrument ---- */
   const seriesEl = flag.find(p => p.dataset.series), bend = (() => { try { return seriesEl ? JSON.parse(seriesEl.dataset.series) : {}; } catch (_) { return {}; } })();
   // phones get the lite quality (no shadow map, smaller marble textures, pixel ratio capped at 1.5); the decision is made once at load
-  let inst = null; try { inst = createInstrument({ canvas: $("instrument"), phone, reduced, series: bend.series, fan: bend.fan, quality: phone() ? "lite" : "full", texSize: phone() ? 320 : 512, startOut: root.classList.contains("opening"), onReady: () => root.classList.add("gl-on") }); } catch (e) { console.error(e); }
+  let inst = null; try { const textures = await prepareTextures({ texSize: phone() ? 320 : 512 }); inst = createInstrument({ canvas: $("instrument"), phone, reduced, series: bend.series, fan: bend.fan, quality: phone() ? "lite" : "full", texSize: phone() ? 320 : 512, textures, startOut: root.classList.contains("opening"), onReady: () => root.classList.add("gl-on") }); } catch (e) { console.error(e); }
   const intro = { k: 1, u: 1, running: false, still: false, tl: null, abort: null, clicked: false };
   const enter = () => { root.classList.add("entered"); root.classList.remove("opening"); root.classList.remove("words"); try { sessionStorage.setItem("seen", "1"); } catch (_) {} };
   /* the opening timeline: 0 to 2.0 s the parts arrive and lock (the click at 1.9 s), 2.0 to 2.9 s the register unlocks
@@ -128,8 +134,12 @@ import { createInstrument } from "./instrument.js";
   }
 
   /* ---- the loop: scroll to chapter, chapter to pose ---- */
+  // short phones (and a phone-wide window at 200% zoom): the chapters are not pinned, so a fixed object would cross the
+  // words as they scroll; the register shows in the hero and leaves for the rest of the page (a deliberate alternate composition)
+  const short = () => phone() && innerHeight <= 820;
   const stageFor = ch => { const ph = phone(), st = ch.dataset.state;
-    if (ch.dataset.chapter === "hero") return ph ? { x: 0.5, y: 0.26, s: 0.55 } : { x: 0.71, y: 0.52, s: 1 };
+    if (ch.dataset.chapter === "hero") return ph ? { x: 0.5, y: short() ? 0.2 : 0.26, s: short() ? 0.4 : 0.55 } : { x: 0.71, y: 0.52, s: 1 };
+    if (short()) return { x: 0.5, y: 1.3, s: 0.001 };
     if (ch.dataset.chapter === "orient") return ph ? { x: 0.5, y: 0.22, s: 0.3 } : { x: 0.72, y: 0.5, s: 0.9 };
     if (ch.dataset.chapter === "system") return ph ? { x: 0.5, y: 0.22, s: 0.42 } : { x: 0.68, y: 0.5, s: 0.9 };
     // on a phone the reading ground has no room beside the words: the register leaves at the handoff (a deliberate exit)
