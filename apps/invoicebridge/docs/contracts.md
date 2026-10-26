@@ -81,3 +81,25 @@ returns the prior batch. Open quantities: open to receive, open to invoice, rece
 blocked (invoiced-not-received) valued at invoice price; `snapshot_cutoffs` re-run the quantity figures as of a date.
 Not yet pinned by a fixture row (candidates for the adversarial tests): same-bytes duplicate, multi-line tax, rounding
 ties, PRICE_VARIANCE, CURRENCY_MISMATCH, NO_PO_LINE, self-approval, credit notes, racing approvals.
+
+## D-06 Backend clarifications (2026-10-26, adopted from A-035; the 18 numbered assumptions are in README.md)
+Metrics are derived from recorded facts only (`book.derive`), never from stored statuses; the SQL reference reads no
+stored status, total, match result or merge flag. The stored `invoices.status` is the workflow state the commands move
+and may lag the derived view; GET /metrics warns `WORKFLOW_STATE_DIFFERS` per such invoice. `snapshot_cutoffs` live
+beside `metrics` (in `PipelineResult.snapshot_cutoffs` and `data.snapshot_cutoffs`), so `metrics` stays exactly the
+expected.json keys. Extra rejection codes: MALFORMED_RECORD, DUPLICATE_ID, UNKNOWN_INVOICE, NON_POSITIVE_AMOUNT,
+CREDIT_EXCEEDS_INVOICE; floats and over-precise decimals are rejected, not rounded (quantities 4 dp, prices and rates
+6 dp, money 2 dp, amounts below 10^12). Same source bytes are checked before identity (DUPLICATE_SOURCE_BYTES, then
+DUPLICATE_IDENTITY), greedily in (imported_at, invoice_id) order. Reason order per line: NO_PO_LINE, CURRENCY_MISMATCH
+(never converted), QUANTITY_BLOCKED, PRICE_VARIANCE; an invoice with any exception consumes nothing. C08 is an
+`approvals` row with decision reject and a required reason; only the first valid approval counts; invalid decisions
+are listed (NOT_MATCHED, SELF_APPROVAL, ROLE_OR_LIMIT, NOT_REVIEWABLE, REJECT_AFTER_APPROVAL). Policy in force is the
+latest `effective_from`; `escalation_role` may approve any amount; no policy means 403 NO_POLICY. Roles: C01–C05
+clerk/reviewer/admin, C07–C10 reviewer/admin; reads need no actor. Status precedence adjusted > exported > approved;
+credits reduce `approved_payable` only; export batches are named sets, replayed by key, 409 BATCH_CONFLICT for another
+set, `exported_at` excluded from the payload hash. Credits once per credit_id (409 CREDIT_ALREADY_APPLIED), cumulative
+no more than the invoice total, no cash movement. Exceptions one per (invoice, type), append-only assignment history.
+Windows are [from, to) on imported_at with `to` as the as-of instant; snapshot cutoffs inclusive; group_by none /
+vendor / currency. C06 is 501; there is no receipt command (receipts are reference data; reversal is the one UPDATE
+the schema allows). Known: the stored canonical copy of concurrent same-bytes imports can differ from the derived
+earliest-import canonical (warned, counts agree); metrics can run ahead of the workflow (warned).
