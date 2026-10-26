@@ -88,3 +88,11 @@ are browser-memory simulations; a reload restores the snapshot.
 * `definition_hash` = sha256 of compact sorted-key JSON `{"steps": [[id, name, required,
   role_key, sequence]…], "dependencies": [[step_definition_id, prerequisite_id, type]…]}`.
 * Step waiting = `started_at − ready_at` in business hours.
+
+## D-06 Schema clarifications (2026-10-26, adopted from A-013)
+`calendar_intervals.kind` ∈ {working, holiday}; `workflow_requirements` table holds the
+required document types per version; `document_reviews` is a separate append-only table
+(the effective review status is the latest review); `approvals.version_number` with a
+unique (step_instance_id, version_number) makes a second decision a `DECISION_CONFLICT`;
+`cases.linked_case_id` records the correction case opened instead of a reopen. Waiting
+intervals are clipped to the case span and merged before deduction; active hours floor at 0.

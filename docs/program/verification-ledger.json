@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T12:14:37Z",
+  "updated_at": "2026-10-26T12:25:06Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -427,6 +427,34 @@
       "code_sha": "site from 50e72e1; portfolio f03b26f",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40320891807",
       "ts": "2026-10-26T12:14:37Z"
+    },
+    {
+      "requirement": "P02-MET-01..11 R02 domain + SQL reference + API metrics equal golden (both states)",
+      "project": "02-onboard-studio",
+      "status": "verified",
+      "command": "pytest -q (apps/onboard-studio, DATABASE_URL set)",
+      "exit_code": 0,
+      "expected": "66.0000 / 2.0000 / 65.0000 / 1.0000 / 1.0000 (eligible) and 2.0000 (not); SLA 1.000000",
+      "actual": "256 passed",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T12:25:06Z"
+    },
+    {
+      "requirement": "P02-TEST-01,02,03,05,06,09,10,11 DETECT (application path)",
+      "project": "02-onboard-studio",
+      "status": "verified",
+      "command": "pytest tests/test_adversarial.py",
+      "exit_code": 0,
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T12:25:06Z"
+    },
+    {
+      "requirement": "P02-TEST-04,07,08,12 and C07/C10",
+      "project": "02-onboard-studio",
+      "status": "blocked/not_checked",
+      "reason": "C07 reassign-work and C10 migrate-workflow return 501 NOT_IMPLEMENTED in the slice (extension); TEST-08 weekend holiday covered at domain level only",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T12:25:06Z"
     }
   ]
 }
