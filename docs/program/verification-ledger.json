@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T13:19:43Z",
+  "updated_at": "2026-10-26T13:25:24Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -553,6 +553,35 @@
       "code_sha": "a18f12e",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40329407956",
       "ts": "2026-10-26T13:19:43Z"
+    },
+    {
+      "requirement": "master 18 reviewer disproof pass (Onboard Studio)",
+      "project": "02-onboard-studio",
+      "status": "failed",
+      "defects": [
+        "Q-01 complete-case accepts occurred_at before recorded approvals; pause left open on completed case; ingest would reject the same rows (CASE_ALREADY_COMPLETE)",
+        "Q-02 approve_step locks step->case while reject/submit/resubmit lock case->step: DeadlockDetected -> 500 in 9/25 races",
+        "Q-03 reference_metrics.sql divides per case before averaging (numeric truncation breaks half-up ties) and double-counts overlapping waits",
+        "Q-04 (suspected) document accepted on a prior version counts for completion in domain/TS",
+        "Q-05 (suspected) empty calendar: no intervals -> durations 0 and SLA met; no rows -> case dropped from denominator; no FK on sla_rules.calendar_id",
+        "Q-06 (low) idempotency replay not actor-bound; '+00:00' vs 'Z' instants hash differently",
+        "Q-07 (known) sub-millisecond timestamps diverge Python/TS"
+      ],
+      "claim_text_issues": [
+        "'same population' loose: 58% of v1 cohort predates v2",
+        "handoff denominators mixed open/completed",
+        "~20% of the active-hours gap is pause deduction (business hours -14%, active -36%)"
+      ],
+      "could_not_disprove": [
+        "22 edge inputs Python==TS",
+        "1,150 snapshot cells equal",
+        "group sums reconcile",
+        "concurrency 1x200/3x409",
+        "atomic rollback",
+        "v2 lower active hours in every segment\u00d7region cell and in the same window (9.2503 vs 5.8690)"
+      ],
+      "code_sha": "eac63b9",
+      "ts": "2026-10-26T13:25:24Z"
     }
   ]
 }
