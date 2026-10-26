@@ -1,0 +1,13 @@
+{
+ "entity": "locations",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "location_id": "loc-001",
+   "location_name": "Main DC",
+   "timezone": "UTC",
+   "storage_capacity": 1000,
+   "active": true
+  }
+ ]
+}

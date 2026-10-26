@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:33:42Z",
+  "updated_at": "2026-10-26T15:14:24Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
@@ -268,6 +268,17 @@
       ],
       "retries": 0,
       "acceptance": "live-check green; case study live"
+    },
+    {
+      "id": "T-03-07",
+      "project": "03-supplyscope",
+      "title": "Fix S-02, S-03 (+ reviewer findings); regression tests; re-review",
+      "status": "pending",
+      "prereqs": [
+        "T-03-04"
+      ],
+      "retries": 0,
+      "acceptance": "tests pass in Python and TS; CI green"
     }
   ]
 }

@@ -1,0 +1,206 @@
+{
+  "generated_by": "e2e/screens.spec.ts",
+  "count": 25,
+  "shots": [
+    {
+      "file": "home-360.png",
+      "route": "./",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "overview-360.png",
+      "route": "overview/",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "skus-360.png",
+      "route": "skus/?sku=prod-001",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "forecast-360.png",
+      "route": "forecast/",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "reorder-360.png",
+      "route": "reorder/",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "case-study-360.png",
+      "route": "case-study/",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "home-768.png",
+      "route": "./",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "overview-768.png",
+      "route": "overview/",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "skus-768.png",
+      "route": "skus/?sku=prod-001",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "forecast-768.png",
+      "route": "forecast/",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "reorder-768.png",
+      "route": "reorder/",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "case-study-768.png",
+      "route": "case-study/",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "home-1280.png",
+      "route": "./",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "overview-1280.png",
+      "route": "overview/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "skus-1280.png",
+      "route": "skus/?sku=prod-001",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "forecast-1280.png",
+      "route": "forecast/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "reorder-1280.png",
+      "route": "reorder/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "case-study-1280.png",
+      "route": "case-study/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "home-1920.png",
+      "route": "./",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "overview-1920.png",
+      "route": "overview/",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "skus-1920.png",
+      "route": "skus/?sku=prod-001",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "forecast-1920.png",
+      "route": "forecast/",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "reorder-1920.png",
+      "route": "reorder/",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "case-study-1920.png",
+      "route": "case-study/",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "skus-zoom200.png",
+      "route": "skus/?sku=prod-001",
+      "width": 640,
+      "scrollWidth": 640,
+      "innerWidth": 640,
+      "deviceScaleFactor": 2
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:53:00Z",
+  "updated_at": "2026-10-26T15:14:24Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -675,6 +675,36 @@
       "command": "pytest -q (132 passed)",
       "code_sha": "7b8d208 (hosted Mode A run 40343593698 success)",
       "ts": "2026-10-26T14:51:27Z"
+    },
+    {
+      "requirement": "P03-GOLD-06 displayed values vs reference (browser) + Python/TS parity over the snapshot (overall, by location/supplier/product/abc, forecast folds)",
+      "project": "03-supplyscope",
+      "status": "verified",
+      "command": "npm run e2e (journey golden test); scratch py vs ts diff",
+      "exit_code": 0,
+      "expected": "40/30/10/60/70/120/60/60/72; position_80 -> 0",
+      "actual": "as expected; 0 diffs",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T15:14:24Z"
+    },
+    {
+      "requirement": "P03-UI-01/02/05/06/10 R18/R19/R22 widths 360/768/1280/1920, 200% zoom, no overflow, no console errors",
+      "project": "03-supplyscope",
+      "status": "verified",
+      "command": "npm run e2e (screens.spec.ts, 25 screenshots)",
+      "exit_code": 0,
+      "actual": "36 passed",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T15:14:24Z",
+      "evidence": "apps/supplyscope/docs/evidence/web/ (subset) + CI artifact"
+    },
+    {
+      "requirement": "S-03 forecast promo factor applies planned_uplift instead of 1+uplift (web worker finding)",
+      "project": "03-supplyscope",
+      "status": "failed",
+      "defect": "domain/supplyscope/forecast.py promo_factor; mirrored in TS; fix queued T-03-07",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T15:14:24Z"
     }
   ]
 }

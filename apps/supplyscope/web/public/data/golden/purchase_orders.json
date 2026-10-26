@@ -1,0 +1,13 @@
+{
+ "entity": "purchase_orders",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "purchase_order_id": "po-001",
+   "supplier_id": "sup-001",
+   "ordered_at": "2026-03-20T09:00:00Z",
+   "status": "confirmed",
+   "currency": "USD"
+  }
+ ]
+}

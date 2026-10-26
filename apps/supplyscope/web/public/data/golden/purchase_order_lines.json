@@ -1,0 +1,13 @@
+{
+ "entity": "purchase_order_lines",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "po_line_id": "pol-001",
+   "purchase_order_id": "po-001",
+   "product_id": "prod-001",
+   "ordered_quantity": 30,
+   "unit_cost": "12.50"
+  }
+ ]
+}

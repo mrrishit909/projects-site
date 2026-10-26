@@ -1,0 +1,13 @@
+{
+ "entity": "products",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "product_id": "prod-001",
+   "sku": "SKU-001",
+   "unit_cost": "12.50",
+   "pack_size": 24,
+   "minimum_order_quantity": 50
+  }
+ ]
+}
