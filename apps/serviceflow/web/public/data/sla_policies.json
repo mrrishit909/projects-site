@@ -1,0 +1,5 @@
+{"entity":"sla_policies","dataset_version":"sf-20261026-20261026","rows":[
+{"calendar_id":"cal-001","first_response_minutes":15,"priority":"P1","resolution_minutes":240,"sla_policy_id":"sla-P1"},
+{"calendar_id":"cal-001","first_response_minutes":60,"priority":"P2","resolution_minutes":1440,"sla_policy_id":"sla-P2"},
+{"calendar_id":"cal-001","first_response_minutes":240,"priority":"P3","resolution_minutes":4320,"sla_policy_id":"sla-P3"}
+]}

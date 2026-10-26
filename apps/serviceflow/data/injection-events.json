@@ -1,0 +1,577 @@
+{
+  "dataset_version": "sf-20261026-20261026",
+  "events": [
+    {
+      "command": "ingest-ticket-events",
+      "event_id": "EV-01",
+      "expected": {
+        "rejected_records": [
+          {
+            "entity": "ticket_events",
+            "id": "e-00006",
+            "reason_code": "BOT_AS_HUMAN_REPLY"
+          }
+        ]
+      },
+      "expected_handling": "the event alone is rejected (automation never makes a first response); nothing is stored",
+      "expected_reason": "BOT_AS_HUMAN_REPLY",
+      "expected_status": 200,
+      "injection": "INJ-01",
+      "requires": [],
+      "steps": [
+        {
+          "command": "ingest-ticket-events",
+          "headers": {
+            "X-Actor-Id": "ana-1",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "sf-20261026-20261026",
+            "idempotency_key": "ev-01",
+            "input": {
+              "ticket_events": [
+                {
+                  "actor_id": "bot-001",
+                  "agent_id": null,
+                  "event_id": "e-00006",
+                  "event_type": "replied_human",
+                  "occurred_at": "2026-07-06T03:06:57Z",
+                  "queue_id": null,
+                  "ticket_id": "t-0002"
+                }
+              ]
+            },
+            "request_id": "ev-01"
+          }
+        }
+      ]
+    },
+    {
+      "command": "reopen-ticket",
+      "event_id": "EV-02",
+      "expected": {
+        "customer_contacts": 1,
+        "cycle": 1,
+        "prior_cycle": 0,
+        "reopen_count": 1,
+        "state": "reopened"
+      },
+      "expected_handling": "one customer contact: the follow-up reopens the original ticket and links the prior cycle",
+      "expected_reason": null,
+      "expected_status": 200,
+      "injection": "INJ-02",
+      "requires": [],
+      "steps": [
+        {
+          "command": "reopen-ticket",
+          "headers": {
+            "X-Actor-Id": "sup-1",
+            "X-Actor-Role": "supervisor"
+          },
+          "input": {
+            "dataset_version": "sf-20261026-20261026",
+            "idempotency_key": "ev-02",
+            "input": {
+              "occurred_at": "2026-07-20T17:46:08Z",
+              "ticket_id": "t-0574"
+            },
+            "request_id": "ev-02"
+          }
+        }
+      ]
+    },
+    {
+      "command": "start-service",
+      "event_id": "EV-03",
+      "expected_handling": "refused: agt-003 lacks the billing skill; the ticket stays queued",
+      "expected_reason": "AGENT_NOT_QUALIFIED",
+      "expected_status": 422,
+      "injection": "INJ-03",
+      "requires": [],
+      "steps": [
+        {
+          "command": "ingest-ticket-events",
+          "headers": {
+            "X-Actor-Id": "ana-1",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "sf-20261026-20261026",
+            "idempotency_key": "ev-03a",
+            "input": {
+              "ticket_events": [
+                {
+                  "actor_id": null,
+                  "agent_id": null,
+                  "event_id": "e-ev03-1",
+                  "event_type": "created",
+                  "occurred_at": "2026-07-27T05:45:00Z",
+                  "queue_id": "q-001",
+                  "ticket_id": "t-ev03"
+                }
+              ],
+              "tickets": [
+                {
+                  "channel": "email",
+                  "created_at": "2026-07-27T05:45:00Z",
+                  "customer_id": "c-0001",
+                  "priority": "P2",
+                  "queue_id": "q-001",
+                  "ticket_id": "t-ev03"
+                }
+              ]
+            },
+            "request_id": "ev-03a"
+          }
+        },
+        {
+          "command": "assign-queue",
+          "headers": {
+            "X-Actor-Id": "sup-1",
+            "X-Actor-Role": "supervisor"
+          },
+          "input": {
+            "dataset_version": "sf-20261026-20261026",
+            "idempotency_key": "ev-03b",
+            "input": {
+              "occurred_at": "2026-07-27T05:50:00Z",
+              "queue_id": "q-001",
+              "ticket_id": "t-ev03"
+            },
+            "request_id": "ev-03b"
+          }
+        },
+        {
+          "command": "start-service",
+          "headers": {
+            "X-Actor-Id": "sup-1",
+            "X-Actor-Role": "supervisor"
+          },
+          "input": {
+            "dataset_version": "sf-20261026-20261026",
+            "idempotency_key": "ev-03c",
+            "input": {
+              "agent_id": "agt-003",
+              "occurred_at": "2026-07-27T06:00:00Z",
+              "ticket_id": "t-ev03"
+            },
+            "request_id": "ev-03c"
+          }
+        }
+      ]
+    },
+    {
+      "command": "ingest-ticket-events",
+      "event_id": "EV-04",
+      "expected": {
+        "rejected_records": [
+          {
+            "entity": "ticket_events",
+            "id": "e-07374",
+            "reason_code": "TICKET_REJECTED"
+          },
+          {
+            "entity": "ticket_events",
+            "id": "e-07375",
+            "reason_code": "TICKET_REJECTED"
+          },
+          {
+            "entity": "ticket_events",
+            "id": "e-07376",
+            "reason_code": "TICKET_REJECTED"
+          },
+          {
+            "entity": "ticket_events",
+            "id": "e-07379",
+            "reason_code": "TICKET_REJECTED"
+          },
+          {
+            "entity": "ticket_events",
+            "id": "e-07405",
+            "reason_code": "TICKET_REJECTED"
+          },
+          {
+            "entity": "tickets",
+            "id": "t-1295",
+            "reason_code": "CONCURRENCY_EXCEEDED"
+          }
+        ]
+      },
+      "expected_handling": "the later of the two overlapping services is rejected with its events and survey",
+      "expected_reason": "CONCURRENCY_EXCEEDED",
+      "expected_status": 200,
+      "injection": "INJ-04",
+      "requires": [],
+      "steps": [
+        {
+          "command": "ingest-ticket-events",
+          "headers": {
+            "X-Actor-Id": "ana-1",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "sf-20261026-20261026",
+            "idempotency_key": "ev-04",
+            "input": {
+              "surveys": [],
+              "ticket_events": [
+                {
+                  "actor_id": null,
+                  "agent_id": null,
+                  "event_id": "e-07374",
+                  "event_type": "created",
+                  "occurred_at": "2026-08-04T16:19:29Z",
+                  "queue_id": "q-003",
+                  "ticket_id": "t-1295"
+                },
+                {
+                  "actor_id": "bot-001",
+                  "agent_id": null,
+                  "event_id": "e-07375",
+                  "event_type": "acknowledged_bot",
+                  "occurred_at": "2026-08-04T16:19:36Z",
+                  "queue_id": null,
+                  "ticket_id": "t-1295"
+                },
+                {
+                  "actor_id": "agt-009",
+                  "agent_id": "agt-009",
+                  "event_id": "e-07376",
+                  "event_type": "service_started",
+                  "occurred_at": "2026-08-04T16:20:03Z",
+                  "queue_id": null,
+                  "ticket_id": "t-1295"
+                },
+                {
+                  "actor_id": "agt-009",
+                  "agent_id": "agt-009",
+                  "event_id": "e-07379",
+                  "event_type": "replied_human",
+                  "occurred_at": "2026-08-04T16:23:42Z",
+                  "queue_id": null,
+                  "ticket_id": "t-1295"
+                },
+                {
+                  "actor_id": "agt-009",
+                  "agent_id": "agt-009",
+                  "event_id": "e-07405",
+                  "event_type": "resolved",
+                  "occurred_at": "2026-08-04T17:09:08Z",
+                  "queue_id": null,
+                  "ticket_id": "t-1295"
+                }
+              ],
+              "tickets": [
+                {
+                  "channel": "web_form",
+                  "created_at": "2026-08-04T16:19:29Z",
+                  "customer_id": "c-0410",
+                  "priority": "P3",
+                  "queue_id": "q-003",
+                  "ticket_id": "t-1295"
+                }
+              ]
+            },
+            "request_id": "ev-04"
+          }
+        }
+      ]
+    },
+    {
+      "command": "start-service",
+      "event_id": "EV-05",
+      "expected_handling": "refused: a break is not capacity; the shift row's break_minutes 0 does not hide the recorded break",
+      "expected_reason": "AGENT_ON_BREAK",
+      "expected_status": 422,
+      "injection": "INJ-05",
+      "requires": [
+        "shift_breaks"
+      ],
+      "shift_breaks_rows": [
+        {
+          "agent_id": "agt-002",
+          "break_id": "br-0447",
+          "ends_at": "2026-08-11T09:15:00Z",
+          "shift_id": "sh-0447",
+          "starts_at": "2026-08-11T08:45:00Z"
+        }
+      ],
+      "steps": [
+        {
+          "command": "ingest-ticket-events",
+          "headers": {
+            "X-Actor-Id": "ana-1",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "sf-20261026-20261026",
+            "idempotency_key": "ev-05a",
+            "input": {
+              "ticket_events": [
+                {
+                  "actor_id": null,
+                  "agent_id": null,
+                  "event_id": "e-ev05-1",
+                  "event_type": "created",
+                  "occurred_at": "2026-08-11T08:35:00Z",
+                  "queue_id": "q-001",
+                  "ticket_id": "t-ev05"
+                }
+              ],
+              "tickets": [
+                {
+                  "channel": "email",
+                  "created_at": "2026-08-11T08:35:00Z",
+                  "customer_id": "c-0001",
+                  "priority": "P2",
+                  "queue_id": "q-001",
+                  "ticket_id": "t-ev05"
+                }
+              ]
+            },
+            "request_id": "ev-05a"
+          }
+        },
+        {
+          "command": "assign-queue",
+          "headers": {
+            "X-Actor-Id": "sup-1",
+            "X-Actor-Role": "supervisor"
+          },
+          "input": {
+            "dataset_version": "sf-20261026-20261026",
+            "idempotency_key": "ev-05b",
+            "input": {
+              "occurred_at": "2026-08-11T08:40:00Z",
+              "queue_id": "q-001",
+              "ticket_id": "t-ev05"
+            },
+            "request_id": "ev-05b"
+          }
+        },
+        {
+          "command": "start-service",
+          "headers": {
+            "X-Actor-Id": "sup-1",
+            "X-Actor-Role": "supervisor"
+          },
+          "input": {
+            "dataset_version": "sf-20261026-20261026",
+            "idempotency_key": "ev-05c",
+            "input": {
+              "agent_id": "agt-002",
+              "occurred_at": "2026-08-11T08:50:00Z",
+              "ticket_id": "t-ev05"
+            },
+            "request_id": "ev-05c"
+          }
+        }
+      ]
+    },
+    {
+      "command": "ingest-ticket-events",
+      "event_id": "EV-06",
+      "expected": {
+        "rejected_records": [
+          {
+            "entity": "surveys",
+            "id": "sv-1793",
+            "reason_code": "TICKET_REJECTED"
+          },
+          {
+            "entity": "ticket_events",
+            "id": "e-18300",
+            "reason_code": "TICKET_REJECTED"
+          },
+          {
+            "entity": "ticket_events",
+            "id": "e-18301",
+            "reason_code": "TICKET_REJECTED"
+          },
+          {
+            "entity": "ticket_events",
+            "id": "e-18303",
+            "reason_code": "TICKET_REJECTED"
+          },
+          {
+            "entity": "ticket_events",
+            "id": "e-18304",
+            "reason_code": "TICKET_REJECTED"
+          },
+          {
+            "entity": "ticket_events",
+            "id": "e-18306",
+            "reason_code": "TICKET_REJECTED"
+          },
+          {
+            "entity": "ticket_events",
+            "id": "e-18307",
+            "reason_code": "TICKET_REJECTED"
+          },
+          {
+            "entity": "ticket_events",
+            "id": "e-18340",
+            "reason_code": "TICKET_REJECTED"
+          },
+          {
+            "entity": "tickets",
+            "id": "t-3206",
+            "reason_code": "TRANSFER_RESETS_ARRIVAL"
+          }
+        ]
+      },
+      "expected_handling": "the whole ticket is rejected: a transfer never moves the arrival",
+      "expected_reason": "TRANSFER_RESETS_ARRIVAL",
+      "expected_status": 200,
+      "injection": "INJ-06",
+      "requires": [],
+      "steps": [
+        {
+          "command": "ingest-ticket-events",
+          "headers": {
+            "X-Actor-Id": "ana-1",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "sf-20261026-20261026",
+            "idempotency_key": "ev-06",
+            "input": {
+              "surveys": [
+                {
+                  "invited_at": "2026-09-15T10:55:49Z",
+                  "response_at": null,
+                  "score": null,
+                  "survey_id": "sv-1793",
+                  "ticket_id": "t-3206"
+                }
+              ],
+              "ticket_events": [
+                {
+                  "actor_id": null,
+                  "agent_id": null,
+                  "event_id": "e-18300",
+                  "event_type": "created",
+                  "occurred_at": "2026-09-15T09:16:08Z",
+                  "queue_id": "q-001",
+                  "ticket_id": "t-3206"
+                },
+                {
+                  "actor_id": "bot-001",
+                  "agent_id": null,
+                  "event_id": "e-18301",
+                  "event_type": "acknowledged_bot",
+                  "occurred_at": "2026-09-15T09:16:17Z",
+                  "queue_id": null,
+                  "ticket_id": "t-3206"
+                },
+                {
+                  "actor_id": "agt-004",
+                  "agent_id": "agt-004",
+                  "event_id": "e-18303",
+                  "event_type": "service_started",
+                  "occurred_at": "2026-09-15T09:16:46Z",
+                  "queue_id": null,
+                  "ticket_id": "t-3206"
+                },
+                {
+                  "actor_id": "agt-004",
+                  "agent_id": "agt-004",
+                  "event_id": "e-18304",
+                  "event_type": "replied_human",
+                  "occurred_at": "2026-09-15T09:19:33Z",
+                  "queue_id": null,
+                  "ticket_id": "t-3206"
+                },
+                {
+                  "actor_id": "agt-004",
+                  "agent_id": null,
+                  "event_id": "e-18306",
+                  "event_type": "transferred",
+                  "occurred_at": "2026-09-15T09:24:03Z",
+                  "queue_id": "q-003",
+                  "ticket_id": "t-3206"
+                },
+                {
+                  "actor_id": "agt-009",
+                  "agent_id": "agt-009",
+                  "event_id": "e-18307",
+                  "event_type": "service_started",
+                  "occurred_at": "2026-09-15T09:24:37Z",
+                  "queue_id": null,
+                  "ticket_id": "t-3206"
+                },
+                {
+                  "actor_id": "agt-009",
+                  "agent_id": "agt-009",
+                  "event_id": "e-18340",
+                  "event_type": "resolved",
+                  "occurred_at": "2026-09-15T10:14:44Z",
+                  "queue_id": null,
+                  "ticket_id": "t-3206"
+                }
+              ],
+              "tickets": [
+                {
+                  "channel": "phone",
+                  "created_at": "2026-09-15T09:24:03Z",
+                  "customer_id": "c-0351",
+                  "priority": "P2",
+                  "queue_id": "q-003",
+                  "ticket_id": "t-3206"
+                }
+              ]
+            },
+            "request_id": "ev-06"
+          }
+        }
+      ]
+    },
+    {
+      "command": "run-simulation",
+      "event_id": "EV-07",
+      "expected": {
+        "mean_wait_lower_than": "sim-001",
+        "statistics.warmup_excluded": 0
+      },
+      "expected_handling": "accepted but flagged: warmup_excluded is 0 and the mean wait is biased low against the warmed run",
+      "expected_reason": null,
+      "expected_status": 200,
+      "injection": "INJ-07",
+      "requires": [],
+      "steps": [
+        {
+          "command": "run-simulation",
+          "headers": {
+            "X-Actor-Id": "sup-1",
+            "X-Actor-Role": "supervisor"
+          },
+          "input": {
+            "dataset_version": "sf-20261026-20261026",
+            "idempotency_key": "ev-07",
+            "input": {
+              "config": {
+                "agents": 5,
+                "arrival_rate_per_hour": 3.12,
+                "discipline": "fifo_within_priority",
+                "priority_mix": {
+                  "P1": 0.09,
+                  "P2": 0.37,
+                  "P3": 0.54
+                },
+                "service": "exponential",
+                "service_minutes": 69.1
+              },
+              "horizon_minutes": 720,
+              "policy_version": "baseline-v1-cold-start",
+              "replications": 1,
+              "seed": 20261026,
+              "simulation_id": "sim-ev07-cold",
+              "warmup_minutes": 0
+            },
+            "request_id": "ev-07"
+          }
+        }
+      ]
+    }
+  ]
+}

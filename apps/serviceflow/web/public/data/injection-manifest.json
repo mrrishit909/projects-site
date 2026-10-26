@@ -1,0 +1,643 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "944ef91b3dc17c04c6bb601e0faac94f956d121877de2b9864988cf7c5d5cba4",
+  "dataset_version": "sf-20261026-20261026",
+  "designed_relationships": [
+    "technical queue P1 resolution has a long tail: n 142, mean 247.2 min, P90 619.4 min (nearest rank), P90 / mean 2.51; first response mean 22.9 min (15 % of technical P1 are major incidents that wait hours for engineering; resolution is measured from the original arrival; synthetic).",
+    "Monday 09-11 UTC is the capacity bind: arrivals per staffed hour 1.33 against 0.98 for the next 2-hour block (Mon 10-12) and 0.43 for the median block (staffed = shift minus the break pro rata; blocks with fewer than 24 staffed hours excluded; surge multiplier 2.4 on those two hours; synthetic).",
+    "proficiency >= 4 resolves faster: mean handling 35.9 min (n 1946) against 39.5 min (n 3039) for proficiency <= 3; relative to the queue and priority mean 0.896 against 1.066 (handling factors {1: 1.3, 2: 1.15, 3: 1.0, 4: 0.85, 5: 0.72}; synthetic).",
+    "the holdout (weeks 9-12) arrives +20.0 % harder than the training window (weeks 1-8): 2.135 against 1.779 tickets per hour; designed uplift 20 % and disclosed (synthetic)."
+  ],
+  "events_file": "data/injection-events.json",
+  "injections": [
+    {
+      "description": "4 bot messages typed as a human reply (event_type replied_human, actor bot-001, 40 s after the creation acknowledgement) on tickets whose real first human reply came 90 minutes or more later; kept in the entity file so the domain must refuse them.",
+      "entity": "ticket_events",
+      "expected_handling": "ingest rejects each event alone with BOT_AS_HUMAN_REPLY (the ticket stays); first response is measured from the real human reply, never from the bot.",
+      "expected_rejections": [
+        {
+          "entity": "ticket_events",
+          "id": "e-00006",
+          "reason_code": "BOT_AS_HUMAN_REPLY"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-10283",
+          "reason_code": "BOT_AS_HUMAN_REPLY"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-09107",
+          "reason_code": "BOT_AS_HUMAN_REPLY"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-08476",
+          "reason_code": "BOT_AS_HUMAN_REPLY"
+        }
+      ],
+      "id": "INJ-01",
+      "location": "entity_files+events",
+      "record_ids": [
+        "e-00006",
+        "e-10283",
+        "e-09107",
+        "e-08476"
+      ],
+      "test": "P04-TEST-01",
+      "tickets": [
+        "t-0002",
+        "t-1797",
+        "t-1598",
+        "t-1486"
+      ]
+    },
+    {
+      "description": "4 customer follow-ups on resolved tickets were recorded as a NEW ticket from a NEW customer record (created at the same instant as the ticket, same segment, timezone, queue, priority and channel as the original's customer) instead of a reopened event on the original.",
+      "detail": [
+        {
+          "duplicate_created_at": "2026-07-20T17:46:08Z",
+          "duplicate_customer": "c-1001",
+          "duplicate_ticket": "t-0614",
+          "original_customer": "c-0635",
+          "original_ticket": "t-0574"
+        },
+        {
+          "duplicate_created_at": "2026-09-02T21:35:36Z",
+          "duplicate_customer": "c-1002",
+          "duplicate_ticket": "t-2624",
+          "original_customer": "c-0267",
+          "original_ticket": "t-2554"
+        },
+        {
+          "duplicate_created_at": "2026-08-22T09:14:19Z",
+          "duplicate_customer": "c-1003",
+          "duplicate_ticket": "t-2107",
+          "original_customer": "c-0474",
+          "original_ticket": "t-2097"
+        },
+        {
+          "duplicate_created_at": "2026-07-30T05:31:12Z",
+          "duplicate_customer": "c-1004",
+          "duplicate_ticket": "t-1087",
+          "original_customer": "c-0968",
+          "original_ticket": "t-1076"
+        }
+      ],
+      "entity": "tickets",
+      "expected_handling": "the domain cannot see the link (no field carries it): both tickets count as arrivals and completions and the original's reopen is missing from disclosures.reopened_tickets; the manifest is the analyst check. The correct recording is EV-02 (C06 reopen-ticket: one customer contact, reopen_count 1, prior cycle linked).",
+      "id": "INJ-02",
+      "location": "entity_files+events",
+      "record_ids": [
+        "t-0574",
+        "t-0614",
+        "c-1001",
+        "t-2554",
+        "t-2624",
+        "c-1002",
+        "t-2097",
+        "t-2107",
+        "c-1003",
+        "t-1076",
+        "t-1087",
+        "c-1004"
+      ],
+      "test": "P04-TEST-02"
+    },
+    {
+      "description": "3 tickets (one per queue) were served by an agent who does not hold the queue's skill at the start instant (a billing ticket by an onboarding-only agent, and so on).",
+      "detail": [
+        {
+          "agent_id": "agt-014",
+          "queue_id": "q-001",
+          "ticket": "t-1852"
+        },
+        {
+          "agent_id": "agt-007",
+          "queue_id": "q-002",
+          "ticket": "t-2422"
+        },
+        {
+          "agent_id": "agt-001",
+          "queue_id": "q-003",
+          "ticket": "t-0630"
+        }
+      ],
+      "entity": "tickets",
+      "expected_handling": "ingest rejects each whole ticket with AGENT_NOT_QUALIFIED; its events and survey carry TICKET_REJECTED (D-05); EV-03 shows C03 start-service refusing the same assignment.",
+      "expected_rejections": [
+        {
+          "entity": "surveys",
+          "id": "sv-1013",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-10581",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-10582",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-10583",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-10591",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-10594",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "tickets",
+          "id": "t-1852",
+          "reason_code": "AGENT_NOT_QUALIFIED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-13816",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-13817",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-13820",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-13822",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-13840",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "tickets",
+          "id": "t-2422",
+          "reason_code": "AGENT_NOT_QUALIFIED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-03624",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-03625",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-03626",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-03629",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-03642",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "tickets",
+          "id": "t-0630",
+          "reason_code": "AGENT_NOT_QUALIFIED"
+        }
+      ],
+      "id": "INJ-03",
+      "location": "entity_files+events",
+      "record_ids": [
+        "t-1852",
+        "t-2422",
+        "t-0630"
+      ],
+      "test": "P04-TEST-03"
+    },
+    {
+      "description": "3 tickets were assigned to an agent who was already serving another ticket (max_concurrent 1): the second service starts while the first is still open.",
+      "detail": [
+        {
+          "agent_id": "agt-009",
+          "first_ticket": "t-1289",
+          "max_concurrent": 1,
+          "rejected_ticket": "t-1295"
+        },
+        {
+          "agent_id": "agt-012",
+          "first_ticket": "t-2798",
+          "max_concurrent": 1,
+          "rejected_ticket": "t-2799"
+        },
+        {
+          "agent_id": "agt-001",
+          "first_ticket": "t-2415",
+          "max_concurrent": 1,
+          "rejected_ticket": "t-2421"
+        }
+      ],
+      "entity": "tickets",
+      "expected_handling": "ingest keeps the earlier start and rejects the later ticket with CONCURRENCY_EXCEEDED (events and survey TICKET_REJECTED); the rejected ticket occupies nobody.",
+      "expected_rejections": [
+        {
+          "entity": "ticket_events",
+          "id": "e-07374",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-07375",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-07376",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-07379",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-07405",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "tickets",
+          "id": "t-1295",
+          "reason_code": "CONCURRENCY_EXCEEDED"
+        },
+        {
+          "entity": "surveys",
+          "id": "sv-1567",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-16000",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-16001",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-16002",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-16003",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-16014",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "tickets",
+          "id": "t-2799",
+          "reason_code": "CONCURRENCY_EXCEEDED"
+        },
+        {
+          "entity": "surveys",
+          "id": "sv-1360",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-13812",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-13813",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-13825",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-13826",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-13844",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "tickets",
+          "id": "t-2421",
+          "reason_code": "CONCURRENCY_EXCEEDED"
+        }
+      ],
+      "id": "INJ-04",
+      "location": "entity_files+events",
+      "record_ids": [
+        "t-1295",
+        "t-2799",
+        "t-2421"
+      ],
+      "test": "P04-TEST-04"
+    },
+    {
+      "description": "3 full 8-hour shifts carry break_minutes 0 although a 30-minute break was taken (shift_breaks has it): the break is counted as available time.",
+      "detail": [
+        {
+          "agent_id": "agt-002",
+          "break_recorded_in_shift_breaks": "br-0447",
+          "recorded_break_minutes": 0,
+          "shift_id": "sh-0447"
+        },
+        {
+          "agent_id": "agt-008",
+          "break_recorded_in_shift_breaks": "br-0453",
+          "recorded_break_minutes": 0,
+          "shift_id": "sh-0453"
+        },
+        {
+          "agent_id": "agt-014",
+          "break_recorded_in_shift_breaks": "br-0234",
+          "recorded_break_minutes": 0,
+          "shift_id": "sh-0234"
+        }
+      ],
+      "entity": "shifts",
+      "expected_handling": "the shift rows are accepted as given (the domain deducts the declared break only); staffed time is overstated by 30 minutes per shift and occupancy understated; a shift with a recorded break and break_minutes 0 is the reconciliation check; EV-05 shows C03 start-service refusing an instant inside the recorded break (AGENT_ON_BREAK).",
+      "id": "INJ-05",
+      "location": "entity_files+events",
+      "record_ids": [
+        "sh-0447",
+        "sh-0453",
+        "sh-0234"
+      ],
+      "test": "P04-TEST-05"
+    },
+    {
+      "description": "3 transferred tickets whose ticket row has created_at set to the transfer instant (the arrival was reset) while the first event still carries the original arrival.",
+      "entity": "tickets",
+      "expected_handling": "ingest rejects each whole ticket with TRANSFER_RESETS_ARRIVAL (events and survey TICKET_REJECTED); a correct transfer keeps created_at and restarts only the per-queue wait.",
+      "expected_rejections": [
+        {
+          "entity": "surveys",
+          "id": "sv-1793",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-18300",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-18301",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-18303",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-18304",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-18306",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-18307",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-18340",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "tickets",
+          "id": "t-3206",
+          "reason_code": "TRANSFER_RESETS_ARRIVAL"
+        },
+        {
+          "entity": "surveys",
+          "id": "sv-1201",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-12324",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-12325",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-12337",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-12339",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-12341",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-12345",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-12364",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "tickets",
+          "id": "t-2162",
+          "reason_code": "TRANSFER_RESETS_ARRIVAL"
+        },
+        {
+          "entity": "surveys",
+          "id": "sv-0576",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-06093",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-06094",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-06110",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-06114",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-06117",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-06138",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "ticket_events",
+          "id": "e-06146",
+          "reason_code": "TICKET_REJECTED"
+        },
+        {
+          "entity": "tickets",
+          "id": "t-1066",
+          "reason_code": "TRANSFER_RESETS_ARRIVAL"
+        }
+      ],
+      "id": "INJ-06",
+      "location": "entity_files+events",
+      "record_ids": [
+        "t-3206",
+        "t-2162",
+        "t-1066"
+      ],
+      "test": "P04-TEST-08"
+    },
+    {
+      "description": "A simulation run that includes its warm-up: the baseline run sim-001 declares 120 warm-up minutes, the replayed run declares 0 with the same seed and config, so the empty-system start is counted in the statistics.",
+      "entity": "simulation_runs",
+      "expected_handling": "C08 accepts the run (0 warm-up is legal) but statistics.warmup_excluded is 0 and the mean wait is lower than the warmed run's (cold-start bias); results are labelled simulated estimates and must show the declared warm-up.",
+      "id": "INJ-07",
+      "location": "events",
+      "record_ids": [
+        "sim-ev07-cold"
+      ],
+      "test": "P04-TEST-09"
+    },
+    {
+      "description": "America/Santiago moves from UTC-04:00 to UTC-03:00 at 2026-09-06T04:00:00Z. The night crew (agt-017 and agt-018) works Sat 18:00 to Sun 02:00 local; the real shift is 420 minutes (22:00Z to 05:00Z). agt-018's row was built with naive wall-clock arithmetic (+8 h): it ends at 06:00Z, 480 minutes. agt-017's row on the same night is correct.",
+      "detail": {
+        "agent_id": "agt-018",
+        "correct_crossing_shifts": [
+          "sh-0761"
+        ],
+        "correct_minutes": 420,
+        "correct_utc": [
+          "2026-09-05T22:00:00Z",
+          "2026-09-06T05:00:00Z"
+        ],
+        "declared_local": "Sat 2026-09-05 18:00 to Sun 2026-09-06 02:00 America/Santiago",
+        "recorded_minutes": 480,
+        "recorded_utc": [
+          "2026-09-05T22:00:00Z",
+          "2026-09-06T06:00:00Z"
+        ],
+        "shift_id": "sh-0762",
+        "weekend": {
+          "offset_after": "-03:00",
+          "offset_before": "-04:00",
+          "saturday": "2026-09-05",
+          "sunday": "2026-09-06",
+          "transition_utc": "2026-09-06T04:00:00Z",
+          "zone": "America/Santiago"
+        }
+      },
+      "entity": "shifts",
+      "expected_handling": "the domain stores shifts as UTC instants (D-02) and cannot know the roster: staffed time is overstated by 60 minutes; detection recomputes the end from the agent's zone (timeutil.local_to_utc) and compares; the agent's Santiago shifts move one hour earlier in UTC from 2026-09-06 on (week 10 weekdays and week 9 Sunday).",
+      "id": "INJ-08",
+      "location": "entity_files",
+      "record_ids": [
+        "sh-0762"
+      ],
+      "test": "P04-TEST-07"
+    },
+    {
+      "description": "Survey nonresponse is not random: customers who missed a first-response or resolution target, were transferred or were reopened respond far less often (x0.6, and x0.55 / x0.35 for scores 3 and below), so CSAT among responders is higher than among all invited. record_ids lists the first 30 unanswered invitations after a poor experience; record_count is all of them.",
+      "entity": "surveys",
+      "expected_handling": "the domain computes CSAT over valid responses and discloses invited, valid, nonresponse and the note 'nonresponse is not random'; the realised numbers are in manifest.stats (csat_among_responders against csat_latent_all_invited).",
+      "id": "INJ-09",
+      "location": "entity_files",
+      "record_count": 318,
+      "record_ids": [
+        "sv-0010",
+        "sv-0016",
+        "sv-0028",
+        "sv-0037",
+        "sv-0043",
+        "sv-0050",
+        "sv-0062",
+        "sv-0070",
+        "sv-0073",
+        "sv-0102",
+        "sv-0107",
+        "sv-0122",
+        "sv-0131",
+        "sv-0141",
+        "sv-0146",
+        "sv-0151",
+        "sv-0152",
+        "sv-0153",
+        "sv-0154",
+        "sv-0156",
+        "sv-0164",
+        "sv-0178",
+        "sv-0184",
+        "sv-0187",
+        "sv-0194",
+        "sv-0200",
+        "sv-0214",
+        "sv-0216",
+        "sv-0222",
+        "sv-0226"
+      ],
+      "test": "P04-TEST-11"
+    }
+  ],
+  "seed": 20261026
+}

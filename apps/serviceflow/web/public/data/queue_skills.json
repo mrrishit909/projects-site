@@ -1,0 +1,5 @@
+{"entity":"queue_skills","dataset_version":"sf-20261026-20261026","rows":[
+{"queue_id":"q-001","skill_id":"s-001"},
+{"queue_id":"q-002","skill_id":"s-002"},
+{"queue_id":"q-003","skill_id":"s-003"}
+]}

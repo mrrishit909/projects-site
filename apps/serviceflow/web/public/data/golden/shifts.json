@@ -1,0 +1,3 @@
+{"entity":"shifts","dataset_version":"golden-v1","rows":[
+{"agent_id":"agt-001","break_minutes":30,"ends_at":"2026-07-06T17:00:00Z","shift_id":"sh-001","starts_at":"2026-07-06T09:00:00Z"}
+]}

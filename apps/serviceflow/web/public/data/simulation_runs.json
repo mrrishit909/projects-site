@@ -1,0 +1,5 @@
+{"entity":"simulation_runs","dataset_version":"sf-20261026-20261026","rows":[
+{"config":{"agents":5,"arrival_rate_per_hour":3.12,"discipline":"fifo_within_priority","priority_mix":{"P1":0.09,"P2":0.37,"P3":0.54},"service":"exponential","service_minutes":69.1},"horizon_minutes":720,"policy_version":"baseline-v1","seed":20261026,"simulation_id":"sim-001","warmup_minutes":120},
+{"config":{"agents":6,"arrival_rate_per_hour":3.12,"discipline":"fifo_within_priority","priority_mix":{"P1":0.09,"P2":0.37,"P3":0.54},"service":"exponential","service_minutes":69.1},"horizon_minutes":720,"policy_version":"plus-one-agent-v1","seed":20261026,"simulation_id":"sim-002","warmup_minutes":120},
+{"config":{"agents":5,"arrival_rate_per_hour":3.74,"discipline":"fifo_within_priority","priority_mix":{"P1":0.09,"P2":0.37,"P3":0.54},"service":"exponential","service_minutes":69.1},"horizon_minutes":720,"policy_version":"holdout-intensity-v1","seed":20261026,"simulation_id":"sim-003","warmup_minutes":120}
+]}

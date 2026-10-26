@@ -1,0 +1,428 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "944ef91b3dc17c04c6bb601e0faac94f956d121877de2b9864988cf7c5d5cba4",
+  "dataset_version": "sf-20261026-20261026",
+  "designed_relationships": [
+    "technical queue P1 resolution has a long tail: n 142, mean 247.2 min, P90 619.4 min (nearest rank), P90 / mean 2.51; first response mean 22.9 min (15 % of technical P1 are major incidents that wait hours for engineering; resolution is measured from the original arrival; synthetic).",
+    "Monday 09-11 UTC is the capacity bind: arrivals per staffed hour 1.33 against 0.98 for the next 2-hour block (Mon 10-12) and 0.43 for the median block (staffed = shift minus the break pro rata; blocks with fewer than 24 staffed hours excluded; surge multiplier 2.4 on those two hours; synthetic).",
+    "proficiency >= 4 resolves faster: mean handling 35.9 min (n 1946) against 39.5 min (n 3039) for proficiency <= 3; relative to the queue and priority mean 0.896 against 1.066 (handling factors {1: 1.3, 2: 1.15, 3: 1.0, 4: 0.85, 5: 0.72}; synthetic).",
+    "the holdout (weeks 9-12) arrives +20.0 % harder than the training window (weeks 1-8): 2.135 against 1.779 tickets per hour; designed uplift 20 % and disclosed (synthetic)."
+  ],
+  "generated_at": "2026-10-26T16:34:09Z",
+  "generator": {
+    "name": "generate.py",
+    "parameters": {
+      "abandonable_channels": [
+        "chat",
+        "phone"
+      ],
+      "agent_zones": [
+        "Europe/Berlin",
+        "America/Santiago"
+      ],
+      "agents": 18,
+      "arrival_realisation": "first attempt (0, 1, ...) with holdout/training rate within 1.5 points of +20 %",
+      "as_of": "2026-09-27T23:59:59Z",
+      "break_minutes": 30,
+      "channels": {
+        "chat": 0.3,
+        "email": 0.4,
+        "phone": 0.15,
+        "web_form": 0.15
+      },
+      "customers": 1000,
+      "day_weight_mon_to_sun": [
+        1.0,
+        1.05,
+        1.05,
+        1.0,
+        0.92,
+        0.14,
+        0.1
+      ],
+      "days": 84,
+      "dst_weekend": {
+        "offset_after": "-03:00",
+        "offset_before": "-04:00",
+        "saturday": "2026-09-05",
+        "sunday": "2026-09-06",
+        "transition_utc": "2026-09-06T04:00:00Z",
+        "zone": "America/Santiago"
+      },
+      "handling_median_minutes": {
+        "q-001/P1": [
+          36,
+          0.45
+        ],
+        "q-001/P2": [
+          30,
+          0.45
+        ],
+        "q-001/P3": [
+          23,
+          0.45
+        ],
+        "q-002/P2": [
+          80,
+          0.55
+        ],
+        "q-002/P3": [
+          57,
+          0.55
+        ],
+        "q-003/P1": [
+          70,
+          0.45
+        ],
+        "q-003/P2": [
+          57,
+          0.45
+        ],
+        "q-003/P3": [
+          47,
+          0.45
+        ]
+      },
+      "holdout_intensity_uplift": 1.2,
+      "holdout_weeks": [
+        9,
+        12
+      ],
+      "hour_weight_utc": [
+        0.06,
+        0.05,
+        0.05,
+        0.05,
+        0.06,
+        0.12,
+        0.3,
+        0.55,
+        0.8,
+        1.0,
+        1.1,
+        1.15,
+        1.2,
+        1.3,
+        1.35,
+        1.25,
+        1.1,
+        0.9,
+        0.7,
+        0.55,
+        0.4,
+        0.28,
+        0.15,
+        0.09
+      ],
+      "leave_days_per_agent": 2,
+      "monday_surge_hours_utc": {
+        "10": 2.4,
+        "9": 2.4
+      },
+      "p_impatient": 0.55,
+      "p_pause": 0.12,
+      "p_reopen": 0.066,
+      "p_survey_invited": 0.6,
+      "p_transfer": 0.085,
+      "patience_mean_minutes": {
+        "chat": 35,
+        "phone": 18
+      },
+      "priority_mix": {
+        "q-001": [
+          0.03,
+          0.32,
+          0.65
+        ],
+        "q-002": [
+          0.1,
+          0.4,
+          0.5
+        ],
+        "q-003": [
+          0.04,
+          0.36,
+          0.6
+        ]
+      },
+      "proficiency_factor": {
+        "1": 1.3,
+        "2": 1.15,
+        "3": 1.0,
+        "4": 0.85,
+        "5": 0.72
+      },
+      "queues": {
+        "q-001": {
+          "name": "Billing",
+          "priority_policy": "fifo_within_priority",
+          "share": 0.36,
+          "skill": "s-001"
+        },
+        "q-002": {
+          "name": "Technical",
+          "priority_policy": "fifo_within_priority",
+          "share": 0.4,
+          "skill": "s-002"
+        },
+        "q-003": {
+          "name": "Onboarding",
+          "priority_policy": "fifo",
+          "share": 0.24,
+          "skill": "s-003"
+        }
+      },
+      "seed": 20261026,
+      "size_budget_bytes": 5000000,
+      "sla_minutes": {
+        "P1": [
+          15,
+          240
+        ],
+        "P2": [
+          60,
+          1440
+        ],
+        "P3": [
+          240,
+          4320
+        ]
+      },
+      "survey_poor_experience_factor": 0.6,
+      "survey_response_base": 0.42,
+      "technical_p1": {
+        "escalated_median_sigma": [
+          130,
+          0.5
+        ],
+        "major_handling_median_sigma": [
+          120,
+          0.4
+        ],
+        "major_incident_share": 0.15,
+        "major_wait_seconds": [
+          7800,
+          18000
+        ],
+        "routine": [
+          0.72,
+          28,
+          0.4
+        ]
+      },
+      "tickets_target": 3700,
+      "training_weeks": [
+        1,
+        8
+      ],
+      "volume_cap": "one event row per state change and no separate 'queued' row at creation (created carries the queue); a human reply is recorded once per ticket; about 4,800 tickets so the 12 files stay under 5 MB (a row costs about 150 bytes with every field present)",
+      "weeks": 12,
+      "window": [
+        "2026-07-06",
+        "2026-09-27"
+      ]
+    },
+    "seed": 20261026
+  },
+  "injection_manifest": "injection-manifest.json",
+  "row_counts": {
+    "agent_skills": 29,
+    "agents": 18,
+    "customers": 1004,
+    "queue_skills": 3,
+    "queues": 3,
+    "shift_breaks": 1018,
+    "shifts": 1020,
+    "simulation_runs": 3,
+    "skills": 3,
+    "sla_policies": 3,
+    "surveys": 2153,
+    "ticket_events": 21948,
+    "tickets": 3826
+  },
+  "stats": {
+    "abandoned_share": 0.0546,
+    "bot_acknowledgements": 3826,
+    "breaks_recorded": 1018,
+    "completed_share": 0.9454,
+    "csat_among_responders": 0.8642,
+    "csat_latent_all_invited": 0.7585,
+    "designed": {
+      "monday_block": {
+        "hour_utc": "Mon 09-11",
+        "median_block_ratio": 0.4292,
+        "next_best": {
+          "block": "Mon 10-12",
+          "ratio": 0.9844
+        },
+        "ratio": 1.3259,
+        "top": "Mon 09-11"
+      },
+      "proficiency": {
+        "mean_handling_ge4_minutes": 35.92,
+        "mean_handling_le3_minutes": 39.55,
+        "normalised_ge4": 0.8964,
+        "normalised_le3": 1.0664
+      },
+      "technical_p1": {
+        "mean_first_response_minutes": 22.87,
+        "mean_resolution_minutes": 247.19,
+        "n": 142,
+        "p90_first_response_minutes": 25.6,
+        "p90_over_mean": 2.506,
+        "p90_resolution_minutes": 619.42
+      }
+    },
+    "events": 21948,
+    "events_per_ticket": 5.737,
+    "handling_hours": 3169.7,
+    "holdout_arrivals": 1435,
+    "holdout_rate_per_hour": 2.1354,
+    "holdout_relative_change": 0.2003,
+    "invited_after_poor_experience": 405,
+    "leave_days": {
+      "agt-001": [
+        "2026-09-11",
+        "2026-09-15"
+      ],
+      "agt-002": [
+        "2026-07-08",
+        "2026-08-04"
+      ],
+      "agt-003": [
+        "2026-08-26",
+        "2026-09-01"
+      ],
+      "agt-004": [
+        "2026-08-28",
+        "2026-09-22"
+      ],
+      "agt-005": [
+        "2026-08-26",
+        "2026-09-10"
+      ],
+      "agt-006": [
+        "2026-08-20",
+        "2026-09-02"
+      ],
+      "agt-007": [
+        "2026-09-10",
+        "2026-09-16"
+      ],
+      "agt-008": [
+        "2026-08-20",
+        "2026-08-26"
+      ],
+      "agt-009": [
+        "2026-08-12",
+        "2026-08-20"
+      ],
+      "agt-010": [
+        "2026-08-27",
+        "2026-09-22"
+      ],
+      "agt-011": [
+        "2026-07-17",
+        "2026-08-26"
+      ],
+      "agt-012": [
+        "2026-08-20",
+        "2026-09-25"
+      ],
+      "agt-013": [
+        "2026-07-17",
+        "2026-09-22"
+      ],
+      "agt-014": [
+        "2026-07-10",
+        "2026-09-22"
+      ],
+      "agt-015": [
+        "2026-07-15",
+        "2026-08-07"
+      ],
+      "agt-016": [
+        "2026-07-07",
+        "2026-07-15"
+      ],
+      "agt-017": [
+        "2026-08-12",
+        "2026-08-25"
+      ],
+      "agt-018": [
+        "2026-07-08",
+        "2026-08-05"
+      ]
+    },
+    "occupancy": 0.4247,
+    "reopened_share": 0.063,
+    "response_rate_after_good_experience": 0.3799,
+    "response_rate_after_poor_experience": 0.2148,
+    "shifts": 1020,
+    "simulation": {
+      "breaks_missed": 0,
+      "breaks_taken": 1018,
+      "dispatched": 4156,
+      "shifts": 1020
+    },
+    "simulation_run_parameters": {
+      "agents": 5,
+      "mix": {
+        "P1": 0.09,
+        "P2": 0.37,
+        "P3": 0.54
+      },
+      "rate": 3.12,
+      "service_minutes": 69.1,
+      "technical_agents_on_shift_by_training_monday": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ]
+    },
+    "sla_resolution_within_all": 0.9782,
+    "staffed_hours_net_of_breaks": 7464.0,
+    "survey_invitation_rate": 0.5952,
+    "survey_response_rate": 0.3488,
+    "surveys_invited": 2153,
+    "tickets": 3826,
+    "tickets_by_channel": {
+      "chat": 1197,
+      "email": 1501,
+      "phone": 573,
+      "web_form": 555
+    },
+    "tickets_by_priority": {
+      "P1": 236,
+      "P2": 1391,
+      "P3": 2199
+    },
+    "tickets_by_queue": {
+      "q-001": 1366,
+      "q-002": 1552,
+      "q-003": 908
+    },
+    "tickets_per_week": [
+      293,
+      273,
+      320,
+      309,
+      303,
+      303,
+      314,
+      276,
+      370,
+      344,
+      386,
+      335
+    ],
+    "training_arrivals": 2391,
+    "training_rate_per_hour": 1.779,
+    "transferred_share": 0.0789
+  }
+}

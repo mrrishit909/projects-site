@@ -1,0 +1,3 @@
+{"entity":"agents","dataset_version":"golden-v1","rows":[
+{"active":true,"agent_id":"agt-001","agent_name":"Agent One","employment_type":"full_time","max_concurrent":1,"timezone":"America/New_York"}
+]}

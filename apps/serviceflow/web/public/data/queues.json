@@ -1,0 +1,5 @@
+{"entity":"queues","dataset_version":"sf-20261026-20261026","rows":[
+{"active":true,"calendar_id":"cal-001","priority_policy":"fifo_within_priority","queue_id":"q-001","queue_name":"Billing"},
+{"active":true,"calendar_id":"cal-001","priority_policy":"fifo_within_priority","queue_id":"q-002","queue_name":"Technical"},
+{"active":true,"calendar_id":"cal-001","priority_policy":"fifo","queue_id":"q-003","queue_name":"Onboarding"}
+]}

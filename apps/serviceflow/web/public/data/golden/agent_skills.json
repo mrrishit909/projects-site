@@ -1,0 +1,3 @@
+{"entity":"agent_skills","dataset_version":"golden-v1","rows":[
+{"agent_id":"agt-001","agent_skill_id":"as-001","effective_from":"2026-01-01T00:00:00Z","proficiency":4,"skill_id":"s-001"}
+]}

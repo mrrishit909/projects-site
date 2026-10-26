@@ -86,3 +86,25 @@ keep running. C09 `compare-policies` pairs replications on one seed and reports 
 labelled an estimate. C07 and C10 return 501 `NOT_IMPLEMENTED`. Open: the metrics default
 window (currently first arrival to last event plus one second, echoed in `meta`) and the ingest
 command's full-population reload, which is lab-scale only.
+
+## D-07 Synthetic world (2026-10-26, adopted from A-029)
+The published snapshot holds 3,826 tickets, not the specification's "about 6,000": with every event field
+present (nulls included, so the files match the fixture's exact shape) one event row costs about 165 bytes and
+6,000 tickets would exceed the 5 MB cap the same specification sets, so the cap wins and the deviation is
+disclosed here and in `data/README-generator.md` (knob `TICKETS_TARGET`). `created` carries the queue; `queued`
+appears only when a reopened ticket re-enters its queue; one human reply per ticket. `shift_breaks.json` is a
+thirteenth entity file, hashed with the rest (no loader in `seed.py` yet). Zones: Europe/Berlin and
+America/Santiago, shifts declared in local wall-clock time and converted with zoneinfo; the DST weekend is
+2026-09-05/06 in Santiago (switch 2026-09-06T04:00Z); the night crew's Saturday shift is 420 real minutes and
+agt-018's 480-minute row is INJ-08. Onboarding is `fifo`, billing and technical `fifo_within_priority`; across
+queues `fifo` tickets rank as P2; a transfer restarts the wait in the new queue; dispatch takes the longest-idle
+agent; breaks start at the first idle moment after 42–55 % of the shift. SLA targets (first response /
+resolution, wall clock): P1 15/240, P2 60/1440, P3 240/4320 minutes. Holdout arrivals are Poisson × 1.2; the
+realisation is the first of a fixed, disclosed series of attempts within 1.5 points of +20 %. 15 % of technical
+P1 tickets are major incidents paused 2.7–5 h. Chat and phone customers may abandon before service. One survey
+per ticket on the final resolution with response skewed by score (INJ-09). Three simulation runs from
+training-window data; the cold-start run is replay-only (EV-07). INJ-02 (a reopen recorded as a new customer)
+is not detectable by the domain and stays an analyst check in the manifest. Event ids follow receive order, so
+about 1 % of replies and pauses are late arrivals. Known behaviour, not fixed: D-05 deducts no break from a
+shift a window cuts, so staffed minutes of adjacent windows exceed the whole (447,450 vs 447,990); a
+declared-interval rule over `shift_breaks` is a later decision.

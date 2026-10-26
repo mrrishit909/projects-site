@@ -1,0 +1,20 @@
+{"entity":"agents","dataset_version":"sf-20261026-20261026","rows":[
+{"active":true,"agent_id":"agt-001","agent_name":"Ines Brandt","employment_type":"full_time","max_concurrent":1,"timezone":"Europe/Berlin"},
+{"active":true,"agent_id":"agt-002","agent_name":"Jonas Keller","employment_type":"full_time","max_concurrent":1,"timezone":"Europe/Berlin"},
+{"active":true,"agent_id":"agt-003","agent_name":"Mara Vogel","employment_type":"full_time","max_concurrent":1,"timezone":"Europe/Berlin"},
+{"active":true,"agent_id":"agt-004","agent_name":"Tilo Neumann","employment_type":"full_time","max_concurrent":1,"timezone":"Europe/Berlin"},
+{"active":true,"agent_id":"agt-005","agent_name":"Lena Fischer","employment_type":"full_time","max_concurrent":1,"timezone":"Europe/Berlin"},
+{"active":true,"agent_id":"agt-006","agent_name":"Pavel Novak","employment_type":"full_time","max_concurrent":1,"timezone":"Europe/Berlin"},
+{"active":true,"agent_id":"agt-007","agent_name":"Greta Lund","employment_type":"part_time","max_concurrent":1,"timezone":"Europe/Berlin"},
+{"active":true,"agent_id":"agt-008","agent_name":"Omar Haddad","employment_type":"full_time","max_concurrent":1,"timezone":"Europe/Berlin"},
+{"active":true,"agent_id":"agt-009","agent_name":"Sofia Ricci","employment_type":"full_time","max_concurrent":1,"timezone":"Europe/Berlin"},
+{"active":true,"agent_id":"agt-010","agent_name":"Camila Rojas","employment_type":"full_time","max_concurrent":1,"timezone":"America/Santiago"},
+{"active":true,"agent_id":"agt-011","agent_name":"Tomas Araya","employment_type":"full_time","max_concurrent":1,"timezone":"America/Santiago"},
+{"active":true,"agent_id":"agt-012","agent_name":"Valentina Soto","employment_type":"full_time","max_concurrent":1,"timezone":"America/Santiago"},
+{"active":true,"agent_id":"agt-013","agent_name":"Diego Pinto","employment_type":"part_time","max_concurrent":1,"timezone":"America/Santiago"},
+{"active":true,"agent_id":"agt-014","agent_name":"Javiera Munoz","employment_type":"full_time","max_concurrent":1,"timezone":"America/Santiago"},
+{"active":true,"agent_id":"agt-015","agent_name":"Matias Vega","employment_type":"full_time","max_concurrent":1,"timezone":"America/Santiago"},
+{"active":true,"agent_id":"agt-016","agent_name":"Fernanda Diaz","employment_type":"full_time","max_concurrent":1,"timezone":"America/Santiago"},
+{"active":true,"agent_id":"agt-017","agent_name":"Nicolas Reyes","employment_type":"contractor","max_concurrent":1,"timezone":"America/Santiago"},
+{"active":true,"agent_id":"agt-018","agent_name":"Paula Campos","employment_type":"full_time","max_concurrent":1,"timezone":"America/Santiago"}
+]}

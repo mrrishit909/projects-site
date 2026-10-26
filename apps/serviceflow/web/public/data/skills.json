@@ -1,0 +1,5 @@
+{"entity":"skills","dataset_version":"sf-20261026-20261026","rows":[
+{"active":true,"created_at":"2026-01-01T00:00:00Z","description":"Invoices, refunds and plan changes","skill_id":"s-001","skill_name":"Billing"},
+{"active":true,"created_at":"2026-01-01T00:00:00Z","description":"Integration faults and outage troubleshooting","skill_id":"s-002","skill_name":"Technical"},
+{"active":true,"created_at":"2026-01-01T00:00:00Z","description":"Account set-up and first-week guidance","skill_id":"s-003","skill_name":"Onboarding"}
+]}
