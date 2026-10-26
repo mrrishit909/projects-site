@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:13:20Z",
+  "updated_at": "2026-10-26T15:16:56Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -41,6 +41,20 @@
         "verified_at": "2026-10-26T14:13:20Z"
       },
       "previous_release_commit": "a614136"
+    },
+    {
+      "slug": "supplyscope",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/supplyscope/",
+      "site_path": "labs/supplyscope/ on unified-portfolio",
+      "release_commit_unified_portfolio": "7df1914",
+      "rollback_commit_unified_portfolio": "244acba",
+      "source_commit_business_data_lab": "12f866f385202f93c90eaff3f3a68560b29356fa",
+      "published_tree_sha256": "7c25780b5586ec6ff10973bca78c4e5a4bea5b3bab7db674964e765b2f637a70",
+      "files": 55,
+      "dataset_version": "ss-20261026-20261026",
+      "dataset_hash": "5bdabb50eea4b192e3b17e1e5b1a79dc6b26feb4a2b8b78ad094acde9f8bcc8c",
+      "contract_version": "v1",
+      "publication_status": "pushed; live verification pending"
     }
   ]
 }
