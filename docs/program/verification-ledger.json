@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:13:20Z",
+  "updated_at": "2026-10-26T14:33:42Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -625,6 +625,25 @@
       "code_sha": "site from 1a27a0e",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40337325817",
       "ts": "2026-10-26T14:13:20Z"
+    },
+    {
+      "requirement": "P03-MET-01..12 domain + SQL reference + API metrics equal golden (both states, variants)",
+      "project": "03-supplyscope",
+      "status": "verified",
+      "command": "pytest -q (apps/supplyscope, DATABASE_URL set)",
+      "exit_code": 0,
+      "actual": "110 passed",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T14:33:42Z"
+    },
+    {
+      "requirement": "P03-TEST-01,02,04..12 DETECT (application path) + 03 (rules)",
+      "project": "03-supplyscope",
+      "status": "verified",
+      "command": "pytest tests/test_adversarial.py tests/test_rules.py",
+      "exit_code": 0,
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T14:33:42Z"
     }
   ]
 }

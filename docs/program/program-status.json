@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T14:13:20Z",
+  "updated_at": "2026-10-26T14:33:42Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -71,7 +71,7 @@
     },
     "03-supplyscope": {
       "slug": "supplyscope",
-      "stage": "gate-A passed (fixture verified); domain/API slice in progress",
+      "stage": "gate-B (local): domain/API verified; CI pending; generator next",
       "built": false,
       "verified": false,
       "published": false,
@@ -80,7 +80,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": "T-03-03 (A-021)"
+      "next_task": "T-03-04a generator (A-022)"
     },
     "04-serviceflow": {
       "slug": "serviceflow",
