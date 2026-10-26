@@ -1,0 +1,99 @@
+{
+  "dataset_version": "ra-20261026-20261026",
+  "events": [
+    {
+      "command": "ingest-sales",
+      "expected_handling": "the row repeats an existing shipment_line_id; it must not create a second shipment line or a second allocation",
+      "injection": "INJ-05",
+      "input": {
+        "batch": {
+          "contract": "v1",
+          "shipment_lines": [
+            {
+              "cost_version_id": null,
+              "line_id": "line-003074",
+              "shipment_id": "shp-001338",
+              "shipment_line_id": "sl-003305",
+              "shipped_quantity": 33
+            }
+          ]
+        }
+      }
+    },
+    {
+      "command": "allocate-freight",
+      "expected_error_code": "FREIGHT_ALREADY_ALLOCATED",
+      "expected_handling": "second call returns 409 and rolls back; the shipment line is allocated once",
+      "injection": "INJ-05",
+      "input": {
+        "shipment_id": "shp-001338"
+      },
+      "repeat": 2
+    },
+    {
+      "command": "post-a-partial-return",
+      "expected_error_code": "RETURN_EXCEEDS_REMAINING",
+      "injection": "INJ-06",
+      "input": {
+        "credit_amount": "87.30",
+        "credit_date": "2025-02-06",
+        "expected_version": 1,
+        "reason": "injected: return of 5 against 4 shipped",
+        "returned_quantity": 5,
+        "shipment_line_id": "sl-000965"
+      }
+    },
+    {
+      "command": "post-a-partial-return",
+      "expected_error_code": "RETURN_EXCEEDS_REMAINING",
+      "injection": "INJ-06",
+      "input": {
+        "credit_amount": "52.16",
+        "credit_date": "2025-06-27",
+        "expected_version": 1,
+        "reason": "injected: return of 8 against 6 shipped",
+        "returned_quantity": 8,
+        "shipment_line_id": "sl-002118"
+      }
+    },
+    {
+      "command": "post-a-partial-return",
+      "expected_error_code": "RETURN_EXCEEDS_REMAINING",
+      "injection": "INJ-06",
+      "input": {
+        "credit_amount": "222.36",
+        "credit_date": "2025-10-19",
+        "expected_version": 1,
+        "reason": "injected: return of 6 against 5 shipped",
+        "returned_quantity": 6,
+        "shipment_line_id": "sl-003121"
+      }
+    },
+    {
+      "command": "post-a-partial-return",
+      "expected_error_code": "RETURN_EXCEEDS_REMAINING",
+      "injection": "INJ-06",
+      "input": {
+        "credit_amount": "375.90",
+        "credit_date": "2026-01-13",
+        "expected_version": 1,
+        "reason": "injected: return of 7 against 5 shipped",
+        "returned_quantity": 7,
+        "shipment_line_id": "sl-004046"
+      }
+    },
+    {
+      "command": "post-a-partial-return",
+      "expected_error_code": "CREDIT_SIGN_REVERSED",
+      "injection": "INJ-07",
+      "input": {
+        "credit_amount": "-76.21",
+        "credit_date": "2026-05-01",
+        "expected_version": 1,
+        "reason": "injected: negative credit",
+        "returned_quantity": 1,
+        "shipment_line_id": "sl-005053"
+      }
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T10:15:32Z",
+  "updated_at": "2026-10-26T10:28:57Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
@@ -72,7 +72,7 @@
       "id": "T-01-05b",
       "project": "01-revenue-atlas",
       "title": "Synthetic data generator + published snapshot + injection manifest (P01-WORK-03)",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-01-03"
       ],
@@ -83,7 +83,7 @@
       "id": "T-01-06",
       "project": "01-revenue-atlas",
       "title": "Static web demo (entry screens) + TS golden check + Playwright screenshots at 360/768/1280/1920",
-      "status": "pending",
+      "status": "in_progress",
       "prereqs": [
         "T-01-03"
       ],

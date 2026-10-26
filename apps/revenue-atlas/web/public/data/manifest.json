@@ -1,0 +1,120 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444",
+  "dataset_version": "ra-20261026-20261026",
+  "designed_relationships": [
+    "cat-fixtures unit costs rise about 18 % from 2026-01 (cost_versions valid_from 2026-01-01) while unit prices stay unchanged, so fixtures contribution margin rate falls from 2026-01.",
+    "reg-west discount rate roughly doubles from 2026-03 (probability .35 -> .55, depth x1.45, reason_code promo), visible as allocated discounts / gross sales by region and month.",
+    "enterprise customers in cat-apparel return about 3x the rate of other segment/category combinations (return probability 0.156 vs 0.052 per shipment line)."
+  ],
+  "generated_at": "2026-10-26T10:25:34Z",
+  "generator": {
+    "name": "generate.py",
+    "parameters": {
+      "categories": [
+        "cat-fixtures",
+        "cat-apparel",
+        "cat-tools",
+        "cat-packaging",
+        "cat-safety",
+        "cat-office"
+      ],
+      "cost_version_boundaries": [
+        "2024-10-01",
+        "2025-04-01",
+        "2025-10-01",
+        "2026-04-01"
+      ],
+      "customers": 48,
+      "discount_line_probability": 0.35,
+      "discount_reason_codes": [
+        "volume",
+        "promo",
+        "goodwill",
+        "price_match"
+      ],
+      "enterprise_apparel_return_multiplier": 3.0,
+      "fixtures_cost_step": {
+        "factor": [
+          1.17,
+          1.19
+        ],
+        "from": "2026-01-01"
+      },
+      "foreign_currency_customers": {
+        "CAD": 4,
+        "EUR": 6
+      },
+      "injections": {
+        "cancelled_orders": 5,
+        "duplicate_shipment_line_rows": 1,
+        "malformed_currency_orders": 3,
+        "missing_cost_version_products": 1,
+        "missing_fx_dates": 2,
+        "negative_credits": 1,
+        "overlapping_cost_versions": 2,
+        "returns_exceeding_remaining": 4,
+        "territory_change_customers": 2,
+        "unassigned_customers": 3,
+        "zero_gross_orders": 2
+      },
+      "line_count_weights": {
+        "1": 0.25,
+        "2": 0.3,
+        "3": 0.22,
+        "4": 0.14,
+        "5": 0.09
+      },
+      "months": 24,
+      "orders": 2400,
+      "products": 36,
+      "regions": [
+        "reg-north",
+        "reg-south",
+        "reg-east",
+        "reg-west"
+      ],
+      "reporting_currency": "USD",
+      "reps": 8,
+      "return_credit_delay_days": [
+        5,
+        45
+      ],
+      "return_line_probability": 0.052,
+      "seed": 20261026,
+      "segments": {
+        "enterprise": 8,
+        "mid_market": 14,
+        "smb": 26
+      },
+      "short_ship_line_probability": 0.03,
+      "split_order_probability": 0.18,
+      "west_discount_change": {
+        "from": "2026-03-01",
+        "pct_range": [
+          0.08,
+          0.13
+        ],
+        "probability": 0.55,
+        "reason_code": "promo"
+      },
+      "window_end": "2026-09-30",
+      "window_start": "2024-10-01"
+    },
+    "seed": 20261026
+  },
+  "injection_manifest": "injection-manifest.json",
+  "row_counts": {
+    "cost_versions": 150,
+    "customers": 50,
+    "discounts": 2197,
+    "exchange_rates": 1458,
+    "order_lines": 6168,
+    "orders": 2400,
+    "products": 36,
+    "quotas": 64,
+    "returns": 385,
+    "shipment_lines": 6649,
+    "shipments": 2727
+  }
+}

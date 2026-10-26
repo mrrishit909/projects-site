@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T10:18:41Z",
+  "updated_at": "2026-10-26T10:28:57Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -139,6 +139,17 @@
       "code_sha": "57f0143",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40306213772",
       "ts": "2026-10-26T10:18:41Z"
+    },
+    {
+      "requirement": "P01-DATA-*-R14 / master 14: deterministic generation, seed and parameters recorded, injection manifest published separately",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "generate.py --seed 20261026 twice; pytest tests/test_generator.py",
+      "exit_code": 0,
+      "expected": "identical dataset_hash across runs; pipeline rejects 3 malformed-currency orders; quarantines overlapping/missing cost versions and missing FX",
+      "actual": "hash 40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444 both runs; 16 passed",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T10:28:57Z"
     }
   ]
 }

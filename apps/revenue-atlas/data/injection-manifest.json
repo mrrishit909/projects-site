@@ -1,0 +1,216 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444",
+  "dataset_version": "ra-20261026-20261026",
+  "designed_relationships": [
+    "cat-fixtures unit costs rise about 18 % from 2026-01 (cost_versions valid_from 2026-01-01) while unit prices stay unchanged, so fixtures contribution margin rate falls from 2026-01.",
+    "reg-west discount rate roughly doubles from 2026-03 (probability .35 -> .55, depth x1.45, reason_code promo), visible as allocated discounts / gross sales by region and month.",
+    "enterprise customers in cat-apparel return about 3x the rate of other segment/category combinations (return probability 0.156 vs 0.052 per shipment line)."
+  ],
+  "events_file": "data/injection-events.json",
+  "injections": [
+    {
+      "description": "3 orders with a malformed currency: ord-002141='US$', ord-002021='usd', ord-001005='EU'; their lines, discounts, shipments, shipment lines and returns are in the files too.",
+      "entity": "orders",
+      "expected_handling": "C01/validate_batch rejects exactly these orders and every dependent row with CURRENCY_NOT_ISO4217; raw rows are kept; none enters the population.",
+      "id": "INJ-01",
+      "record_ids": [
+        "ord-002141",
+        "ord-002021",
+        "ord-001005"
+      ],
+      "test": "P01-FLOW-01"
+    },
+    {
+      "affected_shipment_line_ids": [
+        "sl-003115",
+        "sl-003119",
+        "sl-003133",
+        "sl-003154",
+        "sl-003210",
+        "sl-003213",
+        "sl-003219",
+        "sl-003221",
+        "sl-003225",
+        "sl-003255",
+        "sl-003257",
+        "sl-003259",
+        "sl-003268",
+        "sl-003270",
+        "sl-003304",
+        "sl-003306",
+        "sl-003363",
+        "sl-003378",
+        "sl-003123",
+        "sl-003167",
+        "sl-003186",
+        "sl-003249",
+        "sl-003264",
+        "sl-003273",
+        "sl-003287",
+        "sl-003296",
+        "sl-003298",
+        "sl-003339",
+        "sl-003352",
+        "sl-003353",
+        "sl-003356"
+      ],
+      "description": "2 cost versions whose valid_to runs one month (to 2025-11-01) into the next version of the same product, so 2025-10 has two matching versions.",
+      "entity": "cost_versions",
+      "expected_handling": "31 shipment lines in 2025-10 are quarantined with COST_VERSION_AMBIGUOUS.",
+      "id": "INJ-02",
+      "overlapping_with": [
+        "cv-0081",
+        "cv-0101"
+      ],
+      "products": [
+        "prod-0019",
+        "prod-0024"
+      ],
+      "record_ids": [
+        "cv-0080",
+        "cv-0100"
+      ],
+      "test": "P01-TEST-03"
+    },
+    {
+      "affected_shipment_line_ids": [
+        "sl-004359",
+        "sl-004363",
+        "sl-004405",
+        "sl-004423",
+        "sl-004444",
+        "sl-004457",
+        "sl-004468",
+        "sl-004480",
+        "sl-004505",
+        "sl-004519",
+        "sl-004545",
+        "sl-004548",
+        "sl-004567",
+        "sl-004590",
+        "sl-004642"
+      ],
+      "description": "prod-0007 has no cost version in 2026-02 (one version ends 2026-02-01, the next starts 2026-03-01).",
+      "entity": "cost_versions",
+      "expected_handling": "15 shipment lines in 2026-02 are quarantined with COST_VERSION_MISSING.",
+      "id": "INJ-03",
+      "product_id": "prod-0007",
+      "record_ids": [
+        "cv-0033",
+        "cv-0034"
+      ],
+      "test": "P01-TEST-03"
+    },
+    {
+      "affected_shipment_ids": [
+        "shp-000953",
+        "shp-000962",
+        "shp-000966",
+        "shp-001451",
+        "shp-001457"
+      ],
+      "description": "2 daily FX rows are absent (rate_ids are skipped in the sequence).",
+      "entity": "exchange_rates",
+      "expected_handling": "shipment lines of 5 shipments on those dates are quarantined with FX_RATE_MISSING; never defaulted to 1.0.",
+      "id": "INJ-04",
+      "missing": [
+        {
+          "currency": "EUR",
+          "rate_date": "2025-07-08"
+        },
+        {
+          "currency": "CAD",
+          "rate_date": "2025-11-18"
+        }
+      ],
+      "record_ids": [
+        "fx-000281",
+        "fx-001144"
+      ],
+      "test": "P01-TEST-04"
+    },
+    {
+      "description": "1 duplicate shipment line row (same shipment_line_id). Kept in data/injection-events.json, not in the entity file, because seeding would collide on the primary key.",
+      "entity": "shipment_lines",
+      "expected_handling": "replayed through C01 it adds no row; freight allocation is keyed by shipment_line_id so a repeated C04 returns 409 FREIGHT_ALREADY_ALLOCATED.",
+      "id": "INJ-05",
+      "record_ids": [
+        "sl-003305"
+      ],
+      "test": "P01-TEST-01"
+    },
+    {
+      "description": "4 returns exceeding the remaining quantity. Kept in data/injection-events.json as C03 inputs.",
+      "entity": "returns",
+      "expected_handling": "C03 rejects each with RETURN_EXCEEDS_REMAINING; nothing is written.",
+      "id": "INJ-06",
+      "record_ids": [
+        "sl-000965",
+        "sl-002118",
+        "sl-003121",
+        "sl-004046"
+      ],
+      "test": "P01-TEST-06"
+    },
+    {
+      "description": "1 return with a negative credit. Kept in data/injection-events.json as a C03 input (not in the entity file: the database CHECK credit_amount >= 0 would fail the seed).",
+      "entity": "returns",
+      "expected_handling": "C03 rejects with CREDIT_SIGN_REVERSED.",
+      "id": "INJ-07",
+      "record_ids": [
+        "sl-005053"
+      ],
+      "test": "P01-TEST-10"
+    },
+    {
+      "description": "2 customers change region mid-series: cust-0032 reg-east -> reg-south on 2025-09-01; cust-0039 reg-south -> reg-north on 2026-02-01.",
+      "entity": "customers",
+      "expected_handling": "each shipment line takes the customer version effective at shipped_at (type-2).",
+      "id": "INJ-08",
+      "record_ids": [
+        "cust-0032",
+        "cust-0039"
+      ],
+      "test": "P01-TEST-07"
+    },
+    {
+      "description": "3 customers whose only version starts 20 days after their first shipment.",
+      "entity": "customers",
+      "expected_handling": "earlier lines resolve to region UNASSIGNED, shown as its own row.",
+      "id": "INJ-09",
+      "record_ids": [
+        "cust-0034",
+        "cust-0047",
+        "cust-0010"
+      ],
+      "test": "P01-TEST-11"
+    },
+    {
+      "description": "5 orders cancelled before shipment (status cancelled, lines kept, no shipments).",
+      "entity": "orders",
+      "expected_handling": "no shipment lines; never in the reporting population.",
+      "id": "INJ-10",
+      "record_ids": [
+        "ord-001094",
+        "ord-001189",
+        "ord-001609",
+        "ord-001892",
+        "ord-002355"
+      ],
+      "test": "P01-TEST-09"
+    },
+    {
+      "description": "2 orders with every unit_price 0.00 (zero gross) and nonzero shipping_cost (18.50 or 24.75).",
+      "entity": "orders",
+      "expected_handling": "freight allocates by shipped quantity, so residual stays 0.00 and contribution carries the cost.",
+      "id": "INJ-11",
+      "record_ids": [
+        "ord-001544",
+        "ord-001821"
+      ],
+      "test": "P01-TEST-05"
+    }
+  ],
+  "seed": 20261026
+}
