@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T13:08:34Z",
+  "updated_at": "2026-10-26T13:15:48Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -56,16 +56,17 @@
     },
     "02-onboard-studio": {
       "slug": "onboard-studio",
-      "stage": "gate-B passed; generator verified (hash 3c20d296...); web part 1 (TS domain + shell, A-015) in progress",
-      "built": false,
-      "verified": false,
+      "stage": "built and verified (CI green both jobs); published to labs/onboard-studio (live check running); portfolio record prepared",
+      "built": true,
+      "verified": true,
       "published": false,
       "integrated": false,
-      "last_verified_sha": "2a60c40",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40326858638",
+      "last_verified_sha": "eac63b9",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40328738179",
       "site_url": null,
       "blockers": [],
-      "next_task": "T-02-04b web part 1 (A-015) then part 2 screens + e2e (A-016), publish, integrate"
+      "next_task": "live-check green -> push portfolio integration (project.json, cover, loop) -> reviewer pass -> artifacts",
+      "verified_note": "Entry journey + 8 adversarial cases; no independent reviewer pass yet; C07/C10 and 5 screens are extensions"
     },
     "03-supplyscope": {
       "slug": "supplyscope",

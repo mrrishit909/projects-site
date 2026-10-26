@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T13:13:26Z",
+  "updated_at": "2026-10-26T13:15:48Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -507,7 +507,7 @@
       "exit_code": 0,
       "expected": "66.0000 / 2.0000 / 65.0000 / 1.0000 active, SLA met; pause None -> active 2.0000",
       "actual": "as expected",
-      "code_sha": "pending-commit",
+      "code_sha": "eac63b9 (hosted run 40328738179 success)",
       "ts": "2026-10-26T13:13:26Z"
     },
     {
@@ -517,9 +517,20 @@
       "command": "npm run e2e (screens.spec.ts, 25 screenshots)",
       "exit_code": 0,
       "actual": "35 passed; index.json shows scrollWidth == innerWidth",
-      "code_sha": "pending-commit",
+      "code_sha": "eac63b9 (hosted run 40328738179 success)",
       "ts": "2026-10-26T13:13:26Z",
       "evidence": "apps/onboard-studio/docs/evidence/web/ (subset) + CI artifact"
+    },
+    {
+      "requirement": "P02-REL-05 + P02-UI R18/R23: CI Mode A (279 tests, postgres:16) and Mode B (150 TS checks, 35 Playwright tests, screenshots) on hosted runner",
+      "project": "02-onboard-studio",
+      "status": "verified",
+      "command": "onboard-studio-ci.yml",
+      "exit_code": 0,
+      "actual": "both jobs success",
+      "code_sha": "eac63b9",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40328738179",
+      "ts": "2026-10-26T13:15:48Z"
     }
   ]
 }
