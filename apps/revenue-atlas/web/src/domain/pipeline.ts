@@ -24,6 +24,8 @@ export interface PipelineResult {
   unallocatedFreight: D.Dec;
   /** Same, only for shipments inside the window (what `metrics` used). */
   unallocatedFreightInWindow: D.Dec;
+  /** Unallocated freight per shipment id, reporting currency (D-04); its sum is `unallocatedFreight`. */
+  unallocatedByShipment: Map<string, D.Dec>;
   /** Shipment lines excluded by order status (cancelled etc.), not quarantined. */
   excluded: string[];
   /** Accepted return credits, for credit_date windows (D-01a). */
@@ -180,6 +182,7 @@ export function runPipeline(inputs: PipelineInputs, includeReturns: boolean, win
   return {
     ingest: ing, facts: factList, freightByLine, discountByLine, quarantined, metrics,
     unallocatedFreight: D.sum(unallocByShp.values()), unallocatedFreightInWindow: unallocW,
+    unallocatedByShipment: new Map([...unallocByShp].sort(([a], [b]) => cmpStr(a, b))),
     excluded: excluded.sort(cmpStr), returns: events,
   };
 }

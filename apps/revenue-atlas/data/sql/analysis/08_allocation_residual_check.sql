@@ -2,10 +2,14 @@
 -- its stored freight_allocations (native currency); every shipment must be 0.00. Discounts: for every order line, the
 -- cent-rounded discount for the shipped share, round(discount x shipped/ordered, 2), minus the sum of its stored
 -- discount_allocations. Any non-zero residual or missing allocation fails (the last column of the single result row).
+-- Freight is checked for shipments that have at least one in-population line: C04 allocates only over lines that are not
+-- quarantined (D-08, R-08), so a shipment whose every line is quarantined carries no allocation, exactly as the contract
+-- metrics ignore it (their lines and their freight are outside the population).
 WITH f AS (
     SELECT s.shipment_id, s.shipping_cost - COALESCE(sum(fa.amount), 0) AS residual, count(fa.*) AS alloc_rows
     FROM shipments s JOIN shipment_lines sl ON sl.shipment_id = s.shipment_id
     LEFT JOIN freight_allocations fa ON fa.shipment_line_id = sl.shipment_line_id
+    WHERE EXISTS (SELECT 1 FROM ra_line_facts r WHERE r.shipment_id = s.shipment_id AND r.in_population)
     GROUP BY s.shipment_id, s.shipping_cost),
 d AS (
     SELECT ol.line_id,

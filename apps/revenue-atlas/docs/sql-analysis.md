@@ -40,7 +40,7 @@ and against the Python domain `run_pipeline` over the same JSON files. Both numb
 | python domain run_pipeline (all 8 money fields) | 3309826.22 | 3309826.22 | True |
 
 Bridge total (contribution margin): **3,309,826.22** from the view; **3,309,826.22** from `reference_totals.sql`; **3,309,826.22** from the Python domain. `reference_totals.sql` reports
-`allocation_residual` 0.00. A first version of the view that used the stored C04 freight gave contribution 3,310,114.01 (shipping 50,319.35 against 50,607.14); that gap is explained in query 09.
+`allocation_residual` 0.00. A first version of the view that used the stored C04 freight gave contribution 3,310,114.01 (shipping 50,319.35 against 50,607.14); that gap (R-08) is explained in query 09 and was closed by the C04 fix.
 
 ## 01 Margin bridge by month: `01_margin_bridge_by_month.sql`
 Steps (D-05): gross - discounts - credits = net; net - COGS = gross profit; gross profit - freight = contribution (no shipping revenue or other variable costs exist in the data).
@@ -206,20 +206,19 @@ Freight residual per shipment = `shipping_cost` - sum of its stored `freight_all
 
 | shipments_checked | shipments_nonzero_residual | freight_abs_residual | shipments_without_allocation | order_lines_checked | order_lines_nonzero_residual | discount_abs_residual | failures |
 |---|---|---|---|---|---|---|---|
-| 2724 | 0 | 0.000000 | 0 | 6152 | 0 | 0.000000 | 0 |
+| 2715 | 0 | 0.000000 | 0 | 6152 | 0 | 0.000000 | 0 |
 
-Observed: 0 failures in 2,724 shipments and 6,152 order lines; `failures` = 0 is also a condition of `run_all.py` exiting 0. `reference_totals.sql` independently reports `allocation_residual` 0.00 for the population.
-Scope: this checks the *stored* allocations on the settled seed path (one C04 per shipment); reviewer finding R-02 (a line shipped across several C04 calls drifts by cents) is a different path and is not exercised.
+Observed: 0 failures in 2,715 shipments with at least one in-population line (the other 9 shipments have every line quarantined, so C04 correctly stores no freight for them, D-08) and 6,152 order lines; `failures` = 0 is also a condition of `run_all.py` exiting 0. `reference_totals.sql` independently reports `allocation_residual` 0.00 for the population.
+Scope: this checks the *stored* allocations on the settled seed path (one C04 per shipment). Reviewer finding R-02 (a line shipped across several C04 calls drifted by cents) is fixed in C04 (it upserts the split of the whole order line) and covered by `tests/test_review_findings.py` and `data/sql/discount_reconciliation.sql` (rows = lines whose stored discount sum drifts from `round(discount x shipped / ordered, 2)`; on this snapshot it returns no rows).
 
 ## 09 Stored C04 freight against contract freight (diagnostic, not one of the eight): `09_stored_vs_contract_freight.sql`
 
 | shipments_in_population | partially_quarantined_shipments | contract_freight | stored_c04_freight_on_kept_lines | gap | stored_on_quarantined_siblings |
 |---|---|---|---|---|---|
-| 2715 | 41 | 50607.14 | 50319.35 | 287.78 | 287.78 |
+| 2715 | 41 | 50607.14 | 50607.14 | 0.00 | 0.00 |
 
-Observed: C04 splits a shipment's freight over **all** of its lines, including lines C02 quarantined; the contract metrics split it over the in-population lines only. In 41 partially quarantined shipments
-287.78 of freight sits on quarantined lines, so summing the stored `freight_allocations` of population lines gives 50,319.35 shipping cost and 3,310,114.01 contribution, against 50,607.14 and 3,309,826.22.
-The API/metrics path is unaffected (it uses the pipeline); anyone aggregating the stored allocation table directly would be off by that amount. Recorded as an open finding.
+Observed: the first version of C04 split a shipment's freight over **all** of its lines, including lines C02 quarantined, while the contract metrics split it over the in-population lines only; in 41 partially quarantined shipments 287.78 of freight sat on quarantined lines, so summing the stored `freight_allocations` of population lines gave 50,319.35 shipping cost and 3,310,114.01 contribution against 50,607.14 and 3,309,826.22 (reviewer finding R-08).
+Fixed in T-01-13 (D-08): C04 allocates only over lines that are not quarantined at that moment and re-spreads when that set changes, so after C02 + C04 for every shipment the stored freight equals the contract freight: gap 0.00 and nothing stored on quarantined siblings (the table above is the re-run).
 
 ## Derived arithmetic used by the executive memo
 Computed in `run_all.py` from the printed outputs of queries 01, 03 and 04 only: contribution lost to the rate drop = (rate before - rate after) x net sales after.

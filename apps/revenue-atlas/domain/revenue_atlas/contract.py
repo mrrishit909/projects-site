@@ -9,3 +9,4 @@ CURRENCY_RE = r"^[A-Z]{3}$"
 KNOWN_CURRENCIES = frozenset({"USD", "EUR", "GBP", "CAD", "MXN", "JPY"})
 ELIGIBLE_ORDER_STATUSES = frozenset({"shipped", "partially_returned"})  # D-01
 UNASSIGNED_REGION = "UNASSIGNED"  # D-06
+UNALLOCATED_GROUP = "UNALLOCATED"  # D-04, D-08: the group that carries freight no shipment line could carry

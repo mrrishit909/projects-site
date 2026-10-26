@@ -4,8 +4,8 @@
 -- in_population = costed (C02), not quarantined, order shipped or partially_returned, FX present (D-01).
 -- Discounts: the stored discount_allocations of C04 (D-04). Freight: shipping_cost re-split by gross-sales weight over
 -- the shipment's IN-POPULATION lines with largest remainder (lowest shipment_line_id breaks ties), which is what the contract
--- metrics do; the stored freight_allocations of C04 span ALL lines of a shipment incl. quarantined ones and are kept
--- as stored_freight_usd for the diagnostic 09_stored_vs_contract_freight.sql. Everything else reads these two views.
+-- metrics do; the stored freight_allocations of C04 (over the non-quarantined lines since D-08/R-08) are kept
+-- as stored_freight_usd for the diagnostic 09_stored_vs_contract_freight.sql, which now shows a gap of 0.00. Everything else reads these two views.
 DROP VIEW IF EXISTS ra_return_facts;
 DROP VIEW IF EXISTS ra_line_facts;
 

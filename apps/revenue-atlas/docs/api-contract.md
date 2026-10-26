@@ -12,10 +12,10 @@ warnings, version}`.
 
 | ID | Method and path | Transition / population | Hard validation | Status |
 |---|---|---|---|---|
-| C01 | POST /api/v1/revenue-atlas/commands/ingest-sales | unvalidated batch → validated batch | ISO-4217 currency; raw rows preserved; idempotent by key | slice |
+| C01 | POST /api/v1/revenue-atlas/commands/ingest-sales | unvalidated batch → validated batch | ISO-4217 currency; shipped <= ordered per order line (`SHIPPED_EXCEEDS_ORDERED`); shipment line in its shipment's order (`SHIPMENT_LINE_ORDER_MISMATCH`); raw rows preserved; idempotent by key. A violation seen only by the database (a later batch) is a 422 with the same rule id (D-08) | slice |
 | C02 | POST /api/v1/revenue-atlas/commands/resolve-historical-cost | shipped line → costed line | exactly one cost version at shipped_at | slice |
-| C03 | POST /api/v1/revenue-atlas/commands/post-a-partial-return | shipped → partially returned | qty ≤ remaining; credit ≥ 0 | slice |
-| C04 | POST /api/v1/revenue-atlas/commands/allocate-freight | order freight → line allocations | residual 0.00; unique per shipment line | slice |
+| C03 | POST /api/v1/revenue-atlas/commands/post-a-partial-return | shipped → partially returned | qty ≤ remaining; credit ≥ 0 (`-0.00` is `CREDIT_SIGN_REVERSED`, D-08) | slice |
+| C04 | POST /api/v1/revenue-atlas/commands/allocate-freight | order freight → line allocations | residual 0.00; unique per shipment line; freight only over lines not quarantined; same shipment again is 409 unless the eligible set changed, then status `reallocated` (re-spread, D-08); discount split of the whole order line upserted | slice |
 | C05 | POST /api/v1/revenue-atlas/commands/investigate-margin-decline | overview → segment → transactions | scope and time basis echoed | extension |
 | C06 | POST /api/v1/revenue-atlas/commands/compare-regional-results | regions → reconciled comparison | UNASSIGNED row explicit | extension |
 | C07 | POST /api/v1/revenue-atlas/commands/create-scenario | baseline → draft scenario | baseline immutable | extension |

@@ -2,7 +2,8 @@
 import { ACCEPTED_INPUT_CONTRACTS, CONTRACT_VERSION, CURRENCY_RE, KNOWN_CURRENCIES } from "./contract";
 import * as D from "./decimal";
 import {
-  CONTRACT_MISMATCH, CURRENCY_NOT_ISO4217, DomainError, MALFORMED_RECORD, ORPHAN_REFERENCE, cmpStr,
+  CONTRACT_MISMATCH, CREDIT_SIGN_REVERSED, CURRENCY_NOT_ISO4217, DomainError, MALFORMED_RECORD, ORPHAN_REFERENCE,
+  SHIPMENT_LINE_ORDER_MISMATCH, SHIPPED_EXCEEDS_ORDERED, cmpStr,
 } from "./errors";
 import {
   ENTITIES, type Accepted, type EntityCounts, type EntityName, type PipelineInputs, type RejectedRecord,
@@ -86,6 +87,10 @@ export interface IngestResult {
  * Validate and parse a raw batch (D-06 C01). A bad order currency rejects the order and every
  * dependent (lines, discounts, shipments, shipment lines, returns) with CURRENCY_NOT_ISO4217; a bad
  * shipment currency rejects the shipment and its lines and returns. Raw rows are kept.
+ * D-08: an order line whose shipment lines ship more than the ordered quantity is rejected with
+ * SHIPPED_EXCEEDS_ORDERED together with its discounts, shipment lines and their returns; a shipment line
+ * whose order line belongs to another order than its shipment is rejected with SHIPMENT_LINE_ORDER_MISMATCH
+ * (and its returns); a return whose credit_amount is "-0.00" is rejected with CREDIT_SIGN_REVERSED.
  */
 export function validateBatch(raw: PipelineInputs): IngestResult {
   if (!ACCEPTED_INPUT_CONTRACTS.has(raw.contract ?? CONTRACT_VERSION)) {
@@ -128,32 +133,62 @@ export function validateBatch(raw: PipelineInputs): IngestResult {
   }
   const shipIds = new Set(parsed.shipments.map((x) => x.rec.shipment_id as string));
 
+  // D-08 (R-06, R-01): shipment lines whose order line belongs to another order, and order lines whose
+  // (otherwise valid) shipment lines ship more than the ordered quantity.
+  const shipOrder = new Map<string, string>(parsed.shipments.map((x) => [x.rec.shipment_id as string, x.rec.order_id as string]));
+  const lineOrder = new Map<string, string>(parsed.order_lines.map((x) => [x.rec.line_id as string, x.rec.order_id as string]));
+  const lineQty = new Map<string, number>(parsed.order_lines.map((x) => [x.rec.line_id as string, x.rec.quantity as number]));
+  const currencyBadLines = new Set<string>(parsed.order_lines.filter((x) => badOrders.has(x.rec.order_id)).map((x) => x.rec.line_id as string));
+  const mismatched = new Set<string>();
+  const shippedByLine = new Map<string, number>();
+  for (const { rec } of parsed.shipment_lines) {
+    if (badShipments.has(rec.shipment_id) || currencyBadLines.has(rec.line_id)) continue;
+    if (!shipOrder.has(rec.shipment_id) || !lineOrder.has(rec.line_id)) continue; // orphan, reported below
+    if (lineOrder.get(rec.line_id) !== shipOrder.get(rec.shipment_id)) {
+      mismatched.add(rec.shipment_line_id);
+      continue;
+    }
+    shippedByLine.set(rec.line_id, (shippedByLine.get(rec.line_id) ?? 0) + (rec.shipped_quantity as number));
+  }
+  const overLines = new Set<string>();
+  for (const [k, total] of shippedByLine) if (total > lineQty.get(k)!) overLines.add(k);
+
   const badLines = new Set<string>();
   for (const { row, rec } of parsed.order_lines) {
     if (badOrders.has(rec.order_id)) {
       badLines.add(rec.line_id);
       reject("order_lines", row, CURRENCY_NOT_ISO4217);
     } else if (!orderIds.has(rec.order_id)) reject("order_lines", row, ORPHAN_REFERENCE);
+    else if (overLines.has(rec.line_id)) reject("order_lines", row, SHIPPED_EXCEEDS_ORDERED);
   }
   const lineIds = new Set(parsed.order_lines.map((x) => x.rec.line_id as string));
 
   for (const { row, rec } of parsed.discounts) {
     if (badLines.has(rec.line_id)) reject("discounts", row, CURRENCY_NOT_ISO4217);
     else if (!lineIds.has(rec.line_id)) reject("discounts", row, ORPHAN_REFERENCE);
+    else if (overLines.has(rec.line_id)) reject("discounts", row, SHIPPED_EXCEEDS_ORDERED);
   }
 
-  const badSls = new Set<string>();
+  const badSls = new Map<string, string>(); // shipment_line_id -> reason code its returns inherit
   for (const { row, rec } of parsed.shipment_lines) {
     if (badShipments.has(rec.shipment_id) || badLines.has(rec.line_id)) {
-      badSls.add(rec.shipment_line_id);
+      badSls.set(rec.shipment_line_id, CURRENCY_NOT_ISO4217);
       reject("shipment_lines", row, CURRENCY_NOT_ISO4217);
     } else if (!shipIds.has(rec.shipment_id) || !lineIds.has(rec.line_id)) reject("shipment_lines", row, ORPHAN_REFERENCE);
+    else if (mismatched.has(rec.shipment_line_id)) {
+      badSls.set(rec.shipment_line_id, SHIPMENT_LINE_ORDER_MISMATCH);
+      reject("shipment_lines", row, SHIPMENT_LINE_ORDER_MISMATCH);
+    } else if (overLines.has(rec.line_id)) {
+      badSls.set(rec.shipment_line_id, SHIPPED_EXCEEDS_ORDERED);
+      reject("shipment_lines", row, SHIPPED_EXCEEDS_ORDERED);
+    }
   }
   const slIds = new Set(parsed.shipment_lines.map((x) => x.rec.shipment_line_id as string));
 
   for (const { row, rec } of parsed.returns) {
-    if (badSls.has(rec.shipment_line_id)) reject("returns", row, CURRENCY_NOT_ISO4217);
+    if (badSls.has(rec.shipment_line_id)) reject("returns", row, badSls.get(rec.shipment_line_id)!);
     else if (!slIds.has(rec.shipment_line_id)) reject("returns", row, ORPHAN_REFERENCE);
+    else if (D.isZero(rec.credit_amount) && /^\s*-/.test(row.credit_amount as string)) reject("returns", row, CREDIT_SIGN_REVERSED); // "-0.00" (D-08)
   }
 
   const accepted = {} as Record<EntityName, unknown[]>;

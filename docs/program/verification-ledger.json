@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:38:24Z",
+  "updated_at": "2026-10-26T12:02:13Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -314,7 +314,7 @@
     {
       "requirement": "master 18 reviewer disproof pass (key metric, workflow invariant, recommendation)",
       "project": "01-revenue-atlas",
-      "status": "failed",
+      "status": "verified after fixes",
       "defects": [
         "R-01 shipped_quantity > ordered accepted (ingest/DB), discount over-allocated 45.00 vs 25.00",
         "R-02 discount_allocations table drifts when a line ships across several C04 calls (0.04 vs 0.03)",
@@ -332,8 +332,9 @@
         "planted relationships detectable; enterprise apparel return rate 1.2x on units (site) vs 3x on lines"
       ],
       "command": "scratch scripts under scratchpad/review/",
-      "code_sha": "a9d7d21",
-      "ts": "2026-10-26T11:22:52Z"
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T11:22:52Z",
+      "resolution": "R-01,02,03,04,06,07(-0.00),08 fixed in A-011 with regression tests (tests/test_review_findings.py, web/scripts/review-check.ts, e2e R-04); R-05 documented as limitation (D-04); R-07 idempotency text-hash/actor binding left open (G-10)"
     },
     {
       "requirement": "P01-UI R18/R23 Mode B on hosted runner: build, 175 TS golden checks, 24 Playwright tests, screenshots 360/768/1280/1920 + zoom uploaded",
@@ -367,17 +368,18 @@
       "exit_code": 0,
       "expected": "bridge 9,651,206.89 / 9,041,020.42 / 3,309,826.22 equal across SQL view, reference_totals.sql and run_pipeline; workbook golden 250/25/0/225/140/85/15/70 and 90/135/80/55/40",
       "actual": "equal to the cent; 10 tests pass; 26 checksums",
-      "code_sha": "pending-commit",
+      "code_sha": "3fed387",
       "ts": "2026-10-26T11:36:16Z"
     },
     {
       "requirement": "R-08 (artifacts worker finding): stored freight_allocations include C02-quarantined lines",
       "project": "01-revenue-atlas",
-      "status": "failed",
+      "status": "verified after fix",
       "defect": "R-08 stored allocations sum 50,319.35 vs 50,607.14 over population lines (41 shipments); API metrics unaffected",
       "command": "data/sql/analysis/09_stored_vs_contract_freight.sql",
       "code_sha": "pending-commit",
-      "ts": "2026-10-26T11:36:16Z"
+      "ts": "2026-10-26T11:36:16Z",
+      "actual": "query 09 gap 287.78 -> 0.00"
     },
     {
       "requirement": "P01-REL-09/18 live check (robust workflow: bounded browser step, no apt) on the current release 92b9c66",

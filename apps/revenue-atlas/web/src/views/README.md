@@ -4,6 +4,10 @@
   the URL query (`?from=&to=&region=&segment=&category=`), so a deep link reproduces a view. Totals come from
   `computeMetrics` over that population; the ledger totals are summed independently from the fact columns, and the e2e
   asserts the two agree.
+* Dates (D-01a, D-09): the population is the lines shipped in the window, credits are selected by credit date. The
+  overview months, the bridge and its region table call `monthlyMetrics` / `groupMetrics` / `computeMetrics` with the
+  pipeline's `returns`; the ledger adds credit rows for credits dated in the window on lines shipped outside it, so its
+  totals equal the bridge.
 * `?hl=<step>` highlights the ledger columns behind a bridge step; `?dataset=golden` loads `public/data/golden/`
   (written by `scripts/golden-to-snapshot.ts`).
 * Unallocated freight (D-04) is added to shipping cost only for the unfiltered population; it cannot be attributed to a

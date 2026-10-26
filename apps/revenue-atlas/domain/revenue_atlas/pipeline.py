@@ -30,6 +30,8 @@ class PipelineResult:
     unallocated_freight: Decimal = ZERO
     excluded_shipment_lines: list[str] = field(default_factory=list)
     returns: list[ReturnEvent] = field(default_factory=list)  # accepted credits, for credit_date windows (D-01a)
+    unallocated_by_shipment: dict[str, Decimal] = field(default_factory=dict)  # D-04, in the reporting currency
+    unallocated_freight_in_window: Decimal = ZERO  # the part of unallocated_freight shipped in ``window``
 
 
 def _raw(obj: Any) -> dict[str, Any]:
@@ -154,4 +156,6 @@ def run_pipeline(inputs: dict, include_returns: bool,
                               declared_shipping_cost=declared, returns=events)
     return PipelineResult(ing, fact_list, freight_by_line, discount_by_line,
                           sorted(quarantined, key=lambda q: (q.entity, q.id)), metrics,
-                          unallocated_freight=sum(unalloc_by_shp.values(), ZERO), excluded_shipment_lines=sorted(excluded), returns=events)
+                          unallocated_freight=sum(unalloc_by_shp.values(), ZERO), excluded_shipment_lines=sorted(excluded), returns=events,
+                          unallocated_by_shipment=dict(sorted(unalloc_by_shp.items())),
+                          unallocated_freight_in_window=unalloc_w)

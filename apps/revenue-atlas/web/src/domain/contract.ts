@@ -7,3 +7,4 @@ export const CURRENCY_RE = /^[A-Z]{3}$/;
 export const KNOWN_CURRENCIES: ReadonlySet<string> = new Set(["USD", "EUR", "GBP", "CAD", "MXN", "JPY"]);
 export const ELIGIBLE_ORDER_STATUSES: ReadonlySet<string> = new Set(["shipped", "partially_returned"]);
 export const UNASSIGNED_REGION = "UNASSIGNED";
+export const UNALLOCATED_GROUP = "UNALLOCATED"; // D-04, D-08: the group that carries freight no shipment line could carry

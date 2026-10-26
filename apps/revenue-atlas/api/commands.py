@@ -16,10 +16,12 @@ from typing import Any, Callable
 import psycopg
 from psycopg.types.json import Jsonb
 from revenue_atlas import DomainError, run_pipeline
-from revenue_atlas.allocation import allocate_discounts, allocate_freight
+from revenue_atlas.allocation import FreightAllocation, allocate_discounts, allocate_freight
+from revenue_atlas.contract import ELIGIBLE_ORDER_STATUSES
 from revenue_atlas.costing import resolve_cost_version
 from revenue_atlas.ingest import ENTITIES, validate_batch
 from revenue_atlas.fx import rate_for
+from revenue_atlas.money import ZERO
 from revenue_atlas.models import (CostVersion, Discount, ExchangeRate, OrderLine, Return, Shipment,
                                   ShipmentLine)
 from revenue_atlas.returns import expected_credit, validate_return
@@ -60,6 +62,12 @@ class Outcome:
 
 
 Handler = Callable[[Conn, Any, Actor], Outcome]
+
+#: database constraint (migration 0003) -> (reason code, path) for a 422 (D-08).
+_INVARIANT_CODES = {
+    "shipment_lines_shipped_le_ordered": ("SHIPPED_EXCEEDS_ORDERED", "input.batch.shipment_lines"),
+    "shipment_lines_order_match": ("SHIPMENT_LINE_ORDER_MISMATCH", "input.batch.shipment_lines"),
+}
 
 
 def _warning(code: str, message: str, path: str | None = None) -> dict[str, Any]:
@@ -109,6 +117,15 @@ def execute(name: str, req: Envelope, actor: Actor, handler: Handler) -> tuple[d
                                "freight for this shipment line is already allocated",
                                [detail("input.shipment_id", "FREIGHT_ALREADY_ALLOCATED",
                                        "a shipment line may be allocated once")]) from None
+            raise
+        except psycopg.errors.CheckViolation as exc:
+            # D-08: the 0003 triggers (R-01 shipped > ordered, R-06 line of another order) guard rows that
+            # reach the database through a later batch; the transaction is rolled back, nothing is stored.
+            name = exc.diag.constraint_name
+            if name in _INVARIANT_CODES:
+                code, path = _INVARIANT_CODES[name]
+                raise ApiError(422, "VALIDATION_FAILED", exc.diag.message_primary or code,
+                               [detail(path, code, exc.diag.message_primary or code)]) from None
             raise
         command_id = f"cmd-{uuid.uuid4().hex[:16]}"
         if out.audit is not None:
@@ -375,59 +392,114 @@ def _already_allocated(conn: Conn, line_ids: list[str]) -> list[str]:
         "ORDER BY shipment_line_id", (line_ids,)).fetchall()]
 
 
+def _stored_freight(conn: Conn, line_ids: list[str]) -> dict[str, Decimal]:
+    return {r["shipment_line_id"]: r["amount"] for r in conn.execute(
+        "SELECT shipment_line_id, amount FROM freight_allocations WHERE shipment_line_id = ANY(%s)",
+        (line_ids,)).fetchall()}
+
+
 def allocate_freight_command(conn: Conn, req: Any, actor: Actor) -> Outcome:
-    """C04: allocate shipping_cost over lines by gross-sales weight (D-04); once per line."""
+    """C04: allocate shipping_cost over the shipment's non-quarantined lines by gross-sales weight (D-04, D-08).
+
+    R-08: a line the pipeline would quarantine at this moment (FX or cost version missing/ambiguous) or whose
+    order is not eligible carries no freight, exactly as in ``run_pipeline``. R-02: the discount split is
+    recomputed for every order line touched, over all of its shipment lines, and upserted.
+    Running C04 again for an already allocated shipment is a 409 when it would change nothing
+    (P01-TEST-01); when the eligible set changed (a line was un-quarantined or quarantined since) it re-spreads:
+    stale rows are deleted and the others upserted, all in this one transaction (D-08).
+    """
     inp = req.input
     shp = conn.execute("SELECT * FROM shipments WHERE shipment_id = %s FOR UPDATE",
                        (inp.shipment_id,)).fetchone()
     if shp is None:
         raise _not_found("input.shipment_id", "SHIPMENT_UNKNOWN", "shipment")
     lines = conn.execute(
-        "SELECT sl.*, ol.unit_price, ol.quantity AS ordered_quantity FROM shipment_lines sl "
-        "JOIN order_lines ol ON ol.line_id = sl.line_id WHERE sl.shipment_id = %s "
-        "ORDER BY sl.shipment_line_id", (inp.shipment_id,)).fetchall()
+        "SELECT sl.*, ol.unit_price, ol.quantity AS ordered_quantity, ol.product_id, "
+        "o.currency AS order_cur, o.status AS order_status FROM shipment_lines sl "
+        "JOIN order_lines ol ON ol.line_id = sl.line_id JOIN orders o ON o.order_id = ol.order_id "
+        "WHERE sl.shipment_id = %s ORDER BY sl.shipment_line_id", (inp.shipment_id,)).fetchall()
     ids = [ln["shipment_line_id"] for ln in lines]
     existing = _already_allocated(conn, ids)
-    if existing:
-        raise ApiError(409, "FREIGHT_ALREADY_ALLOCATED",
-                       "freight for this shipment is already allocated",
-                       [detail("input.shipment_id", "FREIGHT_ALREADY_ALLOCATED",
-                               f"already allocated: {', '.join(existing)}")])
+    versions = _cost_versions(conn, sorted({ln["product_id"] for ln in lines}))
+    skipped: dict[str, str] = {}
+    eligible = []
+    for ln in lines:
+        if ln["order_status"] not in ELIGIBLE_ORDER_STATUSES:
+            skipped[ln["shipment_line_id"]] = "ORDER_STATUS_EXCLUDED"
+            continue
+        err = _line_error(conn, ln, shp["shipped_at"], ln["order_cur"], shp["currency"], versions)
+        if err is not None:
+            skipped[ln["shipment_line_id"]] = err.code
+            continue
+        eligible.append(ln)
     domain_shipment = Shipment(shp["shipment_id"], shp["order_id"], shp["shipped_at"],
                                shp["shipping_cost"], shp["currency"])
     domain_lines = [ShipmentLine(ln["shipment_line_id"], ln["shipment_id"], ln["line_id"],
-                                 ln["shipped_quantity"], ln["cost_version_id"]) for ln in lines]
-    gross = {ln["shipment_line_id"]: ln["shipped_quantity"] * ln["unit_price"] for ln in lines}
-    fa = allocate_freight(domain_shipment, domain_lines, gross)
+                                 ln["shipped_quantity"], ln["cost_version_id"]) for ln in eligible]
+    gross = {ln["shipment_line_id"]: ln["shipped_quantity"] * ln["unit_price"] for ln in eligible}
+    if eligible:
+        fa = allocate_freight(domain_shipment, domain_lines, gross)
+    else:  # nothing in the population carries this shipment's freight; the pipeline ignores the shipment too
+        fa = FreightAllocation({}, ZERO, False)
     if not fa.unallocated and fa.residual != 0:
         raise ApiError(422, "VALIDATION_FAILED", "allocation residual is not 0.00",
                        [detail("input.shipment_id", "ALLOCATION_RESIDUAL_NONZERO", str(fa.residual))])
-    for sid, amount in sorted(fa.allocations.items()):
-        # No ON CONFLICT: the PRIMARY KEY is the double-allocation guard (P01-TEST-01).
-        conn.execute("INSERT INTO freight_allocations (shipment_line_id, shipment_id, amount) "
-                     "VALUES (%s, %s, %s)", (sid, inp.shipment_id, amount))
-    discounts = _allocate_discounts(conn, inp.shipment_id, set(ids))
+    respread = False
+    if existing:
+        stored = _stored_freight(conn, ids)
+        if stored == fa.allocations:
+            raise ApiError(409, "FREIGHT_ALREADY_ALLOCATED",
+                           "freight for this shipment is already allocated",
+                           [detail("input.shipment_id", "FREIGHT_ALREADY_ALLOCATED",
+                                   f"already allocated: {', '.join(existing)}")])
+        respread = True
+        stale = [sid for sid in stored if sid not in fa.allocations]
+        if stale:
+            conn.execute("DELETE FROM freight_allocations WHERE shipment_line_id = ANY(%s)", (stale,))
+        for sid, amount in sorted(fa.allocations.items()):
+            conn.execute("INSERT INTO freight_allocations (shipment_line_id, shipment_id, amount) "
+                         "VALUES (%s, %s, %s) ON CONFLICT (shipment_line_id) DO UPDATE "
+                         "SET amount = EXCLUDED.amount, allocated_at = now()", (sid, inp.shipment_id, amount))
+    else:
+        for sid, amount in sorted(fa.allocations.items()):
+            # No ON CONFLICT: the PRIMARY KEY is the double-allocation guard (P01-TEST-01).
+            conn.execute("INSERT INTO freight_allocations (shipment_line_id, shipment_id, amount) "
+                         "VALUES (%s, %s, %s)", (sid, inp.shipment_id, amount))
+    discounts, resplit = _allocate_discounts(conn, inp.shipment_id, set(ids))
     result = {"shipment_id": inp.shipment_id,
               "allocations": {k: db.money(v) for k, v in sorted(fa.allocations.items())},
               "discount_allocations": {k: db.money(v) for k, v in sorted(discounts.items())},
               "allocation_residual": db.money(fa.residual if not fa.unallocated else Decimal(0)),
-              "unallocated_freight": db.money(fa.residual) if fa.unallocated else "0.00"}
+              "unallocated_freight": db.money(fa.residual) if fa.unallocated else "0.00",
+              "skipped_lines": dict(sorted(skipped.items())),
+              "discount_resplit_on_other_shipments": {k: db.money(v) for k, v in sorted(resplit.items())}}
     warnings = ([_warning("FREIGHT_UNALLOCATED", "shipment has no weight; freight stays on the "
                           "unallocated row and still counts in contribution (D-04)",
                           f"shipments[{inp.shipment_id}]")] if fa.unallocated else [])
+    warnings += [_warning("FREIGHT_LINE_SKIPPED", f"{sid} carries no freight: {code} (D-08)",
+                          f"shipment_lines[{sid}]") for sid, code in sorted(skipped.items())]
+    if respread:
+        warnings.append(_warning("FREIGHT_RESPREAD", "freight was re-spread over the lines that are "
+                                 "not quarantined now (D-08)", f"shipments[{inp.shipment_id}]"))
     version = max((ln["version"] for ln in lines), default=1)
-    return Outcome("allocated", result, version, warnings,
+    return Outcome("reallocated" if respread else "allocated", result, version, warnings,
                    Audit("shipment", inp.shipment_id, "allocate-freight", version, version,
-                         f"{len(fa.allocations)} lines allocated"))
+                         f"{len(fa.allocations)} lines allocated" + (", re-spread" if respread else "")))
 
 
-def _allocate_discounts(conn: Conn, shipment_id: str, line_ids: set[str]) -> dict[str, Decimal]:
-    """Persist discount allocations (D-04) for this shipment's lines; split over all shipments of each order line."""
+def _allocate_discounts(conn: Conn, shipment_id: str,
+                        line_ids: set[str]) -> tuple[dict[str, Decimal], dict[str, Decimal]]:
+    """Persist the discount split (D-04, D-08 R-02) of every order line this shipment touches.
+
+    The split is recomputed over ALL shipment lines that exist for the order line and upserted, so the stored
+    rows always equal the contract split: sum = round(discount x shipped / ordered, 2). Returns the rows of
+    this shipment's lines and the rows of OTHER shipments' lines whose amount changed.
+    """
     olines = conn.execute(
         "SELECT * FROM order_lines WHERE line_id IN (SELECT line_id FROM shipment_lines "
-        "WHERE shipment_id = %s) ORDER BY line_id", (shipment_id,)).fetchall()
+        "WHERE shipment_id = %s) ORDER BY line_id FOR NO KEY UPDATE", (shipment_id,)).fetchall()
     if not olines:
-        return {}
+        return {}, {}
     keys = [o["line_id"] for o in olines]
     sls = [ShipmentLine(r["shipment_line_id"], r["shipment_id"], r["line_id"], r["shipped_quantity"])
            for r in conn.execute("SELECT * FROM shipment_lines WHERE line_id = ANY(%s)", (keys,)).fetchall()]
@@ -437,12 +509,17 @@ def _allocate_discounts(conn: Conn, shipment_id: str, line_ids: set[str]) -> dic
     ols = [OrderLine(o["line_id"], o["order_id"], o["product_id"], o["quantity"], o["unit_price"])
            for o in olines]
     alloc = allocate_discounts(ols, discs, sls)
-    mine = {k: v for k, v in alloc.items() if k in line_ids}
+    before = {r["shipment_line_id"]: r["amount"] for r in conn.execute(
+        "SELECT shipment_line_id, amount FROM discount_allocations WHERE shipment_line_id = ANY(%s)",
+        (sorted(alloc),)).fetchall()}
     by_line = {s.shipment_line_id: s.line_id for s in sls}
-    for sid, amount in sorted(mine.items()):
+    for sid, amount in sorted(alloc.items()):
         conn.execute("INSERT INTO discount_allocations (shipment_line_id, line_id, amount) "
-                     "VALUES (%s, %s, %s) ON CONFLICT DO NOTHING", (sid, by_line[sid], amount))
-    return mine
+                     "VALUES (%s, %s, %s) ON CONFLICT (shipment_line_id) DO UPDATE "
+                     "SET amount = EXCLUDED.amount, line_id = EXCLUDED.line_id", (sid, by_line[sid], amount))
+    mine = {k: v for k, v in alloc.items() if k in line_ids}
+    others = {k: v for k, v in alloc.items() if k not in line_ids and k in before and before[k] != v}
+    return mine, others
 
 
 # --- dispatch ---------------------------------------------------------------------

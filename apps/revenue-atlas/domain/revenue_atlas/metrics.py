@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Callable
 
-from .contract import UNASSIGNED_REGION
+from .contract import UNALLOCATED_GROUP, UNASSIGNED_REGION
 from .errors import INVALID_WINDOW, DomainError
 from .models import ReturnEvent, ShipmentLineFact
 from .money import ZERO, money_str, rate_str
@@ -109,10 +109,53 @@ def region_key(fact: ShipmentLineFact) -> str:
 def group_metrics(facts: list[ShipmentLineFact],
                   key: Callable[[ShipmentLineFact], str | None],
                   window: Window = (None, None),
-                  returns: list[ReturnEvent] | None = None) -> dict[str, dict]:
-    """Metrics per group, sorted by key; ``None`` keys become UNASSIGNED."""
+                  returns: list[ReturnEvent] | None = None,
+                  unallocated_freight: Decimal = ZERO) -> dict[str, dict]:
+    """Metrics per group, sorted by key; ``None`` keys become UNASSIGNED.
+
+    D-08 (R-03): freight that no shipment line could carry (``unallocated_freight``, already
+    restricted to the window by the caller) still counts in shipping cost (D-04). It is emitted as
+    an explicit ``UNALLOCATED`` group with shipping cost equal to it and contribution minus it, for
+    every grouping key, so the groups add up to the overall metrics. Nothing is emitted when it is 0.
+    """
     check_window(window)
     groups: dict[str, list[ShipmentLineFact]] = {}
     for f in facts:
         groups.setdefault(key(f) or UNASSIGNED_REGION, []).append(f)
-    return {k: compute_metrics(groups[k], window, returns=returns) for k in sorted(groups)}
+    out = {k: compute_metrics(groups[k], window, returns=returns) for k in groups}
+    if unallocated_freight != 0:
+        out[UNALLOCATED_GROUP] = compute_metrics([], window, unallocated_freight=unallocated_freight)
+    return {k: out[k] for k in sorted(out)}
+
+
+def month_of(shipped_at: datetime) -> str:
+    """UTC calendar month "YYYY-MM" of a shipment instant."""
+    return shipped_at.astimezone(timezone.utc).strftime("%Y-%m")
+
+
+def monthly_metrics(facts: list[ShipmentLineFact], returns: list[ReturnEvent],
+                    window: Window = (None, None), *,
+                    unallocated_by_shipment: dict[str, Decimal] | None = None) -> dict[str, dict]:
+    """Month by month metrics under D-01a/D-09: month M selects shipment lines shipped in M and credits
+    dated in M (whatever month their line shipped), intersected with ``window``. Months with only
+    credits appear (gross 0.00). Unallocated freight of a shipment belongs to its shipped month."""
+    check_window(window)
+    ship_at = {f.shipment_id: f.shipped_at for f in facts}
+    months: set[str] = {month_of(f.shipped_at) for f in facts if in_window(f.shipped_at, window)}
+    known = {f.shipment_line_id for f in facts}
+    for r in returns:
+        if r.shipment_line_id in known and credit_in_window(r.credit_date, window):
+            months.add(r.credit_date[:7])
+    out: dict[str, dict] = {}
+    for m in sorted(months):
+        y, mo = int(m[:4]), int(m[5:])
+        lo = datetime(y, mo, 1, tzinfo=timezone.utc)
+        hi = datetime(y + (mo == 12), mo % 12 + 1, 1, tzinfo=timezone.utc)
+        if window[0] is not None:
+            lo = max(lo, window[0])
+        if window[1] is not None:
+            hi = min(hi, window[1])
+        unalloc = sum((v for sid, v in (unallocated_by_shipment or {}).items()
+                       if sid in ship_at and in_window(ship_at[sid], (lo, hi))), ZERO)
+        out[m] = compute_metrics(facts, (lo, hi), returns=returns, unallocated_freight=unalloc)
+    return out

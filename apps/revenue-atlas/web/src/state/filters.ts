@@ -2,7 +2,7 @@
 // analytic screen reads. The query string is the single source of truth, so deep links work and a reload
 // restores the same view. Other params (dataset, hl) are preserved untouched.
 import { useCallback, useMemo, useSyncExternalStore } from "react";
-import { NO_WINDOW, computeMetrics, inWindow, regionKey, utcMidnight, type Window } from "../domain/metrics";
+import { NO_WINDOW, computeMetrics, regionKey, utcMidnight, windowLedger, type OutsideCredit, type Window } from "../domain/metrics";
 import type { PipelineResult } from "../domain/pipeline";
 import type { Metrics, ShipmentLineFact } from "../domain/types";
 import type { Snapshot } from "../data/load";
@@ -110,7 +110,13 @@ export type Population =
       filters: Filters;
       /** Message when the date window is unusable (bad date or from >= to); the population is then empty. */
       windowError: string | null;
+      /** Shipment lines shipped in the window; their credit columns hold only credits dated in the window (D-01a, D-09). */
       facts: ShipmentLineFact[];
+      /** Facts that pass the region/segment/category filters but not the window: what credits and monthly series read. */
+      dimFacts: ShipmentLineFact[];
+      /** Credits dated in the window for lines shipped outside it (D-09); empty without a window. */
+      outside: OutsideCredit[];
+      window: Window;
       metrics: Metrics;
       options: FilterOptions;
       active: boolean;
@@ -147,16 +153,17 @@ export function usePopulation(): Population {
   const pop = useMemo(() => {
     if (!ready || !lookups) return null;
     const { window, error } = windowOf(filters);
-    const facts = error ? [] : ready.result.facts.filter((f) =>
-      inWindow(f.shipped_at, window) &&
+    const dimFacts = error ? [] : ready.result.facts.filter((f) =>
       (!filters.region || regionKey(f) === filters.region) &&
       (!filters.segment || lookups.segmentOf(f.customer_id, f.shipped_date) === filters.segment) &&
       (!filters.category || lookups.categoryOf(f.product_id) === filters.category));
+    // D-01a / D-09: lines are selected by shipped_at, credits by credit_date (R-04). Without a window the two coincide.
+    const { lines: facts, outside } = windowLedger(dimFacts, ready.result.returns, window);
     // Freight that no line could carry counts in contribution (D-04); it cannot be attributed to a
     // region/segment/category or a partial window, so it is added only for the unfiltered population.
     const active = hasFilters(filters);
-    const metrics = computeMetrics(facts, NO_WINDOW, active ? {} : { unallocatedFreight: ready.result.unallocatedFreight });
-    return { facts, metrics, windowError: error, active };
+    const metrics = computeMetrics(dimFacts, window, { returns: ready.result.returns, ...(active ? {} : { unallocatedFreight: ready.result.unallocatedFreight }) });
+    return { facts, dimFacts, outside, window, metrics, windowError: error, active };
   }, [ready, lookups, filters]);
   if (state.status === "loading") return { status: "loading" };
   if (state.status === "error") return { status: "error", error: state.error, retry: reload };

@@ -1,0 +1,298 @@
+{
+ "fixture_id": "adv",
+ "contract": "v1",
+ "reporting_currency": "USD",
+ "customers": [
+  {
+   "customer_id": "c1",
+   "customer_name": "A",
+   "region_id": "reg-W",
+   "segment": "SMB",
+   "effective_from": "2025-01-01"
+  },
+  {
+   "customer_id": "c2",
+   "customer_name": "B",
+   "region_id": "reg-E",
+   "segment": "ENT",
+   "effective_from": "2025-01-01"
+  }
+ ],
+ "products": [
+  {
+   "product_id": "p1",
+   "sku": "p1",
+   "category_id": "cat",
+   "unit_of_measure": "each",
+   "active": true
+  },
+  {
+   "product_id": "p2",
+   "sku": "p2",
+   "category_id": "cat",
+   "unit_of_measure": "each",
+   "active": true
+  },
+  {
+   "product_id": "p3",
+   "sku": "p3",
+   "category_id": "cat",
+   "unit_of_measure": "each",
+   "active": true
+  },
+  {
+   "product_id": "p4",
+   "sku": "p4",
+   "category_id": "cat",
+   "unit_of_measure": "each",
+   "active": true
+  }
+ ],
+ "orders": [
+  {
+   "order_id": "o1",
+   "customer_id": "c1",
+   "order_date": "2026-03-01",
+   "currency": "USD",
+   "status": "shipped"
+  },
+  {
+   "order_id": "o2",
+   "customer_id": "c2",
+   "order_date": "2026-03-01",
+   "currency": "EUR",
+   "status": "shipped"
+  }
+ ],
+ "order_lines": [
+  {
+   "line_id": "L1",
+   "order_id": "o1",
+   "product_id": "p1",
+   "quantity": 7,
+   "unit_price": "33.33"
+  },
+  {
+   "line_id": "L2",
+   "order_id": "o1",
+   "product_id": "p2",
+   "quantity": 3,
+   "unit_price": "12.00"
+  },
+  {
+   "line_id": "L3",
+   "order_id": "o2",
+   "product_id": "p3",
+   "quantity": 5,
+   "unit_price": "19.99"
+  },
+  {
+   "line_id": "L4",
+   "order_id": "o2",
+   "product_id": "p4",
+   "quantity": 2,
+   "unit_price": "45.50"
+  },
+  {
+   "line_id": "L5",
+   "order_id": "o1",
+   "product_id": "p1",
+   "quantity": 2,
+   "unit_price": "10.00"
+  }
+ ],
+ "discounts": [
+  {
+   "discount_id": "d1",
+   "line_id": "L1",
+   "discount_amount": "10.01",
+   "reason_code": "X",
+   "approved_by": "m"
+  },
+  {
+   "discount_id": "d1b",
+   "line_id": "L1",
+   "discount_amount": "0.01",
+   "reason_code": "X",
+   "approved_by": "m"
+  },
+  {
+   "discount_id": "d3",
+   "line_id": "L3",
+   "discount_amount": "3.33",
+   "reason_code": "X",
+   "approved_by": "m"
+  },
+  {
+   "discount_id": "d5",
+   "line_id": "L5",
+   "discount_amount": "10.00",
+   "reason_code": "X",
+   "approved_by": "m"
+  }
+ ],
+ "shipments": [
+  {
+   "shipment_id": "S1",
+   "order_id": "o1",
+   "shipped_at": "2026-03-02T10:00:00Z",
+   "shipping_cost": "10.00",
+   "currency": "USD"
+  },
+  {
+   "shipment_id": "S2",
+   "order_id": "o1",
+   "shipped_at": "2026-03-03T10:00:00Z",
+   "shipping_cost": "7.77",
+   "currency": "USD"
+  },
+  {
+   "shipment_id": "S4",
+   "order_id": "o2",
+   "shipped_at": "2026-03-02T23:30:00-05:00",
+   "shipping_cost": "12.34",
+   "currency": "EUR"
+  },
+  {
+   "shipment_id": "S5",
+   "order_id": "o2",
+   "shipped_at": "2026-03-03T10:00:00Z",
+   "shipping_cost": "0.01",
+   "currency": "EUR"
+  }
+ ],
+ "shipment_lines": [
+  {
+   "shipment_line_id": "sl1",
+   "shipment_id": "S1",
+   "line_id": "L1",
+   "shipped_quantity": 3
+  },
+  {
+   "shipment_line_id": "sl2",
+   "shipment_id": "S1",
+   "line_id": "L2",
+   "shipped_quantity": 0
+  },
+  {
+   "shipment_line_id": "sl3",
+   "shipment_id": "S2",
+   "line_id": "L1",
+   "shipped_quantity": 2
+  },
+  {
+   "shipment_line_id": "sl4",
+   "shipment_id": "S4",
+   "line_id": "L3",
+   "shipped_quantity": 3
+  },
+  {
+   "shipment_line_id": "sl5",
+   "shipment_id": "S4",
+   "line_id": "L4",
+   "shipped_quantity": 2
+  },
+  {
+   "shipment_line_id": "sl6",
+   "shipment_id": "S5",
+   "line_id": "L3",
+   "shipped_quantity": 2
+  },
+  {
+   "shipment_line_id": "sl7",
+   "shipment_id": "S2",
+   "line_id": "L5",
+   "shipped_quantity": 3
+  }
+ ],
+ "returns": [
+  {
+   "return_id": "r1",
+   "shipment_line_id": "sl4",
+   "returned_quantity": 2,
+   "credit_amount": "38.65",
+   "credit_date": "2026-03-10"
+  },
+  {
+   "return_id": "r2",
+   "shipment_line_id": "sl6",
+   "returned_quantity": 1,
+   "credit_amount": "19.32",
+   "credit_date": "2026-03-11"
+  },
+  {
+   "return_id": "r3",
+   "shipment_line_id": "sl4",
+   "returned_quantity": 2,
+   "credit_amount": "1.00",
+   "credit_date": "2026-03-12"
+  }
+ ],
+ "cost_versions": [
+  {
+   "cost_version_id": "cv-p1",
+   "product_id": "p1",
+   "unit_cost": "7.123",
+   "valid_from": "2026-01-01",
+   "valid_to": null
+  },
+  {
+   "cost_version_id": "cv-p2",
+   "product_id": "p2",
+   "unit_cost": "7.123",
+   "valid_from": "2026-01-01",
+   "valid_to": null
+  },
+  {
+   "cost_version_id": "cv-p3",
+   "product_id": "p3",
+   "unit_cost": "7.123",
+   "valid_from": "2026-01-01",
+   "valid_to": null
+  },
+  {
+   "cost_version_id": "cv-p4",
+   "product_id": "p4",
+   "unit_cost": "7.123",
+   "valid_from": "2026-01-01",
+   "valid_to": null
+  }
+ ],
+ "exchange_rates": [
+  {
+   "rate_id": "fx0",
+   "currency": "EUR",
+   "reporting_currency": "USD",
+   "rate_date": "2026-03-02",
+   "rate": "1.083721"
+  },
+  {
+   "rate_id": "fx1",
+   "currency": "EUR",
+   "reporting_currency": "USD",
+   "rate_date": "2026-03-03",
+   "rate": "1.091117"
+  },
+  {
+   "rate_id": "fx2",
+   "currency": "EUR",
+   "reporting_currency": "USD",
+   "rate_date": "2026-03-10",
+   "rate": "1.07"
+  },
+  {
+   "rate_id": "fx3",
+   "currency": "EUR",
+   "reporting_currency": "USD",
+   "rate_date": "2026-03-11",
+   "rate": "1.0711"
+  },
+  {
+   "rate_id": "fx4",
+   "currency": "EUR",
+   "reporting_currency": "USD",
+   "rate_date": "2026-03-12",
+   "rate": "1.1"
+  }
+ ]
+}

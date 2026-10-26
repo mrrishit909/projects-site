@@ -18,8 +18,8 @@ export function csvCell(raw: string): string {
 }
 const header = (s: string): string => `# ${s.replace(/[\r\n]+/g, " ")}`;
 
-export function buildCsv(opts: { manifest: Manifest; filters: Filters; facts: readonly ShipmentLineFact[]; lookups: Lookups; scope: "filtered" | "full" }): string {
-  const { manifest: m, filters, facts, lookups, scope } = opts;
+export function buildCsv(opts: { manifest: Manifest; filters: Filters; facts: readonly ShipmentLineFact[]; lookups: Lookups; scope: "filtered" | "full"; creditRows?: number }): string {
+  const { manifest: m, filters, facts, lookups, scope, creditRows = 0 } = opts;
   const lines = [
     header("Revenue Atlas ledger export. Synthetic data."),
     header(`contract_version: ${m.contract_version}`),
@@ -32,6 +32,8 @@ export function buildCsv(opts: { manifest: Manifest; filters: Filters; facts: re
     header("window: shipment date, UTC, half-open [from, to)"),
     header("currency: USD (reporting currency)"),
     header(`row_count: ${facts.length}`),
+    header(scope === "full" ? "credit column: every credit of the line, whatever its credit date" : "credit column: credits dated inside the window only (D-01a, D-09)"),
+    header(`credit_rows_outside_window: ${creditRows} (credits dated in the window for lines shipped outside it; see the ledger screen)`),
     COLUMNS.map((c) => csvCell(c.label)).join(","),
   ];
   for (const f of facts) lines.push(COLUMNS.map((c) => csvCell(c.id === "region" ? f.region_id || UNASSIGNED_REGION : c.num ? c.text(f, lookups).replace(/,/g, "") : c.text(f, lookups))).join(","));
@@ -53,7 +55,7 @@ export function ExportButtons({ pop }: { pop: Extract<Population, { status: "rea
   const m = pop.snapshot.manifest;
   const run = (scope: "filtered" | "full"): void => {
     const facts = scope === "full" ? pop.result.facts : pop.facts;
-    download(`revenue-atlas-${scope}-${m.dataset_version}.csv`, buildCsv({ manifest: m, filters: pop.filters, facts, lookups: pop.lookups, scope }));
+    download(`revenue-atlas-${scope}-${m.dataset_version}.csv`, buildCsv({ manifest: m, filters: pop.filters, facts, lookups: pop.lookups, scope, creditRows: scope === "full" ? 0 : pop.outside.length }));
   };
   return (
     <div className="actions" role="group" aria-label="Export">

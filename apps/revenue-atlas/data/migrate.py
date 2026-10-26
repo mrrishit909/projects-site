@@ -32,6 +32,8 @@ def reset(conn: psycopg.Connection) -> None:
     for table in OWNED_TABLES:
         conn.execute(f'DROP TABLE IF EXISTS "{table}" CASCADE')  # names are constants above
     conn.execute("DROP FUNCTION IF EXISTS ra_forbid_mutation() CASCADE")
+    conn.execute("DROP FUNCTION IF EXISTS ra_check_shipment_line() CASCADE")
+    conn.execute("DROP FUNCTION IF EXISTS ra_check_order_line_quantity() CASCADE")
 
 
 def apply_migrations(conn: psycopg.Connection) -> list[str]:

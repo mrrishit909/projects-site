@@ -35,7 +35,7 @@ Reconciliation holds: the bridge total (contribution 3,309,826.22) equals `data/
 ## Limitations
 * **Synthetic and designed-in.** The generator planted three relationships (fixtures cost +18 % from 2026-01, West discount depth from 2026-03, enterprise apparel returns about 3x per line; `data/injection-manifest.json`). Finding them shows the analysis can detect such effects; it does not show they exist in any business. Customer decline (query 06) is the only result not designed in, and it is unexplained.
 * **Static demo.** The public site recomputes the contract in the browser over the published snapshot; mutations live in browser memory only.
-* **Known open defects** (independent review R-01..R-07, ledger): the web overview and bridge count credits by shipment month, not credit date (R-04), so the browser's monthly credits differ from query 01; grouped sums can drift by cents after FX conversion (R-05; the 9,651,206.89 total here is exact); stored C04 freight spans quarantined lines (query 09: 287.78). This memo uses the SQL figures.
+* **Known limitation** (independent review R-05): grouped sums can drift by cents after FX conversion (the 9,651,206.89 total here is exact; product-level gross adds to 9,651,206.92). The other review findings (R-01..R-04, R-06..R-08, including the browser's monthly credits now following the credit date and stored C04 freight now matching the contract, query 09 gap 0.00) were fixed in T-01-13. This memo uses the SQL figures.
 * Quotas are not analysed (no attainment calculation in the slice).
 
 ## Recommendation

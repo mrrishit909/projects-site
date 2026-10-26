@@ -19,7 +19,7 @@ export function Evidence() {
   const search = useSearch();
   const hl = new URLSearchParams(search).get("hl") ?? "";
   const cols = STEP_COLUMNS[hl] ?? [];
-  const totals = useMemo(() => (pop.status === "ready" ? ledgerTotals(pop.facts, pop.active ? ZERO : pop.result.unallocatedFreight) : null), [pop]);
+  const totals = useMemo(() => (pop.status === "ready" ? ledgerTotals(pop.facts, pop.active ? ZERO : pop.result.unallocatedFreight, pop.outside) : null), [pop]);
   const quarantine = useMemo(() => {
     if (pop.status !== "ready") return [];
     const m = new Map<string, number>();
@@ -48,7 +48,7 @@ export function Evidence() {
               <button type="button" className="btn" onClick={() => patchQuery({ hl: null })}>Remove highlight</button>
             </p>
           )}
-          {pop.facts.length === 0 ? <EmptyPopulation windowError={pop.windowError} /> : (
+          {pop.facts.length === 0 && pop.outside.length === 0 ? <EmptyPopulation windowError={pop.windowError} /> : (
             <>
               <h2>Totals for this population</h2>
               <dl className="totals" data-testid="ledger-totals" aria-label="Ledger totals, USD">
@@ -63,10 +63,11 @@ export function Evidence() {
               </dl>
               <p className="small muted" style={{ maxWidth: "none" }}>
                 USD. The COGS column below is cost at the shipped cost version; the total subtracts {fmtDec(totals.recoverable)} of recoverable return cost, as the bridge does (D-03).
+                {pop.outside.length > 0 && ` Credits follow their credit date (D-01a, D-09): ${fmtInt(pop.outside.length)} credits for lines shipped outside the window are listed as credit rows below the ledger and are inside these totals.`}
                 {" "}<QueryLink to="bridge" filters={pop.filters}>Compare with the margin bridge</QueryLink>.
               </p>
               <ExportButtons pop={pop} />
-              <LedgerTable facts={pop.facts} lookups={pop.lookups} highlight={cols} extraFreight={pop.active ? ZERO : pop.result.unallocatedFreight} />
+              <LedgerTable facts={pop.facts} lookups={pop.lookups} highlight={cols} extraFreight={pop.active ? ZERO : pop.result.unallocatedFreight} outside={pop.outside} />
             </>
           )}
           <section className="note-box" aria-labelledby="quarantine-title" data-testid="quarantine-note">

@@ -8,8 +8,8 @@ from datetime import datetime, timezone
 from typing import Any, Callable
 
 from .contract import ACCEPTED_INPUT_CONTRACTS, CONTRACT_VERSION, CURRENCY_RE, KNOWN_CURRENCIES
-from .errors import (CONTRACT_MISMATCH, CURRENCY_NOT_ISO4217, MALFORMED_RECORD,
-                     ORPHAN_REFERENCE, DomainError)
+from .errors import (CONTRACT_MISMATCH, CREDIT_SIGN_REVERSED, CURRENCY_NOT_ISO4217, MALFORMED_RECORD,
+                     ORPHAN_REFERENCE, SHIPMENT_LINE_ORDER_MISMATCH, SHIPPED_EXCEEDS_ORDERED, DomainError)
 from .models import (CostVersion, Customer, Discount, ExchangeRate, Order, OrderLine,
                      Product, RejectedRecord, Return, Shipment, ShipmentLine)
 from .money import parse_money
@@ -101,6 +101,12 @@ def validate_batch(raw: dict) -> IngestResult:
     A bad order currency rejects the order and every dependent (lines, discounts,
     shipments, shipment lines, returns) with CURRENCY_NOT_ISO4217; a bad shipment
     currency rejects the shipment and its lines and returns. Raw rows are kept.
+
+    D-08: an order line whose shipment lines ship more than the ordered quantity is rejected
+    with SHIPPED_EXCEEDS_ORDERED together with its discounts, shipment lines and their returns;
+    a shipment line whose order line belongs to another order than its shipment is rejected
+    with SHIPMENT_LINE_ORDER_MISMATCH (and its returns); a return with credit_amount "-0.00"
+    is rejected with CREDIT_SIGN_REVERSED.
     """
     if raw.get("contract", CONTRACT_VERSION) not in ACCEPTED_INPUT_CONTRACTS:
         raise DomainError(CONTRACT_MISMATCH, f"expected contract {CONTRACT_VERSION}",
@@ -137,6 +143,25 @@ def validate_batch(raw: dict) -> IngestResult:
             reject("shipments", row, ORPHAN_REFERENCE)
     ship_ids = {s.shipment_id for _, s in parsed["shipments"]}
 
+    # D-08 (R-06, R-01): shipment lines whose order line belongs to another order, and order lines
+    # whose (otherwise valid) shipment lines ship more than the ordered quantity.
+    ship_order = {s.shipment_id: s.order_id for _, s in parsed["shipments"]}
+    line_order = {ln.line_id: ln.order_id for _, ln in parsed["order_lines"]}
+    line_qty = {ln.line_id: ln.quantity for _, ln in parsed["order_lines"]}
+    currency_bad_lines = {ln.line_id for _, ln in parsed["order_lines"] if ln.order_id in bad_orders}
+    mismatched: set[str] = set()
+    shipped_by_line: dict[str, int] = {}
+    for _, sl in parsed["shipment_lines"]:
+        if sl.shipment_id in bad_shipments or sl.line_id in currency_bad_lines:
+            continue
+        if sl.shipment_id not in ship_order or sl.line_id not in line_order:
+            continue  # orphan, reported below
+        if line_order[sl.line_id] != ship_order[sl.shipment_id]:
+            mismatched.add(sl.shipment_line_id)
+            continue
+        shipped_by_line[sl.line_id] = shipped_by_line.get(sl.line_id, 0) + sl.shipped_quantity
+    over_lines = {k for k, total in shipped_by_line.items() if total > line_qty[k]}
+
     bad_lines: set[str] = set()
     for row, ln in parsed["order_lines"]:
         if ln.order_id in bad_orders:
@@ -144,6 +169,8 @@ def validate_batch(raw: dict) -> IngestResult:
             reject("order_lines", row, CURRENCY_NOT_ISO4217)
         elif ln.order_id not in order_ids:
             reject("order_lines", row, ORPHAN_REFERENCE)
+        elif ln.line_id in over_lines:
+            reject("order_lines", row, SHIPPED_EXCEEDS_ORDERED)
     line_ids = {ln.line_id for _, ln in parsed["order_lines"]}
 
     for row, d in parsed["discounts"]:
@@ -151,21 +178,31 @@ def validate_batch(raw: dict) -> IngestResult:
             reject("discounts", row, CURRENCY_NOT_ISO4217)
         elif d.line_id not in line_ids:
             reject("discounts", row, ORPHAN_REFERENCE)
+        elif d.line_id in over_lines:
+            reject("discounts", row, SHIPPED_EXCEEDS_ORDERED)
 
-    bad_sls: set[str] = set()
+    bad_sls: dict[str, str] = {}  # shipment_line_id -> reason code its returns inherit
     for row, sl in parsed["shipment_lines"]:
         if sl.shipment_id in bad_shipments or sl.line_id in bad_lines:
-            bad_sls.add(sl.shipment_line_id)
+            bad_sls[sl.shipment_line_id] = CURRENCY_NOT_ISO4217
             reject("shipment_lines", row, CURRENCY_NOT_ISO4217)
         elif sl.shipment_id not in ship_ids or sl.line_id not in line_ids:
             reject("shipment_lines", row, ORPHAN_REFERENCE)
+        elif sl.shipment_line_id in mismatched:
+            bad_sls[sl.shipment_line_id] = SHIPMENT_LINE_ORDER_MISMATCH
+            reject("shipment_lines", row, SHIPMENT_LINE_ORDER_MISMATCH)
+        elif sl.line_id in over_lines:
+            bad_sls[sl.shipment_line_id] = SHIPPED_EXCEEDS_ORDERED
+            reject("shipment_lines", row, SHIPPED_EXCEEDS_ORDERED)
     sl_ids = {sl.shipment_line_id for _, sl in parsed["shipment_lines"]}
 
     for row, r in parsed["returns"]:
         if r.shipment_line_id in bad_sls:
-            reject("returns", row, CURRENCY_NOT_ISO4217)
+            reject("returns", row, bad_sls[r.shipment_line_id])
         elif r.shipment_line_id not in sl_ids:
             reject("returns", row, ORPHAN_REFERENCE)
+        elif r.credit_amount == 0 and r.credit_amount.is_signed():
+            reject("returns", row, CREDIT_SIGN_REVERSED)  # "-0.00": a sign-reversed export (D-08)
 
     result = IngestResult()
     for ent in ENTITIES:

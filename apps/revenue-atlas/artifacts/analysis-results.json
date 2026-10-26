@@ -985,7 +985,7 @@
  ],
  "08_allocation_residual_check": [
   {
-   "shipments_checked": 2724,
+   "shipments_checked": 2715,
    "shipments_nonzero_residual": 0,
    "freight_abs_residual": "0.000000",
    "shipments_without_allocation": 0,
@@ -1000,9 +1000,9 @@
    "shipments_in_population": 2715,
    "partially_quarantined_shipments": 41,
    "contract_freight": "50607.14",
-   "stored_c04_freight_on_kept_lines": "50319.35",
-   "gap": "287.78",
-   "stored_on_quarantined_siblings": "287.78"
+   "stored_c04_freight_on_kept_lines": "50607.14",
+   "gap": "0.00",
+   "stored_on_quarantined_siblings": "0.00"
   }
  ],
  "memo_arithmetic": [

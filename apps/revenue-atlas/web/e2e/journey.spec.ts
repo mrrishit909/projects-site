@@ -156,3 +156,23 @@ test("clicking a waterfall bar drills into the ledger with that step highlighted
   await expect(page.getByTestId("highlight-note")).toContainText("Allocated discounts");
   expect(problems).toEqual([]);
 });
+
+test("R-04 / D-09: a window holding credits for earlier shipments shows credit rows and the ledger equals the bridge", async ({ page }) => {
+  const problems = watch(page);
+  await page.goto("bridge/?from=2024-11-01&to=2024-12-01");
+  await expect(page.getByTestId("credit-basis-note")).toContainText("credits dated inside it for lines shipped earlier");
+  const want: Record<string, string> = {};
+  for (const id of ["gross", "discounts", "credits", "net", "contribution"]) want[id] = (await text(page, `step-${id}`)).replace(/^-/, "");
+  expect(want.credits).toBe("6,096.40"); // the SQL month table (credit month 2024-11), not the shipment-month 15,266.75
+  await page.goto("evidence/?from=2024-11-01&to=2024-12-01");
+  await expect(page.getByTestId("outside-credits")).toBeVisible();
+  await expect(page.getByTestId("outside-credits-table").locator("tbody tr").first()).toBeVisible();
+  for (const [step, id] of [["gross", "gross"], ["discounts", "discounts"], ["credits", "credits"], ["net", "net"], ["contribution", "contribution"]] as const) {
+    expect((await text(page, `totals-${id}`)).replace(/^-/, "")).toBe(want[step]);
+  }
+  // The overview month for 2024-11 carries the same credits.
+  await page.goto("overview/");
+  const row = page.getByTestId("trend-table").locator("tbody tr").filter({ hasText: "2024-11" });
+  await expect(row).toHaveCount(1);
+  expect(problems).toEqual([]);
+});

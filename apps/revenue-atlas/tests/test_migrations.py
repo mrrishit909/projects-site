@@ -19,7 +19,7 @@ def test_migrate_from_empty_then_twice_gives_same_tables(db_url):
         first = migrate.apply_migrations(c)
         c.commit()
         tables = _tables(c)
-        assert first == ["0001_schema.sql", "0002_constraints.sql"]
+        assert first == ["0001_schema.sql", "0002_constraints.sql", "0003_shipment_invariants.sql"]
         second = migrate.apply_migrations(c)
         c.commit()
         assert second == []
@@ -28,7 +28,7 @@ def test_migrate_from_empty_then_twice_gives_same_tables(db_url):
                 "raw_batches", "rejected_records", "quarantined_records", "audit_events",
                 "command_results", "dataset_versions", "schema_migrations"} <= tables
         versions = [r["version"] for r in c.execute("SELECT version FROM schema_migrations ORDER BY version")]
-        assert versions == ["0001_schema.sql", "0002_constraints.sql"]
+        assert versions == ["0001_schema.sql", "0002_constraints.sql", "0003_shipment_invariants.sql"]
 
 
 def test_money_columns_are_numeric_20_6_and_versions_default(conn):

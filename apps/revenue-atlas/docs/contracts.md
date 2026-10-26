@@ -78,9 +78,18 @@ Exact rule for a window `[from, to)` (a missing bound is unbounded; no window me
   (P01-MET-12).
 * Allocation is keyed by `shipment_line_id`; the allocation table has a unique constraint
   on it, which is how a many-to-many double allocation is detected (P01-TEST-01).
-* Margin attribution by customer/product/region is therefore **exact additive**: every
-  dollar of discount, cost, credit and freight belongs to exactly one shipment line
-  (P01-DOMAIN-05).
+* Margin attribution is **exactly additive in the source currency**: every unit of discount, cost, credit and
+  freight belongs to exactly one shipment line. Freight no line can carry stays on the explicit unallocated
+  freight (see D-08: grouped results show it as the `UNALLOCATED` group, so grouped shipping cost sums to the total).
+* **Known limitation R-05 (reviewer finding, behaviour deliberately not changed).** Money is converted to the
+  reporting currency per shipment line at full precision and rounded to cents only for presentation (D-02), so
+  *converted* sums over groups that are each rounded to cents can differ from the rounded overall total by a few
+  cents. Observed on the published snapshot: product-level gross sales add up to 9,651,206.92 against the overall
+  9,651,206.89; on the reviewer's EUR fixture product net sales add up to 302.15 against 302.16 and COGS to
+  64.12 against 64.11. The ungrouped total is the exact figure; grouped views are labelled "may differ by cents
+  after conversion". Not a defect of the allocation (which is exact in cents per line) but of per-group presentation
+  rounding; the remedy (carry grouped values unrounded, or largest-remainder the rounding across groups) is left
+  for a later contract version.
 
 ## D-05 Metric formulas (P01-MET-01..12 R02)
 | Metric | Formula | Zero/empty behaviour |
@@ -110,8 +119,8 @@ aggregated numerator and denominator, never averaged over rows (P01-MET-07-R04).
   with the rejection reason. Repeating a batch with the same idempotency key and payload
   returns the prior result; the same key with a different payload is a 409.
 * C03 partial return: `returned_quantity ≤ shipped_quantity − already returned`; a
-  negative credit (`credit_amount < 0`) is rejected with `CREDIT_SIGN_REVERSED`
-  (P01-TEST-06, P01-TEST-10). A return dated after a published snapshot's period does not
+  negative credit (`credit_amount < 0`, including negative zero `-0.00`, D-08) is rejected with
+  `CREDIT_SIGN_REVERSED` (P01-TEST-06, P01-TEST-10). A return dated after a published snapshot's period does not
   alter that snapshot; it appears in the next run with a revision note (P01-TEST-02).
 * Region: a customer's region is the `customers` version effective at `shipped_at`
   (`effective_from` versions, type-2). Lines with no customer version resolve to the
@@ -137,3 +146,70 @@ to a copy of the baseline facts as `allocated_discount × (1 + discount_delta)` 
 `freight × (1 + shipping_delta)`; merchandise credits and costs are not rescaled. Scenario
 results are always labelled estimates and shown beside, never instead of, observed results
 (P01-MET-*-R24, P01-FLOW-07/08).
+
+## D-08 Ingest invariants, discount and freight persistence (added 2026-10-26, review findings R-01..R-08)
+Decision note, T-01-13. The metric formulas are unchanged, so `CONTRACT_VERSION` stays `v1.1` and the golden fixture
+is untouched; what changes is which inputs are accepted and what C04 persists. Implemented in the Python domain
+(`ingest.py`), TypeScript (`ingest.ts`), PostgreSQL (migration `0003_shipment_invariants.sql`) and `api/commands.py`.
+* **R-01 shipped never exceeds ordered.** For every order line the total `shipped_quantity` over its shipment lines
+  must be at most `order_lines.quantity`. A violating order line is rejected at C01 with `SHIPPED_EXCEEDS_ORDERED`
+  together with its discounts, its shipment lines and their returns (dependent rejection, same pattern as the
+  currency rule; raw rows kept in `rejected_records`). Rows already rejected for a currency or orphan reason keep that
+  reason and do not count towards the total. Database guard: trigger `shipment_lines_invariants` (BEFORE INSERT or
+  UPDATE of `shipped_quantity`, `line_id`, `shipment_id`) refuses a row that would push the total above the ordered
+  quantity (`check_violation`, constraint name `shipment_lines_shipped_le_ordered`, serialised per order line by a
+  row lock); trigger `order_lines_quantity_floor` refuses lowering `quantity` below what shipped. A violation that
+  only the database sees (a later batch adds shipments to a line that already shipped) is a 422
+  `SHIPPED_EXCEEDS_ORDERED` and rolls the whole C01 back. It is *not* a plain `CHECK` because it reads other rows.
+  C03 needs no extra rule: returns are bounded by the shipped quantity (D-06), which is now bounded by the ordered one.
+* **R-06 a shipment line belongs to its shipment's order.** A shipment line whose order line belongs to a different
+  order than its shipment is rejected with `SHIPMENT_LINE_ORDER_MISMATCH` (and so are its returns, with the same
+  code); it does not count towards any line's shipped total. Database guard: the same trigger, constraint
+  `shipment_lines_order_match`.
+* **R-07 negative zero.** `credit_amount` of `-0.00` (any signed zero) is **rejected** with `CREDIT_SIGN_REVERSED`
+  rather than normalised to `0.00`: a signed zero is the footprint of a sign-reversed source, and silently
+  accepting it would hide that. A plain `0.00` credit stays valid. C03 (Python `validate_return`) and C01 (both
+  implementations, so TypeScript recomputation agrees) apply it.
+* **R-02 discount persistence.** C04 recomputes the discount split of every order line the shipment touches over
+  all of that line's shipment lines that exist and upserts (`ON CONFLICT DO UPDATE`) every row, in the one command
+  transaction, so the stored rows always equal the contract split `round(discount x shipped / ordered, 2)` by largest
+  remainder. The result lists rows of other shipments whose amount changed (`discount_resplit_on_other_shipments`).
+  `data/sql/discount_reconciliation.sql` returns the order lines whose stored sum drifts from that figure (no rows =
+  reconciled). Note: the discount split spans all shipment lines, quarantined or not, whereas the pipeline drops
+  quarantined lines before splitting; the two agree except for order lines that mix quarantined and kept lines.
+* **R-08 freight only over lines that are not quarantined.** C04 evaluates, at allocation time and exactly as the
+  pipeline does, FX for the order and shipment currency, the cost version and the order status of every line of the
+  shipment; lines that fail get no freight row (reported in `skipped_lines` and a `FREIGHT_LINE_SKIPPED` warning).
+  Running C04 again for an allocated shipment is still `409 FREIGHT_ALREADY_ALLOCATED` (P01-TEST-01) when the
+  result would not change; when the eligible set has changed (a line was un-quarantined by a new cost version or
+  rate, or quarantined since) it is a **re-spread**: stale rows are deleted, the others upserted, status
+  `reallocated`, warning `FREIGHT_RESPREAD`, one transaction. The first allocation still uses a plain insert so the
+  primary key remains the concurrent double-allocation guard. After C02 + C04 for every shipment the stored
+  freight equals the contract freight (query 09 gap 0.00).
+* **R-03 grouped results include unallocated freight.** `group_metrics` / `groupMetrics` take the unallocated freight
+  (already restricted to the window by the caller; the pipeline exposes `unallocated_freight`,
+  `unallocated_freight_in_window` and `unallocated_by_shipment`) and emit an explicit **`UNALLOCATED`** group with
+  `shipping_cost` equal to it, `contribution_margin` equal to minus it and everything else zero, for every grouping
+  key (region, customer, product, month). Nothing is emitted when it is 0.00. On the reviewer's fixture the overall
+  shipping cost 36.25 equals the sum over groups (31.25 + 5.00). The web screens add it only for the unfiltered
+  population, as for the totals, because it cannot be attributed to a region, segment, category or part of a window.
+
+## D-09 Where a credit appears in the months, the bridge and the ledger (added 2026-10-26, R-04)
+D-01a already says a credit belongs to the window that contains its `credit_date`. The web screens now obey it:
+* **Population.** Facts are filtered by the region, segment and category filters only; the date window then selects
+  shipment lines by `shipped_at` and credits by `credit_date` (`computeMetrics(dimFacts, window, { returns })`).
+  The bridge, the region table and the headline totals use exactly that call; without a date filter nothing changes.
+* **Overview months.** Month M is the window [M-01, next M-01) intersected with the filter window: it holds the lines
+  shipped in M and the credits dated in M whatever the month of their line (`monthlyMetrics`, mirrored by
+  `metrics.monthly_metrics`). A credit dated 2024-11-xx for a line shipped in 2024-10 therefore sits in November
+  (published snapshot 2024-11: credits 6,096.40, where grouping by shipment month had shown 15,266.75). A month with
+  credits and no shipments appears (gross 0.00, negative net). The months add up to the total to within the cent
+  rounding of each month (D-04, R-05). The 2026-01 rate comparison uses the same windows.
+* **Ledger.** The ledger lists the shipment lines shipped in the window. Their *Credit* column holds only the credits
+  dated in the window (`windowLedger`). Credits dated in the window for lines shipped outside it have no line row, so
+  the ledger shows them as **credit rows** under the line table (credit date, return, line, shipped at, customer,
+  region, quantity, credit, recoverable cost), with their own totals line. `ledgerTotals` adds them, so the ledger's
+  totals equal the bridge for the same filters (lines + credit rows == `computeMetrics`), and the bridge says how
+  many credit rows its window holds. The line table's footer stays the sum of the visible line rows; the CSV export
+  of the current filters carries the line rows with windowed credits and a header with the number of credit rows.
+  Without a date filter there are no credit rows and the figures are the lifetime values as before.

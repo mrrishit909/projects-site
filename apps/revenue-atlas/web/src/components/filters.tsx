@@ -61,7 +61,7 @@ export function PopulationSummary({ pop }: { pop: Ready }) {
   const rejected = pop.result.ingest.rejected.length;
   return (
     <dl className="basis" data-testid="population-summary">
-      <div><dt>Date basis</dt><dd>Shipment date, UTC; months as [start, next start)</dd></div>
+      <div><dt>Date basis</dt><dd>Shipment date, UTC; months as [start, next start); credits on their credit date (D-01a)</dd></div>
       <div><dt>Active window</dt><dd data-testid="active-window">[{pop.filters.from || "first shipment"}, {pop.filters.to || "no end"})</dd></div>
       <div><dt>Active filters</dt><dd data-testid="active-filters">{describeFilters(pop.filters)}</dd></div>
       <div><dt>Population</dt><dd><span data-testid="population-count">{fmtInt(pop.facts.length)}</span> shipment lines · {fmtInt(pop.metrics.eligible_orders)} orders</dd></div>

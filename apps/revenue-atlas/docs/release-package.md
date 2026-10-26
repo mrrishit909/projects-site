@@ -44,11 +44,11 @@ Use `git revert`, not a reset or force push, so history stays auditable.
 | File | sha256 |
 |---|---|
 | `artifacts/revenue-atlas-analyst-workbook.xlsx` | `4b9415c112f0bdeb3b4b00a20dc64fbc1cffb07b0cedc02efafb814b17d2fc1b` |
-| `artifacts/analysis-results.json` | `71b449cf5c1f5c2a3ec32985fa9f198cb35423c412c0db0d60a248dd13b7a881` |
+| `artifacts/analysis-results.json` | `2436b45e0291f6f1d06352ef14ac725123c0a3f7218786173ff24bec194a10bc` |
 | `artifacts/build_workbook.py` | `9cec28aec00e7f9c34e3665ea5fb835c8a2c1e07d8ad89ba47e93d21e765ed70` |
 | `artifacts/checksums.py` | `ed3d9600cb6032210e6ec8461467126a9738ccca552c3f54b6599155b3bfabb7` |
 | `requirements-artifacts.txt` | `06d28d69e958deafb09f0a44fcae9b548f15e4debc14ebc39aad5f0934856fbf` |
-| `data/sql/analysis/00_line_facts.sql` | `e9e2dab153dfff0812f67c97e20ff16084fb937d86c2356be0a1c1ea0f817b6f` |
+| `data/sql/analysis/00_line_facts.sql` | `af7b2ea539ac4a08895f02a1000907003a977fada495bcc249559fddca233a07` |
 | `data/sql/analysis/01_margin_bridge_by_month.sql` | `fbd651519459075f4ccd2a9649921499de5a36a38f1f3cced78996e35e4724d5` |
 | `data/sql/analysis/02_contribution_by_region.sql` | `6a0676f688ccc182c86243a7ed69d5d16a883fb5605cb5f868f8e3fcabeb9ca8` |
 | `data/sql/analysis/03_discount_rate_by_region_before_after_2026_03.sql` | `a9698f7a1d11519a0945dae622c235115e71de9a9662ddf2f3ce4d77474697e1` |
@@ -56,19 +56,19 @@ Use `git revert`, not a reset or force push, so history stays auditable.
 | `data/sql/analysis/05_return_rate_by_segment_category.sql` | `665623c6a420a104488f1761177bd34a09bdbfc425c7fd74761803d9615a9408` |
 | `data/sql/analysis/06_top10_customers_contribution_decline.sql` | `d6e0ae83413fb959ce116c5e92e0732ec990733ba0f1d0dff08de65a21cb3d44` |
 | `data/sql/analysis/07_quarantine_reasons.sql` | `baeb894e57ef7e5737a78ee4435e10c867236d77a3260da5763798dd9cbe1649` |
-| `data/sql/analysis/08_allocation_residual_check.sql` | `d9a49d765a8b8d357459f42396e8992a21fd3bc0f61cc0c899cb49c15f6a494e` |
+| `data/sql/analysis/08_allocation_residual_check.sql` | `6905debd1ac3f0d0859cbcad92f6a4dc4b07fa2f7c87dc5e278204772436a4e3` |
 | `data/sql/analysis/09_stored_vs_contract_freight.sql` | `3cb54db749b1a39431c96b96e80c0d4aa8b889d67a32749c4f5e7eada73e0243` |
 | `data/sql/analysis/prepare_snapshot.py` | `c8cf27be12dd41ca3c171b36f0ebe4ca7a6a12f84f04d376b0f635d42e2559b0` |
 | `data/sql/analysis/run_all.py` | `7a7a5b249610e587dd3ff2e85b918a6413be090910d6b8ee00caf2de7f1c2746` |
 | `tests/test_artifacts.py` | `1fa5504de41b10709ea33abc5cbed373473dcf2e6571f7af1540db5795aa4e9b` |
-| `docs/data-dictionary.md` | `1bfcdd3806867757fba8bcee9b4aa582377174f883ce02f161e1508c85c1a131` |
+| `docs/data-dictionary.md` | `c0aa0019c6822a5d863a7318b6ebcc8ac34a8de7bad618f44496cf304d38f9f6` |
 | `docs/erd.md` | `183a4eae56633cc3117a0bc30c6295e15383c4a14f18d2108e60e5a0554feef7` |
-| `docs/sql-analysis.md` | `23433edc241e33acc2f689edf516a2c3f6e9abde45b14b28b2b780584925df82` |
+| `docs/sql-analysis.md` | `8f5c5479afed2a84689b5b0749439d71fa617c1d7fcf83959aad55059554baf9` |
 | `docs/workbook.md` | `853252f25c0cd871b6cbb3821eb26ac6b49b329860975174f8d1296efb927dc0` |
 | `docs/bi-package.md` | `e05d992d8d8d2e63e0982b231872093612b4c03465ea93e344a98d7a768f75d0` |
-| `docs/executive-memo.md` | `0cd1b6b67ff3ec718f33f9cebc4b45475b6263453b79fc779d0cb9906fe64e0a` |
-| `docs/technical-case-study.md` | `ed2bb39179bfac4f3c738fac4d88482c095a17bbf1411bb134eeaba0dada200c` |
-| `docs/resume-bullets.md` | `1646348f6b7dde1f48469b24ee0a96c080140d6a002eb030e78c294f0c7a3931` |
+| `docs/executive-memo.md` | `32cf414b975b088343dedeb807f4372bd10f3119ab1de6df86669501727b2e4c` |
+| `docs/technical-case-study.md` | `d38713fe5ea6c80cd430395f5808b575896f38f7f2d873b720561690f5235811` |
+| `docs/resume-bullets.md` | `a33221a2dbc7bd20e5644fbdab16e1a81f539a754932cb89756b38d6c31b6866` |
 
 `docs/release-package.md` itself is not listed (it carries this table). Regenerate after any edit: `../../.venv/bin/python artifacts/checksums.py`; `tests/test_artifacts.py::test_checksums_file_matches_files` fails on a stale line.
 The `.xlsx` hash is that of the LibreOffice-recalculated file (`workbook.md`). No `.pbix` exists, so none is listed (`bi-package.md`).

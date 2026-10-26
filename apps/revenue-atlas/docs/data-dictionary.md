@@ -88,7 +88,7 @@ calculation (P01-TEST-08 blocked in the ledger).
 | `shipment_line_id` | TEXT | no | PK; **fact grain** of every metric; key of both allocation tables | D-01, D-04 |
 | `shipment_id` | TEXT | no | FK (enforced) `shipment_lines_shipment_fk` | |
 | `line_id` | TEXT | no | FK (enforced) `shipment_lines_line_fk` -> order_lines | |
-| `shipped_quantity` | BIGINT | no | CHECK >= 0; at most the ordered quantity in practice (reviewer R-01: not enforced) | |
+| `shipped_quantity` | BIGINT | no | CHECK >= 0; total per order line at most the ordered quantity (trigger `shipment_lines_invariants`, D-08 / R-01) | |
 | `cost_version_id` | TEXT | yes | FK (enforced) `shipment_lines_cost_fk`; NULL until C02; immutable once set | D-03 |
 | `version` | INT | no | Default 1, CHECK >= 1; optimistic concurrency counter bumped by C03 | D-06 |
 
@@ -134,6 +134,8 @@ calculation (P01-TEST-08 blocked in the ledger).
 | `schema_migrations` | one applied migration | `version` | 2 | Created by `data/migrate.py` with the file checksum; a changed applied file aborts. |
 
 Constraint catalogue: nine named FKs in `0002` (shown in the field tables) plus three inline FKs in `0001` (`freight_allocations`, `discount_allocations`, `rejected_records`); currency regex checks on `orders`, `shipments`, `exchange_rates`;
+
+Migration `0003_shipment_invariants.sql` (D-08) adds two triggers that act as checks reading other rows: `shipment_lines_invariants` (constraint names `shipment_lines_shipped_le_ordered`: total shipped per order line <= `order_lines.quantity`; `shipment_lines_order_match`: the line's order equals the shipment's order) and `order_lines_quantity_floor` (`quantity` cannot drop below what shipped). They raise `check_violation`; C01 maps them to a 422 with the reason codes `SHIPPED_EXCEEDS_ORDERED` / `SHIPMENT_LINE_ORDER_MISMATCH`. C04 upserts `discount_allocations` for every shipment line of the order lines it touches and may delete and upsert `freight_allocations` of the shipment when re-spreading (D-08).
 `rate > 0`, `quantity >= 1`, `unit_price >= 0`, `discount_amount >= 0`, `shipping_cost >= 0`, `shipped_quantity >= 0`, `version >= 1`,
 `returned_quantity >= 1`, `credit_amount >= 0`, `unit_cost >= 0`, `valid_to > valid_from`, freight `amount >= 0`; indexes on
 `shipment_lines(shipment_id)`, `(line_id)`, `returns(shipment_line_id)`, `cost_versions(product_id, valid_from)`, `shipments(shipped_at)`,

@@ -11,7 +11,7 @@ from .money import cents
 def validate_return(shipment_line: ShipmentLine, prior_returns: list[Return],
                     returned_quantity: int, credit_amount: Decimal) -> None:
     """Raise unless qty <= shipped - already returned and credit >= 0 (D-06)."""
-    if credit_amount < 0:
+    if credit_amount < 0 or (credit_amount == 0 and credit_amount.is_signed()):  # "-0.00" too (D-08)
         raise DomainError(CREDIT_SIGN_REVERSED, "credit_amount must not be negative",
                           details={"credit_amount": str(credit_amount)})
     remaining = shipment_line.shipped_quantity - sum(r.returned_quantity for r in prior_returns)

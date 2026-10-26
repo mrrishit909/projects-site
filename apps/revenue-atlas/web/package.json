@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "golden": "tsx scripts/golden-check.ts",
-    "check": "npm run typecheck && npm run golden",
+    "check": "npm run typecheck && npm run golden && tsx scripts/review-check.ts",
     "e2e": "playwright test",
     "build:pages": "SITE_BASE=/projects-site/labs/revenue-atlas/ npm run build"
   },
