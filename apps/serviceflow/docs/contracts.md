@@ -68,3 +68,21 @@ deducted from staffed time only when the window covers the whole shift (a pro-ra
 declared-interval rule is a later decision). `abandonable_channels` is declared in the
 inputs; the survey invitation rate is over resolved tickets. Dependents of a rejected ticket
 carry `TICKET_REJECTED`.
+
+## D-06 Backend clarifications (2026-10-26, adopted from A-028)
+Overlap of an agent's intervals is an application check (domain ingest and C03/resume under an
+agent row lock, race-tested), not a row trigger, because the log accepts late arrivals. Lock
+order: idempotency key, then ticket rows by id, then agent rows by id; a deadlock is retried
+three times, then 409 `CONCURRENT_UPDATE`. Roles: ingest, simulation and compare are open to
+analyst, supervisor and admin; C02–C06 and `resolve-ticket` need supervisor or admin (403
+`ROLE_FORBIDDEN`). Handling is clipped to the window; resolution and wait are measured from the
+original arrival; backlog and overdue exclude abandoned tickets; CSAT counts only tickets
+completed in the window; staffing figures exist only for `group_by=agent`. Simulation services
+start only before the horizon and tickets still waiting are reported as censored; events are
+listed as all starts, then all resolves. `resume-work` and `resolve-ticket` are added commands;
+`shift_breaks` is a data-load-only table that blocks C03 inside a break. A ticket whose priority
+has no SLA policy is refused with 422 `SLA_POLICY_MISSING`; handling stops on pause, SLA clocks
+keep running. C09 `compare-policies` pairs replications on one seed and reports a 95% t-interval
+labelled an estimate. C07 and C10 return 501 `NOT_IMPLEMENTED`. Open: the metrics default
+window (currently first arrival to last event plus one second, echoed in `meta`) and the ingest
+command's full-population reload, which is lab-scale only.

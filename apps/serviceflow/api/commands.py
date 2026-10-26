@@ -22,25 +22,21 @@ import time
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from fractions import Fraction
 from typing import Any, Callable
 
 import psycopg
 from psycopg.types.json import Jsonb
-from serviceflow import DomainError
 from serviceflow.errors import INVALID_STATE
 from serviceflow.events import Interval, History, interval_conflict, replay
 from serviceflow.ingest import validate_batch
-from serviceflow.metrics import histories
-from serviceflow.models import Population
 from serviceflow.simulation import compare_policies as sim_compare
 from serviceflow.simulation import mean_ci95, parse_config, replicate
-from serviceflow.timeutil import d4, iso_z, parse_ts
+from serviceflow.timeutil import iso_z, parse_ts
 
 from data.seed import COLUMNS, canonical_json, insert_rejected, insert_simulation, sha256_hex
 
 from . import db
-from .errors import ApiError, detail, from_domain
+from .errors import ApiError, detail
 from .schemas import Envelope
 
 Conn = psycopg.Connection[db.Row]

@@ -139,7 +139,7 @@ class History:
             if t == "created":
                 state = state or "new"
             elif t == "queued":
-                state = "queued" if state in (None, "new") else state
+                state = "queued" if state in (None, "new", "reopened") else state
             elif t in OPENERS:
                 state = "in_service"
             elif t == "paused":

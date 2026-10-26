@@ -23,7 +23,7 @@ from typing import Any
 from .contract import CONTRACT_VERSION, ENTITIES, OPENERS
 from .errors import (AGENT_NOT_QUALIFIED, BOT_AS_HUMAN_REPLY, CONCURRENCY_EXCEEDED, CONTRACT_MISMATCH, DUPLICATE_ID,
                      MALFORMED_RECORD, TICKET_REJECTED, TRANSFER_RESETS_ARRIVAL, UNKNOWN_REFERENCE, DomainError)
-from .events import interval_conflict, is_bot, ordered, queue_at, replay
+from .events import interval_conflict, is_bot, queue_at, replay
 from .models import Population, RejectedRecord, Ticket, TicketEvent, parsers, row_id
 
 
