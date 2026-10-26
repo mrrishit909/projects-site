@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T16:21:38Z",
+  "updated_at": "2026-10-26T16:37:17Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -814,6 +814,17 @@
       "code_sha": "ca3e626 / portfolio 13af835",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40358131147",
       "ts": "2026-10-26T16:21:38Z"
+    },
+    {
+      "requirement": "P04-WORK-03 generator: determinism (3 PYTHONHASHSEED), size cap, designed relationships (technical P1 P90/mean 2.51; Monday 09-11 bind 1.33/h; proficiency >=4 faster 35.9 vs 39.5 min; holdout +20.0%), injections, SQL agrees with domain on 28 keys over three windows",
+      "project": "04-serviceflow",
+      "status": "verified",
+      "command": "python data/generate.py (x2); tests/reference_check.py; DATABASE_URL=... pytest -q",
+      "exit_code": 0,
+      "actual": "byte-identical; 4,836,065 bytes; ALL OK; 333 passed",
+      "code_sha": "dd40fdf",
+      "evidence": "apps/serviceflow/data/README-generator.md; tests/test_generator.py",
+      "ts": "2026-10-26T16:37:17Z"
     }
   ]
 }

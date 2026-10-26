@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T16:21:38Z",
+  "updated_at": "2026-10-26T16:37:17Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -86,7 +86,7 @@
     },
     "04-serviceflow": {
       "slug": "serviceflow",
-      "stage": "gate-A passed; backend slice committed 99e219b (301 tests local); CI Mode A pending; generator A-029 running",
+      "stage": "gate-A passed; backend slice CI-green (99e219b); generator committed dd40fdf (333 tests); web A-030 running",
       "built": false,
       "verified": false,
       "published": false,
@@ -95,7 +95,7 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40354858820",
       "site_url": null,
       "blockers": [],
-      "next_task": "T-04-04 (A-029 generator -> web -> publish -> integrate)"
+      "next_task": "T-04-04 (A-030 web -> CI Mode B -> publish -> integrate)"
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
@@ -178,7 +178,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 04 ServiceFlow: A-029 generator hand-back -> verify -> web worker -> publish labs/serviceflow -> integrate -> reviewer -> artifacts. Then project 05 InvoiceBridge fixture worker.",
+    "next_concrete_task": "Project 04 ServiceFlow: A-030 web hand-back -> verify (check/build:pages/e2e) -> commit -> CI Mode B -> publish-site.sh serviceflow -> release manifest -> live check -> portfolio integration (serviceflow/project.json, cover, shots; tile exists) -> reviewer -> fixes -> artifacts. Then project 05.",
     "acceptance": "see task-queue.json"
   }
 }
