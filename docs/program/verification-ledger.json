@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T09:56:53Z",
+  "updated_at": "2026-10-26T10:02:07Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -24,6 +24,21 @@
       "code_sha": "pending-commit",
       "ts": "2026-10-26T09:56:53Z",
       "note": "independent stdlib reference by worker A-001; coordinator re-ran it"
+    },
+    {
+      "requirement": "P01-MET-01..09,12 R02 + P01-FLOW-01..04 invariants (domain layer)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "python -m pytest -q (apps/revenue-atlas)",
+      "exit_code": 0,
+      "expected": "golden baseline/after_return metrics equal expected.json; 18 rule tests",
+      "actual": "23 passed",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T10:02:07Z",
+      "gaps": [
+        "G-01 credit-date windowing of returns not yet implemented (D-01)",
+        "G-02 posted credit not validated against expected_credit"
+      ]
     }
   ]
 }

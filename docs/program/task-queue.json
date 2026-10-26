@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T09:56:53Z",
+  "updated_at": "2026-10-26T10:02:07Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
@@ -38,7 +38,7 @@
       "id": "T-01-03",
       "project": "01-revenue-atlas",
       "title": "Domain functions + unit tests (costing, freight allocation, returns, metrics)",
-      "status": "pending",
+      "status": "done",
       "prereqs": [
         "T-01-01",
         "T-01-02"
@@ -50,7 +50,7 @@
       "id": "T-01-04",
       "project": "01-revenue-atlas",
       "title": "Postgres migrations + seed + SQL reference totals",
-      "status": "pending",
+      "status": "in_progress",
       "prereqs": [
         "T-01-03"
       ],
@@ -61,7 +61,7 @@
       "id": "T-01-05",
       "project": "01-revenue-atlas",
       "title": "FastAPI commands C01-C04 + reads + request tests + CI with postgres service",
-      "status": "pending",
+      "status": "in_progress",
       "prereqs": [
         "T-01-04"
       ],
