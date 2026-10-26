@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T12:26:29Z",
+  "updated_at": "2026-10-26T12:46:43Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -467,6 +467,17 @@
       "code_sha": "0a24202",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40322386220",
       "ts": "2026-10-26T12:26:29Z"
+    },
+    {
+      "requirement": "P02 master 14 deterministic generation; injected defects detected (INJ-01,02,03,09,10) and replayed (INJ-04..07,11,12)",
+      "project": "02-onboard-studio",
+      "status": "verified",
+      "command": "generate.py --seed 20261026 twice; pytest tests/test_generator.py",
+      "exit_code": 0,
+      "expected": "identical hash; designed relationships: v2 active < 0.75x v1, enterprise rework > 1.5x, reg-north paused highest",
+      "actual": "hash 3c20d296bcf178065e9178cae04f763994b4d7197026af2c021ab55b4cc2bc6a both runs; v2/v1 0.64; enterprise 0.290 vs 0.172; reg-north 59.1 h",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T12:46:43Z"
     }
   ]
 }

@@ -1,0 +1,197 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "3c20d296bcf178065e9178cae04f763994b4d7197026af2c021ab55b4cc2bc6a",
+  "dataset_version": "os-20261026-20261026",
+  "designed_relationships": [
+    "workflow version 2 (published 2025-10-01, 60 % of later cases) removes the verify_identity handoff and adds a parallel collect_address_proof step: about 35 % lower active elapsed time and about 20 % fewer handoffs per case than version 1 (synthetic).",
+    "enterprise organizations have about 2x the rework rate: identity_proof rejection probability 0.20 vs 0.11 (synthetic).",
+    "region reg-north has longer customer waiting: more customer_info_requested / external_verification pauses per case (mean 1.65 vs 0.9) and each about 1.4x longer, so paused_time_hours is highest (synthetic).",
+    "bottleneck at step approve_account for reviewer rev-004: 40 % of reviews, queue x3.6 and review x3.4 slower than rev-005 / rev-006 (synthetic)."
+  ],
+  "events_file": "data/injection-events.json",
+  "injections": [
+    {
+      "description": "2 cases completed with a required document missing: case-000218 has no business_registration version; case-000545 has a business_registration version that was never accepted.",
+      "entity": "cases",
+      "expected_handling": "ingest rejects each case and every row hanging off it with MISSING_REQUIRED_DOCUMENT; raw rows are kept; none enters the population.",
+      "id": "INJ-01",
+      "location": "entity_files",
+      "record_ids": [
+        "case-000218",
+        "case-000545"
+      ],
+      "test": "P02-TEST-01"
+    },
+    {
+      "case_ids": [
+        "case-000638",
+        "case-000125"
+      ],
+      "description": "2 pairs of conflicting decisions on one step version: an approval followed 7 minutes later by a 'rejected' decision from another reviewer, no version number.",
+      "entity": "approvals",
+      "expected_handling": "ingest keeps the earlier decision and rejects the later approval row with DECISION_CONFLICT (only that row); the replay events show the same conflict through approve-step.",
+      "first_decision_ids": [
+        "apr-003151",
+        "apr-000622"
+      ],
+      "id": "INJ-02",
+      "location": "entity_files+events",
+      "record_ids": [
+        "apr-003152",
+        "apr-000623"
+      ],
+      "step_instance_ids": [
+        "si-003189",
+        "si-000623"
+      ],
+      "test": "P02-TEST-02"
+    },
+    {
+      "case_ids": [
+        "case-000586",
+        "case-000629",
+        "case-000321"
+      ],
+      "description": "3 customer_info_requested pauses that lie wholly outside every working interval (a Saturday, a Sunday and a weekday holiday) inside completed cases.",
+      "entity": "waiting_intervals",
+      "expected_handling": "the pipeline accepts them, deducts 0 business hours and returns a PAUSE_OUTSIDE_WORKING_INTERVAL flag for each.",
+      "id": "INJ-03",
+      "kinds": [
+        "saturday",
+        "sunday",
+        "holiday"
+      ],
+      "location": "entity_files",
+      "record_ids": [
+        "wi-00704",
+        "wi-00753",
+        "wi-00396"
+      ],
+      "test": "P02-TEST-03"
+    },
+    {
+      "description": "an attempted edit of the published workflow version wfv-001 (publish again; a direct UPDATE of a step definition).",
+      "entity": "workflow_versions",
+      "expected_handling": "409 ALREADY_PUBLISHED; the UPDATE is refused by the immutability trigger.",
+      "id": "INJ-04",
+      "location": "events",
+      "record_ids": [
+        "wfv-001"
+      ],
+      "test": "P02-TEST-04"
+    },
+    {
+      "description": "a draft version wfv-003 whose dependencies form a cycle (sd-901 -> sd-902 -> sd-903 -> sd-901); it is not in the entity files because the seed would reject it.",
+      "entity": "workflow_versions",
+      "expected_handling": "publish-workflow-version rejects it with DEPENDENCY_CYCLE (Kahn).",
+      "id": "INJ-05",
+      "location": "events",
+      "record_ids": [
+        "wfv-003"
+      ],
+      "test": "P02-TEST-05"
+    },
+    {
+      "description": "2 resubmissions that would overwrite an accepted document version (resubmit-document on an accepted type; a direct UPDATE of a document_versions row).",
+      "entity": "document_versions",
+      "expected_handling": "resubmit-document is refused with NOT_IN_CHANGES_REQUESTED; the UPDATE is refused by the append-only trigger; the prior row stays intact.",
+      "id": "INJ-06",
+      "location": "events",
+      "record_ids": [
+        "dv-000213",
+        "dv-000334"
+      ],
+      "test": "P02-TEST-06"
+    },
+    {
+      "description": "2 reassignments that drop the prior assignment interval instead of closing it.",
+      "entity": "assignments",
+      "expected_handling": "reassign-work is an extension command (501 NOT_IMPLEMENTED now); when it ships the prior interval must be closed with ended_at, never deleted.",
+      "id": "INJ-07",
+      "location": "events",
+      "record_ids": [
+        "asg-000514",
+        "asg-000795"
+      ],
+      "test": "P02-TEST-07"
+    },
+    {
+      "dates": [
+        "2026-02-14",
+        "2026-07-04"
+      ],
+      "description": "2 of the 6 holidays fall on a weekend (2026-02-14 Saturday, 2026-07-04 Saturday).",
+      "entity": "calendar_intervals",
+      "expected_handling": "a holiday on a weekend subtracts nothing from the working set.",
+      "id": "INJ-08",
+      "location": "entity_files",
+      "record_ids": [
+        "ci-0397",
+        "ci-0398"
+      ],
+      "test": "P02-TEST-08"
+    },
+    {
+      "case_ids": [
+        "case-000138",
+        "case-000541",
+        "case-000473"
+      ],
+      "description": "3 customer waits labelled as work: reason_code internal_processing / document_review / manual_check with pause_requested true.",
+      "entity": "waiting_intervals",
+      "expected_handling": "ingest rejects each case and its rows with PAUSE_REASON_NOT_CONFIGURED.",
+      "id": "INJ-09",
+      "location": "entity_files",
+      "reason_codes": [
+        "internal_processing",
+        "document_review",
+        "manual_check"
+      ],
+      "record_ids": [
+        "wi-00167",
+        "wi-00652",
+        "wi-00572"
+      ],
+      "test": "P02-TEST-09"
+    },
+    {
+      "case_ids": [
+        "case-000075",
+        "case-000685"
+      ],
+      "description": "2 self-approvals: the approve_account reviewer was also the last assignee of the step.",
+      "entity": "approvals",
+      "expected_handling": "ingest rejects each case and its rows with SELF_APPROVAL.",
+      "id": "INJ-10",
+      "location": "entity_files",
+      "record_ids": [
+        "apr-000374",
+        "apr-003384"
+      ],
+      "test": "P02-TEST-10"
+    },
+    {
+      "description": "a reopen of a completed case.",
+      "entity": "cases",
+      "expected_handling": "reopen-case is refused with 409 CASE_REOPEN_FORBIDDEN; a linked correction case is opened with create-case (corrects_case_id).",
+      "id": "INJ-11",
+      "location": "events",
+      "record_ids": [
+        "case-000001"
+      ],
+      "test": "P02-TEST-11"
+    },
+    {
+      "description": "a workflow migration whose step mapping drops an accepted document.",
+      "entity": "document_versions",
+      "expected_handling": "migrate-workflow is an extension command (501 NOT_IMPLEMENTED now); accepted documents must be carried by document_type, never dropped.",
+      "id": "INJ-12",
+      "location": "events",
+      "record_ids": [
+        "case-000086"
+      ],
+      "test": "P02-TEST-12"
+    }
+  ],
+  "seed": 20261026
+}

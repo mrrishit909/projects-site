@@ -1,0 +1,10 @@
+{"entity":"dependencies","dataset_version":"os-20261026-20261026","rows":[
+{"created_at":"2025-03-10T09:00:00Z","dependency_id":"dep-001","dependency_type":"mandatory","prerequisite_id":"sd-001","step_definition_id":"sd-002"},
+{"created_at":"2025-03-10T09:00:00Z","dependency_id":"dep-002","dependency_type":"mandatory","prerequisite_id":"sd-002","step_definition_id":"sd-003"},
+{"created_at":"2025-03-10T09:00:00Z","dependency_id":"dep-003","dependency_type":"mandatory","prerequisite_id":"sd-003","step_definition_id":"sd-004"},
+{"created_at":"2025-03-10T09:00:00Z","dependency_id":"dep-004","dependency_type":"mandatory","prerequisite_id":"sd-004","step_definition_id":"sd-005"},
+{"created_at":"2025-10-01T09:00:00Z","dependency_id":"dep-005","dependency_type":"mandatory","prerequisite_id":"sd-006","step_definition_id":"sd-008"},
+{"created_at":"2025-10-01T09:00:00Z","dependency_id":"dep-006","dependency_type":"mandatory","prerequisite_id":"sd-007","step_definition_id":"sd-008"},
+{"created_at":"2025-10-01T09:00:00Z","dependency_id":"dep-007","dependency_type":"mandatory","prerequisite_id":"sd-008","step_definition_id":"sd-009"},
+{"created_at":"2025-10-01T09:00:00Z","dependency_id":"dep-008","dependency_type":"mandatory","prerequisite_id":"sd-009","step_definition_id":"sd-010"}
+]}

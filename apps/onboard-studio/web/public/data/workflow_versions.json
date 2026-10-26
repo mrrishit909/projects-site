@@ -1,0 +1,4 @@
+{"entity":"workflow_versions","dataset_version":"os-20261026-20261026","rows":[
+{"definition_hash":"37c099f914696c680e4faf55fb703f641aabffa5601fbd06a14f0d7fc0644db6","published_at":"2025-03-10T09:00:00Z","template_id":"tpl-001","version_number":1,"workflow_version_id":"wfv-001"},
+{"definition_hash":"351e632ac573e61c465087389f05cf44b28dc7a7db598f3a72df9e39e0ae3420","published_at":"2025-10-01T09:00:00Z","template_id":"tpl-001","version_number":2,"workflow_version_id":"wfv-002"}
+]}

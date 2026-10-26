@@ -1,0 +1,4 @@
+{"entity":"workflow_requirements","dataset_version":"os-20261026-20261026","rows":[
+{"required_document_types":["business_registration","identity_proof"],"workflow_version_id":"wfv-001"},
+{"required_document_types":["address_proof","business_registration","identity_proof"],"workflow_version_id":"wfv-002"}
+]}

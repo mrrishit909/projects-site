@@ -1,0 +1,12 @@
+{"entity":"step_definitions","dataset_version":"os-20261026-20261026","rows":[
+{"required":true,"role_key":"ops","sequence":1,"step_definition_id":"sd-001","step_name":"collect_documents","workflow_version_id":"wfv-001"},
+{"required":true,"role_key":"ops","sequence":2,"step_definition_id":"sd-002","step_name":"verify_identity","workflow_version_id":"wfv-001"},
+{"required":true,"role_key":"compliance","sequence":3,"step_definition_id":"sd-003","step_name":"compliance_review","workflow_version_id":"wfv-001"},
+{"required":true,"role_key":"reviewer","sequence":4,"step_definition_id":"sd-004","step_name":"approve_account","workflow_version_id":"wfv-001"},
+{"required":true,"role_key":"ops","sequence":5,"step_definition_id":"sd-005","step_name":"activate_account","workflow_version_id":"wfv-001"},
+{"required":true,"role_key":"ops","sequence":1,"step_definition_id":"sd-006","step_name":"collect_documents","workflow_version_id":"wfv-002"},
+{"required":true,"role_key":"ops","sequence":2,"step_definition_id":"sd-007","step_name":"collect_address_proof","workflow_version_id":"wfv-002"},
+{"required":true,"role_key":"compliance","sequence":3,"step_definition_id":"sd-008","step_name":"compliance_review","workflow_version_id":"wfv-002"},
+{"required":true,"role_key":"reviewer","sequence":4,"step_definition_id":"sd-009","step_name":"approve_account","workflow_version_id":"wfv-002"},
+{"required":true,"role_key":"ops","sequence":5,"step_definition_id":"sd-010","step_name":"activate_account","workflow_version_id":"wfv-002"}
+]}

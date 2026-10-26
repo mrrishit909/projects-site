@@ -1,0 +1,269 @@
+{
+  "dataset_version": "os-20261026-20261026",
+  "events": [
+    {
+      "case_id": "case-000666",
+      "command": "approve-step",
+      "expected_handling": "the first decision is accepted (200)",
+      "expected_status": 200,
+      "headers": {
+        "X-Actor-Id": "rev-007",
+        "X-Actor-Role": "admin"
+      },
+      "injection": "INJ-02",
+      "input": {
+        "expected_version": 1,
+        "occurred_at": "2026-10-01T00:59:00Z",
+        "reason": "first decision",
+        "step_instance_id": "si-003328"
+      }
+    },
+    {
+      "case_id": "case-000666",
+      "command": "approve-step",
+      "expected_error_code": "DECISION_CONFLICT",
+      "expected_handling": "a second decision on the same step version is refused with 409 DECISION_CONFLICT; the first stands",
+      "headers": {
+        "X-Actor-Id": "rev-008",
+        "X-Actor-Role": "admin"
+      },
+      "injection": "INJ-02",
+      "input": {
+        "expected_version": 1,
+        "occurred_at": "2026-10-01T01:06:00Z",
+        "reason": "conflicting second decision",
+        "step_instance_id": "si-003328"
+      }
+    },
+    {
+      "case_id": "case-000407",
+      "command": "approve-step",
+      "expected_handling": "the first decision is accepted (200)",
+      "expected_status": 200,
+      "headers": {
+        "X-Actor-Id": "rev-004",
+        "X-Actor-Role": "reviewer"
+      },
+      "injection": "INJ-02",
+      "input": {
+        "expected_version": 1,
+        "occurred_at": "2026-10-01T00:59:00Z",
+        "reason": "first decision",
+        "step_instance_id": "si-002034"
+      }
+    },
+    {
+      "case_id": "case-000407",
+      "command": "approve-step",
+      "expected_error_code": "DECISION_CONFLICT",
+      "expected_handling": "a second decision on the same step version is refused with 409 DECISION_CONFLICT; the first stands",
+      "headers": {
+        "X-Actor-Id": "rev-006",
+        "X-Actor-Role": "reviewer"
+      },
+      "injection": "INJ-02",
+      "input": {
+        "expected_version": 1,
+        "occurred_at": "2026-10-01T01:06:00Z",
+        "reason": "conflicting second decision",
+        "step_instance_id": "si-002034"
+      }
+    },
+    {
+      "command": "publish-workflow-version",
+      "expected_error_code": "ALREADY_PUBLISHED",
+      "expected_handling": "409; a published workflow version is immutable and keeps its definition_hash",
+      "headers": {
+        "X-Actor-Id": "adm-001",
+        "X-Actor-Role": "admin"
+      },
+      "injection": "INJ-04",
+      "input": {
+        "occurred_at": "2026-10-01T01:59:00Z",
+        "workflow_version_id": "wfv-001"
+      }
+    },
+    {
+      "command": "sql",
+      "expected_error_code": "integrity_constraint_violation",
+      "expected_handling": "refused by the step_definitions_immutable trigger (published version)",
+      "injection": "INJ-04",
+      "statement": "UPDATE step_definitions SET step_name = 'collect_documents_v1_edited' WHERE step_definition_id = 'sd-001'"
+    },
+    {
+      "command": "publish-workflow-version",
+      "expected_error_code": "DEPENDENCY_CYCLE",
+      "expected_handling": "422; the version is not published and nothing is written",
+      "headers": {
+        "X-Actor-Id": "adm-001",
+        "X-Actor-Role": "admin"
+      },
+      "injection": "INJ-05",
+      "input": {
+        "dependencies": [
+          {
+            "dependency_id": "dep-901",
+            "dependency_type": "mandatory",
+            "prerequisite_id": "sd-901",
+            "step_definition_id": "sd-902"
+          },
+          {
+            "dependency_id": "dep-902",
+            "dependency_type": "mandatory",
+            "prerequisite_id": "sd-902",
+            "step_definition_id": "sd-903"
+          },
+          {
+            "dependency_id": "dep-903",
+            "dependency_type": "mandatory",
+            "prerequisite_id": "sd-903",
+            "step_definition_id": "sd-901"
+          }
+        ],
+        "occurred_at": "2026-10-01T02:59:00Z",
+        "required_document_types": [
+          "identity_proof"
+        ],
+        "sla_rule": {
+          "business_minutes": 480,
+          "calendar_id": "cal-001",
+          "pause_policy": [
+            "customer_info_requested",
+            "external_verification"
+          ],
+          "sla_rule_id": "sla-903"
+        },
+        "steps": [
+          {
+            "required": true,
+            "role_key": "ops",
+            "sequence": 1,
+            "step_definition_id": "sd-901",
+            "step_name": "collect_documents"
+          },
+          {
+            "required": true,
+            "role_key": "compliance",
+            "sequence": 2,
+            "step_definition_id": "sd-902",
+            "step_name": "compliance_review"
+          },
+          {
+            "required": true,
+            "role_key": "reviewer",
+            "sequence": 3,
+            "step_definition_id": "sd-903",
+            "step_name": "approve_account"
+          }
+        ],
+        "template_id": "tpl-001",
+        "version_number": 3,
+        "workflow_version_id": "wfv-003"
+      }
+    },
+    {
+      "command": "resubmit-document",
+      "expected_error_code": "NOT_IN_CHANGES_REQUESTED",
+      "expected_handling": "an accepted document version cannot be overwritten; a new version needs a prior rejection and the prior row stays intact",
+      "headers": {
+        "X-Actor-Id": "ops-001",
+        "X-Actor-Role": "ops"
+      },
+      "injection": "INJ-06",
+      "input": {
+        "case_id": "case-000086",
+        "document_type": "identity_proof",
+        "occurred_at": "2026-10-01T03:59:00Z"
+      }
+    },
+    {
+      "command": "resubmit-document",
+      "expected_error_code": "NOT_IN_CHANGES_REQUESTED",
+      "expected_handling": "an accepted document version cannot be overwritten; a new version needs a prior rejection and the prior row stays intact",
+      "headers": {
+        "X-Actor-Id": "ops-001",
+        "X-Actor-Role": "ops"
+      },
+      "injection": "INJ-06",
+      "input": {
+        "case_id": "case-000133",
+        "document_type": "identity_proof",
+        "occurred_at": "2026-10-01T03:59:00Z"
+      }
+    },
+    {
+      "command": "sql",
+      "expected_error_code": "integrity_constraint_violation",
+      "expected_handling": "refused by the document_versions_append_only trigger",
+      "injection": "INJ-06",
+      "statement": "UPDATE document_versions SET content_hash = 'sha256:' || repeat('0', 64) WHERE document_version_id = 'dv-000213'"
+    },
+    {
+      "command": "reassign-work",
+      "expected_error_code": "NOT_IMPLEMENTED",
+      "expected_handling": "501 in this milestone; once implemented the prior assignment gets ended_at and is never deleted, so waiting time is preserved",
+      "headers": {
+        "X-Actor-Id": "ops-001",
+        "X-Actor-Role": "ops"
+      },
+      "injection": "INJ-07",
+      "input": {
+        "assignee_id": "ops-016",
+        "drop_prior_interval": true,
+        "occurred_at": "2026-10-01T04:59:00Z",
+        "step_instance_id": "si-000430"
+      }
+    },
+    {
+      "command": "reassign-work",
+      "expected_error_code": "NOT_IMPLEMENTED",
+      "expected_handling": "501 in this milestone; once implemented the prior assignment gets ended_at and is never deleted, so waiting time is preserved",
+      "headers": {
+        "X-Actor-Id": "ops-001",
+        "X-Actor-Role": "ops"
+      },
+      "injection": "INJ-07",
+      "input": {
+        "assignee_id": "ops-016",
+        "drop_prior_interval": true,
+        "occurred_at": "2026-10-01T04:59:00Z",
+        "step_instance_id": "si-000662"
+      }
+    },
+    {
+      "command": "reopen-case",
+      "expected_error_code": "CASE_REOPEN_FORBIDDEN",
+      "expected_handling": "409; a completed case cannot be reopened, open a linked correction case",
+      "headers": {
+        "X-Actor-Id": "adm-001",
+        "X-Actor-Role": "admin"
+      },
+      "injection": "INJ-11",
+      "input": {
+        "case_id": "case-000001"
+      }
+    },
+    {
+      "command": "migrate-workflow",
+      "expected_error_code": "NOT_IMPLEMENTED",
+      "expected_handling": "501 in this milestone; once implemented accepted documents are carried by document_type and never dropped, unresolved steps are listed",
+      "headers": {
+        "X-Actor-Id": "adm-001",
+        "X-Actor-Role": "admin"
+      },
+      "injection": "INJ-12",
+      "input": {
+        "case_id": "case-000086",
+        "drop_document_types": [
+          "identity_proof"
+        ],
+        "from_workflow_version_id": "wfv-001",
+        "occurred_at": "2026-10-01T05:59:00Z",
+        "step_mapping": {
+          "sd-002": null
+        },
+        "to_workflow_version_id": "wfv-002"
+      }
+    }
+  ]
+}
