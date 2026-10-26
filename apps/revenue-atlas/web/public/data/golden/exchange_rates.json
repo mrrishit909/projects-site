@@ -1,0 +1,13 @@
+{
+ "entity": "exchange_rates",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "rate_id": "fx-001",
+   "currency": "USD",
+   "reporting_currency": "USD",
+   "rate_date": "2026-01-01",
+   "rate": "1.0"
+  }
+ ]
+}

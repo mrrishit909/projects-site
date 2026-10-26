@@ -1,0 +1,20 @@
+{
+ "entity": "shipment_lines",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "shipment_line_id": "sl-001",
+   "shipment_id": "shp-001",
+   "line_id": "line-001",
+   "shipped_quantity": 2,
+   "cost_version_id": "cv-001"
+  },
+  {
+   "shipment_line_id": "sl-002",
+   "shipment_id": "shp-001",
+   "line_id": "line-002",
+   "shipped_quantity": 1,
+   "cost_version_id": "cv-002"
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "entity": "customers",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "customer_id": "cust-001",
+   "customer_name": "Golden Customer",
+   "region_id": "reg-001",
+   "segment": "SMB",
+   "effective_from": "2025-01-01"
+  }
+ ]
+}

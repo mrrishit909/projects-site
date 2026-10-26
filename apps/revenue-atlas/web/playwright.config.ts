@@ -1,4 +1,11 @@
 import { defineConfig } from "@playwright/test";
+import { existsSync } from "node:fs";
+
+// Offline sandboxes cannot download the pinned Chromium build; use a preinstalled one when present
+// (override with PW_CHROMIUM). CI downloads the pinned browser and leaves executablePath unset.
+const LOCAL = ["/opt/pw-browsers/chromium-1243/chrome-linux64/chrome"];
+const fromEnv = (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env.PW_CHROMIUM;
+const executablePath = fromEnv ?? LOCAL.find((p) => existsSync(p));
 
 // The e2e suite serves the production build under the same nested base path used on
 // GitHub Pages, so route entry and reload are verified on the real prefix (master 21).
@@ -20,5 +27,5 @@ export default defineConfig({
     reuseExistingServer: false,
     timeout: 30_000,
   },
-  projects: [{ name: "chromium", use: { browserName: "chromium" } }],
+  projects: [{ name: "chromium", use: { browserName: "chromium", ...(executablePath ? { launchOptions: { executablePath } } : {}) } }],
 });

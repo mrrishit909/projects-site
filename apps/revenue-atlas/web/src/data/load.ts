@@ -10,7 +10,16 @@ export interface Snapshot {
 }
 export type LoadResult = { ok: true; snapshot: Snapshot } | { ok: false; error: string };
 
-export const dataUrl = (file: string): string => `${import.meta.env.BASE_URL}data/${file}`;
+/** "golden" when the page was opened with ?dataset=golden (the hand-derived fixture, for the display check); else "". */
+export function datasetId(): string {
+  try {
+    return new URLSearchParams(window.location.search).get("dataset") === "golden" ? "golden" : "";
+  } catch {
+    return "";
+  }
+}
+
+export const dataUrl = (file: string): string => `${import.meta.env.BASE_URL}data/${datasetId() ? "golden/" : ""}${file}`;
 
 async function getJson(file: string): Promise<unknown> {
   const res = await fetch(dataUrl(file), { headers: { Accept: "application/json" } });

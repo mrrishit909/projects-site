@@ -1,0 +1,20 @@
+{
+ "entity": "products",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "product_id": "prod-001",
+   "sku": "SKU-A",
+   "category_id": "cat-001",
+   "unit_of_measure": "each",
+   "active": true
+  },
+  {
+   "product_id": "prod-002",
+   "sku": "SKU-B",
+   "category_id": "cat-001",
+   "unit_of_measure": "each",
+   "active": true
+  }
+ ]
+}

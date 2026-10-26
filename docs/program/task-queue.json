@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T10:28:57Z",
+  "updated_at": "2026-10-26T10:50:19Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
@@ -83,7 +83,7 @@
       "id": "T-01-06",
       "project": "01-revenue-atlas",
       "title": "Static web demo (entry screens) + TS golden check + Playwright screenshots at 360/768/1280/1920",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-01-03"
       ],
@@ -127,7 +127,7 @@
       "id": "T-01-10",
       "project": "01-revenue-atlas",
       "title": "Publish site to unified-portfolio/labs/revenue-atlas and verify live from Actions",
-      "status": "pending",
+      "status": "in_progress",
       "prereqs": [
         "T-01-08"
       ],

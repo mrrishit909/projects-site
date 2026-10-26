@@ -1,0 +1,154 @@
+{
+  "generated_at": "2026-10-26T10:49:26.875Z",
+  "count": 21,
+  "screenshots": [
+    {
+      "file": "landing-360.png",
+      "route": "/",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360
+    },
+    {
+      "file": "overview-360.png",
+      "route": "/overview/",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360
+    },
+    {
+      "file": "bridge-360.png",
+      "route": "/bridge/",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360
+    },
+    {
+      "file": "evidence-360.png",
+      "route": "/evidence/",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360
+    },
+    {
+      "file": "case-study-360.png",
+      "route": "/case-study/",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360
+    },
+    {
+      "file": "landing-768.png",
+      "route": "/",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768
+    },
+    {
+      "file": "overview-768.png",
+      "route": "/overview/",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768
+    },
+    {
+      "file": "bridge-768.png",
+      "route": "/bridge/",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768
+    },
+    {
+      "file": "evidence-768.png",
+      "route": "/evidence/",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768
+    },
+    {
+      "file": "case-study-768.png",
+      "route": "/case-study/",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768
+    },
+    {
+      "file": "landing-1280.png",
+      "route": "/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280
+    },
+    {
+      "file": "overview-1280.png",
+      "route": "/overview/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280
+    },
+    {
+      "file": "bridge-1280.png",
+      "route": "/bridge/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280
+    },
+    {
+      "file": "evidence-1280.png",
+      "route": "/evidence/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280
+    },
+    {
+      "file": "case-study-1280.png",
+      "route": "/case-study/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280
+    },
+    {
+      "file": "landing-1920.png",
+      "route": "/",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920
+    },
+    {
+      "file": "overview-1920.png",
+      "route": "/overview/",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920
+    },
+    {
+      "file": "bridge-1920.png",
+      "route": "/bridge/",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920
+    },
+    {
+      "file": "evidence-1920.png",
+      "route": "/evidence/",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920
+    },
+    {
+      "file": "case-study-1920.png",
+      "route": "/case-study/",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920
+    },
+    {
+      "file": "bridge-zoom200.png",
+      "route": "/bridge/",
+      "width": 640,
+      "scrollWidth": 640,
+      "innerWidth": 640,
+      "note": "1280 CSS px at 200% zoom = 640 CSS px viewport, deviceScaleFactor 2"
+    }
+  ]
+}

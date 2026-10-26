@@ -1,0 +1,26 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "6b0f21f9407e50368edf5c7a62835aa4ff4daf274fee453fa1f069cdc414a424",
+  "dataset_version": "golden-v1",
+  "generated_at": "2026-10-26T00:00:00Z",
+  "generator": {
+    "name": "tests/fixtures/golden (hand-derived, no generator)",
+    "seed": 0,
+    "parameters": {}
+  },
+  "injection_manifest": "../injection-manifest.json",
+  "designed_relationships": [],
+  "fixture_id": "revenue-atlas-golden-v1",
+  "row_counts": {
+    "customers": 1,
+    "products": 2,
+    "orders": 1,
+    "order_lines": 2,
+    "discounts": 2,
+    "shipments": 1,
+    "shipment_lines": 2,
+    "returns": 1,
+    "cost_versions": 2,
+    "exchange_rates": 1
+  }
+}

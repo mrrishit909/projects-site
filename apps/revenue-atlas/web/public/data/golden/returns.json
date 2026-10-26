@@ -1,0 +1,13 @@
+{
+ "entity": "returns",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "return_id": "ret-001",
+   "shipment_line_id": "sl-001",
+   "returned_quantity": 1,
+   "credit_amount": "90.00",
+   "credit_date": "2026-03-20"
+  }
+ ]
+}

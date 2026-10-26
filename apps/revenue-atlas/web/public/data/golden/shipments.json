@@ -1,0 +1,13 @@
+{
+ "entity": "shipments",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "shipment_id": "shp-001",
+   "order_id": "ord-001",
+   "shipped_at": "2026-03-10T14:30:00Z",
+   "shipping_cost": "15.00",
+   "currency": "USD"
+  }
+ ]
+}

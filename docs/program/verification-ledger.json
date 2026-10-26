@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T10:37:36Z",
+  "updated_at": "2026-10-26T10:50:19Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -161,6 +161,40 @@
       "actual": "ALL OK (166 checks); runPipeline over 6,649 lines in ~0.3 s",
       "code_sha": "pending-commit",
       "ts": "2026-10-26T10:37:36Z"
+    },
+    {
+      "requirement": "P01-GOLD-06 displayed and exported value against the reference (browser)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "npm run e2e (journey.spec.ts golden test on /bridge/?dataset=golden)",
+      "exit_code": 0,
+      "expected": "gross 250.00, discounts 25.00, credits 90.00, net 135.00, COGS 80.00, GP 55.00, shipping 15.00, contribution 40.00",
+      "actual": "as expected in bridge steps and ledger totals",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T10:50:19Z"
+    },
+    {
+      "requirement": "P01-UI-01/02/08/10 R18/R19/R22 widths 360/768/1280/1920, 200% zoom, no overflow, no console errors, nested path reload",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "npm run e2e (screens.spec.ts, 21 screenshots)",
+      "exit_code": 0,
+      "expected": "scrollWidth == innerWidth on every shot; 0 console errors",
+      "actual": "24 passed; evidence/index.json shows equal widths for all 21",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T10:50:19Z",
+      "evidence": "apps/revenue-atlas/docs/evidence/web/ (subset) + CI artifact revenue-atlas-mode-b-<sha>"
+    },
+    {
+      "requirement": "P01-FLOW-09 export embeds filters and versions",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "npm run e2e (journey export step)",
+      "exit_code": 0,
+      "expected": "# header lines with contract_version, dataset_version, dataset_hash, filters, row count",
+      "actual": "asserted in test",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T10:50:19Z"
     }
   ]
 }

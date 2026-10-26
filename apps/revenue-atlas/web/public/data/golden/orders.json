@@ -1,0 +1,13 @@
+{
+ "entity": "orders",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "order_id": "ord-001",
+   "customer_id": "cust-001",
+   "order_date": "2026-03-08",
+   "currency": "USD",
+   "status": "shipped"
+  }
+ ]
+}

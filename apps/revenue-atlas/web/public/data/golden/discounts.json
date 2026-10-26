@@ -1,0 +1,20 @@
+{
+ "entity": "discounts",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "discount_id": "disc-001",
+   "line_id": "line-001",
+   "discount_amount": "20.00",
+   "reason_code": "VOLUME",
+   "approved_by": "mgr-001"
+  },
+  {
+   "discount_id": "disc-002",
+   "line_id": "line-002",
+   "discount_amount": "5.00",
+   "reason_code": "PROMO",
+   "approved_by": "mgr-001"
+  }
+ ]
+}

@@ -8,3 +8,4 @@ dist/
 .playwright/
 *.egg-info/
 .env
+apps/revenue-atlas/web/evidence/
