@@ -364,7 +364,7 @@
       "id": "T-05-02",
       "project": "05-invoicebridge",
       "title": "Golden fixture + reference check",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-05-01"
       ],
@@ -375,7 +375,7 @@
       "id": "T-05-03",
       "project": "05-invoicebridge",
       "title": "Domain + Postgres + FastAPI slice + CI",
-      "status": "pending",
+      "status": "in_progress",
       "prereqs": [
         "T-05-02"
       ],

@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T19:29:09Z",
+  "updated_at": "2026-10-26T19:36:24Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -86,7 +86,7 @@
     },
     "04-serviceflow": {
       "slug": "serviceflow",
-      "stage": "built, verified (reviewer findings fixed; CI green on 43de7f8), published (republished fec6758 with the artifacts commit; CI and live check pending), integrated, artifacts verified",
+      "stage": "built, verified, published and live-verified (run 40387041943 on the artifacts republish fec6758), integrated, artifacts verified; CI on 2a6578e green",
       "built": true,
       "verified": true,
       "published": true,
@@ -95,13 +95,13 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40375493599",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/serviceflow/",
       "blockers": [],
-      "next_task": "confirm CI on 2a6578e and live check; then project 05",
+      "next_task": "none open; deferred: C07/C10 (501), queue/compare/survey screens, shift_breaks loader in seed.py, test_artifacts in CI (needs LibreOffice)",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/serviceflow/",
       "verified_note": "Entry journey + reviewer disproof pass; all 18 findings fixed in T-04-07 with tests in Python, SQL and TypeScript"
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
-      "stage": "contracts v1 and tooling committed (75aa6bd); golden fixture A-034 running",
+      "stage": "gate-A passed (fixture verified, 412 checks, dc96dbe); backend A-035 running",
       "built": false,
       "verified": false,
       "published": false,
@@ -110,7 +110,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": "T-05-02 (A-034)"
+      "next_task": "T-05-03 (A-035)"
     },
     "06-productsignal": {
       "slug": "productsignal",
@@ -180,7 +180,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Confirm serviceflow-ci.yml on 2a6578e and live-check on the manifest commit. Then project 05 InvoiceBridge: fixture worker (PO 10 x $20, receipt 6, invoice 6 -> 120/132 with 10% tax; second invoice quantity-blocked; duplicate import leaves one obligation), then backend, generator, web, publish, integrate, review, artifacts.",
+    "next_concrete_task": "Project 05 InvoiceBridge: A-035 backend hand-back -> verify -> commit -> CI Mode A -> generator -> web -> publish labs/invoicebridge -> integrate -> reviewer -> fixes -> artifacts. Then project 06.",
     "acceptance": "see task-queue.json"
   }
 }

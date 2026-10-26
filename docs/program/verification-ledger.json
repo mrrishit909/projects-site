@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T19:28:15Z",
+  "updated_at": "2026-10-26T19:36:24Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -913,6 +913,39 @@
       "code_sha": "2a6578e",
       "evidence": "apps/serviceflow/docs/*.md; artifacts/CHECKSUMS.txt",
       "ts": "2026-10-26T19:28:15Z"
+    },
+    {
+      "requirement": "P04-REL after the artifacts republish: live manifest code_sha == 2a6578e..., 11 routes, links both ways; all four sites green",
+      "project": "04-serviceflow",
+      "status": "verified",
+      "command": "live-check.yml run 40387041943 (matrix)",
+      "exit_code": 0,
+      "actual": "all jobs success",
+      "code_sha": "2a6578e / portfolio fec6758",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40387041943",
+      "ts": "2026-10-26T19:36:24Z"
+    },
+    {
+      "requirement": "P04 CI on the artifacts commit (code unchanged except simulation.tsx wording)",
+      "project": "04-serviceflow",
+      "status": "verified",
+      "command": "serviceflow-ci.yml run 40386915863",
+      "exit_code": 0,
+      "actual": "success",
+      "code_sha": "2a6578e",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40386915863",
+      "ts": "2026-10-26T19:36:24Z"
+    },
+    {
+      "requirement": "P05-GOLD-01..11: PO 10 x 20.00, receipt 6, invoice 6 -> 120.00 before tax, 12.00 tax, 132.00 total, one obligation; second invoice QUANTITY_BLOCKED; duplicate merged; variants rejected/empty",
+      "project": "05-invoicebridge",
+      "status": "verified",
+      "command": "python3 -I apps/invoicebridge/tests/reference_check.py",
+      "exit_code": 0,
+      "actual": "ALL OK (412 checks)",
+      "code_sha": "dc96dbe",
+      "evidence": "apps/invoicebridge/tests/fixtures/golden/",
+      "ts": "2026-10-26T19:36:24Z"
     }
   ]
 }
