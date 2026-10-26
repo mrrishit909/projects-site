@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T18:12:13Z",
+  "updated_at": "2026-10-26T18:18:57Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -66,13 +66,13 @@
       "site_path": "labs/serviceflow/ on unified-portfolio",
       "release_commit_unified_portfolio": "e44d15d",
       "rollback_commit_unified_portfolio": "e3bd4a4",
-      "source_commit_business_data_lab": "43de7f8",
+      "source_commit_business_data_lab": "43de7f8ce1636c8b301bf70165ced156e3f3a9b3",
       "published_tree_sha256": "b5a33b9681eb0319a9c092bfc83e29b37d333c4bc836e784815eaab7a614f445",
       "files": 45,
       "dataset_version": "sf-20261026-20261026",
       "dataset_hash": "944ef91b3dc17c04c6bb601e0faac94f956d121877de2b9864988cf7c5d5cba4",
       "contract_version": "v1",
-      "publication_status": "republished after T-04-07 reviewer fixes (e44d15d); CI and live check pending",
+      "publication_status": "republished after T-04-07 reviewer fixes (e44d15d); live run 40375648141 failed only on the short-hash comparison in the manifest (coordinator error, corrected); re-run pending",
       "live_verification": {
         "run_url": null,
         "verified_at": null,
