@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T15:30:18Z",
+  "updated_at": "2026-10-26T16:01:00Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -86,7 +86,7 @@
     },
     "04-serviceflow": {
       "slug": "serviceflow",
-      "stage": "gate-A passed (fixture verified; spec hash ee79cf36...); domain/API slice in progress",
+      "stage": "gate-A passed; backend slice committed 99e219b (301 tests local); CI Mode A pending; generator A-029 running",
       "built": false,
       "verified": false,
       "published": false,
@@ -95,7 +95,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": "T-04-03 (A-028)"
+      "next_task": "T-04-04 (A-029 generator -> web -> publish -> integrate)"
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
@@ -178,7 +178,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 03 SupplyScope: A-020 golden fixture (position 60 -> order 72), then domain/API slice (T-03-03), generator, web, publish, integrate",
+    "next_concrete_task": "Project 04 ServiceFlow: verify serviceflow-ci.yml Mode A on 99e219b; A-029 generator hand-back -> web worker -> publish labs/serviceflow -> integrate. Project 03: A-026 fix hand-back -> rerun -> republish.",
     "acceptance": "see task-queue.json"
   }
 }
