@@ -1,3 +1,7 @@
+> **Read the corrected bootstrap first:** [BUSINESS-DATA-LAB-BOOTSTRAP.md](../../BUSINESS-DATA-LAB-BOOTSTRAP.md).
+> Repository: `mrrishit909/projects-site`; branch: `claude-business-data-directive-2026-10-26`; directory: `build-directives/business-data-lab/`.
+> The bootstrap takes precedence for source discovery, allowed remote compute and Fable supervision. Original combined/ZIP copies are the baseline specifications and must also be read with that correction.
+
 # Ten-project Claude Code build pack
 
 This package merges the original ten project briefs with the accuracy audit and the user's updated remote-execution, multi-model, autonomous-build and website requirements.
