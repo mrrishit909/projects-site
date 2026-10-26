@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:15:55Z",
+  "updated_at": "2026-10-26T11:30:43Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -12,14 +12,14 @@
       "files": 38,
       "dataset_version": "ra-20261026-20261026",
       "dataset_hash": "40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444",
-      "publication_status": "republished; live verification of this release pending",
+      "publication_status": "published and verified live from a GitHub-hosted runner (release 92b9c66, contract v1.1)",
       "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40310810960",
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40313778038",
         "http": "200 for /, overview/, bridge/, evidence/, case-study/, data/manifest.json, routes.json",
-        "manifest_dataset_hash_served": "40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444",
         "browser": "overview and bridge screenshots at 360 and 1280, 0 console errors",
-        "artifact": "live-revenue-atlas-40310810960 (id 12643684666, sha256 de35d2ec..., expires 2027-01-24)",
-        "verified_at": "2026-10-26T10:53:16Z"
+        "portfolio_link": "both directions verified (job 121541147043)",
+        "artifact": "live-revenue-atlas-40313778038 (id 12646761607, sha256 dffafdf0...)",
+        "verified_at": "2026-10-26T11:29:53Z"
       },
       "previous_release_commit": "cdae3f271d81df8e42e98eefb2cfdd4ca5fc1fb1",
       "contract_version": "v1.1"

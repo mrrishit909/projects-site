@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T11:25:31Z",
+  "updated_at": "2026-10-26T11:30:43Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -41,7 +41,7 @@
   "projects": {
     "01-revenue-atlas": {
       "slug": "revenue-atlas",
-      "stage": "published, live-verified, integrated; CI fully green on hosted runner; artifacts (A-010) and reviewer fixes (T-01-13) pending",
+      "stage": "built, verified (provisional: reviewer findings R-01..R-04 open), published (live-verified), integrated (case study live, links verified); artifacts A-010 running; fixes T-01-13 queued",
       "built": true,
       "verified": true,
       "published": true,

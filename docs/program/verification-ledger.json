@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:25:31Z",
+  "updated_at": "2026-10-26T11:30:43Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -346,6 +346,18 @@
       "code_sha": "fdd0789",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40314532665",
       "ts": "2026-10-26T11:25:31Z"
+    },
+    {
+      "requirement": "P01-REL-09/17/18 live verification of the republished site (contract v1.1) and the portfolio link, both directions",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "live-check.yml run 40313778038 (jobs live + portfolio-link)",
+      "exit_code": 0,
+      "expected": "200 on 7 URLs; screenshots; 0 console errors; links both ways",
+      "actual": "success",
+      "code_sha": "a3ec7d2 (site built from a9d7d21)",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40313778038/artifacts/12646761607",
+      "ts": "2026-10-26T11:30:43Z"
     }
   ]
 }
