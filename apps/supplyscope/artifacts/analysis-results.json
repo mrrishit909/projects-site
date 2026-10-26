@@ -1,0 +1,3405 @@
+{
+ "01_stock_position_month_end_by_location": [
+  {
+   "month": "2025-04",
+   "location_id": "loc-01",
+   "on_hand": 378,
+   "on_order": 420,
+   "backorders": 0,
+   "position": 798,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "41.0",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-04",
+   "location_id": "loc-02",
+   "on_hand": 228,
+   "on_order": 314,
+   "backorders": 0,
+   "position": 542,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "96.6",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-04",
+   "location_id": "loc-03",
+   "on_hand": 214,
+   "on_order": 140,
+   "backorders": 0,
+   "position": 354,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "38.5",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-05",
+   "location_id": "loc-01",
+   "on_hand": 426,
+   "on_order": 340,
+   "backorders": 0,
+   "position": 766,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "39.4",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-05",
+   "location_id": "loc-02",
+   "on_hand": 173,
+   "on_order": 348,
+   "backorders": 0,
+   "position": 521,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "92.9",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-05",
+   "location_id": "loc-03",
+   "on_hand": 212,
+   "on_order": 120,
+   "backorders": 0,
+   "position": 332,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "36.1",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-06",
+   "location_id": "loc-01",
+   "on_hand": 347,
+   "on_order": 498,
+   "backorders": 0,
+   "position": 845,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "43.5",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-06",
+   "location_id": "loc-02",
+   "on_hand": 200,
+   "on_order": 342,
+   "backorders": 0,
+   "position": 542,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "96.6",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-06",
+   "location_id": "loc-03",
+   "on_hand": 233,
+   "on_order": 108,
+   "backorders": 0,
+   "position": 341,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "37.1",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-07",
+   "location_id": "loc-01",
+   "on_hand": 484,
+   "on_order": 288,
+   "backorders": 0,
+   "position": 772,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "39.7",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-07",
+   "location_id": "loc-02",
+   "on_hand": 228,
+   "on_order": 296,
+   "backorders": 0,
+   "position": 524,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "93.4",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-07",
+   "location_id": "loc-03",
+   "on_hand": 135,
+   "on_order": 232,
+   "backorders": 1,
+   "position": 366,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "39.9",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-08",
+   "location_id": "loc-01",
+   "on_hand": 409,
+   "on_order": 354,
+   "backorders": 0,
+   "position": 763,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "39.2",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-08",
+   "location_id": "loc-02",
+   "on_hand": 202,
+   "on_order": 350,
+   "backorders": 0,
+   "position": 552,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "98.4",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-08",
+   "location_id": "loc-03",
+   "on_hand": 194,
+   "on_order": 180,
+   "backorders": 0,
+   "position": 374,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "40.7",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-09",
+   "location_id": "loc-01",
+   "on_hand": 426,
+   "on_order": 384,
+   "backorders": 0,
+   "position": 810,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "41.7",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-09",
+   "location_id": "loc-02",
+   "on_hand": 223,
+   "on_order": 320,
+   "backorders": 0,
+   "position": 543,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "96.8",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-09",
+   "location_id": "loc-03",
+   "on_hand": 277,
+   "on_order": 150,
+   "backorders": 0,
+   "position": 427,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "46.4",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-10",
+   "location_id": "loc-01",
+   "on_hand": 409,
+   "on_order": 436,
+   "backorders": 0,
+   "position": 845,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "43.5",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-10",
+   "location_id": "loc-02",
+   "on_hand": 188,
+   "on_order": 360,
+   "backorders": 0,
+   "position": 548,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "97.7",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-10",
+   "location_id": "loc-03",
+   "on_hand": 220,
+   "on_order": 170,
+   "backorders": 0,
+   "position": 390,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "42.4",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-11",
+   "location_id": "loc-01",
+   "on_hand": 467,
+   "on_order": 320,
+   "backorders": 0,
+   "position": 787,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "40.5",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-11",
+   "location_id": "loc-02",
+   "on_hand": 201,
+   "on_order": 340,
+   "backorders": 0,
+   "position": 541,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "96.4",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-11",
+   "location_id": "loc-03",
+   "on_hand": 190,
+   "on_order": 192,
+   "backorders": 0,
+   "position": 382,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "41.5",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-12",
+   "location_id": "loc-01",
+   "on_hand": 437,
+   "on_order": 288,
+   "backorders": 0,
+   "position": 725,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "37.3",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-12",
+   "location_id": "loc-02",
+   "on_hand": 208,
+   "on_order": 346,
+   "backorders": 0,
+   "position": 554,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "98.8",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2025-12",
+   "location_id": "loc-03",
+   "on_hand": 199,
+   "on_order": 120,
+   "backorders": 9,
+   "position": 310,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "34.7",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-01",
+   "location_id": "loc-01",
+   "on_hand": 410,
+   "on_order": 384,
+   "backorders": 0,
+   "position": 794,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "40.8",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-01",
+   "location_id": "loc-02",
+   "on_hand": 280,
+   "on_order": 258,
+   "backorders": 0,
+   "position": 538,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "95.9",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-01",
+   "location_id": "loc-03",
+   "on_hand": 216,
+   "on_order": 132,
+   "backorders": 0,
+   "position": 348,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "37.8",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-02",
+   "location_id": "loc-01",
+   "on_hand": 489,
+   "on_order": 304,
+   "backorders": 0,
+   "position": 793,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "40.8",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-02",
+   "location_id": "loc-02",
+   "on_hand": 216,
+   "on_order": 342,
+   "backorders": 0,
+   "position": 558,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "99.5",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-02",
+   "location_id": "loc-03",
+   "on_hand": 279,
+   "on_order": 36,
+   "backorders": 0,
+   "position": 315,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "34.2",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-03",
+   "location_id": "loc-01",
+   "on_hand": 281,
+   "on_order": 586,
+   "backorders": 0,
+   "position": 867,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "44.6",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-03",
+   "location_id": "loc-02",
+   "on_hand": 143,
+   "on_order": 410,
+   "backorders": 0,
+   "position": 553,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "98.6",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-03",
+   "location_id": "loc-03",
+   "on_hand": 236,
+   "on_order": 162,
+   "backorders": 0,
+   "position": 398,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "43.3",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-04",
+   "location_id": "loc-01",
+   "on_hand": 299,
+   "on_order": 652,
+   "backorders": 0,
+   "position": 951,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "48.9",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-04",
+   "location_id": "loc-02",
+   "on_hand": 184,
+   "on_order": 372,
+   "backorders": 0,
+   "position": 556,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "99.1",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-04",
+   "location_id": "loc-03",
+   "on_hand": 215,
+   "on_order": 152,
+   "backorders": 0,
+   "position": 367,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "39.9",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-05",
+   "location_id": "loc-01",
+   "on_hand": 271,
+   "on_order": 530,
+   "backorders": 0,
+   "position": 801,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "41.2",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-05",
+   "location_id": "loc-02",
+   "on_hand": 142,
+   "on_order": 408,
+   "backorders": 0,
+   "position": 550,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "98.0",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-05",
+   "location_id": "loc-03",
+   "on_hand": 236,
+   "on_order": 228,
+   "backorders": 0,
+   "position": 464,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "50.4",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-06",
+   "location_id": "loc-01",
+   "on_hand": 476,
+   "on_order": 360,
+   "backorders": 0,
+   "position": 836,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "43.0",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-06",
+   "location_id": "loc-02",
+   "on_hand": 259,
+   "on_order": 274,
+   "backorders": 0,
+   "position": 533,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "95.0",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-06",
+   "location_id": "loc-03",
+   "on_hand": 292,
+   "on_order": 156,
+   "backorders": 0,
+   "position": 448,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "48.7",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-07",
+   "location_id": "loc-01",
+   "on_hand": 318,
+   "on_order": 570,
+   "backorders": 0,
+   "position": 888,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "45.7",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-07",
+   "location_id": "loc-02",
+   "on_hand": 229,
+   "on_order": 300,
+   "backorders": 0,
+   "position": 529,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "94.3",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-07",
+   "location_id": "loc-03",
+   "on_hand": 224,
+   "on_order": 236,
+   "backorders": 0,
+   "position": 460,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "50.0",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-08",
+   "location_id": "loc-01",
+   "on_hand": 563,
+   "on_order": 262,
+   "backorders": 0,
+   "position": 825,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "42.4",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-08",
+   "location_id": "loc-02",
+   "on_hand": 228,
+   "on_order": 304,
+   "backorders": 0,
+   "position": 532,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "94.8",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-08",
+   "location_id": "loc-03",
+   "on_hand": 244,
+   "on_order": 216,
+   "backorders": 0,
+   "position": 460,
+   "on_order_confirmed_only": 0,
+   "pct_of_capacity": "50.0",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-09",
+   "location_id": "loc-01",
+   "on_hand": 504,
+   "on_order": 284,
+   "backorders": 0,
+   "position": 788,
+   "on_order_confirmed_only": 248,
+   "pct_of_capacity": "40.5",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-09",
+   "location_id": "loc-02",
+   "on_hand": 246,
+   "on_order": 336,
+   "backorders": 0,
+   "position": 582,
+   "on_order_confirmed_only": 336,
+   "pct_of_capacity": "103.7",
+   "negative_pairs": 0
+  },
+  {
+   "month": "2026-09",
+   "location_id": "loc-03",
+   "on_hand": 270,
+   "on_order": 60,
+   "backorders": 0,
+   "position": 330,
+   "on_order_confirmed_only": 24,
+   "pct_of_capacity": "35.9",
+   "negative_pairs": 0
+  }
+ ],
+ "02_draft_orders_arithmetic": [
+  {
+   "product_id": "prod-002",
+   "location_id": "loc-02",
+   "abc_class": "A",
+   "supplier_id": "sup-02",
+   "on_hand": 70,
+   "on_order": 48,
+   "backorders": 0,
+   "position": 118,
+   "reorder_point": 128,
+   "target_position": 252,
+   "raw_order": 134,
+   "moq": 24,
+   "after_moq": 134,
+   "pack_size": 12,
+   "order_qty": 144,
+   "unit_cost": "41.74",
+   "order_value": "6010.56"
+  },
+  {
+   "product_id": "prod-005",
+   "location_id": "loc-02",
+   "abc_class": "A",
+   "supplier_id": "sup-01",
+   "on_hand": 0,
+   "on_order": 48,
+   "backorders": 0,
+   "position": 48,
+   "reorder_point": 51,
+   "target_position": 144,
+   "raw_order": 96,
+   "moq": 24,
+   "after_moq": 96,
+   "pack_size": 12,
+   "order_qty": 96,
+   "unit_cost": "53.17",
+   "order_value": "5104.32"
+  },
+  {
+   "product_id": "TOTAL (2 of 60 triggered)",
+   "location_id": null,
+   "abc_class": null,
+   "supplier_id": null,
+   "on_hand": 1020,
+   "on_order": 608,
+   "backorders": 0,
+   "position": 1628,
+   "reorder_point": 1198,
+   "target_position": 2336,
+   "raw_order": 230,
+   "moq": null,
+   "after_moq": 230,
+   "pack_size": null,
+   "order_qty": 240,
+   "unit_cost": null,
+   "order_value": "11114.88"
+  }
+ ],
+ "03_fill_rate_stockout_by_location_abc": [
+  {
+   "location_id": "loc-01",
+   "abc_class": "A",
+   "pairs": 3,
+   "fulfilled_units": 10983,
+   "unmet_units": 425,
+   "requested_units": 11408,
+   "fill_rate": "0.962745",
+   "stockout_pair_days": 42,
+   "stockout_pair_day_share": "0.025547"
+  },
+  {
+   "location_id": "loc-01",
+   "abc_class": "B",
+   "pairs": 10,
+   "fulfilled_units": 2353,
+   "unmet_units": 69,
+   "requested_units": 2422,
+   "fill_rate": "0.971511",
+   "stockout_pair_days": 54,
+   "stockout_pair_day_share": "0.009854"
+  },
+  {
+   "location_id": "loc-01",
+   "abc_class": "C",
+   "pairs": 16,
+   "fulfilled_units": 1402,
+   "unmet_units": 46,
+   "requested_units": 1448,
+   "fill_rate": "0.968232",
+   "stockout_pair_days": 32,
+   "stockout_pair_day_share": "0.003650"
+  },
+  {
+   "location_id": "loc-01",
+   "abc_class": "ALL",
+   "pairs": 29,
+   "fulfilled_units": 14738,
+   "unmet_units": 540,
+   "requested_units": 15278,
+   "fill_rate": "0.964655",
+   "stockout_pair_days": 128,
+   "stockout_pair_day_share": "0.008054"
+  },
+  {
+   "location_id": "loc-02",
+   "abc_class": "A",
+   "pairs": 3,
+   "fulfilled_units": 12087,
+   "unmet_units": 1682,
+   "requested_units": 13769,
+   "fill_rate": "0.877842",
+   "stockout_pair_days": 205,
+   "stockout_pair_day_share": "0.124696"
+  },
+  {
+   "location_id": "loc-02",
+   "abc_class": "B",
+   "pairs": 3,
+   "fulfilled_units": 679,
+   "unmet_units": 18,
+   "requested_units": 697,
+   "fill_rate": "0.974175",
+   "stockout_pair_days": 15,
+   "stockout_pair_day_share": "0.009124"
+  },
+  {
+   "location_id": "loc-02",
+   "abc_class": "C",
+   "pairs": 11,
+   "fulfilled_units": 862,
+   "unmet_units": 14,
+   "requested_units": 876,
+   "fill_rate": "0.984018",
+   "stockout_pair_days": 13,
+   "stockout_pair_day_share": "0.002157"
+  },
+  {
+   "location_id": "loc-02",
+   "abc_class": "ALL",
+   "pairs": 17,
+   "fulfilled_units": 13628,
+   "unmet_units": 1714,
+   "requested_units": 15342,
+   "fill_rate": "0.888281",
+   "stockout_pair_days": 233,
+   "stockout_pair_day_share": "0.025011"
+  },
+  {
+   "location_id": "loc-03",
+   "abc_class": "A",
+   "pairs": 2,
+   "fulfilled_units": 6120,
+   "unmet_units": 316,
+   "requested_units": 6436,
+   "fill_rate": "0.950901",
+   "stockout_pair_days": 47,
+   "stockout_pair_day_share": "0.042883"
+  },
+  {
+   "location_id": "loc-03",
+   "abc_class": "B",
+   "pairs": 3,
+   "fulfilled_units": 771,
+   "unmet_units": 28,
+   "requested_units": 799,
+   "fill_rate": "0.964956",
+   "stockout_pair_days": 13,
+   "stockout_pair_day_share": "0.007908"
+  },
+  {
+   "location_id": "loc-03",
+   "abc_class": "C",
+   "pairs": 9,
+   "fulfilled_units": 819,
+   "unmet_units": 14,
+   "requested_units": 833,
+   "fill_rate": "0.983193",
+   "stockout_pair_days": 10,
+   "stockout_pair_day_share": "0.002028"
+  },
+  {
+   "location_id": "loc-03",
+   "abc_class": "ALL",
+   "pairs": 14,
+   "fulfilled_units": 7710,
+   "unmet_units": 358,
+   "requested_units": 8068,
+   "fill_rate": "0.955627",
+   "stockout_pair_days": 70,
+   "stockout_pair_day_share": "0.009124"
+  },
+  {
+   "location_id": "ALL",
+   "abc_class": "ALL",
+   "pairs": 60,
+   "fulfilled_units": 36076,
+   "unmet_units": 2612,
+   "requested_units": 38688,
+   "fill_rate": "0.932486",
+   "stockout_pair_days": 431,
+   "stockout_pair_day_share": "0.013108"
+  }
+ ],
+ "04_supplier_on_time_by_month": [
+  {
+   "supplier_id": "sup-01",
+   "month": "2025-04",
+   "eligible_receipts": 23,
+   "on_time_receipts": 20,
+   "on_time_rate": "0.869565",
+   "cum_eligible": 23,
+   "cum_on_time_rate": "0.869565",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2025-05",
+   "eligible_receipts": 19,
+   "on_time_receipts": 14,
+   "on_time_rate": "0.736842",
+   "cum_eligible": 42,
+   "cum_on_time_rate": "0.809524",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2025-06",
+   "eligible_receipts": 21,
+   "on_time_receipts": 20,
+   "on_time_rate": "0.952381",
+   "cum_eligible": 63,
+   "cum_on_time_rate": "0.857143",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2025-07",
+   "eligible_receipts": 20,
+   "on_time_receipts": 14,
+   "on_time_rate": "0.700000",
+   "cum_eligible": 83,
+   "cum_on_time_rate": "0.819277",
+   "overdue_open_lines": 1
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2025-08",
+   "eligible_receipts": 20,
+   "on_time_receipts": 15,
+   "on_time_rate": "0.750000",
+   "cum_eligible": 103,
+   "cum_on_time_rate": "0.805825",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2025-09",
+   "eligible_receipts": 19,
+   "on_time_receipts": 17,
+   "on_time_rate": "0.894737",
+   "cum_eligible": 122,
+   "cum_on_time_rate": "0.819672",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2025-10",
+   "eligible_receipts": 15,
+   "on_time_receipts": 13,
+   "on_time_rate": "0.866667",
+   "cum_eligible": 137,
+   "cum_on_time_rate": "0.824818",
+   "overdue_open_lines": 1
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2025-11",
+   "eligible_receipts": 20,
+   "on_time_receipts": 15,
+   "on_time_rate": "0.750000",
+   "cum_eligible": 157,
+   "cum_on_time_rate": "0.815287",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2025-12",
+   "eligible_receipts": 19,
+   "on_time_receipts": 16,
+   "on_time_rate": "0.842105",
+   "cum_eligible": 176,
+   "cum_on_time_rate": "0.818182",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2026-01",
+   "eligible_receipts": 18,
+   "on_time_receipts": 14,
+   "on_time_rate": "0.777778",
+   "cum_eligible": 194,
+   "cum_on_time_rate": "0.814433",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2026-02",
+   "eligible_receipts": 20,
+   "on_time_receipts": 16,
+   "on_time_rate": "0.800000",
+   "cum_eligible": 214,
+   "cum_on_time_rate": "0.813084",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2026-03",
+   "eligible_receipts": 13,
+   "on_time_receipts": 12,
+   "on_time_rate": "0.923077",
+   "cum_eligible": 227,
+   "cum_on_time_rate": "0.819383",
+   "overdue_open_lines": 1
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2026-04",
+   "eligible_receipts": 21,
+   "on_time_receipts": 20,
+   "on_time_rate": "0.952381",
+   "cum_eligible": 248,
+   "cum_on_time_rate": "0.830645",
+   "overdue_open_lines": 1
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2026-05",
+   "eligible_receipts": 14,
+   "on_time_receipts": 11,
+   "on_time_rate": "0.785714",
+   "cum_eligible": 262,
+   "cum_on_time_rate": "0.828244",
+   "overdue_open_lines": 6
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2026-06",
+   "eligible_receipts": 23,
+   "on_time_receipts": 14,
+   "on_time_rate": "0.608696",
+   "cum_eligible": 285,
+   "cum_on_time_rate": "0.810526",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2026-07",
+   "eligible_receipts": 18,
+   "on_time_receipts": 18,
+   "on_time_rate": "1.000000",
+   "cum_eligible": 303,
+   "cum_on_time_rate": "0.821782",
+   "overdue_open_lines": 2
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2026-08",
+   "eligible_receipts": 18,
+   "on_time_receipts": 15,
+   "on_time_rate": "0.833333",
+   "cum_eligible": 321,
+   "cum_on_time_rate": "0.822430",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "2026-09",
+   "eligible_receipts": 19,
+   "on_time_receipts": 18,
+   "on_time_rate": "0.947368",
+   "cum_eligible": 340,
+   "cum_on_time_rate": "0.829412",
+   "overdue_open_lines": 3
+  },
+  {
+   "supplier_id": "sup-01",
+   "month": "ALL",
+   "eligible_receipts": 340,
+   "on_time_receipts": 282,
+   "on_time_rate": "0.829412",
+   "cum_eligible": 340,
+   "cum_on_time_rate": "0.829412",
+   "overdue_open_lines": null
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2025-04",
+   "eligible_receipts": 15,
+   "on_time_receipts": 12,
+   "on_time_rate": "0.800000",
+   "cum_eligible": 15,
+   "cum_on_time_rate": "0.800000",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2025-05",
+   "eligible_receipts": 17,
+   "on_time_receipts": 16,
+   "on_time_rate": "0.941176",
+   "cum_eligible": 32,
+   "cum_on_time_rate": "0.875000",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2025-06",
+   "eligible_receipts": 22,
+   "on_time_receipts": 16,
+   "on_time_rate": "0.727273",
+   "cum_eligible": 54,
+   "cum_on_time_rate": "0.814815",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2025-07",
+   "eligible_receipts": 20,
+   "on_time_receipts": 15,
+   "on_time_rate": "0.750000",
+   "cum_eligible": 74,
+   "cum_on_time_rate": "0.797297",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2025-08",
+   "eligible_receipts": 22,
+   "on_time_receipts": 20,
+   "on_time_rate": "0.909091",
+   "cum_eligible": 96,
+   "cum_on_time_rate": "0.822917",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2025-09",
+   "eligible_receipts": 22,
+   "on_time_receipts": 20,
+   "on_time_rate": "0.909091",
+   "cum_eligible": 118,
+   "cum_on_time_rate": "0.838983",
+   "overdue_open_lines": 1
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2025-10",
+   "eligible_receipts": 20,
+   "on_time_receipts": 17,
+   "on_time_rate": "0.850000",
+   "cum_eligible": 138,
+   "cum_on_time_rate": "0.840580",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2025-11",
+   "eligible_receipts": 18,
+   "on_time_receipts": 16,
+   "on_time_rate": "0.888889",
+   "cum_eligible": 156,
+   "cum_on_time_rate": "0.846154",
+   "overdue_open_lines": 1
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2025-12",
+   "eligible_receipts": 17,
+   "on_time_receipts": 14,
+   "on_time_rate": "0.823529",
+   "cum_eligible": 173,
+   "cum_on_time_rate": "0.843931",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2026-01",
+   "eligible_receipts": 16,
+   "on_time_receipts": 16,
+   "on_time_rate": "1.000000",
+   "cum_eligible": 189,
+   "cum_on_time_rate": "0.857143",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2026-02",
+   "eligible_receipts": 16,
+   "on_time_receipts": 14,
+   "on_time_rate": "0.875000",
+   "cum_eligible": 205,
+   "cum_on_time_rate": "0.858537",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2026-03",
+   "eligible_receipts": 18,
+   "on_time_receipts": 18,
+   "on_time_rate": "1.000000",
+   "cum_eligible": 223,
+   "cum_on_time_rate": "0.869955",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2026-04",
+   "eligible_receipts": 20,
+   "on_time_receipts": 15,
+   "on_time_rate": "0.750000",
+   "cum_eligible": 243,
+   "cum_on_time_rate": "0.860082",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2026-05",
+   "eligible_receipts": 19,
+   "on_time_receipts": 17,
+   "on_time_rate": "0.894737",
+   "cum_eligible": 262,
+   "cum_on_time_rate": "0.862595",
+   "overdue_open_lines": 1
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2026-06",
+   "eligible_receipts": 24,
+   "on_time_receipts": 21,
+   "on_time_rate": "0.875000",
+   "cum_eligible": 286,
+   "cum_on_time_rate": "0.863636",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2026-07",
+   "eligible_receipts": 20,
+   "on_time_receipts": 17,
+   "on_time_rate": "0.850000",
+   "cum_eligible": 306,
+   "cum_on_time_rate": "0.862745",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2026-08",
+   "eligible_receipts": 22,
+   "on_time_receipts": 19,
+   "on_time_rate": "0.863636",
+   "cum_eligible": 328,
+   "cum_on_time_rate": "0.862805",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "2026-09",
+   "eligible_receipts": 20,
+   "on_time_receipts": 18,
+   "on_time_rate": "0.900000",
+   "cum_eligible": 348,
+   "cum_on_time_rate": "0.864943",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-02",
+   "month": "ALL",
+   "eligible_receipts": 348,
+   "on_time_receipts": 301,
+   "on_time_rate": "0.864943",
+   "cum_eligible": 348,
+   "cum_on_time_rate": "0.864943",
+   "overdue_open_lines": null
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2025-04",
+   "eligible_receipts": 14,
+   "on_time_receipts": 11,
+   "on_time_rate": "0.785714",
+   "cum_eligible": 14,
+   "cum_on_time_rate": "0.785714",
+   "overdue_open_lines": 1
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2025-05",
+   "eligible_receipts": 18,
+   "on_time_receipts": 12,
+   "on_time_rate": "0.666667",
+   "cum_eligible": 32,
+   "cum_on_time_rate": "0.718750",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2025-06",
+   "eligible_receipts": 15,
+   "on_time_receipts": 13,
+   "on_time_rate": "0.866667",
+   "cum_eligible": 47,
+   "cum_on_time_rate": "0.765957",
+   "overdue_open_lines": 2
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2025-07",
+   "eligible_receipts": 15,
+   "on_time_receipts": 10,
+   "on_time_rate": "0.666667",
+   "cum_eligible": 62,
+   "cum_on_time_rate": "0.741935",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2025-08",
+   "eligible_receipts": 15,
+   "on_time_receipts": 13,
+   "on_time_rate": "0.866667",
+   "cum_eligible": 77,
+   "cum_on_time_rate": "0.766234",
+   "overdue_open_lines": 2
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2025-09",
+   "eligible_receipts": 17,
+   "on_time_receipts": 8,
+   "on_time_rate": "0.470588",
+   "cum_eligible": 94,
+   "cum_on_time_rate": "0.712766",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2025-10",
+   "eligible_receipts": 11,
+   "on_time_receipts": 8,
+   "on_time_rate": "0.727273",
+   "cum_eligible": 105,
+   "cum_on_time_rate": "0.714286",
+   "overdue_open_lines": 1
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2025-11",
+   "eligible_receipts": 14,
+   "on_time_receipts": 11,
+   "on_time_rate": "0.785714",
+   "cum_eligible": 119,
+   "cum_on_time_rate": "0.722689",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2025-12",
+   "eligible_receipts": 10,
+   "on_time_receipts": 9,
+   "on_time_rate": "0.900000",
+   "cum_eligible": 129,
+   "cum_on_time_rate": "0.736434",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2026-01",
+   "eligible_receipts": 14,
+   "on_time_receipts": 11,
+   "on_time_rate": "0.785714",
+   "cum_eligible": 143,
+   "cum_on_time_rate": "0.741259",
+   "overdue_open_lines": 1
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2026-02",
+   "eligible_receipts": 13,
+   "on_time_receipts": 7,
+   "on_time_rate": "0.538462",
+   "cum_eligible": 156,
+   "cum_on_time_rate": "0.724359",
+   "overdue_open_lines": 2
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2026-03",
+   "eligible_receipts": 13,
+   "on_time_receipts": 6,
+   "on_time_rate": "0.461538",
+   "cum_eligible": 169,
+   "cum_on_time_rate": "0.704142",
+   "overdue_open_lines": 2
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2026-04",
+   "eligible_receipts": 13,
+   "on_time_receipts": 6,
+   "on_time_rate": "0.461538",
+   "cum_eligible": 182,
+   "cum_on_time_rate": "0.686813",
+   "overdue_open_lines": 3
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2026-05",
+   "eligible_receipts": 16,
+   "on_time_receipts": 10,
+   "on_time_rate": "0.625000",
+   "cum_eligible": 198,
+   "cum_on_time_rate": "0.681818",
+   "overdue_open_lines": 2
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2026-06",
+   "eligible_receipts": 13,
+   "on_time_receipts": 13,
+   "on_time_rate": "1.000000",
+   "cum_eligible": 211,
+   "cum_on_time_rate": "0.701422",
+   "overdue_open_lines": 3
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2026-07",
+   "eligible_receipts": 13,
+   "on_time_receipts": 7,
+   "on_time_rate": "0.538462",
+   "cum_eligible": 224,
+   "cum_on_time_rate": "0.691964",
+   "overdue_open_lines": 4
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2026-08",
+   "eligible_receipts": 16,
+   "on_time_receipts": 11,
+   "on_time_rate": "0.687500",
+   "cum_eligible": 240,
+   "cum_on_time_rate": "0.691667",
+   "overdue_open_lines": 4
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "2026-09",
+   "eligible_receipts": 14,
+   "on_time_receipts": 7,
+   "on_time_rate": "0.500000",
+   "cum_eligible": 254,
+   "cum_on_time_rate": "0.681102",
+   "overdue_open_lines": 2
+  },
+  {
+   "supplier_id": "sup-03",
+   "month": "ALL",
+   "eligible_receipts": 254,
+   "on_time_receipts": 173,
+   "on_time_rate": "0.681102",
+   "cum_eligible": 254,
+   "cum_on_time_rate": "0.681102",
+   "overdue_open_lines": null
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2025-04",
+   "eligible_receipts": 13,
+   "on_time_receipts": 12,
+   "on_time_rate": "0.923077",
+   "cum_eligible": 13,
+   "cum_on_time_rate": "0.923077",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2025-05",
+   "eligible_receipts": 20,
+   "on_time_receipts": 20,
+   "on_time_rate": "1.000000",
+   "cum_eligible": 33,
+   "cum_on_time_rate": "0.969697",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2025-06",
+   "eligible_receipts": 18,
+   "on_time_receipts": 18,
+   "on_time_rate": "1.000000",
+   "cum_eligible": 51,
+   "cum_on_time_rate": "0.980392",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2025-07",
+   "eligible_receipts": 22,
+   "on_time_receipts": 22,
+   "on_time_rate": "1.000000",
+   "cum_eligible": 73,
+   "cum_on_time_rate": "0.986301",
+   "overdue_open_lines": 1
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2025-08",
+   "eligible_receipts": 24,
+   "on_time_receipts": 20,
+   "on_time_rate": "0.833333",
+   "cum_eligible": 97,
+   "cum_on_time_rate": "0.948454",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2025-09",
+   "eligible_receipts": 21,
+   "on_time_receipts": 19,
+   "on_time_rate": "0.904762",
+   "cum_eligible": 118,
+   "cum_on_time_rate": "0.940678",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2025-10",
+   "eligible_receipts": 17,
+   "on_time_receipts": 15,
+   "on_time_rate": "0.882353",
+   "cum_eligible": 135,
+   "cum_on_time_rate": "0.933333",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2025-11",
+   "eligible_receipts": 28,
+   "on_time_receipts": 22,
+   "on_time_rate": "0.785714",
+   "cum_eligible": 163,
+   "cum_on_time_rate": "0.907975",
+   "overdue_open_lines": 1
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2025-12",
+   "eligible_receipts": 22,
+   "on_time_receipts": 14,
+   "on_time_rate": "0.636364",
+   "cum_eligible": 185,
+   "cum_on_time_rate": "0.875676",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2026-01",
+   "eligible_receipts": 18,
+   "on_time_receipts": 14,
+   "on_time_rate": "0.777778",
+   "cum_eligible": 203,
+   "cum_on_time_rate": "0.866995",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2026-02",
+   "eligible_receipts": 16,
+   "on_time_receipts": 11,
+   "on_time_rate": "0.687500",
+   "cum_eligible": 219,
+   "cum_on_time_rate": "0.853881",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2026-03",
+   "eligible_receipts": 16,
+   "on_time_receipts": 16,
+   "on_time_rate": "1.000000",
+   "cum_eligible": 235,
+   "cum_on_time_rate": "0.863830",
+   "overdue_open_lines": 2
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2026-04",
+   "eligible_receipts": 24,
+   "on_time_receipts": 17,
+   "on_time_rate": "0.708333",
+   "cum_eligible": 259,
+   "cum_on_time_rate": "0.849421",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2026-05",
+   "eligible_receipts": 24,
+   "on_time_receipts": 21,
+   "on_time_rate": "0.875000",
+   "cum_eligible": 283,
+   "cum_on_time_rate": "0.851590",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2026-06",
+   "eligible_receipts": 25,
+   "on_time_receipts": 23,
+   "on_time_rate": "0.920000",
+   "cum_eligible": 308,
+   "cum_on_time_rate": "0.857143",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2026-07",
+   "eligible_receipts": 21,
+   "on_time_receipts": 14,
+   "on_time_rate": "0.666667",
+   "cum_eligible": 329,
+   "cum_on_time_rate": "0.844985",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2026-08",
+   "eligible_receipts": 22,
+   "on_time_receipts": 16,
+   "on_time_rate": "0.727273",
+   "cum_eligible": 351,
+   "cum_on_time_rate": "0.837607",
+   "overdue_open_lines": 0
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "2026-09",
+   "eligible_receipts": 15,
+   "on_time_receipts": 14,
+   "on_time_rate": "0.933333",
+   "cum_eligible": 366,
+   "cum_on_time_rate": "0.841530",
+   "overdue_open_lines": 1
+  },
+  {
+   "supplier_id": "sup-04",
+   "month": "ALL",
+   "eligible_receipts": 366,
+   "on_time_receipts": 308,
+   "on_time_rate": "0.841530",
+   "cum_eligible": 366,
+   "cum_on_time_rate": "0.841530",
+   "overdue_open_lines": null
+  }
+ ],
+ "05_censored_vs_latent_class_a": [
+  {
+   "product_id": "prod-001",
+   "location_id": "loc-01",
+   "unmet_policy": "lost_sale",
+   "stockout_days": 5,
+   "stockout_days_in_promo": 1,
+   "observed_on_stockout_days": 8,
+   "latent_on_stockout_days": 54,
+   "censored_units": 46,
+   "unmet_recorded": 46,
+   "share_of_latent_unseen": "0.851852",
+   "days_observed_ne_latent": 0
+  },
+  {
+   "product_id": "prod-002",
+   "location_id": "loc-02",
+   "unmet_policy": "lost_sale",
+   "stockout_days": 74,
+   "stockout_days_in_promo": 12,
+   "observed_on_stockout_days": 176,
+   "latent_on_stockout_days": 806,
+   "censored_units": 630,
+   "unmet_recorded": 630,
+   "share_of_latent_unseen": "0.781638",
+   "days_observed_ne_latent": 0
+  },
+  {
+   "product_id": "prod-003",
+   "location_id": "loc-03",
+   "unmet_policy": "backlog",
+   "stockout_days": 19,
+   "stockout_days_in_promo": 4,
+   "observed_on_stockout_days": 29,
+   "latent_on_stockout_days": 145,
+   "censored_units": 116,
+   "unmet_recorded": 116,
+   "share_of_latent_unseen": "0.800000",
+   "days_observed_ne_latent": 0
+  },
+  {
+   "product_id": "prod-004",
+   "location_id": "loc-01",
+   "unmet_policy": "lost_sale",
+   "stockout_days": 10,
+   "stockout_days_in_promo": 7,
+   "observed_on_stockout_days": 25,
+   "latent_on_stockout_days": 202,
+   "censored_units": 177,
+   "unmet_recorded": 177,
+   "share_of_latent_unseen": "0.876238",
+   "days_observed_ne_latent": 0
+  },
+  {
+   "product_id": "prod-005",
+   "location_id": "loc-02",
+   "unmet_policy": "lost_sale",
+   "stockout_days": 82,
+   "stockout_days_in_promo": 11,
+   "observed_on_stockout_days": 187,
+   "latent_on_stockout_days": 735,
+   "censored_units": 548,
+   "unmet_recorded": 548,
+   "share_of_latent_unseen": "0.745578",
+   "days_observed_ne_latent": 0
+  },
+  {
+   "product_id": "prod-006",
+   "location_id": "loc-03",
+   "unmet_policy": "backlog",
+   "stockout_days": 28,
+   "stockout_days_in_promo": 5,
+   "observed_on_stockout_days": 23,
+   "latent_on_stockout_days": 223,
+   "censored_units": 200,
+   "unmet_recorded": 200,
+   "share_of_latent_unseen": "0.896861",
+   "days_observed_ne_latent": 0
+  },
+  {
+   "product_id": "prod-007",
+   "location_id": "loc-01",
+   "unmet_policy": "lost_sale",
+   "stockout_days": 27,
+   "stockout_days_in_promo": 9,
+   "observed_on_stockout_days": 8,
+   "latent_on_stockout_days": 210,
+   "censored_units": 202,
+   "unmet_recorded": 202,
+   "share_of_latent_unseen": "0.961905",
+   "days_observed_ne_latent": 0
+  },
+  {
+   "product_id": "prod-008",
+   "location_id": "loc-02",
+   "unmet_policy": "lost_sale",
+   "stockout_days": 49,
+   "stockout_days_in_promo": 11,
+   "observed_on_stockout_days": 148,
+   "latent_on_stockout_days": 652,
+   "censored_units": 504,
+   "unmet_recorded": 504,
+   "share_of_latent_unseen": "0.773006",
+   "days_observed_ne_latent": 0
+  }
+ ],
+ "06_working_capital_by_location": [
+  {
+   "month": "2025-04",
+   "end_loc_01": "8405.25",
+   "end_loc_02": "6533.12",
+   "end_loc_03": "7092.51",
+   "end_total": "22030.88",
+   "avg_daily_total": "29741.51",
+   "avg_daily_at_base_cost": "29741.51",
+   "step_effect": "0.00"
+  },
+  {
+   "month": "2025-05",
+   "end_loc_01": "9512.13",
+   "end_loc_02": "4143.87",
+   "end_loc_03": "4279.22",
+   "end_total": "17935.22",
+   "avg_daily_total": "21330.36",
+   "avg_daily_at_base_cost": "21330.36",
+   "step_effect": "0.00"
+  },
+  {
+   "month": "2025-06",
+   "end_loc_01": "7588.55",
+   "end_loc_02": "6397.81",
+   "end_loc_03": "4714.13",
+   "end_total": "18700.49",
+   "avg_daily_total": "18573.59",
+   "avg_daily_at_base_cost": "18573.59",
+   "step_effect": "0.00"
+  },
+  {
+   "month": "2025-07",
+   "end_loc_01": "11280.83",
+   "end_loc_02": "7202.22",
+   "end_loc_03": "3449.99",
+   "end_total": "21933.04",
+   "avg_daily_total": "21012.67",
+   "avg_daily_at_base_cost": "21012.67",
+   "step_effect": "0.00"
+  },
+  {
+   "month": "2025-08",
+   "end_loc_01": "8783.45",
+   "end_loc_02": "6289.24",
+   "end_loc_03": "4781.29",
+   "end_total": "19853.98",
+   "avg_daily_total": "19930.70",
+   "avg_daily_at_base_cost": "19930.70",
+   "step_effect": "0.00"
+  },
+  {
+   "month": "2025-09",
+   "end_loc_01": "10310.82",
+   "end_loc_02": "6804.63",
+   "end_loc_03": "8096.07",
+   "end_total": "25211.52",
+   "avg_daily_total": "21895.41",
+   "avg_daily_at_base_cost": "21895.41",
+   "step_effect": "0.00"
+  },
+  {
+   "month": "2025-10",
+   "end_loc_01": "10537.20",
+   "end_loc_02": "4355.02",
+   "end_loc_03": "7360.95",
+   "end_total": "22253.17",
+   "avg_daily_total": "22460.25",
+   "avg_daily_at_base_cost": "22460.25",
+   "step_effect": "0.00"
+  },
+  {
+   "month": "2025-11",
+   "end_loc_01": "8899.53",
+   "end_loc_02": "5906.75",
+   "end_loc_03": "3571.34",
+   "end_total": "18377.62",
+   "avg_daily_total": "22680.15",
+   "avg_daily_at_base_cost": "22680.15",
+   "step_effect": "0.00"
+  },
+  {
+   "month": "2025-12",
+   "end_loc_01": "9192.73",
+   "end_loc_02": "5912.90",
+   "end_loc_03": "3447.35",
+   "end_total": "18552.98",
+   "avg_daily_total": "22038.51",
+   "avg_daily_at_base_cost": "22038.51",
+   "step_effect": "0.00"
+  },
+  {
+   "month": "2026-01",
+   "end_loc_01": "9656.06",
+   "end_loc_02": "9264.51",
+   "end_loc_03": "5223.02",
+   "end_total": "24143.59",
+   "avg_daily_total": "21867.29",
+   "avg_daily_at_base_cost": "21867.29",
+   "step_effect": "0.00"
+  },
+  {
+   "month": "2026-02",
+   "end_loc_01": "13452.34",
+   "end_loc_02": "7118.96",
+   "end_loc_03": "8556.33",
+   "end_total": "29127.63",
+   "avg_daily_total": "23302.54",
+   "avg_daily_at_base_cost": "22811.89",
+   "step_effect": "490.65"
+  },
+  {
+   "month": "2026-03",
+   "end_loc_01": "5474.44",
+   "end_loc_02": "3004.12",
+   "end_loc_03": "7643.63",
+   "end_total": "16122.19",
+   "avg_daily_total": "21591.06",
+   "avg_daily_at_base_cost": "21085.26",
+   "step_effect": "505.80"
+  },
+  {
+   "month": "2026-04",
+   "end_loc_01": "6202.72",
+   "end_loc_02": "4377.43",
+   "end_loc_03": "6596.39",
+   "end_total": "17176.54",
+   "avg_daily_total": "23076.81",
+   "avg_daily_at_base_cost": "22436.29",
+   "step_effect": "640.53"
+  },
+  {
+   "month": "2026-05",
+   "end_loc_01": "4208.01",
+   "end_loc_02": "2781.05",
+   "end_loc_03": "6618.28",
+   "end_total": "13607.34",
+   "avg_daily_total": "17834.45",
+   "avg_daily_at_base_cost": "17463.75",
+   "step_effect": "370.70"
+  },
+  {
+   "month": "2026-06",
+   "end_loc_01": "13179.79",
+   "end_loc_02": "7807.42",
+   "end_loc_03": "7986.73",
+   "end_total": "28973.94",
+   "avg_daily_total": "21756.03",
+   "avg_daily_at_base_cost": "21320.51",
+   "step_effect": "435.52"
+  },
+  {
+   "month": "2026-07",
+   "end_loc_01": "6341.03",
+   "end_loc_02": "8088.76",
+   "end_loc_03": "6404.68",
+   "end_total": "20834.47",
+   "avg_daily_total": "20691.62",
+   "avg_daily_at_base_cost": "20275.78",
+   "step_effect": "415.85"
+  },
+  {
+   "month": "2026-08",
+   "end_loc_01": "14405.38",
+   "end_loc_02": "6494.67",
+   "end_loc_03": "6938.06",
+   "end_total": "27838.11",
+   "avg_daily_total": "21910.81",
+   "avg_daily_at_base_cost": "21416.39",
+   "step_effect": "494.41"
+  },
+  {
+   "month": "2026-09",
+   "end_loc_01": "13078.47",
+   "end_loc_02": "7855.29",
+   "end_loc_03": "8156.88",
+   "end_total": "29090.64",
+   "avg_daily_total": "22533.64",
+   "avg_daily_at_base_cost": "22060.66",
+   "step_effect": "472.98"
+  },
+  {
+   "month": "ALL",
+   "end_loc_01": null,
+   "end_loc_02": null,
+   "end_loc_03": null,
+   "end_total": null,
+   "avg_daily_total": "21881.18",
+   "avg_daily_at_base_cost": "21670.23",
+   "step_effect": "210.95"
+  }
+ ],
+ "07_forecast_wape_by_sku": [
+  {
+   "product_id": "prod-001",
+   "location_id": "loc-01",
+   "abc_class": "A",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 351,
+   "zero_demand_runs": 0,
+   "wape_naive": "0.612536",
+   "wape_seasonal_naive": "0.680912",
+   "wape_ewma": "0.518291",
+   "ewma_beats_seasonal_naive": "yes",
+   "leaky_points": 0,
+   "selected_models": "ewma+naive"
+  },
+  {
+   "product_id": "prod-002",
+   "location_id": "loc-02",
+   "abc_class": "A",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 416,
+   "zero_demand_runs": 0,
+   "wape_naive": "0.653846",
+   "wape_seasonal_naive": "0.754808",
+   "wape_ewma": "0.606346",
+   "ewma_beats_seasonal_naive": "yes",
+   "leaky_points": 0,
+   "selected_models": "ewma+naive"
+  },
+  {
+   "product_id": "prod-003",
+   "location_id": "loc-03",
+   "abc_class": "A",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 273,
+   "zero_demand_runs": 0,
+   "wape_naive": "0.545788",
+   "wape_seasonal_naive": "0.692308",
+   "wape_ewma": "0.508571",
+   "ewma_beats_seasonal_naive": "yes",
+   "leaky_points": 0,
+   "selected_models": "ewma"
+  },
+  {
+   "product_id": "prod-004",
+   "location_id": "loc-01",
+   "abc_class": "A",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 547,
+   "zero_demand_runs": 0,
+   "wape_naive": "0.659963",
+   "wape_seasonal_naive": "0.510055",
+   "wape_ewma": "0.447020",
+   "ewma_beats_seasonal_naive": "yes",
+   "leaky_points": 0,
+   "selected_models": "ewma"
+  },
+  {
+   "product_id": "prod-005",
+   "location_id": "loc-02",
+   "abc_class": "A",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 353,
+   "zero_demand_runs": 0,
+   "wape_naive": "0.654391",
+   "wape_seasonal_naive": "0.643059",
+   "wape_ewma": "0.522720",
+   "ewma_beats_seasonal_naive": "yes",
+   "leaky_points": 0,
+   "selected_models": "ewma+seasonal_naive"
+  },
+  {
+   "product_id": "prod-006",
+   "location_id": "loc-03",
+   "abc_class": "A",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 296,
+   "zero_demand_runs": 0,
+   "wape_naive": "0.709459",
+   "wape_seasonal_naive": "0.662162",
+   "wape_ewma": "0.490338",
+   "ewma_beats_seasonal_naive": "yes",
+   "leaky_points": 0,
+   "selected_models": "ewma+naive+seasonal_naive"
+  },
+  {
+   "product_id": "prod-007",
+   "location_id": "loc-01",
+   "abc_class": "A",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 256,
+   "zero_demand_runs": 0,
+   "wape_naive": "0.828125",
+   "wape_seasonal_naive": "0.734375",
+   "wape_ewma": "0.609375",
+   "ewma_beats_seasonal_naive": "yes",
+   "leaky_points": 0,
+   "selected_models": "ewma"
+  },
+  {
+   "product_id": "prod-008",
+   "location_id": "loc-02",
+   "abc_class": "A",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 449,
+   "zero_demand_runs": 0,
+   "wape_naive": "0.661470",
+   "wape_seasonal_naive": "0.759465",
+   "wape_ewma": "0.629220",
+   "ewma_beats_seasonal_naive": "yes",
+   "leaky_points": 0,
+   "selected_models": "ewma+naive"
+  },
+  {
+   "product_id": "prod-012",
+   "location_id": "loc-01",
+   "abc_class": "B",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 21,
+   "zero_demand_runs": 0,
+   "wape_naive": "1.571429",
+   "wape_seasonal_naive": "1.571429",
+   "wape_ewma": "1.637143",
+   "ewma_beats_seasonal_naive": "no",
+   "leaky_points": 0,
+   "selected_models": "ewma+naive+seasonal_naive"
+  },
+  {
+   "product_id": "prod-016",
+   "location_id": "loc-03",
+   "abc_class": "B",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 36,
+   "zero_demand_runs": 0,
+   "wape_naive": "1.000000",
+   "wape_seasonal_naive": "1.222222",
+   "wape_ewma": "1.053889",
+   "ewma_beats_seasonal_naive": "yes",
+   "leaky_points": 0,
+   "selected_models": "ewma+naive"
+  },
+  {
+   "product_id": "prod-034",
+   "location_id": "loc-01",
+   "abc_class": "C",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 25,
+   "zero_demand_runs": 0,
+   "wape_naive": "2.120000",
+   "wape_seasonal_naive": "1.800000",
+   "wape_ewma": "1.569600",
+   "ewma_beats_seasonal_naive": "yes",
+   "leaky_points": 0,
+   "selected_models": "naive"
+  },
+  {
+   "product_id": "prod-037",
+   "location_id": "loc-02",
+   "abc_class": "C",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 14,
+   "zero_demand_runs": 1,
+   "wape_naive": "3.000000",
+   "wape_seasonal_naive": "1.285714",
+   "wape_ewma": "1.648571",
+   "ewma_beats_seasonal_naive": "no",
+   "leaky_points": 0,
+   "selected_models": "naive+seasonal_naive"
+  },
+  {
+   "product_id": "prod-043",
+   "location_id": "loc-03",
+   "abc_class": "C",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 5,
+   "zero_demand_runs": 3,
+   "wape_naive": "1.000000",
+   "wape_seasonal_naive": "2.200000",
+   "wape_ewma": "1.940000",
+   "ewma_beats_seasonal_naive": "yes",
+   "leaky_points": 0,
+   "selected_models": "naive+seasonal_naive"
+  },
+  {
+   "product_id": "prod-046",
+   "location_id": "loc-02",
+   "abc_class": "C",
+   "runs": 4,
+   "points": 56,
+   "total_actual": 9,
+   "zero_demand_runs": 2,
+   "wape_naive": "1.000000",
+   "wape_seasonal_naive": "1.000000",
+   "wape_ewma": "1.015556",
+   "ewma_beats_seasonal_naive": "no",
+   "leaky_points": 0,
+   "selected_models": "ewma+naive+seasonal_naive"
+  }
+ ],
+ "08_rejections_and_defects_by_reason": [
+  {
+   "lens": "rejection",
+   "entity": "inventory_movements",
+   "reason": "DUPLICATE_MOVEMENT_ID",
+   "records": 3,
+   "ids": "mv-002230, mv-005418, mv-006574"
+  },
+  {
+   "lens": "rejection",
+   "entity": "receipts",
+   "reason": "RECEIPT_BEFORE_ORDER",
+   "records": 1,
+   "ids": "rcpt-01309"
+  },
+  {
+   "lens": "detected",
+   "entity": "purchase_order_lines",
+   "reason": "CLOSED_ORDER_PARTLY_RECEIVED",
+   "records": 2,
+   "ids": "pol-00795, pol-00840"
+  },
+  {
+   "lens": "detected",
+   "entity": "receipts",
+   "reason": "LEAD_TIME_SPANS_CLOSURE",
+   "records": 8,
+   "ids": "rcpt-00690, rcpt-00702, rcpt-00712, rcpt-00713, rcpt-00714, rcpt-00715, rcpt-00716, rcpt-00721"
+  },
+  {
+   "lens": "detected",
+   "entity": "reservations",
+   "reason": "OPEN_RESERVATION_AT_CUTOFF",
+   "records": 6,
+   "ids": "res-001, res-002, res-003, res-004, res-005, res-006"
+  }
+ ],
+ "10_options_service_target": [
+  {
+   "option": "params of record (generator z 1.28, about 0.90)",
+   "triggered_pairs": 2,
+   "class_a_triggered": 2,
+   "order_units": 240,
+   "order_value": "11114.88"
+  },
+  {
+   "option": "derived from the forecast at 0.90",
+   "triggered_pairs": 7,
+   "class_a_triggered": 0,
+   "order_units": 88,
+   "order_value": "1457.40"
+  },
+  {
+   "option": "derived from the forecast at 0.95",
+   "triggered_pairs": 9,
+   "class_a_triggered": 1,
+   "order_units": 154,
+   "order_value": "4707.66"
+  }
+ ],
+ "10_options_service_target_sku_detail": [
+  {
+   "sku": "prod-002",
+   "option": "params of record (generator z 1.28, about 0.90)",
+   "position": 118,
+   "reorder_point": 128,
+   "target_position": 252,
+   "triggered": true,
+   "order_quantity": 144,
+   "order_value": "6010.56"
+  },
+  {
+   "sku": "prod-002",
+   "option": "derived from the forecast at 0.90",
+   "position": 118,
+   "reorder_point": 99,
+   "target_position": 142,
+   "triggered": false,
+   "order_quantity": 0,
+   "order_value": "0.00"
+  },
+  {
+   "sku": "prod-002",
+   "option": "derived from the forecast at 0.95",
+   "position": 118,
+   "reorder_point": 107,
+   "target_position": 150,
+   "triggered": false,
+   "order_quantity": 0,
+   "order_value": "0.00"
+  },
+  {
+   "sku": "prod-005",
+   "option": "params of record (generator z 1.28, about 0.90)",
+   "position": 48,
+   "reorder_point": 51,
+   "target_position": 144,
+   "triggered": true,
+   "order_quantity": 96,
+   "order_value": "5104.32"
+  },
+  {
+   "sku": "prod-005",
+   "option": "derived from the forecast at 0.90",
+   "position": 48,
+   "reorder_point": 47,
+   "target_position": 95,
+   "triggered": false,
+   "order_quantity": 0,
+   "order_value": "0.00"
+  },
+  {
+   "sku": "prod-005",
+   "option": "derived from the forecast at 0.95",
+   "position": 48,
+   "reorder_point": 51,
+   "target_position": 99,
+   "triggered": true,
+   "order_quantity": 60,
+   "order_value": "3190.20"
+  }
+ ],
+ "10_options_unmet_policy": [
+  {
+   "sku": "prod-002",
+   "scenario": "sc-95-lost",
+   "policy": "lost_sale",
+   "seed": 20261026,
+   "replications": 100,
+   "mean_latent_demand_per_day": "8.91",
+   "lead_days": "12-19",
+   "fill_rate": "0.9119",
+   "stockout_day_share": "0.1009"
+  },
+  {
+   "sku": "prod-002",
+   "scenario": "sc-95-backlog",
+   "policy": "backlog",
+   "seed": 20261026,
+   "replications": 100,
+   "mean_latent_demand_per_day": "8.91",
+   "lead_days": "12-19",
+   "fill_rate": "0.9038",
+   "stockout_day_share": "0.1115"
+  },
+  {
+   "sku": "prod-005",
+   "scenario": "sc-95-lost",
+   "policy": "lost_sale",
+   "seed": 20261026,
+   "replications": 100,
+   "mean_latent_demand_per_day": "7.15",
+   "lead_days": "5-12",
+   "fill_rate": "0.8979",
+   "stockout_day_share": "0.1142"
+  },
+  {
+   "sku": "prod-005",
+   "scenario": "sc-95-backlog",
+   "policy": "backlog",
+   "seed": 20261026,
+   "replications": 100,
+   "mean_latent_demand_per_day": "7.15",
+   "lead_days": "5-12",
+   "fill_rate": "0.8876",
+   "stockout_day_share": "0.1286"
+  }
+ ],
+ "bi_expected_measures": [
+  {
+   "measure": "Fulfilled Units",
+   "expected": 36076,
+   "source": "fact_movement_day, sum"
+  },
+  {
+   "measure": "Unmet Units",
+   "expected": 2612,
+   "source": "fact_movement_day, sum"
+  },
+  {
+   "measure": "Requested Units",
+   "expected": 38688,
+   "source": "fulfilled + unmet"
+  },
+  {
+   "measure": "Fill Rate",
+   "expected": "0.932486",
+   "source": "query 03 ALL"
+  },
+  {
+   "measure": "Stockout SKU Day Share",
+   "expected": "0.013108",
+   "source": "431 / 32880, query 03 ALL"
+  },
+  {
+   "measure": "Stockout Calendar Day Share",
+   "expected": "0.529197",
+   "source": "290 / 548, reference_metrics.sql stockout_days"
+  },
+  {
+   "measure": "On Hand Units (2026-09-30)",
+   "expected": 1020,
+   "source": "query 01, 2026-09"
+  },
+  {
+   "measure": "Working Capital (2026-09-30)",
+   "expected": "29090.64",
+   "source": "query 06, 2026-09 end_total"
+  },
+  {
+   "measure": "Average Inventory Value",
+   "expected": "21881.18",
+   "source": "query 06 row ALL"
+  },
+  {
+   "measure": "Inventory Turnover",
+   "expected": "40.487277",
+   "source": "domain supplementary()"
+  },
+  {
+   "measure": "Inventory Position (2026-09-30)",
+   "expected": 1628,
+   "source": "query 02 TOTAL"
+  },
+  {
+   "measure": "Draft Order Units",
+   "expected": 240,
+   "source": "query 02 TOTAL"
+  },
+  {
+   "measure": "Draft Order Value",
+   "expected": "11114.88",
+   "source": "query 02 TOTAL"
+  },
+  {
+   "measure": "Triggered Pairs",
+   "expected": 2,
+   "source": "query 02"
+  }
+ ],
+ "09_golden_position_and_order": [
+  {
+   "on_hand": 40,
+   "on_order": 30,
+   "backorders": 10,
+   "position": 60,
+   "reorder_point": 70,
+   "target_position": 120,
+   "triggered": true,
+   "raw_order": 60,
+   "moq": 50,
+   "order_after_moq": 60,
+   "pack_size": 24,
+   "order_quantity": 72,
+   "running_min_day_order": 0,
+   "running_min_timestamp_order": -35,
+   "working_capital": "500.00",
+   "fulfilled_units": 95,
+   "unmet_units": 5,
+   "fill_rate": "0.950000",
+   "stockout_days_count": 1,
+   "stockout_days": "0.032258"
+  },
+  {
+   "state": "position_80",
+   "on_hand": 40,
+   "on_order": 50,
+   "backorders": 10,
+   "position": 80,
+   "reorder_point": 70,
+   "target_position": 120,
+   "triggered": false,
+   "raw_order": 0,
+   "moq": 50,
+   "order_after_moq": 0,
+   "pack_size": 24,
+   "order_quantity": 0,
+   "running_min_day_order": 0,
+   "running_min_timestamp_order": -35,
+   "working_capital": "500.00",
+   "fulfilled_units": 95,
+   "unmet_units": 5,
+   "fill_rate": "0.950000",
+   "stockout_days_count": 1,
+   "stockout_days": "0.032258"
+  }
+ ],
+ "reconciliation": [
+  {
+   "check": "B options: params-of-record row equals the 02 TOTAL (triggered pairs / order units)",
+   "analysis_sql": "2 / 240",
+   "second_source": "2 / 240",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot on_hand: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "1020",
+   "second_source": "1020",
+   "third_source": "1020",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot on_order: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "608",
+   "second_source": "608",
+   "third_source": "608",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot backorders: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot inventory_position: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "1628",
+   "second_source": "1628",
+   "third_source": "1628",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot reorder_point: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "1198",
+   "second_source": "1198",
+   "third_source": "1198",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot target_position: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "2336",
+   "second_source": "2336",
+   "third_source": "2336",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot raw_order: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "230",
+   "second_source": "230",
+   "third_source": "230",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot order_after_moq: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "230",
+   "second_source": "230",
+   "third_source": "230",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot order_quantity: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "240",
+   "second_source": "240",
+   "third_source": "240",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot fulfilled_units: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "36076",
+   "second_source": "36076",
+   "third_source": "36076",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot unmet_units: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "2612",
+   "second_source": "2612",
+   "third_source": "2612",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot requested_units: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "38688",
+   "second_source": "38688",
+   "third_source": "38688",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot fill_rate: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "0.932486",
+   "second_source": "0.932486",
+   "third_source": "0.932486",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshot working_capital: query 01/02/03/06 vs reference_metrics.sql vs domain",
+   "analysis_sql": "29090.64",
+   "second_source": "29090.64",
+   "third_source": "29090.64",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B on hand 02 TOTAL vs 01 month-end 2026-09",
+   "analysis_sql": "1020",
+   "second_source": "1020",
+   "third_source": "1020",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B on order (contract, confirmed only) 02 TOTAL vs 01 column on_order_confirmed_only",
+   "analysis_sql": "608",
+   "second_source": "608",
+   "third_source": "608",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B observed days 548 (03 pair-days / 60 pairs) vs reference vs domain",
+   "analysis_sql": "548",
+   "second_source": "548",
+   "third_source": "548",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B stockout days (distinct dates with unmet demand, all pairs): SQL vs reference vs domain",
+   "analysis_sql": "290",
+   "second_source": "290",
+   "third_source": "290",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B average daily inventory value 06 row ALL vs domain supplementary()",
+   "analysis_sql": "21881.18",
+   "second_source": "21881.18",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B on-order difference as-of rule vs confirmed only at the final month-end (S-04: closed orders with a partial line)",
+   "analysis_sql": "72",
+   "second_source": "72",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B bi_fact_movement_day rows (60 pairs x 548 days)",
+   "analysis_sql": "32880",
+   "second_source": "32880",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B bi_fact_movement_day stock value on 2026-09-30 vs working capital",
+   "analysis_sql": "29090.64",
+   "second_source": "29090.64",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B bi_fact_movement_day fulfilled units vs reference",
+   "analysis_sql": "36076",
+   "second_source": "36076",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B bi_fact_movement_day unmet units vs reference",
+   "analysis_sql": "2612",
+   "second_source": "2612",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B bi Inventory Turnover (facts) vs domain supplementary()",
+   "analysis_sql": "40.487277",
+   "second_source": "40.487277",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B bi Stockout Calendar Day Share (facts) vs reference_metrics.sql stockout_days",
+   "analysis_sql": "0.529197",
+   "second_source": "0.529197",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B bi Inventory Position (facts) vs reference_metrics.sql",
+   "analysis_sql": "1628",
+   "second_source": "1628",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B bi Draft Order Units (facts) vs reference_metrics.sql order_quantity",
+   "analysis_sql": "240",
+   "second_source": "240",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B draft_orders rows persisted in the seeded snapshot (derived table, written by the API)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B bi_fact_draft_order rows (60 pairs at the cutoff)",
+   "analysis_sql": "60",
+   "second_source": "60",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01 month-end cells (18 months x 3 locations) differing from the Python replay of on hand / on order / backorders",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 60 draft-order rows (bi_fact_draft_order) differing from the domain per pair",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C triggered pairs: 02 rows vs bi_fact_draft_order triggered vs domain",
+   "analysis_sql": "2",
+   "second_source": "2",
+   "third_source": "2",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03 rows (location x ABC, location subtotals, ALL) differing from compute_metrics",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04 cumulative as-of rate cells (4 suppliers x 18 cutoffs) differing from on_time_rate(cutoff)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04 cells compared",
+   "analysis_sql": "72",
+   "second_source": "72",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04 sup-01 whole history: eligible / on-time rate",
+   "analysis_sql": "340 / 0.829412",
+   "second_source": "340 / 0.829412",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04 sup-02 whole history: eligible / on-time rate",
+   "analysis_sql": "348 / 0.864943",
+   "second_source": "348 / 0.864943",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04 sup-03 whole history: eligible / on-time rate",
+   "analysis_sql": "254 / 0.681102",
+   "second_source": "254 / 0.681102",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04 sup-04 whole history: eligible / on-time rate",
+   "analysis_sql": "366 / 0.841530",
+   "second_source": "366 / 0.841530",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04 sup-03 late share vs the manifest's designed 31.9 % of 254",
+   "analysis_sql": "31.9 % of 254",
+   "second_source": "31.9 % of 254",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05 SKUs (8 class A) differing from censored_vs_latent, censored = unmet, or the manifest's stockout days",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07 WAPE cells (14 SKUs x 3 models) differing from Python over forecast_points.json and sales.json",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07 leaky forecast points (target date on or before the cutoff)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-01 DUPLICATE_MOVEMENT_ID ids",
+   "analysis_sql": "mv-002230, mv-005418, mv-006574",
+   "second_source": "mv-002230, mv-005418, mv-006574",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-02 RECEIPT_BEFORE_ORDER ids",
+   "analysis_sql": "rcpt-01309",
+   "second_source": "rcpt-01309",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-03 closed orders partly received (po lines)",
+   "analysis_sql": "pol-00795, pol-00840",
+   "second_source": "pol-00795, pol-00840",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-04 receipts spanning the closure",
+   "analysis_sql": "8",
+   "second_source": "8",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-07 open reservations at the cutoff",
+   "analysis_sql": "res-001, res-002, res-003, res-004, res-005, res-006",
+   "second_source": "res-001, res-002, res-003, res-004, res-005, res-006",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D rejected rows kept (table) vs domain ingest",
+   "analysis_sql": "4",
+   "second_source": "4",
+   "third_source": "4",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: on_hand",
+   "analysis_sql": "40",
+   "second_source": "40",
+   "third_source": "40",
+   "fourth_source": "40",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: on_order",
+   "analysis_sql": "30",
+   "second_source": "30",
+   "third_source": "30",
+   "fourth_source": "30",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: backorders",
+   "analysis_sql": "10",
+   "second_source": "10",
+   "third_source": "10",
+   "fourth_source": "10",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: inventory_position",
+   "analysis_sql": "60",
+   "second_source": "60",
+   "third_source": "60",
+   "fourth_source": "60",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: reorder_point",
+   "analysis_sql": "70",
+   "second_source": "70",
+   "third_source": "70",
+   "fourth_source": "70",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: target_position",
+   "analysis_sql": "120",
+   "second_source": "120",
+   "third_source": "120",
+   "fourth_source": "120",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: reorder_triggered",
+   "analysis_sql": "True",
+   "second_source": "True",
+   "third_source": "True",
+   "fourth_source": "True",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: raw_order",
+   "analysis_sql": "60",
+   "second_source": "60",
+   "third_source": "60",
+   "fourth_source": "60",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: order_after_moq",
+   "analysis_sql": "60",
+   "second_source": "60",
+   "third_source": "60",
+   "fourth_source": "60",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: order_quantity",
+   "analysis_sql": "72",
+   "second_source": "72",
+   "third_source": "72",
+   "fourth_source": "72",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: running_stock_min",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "0",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: timestamp_order_stock_min",
+   "analysis_sql": "-35",
+   "second_source": "-35",
+   "third_source": "-35",
+   "fourth_source": "-35",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: working_capital",
+   "analysis_sql": "500.00",
+   "second_source": "500.00",
+   "third_source": "500.00",
+   "fourth_source": "500.00",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: fulfilled_units",
+   "analysis_sql": "95",
+   "second_source": "95",
+   "third_source": "95",
+   "fourth_source": "95",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: unmet_units",
+   "analysis_sql": "5",
+   "second_source": "5",
+   "third_source": "5",
+   "fourth_source": "5",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: fill_rate",
+   "analysis_sql": "0.950000",
+   "second_source": "0.950000",
+   "third_source": "0.950000",
+   "fourth_source": "0.950000",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: stockout_day_count",
+   "analysis_sql": "1",
+   "second_source": "1",
+   "third_source": "1",
+   "fourth_source": "1",
+   "equal": true
+  },
+  {
+   "check": "A golden state golden: stockout_days",
+   "analysis_sql": "0.032258",
+   "second_source": "0.032258",
+   "third_source": "0.032258",
+   "fourth_source": "0.032258",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: on_hand",
+   "analysis_sql": "40",
+   "second_source": "40",
+   "third_source": "40",
+   "fourth_source": "40",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: on_order",
+   "analysis_sql": "50",
+   "second_source": "50",
+   "third_source": "50",
+   "fourth_source": "50",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: backorders",
+   "analysis_sql": "10",
+   "second_source": "10",
+   "third_source": "10",
+   "fourth_source": "10",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: inventory_position",
+   "analysis_sql": "80",
+   "second_source": "80",
+   "third_source": "80",
+   "fourth_source": "80",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: reorder_point",
+   "analysis_sql": "70",
+   "second_source": "70",
+   "third_source": "70",
+   "fourth_source": "70",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: target_position",
+   "analysis_sql": "120",
+   "second_source": "120",
+   "third_source": "120",
+   "fourth_source": "120",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: reorder_triggered",
+   "analysis_sql": "False",
+   "second_source": "False",
+   "third_source": "False",
+   "fourth_source": "False",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: raw_order",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "0",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: order_after_moq",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "0",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: order_quantity",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "0",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: running_stock_min",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "0",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: timestamp_order_stock_min",
+   "analysis_sql": "-35",
+   "second_source": "-35",
+   "third_source": "-35",
+   "fourth_source": "-35",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: working_capital",
+   "analysis_sql": "500.00",
+   "second_source": "500.00",
+   "third_source": "500.00",
+   "fourth_source": "500.00",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: fulfilled_units",
+   "analysis_sql": "95",
+   "second_source": "95",
+   "third_source": "95",
+   "fourth_source": "95",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: unmet_units",
+   "analysis_sql": "5",
+   "second_source": "5",
+   "third_source": "5",
+   "fourth_source": "5",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: fill_rate",
+   "analysis_sql": "0.950000",
+   "second_source": "0.950000",
+   "third_source": "0.950000",
+   "fourth_source": "0.950000",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: stockout_day_count",
+   "analysis_sql": "1",
+   "second_source": "1",
+   "third_source": "1",
+   "fourth_source": "1",
+   "equal": true
+  },
+  {
+   "check": "A golden state position_80: stockout_days",
+   "analysis_sql": "0.032258",
+   "second_source": "0.032258",
+   "third_source": "0.032258",
+   "fourth_source": "0.032258",
+   "equal": true
+  }
+ ],
+ "golden_three_sources": [
+  {
+   "state": "golden",
+   "quantity": "on_hand",
+   "analysis_sql_09": "40",
+   "reference_metrics_sql": "40",
+   "python_domain": "40",
+   "expected_json": "40"
+  },
+  {
+   "state": "golden",
+   "quantity": "on_order",
+   "analysis_sql_09": "30",
+   "reference_metrics_sql": "30",
+   "python_domain": "30",
+   "expected_json": "30"
+  },
+  {
+   "state": "golden",
+   "quantity": "backorders",
+   "analysis_sql_09": "10",
+   "reference_metrics_sql": "10",
+   "python_domain": "10",
+   "expected_json": "10"
+  },
+  {
+   "state": "golden",
+   "quantity": "inventory_position",
+   "analysis_sql_09": "60",
+   "reference_metrics_sql": "60",
+   "python_domain": "60",
+   "expected_json": "60"
+  },
+  {
+   "state": "golden",
+   "quantity": "reorder_point",
+   "analysis_sql_09": "70",
+   "reference_metrics_sql": "70",
+   "python_domain": "70",
+   "expected_json": "70"
+  },
+  {
+   "state": "golden",
+   "quantity": "target_position",
+   "analysis_sql_09": "120",
+   "reference_metrics_sql": "120",
+   "python_domain": "120",
+   "expected_json": "120"
+  },
+  {
+   "state": "golden",
+   "quantity": "reorder_triggered",
+   "analysis_sql_09": "True",
+   "reference_metrics_sql": "True",
+   "python_domain": "True",
+   "expected_json": "True"
+  },
+  {
+   "state": "golden",
+   "quantity": "raw_order",
+   "analysis_sql_09": "60",
+   "reference_metrics_sql": "60",
+   "python_domain": "60",
+   "expected_json": "60"
+  },
+  {
+   "state": "golden",
+   "quantity": "order_after_moq",
+   "analysis_sql_09": "60",
+   "reference_metrics_sql": "60",
+   "python_domain": "60",
+   "expected_json": "60"
+  },
+  {
+   "state": "golden",
+   "quantity": "order_quantity",
+   "analysis_sql_09": "72",
+   "reference_metrics_sql": "72",
+   "python_domain": "72",
+   "expected_json": "72"
+  },
+  {
+   "state": "golden",
+   "quantity": "running_stock_min",
+   "analysis_sql_09": "0",
+   "reference_metrics_sql": "0",
+   "python_domain": "0",
+   "expected_json": "0"
+  },
+  {
+   "state": "golden",
+   "quantity": "timestamp_order_stock_min",
+   "analysis_sql_09": "-35",
+   "reference_metrics_sql": "-35",
+   "python_domain": "-35",
+   "expected_json": "-35"
+  },
+  {
+   "state": "golden",
+   "quantity": "working_capital",
+   "analysis_sql_09": "500.00",
+   "reference_metrics_sql": "500.00",
+   "python_domain": "500.00",
+   "expected_json": "500.00"
+  },
+  {
+   "state": "golden",
+   "quantity": "fulfilled_units",
+   "analysis_sql_09": "95",
+   "reference_metrics_sql": "95",
+   "python_domain": "95",
+   "expected_json": "95"
+  },
+  {
+   "state": "golden",
+   "quantity": "unmet_units",
+   "analysis_sql_09": "5",
+   "reference_metrics_sql": "5",
+   "python_domain": "5",
+   "expected_json": "5"
+  },
+  {
+   "state": "golden",
+   "quantity": "fill_rate",
+   "analysis_sql_09": "0.950000",
+   "reference_metrics_sql": "0.950000",
+   "python_domain": "0.950000",
+   "expected_json": "0.950000"
+  },
+  {
+   "state": "golden",
+   "quantity": "stockout_day_count",
+   "analysis_sql_09": "1",
+   "reference_metrics_sql": "1",
+   "python_domain": "1",
+   "expected_json": "1"
+  },
+  {
+   "state": "golden",
+   "quantity": "stockout_days",
+   "analysis_sql_09": "0.032258",
+   "reference_metrics_sql": "0.032258",
+   "python_domain": "0.032258",
+   "expected_json": "0.032258"
+  },
+  {
+   "state": "position_80",
+   "quantity": "on_hand",
+   "analysis_sql_09": "40",
+   "reference_metrics_sql": "40",
+   "python_domain": "40",
+   "expected_json": "40"
+  },
+  {
+   "state": "position_80",
+   "quantity": "on_order",
+   "analysis_sql_09": "50",
+   "reference_metrics_sql": "50",
+   "python_domain": "50",
+   "expected_json": "50"
+  },
+  {
+   "state": "position_80",
+   "quantity": "backorders",
+   "analysis_sql_09": "10",
+   "reference_metrics_sql": "10",
+   "python_domain": "10",
+   "expected_json": "10"
+  },
+  {
+   "state": "position_80",
+   "quantity": "inventory_position",
+   "analysis_sql_09": "80",
+   "reference_metrics_sql": "80",
+   "python_domain": "80",
+   "expected_json": "80"
+  },
+  {
+   "state": "position_80",
+   "quantity": "reorder_point",
+   "analysis_sql_09": "70",
+   "reference_metrics_sql": "70",
+   "python_domain": "70",
+   "expected_json": "70"
+  },
+  {
+   "state": "position_80",
+   "quantity": "target_position",
+   "analysis_sql_09": "120",
+   "reference_metrics_sql": "120",
+   "python_domain": "120",
+   "expected_json": "120"
+  },
+  {
+   "state": "position_80",
+   "quantity": "reorder_triggered",
+   "analysis_sql_09": "False",
+   "reference_metrics_sql": "False",
+   "python_domain": "False",
+   "expected_json": "False"
+  },
+  {
+   "state": "position_80",
+   "quantity": "raw_order",
+   "analysis_sql_09": "0",
+   "reference_metrics_sql": "0",
+   "python_domain": "0",
+   "expected_json": "0"
+  },
+  {
+   "state": "position_80",
+   "quantity": "order_after_moq",
+   "analysis_sql_09": "0",
+   "reference_metrics_sql": "0",
+   "python_domain": "0",
+   "expected_json": "0"
+  },
+  {
+   "state": "position_80",
+   "quantity": "order_quantity",
+   "analysis_sql_09": "0",
+   "reference_metrics_sql": "0",
+   "python_domain": "0",
+   "expected_json": "0"
+  },
+  {
+   "state": "position_80",
+   "quantity": "running_stock_min",
+   "analysis_sql_09": "0",
+   "reference_metrics_sql": "0",
+   "python_domain": "0",
+   "expected_json": "0"
+  },
+  {
+   "state": "position_80",
+   "quantity": "timestamp_order_stock_min",
+   "analysis_sql_09": "-35",
+   "reference_metrics_sql": "-35",
+   "python_domain": "-35",
+   "expected_json": "-35"
+  },
+  {
+   "state": "position_80",
+   "quantity": "working_capital",
+   "analysis_sql_09": "500.00",
+   "reference_metrics_sql": "500.00",
+   "python_domain": "500.00",
+   "expected_json": "500.00"
+  },
+  {
+   "state": "position_80",
+   "quantity": "fulfilled_units",
+   "analysis_sql_09": "95",
+   "reference_metrics_sql": "95",
+   "python_domain": "95",
+   "expected_json": "95"
+  },
+  {
+   "state": "position_80",
+   "quantity": "unmet_units",
+   "analysis_sql_09": "5",
+   "reference_metrics_sql": "5",
+   "python_domain": "5",
+   "expected_json": "5"
+  },
+  {
+   "state": "position_80",
+   "quantity": "fill_rate",
+   "analysis_sql_09": "0.950000",
+   "reference_metrics_sql": "0.950000",
+   "python_domain": "0.950000",
+   "expected_json": "0.950000"
+  },
+  {
+   "state": "position_80",
+   "quantity": "stockout_day_count",
+   "analysis_sql_09": "1",
+   "reference_metrics_sql": "1",
+   "python_domain": "1",
+   "expected_json": "1"
+  },
+  {
+   "state": "position_80",
+   "quantity": "stockout_days",
+   "analysis_sql_09": "0.032258",
+   "reference_metrics_sql": "0.032258",
+   "python_domain": "0.032258",
+   "expected_json": "0.032258"
+  }
+ ],
+ "reference_metrics_snapshot": [
+  {
+   "fill_rate": "0.932486",
+   "requested_units": 38688,
+   "fulfilled_units": 36076,
+   "unmet_units": 2612,
+   "observed_days": 548,
+   "stockout_day_count": 290,
+   "stockout_days": "0.529197",
+   "running_stock_min": 0,
+   "timestamp_order_stock_min": 0,
+   "negative_stock": false,
+   "working_capital": "29090.64",
+   "empty_population": false,
+   "on_hand": 1020,
+   "on_order": 608,
+   "backorders": 0,
+   "reserved": 123,
+   "available": 897,
+   "inventory_position": 1628,
+   "reorder_point": 1198,
+   "target_position": 2336,
+   "reorder_triggered": true,
+   "raw_order": 230,
+   "order_after_moq": 230,
+   "order_quantity": 240
+  }
+ ],
+ "python_domain_snapshot": [
+  {
+   "fill_rate": "0.932486",
+   "requested_units": 38688,
+   "fulfilled_units": 36076,
+   "unmet_units": 2612,
+   "observed_days": 548,
+   "stockout_day_count": 290,
+   "stockout_days": "0.529197",
+   "running_stock_min": 0,
+   "timestamp_order_stock_min": 0,
+   "negative_stock": false,
+   "working_capital": "29090.64",
+   "empty_population": false,
+   "on_hand": 1020,
+   "on_order": 608,
+   "backorders": 0,
+   "reserved": 123,
+   "available": 897,
+   "inventory_position": 1628,
+   "reorder_point": 1198,
+   "target_position": 2336,
+   "reorder_triggered": true,
+   "raw_order": 230,
+   "order_after_moq": 230,
+   "order_quantity": 240
+  }
+ ]
+}

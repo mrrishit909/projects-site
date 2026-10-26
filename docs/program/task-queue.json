@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T15:30:18Z",
+  "updated_at": "2026-10-26T15:46:50Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
@@ -273,7 +273,7 @@
       "id": "T-03-07",
       "project": "03-supplyscope",
       "title": "Fix S-02, S-03, R3-01 (SKU-day stockout metric), R3-02, R3-03, R3-04, R3-05, R3-06 (+R3-07 flags); regression tests; re-review",
-      "status": "pending",
+      "status": "in_progress",
       "prereqs": [
         "T-03-04"
       ],
@@ -319,6 +319,15 @@
       ],
       "retries": 0,
       "acceptance": "live-check green; case study live"
+    },
+    {
+      "id": "T-03-05",
+      "project": "03-supplyscope",
+      "title": "Artifacts P03-ART-03..10",
+      "status": "done",
+      "prereqs": [],
+      "retries": 0,
+      "acceptance": "checksums + tests"
     }
   ]
 }
