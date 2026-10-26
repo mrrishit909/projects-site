@@ -6,8 +6,13 @@ import { StudioProvider } from "./state/studio";
 import { Landing } from "./views/landing";
 import { NotFound } from "./views/not-found";
 import { Stub } from "./views/stub";
+import { Cases } from "./views/cases";
+import { CaseStudy } from "./views/case-study";
+import { Queue } from "./views/queue";
+import { Sla } from "./views/sla";
+import { Workflow } from "./views/workflow";
 
-const VIEWS: Record<string, () => ReactElement> = { "": Landing };
+const VIEWS: Record<string, () => ReactElement> = { "": Landing, cases: Cases, workflow: Workflow, sla: Sla, queue: Queue, "case-study": CaseStudy };
 
 export function App() {
   const route = useRoute();

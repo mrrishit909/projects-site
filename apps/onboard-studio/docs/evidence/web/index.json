@@ -1,0 +1,205 @@
+{
+  "generated_by": "e2e/screens.spec.ts",
+  "shots": [
+    {
+      "file": "home-360.png",
+      "route": "./",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "cases-360.png",
+      "route": "cases/?case=case-000001",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "workflow-360.png",
+      "route": "workflow/",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "sla-360.png",
+      "route": "sla/",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "queue-360.png",
+      "route": "queue/",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "case-study-360.png",
+      "route": "case-study/",
+      "width": 360,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "home-768.png",
+      "route": "./",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "cases-768.png",
+      "route": "cases/?case=case-000001",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "workflow-768.png",
+      "route": "workflow/",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "sla-768.png",
+      "route": "sla/",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "queue-768.png",
+      "route": "queue/",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "case-study-768.png",
+      "route": "case-study/",
+      "width": 768,
+      "scrollWidth": 768,
+      "innerWidth": 768,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "home-1280.png",
+      "route": "./",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "cases-1280.png",
+      "route": "cases/?case=case-000001",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "workflow-1280.png",
+      "route": "workflow/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "sla-1280.png",
+      "route": "sla/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "queue-1280.png",
+      "route": "queue/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "case-study-1280.png",
+      "route": "case-study/",
+      "width": 1280,
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "home-1920.png",
+      "route": "./",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "cases-1920.png",
+      "route": "cases/?case=case-000001",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "workflow-1920.png",
+      "route": "workflow/",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "sla-1920.png",
+      "route": "sla/",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "queue-1920.png",
+      "route": "queue/",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "case-study-1920.png",
+      "route": "case-study/",
+      "width": 1920,
+      "scrollWidth": 1920,
+      "innerWidth": 1920,
+      "deviceScaleFactor": 1
+    },
+    {
+      "file": "cases-zoom200.png",
+      "route": "cases/?case=case-000001",
+      "width": 640,
+      "scrollWidth": 640,
+      "innerWidth": 640,
+      "deviceScaleFactor": 2
+    }
+  ]
+}

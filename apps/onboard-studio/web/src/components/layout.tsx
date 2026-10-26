@@ -2,6 +2,10 @@ import { useEffect, useRef, type ReactNode } from "react";
 import { ROUTES } from "../routes";
 import { useStudio } from "../state/studio";
 import { Link } from "./link";
+import "../styles/screens.css";
+
+/** Routes whose views are built in a later milestone. */
+const IN_PROGRESS = new Set(["intake", "documents", "bottlenecks", "versions", "simulation"]);
 
 const short = (s: string, n = 12): string => (s.length > n ? `${s.slice(0, n)}…` : s);
 
@@ -47,7 +51,7 @@ export function Layout({ route, title, children }: { route: string | null; title
           <nav aria-label="Primary">
             <ul className="nav">
               {ROUTES.filter((r) => r.path !== "").map((r) => (
-                <li key={r.path}><Link to={r.path} aria-current={route === r.path ? "page" : undefined}>{r.label}</Link></li>
+                <li key={r.path}><Link to={r.path} aria-current={route === r.path ? "page" : undefined}>{r.label}{IN_PROGRESS.has(r.path) && <span className="nav__tag"> in progress</span>}</Link></li>
               ))}
             </ul>
           </nav>

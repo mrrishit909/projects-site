@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T13:08:34Z",
+  "updated_at": "2026-10-26T13:13:26Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -498,6 +498,28 @@
       "command": "pytest -q (279 passed)",
       "code_sha": "2a60c40 (hosted Mode A run 40326858638 success)",
       "ts": "2026-10-26T12:59:46Z"
+    },
+    {
+      "requirement": "P02-GOLD-06 displayed values vs reference (browser)",
+      "project": "02-onboard-studio",
+      "status": "verified",
+      "command": "npm run e2e (journey golden test on /cases/?dataset=golden&case=case-001)",
+      "exit_code": 0,
+      "expected": "66.0000 / 2.0000 / 65.0000 / 1.0000 active, SLA met; pause None -> active 2.0000",
+      "actual": "as expected",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T13:13:26Z"
+    },
+    {
+      "requirement": "P02-UI-02/03/04/06/10 R18/R19/R22 widths 360/768/1280/1920, 200% zoom, no overflow, no console errors, nested reload",
+      "project": "02-onboard-studio",
+      "status": "verified",
+      "command": "npm run e2e (screens.spec.ts, 25 screenshots)",
+      "exit_code": 0,
+      "actual": "35 passed; index.json shows scrollWidth == innerWidth",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T13:13:26Z",
+      "evidence": "apps/onboard-studio/docs/evidence/web/ (subset) + CI artifact"
     }
   ]
 }

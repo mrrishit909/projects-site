@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T12:25:06Z",
+  "updated_at": "2026-10-26T13:13:26Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
@@ -191,7 +191,7 @@
       "id": "T-02-04",
       "project": "02-onboard-studio",
       "title": "Generator + web (timeline-first) + e2e + publish + integrate",
-      "status": "in_progress",
+      "status": "web done; publish + integrate in progress",
       "prereqs": [
         "T-02-03"
       ],

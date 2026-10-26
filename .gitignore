@@ -9,3 +9,5 @@ dist/
 *.egg-info/
 .env
 apps/revenue-atlas/web/evidence/
+apps/onboard-studio/web/evidence/
+apps/*/web/test-results/
