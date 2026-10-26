@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T23:12:14Z",
+  "updated_at": "2026-10-26T23:15:18Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -107,16 +107,16 @@
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
-      "stage": "built, verified (reviewer findings fixed and regression-tested at 2dcc460), republished 188e409 (CI and live check pending), integrated (case study updated); artifacts A-045 running",
+      "stage": "built, verified (reviewer findings fixed; CI green on 2dcc460), published and live-verified (run 40418131237), integrated (case study live); artifacts A-045 running",
       "built": true,
       "verified": true,
       "published": true,
       "integrated": true,
-      "last_verified_sha": "2dcc460 (local)",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40405870287",
+      "last_verified_sha": "2dcc460",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40418007851",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/invoicebridge/",
       "blockers": [],
-      "next_task": "confirm CI and live check; A-045 artifacts",
+      "next_task": "A-045 artifacts -> then nothing open",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/invoicebridge/",
       "verified_note": "Entry journey + reviewer disproof pass; all 22 findings fixed in T-05-07 with tests in Python, SQL, TypeScript and the API"
     },

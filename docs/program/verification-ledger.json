@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T23:12:14Z",
+  "updated_at": "2026-10-26T23:15:18Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1067,6 +1067,28 @@
       "code_sha": "a3f8f74",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40416593132",
       "ts": "2026-10-26T23:12:14Z"
+    },
+    {
+      "requirement": "P05 CI after the reviewer fixes (402 tests Mode A; 227 golden + 41 review checks, 71 Playwright tests Mode B) on github-hosted",
+      "project": "05-invoicebridge",
+      "status": "verified",
+      "command": "invoicebridge-ci.yml run 40418007851",
+      "exit_code": 0,
+      "actual": "both jobs success",
+      "code_sha": "2dcc460",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40418007851",
+      "ts": "2026-10-26T23:15:18Z"
+    },
+    {
+      "requirement": "P05-REL-09/17/18 after the republish: live manifest code_sha == 2dcc460..., 11 routes, links both ways; all five sites green",
+      "project": "05-invoicebridge",
+      "status": "verified",
+      "command": "live-check.yml run 40418131237 (matrix)",
+      "exit_code": 0,
+      "actual": "all jobs success",
+      "code_sha": "2dcc460 / portfolio 188e409",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40418131237",
+      "ts": "2026-10-26T23:15:18Z"
     }
   ]
 }

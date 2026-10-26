@@ -439,7 +439,7 @@
       "id": "T-05-07",
       "project": "05-invoicebridge",
       "title": "Fix reviewer findings R5-01..R5-22; regression tests; republish",
-      "status": "done (local + republished); CI and live check pending",
+      "status": "done",
       "prereqs": [
         "T-05-04"
       ],
