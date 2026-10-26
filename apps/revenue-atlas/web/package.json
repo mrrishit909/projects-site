@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/postbuild-routes.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "golden": "node --import tsx/esm scripts/golden-check.ts",
+    "golden": "tsx scripts/golden-check.ts",
     "check": "npm run typecheck && npm run golden",
     "e2e": "playwright test"
   },
