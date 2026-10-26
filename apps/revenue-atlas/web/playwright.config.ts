@@ -22,7 +22,7 @@ export default defineConfig({
     screenshot: "off",
   },
   webServer: {
-    command: `npx vite preview --port 4173 --strictPort --base ${BASE}`,
+    command: `npx vite preview --host 127.0.0.1 --port 4173 --strictPort --base ${BASE}`,
     url: `http://127.0.0.1:4173${BASE}`,
     reuseExistingServer: false,
     timeout: 90_000,
