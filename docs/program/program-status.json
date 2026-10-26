@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T11:17:30Z",
+  "updated_at": "2026-10-26T11:18:47Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -46,8 +46,8 @@
       "verified": true,
       "published": true,
       "integrated": true,
-      "last_verified_sha": "57f0143",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40310810960",
+      "last_verified_sha": "a9d7d21",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40313628128",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/revenue-atlas/",
       "blockers": [],
       "next_task": "after A-008: rebuild web, publish-site.sh, push unified-portfolio, rerun live-check (both jobs green), then reviewer disproof pass",

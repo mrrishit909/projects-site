@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:14:47Z",
+  "updated_at": "2026-10-26T11:18:47Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -206,7 +206,7 @@
       "exit_code": 0,
       "expected": "closed-window net stays 225.00; later window shows credit 90.00",
       "actual": "closed window net 225.00, credits 0.00; later window credits 90.00, net -90.00",
-      "code_sha": "pending-commit",
+      "code_sha": "a9d7d21 (hosted Mode A run 40313628128 success)",
       "ts": "2026-10-26T11:14:47Z"
     },
     {
@@ -218,7 +218,7 @@
       "exit_code": 0,
       "expected": "line quarantined, totals equal golden; rate ingest admits line",
       "actual": "as expected; after rate: gross 338.00, CM 93.60",
-      "code_sha": "pending-commit",
+      "code_sha": "a9d7d21 (hosted Mode A run 40313628128 success)",
       "ts": "2026-10-26T11:14:47Z"
     },
     {
@@ -297,6 +297,19 @@
       "code_sha": "41d2aa5",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40311533558/artifacts/12644997594",
       "ts": "2026-10-26T11:10:40Z"
+    },
+    {
+      "requirement": "P01-REL-05 Mode A on hosted runner after contract v1.1",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "revenue-atlas-ci.yml job Mode A",
+      "exit_code": 0,
+      "expected": "reference check ALL OK; 100 tests pass with postgres:16 service",
+      "actual": "success",
+      "code_sha": "a9d7d21",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40313628128",
+      "ts": "2026-10-26T11:18:47Z",
+      "note": "Mode B job failed on the runner: Playwright preview webServer timeout (passes locally, 24 tests); diagnosis in progress"
     }
   ]
 }
