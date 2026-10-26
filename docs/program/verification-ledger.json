@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T21:11:16Z",
+  "updated_at": "2026-10-26T21:15:29Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -976,9 +976,20 @@
       "command": "python data/generate.py (x2); reference_check.py; DATABASE_URL=... pytest -q",
       "exit_code": 0,
       "actual": "byte-identical; 3,735,251 bytes; ALL OK (412); 320 passed",
-      "code_sha": "pending-commit",
+      "code_sha": "ba922a1",
       "evidence": "apps/invoicebridge/data/README-generator.md; tests/test_generator.py",
       "ts": "2026-10-26T21:11:16Z"
+    },
+    {
+      "requirement": "P05 Mode A on the generator commit (320 tests incl. 35 generator tests with SQL reference at three cutoffs, postgres:16 service, github-hosted)",
+      "project": "05-invoicebridge",
+      "status": "verified",
+      "command": "invoicebridge-ci.yml run 40402231716 job 'Mode A'",
+      "exit_code": 0,
+      "actual": "Mode A success; Mode B failing until the site source exists (A-037 running)",
+      "code_sha": "ba922a1",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40402231716",
+      "ts": "2026-10-26T21:15:29Z"
     }
   ]
 }

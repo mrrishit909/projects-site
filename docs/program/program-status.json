@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T21:11:16Z",
+  "updated_at": "2026-10-26T21:15:29Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -106,8 +106,8 @@
       "verified": false,
       "published": false,
       "integrated": false,
-      "last_verified_sha": "a381e53 (Mode A)",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40395845883",
+      "last_verified_sha": "ba922a1 (Mode A)",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40402231716",
       "site_url": null,
       "blockers": [],
       "next_task": "T-05-04 (A-037 web -> CI Mode B -> publish -> integrate)"
