@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T12:05:40Z",
+  "updated_at": "2026-10-26T12:13:28Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -41,17 +41,17 @@
   "projects": {
     "01-revenue-atlas": {
       "slug": "revenue-atlas",
-      "stage": "built, verified (provisional: reviewer findings R-01..R-04 open), published (live-verified), integrated (case study live, links verified); artifacts A-010 running; fixes T-01-13 queued",
+      "stage": "built, verified (reviewer findings fixed and regression-tested), published (release f2605bb, live check pending), integrated; artifacts delivered",
       "built": true,
       "verified": true,
       "published": true,
       "integrated": true,
-      "last_verified_sha": "fdd0789",
+      "last_verified_sha": "50e72e1",
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40319480592",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/revenue-atlas/",
       "blockers": [],
-      "next_task": "after A-008: rebuild web, publish-site.sh, push unified-portfolio, rerun live-check (both jobs green), then reviewer disproof pass",
-      "verified_note": "Entry journey verified end to end (golden in browser, 100 backend tests on hosted runner, 24 browser tests). Reviewer disproof pass found R-01..R-07 (ledger); R-01..R-04 are open defects queued as T-01-13, so \"verified\" is provisional until they are fixed and re-reviewed.",
+      "next_task": "live-check of f2605bb; then project 02",
+      "verified_note": "Entry journey + adversarial + reviewer pass; open low items G-10 (idempotency text hash/actor binding), G-11 (persisted discount split over quarantined lines), G-09 (web windowed views: credit rows), extension screens UI-03..07,09 and C05-C10 not built",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/revenue-atlas/"
     },
     "02-onboard-studio": {
@@ -174,7 +174,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "If apps/revenue-atlas/web/e2e/journey.spec.ts exists and `npm run e2e` passes: commit, then tools/publish-site.sh revenue-atlas apps/revenue-atlas/web/dist /home/user/projects-site (unified-portfolio), push, then dispatch live-check.yml via workflow_dispatch. Else re-dispatch A-006 per task-queue T-01-06.",
-    "acceptance": "CI Mode B green with screenshots artifact at 360/768/1280/1920; bridge on ?dataset=golden shows contribution 40.00"
+    "next_concrete_task": "Project 02 Onboard Studio: T-02-02 golden fixture worker (A-012) then domain/API slice; Revenue Atlas: confirm live-check green for release f2605bb",
+    "acceptance": "see task-queue.json"
   }
 }

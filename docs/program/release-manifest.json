@@ -1,18 +1,18 @@
 {
-  "updated_at": "2026-10-26T11:38:24Z",
+  "updated_at": "2026-10-26T12:13:28Z",
   "sites": [
     {
       "slug": "revenue-atlas",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/revenue-atlas/",
       "site_path": "labs/revenue-atlas/ on unified-portfolio",
-      "release_commit_unified_portfolio": "92b9c66",
-      "rollback_commit_unified_portfolio": "954f7fb51d2fb5253db2aa4f75f05961cbe46932",
-      "source_commit_business_data_lab": "a9d7d21c350a818320fe29dc5d3a313acceebbfa",
-      "published_tree_sha256": "5e89722301518793abfa282556d0e0004edabeeb8d1f922d89029e6347999c76",
+      "release_commit_unified_portfolio": "f2605bb",
+      "rollback_commit_unified_portfolio": "92b9c66",
+      "source_commit_business_data_lab": "50e72e15ae1ea350f4fe5c7d3a7e54efc9baf427",
+      "published_tree_sha256": "b6ff281846be859220724b66970299bd37e930a06ef6c909ea530142917dffe3",
       "files": 38,
       "dataset_version": "ra-20261026-20261026",
       "dataset_hash": "40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444",
-      "publication_status": "published and verified live from a GitHub-hosted runner (release 92b9c66, contract v1.1)",
+      "publication_status": "republished after reviewer fixes; live verification of this release pending",
       "live_verification": {
         "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40313778038",
         "http": "200 for /, overview/, bridge/, evidence/, case-study/, data/manifest.json, routes.json",
@@ -22,7 +22,7 @@
         "verified_at": "2026-10-26T11:29:53Z",
         "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40316433768"
       },
-      "previous_release_commit": "cdae3f271d81df8e42e98eefb2cfdd4ca5fc1fb1",
+      "previous_release_commit": "92b9c66",
       "contract_version": "v1.1"
     }
   ]
