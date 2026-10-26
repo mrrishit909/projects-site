@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T15:24:58Z",
+  "updated_at": "2026-10-26T15:30:18Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -761,6 +761,17 @@
       "code_sha": "manifest commit",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40348856013",
       "ts": "2026-10-26T15:24:58Z"
+    },
+    {
+      "requirement": "P04-GOLD-01..10",
+      "project": "04-serviceflow",
+      "status": "verified",
+      "command": "python3 -I apps/serviceflow/tests/reference_check.py",
+      "exit_code": 0,
+      "expected": "starts 0/10/20, waits 0/10/20, mean 10.0000, completion 30.0000; SLA first response 0.666667",
+      "actual": "ALL OK (131 checks)",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T15:30:18Z"
     }
   ]
 }

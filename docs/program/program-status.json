@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T15:24:58Z",
+  "updated_at": "2026-10-26T15:30:18Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -86,7 +86,7 @@
     },
     "04-serviceflow": {
       "slug": "serviceflow",
-      "stage": "queued",
+      "stage": "gate-A passed (fixture verified; spec hash ee79cf36...); domain/API slice in progress",
       "built": false,
       "verified": false,
       "published": false,
@@ -95,7 +95,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": null
+      "next_task": "T-04-03 (A-028)"
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",

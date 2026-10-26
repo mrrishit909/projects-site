@@ -60,3 +60,11 @@ benefits (P04-DOMAIN-06).
 Mode A: Python domain (event log, metrics, discrete-event simulator) + PostgreSQL + FastAPI
 verified on GitHub-hosted runners. Mode B: TypeScript mirror over the published snapshot; the
 simulation studio runs in the browser on a copy with the published seed; nothing persists.
+
+## D-05 Fixture-driven clarifications (2026-10-26, adopted from A-027)
+Backlog at a cutoff counts arrived tickets not yet resolved, including those in service.
+First-response eligibility = tickets with a human reply; bot replies never count. The break is
+deducted from staffed time only when the window covers the whole shift (a pro-rata or
+declared-interval rule is a later decision). `abandonable_channels` is declared in the
+inputs; the survey invitation rate is over resolved tickets. Dependents of a rejected ticket
+carry `TICKET_REJECTED`.

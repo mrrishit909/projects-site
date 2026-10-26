@@ -1,0 +1,422 @@
+{
+  "contract_version": 1,
+  "window_start": "2026-07-06T09:00:00Z",
+  "window_end": "2026-07-06T10:00:00Z",
+  "backlog_cutoffs": [
+    "2026-07-06T09:05:00Z",
+    "2026-07-06T09:25:00Z",
+    "2026-07-06T10:00:00Z"
+  ],
+  "abandonable_channels": [
+    "chat",
+    "phone"
+  ],
+  "customers": [
+    {
+      "customer_id": "c-001",
+      "segment": "smb",
+      "timezone": "America/New_York",
+      "created_at": "2026-01-01T00:00:00Z",
+      "synthetic": true
+    },
+    {
+      "customer_id": "c-002",
+      "segment": "smb",
+      "timezone": "America/New_York",
+      "created_at": "2026-01-01T00:00:00Z",
+      "synthetic": true
+    },
+    {
+      "customer_id": "c-003",
+      "segment": "smb",
+      "timezone": "America/New_York",
+      "created_at": "2026-01-01T00:00:00Z",
+      "synthetic": true
+    },
+    {
+      "customer_id": "c-004",
+      "segment": "smb",
+      "timezone": "America/New_York",
+      "created_at": "2026-01-01T00:00:00Z",
+      "synthetic": true
+    },
+    {
+      "customer_id": "c-005",
+      "segment": "smb",
+      "timezone": "America/New_York",
+      "created_at": "2026-01-01T00:00:00Z",
+      "synthetic": true
+    }
+  ],
+  "queues": [
+    {
+      "queue_id": "q-001",
+      "queue_name": "General support",
+      "priority_policy": "fifo_within_priority",
+      "calendar_id": "cal-001",
+      "active": true
+    }
+  ],
+  "tickets": [
+    {
+      "ticket_id": "t-001",
+      "customer_id": "c-001",
+      "queue_id": "q-001",
+      "priority": "P2",
+      "created_at": "2026-07-06T09:00:00Z",
+      "channel": "email"
+    },
+    {
+      "ticket_id": "t-002",
+      "customer_id": "c-002",
+      "queue_id": "q-001",
+      "priority": "P2",
+      "created_at": "2026-07-06T09:00:00Z",
+      "channel": "email"
+    },
+    {
+      "ticket_id": "t-003",
+      "customer_id": "c-003",
+      "queue_id": "q-001",
+      "priority": "P2",
+      "created_at": "2026-07-06T09:00:00Z",
+      "channel": "email"
+    },
+    {
+      "ticket_id": "t-004",
+      "customer_id": "c-004",
+      "queue_id": "q-001",
+      "priority": "P2",
+      "created_at": "2026-07-06T09:00:00Z",
+      "channel": "email"
+    },
+    {
+      "ticket_id": "t-005",
+      "customer_id": "c-005",
+      "queue_id": "q-001",
+      "priority": "P2",
+      "created_at": "2026-07-06T09:00:00Z",
+      "channel": "email"
+    }
+  ],
+  "ticket_events": [
+    {
+      "event_id": "e-001",
+      "ticket_id": "t-001",
+      "event_type": "created",
+      "occurred_at": "2026-07-06T09:00:00Z",
+      "actor_id": null,
+      "queue_id": "q-001",
+      "agent_id": null
+    },
+    {
+      "event_id": "e-002",
+      "ticket_id": "t-001",
+      "event_type": "acknowledged_bot",
+      "occurred_at": "2026-07-06T09:00:05Z",
+      "actor_id": "bot-001",
+      "queue_id": "q-001",
+      "agent_id": null
+    },
+    {
+      "event_id": "e-003",
+      "ticket_id": "t-001",
+      "event_type": "queued",
+      "occurred_at": "2026-07-06T09:00:01Z",
+      "actor_id": null,
+      "queue_id": "q-001",
+      "agent_id": null
+    },
+    {
+      "event_id": "e-004",
+      "ticket_id": "t-001",
+      "event_type": "service_started",
+      "occurred_at": "2026-07-06T09:00:00Z",
+      "actor_id": "agt-001",
+      "queue_id": "q-001",
+      "agent_id": "agt-001"
+    },
+    {
+      "event_id": "e-005",
+      "ticket_id": "t-001",
+      "event_type": "replied_human",
+      "occurred_at": "2026-07-06T09:00:00Z",
+      "actor_id": "agt-001",
+      "queue_id": "q-001",
+      "agent_id": "agt-001"
+    },
+    {
+      "event_id": "e-006",
+      "ticket_id": "t-001",
+      "event_type": "resolved",
+      "occurred_at": "2026-07-06T09:10:00Z",
+      "actor_id": "agt-001",
+      "queue_id": "q-001",
+      "agent_id": "agt-001"
+    },
+    {
+      "event_id": "e-007",
+      "ticket_id": "t-002",
+      "event_type": "created",
+      "occurred_at": "2026-07-06T09:00:00Z",
+      "actor_id": null,
+      "queue_id": "q-001",
+      "agent_id": null
+    },
+    {
+      "event_id": "e-008",
+      "ticket_id": "t-002",
+      "event_type": "acknowledged_bot",
+      "occurred_at": "2026-07-06T09:00:05Z",
+      "actor_id": "bot-001",
+      "queue_id": "q-001",
+      "agent_id": null
+    },
+    {
+      "event_id": "e-009",
+      "ticket_id": "t-002",
+      "event_type": "queued",
+      "occurred_at": "2026-07-06T09:00:01Z",
+      "actor_id": null,
+      "queue_id": "q-001",
+      "agent_id": null
+    },
+    {
+      "event_id": "e-010",
+      "ticket_id": "t-002",
+      "event_type": "service_started",
+      "occurred_at": "2026-07-06T09:10:00Z",
+      "actor_id": "agt-001",
+      "queue_id": "q-001",
+      "agent_id": "agt-001"
+    },
+    {
+      "event_id": "e-011",
+      "ticket_id": "t-002",
+      "event_type": "replied_human",
+      "occurred_at": "2026-07-06T09:10:00Z",
+      "actor_id": "agt-001",
+      "queue_id": "q-001",
+      "agent_id": "agt-001"
+    },
+    {
+      "event_id": "e-012",
+      "ticket_id": "t-002",
+      "event_type": "resolved",
+      "occurred_at": "2026-07-06T09:20:00Z",
+      "actor_id": "agt-001",
+      "queue_id": "q-001",
+      "agent_id": "agt-001"
+    },
+    {
+      "event_id": "e-013",
+      "ticket_id": "t-003",
+      "event_type": "created",
+      "occurred_at": "2026-07-06T09:00:00Z",
+      "actor_id": null,
+      "queue_id": "q-001",
+      "agent_id": null
+    },
+    {
+      "event_id": "e-014",
+      "ticket_id": "t-003",
+      "event_type": "acknowledged_bot",
+      "occurred_at": "2026-07-06T09:00:05Z",
+      "actor_id": "bot-001",
+      "queue_id": "q-001",
+      "agent_id": null
+    },
+    {
+      "event_id": "e-015",
+      "ticket_id": "t-003",
+      "event_type": "queued",
+      "occurred_at": "2026-07-06T09:00:01Z",
+      "actor_id": null,
+      "queue_id": "q-001",
+      "agent_id": null
+    },
+    {
+      "event_id": "e-016",
+      "ticket_id": "t-003",
+      "event_type": "service_started",
+      "occurred_at": "2026-07-06T09:20:00Z",
+      "actor_id": "agt-001",
+      "queue_id": "q-001",
+      "agent_id": "agt-001"
+    },
+    {
+      "event_id": "e-017",
+      "ticket_id": "t-003",
+      "event_type": "replied_human",
+      "occurred_at": "2026-07-06T09:20:00Z",
+      "actor_id": "agt-001",
+      "queue_id": "q-001",
+      "agent_id": "agt-001"
+    },
+    {
+      "event_id": "e-018",
+      "ticket_id": "t-003",
+      "event_type": "resolved",
+      "occurred_at": "2026-07-06T09:30:00Z",
+      "actor_id": "agt-001",
+      "queue_id": "q-001",
+      "agent_id": "agt-001"
+    },
+    {
+      "event_id": "e-019",
+      "ticket_id": "t-004",
+      "event_type": "created",
+      "occurred_at": "2026-07-06T09:00:00Z",
+      "actor_id": null,
+      "queue_id": "q-001",
+      "agent_id": null
+    },
+    {
+      "event_id": "e-020",
+      "ticket_id": "t-004",
+      "event_type": "queued",
+      "occurred_at": "2026-07-06T09:00:01Z",
+      "actor_id": null,
+      "queue_id": "q-001",
+      "agent_id": null
+    },
+    {
+      "event_id": "e-021",
+      "ticket_id": "t-004",
+      "event_type": "service_started",
+      "occurred_at": "2026-07-06T09:02:00Z",
+      "actor_id": "agt-002",
+      "queue_id": "q-001",
+      "agent_id": "agt-002"
+    },
+    {
+      "event_id": "e-022",
+      "ticket_id": "t-005",
+      "event_type": "created",
+      "occurred_at": "2026-07-06T09:00:00Z",
+      "actor_id": null,
+      "queue_id": "q-001",
+      "agent_id": null
+    },
+    {
+      "event_id": "e-023",
+      "ticket_id": "t-005",
+      "event_type": "queued",
+      "occurred_at": "2026-07-06T09:00:01Z",
+      "actor_id": null,
+      "queue_id": "q-001",
+      "agent_id": null
+    },
+    {
+      "event_id": "e-024",
+      "ticket_id": "t-005",
+      "event_type": "service_started",
+      "occurred_at": "2026-07-06T09:05:00Z",
+      "actor_id": "agt-001",
+      "queue_id": "q-001",
+      "agent_id": "agt-001"
+    }
+  ],
+  "agents": [
+    {
+      "agent_id": "agt-001",
+      "agent_name": "Agent One",
+      "timezone": "America/New_York",
+      "employment_type": "full_time",
+      "active": true,
+      "max_concurrent": 1
+    },
+    {
+      "agent_id": "agt-002",
+      "agent_name": "Agent Two",
+      "timezone": "America/New_York",
+      "employment_type": "part_time",
+      "active": true,
+      "max_concurrent": 1
+    }
+  ],
+  "skills": [
+    {
+      "skill_id": "s-001",
+      "skill_name": "General",
+      "description": "General support",
+      "active": true,
+      "created_at": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "agent_skills": [
+    {
+      "agent_skill_id": "as-001",
+      "agent_id": "agt-001",
+      "skill_id": "s-001",
+      "proficiency": 4,
+      "effective_from": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "queue_skills": [
+    {
+      "queue_id": "q-001",
+      "skill_id": "s-001"
+    }
+  ],
+  "shifts": [
+    {
+      "shift_id": "sh-001",
+      "agent_id": "agt-001",
+      "starts_at": "2026-07-06T09:00:00Z",
+      "ends_at": "2026-07-06T17:00:00Z",
+      "break_minutes": 30
+    }
+  ],
+  "sla_policies": [
+    {
+      "sla_policy_id": "sla-P2",
+      "priority": "P2",
+      "first_response_minutes": 15,
+      "resolution_minutes": 60,
+      "calendar_id": "cal-001"
+    }
+  ],
+  "surveys": [
+    {
+      "survey_id": "sv-001",
+      "ticket_id": "t-001",
+      "response_at": null,
+      "score": null,
+      "invited_at": "2026-07-06T09:11:00Z"
+    },
+    {
+      "survey_id": "sv-002",
+      "ticket_id": "t-003",
+      "response_at": "2026-07-06T09:40:00Z",
+      "score": 5,
+      "invited_at": "2026-07-06T09:31:00Z"
+    },
+    {
+      "survey_id": "sv-004",
+      "ticket_id": "t-004",
+      "response_at": null,
+      "score": null,
+      "invited_at": "2026-07-06T09:30:00Z"
+    }
+  ],
+  "simulation_runs": [
+    {
+      "simulation_id": "sim-001",
+      "seed": 1,
+      "warmup_minutes": 0,
+      "policy_version": "fifo-v1",
+      "horizon_minutes": 60,
+      "config": {
+        "agents": 1,
+        "service_minutes": 10,
+        "arrivals": [
+          0,
+          0,
+          0
+        ],
+        "discipline": "fifo"
+      }
+    }
+  ]
+}

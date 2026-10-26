@@ -1,0 +1,91 @@
+{
+  "contract_version": 1,
+  "ingest": {
+    "counts": {
+      "customers": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "queues": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "tickets": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "ticket_events": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "agents": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "skills": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "agent_skills": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "queue_skills": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "shifts": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "sla_policies": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "surveys": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "simulation_runs": {
+        "accepted": 0,
+        "rejected": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "metrics": {
+    "arrival_count": 0,
+    "completion_count": 0,
+    "arrival_rate_per_hour": "0.000000",
+    "completion_rate_per_hour": "0.000000",
+    "backlog": {
+      "2026-07-06T09:05:00Z": 0,
+      "2026-07-06T09:25:00Z": 0,
+      "2026-07-06T10:00:00Z": 0
+    },
+    "first_response_minutes": {},
+    "mean_first_response_minutes": null,
+    "p90_first_response_minutes": null,
+    "wait_minutes": {},
+    "mean_wait_minutes": null,
+    "resolution_minutes": {},
+    "mean_resolution_minutes": null,
+    "handling_minutes_total": "0.0000",
+    "sla_first_response_compliance": null,
+    "sla_first_response_within": 0,
+    "sla_first_response_eligible": 0,
+    "sla_resolution_compliance": null,
+    "sla_resolution_within": 0,
+    "sla_resolution_eligible": 0,
+    "open_overdue_at_cutoff": 0,
+    "staffed_available_minutes": "60.0000",
+    "staffed_shift_minutes_whole": "450.0000",
+    "agent_occupancy": "0.000000",
+    "abandonment_rate": null,
+    "csat": null,
+    "survey_invitation_rate": null,
+    "survey_response_rate": null,
+    "empty_population": true
+  },
+  "simulation": null
+}
