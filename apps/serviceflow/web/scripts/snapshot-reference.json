@@ -1,0 +1,663 @@
+{
+ "dataset_hash": "944ef91b3dc17c04c6bb601e0faac94f956d121877de2b9864988cf7c5d5cba4",
+ "generated_by": "domain/serviceflow (Python) run once over web/public/data; see web/scripts/golden-check.ts",
+ "ingest_counts": {
+  "agent_skills": {
+   "accepted": 29,
+   "rejected": 0
+  },
+  "agents": {
+   "accepted": 18,
+   "rejected": 0
+  },
+  "customers": {
+   "accepted": 1004,
+   "rejected": 0
+  },
+  "queue_skills": {
+   "accepted": 3,
+   "rejected": 0
+  },
+  "queues": {
+   "accepted": 3,
+   "rejected": 0
+  },
+  "shifts": {
+   "accepted": 1020,
+   "rejected": 0
+  },
+  "simulation_runs": {
+   "accepted": 3,
+   "rejected": 0
+  },
+  "skills": {
+   "accepted": 3,
+   "rejected": 0
+  },
+  "sla_policies": {
+   "accepted": 3,
+   "rejected": 0
+  },
+  "surveys": {
+   "accepted": 2147,
+   "rejected": 6
+  },
+  "ticket_events": {
+   "accepted": 21893,
+   "rejected": 55
+  },
+  "tickets": {
+   "accepted": 3817,
+   "rejected": 9
+  }
+ },
+ "rejected": [
+  [
+   "surveys",
+   "sv-0576",
+   "TICKET_REJECTED"
+  ],
+  [
+   "surveys",
+   "sv-1013",
+   "TICKET_REJECTED"
+  ],
+  [
+   "surveys",
+   "sv-1201",
+   "TICKET_REJECTED"
+  ],
+  [
+   "surveys",
+   "sv-1360",
+   "TICKET_REJECTED"
+  ],
+  [
+   "surveys",
+   "sv-1567",
+   "TICKET_REJECTED"
+  ],
+  [
+   "surveys",
+   "sv-1793",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-00006",
+   "BOT_AS_HUMAN_REPLY"
+  ],
+  [
+   "ticket_events",
+   "e-03624",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-03625",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-03626",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-03629",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-03642",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-06093",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-06094",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-06110",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-06114",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-06117",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-06138",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-06146",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-07374",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-07375",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-07376",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-07379",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-07405",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-08476",
+   "BOT_AS_HUMAN_REPLY"
+  ],
+  [
+   "ticket_events",
+   "e-09107",
+   "BOT_AS_HUMAN_REPLY"
+  ],
+  [
+   "ticket_events",
+   "e-10283",
+   "BOT_AS_HUMAN_REPLY"
+  ],
+  [
+   "ticket_events",
+   "e-10581",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-10582",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-10583",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-10591",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-10594",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-12324",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-12325",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-12337",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-12339",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-12341",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-12345",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-12364",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-13812",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-13813",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-13816",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-13817",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-13820",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-13822",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-13825",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-13826",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-13840",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-13844",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-16000",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-16001",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-16002",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-16003",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-16014",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-18300",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-18301",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-18303",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-18304",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-18306",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-18307",
+   "TICKET_REJECTED"
+  ],
+  [
+   "ticket_events",
+   "e-18340",
+   "TICKET_REJECTED"
+  ],
+  [
+   "tickets",
+   "t-0630",
+   "AGENT_NOT_QUALIFIED"
+  ],
+  [
+   "tickets",
+   "t-1066",
+   "TRANSFER_RESETS_ARRIVAL"
+  ],
+  [
+   "tickets",
+   "t-1295",
+   "CONCURRENCY_EXCEEDED"
+  ],
+  [
+   "tickets",
+   "t-1852",
+   "AGENT_NOT_QUALIFIED"
+  ],
+  [
+   "tickets",
+   "t-2162",
+   "TRANSFER_RESETS_ARRIVAL"
+  ],
+  [
+   "tickets",
+   "t-2421",
+   "CONCURRENCY_EXCEEDED"
+  ],
+  [
+   "tickets",
+   "t-2422",
+   "AGENT_NOT_QUALIFIED"
+  ],
+  [
+   "tickets",
+   "t-2799",
+   "CONCURRENCY_EXCEEDED"
+  ],
+  [
+   "tickets",
+   "t-3206",
+   "TRANSFER_RESETS_ARRIVAL"
+  ]
+ ],
+ "windows": {
+  "full": {
+   "backlog": {
+    "2026-09-28T00:00:00Z": 0
+   },
+   "disclosures_digest": "1ff02f237e9a0e2e2975180e596890fabf86bc9ecb8c4d8b7d7f8d5c75ebc3b3",
+   "from": "2026-07-06T00:00:00Z",
+   "groups": {
+    "agent": {
+     "digest": "0fac11c366a8687a49a3e13ce9125132898cd4c106211ff673166c38fb7d2f9d",
+     "keys": [
+      "agt-001",
+      "agt-002",
+      "agt-003",
+      "agt-004",
+      "agt-005",
+      "agt-006",
+      "agt-007",
+      "agt-008",
+      "agt-009",
+      "agt-010",
+      "agt-011",
+      "agt-012",
+      "agt-013",
+      "agt-014",
+      "agt-015",
+      "agt-016",
+      "agt-017",
+      "agt-018"
+     ]
+    },
+    "channel": {
+     "digest": "15c202a52e458bb8498216ba473fd11af5b7fa10b40efa8b4c46a213228bbcba",
+     "keys": [
+      "chat",
+      "email",
+      "phone",
+      "web_form"
+     ]
+    },
+    "priority": {
+     "digest": "ca8a84c8e5020dfa34a9250caf3c498741ae40c813dfe655fb20cdfc092530f9",
+     "keys": [
+      "P1",
+      "P2",
+      "P3"
+     ]
+    },
+    "queue": {
+     "digest": "f35ebbeb849209c640ca21c600722cc36f68b314ddc79356cb7806070942a925",
+     "keys": [
+      "q-001",
+      "q-002",
+      "q-003"
+     ]
+    }
+   },
+   "headline": {
+    "abandonment_rate": "0.118213",
+    "agent_occupancy": "0.424263",
+    "arrival_count": 3817,
+    "arrival_rate_per_hour": "1.893353",
+    "completion_count": 3608,
+    "completion_rate_per_hour": "1.789683",
+    "csat": "0.864000",
+    "empty_population": false,
+    "handling_minutes_total": "189836.2667",
+    "mean_first_response_minutes": "28.0046",
+    "mean_resolution_minutes": "164.5909",
+    "mean_wait_minutes": "25.5073",
+    "open_overdue_at_cutoff": 0,
+    "p90_first_response_minutes": "44.1500",
+    "sla_first_response_compliance": "0.950498",
+    "sla_first_response_eligible": 3616,
+    "sla_first_response_within": 3437,
+    "sla_resolution_compliance": "0.978104",
+    "sla_resolution_eligible": 3608,
+    "sla_resolution_within": 3529,
+    "staffed_available_minutes": "447450.0000",
+    "staffed_shift_minutes_whole": "447990.0000",
+    "survey_invitation_rate": "0.595067",
+    "survey_response_rate": "0.349325"
+   },
+   "metrics_digest": "f02df7b3ded01b99a11e3967c91b4b1316e58ee590d165049329c97f9d8fa208",
+   "to": "2026-09-28T00:00:00Z"
+  },
+  "holdout": {
+   "backlog": {
+    "2026-09-28T00:00:00Z": 0
+   },
+   "disclosures_digest": "5d52c8429bdda8c10c3decf6deb13d22f00a9bd67319cd162c70f449205bd0ac",
+   "from": "2026-08-31T00:00:00Z",
+   "groups": {
+    "agent": {
+     "digest": "febecc7eb249143c2317501cab119a1346d10b3c64927b972e3a57078bfaea9e",
+     "keys": [
+      "agt-001",
+      "agt-002",
+      "agt-003",
+      "agt-004",
+      "agt-005",
+      "agt-006",
+      "agt-007",
+      "agt-008",
+      "agt-009",
+      "agt-010",
+      "agt-011",
+      "agt-012",
+      "agt-013",
+      "agt-014",
+      "agt-015",
+      "agt-016",
+      "agt-017",
+      "agt-018"
+     ]
+    },
+    "channel": {
+     "digest": "d92015f75d4f3c8842befdf64da0ebae5d32774c7e0ef39154f6bb9c8342c847",
+     "keys": [
+      "chat",
+      "email",
+      "phone",
+      "web_form"
+     ]
+    },
+    "priority": {
+     "digest": "af535a4d312dca96b32548514f58fb893e8fbba98dc86f3ee59f058c4a9def43",
+     "keys": [
+      "P1",
+      "P2",
+      "P3"
+     ]
+    },
+    "queue": {
+     "digest": "bddf32302aced1a4fd27d72d65d29da1ceb098df0823c90915290c30a496b01a",
+     "keys": [
+      "q-001",
+      "q-002",
+      "q-003"
+     ]
+    }
+   },
+   "headline": {
+    "abandonment_rate": "0.128637",
+    "agent_occupancy": "0.473609",
+    "arrival_count": 1431,
+    "arrival_rate_per_hour": "2.129464",
+    "completion_count": 1348,
+    "completion_rate_per_hour": "2.005952",
+    "csat": "0.849462",
+    "empty_population": false,
+    "handling_minutes_total": "70870.8833",
+    "mean_first_response_minutes": "35.7365",
+    "mean_resolution_minutes": "180.3161",
+    "mean_wait_minutes": "33.2661",
+    "open_overdue_at_cutoff": 0,
+    "p90_first_response_minutes": "59.3833",
+    "sla_first_response_compliance": "0.940697",
+    "sla_first_response_eligible": 1349,
+    "sla_first_response_within": 1269,
+    "sla_resolution_compliance": "0.972552",
+    "sla_resolution_eligible": 1348,
+    "sla_resolution_within": 1311,
+    "staffed_available_minutes": "149640.0000",
+    "staffed_shift_minutes_whole": "447990.0000",
+    "survey_invitation_rate": "0.601632",
+    "survey_response_rate": "0.344020"
+   },
+   "metrics_digest": "a6ecad0c0e0a968b8184af70eb5eb179e1ed7f1e106f00364e637ac481778e5c",
+   "to": "2026-09-28T00:00:00Z"
+  },
+  "training": {
+   "backlog": {
+    "2026-08-31T00:00:00Z": 1
+   },
+   "disclosures_digest": "c8699bc7ed497cc5027856bf45b82dd1f843ef925200caca6140aea412f956aa",
+   "from": "2026-07-06T00:00:00Z",
+   "groups": {
+    "agent": {
+     "digest": "23d4c613c5cc70c87489d7c3debdbb2d237a81ca66c2d60dd3eec0fb267efe14",
+     "keys": [
+      "agt-001",
+      "agt-002",
+      "agt-003",
+      "agt-004",
+      "agt-005",
+      "agt-006",
+      "agt-007",
+      "agt-008",
+      "agt-009",
+      "agt-010",
+      "agt-011",
+      "agt-012",
+      "agt-013",
+      "agt-014",
+      "agt-015",
+      "agt-016",
+      "agt-017",
+      "agt-018"
+     ]
+    },
+    "channel": {
+     "digest": "7d051404093728ed9d24384144d3f9e12b59c2305772b96bb56b3f00dd27900a",
+     "keys": [
+      "chat",
+      "email",
+      "phone",
+      "web_form"
+     ]
+    },
+    "priority": {
+     "digest": "69d235c2a86b97daa35ee2f34a9603992ad2560424814cfe0d33f2bdbce22f83",
+     "keys": [
+      "P1",
+      "P2",
+      "P3"
+     ]
+    },
+    "queue": {
+     "digest": "52d0d5b1121721b528027d3e9687a7aa88762b0a5b779d08fb96bbe3f85fc15b",
+     "keys": [
+      "q-001",
+      "q-002",
+      "q-003"
+     ]
+    }
+   },
+   "headline": {
+    "abandonment_rate": "0.112108",
+    "agent_occupancy": "0.399387",
+    "arrival_count": 2386,
+    "arrival_rate_per_hour": "1.775298",
+    "completion_count": 2260,
+    "completion_rate_per_hour": "1.681548",
+    "csat": "0.872611",
+    "empty_population": false,
+    "handling_minutes_total": "118965.3833",
+    "mean_first_response_minutes": "23.4036",
+    "mean_resolution_minutes": "155.2115",
+    "mean_wait_minutes": "20.8904",
+    "open_overdue_at_cutoff": 0,
+    "p90_first_response_minutes": "37.5500",
+    "sla_first_response_compliance": "0.956330",
+    "sla_first_response_eligible": 2267,
+    "sla_first_response_within": 2168,
+    "sla_resolution_compliance": "0.981416",
+    "sla_resolution_eligible": 2260,
+    "sla_resolution_within": 2218,
+    "staffed_available_minutes": "297870.0000",
+    "staffed_shift_minutes_whole": "447990.0000",
+    "survey_invitation_rate": "0.591150",
+    "survey_response_rate": "0.352545"
+   },
+   "metrics_digest": "2dc2cccaf87ed6a757d92e1586cae2d0b7ac99bc10ba4bbf19af78bc82c2f574",
+   "to": "2026-08-31T00:00:00Z"
+  }
+ }
+}

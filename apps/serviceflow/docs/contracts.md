@@ -108,3 +108,16 @@ is not detectable by the domain and stays an analyst check in the manifest. Even
 about 1 % of replies and pauses are late arrivals. Known behaviour, not fixed: D-05 deducts no break from a
 shift a window cuts, so staffed minutes of adjacent windows exceed the whole (447,450 vs 447,990); a
 declared-interval rule over `shift_breaks` is a later decision.
+
+## D-08 Static site (2026-10-26, adopted from A-030)
+The site serves the published snapshot over the window [2026-07-06T00:00Z, as_of + 1 s); training is weeks 1–8 and
+holdout weeks 9–12 as the manifest's `training_weeks` declare. Timestamps are integer epoch seconds; a non-zero
+sub-second part is refused at ingest. `contract_version` "v1" in the manifests maps to the integer 1 in the inputs.
+The simulation studio compares the three published runs with `public/reference/simulation-runs.json`, produced by one
+run of the Python simulator, and `scripts/snapshot-reference.json` holds Python digests of the snapshot metrics so the
+TypeScript golden check needs no Python in CI; the seeded generator (SHA-512 seeding, Mersenne Twister, expovariate,
+choices) is reimplemented and checked against CPython 3.11. P90 of wait and resolution, per-priority P90, abandoned
+counts and the P90/mean ratio are additions beyond the 28 published keys and are labelled as such. The shift grid's
+occupancy uses the recorded `shift_breaks` intervals and says that the published metric follows D-05 instead. The
+simulation interval's square root is exact at 1e-8 where Python uses a float. Queues, Compare and Surveys are stubs
+that show no figures. The evidence route runs the golden checks live and claims no CI result.
