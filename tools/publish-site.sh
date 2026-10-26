@@ -5,7 +5,7 @@
 # legacy "pages build and deployment" run for unified-portfolio completes. The commit on
 # unified-portfolio is the release ref; the previous commit is the rollback ref (master 21).
 set -euo pipefail
-slug="$1"; dist="$2"; portfolio="$3"
+slug="$1"; dist="$(cd "$2" && pwd)"; portfolio="$3"
 test -f "$dist/index.html" && test -f "$dist/routes.json"
 grep -q "/projects-site/labs/$slug/" "$dist/index.html" || { echo "dist was not built with --base=/projects-site/labs/$slug/"; exit 1; }
 lab_sha=$(git -C "$(dirname "$0")/.." rev-parse HEAD)
