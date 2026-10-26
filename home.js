@@ -12,13 +12,13 @@ import { createInstrument, prepareTextures } from "./instrument.js";
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
   const phone = () => innerWidth <= 760;
-  const cl = v => Math.max(0, Math.min(1, v)), lerp = (a, b, t) => a + (b - a) * t;
+  const cl = v => Math.max(0, Math.min(1, v)), lerp = (a, b, t) => a + (b - a) * t, sm = t => t * t * (3 - 2 * t);
   const hasGsap = typeof gsap !== "undefined";
 
   /* ---- into a case study and back (cross-document View Transitions): the clicked title travels ---- */
   const chapters = [...document.querySelectorAll("[data-chapter]")], flag = chapters.filter(c => c.dataset.slug);
   const slugOf = url => { try { const path = new URL(url, location.href).pathname; return flag.map(p => p.dataset.slug).find(s => path.endsWith("/" + s + "/")); } catch (_) { return null; } };
-  const nameFor = (slug, on) => { const p = flag.find(p => p.dataset.slug === slug); if (!p) return; p.querySelector("h2").style.viewTransitionName = on ? "title" : ""; };
+  const nameFor = (slug, on) => { const p = flag.find(p => p.dataset.slug === slug); if (!p) return; p.querySelector("h2").style.viewTransitionName = on ? "title" : ""; const m = p.querySelector(".marks"); if (m) m.style.viewTransitionName = on ? "marks" : ""; };
   addEventListener("pageswap", e => { const to = e.activation && e.activation.entry && e.activation.entry.url, s = to && slugOf(to); if (s) { try { sessionStorage.setItem("back", s); } catch (_) {} } if (!e.viewTransition) return; if (!s) { e.viewTransition.skipTransition(); return; } nameFor(s, true); try { sessionStorage.setItem("vt", s); } catch (_) {} });
   // returning from a case study: focus lands on the button that was clicked, without scrolling
   addEventListener("pageshow", () => { let s = null; try { s = sessionStorage.getItem("back"); sessionStorage.removeItem("back"); } catch (_) {} const btn = s && document.querySelector(`#feature-${s} .btns a.fill`); if (btn) btn.focus({ preventScroll: true }); });
@@ -80,14 +80,16 @@ import { createInstrument, prepareTextures } from "./instrument.js";
   const HOURS = JSON.parse($("hours-data").textContent), hourIn = $("hour"), hourOut = $("hour-out"), hourV = $("hour-v"), hourN = $("hour-n");
   const h12 = h => `${(h + 11) % 12 + 1} ${h < 12 ? "a.m." : "p.m."}`;
   const hourOf = () => HOURS.find(x => x.h === +hourIn.value) || HOURS[0];
-  const showHour = () => { if (!hourIn) return; const d = hourOf(); hourOut.textContent = h12(d.h); hourV.textContent = (d.otp * 100).toFixed(1); hourN.textContent = `${d.n.toLocaleString("en-US")} flights left between ${h12(d.h)} and ${h12(d.h + 1)}`; };
+  const showHour = () => { if (!hourIn) return; const d = hourOf(); hourOut.textContent = h12(d.h); hourV.textContent = (d.otp * 100).toFixed(1); hourN.textContent = `${d.n.toLocaleString("en-US")} flights`; };
+  // the hour's lateness, 0..1 across the published range (about 89% on time at 5 a.m. to 60% late evening): lights the Time panel
+  const lateOf = () => cl((0.89 - hourOf().otp) / 0.3);
   if (hourIn) { hourIn.addEventListener("input", () => { showHour(); audio.play("tick"); }); showHour(); }
 
   /* ---- the instrument ---- */
   const seriesEl = flag.find(p => p.dataset.series), bend = (() => { try { return seriesEl ? JSON.parse(seriesEl.dataset.series) : {}; } catch (_) { return {}; } })();
   // phones get the lite quality (no shadow map, smaller marble textures, pixel ratio capped at 1.5); the decision is made once at load
   let inst = null; try { const textures = await prepareTextures({ texSize: phone() ? 320 : 512 }); inst = createInstrument({ canvas: $("instrument"), phone, reduced, series: bend.series, fan: bend.fan, quality: phone() ? "lite" : "full", texSize: phone() ? 320 : 512, textures, startOut: root.classList.contains("opening"), onReady: () => root.classList.add("gl-on") }); } catch (e) { console.error(e); }
-  const intro = { k: 1, u: 1, running: false, still: false, tl: null, abort: null, clicked: false };
+  const intro = { k: 1, d: 1, cam: 1, u: 1, running: false, still: false, tl: null, abort: null, clicked: false };
   const enter = () => { root.classList.add("entered"); root.classList.remove("opening"); root.classList.remove("words"); try { sessionStorage.setItem("seen", "1"); } catch (_) {} };
   /* the opening timeline: 0 to 2.0 s the parts arrive and lock (the click at 1.9 s), 2.0 to 2.9 s the register unlocks
      into the exploded hero (the signature, with a texture), the words from 0.5 s, buttons at 2.4 s; 3.1 s total.
@@ -100,12 +102,22 @@ import { createInstrument, prepareTextures } from "./instrument.js";
     root.classList.add("cut"); if (root.dataset.field !== "green") { curField = "green"; root.dataset.field = "green"; } setTimeout(() => root.classList.remove("cut"), 80);
     root.classList.add("opening"); root.classList.remove("entered", "words");
     try { sessionStorage.setItem("seen", "1"); } catch (_) {}   // leaving mid-sequence counts as seen: Back never replays it
-    intro.k = 0; intro.u = 0; intro.running = true; intro.still = reduced; intro.clicked = false;
-    const tl = intro.tl = gsap.timeline({ onComplete: () => { intro.running = false; intro.k = 1; intro.u = 1; enter(); } });
-    tl.to(intro, { k: 1, duration: reduced ? 0.8 : 2.0, ease: "power2.inOut" }, 0);
-    tl.call(() => { if (!intro.clicked) { intro.clicked = true; audio.play("click"); } }, null, reduced ? 0.8 : 1.9);
-    tl.to(intro, { u: 1, duration: reduced ? 0.6 : 0.9, ease: "power3.inOut", onStart: () => audio.play("texture") }, reduced ? 0.8 : 2.0);
-    tl.call(() => root.classList.add("words"), null, 0.5);
+    intro.u = 0; intro.running = true; intro.still = reduced; intro.clicked = false;
+    intro.k = intro.d = intro.cam = reduced ? 1 : 0;
+    const tl = intro.tl = gsap.timeline({ onComplete: () => { intro.running = false; intro.k = intro.d = intro.cam = 1; intro.u = 1; enter(); } });
+    const click = () => { if (!intro.clicked) { intro.clicked = true; audio.play("click"); } };
+    if (reduced) { tl.call(() => root.classList.add("words"), null, 0); tl.to(intro, { u: 1, duration: 0.6, ease: "power2.inOut" }, 0.2); }
+    else {
+      /* shot 1 and 2: the dial turns to its index (a small overshoot), the core stack seats as it aligns: the click */
+      tl.to(intro, { d: 1, duration: 0.8, ease: "back.out(1.4)" }, 0.5);
+      tl.to(intro, { k: 1, duration: 0.45, ease: "power4.in" }, 0.85);
+      tl.call(click, null, 1.3);
+      /* shot 3: the seating unlocks the register by assembly while the camera pulls back; the words resolve */
+      tl.to(intro, { cam: 1, duration: 1.1, ease: "power2.inOut" }, 1.3);
+      tl.to(intro, { u: 1, duration: 1.2, ease: "power2.inOut", onStart: () => audio.play("texture") }, 1.35);
+      tl.call(() => root.classList.add("words"), null, 1.5);
+      tl.to({}, { duration: 0.4 }, 2.6);   // shot 4: settle
+    }
     const skip = () => { if (!intro.running) return; tl.progress(1); };
     for (const ev of ["wheel", "touchstart", "keydown"]) addEventListener(ev, skip, { passive: true, once: true, signal: sig });
     $("skip").addEventListener("click", skip, { signal: sig }); };
@@ -137,16 +149,18 @@ import { createInstrument, prepareTextures } from "./instrument.js";
   // short phones (and a phone-wide window at 200% zoom): the chapters are not pinned, so a fixed object would cross the
   // words as they scroll; the register shows in the hero and leaves for the rest of the page (a deliberate alternate composition)
   const short = () => phone() && innerHeight <= 820;
-  const stageFor = ch => { const ph = phone(), st = ch.dataset.state;
-    if (ch.dataset.chapter === "hero") return ph ? { x: 0.5, y: short() ? 0.2 : 0.26, s: short() ? 0.4 : 0.55 } : { x: 0.71, y: 0.52, s: 1 };
+  const mix = (a, b, t) => ({ x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t), s: lerp(a.s, b.s, t) });
+  const stageFor = ch => { const ph = phone(), st = ch.dataset.state, c = intro.cam;
+    if (ch.dataset.chapter === "hero") return ph ? mix({ x: 0.5, y: 0.3, s: 1.4 }, { x: 0.5, y: short() ? 0.2 : 0.26, s: short() ? 0.4 : 0.55 }, c) : mix({ x: 0.74, y: 0.38, s: 2.3 }, { x: 0.71, y: 0.52, s: 1 }, c);
     if (short()) return { x: 0.5, y: 1.3, s: 0.001 };
-    if (ch.dataset.chapter === "orient") return ph ? { x: 0.5, y: 0.22, s: 0.3 } : { x: 0.72, y: 0.5, s: 0.9 };
+    if (ch.dataset.chapter === "orient") return ph ? { x: 0.5, y: 0.13, s: 0.55 } : { x: 0.78, y: 0.8, s: 1.9 };
+    if (ch.classList.contains("wide")) return ph ? { x: 0.5, y: 0.33, s: 0.42 } : { x: 0.63, y: 0.56, s: 0.92 };
     if (ch.dataset.chapter === "system") return ph ? { x: 0.5, y: 0.22, s: 0.42 } : { x: 0.68, y: 0.5, s: 0.9 };
     // on a phone the reading ground has no room beside the words: the register leaves at the handoff (a deliberate exit)
     if (ch.dataset.chapter === "about") return ph ? { x: 0.5, y: 1.3, s: 0.001 } : { x: 0.82, y: 0.36, s: 0.55 };
     if (ch.dataset.chapter === "archive") return ph ? { x: 0.5, y: 1.3, s: 0.001 } : { x: 0.86, y: 0.55, s: 0.4 };
     if (ch.dataset.chapter === "contact") return ph ? { x: 0.5, y: 1.3, s: 0.001 } : { x: 0.72, y: 0.5, s: 0.85 };
-    const wide = st === "pipeline" || st === "timeline"; return ph ? { x: 0.5, y: 0.22, s: wide ? 0.36 : 0.5 } : { x: wide ? 0.66 : 0.69, y: 0.46, s: wide ? 0.72 : st === "network" ? 0.8 : 0.88 }; };
+    const long = st === "pipeline" || st === "timeline"; return ph ? { x: 0.5, y: 0.22, s: long ? 0.36 : 0.5 } : { x: long ? 0.66 : 0.69, y: 0.46, s: long ? 0.72 : st === "network" ? 0.8 : 0.88 }; };
   const RY = { open: -0.5, closed: -0.5, network: -0.22, pipeline: -0.34, timeline: -0.28, documents: -0.5 };
   const testsEl = $("tests-n"); let lastTests = -1, lastChapterCue = -1;
   const tick = t => {
@@ -157,12 +171,14 @@ import { createInstrument, prepareTextures } from "./instrument.js";
     const field = scrollY + innerHeight * 0.92 >= tops.get(handoff) ? "ivory" : "green"; if (field !== curField) { curField = field; root.dataset.field = field; }
     const prev = chapters[Math.max(0, k - 1)], prevState = prev.dataset.state, st = ch.dataset.state;
     const u = cl((scrollY - tops.get(ch)) / Math.max(1, ch.offsetHeight - innerHeight));
-    let pose = { state: st, stage: stageFor(ch), introK: intro.k, introStill: intro.still, tilt: { x: ptr.nx, y: ptr.ny }, spin: ptr.spin, ry: RY[st] == null ? -0.5 : RY[st], rx: 0.16, force: intro.running, ground: -3.3 };
-    if (name === "hero") { pose.state = "closed"; pose.next = "open"; pose.u = intro.u; }
-    else if (ch.dataset.slug) { pose.state = prevState === "open" || prevState === "closed" ? "open" : prevState; pose.next = st; pose.u = cl((u - 0.04) / 0.5); pose.arg = prev.dataset.slug ? +prev.dataset.argEnd || undefined : undefined;
-      if (st === "pipeline") { pose.nextArg = Math.round(31 * cl((u - 0.3) / 0.5)); if (testsEl && pose.nextArg !== lastTests) { testsEl.textContent = String(pose.nextArg); if (pose.nextArg > lastTests && lastTests >= 0) audio.play("tick"); lastTests = pose.nextArg; } }
+    let pose = { state: st, stage: stageFor(ch), introK: intro.k, introD: intro.d, introStill: intro.still, tilt: { x: ptr.nx, y: ptr.ny }, spin: ptr.spin, ry: RY[st] == null ? -0.5 : RY[st], rx: 0.16, force: intro.running, ground: -3.3 };
+    if (name === "hero") { const c = sm(intro.cam); pose.state = "closed"; pose.next = "open"; pose.u = intro.u; pose.lead = true; pose.ry = lerp(-0.95, -0.5, c); pose.rx = lerp(0.05, 0.16, c); }
+    else if (name === "orient") { pose.state = "closed"; pose.ry = -0.3; pose.rx = 0.1; }
+    else if (ch.dataset.slug) { pose.state = prevState === "open" || prevState === "closed" ? (k === 1 ? "closed" : "open") : prevState; pose.next = st; pose.u = cl((u - 0.04) / 0.5); pose.arg = prev.dataset.slug ? +prev.dataset.argEnd || undefined : undefined; pose.arg2 = prev.dataset.slug ? +prev.dataset.argEnd2 || undefined : undefined;
+      if (st === "network") { pose.nextArg = hourOf().h; pose.nextArg2 = lateOf(); }
+      else if (st === "pipeline") { pose.nextArg = Math.round(31 * cl((u - 0.3) / 0.5)); if (testsEl && pose.nextArg !== lastTests) { testsEl.textContent = String(pose.nextArg); if (pose.nextArg > lastTests && lastTests >= 0) audio.play("tick"); lastTests = pose.nextArg; } }
       else if (st === "documents") { pose.nextArg = cl((u - 0.08) / 0.4) + cl((u - 0.7) / 0.28); ch.classList.toggle("refusing", pose.nextArg > 1.5); }
-      ch.dataset.argEnd = pose.nextArg == null ? "" : String(pose.nextArg); }
+      ch.dataset.argEnd = pose.nextArg == null ? "" : String(pose.nextArg); ch.dataset.argEnd2 = pose.nextArg2 == null ? "" : String(pose.nextArg2); }
     else if (name === "system") { if (sys.state === "open" || sys.state === "closed") { pose.state = "closed"; pose.next = "open"; pose.u = sys.sep; } else pose.state = sys.state; pose.arg = sys.state === "pipeline" ? 31 : sys.state === "documents" ? 1 : undefined; pose.spin = ptr.spin + sys.spin; pose.ry = RY[sys.state]; }
     else if (name === "contact") { pose.state = "closed"; pose.ry = -0.5 + Math.sin(t / 9000) * 0.25; pose.force = true; }
     else if (name === "about" || name === "archive") { pose.state = "closed"; pose.ry = -0.65; }

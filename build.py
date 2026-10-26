@@ -327,12 +327,10 @@ def unit_split(sc):
 
 
 CONTROLS = {
-    "florida-flight-delays": ('<form class="hour-form" onsubmit="return false"><label for="hour">Departure hour, Florida airports (published hourly rates)</label>'
-                              '<input type="range" id="hour" name="hour" min="5" max="23" step="1" value="8" aria-describedby="hour-line"><output for="hour" id="hour-out">8 a.m.</output></form>'
-                              '<p class="counter" id="hour-line"><b id="hour-v">88.7</b>% arrived on time; <span id="hour-n">38,946 flights left between 8 and 9 a.m.</span></p>'),
+    "florida-flight-delays": ('<form class="hour-form" onsubmit="return false"><label for="hour">Departure hour</label>'
+                              '<input type="range" id="hour" name="hour" min="5" max="23" step="1" value="8" aria-describedby="hour-line">'
+                              '<output for="hour" id="hour-line" class="counter"><b id="hour-out">8 a.m.</b> <b id="hour-v">88.7</b>% on time, <span id="hour-n">38,946 flights</span> (published hourly rates)</output></form>'),
     "retail-dbt": '<p class="counter"><b id="tests-n">0</b> of 31 tests pinned into the frames as you scroll.</p>',
-    "us-retail-forecast": '<p class="stage-note">The columns stand at the real monthly series, Aug 2024 to Jul 2026; the bars ahead follow last year\u2019s shape and fan out by the backtest\u2019s error at each horizon. An illustrative shape: the chart below is the data.</p>',
-    "sec-10k-rag": '<p class="stage-note">One passage lifts out of the index and faces you. Keep scrolling and the drawer closes: the refusal, when the filing does not hold the answer.</p>',
 }
 
 
@@ -349,13 +347,10 @@ def home_page(projects):
         p, sc, at = by_slug[f["slug"]], f["scale"], f["atelier"]
         big, unit = unit_split(sc)
         links = [f'<a class="btn fill" href="{p["slug"]}/">View project <span class="arrow" aria-hidden="true">&rarr;</span></a>', f'<a class="btn" href="{escape(p["repo"])}" target="_blank" rel="noopener">Code</a>']
-        if p.get("demo"):
-            links.append(f'<a class="btn" href="{escape(demo_url(p))}">{escape(p.get("demo_label", "Demo"))}</a>')
         w, h = webp_size(ROOT / p["slug"] / "cover-800.webp")
         series = (" data-series=" + chr(39) + json.dumps({"series": f["series"], "fan": f["fan"]}, separators=(",", ":")) + chr(39)) if f.get("series") else ""
         chapters.append(
-            f'<section class="chapter" id="feature-{p["slug"]}" data-chapter="work-{i}" data-label="{escape(p["title"], quote=True)}" data-state="{at["state"]}" data-slug="{p["slug"]}"{series} aria-labelledby="t-{p["slug"]}"><div class="chapter-in">'
-            f'<p class="kicker label">{i:02d} / {escape(f["area"])}</p>'
+            f'<section class="chapter{" " + at["composition"] if at.get("composition") else ""}" id="feature-{p["slug"]}" data-chapter="work-{i}" data-label="{escape(p["title"], quote=True)}" data-state="{at["state"]}" data-slug="{p["slug"]}"{series} aria-labelledby="t-{p["slug"]}"><div class="chapter-in">'
             f'<div class="text"><h2 class="display" id="t-{p["slug"]}">{escape(p["title"])}<span class="dot" aria-hidden="true"></span></h2>'
             f'<p class="lead">{escape(at["lead"])}</p>'
             f'<p class="figure"><b>{big}</b><span class="unit">{escape(unit)}</span><span class="def">{escape(at["definition"])}</span></p>'

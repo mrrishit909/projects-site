@@ -99,7 +99,7 @@ main { position: relative; z-index: 1; }
 .hero .domains span { display: block; }
 .hero .foot-lines { grid-column: 1; grid-row: 3; color: var(--fg-2); padding-top: 18px; border-top: 1px solid var(--line); max-width: 36ch; }
 .hero .foot-lines span { display: block; }
-.skip-intro { position: fixed; right: var(--gutter); bottom: 24px; z-index: 60; visibility: hidden; }
+.skip-intro { position: fixed; right: var(--gutter); bottom: 24px; z-index: 60; visibility: hidden; background: var(--deep); }
 html.opening .skip-intro { visibility: visible; }
 /* the words arrive during the opening (CSS owns the type; GSAP owns the object and the timing class) */
 html.js.opening .hero .block > :not(h1), html.js.opening .hero .domains, html.js.opening .hero .foot-lines { opacity: 0; transform: translateY(22px); }
@@ -110,6 +110,7 @@ html.js.opening.words .hero .block > :nth-child(2) { transition-delay: 120ms; } 
 /* ---- the chapters: a pinned screen each, the text column on the left, the object's room on the right ---- */
 .orient { padding: 12vh var(--gutter) 8vh; display: grid; grid-template-columns: minmax(0, 5.4fr) minmax(0, 6.6fr); gap: 24px 32px; align-items: start; }
 .orient > * { grid-column: 1; }
+.orient h2 { font-size: clamp(40px, 5.2vw, 88px); }
 .orient .lead { max-width: 40ch; }
 .orient ol { display: grid; border-top: 1px solid var(--line); margin-top: 8px; }
 .orient li a { display: grid; grid-template-columns: 3ch 1fr auto; gap: 18px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid var(--line); text-decoration: none; }
@@ -143,11 +144,22 @@ html.js .chapter.is-in .marks span { opacity: 1; }
 html.js .chapter .text > *, html.js .chapter .kicker, html.js .chapter .evidence { opacity: 0; transform: translateY(16px); transition: opacity var(--t3) var(--ease), transform var(--t3) var(--ease); }
 html.js .chapter.is-in .text > *, html.js .chapter.is-in .kicker, html.js .chapter.is-in .evidence { opacity: 1; transform: none; }
 .chapter.is-in .text > :nth-child(2) { transition-delay: 80ms; } .chapter.is-in .text > :nth-child(3) { transition-delay: 160ms; } .chapter.is-in .text > :nth-child(4) { transition-delay: 240ms; } .chapter.is-in .text > :nth-child(5) { transition-delay: 320ms; } .chapter.is-in .evidence { transition-delay: 400ms; }
-/* the per-chapter controls */
-.hour-form { display: grid; grid-template-columns: 1fr auto; gap: 6px 14px; align-items: center; max-width: 360px; }
-.hour-form label { grid-column: 1 / -1; color: var(--fg-2); font-size: var(--fs-small); }
+/* the wide composition (chapter 1): the title across both columns over a wide establishing view of the object; the
+   figure, the control and the actions settle bottom left, the evidence bottom right, the marks over the object */
+.chapter.wide .chapter-in { grid-template-rows: auto 1fr auto auto auto auto; }
+.chapter.wide .text { display: contents; }
+.chapter.wide h2 { grid-column: 1 / -1; grid-row: 1; font-size: clamp(54px, 9.2vw, 164px); }
+.chapter.wide .marks { grid-row: 2; align-self: start; padding-top: 18px; }
+.chapter.wide .lead { grid-column: 1; grid-row: 3; align-self: end; }
+.chapter.wide .figure { grid-column: 1; grid-row: 4; margin-top: 6px; }
+.chapter.wide .hour-form { grid-column: 1; grid-row: 5; margin-top: 6px; }
+.chapter.wide .btns { grid-column: 1; grid-row: 6; margin-top: 10px; }
+.chapter.wide .evidence { grid-row: 3 / span 4; }
+/* the per-chapter controls: one line, the figure the slider changes beneath it */
+.hour-form { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; align-items: center; max-width: 420px; }
+.hour-form label { color: var(--fg-2); font-size: var(--fs-small); white-space: nowrap; }
+.hour-form output { grid-column: 1 / -1; display: block; }
 input[type="range"] { width: 100%; accent-color: var(--champagne); height: 28px; }
-.hour-form output { font-family: var(--mono); font-size: var(--fs-small); min-width: 6ch; }
 .counter { color: var(--fg-2); font-size: var(--fs-small); }
 .counter b { font-family: var(--mono); color: var(--fg); font-weight: 400; }
 .stage-note { color: var(--fg-2); font-size: var(--fs-small); max-width: 44ch; line-height: 1.4; }
@@ -207,7 +219,7 @@ html[data-field="ivory"] canvas.instrument { z-index: 2; }
 .summary div:last-child { border-right: 0; }
 .summary dt { color: var(--fg-2); font-size: var(--fs-label); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
 .summary dd { margin-top: 6px; font-size: var(--fs-small); line-height: 1.5; overflow-wrap: anywhere; }
-.case-hero .object { grid-column: 2; grid-row: 1 / span 3; position: relative; min-height: 440px; }
+.case-hero .object { grid-column: 2; grid-row: 1 / span 3; position: relative; min-height: 560px; }
 .case-hero .object canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 /* the still of the same arrangement stands in before the first WebGL frame and without WebGL or JavaScript */
 .case-hero .object-still { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: 50% 50%; }
@@ -342,6 +354,7 @@ dialog.detail .dl-nav { display: flex; justify-content: space-between; gap: 12px
   .hero .block { grid-row: 3; gap: 18px; }
   .hero .domains { display: none; }
   .hero .foot-lines { grid-row: 4; }
+  .skip-intro { top: 112px; bottom: auto; right: 16px; min-height: 40px; padding: 0 14px; }   /* over the object room, never over the words */
   .hero .lead { max-width: 28ch; }
   .poster img { object-fit: contain; object-position: 50% 24%; }
   .orient { grid-template-columns: 1fr; padding: 32svh 20px 6vh; }
@@ -358,6 +371,14 @@ dialog.detail .dl-nav { display: flex; justify-content: space-between; gap: 12px
   .chapter .figure b { font-size: 15vw; }
   .chapter .foot { grid-row: 4; }
   .chapter .evidence { display: none; }
+  .chapter.wide .chapter-in { grid-template-rows: auto 26svh auto auto auto auto auto; gap: 6px; padding-top: 92px; }
+  .chapter.wide .lead { line-height: 1.3; }
+  .chapter.wide h2 { grid-row: 1; }
+  .chapter.wide .marks { grid-row: 3; padding-top: 0; }
+  .chapter.wide .lead { grid-row: 4; align-self: start; }
+  .chapter.wide .figure { grid-row: 5; }
+  .chapter.wide .hour-form { grid-row: 6; }
+  .chapter.wide .btns { grid-row: 7; }
   .marks { grid-column: 1; align-self: start; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px 8px; font-size: 11px; letter-spacing: 0.02em; padding-top: 0; }
   .marks span { grid-template-columns: 1fr; }
   .marks span::after { display: none; }
@@ -438,6 +459,8 @@ html.paused .rv, html.paused .btn, html.paused .marks span, html.paused .chapter
 /* ---- cross-document View Transitions: the clicked chapter title travels into the case study's h1 and back ---- */
 @view-transition { navigation: auto; }
 .case-hero h1 { view-transition-name: title; }
+.case-hero .marks { view-transition-name: marks; }
+::view-transition-group(marks) { animation-duration: 0.64s; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
 ::view-transition-old(root) { animation: vt-out 0.35s cubic-bezier(0.23, 1, 0.32, 1) both; }
 ::view-transition-new(root) { animation: vt-in 0.6s cubic-bezier(0.23, 1, 0.32, 1) both; }
 @keyframes vt-out { to { opacity: 0; } }

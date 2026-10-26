@@ -23,10 +23,12 @@
       const texSize = innerWidth <= 760 ? 256 : 384; const textures = await prepareTextures({ texSize, words });
       const inst = createInstrument({ canvas: cv, phone: () => innerWidth <= 760, reduced: reduce, words, quality: "lite", texSize, textures, onReady: () => document.documentElement.classList.add("gl-on") });
       if (!inst) return;
+      // arriving from this project's chapter on the home (the View Transition's record), the arrangement is already formed: the same object continues
+      let formed = false; try { formed = sessionStorage.getItem("vt") === location.pathname.split("/").filter(Boolean).pop(); } catch (_) {}
       let t0 = 0; const tick = t => { requestAnimationFrame(tick); if (document.hidden) return; if (!t0) t0 = t;
-        const ph = innerWidth <= 760, u = Math.min(1, (t - t0) / 1400);
-        inst.update(t, { state: "closed", next: state, u: reduce ? 1 : u, arg: state === "pipeline" ? 31 : state === "documents" ? 1 : undefined, nextArg: state === "pipeline" ? 31 : state === "documents" ? 1 : undefined,
-          stage: { x: 0.5, y: 0.5, s: ph ? (wide ? 0.44 : 0.6) : (wide ? 0.78 : 0.95) }, ry: (state === "network" ? -0.2 : -0.45) + (reduce ? 0 : Math.sin(t / 7000) * 0.18), rx: 0.14, ground: -3.1, force: !reduce }); };
+        const ph = innerWidth <= 760, u = formed || reduce ? 1 : Math.min(1, (t - t0) / 1400), arg = state === "pipeline" ? 31 : state === "documents" ? 1 : state === "network" ? 8 : undefined;
+        inst.update(t, { state: "closed", next: state, u, arg, nextArg: arg, nextArg2: state === "network" ? 0.11 : undefined,
+          stage: { x: 0.5, y: 0.5, s: ph ? (wide ? 0.44 : state === "network" ? 0.9 : 0.6) : (wide ? 0.78 : state === "network" ? 1.08 : 0.95) }, ry: (state === "network" ? -0.22 : -0.45) + (reduce ? 0 : Math.sin(t / 7000) * 0.18), rx: 0.14, ground: -3.1, force: !reduce }); };
       requestAnimationFrame(tick);
     }).catch(() => 0);
     if (document.readyState === "complete") setTimeout(start, 50); else addEventListener("load", () => setTimeout(start, 50));

@@ -50,9 +50,11 @@ A project's record sleeve on the home page, and the "Next project" link on the c
 
 * **`/projects/` (index.html) is the home: PRECISION ATELIER** (2026-10-25, the owner-selected direction; the concept
   image is the target; see `design/art-direction.md`, `design/storyboard.md`, `docs/INSTRUMENT.md`, `docs/AUDIO.md`,
-  `docs/ROUTES.md`, `docs/ATELIER_PROGRESS.md`). One object: a 32-part register of brushed champagne brass, racing-green
-  lacquer and marble (`instrument.js`, procedural Three.js r170, tree-shaken in `vendor/three/`, rebuilt from
-  `docs/BUILD-THREE.md`) that assembles on arrival, unlocks into the exploded hero, and is rearranged by each flagship
+  `docs/ROUTES.md`, `docs/ATELIER_PROGRESS.md`). One object: a 41-part register in five assemblies (head, core with the dial, sides, connectors, base) of brushed
+  champagne brass, racing-green lacquer and marble (`instrument.js`, procedural Three.js r170, tree-shaken in
+  `vendor/three/`, rebuilt from `docs/BUILD-THREE.md`; the contract in `docs/INSTRUMENT.md`, the shot list and
+  storyboard in `design/journey.md`) whose opening is a close-up on the dial (it turns, the core seats, the register
+  unlocks by assembly as the camera pulls back), and which is rearranged by each flagship
   chapter into that project's structure (network = the star schema, pipeline = dbt's four layers with 31 test pins,
   timeline = the real monthly series with a fanning forecast, documents = a card index with a lifted passage and the
   refusal), then rests assembled on the ivory reading ground. Files: `index.template.html` + `atelier.css` (the one
@@ -61,7 +63,8 @@ A project's record sleeve on the home page, and the "Next project" link on the c
   buttons and arrow keys; pointer drag on fine pointers; Pause; the audio manager; the hour input; the evidence
   fragments drawn by `motion/scenes/<slug>.js`; View Transitions into the case studies) + `instrument.js` (parts,
   materials, states, the arrival trajectories, adaptive pixel ratio, context loss). `build.py` `home_page()` emits one
-  `.chapter` per `featured.json` entry from its `atelier` block (`state`, `marks`, `lead`, `definition`) with the figure
+  `.chapter` per `featured.json` entry from its `atelier` block (`state`, `marks`, `lead`, `definition`, optional
+  `composition`: `wide` puts the title across the screen over the object; chapter 1 only until the owner accepts) with the figure
   from `scale`, the hourly rates from `florida-flight-delays/preview/data.json`, the twelve most recent case studies and
   the counts from `data/github.json` (`tools/github.sh` refreshes it; **re-run it then `python3 build.py` after pushing new
   repositories**). The posters for the first paint and for browsers without WebGL are `assets/atelier-poster.webp` and

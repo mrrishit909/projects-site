@@ -10,7 +10,8 @@ const BASE = 'http://127.0.0.1:8800/index.html';
 const smooth = (p, from, to, ms) => p.evaluate(([a, b, ms]) => new Promise(res => { const t0 = performance.now(); const step = now => { const u = Math.min(1, (now - t0) / ms); scrollTo(0, a + (b - a) * (u * u * (3 - 2 * u))); if (u < 1) requestAnimationFrame(step); else res(); }; requestAnimationFrame(step); }), [from, to, ms]);
 const top = (p, sel) => p.evaluate(s => document.querySelector(s).getBoundingClientRect().top + scrollY, sel);
 const height = (p, sel) => p.evaluate(s => document.querySelector(s).offsetHeight, sel);
-const clip = async (b, name, vp, mobile, run, init) => {
+const ONLY = process.argv[3] || '';
+const clip = async (b, name, vp, mobile, run, init) => { if (ONLY && !name.includes(ONLY)) return;
   const ctx = await b.newContext({ viewport: vp, deviceScaleFactor: 1, isMobile: mobile, hasTouch: mobile, recordVideo: { dir: out, size: vp }, reducedMotion: name.includes('reduced') ? 'reduce' : 'no-preference' });
   if (init) await ctx.addInitScript(init);
   const p = await ctx.newPage(); await run(p); const v = p.video(); await ctx.close(); const f = await v.path(); const dst = path.join(out, name + '.webm'); fs.renameSync(f, dst);
@@ -35,5 +36,15 @@ const clip = async (b, name, vp, mobile, run, init) => {
   await clip(b, 'context-loss', D, false, async p => { await p.goto(BASE, { waitUntil: 'networkidle' }); await p.waitForTimeout(800); await p.evaluate(() => { const gl = document.getElementById('instrument').getContext('webgl2'); window.__lose = gl.getExtension('WEBGL_lose_context'); window.__lose.loseContext(); }); await p.waitForTimeout(1500); await p.evaluate(() => window.__lose.restoreContext()); await p.waitForTimeout(2000); }, () => { try { sessionStorage.setItem('seen', '1'); } catch (_) {} });
   await clip(b, 'phone-opening', M, true, async p => { await p.goto(BASE, { waitUntil: 'commit' }); await p.waitForTimeout(4500); });
   await clip(b, 'phone-walk', M, true, async p => { await p.goto(BASE, { waitUntil: 'networkidle' }); const H = await p.evaluate(() => document.body.scrollHeight - innerHeight); await smooth(p, 0, H, 18000); await p.waitForTimeout(800); }, () => { try { sessionStorage.setItem('seen', '1'); } catch (_) {} });
+  // the representative journey (design/journey.md): a fresh opening, the hero, Selected work, the first project forming and
+  // settling, its hour control, View project, the case page's hero and reading, Back; desktop and phone
+  const journey = async (p, tall) => { await p.goto(BASE, { waitUntil: 'commit' }); await p.waitForTimeout(3600);
+    const t1 = await top(p, '#feature-florida-flight-delays'), h1 = await height(p, '#feature-florida-flight-delays');
+    await smooth(p, 0, t1 + (h1 - tall) * 0.62, 6500); await p.waitForTimeout(900);
+    await p.evaluate(() => { const i = document.getElementById('hour'); for (const v of [12, 16, 20]) { i.value = v; i.dispatchEvent(new Event('input', { bubbles: true })); } }); await p.waitForTimeout(1400);
+    await p.evaluate(() => document.querySelector('#feature-florida-flight-delays .btns a.fill').click()); await p.waitForLoadState('load'); await p.waitForTimeout(2200);
+    await smooth(p, 0, tall * 1.1, 2200); await p.waitForTimeout(600); await p.goBack(); await p.waitForLoadState('load'); await p.waitForTimeout(2200); };
+  await clip(b, 'journey-desktop', D, false, p => journey(p, 900));
+  await clip(b, 'journey-phone', M, true, p => journey(p, 844));
   await b.close();
 })();

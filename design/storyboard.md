@@ -2,27 +2,28 @@
 
 Evidence: screenshots in `~/projects-site-evidence/atelier-2026-10-25/r*/`, recordings in `recordings/final/`.
 
-## The opening (measured 3.1 s on the GSAP clock; about 3.4 s from first render on the test Mac)
+## The opening (3.0 s on the GSAP clock; design/journey.md section 3 is the shot list)
 
-| t | Object (instrument.js, k = introK) | Words (CSS, html.opening / .words) | Sound |
-|---|---|---|---|
-| 0.0 | the parts are off-axis at their families' approach distances (the instrument starts there when the opening will play); the group turned 1.2 rad | brand, nav, kicker and the headline are in the first frame; the poster shows until the first WebGL frame | silence |
-| 0.0 to 2.0 | k 0 to 1 (power2.inOut): rails from above, the core from the front, slabs from the sides, the lower block from the left, frames from behind, the inner frame, brackets from below, pins from the depth, pads last; each unwinds its yaw as it lands; the group's turn settles | at 0.5 s the lead, the buttons, the domains and the corner lines rise (staggered 120 to 400 ms) | click at 1.9 s when the register locks |
-| 2.0 to 2.9 | the signature: closed blends to open (power3.inOut 0.9 s); the register unlocks into the exploded hero | the words are settled; nothing competes | a short texture at 2.0 s |
-| 2.9 to 3.1 | rest; html.entered; Replay appears, Skip disappears | | |
+| t | Object (instrument.js: introD, introK, the lead blend) | Camera (home.js: intro.cam) | Words | Sound |
+|---|---|---|---|---|
+| 0.0 | assembled except the front core stack, which stands 0.7 ahead of its seat with the dial 2.4 rad off its index | the close-up: scale 2.3, the dial at the right of the statement, ry -0.95 | brand, nav, kicker and the statement on the first frame | silence |
+| 0.5 to 1.3 | the dial turns to its index (back.out, a small overshoot) | still | | |
+| 0.85 to 1.3 | the core stack seats as the dial aligns (power4.in) | still | | the click at 1.3 |
+| 1.3 to 2.5 | the seating unlocks the register by assembly (lead order: head, frame, base, sides, connectors, core, dial, screws; power2.inOut over 1.2 s) | the pull-back: scale 2.3 to 1.0, ry -0.95 to -0.5, rx 0.05 to 0.16 (1.1 s) | the lead, the buttons, the domains and the corner lines rise from 1.5 s (staggered 120 to 400 ms) | the texture at 1.35 |
+| 2.5 to 3.0 | settling | settled | | |
+| 3.0 | html.entered; Replay appears, Skip disappears | | | |
 
-Controls: Skip (button, wheel, touch, key) sets the timeline to its end: k = 1, u = 1, entered. Replay kills the timeline
-and its listeners (AbortController), scrolls to the top, cuts the ground to green, and runs again. Repeat visits in a
-session, hash arrivals and returns from case studies skip the sequence. Reduced motion: no travel; k and u still run in
-0.8 + 0.6 s with `introStill`.
+Controls: Skip (button, wheel, touch, key) sets the timeline to its end. Replay kills the timeline and its listeners,
+scrolls to the top, cuts the ground to green, and runs again. Repeat visits in a session, hash arrivals and returns
+from case studies skip the sequence. Reduced motion: no close-up, no travel; assembled to exploded in 0.6 s.
 
 ## Chapters (scroll-driven; each a pinned screen inside a 185 svh section)
 
 | Chapter | Entry (u 0 to 0.04) | Development (u 0.04 to 0.54) | Settled reading state (u 0.54 to 1) | Interaction | Out |
 |---|---|---|---|---|---|
-| Hero | the opening | | the exploded hero | drag, tilt (fine pointers); Replay | the words scroll off, the object holds |
-| Selected work (orient) | | the object holds | the list of four | links to the chapters | |
-| 01 Florida: network | from the previous arrangement (open) | the plate becomes the fact table; the two slabs and two lacquer plates travel to the corners; the pins turn into connectors from the plate's corners; the rails settle as a base | the star schema under AIRPORTS / TIME / CARRIERS / OBSERVATIONS | the departure-hour range (published rates, figure in HTML) | the next chapter's blend |
+| Hero | the opening | | the exploded hero (split: statement left, register right) | tilt (fine pointers); Replay | the words scroll off, the object closes as the camera approaches |
+| Selected work (orient) | the register closes | the camera comes in on the head block: scale 1.9, the tick scale and the plate fill the lower right; negative space on the left | the list of four | links to the chapters | the schema forms as the title arrives |
+| 01 Florida: network (the wide composition) | from closed | the title spans the screen; beneath it the core stays assembled as the fact block, the four panels travel to the corners, the connectors turn from the block's corners, the head and base beams and the brackets frame it | the schema under AIRPORTS / TIME / CARRIERS / OBSERVATIONS; the figure, one control line and two actions bottom left, the report fragment bottom right | the departure hour turns the dial to that hour and lights the Time panel by its lateness; the figure line updates (published rates) | the next chapter's blend |
 | 02 dbt: pipeline | from network | four standing frames line up on two long rails: source bars, staging plates, intermediate slabs, the engraved plate as the marts; 31 test pins slot into the frames' top bars from u 0.3 to 0.8 | the row under SOURCE / STAGING / INTERMEDIATE / MARTS, 31 of 31 | the counter follows the scroll both ways; ticks | |
 | 03 Forecast: timeline | from pipeline | twelve solid parts stand in time order at the real series' height; twelve thin bars stand ahead at last year's shape and fan apart by the backtest's error; the pins lie as the axis; the bracket marks now | OBSERVED / NOW / FORECAST / 80% RANGE; the figure 1.81% with its backtest definition | | |
 | 04 10-K: documents | from timeline | the drawer forms; cards fan back from a shared edge; the ivory passage lifts out and turns to face the visitor (u 0.08 to 0.48) | the answer with its passage; then (u 0.7 to 0.98) the drawer closes and the brackets cross: the refusal (`refusing` class) | | |

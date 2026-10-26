@@ -92,6 +92,33 @@ and focus on the clicked button after every Back. Repeated downloads: every navi
 because the local server sends no cache headers; on GitHub Pages they are cached for ten minutes. Heap: single samples,
 no monotonic growth across the three repetitions; not a leak verdict.
 
+## Round 5 (2026-10-26, the refinement candidate): the same protocol on the rebuilt instrument
+
+Conditions unchanged (Apple M3 Pro, Playwright Chromium on ANGLE Metal; Lighthouse 12.8.2 headless, software GL; serve
+with gzip on 8801). Thresholds frozen as above. Geometry: 41 parts plus the dial (a 56-sided drum) and four screws, 50
+draw calls assembled or exploded at DPR 1 (36 in the network).
+
+| Measure | 9ecf79b | this candidate | Threshold | Status |
+|---|---|---|---|---|
+| Pacing, every journey, desktop 2x and phone emulation (p50 / p99) | 16.7 / 16.8 ms | 16.7 / 16.8 ms (the opening p99 33.3 ms on desktop) | p99 under 33 ms | VERIFIED PASS except the opening's one compile frame |
+| The opening's compile frame | 100 ms desktop, 67 ms phone | 133 ms desktop, 50 ms phone | no frame over 50 ms after the first paint | FAIL on desktop (one frame, before the first visible motion; the close-up is drawn from it), PASS on the phone preset |
+| Throttled 4x CPU blocking, GPU on (home phone / home desktop / case phone) | 108 / 206 / 90 ms | 171 / 233 / 120 ms | under 400 ms | VERIFIED PASS; the rise is the dial's ring canvas and the denser bevels |
+| Lighthouse mobile performance (home / case / long case / archive) | 94 / 97 / 90 / 95 | 91 / 97 / 90 / 95 | 90 or better | VERIFIED PASS |
+| Lighthouse mobile LCP (home / case / long case / archive) | 2.6 / 2.4 / 3.6 / 2.6 s | 2.6 / 2.4 / 3.6 / 2.6 s | 2.5 s | **FAIL unchanged** on three pages (unrelated to the instrument: the display font's arrival and the still's decode; next actions above) |
+| Lighthouse mobile TBT (home) | 30 ms | 230 ms | 200 ms (Lighthouse's own green band) | FAIL by Lighthouse's band: the texture preparation and compile under software GL and 4x CPU; see the throttled row for the GPU-on figure |
+| Lighthouse desktop (all four pages) | 100 | 100 | 90 | VERIFIED PASS |
+| Accessibility (all pages, both presets) | 100 | 100 | 95 | VERIFIED PASS |
+| CLS (all pages) | 0 to 0.002 | 0 to 0.002 | 0.1 | VERIFIED PASS |
+| Context loss, five cycles | recovered | recovered (the poster shows while lost, the hour input keeps working, 60 rAF/s after) | recovers | VERIFIED PASS |
+| Lifecycle, three repetitions | one loop, canvases 5 home / 1 case, scroll and focus restored | the same; heap single samples 7 to 28 MB with no monotonic growth; the repeated-download list is identical (the local server sends no cache headers) | | PARTIAL (not a leak verdict) |
+| Fallbacks (84 captures) and responsive (27 entries) | no overflow | no overflow | | VERIFIED PASS |
+
+Consequence: the rebuilt object costs about 60 ms more of blocking at 4x CPU and one longer compile frame on desktop;
+both sit inside the frozen thresholds except the compile frame, which was already over the 50 ms line on 9ecf79b and
+is now 133 ms. It happens once, before the dial starts to turn, so it is not visible as a hitch in the motion
+(recordings/refine/opening-fresh). Options if it must go: compile against a warm-up render on an off-screen target
+during the first 500 ms of the close-up, or drop the dial to 40 sides.
+
 ## Limitations
 
 - No physical device. The phone rows are emulation on the same GPU; the lite tier is the mitigation, not proof.

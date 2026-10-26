@@ -1,58 +1,76 @@
 /* THE INSTRUMENT (Precision Atelier): one bespoke register of brushed champagne brass, racing-green lacquer and
-   marble, built from 32 individually addressable parts (see PARTS; pins carry two cap children) plus 31 test pins.
-   Every part has a name, a family, a material, an assembled position and an exploded offset; every STATE writes a
-   target transform (position, euler, scale, tone) per part and the frame loop lerps toward it, so any two states blend
-   by scroll and interruptions stay smooth. States: closed (assembled), open (the exploded hero), network (a fact table
-   and four dimensions joined by the pins), pipeline (source, staging, intermediate, marts as standing frames in a row;
-   the 31 test pins slot in one by one), timeline (parts stand in time order along the real monthly series, then thin
-   bars fan apart by the backtest's error at each horizon), documents (a card index drawer opened at one passage; past
-   u = 1 the drawer closes: the refusal), rest. The opening (introK 0..1) is written here as per-family trajectories
-   along the three axes in a lead/follow order; home.js owns the timeline, this file owns every matrix. Materials are
-   MeshPhysicalMaterial with procedural canvas textures (brushed roughness, engraving, marble veins) under an authored
-   environment baked by PMREMGenerator: no downloaded assets. Transparent canvas: the page's CSS ground is the scene's
-   ground. UI colour tokens are not these material values; both were tuned by eye against the concept image. */
+   marble, built from 41 individually addressable parts in five assemblies (see PARTS and design/journey.md) plus 31 test
+   pins. Head: the thick brass head block with its tick scale, the lacquer cap, a brass lip and the top door frame. Core:
+   the engraved plate, two lacquer back plates, the inner frame, and the DIAL (a brass drum with an hour ring between two
+   cheeks under an index needle) with four screws: the mechanism. Sides: the two marble slabs and their brackets.
+   Connectors: four pins. Base: the shelf, the plinth, the lower frame, the slotted base bar, two feet.
+   Every part has an assembled position and an exploded offset authored per assembly (the head rises most, the base drops
+   half as far, the sides open a little, the core steps apart); every STATE writes a target transform (position, euler,
+   scale, tone) per part and the frame loop lerps toward it, so any two states blend by scroll and interruptions stay
+   smooth. States: closed, open (the hero), network (the star schema: the core as the fact block, four dimension panels
+   joined by the connectors; the dial turns to the departure hour and the Time panel lights by that hour's lateness),
+   pipeline(n), timeline, documents(u 0..2), rest. The opening: introD turns the dial to its index, introK seats the core
+   stack (the click), then the closed-to-open blend propagates by assembly (lead order) while home.js pulls the camera
+   back. Materials are MeshPhysicalMaterial with procedural canvas textures under an authored environment baked by
+   PMREMGenerator: no downloaded assets. Transparent canvas: the page's CSS ground is the scene's ground. */
 import * as THREE from "three";
 
 const CL = v => Math.max(0, Math.min(1, v)), L = (a, b, t) => a + (b - a) * t, SM = t => t * t * (3 - 2 * t);
 
-/* ---- the parts: [name, family, [w, h, d], material, [x, y, z] assembled, [dx, dy, dz] exploded, yaw] ---- */
+/* ---- the parts: [name, family, [w, h, d], material, [x, y, z] assembled, [dx, dy, dz] exploded, yaw, stack]
+   family decides the geometry kind (pin and dial are cylinders along y and x, screw along z), the arrival lead and the
+   explode lead; stack = 1 marks the front core stack that stands out of its seat at the start of the opening ---- */
 export const PARTS = [
-  ["rail", "rail", [3.6, 0.3, 0.55], "rail", [0, 2.1, 0], [0.2, 1.3, 0.1], 0.08],
-  ["cap", "rail", [3.0, 0.12, 0.42], "brass", [0, 1.85, 0], [-0.1, 0.8, 0], -0.04],
-  ["frameTopF", "frame", [3.3, 0.1, 0.08], "brass", [0, 1.55, 0.5], [0, 0.45, 0.25], 0],
-  ["frameTopB", "frame", [3.3, 0.1, 0.08], "brass", [0, 1.55, -0.5], [0, 0.5, -0.25], 0],
-  ["frameTopL", "frame", [0.08, 0.1, 1.0], "brass", [-1.62, 1.55, 0], [-0.3, 0.42, 0], 0],
-  ["frameTopR", "frame", [0.08, 0.1, 1.0], "brass", [1.62, 1.55, 0], [0.3, 0.42, 0], 0],
-  ["plate", "core", [1.7, 2.3, 0.14], "plate", [0, 0, 0.22], [0, 0, 0.3], 0],
-  ["innerT", "inner", [1.9, 0.07, 0.07], "brass", [0, 1.2, 0.34], [0, 0.12, 0.42], 0],
-  ["innerB", "inner", [1.9, 0.07, 0.07], "brass", [0, -1.2, 0.34], [0, -0.12, 0.42], 0],
-  ["innerL", "inner", [0.07, 2.45, 0.07], "brass", [-0.92, 0, 0.34], [-0.12, 0, 0.42], 0],
-  ["innerR", "inner", [0.07, 2.45, 0.07], "brass", [0.92, 0, 0.34], [0.12, 0, 0.42], 0],
-  ["backA", "core", [1.7, 2.3, 0.08], "lacquer", [0, 0, -0.1], [0.05, 0.05, -0.2], 0],
-  ["backB", "core", [1.7, 2.3, 0.08], "lacquer", [0, 0, -0.34], [-0.05, -0.05, -0.55], 0],
-  ["marbleL", "slab", [0.55, 2.3, 0.9], "green", [-1.25, 0, 0], [-0.45, 0.1, 0], 0],
-  ["marbleR", "slab", [0.55, 2.3, 0.9], "ivory", [1.25, 0, 0], [0.45, -0.1, 0], 0],
-  ["bracketL", "bracket", [0.09, 2.5, 0.09], "brass", [-1.72, 0, 0.3], [-0.75, 0, 0.3], 0],
-  ["bracketR", "bracket", [0.09, 2.5, 0.09], "brass", [1.72, 0, 0.3], [0.75, 0, 0.3], 0],
-  ["pinFL", "pin", [0.035, 2.7, 0], "brass", [-1.95, 0, 0.38], [-1.1, 0.2, 0.3], 0],
-  ["pinFR", "pin", [0.035, 2.7, 0], "brass", [1.95, 0, 0.38], [1.1, -0.2, 0.3], 0],
-  ["pinBL", "pin", [0.035, 2.7, 0], "brass", [-1.95, 0, -0.38], [-1.0, -0.15, -0.3], 0],
-  ["pinBR", "pin", [0.035, 2.7, 0], "brass", [1.95, 0, -0.38], [1.0, 0.15, -0.3], 0],
-  ["shelf", "lower", [3.0, 0.06, 0.8], "lacquer", [0, -1.28, 0], [0, -0.3, 0], 0],
-  ["lower", "lower", [3.2, 0.46, 0.95], "lacquer", [0, -1.55, 0], [0, -0.5, 0], 0],
-  ["frameLowF", "frame", [3.3, 0.1, 0.08], "brass", [0, -1.55, 0.5], [0, -0.45, 0.25], 0],
-  ["frameLowB", "frame", [3.3, 0.1, 0.08], "brass", [0, -1.55, -0.5], [0, -0.5, -0.25], 0],
-  ["frameLowL", "frame", [0.08, 0.1, 1.0], "brass", [-1.62, -1.55, 0], [-0.3, -0.42, 0], 0],
-  ["frameLowR", "frame", [0.08, 0.1, 1.0], "brass", [1.62, -1.55, 0], [0.3, -0.42, 0], 0],
-  ["slotL", "rail", [1.3, 0.12, 0.45], "slot", [-0.72, -2.05, 0], [-0.2, -0.85, 0], 0.03],
-  ["slotR", "rail", [1.3, 0.12, 0.45], "slot", [0.72, -2.05, 0], [0.2, -0.9, 0], -0.03],
-  ["pad", "pad", [0.9, 0.08, 0.6], "brass", [-0.9, -1.9, 0.1], [-1.2, -1.4, 0.4], 0.12],
-  ["base", "rail", [2.8, 0.22, 0.6], "slot", [0, -2.3, 0], [0.1, -1.6, 0], -0.06],
-  ["foot", "pad", [0.6, 0.06, 0.4], "brass", [1.3, -2.45, 0.2], [1.6, -1.9, 0.5], 0.2],
+  // head
+  ["rail", "head", [3.4, 0.44, 0.92], "rail", [0, 2.02, 0], [0, 1.12, 0], 0, 0],
+  ["cap", "head", [3.0, 0.16, 0.72], "lacquer", [0, 2.33, 0], [0, 1.42, 0], 0, 0],
+  ["lip", "head", [3.5, 0.07, 1.02], "brass", [0, 1.76, 0], [0, 0.88, 0], 0, 0],
+  ["frameTopF", "frame", [3.3, 0.12, 0.12], "brass", [0, 1.56, 0.5], [0, 0.66, 0.22], 0, 0],
+  ["frameTopB", "frame", [3.3, 0.12, 0.12], "brass", [0, 1.56, -0.5], [0, 0.7, -0.22], 0, 0],
+  ["frameTopL", "frame", [0.12, 0.12, 1.0], "brass", [-1.6, 1.56, 0], [-0.22, 0.64, 0], 0, 0],
+  ["frameTopR", "frame", [0.12, 0.12, 1.0], "brass", [1.6, 1.56, 0], [0.22, 0.64, 0], 0, 0],
+  // core
+  ["backB", "core", [1.8, 2.4, 0.1], "lacquer", [0, 0.05, -0.34], [-0.04, -0.06, -0.5], 0, 0],
+  ["backA", "core", [1.8, 2.4, 0.1], "lacquer", [0, 0.05, -0.1], [0.04, 0.04, -0.22], 0, 0],
+  ["plate", "core", [1.7, 2.3, 0.14], "plate", [0, 0.1, 0.22], [0, 0, 0.3], 0, 1],
+  ["innerT", "inner", [1.9, 0.09, 0.09], "brass", [0, 1.3, 0.34], [0, 0.14, 0.5], 0, 1],
+  ["innerB", "inner", [1.9, 0.09, 0.09], "brass", [0, -1.1, 0.34], [0, -0.14, 0.5], 0, 1],
+  ["innerL", "inner", [0.09, 2.5, 0.09], "brass", [-0.92, 0.1, 0.34], [-0.14, 0, 0.5], 0, 1],
+  ["innerR", "inner", [0.09, 2.5, 0.09], "brass", [0.92, 0.1, 0.34], [0.14, 0, 0.5], 0, 1],
+  ["dial", "dial", [0.28, 1.1, 0.28], "dial", [0, -0.7, 0.5], [0, 0, 0.75], 0, 1],
+  ["cheekL", "core", [0.14, 0.72, 0.5], "brass", [-0.68, -0.7, 0.42], [-0.06, 0, 0.68], 0, 1],
+  ["cheekR", "core", [0.14, 0.72, 0.5], "brass", [0.68, -0.7, 0.42], [0.06, 0, 0.68], 0, 1],
+  ["needle", "core", [0.035, 0.36, 0.035], "brass", [0, -0.3, 0.62], [0, 0.1, 0.78], 0, 1],
+  ["screwTL", "screw", [0.05, 0.05, 0.05], "brass", [-0.74, 1.14, 0.31], [-0.1, 0.1, 0.62], 0, 1],
+  ["screwTR", "screw", [0.05, 0.05, 0.05], "brass", [0.74, 1.14, 0.31], [0.1, 0.1, 0.62], 0, 1],
+  ["screwBL", "screw", [0.05, 0.05, 0.05], "brass", [-0.74, -0.94, 0.31], [-0.1, -0.1, 0.62], 0, 1],
+  ["screwBR", "screw", [0.05, 0.05, 0.05], "brass", [0.74, -0.94, 0.31], [0.1, -0.1, 0.62], 0, 1],
+  // sides
+  ["marbleL", "slab", [0.6, 2.5, 0.95], "green", [-1.3, 0.05, 0], [-0.52, 0.12, 0], 0, 0],
+  ["marbleR", "slab", [0.6, 2.5, 0.95], "ivory", [1.3, 0.05, 0], [0.52, -0.1, 0], 0, 0],
+  ["bracketL", "bracket", [0.1, 2.7, 0.1], "brass", [-1.75, 0.05, 0.3], [-0.82, 0, 0.22], 0, 0],
+  ["bracketR", "bracket", [0.1, 2.7, 0.1], "brass", [1.75, 0.05, 0.3], [0.82, 0, 0.22], 0, 0],
+  // connectors
+  ["pinFL", "pin", [0.035, 2.9, 0], "pin", [-1.95, 0.05, 0.4], [-0.72, 0.2, 0.16], 0, 0],
+  ["pinFR", "pin", [0.035, 2.9, 0], "pin", [1.95, 0.05, 0.4], [0.72, -0.2, 0.16], 0, 0],
+  ["pinBL", "pin", [0.035, 2.9, 0], "pin", [-1.95, 0.05, -0.4], [-0.64, -0.14, -0.16], 0, 0],
+  ["pinBR", "pin", [0.035, 2.9, 0], "pin", [1.95, 0.05, -0.4], [0.64, 0.14, -0.16], 0, 0],
+  // base
+  ["shelf", "lower", [3.0, 0.08, 0.86], "brass", [0, -1.3, 0], [0, -0.42, 0], 0, 0],
+  ["lower", "lower", [3.3, 0.5, 1.0], "lacquer", [0, -1.62, 0], [0, -0.68, 0], 0, 0],
+  ["frameLowF", "frame", [3.5, 0.12, 0.12], "brass", [0, -1.95, 0.56], [0, -0.78, 0.2], 0, 0],
+  ["frameLowB", "frame", [3.5, 0.12, 0.12], "brass", [0, -1.95, -0.56], [0, -0.82, -0.2], 0, 0],
+  ["frameLowL", "frame", [0.12, 0.12, 1.12], "brass", [-1.7, -1.95, 0], [-0.2, -0.76, 0], 0, 0],
+  ["frameLowR", "frame", [0.12, 0.12, 1.12], "brass", [1.7, -1.95, 0], [0.2, -0.76, 0], 0, 0],
+  ["base", "lower", [3.2, 0.26, 0.72], "slot", [0, -2.2, 0], [0.06, -1.08, 0], -0.03, 0],
+  ["slotL", "lower", [1.3, 0.12, 0.5], "slot", [-0.75, -2.42, 0], [-0.14, -1.3, 0], 0.03, 0],
+  ["slotR", "lower", [1.3, 0.12, 0.5], "slot", [0.75, -2.42, 0], [0.14, -1.36, 0], -0.03, 0],
+  ["pad", "pad", [0.9, 0.08, 0.6], "brass", [-0.9, -2.55, 0.15], [-0.6, -1.62, 0.3], 0.1, 0],
+  ["foot", "pad", [0.6, 0.06, 0.4], "brass", [1.2, -2.55, 0.2], [0.8, -1.68, 0.36], 0.16, 0],
 ];
 export const N_TESTS = 31;
 
-/* ---- procedural textures: value-noise fbm, brushed streaks, marble veins, the engraved plate, the rails ---- */
+/* ---- procedural textures: value-noise fbm, brushed streaks, marble veins, the engraved plate, the rails, the dial ---- */
 const fbm = (W, oct, seed) => { const out = new Float32Array(W * W); let s = seed; const rnd = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
   let amp = 1, freq = 3, norm = 0;
   for (let o = 0; o < oct; o++) { const G = freq + 2, g = new Float32Array(G * G); for (let i = 0; i < G * G; i++) g[i] = rnd();
@@ -71,24 +89,30 @@ const marble = (W, base, vein, mottle, seed, scale, sharp) => { const c = canvas
 const brushed = (W, seed) => { const c = canvas(W, W), g = c.getContext("2d"), img = g.createImageData(W, W), d = img.data; let s = seed; const rnd = () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
   for (let y = 0; y < W; y++) { const row = 0.5 + (rnd() - 0.5) * 0.5; for (let x = 0; x < W; x++) { const i = (y * W + x) * 4, v = CL(row + (rnd() - 0.5) * 0.12) * 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; } }
   g.putImageData(img, 0, 0); return c; };
-const BRASS = "#cfb588", INK = "rgba(22, 32, 26, 0.8)";
+const BRASS = "#cfb588", INK = "rgba(22, 32, 26, 0.8)", DISPLAY = "'Bricolage Grotesque', 'Archivo', sans-serif";
 const streak = (g, w, h) => { const b = brushed(256, 11); g.globalAlpha = 0.16; g.fillStyle = g.createPattern(b, "repeat"); g.fillRect(0, 0, w, h); g.globalAlpha = 1; };
 const engraved = words => { const c = canvas(768, 1024), g = c.getContext("2d"); g.fillStyle = BRASS; g.fillRect(0, 0, 768, 1024); streak(g, 768, 1024);
-  g.fillStyle = INK; g.font = "800 96px 'Bricolage Grotesque', 'Archivo', sans-serif"; try { g.fontStretch = "condensed"; } catch (_) {}
-  g.textBaseline = "top"; words.forEach((w, i) => g.fillText(w.toUpperCase(), 96, 300 + i * 112));
+  g.fillStyle = INK; g.font = `800 96px ${DISPLAY}`; try { g.fontStretch = "condensed"; } catch (_) {}
+  g.textBaseline = "top"; words.forEach((w, i) => g.fillText(w.toUpperCase(), 96, 210 + i * 112));
   g.fillStyle = "rgba(22, 32, 26, 0.6)"; for (let i = 0; i < 40; i++) { const y = 80 + i * 22; g.fillRect(40, y, i % 5 === 0 ? 26 : 12, 2); }
-  g.fillRect(96, 270, 420, 3); g.fillRect(96, 760, 220, 3); return c; };
+  g.fillRect(96, 180, 420, 3); g.fillRect(96, 672, 220, 3); return c; };
 const railTicks = slot => { const c = canvas(1024, 160), g = c.getContext("2d"); g.fillStyle = BRASS; g.fillRect(0, 0, 1024, 160); streak(g, 1024, 160); g.fillStyle = INK;
   if (slot) { g.beginPath(); g.roundRect(300, 64, 424, 32, 16); g.fill(); }
-  else for (let i = 0; i < 128; i++) { const h = i % 8 === 0 ? 40 : i % 4 === 0 ? 24 : 12; g.fillRect(8 + i * 8, 130 - h, 2, h); }
+  else { for (let i = 0; i < 128; i++) { const h = i % 8 === 0 ? 40 : i % 4 === 0 ? 24 : 12; g.fillRect(8 + i * 8, 130 - h, 2, h); }
+    g.font = `700 26px ${DISPLAY}`; g.textBaseline = "top"; for (let i = 0; i < 16; i++) g.fillText(String(i * 8), 8 + i * 64 + 6, 40); }
   return c; };
+/* the hour ring: 24 hours around the drum, a numeral every six, the index line at hour 0 */
+const dialRing = () => { const c = canvas(1024, 256), g = c.getContext("2d"); g.fillStyle = BRASS; g.fillRect(0, 0, 1024, 256); streak(g, 1024, 256); g.fillStyle = INK;
+  for (let i = 0; i < 96; i++) { const x = i / 96 * 1024, h = i % 24 === 0 ? 70 : i % 4 === 0 ? 40 : 18; g.fillRect(x, 20, i % 4 === 0 ? 3 : 2, h); g.fillRect(x, 236 - h * 0.5, i % 4 === 0 ? 3 : 2, h * 0.5); }
+  g.font = `700 54px ${DISPLAY}`; g.textBaseline = "middle"; g.textAlign = "center"; for (let h = 0; h < 24; h += 6) g.fillText(String(h).padStart(2, "0"), h / 24 * 1024 + 24, 148);
+  g.fillRect(0, 120, 1024, 2); return c; };
 
 /* The procedural textures, drawn one per task (a yield between each) so no single main-thread task carries all of
    them; pass the result to createInstrument as `textures`. */
 export async function prepareTextures({ texSize = 512, words = ["Data", "Security", "Intelligence", "Impact"] } = {}) {
   const yieldNow = () => new Promise(r => setTimeout(r, 0)); const T = {};
   T.rough = brushed(Math.min(512, texSize), 3); await yieldNow();
-  T.rail = railTicks(false); T.slot = railTicks(true); T.plate = engraved(words); await yieldNow();
+  T.rail = railTicks(false); T.slot = railTicks(true); T.plate = engraved(words); T.dial = dialRing(); await yieldNow();
   T.green = marble(texSize, [0.04, 0.16, 0.11], [0.6, 0.66, 0.58], 0.05, 5, 1.6, 16); await yieldNow();
   T.ivory = marble(texSize, [0.92, 0.88, 0.8], [0.58, 0.53, 0.47], 0.04, 9, 1.3, 11);
   return T;
@@ -96,7 +120,7 @@ export async function prepareTextures({ texSize = 512, words = ["Data", "Securit
 
 export function createInstrument({ canvas: cv, phone, reduced, series, fan, words = ["Data", "Security", "Intelligence", "Impact"], quality = "full", startOut = false, texSize = 512, textures = null, onReady }) {
   const t0 = performance.now(), marks = {};
-  const TX = textures || { rough: brushed(Math.min(512, texSize), 3), rail: railTicks(false), slot: railTicks(true), plate: engraved(words), green: marble(texSize, [0.04, 0.16, 0.11], [0.6, 0.66, 0.58], 0.05, 5, 1.6, 16), ivory: marble(texSize, [0.92, 0.88, 0.8], [0.58, 0.53, 0.47], 0.04, 9, 1.3, 11) };
+  const TX = textures || { rough: brushed(Math.min(512, texSize), 3), rail: railTicks(false), slot: railTicks(true), plate: engraved(words), dial: dialRing(), green: marble(texSize, [0.04, 0.16, 0.11], [0.6, 0.66, 0.58], 0.05, 5, 1.6, 16), ivory: marble(texSize, [0.92, 0.88, 0.8], [0.58, 0.53, 0.47], 0.04, 9, 1.3, 11) };
   let gl = null;
   try { gl = cv.getContext("webgl2", { antialias: true, alpha: true, premultipliedAlpha: true, powerPreference: "high-performance" }); } catch (_) {}
   if (!gl) return null;
@@ -118,35 +142,41 @@ export function createInstrument({ canvas: cv, phone, reduced, series, fan, word
     panel(14, 1.2, [0, -6.9, 3], [-Math.PI / 2, 0, 0], 0x1e4a38, 1.5);       // the green floor glow
     const pm = new THREE.PMREMGenerator(renderer); const t = pm.fromScene(s, 0.04).texture; pm.dispose(); return t; })();
   scene.environment = env; marks.env = Math.round(performance.now() - t0);
-  const key = new THREE.DirectionalLight(0xfff0d8, 2.2); key.position.set(-7, 9, 8); key.castShadow = shadows;
+  const key = new THREE.DirectionalLight(0xfff0d8, 2.3); key.position.set(-7, 9, 8); key.castShadow = shadows;
   key.shadow.mapSize.set(1024, 1024); key.shadow.camera.left = -8; key.shadow.camera.right = 8; key.shadow.camera.top = 8; key.shadow.camera.bottom = -8; key.shadow.camera.near = 2; key.shadow.camera.far = 40; key.shadow.bias = -0.0006; key.shadow.normalBias = 0.02; key.shadow.radius = 3;
   scene.add(key); scene.add(key.target);
-  const rim = new THREE.DirectionalLight(0xcfe6dc, 0.8); rim.position.set(8, 3, -6); scene.add(rim);
+  const rim = new THREE.DirectionalLight(0xcfe6dc, 0.9); rim.position.set(8, 3, -6); scene.add(rim);
   scene.add(new THREE.AmbientLight(0x2a4a3c, 0.5));
 
-  /* ---- materials ---- */
+  /* ---- materials: brass is brushed and never a mirror; lacquer and marble carry a clearcoat ---- */
   const rough = tex(TX.rough); rough.repeat.set(2, 2);
-  const metal = (extra) => new THREE.MeshPhysicalMaterial({ metalness: 1, roughness: 0.5, roughnessMap: rough, anisotropy: 0.6, envMapIntensity: 1.0, emissive: 0x6a4f22, emissiveIntensity: 0, ...extra });
+  const metal = (extra) => new THREE.MeshPhysicalMaterial({ metalness: 1, roughness: 0.56, roughnessMap: rough, anisotropy: 0.6, envMapIntensity: 0.95, emissive: 0x6a4f22, emissiveIntensity: 0, ...extra });
   const M = {
-    brass: metal({ color: 0xcbb084 }),
-    rail: metal({ map: tex(TX.rail, true), roughness: 0.48 }),
-    slot: metal({ map: tex(TX.slot, true), roughness: 0.48 }),
-    plate: metal({ map: tex(TX.plate, true), roughness: 0.46, anisotropy: 0.5 }),
-    pin: metal({ color: 0xcbb084 }),
-    lacquer: new THREE.MeshPhysicalMaterial({ color: 0x0b3328, metalness: 0, roughness: 0.34, clearcoat: 0.7, clearcoatRoughness: 0.14, envMapIntensity: 0.7, emissive: 0x1a5a40, emissiveIntensity: 0 }),
-    green: new THREE.MeshPhysicalMaterial({ map: tex(TX.green, true), metalness: 0, roughness: 0.22, clearcoat: 0.5, clearcoatRoughness: 0.12, envMapIntensity: 0.7, emissive: 0x1a5a40, emissiveIntensity: 0 }),
-    ivory: new THREE.MeshPhysicalMaterial({ map: tex(TX.ivory, true), metalness: 0, roughness: 0.26, clearcoat: 0.45, clearcoatRoughness: 0.14, envMapIntensity: 0.65, emissive: 0x8a7a50, emissiveIntensity: 0 }),
+    brass: metal({ color: 0xc9b086 }),
+    rail: metal({ map: tex(TX.rail, true), roughness: 0.52 }),
+    slot: metal({ map: tex(TX.slot, true), roughness: 0.52 }),
+    plate: metal({ map: tex(TX.plate, true), roughness: 0.5, anisotropy: 0.5 }),
+    dial: metal({ map: tex(TX.dial, true), roughness: 0.48, anisotropy: 0.7 }),
+    pin: metal({ color: 0xc9b086, roughness: 0.5 }),
+    lacquer: new THREE.MeshPhysicalMaterial({ color: 0x0b3328, metalness: 0, roughness: 0.36, clearcoat: 0.6, clearcoatRoughness: 0.16, envMapIntensity: 0.7, emissive: 0x1a5a40, emissiveIntensity: 0 }),
+    green: new THREE.MeshPhysicalMaterial({ map: tex(TX.green, true), metalness: 0, roughness: 0.26, clearcoat: 0.4, clearcoatRoughness: 0.14, envMapIntensity: 0.7, emissive: 0x1a5a40, emissiveIntensity: 0 }),
+    ivory: new THREE.MeshPhysicalMaterial({ map: tex(TX.ivory, true), metalness: 0, roughness: 0.3, clearcoat: 0.35, clearcoatRoughness: 0.16, envMapIntensity: 0.65, emissive: 0x8a7a50, emissiveIntensity: 0 }),
   };
   marks.textures = Math.round(performance.now() - t0);
   const geos = {};
-  const geoFor = ([w, h, d], fam) => { const k = fam === "pin" ? `pin${h}` : [w, h, d].join("x"); if (!geos[k]) geos[k] = fam === "pin" ? new THREE.CylinderGeometry(w, w, h, 18) : new THREE.RoundedBoxGeometry(w, h, d, 3, Math.min(0.03, Math.min(w, h, d) * 0.3)); return geos[k]; };
+  const geoFor = ([w, h, d], fam) => { const k = fam + [w, h, d].join("x"); if (geos[k]) return geos[k];
+    let g; if (fam === "pin") g = new THREE.CylinderGeometry(w, w, h, 18);
+    else if (fam === "dial") { g = new THREE.CylinderGeometry(w, w, h, 56); g.rotateZ(Math.PI / 2); }            // the drum's axis is x; its spin is the pitch
+    else if (fam === "screw") { g = new THREE.CylinderGeometry(w, w, 0.04, 16); g.rotateX(Math.PI / 2); }
+    else g = new THREE.RoundedBoxGeometry(w, h, d, 4, Math.min(0.045, Math.min(w, h, d) * 0.3));
+    return geos[k] = g; };
 
   /* ---- build the parts and the 31 test pins ---- */
   const group = new THREE.Group(); scene.add(group);
   const capGeo = new THREE.CylinderGeometry(0.07, 0.07, 0.06, 14);
-  const parts = PARTS.map(([name, fam, size, mat, at, ex, yaw]) => { const mesh = new THREE.Mesh(geoFor(size, fam), M[mat]); mesh.castShadow = shadows; mesh.receiveShadow = shadows; mesh.name = name;
+  const parts = PARTS.map(([name, fam, size, mat, at, ex, yaw, stack]) => { const mesh = new THREE.Mesh(geoFor(size, fam), M[mat]); mesh.castShadow = shadows; mesh.receiveShadow = shadows; mesh.name = name;
     if (fam === "pin") for (const s of [-1, 1]) { const c = new THREE.Mesh(capGeo, M.brass); c.position.y = s * size[1] / 2; c.castShadow = shadows; mesh.add(c); }
-    group.add(mesh); return { name, fam, size, mat, at, ex, yaw, mesh }; });
+    group.add(mesh); return { name, fam, size, mat, at, ex, yaw, stack, mesh }; });
   const pinGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.42, 12), headGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.05, 12);
   const tests = []; for (let i = 0; i < N_TESTS; i++) { const m = new THREE.Mesh(pinGeo, M.pin); const h = new THREE.Mesh(headGeo, M.pin); h.position.y = 0.22; m.add(h); m.castShadow = shadows; m.visible = false; group.add(m); tests.push(m); }
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.ShadowMaterial({ opacity: 0.3 })); ground.rotation.x = -Math.PI / 2; ground.position.y = -3.3; ground.receiveShadow = shadows; group.add(ground);
@@ -155,6 +185,7 @@ export function createInstrument({ canvas: cv, phone, reduced, series, fan, word
   const hide = (T, i) => put(T, i, 0, -3, 0, 0, 0, 0, 0.001, 0.001, 0.001, 0);
   const hidePins = T => { for (let i = 0; i < NT; i++) hide(T, NP + i); };
   const idx = Object.fromEntries(parts.map((p, i) => [p.name, i]));
+  const seat = (T, i, dx = 0, dy = 0, dz = 0, tone = 0, pitch = 0) => { const p = parts[i]; put(T, i, p.at[0] + dx, p.at[1] + dy, p.at[2] + dz, 0, pitch, 0, 1, 1, 1, tone); };
   /* stand a part as a column of width w, height h, depth d: its longest axis becomes vertical, the others scale gently */
   const column = (T, i, x, y, z, w, h, d, tone, roll = 0) => { const p = parts[i], [pw, ph, pd] = p.fam === "pin" ? [p.size[0] * 2, p.size[1], p.size[0] * 2] : p.size;
     if (ph >= pw && ph >= pd) put(T, i, x, y, z, 0, 0, roll, w / pw, h / ph, d / pd, tone);                 // already tall
@@ -162,23 +193,31 @@ export function createInstrument({ canvas: cv, phone, reduced, series, fan, word
     else put(T, i, x, y, z, 0, Math.PI / 2, roll, w / pw, d / ph, h / pd, tone); };                        // long along z: pitch it up
   const months = (() => { const h = series && series.length === 24 ? series.slice() : Array.from({ length: 24 }, (_, k) => 1 + 0.07 * Math.sin((k % 12) / 12 * Math.PI * 2 - 1.9)); const mean = h.reduce((a, b) => a + b, 0) / h.length; return h.map(x => x / mean); })();
   const fanAt = h => (fan && fan[h] != null ? fan[h] : 2) / 2.6;
+  const CORE = ["backB", "backA", "plate", "innerT", "innerB", "innerL", "innerR", "dial", "cheekL", "cheekR", "needle", "screwTL", "screwTR", "screwBL", "screwBR"];
+  const hourAngle = h => (h == null ? 8 : h) / 24 * Math.PI * 2;
 
   /* ---- the states ---- */
   const STATES = {
-    closed(T) { parts.forEach((p, i) => put(T, i, p.at[0], p.at[1], p.at[2], 0, 0, 0, 1, 1, 1, 0)); hidePins(T); },
-    /* the exploded hero: every part lifted along the axis, the sides opened, the rail turned a little */
-    open(T) { parts.forEach((p, i) => put(T, i, p.at[0] + p.ex[0], p.at[1] * 1.12 + p.ex[1], p.at[2] + p.ex[2], p.yaw, p.fam === "pin" ? 0 : p.ex[2] * 0.04, 0, 1, 1, 1, 0)); hidePins(T); },
-    /* the star schema: the plate is the fact table; the two slabs and two back plates are the four dimensions at the
-       corners; the four pins turn to join them to the centre; the rails rest as a base, the frames as a ring */
-    network(T) { const corners = [["marbleL", -2.6, 1.8], ["marbleR", 2.6, 1.8], ["backA", -2.6, -1.8], ["backB", 2.6, -1.8]], pins = ["pinFL", "pinFR", "pinBL", "pinBR"];
-      parts.forEach((p, i) => put(T, i, p.at[0] * 1.3, -3 + (p.at[1] + 2.4) * 0.08, p.at[2] * 1.3, 0, 0, 0, 1, 1, 1, 0));
-      put(T, idx.plate, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0.7);
-      ["innerT", "innerB", "innerL", "innerR"].forEach(n => { const p = parts[idx[n]]; put(T, idx[n], p.at[0] * 1.1, p.at[1] * 1.1, 0.12, 0, 0, 0, 1.1, 1.1, 1, 0); });
-      corners.forEach(([n, x, y], k) => { put(T, idx[n], x, y, 0, 0, 0, 0, 1, 0.8, 1, 0.35);
-        const cx = Math.sign(x) * 0.85, cy = Math.sign(y) * 1.15, ex = x - Math.sign(x) * 0.28, ey = y - Math.sign(y) * 1.15, d = Math.hypot(ex - cx, ey - cy), ang = Math.atan2(ey - cy, ex - cx);
-        put(T, idx[pins[k]], (cx + ex) / 2, (cy + ey) / 2, 0.15, 0, 0, ang - Math.PI / 2, 1, d / 2.7, 1, 0); });
-      put(T, idx.bracketL, -2.6, 0, 0.1, 0, 0, 0, 1, 1.45, 1, 0); put(T, idx.bracketR, 2.6, 0, 0.1, 0, 0, 0, 1, 1.45, 1, 0);
-      put(T, idx.rail, 0, -3.1, 0, 0, 0, 0, 1.4, 1, 1, 0); put(T, idx.base, 0, 3.1, 0, 0, 0, 0, 1.6, 1, 1, 0); hidePins(T); },
+    closed(T) { parts.forEach((p, i) => seat(T, i)); hidePins(T); },
+    /* the exploded hero: each assembly lifts by its authored offset (the head most, the base less, the sides a little,
+       the core in small steps); nothing is evenly spaced */
+    open(T) { parts.forEach((p, i) => put(T, i, p.at[0] + p.ex[0], p.at[1] + p.ex[1], p.at[2] + p.ex[2], p.yaw, 0, 0, 1, 1, 1, 0)); hidePins(T); },
+    /* the star schema: the core stays assembled as the fact block (the dial reads the departure hour); the four dimension
+       panels stand at the corners turned a little toward the centre; the connectors join each panel to the block's
+       corner; the head and base beams and the brackets frame it. hour: the dial's reading; late: 0..1 lights the Time
+       panel (ivory) and thickens its connector, and steps both forward */
+    network(T, hour = 8, late = 0) { const lateK = CL(late);
+      parts.forEach((p, i) => hide(T, i));
+      CORE.forEach(n => seat(T, idx[n], 0, -0.05, 0, n === "plate" ? 0.55 : 0, n === "dial" ? hourAngle(hour) : 0));
+      const corners = [["marbleL", -2.75, 1.75, 0], ["marbleR", 2.75, 1.75, lateK], ["backA", 2.75, -1.75, 0], ["backB", -2.75, -1.75, 0]], pins = ["pinFL", "pinFR", "pinBR", "pinBL"];
+      corners.forEach(([n, x, y, lit], k) => { const p = parts[idx[n]], tall = p.fam === "slab";
+        put(T, idx[n], x + Math.sign(x) * lit * 0.3, y + lit * 0.1, lit * 0.8, -Math.sign(x) * 0.28, 0, 0, (tall ? 1 : 0.9) * (1 + lit * 0.14), (tall ? 0.82 : 0.74) * (1 + lit * 0.14), tall ? 0.9 : 1.6, lit * 0.9);
+        const cx = Math.sign(x) * 0.9, cy = Math.sign(y) * 1.2, ex = x - Math.sign(x) * (tall ? 0.3 : 0.95), ey = y - Math.sign(y) * (tall ? 1.0 : 1.0), d = Math.hypot(ex - cx, ey - cy), ang = Math.atan2(ey - cy, ex - cx);
+        put(T, idx[pins[k]], (cx + ex) / 2, (cy + ey) / 2, 0.2 + lit * 0.2, 0, 0, ang - Math.PI / 2, 1 + lit * 1.4, d / 2.9, 1 + lit * 1.4, lit); });
+      put(T, idx.bracketL, -3.4, 0, 0, 0, 0, 0, 1, 1.5, 1, 0); put(T, idx.bracketR, 3.4, 0, 0, 0, 0, 0, 1, 1.5, 1, 0);
+      put(T, idx.rail, 0, 3.15, 0, 0, 0, 0, 1.45, 0.8, 0.8, 0); put(T, idx.base, 0, -3.15, 0, 0, 0, 0, 1.55, 1, 1, 0);
+      put(T, idx.cap, 0, 3.52, 0, 0, 0, 0, 1.45, 0.9, 0.7, 0); put(T, idx.shelf, 0, -2.95, 0, 0, 0, 0, 1.6, 1, 0.8, 0);
+      hidePins(T); },
     /* dbt: four standing frames in a row (source, staging, intermediate, marts) on two long rails; the solid parts stand
        inside each frame as its tables; the 31 test pins slot into the frames' top bars as the tests pass */
     pipeline(T, n = 0) { const G = [-4.3, -1.45, 1.4, 4.25];
@@ -234,18 +273,20 @@ export function createInstrument({ canvas: cv, phone, reduced, series, fan, word
       hidePins(T); },
     rest(T) { STATES.closed(T); },
   };
-  const cache = {}; const stateOf = (name, arg) => { const k = name + ":" + (arg == null ? "" : typeof arg === "number" ? arg.toFixed(2) : arg); if (!cache[k]) { const T = mk(); STATES[name](T, arg); cache[k] = T; } return cache[k]; };
+  const cache = {}; const keyOf = a => a == null ? "" : typeof a === "number" ? a.toFixed(2) : a;
+  const stateOf = (name, arg, arg2) => { const k = name + ":" + keyOf(arg) + ":" + keyOf(arg2); if (!cache[k]) { const T = mk(); STATES[name](T, arg, arg2); cache[k] = T; } return cache[k]; };
   const now = mk(); now.set(stateOf("closed")); const tgt = mk();
-  // (the arrival offsets are applied to `now` below, once `arrive` exists)
   const Mx = new THREE.Matrix4(), P = new THREE.Vector3(), Q = new THREE.Quaternion(), E = new THREE.Euler(), S = new THREE.Vector3();
   const meshes = [...parts.map(p => p.mesh), ...tests];
 
-  /* ---- the opening: each family arrives along its own axis (rails from above, slabs from the sides, pins from the
-     depth, frames from the corners), in a lead/follow order; k 0..1 ---- */
-  const AX = { rail: [0, 7, 0], frame: [0, 0, -6], inner: [0, 0, 4], core: [0, 0, 5], slab: [6, 0, 0], bracket: [0, -6, 0], pin: [0, 0, -7], lower: [-6, 0, 0], pad: [5, -3, 0] };
-  const LEAD = { rail: 0.0, core: 0.12, slab: 0.22, lower: 0.3, frame: 0.42, inner: 0.48, bracket: 0.52, pin: 0.6, pad: 0.66 };
-  const arrive = (p, k) => { const t = SM(CL((k - LEAD[p.fam]) / 0.34)); const a = AX[p.fam], side = p.at[0] < 0 ? -1 : 1; return [a[0] * (1 - t) * side, a[1] * (1 - t), a[2] * (1 - t), (1 - t) * 0.9 * side]; };
-  if (startOut && !reduced) for (let i = 0; i < NP; i++) { const o = i * F, [ax, ay, az, r] = arrive(parts[i], 0); now[o] += ax; now[o + 1] += ay; now[o + 2] += az; now[o + 3] += r * 0.5; now[o + 5] += r * 0.3; }
+  /* ---- the opening (design/journey.md, shots 1 to 3): introD 0..1 turns the dial from 2.4 rad off its index to the
+     index; introK 0..1 seats the front core stack from 0.7 ahead; the closed-to-open blend then propagates by assembly
+     in LEAD order (the head first, the base after it, the sides, then the core) ---- */
+  const LEAD = { head: 0, frame: 0.08, lower: 0.2, slab: 0.36, bracket: 0.36, pin: 0.42, pad: 0.3, core: 0.52, inner: 0.52, dial: 0.58, screw: 0.62 };
+  const blendOf = (p, u, lead) => SM(CL((u - (lead ? LEAD[p.fam] * 0.5 : LEAD[p.fam] * 0.16)) / (lead ? 0.5 : 0.84)));
+  const DIAL = idx.dial;
+  const applyIntro = (T, d, k) => { const out = 0.7 * (1 - SM(CL(k))); for (let i = 0; i < NP; i++) if (parts[i].stack) T[i * F + 2] += out; T[DIAL * F + 4] += (1 - d) * 2.4; };
+  if (startOut && !reduced) applyIntro(now, 0, 0);
 
   /* ---- stage, resize, context loss ---- */
   const resize = () => { const w = cv.clientWidth || innerWidth, h = cv.clientHeight || innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
@@ -258,18 +299,18 @@ export function createInstrument({ canvas: cv, phone, reduced, series, fan, word
   try { renderer.compile(scene, camera); } catch (_) {} marks.compile = Math.round(performance.now() - t0);
   const cur = { x: 0, y: 0, s: 1, rx: 0, ry: 0, tilt: { x: 0, y: 0 } };
   let lastT = performance.now(), fast = 0, slow = 0, lock = 0, settled = 0, paused = false, firstFrame = true;
-  const EM = { brass: 0, rail: 0, slot: 0, plate: 0.8, pin: 1.0, lacquer: 0.5, green: 0.5, ivory: 0.6 };
+  const EM = { brass: 0, rail: 0, slot: 0, plate: 0.8, dial: 0, pin: 1.0, lacquer: 0.5, green: 0.5, ivory: 1.4 };
   const update = (t, pose) => {
     if (lost.on || paused) return;
     const dt = Math.min(0.05, (t - lastT) / 1000); lastT = t;
     const ease = reduced ? 1 : 1 - Math.pow(0.004, dt), quick = reduced ? 1 : 1 - Math.pow(0.0005, dt);
-    const A = stateOf(pose.state || "open", pose.arg), B = pose.next ? stateOf(pose.next, pose.nextArg) : A, u = SM(CL(pose.u || 0));
-    const k = pose.introK == null ? 1 : pose.introK, opening = k < 1;
+    const A = stateOf(pose.state || "open", pose.arg, pose.arg2), B = pose.next ? stateOf(pose.next, pose.nextArg, pose.nextArg2) : A, u = SM(CL(pose.u || 0));
+    const k = pose.introK == null ? 1 : pose.introK, d = pose.introD == null ? 1 : pose.introD, opening = k < 1 || d < 1;
     let moved = 0;
-    for (let i = 0; i < NALL; i++) { const o = i * F, m = B === A ? 0 : SM(CL((u - (i % 7) * 0.03) / 0.82));
-      for (let j = 0; j < F; j++) tgt[o + j] = L(A[o + j], B[o + j], m);
-      if (opening && i < NP && !pose.introStill) { const [ax, ay, az, r] = arrive(parts[i], k); tgt[o] += ax; tgt[o + 1] += ay; tgt[o + 2] += az; tgt[o + 3] += r * 0.5; tgt[o + 5] += r * 0.3; } }
-    const rate = opening && !reduced ? 1 - Math.pow(0.00005, dt) : ease;
+    for (let i = 0; i < NALL; i++) { const o = i * F, m = B === A ? 0 : i < NP ? blendOf(parts[i], u, pose.lead) : SM(CL((u - (i % 7) * 0.03) / 0.82));
+      for (let j = 0; j < F; j++) tgt[o + j] = L(A[o + j], B[o + j], m); }
+    if (opening && !pose.introStill) applyIntro(tgt, d, k);
+    const rate = opening && !reduced ? 1 - Math.pow(0.00002, dt) : ease;
     for (let i = 0; i < NALL; i++) { const o = i * F, mesh = meshes[i];
       for (let j = 0; j < F; j++) { const nv = L(now[o + j], tgt[o + j], j === 9 ? quick : rate); moved = Math.max(moved, Math.abs(nv - now[o + j])); now[o + j] = nv; }
       P.set(now[o], now[o + 1], now[o + 2]); E.set(now[o + 4], now[o + 3], now[o + 5]); Q.setFromEuler(E); S.set(now[o + 6], now[o + 7], now[o + 8]); Mx.compose(P, Q, S); mesh.matrix.copy(Mx); mesh.matrixAutoUpdate = false; mesh.matrixWorldNeedsUpdate = true;
@@ -279,9 +320,11 @@ export function createInstrument({ canvas: cv, phone, reduced, series, fan, word
     for (const m in M) M[m].emissiveIntensity = (glow[m] || 0) * EM[m];
     const st = pose.stage || { x: 0.68, y: 0.5, s: 1 };
     const tx = (st.x - 0.5) * visW(), ty = (0.5 - st.y) * visH(), ts = st.s * (phone() ? 0.7 : 1);
+    if (firstFrame) { cur.x = tx; cur.y = ty; cur.s = ts; }
     cur.x = L(cur.x, tx, ease); cur.y = L(cur.y, ty, ease); cur.s = L(cur.s, ts, ease);
     const tilt = pose.tilt || { x: 0, y: 0 }; cur.tilt.x = L(cur.tilt.x, tilt.x, ease); cur.tilt.y = L(cur.tilt.y, tilt.y, ease);
-    const ry = (pose.ry == null ? -0.5 : pose.ry) + cur.tilt.x * 0.14 + (pose.spin || 0) - (opening && !pose.introStill ? 1.2 * (1 - SM(CL(k / 0.8))) : 0), rx = (pose.rx == null ? 0.16 : pose.rx) - cur.tilt.y * 0.08;
+    const ry = (pose.ry == null ? -0.5 : pose.ry) + cur.tilt.x * 0.14 + (pose.spin || 0), rx = (pose.rx == null ? 0.16 : pose.rx) - cur.tilt.y * 0.08;
+    if (firstFrame) { cur.ry = ry; cur.rx = rx; }
     cur.ry = L(cur.ry, ry, ease); cur.rx = L(cur.rx, rx, ease);
     moved = Math.max(moved, Math.abs(cur.x - tx), Math.abs(cur.y - ty), Math.abs(cur.ry - ry), Math.abs(cur.rx - rx));
     group.position.set(cur.x, cur.y, 0); group.scale.setScalar(cur.s); group.rotation.set(cur.rx, cur.ry, 0);

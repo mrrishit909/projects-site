@@ -25,7 +25,9 @@ html.poster,html.poster body{background:transparent}
   <label>next <select id="next"><option value="">none</option></select></label>
   <label>u <input id="u" type="range" min="0" max="1" step="0.01" value="0"></label>
   <label>arg <input id="arg" type="range" min="0" max="31" step="1" value="31"></label>
-  <label>intro <input id="k" type="range" min="0" max="1" step="0.01" value="1"></label>
+  <label>arg2 <input id="arg2" type="range" min="0" max="1" step="0.01" value="0"></label>
+  <label>seat <input id="k" type="range" min="0" max="1" step="0.01" value="1"></label>
+  <label>dial <input id="d" type="range" min="0" max="1" step="0.01" value="1"></label>
   <label>ry <input id="ry" type="range" min="-3.2" max="3.2" step="0.01" value="-0.5"></label>
   <label>rx <input id="rx" type="range" min="-1" max="1" step="0.01" value="0.16"></label>
   <button id="ivory" type="button">ivory ground</button>
@@ -39,13 +41,13 @@ const fan = [1.67,1.01,1.96,1.47,1.09,2.44,1.61,1.4,2.67,2.09,1.66,2.59];
 await Promise.all([document.fonts.load("800 20px 'Bricolage Grotesque'"), document.fonts.load("500 20px Geist")]).catch(() => 0);
 const inst = createInstrument({ canvas: $("c"), phone: () => innerWidth <= 720, reduced: false, series, fan, textures: await prepareTextures() });
 for (const s of inst.states) { $("state").add(new Option(s, s)); $("next").add(new Option(s, s)); }
-for (const k of ["state", "next", "u", "arg", "k", "ry", "rx"]) if (q.has(k)) $(k).value = q.get(k);
+for (const k of ["state", "next", "u", "arg", "arg2", "k", "d", "ry", "rx"]) if (q.has(k)) $(k).value = q.get(k);
 if (q.get("ground") === "ivory") document.body.classList.add("ivory");
 if (q.get("poster")) { document.documentElement.classList.add("poster"); document.querySelector(".ui").hidden = true; }
 $("ivory").addEventListener("click", () => document.body.classList.toggle("ivory"));
 const stageX = +(q.get("sx") || 0.5), stageY = +(q.get("sy") || 0.5), stageS = +(q.get("ss") || 1);
 const tick = t => { requestAnimationFrame(tick);
-  const arg = $("state").value === "documents" ? +$("u").value * 2 : +$("arg").value, pose = { state: $("state").value, next: $("next").value || null, u: +$("u").value, arg, nextArg: arg, introK: +$("k").value, ry: +$("ry").value, rx: +$("rx").value, stage: { x: stageX, y: stageY, s: stageS }, force: true };
+  const arg = $("state").value === "documents" ? +$("u").value * 2 : +$("arg").value, pose = { state: $("state").value, next: $("next").value || null, u: +$("u").value, arg, arg2: +$("arg2").value, nextArg: arg, nextArg2: +$("arg2").value, introK: +$("k").value, introD: +$("d").value, lead: q.has("lead"), ry: +$("ry").value, rx: +$("rx").value, stage: { x: stageX, y: stageY, s: stageS }, force: true };
   inst.update(t, pose); const i = inst.info(); $("info").value = `calls ${i.calls} tris ${i.triangles} dpr ${i.dpr}`; };
 requestAnimationFrame(tick);
 window.inst = inst;

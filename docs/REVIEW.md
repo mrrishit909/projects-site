@@ -89,6 +89,27 @@ The findings were treated as defects to verify (docs/DEFECTS.md D-01 to D-10), n
     tested commit, the evidence folder, the scripts (tests/evidence), conditions, a manifest and checksums, and diffs
     the packaged site against the commit.
 
+## Round 5 (2026-10-26, the refinement pass): the critical review of the representative journey
+
+Evidence: `refine/before/` (f11ce90) and `refine/after/` (the candidate) from the same script
+(tests/evidence/journey-frames.cjs), `refine/lab/` (the instrument's views), `recordings/refine/` (sixteen clips plus
+`journey-desktop` and `journey-phone`, each with a contact sheet). Every row was judged by reading the frames and the
+sheets, not by the tests. Scope: the journey only; the other chapters and the ivory sections are held for acceptance.
+
+| Item | Before (f11ce90) | After (the candidate) | Judgement | Defects found, disposition |
+|---|---|---|---|---|
+| Instrument craftsmanship | thin bars spaced evenly over a tall column; no chassis, no mechanism (before/d-hero.png) | a thick head block with its scale, a plinth, a dense core with the dial between its cheeks under an index needle, screws, panels with thickness; grouped explode (lab/sheet-views2.jpg, after/d-hero.png) | improved; reads as one object with a purpose | the dial first covered the plate's last word (fixed: the words raised, the dial lowered); the head floated too far in the hero (fixed: offsets reduced by a third); the connectors stood far out (fixed: offsets reduced) |
+| First-frame impact | the whole exploded object small at the right, the same frame as the settled hero | a close-up on the dial and the plate at the right of the statement; the register's head cut by the frame | improved; the first frame is a different scale from the settled one | the first frame started mid-lerp from the origin (fixed: the camera snaps on the first frame); Skip overlapped the brass (fixed: a solid ground; on phones it moved over the object room) |
+| Opening causality and pacing | parts fly in from scattered positions and stop; nothing causes anything | the dial turns to its index, the stack seats (the click), the seating unlocks the head, the base follows, the sides, then the core, while the camera pulls back; the words rise during the pull-back; 3.0 s | improved; readable as one action propagating (recordings/refine/opening-fresh-sheet.jpg) | none open; the overshoot on the dial is small and settles |
+| Distinctness of project scenes | the schema read as a square of bars with slabs at its corners; the hour changed two numbers | the core stays assembled as the fact block with the dial at the hour; four panels at the corners joined by the connectors; the hour turns the dial, lights the Time panel and thickens its connector (lab/network-8am vs network-8pm) | improved for chapter 1; chapters 2 to 4 unchanged (held) | the lit panel's glow is subtle at the hero's scale; the forward step and the thicker connector carry it |
+| Transition continuity | every section the same composition; the object the same size and angle | hero (split) to Selected work (the register closes as the camera comes in on the head block) to chapter 1 (the title across the screen, the schema forming wide beneath it) to the case page (the title and the marks travel, the schema already formed) | improved; each boundary carries the object or the title | on phones the close-up crosses the words in Selected work while it scrolls (D-11 class; reduced by a smaller stage) |
+| Typography and readability | fourteen elements in chapter 1 | title, lead, figure, one control line, two actions, the marks, the fragment | improved | the chapter 1 lead ran over the object at 1440 wide (fixed: the object right and smaller); the phone title sat over the object (fixed: the room below the title) |
+| Interface restraint | numbered kickers with rules, three buttons, a label, an output and a sentence per chapter, stage notes | kickers and stage notes gone; the hour control is one line; two actions | improved | the dbt counter remains (held with chapter 2) |
+| Mobile composition | | the close-up on phones, the hero, the wide chapter unpinned on short phones and pinned at 844 with the button on screen | acceptable in emulation | the register crosses the words in the unpinned sections (D-11, open); no physical phone |
+| Accessibility | | the hour input is a labelled native range with an output; the marks carry no new semantics; focus returns to View project after Back; Lighthouse accessibility unchanged | unchanged | screen reader BLOCKED |
+| Audio | | the click moved to the seating (1.3 s), the texture to the unlocking | unchanged in kind | AUDITORY REVIEW NOT PERFORMED |
+| Performance and resilience | | see docs/PERFORMANCE.md (round 5 rows): pacing, throttled start-up, Lighthouse, fallbacks on the rebuilt object | see the figures | the posters and stills re-rendered and pixel-checked |
+
 ## The website-playbook rubric (graded on r3 and the recordings)
 
 | Criterion | Intended outcome | Implementation decision | Evidence inspected | Status | Remaining correction |
