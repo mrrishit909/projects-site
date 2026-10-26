@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:30:43Z",
+  "updated_at": "2026-10-26T11:38:24Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -19,7 +19,8 @@
         "browser": "overview and bridge screenshots at 360 and 1280, 0 console errors",
         "portfolio_link": "both directions verified (job 121541147043)",
         "artifact": "live-revenue-atlas-40313778038 (id 12646761607, sha256 dffafdf0...)",
-        "verified_at": "2026-10-26T11:29:53Z"
+        "verified_at": "2026-10-26T11:29:53Z",
+        "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40316433768"
       },
       "previous_release_commit": "cdae3f271d81df8e42e98eefb2cfdd4ca5fc1fb1",
       "contract_version": "v1.1"

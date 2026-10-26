@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:36:16Z",
+  "updated_at": "2026-10-26T11:38:24Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -378,6 +378,18 @@
       "command": "data/sql/analysis/09_stored_vs_contract_freight.sql",
       "code_sha": "pending-commit",
       "ts": "2026-10-26T11:36:16Z"
+    },
+    {
+      "requirement": "P01-REL-09/18 live check (robust workflow: bounded browser step, no apt) on the current release 92b9c66",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "live-check.yml jobs live + portfolio-link",
+      "exit_code": 0,
+      "expected": "both jobs success",
+      "actual": "success",
+      "code_sha": "workflow commit on business-data-lab; site release 92b9c66",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40316433768",
+      "ts": "2026-10-26T11:38:24Z"
     }
   ]
 }
