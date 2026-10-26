@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T10:15:32Z",
+  "updated_at": "2026-10-26T10:18:41Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -21,7 +21,7 @@
       "exit_code": 0,
       "expected": "net 225.00, cogs 140.00, gp 85.00, freight 12.00/3.00, contribution 70.00; after return net 135.00, cogs 80.00, contribution 40.00; rejected variant totals equal baseline; empty variant rates null",
       "actual": "ALL OK (0 mismatches), 187 checks, 7 fixture hashes verified",
-      "code_sha": "pending-commit",
+      "code_sha": "57f01433 (hosted run 40306213772, Mode A success)",
       "ts": "2026-10-26T09:56:53Z",
       "note": "independent stdlib reference by worker A-001; coordinator re-ran it"
     },
@@ -33,7 +33,7 @@
       "exit_code": 0,
       "expected": "golden baseline/after_return metrics equal expected.json; 18 rule tests",
       "actual": "23 passed",
-      "code_sha": "pending-commit",
+      "code_sha": "57f01433 (hosted run 40306213772, Mode A success)",
       "ts": "2026-10-26T10:02:07Z",
       "gaps": [
         "G-01 credit-date windowing of returns not yet implemented (D-01)",
@@ -48,7 +48,7 @@
       "exit_code": 0,
       "expected": "baseline 250/25/0/225/140/0/85/15/70/0.00; after return 90/135/80/60/55/40",
       "actual": "equal as 2dp strings",
-      "code_sha": "pending-commit",
+      "code_sha": "57f01433 (hosted run 40306213772, Mode A success)",
       "ts": "2026-10-26T10:15:32Z"
     },
     {
@@ -59,7 +59,7 @@
       "exit_code": 0,
       "expected": "status codes per api-contract.md; migrations idempotent",
       "actual": "passed",
-      "code_sha": "pending-commit",
+      "code_sha": "57f01433 (hosted run 40306213772, Mode A success)",
       "ts": "2026-10-26T10:15:32Z"
     },
     {
@@ -70,7 +70,7 @@
       "exit_code": 0,
       "expected": "second allocation rejected by PRIMARY KEY, 409 FREIGHT_ALREADY_ALLOCATED, no partial write; idempotent rerun returns same allocations",
       "actual": "passed",
-      "code_sha": "pending-commit",
+      "code_sha": "57f01433 (hosted run 40306213772, Mode A success)",
       "ts": "2026-10-26T10:15:32Z"
     },
     {
@@ -81,7 +81,7 @@
       "exit_code": 0,
       "expected": "quarantine COST_VERSION_AMBIGUOUS then recovery after valid_to fix",
       "actual": "passed",
-      "code_sha": "pending-commit",
+      "code_sha": "57f01433 (hosted run 40306213772, Mode A success)",
       "ts": "2026-10-26T10:15:32Z"
     },
     {
@@ -92,7 +92,7 @@
       "exit_code": 0,
       "expected": "422 CREDIT_SIGN_REVERSED",
       "actual": "passed",
-      "code_sha": "pending-commit",
+      "code_sha": "57f01433 (hosted run 40306213772, Mode A success)",
       "ts": "2026-10-26T10:15:32Z"
     },
     {
@@ -103,7 +103,7 @@
       "exit_code": 0,
       "expected": "no facts, totals unchanged",
       "actual": "passed",
-      "code_sha": "pending-commit",
+      "code_sha": "57f01433 (hosted run 40306213772, Mode A success)",
       "ts": "2026-10-26T10:15:32Z"
     },
     {
@@ -114,7 +114,7 @@
       "exit_code": 0,
       "expected": "422 RETURN_EXCEEDS_REMAINING; smaller valid return accepted",
       "actual": "passed",
-      "code_sha": "pending-commit",
+      "code_sha": "57f01433 (hosted run 40306213772, Mode A success)",
       "ts": "2026-10-26T10:15:32Z"
     },
     {
@@ -127,6 +127,18 @@
       "actual": "domain-level rules exist for 04,05,07,11 (tests/test_rules.py); application-path tests pending T-01-07",
       "code_sha": null,
       "ts": "2026-10-26T10:15:32Z"
+    },
+    {
+      "requirement": "P01-REL-05 backend and relational suite on GitHub Actions with transient PostgreSQL",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "workflow revenue-atlas-ci.yml job 'Mode A' (runner.environment github-hosted asserted)",
+      "exit_code": 0,
+      "expected": "63 tests pass against postgres:16 service",
+      "actual": "success",
+      "code_sha": "57f0143",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40306213772",
+      "ts": "2026-10-26T10:18:41Z"
     }
   ]
 }

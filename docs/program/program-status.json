@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T10:03:26Z",
+  "updated_at": "2026-10-26T10:18:41Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -41,16 +41,16 @@
   "projects": {
     "01-revenue-atlas": {
       "slug": "revenue-atlas",
-      "stage": "gate-B (domain verified in CI; db/api in progress)",
+      "stage": "gate-B passed (Mode A verified on hosted runner: 63 tests incl. PostgreSQL service); generator + web in progress",
       "built": false,
       "verified": false,
       "published": false,
       "integrated": false,
-      "last_verified_sha": "b473464b30ded6736c27eb890823c3d2a1bae359",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40304221309",
+      "last_verified_sha": "57f0143",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40306213772",
       "site_url": null,
       "blockers": [],
-      "next_task": "T-01-04/05 migrations, SQL reference, FastAPI commands (worker A-003 running)"
+      "next_task": "T-01-05b generator (A-004 running), then T-01-06 web"
     },
     "02-onboard-studio": {
       "slug": "onboard-studio",
