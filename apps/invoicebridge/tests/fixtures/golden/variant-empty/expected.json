@@ -1,0 +1,140 @@
+{
+  "contract_version": 1,
+  "ingest": {
+    "counts": {
+      "vendors": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "purchase_orders": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "po_lines": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "receipts": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "invoices": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "invoice_lines": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "credit_notes": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "approval_policies": {
+        "accepted": 1,
+        "rejected": 0,
+        "merged": 0
+      },
+      "approvals": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      }
+    },
+    "rejected_records": [],
+    "merged_records": []
+  },
+  "documents": {
+    "invoices": {},
+    "match_results": []
+  },
+  "metrics": {
+    "matched": {
+      "invoice_count": 0,
+      "amount_before_tax": "0.00",
+      "tax": "0.00",
+      "total": "0.00"
+    },
+    "obligations": {
+      "count": 0,
+      "total": "0.00"
+    },
+    "exceptions": {
+      "open_count": 0,
+      "unowned_count": 0,
+      "by_reason": {
+        "QUANTITY_BLOCKED": 0,
+        "PRICE_VARIANCE": 0,
+        "NO_PO_LINE": 0,
+        "ROUNDING_EXCEPTION": 0,
+        "CURRENCY_MISMATCH": 0
+      },
+      "records": []
+    },
+    "duplicates": {
+      "groups_detected": 0,
+      "rows_merged": 0,
+      "unresolved_groups": 0
+    },
+    "quantities": {
+      "ordered_quantity": "0.0000",
+      "net_received_quantity": "0.0000",
+      "accepted_invoiced_quantity": "0.0000",
+      "open_to_receive_quantity": "0.0000",
+      "open_to_invoice_quantity": "0.0000",
+      "received_not_invoiced_quantity": "0.0000",
+      "invoiced_not_received_quantity": "0.0000",
+      "received_not_invoiced_value": "0.00",
+      "invoiced_not_received_value": "0.00"
+    },
+    "snapshots": {
+      "2026-10-05T23:00:00Z": {
+        "ordered_quantity": "0.0000",
+        "net_received_quantity": "0.0000",
+        "accepted_invoiced_quantity": "0.0000",
+        "open_to_receive_quantity": "0.0000",
+        "open_to_invoice_quantity": "0.0000",
+        "received_not_invoiced_quantity": "0.0000",
+        "invoiced_not_received_quantity": "0.0000",
+        "received_not_invoiced_value": "0.00",
+        "invoiced_not_received_value": "0.00"
+      }
+    },
+    "rates": {
+      "eligible_invoices": 0,
+      "straight_through_rate": null,
+      "exception_rate": null
+    },
+    "processing": {
+      "approved_count": 0,
+      "mean_minutes": null,
+      "pending_count": 0
+    },
+    "approvals": {
+      "valid_count": 0,
+      "invalid_records": []
+    },
+    "payable": {
+      "approved_total": "0.00",
+      "credit_total": "0.00",
+      "approved_payable": "0.00"
+    },
+    "export": {
+      "requests_received": 0,
+      "batches_created": 0,
+      "repeat_requests_returned_prior": 0,
+      "rows": [],
+      "exclusions": [],
+      "accepted_export_total": "0.00",
+      "eligible_approved_total": "0.00",
+      "difference": "0.00"
+    }
+  }
+}

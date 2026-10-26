@@ -1,0 +1,30 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-10-26T00:00:00Z",
+  "snapshot_cutoffs": [
+    "2026-10-05T23:00:00Z"
+  ],
+  "tolerances": {
+    "price_per_unit": "0.00",
+    "rounding_per_line": "0.01",
+    "rounding_per_invoice": "0.02"
+  },
+  "vendors": [],
+  "purchase_orders": [],
+  "po_lines": [],
+  "receipts": [],
+  "invoices": [],
+  "invoice_lines": [],
+  "credit_notes": [],
+  "approval_policies": [
+    {
+      "policy_id": "pol-v1",
+      "version_number": 1,
+      "amount_limit": "5000.00",
+      "reviewer_role": "reviewer",
+      "effective_from": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "approvals": [],
+  "export_requests": []
+}

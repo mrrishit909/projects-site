@@ -1,0 +1,150 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-10-26T00:00:00Z",
+  "snapshot_cutoffs": [
+    "2026-10-05T23:00:00Z"
+  ],
+  "tolerances": {
+    "price_per_unit": "0.00",
+    "rounding_per_line": "0.01",
+    "rounding_per_invoice": "0.02"
+  },
+  "vendors": [
+    {
+      "vendor_id": "ven-001",
+      "vendor_name": "Northwind Supply Co",
+      "tax_reference": "US-TAX-0001",
+      "currency": "USD",
+      "active": true
+    }
+  ],
+  "purchase_orders": [
+    {
+      "po_id": "po-001",
+      "vendor_id": "ven-001",
+      "ordered_at": "2026-10-01T09:00:00Z",
+      "status": "open",
+      "currency": "USD"
+    }
+  ],
+  "po_lines": [
+    {
+      "po_line_id": "pol-001",
+      "po_id": "po-001",
+      "product_code": "WIDGET-A",
+      "quantity": "10",
+      "unit_price": "20.00"
+    }
+  ],
+  "receipts": [
+    {
+      "receipt_id": "rc-001",
+      "po_line_id": "pol-001",
+      "received_quantity": "6",
+      "received_at": "2026-10-05T10:00:00Z",
+      "reversed": false
+    },
+    {
+      "receipt_id": "rc-002",
+      "po_line_id": "pol-999",
+      "received_quantity": "5",
+      "received_at": "2026-10-05T11:00:00Z",
+      "reversed": false
+    }
+  ],
+  "invoices": [
+    {
+      "invoice_id": "inv-001",
+      "vendor_id": "ven-001",
+      "invoice_number": "INV-1001",
+      "invoice_date": "2026-10-06",
+      "currency": "USD",
+      "tax_rate": "0.10",
+      "freight": "0.00",
+      "invoice_discount": "0.00",
+      "declared_total": "132.00",
+      "created_by": "usr-clerk01",
+      "source_sha256": "bf8040f6479097e466a8679d14535ce357ddb5e22078c50e3406a4c3889c3e07",
+      "source_filename": "INV-1001.pdf",
+      "idempotency_key": "idem-001",
+      "imported_at": "2026-10-06T09:00:00Z"
+    },
+    {
+      "invoice_id": "inv-003",
+      "vendor_id": "ven-001",
+      "invoice_number": "INV-1003",
+      "invoice_date": "2026-10-06",
+      "currency": "USD",
+      "tax_rate": "0.10",
+      "freight": "0.00",
+      "invoice_discount": "0.00",
+      "declared_total": "-44.00",
+      "created_by": "usr-clerk01",
+      "source_sha256": "42c18a86ec0aa80ff25dcef3b649d036cfc46ae9c793580682b2d6dde5bb4068",
+      "source_filename": "INV-1003.pdf",
+      "idempotency_key": "idem-013",
+      "imported_at": "2026-10-06T10:00:00Z"
+    }
+  ],
+  "invoice_lines": [
+    {
+      "invoice_line_id": "il-001",
+      "invoice_id": "inv-001",
+      "po_line_id": "pol-001",
+      "quantity": "6",
+      "unit_price": "20.00"
+    },
+    {
+      "invoice_line_id": "il-003-1",
+      "invoice_id": "inv-003",
+      "po_line_id": "pol-001",
+      "quantity": "2",
+      "unit_price": "20.00"
+    },
+    {
+      "invoice_line_id": "il-003-2",
+      "invoice_id": "inv-003",
+      "po_line_id": "pol-001",
+      "quantity": "-4",
+      "unit_price": "20.00"
+    }
+  ],
+  "credit_notes": [],
+  "approval_policies": [
+    {
+      "policy_id": "pol-v1",
+      "version_number": 1,
+      "amount_limit": "5000.00",
+      "reviewer_role": "reviewer",
+      "effective_from": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "approvals": [
+    {
+      "approval_id": "ap-001",
+      "invoice_id": "inv-001",
+      "actor_id": "usr-rev01",
+      "actor_role": "reviewer",
+      "decision": "approve",
+      "decided_at": "2026-10-06T15:30:00Z"
+    },
+    {
+      "approval_id": "ap-002",
+      "invoice_id": "inv-003",
+      "actor_id": "usr-rev01",
+      "actor_role": "reviewer",
+      "decision": "approve",
+      "decided_at": "2026-10-06T16:00:00Z"
+    }
+  ],
+  "export_requests": [
+    {
+      "batch_id": "bat-001",
+      "idempotency_key": "exp-key-001",
+      "invoice_ids": [
+        "inv-001"
+      ],
+      "exported_at": "2026-10-07T08:00:00Z"
+    }
+  ]
+}

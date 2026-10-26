@@ -1,0 +1,252 @@
+{
+  "contract_version": 1,
+  "ingest": {
+    "counts": {
+      "vendors": {
+        "accepted": 1,
+        "rejected": 0,
+        "merged": 0
+      },
+      "purchase_orders": {
+        "accepted": 1,
+        "rejected": 0,
+        "merged": 0
+      },
+      "po_lines": {
+        "accepted": 1,
+        "rejected": 0,
+        "merged": 0
+      },
+      "receipts": {
+        "accepted": 1,
+        "rejected": 1,
+        "merged": 0
+      },
+      "invoices": {
+        "accepted": 1,
+        "rejected": 1,
+        "merged": 0
+      },
+      "invoice_lines": {
+        "accepted": 1,
+        "rejected": 2,
+        "merged": 0
+      },
+      "credit_notes": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "approval_policies": {
+        "accepted": 1,
+        "rejected": 0,
+        "merged": 0
+      },
+      "approvals": {
+        "accepted": 1,
+        "rejected": 1,
+        "merged": 0
+      }
+    },
+    "rejected_records": [
+      {
+        "entity": "approvals",
+        "id": "ap-002",
+        "status": "rejected",
+        "reason_code": "DEPENDENT_REJECTED",
+        "raw_row": {
+          "approval_id": "ap-002",
+          "invoice_id": "inv-003",
+          "actor_id": "usr-rev01",
+          "actor_role": "reviewer",
+          "decision": "approve",
+          "decided_at": "2026-10-06T16:00:00Z"
+        }
+      },
+      {
+        "entity": "invoice_lines",
+        "id": "il-003-1",
+        "status": "rejected",
+        "reason_code": "DEPENDENT_REJECTED",
+        "raw_row": {
+          "invoice_line_id": "il-003-1",
+          "invoice_id": "inv-003",
+          "po_line_id": "pol-001",
+          "quantity": "2",
+          "unit_price": "20.00"
+        }
+      },
+      {
+        "entity": "invoice_lines",
+        "id": "il-003-2",
+        "status": "rejected",
+        "reason_code": "NON_POSITIVE_QUANTITY",
+        "raw_row": {
+          "invoice_line_id": "il-003-2",
+          "invoice_id": "inv-003",
+          "po_line_id": "pol-001",
+          "quantity": "-4",
+          "unit_price": "20.00"
+        }
+      },
+      {
+        "entity": "invoices",
+        "id": "inv-003",
+        "status": "rejected",
+        "reason_code": "DEPENDENT_REJECTED",
+        "raw_row": {
+          "invoice_id": "inv-003",
+          "vendor_id": "ven-001",
+          "invoice_number": "INV-1003",
+          "invoice_date": "2026-10-06",
+          "currency": "USD",
+          "tax_rate": "0.10",
+          "freight": "0.00",
+          "invoice_discount": "0.00",
+          "declared_total": "-44.00",
+          "created_by": "usr-clerk01",
+          "source_sha256": "42c18a86ec0aa80ff25dcef3b649d036cfc46ae9c793580682b2d6dde5bb4068",
+          "source_filename": "INV-1003.pdf",
+          "idempotency_key": "idem-013",
+          "imported_at": "2026-10-06T10:00:00Z"
+        }
+      },
+      {
+        "entity": "receipts",
+        "id": "rc-002",
+        "status": "rejected",
+        "reason_code": "UNKNOWN_PO_LINE",
+        "raw_row": {
+          "receipt_id": "rc-002",
+          "po_line_id": "pol-999",
+          "received_quantity": "5",
+          "received_at": "2026-10-05T11:00:00Z",
+          "reversed": false
+        }
+      }
+    ],
+    "merged_records": []
+  },
+  "documents": {
+    "invoices": {
+      "inv-001": {
+        "status": "exported",
+        "subtotal": "120.00",
+        "tax": "12.00",
+        "freight": "0.00",
+        "invoice_discount": "0.00",
+        "total": "132.00",
+        "declared_total": "132.00",
+        "rounding_difference": "0.00",
+        "exception_types": []
+      }
+    },
+    "match_results": [
+      {
+        "invoice_line_id": "il-001",
+        "invoice_id": "inv-001",
+        "rule_version": "1",
+        "status": "matched",
+        "reason_code": null,
+        "available_quantity": "6.0000",
+        "quantity_variance": "0.0000",
+        "price_variance": "0.0000"
+      }
+    ]
+  },
+  "metrics": {
+    "matched": {
+      "invoice_count": 1,
+      "amount_before_tax": "120.00",
+      "tax": "12.00",
+      "total": "132.00"
+    },
+    "obligations": {
+      "count": 1,
+      "total": "132.00"
+    },
+    "exceptions": {
+      "open_count": 0,
+      "unowned_count": 0,
+      "by_reason": {
+        "QUANTITY_BLOCKED": 0,
+        "PRICE_VARIANCE": 0,
+        "NO_PO_LINE": 0,
+        "ROUNDING_EXCEPTION": 0,
+        "CURRENCY_MISMATCH": 0
+      },
+      "records": []
+    },
+    "duplicates": {
+      "groups_detected": 0,
+      "rows_merged": 0,
+      "unresolved_groups": 0
+    },
+    "quantities": {
+      "ordered_quantity": "10.0000",
+      "net_received_quantity": "6.0000",
+      "accepted_invoiced_quantity": "6.0000",
+      "open_to_receive_quantity": "4.0000",
+      "open_to_invoice_quantity": "4.0000",
+      "received_not_invoiced_quantity": "0.0000",
+      "invoiced_not_received_quantity": "0.0000",
+      "received_not_invoiced_value": "0.00",
+      "invoiced_not_received_value": "0.00"
+    },
+    "snapshots": {
+      "2026-10-05T23:00:00Z": {
+        "ordered_quantity": "10.0000",
+        "net_received_quantity": "6.0000",
+        "accepted_invoiced_quantity": "0.0000",
+        "open_to_receive_quantity": "4.0000",
+        "open_to_invoice_quantity": "10.0000",
+        "received_not_invoiced_quantity": "6.0000",
+        "invoiced_not_received_quantity": "0.0000",
+        "received_not_invoiced_value": "120.00",
+        "invoiced_not_received_value": "0.00"
+      }
+    },
+    "rates": {
+      "eligible_invoices": 1,
+      "straight_through_rate": "1.000000",
+      "exception_rate": "0.000000"
+    },
+    "processing": {
+      "approved_count": 1,
+      "mean_minutes": "390.0000",
+      "pending_count": 0
+    },
+    "approvals": {
+      "valid_count": 1,
+      "invalid_records": []
+    },
+    "payable": {
+      "approved_total": "132.00",
+      "credit_total": "0.00",
+      "approved_payable": "132.00"
+    },
+    "export": {
+      "requests_received": 1,
+      "batches_created": 1,
+      "repeat_requests_returned_prior": 0,
+      "rows": [
+        {
+          "export_id": "exp-bat-001-inv-001",
+          "invoice_id": "inv-001",
+          "batch_id": "bat-001",
+          "exported_at": "2026-10-07T08:00:00Z",
+          "vendor_id": "ven-001",
+          "invoice_number": "INV-1001",
+          "invoice_date": "2026-10-06",
+          "currency": "USD",
+          "amount": "132.00",
+          "content_hash": "7776efc65bc163e1b9a09ab336a0fcd12b52aba6ccfdefe49c06baf0b3df6779"
+        }
+      ],
+      "exclusions": [],
+      "accepted_export_total": "132.00",
+      "eligible_approved_total": "132.00",
+      "difference": "0.00"
+    }
+  }
+}

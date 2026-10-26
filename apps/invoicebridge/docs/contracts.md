@@ -58,3 +58,26 @@ paid (P05-DOMAIN-01, P05-TEST-12); OCR is an optional adapter, structured import
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners. Mode B: TypeScript
 mirror over the published snapshot; the intake desk's actions are browser-memory simulations.
+
+## D-05 Fixture-driven clarifications (2026-10-26, adopted from A-034; full text in tests/fixtures/golden/CALCULATION.md D-P5-1..17)
+Tax is computed once per invoice at document level on the unrounded subtotal; money rounds ROUND_HALF_UP to 2 decimals;
+quantities carry 4 decimals. A duplicate (same vendor, normalised invoice number (upper-case letters and digits only),
+invoice date and computed total; D-01 identity uses the computed total) is **merged** into the earliest import, not
+rejected: status `merged`, reason `DUPLICATE_IDENTITY`, lineage and source hash kept, no received quantity consumed.
+Import status is accepted / rejected / merged; invoice status is received, valid, invalid, matched, exception,
+approved, rejected, exported, adjusted, merged; an exception is `open` until assigned. Rejection codes: UNKNOWN_PO_LINE,
+UNKNOWN_VENDOR, UNKNOWN_PO, NON_POSITIVE_QUANTITY, DEPENDENT_REJECTED; an invoice is atomic (one bad line rejects the
+header, its sibling lines and any approval on it). Exception reasons: QUANTITY_BLOCKED, PRICE_VARIANCE, NO_PO_LINE,
+ROUNDING_EXCEPTION, CURRENCY_MISMATCH. An invoice consumes received quantity once matched or later; matching runs in
+(invoice_date, imported_at, invoice_id) order; a receipt with `reversed` true is excluded from net received. Tolerances
+travel in the inputs: price per unit 0.00, rounding per line 0.01, rounding per invoice 0.02. Extra invoice fields:
+tax_rate, freight, invoice_discount, declared_total, created_by, source_sha256, source_filename, idempotency_key,
+imported_at; approvals carry actor_role, and the approver must differ from created_by. An obligation is an approved or
+exported invoice; straight-through and exception rates have distinct validated invoices as denominator and are null
+when it is zero; processing time is minutes to approval over approved invoices only. Export rows: export_id
+`exp-<batch>-<invoice>`, invoice_id, batch_id, exported_at, vendor_id, invoice_number, invoice_date, currency, amount,
+content_hash = sha256 of `invoice_id|vendor_id|invoice_number|invoice_date|currency|amount`; a repeated idempotency key
+returns the prior batch. Open quantities: open to receive, open to invoice, received-not-invoiced valued at PO price,
+blocked (invoiced-not-received) valued at invoice price; `snapshot_cutoffs` re-run the quantity figures as of a date.
+Not yet pinned by a fixture row (candidates for the adversarial tests): same-bytes duplicate, multi-line tax, rounding
+ties, PRICE_VARIANCE, CURRENCY_MISMATCH, NO_PO_LINE, self-approval, credit notes, racing approvals.
