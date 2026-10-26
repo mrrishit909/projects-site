@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T13:19:43Z",
+  "updated_at": "2026-10-26T14:10:14Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -62,7 +62,7 @@
       "published": true,
       "integrated": true,
       "last_verified_sha": "eac63b9",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40328738179",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40336881726",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/onboard-studio/",
       "blockers": [],
       "next_task": "link check -> reviewer findings -> fixes -> artifacts -> project 03",

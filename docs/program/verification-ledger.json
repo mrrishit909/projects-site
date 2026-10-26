@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:08:32Z",
+  "updated_at": "2026-10-26T14:10:14Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -580,7 +580,7 @@
         "atomic rollback",
         "v2 lower active hours in every segment\u00d7region cell and in the same window (9.2503 vs 5.8690)"
       ],
-      "code_sha": "pending-commit",
+      "code_sha": "1a27a0e (hosted run 40336881726 success)",
       "ts": "2026-10-26T13:25:24Z",
       "resolution": "Q-01..Q-06 fixed in A-019 with regression tests (tests/test_review_findings.py, web/scripts/review-check.ts); Q-07 documented; reviewer repros rerun: A2 422, race 0/50 500s, tie 0.0001, docver rejected"
     },
@@ -592,6 +592,17 @@
       "exit_code": 0,
       "code_sha": "3c5377a",
       "ts": "2026-10-26T13:44:39Z"
+    },
+    {
+      "requirement": "CI after reviewer fixes (Onboard Studio): Mode A 330 tests + Mode B 166 TS checks, 35 Playwright tests, screenshots",
+      "project": "02-onboard-studio",
+      "status": "verified",
+      "command": "onboard-studio-ci.yml",
+      "exit_code": 0,
+      "actual": "both jobs success",
+      "code_sha": "1a27a0e",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40336881726",
+      "ts": "2026-10-26T14:10:14Z"
     }
   ]
 }
