@@ -655,7 +655,11 @@ def test_replay_events_behave_as_recorded(loaded, inputs, built):
         for eid, ev in sorted(built["events"].items()):
             responses = []
             for step in ev["steps"]:
-                responses.append(client.post(f"{PREFIX}/commands/{step['command']}", json=step["input"], headers=step["headers"]))
+                # R4-05: the replay carries the dataset_version a client has just read from the API (meta), not the
+                # generator's label: a stale version is 409.
+                body = {**step["input"], "dataset_version": conn.execute(
+                    "SELECT dataset_version FROM dataset_versions ORDER BY created_at DESC LIMIT 1").fetchone()["dataset_version"]}
+                responses.append(client.post(f"{PREFIX}/commands/{step['command']}", json=body, headers=step["headers"]))
             for r in responses[:-1]:
                 assert r.status_code == 200, (eid, r.text)
             last = responses[-1]

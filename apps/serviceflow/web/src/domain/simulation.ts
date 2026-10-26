@@ -12,7 +12,8 @@ export const DEFAULT_PRIORITY = "P2";
 export const MAX_TICKETS = 20_000;
 const PRI = ["P1", "P2", "P3"];
 const T95 = ["12.706", "4.303", "3.182", "2.776", "2.571", "2.447", "2.365", "2.306", "2.262", "2.228", "2.201", "2.179", "2.160", "2.145", "2.131",
-  "2.120", "2.110", "2.101", "2.093", "2.086", "2.080", "2.074", "2.069", "2.064", "2.060", "2.056", "2.052", "2.048", "2.045", "2.042"];
+  "2.120", "2.110", "2.101", "2.093", "2.086", "2.080", "2.074", "2.069", "2.064", "2.060", "2.056", "2.052", "2.048", "2.045", "2.042",
+  "2.040", "2.037", "2.035", "2.032", "2.030", "2.028", "2.026", "2.024", "2.023", "2.021", "2.020", "2.018", "2.017", "2.015", "2.014", "2.013", "2.012", "2.011", "2.010", "2.009"];
 
 const bad = (m: string): never => { throw new Error(m); };
 function num(v: unknown, name: string, o: { positive?: boolean; nonneg?: boolean } = {}): Frac {
@@ -208,8 +209,39 @@ export function meanCi95(values: Frac[]): { n: number; mean: string | null; ci95
   const m = fDiv(fSum(values), frac(n));
   if (n < 2) return { n, mean: d4f(m), ci95_half_width: null };
   const varr = fDiv(fSum(values.map((v) => fMul(fSub(v, m), fSub(v, m)))), frac(n - 1));
-  const t = n - 1 <= 30 ? parseDecimal(T95[n - 2])! : parseDecimal("1.96")!;
+  const t = n - 1 <= T95.length ? parseDecimal(T95[n - 2])! : parseDecimal("2.000")!; // D-09: table to 50 df, 2.000 beyond
   const se2 = fDiv(varr, frac(n));
   const se = frac(isqrt((se2.n * 10n ** 16n) / se2.d), 10n ** 8n);
   return { n, mean: d4f(m), ci95_half_width: d4f(fMul(t, se)) };
+}
+
+/** D-09 / R4-11: replication r uses seed `seed + r`; the mean of the per-replication mean waits with its count and 95 % interval. */
+export function replicationReport(config: unknown, seed: number, replications: number, warmup: unknown = 0, horizon: unknown = 60) {
+  const runs = replicate(config, seed, replications, warmup, horizon, "replication");
+  const waits = runs.map((r) => meanWait(r));
+  return {
+    label: "simulated estimate, not an observed result", seed, replications, seeds: runs.map((r) => r.seed),
+    mean_wait_minutes: meanCi95(waits.filter((w): w is Frac => w !== null)),
+    replications_without_a_wait: waits.filter((w) => w === null).length,
+    censored_tickets_total: runs.reduce((a, r) => a + r.served.filter((x) => x.start === null).length, 0),
+    per_replication_mean_wait_minutes: waits.map((w) => d4f(w)),
+  };
+}
+
+/** Two configs on the SAME seeds, hence the same demand paths when only the policy differs; the paired difference per
+ * replication (proposal minus baseline) with the replication count and a 95 % interval. An estimate, labelled as one. Mirrors
+ * `compare_policies` in domain/serviceflow/simulation.py. */
+export function comparePolicies(baseline: unknown, proposal: unknown, seed: number, replications: number, warmup: unknown = 0, horizon: unknown = 60) {
+  const base = replicate(baseline, seed, replications, warmup, horizon, "baseline");
+  const prop = replicate(proposal, seed, replications, warmup, horizon, "proposal");
+  const pairs = base.map((b, i) => [meanWait(b), meanWait(prop[i]!)] as const).filter((p): p is readonly [Frac, Frac] => p[0] !== null && p[1] !== null);
+  const diffs = pairs.map(([b, p]) => fSub(p, b));
+  const path = (r: SimulationResult): string => JSON.stringify(r.served.map((x) => [d4f(x.demand.arrival), x.demand.priority]));
+  const sameDemand = base.every((b, i) => path(b) === path(prop[i]!));
+  return {
+    label: "simulated estimate, not an observed result", seed, replications, seeds: base.map((r) => r.seed), same_demand_paths: sameDemand,
+    baseline_mean_wait_minutes: meanCi95(pairs.map(([b]) => b)), proposal_mean_wait_minutes: meanCi95(pairs.map(([, p]) => p)),
+    difference_mean_wait_minutes: meanCi95(diffs), paired_replications: pairs.length,
+    proposal_better: diffs.length ? fCmp(fSum(diffs), frac(0)) < 0 : null,
+  };
 }

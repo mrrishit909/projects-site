@@ -34,7 +34,7 @@ Durations are never stored: they are derived from event instants (minutes, 4 dp,
 * 2026-07-06 .. 2026-09-27 (84 days, 12 weeks), snapshot cut `2026-09-27T23:59:59Z`. Weeks 1-8 are the training window,
   weeks 9-12 the holdout, which arrives 20 % harder by design (the generator draws Poisson counts per hour from the
   hour-of-week intensity x 1.2 in the holdout; the realisation is the first of a fixed series of attempts whose holdout/training
-  rate ratio is within 1.5 points of +20 %: Poisson noise alone moves it by about 4 points at this volume).
+  rate ratio is within 1.5 points of +20 %: Poisson noise alone moves it by about 4 points at this volume). The attempt index and the discarded ratios are recorded in `manifest.json` `generator.parameters.arrival_realisation` (attempt 7; attempts 0 to 6 gave +12.86, +14.58, +22.82, +16.92, +12.69, +22.02, +30.46 %): a chosen realisation, not a measurement. The record is not part of `dataset_hash`.
 * Queues `q-001` Billing, `q-002` Technical (both `fifo_within_priority`), `q-003` Onboarding (`fifo`); priorities P1..P3 with
   queue-specific mixes (technical P1 is 10 %); one skill per queue (`s-001..003`); SLA per priority, wall clock, calendar
   `cal-001` (24x7): P1 15 / 240 min, P2 60 / 1,440, P3 240 / 4,320 (first response / resolution).

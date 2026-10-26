@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from .contract import CONTRACT_VERSION, DEFAULT_ABANDONABLE
+from .diagnostics import calendar_warnings, cutoff_warnings
 from .ingest import IngestResult, validate_batch
 from .metrics import Window, compute_metrics
 from .models import Population
@@ -18,6 +19,7 @@ class PipelineResult:
     population: Population
     metrics: dict[str, Any]
     simulations: list[SimulationResult] = field(default_factory=list)
+    warnings: list[dict[str, Any]] = field(default_factory=list)      # D-09: calendars ignored, cutoff at the window end
 
     @property
     def counts(self) -> dict[str, dict[str, int]]:
@@ -48,4 +50,4 @@ def run_pipeline(inputs: dict[str, Any], window: Window | None = None, cutoffs: 
     metrics = compute_metrics(pop, win, cuts, inputs.get("abandonable_channels", DEFAULT_ABANDONABLE))
     sims = [simulate(r.config, r.seed, r.warmup_minutes, r.horizon_minutes, r.simulation_id)
             for r in pop.simulation_runs]
-    return PipelineResult(ing, pop, metrics, sims)
+    return PipelineResult(ing, pop, metrics, sims, [*calendar_warnings(pop), *cutoff_warnings(pop, win, cuts)])

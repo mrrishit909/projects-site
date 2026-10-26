@@ -8,7 +8,7 @@
     "proficiency >= 4 resolves faster: mean handling 35.9 min (n 1946) against 39.5 min (n 3039) for proficiency <= 3; relative to the queue and priority mean 0.896 against 1.066 (handling factors {1: 1.3, 2: 1.15, 3: 1.0, 4: 0.85, 5: 0.72}; synthetic).",
     "the holdout (weeks 9-12) arrives +20.0 % harder than the training window (weeks 1-8): 2.135 against 1.779 tickets per hour; designed uplift 20 % and disclosed (synthetic)."
   ],
-  "generated_at": "2026-10-26T16:34:09Z",
+  "generated_at": "2026-10-26T17:47:37Z",
   "generator": {
     "name": "generate.py",
     "parameters": {
@@ -21,7 +21,24 @@
         "America/Santiago"
       ],
       "agents": 18,
-      "arrival_realisation": "first attempt (0, 1, ...) with holdout/training rate within 1.5 points of +20 %",
+      "arrival_realisation": {
+        "attempt_index": 7,
+        "chosen_uplift_percent": 20.1,
+        "designed_uplift_percent": 20.0,
+        "discarded_uplift_percent": [
+          12.86,
+          14.58,
+          22.82,
+          16.92,
+          12.69,
+          22.02,
+          30.46
+        ],
+        "noise_sd_points": 4.3,
+        "note": "chosen realisation: the +20 % holdout is one draw selected from a fixed series, not a measurement; Poisson noise alone moves the ratio by about 4 points",
+        "rule": "first attempt (0, 1, ...) with holdout/training rate within 1.5 points of +20 %",
+        "tolerance_points": 1.5
+      },
       "as_of": "2026-09-27T23:59:59Z",
       "break_minutes": 30,
       "channels": {

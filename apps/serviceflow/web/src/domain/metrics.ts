@@ -139,9 +139,13 @@ export function disclosures(pop: Population, w: Window, hist: Map<string, Histor
   const invited = surveys.filter((s) => s.invited_at !== null);
   const responded = invited.filter((s) => s.score !== null && s.response_at !== null);
   const all = new Set(pop.tickets.map((t) => t.ticket_id));
+  // R4-09 / D-09: reopens are counted over tickets that arrived in the window and over those completed in it (counted once).
+  const scope = pop.tickets.filter((t) => inside(t.created_at) || done.has(t.ticket_id));
   return {
-    reopened_tickets: arr.filter((t) => reopenCount(hist.get(t.ticket_id)!) > 0).length,
-    reopen_events: sum(arr.map((t) => reopenCount(hist.get(t.ticket_id)!))),
+    reopened_tickets: scope.filter((t) => reopenCount(hist.get(t.ticket_id)!) > 0).length,
+    reopen_events: sum(scope.map((t) => reopenCount(hist.get(t.ticket_id)!))),
+    reopened_among_completions: pop.tickets.filter((t) => done.has(t.ticket_id) && reopenCount(hist.get(t.ticket_id)!) > 0).length,
+    reopened_basis: "arrivals and completions in the window (a ticket counted once)",
     transferred_tickets: arr.filter((t) => transfersOf(hist.get(t.ticket_id)!).length > 0).length,
     arrivals_without_human_reply: arr.filter((t) => firstHumanReplyAt(hist.get(t.ticket_id)!) === null).length,
     bot_events_ignored_for_first_response: pop.ticket_events.filter((e) => e.event_type === "acknowledged_bot" || (e.event_type === "replied_human" && isBot(e.actor_id))).length,

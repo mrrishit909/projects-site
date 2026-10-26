@@ -11,6 +11,10 @@ from .simulation import parse_config
 from .timeutil import iso_z, parse_ts, parse_ts_opt
 
 
+#: D-09 / R4-17: seeds are JSON-safe integers in both domains.
+SEED_MAX = 2 ** 53 - 1
+
+
 def _s(v: object) -> str:
     if not isinstance(v, str) or not v.strip() or len(v) > 256:
         raise ValueError("non-empty string required")
@@ -22,6 +26,11 @@ def _s_opt(v: object) -> str | None:
 
 
 def _int(v: object, minimum: int, maximum: int | None = None) -> int:
+    """D-09 / R4-17: an integer field takes a JSON number whose VALUE is an integer (``30`` and ``30.0`` alike: a
+    JavaScript runtime cannot tell them apart after ``JSON.parse``, so Python must not either). 30.5, NaN, a
+    boolean or a string is refused in both domains."""
+    if isinstance(v, float) and v.is_integer():
+        v = int(v)
     if isinstance(v, bool) or not isinstance(v, int) or v < minimum or (maximum is not None and v > maximum):
         raise ValueError(f"integer >= {minimum} required")
     return v
@@ -240,7 +249,7 @@ def _sim_run(r: dict) -> SimulationRun:
             raise ValueError("minutes must be non-negative numbers")
     if horizon <= 0:
         raise ValueError("horizon must be positive")
-    return SimulationRun(_s(r["simulation_id"]), _int(r["seed"], -(2 ** 62), 2 ** 62), warm, _s(r["policy_version"]),
+    return SimulationRun(_s(r["simulation_id"]), _int(r["seed"], -SEED_MAX, SEED_MAX), warm, _s(r["policy_version"]),
                          horizon, cfg)
 
 

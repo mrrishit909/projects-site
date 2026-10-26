@@ -35,6 +35,10 @@ export type MetricKey = (typeof METRIC_KEYS)[number];
 // Reason codes (domain/serviceflow/errors.py).
 export const AGENT_NOT_QUALIFIED = "AGENT_NOT_QUALIFIED";
 export const CONCURRENCY_EXCEEDED = "CONCURRENCY_EXCEEDED";
+export const SERVICE_OUTSIDE_SHIFT = "SERVICE_OUTSIDE_SHIFT"; // D-09 / R4-03
+export const RESUME_BEFORE_SERVICE = "RESUME_BEFORE_SERVICE"; // D-09 / R4-16
+/** D-09 / R4-17: seeds are JSON-safe integers in both domains (domain/serviceflow/models.py SEED_MAX). */
+export const SEED_MAX = 2 ** 53 - 1;
 export const BOT_AS_HUMAN_REPLY = "BOT_AS_HUMAN_REPLY";
 export const TRANSFER_RESETS_ARRIVAL = "TRANSFER_RESETS_ARRIVAL";
 export const UNKNOWN_REFERENCE = "UNKNOWN_REFERENCE";

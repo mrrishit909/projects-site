@@ -6,9 +6,14 @@ is a bot is BOT_AS_HUMAN_REPLY (that event alone is rejected; automation never m
 
 Ticket rules (the whole ticket is rejected): TRANSFER_RESETS_ARRIVAL (a transferred ticket whose ``created_at`` is
 later than its first event: the transfer reset the arrival), AGENT_NOT_QUALIFIED (a service_started by an agent who
-lacks a skill the queue requires, effective at that instant) and CONCURRENCY_EXCEEDED (a service interval that puts
-more than the agent's ``max_concurrent`` in service at once; the earlier start wins). D-05: a ticket rejected for a
-rule carries that reason; its events and surveys carry TICKET_REJECTED.
+lacks a skill the queue requires, effective at that instant), SERVICE_OUTSIDE_SHIFT (a service interval opened at an
+instant that lies inside none of the agent's shifts, D-01 "available"; D-09), RESUME_BEFORE_SERVICE (the first
+service opener of a ticket is a ``resumed``, not a ``service_started``; D-09) and CONCURRENCY_EXCEEDED (a service
+interval that puts more than the agent's ``max_concurrent`` in service at once). Concurrency is resolved to a fixed
+point (R4-02): the earlier start wins, a rejected ticket occupies nobody, and a ticket rejected only because of a
+ticket that is itself rejected later is accepted again. D-05: a ticket rejected for a rule carries that reason; its
+events and surveys carry TICKET_REJECTED. Breaks are not an ingest entity: a service started inside a recorded break
+is a flag raised by ``break_flags`` (D-05 keeps the break rule for the metrics) and refused by the API's C03.
 
 ``base`` is the population already stored (the API's C01): its rows are trusted and never rejected, but they
 count for references and for concurrency. A trusted ticket that a NEW event would break keeps its stored rows: the
@@ -18,13 +23,17 @@ from __future__ import annotations
 
 import copy
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from typing import Any
 
 from .contract import CONTRACT_VERSION, ENTITIES, OPENERS
 from .errors import (AGENT_NOT_QUALIFIED, BOT_AS_HUMAN_REPLY, CONCURRENCY_EXCEEDED, CONTRACT_MISMATCH, DUPLICATE_ID,
-                     MALFORMED_RECORD, TICKET_REJECTED, TRANSFER_RESETS_ARRIVAL, UNKNOWN_REFERENCE, DomainError)
-from .events import interval_conflict, is_bot, queue_at, replay
+                     MALFORMED_RECORD, RESUME_BEFORE_SERVICE, SERVICE_OUTSIDE_SHIFT, TICKET_REJECTED,
+                     TRANSFER_RESETS_ARRIVAL, UNKNOWN_REFERENCE, DomainError)
+from .events import interval_conflict, is_bot, ordered, queue_at, replay
 from .models import Population, RejectedRecord, Ticket, TicketEvent, parsers, row_id
+
+_EPOCH = datetime(1970, 1, 1, tzinfo=timezone.utc)
 
 
 @dataclass
@@ -141,6 +150,7 @@ def validate_batch(raw: dict[str, Any], base: Population | None = None) -> Inges
         skills_of_queue.setdefault(q.queue_id, set()).add(q.skill_id)
     agent_skills = _group([*base.agent_skills, *(o for _, _, o in ok("agent_skills"))], lambda s: s.agent_id)
     agents = {a.agent_id: a for a in [*base.agents, *(o for _, _, o in ok("agents"))]}
+    shifts_of = _group([*base.shifts, *(o for _, _, o in ok("shifts"))], lambda s: s.agent_id)
 
     reason_of: dict[str, str] = {}      # ticket -> reason code
     offender: dict[str, int | None] = {}  # ticket -> position of the new event that triggered it (None: unknown)
@@ -165,6 +175,21 @@ def validate_batch(raw: dict[str, Any], base: Population | None = None) -> Inges
             held = {s.skill_id for s in agent_skills.get(e.agent_id or "", []) if s.effective_from <= e.occurred_at}
             if not skills_of_queue.get(q or "", set()) <= held:
                 flag(tid, AGENT_NOT_QUALIFIED, pos)
+        first_opener = next((e for e in ordered(evs) if e.event_type in OPENERS), None)
+        if first_opener is not None and first_opener.event_type == "resumed":     # R4-16 (trusted openers excepted)
+            hit = [p for p, e in new_ev[tid] if e.event_id == first_opener.event_id]
+            if hit:
+                flag(tid, RESUME_BEFORE_SERVICE, hit[0])
+        own = replay(t, evs).intervals
+        for pos, e in new_ev[tid]:                                                 # R4-03: available = inside a shift
+            if e.event_type not in OPENERS:
+                continue
+            iv = next((i for i in own if i.start == e.occurred_at and (
+                e.agent_id is None or i.agent_id == e.agent_id)), None)
+            if iv is None:
+                continue
+            if not any(s.starts_at <= e.occurred_at < s.ends_at for s in shifts_of.get(iv.agent_id or "", [])):
+                flag(tid, SERVICE_OUTSIDE_SHIFT, pos)
 
     # Concurrency, sequentially by start so the earlier start wins. Trusted intervals are in from the start.
     accepted_iv: dict[str, list[Any]] = {}
@@ -180,7 +205,8 @@ def validate_batch(raw: dict[str, Any], base: Population | None = None) -> Inges
         tid = e.ticket_id
         if tid in reason_of:
             continue
-        iv = next((i for i in history[tid].intervals if i.start == at and i.agent_id == e.agent_id), None)
+        iv = next((i for i in history[tid].intervals if i.start == at and (
+            e.agent_id is None or i.agent_id == e.agent_id)), None)
         if iv is None:
             continue
         ag = agents.get(iv.agent_id or "")
@@ -192,6 +218,29 @@ def validate_batch(raw: dict[str, Any], base: Population | None = None) -> Inges
                 accepted_iv[agent_key] = [i for i in ivs if i.ticket_id != tid]
             continue
         accepted_iv.setdefault(iv.agent_id or "", []).append(iv)
+
+    # R4-02: iterate to a fixed point. A ticket rejected only because of a ticket that was rejected later is not
+    # really in conflict: it is accepted again when ALL its intervals fit among the tickets that stay accepted.
+    # Only new tickets are released (a trusted ticket keeps the verdict of this batch's new events).
+    released = True
+    while released:
+        released = False
+        for tid in sorted((t for t, r in reason_of.items() if r == CONCURRENCY_EXCEEDED and t not in base_ev
+                           and t in history),
+                          key=lambda t: (min((i.start for i in history[t].intervals), default=_EPOCH), t)):
+            trial: dict[str, list[Any]] = {k: list(v) for k, v in accepted_iv.items()}
+            fits = True
+            for iv in sorted(history[tid].intervals, key=lambda i: i.start):
+                ag = agents.get(iv.agent_id or "")
+                if interval_conflict(trial.get(iv.agent_id or "", []), iv, ag.max_concurrent if ag is not None else 1):
+                    fits = False
+                    break
+                trial.setdefault(iv.agent_id or "", []).append(iv)
+            if fits:
+                del reason_of[tid]
+                offender.pop(tid, None)
+                accepted_iv = trial
+                released = True
 
     for tid, reason in reason_of.items():
         if tid in new_ticket_ids:

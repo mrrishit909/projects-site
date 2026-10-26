@@ -38,7 +38,7 @@ Run: `DATABASE_URL=postgresql://lab:lab@127.0.0.1:5432/serviceflow ../../.venv/b
    arrivals, so a row trigger would refuse valid out-of-order loads. Domain ingest and C03/C05(resume) check it, serialised per agent by
    a row lock; `tests/test_adversarial.py::test_p04_test_04*` and the race test cover it.
 2. Handling and occupancy numerators are service intervals clipped to the window (open ones run to the window end). Golden values are unchanged.
-3. Resolution = final resolution minus the ORIGINAL arrival; first response = first human reply minus arrival; wait = first service start minus arrival.
+3. Resolution = final resolution minus the ORIGINAL arrival; first response = first human reply minus arrival; wait (to first service) = first service start minus the ORIGINAL arrival.
 4. Backlog and open overdue exclude abandoned tickets (they left the queue); overdue is read at the window end.
 5. CSAT, invitation and response rates are over the surveys of tickets completed in the window.
 6. `queue` in a group is the ticket's current queue; `agent` is the agent of the ticket's last service interval. Staffing figures exist only for

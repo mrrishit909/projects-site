@@ -41,7 +41,9 @@ export async function loadSnapshot(dataset = datasetId()): Promise<LoadResult> {
 }
 
 /** The Python-produced reference for the three published simulation runs (public/reference/simulation-runs.json). */
-export interface SimReference { produced_by: string; runs: { simulation_id: string; seed: number; golden: { waits_minutes: string[]; mean_wait_minutes: string | null; final_completion_minute: string | null; events: { simulation_event_id: string; ticket_id: string; event_type: string; event_at: string }[] }; statistics: Record<string, unknown> }[] }
+export interface ReplicationRef { replications: number; mean_wait_minutes: { n: number; mean: string | null; ci95_half_width: string | null }; censored_tickets_total: number; per_replication_mean_wait_minutes: (string | null)[]; seeds: number[]; replications_without_a_wait: number; label: string; seed: number }
+export interface PairedRef { same_demand_paths: boolean; baseline_mean_wait_minutes: ReplicationRef["mean_wait_minutes"]; proposal_mean_wait_minutes: ReplicationRef["mean_wait_minutes"]; difference_mean_wait_minutes: ReplicationRef["mean_wait_minutes"]; paired_replications: number; proposal_better: boolean | null; replications: number; seed: number; seeds: number[]; label: string }
+export interface SimReference { produced_by: string; replications?: { count: number; runs: Record<string, ReplicationRef>; paired: { baseline_vs_plus_one_agent: PairedRef; baseline_vs_holdout_intensity: PairedRef } }; runs: { simulation_id: string; seed: number; golden: { waits_minutes: string[]; mean_wait_minutes: string | null; final_completion_minute: string | null; events: { simulation_event_id: string; ticket_id: string; event_type: string; event_at: string }[] }; statistics: Record<string, unknown> }[] }
 export async function loadSimReference(): Promise<SimReference> {
   return (await getJson(`${import.meta.env.BASE_URL}reference/simulation-runs.json`, "reference/simulation-runs.json")) as SimReference;
 }

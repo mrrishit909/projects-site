@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { ViewHead } from "../components/layout";
 import { Link } from "../components/link";
 import { Gate } from "../components/status";
-import { Panel, V } from "../components/ui";
+import { Panel, RealisationNote, V } from "../components/ui";
 import { tails } from "../domain/extras";
 import { d4s } from "../domain/fixed";
 import { groupValues, staffedSeconds } from "../domain/metrics";
@@ -54,7 +54,8 @@ export function CaseStudy() {
           <li><strong>D-03, capacity.</strong> Staffed time is shift length minus break; breaks are never capacity. Occupancy is handling over staffed time and is "no value" when staffed time is 0, never 0. CSAT is positive (4 or 5) over valid responses with invitation and response rates beside it.</li>
           <li><strong>D-04, simulation.</strong> The golden case must reproduce before random arrivals are used. Demand comes from seed-derived streams drawn before dispatching so policies share a demand path; warm-up observations are excluded; results carry the replication count and a 95 % interval; improvement is always an estimate.</li>
           <li><strong>D-05 and D-06, clarifications.</strong> Backlog counts arrived tickets not yet resolved, including those in service; the break is deducted only when the window covers the whole shift; a ticket rejected at ingest rejects its events and survey (TICKET_REJECTED); tickets still waiting at the horizon are censored.</li>
-          <li><strong>D-07, the synthetic world.</strong> Zones Europe/Berlin and America/Santiago; the DST weekend is 2026-09-05/06 in Santiago, switch at 2026-09-06T04:00Z; SLA targets P1 15/240, P2 60/1440, P3 240/4320 minutes; holdout arrivals are Poisson times 1.2.</li>
+          <li><strong>D-09, review corrections.</strong> Wait means wait to first service. An agent opens service only inside a shift (SERVICE_OUTSIDE_SHIFT at ingest) and a ticket whose first opener is a resume is refused (RESUME_BEFORE_SERVICE); concurrency is resolved to a fixed point; timestamps need seconds and integer fields take integral numbers in both domains; resolution compliance is measured from the original arrival (a reopened ticket is charged its dormant gap); a backlog cutoff includes events at its own instant; calendars other than the 24x7 one are ignored and said to be.</li>
+          <li><strong>D-07, the synthetic world.</strong> Zones Europe/Berlin and America/Santiago; the DST weekend is 2026-09-05/06 in Santiago, switch at 2026-09-06T04:00Z; SLA targets P1 15/240, P2 60/1440, P3 240/4320 minutes; holdout arrivals are Poisson times 1.2, a chosen realisation of a fixed series (noise sd about 4 points, see below).</li>
         </ul>
         <p>Arithmetic: durations are integer seconds and every published figure is rounded half up from an exact integer quotient (BigInt), minutes at four decimals and ratios at six. No floating point reaches a figure.</p>
       </section>
@@ -105,6 +106,7 @@ function Live({ s }: { s: Ready }) {
             <ul data-testid="designed">{m.designed_relationships.map((r) => <li key={r}>{r}</li>)}</ul>
           </>
         )}
+        <p data-testid="realisation"><RealisationNote r={m.generator?.parameters?.arrival_realisation} /></p>
         {tech && (
           <p data-testid="tech-p1">Recomputed: technical queue, P1, full window: resolution of {tech.resolution.n} completed tickets has mean <V v={tech.resolution.mean} unit=" min" /> and P90 <V v={tech.resolution.p90} unit=" min" /> (P90 over mean <V v={tech.resolution.p90_over_mean} />). The mean alone would hide the tail.</p>
         )}

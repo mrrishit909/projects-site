@@ -7,11 +7,12 @@ Custom validators raise ``PydanticCustomError`` whose type is the rule_id report
 from __future__ import annotations
 
 import re
-from datetime import datetime
 from typing import Annotated, Any
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from pydantic_core import PydanticCustomError
+from serviceflow.models import SEED_MAX
+from serviceflow.timeutil import parse_ts
 
 _TOKEN = re.compile(r"^[A-Za-z0-9._:\-]{1,128}$")
 
@@ -28,11 +29,9 @@ def _instant(v: str | None) -> str | None:
     if v is None:
         return None
     try:
-        d = datetime.fromisoformat(v.replace("Z", "+00:00"))
+        parse_ts(v)          # D-09: the same single form as the domain (seconds required)
     except ValueError:
-        raise PydanticCustomError("TIMESTAMP_INVALID", "must be an ISO-8601 timestamp with a zone") from None
-    if d.tzinfo is None:
-        raise PydanticCustomError("TIMESTAMP_INVALID", "must be an ISO-8601 timestamp with a zone")
+        raise PydanticCustomError("TIMESTAMP_INVALID", "must be an ISO-8601 timestamp with seconds and a zone") from None
     return v
 
 
@@ -111,7 +110,7 @@ class ReopenInput(Timed):
 
 class RunSimulationInput(Strict):
     simulation_id: Id
-    seed: StrictInt
+    seed: StrictInt = Field(ge=-SEED_MAX, le=SEED_MAX)
     warmup_minutes: StrictInt | float = Field(default=0, ge=0, allow_inf_nan=False)
     horizon_minutes: StrictInt | float = Field(gt=0, allow_inf_nan=False)
     policy_version: Id
@@ -120,7 +119,7 @@ class RunSimulationInput(Strict):
 
 
 class ComparePoliciesInput(Strict):
-    seed: StrictInt
+    seed: StrictInt = Field(ge=-SEED_MAX, le=SEED_MAX)
     warmup_minutes: StrictInt | float = Field(default=0, ge=0, allow_inf_nan=False)
     horizon_minutes: StrictInt | float = Field(gt=0, allow_inf_nan=False)
     replications: StrictInt = Field(default=10, ge=1, le=200)

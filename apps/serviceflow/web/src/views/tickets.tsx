@@ -105,7 +105,7 @@ function Body({ s }: { s: Ready }) {
             <caption className="sr-only">Tickets arrived on {dayKey}; durations in minutes</caption>
             <thead><tr>
               <th scope="col">Ticket</th><th scope="col">Queue</th><th scope="col">Priority</th><th scope="col">Channel</th><th scope="col">Arrived (UTC)</th>
-              <th scope="col" className="num">Wait (min)</th><th scope="col" className="num">First response (min)</th><th scope="col" className="num">Handling (min)</th><th scope="col" className="num">Resolution (min)</th><th scope="col">Outcome</th>
+              <th scope="col" className="num">Wait to first service (min)</th><th scope="col" className="num">First response (min)</th><th scope="col" className="num">Handling (min)</th><th scope="col" className="num">Resolution (min)</th><th scope="col">Outcome</th>
             </tr></thead>
             <tbody>
               {rows.map((r) => (
@@ -123,7 +123,7 @@ function Body({ s }: { s: Ready }) {
           </table>
         </div>
       </Panel>
-      <Definition items={[RULES.firstResponse, RULES.resolution, { name: "Waiting legs", rule: "D-01", text: "A transfer keeps the original arrival, but the wait for service restarts in the new queue, so a transferred ticket shows a second hatched leg; a reopen starts a new cycle of the same ticket. Handling is the sum of active service intervals; time waiting for the customer is not handling." }]} />
+      <Definition items={[RULES.firstResponse, RULES.wait, RULES.resolution, { name: "Waiting legs", rule: "D-01", text: "A transfer keeps the original arrival, but the wait for service restarts in the new queue, so a transferred ticket shows a second hatched leg; a reopen starts a new cycle of the same ticket. Handling is the sum of active service intervals; time waiting for the customer is not handling." }]} />
     </>
   );
 }

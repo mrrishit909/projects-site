@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { ViewHead } from "../components/layout";
 import { Gate } from "../components/status";
-import { Definition, Panel, Readout, RULES, V } from "../components/ui";
+import { Definition, Panel, Readout, RealisationNote, RULES, V } from "../components/ui";
 import { tails } from "../domain/extras";
 import { computeMetrics, groupMetrics, groupValues } from "../domain/metrics";
 import { isoZ } from "../domain/time";
@@ -49,9 +49,11 @@ function Body({ s }: { s: Ready }) {
       </form>
       <p className="summary">Window [{isoZ(w[0])}, {isoZ(w[1])}). Targets are wall clock (calendar cal-001, 24x7): {["P1", "P2", "P3"].filter((p) => policy.has(p)).map((p) => `${p} ${policy.get(p)!.first_response_minutes} / ${policy.get(p)!.resolution_minutes} min`).join("; ")} (first response / resolution).</p>
 
+      {s.result.warnings.length > 0 && <ul className="notice" data-testid="domain-warnings">{s.result.warnings.map((x) => <li key={`${x.code}${x.path}`}><strong>{x.code}</strong>: {x.message}</li>)}</ul>}
+
       <dl className="readouts" aria-label="All tickets" data-testid="sla-headline">
         <Readout id="sla_fr" label="First-response compliance" value={ratioToPct(all.sla_first_response_compliance)} note={`${all.sla_first_response_within} of ${all.sla_first_response_eligible} eligible`} />
-        <Readout id="sla_rs" label="Resolution compliance" value={ratioToPct(all.sla_resolution_compliance)} note={`${all.sla_resolution_within} of ${all.sla_resolution_eligible} completed`} />
+        <Readout id="sla_rs" label="Resolution compliance" value={ratioToPct(all.sla_resolution_compliance)} note={<>{all.sla_resolution_within} of {all.sla_resolution_eligible} completed; <span data-testid="resolution-basis">measured from the original arrival, so a reopened ticket is charged its dormant gap</span></>} />
         <Readout id="sla_overdue" label="Open overdue, separately" value={all.open_overdue_at_cutoff} note="still open and past the resolution target; not in the ratio above" tone="alert" />
       </dl>
 
@@ -91,7 +93,7 @@ function Body({ s }: { s: Ready }) {
 
       {compare.length === 2 && (
         <Panel title="Training against holdout" id="sla-compare">
-          <p className="panel__note">The holdout weeks arrive harder by design; a change is reported, not hidden (D-04).</p>
+          <p className="panel__note">The holdout weeks arrive harder by design; a change is reported, not hidden (D-04). <span data-testid="realisation-note"><RealisationNote r={s.snapshot.manifest.generator?.parameters?.arrival_realisation} /></span></p>
           <div className="table-wrap" tabIndex={0} role="region" aria-label="Training against holdout, scrolls sideways on narrow screens">
             <table className="grid-table" data-testid="sla-compare-table">
               <thead><tr><th scope="col">Window</th><th scope="col" className="num">Arrivals</th><th scope="col">First-response compliance</th><th scope="col" className="num">P90 first response (min)</th><th scope="col">Resolution compliance</th><th scope="col" className="num">Open overdue</th></tr></thead>

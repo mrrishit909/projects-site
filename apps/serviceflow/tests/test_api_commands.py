@@ -42,8 +42,9 @@ def start(api, ticket="t-q", agent="a-1", minute=60, **extra):
 
 # --- C01 ingest-ticket-events -----------------------------------------------------------------------------------
 
-def ingest(api, **rows):
-    return command(api, "ingest-ticket-events", rows, headers=ANALYST)
+def ingest(api, headers=None, **rows):
+    """C01 as an analyst by default; a batch that touches an EXISTING ticket needs ``headers=SUPERVISOR`` (R4-04)."""
+    return command(api, "ingest-ticket-events", rows, headers=ANALYST if headers is None else headers)
 
 
 def new_ticket(tid, minute=100):
@@ -83,7 +84,7 @@ def test_ingest_preserves_late_arrivals_with_their_own_time(api, conn):
     late = {"event_id": "e-late", "ticket_id": "t-100", "event_type": "queued", "occurred_at": at(101),
             "actor_id": None, "queue_id": "q-1", "agent_id": None}
     r1 = ingest(api, tickets=[t], ticket_events=[e])
-    r2 = ingest(api, ticket_events=[dict(late, event_id="e-later", occurred_at=at(130)), late])    # out of order
+    r2 = ingest(api, headers=SUPERVISOR, ticket_events=[dict(late, event_id="e-later", occurred_at=at(130)), late])    # out of order
     assert r1.status_code == r2.status_code == 200
     rows = conn.execute("SELECT event_id, to_char(occurred_at, 'HH24:MI') AS t FROM ticket_events WHERE ticket_id = 't-100' "
                         "ORDER BY event_seq").fetchall()
@@ -92,7 +93,7 @@ def test_ingest_preserves_late_arrivals_with_their_own_time(api, conn):
 
 def test_ingest_duplicate_event_id_is_rejected_not_overwritten(api, conn):
     dup = {"event_id": "e-0001", "ticket_id": "t-new", "event_type": "queued", "occurred_at": at(5), "queue_id": "q-1"}
-    r = ingest(api, ticket_events=[dup])
+    r = ingest(api, headers=SUPERVISOR, ticket_events=[dup])
     assert r.json()["result"]["rejected_records"] == [{"entity": "ticket_events", "id": "e-0001", "reason_code": "DUPLICATE_ID"}]
     assert conn.execute("SELECT event_type FROM ticket_events WHERE event_id = 'e-0001'").fetchone()["event_type"] == "created"
 
@@ -100,7 +101,7 @@ def test_ingest_duplicate_event_id_is_rejected_not_overwritten(api, conn):
 def test_ingest_bot_as_human_reply_is_rejected(api):
     ev = {"event_id": "e-bot", "ticket_id": "t-new", "event_type": "replied_human", "occurred_at": at(3),
           "actor_id": "bot-1", "queue_id": "q-1", "agent_id": None}
-    assert ingest(api, ticket_events=[ev]).json()["result"]["rejected_records"][0]["reason_code"] == "BOT_AS_HUMAN_REPLY"
+    assert ingest(api, headers=SUPERVISOR, ticket_events=[ev]).json()["result"]["rejected_records"][0]["reason_code"] == "BOT_AS_HUMAN_REPLY"
 
 
 def test_ingest_agent_not_qualified_rejects_the_whole_ticket(api, conn):
@@ -133,14 +134,14 @@ def test_ingest_against_a_trusted_ticket_rejects_only_the_new_events(api, conn):
            "actor_id": "a-9", "queue_id": "q-1", "agent_id": "a-9"}
     rep = {"event_id": "e-rep", "ticket_id": "t-q", "event_type": "replied_human", "occurred_at": at(70),
            "actor_id": "a-9", "queue_id": "q-1", "agent_id": "a-9"}
-    got = {(x["id"]): x["reason_code"] for x in ingest(api, ticket_events=[svc, rep]).json()["result"]["rejected_records"]}
+    got = {(x["id"]): x["reason_code"] for x in ingest(api, headers=SUPERVISOR, ticket_events=[svc, rep]).json()["result"]["rejected_records"]}
     assert got == {"e-svc": "AGENT_NOT_QUALIFIED", "e-rep": "TICKET_REJECTED"}
     assert conn.execute("SELECT count(*) AS n FROM tickets WHERE ticket_id = 't-q'").fetchone()["n"] == 1
 
 
 def test_ingest_transfer_moves_the_current_queue_but_not_the_arrival(api, conn):
     ev = {"event_id": "e-x", "ticket_id": "t-q", "event_type": "transferred", "occurred_at": at(20), "actor_id": "s", "queue_id": "q-2"}
-    assert ingest(api, ticket_events=[ev]).json()["status"] == "loaded"
+    assert ingest(api, headers=SUPERVISOR, ticket_events=[ev]).json()["status"] == "loaded"
     row = conn.execute("SELECT queue_id, to_char(created_at, 'HH24:MI') AS c FROM tickets WHERE ticket_id = 't-q'").fetchone()
     assert row == {"queue_id": "q-2", "c": "09:00"}
 

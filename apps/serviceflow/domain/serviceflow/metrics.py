@@ -184,9 +184,14 @@ def disclosures(pop: Population, window: Window) -> dict[str, Any]:
     surveys = [s for s in pop.surveys if s.ticket_id in done]
     invited = [s for s in surveys if s.invited_at is not None]
     responded = [s for s in invited if s.score is not None and s.response_at is not None]
+    # R4-09 / D-09: a reopen is counted over the tickets that ARRIVED in the window and over those COMPLETED in it (a
+    # ticket that arrived before the window, was reopened and resolved inside it, is a completion with a reopen).
+    scope = [t for t in pop.tickets if inside(t.created_at) or t.ticket_id in done]
     return {
-        "reopened_tickets": sum(1 for t in arr if hist[t.ticket_id].reopen_count > 0),
-        "reopen_events": sum(hist[t.ticket_id].reopen_count for t in arr),
+        "reopened_tickets": sum(1 for t in scope if hist[t.ticket_id].reopen_count > 0),
+        "reopen_events": sum(hist[t.ticket_id].reopen_count for t in scope),
+        "reopened_among_completions": sum(1 for t in pop.tickets if t.ticket_id in done and hist[t.ticket_id].reopen_count > 0),
+        "reopened_basis": "arrivals and completions in the window (a ticket counted once)",
         "transferred_tickets": sum(1 for t in arr if hist[t.ticket_id].transfers),
         "arrivals_without_human_reply": sum(1 for t in arr if hist[t.ticket_id].first_human_reply_at is None),
         "bot_events_ignored_for_first_response": sum(

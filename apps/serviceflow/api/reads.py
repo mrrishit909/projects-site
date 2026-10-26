@@ -21,7 +21,8 @@ from typing import Any
 import psycopg
 from serviceflow import CONTRACT_VERSION, DomainError
 from serviceflow.contract import DEFAULT_ABANDONABLE, GROUP_KEYS
-from serviceflow.metrics import check_window, compute_metrics, disclosures, group_metrics
+from serviceflow.diagnostics import break_flags, break_warnings, calendar_warnings, cutoff_warnings
+from serviceflow.metrics import check_window, compute_metrics, disclosures, group_metrics, histories
 from serviceflow.timeutil import iso_z
 
 from . import db
@@ -200,6 +201,9 @@ def read_metrics(lo: str | None, hi: str | None, cutoff: str | None, group_by: s
             else:
                 data = {"group_by": group_by,
                         "groups": group_metrics(pop, group_by, (start, end), cutoffs, channels)}
+                if group_by == "queue":      # R4-10 / D-09
+                    data["group_basis"] = ("queue = the ticket's FINAL queue: a transferred ticket counts only in the "
+                                           "queue it ended in, with its whole wait from the original arrival")
             data["window"] = {"from": iso_z(start), "to": iso_z(end)}
             data["disclosures"] = disclosures(pop, (start, end))
         except DomainError as err:
@@ -207,4 +211,9 @@ def read_metrics(lo: str | None, hi: str | None, cutoff: str | None, group_by: s
         total = sum(1 for t in pop.tickets if start <= t.created_at < end)
         applied = {"from": iso_z(start), "to": iso_z(end), "cutoff": [iso_z(c) for c in cutoffs],
                    "group_by": group_by, "abandonable_channels": list(channels)}
-        return {"data": data, "meta": meta(conn, applied, total, None, _counts(conn)), "warnings": []}
+        # D-09: warnings that leave the figures as they are: calendars ignored (R4-18), a cutoff at or after the
+        # window end (R4-18), service started inside a recorded break (R4-03, flag only).
+        breaks = conn.execute("SELECT break_id, agent_id, starts_at, ends_at FROM shift_breaks").fetchall()
+        warns = [*calendar_warnings(pop), *cutoff_warnings(pop, (start, end), cutoffs),
+                 *break_warnings(break_flags(histories(pop), [dict(b) for b in breaks]))]
+        return {"data": data, "meta": meta(conn, applied, total, None, _counts(conn)), "warnings": warns}

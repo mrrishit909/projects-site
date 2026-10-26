@@ -158,12 +158,29 @@ DST_WEEKEND = {"zone": "America/Santiago", "saturday": "2026-09-05", "sunday": "
                "transition_utc": "2026-09-06T04:00:00Z", "offset_before": "-04:00", "offset_after": "-03:00"}
 
 
-def default_parameters(seed: int) -> dict[str, Any]:
+#: Standard deviation (percentage points) of the holdout/training uplift over 40 consecutive attempts of this series
+#: (attempts 0..39 of seed 20261026 give mean +19.4 %, sd 4.3): the Poisson noise the chosen realisation sits inside.
+UPLIFT_NOISE_SD_POINTS = 4.3
+
+
+def realisation_record(attempt: int | None, ratios: list[float]) -> dict[str, Any]:
+    """R4-13: the realisation is chosen, not drawn once. Records the attempt index and the uplifts it discarded."""
+    return {"rule": "first attempt (0, 1, ...) with holdout/training rate within 1.5 points of +20 %",
+            "designed_uplift_percent": round((HOLDOUT_UPLIFT - 1) * 100, 1), "tolerance_points": 1.5,
+            "attempt_index": attempt,
+            "discarded_uplift_percent": [round(r, 2) for r in ratios[:-1]] if ratios else [],
+            "chosen_uplift_percent": round(ratios[-1], 2) if ratios else None,
+            "noise_sd_points": UPLIFT_NOISE_SD_POINTS,
+            "note": "chosen realisation: the +20 % holdout is one draw selected from a fixed series, not a measurement; "
+                    "Poisson noise alone moves the ratio by about 4 points"}
+
+
+def default_parameters(seed: int, attempt: int | None = None, ratios: list[float] | None = None) -> dict[str, Any]:
     return {
         "seed": seed, "window": [START.isoformat(), END.isoformat()], "days": NDAYS, "weeks": WEEKS, "as_of": AS_OF,
         "training_weeks": [1, TRAIN_WEEKS], "holdout_weeks": [TRAIN_WEEKS + 1, WEEKS],
         "holdout_intensity_uplift": HOLDOUT_UPLIFT, "tickets_target": TICKETS_TARGET,
-        "arrival_realisation": "first attempt (0, 1, ...) with holdout/training rate within 1.5 points of +20 %",
+        "arrival_realisation": realisation_record(attempt, ratios or []),
         "queues": {q[0]: {"name": q[1], "priority_policy": q[2], "skill": q[3], "share": QUEUE_SHARE[i]}
                    for i, q in enumerate(QUEUES)},
         "priority_mix": {q: list(m) for q, m in PRIORITY_MIX.items()}, "sla_minutes": {p: list(v) for p, v in SLA.items()},
@@ -333,6 +350,7 @@ class Generator:
         base = self.rs["arrivals"].getrandbits(64)
         scale = TICKETS_TARGET / (self.weekly_weight() * (TRAIN_WEEKS + (WEEKS - TRAIN_WEEKS) * HOLDOUT_UPLIFT))
         self.intensity_scale = scale
+        self.arrival_ratios: list[float] = []
         for attempt in range(200):
             r = random.Random(base + attempt)
             out: list[int] = []
@@ -345,6 +363,7 @@ class Generator:
                     out.extend(b + o for o in sorted(r.randrange(3600) for _ in range(n)))
             tr = sum(1 for t in out if t < TRAIN_END) / TRAIN_WEEKS
             ho = sum(1 for t in out if t >= TRAIN_END) / (WEEKS - TRAIN_WEEKS)
+            self.arrival_ratios.append((ho - tr) / tr * 100)
             if abs((ho - tr) / tr - (HOLDOUT_UPLIFT - 1)) <= 0.015:
                 self.arrival_attempt = attempt
                 return out
@@ -882,7 +901,8 @@ class Generator:
         injections = self.injection_manifest()
         events_doc = self.injection_events()
         return {"entities": ents, "stats": stats, "designed": designed, "injections": injections,
-                "events": events_doc, "parameters": default_parameters(self.seed)}
+                "events": events_doc,
+                "parameters": default_parameters(self.seed, self.arrival_attempt, self.arrival_ratios)}
 
     # ---- simulation runs (a pure-queue picture of the technical queue at the Monday 09-11 UTC bind) ------------------
     def simulation_runs(self, order: list[dict]) -> list[dict]:
@@ -1194,8 +1214,10 @@ class Generator:
         ix = self.inj["INJ-01"]["picked"][0]
         tk = self.tks[ix]
         eid = self.event_of[(ix, tk["bot_human_at"], "replied_human", "bot-001")]
+        # R4-04: the ticket already exists, so the batch touches an existing ticket and needs a supervisor (an analyst
+        # may ingest new tickets only); EV-04 and EV-06 re-ingest tickets that were rejected, so they are new tickets.
         ev.append({"event_id": "EV-01", "injection": "INJ-01", "command": "ingest-ticket-events", "requires": [],
-                   "steps": [{"command": "ingest-ticket-events", "headers": ana,
+                   "steps": [{"command": "ingest-ticket-events", "headers": sup,
                               "input": env("01", {"ticket_events": [evrows[eid]]})}],
                    "expected_status": 200, "expected_reason": "BOT_AS_HUMAN_REPLY",
                    "expected": {"rejected_records": [{"entity": "ticket_events", "id": eid, "reason_code": "BOT_AS_HUMAN_REPLY"}]},

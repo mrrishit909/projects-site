@@ -128,9 +128,12 @@ def _normalise(value: Any, key: str = "") -> Any:
 
 
 def _payload_hash(name: str, req: Envelope) -> str:
-    """sha256 over the canonical command name + input (request_id and key excluded; instants normalised)."""
+    """sha256 over the canonical command name + dataset_version + input (request_id and key excluded; instants
+    normalised). The dataset_version is part of the payload (R4-05): the same key with another version is a different
+    request."""
     try:
-        text = canonical_json({"command": name, "input": _normalise(req.input.model_dump())})  # type: ignore[attr-defined]
+        text = canonical_json({"command": name, "dataset_version": req.dataset_version,   # R4-05: part of the payload
+                               "input": _normalise(req.input.model_dump())})  # type: ignore[attr-defined]
     except ValueError:  # NaN / Infinity are not JSON
         raise _invalid("JSON_NON_FINITE", "input contains a non-finite number", "input") from None
     if "\\u0000" in text:
@@ -165,6 +168,21 @@ def execute(name: str, req: Envelope, actor: Actor, handler: Handler) -> tuple[d
     raise _conflict("CONCURRENT_UPDATE", f"the command lost a concurrent update {MAX_ATTEMPTS} times; retry it", "input")
 
 
+def _check_dataset_version(conn: Conn, req: Envelope) -> None:
+    """D-09 / R4-05 (as SupplyScope D-07): the request names the dataset it was prepared against; a different current
+    version is 409 STALE_DATASET_VERSION and nothing is written. A database with no dataset_versions row has nothing
+    to be stale against (the request is accepted)."""
+    row = conn.execute("SELECT dataset_version FROM dataset_versions ORDER BY created_at DESC, dataset_version DESC "
+                       "LIMIT 1").fetchone()
+    if row is not None and row["dataset_version"] != req.dataset_version:
+        raise ApiError(409, "STALE_DATASET_VERSION",
+                       f"the request was prepared against dataset {req.dataset_version!r}; the current dataset is "
+                       f"{row['dataset_version']!r}",
+                       [{**detail("dataset_version", "STALE_DATASET_VERSION",
+                                  "re-read the data and retry with the current dataset_version"),
+                         "context": {"current": row["dataset_version"], "requested": req.dataset_version}}])
+
+
 def _execute_once(name: str, req: Envelope, actor: Actor, handler: Handler,
                   payload_hash: str) -> tuple[dict[str, Any], bool]:
     with db.transaction() as conn:
@@ -180,6 +198,7 @@ def _execute_once(name: str, req: Envelope, actor: Actor, handler: Handler,
                                [detail("idempotency_key", "IDEMPOTENCY_PAYLOAD_MISMATCH",
                                        "same key, different payload_hash")])
             return prior["result"], True
+        _check_dataset_version(conn, req)
         try:
             out = handler(conn, req, actor)
         except psycopg.errors.UniqueViolation as exc:
@@ -307,6 +326,17 @@ def _agent_intervals(conn: Conn, agent_id: str, exclude_ticket: str | None = Non
     return out
 
 
+def _check_available(conn: Conn, agent_id: str, at: datetime) -> None:
+    """D-01 / R4-03: an agent opens service (start or resume) only inside a shift and outside a recorded break."""
+    if conn.execute("SELECT 1 FROM shifts WHERE agent_id = %s AND starts_at <= %s AND %s < ends_at",
+                    (agent_id, at, at)).fetchone() is None:
+        raise _invalid("AGENT_NOT_IN_SHIFT", "the agent has no shift at that instant", "input.agent_id")
+    if conn.execute("SELECT 1 FROM shift_breaks WHERE agent_id = %s AND starts_at <= %s AND %s < ends_at",
+                    (agent_id, at, at)).fetchone() is not None:
+        raise _invalid("AGENT_ON_BREAK", "the agent is on a break at that instant (a break is not capacity)",
+                       "input.agent_id")
+
+
 def _check_concurrency(conn: Conn, agent: db.Row, ticket_id: str, at: datetime) -> None:
     """P04-TEST-04: opening a service interval at ``at`` must keep the agent within ``max_concurrent``."""
     existing = _agent_intervals(conn, agent["agent_id"], exclude_ticket=ticket_id)
@@ -333,6 +363,11 @@ def ingest_ticket_events(conn: Conn, req: Any, actor: Actor) -> Outcome:
     _lock_tickets(conn, touched)             # D-08: tickets first ...
     _lock_agents(conn, agents)               # ... then agents
     base = db.load_population(conn)
+    existing = {t.ticket_id for t in base.tickets}
+    if actor.role not in OPERATOR_ROLES and set(ids(raw["ticket_events"], "ticket_id")) & existing:
+        # R4-04 / D-09: C01 must not be a back door round C02-C06: an analyst may ingest new tickets only.
+        raise _forbidden("ROLE_FORBIDDEN", "only a supervisor or admin adds events to an existing ticket; an analyst "
+                         "ingests new tickets", "header.X-Actor-Role")
     ing = validate_batch(raw, base)
     inserted: dict[str, int] = {}
     for ent in ("customers", "queues", "agents", "skills", "agent_skills", "queue_skills", "shifts", "sla_policies",
@@ -398,13 +433,7 @@ def start_service(conn: Conn, req: Any, actor: Actor) -> Outcome:
     _check_time(h, at)
     if not agent["active"]:
         raise _invalid("AGENT_INACTIVE", "the agent is not active", "input.agent_id")
-    if conn.execute("SELECT 1 FROM shifts WHERE agent_id = %s AND starts_at <= %s AND %s < ends_at",
-                    (inp.agent_id, at, at)).fetchone() is None:
-        raise _invalid("AGENT_NOT_IN_SHIFT", "the agent has no shift at that instant", "input.agent_id")
-    if conn.execute("SELECT 1 FROM shift_breaks WHERE agent_id = %s AND starts_at <= %s AND %s < ends_at",
-                    (inp.agent_id, at, at)).fetchone() is not None:
-        raise _invalid("AGENT_ON_BREAK", "the agent is on a break at that instant (a break is not capacity)",
-                       "input.agent_id")
+    _check_available(conn, inp.agent_id, at)
     queue = h.queue_id or ticket["queue_id"]
     missing = [r["skill_id"] for r in conn.execute(
         "SELECT q.skill_id FROM queue_skills q WHERE q.queue_id = %s AND NOT EXISTS ("
@@ -490,6 +519,7 @@ def resume_work(conn: Conn, req: Any, actor: Actor) -> Outcome:
     agent = _lock_agents(conn, [agent_id]).get(agent_id or "")
     if agent is None:
         raise _invalid("AGENT_UNKNOWN", "the paused ticket has no agent to resume with", "input.ticket_id")
+    _check_available(conn, agent["agent_id"], at)          # R4-03: the same availability rule as start-service
     _check_concurrency(conn, agent, inp.ticket_id, at)
     before = _version(conn, inp.ticket_id)
     event_id = _insert_event(conn, inp.ticket_id, "resumed", at, agent_id, h.queue_id, agent_id)

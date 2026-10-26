@@ -99,3 +99,70 @@ def test_sql_p90_is_nearest_rank_on_ten(conn):
     inputs = w.data()
     load(conn, w)
     assert reference(conn, inputs)["p90_first_response_minutes"] == "18.0000"
+
+
+# --- review A-031 (docs/contracts.md D-09): the SQL agrees with the domain on the findings it owned ----------------------
+
+def agree(conn, w: World, expect_rejected: int | None = None):
+    """Seed through the validating loader, then compare every metric key of the SQL with the domain's."""
+    inputs = w.data()
+    res = run_pipeline(inputs)
+    if expect_rejected is not None:
+        assert len([r for r in res.rejected if r["entity"] == "tickets"]) == expect_rejected
+    load(conn, w)
+    row = reference(conn, inputs)
+    for k in METRIC_KEYS:
+        assert row[k] == res.metrics[k], k
+    return row, res.metrics
+
+
+def test_R4_01_sql_no_shift_in_the_window_is_zero_staffed_and_null_occupancy(conn):
+    w = World(window=(0, 60))
+    w.d["shifts"] = []
+    w.ticket("t-1", 0)
+    w.ev("t-1", "service_started", 10, agent="a-1")
+    row, _ = agree(conn, w)
+    assert row["staffed_available_minutes"] == "0.0000" and row["agent_occupancy"] is None
+
+
+def test_R4_01_sql_a_window_outside_every_shift_is_zero_staffed(conn):
+    w = World(window=(0, 480))
+    w.ticket("t-1", 0)
+    w.serve("t-1", 10, 20)
+    inputs = w.data()
+    inputs["window_start"], inputs["window_end"] = at(-1000), at(-900)             # before the only shifts
+    load(conn, w)
+    row = reference(conn, inputs)
+    assert row["staffed_available_minutes"] == "0.0000" and row["agent_occupancy"] is None
+    assert row["staffed_available_minutes"] == run_pipeline(inputs).metrics["staffed_available_minutes"]
+
+
+@pytest.mark.parametrize("first,second,completed", [("reopened", "resolved", 1), ("resolved", "reopened", 0)])
+def test_R4_15_sql_same_instant_reopen_and_resolve_are_ordered_by_event_id(conn, first, second, completed):
+    w = World(window=(0, 180))
+    w.ticket("t-1", 0)
+    w.serve("t-1", 5, 20)
+    w.ev("t-1", first, 30, actor="x", agent="a-1" if first == "resolved" else None)
+    w.ev("t-1", second, 30, actor="x", agent="a-1" if second == "resolved" else None)
+    row, metrics = agree(conn, w)
+    assert row["completion_count"] == metrics["completion_count"] == completed
+
+
+def test_R4_02_sql_sees_the_fixed_point_population(conn):
+    from test_review_findings import concurrency_cascade
+    row, metrics = agree(conn, concurrency_cascade(), expect_rejected=2)
+    assert row["arrival_count"] == metrics["arrival_count"] == 3
+
+
+def test_R4_03_R4_16_sql_never_sees_an_off_shift_or_resume_first_ticket(conn):
+    w = World(window=(0, 700))
+    w.ticket("t-late", 485)
+    w.serve("t-late", 490, 520)                                  # SERVICE_OUTSIDE_SHIFT: not loaded
+    w.ticket("t-res", 0)
+    w.ev("t-res", "resumed", 5, agent="a-1")                     # RESUME_BEFORE_SERVICE: not loaded
+    w.ev("t-res", "service_started", 10, agent="a-1")
+    w.ev("t-res", "resolved", 20, agent="a-1")
+    w.ticket("t-ok", 100)
+    w.serve("t-ok", 110, 120)
+    row, _ = agree(conn, w, expect_rejected=2)
+    assert row["arrival_count"] == 1 and row["handling_minutes_total"] == "10.0000"

@@ -151,13 +151,28 @@ def count(conn, table: str) -> int:
 _seq = {"n": 0}
 
 
+def current_dataset_version() -> str:
+    """The dataset_version the database names now ("ds-test" when no dataset_versions row exists): commands carry the
+    current version, as a client that has just read the data would (R4-05: a stale version is 409)."""
+    import psycopg
+    url = os.environ.get("DATABASE_URL")
+    if not url:
+        return "ds-test"
+    with psycopg.connect(url) as c:
+        row = c.execute("SELECT dataset_version FROM dataset_versions ORDER BY created_at DESC, dataset_version DESC "
+                        "LIMIT 1").fetchone()
+    return row[0] if row else "ds-test"
+
+
 def command(client, name: str, input_: dict[str, Any], key: str | None = None,
-            headers: dict[str, str] | None = None, request_id: str = "req-test"):
-    """POST one command with a fresh idempotency key unless ``key`` is given (default actor: sup-1, supervisor)."""
+            headers: dict[str, str] | None = None, request_id: str = "req-test", dataset_version: str | None = None):
+    """POST one command with a fresh idempotency key unless ``key`` is given (default actor: sup-1, supervisor).
+    ``dataset_version`` defaults to the database's current one."""
     if key is None:
         _seq["n"] += 1
         key = f"key-{os.getpid()}-{_seq['n']}"
-    body = {"request_id": request_id, "dataset_version": "ds-test", "idempotency_key": key, "input": input_}
+    body = {"request_id": request_id, "dataset_version": dataset_version or current_dataset_version(),
+            "idempotency_key": key, "input": input_}
     return client.post(f"{PREFIX}/commands/{name}", json=body, headers=SUPERVISOR if headers is None else headers)
 
 

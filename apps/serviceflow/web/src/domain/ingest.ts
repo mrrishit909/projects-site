@@ -2,11 +2,11 @@
 // (without the API's `base` population: the site ingests one published batch).
 import {
   AGENT_NOT_QUALIFIED, BOT_AS_HUMAN_REPLY, CONCURRENCY_EXCEEDED, CONTRACT_MISMATCH, CONTRACT_VERSION, DUPLICATE_ID,
-  EMPLOYMENT_TYPES, ENTITIES, EVENT_TYPES, MALFORMED_RECORD, OPENERS, PRIORITIES, PRIORITY_POLICIES, TICKET_REJECTED,
-  TRANSFER_RESETS_ARRIVAL, UNKNOWN_REFERENCE, type Entity,
+  EMPLOYMENT_TYPES, ENTITIES, EVENT_TYPES, MALFORMED_RECORD, OPENERS, PRIORITIES, PRIORITY_POLICIES, RESUME_BEFORE_SERVICE,
+  SEED_MAX, SERVICE_OUTSIDE_SHIFT, TICKET_REJECTED, TRANSFER_RESETS_ARRIVAL, UNKNOWN_REFERENCE, type Entity,
 } from "./contract";
 import { DomainError } from "./errors";
-import { intervalConflict, isBot, queueAt, replay, type Interval } from "./events";
+import { intervalConflict, isBot, ordered, queueAt, replay, type Interval } from "./events";
 import { parseConfig } from "./simulation";
 import { parseTs, parseTsOpt, validZone } from "./time";
 import type {
@@ -18,6 +18,7 @@ type Row = Record<string, unknown>;
 const bad = (m: string): never => { throw new Error(m); };
 const S = (v: unknown): string => (typeof v === "string" && v.trim() !== "" && [...v].length <= 256 ? v : bad("non-empty string required"));
 const SOpt = (v: unknown): string | null => (v === null || v === undefined ? null : S(v));
+/** D-09 / R4-17: an integer field takes a JSON number whose VALUE is an integer (30 and 30.0 alike, as in Python's `_int`). */
 const I = (v: unknown, min: number, max?: number): number =>
   typeof v === "number" && Number.isInteger(v) && v >= min && (max === undefined || v <= max) ? v : bad(`integer >= ${min} required`);
 const B = (v: unknown): boolean => (typeof v === "boolean" ? v : bad("boolean required"));
@@ -60,7 +61,7 @@ const parsers: Record<Entity, (r: Row) => unknown> = {
     const nonneg = (v: unknown): number => (typeof v === "number" && v >= 0 ? v : bad("minutes must be non-negative numbers"));
     const warm = nonneg(r.warmup_minutes), horizon = nonneg(r.horizon_minutes);
     if (horizon <= 0) bad("horizon must be positive");
-    return { simulation_id: S(r.simulation_id), seed: I(r.seed, -(2 ** 53) + 1, 2 ** 53 - 1), warmup_minutes: warm, policy_version: S(r.policy_version), horizon_minutes: horizon, config: cfg as Record<string, unknown> };
+    return { simulation_id: S(r.simulation_id), seed: I(r.seed, -SEED_MAX, SEED_MAX), warmup_minutes: warm, policy_version: S(r.policy_version), horizon_minutes: horizon, config: cfg as Record<string, unknown> };
   },
 };
 
@@ -155,6 +156,7 @@ export function validateBatch(raw: PipelineInputs): IngestResult {
   for (const p of ok("queue_skills")) { const q = p.obj as QueueSkill; (skillsOfQueue.get(q.queue_id) ?? skillsOfQueue.set(q.queue_id, new Set()).get(q.queue_id)!).add(q.skill_id); }
   const agentSkills = group(ok("agent_skills").map((p) => p.obj as AgentSkill), (s) => s.agent_id);
   const agents = new Map<string, Agent>(ok("agents").map((p) => [(p.obj as Agent).agent_id, p.obj as Agent]));
+  const shiftsOf = group(ok("shifts").map((p) => p.obj as Shift), (s) => s.agent_id);
   const reasonOf = new Map<string, string>();
   const flag = (tid: string, reason: string): void => { if (!reasonOf.has(tid)) reasonOf.set(tid, reason); };
   const eventsOf = (tid: string): TicketEvent[] => (newEv.get(tid) ?? []).map((x) => x.e);
@@ -169,6 +171,17 @@ export function validateBatch(raw: PipelineInputs): IngestResult {
       const need = skillsOfQueue.get(q ?? "") ?? new Set<string>();
       if (![...need].every((s) => held.has(s))) flag(tid, AGENT_NOT_QUALIFIED);
     }
+    // R4-16: the first service opener of a ticket must be a service_started, not a resumed
+    const firstOpener = ordered(evs).find((e) => OPENERS.has(e.event_type));
+    if (firstOpener !== undefined && firstOpener.event_type === "resumed") flag(tid, RESUME_BEFORE_SERVICE);
+    // R4-03: an agent starts service only when available: the instant lies inside one of their shifts
+    const own = replay(t, evs).cycles.flatMap((c) => c.intervals);
+    for (const { e } of newEv.get(tid)!) {
+      if (!OPENERS.has(e.event_type)) continue;
+      const iv = own.find((i) => i.start === e.occurred_at && (e.agent_id === null || i.agent_id === e.agent_id));
+      if (iv === undefined) continue;
+      if (!(shiftsOf.get(iv.agent_id ?? "") ?? []).some((s) => s.starts_at <= e.occurred_at && e.occurred_at < s.ends_at)) flag(tid, SERVICE_OUTSIDE_SHIFT);
+    }
   }
 
   // concurrency, sequentially by start so the earlier start wins
@@ -180,7 +193,7 @@ export function validateBatch(raw: PipelineInputs): IngestResult {
   for (const { at, e } of candidates) {
     const tid = e.ticket_id;
     if (reasonOf.has(tid)) continue;
-    const iv = history.get(tid)!.cycles.flatMap((c) => c.intervals).find((i) => i.start === at && i.agent_id === e.agent_id);
+    const iv = history.get(tid)!.cycles.flatMap((c) => c.intervals).find((i) => i.start === at && (e.agent_id === null || i.agent_id === e.agent_id));
     if (iv === undefined) continue;
     const ag = agents.get(iv.agent_id ?? "");
     const cap = ag !== undefined ? ag.max_concurrent : 1;
@@ -191,6 +204,31 @@ export function validateBatch(raw: PipelineInputs): IngestResult {
       continue;
     }
     acceptedIv.set(iv.agent_id ?? "", [...mine, iv]);
+  }
+
+  // R4-02: iterate to a fixed point. A ticket rejected only because of a ticket that was rejected later is accepted
+  // again when all its intervals fit among the tickets that stay accepted.
+  let released = true;
+  while (released) {
+    released = false;
+    const firstStart = (t: string): number => Math.min(...history.get(t)!.cycles.flatMap((c) => c.intervals).map((i) => i.start), Infinity);
+    const pending = [...reasonOf].filter(([t, r]) => r === CONCURRENCY_EXCEEDED && history.has(t)).map(([t]) => t).sort((a, b) => firstStart(a) - firstStart(b) || cmp(a, b));
+    for (const tid of pending) {
+      const trial = new Map<string, Interval[]>([...acceptedIv].map(([k, v]) => [k, [...v]]));
+      let fits = true;
+      for (const iv of history.get(tid)!.cycles.flatMap((c) => c.intervals).sort((a, b) => a.start - b.start)) {
+        const ag = agents.get(iv.agent_id ?? "");
+        const lst = trial.get(iv.agent_id ?? "") ?? [];
+        if (intervalConflict(lst, iv, ag !== undefined ? ag.max_concurrent : 1)) { fits = false; break; }
+        trial.set(iv.agent_id ?? "", [...lst, iv]);
+      }
+      if (fits) {
+        reasonOf.delete(tid);
+        acceptedIv.clear();
+        for (const [k, v] of trial) acceptedIv.set(k, v);
+        released = true;
+      }
+    }
   }
 
   for (const [tid, reason] of reasonOf) {

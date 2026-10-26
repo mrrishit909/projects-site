@@ -30,9 +30,12 @@ _CONFIG_KEYS = {"agents", "service_minutes", "arrivals", "priorities", "arrival_
                 "service", "discipline"}
 DEFAULT_PRIORITY = "P2"
 MAX_TICKETS = 20_000
-#: Two-sided 95 % Student-t critical values by degrees of freedom (1..30); 1.96 beyond.
+#: Two-sided 95 % Student-t critical values by degrees of freedom (1..50, D-09: R4-11 needs 50 replications);
+#: 2.000 beyond (within 1 % of the true value for 51..120 degrees of freedom).
 _T95 = (12.706, 4.303, 3.182, 2.776, 2.571, 2.447, 2.365, 2.306, 2.262, 2.228, 2.201, 2.179, 2.160, 2.145, 2.131,
-        2.120, 2.110, 2.101, 2.093, 2.086, 2.080, 2.074, 2.069, 2.064, 2.060, 2.056, 2.052, 2.048, 2.045, 2.042)
+        2.120, 2.110, 2.101, 2.093, 2.086, 2.080, 2.074, 2.069, 2.064, 2.060, 2.056, 2.052, 2.048, 2.045, 2.042,
+        2.040, 2.037, 2.035, 2.032, 2.030, 2.028, 2.026, 2.024, 2.023, 2.021,
+        2.020, 2.018, 2.017, 2.015, 2.014, 2.013, 2.012, 2.011, 2.010, 2.009)
 
 
 def _num(v: Any, name: str, *, positive: bool = False, nonneg: bool = False) -> Fraction:
@@ -297,9 +300,23 @@ def mean_ci95(values: list[Fraction]) -> dict[str, Any]:
     if n < 2:
         return {"n": n, "mean": d4(m), "ci95_half_width": None}
     var = sum(((v - m) ** 2 for v in values), Fraction(0)) / (n - 1)
-    t = _T95[n - 2] if n - 1 <= 30 else 1.96
+    t = _T95[n - 2] if n - 1 <= len(_T95) else 2.000
     half = Fraction(t).limit_denominator(1000) * Fraction(float(var) ** 0.5 / n ** 0.5).limit_denominator(10 ** 8)
     return {"n": n, "mean": d4(m), "ci95_half_width": d4(half)}
+
+
+def replication_report(config: dict[str, Any], seed: int, replications: int, warmup_minutes: Any = 0,
+                       horizon_minutes: Any = 60) -> dict[str, Any]:
+    """D-09 / R4-11: one run is one draw, so a published run carries replications beside it: replication r uses seed
+    ``seed + r``; the mean of the per-replication mean waits has its count and a 95 % interval (an estimate)."""
+    runs = replicate(config, seed, replications, warmup_minutes, horizon_minutes, "replication")
+    waits = [r.mean_wait for r in runs]
+    return {"label": "simulated estimate, not an observed result", "seed": seed, "replications": replications,
+            "seeds": [seed + r for r in range(replications)],
+            "mean_wait_minutes": mean_ci95([w for w in waits if w is not None]),
+            "replications_without_a_wait": sum(1 for w in waits if w is None),
+            "censored_tickets_total": sum(len(r.censored_ticket_ids) for r in runs),
+            "per_replication_mean_wait_minutes": [d4(w) for w in waits]}
 
 
 def compare_policies(baseline: dict[str, Any], proposal: dict[str, Any], seed: int, replications: int,

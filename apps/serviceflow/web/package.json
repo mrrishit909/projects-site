@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "golden": "tsx scripts/golden-check.ts",
-    "check": "npm run typecheck && npm run golden",
+    "review": "tsx scripts/review-check.ts",
+    "check": "npm run typecheck && npm run golden && npm run review",
     "e2e": "playwright test",
     "build:pages": "SITE_BASE=/projects-site/labs/serviceflow/ npm run build"
   },

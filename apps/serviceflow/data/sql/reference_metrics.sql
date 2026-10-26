@@ -38,11 +38,17 @@ tk AS (
       FROM tickets t LEFT JOIN ev ON ev.ticket_id = t.ticket_id
      GROUP BY t.ticket_id, t.priority, t.channel, t.created_at
 ),
+-- R4-15: the last resolved / reopened is decided on (occurred_at, event_id), as Python and TypeScript order the log:
+-- a resolve and a reopen at the same instant are ordered by event_id, not treated as "not later".
+lastcl AS (
+    SELECT DISTINCT ON (ticket_id) ticket_id, event_type AS last_kind, occurred_at AS last_at
+      FROM ev WHERE event_type IN ('resolved', 'reopened')
+     ORDER BY ticket_id, occurred_at DESC, event_id DESC
+),
 tf AS (
     SELECT tk.*,
-           CASE WHEN last_resolved IS NOT NULL AND (last_reopened IS NULL OR last_resolved > last_reopened)
-                THEN last_resolved END AS final_resolved
-      FROM tk
+           CASE WHEN lc.last_kind = 'resolved' THEN lc.last_at END AS final_resolved
+      FROM tk LEFT JOIN lastcl lc ON lc.ticket_id = tk.ticket_id
 ),
 -- service intervals: only opener / closer rows, an opener preceded by an opener belongs to the same run
 iv_rows AS (
@@ -111,11 +117,13 @@ sla AS (
            (SELECT count(*) FROM rs JOIN sla_policies sp ON sp.priority = rs.priority
              WHERE rs.secs <= sp.resolution_minutes * 60) AS rs_ok
 ),
+-- R4-01: an INNER join (inside the sum): LEFT JOIN made one all-NULL row when no shift overlaps the window, and
+-- least/greatest ignore NULLs, so that row counted the whole window as staffed time.
 staff AS (
-    SELECT coalesce(sum(extract(epoch FROM (least(s.ends_at, p.w1) - greatest(s.starts_at, p.w0))) / 60
-                        - CASE WHEN s.starts_at >= p.w0 AND s.ends_at <= p.w1 THEN s.break_minutes ELSE 0 END), 0) AS avail_min,
+    SELECT coalesce((SELECT sum(extract(epoch FROM (least(s.ends_at, p.w1) - greatest(s.starts_at, p.w0))) / 60
+                                - CASE WHEN s.starts_at >= p.w0 AND s.ends_at <= p.w1 THEN s.break_minutes ELSE 0 END)
+                       FROM params p JOIN shifts s ON least(s.ends_at, p.w1) > greatest(s.starts_at, p.w0)), 0) AS avail_min,
            (SELECT coalesce(sum(extract(epoch FROM (ends_at - starts_at)) / 60 - break_minutes), 0) FROM shifts) AS whole_min
-      FROM params p LEFT JOIN shifts s ON least(s.ends_at, p.w1) > greatest(s.starts_at, p.w0)
 ),
 ab AS (
     SELECT count(*) AS n, count(*) FILTER (WHERE abandoned) AS gone

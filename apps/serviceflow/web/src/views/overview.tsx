@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { ViewHead } from "../components/layout";
 import { Link } from "../components/link";
 import { Gate } from "../components/status";
-import { Definition, Panel, Readout, RULES, V } from "../components/ui";
+import { Definition, Panel, Readout, RealisationNote, RULES, V } from "../components/ui";
 import { METRIC_KEYS, type GroupKey, type MetricKey } from "../domain/contract";
 import { tails } from "../domain/extras";
 import { disclosures, groupMetrics, computeMetrics } from "../domain/metrics";
@@ -18,7 +18,7 @@ const MAPS = new Set<MetricKey>(["backlog", "first_response_minutes", "wait_minu
 const LABEL: Record<MetricKey, string> = {
   arrival_count: "Arrivals", completion_count: "Completions", arrival_rate_per_hour: "Arrival rate per hour", completion_rate_per_hour: "Completion rate per hour",
   backlog: "Backlog at the cutoff", first_response_minutes: "First response, per ticket (min)", mean_first_response_minutes: "Mean first response (min)",
-  p90_first_response_minutes: "P90 first response (min)", wait_minutes: "Wait, per ticket (min)", mean_wait_minutes: "Mean wait (min)",
+  p90_first_response_minutes: "P90 first response (min)", wait_minutes: "Wait to first service, per ticket (min)", mean_wait_minutes: "Mean wait to first service (min)",
   resolution_minutes: "Resolution, per ticket (min)", mean_resolution_minutes: "Mean resolution (min)", handling_minutes_total: "Handling, total (min)",
   sla_first_response_compliance: "SLA first-response compliance", sla_first_response_within: "First response within target",
   sla_first_response_eligible: "First response eligible", sla_resolution_compliance: "SLA resolution compliance", sla_resolution_within: "Resolution within target",
@@ -85,12 +85,12 @@ function Body({ s }: { s: Ready }) {
       </p>
 
       <Panel title="Waiting and the tail" id="tails" tone="night">
-        <p className="panel__note">Mean beside P90 (nearest rank, D-02) for the whole window. P90 of wait and resolution are additions to the 28 contract keys, from the same populations.</p>
+        <p className="panel__note">Mean beside P90 (nearest rank, D-02) for the whole window. P90 of wait and resolution are additions to the 28 contract keys, from the same populations. Wait means wait to first service (first service_started minus the original arrival); tickets never served are outside it.</p>
         <dl className="readouts readouts--pairs">
           <Readout id="first_response_mean" label="First response, mean" value={overall.mean_first_response_minutes} unit=" min" note={`n ${tl.first_response.n}`} />
           <Readout id="first_response_p90" label="First response, P90" value={overall.p90_first_response_minutes} unit=" min" note={`P90 / mean ${tl.first_response.p90_over_mean ?? "no value"}`} />
-          <Readout id="wait_mean" label="Wait for service, mean" value={overall.mean_wait_minutes} unit=" min" note={`n ${tl.wait.n}`} />
-          <Readout id="wait_p90" label="Wait for service, P90" value={tl.wait.p90} unit=" min" note={`P90 / mean ${tl.wait.p90_over_mean ?? "no value"}`} />
+          <Readout id="wait_mean" label="Wait to first service, mean" value={overall.mean_wait_minutes} unit=" min" note={`n ${tl.wait.n}`} />
+          <Readout id="wait_p90" label="Wait to first service, P90" value={tl.wait.p90} unit=" min" note={`P90 / mean ${tl.wait.p90_over_mean ?? "no value"}`} />
           <Readout id="resolution_mean" label="Resolution, mean" value={overall.mean_resolution_minutes} unit=" min" note={`n ${tl.resolution.n}`} />
           <Readout id="resolution_p90" label="Resolution, P90" value={tl.resolution.p90} unit=" min" note={`P90 / mean ${tl.resolution.p90_over_mean ?? "no value"}`} />
         </dl>
@@ -121,25 +121,26 @@ function Body({ s }: { s: Ready }) {
             </tbody>
           </table>
         </div>
-        <p className="small muted">SLA first-response compliance {ratioToPct(overall.sla_first_response_compliance) ?? "no value"} and resolution compliance {ratioToPct(overall.sla_resolution_compliance) ?? "no value"} for all tickets; the SLA page breaks them down by priority.</p>
+        <p className="small muted">SLA first-response compliance {ratioToPct(overall.sla_first_response_compliance) ?? "no value"} and resolution compliance {ratioToPct(overall.sla_resolution_compliance) ?? "no value"} for all tickets; the SLA page breaks them down by priority. <span data-testid="resolution-basis">Resolution compliance is measured from the original arrival: a reopened ticket is charged its dormant gap, the time between its resolution and its reopen.</span>{gkey === "queue" ? <span data-testid="queue-basis"> Grouped by queue means the ticket's final queue: a transferred ticket counts only where it ended, with its whole wait from the original arrival.</span> : null}</p>
       </section>
 
       <Panel title="What a reader must see beside the numbers" id="disclosures">
         <dl className="facts">
-          <div><dt>Reopened tickets (one customer contact each)</dt><dd data-fact="reopened">{disc.reopened_tickets} tickets, {disc.reopen_events} reopens</dd></div>
+          <div><dt>Reopened tickets (one customer contact each; arrivals and completions in the window)</dt><dd data-fact="reopened">{disc.reopened_tickets} tickets, {disc.reopen_events} reopens, {disc.reopened_among_completions} of them completed in the window</dd></div>
           <div><dt>Transferred tickets (arrival never moves)</dt><dd data-fact="transferred">{disc.transferred_tickets}</dd></div>
           <div><dt>Arrivals without a human reply (outside the first-response population)</dt><dd data-fact="no-reply">{disc.arrivals_without_human_reply}</dd></div>
           <div><dt>Bot events ignored for first response</dt><dd data-fact="bots">{disc.bot_events_ignored_for_first_response}</dd></div>
           <div><dt>CSAT base</dt><dd data-fact="csat">{disc.csat.valid_responses} valid responses of {disc.csat.invited} invited, {disc.csat.nonresponse} unanswered</dd></div>
         </dl>
         <p className="small">{disc.csat.note}.</p>
+        <p className="small" data-testid="realisation-note"><RealisationNote r={s.snapshot.manifest.generator?.parameters?.arrival_realisation} /></p>
         <p className="small">{disc.p90_method}. {disc.staffed_break_rule}.</p>
         <h3 className="h3">Quarantined at ingest</h3>
         {rej.length === 0 ? <p>No record was rejected.</p> : (
           <p data-testid="rejected">{rej.length} records were rejected, not dropped silently: {reasons.map(([c, n]) => `${c} ${n}`).join(", ")}. They are kept with their raw rows by the domain; dependents of a rejected ticket carry TICKET_REJECTED (D-05).</p>
         )}
       </Panel>
-      <Definition items={[RULES.window, RULES.p90, RULES.firstResponse, RULES.resolution, RULES.backlog, RULES.occupancy, RULES.csat]} />
+      <Definition items={[RULES.window, RULES.p90, RULES.firstResponse, RULES.wait, RULES.resolution, RULES.backlog, RULES.occupancy, RULES.csat]} />
     </>
   );
 }

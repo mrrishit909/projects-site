@@ -55,12 +55,18 @@ export type Metrics = {
 };
 export type GroupMetrics = Record<string, Metrics>;
 export interface Disclosures {
-  reopened_tickets: number; reopen_events: number; transferred_tickets: number; arrivals_without_human_reply: number;
+  reopened_tickets: number; reopen_events: number; reopened_among_completions: number; reopened_basis: string; transferred_tickets: number; arrivals_without_human_reply: number;
   bot_events_ignored_for_first_response: number; open_overdue_at_window_end: number; p90_method: string;
   csat: { completed_tickets: number; invited: number; valid_responses: number; nonresponse: number; note: string };
   staffed_break_rule: string;
 }
 export type { GroupKey };
+
+/** R4-13: the holdout uplift is a chosen realisation of a fixed series of attempts; the generator records which one and what it discarded. */
+export interface ArrivalRealisation {
+  rule: string; designed_uplift_percent: number; tolerance_points: number; attempt_index: number | null;
+  discarded_uplift_percent: number[]; chosen_uplift_percent: number | null; noise_sd_points: number; note: string;
+}
 
 /** The snapshot manifest as the site shows it. */
 export interface Manifest {
@@ -68,7 +74,7 @@ export interface Manifest {
   row_counts: Record<string, number>;
   code_sha?: string;
   designed_relationships?: string[];
-  generator?: { parameters?: { as_of?: string; window?: [string, string]; training_weeks?: [number, number]; weeks?: number; dst_weekend?: { saturday: string; sunday: string; transition_utc: string; zone: string } } };
+  generator?: { parameters?: { as_of?: string; window?: [string, string]; training_weeks?: [number, number]; weeks?: number; arrival_realisation?: ArrivalRealisation; dst_weekend?: { saturday: string; sunday: string; transition_utc: string; zone: string } } };
   stats?: Record<string, unknown>;
   // the golden fixture's own manifest
   window_start?: string; window_end?: string; backlog_cutoffs?: string[]; abandonable_channels?: string[]; fixture_id?: string;

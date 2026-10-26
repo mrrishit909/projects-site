@@ -408,7 +408,7 @@
    "backlog": {
     "2026-09-28T00:00:00Z": 0
    },
-   "disclosures_digest": "1ff02f237e9a0e2e2975180e596890fabf86bc9ecb8c4d8b7d7f8d5c75ebc3b3",
+   "disclosures_digest": "d9d89523f211ea1623de084a839ae73a73fed89099cb3b29033122a07e3796e8",
    "from": "2026-07-06T00:00:00Z",
    "groups": {
     "agent": {
@@ -493,7 +493,7 @@
    "backlog": {
     "2026-09-28T00:00:00Z": 0
    },
-   "disclosures_digest": "5d52c8429bdda8c10c3decf6deb13d22f00a9bd67319cd162c70f449205bd0ac",
+   "disclosures_digest": "85b40a00e72689186a52e573ff31e96527d836180f12711530d222c9b7dcce85",
    "from": "2026-08-31T00:00:00Z",
    "groups": {
     "agent": {
@@ -578,7 +578,7 @@
    "backlog": {
     "2026-08-31T00:00:00Z": 1
    },
-   "disclosures_digest": "c8699bc7ed497cc5027856bf45b82dd1f843ef925200caca6140aea412f956aa",
+   "disclosures_digest": "78e1f985ea5ad60fdbab4d6202994e770751844b25c99978ac53f3de8d92ac12",
    "from": "2026-07-06T00:00:00Z",
    "groups": {
     "agent": {

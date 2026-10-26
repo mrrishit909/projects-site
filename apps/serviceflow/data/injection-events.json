@@ -22,8 +22,8 @@
         {
           "command": "ingest-ticket-events",
           "headers": {
-            "X-Actor-Id": "ana-1",
-            "X-Actor-Role": "analyst"
+            "X-Actor-Id": "sup-1",
+            "X-Actor-Role": "supervisor"
           },
           "input": {
             "dataset_version": "sf-20261026-20261026",

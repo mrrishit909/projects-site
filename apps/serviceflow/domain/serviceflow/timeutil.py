@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import math
+import re
 from datetime import date, datetime, time, timezone
 from decimal import ROUND_HALF_UP, Decimal
 from fractions import Fraction
@@ -12,11 +13,18 @@ _SIX = Decimal("0.000001")
 ZERO = Fraction(0)
 
 
+#: D-09 / R4-17: the one accepted timestamp form (identical in web/src/domain/time.ts): seconds are required.
+TS_FORM = re.compile(r"^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(Z|[+-]\d{2}:\d{2})$")
+
+
 def parse_ts(value: object) -> datetime:
-    """ISO-8601 string with a zone (``Z`` or an offset) to a UTC datetime. Naive values are refused."""
+    """ISO-8601 string ``YYYY-MM-DDTHH:MM:SS[.f]`` with a zone (``Z`` or an offset) to a UTC datetime. Naive values and
+    forms without seconds (``09:20Z``) are refused, as the TypeScript domain refuses them (D-09)."""
     if isinstance(value, datetime):
         d = value
     elif isinstance(value, str):
+        if not TS_FORM.match(value):
+            raise ValueError("timestamp must be YYYY-MM-DDTHH:MM:SS with a zone")
         d = datetime.fromisoformat(value.replace("Z", "+00:00"))
     else:
         raise ValueError("timestamp must be an ISO-8601 string")

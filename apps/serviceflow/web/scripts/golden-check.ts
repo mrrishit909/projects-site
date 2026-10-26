@@ -9,7 +9,7 @@ import { ENTITIES, EXTRA_ENTITIES, GROUP_KEYS, METRIC_KEYS } from "../src/domain
 import { computeMetrics, disclosures, groupMetrics, p90Seconds } from "../src/domain/metrics";
 import { goldenOf, runPipeline } from "../src/domain/pipeline";
 import { PyRandom, sha512 } from "../src/domain/pyrandom";
-import { goldenShape, meanCi95, replicate, simulate, statistics, meanWait } from "../src/domain/simulation";
+import { comparePolicies, goldenShape, meanCi95, replicate, replicationReport, simulate, statistics, meanWait } from "../src/domain/simulation";
 import { fixed, frac, type Frac } from "../src/domain/fixed";
 import { isoZ, parseTs } from "../src/domain/time";
 import type { Manifest, PipelineInputs } from "../src/domain/types";
@@ -150,6 +150,19 @@ function loadDir(dir: string): { manifest: Manifest; inputs: PipelineInputs } {
     eq(`${s.simulation_id} waits, mean wait, final completion`, [got.waits_minutes, got.mean_wait_minutes, got.final_completion_minute], [want.golden.waits_minutes, want.golden.mean_wait_minutes, want.golden.final_completion_minute]);
     eq(`${s.simulation_id} statistics`, statistics(s), want.statistics);
   }
+  // R4-11: 50 replications per run on seeds seed + r, and the paired difference baseline vs plus-one, equal Python's
+  const reps = simRef.replications;
+  eq("reference replication count", reps.count, 50);
+  for (const run of r.population.simulation_runs) {
+    eq(`${run.simulation_id} ${reps.count} replications equal Python's (mean wait with its 95 % interval, per-replication means)`,
+      replicationReport(run.config, run.seed, reps.count, run.warmup_minutes, run.horizon_minutes), reps.runs[run.simulation_id]);
+  }
+  const [b1, p1] = r.population.simulation_runs;
+  eq("paired difference sim-002 minus sim-001 on 50 shared seeds equals Python's",
+    comparePolicies(b1!.config, p1!.config, b1!.seed, reps.count, b1!.warmup_minutes, b1!.horizon_minutes),
+    (({ baseline, proposal, ...rest }) => rest)(reps.paired.baseline_vs_plus_one_agent));
+  yes("sim-002 shares sim-001's demand path (same seed, same arrival rate)", reps.paired.baseline_vs_plus_one_agent.same_demand_paths === true);
+  yes("sim-003 does not share sim-001's demand path, by design (another arrival intensity)", reps.paired.baseline_vs_holdout_intensity.same_demand_paths === false);
   // designed relationships quoted in the manifest are recomputed, not trusted
   const tech = groupMetrics(r.population, "queue", [parseTs(win.start), parseTs(win.end)], [parseTs(win.end)], r.abandonable, r.histories)["q-002"]!;
   yes("technical queue resolution is measured from the original arrival", tech.completion_count > 0);
