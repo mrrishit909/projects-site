@@ -386,7 +386,7 @@
       "id": "T-05-04",
       "project": "05-invoicebridge",
       "title": "Generator + web + e2e + publish + integrate",
-      "status": "in_progress",
+      "status": "done (published; live check pending); review and artifacts follow",
       "prereqs": [
         "T-05-03"
       ],

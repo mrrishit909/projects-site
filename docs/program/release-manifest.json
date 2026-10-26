@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T19:36:24Z",
+  "updated_at": "2026-10-26T21:42:33Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -77,6 +77,24 @@
         "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40387041943",
         "verified_at": "2026-10-26T19:36:24Z",
         "live_code_sha_matched": "2a6578e684362b9e5b54039619df927fe4f30757"
+      }
+    },
+    {
+      "slug": "invoicebridge",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/invoicebridge/",
+      "site_path": "labs/invoicebridge/ on unified-portfolio",
+      "release_commit_unified_portfolio": "3cff603",
+      "rollback_commit_unified_portfolio": "c535aa0",
+      "source_commit_business_data_lab": "be200319e132adc9b9213bc81b9ccea56a9f4b8b",
+      "published_tree_sha256": "0f1850ca01dddf6b510c28a70bbb1bc461bc1dc6c992390bdfb4e20aa567bf2f",
+      "files": 44,
+      "dataset_version": "ib-20261026-20261026",
+      "dataset_hash": "1f001a43a7031d4260f5abb3b9f7a83f6e1b48397e85cf8b04e0b4d9e052162e",
+      "contract_version": "v1",
+      "publication_status": "published with the case study (3cff603; CI 40405870287 green both modes on be20031); live check pending",
+      "live_verification": {
+        "run_url": null,
+        "verified_at": null
       }
     }
   ]

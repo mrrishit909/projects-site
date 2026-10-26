@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T21:15:29Z",
+  "updated_at": "2026-10-26T21:42:33Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -101,16 +101,17 @@
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
-      "stage": "gate-A passed; backend CI-green Mode A; generator committed (320 tests); web A-037 running",
-      "built": false,
-      "verified": false,
-      "published": false,
+      "stage": "built, verified (CI green both modes on be20031), published 3cff603 (live check pending), integrated (case study pushed; link check pending); reviewer A-038 running",
+      "built": true,
+      "verified": true,
+      "published": true,
       "integrated": false,
-      "last_verified_sha": "ba922a1 (Mode A)",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40402231716",
-      "site_url": null,
+      "last_verified_sha": "be20031",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40405870287",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/invoicebridge/",
       "blockers": [],
-      "next_task": "T-05-04 (A-037 web -> CI Mode B -> publish -> integrate)"
+      "next_task": "live check -> A-038 review -> fixes -> artifacts",
+      "portfolio_case_study": "https://mrrishit909.github.io/projects-site/invoicebridge/"
     },
     "06-productsignal": {
       "slug": "productsignal",
@@ -180,7 +181,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 05 InvoiceBridge: confirm invoicebridge-ci.yml Mode A on a381e53; A-036 generator hand-back -> verify -> commit -> web worker -> publish labs/invoicebridge -> release manifest + live check -> portfolio case study (project.json, cover, shots, motion tile motion/scenes/invoicebridge.js) -> reviewer -> fixes -> artifacts. Then project 06.",
+    "next_concrete_task": "Project 05 InvoiceBridge: confirm live-check on the manifest commit; A-038 reviewer hand-back -> fix worker -> republish -> artifacts. Then project 06 productsignal (spec on the directive branch; contracts first).",
     "acceptance": "see task-queue.json"
   }
 }

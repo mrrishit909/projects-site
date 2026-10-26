@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T21:15:29Z",
+  "updated_at": "2026-10-26T21:42:33Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -990,6 +990,28 @@
       "code_sha": "ba922a1",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40402231716",
       "ts": "2026-10-26T21:15:29Z"
+    },
+    {
+      "requirement": "P05 Mode B (static build, 227 TS golden checks, 71 Playwright tests at 360/768/1280/1920 + 200% zoom) and Mode A on the site commit, github-hosted",
+      "project": "05-invoicebridge",
+      "status": "verified",
+      "command": "invoicebridge-ci.yml run 40405870287",
+      "exit_code": 0,
+      "actual": "both jobs success; evidence artifact uploaded",
+      "code_sha": "be20031",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40405870287",
+      "ts": "2026-10-26T21:42:33Z"
+    },
+    {
+      "requirement": "P05 publication: labs/invoicebridge on unified-portfolio with code_sha stamped; case study invoicebridge/ added (build.py); figures in the case study recomputed by the coordinator with the Python domain over web/public/data",
+      "project": "05-invoicebridge",
+      "status": "verified",
+      "command": "tools/publish-site.sh invoicebridge; python3 build.py; git push origin unified-portfolio",
+      "exit_code": 0,
+      "actual": "44 files, tree sha256 0f1850ca...; portfolio 3cff603",
+      "code_sha": "be20031",
+      "evidence": "docs/program/release-manifest.json",
+      "ts": "2026-10-26T21:42:33Z"
     }
   ]
 }
