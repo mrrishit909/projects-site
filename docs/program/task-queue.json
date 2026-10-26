@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T10:50:19Z",
+  "updated_at": "2026-10-26T10:55:24Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
@@ -127,7 +127,7 @@
       "id": "T-01-10",
       "project": "01-revenue-atlas",
       "title": "Publish site to unified-portfolio/labs/revenue-atlas and verify live from Actions",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-01-08"
       ],
@@ -138,7 +138,7 @@
       "id": "T-01-11",
       "project": "01-revenue-atlas",
       "title": "Portfolio integration (project.json, cover, motion tile, build.py, portfolio-check)",
-      "status": "pending",
+      "status": "in_progress",
       "prereqs": [
         "T-01-10"
       ],

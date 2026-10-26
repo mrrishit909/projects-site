@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T10:50:19Z",
+  "updated_at": "2026-10-26T10:55:24Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -148,7 +148,7 @@
       "exit_code": 0,
       "expected": "identical dataset_hash across runs; pipeline rejects 3 malformed-currency orders; quarantines overlapping/missing cost versions and missing FX",
       "actual": "hash 40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444 both runs; 16 passed",
-      "code_sha": "pending-commit",
+      "code_sha": "5ce3aff9 (web part 2) / d3fddee4",
       "ts": "2026-10-26T10:28:57Z"
     },
     {
@@ -159,7 +159,7 @@
       "exit_code": 0,
       "expected": "all golden and variant metrics, allocations, ingest counts equal expected.json",
       "actual": "ALL OK (166 checks); runPipeline over 6,649 lines in ~0.3 s",
-      "code_sha": "pending-commit",
+      "code_sha": "5ce3aff9 (web part 2) / d3fddee4",
       "ts": "2026-10-26T10:37:36Z"
     },
     {
@@ -170,7 +170,7 @@
       "exit_code": 0,
       "expected": "gross 250.00, discounts 25.00, credits 90.00, net 135.00, COGS 80.00, GP 55.00, shipping 15.00, contribution 40.00",
       "actual": "as expected in bridge steps and ledger totals",
-      "code_sha": "pending-commit",
+      "code_sha": "5ce3aff9 (web part 2) / d3fddee4",
       "ts": "2026-10-26T10:50:19Z"
     },
     {
@@ -181,7 +181,7 @@
       "exit_code": 0,
       "expected": "scrollWidth == innerWidth on every shot; 0 console errors",
       "actual": "24 passed; evidence/index.json shows equal widths for all 21",
-      "code_sha": "pending-commit",
+      "code_sha": "5ce3aff9 (web part 2) / d3fddee4",
       "ts": "2026-10-26T10:50:19Z",
       "evidence": "apps/revenue-atlas/docs/evidence/web/ (subset) + CI artifact revenue-atlas-mode-b-<sha>"
     },
@@ -193,8 +193,20 @@
       "exit_code": 0,
       "expected": "# header lines with contract_version, dataset_version, dataset_hash, filters, row count",
       "actual": "asserted in test",
-      "code_sha": "pending-commit",
+      "code_sha": "5ce3aff9 (web part 2) / d3fddee4",
       "ts": "2026-10-26T10:50:19Z"
+    },
+    {
+      "requirement": "P01-REL-02/09/17 deployed HTTP responses, nested route reload, manifest, browser journey from hosted compute",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "workflow live-check.yml run 40310810960 (runner.environment github-hosted)",
+      "exit_code": 0,
+      "expected": "200 on 7 URLs; manifest hash equals published; 0 console errors; screenshots",
+      "actual": "all 200; hash 40f541fc...; 0 errors; 8 files in artifact",
+      "code_sha": "7c08797",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40310810960/artifacts/12643684666",
+      "ts": "2026-10-26T10:55:24Z"
     }
   ]
 }

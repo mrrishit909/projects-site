@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T10:51:18Z",
+  "updated_at": "2026-10-26T10:55:24Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -12,7 +12,15 @@
       "files": 38,
       "dataset_version": "ra-20261026-20261026",
       "dataset_hash": "40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444",
-      "publication_status": "pushed; live verification pending (live-check.yml)"
+      "publication_status": "published and verified live from a GitHub-hosted runner",
+      "live_verification": {
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40310810960",
+        "http": "200 for /, overview/, bridge/, evidence/, case-study/, data/manifest.json, routes.json",
+        "manifest_dataset_hash_served": "40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444",
+        "browser": "overview and bridge screenshots at 360 and 1280, 0 console errors",
+        "artifact": "live-revenue-atlas-40310810960 (id 12643684666, sha256 de35d2ec..., expires 2027-01-24)",
+        "verified_at": "2026-10-26T10:53:16Z"
+      }
     }
   ]
 }
