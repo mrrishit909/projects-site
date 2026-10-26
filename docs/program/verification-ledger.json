@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:51:27Z",
+  "updated_at": "2026-10-26T14:53:00Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -664,7 +664,7 @@
       "command": "generate.py twice; pytest tests/test_generator.py",
       "exit_code": 0,
       "actual": "hash 5bdabb50eea4b192e3b17e1e5b1a79dc6b26feb4a2b8b78ad094acde9f8bcc8c; sup-03 on-time 0.681 vs 0.83-0.86; loc-02 fill 0.888 vs 0.955/0.965",
-      "code_sha": "pending-commit",
+      "code_sha": "7b8d208 (hosted Mode A run 40343593698 success)",
       "ts": "2026-10-26T14:51:27Z"
     },
     {
@@ -673,7 +673,7 @@
       "status": "verified after fix",
       "defect": "ingest dedup key -> product\u00d7location\u00d7day; snapshot rejections now exactly 3 duplicate movements + 1 pre-order receipt; 6,380 latent rows accepted",
       "command": "pytest -q (132 passed)",
-      "code_sha": "pending-commit",
+      "code_sha": "7b8d208 (hosted Mode A run 40343593698 success)",
       "ts": "2026-10-26T14:51:27Z"
     }
   ]
