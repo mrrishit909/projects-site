@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T10:55:24Z",
+  "updated_at": "2026-10-26T11:10:40Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -41,17 +41,18 @@
   "projects": {
     "01-revenue-atlas": {
       "slug": "revenue-atlas",
-      "stage": "published and live-verified; portfolio integration in progress; adversarial extension tests running (A-007)",
+      "stage": "integrated (case study live, links verified from hosted runner); defect fix A-008 in progress; republish pending",
       "built": true,
       "verified": true,
       "published": true,
-      "integrated": false,
+      "integrated": true,
       "last_verified_sha": "57f0143",
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40310810960",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/revenue-atlas/",
       "blockers": [],
-      "next_task": "T-01-11 portfolio integration (project.json, cover, loop ready in main checkout; run portfolio-check, push unified-portfolio)",
-      "verified_note": "Entry journey verified: golden in browser, 63 backend tests on hosted runner, 24 Playwright tests locally; adversarial P01-TEST-02/04/05/07/08/11/12 application-path tests and reviewer disproof pass still pending (T-01-07)"
+      "next_task": "after A-008: rebuild web, publish-site.sh, push unified-portfolio, rerun live-check (both jobs green), then reviewer disproof pass",
+      "verified_note": "Entry journey verified: golden in browser, 63 backend tests on hosted runner, 24 Playwright tests locally; adversarial P01-TEST-02/04/05/07/08/11/12 application-path tests and reviewer disproof pass still pending (T-01-07)",
+      "portfolio_case_study": "https://mrrishit909.github.io/projects-site/revenue-atlas/"
     },
     "02-onboard-studio": {
       "slug": "onboard-studio",

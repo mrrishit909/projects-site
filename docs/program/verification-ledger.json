@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:01:58Z",
+  "updated_at": "2026-10-26T11:10:40Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -285,6 +285,18 @@
       "actual": "as expected; duplicate line batch rejected ORPHAN_REFERENCE without parents, no-op with parents",
       "code_sha": "pending-commit",
       "ts": "2026-10-26T11:01:58Z"
+    },
+    {
+      "requirement": "P01-REL-18 portfolio case study links to the live site; site links back",
+      "project": "01-revenue-atlas",
+      "status": "partially verified",
+      "command": "live-check.yml run 40311533558 job portfolio-link",
+      "exit_code": 1,
+      "expected": "case page 200 and contains labs/revenue-atlas/; site HTML contains the portfolio URL",
+      "actual": "case page 200, 1 link to labs/revenue-atlas/ (verified); site static HTML lacked the back-link (rendered by JS only) -> static noscript/author link added in web/index.html, republish pending",
+      "code_sha": "41d2aa5",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40311533558/artifacts/12644997594",
+      "ts": "2026-10-26T11:10:40Z"
     }
   ]
 }
