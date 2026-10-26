@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T12:04:33Z",
+  "updated_at": "2026-10-26T12:05:40Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -56,7 +56,7 @@
     },
     "02-onboard-studio": {
       "slug": "onboard-studio",
-      "stage": "gate-A started (contracts v1 written; spec hash verified e26d1733...)",
+      "stage": "gate-A passed (fixture verified); domain/API slice in progress",
       "built": false,
       "verified": false,
       "published": false,
@@ -65,7 +65,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": "T-02-02 golden fixture (P02-GOLD-01 calendar arithmetic) + stdlib reference check"
+      "next_task": "T-02-03 domain + Postgres + FastAPI + CI (A-013)"
     },
     "03-supplyscope": {
       "slug": "supplyscope",

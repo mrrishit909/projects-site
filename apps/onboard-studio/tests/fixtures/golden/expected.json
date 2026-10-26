@@ -1,0 +1,122 @@
+{
+  "fixture_id": "onboard-studio-golden-v1",
+  "note": "Hand-derived literals; see CALCULATION.md. Independent of application code. Population values are means over the accepted completed cases (one case in every fixture here); rates are aggregated numerators over denominators.",
+  "tolerance": {
+    "duration_decimal_places": 4,
+    "rate_decimal_places": 6,
+    "comparison": "exact equality after quantizing (ROUND_HALF_UP)"
+  },
+  "ingest": {
+    "counts": {
+      "organizations": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "cases": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "workflow_versions": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "step_definitions": {
+        "accepted": 2,
+        "rejected": 0
+      },
+      "dependencies": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "step_instances": {
+        "accepted": 2,
+        "rejected": 0
+      },
+      "assignments": {
+        "accepted": 2,
+        "rejected": 0
+      },
+      "document_versions": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "approvals": {
+        "accepted": 2,
+        "rejected": 0
+      },
+      "sla_rules": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "calendar_intervals": {
+        "accepted": 10,
+        "rejected": 0
+      },
+      "waiting_intervals": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "case_events": {
+        "accepted": 10,
+        "rejected": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "states": {
+    "pause_eligible": {
+      "pause_policy": [
+        "customer_info_requested"
+      ],
+      "metrics": {
+        "calendar_cycle_time_hours": "66.0000",
+        "business_cycle_time_hours": "2.0000",
+        "paused_time_hours": "65.0000",
+        "paused_business_overlap_hours": "1.0000",
+        "active_elapsed_hours": "1.0000",
+        "sla_attainment": "1.000000",
+        "completed_eligible_cases": 1,
+        "within_sla_cases": 1,
+        "open_backlog_at_cutoff": {
+          "2026-03-07T12:00:00Z": 1,
+          "2026-03-09T12:00:00Z": 0
+        },
+        "rework_rate": "0.000000",
+        "handoff_count": 0,
+        "step_waiting_time_hours": {
+          "sd-001": "0.0833",
+          "sd-002": "0.0833"
+        },
+        "first_pass_approval": "1.000000",
+        "document_completeness": "1.000000",
+        "empty_population": false
+      }
+    },
+    "pause_not_eligible": {
+      "pause_policy": [],
+      "metrics": {
+        "calendar_cycle_time_hours": "66.0000",
+        "business_cycle_time_hours": "2.0000",
+        "paused_time_hours": "0.0000",
+        "paused_business_overlap_hours": "0.0000",
+        "active_elapsed_hours": "2.0000",
+        "sla_attainment": "1.000000",
+        "completed_eligible_cases": 1,
+        "within_sla_cases": 1,
+        "open_backlog_at_cutoff": {
+          "2026-03-07T12:00:00Z": 1,
+          "2026-03-09T12:00:00Z": 0
+        },
+        "rework_rate": "0.000000",
+        "handoff_count": 0,
+        "step_waiting_time_hours": {
+          "sd-001": "0.0833",
+          "sd-002": "0.0833"
+        },
+        "first_pass_approval": "1.000000",
+        "document_completeness": "1.000000",
+        "empty_population": false
+      }
+    }
+  }
+}

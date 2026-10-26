@@ -75,3 +75,16 @@ denominators. Open cases are shown beside, never inside, SLA attainment.
 Mode A: Python domain + PostgreSQL + FastAPI commands verified on GitHub-hosted runners.
 Mode B: TypeScript re-implementation over a published synthetic snapshot; all case actions
 are browser-memory simulations; a reload restores the snapshot.
+
+## D-05 Fixture-driven clarifications (2026-10-26, adopted from A-012)
+* Required document types per workflow version are carried in a `workflow_requirements`
+  block (`{workflow_version_id: {required_document_types: [...]}}`) until a table exists.
+* `SELF_APPROVAL` (reviewer equals any assignee ever on the step) rejects the case and all
+  its child rows at ingest with that reason.
+* SLA test: `active_elapsed_hours × 60 ≤ business_minutes`. Backlog: a case is open when
+  `opened_at ≤ cutoff < completed_at` (null `completed_at` counts as open).
+* Population durations are the mean over accepted completed cases; rates are aggregated
+  numerators over denominators.
+* `definition_hash` = sha256 of compact sorted-key JSON `{"steps": [[id, name, required,
+  role_key, sequence]…], "dependencies": [[step_definition_id, prerequisite_id, type]…]}`.
+* Step waiting = `started_at − ready_at` in business hours.

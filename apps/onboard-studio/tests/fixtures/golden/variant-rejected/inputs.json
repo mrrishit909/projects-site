@@ -1,0 +1,398 @@
+{
+  "fixture_id": "onboard-studio-variant-rejected-v1",
+  "note": "Golden plus case-002 whose sd-002 approval is made by the step's own assignee.",
+  "cutoffs": [
+    "2026-03-07T12:00:00Z",
+    "2026-03-09T12:00:00Z"
+  ],
+  "states": {
+    "pause_eligible": {
+      "sla-001": {
+        "pause_policy": [
+          "customer_info_requested"
+        ]
+      }
+    },
+    "pause_not_eligible": {
+      "sla-001": {
+        "pause_policy": []
+      }
+    }
+  },
+  "workflow_requirements": {
+    "wfv-001": {
+      "required_document_types": [
+        "identity_proof"
+      ]
+    }
+  },
+  "organizations": [
+    {
+      "organization_id": "org-001",
+      "organization_name": "Synthetic Holdings Ltd",
+      "segment": "smb",
+      "region": "emea",
+      "created_at": "2026-02-01T00:00:00Z"
+    }
+  ],
+  "workflow_versions": [
+    {
+      "workflow_version_id": "wfv-001",
+      "template_id": "tpl-001",
+      "version_number": 1,
+      "published_at": "2026-03-01T00:00:00Z",
+      "definition_hash": "3a4701f5d9e983fc4fa4643cd871ea03b5dd0d4bbaef4390a50545cfe4443bec"
+    }
+  ],
+  "step_definitions": [
+    {
+      "step_definition_id": "sd-001",
+      "workflow_version_id": "wfv-001",
+      "step_name": "collect_documents",
+      "required": true,
+      "role_key": "ops",
+      "sequence": 1
+    },
+    {
+      "step_definition_id": "sd-002",
+      "workflow_version_id": "wfv-001",
+      "step_name": "approve_account",
+      "required": true,
+      "role_key": "reviewer",
+      "sequence": 2
+    }
+  ],
+  "dependencies": [
+    {
+      "dependency_id": "dep-001",
+      "step_definition_id": "sd-002",
+      "prerequisite_id": "sd-001",
+      "dependency_type": "mandatory",
+      "created_at": "2026-03-01T00:00:00Z"
+    }
+  ],
+  "sla_rules": [
+    {
+      "sla_rule_id": "sla-001",
+      "workflow_version_id": "wfv-001",
+      "business_minutes": 480,
+      "pause_policy": [
+        "customer_info_requested"
+      ],
+      "calendar_id": "cal-001"
+    }
+  ],
+  "calendar_intervals": [
+    {
+      "calendar_interval_id": "ci-001",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-02T09:00:00Z",
+      "ends_at": "2026-03-02T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-002",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-03T09:00:00Z",
+      "ends_at": "2026-03-03T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-003",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-04T09:00:00Z",
+      "ends_at": "2026-03-04T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-004",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-05T09:00:00Z",
+      "ends_at": "2026-03-05T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-005",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-06T09:00:00Z",
+      "ends_at": "2026-03-06T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-006",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-09T09:00:00Z",
+      "ends_at": "2026-03-09T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-007",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-10T09:00:00Z",
+      "ends_at": "2026-03-10T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-008",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-11T09:00:00Z",
+      "ends_at": "2026-03-11T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-009",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-12T09:00:00Z",
+      "ends_at": "2026-03-12T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-010",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-13T09:00:00Z",
+      "ends_at": "2026-03-13T17:00:00Z",
+      "timezone": "UTC"
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "case-001",
+      "organization_id": "org-001",
+      "workflow_version_id": "wfv-001",
+      "status": "completed",
+      "opened_at": "2026-03-06T16:00:00Z",
+      "completed_at": "2026-03-09T10:00:00Z"
+    },
+    {
+      "case_id": "case-002",
+      "organization_id": "org-001",
+      "workflow_version_id": "wfv-001",
+      "status": "completed",
+      "opened_at": "2026-03-10T09:00:00Z",
+      "completed_at": "2026-03-10T11:00:00Z"
+    }
+  ],
+  "step_instances": [
+    {
+      "step_instance_id": "si-001",
+      "case_id": "case-001",
+      "step_definition_id": "sd-001",
+      "status": "approved",
+      "version_number": 1,
+      "ready_at": "2026-03-06T16:00:00Z",
+      "started_at": "2026-03-06T16:05:00Z",
+      "approved_at": "2026-03-09T09:40:00Z"
+    },
+    {
+      "step_instance_id": "si-002",
+      "case_id": "case-001",
+      "step_definition_id": "sd-002",
+      "status": "approved",
+      "version_number": 1,
+      "ready_at": "2026-03-09T09:40:00Z",
+      "started_at": "2026-03-09T09:45:00Z",
+      "approved_at": "2026-03-09T10:00:00Z"
+    },
+    {
+      "step_instance_id": "si-201",
+      "case_id": "case-002",
+      "step_definition_id": "sd-001",
+      "status": "approved",
+      "version_number": 1,
+      "ready_at": "2026-03-10T09:00:00Z",
+      "started_at": "2026-03-10T09:05:00Z",
+      "approved_at": "2026-03-10T09:30:00Z"
+    },
+    {
+      "step_instance_id": "si-202",
+      "case_id": "case-002",
+      "step_definition_id": "sd-002",
+      "status": "approved",
+      "version_number": 1,
+      "ready_at": "2026-03-10T09:30:00Z",
+      "started_at": "2026-03-10T09:35:00Z",
+      "approved_at": "2026-03-10T11:00:00Z"
+    }
+  ],
+  "assignments": [
+    {
+      "assignment_id": "asg-001",
+      "step_instance_id": "si-001",
+      "assignee_id": "ops-001",
+      "assigned_at": "2026-03-06T16:00:00Z",
+      "ended_at": "2026-03-09T09:40:00Z"
+    },
+    {
+      "assignment_id": "asg-002",
+      "step_instance_id": "si-002",
+      "assignee_id": "ops-002",
+      "assigned_at": "2026-03-09T09:40:00Z",
+      "ended_at": "2026-03-09T10:00:00Z"
+    },
+    {
+      "assignment_id": "asg-201",
+      "step_instance_id": "si-201",
+      "assignee_id": "ops-001",
+      "assigned_at": "2026-03-10T09:00:00Z",
+      "ended_at": "2026-03-10T09:30:00Z"
+    },
+    {
+      "assignment_id": "asg-202",
+      "step_instance_id": "si-202",
+      "assignee_id": "ops-002",
+      "assigned_at": "2026-03-10T09:30:00Z",
+      "ended_at": "2026-03-10T11:00:00Z"
+    }
+  ],
+  "document_versions": [
+    {
+      "document_version_id": "doc-001",
+      "case_id": "case-001",
+      "document_type": "identity_proof",
+      "version_number": 1,
+      "content_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000001",
+      "review_status": "accepted",
+      "submitted_at": "2026-03-06T16:10:00Z",
+      "reviewed_at": "2026-03-09T09:35:00Z"
+    },
+    {
+      "document_version_id": "doc-201",
+      "case_id": "case-002",
+      "document_type": "identity_proof",
+      "version_number": 1,
+      "content_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000002",
+      "review_status": "accepted",
+      "submitted_at": "2026-03-10T09:10:00Z",
+      "reviewed_at": "2026-03-10T09:25:00Z"
+    }
+  ],
+  "approvals": [
+    {
+      "approval_id": "apr-001",
+      "step_instance_id": "si-001",
+      "reviewer_id": "rev-001",
+      "decision": "approved",
+      "decided_at": "2026-03-09T09:40:00Z",
+      "reason": null
+    },
+    {
+      "approval_id": "apr-002",
+      "step_instance_id": "si-002",
+      "reviewer_id": "rev-002",
+      "decision": "approved",
+      "decided_at": "2026-03-09T10:00:00Z",
+      "reason": null
+    },
+    {
+      "approval_id": "apr-201",
+      "step_instance_id": "si-201",
+      "reviewer_id": "rev-001",
+      "decision": "approved",
+      "decided_at": "2026-03-10T09:30:00Z",
+      "reason": null
+    },
+    {
+      "approval_id": "apr-202",
+      "step_instance_id": "si-202",
+      "reviewer_id": "ops-002",
+      "decision": "approved",
+      "decided_at": "2026-03-10T11:00:00Z",
+      "reason": null
+    }
+  ],
+  "waiting_intervals": [
+    {
+      "waiting_interval_id": "wi-001",
+      "case_id": "case-001",
+      "reason_code": "customer_info_requested",
+      "starts_at": "2026-03-06T16:30:00Z",
+      "ends_at": "2026-03-09T09:30:00Z"
+    }
+  ],
+  "case_events": [
+    {
+      "event_id": "ev-001",
+      "case_id": "case-001",
+      "event_type": "case_opened",
+      "actor_id": "ops-001",
+      "occurred_at": "2026-03-06T16:00:00Z"
+    },
+    {
+      "event_id": "ev-002",
+      "case_id": "case-001",
+      "event_type": "step_started",
+      "actor_id": "ops-001",
+      "occurred_at": "2026-03-06T16:05:00Z"
+    },
+    {
+      "event_id": "ev-003",
+      "case_id": "case-001",
+      "event_type": "document_submitted",
+      "actor_id": "ops-001",
+      "occurred_at": "2026-03-06T16:10:00Z"
+    },
+    {
+      "event_id": "ev-004",
+      "case_id": "case-001",
+      "event_type": "waiting_started",
+      "actor_id": "ops-001",
+      "occurred_at": "2026-03-06T16:30:00Z"
+    },
+    {
+      "event_id": "ev-005",
+      "case_id": "case-001",
+      "event_type": "waiting_ended",
+      "actor_id": "ops-001",
+      "occurred_at": "2026-03-09T09:30:00Z"
+    },
+    {
+      "event_id": "ev-006",
+      "case_id": "case-001",
+      "event_type": "document_accepted",
+      "actor_id": "rev-001",
+      "occurred_at": "2026-03-09T09:35:00Z"
+    },
+    {
+      "event_id": "ev-007",
+      "case_id": "case-001",
+      "event_type": "step_approved",
+      "actor_id": "rev-001",
+      "occurred_at": "2026-03-09T09:40:00Z"
+    },
+    {
+      "event_id": "ev-008",
+      "case_id": "case-001",
+      "event_type": "step_started",
+      "actor_id": "ops-002",
+      "occurred_at": "2026-03-09T09:45:00Z"
+    },
+    {
+      "event_id": "ev-009",
+      "case_id": "case-001",
+      "event_type": "step_approved",
+      "actor_id": "rev-002",
+      "occurred_at": "2026-03-09T10:00:00Z"
+    },
+    {
+      "event_id": "ev-010",
+      "case_id": "case-001",
+      "event_type": "case_completed",
+      "actor_id": "rev-002",
+      "occurred_at": "2026-03-09T10:00:00Z"
+    },
+    {
+      "event_id": "ev-101",
+      "case_id": "case-002",
+      "event_type": "case_opened",
+      "actor_id": "ops-001",
+      "occurred_at": "2026-03-10T09:00:00Z"
+    },
+    {
+      "event_id": "ev-102",
+      "case_id": "case-002",
+      "event_type": "case_completed",
+      "actor_id": "ops-002",
+      "occurred_at": "2026-03-10T11:00:00Z"
+    }
+  ]
+}

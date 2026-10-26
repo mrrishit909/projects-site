@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T12:04:33Z",
+  "updated_at": "2026-10-26T12:05:40Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -404,6 +404,17 @@
       "code_sha": "50e72e1",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40319480592",
       "ts": "2026-10-26T12:04:33Z"
+    },
+    {
+      "requirement": "P02-GOLD-01..10",
+      "project": "02-onboard-studio",
+      "status": "verified",
+      "command": "python3 -I apps/onboard-studio/tests/reference_check.py",
+      "exit_code": 0,
+      "expected": "calendar 66.0000, business 2.0000, paused 65.0000 (business overlap 1.0000), active 1.0000 eligible / 2.0000 not; SLA 1.000000; backlog 1 then 0; step waits 0.0833",
+      "actual": "ALL OK (155 checks)",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T12:05:40Z"
     }
   ]
 }

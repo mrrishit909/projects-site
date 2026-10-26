@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T12:02:13Z",
+  "updated_at": "2026-10-26T12:05:40Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
@@ -169,7 +169,7 @@
       "id": "T-02-02",
       "project": "02-onboard-studio",
       "title": "Golden fixture + stdlib reference check (P02-GOLD-01..11)",
-      "status": "pending",
+      "status": "done",
       "prereqs": [
         "T-01-09"
       ],
@@ -180,7 +180,7 @@
       "id": "T-02-03",
       "project": "02-onboard-studio",
       "title": "Domain + Postgres + FastAPI slice + CI",
-      "status": "pending",
+      "status": "in_progress",
       "prereqs": [
         "T-02-02"
       ],

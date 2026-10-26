@@ -1,0 +1,164 @@
+{
+  "fixture_id": "onboard-studio-variant-empty-v1",
+  "note": "Organizations and workflow only; no cases.",
+  "cutoffs": [
+    "2026-03-07T12:00:00Z",
+    "2026-03-09T12:00:00Z"
+  ],
+  "states": {
+    "pause_eligible": {
+      "sla-001": {
+        "pause_policy": [
+          "customer_info_requested"
+        ]
+      }
+    },
+    "pause_not_eligible": {
+      "sla-001": {
+        "pause_policy": []
+      }
+    }
+  },
+  "workflow_requirements": {
+    "wfv-001": {
+      "required_document_types": [
+        "identity_proof"
+      ]
+    }
+  },
+  "organizations": [
+    {
+      "organization_id": "org-001",
+      "organization_name": "Synthetic Holdings Ltd",
+      "segment": "smb",
+      "region": "emea",
+      "created_at": "2026-02-01T00:00:00Z"
+    }
+  ],
+  "workflow_versions": [
+    {
+      "workflow_version_id": "wfv-001",
+      "template_id": "tpl-001",
+      "version_number": 1,
+      "published_at": "2026-03-01T00:00:00Z",
+      "definition_hash": "3a4701f5d9e983fc4fa4643cd871ea03b5dd0d4bbaef4390a50545cfe4443bec"
+    }
+  ],
+  "step_definitions": [
+    {
+      "step_definition_id": "sd-001",
+      "workflow_version_id": "wfv-001",
+      "step_name": "collect_documents",
+      "required": true,
+      "role_key": "ops",
+      "sequence": 1
+    },
+    {
+      "step_definition_id": "sd-002",
+      "workflow_version_id": "wfv-001",
+      "step_name": "approve_account",
+      "required": true,
+      "role_key": "reviewer",
+      "sequence": 2
+    }
+  ],
+  "dependencies": [
+    {
+      "dependency_id": "dep-001",
+      "step_definition_id": "sd-002",
+      "prerequisite_id": "sd-001",
+      "dependency_type": "mandatory",
+      "created_at": "2026-03-01T00:00:00Z"
+    }
+  ],
+  "sla_rules": [
+    {
+      "sla_rule_id": "sla-001",
+      "workflow_version_id": "wfv-001",
+      "business_minutes": 480,
+      "pause_policy": [
+        "customer_info_requested"
+      ],
+      "calendar_id": "cal-001"
+    }
+  ],
+  "calendar_intervals": [
+    {
+      "calendar_interval_id": "ci-001",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-02T09:00:00Z",
+      "ends_at": "2026-03-02T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-002",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-03T09:00:00Z",
+      "ends_at": "2026-03-03T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-003",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-04T09:00:00Z",
+      "ends_at": "2026-03-04T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-004",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-05T09:00:00Z",
+      "ends_at": "2026-03-05T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-005",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-06T09:00:00Z",
+      "ends_at": "2026-03-06T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-006",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-09T09:00:00Z",
+      "ends_at": "2026-03-09T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-007",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-10T09:00:00Z",
+      "ends_at": "2026-03-10T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-008",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-11T09:00:00Z",
+      "ends_at": "2026-03-11T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-009",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-12T09:00:00Z",
+      "ends_at": "2026-03-12T17:00:00Z",
+      "timezone": "UTC"
+    },
+    {
+      "calendar_interval_id": "ci-010",
+      "calendar_id": "cal-001",
+      "starts_at": "2026-03-13T09:00:00Z",
+      "ends_at": "2026-03-13T17:00:00Z",
+      "timezone": "UTC"
+    }
+  ],
+  "cases": [],
+  "step_instances": [],
+  "assignments": [],
+  "document_versions": [],
+  "approvals": [],
+  "waiting_intervals": [],
+  "case_events": []
+}
