@@ -25,7 +25,9 @@ export default defineConfig({
     command: `npx vite preview --port 4173 --strictPort --base ${BASE}`,
     url: `http://127.0.0.1:4173${BASE}`,
     reuseExistingServer: false,
-    timeout: 30_000,
+    timeout: 90_000,
+    stdout: "pipe",
+    stderr: "pipe",
   },
   projects: [{ name: "chromium", use: { browserName: "chromium", ...(executablePath ? { launchOptions: { executablePath } } : {}) } }],
 });
