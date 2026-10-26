@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T15:14:24Z",
+  "updated_at": "2026-10-26T15:22:44Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -705,6 +705,29 @@
       "defect": "domain/supplyscope/forecast.py promo_factor; mirrored in TS; fix queued T-03-07",
       "code_sha": "pending-commit",
       "ts": "2026-10-26T15:14:24Z"
+    },
+    {
+      "requirement": "master 18 reviewer disproof pass (SupplyScope)",
+      "project": "03-supplyscope",
+      "status": "failed",
+      "defects": [
+        "R3-01 claim text: stockout days described as SKU-days; metric is distinct calendar dates \u00f7 calendar days (290/548); SKU-day rate 431/(60\u00d7548)=1.3%; groups do not reconcile (370/373/431 vs 290)",
+        "R3-02 C07 accepts the same unmet event under two scenarios without demand_ref (backlog + lost sale); scenario backorders lower the real inventory_position; occurred_at defaults to now()",
+        "R3-03 C10 exports a stale draft after later movements; dataset_version in requests never validated",
+        "R3-04 inventory_position for a product with parameters at one of several locations reports that location's position as the total (Python, TS, SQL alike)",
+        "R3-05 sub-millisecond instants: TS truncates to ms, Python/SQL do not",
+        "R3-06 (suspected) target < ROP accepted, still orders",
+        "R3-07 (suspected) negative available unflagged; clamped on_hand in position; SQL int4 overflow; day order on UTC date"
+      ],
+      "could_not_disprove": [
+        "as_of inclusive; backorder boundaries; same-second receipt then sale; negative mid-day flagged; over-receipt 422; cancelled PO not on order; pack 0 malformed; position == ROP no trigger; empty window nulls",
+        "Python==TS==SQL on all cases but R3-05/R3-07",
+        "group reconciliation of working capital, on hand, on order, order quantity",
+        "receipt rules, atomic rollback, concurrency 1x200/3x422, replay rules, seed mismatch 422, draft stays draft",
+        "headline figures reproduce; views compute; synthetic disclosed"
+      ],
+      "code_sha": "12f866f",
+      "ts": "2026-10-26T15:22:44Z"
     }
   ]
 }
