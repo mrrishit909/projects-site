@@ -1,0 +1,1442 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-10-26T00:10:00Z",
+  "cutoff": "2026-10-26T00:00:00Z",
+  "analysis_plan": {
+    "experiment_version_id": "xv-001",
+    "primary_metric": "activation_7d",
+    "unit_type": "account",
+    "allocation": {
+      "control": "0.500000",
+      "treatment": "0.500000"
+    },
+    "planned_end": "2026-10-15T00:00:00Z",
+    "activation_window_days": 7,
+    "guardrail": {
+      "metric": "product_error_rate",
+      "window_days": 7
+    },
+    "revenue_window": {
+      "from": "2026-10-01T00:00:00Z",
+      "to": "2026-10-15T00:00:00Z"
+    },
+    "confidence": "0.95",
+    "z": "1.959964",
+    "srm": {
+      "p_threshold": "0.001",
+      "min_expected_cell": 5
+    },
+    "frozen_at": "2026-09-30T12:00:00Z",
+    "config_hash": "b3e7466e10b2c0d3fd1adfed5155c60a18447dac1af3d9ebde02be35ec77d659"
+  },
+  "metric_windows": {
+    "signup_conversion": {
+      "from": "2026-10-05T00:00:00Z",
+      "to": "2026-10-12T00:00:00Z"
+    },
+    "funnel": {
+      "definition_id": "fun-001",
+      "version": 1,
+      "steps": [
+        "visit",
+        "signup",
+        "onboarding_step_1",
+        "activated"
+      ],
+      "max_gap_hours": 48,
+      "from": "2026-10-05T00:00:00Z",
+      "to": "2026-10-12T00:00:00Z"
+    },
+    "activation": {
+      "from": "2026-10-05T00:00:00Z",
+      "to": "2026-10-26T00:00:00Z",
+      "window_days": 7
+    },
+    "retention": {
+      "signup_from": "2026-09-14",
+      "signup_to": "2026-09-21"
+    },
+    "feature_adoption": {
+      "from": "2026-09-21T00:00:00Z",
+      "to": "2026-09-28T00:00:00Z",
+      "feature": "export",
+      "eligible_plans": [
+        "team",
+        "business"
+      ]
+    }
+  },
+  "accounts": [
+    {
+      "account_id": "acc-c-001",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T09:00:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-c-002",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T09:01:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-c-003",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T09:02:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-c-004",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T09:03:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-c-005",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T09:04:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-c-006",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T09:05:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-c-007",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T09:06:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-c-008",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T09:07:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-c-009",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T09:08:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-c-010",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T09:09:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-c-011",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T09:10:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-c-012",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T09:11:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-t-001",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T11:00:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-t-002",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T11:01:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-t-003",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T11:02:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-t-004",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T11:03:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-t-005",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T11:04:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-t-006",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T11:05:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-t-007",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T11:06:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    },
+    {
+      "account_id": "acc-t-008",
+      "plan": "team",
+      "segment": "smb",
+      "created_at": "2026-10-01T11:07:00Z",
+      "internal": false,
+      "timezone": "UTC"
+    }
+  ],
+  "users": [
+    {
+      "user_id": "u-c-001",
+      "account_id": "acc-c-001",
+      "created_at": "2026-10-01T09:00:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-c-002",
+      "account_id": "acc-c-002",
+      "created_at": "2026-10-01T09:01:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-c-003",
+      "account_id": "acc-c-003",
+      "created_at": "2026-10-01T09:02:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-c-004",
+      "account_id": "acc-c-004",
+      "created_at": "2026-10-01T09:03:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-c-005",
+      "account_id": "acc-c-005",
+      "created_at": "2026-10-01T09:04:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-c-006",
+      "account_id": "acc-c-006",
+      "created_at": "2026-10-01T09:05:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-c-007",
+      "account_id": "acc-c-007",
+      "created_at": "2026-10-01T09:06:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-c-008",
+      "account_id": "acc-c-008",
+      "created_at": "2026-10-01T09:07:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-c-009",
+      "account_id": "acc-c-009",
+      "created_at": "2026-10-01T09:08:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-c-010",
+      "account_id": "acc-c-010",
+      "created_at": "2026-10-01T09:09:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-c-011",
+      "account_id": "acc-c-011",
+      "created_at": "2026-10-01T09:10:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-c-012",
+      "account_id": "acc-c-012",
+      "created_at": "2026-10-01T09:11:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-t-001",
+      "account_id": "acc-t-001",
+      "created_at": "2026-10-01T11:00:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-t-002",
+      "account_id": "acc-t-002",
+      "created_at": "2026-10-01T11:01:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-t-003",
+      "account_id": "acc-t-003",
+      "created_at": "2026-10-01T11:02:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-t-004",
+      "account_id": "acc-t-004",
+      "created_at": "2026-10-01T11:03:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-t-005",
+      "account_id": "acc-t-005",
+      "created_at": "2026-10-01T11:04:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-t-006",
+      "account_id": "acc-t-006",
+      "created_at": "2026-10-01T11:05:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-t-007",
+      "account_id": "acc-t-007",
+      "created_at": "2026-10-01T11:06:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    },
+    {
+      "user_id": "u-t-008",
+      "account_id": "acc-t-008",
+      "created_at": "2026-10-01T11:07:00Z",
+      "timezone": "UTC",
+      "bot_flag": false
+    }
+  ],
+  "identity_links": [],
+  "sessions": [],
+  "events": [
+    {
+      "event_id": "ev-s-c-001",
+      "user_id": "u-c-001",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T09:00:00Z",
+      "received_at": "2026-10-01T09:00:05Z"
+    },
+    {
+      "event_id": "ev-x-c-001",
+      "user_id": "u-c-001",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T09:02:00Z",
+      "received_at": "2026-10-01T09:02:05Z"
+    },
+    {
+      "event_id": "ev-s-c-002",
+      "user_id": "u-c-002",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T09:01:00Z",
+      "received_at": "2026-10-01T09:01:05Z"
+    },
+    {
+      "event_id": "ev-x-c-002",
+      "user_id": "u-c-002",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T09:03:00Z",
+      "received_at": "2026-10-01T09:03:05Z"
+    },
+    {
+      "event_id": "ev-s-c-003",
+      "user_id": "u-c-003",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T09:02:00Z",
+      "received_at": "2026-10-01T09:02:05Z"
+    },
+    {
+      "event_id": "ev-x-c-003",
+      "user_id": "u-c-003",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T09:04:00Z",
+      "received_at": "2026-10-01T09:04:05Z"
+    },
+    {
+      "event_id": "ev-s-c-004",
+      "user_id": "u-c-004",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T09:03:00Z",
+      "received_at": "2026-10-01T09:03:05Z"
+    },
+    {
+      "event_id": "ev-x-c-004",
+      "user_id": "u-c-004",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T09:05:00Z",
+      "received_at": "2026-10-01T09:05:05Z"
+    },
+    {
+      "event_id": "ev-s-c-005",
+      "user_id": "u-c-005",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T09:04:00Z",
+      "received_at": "2026-10-01T09:04:05Z"
+    },
+    {
+      "event_id": "ev-x-c-005",
+      "user_id": "u-c-005",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T09:06:00Z",
+      "received_at": "2026-10-01T09:06:05Z"
+    },
+    {
+      "event_id": "ev-s-c-006",
+      "user_id": "u-c-006",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T09:05:00Z",
+      "received_at": "2026-10-01T09:05:05Z"
+    },
+    {
+      "event_id": "ev-x-c-006",
+      "user_id": "u-c-006",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T09:07:00Z",
+      "received_at": "2026-10-01T09:07:05Z"
+    },
+    {
+      "event_id": "ev-s-c-007",
+      "user_id": "u-c-007",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T09:06:00Z",
+      "received_at": "2026-10-01T09:06:05Z"
+    },
+    {
+      "event_id": "ev-x-c-007",
+      "user_id": "u-c-007",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T09:08:00Z",
+      "received_at": "2026-10-01T09:08:05Z"
+    },
+    {
+      "event_id": "ev-s-c-008",
+      "user_id": "u-c-008",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T09:07:00Z",
+      "received_at": "2026-10-01T09:07:05Z"
+    },
+    {
+      "event_id": "ev-x-c-008",
+      "user_id": "u-c-008",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T09:09:00Z",
+      "received_at": "2026-10-01T09:09:05Z"
+    },
+    {
+      "event_id": "ev-s-c-009",
+      "user_id": "u-c-009",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T09:08:00Z",
+      "received_at": "2026-10-01T09:08:05Z"
+    },
+    {
+      "event_id": "ev-x-c-009",
+      "user_id": "u-c-009",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T09:10:00Z",
+      "received_at": "2026-10-01T09:10:05Z"
+    },
+    {
+      "event_id": "ev-s-c-010",
+      "user_id": "u-c-010",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T09:09:00Z",
+      "received_at": "2026-10-01T09:09:05Z"
+    },
+    {
+      "event_id": "ev-x-c-010",
+      "user_id": "u-c-010",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T09:11:00Z",
+      "received_at": "2026-10-01T09:11:05Z"
+    },
+    {
+      "event_id": "ev-s-c-011",
+      "user_id": "u-c-011",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T09:10:00Z",
+      "received_at": "2026-10-01T09:10:05Z"
+    },
+    {
+      "event_id": "ev-s-c-012",
+      "user_id": "u-c-012",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T09:11:00Z",
+      "received_at": "2026-10-01T09:11:05Z"
+    },
+    {
+      "event_id": "ev-s-t-001",
+      "user_id": "u-t-001",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T11:00:00Z",
+      "received_at": "2026-10-01T11:00:05Z"
+    },
+    {
+      "event_id": "ev-x-t-001",
+      "user_id": "u-t-001",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T11:02:00Z",
+      "received_at": "2026-10-01T11:02:05Z"
+    },
+    {
+      "event_id": "ev-a-t-001",
+      "user_id": "u-t-001",
+      "anonymous_id": null,
+      "event_name": "activated",
+      "event_at": "2026-10-01T13:00:00Z",
+      "received_at": "2026-10-01T13:00:05Z"
+    },
+    {
+      "event_id": "ev-s-t-002",
+      "user_id": "u-t-002",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T11:01:00Z",
+      "received_at": "2026-10-01T11:01:05Z"
+    },
+    {
+      "event_id": "ev-x-t-002",
+      "user_id": "u-t-002",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T11:03:00Z",
+      "received_at": "2026-10-01T11:03:05Z"
+    },
+    {
+      "event_id": "ev-a-t-002",
+      "user_id": "u-t-002",
+      "anonymous_id": null,
+      "event_name": "activated",
+      "event_at": "2026-10-01T13:01:00Z",
+      "received_at": "2026-10-01T13:01:05Z"
+    },
+    {
+      "event_id": "ev-s-t-003",
+      "user_id": "u-t-003",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T11:02:00Z",
+      "received_at": "2026-10-01T11:02:05Z"
+    },
+    {
+      "event_id": "ev-x-t-003",
+      "user_id": "u-t-003",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T11:04:00Z",
+      "received_at": "2026-10-01T11:04:05Z"
+    },
+    {
+      "event_id": "ev-a-t-003",
+      "user_id": "u-t-003",
+      "anonymous_id": null,
+      "event_name": "activated",
+      "event_at": "2026-10-01T13:02:00Z",
+      "received_at": "2026-10-01T13:02:05Z"
+    },
+    {
+      "event_id": "ev-s-t-004",
+      "user_id": "u-t-004",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T11:03:00Z",
+      "received_at": "2026-10-01T11:03:05Z"
+    },
+    {
+      "event_id": "ev-s-t-005",
+      "user_id": "u-t-005",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T11:04:00Z",
+      "received_at": "2026-10-01T11:04:05Z"
+    },
+    {
+      "event_id": "ev-x-t-005",
+      "user_id": "u-t-005",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T11:06:00Z",
+      "received_at": "2026-10-01T11:06:05Z"
+    },
+    {
+      "event_id": "ev-s-t-006",
+      "user_id": "u-t-006",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T11:05:00Z",
+      "received_at": "2026-10-01T11:05:05Z"
+    },
+    {
+      "event_id": "ev-x-t-006",
+      "user_id": "u-t-006",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T11:07:00Z",
+      "received_at": "2026-10-01T11:07:05Z"
+    },
+    {
+      "event_id": "ev-s-t-007",
+      "user_id": "u-t-007",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T11:06:00Z",
+      "received_at": "2026-10-01T11:06:05Z"
+    },
+    {
+      "event_id": "ev-x-t-007",
+      "user_id": "u-t-007",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T11:08:00Z",
+      "received_at": "2026-10-01T11:08:05Z"
+    },
+    {
+      "event_id": "ev-s-t-008",
+      "user_id": "u-t-008",
+      "anonymous_id": null,
+      "event_name": "signup",
+      "event_at": "2026-10-01T11:07:00Z",
+      "received_at": "2026-10-01T11:07:05Z"
+    },
+    {
+      "event_id": "ev-x-t-008",
+      "user_id": "u-t-008",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T11:09:00Z",
+      "received_at": "2026-10-01T11:09:05Z"
+    },
+    {
+      "event_id": "ev-x-t-004-early",
+      "user_id": "u-t-004",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-01T11:02:00Z",
+      "received_at": "2026-10-01T11:02:05Z"
+    },
+    {
+      "event_id": "ev-x-c-003-b",
+      "user_id": "u-c-003",
+      "anonymous_id": null,
+      "event_name": "experiment_exposure",
+      "event_at": "2026-10-02T09:01:00Z",
+      "received_at": "2026-10-02T09:01:05Z"
+    }
+  ],
+  "event_properties": [
+    {
+      "property_id": "pr-0001",
+      "event_id": "ev-x-c-001",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0002",
+      "event_id": "ev-x-c-001",
+      "property_key": "variant",
+      "property_value": "control",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0003",
+      "event_id": "ev-x-c-002",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0004",
+      "event_id": "ev-x-c-002",
+      "property_key": "variant",
+      "property_value": "control",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0005",
+      "event_id": "ev-x-c-003",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0006",
+      "event_id": "ev-x-c-003",
+      "property_key": "variant",
+      "property_value": "control",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0007",
+      "event_id": "ev-x-c-004",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0008",
+      "event_id": "ev-x-c-004",
+      "property_key": "variant",
+      "property_value": "control",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0009",
+      "event_id": "ev-x-c-005",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0010",
+      "event_id": "ev-x-c-005",
+      "property_key": "variant",
+      "property_value": "control",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0011",
+      "event_id": "ev-x-c-006",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0012",
+      "event_id": "ev-x-c-006",
+      "property_key": "variant",
+      "property_value": "control",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0013",
+      "event_id": "ev-x-c-007",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0014",
+      "event_id": "ev-x-c-007",
+      "property_key": "variant",
+      "property_value": "control",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0015",
+      "event_id": "ev-x-c-008",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0016",
+      "event_id": "ev-x-c-008",
+      "property_key": "variant",
+      "property_value": "control",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0017",
+      "event_id": "ev-x-c-009",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0018",
+      "event_id": "ev-x-c-009",
+      "property_key": "variant",
+      "property_value": "control",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0019",
+      "event_id": "ev-x-c-010",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0020",
+      "event_id": "ev-x-c-010",
+      "property_key": "variant",
+      "property_value": "control",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0021",
+      "event_id": "ev-x-t-001",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0022",
+      "event_id": "ev-x-t-001",
+      "property_key": "variant",
+      "property_value": "treatment",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0023",
+      "event_id": "ev-x-t-002",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0024",
+      "event_id": "ev-x-t-002",
+      "property_key": "variant",
+      "property_value": "treatment",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0025",
+      "event_id": "ev-x-t-003",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0026",
+      "event_id": "ev-x-t-003",
+      "property_key": "variant",
+      "property_value": "treatment",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0027",
+      "event_id": "ev-x-t-005",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0028",
+      "event_id": "ev-x-t-005",
+      "property_key": "variant",
+      "property_value": "treatment",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0029",
+      "event_id": "ev-x-t-006",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0030",
+      "event_id": "ev-x-t-006",
+      "property_key": "variant",
+      "property_value": "treatment",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0031",
+      "event_id": "ev-x-t-007",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0032",
+      "event_id": "ev-x-t-007",
+      "property_key": "variant",
+      "property_value": "treatment",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0033",
+      "event_id": "ev-x-t-008",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0034",
+      "event_id": "ev-x-t-008",
+      "property_key": "variant",
+      "property_value": "treatment",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0035",
+      "event_id": "ev-x-t-004-early",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0036",
+      "event_id": "ev-x-t-004-early",
+      "property_key": "variant",
+      "property_value": "treatment",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0037",
+      "event_id": "ev-x-c-003-b",
+      "property_key": "experiment_version_id",
+      "property_value": "xv-001",
+      "value_type": "string"
+    },
+    {
+      "property_id": "pr-0038",
+      "event_id": "ev-x-c-003-b",
+      "property_key": "variant",
+      "property_value": "treatment",
+      "value_type": "string"
+    }
+  ],
+  "subscriptions": [
+    {
+      "subscription_id": "sub-001",
+      "account_id": "acc-t-002",
+      "starts_at": "2026-10-03T12:00:00Z",
+      "ends_at": null,
+      "status": "active",
+      "amount_usd": "20.00"
+    }
+  ],
+  "experiment_versions": [
+    {
+      "experiment_version_id": "xv-001",
+      "name": "Onboarding checklist",
+      "unit_type": "account",
+      "primary_metric": "activation_7d",
+      "planned_end": "2026-10-15T00:00:00Z"
+    }
+  ],
+  "assignments": [
+    {
+      "assignment_id": "as-c-001",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-c-001",
+      "variant": "control",
+      "assigned_at": "2026-10-01T09:01:00Z"
+    },
+    {
+      "assignment_id": "as-c-002",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-c-002",
+      "variant": "control",
+      "assigned_at": "2026-10-01T09:02:00Z"
+    },
+    {
+      "assignment_id": "as-c-003",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-c-003",
+      "variant": "control",
+      "assigned_at": "2026-10-01T09:03:00Z"
+    },
+    {
+      "assignment_id": "as-c-004",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-c-004",
+      "variant": "control",
+      "assigned_at": "2026-10-01T09:04:00Z"
+    },
+    {
+      "assignment_id": "as-c-005",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-c-005",
+      "variant": "control",
+      "assigned_at": "2026-10-01T09:05:00Z"
+    },
+    {
+      "assignment_id": "as-c-006",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-c-006",
+      "variant": "control",
+      "assigned_at": "2026-10-01T09:06:00Z"
+    },
+    {
+      "assignment_id": "as-c-007",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-c-007",
+      "variant": "control",
+      "assigned_at": "2026-10-01T09:07:00Z"
+    },
+    {
+      "assignment_id": "as-c-008",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-c-008",
+      "variant": "control",
+      "assigned_at": "2026-10-01T09:08:00Z"
+    },
+    {
+      "assignment_id": "as-c-009",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-c-009",
+      "variant": "control",
+      "assigned_at": "2026-10-01T09:09:00Z"
+    },
+    {
+      "assignment_id": "as-c-010",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-c-010",
+      "variant": "control",
+      "assigned_at": "2026-10-01T09:10:00Z"
+    },
+    {
+      "assignment_id": "as-c-011",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-c-011",
+      "variant": "control",
+      "assigned_at": "2026-10-01T09:11:00Z"
+    },
+    {
+      "assignment_id": "as-c-012",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-c-012",
+      "variant": "control",
+      "assigned_at": "2026-10-01T09:12:00Z"
+    },
+    {
+      "assignment_id": "as-t-001",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-t-001",
+      "variant": "treatment",
+      "assigned_at": "2026-10-01T11:01:00Z"
+    },
+    {
+      "assignment_id": "as-t-002",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-t-002",
+      "variant": "treatment",
+      "assigned_at": "2026-10-01T11:02:00Z"
+    },
+    {
+      "assignment_id": "as-t-003",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-t-003",
+      "variant": "treatment",
+      "assigned_at": "2026-10-01T11:03:00Z"
+    },
+    {
+      "assignment_id": "as-t-004",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-t-004",
+      "variant": "treatment",
+      "assigned_at": "2026-10-01T11:04:00Z"
+    },
+    {
+      "assignment_id": "as-t-005",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-t-005",
+      "variant": "treatment",
+      "assigned_at": "2026-10-01T11:05:00Z"
+    },
+    {
+      "assignment_id": "as-t-006",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-t-006",
+      "variant": "treatment",
+      "assigned_at": "2026-10-01T11:06:00Z"
+    },
+    {
+      "assignment_id": "as-t-007",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-t-007",
+      "variant": "treatment",
+      "assigned_at": "2026-10-01T11:07:00Z"
+    },
+    {
+      "assignment_id": "as-t-008",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-t-008",
+      "variant": "treatment",
+      "assigned_at": "2026-10-01T11:08:00Z"
+    },
+    {
+      "assignment_id": "as-c-003-b",
+      "experiment_version_id": "xv-001",
+      "unit_id": "acc-c-003",
+      "variant": "treatment",
+      "assigned_at": "2026-10-02T09:00:00Z"
+    }
+  ],
+  "exposures": [
+    {
+      "exposure_id": "ex-c-001",
+      "assignment_id": "as-c-001",
+      "exposed_at": "2026-10-01T09:02:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-c-001"
+    },
+    {
+      "exposure_id": "ex-c-002",
+      "assignment_id": "as-c-002",
+      "exposed_at": "2026-10-01T09:03:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-c-002"
+    },
+    {
+      "exposure_id": "ex-c-003",
+      "assignment_id": "as-c-003",
+      "exposed_at": "2026-10-01T09:04:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-c-003"
+    },
+    {
+      "exposure_id": "ex-c-004",
+      "assignment_id": "as-c-004",
+      "exposed_at": "2026-10-01T09:05:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-c-004"
+    },
+    {
+      "exposure_id": "ex-c-005",
+      "assignment_id": "as-c-005",
+      "exposed_at": "2026-10-01T09:06:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-c-005"
+    },
+    {
+      "exposure_id": "ex-c-006",
+      "assignment_id": "as-c-006",
+      "exposed_at": "2026-10-01T09:07:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-c-006"
+    },
+    {
+      "exposure_id": "ex-c-007",
+      "assignment_id": "as-c-007",
+      "exposed_at": "2026-10-01T09:08:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-c-007"
+    },
+    {
+      "exposure_id": "ex-c-008",
+      "assignment_id": "as-c-008",
+      "exposed_at": "2026-10-01T09:09:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-c-008"
+    },
+    {
+      "exposure_id": "ex-c-009",
+      "assignment_id": "as-c-009",
+      "exposed_at": "2026-10-01T09:10:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-c-009"
+    },
+    {
+      "exposure_id": "ex-c-010",
+      "assignment_id": "as-c-010",
+      "exposed_at": "2026-10-01T09:11:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-c-010"
+    },
+    {
+      "exposure_id": "ex-t-001",
+      "assignment_id": "as-t-001",
+      "exposed_at": "2026-10-01T11:02:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-t-001"
+    },
+    {
+      "exposure_id": "ex-t-002",
+      "assignment_id": "as-t-002",
+      "exposed_at": "2026-10-01T11:03:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-t-002"
+    },
+    {
+      "exposure_id": "ex-t-003",
+      "assignment_id": "as-t-003",
+      "exposed_at": "2026-10-01T11:04:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-t-003"
+    },
+    {
+      "exposure_id": "ex-t-005",
+      "assignment_id": "as-t-005",
+      "exposed_at": "2026-10-01T11:06:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-t-005"
+    },
+    {
+      "exposure_id": "ex-t-006",
+      "assignment_id": "as-t-006",
+      "exposed_at": "2026-10-01T11:07:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-t-006"
+    },
+    {
+      "exposure_id": "ex-t-007",
+      "assignment_id": "as-t-007",
+      "exposed_at": "2026-10-01T11:08:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-t-007"
+    },
+    {
+      "exposure_id": "ex-t-008",
+      "assignment_id": "as-t-008",
+      "exposed_at": "2026-10-01T11:09:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-t-008"
+    },
+    {
+      "exposure_id": "ex-t-004",
+      "assignment_id": "as-t-004",
+      "exposed_at": "2026-10-01T11:02:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-t-004-early"
+    },
+    {
+      "exposure_id": "ex-c-003-b",
+      "assignment_id": "as-c-003-b",
+      "exposed_at": "2026-10-02T09:01:00Z",
+      "surface": "onboarding_checklist",
+      "event_id": "ev-x-c-003-b"
+    }
+  ],
+  "metric_observations": [
+    {
+      "observation_id": "ob-c-001",
+      "assignment_id": "as-c-001",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T09:00:00Z"
+    },
+    {
+      "observation_id": "ob-c-002",
+      "assignment_id": "as-c-002",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T09:01:00Z"
+    },
+    {
+      "observation_id": "ob-c-003",
+      "assignment_id": "as-c-003",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T09:02:00Z"
+    },
+    {
+      "observation_id": "ob-c-004",
+      "assignment_id": "as-c-004",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T09:03:00Z"
+    },
+    {
+      "observation_id": "ob-c-005",
+      "assignment_id": "as-c-005",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T09:04:00Z"
+    },
+    {
+      "observation_id": "ob-c-006",
+      "assignment_id": "as-c-006",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T09:05:00Z"
+    },
+    {
+      "observation_id": "ob-c-007",
+      "assignment_id": "as-c-007",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T09:06:00Z"
+    },
+    {
+      "observation_id": "ob-c-008",
+      "assignment_id": "as-c-008",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T09:07:00Z"
+    },
+    {
+      "observation_id": "ob-c-009",
+      "assignment_id": "as-c-009",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T09:08:00Z"
+    },
+    {
+      "observation_id": "ob-c-010",
+      "assignment_id": "as-c-010",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T09:09:00Z"
+    },
+    {
+      "observation_id": "ob-c-011",
+      "assignment_id": "as-c-011",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T09:10:00Z"
+    },
+    {
+      "observation_id": "ob-c-012",
+      "assignment_id": "as-c-012",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T09:11:00Z"
+    },
+    {
+      "observation_id": "ob-t-001",
+      "assignment_id": "as-t-001",
+      "metric_name": "activation_7d",
+      "value": "1",
+      "window_end": "2026-10-08T11:00:00Z"
+    },
+    {
+      "observation_id": "ob-t-002",
+      "assignment_id": "as-t-002",
+      "metric_name": "activation_7d",
+      "value": "1",
+      "window_end": "2026-10-08T11:01:00Z"
+    },
+    {
+      "observation_id": "ob-t-003",
+      "assignment_id": "as-t-003",
+      "metric_name": "activation_7d",
+      "value": "1",
+      "window_end": "2026-10-08T11:02:00Z"
+    },
+    {
+      "observation_id": "ob-t-004",
+      "assignment_id": "as-t-004",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T11:03:00Z"
+    },
+    {
+      "observation_id": "ob-t-005",
+      "assignment_id": "as-t-005",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T11:04:00Z"
+    },
+    {
+      "observation_id": "ob-t-006",
+      "assignment_id": "as-t-006",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T11:05:00Z"
+    },
+    {
+      "observation_id": "ob-t-007",
+      "assignment_id": "as-t-007",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T11:06:00Z"
+    },
+    {
+      "observation_id": "ob-t-008",
+      "assignment_id": "as-t-008",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T11:07:00Z"
+    },
+    {
+      "observation_id": "ob-c-003-b",
+      "assignment_id": "as-c-003-b",
+      "metric_name": "activation_7d",
+      "value": "0",
+      "window_end": "2026-10-08T09:02:00Z"
+    }
+  ],
+  "analysis_runs": [
+    {
+      "analysis_id": "an-001",
+      "experiment_version_id": "xv-001",
+      "cutoff_at": "2026-10-26T00:00:00Z",
+      "config_hash": "b3e7466e10b2c0d3fd1adfed5155c60a18447dac1af3d9ebde02be35ec77d659",
+      "created_at": "2026-10-26T00:05:00Z"
+    }
+  ]
+}

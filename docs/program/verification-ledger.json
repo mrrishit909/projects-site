@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T21:44:10Z",
+  "updated_at": "2026-10-26T22:01:31Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1023,6 +1023,17 @@
       "code_sha": "be20031 / portfolio 3cff603",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40406631388",
       "ts": "2026-10-26T21:44:10Z"
+    },
+    {
+      "requirement": "P06-GOLD-01..11: 20/100 vs 30/100 -> 0.200000/0.300000, +10.00 pp, relative 0.500000, Newcombe [-0.020249, 0.216734] (not conclusive), SRM OK; day-7 retention 5/20 = 0.250000 in the account timezone; funnel 15/10/8/5; variants rejected/empty",
+      "project": "06-productsignal",
+      "status": "verified",
+      "command": "python3 -I apps/productsignal/tests/reference_check.py",
+      "exit_code": 0,
+      "actual": "ALL OK (706 checks)",
+      "code_sha": "pending-commit",
+      "evidence": "apps/productsignal/tests/fixtures/golden/",
+      "ts": "2026-10-26T22:01:31Z"
     }
   ]
 }

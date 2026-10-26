@@ -1,0 +1,318 @@
+{
+  "contract_version": 1,
+  "empty_population": true,
+  "ingest": {
+    "counts": {
+      "accounts": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "users": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "identity_links": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "sessions": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "events": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "event_properties": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "subscriptions": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "experiment_versions": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "assignments": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "exposures": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "metric_observations": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      },
+      "analysis_runs": {
+        "accepted": 0,
+        "rejected": 0,
+        "merged": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "tracking_quality": {
+    "rows_total": 0,
+    "received_after_cutoff": 0,
+    "duplicates_dropped": 0,
+    "canonical": 0,
+    "delayed_over_24h": 0,
+    "unknown_identity": 0,
+    "bot_events_excluded": 0,
+    "internal_events_excluded": 0,
+    "analysed": 0
+  },
+  "identity": {
+    "anonymous_events": 0,
+    "attributed_by_link": 0,
+    "remain_anonymous": 0
+  },
+  "metrics": {
+    "signup_conversion": {
+      "window": {
+        "from": "2026-10-05T00:00:00Z",
+        "to": "2026-10-12T00:00:00Z"
+      },
+      "unit": "distinct anonymous_id",
+      "visitors": 0,
+      "signed_up": 0,
+      "rate": null
+    },
+    "funnel": {
+      "definition_id": "fun-001",
+      "version": 1,
+      "max_gap_hours": 48,
+      "window": {
+        "from": "2026-10-05T00:00:00Z",
+        "to": "2026-10-12T00:00:00Z"
+      },
+      "steps": [
+        {
+          "step": "visit",
+          "units": 0,
+          "conversion_from_previous": null,
+          "conversion_from_first": null
+        },
+        {
+          "step": "signup",
+          "units": 0,
+          "conversion_from_previous": null,
+          "conversion_from_first": null
+        },
+        {
+          "step": "onboarding_step_1",
+          "units": 0,
+          "conversion_from_previous": null,
+          "conversion_from_first": null
+        },
+        {
+          "step": "activated",
+          "units": 0,
+          "conversion_from_previous": null,
+          "conversion_from_first": null
+        }
+      ],
+      "overall_conversion": null
+    },
+    "activation": {
+      "window": {
+        "from": "2026-10-05T00:00:00Z",
+        "to": "2026-10-26T00:00:00Z"
+      },
+      "window_days": 7,
+      "signups": 0,
+      "immature_excluded": 0,
+      "mature_accounts": 0,
+      "activated": 0,
+      "rate": null
+    },
+    "retention": {
+      "signup_window": {
+        "from": "2026-09-14",
+        "to": "2026-09-21"
+      },
+      "calendar": "account timezone",
+      "cohort_accounts": 0,
+      "excluded_internal_accounts": 0,
+      "day7": {
+        "mature_accounts": 0,
+        "immature_excluded": 0,
+        "retained": 0,
+        "rate": null
+      },
+      "on_or_after_day7": {
+        "mature_accounts": 0,
+        "retained": 0,
+        "rate": null
+      },
+      "week4": {
+        "mature_accounts": 0,
+        "immature_excluded": 0,
+        "retained": 0,
+        "rate": null
+      }
+    },
+    "feature_adoption": {
+      "window": {
+        "from": "2026-09-21T00:00:00Z",
+        "to": "2026-09-28T00:00:00Z"
+      },
+      "feature": "export",
+      "eligible_plans": [
+        "team",
+        "business"
+      ],
+      "eligible_accounts": 0,
+      "adopting_accounts": 0,
+      "use_events": 0,
+      "rate": null
+    },
+    "experiment": {
+      "experiment_version_id": "xv-001",
+      "unit_type": "account",
+      "allocation": {
+        "control": "0.500000",
+        "treatment": "0.500000"
+      },
+      "run": {
+        "analysis_id": null,
+        "cutoff_at": "2026-10-26T00:00:00Z",
+        "planned_end": "2026-10-15T00:00:00Z",
+        "interim": false,
+        "prior_runs": null,
+        "plan_frozen": false,
+        "config_hash": "b3e7466e10b2c0d3fd1adfed5155c60a18447dac1af3d9ebde02be35ec77d659",
+        "config_hash_matches_plan": false
+      },
+      "assigned_units": 0,
+      "mature_units": 0,
+      "immature_or_unobserved_excluded": 0,
+      "srm": {
+        "observed": {
+          "control": 0,
+          "treatment": 0
+        },
+        "expected": null,
+        "statistic": null,
+        "p_value": null,
+        "verdict": "INSUFFICIENT"
+      },
+      "primary": {
+        "metric": "activation_7d",
+        "analysis": "intention_to_treat",
+        "variants": {
+          "control": {
+            "assigned": 0,
+            "mature_units": 0,
+            "activated": 0,
+            "conversion": null,
+            "wilson_95": null
+          },
+          "treatment": {
+            "assigned": 0,
+            "mature_units": 0,
+            "activated": 0,
+            "conversion": null,
+            "wilson_95": null
+          }
+        },
+        "absolute_lift_pp": null,
+        "relative_lift": null,
+        "interval": null,
+        "conclusive": false
+      },
+      "exposure": {
+        "definition": "exposed mature assigned accounts / mature assigned accounts",
+        "by_variant": {
+          "control": {
+            "exposed": 0,
+            "units": 0,
+            "rate": null
+          },
+          "treatment": {
+            "exposed": 0,
+            "units": 0,
+            "rate": null
+          }
+        },
+        "overall": {
+          "exposed": 0,
+          "units": 0,
+          "rate": null
+        }
+      },
+      "exploratory_exposed_only": {
+        "label": "exploratory",
+        "decision_basis": false,
+        "by_variant": {
+          "control": {
+            "exposed_units": 0,
+            "activated": 0,
+            "conversion": null
+          },
+          "treatment": {
+            "exposed_units": 0,
+            "activated": 0,
+            "conversion": null
+          }
+        }
+      },
+      "guardrail": {
+        "metric": "product_error_rate",
+        "window_days": 7,
+        "by_variant": {
+          "control": {
+            "eligible_units": 0,
+            "units_with_error": 0,
+            "error_rate": null
+          },
+          "treatment": {
+            "eligible_units": 0,
+            "units_with_error": 0,
+            "error_rate": null
+          }
+        }
+      },
+      "revenue_per_assigned_account": {
+        "currency": "USD",
+        "window": {
+          "from": "2026-10-01T00:00:00Z",
+          "to": "2026-10-15T00:00:00Z"
+        },
+        "by_variant": {
+          "control": {
+            "units": 0,
+            "total": "0.00",
+            "mean": null,
+            "interval": null
+          },
+          "treatment": {
+            "units": 0,
+            "total": "0.00",
+            "mean": null,
+            "interval": null
+          }
+        }
+      },
+      "observations": {
+        "rows_accepted": 0,
+        "rows_matching_events": 0
+      }
+    }
+  }
+}

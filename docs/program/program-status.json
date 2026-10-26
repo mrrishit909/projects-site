@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T21:48:10Z",
+  "updated_at": "2026-10-26T22:01:31Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -101,7 +101,7 @@
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
-      "stage": "built, verified (CI green both modes on be20031), published and live-verified (run 40406631388), integrated (case study live, links verified both ways); reviewer A-038 running",
+      "stage": "built, verified (provisional: reviewer findings R5-01..R5-09 open, fixes A-040 running), published and live-verified, integrated (case study corrected ce6e02e)",
       "built": true,
       "verified": true,
       "published": true,
@@ -110,12 +110,13 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40405870287",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/invoicebridge/",
       "blockers": [],
-      "next_task": "A-038 review -> fixes -> artifacts",
-      "portfolio_case_study": "https://mrrishit909.github.io/projects-site/invoicebridge/"
+      "next_task": "A-040 fixes -> republish -> live check -> artifacts",
+      "portfolio_case_study": "https://mrrishit909.github.io/projects-site/invoicebridge/",
+      "verified_note": "Entry journey + reviewer disproof pass; 9 rule defects open (the snapshot does not exercise them by the generator's construction); published money now per currency; straight-through definition stated"
     },
     "06-productsignal": {
       "slug": "productsignal",
-      "stage": "contracts v1 and tooling committed (cce09da; spec hash ed0d0941 verified against the source pack); golden fixture A-039 running",
+      "stage": "gate-A passed (fixture verified, 706 checks); backend next",
       "built": false,
       "verified": false,
       "published": false,
@@ -124,7 +125,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": "T-06-02 (A-039)"
+      "next_task": "T-06-03 backend worker"
     },
     "07-trustledger": {
       "slug": "trustledger",

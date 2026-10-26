@@ -406,7 +406,7 @@
       "id": "T-06-02",
       "project": "06-productsignal",
       "title": "Golden fixture + reference check",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-06-01"
       ],
@@ -434,6 +434,17 @@
       ],
       "retries": 0,
       "acceptance": "see T-05 equivalents"
+    },
+    {
+      "id": "T-05-07",
+      "project": "05-invoicebridge",
+      "title": "Fix reviewer findings R5-01..R5-22; regression tests; republish",
+      "status": "in_progress",
+      "prereqs": [
+        "T-05-04"
+      ],
+      "retries": 0,
+      "acceptance": "hand/py/sql/ts agree on every review case; tests pass; CI green; republished and live-verified"
     }
   ]
 }

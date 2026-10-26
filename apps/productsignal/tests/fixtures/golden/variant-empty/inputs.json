@@ -1,0 +1,81 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-10-26T00:10:00Z",
+  "cutoff": "2026-10-26T00:00:00Z",
+  "analysis_plan": {
+    "experiment_version_id": "xv-001",
+    "primary_metric": "activation_7d",
+    "unit_type": "account",
+    "allocation": {
+      "control": "0.500000",
+      "treatment": "0.500000"
+    },
+    "planned_end": "2026-10-15T00:00:00Z",
+    "activation_window_days": 7,
+    "guardrail": {
+      "metric": "product_error_rate",
+      "window_days": 7
+    },
+    "revenue_window": {
+      "from": "2026-10-01T00:00:00Z",
+      "to": "2026-10-15T00:00:00Z"
+    },
+    "confidence": "0.95",
+    "z": "1.959964",
+    "srm": {
+      "p_threshold": "0.001",
+      "min_expected_cell": 5
+    },
+    "frozen_at": "2026-09-30T12:00:00Z",
+    "config_hash": "b3e7466e10b2c0d3fd1adfed5155c60a18447dac1af3d9ebde02be35ec77d659"
+  },
+  "metric_windows": {
+    "signup_conversion": {
+      "from": "2026-10-05T00:00:00Z",
+      "to": "2026-10-12T00:00:00Z"
+    },
+    "funnel": {
+      "definition_id": "fun-001",
+      "version": 1,
+      "steps": [
+        "visit",
+        "signup",
+        "onboarding_step_1",
+        "activated"
+      ],
+      "max_gap_hours": 48,
+      "from": "2026-10-05T00:00:00Z",
+      "to": "2026-10-12T00:00:00Z"
+    },
+    "activation": {
+      "from": "2026-10-05T00:00:00Z",
+      "to": "2026-10-26T00:00:00Z",
+      "window_days": 7
+    },
+    "retention": {
+      "signup_from": "2026-09-14",
+      "signup_to": "2026-09-21"
+    },
+    "feature_adoption": {
+      "from": "2026-09-21T00:00:00Z",
+      "to": "2026-09-28T00:00:00Z",
+      "feature": "export",
+      "eligible_plans": [
+        "team",
+        "business"
+      ]
+    }
+  },
+  "accounts": [],
+  "users": [],
+  "identity_links": [],
+  "sessions": [],
+  "events": [],
+  "event_properties": [],
+  "subscriptions": [],
+  "experiment_versions": [],
+  "assignments": [],
+  "exposures": [],
+  "metric_observations": [],
+  "analysis_runs": []
+}

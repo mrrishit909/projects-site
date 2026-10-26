@@ -83,3 +83,26 @@ Empty population: every count 0, every ratio null, `empty_population` true.
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners. Mode B: TypeScript mirror over the
 published snapshot; the registry and decision screens' actions are browser-memory simulations and say so.
+
+## D-05 Fixture-driven clarifications (2026-10-26, adopted from A-039; full text D-P6-1..25 in tests/fixtures/golden/CALCULATION.md)
+Rounding ROUND_HALF_UP once on unrounded values. Added fields beyond the specification's minimum: `accounts.timezone`
+(IANA), `events.anonymous_id` with `events.user_id` nullable, `subscriptions.amount_usd`. Unknown identity = a
+`user_id` that is no user, or neither id present; an unlinked anonymous visit is valid. Event processing order:
+received by cutoff, dedupe, unknown, bot, internal; events received after the cutoff are reported separately from
+delayed (> 24 h strictly). Duplicate key (user_id or anonymous_id, name, event_at, property set); earliest
+received_at wins. Funnel unit is the visitor key anchored on the earliest visit in the window; gap inclusive; strict
+order; no re-anchoring; signup conversion has no gap and may differ from the funnel's first step. Activation window
+[signup, +7 d), maturity inclusive (signup + 7 d ≤ cutoff; an activation at exactly +7 d does not count). Retention
+day index on the local calendar date; cohorts by local signup date; sessions roll up to the account; bot and internal
+sessions ignored. Feature-adoption eligibility: plan in {team, business} and at least one non-bot session in the
+window. SRM over all accepted assignments, Σ(o−e)²/e, p = erfc(√(stat/2)) by a Decimal series; verdict order
+INSUFFICIENT, MISMATCH, OK; empty population INSUFFICIENT with null numbers. Newcombe is treatment − control with a
+closed interval for "includes 0"; `conclusive` also needs a non-interim run and a valid plan hash. Revenue t-interval
+per variant over all mature assigned accounts (zeros included, df = n − 1, two-sided, null for n < 2). Exposure rate
+over mature assigned accounts; guardrail window [assigned_at, +7 d). `config_hash` = sha256 of the key-sorted compact
+plan JSON without the hash; `plan_frozen` means frozen_at ≤ earliest run; `interim` means cutoff < planned_end.
+Rejection codes: ASSIGNMENT_CONFLICT, EXPOSURE_BEFORE_ASSIGNMENT, DEPENDENT_REJECTED, UNKNOWN_ASSIGNMENT. Golden:
+Wilson control [0.133367, 0.288829], treatment [0.218949, 0.395849], Newcombe difference [−0.020249, 0.216734].
+Provenance note: expected.json was emitted by the reference script after agreeing with a separate float cross-check
+and the hand arithmetic in CALCULATION.md; the independence rests on those two. Unpinned: DST edges, three or more
+variants, segment analysis, a run before the freeze, interim presented as final, a Welch difference of revenue means.
