@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T10:38:46Z",
+  "updated_at": "2026-10-26T10:51:18Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -41,16 +41,17 @@
   "projects": {
     "01-revenue-atlas": {
       "slug": "revenue-atlas",
-      "stage": "gate-C in progress (TS domain verified; entry screens + e2e being built by A-006)",
-      "built": false,
-      "verified": false,
+      "stage": "gate-C passed locally (24 e2e); published to Pages, live verification pending",
+      "built": true,
+      "verified": true,
       "published": false,
       "integrated": false,
       "last_verified_sha": "57f0143",
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40306213772",
-      "site_url": null,
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/revenue-atlas/",
       "blockers": [],
-      "next_task": "T-01-06: web part 2 (overview, bridge, evidence, case study, Playwright evidence); then publish T-01-10"
+      "next_task": "T-01-10 live-check.yml run, then T-01-11 portfolio integration",
+      "verified_note": "Entry journey verified: golden in browser, 63 backend tests on hosted runner, 24 Playwright tests locally; adversarial P01-TEST-02/04/05/07/08/11/12 application-path tests and reviewer disproof pass still pending (T-01-07)"
     },
     "02-onboard-studio": {
       "slug": "onboard-studio",

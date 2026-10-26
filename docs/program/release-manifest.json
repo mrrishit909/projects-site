@@ -1,1 +1,18 @@
-{"updated_at": "2026-10-26T09:52:16Z", "sites": []}
+{
+  "updated_at": "2026-10-26T10:51:18Z",
+  "sites": [
+    {
+      "slug": "revenue-atlas",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/revenue-atlas/",
+      "site_path": "labs/revenue-atlas/ on unified-portfolio",
+      "release_commit_unified_portfolio": "cdae3f271d81df8e42e98eefb2cfdd4ca5fc1fb1",
+      "rollback_commit_unified_portfolio": "13176fcfafdaa926b0baf6442bcab01209788264",
+      "source_commit_business_data_lab": "5ce3aff962548a54b63ced4e0be1b5d980584c53",
+      "published_tree_sha256": "71d09e83885d0e146b54750580e8495d4a6c067c0a2acd6f42bc84d824e10dee",
+      "files": 38,
+      "dataset_version": "ra-20261026-20261026",
+      "dataset_hash": "40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444",
+      "publication_status": "pushed; live verification pending (live-check.yml)"
+    }
+  ]
+}
