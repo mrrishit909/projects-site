@@ -1,18 +1,18 @@
 {
-  "updated_at": "2026-10-26T10:55:24Z",
+  "updated_at": "2026-10-26T11:15:55Z",
   "sites": [
     {
       "slug": "revenue-atlas",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/revenue-atlas/",
       "site_path": "labs/revenue-atlas/ on unified-portfolio",
-      "release_commit_unified_portfolio": "cdae3f271d81df8e42e98eefb2cfdd4ca5fc1fb1",
-      "rollback_commit_unified_portfolio": "13176fcfafdaa926b0baf6442bcab01209788264",
-      "source_commit_business_data_lab": "5ce3aff962548a54b63ced4e0be1b5d980584c53",
-      "published_tree_sha256": "71d09e83885d0e146b54750580e8495d4a6c067c0a2acd6f42bc84d824e10dee",
+      "release_commit_unified_portfolio": "92b9c66",
+      "rollback_commit_unified_portfolio": "954f7fb51d2fb5253db2aa4f75f05961cbe46932",
+      "source_commit_business_data_lab": "a9d7d21c350a818320fe29dc5d3a313acceebbfa",
+      "published_tree_sha256": "5e89722301518793abfa282556d0e0004edabeeb8d1f922d89029e6347999c76",
       "files": 38,
       "dataset_version": "ra-20261026-20261026",
       "dataset_hash": "40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444",
-      "publication_status": "published and verified live from a GitHub-hosted runner",
+      "publication_status": "republished; live verification of this release pending",
       "live_verification": {
         "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40310810960",
         "http": "200 for /, overview/, bridge/, evidence/, case-study/, data/manifest.json, routes.json",
@@ -20,7 +20,9 @@
         "browser": "overview and bridge screenshots at 360 and 1280, 0 console errors",
         "artifact": "live-revenue-atlas-40310810960 (id 12643684666, sha256 de35d2ec..., expires 2027-01-24)",
         "verified_at": "2026-10-26T10:53:16Z"
-      }
+      },
+      "previous_release_commit": "cdae3f271d81df8e42e98eefb2cfdd4ca5fc1fb1",
+      "contract_version": "v1.1"
     }
   ]
 }
