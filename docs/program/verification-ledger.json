@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T17:18:16Z",
+  "updated_at": "2026-10-26T18:12:13Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -869,6 +869,17 @@
       "code_sha": "6a753e8 / portfolio e3bd4a4",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40367109366",
       "ts": "2026-10-26T17:18:16Z"
+    },
+    {
+      "requirement": "P04 reviewer findings R4-01..R4-18 fixed (T-04-07); reviewer harness agrees py/sql/ts on 20 cases",
+      "project": "04-serviceflow",
+      "status": "verified",
+      "command": "reference_check.py; DATABASE_URL=... pytest -q; npm run check; npm run build:pages; npm run e2e",
+      "exit_code": 0,
+      "actual": "ALL OK; 377 passed; 303 golden + 54 review; 70 e2e; replication intervals sim-001 18.8435 \u00b1 8.2004, sim-002 7.9502 \u00b1 5.2231, sim-003 30.6253 \u00b1 8.3091, paired \u221210.8932 \u00b1 3.4329",
+      "code_sha": "43de7f8",
+      "evidence": "apps/serviceflow/docs/uat-evidence.md; tests/test_review_findings.py; web/scripts/review-check.ts",
+      "ts": "2026-10-26T18:12:13Z"
     }
   ]
 }

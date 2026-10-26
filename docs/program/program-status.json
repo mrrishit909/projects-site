@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T17:34:12Z",
+  "updated_at": "2026-10-26T18:12:13Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -86,18 +86,18 @@
     },
     "04-serviceflow": {
       "slug": "serviceflow",
-      "stage": "built, verified (provisional: reviewer findings R4-01..R4-05 open, fixes A-032 running), published and live-verified, integrated (case study corrected 60e8838)",
+      "stage": "built, verified (reviewer findings fixed and regression-tested at 43de7f8), republished e44d15d (CI and live check pending), integrated (case study updated); artifacts A-033 next",
       "built": true,
       "verified": true,
       "published": true,
       "integrated": true,
-      "last_verified_sha": "6a753e8",
+      "last_verified_sha": "43de7f8 (local)",
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40364940392",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/serviceflow/",
       "blockers": [],
-      "next_task": "A-032 fixes -> republish -> live check -> artifacts",
+      "next_task": "confirm CI and live check; A-033 artifacts",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/serviceflow/",
-      "verified_note": "Entry journey + reviewer disproof pass; 5 code defects open (none affects the three published windows); published wording corrected"
+      "verified_note": "Entry journey + reviewer disproof pass; all 18 findings fixed in T-04-07 with tests in Python, SQL and TypeScript"
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
@@ -180,7 +180,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 04 ServiceFlow: confirm live-check on the manifest commit; dispatch opus reviewer (disproof pass); fix worker; artifacts worker. Then project 05 InvoiceBridge fixture worker.",
+    "next_concrete_task": "Project 04 ServiceFlow: confirm serviceflow-ci.yml on 43de7f8 and live-check on the manifest commit; A-033 artifacts hand-back -> verify -> commit. Then project 05 InvoiceBridge: fixture worker (contracts/tooling at 75aa6bd).",
     "acceptance": "see task-queue.json"
   }
 }

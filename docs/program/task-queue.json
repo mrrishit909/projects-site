@@ -333,12 +333,23 @@
       "id": "T-04-07",
       "project": "04-serviceflow",
       "title": "Fix reviewer findings R4-01..R4-18; regression tests; re-review",
-      "status": "in_progress",
+      "status": "done (local + republished); CI and live check pending",
       "prereqs": [
         "T-04-04"
       ],
       "retries": 0,
       "acceptance": "hand/py/sql/ts agree on every review case; tests pass in Python, SQL and TS; CI green; republished and live-verified"
+    },
+    {
+      "id": "T-04-05",
+      "project": "04-serviceflow",
+      "title": "Artifacts P04-ART-*",
+      "status": "in_progress",
+      "prereqs": [
+        "T-04-07"
+      ],
+      "retries": 0,
+      "acceptance": "tests/test_artifacts.py passes; checksums OK"
     }
   ]
 }
