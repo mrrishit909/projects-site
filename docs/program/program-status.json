@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T15:23:27Z",
+  "updated_at": "2026-10-26T15:24:58Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -71,13 +71,13 @@
     },
     "03-supplyscope": {
       "slug": "supplyscope",
-      "stage": "built, published (live-verified), integrated (a27b151, text corrected a1185b9; link check pending); verified provisional: reviewer findings R3-01..R3-07 open, fixes T-03-07 queued behind artifacts A-025",
+      "stage": "built, verified (provisional: reviewer findings R3-01..R3-07 open, fixes queued), published (live-verified), integrated (links verified both ways); artifacts A-025 running",
       "built": true,
       "verified": true,
       "published": true,
       "integrated": true,
-      "last_verified_sha": "7b8d208",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40343593698",
+      "last_verified_sha": "a4a4364",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40348560761",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/supplyscope/",
       "blockers": [],
       "next_task": "A-025 artifacts -> A-026 fixes -> republish -> project 04",

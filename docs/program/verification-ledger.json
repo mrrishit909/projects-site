@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T15:23:27Z",
+  "updated_at": "2026-10-26T15:24:58Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -684,7 +684,7 @@
       "exit_code": 0,
       "expected": "40/30/10/60/70/120/60/60/72; position_80 -> 0",
       "actual": "as expected; 0 diffs",
-      "code_sha": "pending-commit",
+      "code_sha": "12f866f (hosted run 40348560761 success at a4a4364)",
       "ts": "2026-10-26T15:14:24Z"
     },
     {
@@ -694,7 +694,7 @@
       "command": "npm run e2e (screens.spec.ts, 25 screenshots)",
       "exit_code": 0,
       "actual": "36 passed",
-      "code_sha": "pending-commit",
+      "code_sha": "12f866f (hosted run 40348560761 success at a4a4364)",
       "ts": "2026-10-26T15:14:24Z",
       "evidence": "apps/supplyscope/docs/evidence/web/ (subset) + CI artifact"
     },
@@ -703,7 +703,7 @@
       "project": "03-supplyscope",
       "status": "failed",
       "defect": "domain/supplyscope/forecast.py promo_factor; mirrored in TS; fix queued T-03-07",
-      "code_sha": "pending-commit",
+      "code_sha": "12f866f (hosted run 40348560761 success at a4a4364)",
       "ts": "2026-10-26T15:14:24Z"
     },
     {
@@ -739,6 +739,28 @@
       "code_sha": "site from 12f866f",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40347873614",
       "ts": "2026-10-26T15:23:27Z"
+    },
+    {
+      "requirement": "P03-REL-05 + P03-UI R18/R23: CI Mode A (132 tests, postgres:16) and Mode B (221 TS checks, 36 Playwright tests, screenshots) on hosted runner",
+      "project": "03-supplyscope",
+      "status": "verified",
+      "command": "supplyscope-ci.yml",
+      "exit_code": 0,
+      "actual": "both jobs success",
+      "code_sha": "a4a4364",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40348560761",
+      "ts": "2026-10-26T15:24:58Z"
+    },
+    {
+      "requirement": "P03-REL-18 portfolio case study links to the site and the site links back (after integration a27b151 / a1185b9); all three sites re-verified",
+      "project": "03-supplyscope",
+      "status": "verified",
+      "command": "live-check.yml run 40348856013 (matrix)",
+      "exit_code": 0,
+      "actual": "all jobs success",
+      "code_sha": "manifest commit",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40348856013",
+      "ts": "2026-10-26T15:24:58Z"
     }
   ]
 }
