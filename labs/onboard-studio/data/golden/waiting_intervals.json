@@ -1,0 +1,13 @@
+{
+ "entity": "waiting_intervals",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "waiting_interval_id": "wi-001",
+   "case_id": "case-001",
+   "reason_code": "customer_info_requested",
+   "starts_at": "2026-03-06T16:30:00Z",
+   "ends_at": "2026-03-09T09:30:00Z"
+  }
+ ]
+}

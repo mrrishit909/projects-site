@@ -1,0 +1,16 @@
+{
+  "routes": [
+    "",
+    "intake/",
+    "queue/",
+    "cases/",
+    "workflow/",
+    "documents/",
+    "sla/",
+    "bottlenecks/",
+    "versions/",
+    "simulation/",
+    "case-study/"
+  ],
+  "generated_at": "2026-10-26T13:11:51.738Z"
+}

@@ -1,0 +1,4 @@
+{"entity":"sla_rules","dataset_version":"os-20261026-20261026","rows":[
+{"business_minutes":480,"calendar_id":"cal-001","pause_policy":["customer_info_requested","external_verification"],"sla_rule_id":"sla-001","workflow_version_id":"wfv-001"},
+{"business_minutes":480,"calendar_id":"cal-001","pause_policy":["customer_info_requested","external_verification"],"sla_rule_id":"sla-002","workflow_version_id":"wfv-002"}
+]}

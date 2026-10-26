@@ -1,0 +1,13 @@
+{
+ "entity": "workflow_versions",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "workflow_version_id": "wfv-001",
+   "template_id": "tpl-001",
+   "version_number": 1,
+   "published_at": "2026-03-01T00:00:00Z",
+   "definition_hash": "3a4701f5d9e983fc4fa4643cd871ea03b5dd0d4bbaef4390a50545cfe4443bec"
+  }
+ ]
+}

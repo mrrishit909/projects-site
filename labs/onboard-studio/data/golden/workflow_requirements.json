@@ -1,0 +1,12 @@
+{
+ "entity": "workflow_requirements",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "workflow_version_id": "wfv-001",
+   "required_document_types": [
+    "identity_proof"
+   ]
+  }
+ ]
+}

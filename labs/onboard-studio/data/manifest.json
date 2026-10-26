@@ -1,0 +1,296 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "3c20d296bcf178065e9178cae04f763994b4d7197026af2c021ab55b4cc2bc6a",
+  "dataset_version": "os-20261026-20261026",
+  "designed_relationships": [
+    "workflow version 2 (published 2025-10-01, 60 % of later cases) removes the verify_identity handoff and adds a parallel collect_address_proof step: about 35 % lower active elapsed time and about 20 % fewer handoffs per case than version 1 (synthetic).",
+    "enterprise organizations have about 2x the rework rate: identity_proof rejection probability 0.20 vs 0.11 (synthetic).",
+    "region reg-north has longer customer waiting: more customer_info_requested / external_verification pauses per case (mean 1.65 vs 0.9) and each about 1.4x longer, so paused_time_hours is highest (synthetic).",
+    "bottleneck at step approve_account for reviewer rev-004: 40 % of reviews, queue x3.6 and review x3.4 slower than rev-005 / rev-006 (synthetic)."
+  ],
+  "generated_at": "2026-10-26T12:40:38Z",
+  "generator": {
+    "name": "generate.py",
+    "parameters": {
+      "bottleneck": {
+        "queue_factor": 3.6,
+        "review_factor": 3.4,
+        "reviewer": "rev-004",
+        "share": 0.4
+      },
+      "calendar": {
+        "calendar_id": "cal-001",
+        "holidays": [
+          {
+            "date": "2025-05-26",
+            "name": "Memorial Day",
+            "weekday": "Monday"
+          },
+          {
+            "date": "2025-09-01",
+            "name": "Labor Day",
+            "weekday": "Monday"
+          },
+          {
+            "date": "2025-11-27",
+            "name": "Thanksgiving",
+            "weekday": "Thursday"
+          },
+          {
+            "date": "2025-12-25",
+            "name": "Christmas Day",
+            "weekday": "Thursday"
+          },
+          {
+            "date": "2026-02-14",
+            "name": "Founders Day (Saturday)",
+            "weekday": "Saturday"
+          },
+          {
+            "date": "2026-07-04",
+            "name": "Independence Day (Saturday)",
+            "weekday": "Saturday"
+          }
+        ],
+        "timezone": "UTC",
+        "working": "Monday-Friday 09:00-17:00"
+      },
+      "cases": 740,
+      "customer_waits": {
+        "external_verification_probability": {
+          "other": 0.18,
+          "reg-north": 0.3
+        },
+        "info_requests_per_case": {
+          "other": [
+            [
+              0,
+              0.45
+            ],
+            [
+              1,
+              0.4
+            ],
+            [
+              2,
+              0.15
+            ]
+          ],
+          "reg-north": [
+            [
+              0,
+              0.2
+            ],
+            [
+              1,
+              0.4
+            ],
+            [
+              2,
+              0.3
+            ],
+            [
+              3,
+              0.1
+            ]
+          ]
+        },
+        "median_real_minutes": {
+          "info": 1500,
+          "rework": 1200,
+          "verify": 1100
+        },
+        "region_factor": {
+          "other": 1.0,
+          "reg-north": 1.4
+        }
+      },
+      "handoff_probability_per_step": {
+        "1": {
+          "activate_account": 0.1,
+          "approve_account": 0.2,
+          "collect_documents": 0.2,
+          "compliance_review": 0.15,
+          "verify_identity": 0.35
+        },
+        "2": {
+          "activate_account": 0.1,
+          "approve_account": 0.2,
+          "collect_address_proof": 0.12,
+          "collect_documents": 0.19,
+          "compliance_review": 0.15
+        }
+      },
+      "injections": {
+        "completed_missing_document": 2,
+        "conflicting_decision_pairs": 2,
+        "event_only": [
+          "published_version_edit",
+          "draft_dependency_cycle",
+          "document_overwrite x2",
+          "dropped_assignment x2",
+          "reopen_after_completion",
+          "migration_drops_document"
+        ],
+        "pauses_outside_working": 3,
+        "self_approvals": 2,
+        "weekend_holidays": 2,
+        "wrong_reason_code_waits": 3
+      },
+      "months": 18,
+      "organizations": 40,
+      "regions": [
+        "reg-north",
+        "reg-south",
+        "reg-east",
+        "reg-west"
+      ],
+      "rejection_probability": {
+        "address_proof": 0.05,
+        "business_registration": 0.03,
+        "identity_proof_enterprise": 0.2,
+        "identity_proof_other": 0.11
+      },
+      "reviewers_by_role": {
+        "compliance": [
+          "rev-007",
+          "rev-008"
+        ],
+        "ops": [
+          "rev-001",
+          "rev-002",
+          "rev-003"
+        ],
+        "reviewer": [
+          "rev-004",
+          "rev-005",
+          "rev-006"
+        ]
+      },
+      "seed": 20261026,
+      "segments": {
+        "enterprise": 6,
+        "mid_market": 12,
+        "smb": 22
+      },
+      "sla": {
+        "business_minutes": 480,
+        "pause_policy": [
+          "customer_info_requested",
+          "external_verification"
+        ]
+      },
+      "snapshot_cut": "2026-09-30T23:59:00Z",
+      "stalled_case_probability": 0.035,
+      "step_profile_business_minutes": {
+        "1": {
+          "activate_account": [
+            17,
+            22,
+            13
+          ],
+          "approve_account": [
+            31,
+            31,
+            28
+          ],
+          "collect_documents": [
+            22,
+            47,
+            22
+          ],
+          "compliance_review": [
+            31,
+            50,
+            24
+          ],
+          "verify_identity": [
+            28,
+            43,
+            24
+          ]
+        },
+        "2": {
+          "activate_account": [
+            15,
+            18,
+            11
+          ],
+          "approve_account": [
+            25,
+            25,
+            23
+          ],
+          "collect_address_proof": [
+            18,
+            26,
+            16
+          ],
+          "collect_documents": [
+            18,
+            33,
+            16
+          ],
+          "compliance_review": [
+            25,
+            38,
+            18
+          ]
+        }
+      },
+      "window_end": "2026-09-30",
+      "window_start": "2025-04-01",
+      "workflow": {
+        "required_documents": {
+          "1": [
+            "business_registration",
+            "identity_proof"
+          ],
+          "2": [
+            "address_proof",
+            "business_registration",
+            "identity_proof"
+          ]
+        },
+        "template_id": "tpl-001",
+        "v1_steps": [
+          "collect_documents",
+          "verify_identity",
+          "compliance_review",
+          "approve_account",
+          "activate_account"
+        ],
+        "v2_published": "2025-10-01",
+        "v2_share_after_publication": 0.6,
+        "v2_steps": [
+          "collect_documents",
+          "collect_address_proof",
+          "compliance_review",
+          "approve_account",
+          "activate_account"
+        ]
+      }
+    },
+    "seed": 20261026
+  },
+  "injection_manifest": "injection-manifest.json",
+  "row_counts": {
+    "approvals": 3638,
+    "assignments": 4403,
+    "calendar_intervals": 398,
+    "case_events": 12821,
+    "cases": 740,
+    "dependencies": 8,
+    "document_versions": 2170,
+    "organizations": 40,
+    "sla_rules": 2,
+    "step_definitions": 10,
+    "step_instances": 3700,
+    "waiting_intervals": 884,
+    "workflow_requirements": 2,
+    "workflow_versions": 2
+  },
+  "code_sha": "eac63b911dd73e98f1e5afa43e7a68298f10ba57",
+  "published_at": "2026-10-26T13:13:30Z",
+  "source": "https://github.com/mrrishit909/projects-site/tree/eac63b911dd73e98f1e5afa43e7a68298f10ba57/apps/onboard-studio"
+}

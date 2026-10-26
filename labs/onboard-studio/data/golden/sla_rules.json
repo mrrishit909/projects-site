@@ -1,0 +1,15 @@
+{
+ "entity": "sla_rules",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "sla_rule_id": "sla-001",
+   "workflow_version_id": "wfv-001",
+   "business_minutes": 480,
+   "pause_policy": [
+    "customer_info_requested"
+   ],
+   "calendar_id": "cal-001"
+  }
+ ]
+}

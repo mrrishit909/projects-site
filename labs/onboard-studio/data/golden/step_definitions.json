@@ -1,0 +1,22 @@
+{
+ "entity": "step_definitions",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "step_definition_id": "sd-001",
+   "workflow_version_id": "wfv-001",
+   "step_name": "collect_documents",
+   "required": true,
+   "role_key": "ops",
+   "sequence": 1
+  },
+  {
+   "step_definition_id": "sd-002",
+   "workflow_version_id": "wfv-001",
+   "step_name": "approve_account",
+   "required": true,
+   "role_key": "reviewer",
+   "sequence": 2
+  }
+ ]
+}

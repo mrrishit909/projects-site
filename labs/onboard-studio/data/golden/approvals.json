@@ -1,0 +1,22 @@
+{
+ "entity": "approvals",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "approval_id": "apr-001",
+   "step_instance_id": "si-001",
+   "reviewer_id": "rev-001",
+   "decision": "approved",
+   "decided_at": "2026-03-09T09:40:00Z",
+   "reason": null
+  },
+  {
+   "approval_id": "apr-002",
+   "step_instance_id": "si-002",
+   "reviewer_id": "rev-002",
+   "decision": "approved",
+   "decided_at": "2026-03-09T10:00:00Z",
+   "reason": null
+  }
+ ]
+}

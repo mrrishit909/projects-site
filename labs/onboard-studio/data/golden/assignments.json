@@ -1,0 +1,20 @@
+{
+ "entity": "assignments",
+ "dataset_version": "golden-v1",
+ "rows": [
+  {
+   "assignment_id": "asg-001",
+   "step_instance_id": "si-001",
+   "assignee_id": "ops-001",
+   "assigned_at": "2026-03-06T16:00:00Z",
+   "ended_at": "2026-03-09T09:40:00Z"
+  },
+  {
+   "assignment_id": "asg-002",
+   "step_instance_id": "si-002",
+   "assignee_id": "ops-002",
+   "assigned_at": "2026-03-09T09:40:00Z",
+   "ended_at": "2026-03-09T10:00:00Z"
+  }
+ ]
+}
