@@ -1,0 +1,381 @@
+{
+  "dataset_version": "ps-20261026-20261026",
+  "events": [
+    {
+      "event_id": "EV-01",
+      "expected": {
+        "runs_written": 0
+      },
+      "expected_reason": "UNIT_MISMATCH",
+      "expected_status": 422,
+      "injection": "INJ-01",
+      "requires": [],
+      "steps": [
+        {
+          "command": "analyze-experiment",
+          "expected_reason": "UNIT_MISMATCH",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "ps-20261026-20261026",
+            "idempotency_key": "ev-01-a",
+            "input": {
+              "analysis_unit": "user",
+              "cutoff": "2026-08-02T00:00:00Z",
+              "experiment_version_id": "xv-001"
+            },
+            "request_id": "req-ev-01-a"
+          }
+        }
+      ]
+    },
+    {
+      "event_id": "EV-02",
+      "expected": {
+        "runs_written": 0
+      },
+      "expected_reason": "TREATMENT_DEPENDENT_EXCLUSION",
+      "expected_status": 422,
+      "injection": "INJ-02",
+      "requires": [],
+      "steps": [
+        {
+          "command": "analyze-experiment",
+          "expected_reason": "TREATMENT_DEPENDENT_EXCLUSION",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "ps-20261026-20261026",
+            "idempotency_key": "ev-02-a",
+            "input": {
+              "cutoff": "2026-08-02T00:00:00Z",
+              "exclusions": [
+                {
+                  "field": "exposed",
+                  "values": [
+                    "false"
+                  ]
+                }
+              ],
+              "experiment_version_id": "xv-001"
+            },
+            "request_id": "req-ev-02-a"
+          }
+        }
+      ]
+    },
+    {
+      "event_id": "EV-03",
+      "expected": {
+        "decisions_written": 0,
+        "refusal_audited": "record-decision-refused"
+      },
+      "expected_reason": "INTERIM_RUN_CANNOT_SHIP",
+      "expected_status": 409,
+      "injection": "INJ-03",
+      "requires": [
+        "an-002"
+      ],
+      "steps": [
+        {
+          "command": "review-guardrails",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "ps-20261026-20261026",
+            "idempotency_key": "ev-03-a",
+            "input": {
+              "analysis_id": "an-002"
+            },
+            "request_id": "req-ev-03-a"
+          }
+        },
+        {
+          "bind": [
+            {
+              "from_step": 0,
+              "into": "review_id",
+              "path": "result.review_id"
+            }
+          ],
+          "command": "record-decision",
+          "expected_reason": "INTERIM_RUN_CANNOT_SHIP",
+          "expected_status": 409,
+          "headers": {
+            "X-Actor-Id": "usr-exp01",
+            "X-Actor-Role": "experimenter"
+          },
+          "input": {
+            "dataset_version": "ps-20261026-20261026",
+            "idempotency_key": "ev-03-b",
+            "input": {
+              "analysis_id": "an-002",
+              "decision": "ship",
+              "experiment_version_id": "xv-001",
+              "rationale": "The lift looks good on the data so far; shipping.",
+              "review_id": "$review"
+            },
+            "request_id": "req-ev-03-b"
+          }
+        }
+      ]
+    },
+    {
+      "event_id": "EV-08",
+      "expected": {
+        "decision": "inconclusive",
+        "decisions_written": 1,
+        "refusals_audited": 2
+      },
+      "expected_reason": null,
+      "expected_status": 200,
+      "injection": "INJ-08",
+      "requires": [
+        "an-005"
+      ],
+      "steps": [
+        {
+          "command": "review-guardrails",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "ps-20261026-20261026",
+            "idempotency_key": "ev-08-a",
+            "input": {
+              "analysis_id": "an-005"
+            },
+            "request_id": "req-ev-08-a"
+          }
+        },
+        {
+          "bind": [
+            {
+              "from_step": 0,
+              "into": "review_id",
+              "path": "result.review_id"
+            }
+          ],
+          "command": "record-decision",
+          "expected_reason": "SRM_MISMATCH_BLOCKS_DECISION",
+          "expected_status": 409,
+          "headers": {
+            "X-Actor-Id": "usr-exp01",
+            "X-Actor-Role": "experimenter"
+          },
+          "input": {
+            "dataset_version": "ps-20261026-20261026",
+            "idempotency_key": "ev-08-b",
+            "input": {
+              "analysis_id": "an-005",
+              "decision": "ship",
+              "experiment_version_id": "xv-002",
+              "rationale": "The lift looks good on the data so far; shipping.",
+              "review_id": "$review"
+            },
+            "request_id": "req-ev-08-b"
+          }
+        },
+        {
+          "bind": [
+            {
+              "from_step": 0,
+              "into": "review_id",
+              "path": "result.review_id"
+            }
+          ],
+          "command": "record-decision",
+          "expected_reason": "SRM_MISMATCH_BLOCKS_DECISION",
+          "expected_status": 409,
+          "headers": {
+            "X-Actor-Id": "usr-exp01",
+            "X-Actor-Role": "experimenter"
+          },
+          "input": {
+            "dataset_version": "ps-20261026-20261026",
+            "idempotency_key": "ev-08-c",
+            "input": {
+              "analysis_id": "an-005",
+              "decision": "stop",
+              "experiment_version_id": "xv-002",
+              "rationale": "Stop: the treatment looks harmful.",
+              "review_id": "$review"
+            },
+            "request_id": "req-ev-08-c"
+          }
+        },
+        {
+          "bind": [
+            {
+              "from_step": 0,
+              "into": "review_id",
+              "path": "result.review_id"
+            }
+          ],
+          "command": "record-decision",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-exp01",
+            "X-Actor-Role": "experimenter"
+          },
+          "input": {
+            "dataset_version": "ps-20261026-20261026",
+            "idempotency_key": "ev-08-d",
+            "input": {
+              "analysis_id": "an-005",
+              "decision": "inconclusive",
+              "experiment_version_id": "xv-002",
+              "rationale": "Sample ratio mismatch: the randomisation cannot be trusted.",
+              "review_id": "$review"
+            },
+            "request_id": "req-ev-08-d"
+          }
+        }
+      ]
+    },
+    {
+      "event_id": "EV-09",
+      "expected": {
+        "decisions_written": 0,
+        "segment_analysis": {
+          "by": "segment",
+          "cutoff": "2026-08-02T00:00:00Z",
+          "decision_basis": false,
+          "label": "exploratory",
+          "segments_tested": 3
+        }
+      },
+      "expected_reason": "SEGMENT_NOT_A_DECISION_BASIS",
+      "expected_status": 422,
+      "injection": "INJ-09",
+      "requires": [
+        "an-004"
+      ],
+      "steps": [
+        {
+          "command": "review-guardrails",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "ps-20261026-20261026",
+            "idempotency_key": "ev-09-a",
+            "input": {
+              "analysis_id": "an-004"
+            },
+            "request_id": "req-ev-09-a"
+          }
+        },
+        {
+          "bind": [
+            {
+              "from_step": 0,
+              "into": "review_id",
+              "path": "result.review_id"
+            }
+          ],
+          "command": "record-decision",
+          "expected_reason": "SEGMENT_NOT_A_DECISION_BASIS",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-exp01",
+            "X-Actor-Role": "experimenter"
+          },
+          "input": {
+            "dataset_version": "ps-20261026-20261026",
+            "idempotency_key": "ev-09-b",
+            "input": {
+              "analysis_id": "an-004",
+              "basis": "segment",
+              "decision": "ship",
+              "experiment_version_id": "xv-001",
+              "rationale": "The enterprise segment shows the biggest lift.",
+              "review_id": "$review"
+            },
+            "request_id": "req-ev-09-b"
+          }
+        }
+      ]
+    },
+    {
+      "event_id": "EV-10",
+      "expected": {
+        "absolute_lift_pp": "0.00",
+        "control_conversion": "0.000000",
+        "interim": true,
+        "mature_control": 5,
+        "mature_treatment": 6,
+        "relative_lift": null
+      },
+      "expected_reason": null,
+      "expected_status": 200,
+      "injection": "INJ-10",
+      "requires": [],
+      "steps": [
+        {
+          "command": "analyze-experiment",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "ps-20261026-20261026",
+            "idempotency_key": "ev-10-a",
+            "input": {
+              "cutoff": "2026-04-15T00:00:00Z",
+              "experiment_version_id": "xv-001"
+            },
+            "request_id": "req-ev-10-a"
+          }
+        }
+      ]
+    },
+    {
+      "event_id": "EV-11",
+      "expected": {
+        "exposures_written": 0,
+        "rejected_records_kept": 1
+      },
+      "expected_reason": "EXPOSURE_BEFORE_ASSIGNMENT",
+      "expected_status": 422,
+      "injection": "INJ-11",
+      "requires": [],
+      "steps": [
+        {
+          "command": "record-exposure",
+          "expected_reason": "EXPOSURE_BEFORE_ASSIGNMENT",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-exp01",
+            "X-Actor-Role": "experimenter"
+          },
+          "input": {
+            "dataset_version": "ps-20261026-20261026",
+            "idempotency_key": "ev-11-a",
+            "input": {
+              "assignment_id": "as-0225",
+              "exposed_at": "2026-06-04T22:51:45Z",
+              "exposure_id": "ex-ev11",
+              "surface": "onboarding_checklist"
+            },
+            "request_id": "req-ev-11-a"
+          }
+        }
+      ]
+    }
+  ]
+}

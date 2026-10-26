@@ -131,3 +131,23 @@ table covers df 1..2000 at 95 % (the SQL interval is null outside it). GET /metr
 group_by splits account-based metrics only; `dataset_version` is the latest `dataset_versions` row ("unversioned" if
 none). Known: the DB suite takes about 3 minutes; the deadlock retry is tested by injection, not a real deadlock;
 variant-empty is covered through the domain and SQL, not the API replay; DST edges are unpinned.
+
+## D-07 Synthetic world (2026-10-26, adopted from A-044)
+Seed 20261026, 26 weeks 2026-04-06..2026-10-04, `as_of` 2026-10-05T00:00:00Z; 600 accounts, 1,824 users (18 bots),
+1,264 identity links, 3,420 sessions, 12,552 events, 207 subscriptions on 198 accounts (33 %), experiment v1 (400
+assigned, permuted blocks of four, enrolment closed a week before planned_end 2026-08-02 so every assigned account is
+mature at the final run; three interim runs and one final) and v2 (154 assigned, enrolment 2026-08-05..09-30, the
+randomiser sends 3 of 5 to treatment against a 0.40 plan, one run at planned_end; its plan is frozen after v1's last
+run). "Business segment activates faster" is read as the `business` plan with the correlated `enterprise` segment
+(higher 7-day rate and shorter median time to activation). Exposures carry `event_id` null on the surface
+`onboarding_checklist`. Timezones America/New_York, America/Los_Angeles, Europe/London with no DST transition in the
+window. Metric windows are README assumption 3 written explicitly in the config. Runs are created 5 minutes after their
+cutoff. The inputs carry one `analysis_plan` (v1's, the plan of record); the manifest carries both plans. Realised,
+drawn once: activation 63/200 vs 82/200, +9.50 pp (true effect +8.00), Newcombe [0.000812, 0.186863] (conclusive by a
+hair); week-4 retention −4.50 pp with an interval including 0; guardrail −0.50 pp including 0; revenue per account USD
+97.83 vs 130.95, difference including 0; v1 SRM OK, v2 MISMATCH (chi-square 25.004329, p 0.000001); exposure 0.8725.
+**Outcome-informed choices, disclosed in the manifest:** v1 randomisation was changed from a fair coin (223/177, p
+0.021) to permuted blocks after seeing it; `product_error` was changed from per-account to 8 % per session after seeing
+an unrealistic guardrail gap; v2 enrolment start and bounce-visitor counts were tuned; the INJ-06 candidate window was
+widened. Everything else is reported as drawn. **Domain finding (fixed in D-08):** assignments, exposures and
+subscriptions were not filtered by the cutoff, so an interim run counted rows dated after it.

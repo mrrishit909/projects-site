@@ -1,0 +1,3 @@
+{"entity":"experiment_versions","dataset_version":"golden-v1","rows":[
+{"experiment_version_id":"xv-001","name":"Onboarding checklist","planned_end":"2026-10-15T00:00:00Z","primary_metric":"activation_7d","unit_type":"account"}
+]}

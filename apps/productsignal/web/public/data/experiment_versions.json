@@ -1,0 +1,4 @@
+{"entity":"experiment_versions","dataset_version":"ps-20261026-20261026","rows":[
+{"experiment_version_id":"xv-001","name":"Onboarding checklist","planned_end":"2026-08-02T00:00:00Z","primary_metric":"activation_7d","unit_type":"account"},
+{"experiment_version_id":"xv-002","name":"Onboarding checklist (re-plan)","planned_end":"2026-10-04T00:00:00Z","primary_metric":"activation_7d","unit_type":"account"}
+]}
