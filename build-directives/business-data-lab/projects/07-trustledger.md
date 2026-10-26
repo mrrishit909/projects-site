@@ -1,0 +1,2749 @@
+# P07 — TrustLedger: complete project build specification
+Version: 2026-10-26. Read MASTER-DIRECTIVE.md first. These are requirements, not claims that software already exists.
+
+## 01. Product mandate and business boundary
+
+- [P07-GOAL-01] Build a standalone product supporting this decision: Which data issues should be fixed first and who is accountable?
+- [P07-GOAL-02] Primary portfolio roles: Data Governance Analyst; Data Quality Analyst; Analytics Engineer.
+- [P07-GOAL-03] Visual direction: Evidence library: ivory, forest, restrained vermilion; glossary and lineage.
+- [P07-GOAL-04] Use app slug trustledger; keep routes, fixtures, manifests and catalogue entries consistent.
+- [P07-GOAL-05] Execute code only on GitHub-hosted compute; retain durable deliverables in GitHub; never write project files to the laptop.
+- [P07-GOAL-06] Default public experience is static interactive synthetic demo; transactional backend evidence comes from remote CI.
+- [P07-GOAL-07] Use Fable 5.1 for coordination and real specialist-model invocations for implementation and verification.
+- [P07-GOAL-08] Resolve provider/model availability and record actual requested/resolved IDs without inventing capabilities.
+- [P07-GOAL-09] The entry milestone is one complete source-to-decision journey using the reference fixture and working export.
+- [P07-GOAL-10] The mid-level milestone adds the specified exceptions, robustness, versioning and recovery evidence.
+- [P07-GOAL-11] Do not open with a chatbot or require a paid inference API to use the demo.
+- [P07-GOAL-12] No live customer data, real payment, vendor commitment or operational write belongs in the default synthetic demo.
+- [P07-GOAL-13] All monetary, temporal and statistical meaning must be defined before interface implementation.
+- [P07-GOAL-14] If a proposed field/formula conflicts with an invariant, fix the specification through a logged decision before coding.
+- [P07-GOAL-15] Keep specifications addressable by the IDs in this file; do not paste the entire file into every worker prompt.
+- [P07-DOMAIN-01] Keep quality dimensions separate.
+- [P07-DOMAIN-02] No automated ambiguous identity merges.
+- [P07-DOMAIN-03] Store match truth only in verification fixtures.
+- [P07-DOMAIN-04] Version rule weights and denominators.
+- [P07-DOMAIN-05] Distinguish correctness from format validity.
+- [P07-DOMAIN-06] Use synthetic personal details only.
+
+## 02. Independent known-answer fixture
+
+- [P07-GOLD-01] 100 eligible customer rows with 5 missing required emails gives completeness=95%. Of 95 populated emails, 90 pass the validity rule gives populated-only validity=90/95, not 90/100; show both if useful with labels. A critical key failure must remain visible even if a weighted aggregate exceeds 95.
+- [P07-GOLD-02] Encode the reference inputs under tests/fixtures/golden/ and preserve the human-readable calculation.
+- [P07-GOLD-03] Keep the expected-answer file independent of application helper functions and generated dashboard output.
+- [P07-GOLD-04] Have the verification specialist reproduce the answer from the source records before implementation review.
+- [P07-GOLD-05] Use explicit decimal tolerance for monetary results and justified tolerance for statistical/numerical results.
+- [P07-GOLD-06] Test the displayed value, exported value and backend result against the reference, not only against each other.
+- [P07-GOLD-07] Do not enlarge a numeric tolerance to conceal a business-rule disagreement.
+- [P07-GOLD-08] Create one rejected-record variant and show why rejection is correct.
+- [P07-GOLD-09] Create one empty-population variant and show the documented zero-denominator behavior.
+- [P07-GOLD-10] Persist fixture hashes and verification evidence with the code revision.
+- [P07-GOLD-11] If this fixture reveals a definition gap, resolve and version the definition before treating results as authoritative.
+
+## 03. Logical data model and field contracts
+
+### P07-DATA-01: datasets
+- [P07-DATA-01-R01] Create the datasets entity with a documented grain and one stable primary key: dataset_id.
+- [P07-DATA-01-R02] The minimum business fields are dataset_id, dataset_name, source_system, owner_id, classification; add technical metadata only with a documented purpose.
+- [P07-DATA-01-R03] Use the role of datasets in the product workflow to define authoritative source ownership.
+- [P07-DATA-01-R04] Write migrations for datasets; do not rely on ORM auto-create for the verified release.
+- [P07-DATA-01-R05] Create a small valid datasets fixture linked to the independently calculated project example.
+- [P07-DATA-01-R06] Create an invalid datasets fixture that demonstrates a real domain constraint.
+- [P07-DATA-01-R07] Choose explicit row-update semantics for datasets: immutable event, versioned dimension or mutable operational record.
+- [P07-DATA-01-R08] Preserve the original source identifier for datasets when a surrogate key is introduced.
+- [P07-DATA-01-R09] Document whether deletion of datasets is prohibited, reversible or represented by a tombstone.
+- [P07-DATA-01-R10] Reconcile datasets accepted, rejected and deduplicated row counts to the source batch.
+- [P07-DATA-01-R11] Expose only justified synthetic datasets fields to the public site; remove internal runner metadata.
+- [P07-DATA-01-R12] Index datasets according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P07-DATA-01-R13] Do not join datasets at a different grain without an explicit aggregation or allocation rule.
+- [P07-DATA-01-R14] Associate the published datasets snapshot with dataset hash and generator parameters.
+- [P07-DATA-01-R15] Define deterministic sorting and pagination for the datasets evidence view.
+- [P07-DATA-01-R16] Ensure an empty datasets dataset yields an understandable empty state instead of fabricated sample totals.
+- [P07-DATA-01-R17] Archive the datasets schema and sample rows in the data dictionary.
+- [P07-DATA-01-R18] Test that replaying the source import cannot unintentionally duplicate datasets business records.
+- [P07-DATA-01-F01-R01] Field datasets.dataset_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-01-F01-R02] Field datasets.dataset_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-01-F01-R03] Field datasets.dataset_id: make it non-null and unique as the primary key.
+- [P07-DATA-01-F01-R04] Field datasets.dataset_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-01-F01-R05] Field datasets.dataset_id: use stable source-to-key mapping across replays and regeneration.
+- [P07-DATA-01-F01-R06] Field datasets.dataset_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-01-F01-R07] Field datasets.dataset_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-01-F01-R08] Field datasets.dataset_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-01-F02-R01] Field datasets.dataset_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-01-F02-R02] Field datasets.dataset_name: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-01-F02-R03] Field datasets.dataset_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-01-F02-R04] Field datasets.dataset_name: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-01-F02-R05] Field datasets.dataset_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-01-F02-R06] Field datasets.dataset_name: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-01-F02-R07] Field datasets.dataset_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-01-F02-R08] Field datasets.dataset_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-01-F03-R01] Field datasets.source_system: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-01-F03-R02] Field datasets.source_system: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-01-F03-R03] Field datasets.source_system: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-01-F03-R04] Field datasets.source_system: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-01-F03-R05] Field datasets.source_system: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-01-F03-R06] Field datasets.source_system: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-01-F03-R07] Field datasets.source_system: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-01-F03-R08] Field datasets.source_system: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-01-F04-R01] Field datasets.owner_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-01-F04-R02] Field datasets.owner_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-01-F04-R03] Field datasets.owner_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-01-F04-R04] Field datasets.owner_id: validate its reference to owners.owner_id; explain deferred or quarantined unmatched records.
+- [P07-DATA-01-F04-R05] Field datasets.owner_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-01-F04-R06] Field datasets.owner_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-01-F04-R07] Field datasets.owner_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-01-F04-R08] Field datasets.owner_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-01-F05-R01] Field datasets.classification: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-01-F05-R02] Field datasets.classification: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-01-F05-R03] Field datasets.classification: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-01-F05-R04] Field datasets.classification: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-01-F05-R05] Field datasets.classification: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-01-F05-R06] Field datasets.classification: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-01-F05-R07] Field datasets.classification: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-01-F05-R08] Field datasets.classification: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P07-DATA-02: fields
+- [P07-DATA-02-R01] Create the fields entity with a documented grain and one stable primary key: field_id.
+- [P07-DATA-02-R02] The minimum business fields are field_id, dataset_id, field_name, data_type, nullable; add technical metadata only with a documented purpose.
+- [P07-DATA-02-R03] Use the role of fields in the product workflow to define authoritative source ownership.
+- [P07-DATA-02-R04] Write migrations for fields; do not rely on ORM auto-create for the verified release.
+- [P07-DATA-02-R05] Create a small valid fields fixture linked to the independently calculated project example.
+- [P07-DATA-02-R06] Create an invalid fields fixture that demonstrates a real domain constraint.
+- [P07-DATA-02-R07] Choose explicit row-update semantics for fields: immutable event, versioned dimension or mutable operational record.
+- [P07-DATA-02-R08] Preserve the original source identifier for fields when a surrogate key is introduced.
+- [P07-DATA-02-R09] Document whether deletion of fields is prohibited, reversible or represented by a tombstone.
+- [P07-DATA-02-R10] Reconcile fields accepted, rejected and deduplicated row counts to the source batch.
+- [P07-DATA-02-R11] Expose only justified synthetic fields fields to the public site; remove internal runner metadata.
+- [P07-DATA-02-R12] Index fields according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P07-DATA-02-R13] Do not join fields at a different grain without an explicit aggregation or allocation rule.
+- [P07-DATA-02-R14] Associate the published fields snapshot with dataset hash and generator parameters.
+- [P07-DATA-02-R15] Define deterministic sorting and pagination for the fields evidence view.
+- [P07-DATA-02-R16] Ensure an empty fields dataset yields an understandable empty state instead of fabricated sample totals.
+- [P07-DATA-02-R17] Archive the fields schema and sample rows in the data dictionary.
+- [P07-DATA-02-R18] Test that replaying the source import cannot unintentionally duplicate fields business records.
+- [P07-DATA-02-F01-R01] Field fields.field_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-02-F01-R02] Field fields.field_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-02-F01-R03] Field fields.field_id: make it non-null and unique as the primary key.
+- [P07-DATA-02-F01-R04] Field fields.field_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-02-F01-R05] Field fields.field_id: use stable source-to-key mapping across replays and regeneration.
+- [P07-DATA-02-F01-R06] Field fields.field_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-02-F01-R07] Field fields.field_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-02-F01-R08] Field fields.field_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-02-F02-R01] Field fields.dataset_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-02-F02-R02] Field fields.dataset_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-02-F02-R03] Field fields.dataset_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-02-F02-R04] Field fields.dataset_id: validate its reference to datasets.dataset_id; explain deferred or quarantined unmatched records.
+- [P07-DATA-02-F02-R05] Field fields.dataset_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-02-F02-R06] Field fields.dataset_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-02-F02-R07] Field fields.dataset_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-02-F02-R08] Field fields.dataset_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-02-F03-R01] Field fields.field_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-02-F03-R02] Field fields.field_name: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-02-F03-R03] Field fields.field_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-02-F03-R04] Field fields.field_name: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-02-F03-R05] Field fields.field_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-02-F03-R06] Field fields.field_name: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-02-F03-R07] Field fields.field_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-02-F03-R08] Field fields.field_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-02-F04-R01] Field fields.data_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-02-F04-R02] Field fields.data_type: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-02-F04-R03] Field fields.data_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-02-F04-R04] Field fields.data_type: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-02-F04-R05] Field fields.data_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-02-F04-R06] Field fields.data_type: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-02-F04-R07] Field fields.data_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-02-F04-R08] Field fields.data_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-02-F05-R01] Field fields.nullable: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P07-DATA-02-F05-R02] Field fields.nullable: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-02-F05-R03] Field fields.nullable: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-02-F05-R04] Field fields.nullable: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-02-F05-R05] Field fields.nullable: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-02-F05-R06] Field fields.nullable: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-02-F05-R07] Field fields.nullable: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-02-F05-R08] Field fields.nullable: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P07-DATA-03: owners
+- [P07-DATA-03-R01] Create the owners entity with a documented grain and one stable primary key: owner_id.
+- [P07-DATA-03-R02] The minimum business fields are owner_id, owner_name, team, role, active; add technical metadata only with a documented purpose.
+- [P07-DATA-03-R03] Use the role of owners in the product workflow to define authoritative source ownership.
+- [P07-DATA-03-R04] Write migrations for owners; do not rely on ORM auto-create for the verified release.
+- [P07-DATA-03-R05] Create a small valid owners fixture linked to the independently calculated project example.
+- [P07-DATA-03-R06] Create an invalid owners fixture that demonstrates a real domain constraint.
+- [P07-DATA-03-R07] Choose explicit row-update semantics for owners: immutable event, versioned dimension or mutable operational record.
+- [P07-DATA-03-R08] Preserve the original source identifier for owners when a surrogate key is introduced.
+- [P07-DATA-03-R09] Document whether deletion of owners is prohibited, reversible or represented by a tombstone.
+- [P07-DATA-03-R10] Reconcile owners accepted, rejected and deduplicated row counts to the source batch.
+- [P07-DATA-03-R11] Expose only justified synthetic owners fields to the public site; remove internal runner metadata.
+- [P07-DATA-03-R12] Index owners according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P07-DATA-03-R13] Do not join owners at a different grain without an explicit aggregation or allocation rule.
+- [P07-DATA-03-R14] Associate the published owners snapshot with dataset hash and generator parameters.
+- [P07-DATA-03-R15] Define deterministic sorting and pagination for the owners evidence view.
+- [P07-DATA-03-R16] Ensure an empty owners dataset yields an understandable empty state instead of fabricated sample totals.
+- [P07-DATA-03-R17] Archive the owners schema and sample rows in the data dictionary.
+- [P07-DATA-03-R18] Test that replaying the source import cannot unintentionally duplicate owners business records.
+- [P07-DATA-03-F01-R01] Field owners.owner_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-03-F01-R02] Field owners.owner_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-03-F01-R03] Field owners.owner_id: make it non-null and unique as the primary key.
+- [P07-DATA-03-F01-R04] Field owners.owner_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-03-F01-R05] Field owners.owner_id: use stable source-to-key mapping across replays and regeneration.
+- [P07-DATA-03-F01-R06] Field owners.owner_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-03-F01-R07] Field owners.owner_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-03-F01-R08] Field owners.owner_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-03-F02-R01] Field owners.owner_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-03-F02-R02] Field owners.owner_name: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-03-F02-R03] Field owners.owner_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-03-F02-R04] Field owners.owner_name: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-03-F02-R05] Field owners.owner_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-03-F02-R06] Field owners.owner_name: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-03-F02-R07] Field owners.owner_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-03-F02-R08] Field owners.owner_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-03-F03-R01] Field owners.team: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-03-F03-R02] Field owners.team: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-03-F03-R03] Field owners.team: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-03-F03-R04] Field owners.team: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-03-F03-R05] Field owners.team: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-03-F03-R06] Field owners.team: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-03-F03-R07] Field owners.team: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-03-F03-R08] Field owners.team: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-03-F04-R01] Field owners.role: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-03-F04-R02] Field owners.role: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-03-F04-R03] Field owners.role: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-03-F04-R04] Field owners.role: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-03-F04-R05] Field owners.role: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-03-F04-R06] Field owners.role: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-03-F04-R07] Field owners.role: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-03-F04-R08] Field owners.role: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-03-F05-R01] Field owners.active: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P07-DATA-03-F05-R02] Field owners.active: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-03-F05-R03] Field owners.active: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-03-F05-R04] Field owners.active: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-03-F05-R05] Field owners.active: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-03-F05-R06] Field owners.active: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-03-F05-R07] Field owners.active: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-03-F05-R08] Field owners.active: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P07-DATA-04: metric_versions
+- [P07-DATA-04-R01] Create the metric_versions entity with a documented grain and one stable primary key: metric_version_id.
+- [P07-DATA-04-R02] The minimum business fields are metric_version_id, metric_name, definition, valid_from, status; add technical metadata only with a documented purpose.
+- [P07-DATA-04-R03] Use the role of metric_versions in the product workflow to define authoritative source ownership.
+- [P07-DATA-04-R04] Write migrations for metric_versions; do not rely on ORM auto-create for the verified release.
+- [P07-DATA-04-R05] Create a small valid metric_versions fixture linked to the independently calculated project example.
+- [P07-DATA-04-R06] Create an invalid metric_versions fixture that demonstrates a real domain constraint.
+- [P07-DATA-04-R07] Choose explicit row-update semantics for metric_versions: immutable event, versioned dimension or mutable operational record.
+- [P07-DATA-04-R08] Preserve the original source identifier for metric_versions when a surrogate key is introduced.
+- [P07-DATA-04-R09] Document whether deletion of metric_versions is prohibited, reversible or represented by a tombstone.
+- [P07-DATA-04-R10] Reconcile metric_versions accepted, rejected and deduplicated row counts to the source batch.
+- [P07-DATA-04-R11] Expose only justified synthetic metric_versions fields to the public site; remove internal runner metadata.
+- [P07-DATA-04-R12] Index metric_versions according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P07-DATA-04-R13] Do not join metric_versions at a different grain without an explicit aggregation or allocation rule.
+- [P07-DATA-04-R14] Associate the published metric_versions snapshot with dataset hash and generator parameters.
+- [P07-DATA-04-R15] Define deterministic sorting and pagination for the metric_versions evidence view.
+- [P07-DATA-04-R16] Ensure an empty metric_versions dataset yields an understandable empty state instead of fabricated sample totals.
+- [P07-DATA-04-R17] Archive the metric_versions schema and sample rows in the data dictionary.
+- [P07-DATA-04-R18] Test that replaying the source import cannot unintentionally duplicate metric_versions business records.
+- [P07-DATA-04-F01-R01] Field metric_versions.metric_version_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-04-F01-R02] Field metric_versions.metric_version_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-04-F01-R03] Field metric_versions.metric_version_id: make it non-null and unique as the primary key.
+- [P07-DATA-04-F01-R04] Field metric_versions.metric_version_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-04-F01-R05] Field metric_versions.metric_version_id: use stable source-to-key mapping across replays and regeneration.
+- [P07-DATA-04-F01-R06] Field metric_versions.metric_version_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-04-F01-R07] Field metric_versions.metric_version_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-04-F01-R08] Field metric_versions.metric_version_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-04-F02-R01] Field metric_versions.metric_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-04-F02-R02] Field metric_versions.metric_name: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-04-F02-R03] Field metric_versions.metric_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-04-F02-R04] Field metric_versions.metric_name: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-04-F02-R05] Field metric_versions.metric_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-04-F02-R06] Field metric_versions.metric_name: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-04-F02-R07] Field metric_versions.metric_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-04-F02-R08] Field metric_versions.metric_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-04-F03-R01] Field metric_versions.definition: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-04-F03-R02] Field metric_versions.definition: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-04-F03-R03] Field metric_versions.definition: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-04-F03-R04] Field metric_versions.definition: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-04-F03-R05] Field metric_versions.definition: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-04-F03-R06] Field metric_versions.definition: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-04-F03-R07] Field metric_versions.definition: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-04-F03-R08] Field metric_versions.definition: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-04-F04-R01] Field metric_versions.valid_from: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P07-DATA-04-F04-R02] Field metric_versions.valid_from: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-04-F04-R03] Field metric_versions.valid_from: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-04-F04-R04] Field metric_versions.valid_from: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-04-F04-R05] Field metric_versions.valid_from: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-04-F04-R06] Field metric_versions.valid_from: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-04-F04-R07] Field metric_versions.valid_from: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-04-F04-R08] Field metric_versions.valid_from: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-04-F05-R01] Field metric_versions.status: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-04-F05-R02] Field metric_versions.status: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-04-F05-R03] Field metric_versions.status: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-04-F05-R04] Field metric_versions.status: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-04-F05-R05] Field metric_versions.status: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-04-F05-R06] Field metric_versions.status: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-04-F05-R07] Field metric_versions.status: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-04-F05-R08] Field metric_versions.status: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P07-DATA-05: quality_rules
+- [P07-DATA-05-R01] Create the quality_rules entity with a documented grain and one stable primary key: rule_id.
+- [P07-DATA-05-R02] The minimum business fields are rule_id, dataset_id, rule_type, severity, version_number; add technical metadata only with a documented purpose.
+- [P07-DATA-05-R03] Use the role of quality_rules in the product workflow to define authoritative source ownership.
+- [P07-DATA-05-R04] Write migrations for quality_rules; do not rely on ORM auto-create for the verified release.
+- [P07-DATA-05-R05] Create a small valid quality_rules fixture linked to the independently calculated project example.
+- [P07-DATA-05-R06] Create an invalid quality_rules fixture that demonstrates a real domain constraint.
+- [P07-DATA-05-R07] Choose explicit row-update semantics for quality_rules: immutable event, versioned dimension or mutable operational record.
+- [P07-DATA-05-R08] Preserve the original source identifier for quality_rules when a surrogate key is introduced.
+- [P07-DATA-05-R09] Document whether deletion of quality_rules is prohibited, reversible or represented by a tombstone.
+- [P07-DATA-05-R10] Reconcile quality_rules accepted, rejected and deduplicated row counts to the source batch.
+- [P07-DATA-05-R11] Expose only justified synthetic quality_rules fields to the public site; remove internal runner metadata.
+- [P07-DATA-05-R12] Index quality_rules according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P07-DATA-05-R13] Do not join quality_rules at a different grain without an explicit aggregation or allocation rule.
+- [P07-DATA-05-R14] Associate the published quality_rules snapshot with dataset hash and generator parameters.
+- [P07-DATA-05-R15] Define deterministic sorting and pagination for the quality_rules evidence view.
+- [P07-DATA-05-R16] Ensure an empty quality_rules dataset yields an understandable empty state instead of fabricated sample totals.
+- [P07-DATA-05-R17] Archive the quality_rules schema and sample rows in the data dictionary.
+- [P07-DATA-05-R18] Test that replaying the source import cannot unintentionally duplicate quality_rules business records.
+- [P07-DATA-05-F01-R01] Field quality_rules.rule_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-05-F01-R02] Field quality_rules.rule_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-05-F01-R03] Field quality_rules.rule_id: make it non-null and unique as the primary key.
+- [P07-DATA-05-F01-R04] Field quality_rules.rule_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-05-F01-R05] Field quality_rules.rule_id: use stable source-to-key mapping across replays and regeneration.
+- [P07-DATA-05-F01-R06] Field quality_rules.rule_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-05-F01-R07] Field quality_rules.rule_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-05-F01-R08] Field quality_rules.rule_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-05-F02-R01] Field quality_rules.dataset_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-05-F02-R02] Field quality_rules.dataset_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-05-F02-R03] Field quality_rules.dataset_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-05-F02-R04] Field quality_rules.dataset_id: validate its reference to datasets.dataset_id; explain deferred or quarantined unmatched records.
+- [P07-DATA-05-F02-R05] Field quality_rules.dataset_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-05-F02-R06] Field quality_rules.dataset_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-05-F02-R07] Field quality_rules.dataset_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-05-F02-R08] Field quality_rules.dataset_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-05-F03-R01] Field quality_rules.rule_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-05-F03-R02] Field quality_rules.rule_type: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-05-F03-R03] Field quality_rules.rule_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-05-F03-R04] Field quality_rules.rule_type: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-05-F03-R05] Field quality_rules.rule_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-05-F03-R06] Field quality_rules.rule_type: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-05-F03-R07] Field quality_rules.rule_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-05-F03-R08] Field quality_rules.rule_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-05-F04-R01] Field quality_rules.severity: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-05-F04-R02] Field quality_rules.severity: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-05-F04-R03] Field quality_rules.severity: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-05-F04-R04] Field quality_rules.severity: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-05-F04-R05] Field quality_rules.severity: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-05-F04-R06] Field quality_rules.severity: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-05-F04-R07] Field quality_rules.severity: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-05-F04-R08] Field quality_rules.severity: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-05-F05-R01] Field quality_rules.version_number: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P07-DATA-05-F05-R02] Field quality_rules.version_number: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-05-F05-R03] Field quality_rules.version_number: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-05-F05-R04] Field quality_rules.version_number: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-05-F05-R05] Field quality_rules.version_number: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-05-F05-R06] Field quality_rules.version_number: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-05-F05-R07] Field quality_rules.version_number: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-05-F05-R08] Field quality_rules.version_number: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P07-DATA-06: rule_runs
+- [P07-DATA-06-R01] Create the rule_runs entity with a documented grain and one stable primary key: rule_run_id.
+- [P07-DATA-06-R02] The minimum business fields are rule_run_id, rule_id, run_at, eligible_count, failure_count; add technical metadata only with a documented purpose.
+- [P07-DATA-06-R03] Use the role of rule_runs in the product workflow to define authoritative source ownership.
+- [P07-DATA-06-R04] Write migrations for rule_runs; do not rely on ORM auto-create for the verified release.
+- [P07-DATA-06-R05] Create a small valid rule_runs fixture linked to the independently calculated project example.
+- [P07-DATA-06-R06] Create an invalid rule_runs fixture that demonstrates a real domain constraint.
+- [P07-DATA-06-R07] Choose explicit row-update semantics for rule_runs: immutable event, versioned dimension or mutable operational record.
+- [P07-DATA-06-R08] Preserve the original source identifier for rule_runs when a surrogate key is introduced.
+- [P07-DATA-06-R09] Document whether deletion of rule_runs is prohibited, reversible or represented by a tombstone.
+- [P07-DATA-06-R10] Reconcile rule_runs accepted, rejected and deduplicated row counts to the source batch.
+- [P07-DATA-06-R11] Expose only justified synthetic rule_runs fields to the public site; remove internal runner metadata.
+- [P07-DATA-06-R12] Index rule_runs according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P07-DATA-06-R13] Do not join rule_runs at a different grain without an explicit aggregation or allocation rule.
+- [P07-DATA-06-R14] Associate the published rule_runs snapshot with dataset hash and generator parameters.
+- [P07-DATA-06-R15] Define deterministic sorting and pagination for the rule_runs evidence view.
+- [P07-DATA-06-R16] Ensure an empty rule_runs dataset yields an understandable empty state instead of fabricated sample totals.
+- [P07-DATA-06-R17] Archive the rule_runs schema and sample rows in the data dictionary.
+- [P07-DATA-06-R18] Test that replaying the source import cannot unintentionally duplicate rule_runs business records.
+- [P07-DATA-06-F01-R01] Field rule_runs.rule_run_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-06-F01-R02] Field rule_runs.rule_run_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-06-F01-R03] Field rule_runs.rule_run_id: make it non-null and unique as the primary key.
+- [P07-DATA-06-F01-R04] Field rule_runs.rule_run_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-06-F01-R05] Field rule_runs.rule_run_id: use stable source-to-key mapping across replays and regeneration.
+- [P07-DATA-06-F01-R06] Field rule_runs.rule_run_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-06-F01-R07] Field rule_runs.rule_run_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-06-F01-R08] Field rule_runs.rule_run_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-06-F02-R01] Field rule_runs.rule_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-06-F02-R02] Field rule_runs.rule_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-06-F02-R03] Field rule_runs.rule_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-06-F02-R04] Field rule_runs.rule_id: validate its reference to quality_rules.rule_id; explain deferred or quarantined unmatched records.
+- [P07-DATA-06-F02-R05] Field rule_runs.rule_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-06-F02-R06] Field rule_runs.rule_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-06-F02-R07] Field rule_runs.rule_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-06-F02-R08] Field rule_runs.rule_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-06-F03-R01] Field rule_runs.run_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P07-DATA-06-F03-R02] Field rule_runs.run_at: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-06-F03-R03] Field rule_runs.run_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-06-F03-R04] Field rule_runs.run_at: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-06-F03-R05] Field rule_runs.run_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-06-F03-R06] Field rule_runs.run_at: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-06-F03-R07] Field rule_runs.run_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-06-F03-R08] Field rule_runs.run_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-06-F04-R01] Field rule_runs.eligible_count: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P07-DATA-06-F04-R02] Field rule_runs.eligible_count: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-06-F04-R03] Field rule_runs.eligible_count: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-06-F04-R04] Field rule_runs.eligible_count: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-06-F04-R05] Field rule_runs.eligible_count: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-06-F04-R06] Field rule_runs.eligible_count: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-06-F04-R07] Field rule_runs.eligible_count: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-06-F04-R08] Field rule_runs.eligible_count: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-06-F05-R01] Field rule_runs.failure_count: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P07-DATA-06-F05-R02] Field rule_runs.failure_count: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-06-F05-R03] Field rule_runs.failure_count: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-06-F05-R04] Field rule_runs.failure_count: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-06-F05-R05] Field rule_runs.failure_count: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-06-F05-R06] Field rule_runs.failure_count: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-06-F05-R07] Field rule_runs.failure_count: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-06-F05-R08] Field rule_runs.failure_count: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P07-DATA-07: quality_issues
+- [P07-DATA-07-R01] Create the quality_issues entity with a documented grain and one stable primary key: issue_id.
+- [P07-DATA-07-R02] The minimum business fields are issue_id, rule_run_id, owner_id, status, detected_at; add technical metadata only with a documented purpose.
+- [P07-DATA-07-R03] Use the role of quality_issues in the product workflow to define authoritative source ownership.
+- [P07-DATA-07-R04] Write migrations for quality_issues; do not rely on ORM auto-create for the verified release.
+- [P07-DATA-07-R05] Create a small valid quality_issues fixture linked to the independently calculated project example.
+- [P07-DATA-07-R06] Create an invalid quality_issues fixture that demonstrates a real domain constraint.
+- [P07-DATA-07-R07] Choose explicit row-update semantics for quality_issues: immutable event, versioned dimension or mutable operational record.
+- [P07-DATA-07-R08] Preserve the original source identifier for quality_issues when a surrogate key is introduced.
+- [P07-DATA-07-R09] Document whether deletion of quality_issues is prohibited, reversible or represented by a tombstone.
+- [P07-DATA-07-R10] Reconcile quality_issues accepted, rejected and deduplicated row counts to the source batch.
+- [P07-DATA-07-R11] Expose only justified synthetic quality_issues fields to the public site; remove internal runner metadata.
+- [P07-DATA-07-R12] Index quality_issues according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P07-DATA-07-R13] Do not join quality_issues at a different grain without an explicit aggregation or allocation rule.
+- [P07-DATA-07-R14] Associate the published quality_issues snapshot with dataset hash and generator parameters.
+- [P07-DATA-07-R15] Define deterministic sorting and pagination for the quality_issues evidence view.
+- [P07-DATA-07-R16] Ensure an empty quality_issues dataset yields an understandable empty state instead of fabricated sample totals.
+- [P07-DATA-07-R17] Archive the quality_issues schema and sample rows in the data dictionary.
+- [P07-DATA-07-R18] Test that replaying the source import cannot unintentionally duplicate quality_issues business records.
+- [P07-DATA-07-F01-R01] Field quality_issues.issue_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-07-F01-R02] Field quality_issues.issue_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-07-F01-R03] Field quality_issues.issue_id: make it non-null and unique as the primary key.
+- [P07-DATA-07-F01-R04] Field quality_issues.issue_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-07-F01-R05] Field quality_issues.issue_id: use stable source-to-key mapping across replays and regeneration.
+- [P07-DATA-07-F01-R06] Field quality_issues.issue_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-07-F01-R07] Field quality_issues.issue_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-07-F01-R08] Field quality_issues.issue_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-07-F02-R01] Field quality_issues.rule_run_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-07-F02-R02] Field quality_issues.rule_run_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-07-F02-R03] Field quality_issues.rule_run_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-07-F02-R04] Field quality_issues.rule_run_id: validate its reference to rule_runs.rule_run_id; explain deferred or quarantined unmatched records.
+- [P07-DATA-07-F02-R05] Field quality_issues.rule_run_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-07-F02-R06] Field quality_issues.rule_run_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-07-F02-R07] Field quality_issues.rule_run_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-07-F02-R08] Field quality_issues.rule_run_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-07-F03-R01] Field quality_issues.owner_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-07-F03-R02] Field quality_issues.owner_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-07-F03-R03] Field quality_issues.owner_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-07-F03-R04] Field quality_issues.owner_id: validate its reference to owners.owner_id; explain deferred or quarantined unmatched records.
+- [P07-DATA-07-F03-R05] Field quality_issues.owner_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-07-F03-R06] Field quality_issues.owner_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-07-F03-R07] Field quality_issues.owner_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-07-F03-R08] Field quality_issues.owner_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-07-F04-R01] Field quality_issues.status: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-07-F04-R02] Field quality_issues.status: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-07-F04-R03] Field quality_issues.status: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-07-F04-R04] Field quality_issues.status: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-07-F04-R05] Field quality_issues.status: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-07-F04-R06] Field quality_issues.status: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-07-F04-R07] Field quality_issues.status: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-07-F04-R08] Field quality_issues.status: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-07-F05-R01] Field quality_issues.detected_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P07-DATA-07-F05-R02] Field quality_issues.detected_at: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-07-F05-R03] Field quality_issues.detected_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-07-F05-R04] Field quality_issues.detected_at: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-07-F05-R05] Field quality_issues.detected_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-07-F05-R06] Field quality_issues.detected_at: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-07-F05-R07] Field quality_issues.detected_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-07-F05-R08] Field quality_issues.detected_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P07-DATA-08: lineage_edges
+- [P07-DATA-08-R01] Create the lineage_edges entity with a documented grain and one stable primary key: edge_id.
+- [P07-DATA-08-R02] The minimum business fields are edge_id, source_dataset_id, target_dataset_id, evidence_type, observed_at; add technical metadata only with a documented purpose.
+- [P07-DATA-08-R03] Use the role of lineage_edges in the product workflow to define authoritative source ownership.
+- [P07-DATA-08-R04] Write migrations for lineage_edges; do not rely on ORM auto-create for the verified release.
+- [P07-DATA-08-R05] Create a small valid lineage_edges fixture linked to the independently calculated project example.
+- [P07-DATA-08-R06] Create an invalid lineage_edges fixture that demonstrates a real domain constraint.
+- [P07-DATA-08-R07] Choose explicit row-update semantics for lineage_edges: immutable event, versioned dimension or mutable operational record.
+- [P07-DATA-08-R08] Preserve the original source identifier for lineage_edges when a surrogate key is introduced.
+- [P07-DATA-08-R09] Document whether deletion of lineage_edges is prohibited, reversible or represented by a tombstone.
+- [P07-DATA-08-R10] Reconcile lineage_edges accepted, rejected and deduplicated row counts to the source batch.
+- [P07-DATA-08-R11] Expose only justified synthetic lineage_edges fields to the public site; remove internal runner metadata.
+- [P07-DATA-08-R12] Index lineage_edges according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P07-DATA-08-R13] Do not join lineage_edges at a different grain without an explicit aggregation or allocation rule.
+- [P07-DATA-08-R14] Associate the published lineage_edges snapshot with dataset hash and generator parameters.
+- [P07-DATA-08-R15] Define deterministic sorting and pagination for the lineage_edges evidence view.
+- [P07-DATA-08-R16] Ensure an empty lineage_edges dataset yields an understandable empty state instead of fabricated sample totals.
+- [P07-DATA-08-R17] Archive the lineage_edges schema and sample rows in the data dictionary.
+- [P07-DATA-08-R18] Test that replaying the source import cannot unintentionally duplicate lineage_edges business records.
+- [P07-DATA-08-F01-R01] Field lineage_edges.edge_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-08-F01-R02] Field lineage_edges.edge_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-08-F01-R03] Field lineage_edges.edge_id: make it non-null and unique as the primary key.
+- [P07-DATA-08-F01-R04] Field lineage_edges.edge_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-08-F01-R05] Field lineage_edges.edge_id: use stable source-to-key mapping across replays and regeneration.
+- [P07-DATA-08-F01-R06] Field lineage_edges.edge_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-08-F01-R07] Field lineage_edges.edge_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-08-F01-R08] Field lineage_edges.edge_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-08-F02-R01] Field lineage_edges.source_dataset_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-08-F02-R02] Field lineage_edges.source_dataset_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-08-F02-R03] Field lineage_edges.source_dataset_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-08-F02-R04] Field lineage_edges.source_dataset_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-08-F02-R05] Field lineage_edges.source_dataset_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-08-F02-R06] Field lineage_edges.source_dataset_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-08-F02-R07] Field lineage_edges.source_dataset_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-08-F02-R08] Field lineage_edges.source_dataset_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-08-F03-R01] Field lineage_edges.target_dataset_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-08-F03-R02] Field lineage_edges.target_dataset_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-08-F03-R03] Field lineage_edges.target_dataset_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-08-F03-R04] Field lineage_edges.target_dataset_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-08-F03-R05] Field lineage_edges.target_dataset_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-08-F03-R06] Field lineage_edges.target_dataset_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-08-F03-R07] Field lineage_edges.target_dataset_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-08-F03-R08] Field lineage_edges.target_dataset_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-08-F04-R01] Field lineage_edges.evidence_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-08-F04-R02] Field lineage_edges.evidence_type: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-08-F04-R03] Field lineage_edges.evidence_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-08-F04-R04] Field lineage_edges.evidence_type: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-08-F04-R05] Field lineage_edges.evidence_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-08-F04-R06] Field lineage_edges.evidence_type: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-08-F04-R07] Field lineage_edges.evidence_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-08-F04-R08] Field lineage_edges.evidence_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-08-F05-R01] Field lineage_edges.observed_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P07-DATA-08-F05-R02] Field lineage_edges.observed_at: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-08-F05-R03] Field lineage_edges.observed_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-08-F05-R04] Field lineage_edges.observed_at: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-08-F05-R05] Field lineage_edges.observed_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-08-F05-R06] Field lineage_edges.observed_at: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-08-F05-R07] Field lineage_edges.observed_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-08-F05-R08] Field lineage_edges.observed_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P07-DATA-09: customer_records
+- [P07-DATA-09-R01] Create the customer_records entity with a documented grain and one stable primary key: record_id.
+- [P07-DATA-09-R02] The minimum business fields are record_id, source_system, source_customer_id, normalized_name, address_key; add technical metadata only with a documented purpose.
+- [P07-DATA-09-R03] Use the role of customer_records in the product workflow to define authoritative source ownership.
+- [P07-DATA-09-R04] Write migrations for customer_records; do not rely on ORM auto-create for the verified release.
+- [P07-DATA-09-R05] Create a small valid customer_records fixture linked to the independently calculated project example.
+- [P07-DATA-09-R06] Create an invalid customer_records fixture that demonstrates a real domain constraint.
+- [P07-DATA-09-R07] Choose explicit row-update semantics for customer_records: immutable event, versioned dimension or mutable operational record.
+- [P07-DATA-09-R08] Preserve the original source identifier for customer_records when a surrogate key is introduced.
+- [P07-DATA-09-R09] Document whether deletion of customer_records is prohibited, reversible or represented by a tombstone.
+- [P07-DATA-09-R10] Reconcile customer_records accepted, rejected and deduplicated row counts to the source batch.
+- [P07-DATA-09-R11] Expose only justified synthetic customer_records fields to the public site; remove internal runner metadata.
+- [P07-DATA-09-R12] Index customer_records according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P07-DATA-09-R13] Do not join customer_records at a different grain without an explicit aggregation or allocation rule.
+- [P07-DATA-09-R14] Associate the published customer_records snapshot with dataset hash and generator parameters.
+- [P07-DATA-09-R15] Define deterministic sorting and pagination for the customer_records evidence view.
+- [P07-DATA-09-R16] Ensure an empty customer_records dataset yields an understandable empty state instead of fabricated sample totals.
+- [P07-DATA-09-R17] Archive the customer_records schema and sample rows in the data dictionary.
+- [P07-DATA-09-R18] Test that replaying the source import cannot unintentionally duplicate customer_records business records.
+- [P07-DATA-09-F01-R01] Field customer_records.record_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-09-F01-R02] Field customer_records.record_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-09-F01-R03] Field customer_records.record_id: make it non-null and unique as the primary key.
+- [P07-DATA-09-F01-R04] Field customer_records.record_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-09-F01-R05] Field customer_records.record_id: use stable source-to-key mapping across replays and regeneration.
+- [P07-DATA-09-F01-R06] Field customer_records.record_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-09-F01-R07] Field customer_records.record_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-09-F01-R08] Field customer_records.record_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-09-F02-R01] Field customer_records.source_system: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-09-F02-R02] Field customer_records.source_system: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-09-F02-R03] Field customer_records.source_system: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-09-F02-R04] Field customer_records.source_system: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-09-F02-R05] Field customer_records.source_system: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-09-F02-R06] Field customer_records.source_system: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-09-F02-R07] Field customer_records.source_system: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-09-F02-R08] Field customer_records.source_system: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-09-F03-R01] Field customer_records.source_customer_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-09-F03-R02] Field customer_records.source_customer_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-09-F03-R03] Field customer_records.source_customer_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-09-F03-R04] Field customer_records.source_customer_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-09-F03-R05] Field customer_records.source_customer_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-09-F03-R06] Field customer_records.source_customer_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-09-F03-R07] Field customer_records.source_customer_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-09-F03-R08] Field customer_records.source_customer_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-09-F04-R01] Field customer_records.normalized_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-09-F04-R02] Field customer_records.normalized_name: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-09-F04-R03] Field customer_records.normalized_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-09-F04-R04] Field customer_records.normalized_name: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-09-F04-R05] Field customer_records.normalized_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-09-F04-R06] Field customer_records.normalized_name: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-09-F04-R07] Field customer_records.normalized_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-09-F04-R08] Field customer_records.normalized_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-09-F05-R01] Field customer_records.address_key: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-09-F05-R02] Field customer_records.address_key: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-09-F05-R03] Field customer_records.address_key: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-09-F05-R04] Field customer_records.address_key: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-09-F05-R05] Field customer_records.address_key: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-09-F05-R06] Field customer_records.address_key: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-09-F05-R07] Field customer_records.address_key: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-09-F05-R08] Field customer_records.address_key: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P07-DATA-10: match_candidates
+- [P07-DATA-10-R01] Create the match_candidates entity with a documented grain and one stable primary key: candidate_id.
+- [P07-DATA-10-R02] The minimum business fields are candidate_id, left_record_id, right_record_id, score, explanation; add technical metadata only with a documented purpose.
+- [P07-DATA-10-R03] Use the role of match_candidates in the product workflow to define authoritative source ownership.
+- [P07-DATA-10-R04] Write migrations for match_candidates; do not rely on ORM auto-create for the verified release.
+- [P07-DATA-10-R05] Create a small valid match_candidates fixture linked to the independently calculated project example.
+- [P07-DATA-10-R06] Create an invalid match_candidates fixture that demonstrates a real domain constraint.
+- [P07-DATA-10-R07] Choose explicit row-update semantics for match_candidates: immutable event, versioned dimension or mutable operational record.
+- [P07-DATA-10-R08] Preserve the original source identifier for match_candidates when a surrogate key is introduced.
+- [P07-DATA-10-R09] Document whether deletion of match_candidates is prohibited, reversible or represented by a tombstone.
+- [P07-DATA-10-R10] Reconcile match_candidates accepted, rejected and deduplicated row counts to the source batch.
+- [P07-DATA-10-R11] Expose only justified synthetic match_candidates fields to the public site; remove internal runner metadata.
+- [P07-DATA-10-R12] Index match_candidates according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P07-DATA-10-R13] Do not join match_candidates at a different grain without an explicit aggregation or allocation rule.
+- [P07-DATA-10-R14] Associate the published match_candidates snapshot with dataset hash and generator parameters.
+- [P07-DATA-10-R15] Define deterministic sorting and pagination for the match_candidates evidence view.
+- [P07-DATA-10-R16] Ensure an empty match_candidates dataset yields an understandable empty state instead of fabricated sample totals.
+- [P07-DATA-10-R17] Archive the match_candidates schema and sample rows in the data dictionary.
+- [P07-DATA-10-R18] Test that replaying the source import cannot unintentionally duplicate match_candidates business records.
+- [P07-DATA-10-F01-R01] Field match_candidates.candidate_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-10-F01-R02] Field match_candidates.candidate_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-10-F01-R03] Field match_candidates.candidate_id: make it non-null and unique as the primary key.
+- [P07-DATA-10-F01-R04] Field match_candidates.candidate_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-10-F01-R05] Field match_candidates.candidate_id: use stable source-to-key mapping across replays and regeneration.
+- [P07-DATA-10-F01-R06] Field match_candidates.candidate_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-10-F01-R07] Field match_candidates.candidate_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-10-F01-R08] Field match_candidates.candidate_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-10-F02-R01] Field match_candidates.left_record_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-10-F02-R02] Field match_candidates.left_record_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-10-F02-R03] Field match_candidates.left_record_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-10-F02-R04] Field match_candidates.left_record_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-10-F02-R05] Field match_candidates.left_record_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-10-F02-R06] Field match_candidates.left_record_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-10-F02-R07] Field match_candidates.left_record_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-10-F02-R08] Field match_candidates.left_record_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-10-F03-R01] Field match_candidates.right_record_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-10-F03-R02] Field match_candidates.right_record_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-10-F03-R03] Field match_candidates.right_record_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-10-F03-R04] Field match_candidates.right_record_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-10-F03-R05] Field match_candidates.right_record_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-10-F03-R06] Field match_candidates.right_record_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-10-F03-R07] Field match_candidates.right_record_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-10-F03-R08] Field match_candidates.right_record_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-10-F04-R01] Field match_candidates.score: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P07-DATA-10-F04-R02] Field match_candidates.score: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-10-F04-R03] Field match_candidates.score: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-10-F04-R04] Field match_candidates.score: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-10-F04-R05] Field match_candidates.score: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-10-F04-R06] Field match_candidates.score: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-10-F04-R07] Field match_candidates.score: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-10-F04-R08] Field match_candidates.score: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-10-F05-R01] Field match_candidates.explanation: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-10-F05-R02] Field match_candidates.explanation: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-10-F05-R03] Field match_candidates.explanation: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-10-F05-R04] Field match_candidates.explanation: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-10-F05-R05] Field match_candidates.explanation: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-10-F05-R06] Field match_candidates.explanation: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-10-F05-R07] Field match_candidates.explanation: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-10-F05-R08] Field match_candidates.explanation: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P07-DATA-11: merge_decisions
+- [P07-DATA-11-R01] Create the merge_decisions entity with a documented grain and one stable primary key: merge_id.
+- [P07-DATA-11-R02] The minimum business fields are merge_id, candidate_id, reviewer_id, decision, decided_at; add technical metadata only with a documented purpose.
+- [P07-DATA-11-R03] Use the role of merge_decisions in the product workflow to define authoritative source ownership.
+- [P07-DATA-11-R04] Write migrations for merge_decisions; do not rely on ORM auto-create for the verified release.
+- [P07-DATA-11-R05] Create a small valid merge_decisions fixture linked to the independently calculated project example.
+- [P07-DATA-11-R06] Create an invalid merge_decisions fixture that demonstrates a real domain constraint.
+- [P07-DATA-11-R07] Choose explicit row-update semantics for merge_decisions: immutable event, versioned dimension or mutable operational record.
+- [P07-DATA-11-R08] Preserve the original source identifier for merge_decisions when a surrogate key is introduced.
+- [P07-DATA-11-R09] Document whether deletion of merge_decisions is prohibited, reversible or represented by a tombstone.
+- [P07-DATA-11-R10] Reconcile merge_decisions accepted, rejected and deduplicated row counts to the source batch.
+- [P07-DATA-11-R11] Expose only justified synthetic merge_decisions fields to the public site; remove internal runner metadata.
+- [P07-DATA-11-R12] Index merge_decisions according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P07-DATA-11-R13] Do not join merge_decisions at a different grain without an explicit aggregation or allocation rule.
+- [P07-DATA-11-R14] Associate the published merge_decisions snapshot with dataset hash and generator parameters.
+- [P07-DATA-11-R15] Define deterministic sorting and pagination for the merge_decisions evidence view.
+- [P07-DATA-11-R16] Ensure an empty merge_decisions dataset yields an understandable empty state instead of fabricated sample totals.
+- [P07-DATA-11-R17] Archive the merge_decisions schema and sample rows in the data dictionary.
+- [P07-DATA-11-R18] Test that replaying the source import cannot unintentionally duplicate merge_decisions business records.
+- [P07-DATA-11-F01-R01] Field merge_decisions.merge_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-11-F01-R02] Field merge_decisions.merge_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-11-F01-R03] Field merge_decisions.merge_id: make it non-null and unique as the primary key.
+- [P07-DATA-11-F01-R04] Field merge_decisions.merge_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-11-F01-R05] Field merge_decisions.merge_id: use stable source-to-key mapping across replays and regeneration.
+- [P07-DATA-11-F01-R06] Field merge_decisions.merge_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-11-F01-R07] Field merge_decisions.merge_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-11-F01-R08] Field merge_decisions.merge_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-11-F02-R01] Field merge_decisions.candidate_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-11-F02-R02] Field merge_decisions.candidate_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-11-F02-R03] Field merge_decisions.candidate_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-11-F02-R04] Field merge_decisions.candidate_id: validate its reference to match_candidates.candidate_id; explain deferred or quarantined unmatched records.
+- [P07-DATA-11-F02-R05] Field merge_decisions.candidate_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-11-F02-R06] Field merge_decisions.candidate_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-11-F02-R07] Field merge_decisions.candidate_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-11-F02-R08] Field merge_decisions.candidate_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-11-F03-R01] Field merge_decisions.reviewer_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-11-F03-R02] Field merge_decisions.reviewer_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-11-F03-R03] Field merge_decisions.reviewer_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-11-F03-R04] Field merge_decisions.reviewer_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-11-F03-R05] Field merge_decisions.reviewer_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-11-F03-R06] Field merge_decisions.reviewer_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-11-F03-R07] Field merge_decisions.reviewer_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-11-F03-R08] Field merge_decisions.reviewer_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-11-F04-R01] Field merge_decisions.decision: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-11-F04-R02] Field merge_decisions.decision: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-11-F04-R03] Field merge_decisions.decision: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-11-F04-R04] Field merge_decisions.decision: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-11-F04-R05] Field merge_decisions.decision: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-11-F04-R06] Field merge_decisions.decision: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-11-F04-R07] Field merge_decisions.decision: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-11-F04-R08] Field merge_decisions.decision: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-11-F05-R01] Field merge_decisions.decided_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P07-DATA-11-F05-R02] Field merge_decisions.decided_at: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-11-F05-R03] Field merge_decisions.decided_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-11-F05-R04] Field merge_decisions.decided_at: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-11-F05-R05] Field merge_decisions.decided_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-11-F05-R06] Field merge_decisions.decided_at: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-11-F05-R07] Field merge_decisions.decided_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-11-F05-R08] Field merge_decisions.decided_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P07-DATA-12: definition_changes
+- [P07-DATA-12-R01] Create the definition_changes entity with a documented grain and one stable primary key: change_id.
+- [P07-DATA-12-R02] The minimum business fields are change_id, metric_version_id, reason, approved_by, changed_at; add technical metadata only with a documented purpose.
+- [P07-DATA-12-R03] Use the role of definition_changes in the product workflow to define authoritative source ownership.
+- [P07-DATA-12-R04] Write migrations for definition_changes; do not rely on ORM auto-create for the verified release.
+- [P07-DATA-12-R05] Create a small valid definition_changes fixture linked to the independently calculated project example.
+- [P07-DATA-12-R06] Create an invalid definition_changes fixture that demonstrates a real domain constraint.
+- [P07-DATA-12-R07] Choose explicit row-update semantics for definition_changes: immutable event, versioned dimension or mutable operational record.
+- [P07-DATA-12-R08] Preserve the original source identifier for definition_changes when a surrogate key is introduced.
+- [P07-DATA-12-R09] Document whether deletion of definition_changes is prohibited, reversible or represented by a tombstone.
+- [P07-DATA-12-R10] Reconcile definition_changes accepted, rejected and deduplicated row counts to the source batch.
+- [P07-DATA-12-R11] Expose only justified synthetic definition_changes fields to the public site; remove internal runner metadata.
+- [P07-DATA-12-R12] Index definition_changes according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P07-DATA-12-R13] Do not join definition_changes at a different grain without an explicit aggregation or allocation rule.
+- [P07-DATA-12-R14] Associate the published definition_changes snapshot with dataset hash and generator parameters.
+- [P07-DATA-12-R15] Define deterministic sorting and pagination for the definition_changes evidence view.
+- [P07-DATA-12-R16] Ensure an empty definition_changes dataset yields an understandable empty state instead of fabricated sample totals.
+- [P07-DATA-12-R17] Archive the definition_changes schema and sample rows in the data dictionary.
+- [P07-DATA-12-R18] Test that replaying the source import cannot unintentionally duplicate definition_changes business records.
+- [P07-DATA-12-F01-R01] Field definition_changes.change_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-12-F01-R02] Field definition_changes.change_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-12-F01-R03] Field definition_changes.change_id: make it non-null and unique as the primary key.
+- [P07-DATA-12-F01-R04] Field definition_changes.change_id: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-12-F01-R05] Field definition_changes.change_id: use stable source-to-key mapping across replays and regeneration.
+- [P07-DATA-12-F01-R06] Field definition_changes.change_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-12-F01-R07] Field definition_changes.change_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-12-F01-R08] Field definition_changes.change_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-12-F02-R01] Field definition_changes.metric_version_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-12-F02-R02] Field definition_changes.metric_version_id: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-12-F02-R03] Field definition_changes.metric_version_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-12-F02-R04] Field definition_changes.metric_version_id: validate its reference to metric_versions.metric_version_id; explain deferred or quarantined unmatched records.
+- [P07-DATA-12-F02-R05] Field definition_changes.metric_version_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-12-F02-R06] Field definition_changes.metric_version_id: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-12-F02-R07] Field definition_changes.metric_version_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-12-F02-R08] Field definition_changes.metric_version_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-12-F03-R01] Field definition_changes.reason: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-12-F03-R02] Field definition_changes.reason: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-12-F03-R03] Field definition_changes.reason: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-12-F03-R04] Field definition_changes.reason: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-12-F03-R05] Field definition_changes.reason: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-12-F03-R06] Field definition_changes.reason: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-12-F03-R07] Field definition_changes.reason: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-12-F03-R08] Field definition_changes.reason: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-12-F04-R01] Field definition_changes.approved_by: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P07-DATA-12-F04-R02] Field definition_changes.approved_by: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-12-F04-R03] Field definition_changes.approved_by: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-12-F04-R04] Field definition_changes.approved_by: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-12-F04-R05] Field definition_changes.approved_by: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-12-F04-R06] Field definition_changes.approved_by: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-12-F04-R07] Field definition_changes.approved_by: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-12-F04-R08] Field definition_changes.approved_by: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P07-DATA-12-F05-R01] Field definition_changes.changed_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P07-DATA-12-F05-R02] Field definition_changes.changed_at: define its business meaning in the dictionary and use the same label in exports.
+- [P07-DATA-12-F05-R03] Field definition_changes.changed_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P07-DATA-12-F05-R04] Field definition_changes.changed_at: define the allowed domain and reject structurally invalid values before publication.
+- [P07-DATA-12-F05-R05] Field definition_changes.changed_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P07-DATA-12-F05-R06] Field definition_changes.changed_at: create a round-trip test across source, validated model and exported representation.
+- [P07-DATA-12-F05-R07] Field definition_changes.changed_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P07-DATA-12-F05-R08] Field definition_changes.changed_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+
+## 04. Business metric contracts
+
+### P07-MET-01: Completeness
+- [P07-MET-01-R01] Business metric: Completeness.
+- [P07-MET-01-R02] Authoritative calculation rule: nonmissing eligible values / eligible values.
+- [P07-MET-01-R03] Output unit: percent.
+- [P07-MET-01-R04] Important boundary: Whitespace missing policy.
+- [P07-MET-01-R05] Explain how Completeness informs the primary decision: Which data issues should be fixed first and who is accountable?
+- [P07-MET-01-R06] Define the input grain for Completeness; never infer it from the chart grouping.
+- [P07-MET-01-R07] Name each source field and transformation contributing to Completeness.
+- [P07-MET-01-R08] Define the reporting population for Completeness before applying user-selected filters.
+- [P07-MET-01-R09] Name the timestamp and timezone used by Completeness.
+- [P07-MET-01-R10] Use a documented half-open interval for Completeness time filtering.
+- [P07-MET-01-R11] List excluded statuses, invalid records and immature observations for Completeness.
+- [P07-MET-01-R12] Display excluded-record counts when they materially change Completeness.
+- [P07-MET-01-R13] Define Completeness behavior for an empty eligible population.
+- [P07-MET-01-R14] Define Completeness behavior when its denominator is zero or its required baseline is absent.
+- [P07-MET-01-R15] Do not replace unknown Completeness values with zero without a documented business rule.
+- [P07-MET-01-R16] For Completeness, aggregate underlying values correctly before applying ratios or summary functions.
+- [P07-MET-01-R17] Preserve original precision for Completeness; round only at the stated calculation or presentation step.
+- [P07-MET-01-R18] Create a small manually calculated Completeness fixture independent of the main implementation.
+- [P07-MET-01-R19] Implement an independent SQL/spreadsheet/reference check for the important Completeness result.
+- [P07-MET-01-R20] Keep the browser Completeness calculation consistent with the authoritative contract and verified fixture.
+- [P07-MET-01-R21] Show Completeness definition, active scope and unit through a visible explanation affordance.
+- [P07-MET-01-R22] Allow drillthrough from Completeness into contributing evidence or a transparent aggregate explanation.
+- [P07-MET-01-R23] Export Completeness with contract version, filters, dataset hash and generated timestamp.
+- [P07-MET-01-R24] When Completeness is a scenario estimate, visibly separate it from observed historical results.
+- [P07-MET-01-R25] Include a Completeness regression assertion for one project-specific edge case.
+- [P07-MET-01-R26] If Completeness is compared across periods, use comparable eligibility and disclose differences.
+- [P07-MET-01-R27] Keep Completeness historical revisions traceable when late data changes published results.
+- [P07-MET-01-R28] Record a versioned decision if implementation requires changing Completeness semantics.
+- [P07-MET-01-R29] Have a reviewer challenge whether Completeness could be misleading despite being arithmetically correct.
+- [P07-MET-01-R30] Mark Completeness verified only after the known-answer and presentation checks actually run.
+### P07-MET-02: Validity
+- [P07-MET-02-R01] Business metric: Validity.
+- [P07-MET-02-R02] Authoritative calculation rule: eligible values passing domain rule / eligible values.
+- [P07-MET-02-R03] Output unit: percent.
+- [P07-MET-02-R04] Important boundary: Not equivalent to correctness.
+- [P07-MET-02-R05] Explain how Validity informs the primary decision: Which data issues should be fixed first and who is accountable?
+- [P07-MET-02-R06] Define the input grain for Validity; never infer it from the chart grouping.
+- [P07-MET-02-R07] Name each source field and transformation contributing to Validity.
+- [P07-MET-02-R08] Define the reporting population for Validity before applying user-selected filters.
+- [P07-MET-02-R09] Name the timestamp and timezone used by Validity.
+- [P07-MET-02-R10] Use a documented half-open interval for Validity time filtering.
+- [P07-MET-02-R11] List excluded statuses, invalid records and immature observations for Validity.
+- [P07-MET-02-R12] Display excluded-record counts when they materially change Validity.
+- [P07-MET-02-R13] Define Validity behavior for an empty eligible population.
+- [P07-MET-02-R14] Define Validity behavior when its denominator is zero or its required baseline is absent.
+- [P07-MET-02-R15] Do not replace unknown Validity values with zero without a documented business rule.
+- [P07-MET-02-R16] For Validity, aggregate underlying values correctly before applying ratios or summary functions.
+- [P07-MET-02-R17] Preserve original precision for Validity; round only at the stated calculation or presentation step.
+- [P07-MET-02-R18] Create a small manually calculated Validity fixture independent of the main implementation.
+- [P07-MET-02-R19] Implement an independent SQL/spreadsheet/reference check for the important Validity result.
+- [P07-MET-02-R20] Keep the browser Validity calculation consistent with the authoritative contract and verified fixture.
+- [P07-MET-02-R21] Show Validity definition, active scope and unit through a visible explanation affordance.
+- [P07-MET-02-R22] Allow drillthrough from Validity into contributing evidence or a transparent aggregate explanation.
+- [P07-MET-02-R23] Export Validity with contract version, filters, dataset hash and generated timestamp.
+- [P07-MET-02-R24] When Validity is a scenario estimate, visibly separate it from observed historical results.
+- [P07-MET-02-R25] Include a Validity regression assertion for one project-specific edge case.
+- [P07-MET-02-R26] If Validity is compared across periods, use comparable eligibility and disclose differences.
+- [P07-MET-02-R27] Keep Validity historical revisions traceable when late data changes published results.
+- [P07-MET-02-R28] Record a versioned decision if implementation requires changing Validity semantics.
+- [P07-MET-02-R29] Have a reviewer challenge whether Validity could be misleading despite being arithmetically correct.
+- [P07-MET-02-R30] Mark Validity verified only after the known-answer and presentation checks actually run.
+### P07-MET-03: Uniqueness
+- [P07-MET-03-R01] Business metric: Uniqueness.
+- [P07-MET-03-R02] Authoritative calculation rule: unique eligible keys / eligible keys.
+- [P07-MET-03-R03] Output unit: percent.
+- [P07-MET-03-R04] Important boundary: Define duplicate-group versus duplicate-row measure.
+- [P07-MET-03-R05] Explain how Uniqueness informs the primary decision: Which data issues should be fixed first and who is accountable?
+- [P07-MET-03-R06] Define the input grain for Uniqueness; never infer it from the chart grouping.
+- [P07-MET-03-R07] Name each source field and transformation contributing to Uniqueness.
+- [P07-MET-03-R08] Define the reporting population for Uniqueness before applying user-selected filters.
+- [P07-MET-03-R09] Name the timestamp and timezone used by Uniqueness.
+- [P07-MET-03-R10] Use a documented half-open interval for Uniqueness time filtering.
+- [P07-MET-03-R11] List excluded statuses, invalid records and immature observations for Uniqueness.
+- [P07-MET-03-R12] Display excluded-record counts when they materially change Uniqueness.
+- [P07-MET-03-R13] Define Uniqueness behavior for an empty eligible population.
+- [P07-MET-03-R14] Define Uniqueness behavior when its denominator is zero or its required baseline is absent.
+- [P07-MET-03-R15] Do not replace unknown Uniqueness values with zero without a documented business rule.
+- [P07-MET-03-R16] For Uniqueness, aggregate underlying values correctly before applying ratios or summary functions.
+- [P07-MET-03-R17] Preserve original precision for Uniqueness; round only at the stated calculation or presentation step.
+- [P07-MET-03-R18] Create a small manually calculated Uniqueness fixture independent of the main implementation.
+- [P07-MET-03-R19] Implement an independent SQL/spreadsheet/reference check for the important Uniqueness result.
+- [P07-MET-03-R20] Keep the browser Uniqueness calculation consistent with the authoritative contract and verified fixture.
+- [P07-MET-03-R21] Show Uniqueness definition, active scope and unit through a visible explanation affordance.
+- [P07-MET-03-R22] Allow drillthrough from Uniqueness into contributing evidence or a transparent aggregate explanation.
+- [P07-MET-03-R23] Export Uniqueness with contract version, filters, dataset hash and generated timestamp.
+- [P07-MET-03-R24] When Uniqueness is a scenario estimate, visibly separate it from observed historical results.
+- [P07-MET-03-R25] Include a Uniqueness regression assertion for one project-specific edge case.
+- [P07-MET-03-R26] If Uniqueness is compared across periods, use comparable eligibility and disclose differences.
+- [P07-MET-03-R27] Keep Uniqueness historical revisions traceable when late data changes published results.
+- [P07-MET-03-R28] Record a versioned decision if implementation requires changing Uniqueness semantics.
+- [P07-MET-03-R29] Have a reviewer challenge whether Uniqueness could be misleading despite being arithmetically correct.
+- [P07-MET-03-R30] Mark Uniqueness verified only after the known-answer and presentation checks actually run.
+### P07-MET-04: Relationship integrity
+- [P07-MET-04-R01] Business metric: Relationship integrity.
+- [P07-MET-04-R02] Authoritative calculation rule: matched eligible foreign keys / eligible foreign keys.
+- [P07-MET-04-R03] Output unit: percent.
+- [P07-MET-04-R04] Important boundary: Null handling explicit.
+- [P07-MET-04-R05] Explain how Relationship integrity informs the primary decision: Which data issues should be fixed first and who is accountable?
+- [P07-MET-04-R06] Define the input grain for Relationship integrity; never infer it from the chart grouping.
+- [P07-MET-04-R07] Name each source field and transformation contributing to Relationship integrity.
+- [P07-MET-04-R08] Define the reporting population for Relationship integrity before applying user-selected filters.
+- [P07-MET-04-R09] Name the timestamp and timezone used by Relationship integrity.
+- [P07-MET-04-R10] Use a documented half-open interval for Relationship integrity time filtering.
+- [P07-MET-04-R11] List excluded statuses, invalid records and immature observations for Relationship integrity.
+- [P07-MET-04-R12] Display excluded-record counts when they materially change Relationship integrity.
+- [P07-MET-04-R13] Define Relationship integrity behavior for an empty eligible population.
+- [P07-MET-04-R14] Define Relationship integrity behavior when its denominator is zero or its required baseline is absent.
+- [P07-MET-04-R15] Do not replace unknown Relationship integrity values with zero without a documented business rule.
+- [P07-MET-04-R16] For Relationship integrity, aggregate underlying values correctly before applying ratios or summary functions.
+- [P07-MET-04-R17] Preserve original precision for Relationship integrity; round only at the stated calculation or presentation step.
+- [P07-MET-04-R18] Create a small manually calculated Relationship integrity fixture independent of the main implementation.
+- [P07-MET-04-R19] Implement an independent SQL/spreadsheet/reference check for the important Relationship integrity result.
+- [P07-MET-04-R20] Keep the browser Relationship integrity calculation consistent with the authoritative contract and verified fixture.
+- [P07-MET-04-R21] Show Relationship integrity definition, active scope and unit through a visible explanation affordance.
+- [P07-MET-04-R22] Allow drillthrough from Relationship integrity into contributing evidence or a transparent aggregate explanation.
+- [P07-MET-04-R23] Export Relationship integrity with contract version, filters, dataset hash and generated timestamp.
+- [P07-MET-04-R24] When Relationship integrity is a scenario estimate, visibly separate it from observed historical results.
+- [P07-MET-04-R25] Include a Relationship integrity regression assertion for one project-specific edge case.
+- [P07-MET-04-R26] If Relationship integrity is compared across periods, use comparable eligibility and disclose differences.
+- [P07-MET-04-R27] Keep Relationship integrity historical revisions traceable when late data changes published results.
+- [P07-MET-04-R28] Record a versioned decision if implementation requires changing Relationship integrity semantics.
+- [P07-MET-04-R29] Have a reviewer challenge whether Relationship integrity could be misleading despite being arithmetically correct.
+- [P07-MET-04-R30] Mark Relationship integrity verified only after the known-answer and presentation checks actually run.
+### P07-MET-05: Timeliness
+- [P07-MET-05-R01] Business metric: Timeliness.
+- [P07-MET-05-R02] Authoritative calculation rule: datasets refreshed within target / monitored datasets.
+- [P07-MET-05-R03] Output unit: percent.
+- [P07-MET-05-R04] Important boundary: Expected schedule and timezone.
+- [P07-MET-05-R05] Explain how Timeliness informs the primary decision: Which data issues should be fixed first and who is accountable?
+- [P07-MET-05-R06] Define the input grain for Timeliness; never infer it from the chart grouping.
+- [P07-MET-05-R07] Name each source field and transformation contributing to Timeliness.
+- [P07-MET-05-R08] Define the reporting population for Timeliness before applying user-selected filters.
+- [P07-MET-05-R09] Name the timestamp and timezone used by Timeliness.
+- [P07-MET-05-R10] Use a documented half-open interval for Timeliness time filtering.
+- [P07-MET-05-R11] List excluded statuses, invalid records and immature observations for Timeliness.
+- [P07-MET-05-R12] Display excluded-record counts when they materially change Timeliness.
+- [P07-MET-05-R13] Define Timeliness behavior for an empty eligible population.
+- [P07-MET-05-R14] Define Timeliness behavior when its denominator is zero or its required baseline is absent.
+- [P07-MET-05-R15] Do not replace unknown Timeliness values with zero without a documented business rule.
+- [P07-MET-05-R16] For Timeliness, aggregate underlying values correctly before applying ratios or summary functions.
+- [P07-MET-05-R17] Preserve original precision for Timeliness; round only at the stated calculation or presentation step.
+- [P07-MET-05-R18] Create a small manually calculated Timeliness fixture independent of the main implementation.
+- [P07-MET-05-R19] Implement an independent SQL/spreadsheet/reference check for the important Timeliness result.
+- [P07-MET-05-R20] Keep the browser Timeliness calculation consistent with the authoritative contract and verified fixture.
+- [P07-MET-05-R21] Show Timeliness definition, active scope and unit through a visible explanation affordance.
+- [P07-MET-05-R22] Allow drillthrough from Timeliness into contributing evidence or a transparent aggregate explanation.
+- [P07-MET-05-R23] Export Timeliness with contract version, filters, dataset hash and generated timestamp.
+- [P07-MET-05-R24] When Timeliness is a scenario estimate, visibly separate it from observed historical results.
+- [P07-MET-05-R25] Include a Timeliness regression assertion for one project-specific edge case.
+- [P07-MET-05-R26] If Timeliness is compared across periods, use comparable eligibility and disclose differences.
+- [P07-MET-05-R27] Keep Timeliness historical revisions traceable when late data changes published results.
+- [P07-MET-05-R28] Record a versioned decision if implementation requires changing Timeliness semantics.
+- [P07-MET-05-R29] Have a reviewer challenge whether Timeliness could be misleading despite being arithmetically correct.
+- [P07-MET-05-R30] Mark Timeliness verified only after the known-answer and presentation checks actually run.
+### P07-MET-06: Weighted quality score
+- [P07-MET-06-R01] Business metric: Weighted quality score.
+- [P07-MET-06-R02] Authoritative calculation rule: sum(dimension_score * weight) / sum(active_weights).
+- [P07-MET-06-R03] Output unit: score/100.
+- [P07-MET-06-R04] Important boundary: Critical failures shown independently.
+- [P07-MET-06-R05] Explain how Weighted quality score informs the primary decision: Which data issues should be fixed first and who is accountable?
+- [P07-MET-06-R06] Define the input grain for Weighted quality score; never infer it from the chart grouping.
+- [P07-MET-06-R07] Name each source field and transformation contributing to Weighted quality score.
+- [P07-MET-06-R08] Define the reporting population for Weighted quality score before applying user-selected filters.
+- [P07-MET-06-R09] Name the timestamp and timezone used by Weighted quality score.
+- [P07-MET-06-R10] Use a documented half-open interval for Weighted quality score time filtering.
+- [P07-MET-06-R11] List excluded statuses, invalid records and immature observations for Weighted quality score.
+- [P07-MET-06-R12] Display excluded-record counts when they materially change Weighted quality score.
+- [P07-MET-06-R13] Define Weighted quality score behavior for an empty eligible population.
+- [P07-MET-06-R14] Define Weighted quality score behavior when its denominator is zero or its required baseline is absent.
+- [P07-MET-06-R15] Do not replace unknown Weighted quality score values with zero without a documented business rule.
+- [P07-MET-06-R16] For Weighted quality score, aggregate underlying values correctly before applying ratios or summary functions.
+- [P07-MET-06-R17] Preserve original precision for Weighted quality score; round only at the stated calculation or presentation step.
+- [P07-MET-06-R18] Create a small manually calculated Weighted quality score fixture independent of the main implementation.
+- [P07-MET-06-R19] Implement an independent SQL/spreadsheet/reference check for the important Weighted quality score result.
+- [P07-MET-06-R20] Keep the browser Weighted quality score calculation consistent with the authoritative contract and verified fixture.
+- [P07-MET-06-R21] Show Weighted quality score definition, active scope and unit through a visible explanation affordance.
+- [P07-MET-06-R22] Allow drillthrough from Weighted quality score into contributing evidence or a transparent aggregate explanation.
+- [P07-MET-06-R23] Export Weighted quality score with contract version, filters, dataset hash and generated timestamp.
+- [P07-MET-06-R24] When Weighted quality score is a scenario estimate, visibly separate it from observed historical results.
+- [P07-MET-06-R25] Include a Weighted quality score regression assertion for one project-specific edge case.
+- [P07-MET-06-R26] If Weighted quality score is compared across periods, use comparable eligibility and disclose differences.
+- [P07-MET-06-R27] Keep Weighted quality score historical revisions traceable when late data changes published results.
+- [P07-MET-06-R28] Record a versioned decision if implementation requires changing Weighted quality score semantics.
+- [P07-MET-06-R29] Have a reviewer challenge whether Weighted quality score could be misleading despite being arithmetically correct.
+- [P07-MET-06-R30] Mark Weighted quality score verified only after the known-answer and presentation checks actually run.
+### P07-MET-07: Critical failures
+- [P07-MET-07-R01] Business metric: Critical failures.
+- [P07-MET-07-R02] Authoritative calculation rule: count(open critical rule failures).
+- [P07-MET-07-R03] Output unit: failures.
+- [P07-MET-07-R04] Important boundary: Never hidden by averages.
+- [P07-MET-07-R05] Explain how Critical failures informs the primary decision: Which data issues should be fixed first and who is accountable?
+- [P07-MET-07-R06] Define the input grain for Critical failures; never infer it from the chart grouping.
+- [P07-MET-07-R07] Name each source field and transformation contributing to Critical failures.
+- [P07-MET-07-R08] Define the reporting population for Critical failures before applying user-selected filters.
+- [P07-MET-07-R09] Name the timestamp and timezone used by Critical failures.
+- [P07-MET-07-R10] Use a documented half-open interval for Critical failures time filtering.
+- [P07-MET-07-R11] List excluded statuses, invalid records and immature observations for Critical failures.
+- [P07-MET-07-R12] Display excluded-record counts when they materially change Critical failures.
+- [P07-MET-07-R13] Define Critical failures behavior for an empty eligible population.
+- [P07-MET-07-R14] Define Critical failures behavior when its denominator is zero or its required baseline is absent.
+- [P07-MET-07-R15] Do not replace unknown Critical failures values with zero without a documented business rule.
+- [P07-MET-07-R16] For Critical failures, aggregate underlying values correctly before applying ratios or summary functions.
+- [P07-MET-07-R17] Preserve original precision for Critical failures; round only at the stated calculation or presentation step.
+- [P07-MET-07-R18] Create a small manually calculated Critical failures fixture independent of the main implementation.
+- [P07-MET-07-R19] Implement an independent SQL/spreadsheet/reference check for the important Critical failures result.
+- [P07-MET-07-R20] Keep the browser Critical failures calculation consistent with the authoritative contract and verified fixture.
+- [P07-MET-07-R21] Show Critical failures definition, active scope and unit through a visible explanation affordance.
+- [P07-MET-07-R22] Allow drillthrough from Critical failures into contributing evidence or a transparent aggregate explanation.
+- [P07-MET-07-R23] Export Critical failures with contract version, filters, dataset hash and generated timestamp.
+- [P07-MET-07-R24] When Critical failures is a scenario estimate, visibly separate it from observed historical results.
+- [P07-MET-07-R25] Include a Critical failures regression assertion for one project-specific edge case.
+- [P07-MET-07-R26] If Critical failures is compared across periods, use comparable eligibility and disclose differences.
+- [P07-MET-07-R27] Keep Critical failures historical revisions traceable when late data changes published results.
+- [P07-MET-07-R28] Record a versioned decision if implementation requires changing Critical failures semantics.
+- [P07-MET-07-R29] Have a reviewer challenge whether Critical failures could be misleading despite being arithmetically correct.
+- [P07-MET-07-R30] Mark Critical failures verified only after the known-answer and presentation checks actually run.
+### P07-MET-08: Issue resolution time
+- [P07-MET-08-R01] Business metric: Issue resolution time.
+- [P07-MET-08-R02] Authoritative calculation rule: resolved_at - detected_at.
+- [P07-MET-08-R03] Output unit: hours.
+- [P07-MET-08-R04] Important boundary: Reopened issues tracked.
+- [P07-MET-08-R05] Explain how Issue resolution time informs the primary decision: Which data issues should be fixed first and who is accountable?
+- [P07-MET-08-R06] Define the input grain for Issue resolution time; never infer it from the chart grouping.
+- [P07-MET-08-R07] Name each source field and transformation contributing to Issue resolution time.
+- [P07-MET-08-R08] Define the reporting population for Issue resolution time before applying user-selected filters.
+- [P07-MET-08-R09] Name the timestamp and timezone used by Issue resolution time.
+- [P07-MET-08-R10] Use a documented half-open interval for Issue resolution time time filtering.
+- [P07-MET-08-R11] List excluded statuses, invalid records and immature observations for Issue resolution time.
+- [P07-MET-08-R12] Display excluded-record counts when they materially change Issue resolution time.
+- [P07-MET-08-R13] Define Issue resolution time behavior for an empty eligible population.
+- [P07-MET-08-R14] Define Issue resolution time behavior when its denominator is zero or its required baseline is absent.
+- [P07-MET-08-R15] Do not replace unknown Issue resolution time values with zero without a documented business rule.
+- [P07-MET-08-R16] For Issue resolution time, aggregate underlying values correctly before applying ratios or summary functions.
+- [P07-MET-08-R17] Preserve original precision for Issue resolution time; round only at the stated calculation or presentation step.
+- [P07-MET-08-R18] Create a small manually calculated Issue resolution time fixture independent of the main implementation.
+- [P07-MET-08-R19] Implement an independent SQL/spreadsheet/reference check for the important Issue resolution time result.
+- [P07-MET-08-R20] Keep the browser Issue resolution time calculation consistent with the authoritative contract and verified fixture.
+- [P07-MET-08-R21] Show Issue resolution time definition, active scope and unit through a visible explanation affordance.
+- [P07-MET-08-R22] Allow drillthrough from Issue resolution time into contributing evidence or a transparent aggregate explanation.
+- [P07-MET-08-R23] Export Issue resolution time with contract version, filters, dataset hash and generated timestamp.
+- [P07-MET-08-R24] When Issue resolution time is a scenario estimate, visibly separate it from observed historical results.
+- [P07-MET-08-R25] Include a Issue resolution time regression assertion for one project-specific edge case.
+- [P07-MET-08-R26] If Issue resolution time is compared across periods, use comparable eligibility and disclose differences.
+- [P07-MET-08-R27] Keep Issue resolution time historical revisions traceable when late data changes published results.
+- [P07-MET-08-R28] Record a versioned decision if implementation requires changing Issue resolution time semantics.
+- [P07-MET-08-R29] Have a reviewer challenge whether Issue resolution time could be misleading despite being arithmetically correct.
+- [P07-MET-08-R30] Mark Issue resolution time verified only after the known-answer and presentation checks actually run.
+### P07-MET-09: Ownership coverage
+- [P07-MET-09-R01] Business metric: Ownership coverage.
+- [P07-MET-09-R02] Authoritative calculation rule: datasets with accountable owner / datasets.
+- [P07-MET-09-R03] Output unit: percent.
+- [P07-MET-09-R04] Important boundary: Inactive owner not eligible.
+- [P07-MET-09-R05] Explain how Ownership coverage informs the primary decision: Which data issues should be fixed first and who is accountable?
+- [P07-MET-09-R06] Define the input grain for Ownership coverage; never infer it from the chart grouping.
+- [P07-MET-09-R07] Name each source field and transformation contributing to Ownership coverage.
+- [P07-MET-09-R08] Define the reporting population for Ownership coverage before applying user-selected filters.
+- [P07-MET-09-R09] Name the timestamp and timezone used by Ownership coverage.
+- [P07-MET-09-R10] Use a documented half-open interval for Ownership coverage time filtering.
+- [P07-MET-09-R11] List excluded statuses, invalid records and immature observations for Ownership coverage.
+- [P07-MET-09-R12] Display excluded-record counts when they materially change Ownership coverage.
+- [P07-MET-09-R13] Define Ownership coverage behavior for an empty eligible population.
+- [P07-MET-09-R14] Define Ownership coverage behavior when its denominator is zero or its required baseline is absent.
+- [P07-MET-09-R15] Do not replace unknown Ownership coverage values with zero without a documented business rule.
+- [P07-MET-09-R16] For Ownership coverage, aggregate underlying values correctly before applying ratios or summary functions.
+- [P07-MET-09-R17] Preserve original precision for Ownership coverage; round only at the stated calculation or presentation step.
+- [P07-MET-09-R18] Create a small manually calculated Ownership coverage fixture independent of the main implementation.
+- [P07-MET-09-R19] Implement an independent SQL/spreadsheet/reference check for the important Ownership coverage result.
+- [P07-MET-09-R20] Keep the browser Ownership coverage calculation consistent with the authoritative contract and verified fixture.
+- [P07-MET-09-R21] Show Ownership coverage definition, active scope and unit through a visible explanation affordance.
+- [P07-MET-09-R22] Allow drillthrough from Ownership coverage into contributing evidence or a transparent aggregate explanation.
+- [P07-MET-09-R23] Export Ownership coverage with contract version, filters, dataset hash and generated timestamp.
+- [P07-MET-09-R24] When Ownership coverage is a scenario estimate, visibly separate it from observed historical results.
+- [P07-MET-09-R25] Include a Ownership coverage regression assertion for one project-specific edge case.
+- [P07-MET-09-R26] If Ownership coverage is compared across periods, use comparable eligibility and disclose differences.
+- [P07-MET-09-R27] Keep Ownership coverage historical revisions traceable when late data changes published results.
+- [P07-MET-09-R28] Record a versioned decision if implementation requires changing Ownership coverage semantics.
+- [P07-MET-09-R29] Have a reviewer challenge whether Ownership coverage could be misleading despite being arithmetically correct.
+- [P07-MET-09-R30] Mark Ownership coverage verified only after the known-answer and presentation checks actually run.
+### P07-MET-10: Definition coverage
+- [P07-MET-10-R01] Business metric: Definition coverage.
+- [P07-MET-10-R02] Authoritative calculation rule: published metrics with complete contracts / published metrics.
+- [P07-MET-10-R03] Output unit: percent.
+- [P07-MET-10-R04] Important boundary: Versioned checklist.
+- [P07-MET-10-R05] Explain how Definition coverage informs the primary decision: Which data issues should be fixed first and who is accountable?
+- [P07-MET-10-R06] Define the input grain for Definition coverage; never infer it from the chart grouping.
+- [P07-MET-10-R07] Name each source field and transformation contributing to Definition coverage.
+- [P07-MET-10-R08] Define the reporting population for Definition coverage before applying user-selected filters.
+- [P07-MET-10-R09] Name the timestamp and timezone used by Definition coverage.
+- [P07-MET-10-R10] Use a documented half-open interval for Definition coverage time filtering.
+- [P07-MET-10-R11] List excluded statuses, invalid records and immature observations for Definition coverage.
+- [P07-MET-10-R12] Display excluded-record counts when they materially change Definition coverage.
+- [P07-MET-10-R13] Define Definition coverage behavior for an empty eligible population.
+- [P07-MET-10-R14] Define Definition coverage behavior when its denominator is zero or its required baseline is absent.
+- [P07-MET-10-R15] Do not replace unknown Definition coverage values with zero without a documented business rule.
+- [P07-MET-10-R16] For Definition coverage, aggregate underlying values correctly before applying ratios or summary functions.
+- [P07-MET-10-R17] Preserve original precision for Definition coverage; round only at the stated calculation or presentation step.
+- [P07-MET-10-R18] Create a small manually calculated Definition coverage fixture independent of the main implementation.
+- [P07-MET-10-R19] Implement an independent SQL/spreadsheet/reference check for the important Definition coverage result.
+- [P07-MET-10-R20] Keep the browser Definition coverage calculation consistent with the authoritative contract and verified fixture.
+- [P07-MET-10-R21] Show Definition coverage definition, active scope and unit through a visible explanation affordance.
+- [P07-MET-10-R22] Allow drillthrough from Definition coverage into contributing evidence or a transparent aggregate explanation.
+- [P07-MET-10-R23] Export Definition coverage with contract version, filters, dataset hash and generated timestamp.
+- [P07-MET-10-R24] When Definition coverage is a scenario estimate, visibly separate it from observed historical results.
+- [P07-MET-10-R25] Include a Definition coverage regression assertion for one project-specific edge case.
+- [P07-MET-10-R26] If Definition coverage is compared across periods, use comparable eligibility and disclose differences.
+- [P07-MET-10-R27] Keep Definition coverage historical revisions traceable when late data changes published results.
+- [P07-MET-10-R28] Record a versioned decision if implementation requires changing Definition coverage semantics.
+- [P07-MET-10-R29] Have a reviewer challenge whether Definition coverage could be misleading despite being arithmetically correct.
+- [P07-MET-10-R30] Mark Definition coverage verified only after the known-answer and presentation checks actually run.
+### P07-MET-11: Match precision
+- [P07-MET-11-R01] Business metric: Match precision.
+- [P07-MET-11-R02] Authoritative calculation rule: correct reviewed proposed matches / reviewed proposed matches.
+- [P07-MET-11-R03] Output unit: percent.
+- [P07-MET-11-R04] Important boundary: Synthetic truth held outside matcher.
+- [P07-MET-11-R05] Explain how Match precision informs the primary decision: Which data issues should be fixed first and who is accountable?
+- [P07-MET-11-R06] Define the input grain for Match precision; never infer it from the chart grouping.
+- [P07-MET-11-R07] Name each source field and transformation contributing to Match precision.
+- [P07-MET-11-R08] Define the reporting population for Match precision before applying user-selected filters.
+- [P07-MET-11-R09] Name the timestamp and timezone used by Match precision.
+- [P07-MET-11-R10] Use a documented half-open interval for Match precision time filtering.
+- [P07-MET-11-R11] List excluded statuses, invalid records and immature observations for Match precision.
+- [P07-MET-11-R12] Display excluded-record counts when they materially change Match precision.
+- [P07-MET-11-R13] Define Match precision behavior for an empty eligible population.
+- [P07-MET-11-R14] Define Match precision behavior when its denominator is zero or its required baseline is absent.
+- [P07-MET-11-R15] Do not replace unknown Match precision values with zero without a documented business rule.
+- [P07-MET-11-R16] For Match precision, aggregate underlying values correctly before applying ratios or summary functions.
+- [P07-MET-11-R17] Preserve original precision for Match precision; round only at the stated calculation or presentation step.
+- [P07-MET-11-R18] Create a small manually calculated Match precision fixture independent of the main implementation.
+- [P07-MET-11-R19] Implement an independent SQL/spreadsheet/reference check for the important Match precision result.
+- [P07-MET-11-R20] Keep the browser Match precision calculation consistent with the authoritative contract and verified fixture.
+- [P07-MET-11-R21] Show Match precision definition, active scope and unit through a visible explanation affordance.
+- [P07-MET-11-R22] Allow drillthrough from Match precision into contributing evidence or a transparent aggregate explanation.
+- [P07-MET-11-R23] Export Match precision with contract version, filters, dataset hash and generated timestamp.
+- [P07-MET-11-R24] When Match precision is a scenario estimate, visibly separate it from observed historical results.
+- [P07-MET-11-R25] Include a Match precision regression assertion for one project-specific edge case.
+- [P07-MET-11-R26] If Match precision is compared across periods, use comparable eligibility and disclose differences.
+- [P07-MET-11-R27] Keep Match precision historical revisions traceable when late data changes published results.
+- [P07-MET-11-R28] Record a versioned decision if implementation requires changing Match precision semantics.
+- [P07-MET-11-R29] Have a reviewer challenge whether Match precision could be misleading despite being arithmetically correct.
+- [P07-MET-11-R30] Mark Match precision verified only after the known-answer and presentation checks actually run.
+### P07-MET-12: Observed lineage coverage
+- [P07-MET-12-R01] Business metric: Observed lineage coverage.
+- [P07-MET-12-R02] Authoritative calculation rule: observed edges / expected declared edges.
+- [P07-MET-12-R03] Output unit: percent.
+- [P07-MET-12-R04] Important boundary: Separate declared and observed graph.
+- [P07-MET-12-R05] Explain how Observed lineage coverage informs the primary decision: Which data issues should be fixed first and who is accountable?
+- [P07-MET-12-R06] Define the input grain for Observed lineage coverage; never infer it from the chart grouping.
+- [P07-MET-12-R07] Name each source field and transformation contributing to Observed lineage coverage.
+- [P07-MET-12-R08] Define the reporting population for Observed lineage coverage before applying user-selected filters.
+- [P07-MET-12-R09] Name the timestamp and timezone used by Observed lineage coverage.
+- [P07-MET-12-R10] Use a documented half-open interval for Observed lineage coverage time filtering.
+- [P07-MET-12-R11] List excluded statuses, invalid records and immature observations for Observed lineage coverage.
+- [P07-MET-12-R12] Display excluded-record counts when they materially change Observed lineage coverage.
+- [P07-MET-12-R13] Define Observed lineage coverage behavior for an empty eligible population.
+- [P07-MET-12-R14] Define Observed lineage coverage behavior when its denominator is zero or its required baseline is absent.
+- [P07-MET-12-R15] Do not replace unknown Observed lineage coverage values with zero without a documented business rule.
+- [P07-MET-12-R16] For Observed lineage coverage, aggregate underlying values correctly before applying ratios or summary functions.
+- [P07-MET-12-R17] Preserve original precision for Observed lineage coverage; round only at the stated calculation or presentation step.
+- [P07-MET-12-R18] Create a small manually calculated Observed lineage coverage fixture independent of the main implementation.
+- [P07-MET-12-R19] Implement an independent SQL/spreadsheet/reference check for the important Observed lineage coverage result.
+- [P07-MET-12-R20] Keep the browser Observed lineage coverage calculation consistent with the authoritative contract and verified fixture.
+- [P07-MET-12-R21] Show Observed lineage coverage definition, active scope and unit through a visible explanation affordance.
+- [P07-MET-12-R22] Allow drillthrough from Observed lineage coverage into contributing evidence or a transparent aggregate explanation.
+- [P07-MET-12-R23] Export Observed lineage coverage with contract version, filters, dataset hash and generated timestamp.
+- [P07-MET-12-R24] When Observed lineage coverage is a scenario estimate, visibly separate it from observed historical results.
+- [P07-MET-12-R25] Include a Observed lineage coverage regression assertion for one project-specific edge case.
+- [P07-MET-12-R26] If Observed lineage coverage is compared across periods, use comparable eligibility and disclose differences.
+- [P07-MET-12-R27] Keep Observed lineage coverage historical revisions traceable when late data changes published results.
+- [P07-MET-12-R28] Record a versioned decision if implementation requires changing Observed lineage coverage semantics.
+- [P07-MET-12-R29] Have a reviewer challenge whether Observed lineage coverage could be misleading despite being arithmetically correct.
+- [P07-MET-12-R30] Mark Observed lineage coverage verified only after the known-answer and presentation checks actually run.
+
+## 05. End-to-end workflow and transition contracts
+
+### P07-FLOW-01: Register dataset
+- [P07-FLOW-01-R01] Workflow capability: Register dataset.
+- [P07-FLOW-01-R02] Logical transition: Absent -> cataloged.
+- [P07-FLOW-01-R03] Primary invariant: Required owner and classification.
+- [P07-FLOW-01-R04] Define the user goal and permitted actor for Register dataset.
+- [P07-FLOW-01-R05] Define required inputs and source versions for Register dataset.
+- [P07-FLOW-01-R06] Check preconditions before Register dataset; reject violations with a specific user-facing explanation.
+- [P07-FLOW-01-R07] Document the authoritative output of Register dataset and the next valid action.
+- [P07-FLOW-01-R08] Implement Register dataset in a domain/service layer rather than hiding it in a UI callback.
+- [P07-FLOW-01-R09] Define the transaction boundary for Register dataset when state changes.
+- [P07-FLOW-01-R10] Preserve an audit event for material Register dataset decisions without recording secrets.
+- [P07-FLOW-01-R11] Define how Register dataset behaves when the same request or input is repeated.
+- [P07-FLOW-01-R12] Define how Register dataset behaves when its input dataset or record version is stale.
+- [P07-FLOW-01-R13] Prevent conflicting Register dataset updates with version checks or another documented mechanism.
+- [P07-FLOW-01-R14] Keep original evidence immutable when Register dataset creates a correction or new scenario.
+- [P07-FLOW-01-R15] Test the successful Register dataset path using deterministic fixtures.
+- [P07-FLOW-01-R16] Test one rejected Register dataset path against the stated invariant.
+- [P07-FLOW-01-R17] Test interrupted Register dataset execution and prove safe recovery or explicit noncommit.
+- [P07-FLOW-01-R18] Test authorized versus unauthorized Register dataset behavior where real backend roles apply.
+- [P07-FLOW-01-R19] In the static website, label Register dataset mutations as browser-memory simulation.
+- [P07-FLOW-01-R20] Never make Register dataset appear server-persistent in the GitHub Pages demo.
+- [P07-FLOW-01-R21] Expose progress, success and actionable failure feedback for Register dataset.
+- [P07-FLOW-01-R22] Keep keyboard focus coherent after Register dataset updates or opens a dialog.
+- [P07-FLOW-01-R23] Include Register dataset in the UAT script and trace its acceptance criteria to tests.
+- [P07-FLOW-01-R24] Include actual Register dataset verification results in the evidence ledger.
+- [P07-FLOW-01-R25] Use the resulting Register dataset evidence in the case study only with its execution mode disclosed.
+- [P07-FLOW-01-R26] Have the coordinator approve the integrated Register dataset diff after specialist review.
+### P07-FLOW-02: Publish definition
+- [P07-FLOW-02-R01] Workflow capability: Publish definition.
+- [P07-FLOW-02-R02] Logical transition: Draft -> reviewed -> published.
+- [P07-FLOW-02-R03] Primary invariant: Preserve version history.
+- [P07-FLOW-02-R04] Define the user goal and permitted actor for Publish definition.
+- [P07-FLOW-02-R05] Define required inputs and source versions for Publish definition.
+- [P07-FLOW-02-R06] Check preconditions before Publish definition; reject violations with a specific user-facing explanation.
+- [P07-FLOW-02-R07] Document the authoritative output of Publish definition and the next valid action.
+- [P07-FLOW-02-R08] Implement Publish definition in a domain/service layer rather than hiding it in a UI callback.
+- [P07-FLOW-02-R09] Define the transaction boundary for Publish definition when state changes.
+- [P07-FLOW-02-R10] Preserve an audit event for material Publish definition decisions without recording secrets.
+- [P07-FLOW-02-R11] Define how Publish definition behaves when the same request or input is repeated.
+- [P07-FLOW-02-R12] Define how Publish definition behaves when its input dataset or record version is stale.
+- [P07-FLOW-02-R13] Prevent conflicting Publish definition updates with version checks or another documented mechanism.
+- [P07-FLOW-02-R14] Keep original evidence immutable when Publish definition creates a correction or new scenario.
+- [P07-FLOW-02-R15] Test the successful Publish definition path using deterministic fixtures.
+- [P07-FLOW-02-R16] Test one rejected Publish definition path against the stated invariant.
+- [P07-FLOW-02-R17] Test interrupted Publish definition execution and prove safe recovery or explicit noncommit.
+- [P07-FLOW-02-R18] Test authorized versus unauthorized Publish definition behavior where real backend roles apply.
+- [P07-FLOW-02-R19] In the static website, label Publish definition mutations as browser-memory simulation.
+- [P07-FLOW-02-R20] Never make Publish definition appear server-persistent in the GitHub Pages demo.
+- [P07-FLOW-02-R21] Expose progress, success and actionable failure feedback for Publish definition.
+- [P07-FLOW-02-R22] Keep keyboard focus coherent after Publish definition updates or opens a dialog.
+- [P07-FLOW-02-R23] Include Publish definition in the UAT script and trace its acceptance criteria to tests.
+- [P07-FLOW-02-R24] Include actual Publish definition verification results in the evidence ledger.
+- [P07-FLOW-02-R25] Use the resulting Publish definition evidence in the case study only with its execution mode disclosed.
+- [P07-FLOW-02-R26] Have the coordinator approve the integrated Publish definition diff after specialist review.
+### P07-FLOW-03: Run quality rule
+- [P07-FLOW-03-R01] Workflow capability: Run quality rule.
+- [P07-FLOW-03-R02] Logical transition: Active rule -> measured result.
+- [P07-FLOW-03-R03] Primary invariant: Store eligible and failing counts.
+- [P07-FLOW-03-R04] Define the user goal and permitted actor for Run quality rule.
+- [P07-FLOW-03-R05] Define required inputs and source versions for Run quality rule.
+- [P07-FLOW-03-R06] Check preconditions before Run quality rule; reject violations with a specific user-facing explanation.
+- [P07-FLOW-03-R07] Document the authoritative output of Run quality rule and the next valid action.
+- [P07-FLOW-03-R08] Implement Run quality rule in a domain/service layer rather than hiding it in a UI callback.
+- [P07-FLOW-03-R09] Define the transaction boundary for Run quality rule when state changes.
+- [P07-FLOW-03-R10] Preserve an audit event for material Run quality rule decisions without recording secrets.
+- [P07-FLOW-03-R11] Define how Run quality rule behaves when the same request or input is repeated.
+- [P07-FLOW-03-R12] Define how Run quality rule behaves when its input dataset or record version is stale.
+- [P07-FLOW-03-R13] Prevent conflicting Run quality rule updates with version checks or another documented mechanism.
+- [P07-FLOW-03-R14] Keep original evidence immutable when Run quality rule creates a correction or new scenario.
+- [P07-FLOW-03-R15] Test the successful Run quality rule path using deterministic fixtures.
+- [P07-FLOW-03-R16] Test one rejected Run quality rule path against the stated invariant.
+- [P07-FLOW-03-R17] Test interrupted Run quality rule execution and prove safe recovery or explicit noncommit.
+- [P07-FLOW-03-R18] Test authorized versus unauthorized Run quality rule behavior where real backend roles apply.
+- [P07-FLOW-03-R19] In the static website, label Run quality rule mutations as browser-memory simulation.
+- [P07-FLOW-03-R20] Never make Run quality rule appear server-persistent in the GitHub Pages demo.
+- [P07-FLOW-03-R21] Expose progress, success and actionable failure feedback for Run quality rule.
+- [P07-FLOW-03-R22] Keep keyboard focus coherent after Run quality rule updates or opens a dialog.
+- [P07-FLOW-03-R23] Include Run quality rule in the UAT script and trace its acceptance criteria to tests.
+- [P07-FLOW-03-R24] Include actual Run quality rule verification results in the evidence ledger.
+- [P07-FLOW-03-R25] Use the resulting Run quality rule evidence in the case study only with its execution mode disclosed.
+- [P07-FLOW-03-R26] Have the coordinator approve the integrated Run quality rule diff after specialist review.
+### P07-FLOW-04: Open issue
+- [P07-FLOW-04-R01] Workflow capability: Open issue.
+- [P07-FLOW-04-R02] Logical transition: Failure -> owned issue.
+- [P07-FLOW-04-R03] Primary invariant: Link run and severity.
+- [P07-FLOW-04-R04] Define the user goal and permitted actor for Open issue.
+- [P07-FLOW-04-R05] Define required inputs and source versions for Open issue.
+- [P07-FLOW-04-R06] Check preconditions before Open issue; reject violations with a specific user-facing explanation.
+- [P07-FLOW-04-R07] Document the authoritative output of Open issue and the next valid action.
+- [P07-FLOW-04-R08] Implement Open issue in a domain/service layer rather than hiding it in a UI callback.
+- [P07-FLOW-04-R09] Define the transaction boundary for Open issue when state changes.
+- [P07-FLOW-04-R10] Preserve an audit event for material Open issue decisions without recording secrets.
+- [P07-FLOW-04-R11] Define how Open issue behaves when the same request or input is repeated.
+- [P07-FLOW-04-R12] Define how Open issue behaves when its input dataset or record version is stale.
+- [P07-FLOW-04-R13] Prevent conflicting Open issue updates with version checks or another documented mechanism.
+- [P07-FLOW-04-R14] Keep original evidence immutable when Open issue creates a correction or new scenario.
+- [P07-FLOW-04-R15] Test the successful Open issue path using deterministic fixtures.
+- [P07-FLOW-04-R16] Test one rejected Open issue path against the stated invariant.
+- [P07-FLOW-04-R17] Test interrupted Open issue execution and prove safe recovery or explicit noncommit.
+- [P07-FLOW-04-R18] Test authorized versus unauthorized Open issue behavior where real backend roles apply.
+- [P07-FLOW-04-R19] In the static website, label Open issue mutations as browser-memory simulation.
+- [P07-FLOW-04-R20] Never make Open issue appear server-persistent in the GitHub Pages demo.
+- [P07-FLOW-04-R21] Expose progress, success and actionable failure feedback for Open issue.
+- [P07-FLOW-04-R22] Keep keyboard focus coherent after Open issue updates or opens a dialog.
+- [P07-FLOW-04-R23] Include Open issue in the UAT script and trace its acceptance criteria to tests.
+- [P07-FLOW-04-R24] Include actual Open issue verification results in the evidence ledger.
+- [P07-FLOW-04-R25] Use the resulting Open issue evidence in the case study only with its execution mode disclosed.
+- [P07-FLOW-04-R26] Have the coordinator approve the integrated Open issue diff after specialist review.
+### P07-FLOW-05: Triage issue
+- [P07-FLOW-05-R01] Workflow capability: Triage issue.
+- [P07-FLOW-05-R02] Logical transition: Open -> investigating.
+- [P07-FLOW-05-R03] Primary invariant: Owner and due date.
+- [P07-FLOW-05-R04] Define the user goal and permitted actor for Triage issue.
+- [P07-FLOW-05-R05] Define required inputs and source versions for Triage issue.
+- [P07-FLOW-05-R06] Check preconditions before Triage issue; reject violations with a specific user-facing explanation.
+- [P07-FLOW-05-R07] Document the authoritative output of Triage issue and the next valid action.
+- [P07-FLOW-05-R08] Implement Triage issue in a domain/service layer rather than hiding it in a UI callback.
+- [P07-FLOW-05-R09] Define the transaction boundary for Triage issue when state changes.
+- [P07-FLOW-05-R10] Preserve an audit event for material Triage issue decisions without recording secrets.
+- [P07-FLOW-05-R11] Define how Triage issue behaves when the same request or input is repeated.
+- [P07-FLOW-05-R12] Define how Triage issue behaves when its input dataset or record version is stale.
+- [P07-FLOW-05-R13] Prevent conflicting Triage issue updates with version checks or another documented mechanism.
+- [P07-FLOW-05-R14] Keep original evidence immutable when Triage issue creates a correction or new scenario.
+- [P07-FLOW-05-R15] Test the successful Triage issue path using deterministic fixtures.
+- [P07-FLOW-05-R16] Test one rejected Triage issue path against the stated invariant.
+- [P07-FLOW-05-R17] Test interrupted Triage issue execution and prove safe recovery or explicit noncommit.
+- [P07-FLOW-05-R18] Test authorized versus unauthorized Triage issue behavior where real backend roles apply.
+- [P07-FLOW-05-R19] In the static website, label Triage issue mutations as browser-memory simulation.
+- [P07-FLOW-05-R20] Never make Triage issue appear server-persistent in the GitHub Pages demo.
+- [P07-FLOW-05-R21] Expose progress, success and actionable failure feedback for Triage issue.
+- [P07-FLOW-05-R22] Keep keyboard focus coherent after Triage issue updates or opens a dialog.
+- [P07-FLOW-05-R23] Include Triage issue in the UAT script and trace its acceptance criteria to tests.
+- [P07-FLOW-05-R24] Include actual Triage issue verification results in the evidence ledger.
+- [P07-FLOW-05-R25] Use the resulting Triage issue evidence in the case study only with its execution mode disclosed.
+- [P07-FLOW-05-R26] Have the coordinator approve the integrated Triage issue diff after specialist review.
+### P07-FLOW-06: Suggest match
+- [P07-FLOW-06-R01] Workflow capability: Suggest match.
+- [P07-FLOW-06-R02] Logical transition: Distinct source records -> candidate.
+- [P07-FLOW-06-R03] Primary invariant: Explain features and uncertainty.
+- [P07-FLOW-06-R04] Define the user goal and permitted actor for Suggest match.
+- [P07-FLOW-06-R05] Define required inputs and source versions for Suggest match.
+- [P07-FLOW-06-R06] Check preconditions before Suggest match; reject violations with a specific user-facing explanation.
+- [P07-FLOW-06-R07] Document the authoritative output of Suggest match and the next valid action.
+- [P07-FLOW-06-R08] Implement Suggest match in a domain/service layer rather than hiding it in a UI callback.
+- [P07-FLOW-06-R09] Define the transaction boundary for Suggest match when state changes.
+- [P07-FLOW-06-R10] Preserve an audit event for material Suggest match decisions without recording secrets.
+- [P07-FLOW-06-R11] Define how Suggest match behaves when the same request or input is repeated.
+- [P07-FLOW-06-R12] Define how Suggest match behaves when its input dataset or record version is stale.
+- [P07-FLOW-06-R13] Prevent conflicting Suggest match updates with version checks or another documented mechanism.
+- [P07-FLOW-06-R14] Keep original evidence immutable when Suggest match creates a correction or new scenario.
+- [P07-FLOW-06-R15] Test the successful Suggest match path using deterministic fixtures.
+- [P07-FLOW-06-R16] Test one rejected Suggest match path against the stated invariant.
+- [P07-FLOW-06-R17] Test interrupted Suggest match execution and prove safe recovery or explicit noncommit.
+- [P07-FLOW-06-R18] Test authorized versus unauthorized Suggest match behavior where real backend roles apply.
+- [P07-FLOW-06-R19] In the static website, label Suggest match mutations as browser-memory simulation.
+- [P07-FLOW-06-R20] Never make Suggest match appear server-persistent in the GitHub Pages demo.
+- [P07-FLOW-06-R21] Expose progress, success and actionable failure feedback for Suggest match.
+- [P07-FLOW-06-R22] Keep keyboard focus coherent after Suggest match updates or opens a dialog.
+- [P07-FLOW-06-R23] Include Suggest match in the UAT script and trace its acceptance criteria to tests.
+- [P07-FLOW-06-R24] Include actual Suggest match verification results in the evidence ledger.
+- [P07-FLOW-06-R25] Use the resulting Suggest match evidence in the case study only with its execution mode disclosed.
+- [P07-FLOW-06-R26] Have the coordinator approve the integrated Suggest match diff after specialist review.
+### P07-FLOW-07: Approve merge
+- [P07-FLOW-07-R01] Workflow capability: Approve merge.
+- [P07-FLOW-07-R02] Logical transition: Candidate -> linked identity.
+- [P07-FLOW-07-R03] Primary invariant: Human review and audit.
+- [P07-FLOW-07-R04] Define the user goal and permitted actor for Approve merge.
+- [P07-FLOW-07-R05] Define required inputs and source versions for Approve merge.
+- [P07-FLOW-07-R06] Check preconditions before Approve merge; reject violations with a specific user-facing explanation.
+- [P07-FLOW-07-R07] Document the authoritative output of Approve merge and the next valid action.
+- [P07-FLOW-07-R08] Implement Approve merge in a domain/service layer rather than hiding it in a UI callback.
+- [P07-FLOW-07-R09] Define the transaction boundary for Approve merge when state changes.
+- [P07-FLOW-07-R10] Preserve an audit event for material Approve merge decisions without recording secrets.
+- [P07-FLOW-07-R11] Define how Approve merge behaves when the same request or input is repeated.
+- [P07-FLOW-07-R12] Define how Approve merge behaves when its input dataset or record version is stale.
+- [P07-FLOW-07-R13] Prevent conflicting Approve merge updates with version checks or another documented mechanism.
+- [P07-FLOW-07-R14] Keep original evidence immutable when Approve merge creates a correction or new scenario.
+- [P07-FLOW-07-R15] Test the successful Approve merge path using deterministic fixtures.
+- [P07-FLOW-07-R16] Test one rejected Approve merge path against the stated invariant.
+- [P07-FLOW-07-R17] Test interrupted Approve merge execution and prove safe recovery or explicit noncommit.
+- [P07-FLOW-07-R18] Test authorized versus unauthorized Approve merge behavior where real backend roles apply.
+- [P07-FLOW-07-R19] In the static website, label Approve merge mutations as browser-memory simulation.
+- [P07-FLOW-07-R20] Never make Approve merge appear server-persistent in the GitHub Pages demo.
+- [P07-FLOW-07-R21] Expose progress, success and actionable failure feedback for Approve merge.
+- [P07-FLOW-07-R22] Keep keyboard focus coherent after Approve merge updates or opens a dialog.
+- [P07-FLOW-07-R23] Include Approve merge in the UAT script and trace its acceptance criteria to tests.
+- [P07-FLOW-07-R24] Include actual Approve merge verification results in the evidence ledger.
+- [P07-FLOW-07-R25] Use the resulting Approve merge evidence in the case study only with its execution mode disclosed.
+- [P07-FLOW-07-R26] Have the coordinator approve the integrated Approve merge diff after specialist review.
+### P07-FLOW-08: Reverse merge
+- [P07-FLOW-08-R01] Workflow capability: Reverse merge.
+- [P07-FLOW-08-R02] Logical transition: Merged -> reversed mapping.
+- [P07-FLOW-08-R03] Primary invariant: Restore distinct source identities.
+- [P07-FLOW-08-R04] Define the user goal and permitted actor for Reverse merge.
+- [P07-FLOW-08-R05] Define required inputs and source versions for Reverse merge.
+- [P07-FLOW-08-R06] Check preconditions before Reverse merge; reject violations with a specific user-facing explanation.
+- [P07-FLOW-08-R07] Document the authoritative output of Reverse merge and the next valid action.
+- [P07-FLOW-08-R08] Implement Reverse merge in a domain/service layer rather than hiding it in a UI callback.
+- [P07-FLOW-08-R09] Define the transaction boundary for Reverse merge when state changes.
+- [P07-FLOW-08-R10] Preserve an audit event for material Reverse merge decisions without recording secrets.
+- [P07-FLOW-08-R11] Define how Reverse merge behaves when the same request or input is repeated.
+- [P07-FLOW-08-R12] Define how Reverse merge behaves when its input dataset or record version is stale.
+- [P07-FLOW-08-R13] Prevent conflicting Reverse merge updates with version checks or another documented mechanism.
+- [P07-FLOW-08-R14] Keep original evidence immutable when Reverse merge creates a correction or new scenario.
+- [P07-FLOW-08-R15] Test the successful Reverse merge path using deterministic fixtures.
+- [P07-FLOW-08-R16] Test one rejected Reverse merge path against the stated invariant.
+- [P07-FLOW-08-R17] Test interrupted Reverse merge execution and prove safe recovery or explicit noncommit.
+- [P07-FLOW-08-R18] Test authorized versus unauthorized Reverse merge behavior where real backend roles apply.
+- [P07-FLOW-08-R19] In the static website, label Reverse merge mutations as browser-memory simulation.
+- [P07-FLOW-08-R20] Never make Reverse merge appear server-persistent in the GitHub Pages demo.
+- [P07-FLOW-08-R21] Expose progress, success and actionable failure feedback for Reverse merge.
+- [P07-FLOW-08-R22] Keep keyboard focus coherent after Reverse merge updates or opens a dialog.
+- [P07-FLOW-08-R23] Include Reverse merge in the UAT script and trace its acceptance criteria to tests.
+- [P07-FLOW-08-R24] Include actual Reverse merge verification results in the evidence ledger.
+- [P07-FLOW-08-R25] Use the resulting Reverse merge evidence in the case study only with its execution mode disclosed.
+- [P07-FLOW-08-R26] Have the coordinator approve the integrated Reverse merge diff after specialist review.
+### P07-FLOW-09: Disable rule
+- [P07-FLOW-09-R01] Workflow capability: Disable rule.
+- [P07-FLOW-09-R02] Logical transition: Active -> disabled.
+- [P07-FLOW-09-R03] Primary invariant: History and reason retained.
+- [P07-FLOW-09-R04] Define the user goal and permitted actor for Disable rule.
+- [P07-FLOW-09-R05] Define required inputs and source versions for Disable rule.
+- [P07-FLOW-09-R06] Check preconditions before Disable rule; reject violations with a specific user-facing explanation.
+- [P07-FLOW-09-R07] Document the authoritative output of Disable rule and the next valid action.
+- [P07-FLOW-09-R08] Implement Disable rule in a domain/service layer rather than hiding it in a UI callback.
+- [P07-FLOW-09-R09] Define the transaction boundary for Disable rule when state changes.
+- [P07-FLOW-09-R10] Preserve an audit event for material Disable rule decisions without recording secrets.
+- [P07-FLOW-09-R11] Define how Disable rule behaves when the same request or input is repeated.
+- [P07-FLOW-09-R12] Define how Disable rule behaves when its input dataset or record version is stale.
+- [P07-FLOW-09-R13] Prevent conflicting Disable rule updates with version checks or another documented mechanism.
+- [P07-FLOW-09-R14] Keep original evidence immutable when Disable rule creates a correction or new scenario.
+- [P07-FLOW-09-R15] Test the successful Disable rule path using deterministic fixtures.
+- [P07-FLOW-09-R16] Test one rejected Disable rule path against the stated invariant.
+- [P07-FLOW-09-R17] Test interrupted Disable rule execution and prove safe recovery or explicit noncommit.
+- [P07-FLOW-09-R18] Test authorized versus unauthorized Disable rule behavior where real backend roles apply.
+- [P07-FLOW-09-R19] In the static website, label Disable rule mutations as browser-memory simulation.
+- [P07-FLOW-09-R20] Never make Disable rule appear server-persistent in the GitHub Pages demo.
+- [P07-FLOW-09-R21] Expose progress, success and actionable failure feedback for Disable rule.
+- [P07-FLOW-09-R22] Keep keyboard focus coherent after Disable rule updates or opens a dialog.
+- [P07-FLOW-09-R23] Include Disable rule in the UAT script and trace its acceptance criteria to tests.
+- [P07-FLOW-09-R24] Include actual Disable rule verification results in the evidence ledger.
+- [P07-FLOW-09-R25] Use the resulting Disable rule evidence in the case study only with its execution mode disclosed.
+- [P07-FLOW-09-R26] Have the coordinator approve the integrated Disable rule diff after specialist review.
+### P07-FLOW-10: Verify remediation
+- [P07-FLOW-10-R01] Workflow capability: Verify remediation.
+- [P07-FLOW-10-R02] Logical transition: Resolved claim -> rerun confirmed.
+- [P07-FLOW-10-R03] Primary invariant: Do not equate suppression with repair.
+- [P07-FLOW-10-R04] Define the user goal and permitted actor for Verify remediation.
+- [P07-FLOW-10-R05] Define required inputs and source versions for Verify remediation.
+- [P07-FLOW-10-R06] Check preconditions before Verify remediation; reject violations with a specific user-facing explanation.
+- [P07-FLOW-10-R07] Document the authoritative output of Verify remediation and the next valid action.
+- [P07-FLOW-10-R08] Implement Verify remediation in a domain/service layer rather than hiding it in a UI callback.
+- [P07-FLOW-10-R09] Define the transaction boundary for Verify remediation when state changes.
+- [P07-FLOW-10-R10] Preserve an audit event for material Verify remediation decisions without recording secrets.
+- [P07-FLOW-10-R11] Define how Verify remediation behaves when the same request or input is repeated.
+- [P07-FLOW-10-R12] Define how Verify remediation behaves when its input dataset or record version is stale.
+- [P07-FLOW-10-R13] Prevent conflicting Verify remediation updates with version checks or another documented mechanism.
+- [P07-FLOW-10-R14] Keep original evidence immutable when Verify remediation creates a correction or new scenario.
+- [P07-FLOW-10-R15] Test the successful Verify remediation path using deterministic fixtures.
+- [P07-FLOW-10-R16] Test one rejected Verify remediation path against the stated invariant.
+- [P07-FLOW-10-R17] Test interrupted Verify remediation execution and prove safe recovery or explicit noncommit.
+- [P07-FLOW-10-R18] Test authorized versus unauthorized Verify remediation behavior where real backend roles apply.
+- [P07-FLOW-10-R19] In the static website, label Verify remediation mutations as browser-memory simulation.
+- [P07-FLOW-10-R20] Never make Verify remediation appear server-persistent in the GitHub Pages demo.
+- [P07-FLOW-10-R21] Expose progress, success and actionable failure feedback for Verify remediation.
+- [P07-FLOW-10-R22] Keep keyboard focus coherent after Verify remediation updates or opens a dialog.
+- [P07-FLOW-10-R23] Include Verify remediation in the UAT script and trace its acceptance criteria to tests.
+- [P07-FLOW-10-R24] Include actual Verify remediation verification results in the evidence ledger.
+- [P07-FLOW-10-R25] Use the resulting Verify remediation evidence in the case study only with its execution mode disclosed.
+- [P07-FLOW-10-R26] Have the coordinator approve the integrated Verify remediation diff after specialist review.
+
+## 06. Screen-by-screen product experience
+
+### P07-UI-01: Catalog home
+- [P07-UI-01-R01] Screen: Catalog home.
+- [P07-UI-01-R02] Purpose and principal representation: Search datasets, fields and owners.
+- [P07-UI-01-R03] Choose a stable route under /trustledger/ and verify direct navigation and reload for Catalog home.
+- [P07-UI-01-R04] Use the project visual direction on Catalog home: Evidence library: ivory, forest, restrained vermilion; glossary and lineage.
+- [P07-UI-01-R05] Give Catalog home one clear main action related to the business decision.
+- [P07-UI-01-R06] Display the active time window, filters and data version on Catalog home where applicable.
+- [P07-UI-01-R07] Show the synthetic/static-demo label without overwhelming Catalog home.
+- [P07-UI-01-R08] Use real verified snapshot values on Catalog home; do not hand-enter attractive KPI numbers.
+- [P07-UI-01-R09] Explain calculation meaning and units adjacent to important Catalog home values.
+- [P07-UI-01-R10] Provide an accessible table or text alternative for analytical graphics on Catalog home.
+- [P07-UI-01-R11] Use consistent category ordering and deterministic tie breaks on Catalog home.
+- [P07-UI-01-R12] Handle long names, negative values, missing categories and large values on Catalog home.
+- [P07-UI-01-R13] Implement a useful no-data state on Catalog home, including a way to clear restrictive filters.
+- [P07-UI-01-R14] Implement loading and failed-data states on Catalog home without showing invented results.
+- [P07-UI-01-R15] Keep all Catalog home controls keyboard accessible with visible focus.
+- [P07-UI-01-R16] Provide reduced-motion behavior for Catalog home transitions.
+- [P07-UI-01-R17] Keep motion purposeful; chart changes on Catalog home must not conceal changed units or populations.
+- [P07-UI-01-R18] Verify Catalog home at mobile, tablet and desktop widths with actual rendered output.
+- [P07-UI-01-R19] Verify Catalog home at 200 percent zoom and with realistic dense data.
+- [P07-UI-01-R20] Ensure exports from Catalog home match its scope or clearly explain full-population export behavior.
+- [P07-UI-01-R21] Provide navigation from Catalog home to evidence, definitions and the case study.
+- [P07-UI-01-R22] Check console errors, broken assets and nested path handling for Catalog home.
+- [P07-UI-01-R23] Record screenshot-review findings for Catalog home; do not assert review from source inspection.
+- [P07-UI-01-R24] Link Catalog home to its relevant workflow and metric contract IDs in the traceability matrix.
+### P07-UI-02: Glossary
+- [P07-UI-02-R01] Screen: Glossary.
+- [P07-UI-02-R02] Purpose and principal representation: Competing definitions and versions.
+- [P07-UI-02-R03] Choose a stable route under /trustledger/ and verify direct navigation and reload for Glossary.
+- [P07-UI-02-R04] Use the project visual direction on Glossary: Evidence library: ivory, forest, restrained vermilion; glossary and lineage.
+- [P07-UI-02-R05] Give Glossary one clear main action related to the business decision.
+- [P07-UI-02-R06] Display the active time window, filters and data version on Glossary where applicable.
+- [P07-UI-02-R07] Show the synthetic/static-demo label without overwhelming Glossary.
+- [P07-UI-02-R08] Use real verified snapshot values on Glossary; do not hand-enter attractive KPI numbers.
+- [P07-UI-02-R09] Explain calculation meaning and units adjacent to important Glossary values.
+- [P07-UI-02-R10] Provide an accessible table or text alternative for analytical graphics on Glossary.
+- [P07-UI-02-R11] Use consistent category ordering and deterministic tie breaks on Glossary.
+- [P07-UI-02-R12] Handle long names, negative values, missing categories and large values on Glossary.
+- [P07-UI-02-R13] Implement a useful no-data state on Glossary, including a way to clear restrictive filters.
+- [P07-UI-02-R14] Implement loading and failed-data states on Glossary without showing invented results.
+- [P07-UI-02-R15] Keep all Glossary controls keyboard accessible with visible focus.
+- [P07-UI-02-R16] Provide reduced-motion behavior for Glossary transitions.
+- [P07-UI-02-R17] Keep motion purposeful; chart changes on Glossary must not conceal changed units or populations.
+- [P07-UI-02-R18] Verify Glossary at mobile, tablet and desktop widths with actual rendered output.
+- [P07-UI-02-R19] Verify Glossary at 200 percent zoom and with realistic dense data.
+- [P07-UI-02-R20] Ensure exports from Glossary match its scope or clearly explain full-population export behavior.
+- [P07-UI-02-R21] Provide navigation from Glossary to evidence, definitions and the case study.
+- [P07-UI-02-R22] Check console errors, broken assets and nested path handling for Glossary.
+- [P07-UI-02-R23] Record screenshot-review findings for Glossary; do not assert review from source inspection.
+- [P07-UI-02-R24] Link Glossary to its relevant workflow and metric contract IDs in the traceability matrix.
+### P07-UI-03: Quality scorecard
+- [P07-UI-03-R01] Screen: Quality scorecard.
+- [P07-UI-03-R02] Purpose and principal representation: Dimensions and critical overrides.
+- [P07-UI-03-R03] Choose a stable route under /trustledger/ and verify direct navigation and reload for Quality scorecard.
+- [P07-UI-03-R04] Use the project visual direction on Quality scorecard: Evidence library: ivory, forest, restrained vermilion; glossary and lineage.
+- [P07-UI-03-R05] Give Quality scorecard one clear main action related to the business decision.
+- [P07-UI-03-R06] Display the active time window, filters and data version on Quality scorecard where applicable.
+- [P07-UI-03-R07] Show the synthetic/static-demo label without overwhelming Quality scorecard.
+- [P07-UI-03-R08] Use real verified snapshot values on Quality scorecard; do not hand-enter attractive KPI numbers.
+- [P07-UI-03-R09] Explain calculation meaning and units adjacent to important Quality scorecard values.
+- [P07-UI-03-R10] Provide an accessible table or text alternative for analytical graphics on Quality scorecard.
+- [P07-UI-03-R11] Use consistent category ordering and deterministic tie breaks on Quality scorecard.
+- [P07-UI-03-R12] Handle long names, negative values, missing categories and large values on Quality scorecard.
+- [P07-UI-03-R13] Implement a useful no-data state on Quality scorecard, including a way to clear restrictive filters.
+- [P07-UI-03-R14] Implement loading and failed-data states on Quality scorecard without showing invented results.
+- [P07-UI-03-R15] Keep all Quality scorecard controls keyboard accessible with visible focus.
+- [P07-UI-03-R16] Provide reduced-motion behavior for Quality scorecard transitions.
+- [P07-UI-03-R17] Keep motion purposeful; chart changes on Quality scorecard must not conceal changed units or populations.
+- [P07-UI-03-R18] Verify Quality scorecard at mobile, tablet and desktop widths with actual rendered output.
+- [P07-UI-03-R19] Verify Quality scorecard at 200 percent zoom and with realistic dense data.
+- [P07-UI-03-R20] Ensure exports from Quality scorecard match its scope or clearly explain full-population export behavior.
+- [P07-UI-03-R21] Provide navigation from Quality scorecard to evidence, definitions and the case study.
+- [P07-UI-03-R22] Check console errors, broken assets and nested path handling for Quality scorecard.
+- [P07-UI-03-R23] Record screenshot-review findings for Quality scorecard; do not assert review from source inspection.
+- [P07-UI-03-R24] Link Quality scorecard to its relevant workflow and metric contract IDs in the traceability matrix.
+### P07-UI-04: Rule detail
+- [P07-UI-04-R01] Screen: Rule detail.
+- [P07-UI-04-R02] Purpose and principal representation: Eligible population and failed examples.
+- [P07-UI-04-R03] Choose a stable route under /trustledger/ and verify direct navigation and reload for Rule detail.
+- [P07-UI-04-R04] Use the project visual direction on Rule detail: Evidence library: ivory, forest, restrained vermilion; glossary and lineage.
+- [P07-UI-04-R05] Give Rule detail one clear main action related to the business decision.
+- [P07-UI-04-R06] Display the active time window, filters and data version on Rule detail where applicable.
+- [P07-UI-04-R07] Show the synthetic/static-demo label without overwhelming Rule detail.
+- [P07-UI-04-R08] Use real verified snapshot values on Rule detail; do not hand-enter attractive KPI numbers.
+- [P07-UI-04-R09] Explain calculation meaning and units adjacent to important Rule detail values.
+- [P07-UI-04-R10] Provide an accessible table or text alternative for analytical graphics on Rule detail.
+- [P07-UI-04-R11] Use consistent category ordering and deterministic tie breaks on Rule detail.
+- [P07-UI-04-R12] Handle long names, negative values, missing categories and large values on Rule detail.
+- [P07-UI-04-R13] Implement a useful no-data state on Rule detail, including a way to clear restrictive filters.
+- [P07-UI-04-R14] Implement loading and failed-data states on Rule detail without showing invented results.
+- [P07-UI-04-R15] Keep all Rule detail controls keyboard accessible with visible focus.
+- [P07-UI-04-R16] Provide reduced-motion behavior for Rule detail transitions.
+- [P07-UI-04-R17] Keep motion purposeful; chart changes on Rule detail must not conceal changed units or populations.
+- [P07-UI-04-R18] Verify Rule detail at mobile, tablet and desktop widths with actual rendered output.
+- [P07-UI-04-R19] Verify Rule detail at 200 percent zoom and with realistic dense data.
+- [P07-UI-04-R20] Ensure exports from Rule detail match its scope or clearly explain full-population export behavior.
+- [P07-UI-04-R21] Provide navigation from Rule detail to evidence, definitions and the case study.
+- [P07-UI-04-R22] Check console errors, broken assets and nested path handling for Rule detail.
+- [P07-UI-04-R23] Record screenshot-review findings for Rule detail; do not assert review from source inspection.
+- [P07-UI-04-R24] Link Rule detail to its relevant workflow and metric contract IDs in the traceability matrix.
+### P07-UI-05: Issue workbench
+- [P07-UI-05-R01] Screen: Issue workbench.
+- [P07-UI-05-R02] Purpose and principal representation: Ownership, aging and remediation.
+- [P07-UI-05-R03] Choose a stable route under /trustledger/ and verify direct navigation and reload for Issue workbench.
+- [P07-UI-05-R04] Use the project visual direction on Issue workbench: Evidence library: ivory, forest, restrained vermilion; glossary and lineage.
+- [P07-UI-05-R05] Give Issue workbench one clear main action related to the business decision.
+- [P07-UI-05-R06] Display the active time window, filters and data version on Issue workbench where applicable.
+- [P07-UI-05-R07] Show the synthetic/static-demo label without overwhelming Issue workbench.
+- [P07-UI-05-R08] Use real verified snapshot values on Issue workbench; do not hand-enter attractive KPI numbers.
+- [P07-UI-05-R09] Explain calculation meaning and units adjacent to important Issue workbench values.
+- [P07-UI-05-R10] Provide an accessible table or text alternative for analytical graphics on Issue workbench.
+- [P07-UI-05-R11] Use consistent category ordering and deterministic tie breaks on Issue workbench.
+- [P07-UI-05-R12] Handle long names, negative values, missing categories and large values on Issue workbench.
+- [P07-UI-05-R13] Implement a useful no-data state on Issue workbench, including a way to clear restrictive filters.
+- [P07-UI-05-R14] Implement loading and failed-data states on Issue workbench without showing invented results.
+- [P07-UI-05-R15] Keep all Issue workbench controls keyboard accessible with visible focus.
+- [P07-UI-05-R16] Provide reduced-motion behavior for Issue workbench transitions.
+- [P07-UI-05-R17] Keep motion purposeful; chart changes on Issue workbench must not conceal changed units or populations.
+- [P07-UI-05-R18] Verify Issue workbench at mobile, tablet and desktop widths with actual rendered output.
+- [P07-UI-05-R19] Verify Issue workbench at 200 percent zoom and with realistic dense data.
+- [P07-UI-05-R20] Ensure exports from Issue workbench match its scope or clearly explain full-population export behavior.
+- [P07-UI-05-R21] Provide navigation from Issue workbench to evidence, definitions and the case study.
+- [P07-UI-05-R22] Check console errors, broken assets and nested path handling for Issue workbench.
+- [P07-UI-05-R23] Record screenshot-review findings for Issue workbench; do not assert review from source inspection.
+- [P07-UI-05-R24] Link Issue workbench to its relevant workflow and metric contract IDs in the traceability matrix.
+### P07-UI-06: Lineage explorer
+- [P07-UI-06-R01] Screen: Lineage explorer.
+- [P07-UI-06-R02] Purpose and principal representation: Declared versus observed edge styling.
+- [P07-UI-06-R03] Choose a stable route under /trustledger/ and verify direct navigation and reload for Lineage explorer.
+- [P07-UI-06-R04] Use the project visual direction on Lineage explorer: Evidence library: ivory, forest, restrained vermilion; glossary and lineage.
+- [P07-UI-06-R05] Give Lineage explorer one clear main action related to the business decision.
+- [P07-UI-06-R06] Display the active time window, filters and data version on Lineage explorer where applicable.
+- [P07-UI-06-R07] Show the synthetic/static-demo label without overwhelming Lineage explorer.
+- [P07-UI-06-R08] Use real verified snapshot values on Lineage explorer; do not hand-enter attractive KPI numbers.
+- [P07-UI-06-R09] Explain calculation meaning and units adjacent to important Lineage explorer values.
+- [P07-UI-06-R10] Provide an accessible table or text alternative for analytical graphics on Lineage explorer.
+- [P07-UI-06-R11] Use consistent category ordering and deterministic tie breaks on Lineage explorer.
+- [P07-UI-06-R12] Handle long names, negative values, missing categories and large values on Lineage explorer.
+- [P07-UI-06-R13] Implement a useful no-data state on Lineage explorer, including a way to clear restrictive filters.
+- [P07-UI-06-R14] Implement loading and failed-data states on Lineage explorer without showing invented results.
+- [P07-UI-06-R15] Keep all Lineage explorer controls keyboard accessible with visible focus.
+- [P07-UI-06-R16] Provide reduced-motion behavior for Lineage explorer transitions.
+- [P07-UI-06-R17] Keep motion purposeful; chart changes on Lineage explorer must not conceal changed units or populations.
+- [P07-UI-06-R18] Verify Lineage explorer at mobile, tablet and desktop widths with actual rendered output.
+- [P07-UI-06-R19] Verify Lineage explorer at 200 percent zoom and with realistic dense data.
+- [P07-UI-06-R20] Ensure exports from Lineage explorer match its scope or clearly explain full-population export behavior.
+- [P07-UI-06-R21] Provide navigation from Lineage explorer to evidence, definitions and the case study.
+- [P07-UI-06-R22] Check console errors, broken assets and nested path handling for Lineage explorer.
+- [P07-UI-06-R23] Record screenshot-review findings for Lineage explorer; do not assert review from source inspection.
+- [P07-UI-06-R24] Link Lineage explorer to its relevant workflow and metric contract IDs in the traceability matrix.
+### P07-UI-07: Duplicate review
+- [P07-UI-07-R01] Screen: Duplicate review.
+- [P07-UI-07-R02] Purpose and principal representation: Side-by-side identity evidence.
+- [P07-UI-07-R03] Choose a stable route under /trustledger/ and verify direct navigation and reload for Duplicate review.
+- [P07-UI-07-R04] Use the project visual direction on Duplicate review: Evidence library: ivory, forest, restrained vermilion; glossary and lineage.
+- [P07-UI-07-R05] Give Duplicate review one clear main action related to the business decision.
+- [P07-UI-07-R06] Display the active time window, filters and data version on Duplicate review where applicable.
+- [P07-UI-07-R07] Show the synthetic/static-demo label without overwhelming Duplicate review.
+- [P07-UI-07-R08] Use real verified snapshot values on Duplicate review; do not hand-enter attractive KPI numbers.
+- [P07-UI-07-R09] Explain calculation meaning and units adjacent to important Duplicate review values.
+- [P07-UI-07-R10] Provide an accessible table or text alternative for analytical graphics on Duplicate review.
+- [P07-UI-07-R11] Use consistent category ordering and deterministic tie breaks on Duplicate review.
+- [P07-UI-07-R12] Handle long names, negative values, missing categories and large values on Duplicate review.
+- [P07-UI-07-R13] Implement a useful no-data state on Duplicate review, including a way to clear restrictive filters.
+- [P07-UI-07-R14] Implement loading and failed-data states on Duplicate review without showing invented results.
+- [P07-UI-07-R15] Keep all Duplicate review controls keyboard accessible with visible focus.
+- [P07-UI-07-R16] Provide reduced-motion behavior for Duplicate review transitions.
+- [P07-UI-07-R17] Keep motion purposeful; chart changes on Duplicate review must not conceal changed units or populations.
+- [P07-UI-07-R18] Verify Duplicate review at mobile, tablet and desktop widths with actual rendered output.
+- [P07-UI-07-R19] Verify Duplicate review at 200 percent zoom and with realistic dense data.
+- [P07-UI-07-R20] Ensure exports from Duplicate review match its scope or clearly explain full-population export behavior.
+- [P07-UI-07-R21] Provide navigation from Duplicate review to evidence, definitions and the case study.
+- [P07-UI-07-R22] Check console errors, broken assets and nested path handling for Duplicate review.
+- [P07-UI-07-R23] Record screenshot-review findings for Duplicate review; do not assert review from source inspection.
+- [P07-UI-07-R24] Link Duplicate review to its relevant workflow and metric contract IDs in the traceability matrix.
+### P07-UI-08: Merge history
+- [P07-UI-08-R01] Screen: Merge history.
+- [P07-UI-08-R02] Purpose and principal representation: Reversible mapping decisions.
+- [P07-UI-08-R03] Choose a stable route under /trustledger/ and verify direct navigation and reload for Merge history.
+- [P07-UI-08-R04] Use the project visual direction on Merge history: Evidence library: ivory, forest, restrained vermilion; glossary and lineage.
+- [P07-UI-08-R05] Give Merge history one clear main action related to the business decision.
+- [P07-UI-08-R06] Display the active time window, filters and data version on Merge history where applicable.
+- [P07-UI-08-R07] Show the synthetic/static-demo label without overwhelming Merge history.
+- [P07-UI-08-R08] Use real verified snapshot values on Merge history; do not hand-enter attractive KPI numbers.
+- [P07-UI-08-R09] Explain calculation meaning and units adjacent to important Merge history values.
+- [P07-UI-08-R10] Provide an accessible table or text alternative for analytical graphics on Merge history.
+- [P07-UI-08-R11] Use consistent category ordering and deterministic tie breaks on Merge history.
+- [P07-UI-08-R12] Handle long names, negative values, missing categories and large values on Merge history.
+- [P07-UI-08-R13] Implement a useful no-data state on Merge history, including a way to clear restrictive filters.
+- [P07-UI-08-R14] Implement loading and failed-data states on Merge history without showing invented results.
+- [P07-UI-08-R15] Keep all Merge history controls keyboard accessible with visible focus.
+- [P07-UI-08-R16] Provide reduced-motion behavior for Merge history transitions.
+- [P07-UI-08-R17] Keep motion purposeful; chart changes on Merge history must not conceal changed units or populations.
+- [P07-UI-08-R18] Verify Merge history at mobile, tablet and desktop widths with actual rendered output.
+- [P07-UI-08-R19] Verify Merge history at 200 percent zoom and with realistic dense data.
+- [P07-UI-08-R20] Ensure exports from Merge history match its scope or clearly explain full-population export behavior.
+- [P07-UI-08-R21] Provide navigation from Merge history to evidence, definitions and the case study.
+- [P07-UI-08-R22] Check console errors, broken assets and nested path handling for Merge history.
+- [P07-UI-08-R23] Record screenshot-review findings for Merge history; do not assert review from source inspection.
+- [P07-UI-08-R24] Link Merge history to its relevant workflow and metric contract IDs in the traceability matrix.
+### P07-UI-09: Impact preview
+- [P07-UI-09-R01] Screen: Impact preview.
+- [P07-UI-09-R02] Purpose and principal representation: Downstream metrics affected by change.
+- [P07-UI-09-R03] Choose a stable route under /trustledger/ and verify direct navigation and reload for Impact preview.
+- [P07-UI-09-R04] Use the project visual direction on Impact preview: Evidence library: ivory, forest, restrained vermilion; glossary and lineage.
+- [P07-UI-09-R05] Give Impact preview one clear main action related to the business decision.
+- [P07-UI-09-R06] Display the active time window, filters and data version on Impact preview where applicable.
+- [P07-UI-09-R07] Show the synthetic/static-demo label without overwhelming Impact preview.
+- [P07-UI-09-R08] Use real verified snapshot values on Impact preview; do not hand-enter attractive KPI numbers.
+- [P07-UI-09-R09] Explain calculation meaning and units adjacent to important Impact preview values.
+- [P07-UI-09-R10] Provide an accessible table or text alternative for analytical graphics on Impact preview.
+- [P07-UI-09-R11] Use consistent category ordering and deterministic tie breaks on Impact preview.
+- [P07-UI-09-R12] Handle long names, negative values, missing categories and large values on Impact preview.
+- [P07-UI-09-R13] Implement a useful no-data state on Impact preview, including a way to clear restrictive filters.
+- [P07-UI-09-R14] Implement loading and failed-data states on Impact preview without showing invented results.
+- [P07-UI-09-R15] Keep all Impact preview controls keyboard accessible with visible focus.
+- [P07-UI-09-R16] Provide reduced-motion behavior for Impact preview transitions.
+- [P07-UI-09-R17] Keep motion purposeful; chart changes on Impact preview must not conceal changed units or populations.
+- [P07-UI-09-R18] Verify Impact preview at mobile, tablet and desktop widths with actual rendered output.
+- [P07-UI-09-R19] Verify Impact preview at 200 percent zoom and with realistic dense data.
+- [P07-UI-09-R20] Ensure exports from Impact preview match its scope or clearly explain full-population export behavior.
+- [P07-UI-09-R21] Provide navigation from Impact preview to evidence, definitions and the case study.
+- [P07-UI-09-R22] Check console errors, broken assets and nested path handling for Impact preview.
+- [P07-UI-09-R23] Record screenshot-review findings for Impact preview; do not assert review from source inspection.
+- [P07-UI-09-R24] Link Impact preview to its relevant workflow and metric contract IDs in the traceability matrix.
+### P07-UI-10: Case study
+- [P07-UI-10-R01] Screen: Case study.
+- [P07-UI-10-R02] Purpose and principal representation: Governance process and evidence.
+- [P07-UI-10-R03] Choose a stable route under /trustledger/ and verify direct navigation and reload for Case study.
+- [P07-UI-10-R04] Use the project visual direction on Case study: Evidence library: ivory, forest, restrained vermilion; glossary and lineage.
+- [P07-UI-10-R05] Give Case study one clear main action related to the business decision.
+- [P07-UI-10-R06] Display the active time window, filters and data version on Case study where applicable.
+- [P07-UI-10-R07] Show the synthetic/static-demo label without overwhelming Case study.
+- [P07-UI-10-R08] Use real verified snapshot values on Case study; do not hand-enter attractive KPI numbers.
+- [P07-UI-10-R09] Explain calculation meaning and units adjacent to important Case study values.
+- [P07-UI-10-R10] Provide an accessible table or text alternative for analytical graphics on Case study.
+- [P07-UI-10-R11] Use consistent category ordering and deterministic tie breaks on Case study.
+- [P07-UI-10-R12] Handle long names, negative values, missing categories and large values on Case study.
+- [P07-UI-10-R13] Implement a useful no-data state on Case study, including a way to clear restrictive filters.
+- [P07-UI-10-R14] Implement loading and failed-data states on Case study without showing invented results.
+- [P07-UI-10-R15] Keep all Case study controls keyboard accessible with visible focus.
+- [P07-UI-10-R16] Provide reduced-motion behavior for Case study transitions.
+- [P07-UI-10-R17] Keep motion purposeful; chart changes on Case study must not conceal changed units or populations.
+- [P07-UI-10-R18] Verify Case study at mobile, tablet and desktop widths with actual rendered output.
+- [P07-UI-10-R19] Verify Case study at 200 percent zoom and with realistic dense data.
+- [P07-UI-10-R20] Ensure exports from Case study match its scope or clearly explain full-population export behavior.
+- [P07-UI-10-R21] Provide navigation from Case study to evidence, definitions and the case study.
+- [P07-UI-10-R22] Check console errors, broken assets and nested path handling for Case study.
+- [P07-UI-10-R23] Record screenshot-review findings for Case study; do not assert review from source inspection.
+- [P07-UI-10-R24] Link Case study to its relevant workflow and metric contract IDs in the traceability matrix.
+
+## 07. Adversarial domain verification
+
+### P07-TEST-01-DETECT: Overall score hides critical missing keys — detect
+- [P07-TEST-01-DETECT-R01] Failure hypothesis: Overall score hides critical missing keys.
+- [P07-TEST-01-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P07-TEST-01-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Overall score hides critical missing keys.
+- [P07-TEST-01-DETECT-R04] Document the expected business outcome before executing P07-TEST-01-DETECT.
+- [P07-TEST-01-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-01-DETECT-R06] Capture the initial canonical state and dataset hash for P07-TEST-01-DETECT.
+- [P07-TEST-01-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-01-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-01-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-01-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-01-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-01-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-01-DETECT-R13] Use a separate reference calculation when P07-TEST-01-DETECT affects a key numerical total.
+- [P07-TEST-01-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Overall score hides critical missing keys.
+- [P07-TEST-01-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-01-DETECT.
+- [P07-TEST-01-DETECT-R16] If blocked by environment capability, mark P07-TEST-01-DETECT blocked and retain the executable test source.
+- [P07-TEST-01-DETECT-R17] Do not claim P07-TEST-01-DETECT passed from reading the implementation or from another test passing.
+- [P07-TEST-01-DETECT-R18] Rerun P07-TEST-01-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-01-RECOVER: Overall score hides critical missing keys — recover
+- [P07-TEST-01-RECOVER-R01] Failure hypothesis: Overall score hides critical missing keys.
+- [P07-TEST-01-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P07-TEST-01-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Overall score hides critical missing keys.
+- [P07-TEST-01-RECOVER-R04] Document the expected business outcome before executing P07-TEST-01-RECOVER.
+- [P07-TEST-01-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-01-RECOVER-R06] Capture the initial canonical state and dataset hash for P07-TEST-01-RECOVER.
+- [P07-TEST-01-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-01-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-01-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-01-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-01-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-01-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-01-RECOVER-R13] Use a separate reference calculation when P07-TEST-01-RECOVER affects a key numerical total.
+- [P07-TEST-01-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Overall score hides critical missing keys.
+- [P07-TEST-01-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-01-RECOVER.
+- [P07-TEST-01-RECOVER-R16] If blocked by environment capability, mark P07-TEST-01-RECOVER blocked and retain the executable test source.
+- [P07-TEST-01-RECOVER-R17] Do not claim P07-TEST-01-RECOVER passed from reading the implementation or from another test passing.
+- [P07-TEST-01-RECOVER-R18] Rerun P07-TEST-01-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-02-DETECT: Disabled rule makes history disappear — detect
+- [P07-TEST-02-DETECT-R01] Failure hypothesis: Disabled rule makes history disappear.
+- [P07-TEST-02-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P07-TEST-02-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Disabled rule makes history disappear.
+- [P07-TEST-02-DETECT-R04] Document the expected business outcome before executing P07-TEST-02-DETECT.
+- [P07-TEST-02-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-02-DETECT-R06] Capture the initial canonical state and dataset hash for P07-TEST-02-DETECT.
+- [P07-TEST-02-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-02-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-02-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-02-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-02-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-02-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-02-DETECT-R13] Use a separate reference calculation when P07-TEST-02-DETECT affects a key numerical total.
+- [P07-TEST-02-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Disabled rule makes history disappear.
+- [P07-TEST-02-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-02-DETECT.
+- [P07-TEST-02-DETECT-R16] If blocked by environment capability, mark P07-TEST-02-DETECT blocked and retain the executable test source.
+- [P07-TEST-02-DETECT-R17] Do not claim P07-TEST-02-DETECT passed from reading the implementation or from another test passing.
+- [P07-TEST-02-DETECT-R18] Rerun P07-TEST-02-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-02-RECOVER: Disabled rule makes history disappear — recover
+- [P07-TEST-02-RECOVER-R01] Failure hypothesis: Disabled rule makes history disappear.
+- [P07-TEST-02-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P07-TEST-02-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Disabled rule makes history disappear.
+- [P07-TEST-02-RECOVER-R04] Document the expected business outcome before executing P07-TEST-02-RECOVER.
+- [P07-TEST-02-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-02-RECOVER-R06] Capture the initial canonical state and dataset hash for P07-TEST-02-RECOVER.
+- [P07-TEST-02-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-02-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-02-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-02-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-02-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-02-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-02-RECOVER-R13] Use a separate reference calculation when P07-TEST-02-RECOVER affects a key numerical total.
+- [P07-TEST-02-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Disabled rule makes history disappear.
+- [P07-TEST-02-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-02-RECOVER.
+- [P07-TEST-02-RECOVER-R16] If blocked by environment capability, mark P07-TEST-02-RECOVER blocked and retain the executable test source.
+- [P07-TEST-02-RECOVER-R17] Do not claim P07-TEST-02-RECOVER passed from reading the implementation or from another test passing.
+- [P07-TEST-02-RECOVER-R18] Rerun P07-TEST-02-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-03-DETECT: Two people share a name and address — detect
+- [P07-TEST-03-DETECT-R01] Failure hypothesis: Two people share a name and address.
+- [P07-TEST-03-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P07-TEST-03-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Two people share a name and address.
+- [P07-TEST-03-DETECT-R04] Document the expected business outcome before executing P07-TEST-03-DETECT.
+- [P07-TEST-03-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-03-DETECT-R06] Capture the initial canonical state and dataset hash for P07-TEST-03-DETECT.
+- [P07-TEST-03-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-03-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-03-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-03-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-03-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-03-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-03-DETECT-R13] Use a separate reference calculation when P07-TEST-03-DETECT affects a key numerical total.
+- [P07-TEST-03-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Two people share a name and address.
+- [P07-TEST-03-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-03-DETECT.
+- [P07-TEST-03-DETECT-R16] If blocked by environment capability, mark P07-TEST-03-DETECT blocked and retain the executable test source.
+- [P07-TEST-03-DETECT-R17] Do not claim P07-TEST-03-DETECT passed from reading the implementation or from another test passing.
+- [P07-TEST-03-DETECT-R18] Rerun P07-TEST-03-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-03-RECOVER: Two people share a name and address — recover
+- [P07-TEST-03-RECOVER-R01] Failure hypothesis: Two people share a name and address.
+- [P07-TEST-03-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P07-TEST-03-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Two people share a name and address.
+- [P07-TEST-03-RECOVER-R04] Document the expected business outcome before executing P07-TEST-03-RECOVER.
+- [P07-TEST-03-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-03-RECOVER-R06] Capture the initial canonical state and dataset hash for P07-TEST-03-RECOVER.
+- [P07-TEST-03-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-03-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-03-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-03-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-03-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-03-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-03-RECOVER-R13] Use a separate reference calculation when P07-TEST-03-RECOVER affects a key numerical total.
+- [P07-TEST-03-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Two people share a name and address.
+- [P07-TEST-03-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-03-RECOVER.
+- [P07-TEST-03-RECOVER-R16] If blocked by environment capability, mark P07-TEST-03-RECOVER blocked and retain the executable test source.
+- [P07-TEST-03-RECOVER-R17] Do not claim P07-TEST-03-RECOVER passed from reading the implementation or from another test passing.
+- [P07-TEST-03-RECOVER-R18] Rerun P07-TEST-03-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-04-DETECT: Foreign key nulls silently excluded — detect
+- [P07-TEST-04-DETECT-R01] Failure hypothesis: Foreign key nulls silently excluded.
+- [P07-TEST-04-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P07-TEST-04-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Foreign key nulls silently excluded.
+- [P07-TEST-04-DETECT-R04] Document the expected business outcome before executing P07-TEST-04-DETECT.
+- [P07-TEST-04-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-04-DETECT-R06] Capture the initial canonical state and dataset hash for P07-TEST-04-DETECT.
+- [P07-TEST-04-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-04-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-04-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-04-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-04-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-04-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-04-DETECT-R13] Use a separate reference calculation when P07-TEST-04-DETECT affects a key numerical total.
+- [P07-TEST-04-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Foreign key nulls silently excluded.
+- [P07-TEST-04-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-04-DETECT.
+- [P07-TEST-04-DETECT-R16] If blocked by environment capability, mark P07-TEST-04-DETECT blocked and retain the executable test source.
+- [P07-TEST-04-DETECT-R17] Do not claim P07-TEST-04-DETECT passed from reading the implementation or from another test passing.
+- [P07-TEST-04-DETECT-R18] Rerun P07-TEST-04-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-04-RECOVER: Foreign key nulls silently excluded — recover
+- [P07-TEST-04-RECOVER-R01] Failure hypothesis: Foreign key nulls silently excluded.
+- [P07-TEST-04-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P07-TEST-04-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Foreign key nulls silently excluded.
+- [P07-TEST-04-RECOVER-R04] Document the expected business outcome before executing P07-TEST-04-RECOVER.
+- [P07-TEST-04-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-04-RECOVER-R06] Capture the initial canonical state and dataset hash for P07-TEST-04-RECOVER.
+- [P07-TEST-04-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-04-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-04-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-04-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-04-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-04-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-04-RECOVER-R13] Use a separate reference calculation when P07-TEST-04-RECOVER affects a key numerical total.
+- [P07-TEST-04-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Foreign key nulls silently excluded.
+- [P07-TEST-04-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-04-RECOVER.
+- [P07-TEST-04-RECOVER-R16] If blocked by environment capability, mark P07-TEST-04-RECOVER blocked and retain the executable test source.
+- [P07-TEST-04-RECOVER-R17] Do not claim P07-TEST-04-RECOVER passed from reading the implementation or from another test passing.
+- [P07-TEST-04-RECOVER-R18] Rerun P07-TEST-04-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-05-DETECT: Weights change without version — detect
+- [P07-TEST-05-DETECT-R01] Failure hypothesis: Weights change without version.
+- [P07-TEST-05-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P07-TEST-05-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Weights change without version.
+- [P07-TEST-05-DETECT-R04] Document the expected business outcome before executing P07-TEST-05-DETECT.
+- [P07-TEST-05-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-05-DETECT-R06] Capture the initial canonical state and dataset hash for P07-TEST-05-DETECT.
+- [P07-TEST-05-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-05-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-05-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-05-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-05-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-05-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-05-DETECT-R13] Use a separate reference calculation when P07-TEST-05-DETECT affects a key numerical total.
+- [P07-TEST-05-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Weights change without version.
+- [P07-TEST-05-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-05-DETECT.
+- [P07-TEST-05-DETECT-R16] If blocked by environment capability, mark P07-TEST-05-DETECT blocked and retain the executable test source.
+- [P07-TEST-05-DETECT-R17] Do not claim P07-TEST-05-DETECT passed from reading the implementation or from another test passing.
+- [P07-TEST-05-DETECT-R18] Rerun P07-TEST-05-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-05-RECOVER: Weights change without version — recover
+- [P07-TEST-05-RECOVER-R01] Failure hypothesis: Weights change without version.
+- [P07-TEST-05-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P07-TEST-05-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Weights change without version.
+- [P07-TEST-05-RECOVER-R04] Document the expected business outcome before executing P07-TEST-05-RECOVER.
+- [P07-TEST-05-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-05-RECOVER-R06] Capture the initial canonical state and dataset hash for P07-TEST-05-RECOVER.
+- [P07-TEST-05-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-05-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-05-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-05-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-05-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-05-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-05-RECOVER-R13] Use a separate reference calculation when P07-TEST-05-RECOVER affects a key numerical total.
+- [P07-TEST-05-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Weights change without version.
+- [P07-TEST-05-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-05-RECOVER.
+- [P07-TEST-05-RECOVER-R16] If blocked by environment capability, mark P07-TEST-05-RECOVER blocked and retain the executable test source.
+- [P07-TEST-05-RECOVER-R17] Do not claim P07-TEST-05-RECOVER passed from reading the implementation or from another test passing.
+- [P07-TEST-05-RECOVER-R18] Rerun P07-TEST-05-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-06-DETECT: Merged identity cannot be reversed — detect
+- [P07-TEST-06-DETECT-R01] Failure hypothesis: Merged identity cannot be reversed.
+- [P07-TEST-06-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P07-TEST-06-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Merged identity cannot be reversed.
+- [P07-TEST-06-DETECT-R04] Document the expected business outcome before executing P07-TEST-06-DETECT.
+- [P07-TEST-06-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-06-DETECT-R06] Capture the initial canonical state and dataset hash for P07-TEST-06-DETECT.
+- [P07-TEST-06-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-06-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-06-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-06-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-06-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-06-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-06-DETECT-R13] Use a separate reference calculation when P07-TEST-06-DETECT affects a key numerical total.
+- [P07-TEST-06-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Merged identity cannot be reversed.
+- [P07-TEST-06-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-06-DETECT.
+- [P07-TEST-06-DETECT-R16] If blocked by environment capability, mark P07-TEST-06-DETECT blocked and retain the executable test source.
+- [P07-TEST-06-DETECT-R17] Do not claim P07-TEST-06-DETECT passed from reading the implementation or from another test passing.
+- [P07-TEST-06-DETECT-R18] Rerun P07-TEST-06-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-06-RECOVER: Merged identity cannot be reversed — recover
+- [P07-TEST-06-RECOVER-R01] Failure hypothesis: Merged identity cannot be reversed.
+- [P07-TEST-06-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P07-TEST-06-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Merged identity cannot be reversed.
+- [P07-TEST-06-RECOVER-R04] Document the expected business outcome before executing P07-TEST-06-RECOVER.
+- [P07-TEST-06-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-06-RECOVER-R06] Capture the initial canonical state and dataset hash for P07-TEST-06-RECOVER.
+- [P07-TEST-06-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-06-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-06-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-06-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-06-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-06-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-06-RECOVER-R13] Use a separate reference calculation when P07-TEST-06-RECOVER affects a key numerical total.
+- [P07-TEST-06-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Merged identity cannot be reversed.
+- [P07-TEST-06-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-06-RECOVER.
+- [P07-TEST-06-RECOVER-R16] If blocked by environment capability, mark P07-TEST-06-RECOVER blocked and retain the executable test source.
+- [P07-TEST-06-RECOVER-R17] Do not claim P07-TEST-06-RECOVER passed from reading the implementation or from another test passing.
+- [P07-TEST-06-RECOVER-R18] Rerun P07-TEST-06-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-07-DETECT: Inactive owner counted as covered — detect
+- [P07-TEST-07-DETECT-R01] Failure hypothesis: Inactive owner counted as covered.
+- [P07-TEST-07-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P07-TEST-07-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Inactive owner counted as covered.
+- [P07-TEST-07-DETECT-R04] Document the expected business outcome before executing P07-TEST-07-DETECT.
+- [P07-TEST-07-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-07-DETECT-R06] Capture the initial canonical state and dataset hash for P07-TEST-07-DETECT.
+- [P07-TEST-07-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-07-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-07-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-07-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-07-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-07-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-07-DETECT-R13] Use a separate reference calculation when P07-TEST-07-DETECT affects a key numerical total.
+- [P07-TEST-07-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Inactive owner counted as covered.
+- [P07-TEST-07-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-07-DETECT.
+- [P07-TEST-07-DETECT-R16] If blocked by environment capability, mark P07-TEST-07-DETECT blocked and retain the executable test source.
+- [P07-TEST-07-DETECT-R17] Do not claim P07-TEST-07-DETECT passed from reading the implementation or from another test passing.
+- [P07-TEST-07-DETECT-R18] Rerun P07-TEST-07-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-07-RECOVER: Inactive owner counted as covered — recover
+- [P07-TEST-07-RECOVER-R01] Failure hypothesis: Inactive owner counted as covered.
+- [P07-TEST-07-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P07-TEST-07-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Inactive owner counted as covered.
+- [P07-TEST-07-RECOVER-R04] Document the expected business outcome before executing P07-TEST-07-RECOVER.
+- [P07-TEST-07-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-07-RECOVER-R06] Capture the initial canonical state and dataset hash for P07-TEST-07-RECOVER.
+- [P07-TEST-07-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-07-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-07-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-07-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-07-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-07-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-07-RECOVER-R13] Use a separate reference calculation when P07-TEST-07-RECOVER affects a key numerical total.
+- [P07-TEST-07-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Inactive owner counted as covered.
+- [P07-TEST-07-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-07-RECOVER.
+- [P07-TEST-07-RECOVER-R16] If blocked by environment capability, mark P07-TEST-07-RECOVER blocked and retain the executable test source.
+- [P07-TEST-07-RECOVER-R17] Do not claim P07-TEST-07-RECOVER passed from reading the implementation or from another test passing.
+- [P07-TEST-07-RECOVER-R18] Rerun P07-TEST-07-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-08-DETECT: Lineage inferred but presented as observed — detect
+- [P07-TEST-08-DETECT-R01] Failure hypothesis: Lineage inferred but presented as observed.
+- [P07-TEST-08-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P07-TEST-08-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Lineage inferred but presented as observed.
+- [P07-TEST-08-DETECT-R04] Document the expected business outcome before executing P07-TEST-08-DETECT.
+- [P07-TEST-08-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-08-DETECT-R06] Capture the initial canonical state and dataset hash for P07-TEST-08-DETECT.
+- [P07-TEST-08-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-08-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-08-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-08-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-08-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-08-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-08-DETECT-R13] Use a separate reference calculation when P07-TEST-08-DETECT affects a key numerical total.
+- [P07-TEST-08-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Lineage inferred but presented as observed.
+- [P07-TEST-08-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-08-DETECT.
+- [P07-TEST-08-DETECT-R16] If blocked by environment capability, mark P07-TEST-08-DETECT blocked and retain the executable test source.
+- [P07-TEST-08-DETECT-R17] Do not claim P07-TEST-08-DETECT passed from reading the implementation or from another test passing.
+- [P07-TEST-08-DETECT-R18] Rerun P07-TEST-08-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-08-RECOVER: Lineage inferred but presented as observed — recover
+- [P07-TEST-08-RECOVER-R01] Failure hypothesis: Lineage inferred but presented as observed.
+- [P07-TEST-08-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P07-TEST-08-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Lineage inferred but presented as observed.
+- [P07-TEST-08-RECOVER-R04] Document the expected business outcome before executing P07-TEST-08-RECOVER.
+- [P07-TEST-08-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-08-RECOVER-R06] Capture the initial canonical state and dataset hash for P07-TEST-08-RECOVER.
+- [P07-TEST-08-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-08-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-08-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-08-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-08-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-08-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-08-RECOVER-R13] Use a separate reference calculation when P07-TEST-08-RECOVER affects a key numerical total.
+- [P07-TEST-08-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Lineage inferred but presented as observed.
+- [P07-TEST-08-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-08-RECOVER.
+- [P07-TEST-08-RECOVER-R16] If blocked by environment capability, mark P07-TEST-08-RECOVER blocked and retain the executable test source.
+- [P07-TEST-08-RECOVER-R17] Do not claim P07-TEST-08-RECOVER passed from reading the implementation or from another test passing.
+- [P07-TEST-08-RECOVER-R18] Rerun P07-TEST-08-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-09-DETECT: Issue closed without successful rerun — detect
+- [P07-TEST-09-DETECT-R01] Failure hypothesis: Issue closed without successful rerun.
+- [P07-TEST-09-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P07-TEST-09-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Issue closed without successful rerun.
+- [P07-TEST-09-DETECT-R04] Document the expected business outcome before executing P07-TEST-09-DETECT.
+- [P07-TEST-09-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-09-DETECT-R06] Capture the initial canonical state and dataset hash for P07-TEST-09-DETECT.
+- [P07-TEST-09-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-09-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-09-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-09-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-09-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-09-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-09-DETECT-R13] Use a separate reference calculation when P07-TEST-09-DETECT affects a key numerical total.
+- [P07-TEST-09-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Issue closed without successful rerun.
+- [P07-TEST-09-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-09-DETECT.
+- [P07-TEST-09-DETECT-R16] If blocked by environment capability, mark P07-TEST-09-DETECT blocked and retain the executable test source.
+- [P07-TEST-09-DETECT-R17] Do not claim P07-TEST-09-DETECT passed from reading the implementation or from another test passing.
+- [P07-TEST-09-DETECT-R18] Rerun P07-TEST-09-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-09-RECOVER: Issue closed without successful rerun — recover
+- [P07-TEST-09-RECOVER-R01] Failure hypothesis: Issue closed without successful rerun.
+- [P07-TEST-09-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P07-TEST-09-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Issue closed without successful rerun.
+- [P07-TEST-09-RECOVER-R04] Document the expected business outcome before executing P07-TEST-09-RECOVER.
+- [P07-TEST-09-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-09-RECOVER-R06] Capture the initial canonical state and dataset hash for P07-TEST-09-RECOVER.
+- [P07-TEST-09-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-09-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-09-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-09-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-09-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-09-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-09-RECOVER-R13] Use a separate reference calculation when P07-TEST-09-RECOVER affects a key numerical total.
+- [P07-TEST-09-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Issue closed without successful rerun.
+- [P07-TEST-09-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-09-RECOVER.
+- [P07-TEST-09-RECOVER-R16] If blocked by environment capability, mark P07-TEST-09-RECOVER blocked and retain the executable test source.
+- [P07-TEST-09-RECOVER-R17] Do not claim P07-TEST-09-RECOVER passed from reading the implementation or from another test passing.
+- [P07-TEST-09-RECOVER-R18] Rerun P07-TEST-09-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-10-DETECT: Duplicate pair stored in both directions — detect
+- [P07-TEST-10-DETECT-R01] Failure hypothesis: Duplicate pair stored in both directions.
+- [P07-TEST-10-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P07-TEST-10-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Duplicate pair stored in both directions.
+- [P07-TEST-10-DETECT-R04] Document the expected business outcome before executing P07-TEST-10-DETECT.
+- [P07-TEST-10-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-10-DETECT-R06] Capture the initial canonical state and dataset hash for P07-TEST-10-DETECT.
+- [P07-TEST-10-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-10-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-10-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-10-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-10-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-10-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-10-DETECT-R13] Use a separate reference calculation when P07-TEST-10-DETECT affects a key numerical total.
+- [P07-TEST-10-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Duplicate pair stored in both directions.
+- [P07-TEST-10-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-10-DETECT.
+- [P07-TEST-10-DETECT-R16] If blocked by environment capability, mark P07-TEST-10-DETECT blocked and retain the executable test source.
+- [P07-TEST-10-DETECT-R17] Do not claim P07-TEST-10-DETECT passed from reading the implementation or from another test passing.
+- [P07-TEST-10-DETECT-R18] Rerun P07-TEST-10-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-10-RECOVER: Duplicate pair stored in both directions — recover
+- [P07-TEST-10-RECOVER-R01] Failure hypothesis: Duplicate pair stored in both directions.
+- [P07-TEST-10-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P07-TEST-10-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Duplicate pair stored in both directions.
+- [P07-TEST-10-RECOVER-R04] Document the expected business outcome before executing P07-TEST-10-RECOVER.
+- [P07-TEST-10-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-10-RECOVER-R06] Capture the initial canonical state and dataset hash for P07-TEST-10-RECOVER.
+- [P07-TEST-10-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-10-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-10-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-10-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-10-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-10-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-10-RECOVER-R13] Use a separate reference calculation when P07-TEST-10-RECOVER affects a key numerical total.
+- [P07-TEST-10-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Duplicate pair stored in both directions.
+- [P07-TEST-10-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-10-RECOVER.
+- [P07-TEST-10-RECOVER-R16] If blocked by environment capability, mark P07-TEST-10-RECOVER blocked and retain the executable test source.
+- [P07-TEST-10-RECOVER-R17] Do not claim P07-TEST-10-RECOVER passed from reading the implementation or from another test passing.
+- [P07-TEST-10-RECOVER-R18] Rerun P07-TEST-10-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-11-DETECT: Metric definition rewritten in place — detect
+- [P07-TEST-11-DETECT-R01] Failure hypothesis: Metric definition rewritten in place.
+- [P07-TEST-11-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P07-TEST-11-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Metric definition rewritten in place.
+- [P07-TEST-11-DETECT-R04] Document the expected business outcome before executing P07-TEST-11-DETECT.
+- [P07-TEST-11-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-11-DETECT-R06] Capture the initial canonical state and dataset hash for P07-TEST-11-DETECT.
+- [P07-TEST-11-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-11-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-11-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-11-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-11-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-11-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-11-DETECT-R13] Use a separate reference calculation when P07-TEST-11-DETECT affects a key numerical total.
+- [P07-TEST-11-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Metric definition rewritten in place.
+- [P07-TEST-11-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-11-DETECT.
+- [P07-TEST-11-DETECT-R16] If blocked by environment capability, mark P07-TEST-11-DETECT blocked and retain the executable test source.
+- [P07-TEST-11-DETECT-R17] Do not claim P07-TEST-11-DETECT passed from reading the implementation or from another test passing.
+- [P07-TEST-11-DETECT-R18] Rerun P07-TEST-11-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-11-RECOVER: Metric definition rewritten in place — recover
+- [P07-TEST-11-RECOVER-R01] Failure hypothesis: Metric definition rewritten in place.
+- [P07-TEST-11-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P07-TEST-11-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Metric definition rewritten in place.
+- [P07-TEST-11-RECOVER-R04] Document the expected business outcome before executing P07-TEST-11-RECOVER.
+- [P07-TEST-11-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-11-RECOVER-R06] Capture the initial canonical state and dataset hash for P07-TEST-11-RECOVER.
+- [P07-TEST-11-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-11-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-11-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-11-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-11-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-11-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-11-RECOVER-R13] Use a separate reference calculation when P07-TEST-11-RECOVER affects a key numerical total.
+- [P07-TEST-11-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Metric definition rewritten in place.
+- [P07-TEST-11-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-11-RECOVER.
+- [P07-TEST-11-RECOVER-R16] If blocked by environment capability, mark P07-TEST-11-RECOVER blocked and retain the executable test source.
+- [P07-TEST-11-RECOVER-R17] Do not claim P07-TEST-11-RECOVER passed from reading the implementation or from another test passing.
+- [P07-TEST-11-RECOVER-R18] Rerun P07-TEST-11-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-12-DETECT: Rule denominator changes between comparisons — detect
+- [P07-TEST-12-DETECT-R01] Failure hypothesis: Rule denominator changes between comparisons.
+- [P07-TEST-12-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P07-TEST-12-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Rule denominator changes between comparisons.
+- [P07-TEST-12-DETECT-R04] Document the expected business outcome before executing P07-TEST-12-DETECT.
+- [P07-TEST-12-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-12-DETECT-R06] Capture the initial canonical state and dataset hash for P07-TEST-12-DETECT.
+- [P07-TEST-12-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-12-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-12-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-12-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-12-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-12-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-12-DETECT-R13] Use a separate reference calculation when P07-TEST-12-DETECT affects a key numerical total.
+- [P07-TEST-12-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Rule denominator changes between comparisons.
+- [P07-TEST-12-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-12-DETECT.
+- [P07-TEST-12-DETECT-R16] If blocked by environment capability, mark P07-TEST-12-DETECT blocked and retain the executable test source.
+- [P07-TEST-12-DETECT-R17] Do not claim P07-TEST-12-DETECT passed from reading the implementation or from another test passing.
+- [P07-TEST-12-DETECT-R18] Rerun P07-TEST-12-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P07-TEST-12-RECOVER: Rule denominator changes between comparisons — recover
+- [P07-TEST-12-RECOVER-R01] Failure hypothesis: Rule denominator changes between comparisons.
+- [P07-TEST-12-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P07-TEST-12-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Rule denominator changes between comparisons.
+- [P07-TEST-12-RECOVER-R04] Document the expected business outcome before executing P07-TEST-12-RECOVER.
+- [P07-TEST-12-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P07-TEST-12-RECOVER-R06] Capture the initial canonical state and dataset hash for P07-TEST-12-RECOVER.
+- [P07-TEST-12-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P07-TEST-12-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P07-TEST-12-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P07-TEST-12-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P07-TEST-12-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P07-TEST-12-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P07-TEST-12-RECOVER-R13] Use a separate reference calculation when P07-TEST-12-RECOVER affects a key numerical total.
+- [P07-TEST-12-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Rule denominator changes between comparisons.
+- [P07-TEST-12-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P07-TEST-12-RECOVER.
+- [P07-TEST-12-RECOVER-R16] If blocked by environment capability, mark P07-TEST-12-RECOVER blocked and retain the executable test source.
+- [P07-TEST-12-RECOVER-R17] Do not claim P07-TEST-12-RECOVER passed from reading the implementation or from another test passing.
+- [P07-TEST-12-RECOVER-R18] Rerun P07-TEST-12-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+
+## 08. Business and technical deliverables
+
+### P07-ART-01: business-case
+- [P07-ART-01-R01] Deliver business-case for TrustLedger.
+- [P07-ART-01-R02] Its required content is business problem, stakeholder map, scope, current/future-state process and decision criteria.
+- [P07-ART-01-R03] Use this business decision as its organizing question: Which data issues should be fixed first and who is accountable?
+- [P07-ART-01-R04] Reference actual trustledger entities, metrics and workflow IDs instead of generic template prose.
+- [P07-ART-01-R05] Keep business-case source files under the project directory in GitHub.
+- [P07-ART-01-R06] Generate binary business-case outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P07-ART-01-R07] Include the source dataset hash and implementation revision in business-case where relevant.
+- [P07-ART-01-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in business-case.
+- [P07-ART-01-R09] Check that important numbers in business-case reconcile with the independent reference calculation.
+- [P07-ART-01-R10] Use clear units, periods and population descriptions throughout business-case.
+- [P07-ART-01-R11] If business-case depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P07-ART-01-R12] Provide a brief read/use instruction for business-case without requiring laptop installation.
+- [P07-ART-01-R13] Use accessible headings, labels and tables in business-case.
+- [P07-ART-01-R14] Link business-case from the individual website evidence area when safe and useful.
+- [P07-ART-01-R15] Do not publish credentials, real personal records or internal secrets in business-case.
+- [P07-ART-01-R16] Have the appropriate specialist review business-case before coordinator integration.
+- [P07-ART-01-R17] Record the actual verification status of business-case in the release manifest.
+- [P07-ART-01-R18] Keep business-case claims consistent with the public case study and resume bullet suggestions.
+### P07-ART-02: requirements
+- [P07-ART-02-R01] Deliver requirements for TrustLedger.
+- [P07-ART-02-R02] Its required content is functional requirements, nonfunctional requirements, user stories, acceptance criteria and traceability.
+- [P07-ART-02-R03] Use this business decision as its organizing question: Which data issues should be fixed first and who is accountable?
+- [P07-ART-02-R04] Reference actual trustledger entities, metrics and workflow IDs instead of generic template prose.
+- [P07-ART-02-R05] Keep requirements source files under the project directory in GitHub.
+- [P07-ART-02-R06] Generate binary requirements outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P07-ART-02-R07] Include the source dataset hash and implementation revision in requirements where relevant.
+- [P07-ART-02-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in requirements.
+- [P07-ART-02-R09] Check that important numbers in requirements reconcile with the independent reference calculation.
+- [P07-ART-02-R10] Use clear units, periods and population descriptions throughout requirements.
+- [P07-ART-02-R11] If requirements depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P07-ART-02-R12] Provide a brief read/use instruction for requirements without requiring laptop installation.
+- [P07-ART-02-R13] Use accessible headings, labels and tables in requirements.
+- [P07-ART-02-R14] Link requirements from the individual website evidence area when safe and useful.
+- [P07-ART-02-R15] Do not publish credentials, real personal records or internal secrets in requirements.
+- [P07-ART-02-R16] Have the appropriate specialist review requirements before coordinator integration.
+- [P07-ART-02-R17] Record the actual verification status of requirements in the release manifest.
+- [P07-ART-02-R18] Keep requirements claims consistent with the public case study and resume bullet suggestions.
+### P07-ART-03: data-dictionary
+- [P07-ART-03-R01] Deliver data-dictionary for TrustLedger.
+- [P07-ART-03-R02] Its required content is entity grain, field types, source contracts, foreign keys and source-to-target mapping.
+- [P07-ART-03-R03] Use this business decision as its organizing question: Which data issues should be fixed first and who is accountable?
+- [P07-ART-03-R04] Reference actual trustledger entities, metrics and workflow IDs instead of generic template prose.
+- [P07-ART-03-R05] Keep data-dictionary source files under the project directory in GitHub.
+- [P07-ART-03-R06] Generate binary data-dictionary outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P07-ART-03-R07] Include the source dataset hash and implementation revision in data-dictionary where relevant.
+- [P07-ART-03-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in data-dictionary.
+- [P07-ART-03-R09] Check that important numbers in data-dictionary reconcile with the independent reference calculation.
+- [P07-ART-03-R10] Use clear units, periods and population descriptions throughout data-dictionary.
+- [P07-ART-03-R11] If data-dictionary depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P07-ART-03-R12] Provide a brief read/use instruction for data-dictionary without requiring laptop installation.
+- [P07-ART-03-R13] Use accessible headings, labels and tables in data-dictionary.
+- [P07-ART-03-R14] Link data-dictionary from the individual website evidence area when safe and useful.
+- [P07-ART-03-R15] Do not publish credentials, real personal records or internal secrets in data-dictionary.
+- [P07-ART-03-R16] Have the appropriate specialist review data-dictionary before coordinator integration.
+- [P07-ART-03-R17] Record the actual verification status of data-dictionary in the release manifest.
+- [P07-ART-03-R18] Keep data-dictionary claims consistent with the public case study and resume bullet suggestions.
+### P07-ART-04: sql-analysis
+- [P07-ART-04-R01] Deliver sql-analysis for TrustLedger.
+- [P07-ART-04-R02] Its required content is executable SQL investigations with independently reconciled totals.
+- [P07-ART-04-R03] Use this business decision as its organizing question: Which data issues should be fixed first and who is accountable?
+- [P07-ART-04-R04] Reference actual trustledger entities, metrics and workflow IDs instead of generic template prose.
+- [P07-ART-04-R05] Keep sql-analysis source files under the project directory in GitHub.
+- [P07-ART-04-R06] Generate binary sql-analysis outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P07-ART-04-R07] Include the source dataset hash and implementation revision in sql-analysis where relevant.
+- [P07-ART-04-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in sql-analysis.
+- [P07-ART-04-R09] Check that important numbers in sql-analysis reconcile with the independent reference calculation.
+- [P07-ART-04-R10] Use clear units, periods and population descriptions throughout sql-analysis.
+- [P07-ART-04-R11] If sql-analysis depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P07-ART-04-R12] Provide a brief read/use instruction for sql-analysis without requiring laptop installation.
+- [P07-ART-04-R13] Use accessible headings, labels and tables in sql-analysis.
+- [P07-ART-04-R14] Link sql-analysis from the individual website evidence area when safe and useful.
+- [P07-ART-04-R15] Do not publish credentials, real personal records or internal secrets in sql-analysis.
+- [P07-ART-04-R16] Have the appropriate specialist review sql-analysis before coordinator integration.
+- [P07-ART-04-R17] Record the actual verification status of sql-analysis in the release manifest.
+- [P07-ART-04-R18] Keep sql-analysis claims consistent with the public case study and resume bullet suggestions.
+### P07-ART-05: excel-workbook
+- [P07-ART-05-R01] Deliver excel-workbook for TrustLedger.
+- [P07-ART-05-R02] Its required content is formula-driven analyst workbook using project inputs and explicit assumptions.
+- [P07-ART-05-R03] Use this business decision as its organizing question: Which data issues should be fixed first and who is accountable?
+- [P07-ART-05-R04] Reference actual trustledger entities, metrics and workflow IDs instead of generic template prose.
+- [P07-ART-05-R05] Keep excel-workbook source files under the project directory in GitHub.
+- [P07-ART-05-R06] Generate binary excel-workbook outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P07-ART-05-R07] Include the source dataset hash and implementation revision in excel-workbook where relevant.
+- [P07-ART-05-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in excel-workbook.
+- [P07-ART-05-R09] Check that important numbers in excel-workbook reconcile with the independent reference calculation.
+- [P07-ART-05-R10] Use clear units, periods and population descriptions throughout excel-workbook.
+- [P07-ART-05-R11] If excel-workbook depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P07-ART-05-R12] Provide a brief read/use instruction for excel-workbook without requiring laptop installation.
+- [P07-ART-05-R13] Use accessible headings, labels and tables in excel-workbook.
+- [P07-ART-05-R14] Link excel-workbook from the individual website evidence area when safe and useful.
+- [P07-ART-05-R15] Do not publish credentials, real personal records or internal secrets in excel-workbook.
+- [P07-ART-05-R16] Have the appropriate specialist review excel-workbook before coordinator integration.
+- [P07-ART-05-R17] Record the actual verification status of excel-workbook in the release manifest.
+- [P07-ART-05-R18] Keep excel-workbook claims consistent with the public case study and resume bullet suggestions.
+### P07-ART-06: bi-package
+- [P07-ART-06-R01] Deliver bi-package for TrustLedger.
+- [P07-ART-06-R02] Its required content is reusable metric model, relationships, DAX/Power Query where relevant and verification status.
+- [P07-ART-06-R03] Use this business decision as its organizing question: Which data issues should be fixed first and who is accountable?
+- [P07-ART-06-R04] Reference actual trustledger entities, metrics and workflow IDs instead of generic template prose.
+- [P07-ART-06-R05] Keep bi-package source files under the project directory in GitHub.
+- [P07-ART-06-R06] Generate binary bi-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P07-ART-06-R07] Include the source dataset hash and implementation revision in bi-package where relevant.
+- [P07-ART-06-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in bi-package.
+- [P07-ART-06-R09] Check that important numbers in bi-package reconcile with the independent reference calculation.
+- [P07-ART-06-R10] Use clear units, periods and population descriptions throughout bi-package.
+- [P07-ART-06-R11] If bi-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P07-ART-06-R12] Provide a brief read/use instruction for bi-package without requiring laptop installation.
+- [P07-ART-06-R13] Use accessible headings, labels and tables in bi-package.
+- [P07-ART-06-R14] Link bi-package from the individual website evidence area when safe and useful.
+- [P07-ART-06-R15] Do not publish credentials, real personal records or internal secrets in bi-package.
+- [P07-ART-06-R16] Have the appropriate specialist review bi-package before coordinator integration.
+- [P07-ART-06-R17] Record the actual verification status of bi-package in the release manifest.
+- [P07-ART-06-R18] Keep bi-package claims consistent with the public case study and resume bullet suggestions.
+### P07-ART-07: executive-memo
+- [P07-ART-07-R01] Deliver executive-memo for TrustLedger.
+- [P07-ART-07-R02] Its required content is evidence-based recommendation, options, uncertainty and limitations.
+- [P07-ART-07-R03] Use this business decision as its organizing question: Which data issues should be fixed first and who is accountable?
+- [P07-ART-07-R04] Reference actual trustledger entities, metrics and workflow IDs instead of generic template prose.
+- [P07-ART-07-R05] Keep executive-memo source files under the project directory in GitHub.
+- [P07-ART-07-R06] Generate binary executive-memo outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P07-ART-07-R07] Include the source dataset hash and implementation revision in executive-memo where relevant.
+- [P07-ART-07-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in executive-memo.
+- [P07-ART-07-R09] Check that important numbers in executive-memo reconcile with the independent reference calculation.
+- [P07-ART-07-R10] Use clear units, periods and population descriptions throughout executive-memo.
+- [P07-ART-07-R11] If executive-memo depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P07-ART-07-R12] Provide a brief read/use instruction for executive-memo without requiring laptop installation.
+- [P07-ART-07-R13] Use accessible headings, labels and tables in executive-memo.
+- [P07-ART-07-R14] Link executive-memo from the individual website evidence area when safe and useful.
+- [P07-ART-07-R15] Do not publish credentials, real personal records or internal secrets in executive-memo.
+- [P07-ART-07-R16] Have the appropriate specialist review executive-memo before coordinator integration.
+- [P07-ART-07-R17] Record the actual verification status of executive-memo in the release manifest.
+- [P07-ART-07-R18] Keep executive-memo claims consistent with the public case study and resume bullet suggestions.
+### P07-ART-08: uat-evidence
+- [P07-ART-08-R01] Deliver uat-evidence for TrustLedger.
+- [P07-ART-08-R02] Its required content is business scenarios with expected answers, actual observations and defect disposition.
+- [P07-ART-08-R03] Use this business decision as its organizing question: Which data issues should be fixed first and who is accountable?
+- [P07-ART-08-R04] Reference actual trustledger entities, metrics and workflow IDs instead of generic template prose.
+- [P07-ART-08-R05] Keep uat-evidence source files under the project directory in GitHub.
+- [P07-ART-08-R06] Generate binary uat-evidence outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P07-ART-08-R07] Include the source dataset hash and implementation revision in uat-evidence where relevant.
+- [P07-ART-08-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in uat-evidence.
+- [P07-ART-08-R09] Check that important numbers in uat-evidence reconcile with the independent reference calculation.
+- [P07-ART-08-R10] Use clear units, periods and population descriptions throughout uat-evidence.
+- [P07-ART-08-R11] If uat-evidence depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P07-ART-08-R12] Provide a brief read/use instruction for uat-evidence without requiring laptop installation.
+- [P07-ART-08-R13] Use accessible headings, labels and tables in uat-evidence.
+- [P07-ART-08-R14] Link uat-evidence from the individual website evidence area when safe and useful.
+- [P07-ART-08-R15] Do not publish credentials, real personal records or internal secrets in uat-evidence.
+- [P07-ART-08-R16] Have the appropriate specialist review uat-evidence before coordinator integration.
+- [P07-ART-08-R17] Record the actual verification status of uat-evidence in the release manifest.
+- [P07-ART-08-R18] Keep uat-evidence claims consistent with the public case study and resume bullet suggestions.
+### P07-ART-09: technical-case-study
+- [P07-ART-09-R01] Deliver technical-case-study for TrustLedger.
+- [P07-ART-09-R02] Its required content is architecture, tradeoffs, recovery behavior, reproducible setup and measured evidence.
+- [P07-ART-09-R03] Use this business decision as its organizing question: Which data issues should be fixed first and who is accountable?
+- [P07-ART-09-R04] Reference actual trustledger entities, metrics and workflow IDs instead of generic template prose.
+- [P07-ART-09-R05] Keep technical-case-study source files under the project directory in GitHub.
+- [P07-ART-09-R06] Generate binary technical-case-study outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P07-ART-09-R07] Include the source dataset hash and implementation revision in technical-case-study where relevant.
+- [P07-ART-09-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in technical-case-study.
+- [P07-ART-09-R09] Check that important numbers in technical-case-study reconcile with the independent reference calculation.
+- [P07-ART-09-R10] Use clear units, periods and population descriptions throughout technical-case-study.
+- [P07-ART-09-R11] If technical-case-study depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P07-ART-09-R12] Provide a brief read/use instruction for technical-case-study without requiring laptop installation.
+- [P07-ART-09-R13] Use accessible headings, labels and tables in technical-case-study.
+- [P07-ART-09-R14] Link technical-case-study from the individual website evidence area when safe and useful.
+- [P07-ART-09-R15] Do not publish credentials, real personal records or internal secrets in technical-case-study.
+- [P07-ART-09-R16] Have the appropriate specialist review technical-case-study before coordinator integration.
+- [P07-ART-09-R17] Record the actual verification status of technical-case-study in the release manifest.
+- [P07-ART-09-R18] Keep technical-case-study claims consistent with the public case study and resume bullet suggestions.
+### P07-ART-10: release-package
+- [P07-ART-10-R01] Deliver release-package for TrustLedger.
+- [P07-ART-10-R02] Its required content is individual site, source links, checksums, main portfolio metadata and rollback manifest.
+- [P07-ART-10-R03] Use this business decision as its organizing question: Which data issues should be fixed first and who is accountable?
+- [P07-ART-10-R04] Reference actual trustledger entities, metrics and workflow IDs instead of generic template prose.
+- [P07-ART-10-R05] Keep release-package source files under the project directory in GitHub.
+- [P07-ART-10-R06] Generate binary release-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P07-ART-10-R07] Include the source dataset hash and implementation revision in release-package where relevant.
+- [P07-ART-10-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in release-package.
+- [P07-ART-10-R09] Check that important numbers in release-package reconcile with the independent reference calculation.
+- [P07-ART-10-R10] Use clear units, periods and population descriptions throughout release-package.
+- [P07-ART-10-R11] If release-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P07-ART-10-R12] Provide a brief read/use instruction for release-package without requiring laptop installation.
+- [P07-ART-10-R13] Use accessible headings, labels and tables in release-package.
+- [P07-ART-10-R14] Link release-package from the individual website evidence area when safe and useful.
+- [P07-ART-10-R15] Do not publish credentials, real personal records or internal secrets in release-package.
+- [P07-ART-10-R16] Have the appropriate specialist review release-package before coordinator integration.
+- [P07-ART-10-R17] Record the actual verification status of release-package in the release manifest.
+- [P07-ART-10-R18] Keep release-package claims consistent with the public case study and resume bullet suggestions.
+
+## 09. Remote implementation work packages
+
+### P07-WORK-01: contract
+- [P07-WORK-01-R01] Assign contract to the business-contract specialist; write and review concrete definitions before implementing.
+- [P07-WORK-01-R02] Fable coordinator must supply the relevant P07 contract IDs and explicit file ownership.
+- [P07-WORK-01-R03] Resolve the actual specialist model before dispatching P07-WORK-01.
+- [P07-WORK-01-R04] Record requested model, resolved model, task ID and parent assignment for P07-WORK-01.
+- [P07-WORK-01-R05] Run P07-WORK-01 only in a verified GitHub-hosted environment.
+- [P07-WORK-01-R06] Checkpoint the incoming code SHA and assumptions before P07-WORK-01 edits.
+- [P07-WORK-01-R07] Complete a bounded vertical slice in P07-WORK-01; do not redesign unrelated projects.
+- [P07-WORK-01-R08] Return changed paths, verification performed and unresolved issues from P07-WORK-01.
+- [P07-WORK-01-R09] Review the diff and run affected checks before integrating P07-WORK-01.
+- [P07-WORK-01-R10] Persist the resulting commit SHA and evidence URLs for P07-WORK-01.
+- [P07-WORK-01-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P07-WORK-01-R12] No routine permission request is needed at the end of P07-WORK-01; proceed according to the master authorization envelope.
+### P07-WORK-02: fixtures
+- [P07-WORK-02-R01] Assign fixtures to the verification specialist; establish known answers independently of product calculations.
+- [P07-WORK-02-R02] Fable coordinator must supply the relevant P07 contract IDs and explicit file ownership.
+- [P07-WORK-02-R03] Resolve the actual specialist model before dispatching P07-WORK-02.
+- [P07-WORK-02-R04] Record requested model, resolved model, task ID and parent assignment for P07-WORK-02.
+- [P07-WORK-02-R05] Run P07-WORK-02 only in a verified GitHub-hosted environment.
+- [P07-WORK-02-R06] Checkpoint the incoming code SHA and assumptions before P07-WORK-02 edits.
+- [P07-WORK-02-R07] Complete a bounded vertical slice in P07-WORK-02; do not redesign unrelated projects.
+- [P07-WORK-02-R08] Return changed paths, verification performed and unresolved issues from P07-WORK-02.
+- [P07-WORK-02-R09] Review the diff and run affected checks before integrating P07-WORK-02.
+- [P07-WORK-02-R10] Persist the resulting commit SHA and evidence URLs for P07-WORK-02.
+- [P07-WORK-02-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P07-WORK-02-R12] No routine permission request is needed at the end of P07-WORK-02; proceed according to the master authorization envelope.
+### P07-WORK-03: data
+- [P07-WORK-03-R01] Assign data to the data specialist; generate sources, validate and reconcile transformations.
+- [P07-WORK-03-R02] Fable coordinator must supply the relevant P07 contract IDs and explicit file ownership.
+- [P07-WORK-03-R03] Resolve the actual specialist model before dispatching P07-WORK-03.
+- [P07-WORK-03-R04] Record requested model, resolved model, task ID and parent assignment for P07-WORK-03.
+- [P07-WORK-03-R05] Run P07-WORK-03 only in a verified GitHub-hosted environment.
+- [P07-WORK-03-R06] Checkpoint the incoming code SHA and assumptions before P07-WORK-03 edits.
+- [P07-WORK-03-R07] Complete a bounded vertical slice in P07-WORK-03; do not redesign unrelated projects.
+- [P07-WORK-03-R08] Return changed paths, verification performed and unresolved issues from P07-WORK-03.
+- [P07-WORK-03-R09] Review the diff and run affected checks before integrating P07-WORK-03.
+- [P07-WORK-03-R10] Persist the resulting commit SHA and evidence URLs for P07-WORK-03.
+- [P07-WORK-03-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P07-WORK-03-R12] No routine permission request is needed at the end of P07-WORK-03; proceed according to the master authorization envelope.
+### P07-WORK-04: backend
+- [P07-WORK-04-R01] Assign backend to the backend specialist; implement tested transitions and API contracts on remote runners.
+- [P07-WORK-04-R02] Fable coordinator must supply the relevant P07 contract IDs and explicit file ownership.
+- [P07-WORK-04-R03] Resolve the actual specialist model before dispatching P07-WORK-04.
+- [P07-WORK-04-R04] Record requested model, resolved model, task ID and parent assignment for P07-WORK-04.
+- [P07-WORK-04-R05] Run P07-WORK-04 only in a verified GitHub-hosted environment.
+- [P07-WORK-04-R06] Checkpoint the incoming code SHA and assumptions before P07-WORK-04 edits.
+- [P07-WORK-04-R07] Complete a bounded vertical slice in P07-WORK-04; do not redesign unrelated projects.
+- [P07-WORK-04-R08] Return changed paths, verification performed and unresolved issues from P07-WORK-04.
+- [P07-WORK-04-R09] Review the diff and run affected checks before integrating P07-WORK-04.
+- [P07-WORK-04-R10] Persist the resulting commit SHA and evidence URLs for P07-WORK-04.
+- [P07-WORK-04-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P07-WORK-04-R12] No routine permission request is needed at the end of P07-WORK-04; proceed according to the master authorization envelope.
+### P07-WORK-05: web
+- [P07-WORK-05-R01] Assign web to the frontend specialist; connect the first decision journey to verified inputs.
+- [P07-WORK-05-R02] Fable coordinator must supply the relevant P07 contract IDs and explicit file ownership.
+- [P07-WORK-05-R03] Resolve the actual specialist model before dispatching P07-WORK-05.
+- [P07-WORK-05-R04] Record requested model, resolved model, task ID and parent assignment for P07-WORK-05.
+- [P07-WORK-05-R05] Run P07-WORK-05 only in a verified GitHub-hosted environment.
+- [P07-WORK-05-R06] Checkpoint the incoming code SHA and assumptions before P07-WORK-05 edits.
+- [P07-WORK-05-R07] Complete a bounded vertical slice in P07-WORK-05; do not redesign unrelated projects.
+- [P07-WORK-05-R08] Return changed paths, verification performed and unresolved issues from P07-WORK-05.
+- [P07-WORK-05-R09] Review the diff and run affected checks before integrating P07-WORK-05.
+- [P07-WORK-05-R10] Persist the resulting commit SHA and evidence URLs for P07-WORK-05.
+- [P07-WORK-05-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P07-WORK-05-R12] No routine permission request is needed at the end of P07-WORK-05; proceed according to the master authorization envelope.
+### P07-WORK-06: analytics
+- [P07-WORK-06-R01] Assign analytics to the quantitative specialist; verify calculations and domain-specific evaluation.
+- [P07-WORK-06-R02] Fable coordinator must supply the relevant P07 contract IDs and explicit file ownership.
+- [P07-WORK-06-R03] Resolve the actual specialist model before dispatching P07-WORK-06.
+- [P07-WORK-06-R04] Record requested model, resolved model, task ID and parent assignment for P07-WORK-06.
+- [P07-WORK-06-R05] Run P07-WORK-06 only in a verified GitHub-hosted environment.
+- [P07-WORK-06-R06] Checkpoint the incoming code SHA and assumptions before P07-WORK-06 edits.
+- [P07-WORK-06-R07] Complete a bounded vertical slice in P07-WORK-06; do not redesign unrelated projects.
+- [P07-WORK-06-R08] Return changed paths, verification performed and unresolved issues from P07-WORK-06.
+- [P07-WORK-06-R09] Review the diff and run affected checks before integrating P07-WORK-06.
+- [P07-WORK-06-R10] Persist the resulting commit SHA and evidence URLs for P07-WORK-06.
+- [P07-WORK-06-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P07-WORK-06-R12] No routine permission request is needed at the end of P07-WORK-06; proceed according to the master authorization envelope.
+### P07-WORK-07: review
+- [P07-WORK-07-R01] Assign review to the verification specialist; challenge invariants and inspect rendered evidence.
+- [P07-WORK-07-R02] Fable coordinator must supply the relevant P07 contract IDs and explicit file ownership.
+- [P07-WORK-07-R03] Resolve the actual specialist model before dispatching P07-WORK-07.
+- [P07-WORK-07-R04] Record requested model, resolved model, task ID and parent assignment for P07-WORK-07.
+- [P07-WORK-07-R05] Run P07-WORK-07 only in a verified GitHub-hosted environment.
+- [P07-WORK-07-R06] Checkpoint the incoming code SHA and assumptions before P07-WORK-07 edits.
+- [P07-WORK-07-R07] Complete a bounded vertical slice in P07-WORK-07; do not redesign unrelated projects.
+- [P07-WORK-07-R08] Return changed paths, verification performed and unresolved issues from P07-WORK-07.
+- [P07-WORK-07-R09] Review the diff and run affected checks before integrating P07-WORK-07.
+- [P07-WORK-07-R10] Persist the resulting commit SHA and evidence URLs for P07-WORK-07.
+- [P07-WORK-07-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P07-WORK-07-R12] No routine permission request is needed at the end of P07-WORK-07; proceed according to the master authorization envelope.
+### P07-WORK-08: artifacts
+- [P07-WORK-08-R01] Assign artifacts to the business-contract specialist; complete business and analytical deliverables.
+- [P07-WORK-08-R02] Fable coordinator must supply the relevant P07 contract IDs and explicit file ownership.
+- [P07-WORK-08-R03] Resolve the actual specialist model before dispatching P07-WORK-08.
+- [P07-WORK-08-R04] Record requested model, resolved model, task ID and parent assignment for P07-WORK-08.
+- [P07-WORK-08-R05] Run P07-WORK-08 only in a verified GitHub-hosted environment.
+- [P07-WORK-08-R06] Checkpoint the incoming code SHA and assumptions before P07-WORK-08 edits.
+- [P07-WORK-08-R07] Complete a bounded vertical slice in P07-WORK-08; do not redesign unrelated projects.
+- [P07-WORK-08-R08] Return changed paths, verification performed and unresolved issues from P07-WORK-08.
+- [P07-WORK-08-R09] Review the diff and run affected checks before integrating P07-WORK-08.
+- [P07-WORK-08-R10] Persist the resulting commit SHA and evidence URLs for P07-WORK-08.
+- [P07-WORK-08-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P07-WORK-08-R12] No routine permission request is needed at the end of P07-WORK-08; proceed according to the master authorization envelope.
+### P07-WORK-09: release
+- [P07-WORK-09-R01] Assign release to the release specialist; publish and verify the standalone static website.
+- [P07-WORK-09-R02] Fable coordinator must supply the relevant P07 contract IDs and explicit file ownership.
+- [P07-WORK-09-R03] Resolve the actual specialist model before dispatching P07-WORK-09.
+- [P07-WORK-09-R04] Record requested model, resolved model, task ID and parent assignment for P07-WORK-09.
+- [P07-WORK-09-R05] Run P07-WORK-09 only in a verified GitHub-hosted environment.
+- [P07-WORK-09-R06] Checkpoint the incoming code SHA and assumptions before P07-WORK-09 edits.
+- [P07-WORK-09-R07] Complete a bounded vertical slice in P07-WORK-09; do not redesign unrelated projects.
+- [P07-WORK-09-R08] Return changed paths, verification performed and unresolved issues from P07-WORK-09.
+- [P07-WORK-09-R09] Review the diff and run affected checks before integrating P07-WORK-09.
+- [P07-WORK-09-R10] Persist the resulting commit SHA and evidence URLs for P07-WORK-09.
+- [P07-WORK-09-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P07-WORK-09-R12] No routine permission request is needed at the end of P07-WORK-09; proceed according to the master authorization envelope.
+### P07-WORK-10: integrate
+- [P07-WORK-10-R01] Assign integrate to the release specialist; rebuild and verify the existing main portfolio entry.
+- [P07-WORK-10-R02] Fable coordinator must supply the relevant P07 contract IDs and explicit file ownership.
+- [P07-WORK-10-R03] Resolve the actual specialist model before dispatching P07-WORK-10.
+- [P07-WORK-10-R04] Record requested model, resolved model, task ID and parent assignment for P07-WORK-10.
+- [P07-WORK-10-R05] Run P07-WORK-10 only in a verified GitHub-hosted environment.
+- [P07-WORK-10-R06] Checkpoint the incoming code SHA and assumptions before P07-WORK-10 edits.
+- [P07-WORK-10-R07] Complete a bounded vertical slice in P07-WORK-10; do not redesign unrelated projects.
+- [P07-WORK-10-R08] Return changed paths, verification performed and unresolved issues from P07-WORK-10.
+- [P07-WORK-10-R09] Review the diff and run affected checks before integrating P07-WORK-10.
+- [P07-WORK-10-R10] Persist the resulting commit SHA and evidence URLs for P07-WORK-10.
+- [P07-WORK-10-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P07-WORK-10-R12] No routine permission request is needed at the end of P07-WORK-10; proceed according to the master authorization envelope.
+
+## 10. Release, individual website and main portfolio acceptance
+
+- [P07-REL-01] Build trustledger as an independently navigable static product website with its own landing, demo and evidence routes.
+- [P07-REL-02] Publish under a unique verified GitHub Pages path; do not assume the path exists before deployment.
+- [P07-REL-03] Preserve all trustledger durable source, contracts, data generation and evidence in GitHub.
+- [P07-REL-04] Use no laptop checkout, local database, downloaded workbook or browser persistent storage as a build dependency.
+- [P07-REL-05] Run the backend and relational acceptance suite in GitHub Actions with a transient PostgreSQL service.
+- [P07-REL-06] Document the distinction between verified backend execution and browser-only simulated actions.
+- [P07-REL-07] Check every public export for synthetic-only data and absence of secrets.
+- [P07-REL-08] Archive durable workbook/notebook/evidence outputs with checksums and code revision.
+- [P07-REL-09] Verify deployed HTTP responses, route reload, one real user journey, downloads and source links.
+- [P07-REL-10] Inspect the current main projects site schema and generate its required project.json record.
+- [P07-REL-11] Produce cover.jpg and required loop media from actual project visuals with accurate labels.
+- [P07-REL-12] Regenerate catalogue and case-study pages through the current portfolio build process.
+- [P07-REL-13] Preserve the existing Precision Atelier design system on the main site.
+- [P07-REL-14] Keep this individual product identity separate from the main site theme requirements.
+- [P07-REL-15] Add catalogue/search/category/navigation entries according to the existing source schema.
+- [P07-REL-16] Do not modify unrelated project metadata or replace the main opening animation.
+- [P07-REL-17] Confirm the individual website is reachable before its portfolio link is published.
+- [P07-REL-18] Verify the main portfolio case study links to this actual website, source and evidence.
+- [P07-REL-19] Run existing site checks and targeted new-project route checks in hosted compute.
+- [P07-REL-20] Record built, verified, published and integrated as separate release fields.
+- [P07-REL-21] If an external permission blocks publication, preserve a ready change and report its exact state.
+- [P07-REL-22] Do not label a source commit as a verified live release.
+- [P07-REL-23] Prepare rollback to the preceding known-good portfolio/site artifact.
+- [P07-REL-24] End the TrustLedger handoff with the supported business decision, actual evidence and material limitations.
+
+## 11. Concrete implementation starting contracts
+
+These choices fix the default implementation shape. Change them only through a logged domain/architecture decision.
+Project directory: apps/trustledger/.
+Web: React and TypeScript, static build, route base injected by build configuration.
+Backend verification: FastAPI with generated OpenAPI, exercised only on a GitHub-hosted runner by default.
+Relational verification: PostgreSQL service container populated from deterministic fixtures.
+Business logic: pure Python domain functions separated from database and HTTP adapters.
+Browser scenario logic: TypeScript implementation checked against the same independently calculated fixtures.
+Canonical timestamps: UTC instants; display calendars can use configured IANA time zones.
+Canonical identifiers: opaque stable text IDs derived from source identifiers, not mutable display names.
+Canonical currency for the small reference fixture: USD unless explicitly stated otherwise.
+Money: decimal strings in JSON and NUMERIC(20,6) in database; round to currency minor units only at the declared step.
+Probabilities and rates: numeric values in [0,1] where their definition is a proportion; percentage-point differences may be signed.
+Count fields: nonnegative integers unless a signed movement/variance is explicitly part of the business definition.
+Absence: JSON null; do not use NaN, Infinity, the string null, or an empty string as substitute.
+Collection ordering: documented stable field plus primary-key tie breaker.
+Pagination: limit default 50, maximum 200; opaque cursor on large evidence collections.
+Time filtering: from inclusive, to exclusive; reject invalid or reversed ranges.
+Snapshot consistency: all data returned for one analysis references one immutable dataset_version.
+Scenario consistency: baseline_version is immutable; scenario edits use a distinct scenario_id and version.
+Conflict behavior: return 409 for stale version or idempotency-key reuse with a different payload.
+Validation behavior: return 422 with field path, rule ID and safe user message.
+Authorization behavior on the verified backend: 401 for missing identity, 403 for forbidden action; never fake public auth.
+Read-model response: data, meta, warnings; meta includes dataset_version, code_sha, generated_at and applied_filters.
+Error response: error.code, error.message, error.details, request_id; never stack traces or tokens.
+Command request: input, expected_version where relevant, idempotency_key for state-changing operations.
+Audit event: event_id, entity_type, entity_id, action, actor_id, occurred_at, before_version, after_version, reason.
+Static mode: command requests use a local in-memory adapter and display that fact before an action is taken.
+Static mode: a refresh intentionally restores the published fixture; do not imply durable multi-user state.
+API boundaries below are backend contracts to implement and verify; they are not public Pages endpoints.
+Generate a static data manifest rather than requesting unavailable /api routes from GitHub Pages.
+Minimum request tests: valid, malformed, unknown resource, stale version, repeated command and unsupported action.
+Minimum read tests: no records, one record, multiple pages, invalid filter, stable ordering and evidence reconciliation.
+Create a route inventory in docs/api-contract.md before frontend integration.
+Do not publish synthetic actor role switching as proof of backend authorization.
+Only claim access-control verification from separate backend identities and direct request tests.
+Use an optimistic record version for mutable operational rows; keep immutable event rows append-only.
+Specify missing source references as quarantine or explicit unresolved records, not arbitrary placeholder joins.
+Use migrations and seed scripts that succeed from an empty database and on a second idempotent run.
+Keep CI data fixtures below a documented size; large benchmark generation is an opt-in workflow input.
+Archive the exact exported data used by the public static demo with its checksum.
+Do not accidentally archive a transient database connection URL in any manifest.
+### Command C01: Register dataset
+- Contract endpoint: POST /api/v1/trustledger/commands/register-dataset.
+- Business transition: Absent -> cataloged.
+- Hard validation: Required owner and classification.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C02: Publish definition
+- Contract endpoint: POST /api/v1/trustledger/commands/publish-definition.
+- Business transition: Draft -> reviewed -> published.
+- Hard validation: Preserve version history.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C03: Run quality rule
+- Contract endpoint: POST /api/v1/trustledger/commands/run-quality-rule.
+- Business transition: Active rule -> measured result.
+- Hard validation: Store eligible and failing counts.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C04: Open issue
+- Contract endpoint: POST /api/v1/trustledger/commands/open-issue.
+- Business transition: Failure -> owned issue.
+- Hard validation: Link run and severity.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C05: Triage issue
+- Contract endpoint: POST /api/v1/trustledger/commands/triage-issue.
+- Business transition: Open -> investigating.
+- Hard validation: Owner and due date.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C06: Suggest match
+- Contract endpoint: POST /api/v1/trustledger/commands/suggest-match.
+- Business transition: Distinct source records -> candidate.
+- Hard validation: Explain features and uncertainty.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C07: Approve merge
+- Contract endpoint: POST /api/v1/trustledger/commands/approve-merge.
+- Business transition: Candidate -> linked identity.
+- Hard validation: Human review and audit.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C08: Reverse merge
+- Contract endpoint: POST /api/v1/trustledger/commands/reverse-merge.
+- Business transition: Merged -> reversed mapping.
+- Hard validation: Restore distinct source identities.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C09: Disable rule
+- Contract endpoint: POST /api/v1/trustledger/commands/disable-rule.
+- Business transition: Active -> disabled.
+- Hard validation: History and reason retained.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C10: Verify remediation
+- Contract endpoint: POST /api/v1/trustledger/commands/verify-remediation.
+- Business transition: Resolved claim -> rerun confirmed.
+- Hard validation: Do not equate suppression with repair.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Read contract: datasets
+- Endpoint: GET /api/v1/trustledger/data/datasets.
+- Evidence fields: dataset_id,dataset_name,source_system,owner_id,classification.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: fields
+- Endpoint: GET /api/v1/trustledger/data/fields.
+- Evidence fields: field_id,dataset_id,field_name,data_type,nullable.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: owners
+- Endpoint: GET /api/v1/trustledger/data/owners.
+- Evidence fields: owner_id,owner_name,team,role,active.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: metric_versions
+- Endpoint: GET /api/v1/trustledger/data/metric_versions.
+- Evidence fields: metric_version_id,metric_name,definition,valid_from,status.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: quality_rules
+- Endpoint: GET /api/v1/trustledger/data/quality_rules.
+- Evidence fields: rule_id,dataset_id,rule_type,severity,version_number.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: rule_runs
+- Endpoint: GET /api/v1/trustledger/data/rule_runs.
+- Evidence fields: rule_run_id,rule_id,run_at,eligible_count,failure_count.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: quality_issues
+- Endpoint: GET /api/v1/trustledger/data/quality_issues.
+- Evidence fields: issue_id,rule_run_id,owner_id,status,detected_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: lineage_edges
+- Endpoint: GET /api/v1/trustledger/data/lineage_edges.
+- Evidence fields: edge_id,source_dataset_id,target_dataset_id,evidence_type,observed_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: customer_records
+- Endpoint: GET /api/v1/trustledger/data/customer_records.
+- Evidence fields: record_id,source_system,source_customer_id,normalized_name,address_key.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: match_candidates
+- Endpoint: GET /api/v1/trustledger/data/match_candidates.
+- Evidence fields: candidate_id,left_record_id,right_record_id,score,explanation.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: merge_decisions
+- Endpoint: GET /api/v1/trustledger/data/merge_decisions.
+- Evidence fields: merge_id,candidate_id,reviewer_id,decision,decided_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: definition_changes
+- Endpoint: GET /api/v1/trustledger/data/definition_changes.
+- Evidence fields: change_id,metric_version_id,reason,approved_by,changed_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+
+## 12. Small versus large data profiles
+
+- golden: use the exact hand-checkable fixture in section 02; do not substitute random rows.
+- demo: start with approximately 500 primary business objects and enough linked events to demonstrate every required path.
+- analytical history: use the project-required observation horizon, including complete outcome windows and historical versions.
+- benchmark: optional input controls size; begin with 10,000 primary objects and increase only within observed runner resources.
+- store generator seed, config, schema version and injection manifest for every profile.
+- do not equate object count with event count; report each explicitly.
+- keep semantic distributions configurable; volume scaling must not change business rules.
+- do not use a large dataset to hide a failed small known-answer case.
+- no native software requirement may force a laptop download; preserve source and mark unsupported verification honestly.
+- acceptance evidence must state which profile each test used.

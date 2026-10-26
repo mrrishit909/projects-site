@@ -1,0 +1,82 @@
+[
+  {
+    "project": "Revenue Atlas",
+    "path": "projects/01-revenue-atlas.md",
+    "lines": 2749,
+    "nonblank_lines": 2725,
+    "bytes": 305299,
+    "sha256": "b145a4e24d55e4c7e97fd91ebfa0188ef7ef61c6655f019f614d3c6c86e70c80"
+  },
+  {
+    "project": "Onboard Studio",
+    "path": "projects/02-onboard-studio.md",
+    "lines": 2749,
+    "nonblank_lines": 2725,
+    "bytes": 305762,
+    "sha256": "e26d1733812d5d539a524a33dfa8f20a39cc781eda0406a4369f0ddfff7df5d9"
+  },
+  {
+    "project": "SupplyScope",
+    "path": "projects/03-supplyscope.md",
+    "lines": 2749,
+    "nonblank_lines": 2725,
+    "bytes": 304782,
+    "sha256": "059c881278995640d3c9533a7e51b849b625364f906ae1423762cf631e8dc23d"
+  },
+  {
+    "project": "ServiceFlow",
+    "path": "projects/04-serviceflow.md",
+    "lines": 2749,
+    "nonblank_lines": 2725,
+    "bytes": 301629,
+    "sha256": "ee79cf361ee385b5ed526828f4dfa9af3cea041893aaa6570ca7ea83f1d4d40a"
+  },
+  {
+    "project": "InvoiceBridge",
+    "path": "projects/05-invoicebridge.md",
+    "lines": 2749,
+    "nonblank_lines": 2725,
+    "bytes": 302594,
+    "sha256": "4079b90709104ac5832f8619bfda1ee97fdd05faada4a44a22f44977e66d00c4"
+  },
+  {
+    "project": "ProductSignal",
+    "path": "projects/06-productsignal.md",
+    "lines": 2749,
+    "nonblank_lines": 2725,
+    "bytes": 304963,
+    "sha256": "ed0d0941070aa078f4291679299cb921bb7d4772f1d853ef5be25470610cfbd6"
+  },
+  {
+    "project": "TrustLedger",
+    "path": "projects/07-trustledger.md",
+    "lines": 2749,
+    "nonblank_lines": 2725,
+    "bytes": 303061,
+    "sha256": "3a4ec15b273688a39d1bdf7cce1199055a8a2c6128e4097c8cff0c90fe298442"
+  },
+  {
+    "project": "Pipeline Observatory",
+    "path": "projects/08-pipeline-observatory.md",
+    "lines": 2749,
+    "nonblank_lines": 2725,
+    "bytes": 305066,
+    "sha256": "1ffbfbe7c75abc828ce6f40f49306303a2412061656d9d70cefbaafc66c50365"
+  },
+  {
+    "project": "ChangeWorks",
+    "path": "projects/09-changeworks.md",
+    "lines": 2749,
+    "nonblank_lines": 2725,
+    "bytes": 307349,
+    "sha256": "7ae9dea5a94e7e1a1a302c2f420844ff4cc88a3501e34af4af6865e9ae9e048f"
+  },
+  {
+    "project": "RetentionLab",
+    "path": "projects/10-retentionlab.md",
+    "lines": 2749,
+    "nonblank_lines": 2725,
+    "bytes": 306807,
+    "sha256": "6784f44e8c2d66977493e718f7397a30d826c5a0c22984a2e57784286501f672"
+  }
+]

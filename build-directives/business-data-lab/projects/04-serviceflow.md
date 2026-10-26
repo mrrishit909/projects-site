@@ -1,0 +1,2749 @@
+# P04 — ServiceFlow: complete project build specification
+Version: 2026-10-26. Read MASTER-DIRECTIVE.md first. These are requirements, not claims that software already exists.
+
+## 01. Product mandate and business boundary
+
+- [P04-GOAL-01] Build a standalone product supporting this decision: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-GOAL-02] Primary portfolio roles: Operations Analyst; BI Analyst; Transformation Analyst.
+- [P04-GOAL-03] Visual direction: Service control room: midnight blue, cream, cyan; queue timeline and shift grid.
+- [P04-GOAL-04] Use app slug serviceflow; keep routes, fixtures, manifests and catalogue entries consistent.
+- [P04-GOAL-05] Execute code only on GitHub-hosted compute; retain durable deliverables in GitHub; never write project files to the laptop.
+- [P04-GOAL-06] Default public experience is static interactive synthetic demo; transactional backend evidence comes from remote CI.
+- [P04-GOAL-07] Use Fable 5.1 for coordination and real specialist-model invocations for implementation and verification.
+- [P04-GOAL-08] Resolve provider/model availability and record actual requested/resolved IDs without inventing capabilities.
+- [P04-GOAL-09] The entry milestone is one complete source-to-decision journey using the reference fixture and working export.
+- [P04-GOAL-10] The mid-level milestone adds the specified exceptions, robustness, versioning and recovery evidence.
+- [P04-GOAL-11] Do not open with a chatbot or require a paid inference API to use the demo.
+- [P04-GOAL-12] No live customer data, real payment, vendor commitment or operational write belongs in the default synthetic demo.
+- [P04-GOAL-13] All monetary, temporal and statistical meaning must be defined before interface implementation.
+- [P04-GOAL-14] If a proposed field/formula conflicts with an invariant, fix the specification through a logged decision before coding.
+- [P04-GOAL-15] Keep specifications addressable by the IDs in this file; do not paste the entire file into every worker prompt.
+- [P04-DOMAIN-01] Define FIFO within priority class unless overridden.
+- [P04-DOMAIN-02] Estimate arrival distributions from training window only.
+- [P04-DOMAIN-03] Validate on a separate historical window.
+- [P04-DOMAIN-04] Show utilization and waiting tails separately.
+- [P04-DOMAIN-05] Use repeated seeds and comparable demand paths.
+- [P04-DOMAIN-06] Distinguish simulation estimates from realized staffing benefits.
+
+## 02. Independent known-answer fixture
+
+- [P04-GOLD-01] One agent and three tickets arriving at minute 0 with deterministic 10-minute service under FIFO: service starts at 0, 10, 20; waits are 0, 10, 20; mean wait=10 minutes; final completion at minute 30. Reproduce this exact case before using random arrivals.
+- [P04-GOLD-02] Encode the reference inputs under tests/fixtures/golden/ and preserve the human-readable calculation.
+- [P04-GOLD-03] Keep the expected-answer file independent of application helper functions and generated dashboard output.
+- [P04-GOLD-04] Have the verification specialist reproduce the answer from the source records before implementation review.
+- [P04-GOLD-05] Use explicit decimal tolerance for monetary results and justified tolerance for statistical/numerical results.
+- [P04-GOLD-06] Test the displayed value, exported value and backend result against the reference, not only against each other.
+- [P04-GOLD-07] Do not enlarge a numeric tolerance to conceal a business-rule disagreement.
+- [P04-GOLD-08] Create one rejected-record variant and show why rejection is correct.
+- [P04-GOLD-09] Create one empty-population variant and show the documented zero-denominator behavior.
+- [P04-GOLD-10] Persist fixture hashes and verification evidence with the code revision.
+- [P04-GOLD-11] If this fixture reveals a definition gap, resolve and version the definition before treating results as authoritative.
+
+## 03. Logical data model and field contracts
+
+### P04-DATA-01: customers
+- [P04-DATA-01-R01] Create the customers entity with a documented grain and one stable primary key: customer_id.
+- [P04-DATA-01-R02] The minimum business fields are customer_id, segment, timezone, created_at, synthetic; add technical metadata only with a documented purpose.
+- [P04-DATA-01-R03] Use the role of customers in the product workflow to define authoritative source ownership.
+- [P04-DATA-01-R04] Write migrations for customers; do not rely on ORM auto-create for the verified release.
+- [P04-DATA-01-R05] Create a small valid customers fixture linked to the independently calculated project example.
+- [P04-DATA-01-R06] Create an invalid customers fixture that demonstrates a real domain constraint.
+- [P04-DATA-01-R07] Choose explicit row-update semantics for customers: immutable event, versioned dimension or mutable operational record.
+- [P04-DATA-01-R08] Preserve the original source identifier for customers when a surrogate key is introduced.
+- [P04-DATA-01-R09] Document whether deletion of customers is prohibited, reversible or represented by a tombstone.
+- [P04-DATA-01-R10] Reconcile customers accepted, rejected and deduplicated row counts to the source batch.
+- [P04-DATA-01-R11] Expose only justified synthetic customers fields to the public site; remove internal runner metadata.
+- [P04-DATA-01-R12] Index customers according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P04-DATA-01-R13] Do not join customers at a different grain without an explicit aggregation or allocation rule.
+- [P04-DATA-01-R14] Associate the published customers snapshot with dataset hash and generator parameters.
+- [P04-DATA-01-R15] Define deterministic sorting and pagination for the customers evidence view.
+- [P04-DATA-01-R16] Ensure an empty customers dataset yields an understandable empty state instead of fabricated sample totals.
+- [P04-DATA-01-R17] Archive the customers schema and sample rows in the data dictionary.
+- [P04-DATA-01-R18] Test that replaying the source import cannot unintentionally duplicate customers business records.
+- [P04-DATA-01-F01-R01] Field customers.customer_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-01-F01-R02] Field customers.customer_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-01-F01-R03] Field customers.customer_id: make it non-null and unique as the primary key.
+- [P04-DATA-01-F01-R04] Field customers.customer_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-01-F01-R05] Field customers.customer_id: use stable source-to-key mapping across replays and regeneration.
+- [P04-DATA-01-F01-R06] Field customers.customer_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-01-F01-R07] Field customers.customer_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-01-F01-R08] Field customers.customer_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-01-F02-R01] Field customers.segment: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-01-F02-R02] Field customers.segment: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-01-F02-R03] Field customers.segment: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-01-F02-R04] Field customers.segment: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-01-F02-R05] Field customers.segment: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-01-F02-R06] Field customers.segment: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-01-F02-R07] Field customers.segment: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-01-F02-R08] Field customers.segment: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-01-F03-R01] Field customers.timezone: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-01-F03-R02] Field customers.timezone: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-01-F03-R03] Field customers.timezone: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-01-F03-R04] Field customers.timezone: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-01-F03-R05] Field customers.timezone: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-01-F03-R06] Field customers.timezone: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-01-F03-R07] Field customers.timezone: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-01-F03-R08] Field customers.timezone: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-01-F04-R01] Field customers.created_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P04-DATA-01-F04-R02] Field customers.created_at: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-01-F04-R03] Field customers.created_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-01-F04-R04] Field customers.created_at: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-01-F04-R05] Field customers.created_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-01-F04-R06] Field customers.created_at: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-01-F04-R07] Field customers.created_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-01-F04-R08] Field customers.created_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-01-F05-R01] Field customers.synthetic: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P04-DATA-01-F05-R02] Field customers.synthetic: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-01-F05-R03] Field customers.synthetic: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-01-F05-R04] Field customers.synthetic: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-01-F05-R05] Field customers.synthetic: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-01-F05-R06] Field customers.synthetic: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-01-F05-R07] Field customers.synthetic: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-01-F05-R08] Field customers.synthetic: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P04-DATA-02: queues
+- [P04-DATA-02-R01] Create the queues entity with a documented grain and one stable primary key: queue_id.
+- [P04-DATA-02-R02] The minimum business fields are queue_id, queue_name, priority_policy, calendar_id, active; add technical metadata only with a documented purpose.
+- [P04-DATA-02-R03] Use the role of queues in the product workflow to define authoritative source ownership.
+- [P04-DATA-02-R04] Write migrations for queues; do not rely on ORM auto-create for the verified release.
+- [P04-DATA-02-R05] Create a small valid queues fixture linked to the independently calculated project example.
+- [P04-DATA-02-R06] Create an invalid queues fixture that demonstrates a real domain constraint.
+- [P04-DATA-02-R07] Choose explicit row-update semantics for queues: immutable event, versioned dimension or mutable operational record.
+- [P04-DATA-02-R08] Preserve the original source identifier for queues when a surrogate key is introduced.
+- [P04-DATA-02-R09] Document whether deletion of queues is prohibited, reversible or represented by a tombstone.
+- [P04-DATA-02-R10] Reconcile queues accepted, rejected and deduplicated row counts to the source batch.
+- [P04-DATA-02-R11] Expose only justified synthetic queues fields to the public site; remove internal runner metadata.
+- [P04-DATA-02-R12] Index queues according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P04-DATA-02-R13] Do not join queues at a different grain without an explicit aggregation or allocation rule.
+- [P04-DATA-02-R14] Associate the published queues snapshot with dataset hash and generator parameters.
+- [P04-DATA-02-R15] Define deterministic sorting and pagination for the queues evidence view.
+- [P04-DATA-02-R16] Ensure an empty queues dataset yields an understandable empty state instead of fabricated sample totals.
+- [P04-DATA-02-R17] Archive the queues schema and sample rows in the data dictionary.
+- [P04-DATA-02-R18] Test that replaying the source import cannot unintentionally duplicate queues business records.
+- [P04-DATA-02-F01-R01] Field queues.queue_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-02-F01-R02] Field queues.queue_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-02-F01-R03] Field queues.queue_id: make it non-null and unique as the primary key.
+- [P04-DATA-02-F01-R04] Field queues.queue_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-02-F01-R05] Field queues.queue_id: use stable source-to-key mapping across replays and regeneration.
+- [P04-DATA-02-F01-R06] Field queues.queue_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-02-F01-R07] Field queues.queue_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-02-F01-R08] Field queues.queue_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-02-F02-R01] Field queues.queue_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-02-F02-R02] Field queues.queue_name: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-02-F02-R03] Field queues.queue_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-02-F02-R04] Field queues.queue_name: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-02-F02-R05] Field queues.queue_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-02-F02-R06] Field queues.queue_name: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-02-F02-R07] Field queues.queue_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-02-F02-R08] Field queues.queue_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-02-F03-R01] Field queues.priority_policy: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-02-F03-R02] Field queues.priority_policy: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-02-F03-R03] Field queues.priority_policy: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-02-F03-R04] Field queues.priority_policy: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-02-F03-R05] Field queues.priority_policy: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-02-F03-R06] Field queues.priority_policy: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-02-F03-R07] Field queues.priority_policy: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-02-F03-R08] Field queues.priority_policy: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-02-F04-R01] Field queues.calendar_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-02-F04-R02] Field queues.calendar_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-02-F04-R03] Field queues.calendar_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-02-F04-R04] Field queues.calendar_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-02-F04-R05] Field queues.calendar_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-02-F04-R06] Field queues.calendar_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-02-F04-R07] Field queues.calendar_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-02-F04-R08] Field queues.calendar_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-02-F05-R01] Field queues.active: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P04-DATA-02-F05-R02] Field queues.active: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-02-F05-R03] Field queues.active: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-02-F05-R04] Field queues.active: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-02-F05-R05] Field queues.active: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-02-F05-R06] Field queues.active: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-02-F05-R07] Field queues.active: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-02-F05-R08] Field queues.active: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P04-DATA-03: tickets
+- [P04-DATA-03-R01] Create the tickets entity with a documented grain and one stable primary key: ticket_id.
+- [P04-DATA-03-R02] The minimum business fields are ticket_id, customer_id, queue_id, priority, created_at; add technical metadata only with a documented purpose.
+- [P04-DATA-03-R03] Use the role of tickets in the product workflow to define authoritative source ownership.
+- [P04-DATA-03-R04] Write migrations for tickets; do not rely on ORM auto-create for the verified release.
+- [P04-DATA-03-R05] Create a small valid tickets fixture linked to the independently calculated project example.
+- [P04-DATA-03-R06] Create an invalid tickets fixture that demonstrates a real domain constraint.
+- [P04-DATA-03-R07] Choose explicit row-update semantics for tickets: immutable event, versioned dimension or mutable operational record.
+- [P04-DATA-03-R08] Preserve the original source identifier for tickets when a surrogate key is introduced.
+- [P04-DATA-03-R09] Document whether deletion of tickets is prohibited, reversible or represented by a tombstone.
+- [P04-DATA-03-R10] Reconcile tickets accepted, rejected and deduplicated row counts to the source batch.
+- [P04-DATA-03-R11] Expose only justified synthetic tickets fields to the public site; remove internal runner metadata.
+- [P04-DATA-03-R12] Index tickets according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P04-DATA-03-R13] Do not join tickets at a different grain without an explicit aggregation or allocation rule.
+- [P04-DATA-03-R14] Associate the published tickets snapshot with dataset hash and generator parameters.
+- [P04-DATA-03-R15] Define deterministic sorting and pagination for the tickets evidence view.
+- [P04-DATA-03-R16] Ensure an empty tickets dataset yields an understandable empty state instead of fabricated sample totals.
+- [P04-DATA-03-R17] Archive the tickets schema and sample rows in the data dictionary.
+- [P04-DATA-03-R18] Test that replaying the source import cannot unintentionally duplicate tickets business records.
+- [P04-DATA-03-F01-R01] Field tickets.ticket_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-03-F01-R02] Field tickets.ticket_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-03-F01-R03] Field tickets.ticket_id: make it non-null and unique as the primary key.
+- [P04-DATA-03-F01-R04] Field tickets.ticket_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-03-F01-R05] Field tickets.ticket_id: use stable source-to-key mapping across replays and regeneration.
+- [P04-DATA-03-F01-R06] Field tickets.ticket_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-03-F01-R07] Field tickets.ticket_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-03-F01-R08] Field tickets.ticket_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-03-F02-R01] Field tickets.customer_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-03-F02-R02] Field tickets.customer_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-03-F02-R03] Field tickets.customer_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-03-F02-R04] Field tickets.customer_id: validate its reference to customers.customer_id; explain deferred or quarantined unmatched records.
+- [P04-DATA-03-F02-R05] Field tickets.customer_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-03-F02-R06] Field tickets.customer_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-03-F02-R07] Field tickets.customer_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-03-F02-R08] Field tickets.customer_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-03-F03-R01] Field tickets.queue_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-03-F03-R02] Field tickets.queue_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-03-F03-R03] Field tickets.queue_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-03-F03-R04] Field tickets.queue_id: validate its reference to queues.queue_id; explain deferred or quarantined unmatched records.
+- [P04-DATA-03-F03-R05] Field tickets.queue_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-03-F03-R06] Field tickets.queue_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-03-F03-R07] Field tickets.queue_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-03-F03-R08] Field tickets.queue_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-03-F04-R01] Field tickets.priority: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-03-F04-R02] Field tickets.priority: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-03-F04-R03] Field tickets.priority: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-03-F04-R04] Field tickets.priority: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-03-F04-R05] Field tickets.priority: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-03-F04-R06] Field tickets.priority: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-03-F04-R07] Field tickets.priority: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-03-F04-R08] Field tickets.priority: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-03-F05-R01] Field tickets.created_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P04-DATA-03-F05-R02] Field tickets.created_at: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-03-F05-R03] Field tickets.created_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-03-F05-R04] Field tickets.created_at: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-03-F05-R05] Field tickets.created_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-03-F05-R06] Field tickets.created_at: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-03-F05-R07] Field tickets.created_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-03-F05-R08] Field tickets.created_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P04-DATA-04: ticket_events
+- [P04-DATA-04-R01] Create the ticket_events entity with a documented grain and one stable primary key: event_id.
+- [P04-DATA-04-R02] The minimum business fields are event_id, ticket_id, event_type, occurred_at, actor_id; add technical metadata only with a documented purpose.
+- [P04-DATA-04-R03] Use the role of ticket_events in the product workflow to define authoritative source ownership.
+- [P04-DATA-04-R04] Write migrations for ticket_events; do not rely on ORM auto-create for the verified release.
+- [P04-DATA-04-R05] Create a small valid ticket_events fixture linked to the independently calculated project example.
+- [P04-DATA-04-R06] Create an invalid ticket_events fixture that demonstrates a real domain constraint.
+- [P04-DATA-04-R07] Choose explicit row-update semantics for ticket_events: immutable event, versioned dimension or mutable operational record.
+- [P04-DATA-04-R08] Preserve the original source identifier for ticket_events when a surrogate key is introduced.
+- [P04-DATA-04-R09] Document whether deletion of ticket_events is prohibited, reversible or represented by a tombstone.
+- [P04-DATA-04-R10] Reconcile ticket_events accepted, rejected and deduplicated row counts to the source batch.
+- [P04-DATA-04-R11] Expose only justified synthetic ticket_events fields to the public site; remove internal runner metadata.
+- [P04-DATA-04-R12] Index ticket_events according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P04-DATA-04-R13] Do not join ticket_events at a different grain without an explicit aggregation or allocation rule.
+- [P04-DATA-04-R14] Associate the published ticket_events snapshot with dataset hash and generator parameters.
+- [P04-DATA-04-R15] Define deterministic sorting and pagination for the ticket_events evidence view.
+- [P04-DATA-04-R16] Ensure an empty ticket_events dataset yields an understandable empty state instead of fabricated sample totals.
+- [P04-DATA-04-R17] Archive the ticket_events schema and sample rows in the data dictionary.
+- [P04-DATA-04-R18] Test that replaying the source import cannot unintentionally duplicate ticket_events business records.
+- [P04-DATA-04-F01-R01] Field ticket_events.event_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-04-F01-R02] Field ticket_events.event_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-04-F01-R03] Field ticket_events.event_id: make it non-null and unique as the primary key.
+- [P04-DATA-04-F01-R04] Field ticket_events.event_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-04-F01-R05] Field ticket_events.event_id: use stable source-to-key mapping across replays and regeneration.
+- [P04-DATA-04-F01-R06] Field ticket_events.event_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-04-F01-R07] Field ticket_events.event_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-04-F01-R08] Field ticket_events.event_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-04-F02-R01] Field ticket_events.ticket_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-04-F02-R02] Field ticket_events.ticket_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-04-F02-R03] Field ticket_events.ticket_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-04-F02-R04] Field ticket_events.ticket_id: validate its reference to tickets.ticket_id; explain deferred or quarantined unmatched records.
+- [P04-DATA-04-F02-R05] Field ticket_events.ticket_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-04-F02-R06] Field ticket_events.ticket_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-04-F02-R07] Field ticket_events.ticket_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-04-F02-R08] Field ticket_events.ticket_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-04-F03-R01] Field ticket_events.event_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-04-F03-R02] Field ticket_events.event_type: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-04-F03-R03] Field ticket_events.event_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-04-F03-R04] Field ticket_events.event_type: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-04-F03-R05] Field ticket_events.event_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-04-F03-R06] Field ticket_events.event_type: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-04-F03-R07] Field ticket_events.event_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-04-F03-R08] Field ticket_events.event_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-04-F04-R01] Field ticket_events.occurred_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P04-DATA-04-F04-R02] Field ticket_events.occurred_at: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-04-F04-R03] Field ticket_events.occurred_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-04-F04-R04] Field ticket_events.occurred_at: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-04-F04-R05] Field ticket_events.occurred_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-04-F04-R06] Field ticket_events.occurred_at: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-04-F04-R07] Field ticket_events.occurred_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-04-F04-R08] Field ticket_events.occurred_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-04-F05-R01] Field ticket_events.actor_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-04-F05-R02] Field ticket_events.actor_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-04-F05-R03] Field ticket_events.actor_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-04-F05-R04] Field ticket_events.actor_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-04-F05-R05] Field ticket_events.actor_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-04-F05-R06] Field ticket_events.actor_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-04-F05-R07] Field ticket_events.actor_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-04-F05-R08] Field ticket_events.actor_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P04-DATA-05: agents
+- [P04-DATA-05-R01] Create the agents entity with a documented grain and one stable primary key: agent_id.
+- [P04-DATA-05-R02] The minimum business fields are agent_id, agent_name, timezone, employment_type, active; add technical metadata only with a documented purpose.
+- [P04-DATA-05-R03] Use the role of agents in the product workflow to define authoritative source ownership.
+- [P04-DATA-05-R04] Write migrations for agents; do not rely on ORM auto-create for the verified release.
+- [P04-DATA-05-R05] Create a small valid agents fixture linked to the independently calculated project example.
+- [P04-DATA-05-R06] Create an invalid agents fixture that demonstrates a real domain constraint.
+- [P04-DATA-05-R07] Choose explicit row-update semantics for agents: immutable event, versioned dimension or mutable operational record.
+- [P04-DATA-05-R08] Preserve the original source identifier for agents when a surrogate key is introduced.
+- [P04-DATA-05-R09] Document whether deletion of agents is prohibited, reversible or represented by a tombstone.
+- [P04-DATA-05-R10] Reconcile agents accepted, rejected and deduplicated row counts to the source batch.
+- [P04-DATA-05-R11] Expose only justified synthetic agents fields to the public site; remove internal runner metadata.
+- [P04-DATA-05-R12] Index agents according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P04-DATA-05-R13] Do not join agents at a different grain without an explicit aggregation or allocation rule.
+- [P04-DATA-05-R14] Associate the published agents snapshot with dataset hash and generator parameters.
+- [P04-DATA-05-R15] Define deterministic sorting and pagination for the agents evidence view.
+- [P04-DATA-05-R16] Ensure an empty agents dataset yields an understandable empty state instead of fabricated sample totals.
+- [P04-DATA-05-R17] Archive the agents schema and sample rows in the data dictionary.
+- [P04-DATA-05-R18] Test that replaying the source import cannot unintentionally duplicate agents business records.
+- [P04-DATA-05-F01-R01] Field agents.agent_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-05-F01-R02] Field agents.agent_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-05-F01-R03] Field agents.agent_id: make it non-null and unique as the primary key.
+- [P04-DATA-05-F01-R04] Field agents.agent_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-05-F01-R05] Field agents.agent_id: use stable source-to-key mapping across replays and regeneration.
+- [P04-DATA-05-F01-R06] Field agents.agent_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-05-F01-R07] Field agents.agent_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-05-F01-R08] Field agents.agent_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-05-F02-R01] Field agents.agent_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-05-F02-R02] Field agents.agent_name: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-05-F02-R03] Field agents.agent_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-05-F02-R04] Field agents.agent_name: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-05-F02-R05] Field agents.agent_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-05-F02-R06] Field agents.agent_name: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-05-F02-R07] Field agents.agent_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-05-F02-R08] Field agents.agent_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-05-F03-R01] Field agents.timezone: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-05-F03-R02] Field agents.timezone: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-05-F03-R03] Field agents.timezone: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-05-F03-R04] Field agents.timezone: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-05-F03-R05] Field agents.timezone: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-05-F03-R06] Field agents.timezone: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-05-F03-R07] Field agents.timezone: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-05-F03-R08] Field agents.timezone: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-05-F04-R01] Field agents.employment_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-05-F04-R02] Field agents.employment_type: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-05-F04-R03] Field agents.employment_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-05-F04-R04] Field agents.employment_type: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-05-F04-R05] Field agents.employment_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-05-F04-R06] Field agents.employment_type: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-05-F04-R07] Field agents.employment_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-05-F04-R08] Field agents.employment_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-05-F05-R01] Field agents.active: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P04-DATA-05-F05-R02] Field agents.active: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-05-F05-R03] Field agents.active: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-05-F05-R04] Field agents.active: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-05-F05-R05] Field agents.active: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-05-F05-R06] Field agents.active: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-05-F05-R07] Field agents.active: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-05-F05-R08] Field agents.active: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P04-DATA-06: skills
+- [P04-DATA-06-R01] Create the skills entity with a documented grain and one stable primary key: skill_id.
+- [P04-DATA-06-R02] The minimum business fields are skill_id, skill_name, description, active, created_at; add technical metadata only with a documented purpose.
+- [P04-DATA-06-R03] Use the role of skills in the product workflow to define authoritative source ownership.
+- [P04-DATA-06-R04] Write migrations for skills; do not rely on ORM auto-create for the verified release.
+- [P04-DATA-06-R05] Create a small valid skills fixture linked to the independently calculated project example.
+- [P04-DATA-06-R06] Create an invalid skills fixture that demonstrates a real domain constraint.
+- [P04-DATA-06-R07] Choose explicit row-update semantics for skills: immutable event, versioned dimension or mutable operational record.
+- [P04-DATA-06-R08] Preserve the original source identifier for skills when a surrogate key is introduced.
+- [P04-DATA-06-R09] Document whether deletion of skills is prohibited, reversible or represented by a tombstone.
+- [P04-DATA-06-R10] Reconcile skills accepted, rejected and deduplicated row counts to the source batch.
+- [P04-DATA-06-R11] Expose only justified synthetic skills fields to the public site; remove internal runner metadata.
+- [P04-DATA-06-R12] Index skills according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P04-DATA-06-R13] Do not join skills at a different grain without an explicit aggregation or allocation rule.
+- [P04-DATA-06-R14] Associate the published skills snapshot with dataset hash and generator parameters.
+- [P04-DATA-06-R15] Define deterministic sorting and pagination for the skills evidence view.
+- [P04-DATA-06-R16] Ensure an empty skills dataset yields an understandable empty state instead of fabricated sample totals.
+- [P04-DATA-06-R17] Archive the skills schema and sample rows in the data dictionary.
+- [P04-DATA-06-R18] Test that replaying the source import cannot unintentionally duplicate skills business records.
+- [P04-DATA-06-F01-R01] Field skills.skill_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-06-F01-R02] Field skills.skill_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-06-F01-R03] Field skills.skill_id: make it non-null and unique as the primary key.
+- [P04-DATA-06-F01-R04] Field skills.skill_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-06-F01-R05] Field skills.skill_id: use stable source-to-key mapping across replays and regeneration.
+- [P04-DATA-06-F01-R06] Field skills.skill_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-06-F01-R07] Field skills.skill_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-06-F01-R08] Field skills.skill_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-06-F02-R01] Field skills.skill_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-06-F02-R02] Field skills.skill_name: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-06-F02-R03] Field skills.skill_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-06-F02-R04] Field skills.skill_name: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-06-F02-R05] Field skills.skill_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-06-F02-R06] Field skills.skill_name: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-06-F02-R07] Field skills.skill_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-06-F02-R08] Field skills.skill_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-06-F03-R01] Field skills.description: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-06-F03-R02] Field skills.description: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-06-F03-R03] Field skills.description: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-06-F03-R04] Field skills.description: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-06-F03-R05] Field skills.description: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-06-F03-R06] Field skills.description: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-06-F03-R07] Field skills.description: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-06-F03-R08] Field skills.description: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-06-F04-R01] Field skills.active: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P04-DATA-06-F04-R02] Field skills.active: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-06-F04-R03] Field skills.active: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-06-F04-R04] Field skills.active: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-06-F04-R05] Field skills.active: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-06-F04-R06] Field skills.active: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-06-F04-R07] Field skills.active: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-06-F04-R08] Field skills.active: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-06-F05-R01] Field skills.created_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P04-DATA-06-F05-R02] Field skills.created_at: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-06-F05-R03] Field skills.created_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-06-F05-R04] Field skills.created_at: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-06-F05-R05] Field skills.created_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-06-F05-R06] Field skills.created_at: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-06-F05-R07] Field skills.created_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-06-F05-R08] Field skills.created_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P04-DATA-07: agent_skills
+- [P04-DATA-07-R01] Create the agent_skills entity with a documented grain and one stable primary key: agent_skill_id.
+- [P04-DATA-07-R02] The minimum business fields are agent_skill_id, agent_id, skill_id, proficiency, effective_from; add technical metadata only with a documented purpose.
+- [P04-DATA-07-R03] Use the role of agent_skills in the product workflow to define authoritative source ownership.
+- [P04-DATA-07-R04] Write migrations for agent_skills; do not rely on ORM auto-create for the verified release.
+- [P04-DATA-07-R05] Create a small valid agent_skills fixture linked to the independently calculated project example.
+- [P04-DATA-07-R06] Create an invalid agent_skills fixture that demonstrates a real domain constraint.
+- [P04-DATA-07-R07] Choose explicit row-update semantics for agent_skills: immutable event, versioned dimension or mutable operational record.
+- [P04-DATA-07-R08] Preserve the original source identifier for agent_skills when a surrogate key is introduced.
+- [P04-DATA-07-R09] Document whether deletion of agent_skills is prohibited, reversible or represented by a tombstone.
+- [P04-DATA-07-R10] Reconcile agent_skills accepted, rejected and deduplicated row counts to the source batch.
+- [P04-DATA-07-R11] Expose only justified synthetic agent_skills fields to the public site; remove internal runner metadata.
+- [P04-DATA-07-R12] Index agent_skills according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P04-DATA-07-R13] Do not join agent_skills at a different grain without an explicit aggregation or allocation rule.
+- [P04-DATA-07-R14] Associate the published agent_skills snapshot with dataset hash and generator parameters.
+- [P04-DATA-07-R15] Define deterministic sorting and pagination for the agent_skills evidence view.
+- [P04-DATA-07-R16] Ensure an empty agent_skills dataset yields an understandable empty state instead of fabricated sample totals.
+- [P04-DATA-07-R17] Archive the agent_skills schema and sample rows in the data dictionary.
+- [P04-DATA-07-R18] Test that replaying the source import cannot unintentionally duplicate agent_skills business records.
+- [P04-DATA-07-F01-R01] Field agent_skills.agent_skill_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-07-F01-R02] Field agent_skills.agent_skill_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-07-F01-R03] Field agent_skills.agent_skill_id: make it non-null and unique as the primary key.
+- [P04-DATA-07-F01-R04] Field agent_skills.agent_skill_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-07-F01-R05] Field agent_skills.agent_skill_id: use stable source-to-key mapping across replays and regeneration.
+- [P04-DATA-07-F01-R06] Field agent_skills.agent_skill_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-07-F01-R07] Field agent_skills.agent_skill_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-07-F01-R08] Field agent_skills.agent_skill_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-07-F02-R01] Field agent_skills.agent_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-07-F02-R02] Field agent_skills.agent_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-07-F02-R03] Field agent_skills.agent_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-07-F02-R04] Field agent_skills.agent_id: validate its reference to agents.agent_id; explain deferred or quarantined unmatched records.
+- [P04-DATA-07-F02-R05] Field agent_skills.agent_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-07-F02-R06] Field agent_skills.agent_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-07-F02-R07] Field agent_skills.agent_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-07-F02-R08] Field agent_skills.agent_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-07-F03-R01] Field agent_skills.skill_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-07-F03-R02] Field agent_skills.skill_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-07-F03-R03] Field agent_skills.skill_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-07-F03-R04] Field agent_skills.skill_id: validate its reference to skills.skill_id; explain deferred or quarantined unmatched records.
+- [P04-DATA-07-F03-R05] Field agent_skills.skill_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-07-F03-R06] Field agent_skills.skill_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-07-F03-R07] Field agent_skills.skill_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-07-F03-R08] Field agent_skills.skill_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-07-F04-R01] Field agent_skills.proficiency: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-07-F04-R02] Field agent_skills.proficiency: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-07-F04-R03] Field agent_skills.proficiency: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-07-F04-R04] Field agent_skills.proficiency: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-07-F04-R05] Field agent_skills.proficiency: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-07-F04-R06] Field agent_skills.proficiency: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-07-F04-R07] Field agent_skills.proficiency: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-07-F04-R08] Field agent_skills.proficiency: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-07-F05-R01] Field agent_skills.effective_from: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P04-DATA-07-F05-R02] Field agent_skills.effective_from: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-07-F05-R03] Field agent_skills.effective_from: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-07-F05-R04] Field agent_skills.effective_from: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-07-F05-R05] Field agent_skills.effective_from: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-07-F05-R06] Field agent_skills.effective_from: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-07-F05-R07] Field agent_skills.effective_from: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-07-F05-R08] Field agent_skills.effective_from: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P04-DATA-08: shifts
+- [P04-DATA-08-R01] Create the shifts entity with a documented grain and one stable primary key: shift_id.
+- [P04-DATA-08-R02] The minimum business fields are shift_id, agent_id, starts_at, ends_at, break_minutes; add technical metadata only with a documented purpose.
+- [P04-DATA-08-R03] Use the role of shifts in the product workflow to define authoritative source ownership.
+- [P04-DATA-08-R04] Write migrations for shifts; do not rely on ORM auto-create for the verified release.
+- [P04-DATA-08-R05] Create a small valid shifts fixture linked to the independently calculated project example.
+- [P04-DATA-08-R06] Create an invalid shifts fixture that demonstrates a real domain constraint.
+- [P04-DATA-08-R07] Choose explicit row-update semantics for shifts: immutable event, versioned dimension or mutable operational record.
+- [P04-DATA-08-R08] Preserve the original source identifier for shifts when a surrogate key is introduced.
+- [P04-DATA-08-R09] Document whether deletion of shifts is prohibited, reversible or represented by a tombstone.
+- [P04-DATA-08-R10] Reconcile shifts accepted, rejected and deduplicated row counts to the source batch.
+- [P04-DATA-08-R11] Expose only justified synthetic shifts fields to the public site; remove internal runner metadata.
+- [P04-DATA-08-R12] Index shifts according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P04-DATA-08-R13] Do not join shifts at a different grain without an explicit aggregation or allocation rule.
+- [P04-DATA-08-R14] Associate the published shifts snapshot with dataset hash and generator parameters.
+- [P04-DATA-08-R15] Define deterministic sorting and pagination for the shifts evidence view.
+- [P04-DATA-08-R16] Ensure an empty shifts dataset yields an understandable empty state instead of fabricated sample totals.
+- [P04-DATA-08-R17] Archive the shifts schema and sample rows in the data dictionary.
+- [P04-DATA-08-R18] Test that replaying the source import cannot unintentionally duplicate shifts business records.
+- [P04-DATA-08-F01-R01] Field shifts.shift_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-08-F01-R02] Field shifts.shift_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-08-F01-R03] Field shifts.shift_id: make it non-null and unique as the primary key.
+- [P04-DATA-08-F01-R04] Field shifts.shift_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-08-F01-R05] Field shifts.shift_id: use stable source-to-key mapping across replays and regeneration.
+- [P04-DATA-08-F01-R06] Field shifts.shift_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-08-F01-R07] Field shifts.shift_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-08-F01-R08] Field shifts.shift_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-08-F02-R01] Field shifts.agent_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-08-F02-R02] Field shifts.agent_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-08-F02-R03] Field shifts.agent_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-08-F02-R04] Field shifts.agent_id: validate its reference to agents.agent_id; explain deferred or quarantined unmatched records.
+- [P04-DATA-08-F02-R05] Field shifts.agent_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-08-F02-R06] Field shifts.agent_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-08-F02-R07] Field shifts.agent_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-08-F02-R08] Field shifts.agent_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-08-F03-R01] Field shifts.starts_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P04-DATA-08-F03-R02] Field shifts.starts_at: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-08-F03-R03] Field shifts.starts_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-08-F03-R04] Field shifts.starts_at: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-08-F03-R05] Field shifts.starts_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-08-F03-R06] Field shifts.starts_at: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-08-F03-R07] Field shifts.starts_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-08-F03-R08] Field shifts.starts_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-08-F04-R01] Field shifts.ends_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P04-DATA-08-F04-R02] Field shifts.ends_at: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-08-F04-R03] Field shifts.ends_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-08-F04-R04] Field shifts.ends_at: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-08-F04-R05] Field shifts.ends_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-08-F04-R06] Field shifts.ends_at: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-08-F04-R07] Field shifts.ends_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-08-F04-R08] Field shifts.ends_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-08-F05-R01] Field shifts.break_minutes: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P04-DATA-08-F05-R02] Field shifts.break_minutes: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-08-F05-R03] Field shifts.break_minutes: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-08-F05-R04] Field shifts.break_minutes: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-08-F05-R05] Field shifts.break_minutes: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-08-F05-R06] Field shifts.break_minutes: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-08-F05-R07] Field shifts.break_minutes: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-08-F05-R08] Field shifts.break_minutes: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P04-DATA-09: sla_policies
+- [P04-DATA-09-R01] Create the sla_policies entity with a documented grain and one stable primary key: sla_policy_id.
+- [P04-DATA-09-R02] The minimum business fields are sla_policy_id, priority, first_response_minutes, resolution_minutes, calendar_id; add technical metadata only with a documented purpose.
+- [P04-DATA-09-R03] Use the role of sla_policies in the product workflow to define authoritative source ownership.
+- [P04-DATA-09-R04] Write migrations for sla_policies; do not rely on ORM auto-create for the verified release.
+- [P04-DATA-09-R05] Create a small valid sla_policies fixture linked to the independently calculated project example.
+- [P04-DATA-09-R06] Create an invalid sla_policies fixture that demonstrates a real domain constraint.
+- [P04-DATA-09-R07] Choose explicit row-update semantics for sla_policies: immutable event, versioned dimension or mutable operational record.
+- [P04-DATA-09-R08] Preserve the original source identifier for sla_policies when a surrogate key is introduced.
+- [P04-DATA-09-R09] Document whether deletion of sla_policies is prohibited, reversible or represented by a tombstone.
+- [P04-DATA-09-R10] Reconcile sla_policies accepted, rejected and deduplicated row counts to the source batch.
+- [P04-DATA-09-R11] Expose only justified synthetic sla_policies fields to the public site; remove internal runner metadata.
+- [P04-DATA-09-R12] Index sla_policies according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P04-DATA-09-R13] Do not join sla_policies at a different grain without an explicit aggregation or allocation rule.
+- [P04-DATA-09-R14] Associate the published sla_policies snapshot with dataset hash and generator parameters.
+- [P04-DATA-09-R15] Define deterministic sorting and pagination for the sla_policies evidence view.
+- [P04-DATA-09-R16] Ensure an empty sla_policies dataset yields an understandable empty state instead of fabricated sample totals.
+- [P04-DATA-09-R17] Archive the sla_policies schema and sample rows in the data dictionary.
+- [P04-DATA-09-R18] Test that replaying the source import cannot unintentionally duplicate sla_policies business records.
+- [P04-DATA-09-F01-R01] Field sla_policies.sla_policy_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-09-F01-R02] Field sla_policies.sla_policy_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-09-F01-R03] Field sla_policies.sla_policy_id: make it non-null and unique as the primary key.
+- [P04-DATA-09-F01-R04] Field sla_policies.sla_policy_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-09-F01-R05] Field sla_policies.sla_policy_id: use stable source-to-key mapping across replays and regeneration.
+- [P04-DATA-09-F01-R06] Field sla_policies.sla_policy_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-09-F01-R07] Field sla_policies.sla_policy_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-09-F01-R08] Field sla_policies.sla_policy_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-09-F02-R01] Field sla_policies.priority: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-09-F02-R02] Field sla_policies.priority: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-09-F02-R03] Field sla_policies.priority: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-09-F02-R04] Field sla_policies.priority: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-09-F02-R05] Field sla_policies.priority: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-09-F02-R06] Field sla_policies.priority: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-09-F02-R07] Field sla_policies.priority: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-09-F02-R08] Field sla_policies.priority: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-09-F03-R01] Field sla_policies.first_response_minutes: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P04-DATA-09-F03-R02] Field sla_policies.first_response_minutes: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-09-F03-R03] Field sla_policies.first_response_minutes: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-09-F03-R04] Field sla_policies.first_response_minutes: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-09-F03-R05] Field sla_policies.first_response_minutes: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-09-F03-R06] Field sla_policies.first_response_minutes: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-09-F03-R07] Field sla_policies.first_response_minutes: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-09-F03-R08] Field sla_policies.first_response_minutes: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-09-F04-R01] Field sla_policies.resolution_minutes: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P04-DATA-09-F04-R02] Field sla_policies.resolution_minutes: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-09-F04-R03] Field sla_policies.resolution_minutes: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-09-F04-R04] Field sla_policies.resolution_minutes: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-09-F04-R05] Field sla_policies.resolution_minutes: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-09-F04-R06] Field sla_policies.resolution_minutes: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-09-F04-R07] Field sla_policies.resolution_minutes: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-09-F04-R08] Field sla_policies.resolution_minutes: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-09-F05-R01] Field sla_policies.calendar_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-09-F05-R02] Field sla_policies.calendar_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-09-F05-R03] Field sla_policies.calendar_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-09-F05-R04] Field sla_policies.calendar_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-09-F05-R05] Field sla_policies.calendar_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-09-F05-R06] Field sla_policies.calendar_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-09-F05-R07] Field sla_policies.calendar_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-09-F05-R08] Field sla_policies.calendar_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P04-DATA-10: surveys
+- [P04-DATA-10-R01] Create the surveys entity with a documented grain and one stable primary key: survey_id.
+- [P04-DATA-10-R02] The minimum business fields are survey_id, ticket_id, response_at, score, invited_at; add technical metadata only with a documented purpose.
+- [P04-DATA-10-R03] Use the role of surveys in the product workflow to define authoritative source ownership.
+- [P04-DATA-10-R04] Write migrations for surveys; do not rely on ORM auto-create for the verified release.
+- [P04-DATA-10-R05] Create a small valid surveys fixture linked to the independently calculated project example.
+- [P04-DATA-10-R06] Create an invalid surveys fixture that demonstrates a real domain constraint.
+- [P04-DATA-10-R07] Choose explicit row-update semantics for surveys: immutable event, versioned dimension or mutable operational record.
+- [P04-DATA-10-R08] Preserve the original source identifier for surveys when a surrogate key is introduced.
+- [P04-DATA-10-R09] Document whether deletion of surveys is prohibited, reversible or represented by a tombstone.
+- [P04-DATA-10-R10] Reconcile surveys accepted, rejected and deduplicated row counts to the source batch.
+- [P04-DATA-10-R11] Expose only justified synthetic surveys fields to the public site; remove internal runner metadata.
+- [P04-DATA-10-R12] Index surveys according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P04-DATA-10-R13] Do not join surveys at a different grain without an explicit aggregation or allocation rule.
+- [P04-DATA-10-R14] Associate the published surveys snapshot with dataset hash and generator parameters.
+- [P04-DATA-10-R15] Define deterministic sorting and pagination for the surveys evidence view.
+- [P04-DATA-10-R16] Ensure an empty surveys dataset yields an understandable empty state instead of fabricated sample totals.
+- [P04-DATA-10-R17] Archive the surveys schema and sample rows in the data dictionary.
+- [P04-DATA-10-R18] Test that replaying the source import cannot unintentionally duplicate surveys business records.
+- [P04-DATA-10-F01-R01] Field surveys.survey_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-10-F01-R02] Field surveys.survey_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-10-F01-R03] Field surveys.survey_id: make it non-null and unique as the primary key.
+- [P04-DATA-10-F01-R04] Field surveys.survey_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-10-F01-R05] Field surveys.survey_id: use stable source-to-key mapping across replays and regeneration.
+- [P04-DATA-10-F01-R06] Field surveys.survey_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-10-F01-R07] Field surveys.survey_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-10-F01-R08] Field surveys.survey_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-10-F02-R01] Field surveys.ticket_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-10-F02-R02] Field surveys.ticket_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-10-F02-R03] Field surveys.ticket_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-10-F02-R04] Field surveys.ticket_id: validate its reference to tickets.ticket_id; explain deferred or quarantined unmatched records.
+- [P04-DATA-10-F02-R05] Field surveys.ticket_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-10-F02-R06] Field surveys.ticket_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-10-F02-R07] Field surveys.ticket_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-10-F02-R08] Field surveys.ticket_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-10-F03-R01] Field surveys.response_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P04-DATA-10-F03-R02] Field surveys.response_at: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-10-F03-R03] Field surveys.response_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-10-F03-R04] Field surveys.response_at: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-10-F03-R05] Field surveys.response_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-10-F03-R06] Field surveys.response_at: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-10-F03-R07] Field surveys.response_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-10-F03-R08] Field surveys.response_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-10-F04-R01] Field surveys.score: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P04-DATA-10-F04-R02] Field surveys.score: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-10-F04-R03] Field surveys.score: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-10-F04-R04] Field surveys.score: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-10-F04-R05] Field surveys.score: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-10-F04-R06] Field surveys.score: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-10-F04-R07] Field surveys.score: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-10-F04-R08] Field surveys.score: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-10-F05-R01] Field surveys.invited_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P04-DATA-10-F05-R02] Field surveys.invited_at: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-10-F05-R03] Field surveys.invited_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-10-F05-R04] Field surveys.invited_at: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-10-F05-R05] Field surveys.invited_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-10-F05-R06] Field surveys.invited_at: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-10-F05-R07] Field surveys.invited_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-10-F05-R08] Field surveys.invited_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P04-DATA-11: simulation_runs
+- [P04-DATA-11-R01] Create the simulation_runs entity with a documented grain and one stable primary key: simulation_id.
+- [P04-DATA-11-R02] The minimum business fields are simulation_id, seed, warmup_minutes, policy_version, horizon; add technical metadata only with a documented purpose.
+- [P04-DATA-11-R03] Use the role of simulation_runs in the product workflow to define authoritative source ownership.
+- [P04-DATA-11-R04] Write migrations for simulation_runs; do not rely on ORM auto-create for the verified release.
+- [P04-DATA-11-R05] Create a small valid simulation_runs fixture linked to the independently calculated project example.
+- [P04-DATA-11-R06] Create an invalid simulation_runs fixture that demonstrates a real domain constraint.
+- [P04-DATA-11-R07] Choose explicit row-update semantics for simulation_runs: immutable event, versioned dimension or mutable operational record.
+- [P04-DATA-11-R08] Preserve the original source identifier for simulation_runs when a surrogate key is introduced.
+- [P04-DATA-11-R09] Document whether deletion of simulation_runs is prohibited, reversible or represented by a tombstone.
+- [P04-DATA-11-R10] Reconcile simulation_runs accepted, rejected and deduplicated row counts to the source batch.
+- [P04-DATA-11-R11] Expose only justified synthetic simulation_runs fields to the public site; remove internal runner metadata.
+- [P04-DATA-11-R12] Index simulation_runs according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P04-DATA-11-R13] Do not join simulation_runs at a different grain without an explicit aggregation or allocation rule.
+- [P04-DATA-11-R14] Associate the published simulation_runs snapshot with dataset hash and generator parameters.
+- [P04-DATA-11-R15] Define deterministic sorting and pagination for the simulation_runs evidence view.
+- [P04-DATA-11-R16] Ensure an empty simulation_runs dataset yields an understandable empty state instead of fabricated sample totals.
+- [P04-DATA-11-R17] Archive the simulation_runs schema and sample rows in the data dictionary.
+- [P04-DATA-11-R18] Test that replaying the source import cannot unintentionally duplicate simulation_runs business records.
+- [P04-DATA-11-F01-R01] Field simulation_runs.simulation_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-11-F01-R02] Field simulation_runs.simulation_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-11-F01-R03] Field simulation_runs.simulation_id: make it non-null and unique as the primary key.
+- [P04-DATA-11-F01-R04] Field simulation_runs.simulation_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-11-F01-R05] Field simulation_runs.simulation_id: use stable source-to-key mapping across replays and regeneration.
+- [P04-DATA-11-F01-R06] Field simulation_runs.simulation_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-11-F01-R07] Field simulation_runs.simulation_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-11-F01-R08] Field simulation_runs.simulation_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-11-F02-R01] Field simulation_runs.seed: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-11-F02-R02] Field simulation_runs.seed: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-11-F02-R03] Field simulation_runs.seed: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-11-F02-R04] Field simulation_runs.seed: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-11-F02-R05] Field simulation_runs.seed: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-11-F02-R06] Field simulation_runs.seed: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-11-F02-R07] Field simulation_runs.seed: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-11-F02-R08] Field simulation_runs.seed: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-11-F03-R01] Field simulation_runs.warmup_minutes: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P04-DATA-11-F03-R02] Field simulation_runs.warmup_minutes: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-11-F03-R03] Field simulation_runs.warmup_minutes: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-11-F03-R04] Field simulation_runs.warmup_minutes: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-11-F03-R05] Field simulation_runs.warmup_minutes: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-11-F03-R06] Field simulation_runs.warmup_minutes: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-11-F03-R07] Field simulation_runs.warmup_minutes: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-11-F03-R08] Field simulation_runs.warmup_minutes: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-11-F04-R01] Field simulation_runs.policy_version: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-11-F04-R02] Field simulation_runs.policy_version: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-11-F04-R03] Field simulation_runs.policy_version: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-11-F04-R04] Field simulation_runs.policy_version: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-11-F04-R05] Field simulation_runs.policy_version: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-11-F04-R06] Field simulation_runs.policy_version: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-11-F04-R07] Field simulation_runs.policy_version: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-11-F04-R08] Field simulation_runs.policy_version: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-11-F05-R01] Field simulation_runs.horizon: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P04-DATA-11-F05-R02] Field simulation_runs.horizon: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-11-F05-R03] Field simulation_runs.horizon: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-11-F05-R04] Field simulation_runs.horizon: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-11-F05-R05] Field simulation_runs.horizon: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-11-F05-R06] Field simulation_runs.horizon: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-11-F05-R07] Field simulation_runs.horizon: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-11-F05-R08] Field simulation_runs.horizon: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P04-DATA-12: simulation_events
+- [P04-DATA-12-R01] Create the simulation_events entity with a documented grain and one stable primary key: simulation_event_id.
+- [P04-DATA-12-R02] The minimum business fields are simulation_event_id, simulation_id, ticket_id, event_type, event_at; add technical metadata only with a documented purpose.
+- [P04-DATA-12-R03] Use the role of simulation_events in the product workflow to define authoritative source ownership.
+- [P04-DATA-12-R04] Write migrations for simulation_events; do not rely on ORM auto-create for the verified release.
+- [P04-DATA-12-R05] Create a small valid simulation_events fixture linked to the independently calculated project example.
+- [P04-DATA-12-R06] Create an invalid simulation_events fixture that demonstrates a real domain constraint.
+- [P04-DATA-12-R07] Choose explicit row-update semantics for simulation_events: immutable event, versioned dimension or mutable operational record.
+- [P04-DATA-12-R08] Preserve the original source identifier for simulation_events when a surrogate key is introduced.
+- [P04-DATA-12-R09] Document whether deletion of simulation_events is prohibited, reversible or represented by a tombstone.
+- [P04-DATA-12-R10] Reconcile simulation_events accepted, rejected and deduplicated row counts to the source batch.
+- [P04-DATA-12-R11] Expose only justified synthetic simulation_events fields to the public site; remove internal runner metadata.
+- [P04-DATA-12-R12] Index simulation_events according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P04-DATA-12-R13] Do not join simulation_events at a different grain without an explicit aggregation or allocation rule.
+- [P04-DATA-12-R14] Associate the published simulation_events snapshot with dataset hash and generator parameters.
+- [P04-DATA-12-R15] Define deterministic sorting and pagination for the simulation_events evidence view.
+- [P04-DATA-12-R16] Ensure an empty simulation_events dataset yields an understandable empty state instead of fabricated sample totals.
+- [P04-DATA-12-R17] Archive the simulation_events schema and sample rows in the data dictionary.
+- [P04-DATA-12-R18] Test that replaying the source import cannot unintentionally duplicate simulation_events business records.
+- [P04-DATA-12-F01-R01] Field simulation_events.simulation_event_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-12-F01-R02] Field simulation_events.simulation_event_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-12-F01-R03] Field simulation_events.simulation_event_id: make it non-null and unique as the primary key.
+- [P04-DATA-12-F01-R04] Field simulation_events.simulation_event_id: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-12-F01-R05] Field simulation_events.simulation_event_id: use stable source-to-key mapping across replays and regeneration.
+- [P04-DATA-12-F01-R06] Field simulation_events.simulation_event_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-12-F01-R07] Field simulation_events.simulation_event_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-12-F01-R08] Field simulation_events.simulation_event_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-12-F02-R01] Field simulation_events.simulation_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-12-F02-R02] Field simulation_events.simulation_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-12-F02-R03] Field simulation_events.simulation_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-12-F02-R04] Field simulation_events.simulation_id: validate its reference to simulation_runs.simulation_id; explain deferred or quarantined unmatched records.
+- [P04-DATA-12-F02-R05] Field simulation_events.simulation_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-12-F02-R06] Field simulation_events.simulation_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-12-F02-R07] Field simulation_events.simulation_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-12-F02-R08] Field simulation_events.simulation_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-12-F03-R01] Field simulation_events.ticket_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-12-F03-R02] Field simulation_events.ticket_id: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-12-F03-R03] Field simulation_events.ticket_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-12-F03-R04] Field simulation_events.ticket_id: validate its reference to tickets.ticket_id; explain deferred or quarantined unmatched records.
+- [P04-DATA-12-F03-R05] Field simulation_events.ticket_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-12-F03-R06] Field simulation_events.ticket_id: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-12-F03-R07] Field simulation_events.ticket_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-12-F03-R08] Field simulation_events.ticket_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-12-F04-R01] Field simulation_events.event_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P04-DATA-12-F04-R02] Field simulation_events.event_type: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-12-F04-R03] Field simulation_events.event_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-12-F04-R04] Field simulation_events.event_type: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-12-F04-R05] Field simulation_events.event_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-12-F04-R06] Field simulation_events.event_type: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-12-F04-R07] Field simulation_events.event_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-12-F04-R08] Field simulation_events.event_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P04-DATA-12-F05-R01] Field simulation_events.event_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P04-DATA-12-F05-R02] Field simulation_events.event_at: define its business meaning in the dictionary and use the same label in exports.
+- [P04-DATA-12-F05-R03] Field simulation_events.event_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P04-DATA-12-F05-R04] Field simulation_events.event_at: define the allowed domain and reject structurally invalid values before publication.
+- [P04-DATA-12-F05-R05] Field simulation_events.event_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P04-DATA-12-F05-R06] Field simulation_events.event_at: create a round-trip test across source, validated model and exported representation.
+- [P04-DATA-12-F05-R07] Field simulation_events.event_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P04-DATA-12-F05-R08] Field simulation_events.event_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+
+## 04. Business metric contracts
+
+### P04-MET-01: Arrival rate
+- [P04-MET-01-R01] Business metric: Arrival rate.
+- [P04-MET-01-R02] Authoritative calculation rule: eligible arrivals / interval duration.
+- [P04-MET-01-R03] Output unit: tickets/hour.
+- [P04-MET-01-R04] Important boundary: Split by queue and priority.
+- [P04-MET-01-R05] Explain how Arrival rate informs the primary decision: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-MET-01-R06] Define the input grain for Arrival rate; never infer it from the chart grouping.
+- [P04-MET-01-R07] Name each source field and transformation contributing to Arrival rate.
+- [P04-MET-01-R08] Define the reporting population for Arrival rate before applying user-selected filters.
+- [P04-MET-01-R09] Name the timestamp and timezone used by Arrival rate.
+- [P04-MET-01-R10] Use a documented half-open interval for Arrival rate time filtering.
+- [P04-MET-01-R11] List excluded statuses, invalid records and immature observations for Arrival rate.
+- [P04-MET-01-R12] Display excluded-record counts when they materially change Arrival rate.
+- [P04-MET-01-R13] Define Arrival rate behavior for an empty eligible population.
+- [P04-MET-01-R14] Define Arrival rate behavior when its denominator is zero or its required baseline is absent.
+- [P04-MET-01-R15] Do not replace unknown Arrival rate values with zero without a documented business rule.
+- [P04-MET-01-R16] For Arrival rate, aggregate underlying values correctly before applying ratios or summary functions.
+- [P04-MET-01-R17] Preserve original precision for Arrival rate; round only at the stated calculation or presentation step.
+- [P04-MET-01-R18] Create a small manually calculated Arrival rate fixture independent of the main implementation.
+- [P04-MET-01-R19] Implement an independent SQL/spreadsheet/reference check for the important Arrival rate result.
+- [P04-MET-01-R20] Keep the browser Arrival rate calculation consistent with the authoritative contract and verified fixture.
+- [P04-MET-01-R21] Show Arrival rate definition, active scope and unit through a visible explanation affordance.
+- [P04-MET-01-R22] Allow drillthrough from Arrival rate into contributing evidence or a transparent aggregate explanation.
+- [P04-MET-01-R23] Export Arrival rate with contract version, filters, dataset hash and generated timestamp.
+- [P04-MET-01-R24] When Arrival rate is a scenario estimate, visibly separate it from observed historical results.
+- [P04-MET-01-R25] Include a Arrival rate regression assertion for one project-specific edge case.
+- [P04-MET-01-R26] If Arrival rate is compared across periods, use comparable eligibility and disclose differences.
+- [P04-MET-01-R27] Keep Arrival rate historical revisions traceable when late data changes published results.
+- [P04-MET-01-R28] Record a versioned decision if implementation requires changing Arrival rate semantics.
+- [P04-MET-01-R29] Have a reviewer challenge whether Arrival rate could be misleading despite being arithmetically correct.
+- [P04-MET-01-R30] Mark Arrival rate verified only after the known-answer and presentation checks actually run.
+### P04-MET-02: Completion rate
+- [P04-MET-02-R01] Business metric: Completion rate.
+- [P04-MET-02-R02] Authoritative calculation rule: resolved tickets / interval duration.
+- [P04-MET-02-R03] Output unit: tickets/hour.
+- [P04-MET-02-R04] Important boundary: Reopen logic explicit.
+- [P04-MET-02-R05] Explain how Completion rate informs the primary decision: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-MET-02-R06] Define the input grain for Completion rate; never infer it from the chart grouping.
+- [P04-MET-02-R07] Name each source field and transformation contributing to Completion rate.
+- [P04-MET-02-R08] Define the reporting population for Completion rate before applying user-selected filters.
+- [P04-MET-02-R09] Name the timestamp and timezone used by Completion rate.
+- [P04-MET-02-R10] Use a documented half-open interval for Completion rate time filtering.
+- [P04-MET-02-R11] List excluded statuses, invalid records and immature observations for Completion rate.
+- [P04-MET-02-R12] Display excluded-record counts when they materially change Completion rate.
+- [P04-MET-02-R13] Define Completion rate behavior for an empty eligible population.
+- [P04-MET-02-R14] Define Completion rate behavior when its denominator is zero or its required baseline is absent.
+- [P04-MET-02-R15] Do not replace unknown Completion rate values with zero without a documented business rule.
+- [P04-MET-02-R16] For Completion rate, aggregate underlying values correctly before applying ratios or summary functions.
+- [P04-MET-02-R17] Preserve original precision for Completion rate; round only at the stated calculation or presentation step.
+- [P04-MET-02-R18] Create a small manually calculated Completion rate fixture independent of the main implementation.
+- [P04-MET-02-R19] Implement an independent SQL/spreadsheet/reference check for the important Completion rate result.
+- [P04-MET-02-R20] Keep the browser Completion rate calculation consistent with the authoritative contract and verified fixture.
+- [P04-MET-02-R21] Show Completion rate definition, active scope and unit through a visible explanation affordance.
+- [P04-MET-02-R22] Allow drillthrough from Completion rate into contributing evidence or a transparent aggregate explanation.
+- [P04-MET-02-R23] Export Completion rate with contract version, filters, dataset hash and generated timestamp.
+- [P04-MET-02-R24] When Completion rate is a scenario estimate, visibly separate it from observed historical results.
+- [P04-MET-02-R25] Include a Completion rate regression assertion for one project-specific edge case.
+- [P04-MET-02-R26] If Completion rate is compared across periods, use comparable eligibility and disclose differences.
+- [P04-MET-02-R27] Keep Completion rate historical revisions traceable when late data changes published results.
+- [P04-MET-02-R28] Record a versioned decision if implementation requires changing Completion rate semantics.
+- [P04-MET-02-R29] Have a reviewer challenge whether Completion rate could be misleading despite being arithmetically correct.
+- [P04-MET-02-R30] Mark Completion rate verified only after the known-answer and presentation checks actually run.
+### P04-MET-03: Backlog at cutoff
+- [P04-MET-03-R01] Business metric: Backlog at cutoff.
+- [P04-MET-03-R02] Authoritative calculation rule: arrived unresolved tickets at cutoff.
+- [P04-MET-03-R03] Output unit: tickets.
+- [P04-MET-03-R04] Important boundary: Reconstruct event history.
+- [P04-MET-03-R05] Explain how Backlog at cutoff informs the primary decision: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-MET-03-R06] Define the input grain for Backlog at cutoff; never infer it from the chart grouping.
+- [P04-MET-03-R07] Name each source field and transformation contributing to Backlog at cutoff.
+- [P04-MET-03-R08] Define the reporting population for Backlog at cutoff before applying user-selected filters.
+- [P04-MET-03-R09] Name the timestamp and timezone used by Backlog at cutoff.
+- [P04-MET-03-R10] Use a documented half-open interval for Backlog at cutoff time filtering.
+- [P04-MET-03-R11] List excluded statuses, invalid records and immature observations for Backlog at cutoff.
+- [P04-MET-03-R12] Display excluded-record counts when they materially change Backlog at cutoff.
+- [P04-MET-03-R13] Define Backlog at cutoff behavior for an empty eligible population.
+- [P04-MET-03-R14] Define Backlog at cutoff behavior when its denominator is zero or its required baseline is absent.
+- [P04-MET-03-R15] Do not replace unknown Backlog at cutoff values with zero without a documented business rule.
+- [P04-MET-03-R16] For Backlog at cutoff, aggregate underlying values correctly before applying ratios or summary functions.
+- [P04-MET-03-R17] Preserve original precision for Backlog at cutoff; round only at the stated calculation or presentation step.
+- [P04-MET-03-R18] Create a small manually calculated Backlog at cutoff fixture independent of the main implementation.
+- [P04-MET-03-R19] Implement an independent SQL/spreadsheet/reference check for the important Backlog at cutoff result.
+- [P04-MET-03-R20] Keep the browser Backlog at cutoff calculation consistent with the authoritative contract and verified fixture.
+- [P04-MET-03-R21] Show Backlog at cutoff definition, active scope and unit through a visible explanation affordance.
+- [P04-MET-03-R22] Allow drillthrough from Backlog at cutoff into contributing evidence or a transparent aggregate explanation.
+- [P04-MET-03-R23] Export Backlog at cutoff with contract version, filters, dataset hash and generated timestamp.
+- [P04-MET-03-R24] When Backlog at cutoff is a scenario estimate, visibly separate it from observed historical results.
+- [P04-MET-03-R25] Include a Backlog at cutoff regression assertion for one project-specific edge case.
+- [P04-MET-03-R26] If Backlog at cutoff is compared across periods, use comparable eligibility and disclose differences.
+- [P04-MET-03-R27] Keep Backlog at cutoff historical revisions traceable when late data changes published results.
+- [P04-MET-03-R28] Record a versioned decision if implementation requires changing Backlog at cutoff semantics.
+- [P04-MET-03-R29] Have a reviewer challenge whether Backlog at cutoff could be misleading despite being arithmetically correct.
+- [P04-MET-03-R30] Mark Backlog at cutoff verified only after the known-answer and presentation checks actually run.
+### P04-MET-04: First response
+- [P04-MET-04-R01] Business metric: First response.
+- [P04-MET-04-R02] Authoritative calculation rule: first human reply - arrival.
+- [P04-MET-04-R03] Output unit: minutes.
+- [P04-MET-04-R04] Important boundary: Automated acknowledgements excluded.
+- [P04-MET-04-R05] Explain how First response informs the primary decision: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-MET-04-R06] Define the input grain for First response; never infer it from the chart grouping.
+- [P04-MET-04-R07] Name each source field and transformation contributing to First response.
+- [P04-MET-04-R08] Define the reporting population for First response before applying user-selected filters.
+- [P04-MET-04-R09] Name the timestamp and timezone used by First response.
+- [P04-MET-04-R10] Use a documented half-open interval for First response time filtering.
+- [P04-MET-04-R11] List excluded statuses, invalid records and immature observations for First response.
+- [P04-MET-04-R12] Display excluded-record counts when they materially change First response.
+- [P04-MET-04-R13] Define First response behavior for an empty eligible population.
+- [P04-MET-04-R14] Define First response behavior when its denominator is zero or its required baseline is absent.
+- [P04-MET-04-R15] Do not replace unknown First response values with zero without a documented business rule.
+- [P04-MET-04-R16] For First response, aggregate underlying values correctly before applying ratios or summary functions.
+- [P04-MET-04-R17] Preserve original precision for First response; round only at the stated calculation or presentation step.
+- [P04-MET-04-R18] Create a small manually calculated First response fixture independent of the main implementation.
+- [P04-MET-04-R19] Implement an independent SQL/spreadsheet/reference check for the important First response result.
+- [P04-MET-04-R20] Keep the browser First response calculation consistent with the authoritative contract and verified fixture.
+- [P04-MET-04-R21] Show First response definition, active scope and unit through a visible explanation affordance.
+- [P04-MET-04-R22] Allow drillthrough from First response into contributing evidence or a transparent aggregate explanation.
+- [P04-MET-04-R23] Export First response with contract version, filters, dataset hash and generated timestamp.
+- [P04-MET-04-R24] When First response is a scenario estimate, visibly separate it from observed historical results.
+- [P04-MET-04-R25] Include a First response regression assertion for one project-specific edge case.
+- [P04-MET-04-R26] If First response is compared across periods, use comparable eligibility and disclose differences.
+- [P04-MET-04-R27] Keep First response historical revisions traceable when late data changes published results.
+- [P04-MET-04-R28] Record a versioned decision if implementation requires changing First response semantics.
+- [P04-MET-04-R29] Have a reviewer challenge whether First response could be misleading despite being arithmetically correct.
+- [P04-MET-04-R30] Mark First response verified only after the known-answer and presentation checks actually run.
+### P04-MET-05: Resolution duration
+- [P04-MET-05-R01] Business metric: Resolution duration.
+- [P04-MET-05-R02] Authoritative calculation rule: final resolution - arrival.
+- [P04-MET-05-R03] Output unit: minutes.
+- [P04-MET-05-R04] Important boundary: Show reopened handling.
+- [P04-MET-05-R05] Explain how Resolution duration informs the primary decision: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-MET-05-R06] Define the input grain for Resolution duration; never infer it from the chart grouping.
+- [P04-MET-05-R07] Name each source field and transformation contributing to Resolution duration.
+- [P04-MET-05-R08] Define the reporting population for Resolution duration before applying user-selected filters.
+- [P04-MET-05-R09] Name the timestamp and timezone used by Resolution duration.
+- [P04-MET-05-R10] Use a documented half-open interval for Resolution duration time filtering.
+- [P04-MET-05-R11] List excluded statuses, invalid records and immature observations for Resolution duration.
+- [P04-MET-05-R12] Display excluded-record counts when they materially change Resolution duration.
+- [P04-MET-05-R13] Define Resolution duration behavior for an empty eligible population.
+- [P04-MET-05-R14] Define Resolution duration behavior when its denominator is zero or its required baseline is absent.
+- [P04-MET-05-R15] Do not replace unknown Resolution duration values with zero without a documented business rule.
+- [P04-MET-05-R16] For Resolution duration, aggregate underlying values correctly before applying ratios or summary functions.
+- [P04-MET-05-R17] Preserve original precision for Resolution duration; round only at the stated calculation or presentation step.
+- [P04-MET-05-R18] Create a small manually calculated Resolution duration fixture independent of the main implementation.
+- [P04-MET-05-R19] Implement an independent SQL/spreadsheet/reference check for the important Resolution duration result.
+- [P04-MET-05-R20] Keep the browser Resolution duration calculation consistent with the authoritative contract and verified fixture.
+- [P04-MET-05-R21] Show Resolution duration definition, active scope and unit through a visible explanation affordance.
+- [P04-MET-05-R22] Allow drillthrough from Resolution duration into contributing evidence or a transparent aggregate explanation.
+- [P04-MET-05-R23] Export Resolution duration with contract version, filters, dataset hash and generated timestamp.
+- [P04-MET-05-R24] When Resolution duration is a scenario estimate, visibly separate it from observed historical results.
+- [P04-MET-05-R25] Include a Resolution duration regression assertion for one project-specific edge case.
+- [P04-MET-05-R26] If Resolution duration is compared across periods, use comparable eligibility and disclose differences.
+- [P04-MET-05-R27] Keep Resolution duration historical revisions traceable when late data changes published results.
+- [P04-MET-05-R28] Record a versioned decision if implementation requires changing Resolution duration semantics.
+- [P04-MET-05-R29] Have a reviewer challenge whether Resolution duration could be misleading despite being arithmetically correct.
+- [P04-MET-05-R30] Mark Resolution duration verified only after the known-answer and presentation checks actually run.
+### P04-MET-06: Handling duration
+- [P04-MET-06-R01] Business metric: Handling duration.
+- [P04-MET-06-R02] Authoritative calculation rule: sum(active service intervals).
+- [P04-MET-06-R03] Output unit: minutes.
+- [P04-MET-06-R04] Important boundary: Exclude idle wait.
+- [P04-MET-06-R05] Explain how Handling duration informs the primary decision: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-MET-06-R06] Define the input grain for Handling duration; never infer it from the chart grouping.
+- [P04-MET-06-R07] Name each source field and transformation contributing to Handling duration.
+- [P04-MET-06-R08] Define the reporting population for Handling duration before applying user-selected filters.
+- [P04-MET-06-R09] Name the timestamp and timezone used by Handling duration.
+- [P04-MET-06-R10] Use a documented half-open interval for Handling duration time filtering.
+- [P04-MET-06-R11] List excluded statuses, invalid records and immature observations for Handling duration.
+- [P04-MET-06-R12] Display excluded-record counts when they materially change Handling duration.
+- [P04-MET-06-R13] Define Handling duration behavior for an empty eligible population.
+- [P04-MET-06-R14] Define Handling duration behavior when its denominator is zero or its required baseline is absent.
+- [P04-MET-06-R15] Do not replace unknown Handling duration values with zero without a documented business rule.
+- [P04-MET-06-R16] For Handling duration, aggregate underlying values correctly before applying ratios or summary functions.
+- [P04-MET-06-R17] Preserve original precision for Handling duration; round only at the stated calculation or presentation step.
+- [P04-MET-06-R18] Create a small manually calculated Handling duration fixture independent of the main implementation.
+- [P04-MET-06-R19] Implement an independent SQL/spreadsheet/reference check for the important Handling duration result.
+- [P04-MET-06-R20] Keep the browser Handling duration calculation consistent with the authoritative contract and verified fixture.
+- [P04-MET-06-R21] Show Handling duration definition, active scope and unit through a visible explanation affordance.
+- [P04-MET-06-R22] Allow drillthrough from Handling duration into contributing evidence or a transparent aggregate explanation.
+- [P04-MET-06-R23] Export Handling duration with contract version, filters, dataset hash and generated timestamp.
+- [P04-MET-06-R24] When Handling duration is a scenario estimate, visibly separate it from observed historical results.
+- [P04-MET-06-R25] Include a Handling duration regression assertion for one project-specific edge case.
+- [P04-MET-06-R26] If Handling duration is compared across periods, use comparable eligibility and disclose differences.
+- [P04-MET-06-R27] Keep Handling duration historical revisions traceable when late data changes published results.
+- [P04-MET-06-R28] Record a versioned decision if implementation requires changing Handling duration semantics.
+- [P04-MET-06-R29] Have a reviewer challenge whether Handling duration could be misleading despite being arithmetically correct.
+- [P04-MET-06-R30] Mark Handling duration verified only after the known-answer and presentation checks actually run.
+### P04-MET-07: P90 first response
+- [P04-MET-07-R01] Business metric: P90 first response.
+- [P04-MET-07-R02] Authoritative calculation rule: 90th percentile eligible response durations.
+- [P04-MET-07-R03] Output unit: minutes.
+- [P04-MET-07-R04] Important boundary: Document quantile implementation.
+- [P04-MET-07-R05] Explain how P90 first response informs the primary decision: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-MET-07-R06] Define the input grain for P90 first response; never infer it from the chart grouping.
+- [P04-MET-07-R07] Name each source field and transformation contributing to P90 first response.
+- [P04-MET-07-R08] Define the reporting population for P90 first response before applying user-selected filters.
+- [P04-MET-07-R09] Name the timestamp and timezone used by P90 first response.
+- [P04-MET-07-R10] Use a documented half-open interval for P90 first response time filtering.
+- [P04-MET-07-R11] List excluded statuses, invalid records and immature observations for P90 first response.
+- [P04-MET-07-R12] Display excluded-record counts when they materially change P90 first response.
+- [P04-MET-07-R13] Define P90 first response behavior for an empty eligible population.
+- [P04-MET-07-R14] Define P90 first response behavior when its denominator is zero or its required baseline is absent.
+- [P04-MET-07-R15] Do not replace unknown P90 first response values with zero without a documented business rule.
+- [P04-MET-07-R16] For P90 first response, aggregate underlying values correctly before applying ratios or summary functions.
+- [P04-MET-07-R17] Preserve original precision for P90 first response; round only at the stated calculation or presentation step.
+- [P04-MET-07-R18] Create a small manually calculated P90 first response fixture independent of the main implementation.
+- [P04-MET-07-R19] Implement an independent SQL/spreadsheet/reference check for the important P90 first response result.
+- [P04-MET-07-R20] Keep the browser P90 first response calculation consistent with the authoritative contract and verified fixture.
+- [P04-MET-07-R21] Show P90 first response definition, active scope and unit through a visible explanation affordance.
+- [P04-MET-07-R22] Allow drillthrough from P90 first response into contributing evidence or a transparent aggregate explanation.
+- [P04-MET-07-R23] Export P90 first response with contract version, filters, dataset hash and generated timestamp.
+- [P04-MET-07-R24] When P90 first response is a scenario estimate, visibly separate it from observed historical results.
+- [P04-MET-07-R25] Include a P90 first response regression assertion for one project-specific edge case.
+- [P04-MET-07-R26] If P90 first response is compared across periods, use comparable eligibility and disclose differences.
+- [P04-MET-07-R27] Keep P90 first response historical revisions traceable when late data changes published results.
+- [P04-MET-07-R28] Record a versioned decision if implementation requires changing P90 first response semantics.
+- [P04-MET-07-R29] Have a reviewer challenge whether P90 first response could be misleading despite being arithmetically correct.
+- [P04-MET-07-R30] Mark P90 first response verified only after the known-answer and presentation checks actually run.
+### P04-MET-08: SLA compliance
+- [P04-MET-08-R01] Business metric: SLA compliance.
+- [P04-MET-08-R02] Authoritative calculation rule: eligible tickets within policy / eligible tickets.
+- [P04-MET-08-R03] Output unit: percent.
+- [P04-MET-08-R04] Important boundary: Open overdue shown separately.
+- [P04-MET-08-R05] Explain how SLA compliance informs the primary decision: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-MET-08-R06] Define the input grain for SLA compliance; never infer it from the chart grouping.
+- [P04-MET-08-R07] Name each source field and transformation contributing to SLA compliance.
+- [P04-MET-08-R08] Define the reporting population for SLA compliance before applying user-selected filters.
+- [P04-MET-08-R09] Name the timestamp and timezone used by SLA compliance.
+- [P04-MET-08-R10] Use a documented half-open interval for SLA compliance time filtering.
+- [P04-MET-08-R11] List excluded statuses, invalid records and immature observations for SLA compliance.
+- [P04-MET-08-R12] Display excluded-record counts when they materially change SLA compliance.
+- [P04-MET-08-R13] Define SLA compliance behavior for an empty eligible population.
+- [P04-MET-08-R14] Define SLA compliance behavior when its denominator is zero or its required baseline is absent.
+- [P04-MET-08-R15] Do not replace unknown SLA compliance values with zero without a documented business rule.
+- [P04-MET-08-R16] For SLA compliance, aggregate underlying values correctly before applying ratios or summary functions.
+- [P04-MET-08-R17] Preserve original precision for SLA compliance; round only at the stated calculation or presentation step.
+- [P04-MET-08-R18] Create a small manually calculated SLA compliance fixture independent of the main implementation.
+- [P04-MET-08-R19] Implement an independent SQL/spreadsheet/reference check for the important SLA compliance result.
+- [P04-MET-08-R20] Keep the browser SLA compliance calculation consistent with the authoritative contract and verified fixture.
+- [P04-MET-08-R21] Show SLA compliance definition, active scope and unit through a visible explanation affordance.
+- [P04-MET-08-R22] Allow drillthrough from SLA compliance into contributing evidence or a transparent aggregate explanation.
+- [P04-MET-08-R23] Export SLA compliance with contract version, filters, dataset hash and generated timestamp.
+- [P04-MET-08-R24] When SLA compliance is a scenario estimate, visibly separate it from observed historical results.
+- [P04-MET-08-R25] Include a SLA compliance regression assertion for one project-specific edge case.
+- [P04-MET-08-R26] If SLA compliance is compared across periods, use comparable eligibility and disclose differences.
+- [P04-MET-08-R27] Keep SLA compliance historical revisions traceable when late data changes published results.
+- [P04-MET-08-R28] Record a versioned decision if implementation requires changing SLA compliance semantics.
+- [P04-MET-08-R29] Have a reviewer challenge whether SLA compliance could be misleading despite being arithmetically correct.
+- [P04-MET-08-R30] Mark SLA compliance verified only after the known-answer and presentation checks actually run.
+### P04-MET-09: Agent occupancy
+- [P04-MET-09-R01] Business metric: Agent occupancy.
+- [P04-MET-09-R02] Authoritative calculation rule: active handling / staffed available time.
+- [P04-MET-09-R03] Output unit: percent.
+- [P04-MET-09-R04] Important boundary: Multichannel concurrency explicitly bounded.
+- [P04-MET-09-R05] Explain how Agent occupancy informs the primary decision: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-MET-09-R06] Define the input grain for Agent occupancy; never infer it from the chart grouping.
+- [P04-MET-09-R07] Name each source field and transformation contributing to Agent occupancy.
+- [P04-MET-09-R08] Define the reporting population for Agent occupancy before applying user-selected filters.
+- [P04-MET-09-R09] Name the timestamp and timezone used by Agent occupancy.
+- [P04-MET-09-R10] Use a documented half-open interval for Agent occupancy time filtering.
+- [P04-MET-09-R11] List excluded statuses, invalid records and immature observations for Agent occupancy.
+- [P04-MET-09-R12] Display excluded-record counts when they materially change Agent occupancy.
+- [P04-MET-09-R13] Define Agent occupancy behavior for an empty eligible population.
+- [P04-MET-09-R14] Define Agent occupancy behavior when its denominator is zero or its required baseline is absent.
+- [P04-MET-09-R15] Do not replace unknown Agent occupancy values with zero without a documented business rule.
+- [P04-MET-09-R16] For Agent occupancy, aggregate underlying values correctly before applying ratios or summary functions.
+- [P04-MET-09-R17] Preserve original precision for Agent occupancy; round only at the stated calculation or presentation step.
+- [P04-MET-09-R18] Create a small manually calculated Agent occupancy fixture independent of the main implementation.
+- [P04-MET-09-R19] Implement an independent SQL/spreadsheet/reference check for the important Agent occupancy result.
+- [P04-MET-09-R20] Keep the browser Agent occupancy calculation consistent with the authoritative contract and verified fixture.
+- [P04-MET-09-R21] Show Agent occupancy definition, active scope and unit through a visible explanation affordance.
+- [P04-MET-09-R22] Allow drillthrough from Agent occupancy into contributing evidence or a transparent aggregate explanation.
+- [P04-MET-09-R23] Export Agent occupancy with contract version, filters, dataset hash and generated timestamp.
+- [P04-MET-09-R24] When Agent occupancy is a scenario estimate, visibly separate it from observed historical results.
+- [P04-MET-09-R25] Include a Agent occupancy regression assertion for one project-specific edge case.
+- [P04-MET-09-R26] If Agent occupancy is compared across periods, use comparable eligibility and disclose differences.
+- [P04-MET-09-R27] Keep Agent occupancy historical revisions traceable when late data changes published results.
+- [P04-MET-09-R28] Record a versioned decision if implementation requires changing Agent occupancy semantics.
+- [P04-MET-09-R29] Have a reviewer challenge whether Agent occupancy could be misleading despite being arithmetically correct.
+- [P04-MET-09-R30] Mark Agent occupancy verified only after the known-answer and presentation checks actually run.
+### P04-MET-10: Abandonment rate
+- [P04-MET-10-R01] Business metric: Abandonment rate.
+- [P04-MET-10-R02] Authoritative calculation rule: abandoned eligible contacts / eligible arrivals.
+- [P04-MET-10-R03] Output unit: percent.
+- [P04-MET-10-R04] Important boundary: Only channels with abandonment.
+- [P04-MET-10-R05] Explain how Abandonment rate informs the primary decision: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-MET-10-R06] Define the input grain for Abandonment rate; never infer it from the chart grouping.
+- [P04-MET-10-R07] Name each source field and transformation contributing to Abandonment rate.
+- [P04-MET-10-R08] Define the reporting population for Abandonment rate before applying user-selected filters.
+- [P04-MET-10-R09] Name the timestamp and timezone used by Abandonment rate.
+- [P04-MET-10-R10] Use a documented half-open interval for Abandonment rate time filtering.
+- [P04-MET-10-R11] List excluded statuses, invalid records and immature observations for Abandonment rate.
+- [P04-MET-10-R12] Display excluded-record counts when they materially change Abandonment rate.
+- [P04-MET-10-R13] Define Abandonment rate behavior for an empty eligible population.
+- [P04-MET-10-R14] Define Abandonment rate behavior when its denominator is zero or its required baseline is absent.
+- [P04-MET-10-R15] Do not replace unknown Abandonment rate values with zero without a documented business rule.
+- [P04-MET-10-R16] For Abandonment rate, aggregate underlying values correctly before applying ratios or summary functions.
+- [P04-MET-10-R17] Preserve original precision for Abandonment rate; round only at the stated calculation or presentation step.
+- [P04-MET-10-R18] Create a small manually calculated Abandonment rate fixture independent of the main implementation.
+- [P04-MET-10-R19] Implement an independent SQL/spreadsheet/reference check for the important Abandonment rate result.
+- [P04-MET-10-R20] Keep the browser Abandonment rate calculation consistent with the authoritative contract and verified fixture.
+- [P04-MET-10-R21] Show Abandonment rate definition, active scope and unit through a visible explanation affordance.
+- [P04-MET-10-R22] Allow drillthrough from Abandonment rate into contributing evidence or a transparent aggregate explanation.
+- [P04-MET-10-R23] Export Abandonment rate with contract version, filters, dataset hash and generated timestamp.
+- [P04-MET-10-R24] When Abandonment rate is a scenario estimate, visibly separate it from observed historical results.
+- [P04-MET-10-R25] Include a Abandonment rate regression assertion for one project-specific edge case.
+- [P04-MET-10-R26] If Abandonment rate is compared across periods, use comparable eligibility and disclose differences.
+- [P04-MET-10-R27] Keep Abandonment rate historical revisions traceable when late data changes published results.
+- [P04-MET-10-R28] Record a versioned decision if implementation requires changing Abandonment rate semantics.
+- [P04-MET-10-R29] Have a reviewer challenge whether Abandonment rate could be misleading despite being arithmetically correct.
+- [P04-MET-10-R30] Mark Abandonment rate verified only after the known-answer and presentation checks actually run.
+### P04-MET-11: CSAT
+- [P04-MET-11-R01] Business metric: CSAT.
+- [P04-MET-11-R02] Authoritative calculation rule: positive responses / valid responses.
+- [P04-MET-11-R03] Output unit: percent.
+- [P04-MET-11-R04] Important boundary: Show invitation and response rates.
+- [P04-MET-11-R05] Explain how CSAT informs the primary decision: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-MET-11-R06] Define the input grain for CSAT; never infer it from the chart grouping.
+- [P04-MET-11-R07] Name each source field and transformation contributing to CSAT.
+- [P04-MET-11-R08] Define the reporting population for CSAT before applying user-selected filters.
+- [P04-MET-11-R09] Name the timestamp and timezone used by CSAT.
+- [P04-MET-11-R10] Use a documented half-open interval for CSAT time filtering.
+- [P04-MET-11-R11] List excluded statuses, invalid records and immature observations for CSAT.
+- [P04-MET-11-R12] Display excluded-record counts when they materially change CSAT.
+- [P04-MET-11-R13] Define CSAT behavior for an empty eligible population.
+- [P04-MET-11-R14] Define CSAT behavior when its denominator is zero or its required baseline is absent.
+- [P04-MET-11-R15] Do not replace unknown CSAT values with zero without a documented business rule.
+- [P04-MET-11-R16] For CSAT, aggregate underlying values correctly before applying ratios or summary functions.
+- [P04-MET-11-R17] Preserve original precision for CSAT; round only at the stated calculation or presentation step.
+- [P04-MET-11-R18] Create a small manually calculated CSAT fixture independent of the main implementation.
+- [P04-MET-11-R19] Implement an independent SQL/spreadsheet/reference check for the important CSAT result.
+- [P04-MET-11-R20] Keep the browser CSAT calculation consistent with the authoritative contract and verified fixture.
+- [P04-MET-11-R21] Show CSAT definition, active scope and unit through a visible explanation affordance.
+- [P04-MET-11-R22] Allow drillthrough from CSAT into contributing evidence or a transparent aggregate explanation.
+- [P04-MET-11-R23] Export CSAT with contract version, filters, dataset hash and generated timestamp.
+- [P04-MET-11-R24] When CSAT is a scenario estimate, visibly separate it from observed historical results.
+- [P04-MET-11-R25] Include a CSAT regression assertion for one project-specific edge case.
+- [P04-MET-11-R26] If CSAT is compared across periods, use comparable eligibility and disclose differences.
+- [P04-MET-11-R27] Keep CSAT historical revisions traceable when late data changes published results.
+- [P04-MET-11-R28] Record a versioned decision if implementation requires changing CSAT semantics.
+- [P04-MET-11-R29] Have a reviewer challenge whether CSAT could be misleading despite being arithmetically correct.
+- [P04-MET-11-R30] Mark CSAT verified only after the known-answer and presentation checks actually run.
+### P04-MET-12: Simulated wait improvement
+- [P04-MET-12-R01] Business metric: Simulated wait improvement.
+- [P04-MET-12-R02] Authoritative calculation rule: baseline wait - scenario wait.
+- [P04-MET-12-R03] Output unit: minutes.
+- [P04-MET-12-R04] Important boundary: Repeated runs and intervals.
+- [P04-MET-12-R05] Explain how Simulated wait improvement informs the primary decision: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-MET-12-R06] Define the input grain for Simulated wait improvement; never infer it from the chart grouping.
+- [P04-MET-12-R07] Name each source field and transformation contributing to Simulated wait improvement.
+- [P04-MET-12-R08] Define the reporting population for Simulated wait improvement before applying user-selected filters.
+- [P04-MET-12-R09] Name the timestamp and timezone used by Simulated wait improvement.
+- [P04-MET-12-R10] Use a documented half-open interval for Simulated wait improvement time filtering.
+- [P04-MET-12-R11] List excluded statuses, invalid records and immature observations for Simulated wait improvement.
+- [P04-MET-12-R12] Display excluded-record counts when they materially change Simulated wait improvement.
+- [P04-MET-12-R13] Define Simulated wait improvement behavior for an empty eligible population.
+- [P04-MET-12-R14] Define Simulated wait improvement behavior when its denominator is zero or its required baseline is absent.
+- [P04-MET-12-R15] Do not replace unknown Simulated wait improvement values with zero without a documented business rule.
+- [P04-MET-12-R16] For Simulated wait improvement, aggregate underlying values correctly before applying ratios or summary functions.
+- [P04-MET-12-R17] Preserve original precision for Simulated wait improvement; round only at the stated calculation or presentation step.
+- [P04-MET-12-R18] Create a small manually calculated Simulated wait improvement fixture independent of the main implementation.
+- [P04-MET-12-R19] Implement an independent SQL/spreadsheet/reference check for the important Simulated wait improvement result.
+- [P04-MET-12-R20] Keep the browser Simulated wait improvement calculation consistent with the authoritative contract and verified fixture.
+- [P04-MET-12-R21] Show Simulated wait improvement definition, active scope and unit through a visible explanation affordance.
+- [P04-MET-12-R22] Allow drillthrough from Simulated wait improvement into contributing evidence or a transparent aggregate explanation.
+- [P04-MET-12-R23] Export Simulated wait improvement with contract version, filters, dataset hash and generated timestamp.
+- [P04-MET-12-R24] When Simulated wait improvement is a scenario estimate, visibly separate it from observed historical results.
+- [P04-MET-12-R25] Include a Simulated wait improvement regression assertion for one project-specific edge case.
+- [P04-MET-12-R26] If Simulated wait improvement is compared across periods, use comparable eligibility and disclose differences.
+- [P04-MET-12-R27] Keep Simulated wait improvement historical revisions traceable when late data changes published results.
+- [P04-MET-12-R28] Record a versioned decision if implementation requires changing Simulated wait improvement semantics.
+- [P04-MET-12-R29] Have a reviewer challenge whether Simulated wait improvement could be misleading despite being arithmetically correct.
+- [P04-MET-12-R30] Mark Simulated wait improvement verified only after the known-answer and presentation checks actually run.
+
+## 05. End-to-end workflow and transition contracts
+
+### P04-FLOW-01: Ingest ticket events
+- [P04-FLOW-01-R01] Workflow capability: Ingest ticket events.
+- [P04-FLOW-01-R02] Logical transition: Raw history -> ordered canonical events.
+- [P04-FLOW-01-R03] Primary invariant: Preserve late arrivals.
+- [P04-FLOW-01-R04] Define the user goal and permitted actor for Ingest ticket events.
+- [P04-FLOW-01-R05] Define required inputs and source versions for Ingest ticket events.
+- [P04-FLOW-01-R06] Check preconditions before Ingest ticket events; reject violations with a specific user-facing explanation.
+- [P04-FLOW-01-R07] Document the authoritative output of Ingest ticket events and the next valid action.
+- [P04-FLOW-01-R08] Implement Ingest ticket events in a domain/service layer rather than hiding it in a UI callback.
+- [P04-FLOW-01-R09] Define the transaction boundary for Ingest ticket events when state changes.
+- [P04-FLOW-01-R10] Preserve an audit event for material Ingest ticket events decisions without recording secrets.
+- [P04-FLOW-01-R11] Define how Ingest ticket events behaves when the same request or input is repeated.
+- [P04-FLOW-01-R12] Define how Ingest ticket events behaves when its input dataset or record version is stale.
+- [P04-FLOW-01-R13] Prevent conflicting Ingest ticket events updates with version checks or another documented mechanism.
+- [P04-FLOW-01-R14] Keep original evidence immutable when Ingest ticket events creates a correction or new scenario.
+- [P04-FLOW-01-R15] Test the successful Ingest ticket events path using deterministic fixtures.
+- [P04-FLOW-01-R16] Test one rejected Ingest ticket events path against the stated invariant.
+- [P04-FLOW-01-R17] Test interrupted Ingest ticket events execution and prove safe recovery or explicit noncommit.
+- [P04-FLOW-01-R18] Test authorized versus unauthorized Ingest ticket events behavior where real backend roles apply.
+- [P04-FLOW-01-R19] In the static website, label Ingest ticket events mutations as browser-memory simulation.
+- [P04-FLOW-01-R20] Never make Ingest ticket events appear server-persistent in the GitHub Pages demo.
+- [P04-FLOW-01-R21] Expose progress, success and actionable failure feedback for Ingest ticket events.
+- [P04-FLOW-01-R22] Keep keyboard focus coherent after Ingest ticket events updates or opens a dialog.
+- [P04-FLOW-01-R23] Include Ingest ticket events in the UAT script and trace its acceptance criteria to tests.
+- [P04-FLOW-01-R24] Include actual Ingest ticket events verification results in the evidence ledger.
+- [P04-FLOW-01-R25] Use the resulting Ingest ticket events evidence in the case study only with its execution mode disclosed.
+- [P04-FLOW-01-R26] Have the coordinator approve the integrated Ingest ticket events diff after specialist review.
+### P04-FLOW-02: Assign queue
+- [P04-FLOW-02-R01] Workflow capability: Assign queue.
+- [P04-FLOW-02-R02] Logical transition: New ticket -> queued.
+- [P04-FLOW-02-R03] Primary invariant: Respect skill eligibility.
+- [P04-FLOW-02-R04] Define the user goal and permitted actor for Assign queue.
+- [P04-FLOW-02-R05] Define required inputs and source versions for Assign queue.
+- [P04-FLOW-02-R06] Check preconditions before Assign queue; reject violations with a specific user-facing explanation.
+- [P04-FLOW-02-R07] Document the authoritative output of Assign queue and the next valid action.
+- [P04-FLOW-02-R08] Implement Assign queue in a domain/service layer rather than hiding it in a UI callback.
+- [P04-FLOW-02-R09] Define the transaction boundary for Assign queue when state changes.
+- [P04-FLOW-02-R10] Preserve an audit event for material Assign queue decisions without recording secrets.
+- [P04-FLOW-02-R11] Define how Assign queue behaves when the same request or input is repeated.
+- [P04-FLOW-02-R12] Define how Assign queue behaves when its input dataset or record version is stale.
+- [P04-FLOW-02-R13] Prevent conflicting Assign queue updates with version checks or another documented mechanism.
+- [P04-FLOW-02-R14] Keep original evidence immutable when Assign queue creates a correction or new scenario.
+- [P04-FLOW-02-R15] Test the successful Assign queue path using deterministic fixtures.
+- [P04-FLOW-02-R16] Test one rejected Assign queue path against the stated invariant.
+- [P04-FLOW-02-R17] Test interrupted Assign queue execution and prove safe recovery or explicit noncommit.
+- [P04-FLOW-02-R18] Test authorized versus unauthorized Assign queue behavior where real backend roles apply.
+- [P04-FLOW-02-R19] In the static website, label Assign queue mutations as browser-memory simulation.
+- [P04-FLOW-02-R20] Never make Assign queue appear server-persistent in the GitHub Pages demo.
+- [P04-FLOW-02-R21] Expose progress, success and actionable failure feedback for Assign queue.
+- [P04-FLOW-02-R22] Keep keyboard focus coherent after Assign queue updates or opens a dialog.
+- [P04-FLOW-02-R23] Include Assign queue in the UAT script and trace its acceptance criteria to tests.
+- [P04-FLOW-02-R24] Include actual Assign queue verification results in the evidence ledger.
+- [P04-FLOW-02-R25] Use the resulting Assign queue evidence in the case study only with its execution mode disclosed.
+- [P04-FLOW-02-R26] Have the coordinator approve the integrated Assign queue diff after specialist review.
+### P04-FLOW-03: Start service
+- [P04-FLOW-03-R01] Workflow capability: Start service.
+- [P04-FLOW-03-R02] Logical transition: Queued -> in_service.
+- [P04-FLOW-03-R03] Primary invariant: Agent available and qualified.
+- [P04-FLOW-03-R04] Define the user goal and permitted actor for Start service.
+- [P04-FLOW-03-R05] Define required inputs and source versions for Start service.
+- [P04-FLOW-03-R06] Check preconditions before Start service; reject violations with a specific user-facing explanation.
+- [P04-FLOW-03-R07] Document the authoritative output of Start service and the next valid action.
+- [P04-FLOW-03-R08] Implement Start service in a domain/service layer rather than hiding it in a UI callback.
+- [P04-FLOW-03-R09] Define the transaction boundary for Start service when state changes.
+- [P04-FLOW-03-R10] Preserve an audit event for material Start service decisions without recording secrets.
+- [P04-FLOW-03-R11] Define how Start service behaves when the same request or input is repeated.
+- [P04-FLOW-03-R12] Define how Start service behaves when its input dataset or record version is stale.
+- [P04-FLOW-03-R13] Prevent conflicting Start service updates with version checks or another documented mechanism.
+- [P04-FLOW-03-R14] Keep original evidence immutable when Start service creates a correction or new scenario.
+- [P04-FLOW-03-R15] Test the successful Start service path using deterministic fixtures.
+- [P04-FLOW-03-R16] Test one rejected Start service path against the stated invariant.
+- [P04-FLOW-03-R17] Test interrupted Start service execution and prove safe recovery or explicit noncommit.
+- [P04-FLOW-03-R18] Test authorized versus unauthorized Start service behavior where real backend roles apply.
+- [P04-FLOW-03-R19] In the static website, label Start service mutations as browser-memory simulation.
+- [P04-FLOW-03-R20] Never make Start service appear server-persistent in the GitHub Pages demo.
+- [P04-FLOW-03-R21] Expose progress, success and actionable failure feedback for Start service.
+- [P04-FLOW-03-R22] Keep keyboard focus coherent after Start service updates or opens a dialog.
+- [P04-FLOW-03-R23] Include Start service in the UAT script and trace its acceptance criteria to tests.
+- [P04-FLOW-03-R24] Include actual Start service verification results in the evidence ledger.
+- [P04-FLOW-03-R25] Use the resulting Start service evidence in the case study only with its execution mode disclosed.
+- [P04-FLOW-03-R26] Have the coordinator approve the integrated Start service diff after specialist review.
+### P04-FLOW-04: Transfer ticket
+- [P04-FLOW-04-R01] Workflow capability: Transfer ticket.
+- [P04-FLOW-04-R02] Logical transition: Queue A -> queue B.
+- [P04-FLOW-04-R03] Primary invariant: Preserve original arrival and transfer wait.
+- [P04-FLOW-04-R04] Define the user goal and permitted actor for Transfer ticket.
+- [P04-FLOW-04-R05] Define required inputs and source versions for Transfer ticket.
+- [P04-FLOW-04-R06] Check preconditions before Transfer ticket; reject violations with a specific user-facing explanation.
+- [P04-FLOW-04-R07] Document the authoritative output of Transfer ticket and the next valid action.
+- [P04-FLOW-04-R08] Implement Transfer ticket in a domain/service layer rather than hiding it in a UI callback.
+- [P04-FLOW-04-R09] Define the transaction boundary for Transfer ticket when state changes.
+- [P04-FLOW-04-R10] Preserve an audit event for material Transfer ticket decisions without recording secrets.
+- [P04-FLOW-04-R11] Define how Transfer ticket behaves when the same request or input is repeated.
+- [P04-FLOW-04-R12] Define how Transfer ticket behaves when its input dataset or record version is stale.
+- [P04-FLOW-04-R13] Prevent conflicting Transfer ticket updates with version checks or another documented mechanism.
+- [P04-FLOW-04-R14] Keep original evidence immutable when Transfer ticket creates a correction or new scenario.
+- [P04-FLOW-04-R15] Test the successful Transfer ticket path using deterministic fixtures.
+- [P04-FLOW-04-R16] Test one rejected Transfer ticket path against the stated invariant.
+- [P04-FLOW-04-R17] Test interrupted Transfer ticket execution and prove safe recovery or explicit noncommit.
+- [P04-FLOW-04-R18] Test authorized versus unauthorized Transfer ticket behavior where real backend roles apply.
+- [P04-FLOW-04-R19] In the static website, label Transfer ticket mutations as browser-memory simulation.
+- [P04-FLOW-04-R20] Never make Transfer ticket appear server-persistent in the GitHub Pages demo.
+- [P04-FLOW-04-R21] Expose progress, success and actionable failure feedback for Transfer ticket.
+- [P04-FLOW-04-R22] Keep keyboard focus coherent after Transfer ticket updates or opens a dialog.
+- [P04-FLOW-04-R23] Include Transfer ticket in the UAT script and trace its acceptance criteria to tests.
+- [P04-FLOW-04-R24] Include actual Transfer ticket verification results in the evidence ledger.
+- [P04-FLOW-04-R25] Use the resulting Transfer ticket evidence in the case study only with its execution mode disclosed.
+- [P04-FLOW-04-R26] Have the coordinator approve the integrated Transfer ticket diff after specialist review.
+### P04-FLOW-05: Pause work
+- [P04-FLOW-05-R01] Workflow capability: Pause work.
+- [P04-FLOW-05-R02] Logical transition: In_service -> waiting_customer.
+- [P04-FLOW-05-R03] Primary invariant: Differentiate SLA policy.
+- [P04-FLOW-05-R04] Define the user goal and permitted actor for Pause work.
+- [P04-FLOW-05-R05] Define required inputs and source versions for Pause work.
+- [P04-FLOW-05-R06] Check preconditions before Pause work; reject violations with a specific user-facing explanation.
+- [P04-FLOW-05-R07] Document the authoritative output of Pause work and the next valid action.
+- [P04-FLOW-05-R08] Implement Pause work in a domain/service layer rather than hiding it in a UI callback.
+- [P04-FLOW-05-R09] Define the transaction boundary for Pause work when state changes.
+- [P04-FLOW-05-R10] Preserve an audit event for material Pause work decisions without recording secrets.
+- [P04-FLOW-05-R11] Define how Pause work behaves when the same request or input is repeated.
+- [P04-FLOW-05-R12] Define how Pause work behaves when its input dataset or record version is stale.
+- [P04-FLOW-05-R13] Prevent conflicting Pause work updates with version checks or another documented mechanism.
+- [P04-FLOW-05-R14] Keep original evidence immutable when Pause work creates a correction or new scenario.
+- [P04-FLOW-05-R15] Test the successful Pause work path using deterministic fixtures.
+- [P04-FLOW-05-R16] Test one rejected Pause work path against the stated invariant.
+- [P04-FLOW-05-R17] Test interrupted Pause work execution and prove safe recovery or explicit noncommit.
+- [P04-FLOW-05-R18] Test authorized versus unauthorized Pause work behavior where real backend roles apply.
+- [P04-FLOW-05-R19] In the static website, label Pause work mutations as browser-memory simulation.
+- [P04-FLOW-05-R20] Never make Pause work appear server-persistent in the GitHub Pages demo.
+- [P04-FLOW-05-R21] Expose progress, success and actionable failure feedback for Pause work.
+- [P04-FLOW-05-R22] Keep keyboard focus coherent after Pause work updates or opens a dialog.
+- [P04-FLOW-05-R23] Include Pause work in the UAT script and trace its acceptance criteria to tests.
+- [P04-FLOW-05-R24] Include actual Pause work verification results in the evidence ledger.
+- [P04-FLOW-05-R25] Use the resulting Pause work evidence in the case study only with its execution mode disclosed.
+- [P04-FLOW-05-R26] Have the coordinator approve the integrated Pause work diff after specialist review.
+### P04-FLOW-06: Reopen ticket
+- [P04-FLOW-06-R01] Workflow capability: Reopen ticket.
+- [P04-FLOW-06-R02] Logical transition: Resolved -> reopened.
+- [P04-FLOW-06-R03] Primary invariant: Link prior resolution cycle.
+- [P04-FLOW-06-R04] Define the user goal and permitted actor for Reopen ticket.
+- [P04-FLOW-06-R05] Define required inputs and source versions for Reopen ticket.
+- [P04-FLOW-06-R06] Check preconditions before Reopen ticket; reject violations with a specific user-facing explanation.
+- [P04-FLOW-06-R07] Document the authoritative output of Reopen ticket and the next valid action.
+- [P04-FLOW-06-R08] Implement Reopen ticket in a domain/service layer rather than hiding it in a UI callback.
+- [P04-FLOW-06-R09] Define the transaction boundary for Reopen ticket when state changes.
+- [P04-FLOW-06-R10] Preserve an audit event for material Reopen ticket decisions without recording secrets.
+- [P04-FLOW-06-R11] Define how Reopen ticket behaves when the same request or input is repeated.
+- [P04-FLOW-06-R12] Define how Reopen ticket behaves when its input dataset or record version is stale.
+- [P04-FLOW-06-R13] Prevent conflicting Reopen ticket updates with version checks or another documented mechanism.
+- [P04-FLOW-06-R14] Keep original evidence immutable when Reopen ticket creates a correction or new scenario.
+- [P04-FLOW-06-R15] Test the successful Reopen ticket path using deterministic fixtures.
+- [P04-FLOW-06-R16] Test one rejected Reopen ticket path against the stated invariant.
+- [P04-FLOW-06-R17] Test interrupted Reopen ticket execution and prove safe recovery or explicit noncommit.
+- [P04-FLOW-06-R18] Test authorized versus unauthorized Reopen ticket behavior where real backend roles apply.
+- [P04-FLOW-06-R19] In the static website, label Reopen ticket mutations as browser-memory simulation.
+- [P04-FLOW-06-R20] Never make Reopen ticket appear server-persistent in the GitHub Pages demo.
+- [P04-FLOW-06-R21] Expose progress, success and actionable failure feedback for Reopen ticket.
+- [P04-FLOW-06-R22] Keep keyboard focus coherent after Reopen ticket updates or opens a dialog.
+- [P04-FLOW-06-R23] Include Reopen ticket in the UAT script and trace its acceptance criteria to tests.
+- [P04-FLOW-06-R24] Include actual Reopen ticket verification results in the evidence ledger.
+- [P04-FLOW-06-R25] Use the resulting Reopen ticket evidence in the case study only with its execution mode disclosed.
+- [P04-FLOW-06-R26] Have the coordinator approve the integrated Reopen ticket diff after specialist review.
+### P04-FLOW-07: Build shift scenario
+- [P04-FLOW-07-R01] Workflow capability: Build shift scenario.
+- [P04-FLOW-07-R02] Logical transition: Baseline -> candidate schedule.
+- [P04-FLOW-07-R03] Primary invariant: Respect availability and breaks.
+- [P04-FLOW-07-R04] Define the user goal and permitted actor for Build shift scenario.
+- [P04-FLOW-07-R05] Define required inputs and source versions for Build shift scenario.
+- [P04-FLOW-07-R06] Check preconditions before Build shift scenario; reject violations with a specific user-facing explanation.
+- [P04-FLOW-07-R07] Document the authoritative output of Build shift scenario and the next valid action.
+- [P04-FLOW-07-R08] Implement Build shift scenario in a domain/service layer rather than hiding it in a UI callback.
+- [P04-FLOW-07-R09] Define the transaction boundary for Build shift scenario when state changes.
+- [P04-FLOW-07-R10] Preserve an audit event for material Build shift scenario decisions without recording secrets.
+- [P04-FLOW-07-R11] Define how Build shift scenario behaves when the same request or input is repeated.
+- [P04-FLOW-07-R12] Define how Build shift scenario behaves when its input dataset or record version is stale.
+- [P04-FLOW-07-R13] Prevent conflicting Build shift scenario updates with version checks or another documented mechanism.
+- [P04-FLOW-07-R14] Keep original evidence immutable when Build shift scenario creates a correction or new scenario.
+- [P04-FLOW-07-R15] Test the successful Build shift scenario path using deterministic fixtures.
+- [P04-FLOW-07-R16] Test one rejected Build shift scenario path against the stated invariant.
+- [P04-FLOW-07-R17] Test interrupted Build shift scenario execution and prove safe recovery or explicit noncommit.
+- [P04-FLOW-07-R18] Test authorized versus unauthorized Build shift scenario behavior where real backend roles apply.
+- [P04-FLOW-07-R19] In the static website, label Build shift scenario mutations as browser-memory simulation.
+- [P04-FLOW-07-R20] Never make Build shift scenario appear server-persistent in the GitHub Pages demo.
+- [P04-FLOW-07-R21] Expose progress, success and actionable failure feedback for Build shift scenario.
+- [P04-FLOW-07-R22] Keep keyboard focus coherent after Build shift scenario updates or opens a dialog.
+- [P04-FLOW-07-R23] Include Build shift scenario in the UAT script and trace its acceptance criteria to tests.
+- [P04-FLOW-07-R24] Include actual Build shift scenario verification results in the evidence ledger.
+- [P04-FLOW-07-R25] Use the resulting Build shift scenario evidence in the case study only with its execution mode disclosed.
+- [P04-FLOW-07-R26] Have the coordinator approve the integrated Build shift scenario diff after specialist review.
+### P04-FLOW-08: Run simulation
+- [P04-FLOW-08-R01] Workflow capability: Run simulation.
+- [P04-FLOW-08-R02] Logical transition: Frozen config -> replicated outcomes.
+- [P04-FLOW-08-R03] Primary invariant: Warm-up and seeds fixed.
+- [P04-FLOW-08-R04] Define the user goal and permitted actor for Run simulation.
+- [P04-FLOW-08-R05] Define required inputs and source versions for Run simulation.
+- [P04-FLOW-08-R06] Check preconditions before Run simulation; reject violations with a specific user-facing explanation.
+- [P04-FLOW-08-R07] Document the authoritative output of Run simulation and the next valid action.
+- [P04-FLOW-08-R08] Implement Run simulation in a domain/service layer rather than hiding it in a UI callback.
+- [P04-FLOW-08-R09] Define the transaction boundary for Run simulation when state changes.
+- [P04-FLOW-08-R10] Preserve an audit event for material Run simulation decisions without recording secrets.
+- [P04-FLOW-08-R11] Define how Run simulation behaves when the same request or input is repeated.
+- [P04-FLOW-08-R12] Define how Run simulation behaves when its input dataset or record version is stale.
+- [P04-FLOW-08-R13] Prevent conflicting Run simulation updates with version checks or another documented mechanism.
+- [P04-FLOW-08-R14] Keep original evidence immutable when Run simulation creates a correction or new scenario.
+- [P04-FLOW-08-R15] Test the successful Run simulation path using deterministic fixtures.
+- [P04-FLOW-08-R16] Test one rejected Run simulation path against the stated invariant.
+- [P04-FLOW-08-R17] Test interrupted Run simulation execution and prove safe recovery or explicit noncommit.
+- [P04-FLOW-08-R18] Test authorized versus unauthorized Run simulation behavior where real backend roles apply.
+- [P04-FLOW-08-R19] In the static website, label Run simulation mutations as browser-memory simulation.
+- [P04-FLOW-08-R20] Never make Run simulation appear server-persistent in the GitHub Pages demo.
+- [P04-FLOW-08-R21] Expose progress, success and actionable failure feedback for Run simulation.
+- [P04-FLOW-08-R22] Keep keyboard focus coherent after Run simulation updates or opens a dialog.
+- [P04-FLOW-08-R23] Include Run simulation in the UAT script and trace its acceptance criteria to tests.
+- [P04-FLOW-08-R24] Include actual Run simulation verification results in the evidence ledger.
+- [P04-FLOW-08-R25] Use the resulting Run simulation evidence in the case study only with its execution mode disclosed.
+- [P04-FLOW-08-R26] Have the coordinator approve the integrated Run simulation diff after specialist review.
+### P04-FLOW-09: Compare policies
+- [P04-FLOW-09-R01] Workflow capability: Compare policies.
+- [P04-FLOW-09-R02] Logical transition: Baseline versus proposal -> decision.
+- [P04-FLOW-09-R03] Primary invariant: Same demand sample.
+- [P04-FLOW-09-R04] Define the user goal and permitted actor for Compare policies.
+- [P04-FLOW-09-R05] Define required inputs and source versions for Compare policies.
+- [P04-FLOW-09-R06] Check preconditions before Compare policies; reject violations with a specific user-facing explanation.
+- [P04-FLOW-09-R07] Document the authoritative output of Compare policies and the next valid action.
+- [P04-FLOW-09-R08] Implement Compare policies in a domain/service layer rather than hiding it in a UI callback.
+- [P04-FLOW-09-R09] Define the transaction boundary for Compare policies when state changes.
+- [P04-FLOW-09-R10] Preserve an audit event for material Compare policies decisions without recording secrets.
+- [P04-FLOW-09-R11] Define how Compare policies behaves when the same request or input is repeated.
+- [P04-FLOW-09-R12] Define how Compare policies behaves when its input dataset or record version is stale.
+- [P04-FLOW-09-R13] Prevent conflicting Compare policies updates with version checks or another documented mechanism.
+- [P04-FLOW-09-R14] Keep original evidence immutable when Compare policies creates a correction or new scenario.
+- [P04-FLOW-09-R15] Test the successful Compare policies path using deterministic fixtures.
+- [P04-FLOW-09-R16] Test one rejected Compare policies path against the stated invariant.
+- [P04-FLOW-09-R17] Test interrupted Compare policies execution and prove safe recovery or explicit noncommit.
+- [P04-FLOW-09-R18] Test authorized versus unauthorized Compare policies behavior where real backend roles apply.
+- [P04-FLOW-09-R19] In the static website, label Compare policies mutations as browser-memory simulation.
+- [P04-FLOW-09-R20] Never make Compare policies appear server-persistent in the GitHub Pages demo.
+- [P04-FLOW-09-R21] Expose progress, success and actionable failure feedback for Compare policies.
+- [P04-FLOW-09-R22] Keep keyboard focus coherent after Compare policies updates or opens a dialog.
+- [P04-FLOW-09-R23] Include Compare policies in the UAT script and trace its acceptance criteria to tests.
+- [P04-FLOW-09-R24] Include actual Compare policies verification results in the evidence ledger.
+- [P04-FLOW-09-R25] Use the resulting Compare policies evidence in the case study only with its execution mode disclosed.
+- [P04-FLOW-09-R26] Have the coordinator approve the integrated Compare policies diff after specialist review.
+### P04-FLOW-10: Export recommendation
+- [P04-FLOW-10-R01] Workflow capability: Export recommendation.
+- [P04-FLOW-10-R02] Logical transition: Reviewed scenario -> memo.
+- [P04-FLOW-10-R03] Primary invariant: Include uncertainty and service targets.
+- [P04-FLOW-10-R04] Define the user goal and permitted actor for Export recommendation.
+- [P04-FLOW-10-R05] Define required inputs and source versions for Export recommendation.
+- [P04-FLOW-10-R06] Check preconditions before Export recommendation; reject violations with a specific user-facing explanation.
+- [P04-FLOW-10-R07] Document the authoritative output of Export recommendation and the next valid action.
+- [P04-FLOW-10-R08] Implement Export recommendation in a domain/service layer rather than hiding it in a UI callback.
+- [P04-FLOW-10-R09] Define the transaction boundary for Export recommendation when state changes.
+- [P04-FLOW-10-R10] Preserve an audit event for material Export recommendation decisions without recording secrets.
+- [P04-FLOW-10-R11] Define how Export recommendation behaves when the same request or input is repeated.
+- [P04-FLOW-10-R12] Define how Export recommendation behaves when its input dataset or record version is stale.
+- [P04-FLOW-10-R13] Prevent conflicting Export recommendation updates with version checks or another documented mechanism.
+- [P04-FLOW-10-R14] Keep original evidence immutable when Export recommendation creates a correction or new scenario.
+- [P04-FLOW-10-R15] Test the successful Export recommendation path using deterministic fixtures.
+- [P04-FLOW-10-R16] Test one rejected Export recommendation path against the stated invariant.
+- [P04-FLOW-10-R17] Test interrupted Export recommendation execution and prove safe recovery or explicit noncommit.
+- [P04-FLOW-10-R18] Test authorized versus unauthorized Export recommendation behavior where real backend roles apply.
+- [P04-FLOW-10-R19] In the static website, label Export recommendation mutations as browser-memory simulation.
+- [P04-FLOW-10-R20] Never make Export recommendation appear server-persistent in the GitHub Pages demo.
+- [P04-FLOW-10-R21] Expose progress, success and actionable failure feedback for Export recommendation.
+- [P04-FLOW-10-R22] Keep keyboard focus coherent after Export recommendation updates or opens a dialog.
+- [P04-FLOW-10-R23] Include Export recommendation in the UAT script and trace its acceptance criteria to tests.
+- [P04-FLOW-10-R24] Include actual Export recommendation verification results in the evidence ledger.
+- [P04-FLOW-10-R25] Use the resulting Export recommendation evidence in the case study only with its execution mode disclosed.
+- [P04-FLOW-10-R26] Have the coordinator approve the integrated Export recommendation diff after specialist review.
+
+## 06. Screen-by-screen product experience
+
+### P04-UI-01: Operations overview
+- [P04-UI-01-R01] Screen: Operations overview.
+- [P04-UI-01-R02] Purpose and principal representation: Backlog, arrivals and service targets.
+- [P04-UI-01-R03] Choose a stable route under /serviceflow/ and verify direct navigation and reload for Operations overview.
+- [P04-UI-01-R04] Use the project visual direction on Operations overview: Service control room: midnight blue, cream, cyan; queue timeline and shift grid.
+- [P04-UI-01-R05] Give Operations overview one clear main action related to the business decision.
+- [P04-UI-01-R06] Display the active time window, filters and data version on Operations overview where applicable.
+- [P04-UI-01-R07] Show the synthetic/static-demo label without overwhelming Operations overview.
+- [P04-UI-01-R08] Use real verified snapshot values on Operations overview; do not hand-enter attractive KPI numbers.
+- [P04-UI-01-R09] Explain calculation meaning and units adjacent to important Operations overview values.
+- [P04-UI-01-R10] Provide an accessible table or text alternative for analytical graphics on Operations overview.
+- [P04-UI-01-R11] Use consistent category ordering and deterministic tie breaks on Operations overview.
+- [P04-UI-01-R12] Handle long names, negative values, missing categories and large values on Operations overview.
+- [P04-UI-01-R13] Implement a useful no-data state on Operations overview, including a way to clear restrictive filters.
+- [P04-UI-01-R14] Implement loading and failed-data states on Operations overview without showing invented results.
+- [P04-UI-01-R15] Keep all Operations overview controls keyboard accessible with visible focus.
+- [P04-UI-01-R16] Provide reduced-motion behavior for Operations overview transitions.
+- [P04-UI-01-R17] Keep motion purposeful; chart changes on Operations overview must not conceal changed units or populations.
+- [P04-UI-01-R18] Verify Operations overview at mobile, tablet and desktop widths with actual rendered output.
+- [P04-UI-01-R19] Verify Operations overview at 200 percent zoom and with realistic dense data.
+- [P04-UI-01-R20] Ensure exports from Operations overview match its scope or clearly explain full-population export behavior.
+- [P04-UI-01-R21] Provide navigation from Operations overview to evidence, definitions and the case study.
+- [P04-UI-01-R22] Check console errors, broken assets and nested path handling for Operations overview.
+- [P04-UI-01-R23] Record screenshot-review findings for Operations overview; do not assert review from source inspection.
+- [P04-UI-01-R24] Link Operations overview to its relevant workflow and metric contract IDs in the traceability matrix.
+### P04-UI-02: Queue explorer
+- [P04-UI-02-R01] Screen: Queue explorer.
+- [P04-UI-02-R02] Purpose and principal representation: Priority and skill-level breakdown.
+- [P04-UI-02-R03] Choose a stable route under /serviceflow/ and verify direct navigation and reload for Queue explorer.
+- [P04-UI-02-R04] Use the project visual direction on Queue explorer: Service control room: midnight blue, cream, cyan; queue timeline and shift grid.
+- [P04-UI-02-R05] Give Queue explorer one clear main action related to the business decision.
+- [P04-UI-02-R06] Display the active time window, filters and data version on Queue explorer where applicable.
+- [P04-UI-02-R07] Show the synthetic/static-demo label without overwhelming Queue explorer.
+- [P04-UI-02-R08] Use real verified snapshot values on Queue explorer; do not hand-enter attractive KPI numbers.
+- [P04-UI-02-R09] Explain calculation meaning and units adjacent to important Queue explorer values.
+- [P04-UI-02-R10] Provide an accessible table or text alternative for analytical graphics on Queue explorer.
+- [P04-UI-02-R11] Use consistent category ordering and deterministic tie breaks on Queue explorer.
+- [P04-UI-02-R12] Handle long names, negative values, missing categories and large values on Queue explorer.
+- [P04-UI-02-R13] Implement a useful no-data state on Queue explorer, including a way to clear restrictive filters.
+- [P04-UI-02-R14] Implement loading and failed-data states on Queue explorer without showing invented results.
+- [P04-UI-02-R15] Keep all Queue explorer controls keyboard accessible with visible focus.
+- [P04-UI-02-R16] Provide reduced-motion behavior for Queue explorer transitions.
+- [P04-UI-02-R17] Keep motion purposeful; chart changes on Queue explorer must not conceal changed units or populations.
+- [P04-UI-02-R18] Verify Queue explorer at mobile, tablet and desktop widths with actual rendered output.
+- [P04-UI-02-R19] Verify Queue explorer at 200 percent zoom and with realistic dense data.
+- [P04-UI-02-R20] Ensure exports from Queue explorer match its scope or clearly explain full-population export behavior.
+- [P04-UI-02-R21] Provide navigation from Queue explorer to evidence, definitions and the case study.
+- [P04-UI-02-R22] Check console errors, broken assets and nested path handling for Queue explorer.
+- [P04-UI-02-R23] Record screenshot-review findings for Queue explorer; do not assert review from source inspection.
+- [P04-UI-02-R24] Link Queue explorer to its relevant workflow and metric contract IDs in the traceability matrix.
+### P04-UI-03: Ticket timeline
+- [P04-UI-03-R01] Screen: Ticket timeline.
+- [P04-UI-03-R02] Purpose and principal representation: Human response and status history.
+- [P04-UI-03-R03] Choose a stable route under /serviceflow/ and verify direct navigation and reload for Ticket timeline.
+- [P04-UI-03-R04] Use the project visual direction on Ticket timeline: Service control room: midnight blue, cream, cyan; queue timeline and shift grid.
+- [P04-UI-03-R05] Give Ticket timeline one clear main action related to the business decision.
+- [P04-UI-03-R06] Display the active time window, filters and data version on Ticket timeline where applicable.
+- [P04-UI-03-R07] Show the synthetic/static-demo label without overwhelming Ticket timeline.
+- [P04-UI-03-R08] Use real verified snapshot values on Ticket timeline; do not hand-enter attractive KPI numbers.
+- [P04-UI-03-R09] Explain calculation meaning and units adjacent to important Ticket timeline values.
+- [P04-UI-03-R10] Provide an accessible table or text alternative for analytical graphics on Ticket timeline.
+- [P04-UI-03-R11] Use consistent category ordering and deterministic tie breaks on Ticket timeline.
+- [P04-UI-03-R12] Handle long names, negative values, missing categories and large values on Ticket timeline.
+- [P04-UI-03-R13] Implement a useful no-data state on Ticket timeline, including a way to clear restrictive filters.
+- [P04-UI-03-R14] Implement loading and failed-data states on Ticket timeline without showing invented results.
+- [P04-UI-03-R15] Keep all Ticket timeline controls keyboard accessible with visible focus.
+- [P04-UI-03-R16] Provide reduced-motion behavior for Ticket timeline transitions.
+- [P04-UI-03-R17] Keep motion purposeful; chart changes on Ticket timeline must not conceal changed units or populations.
+- [P04-UI-03-R18] Verify Ticket timeline at mobile, tablet and desktop widths with actual rendered output.
+- [P04-UI-03-R19] Verify Ticket timeline at 200 percent zoom and with realistic dense data.
+- [P04-UI-03-R20] Ensure exports from Ticket timeline match its scope or clearly explain full-population export behavior.
+- [P04-UI-03-R21] Provide navigation from Ticket timeline to evidence, definitions and the case study.
+- [P04-UI-03-R22] Check console errors, broken assets and nested path handling for Ticket timeline.
+- [P04-UI-03-R23] Record screenshot-review findings for Ticket timeline; do not assert review from source inspection.
+- [P04-UI-03-R24] Link Ticket timeline to its relevant workflow and metric contract IDs in the traceability matrix.
+### P04-UI-04: Staffing grid
+- [P04-UI-04-R01] Screen: Staffing grid.
+- [P04-UI-04-R02] Purpose and principal representation: Coverage and breaks by interval.
+- [P04-UI-04-R03] Choose a stable route under /serviceflow/ and verify direct navigation and reload for Staffing grid.
+- [P04-UI-04-R04] Use the project visual direction on Staffing grid: Service control room: midnight blue, cream, cyan; queue timeline and shift grid.
+- [P04-UI-04-R05] Give Staffing grid one clear main action related to the business decision.
+- [P04-UI-04-R06] Display the active time window, filters and data version on Staffing grid where applicable.
+- [P04-UI-04-R07] Show the synthetic/static-demo label without overwhelming Staffing grid.
+- [P04-UI-04-R08] Use real verified snapshot values on Staffing grid; do not hand-enter attractive KPI numbers.
+- [P04-UI-04-R09] Explain calculation meaning and units adjacent to important Staffing grid values.
+- [P04-UI-04-R10] Provide an accessible table or text alternative for analytical graphics on Staffing grid.
+- [P04-UI-04-R11] Use consistent category ordering and deterministic tie breaks on Staffing grid.
+- [P04-UI-04-R12] Handle long names, negative values, missing categories and large values on Staffing grid.
+- [P04-UI-04-R13] Implement a useful no-data state on Staffing grid, including a way to clear restrictive filters.
+- [P04-UI-04-R14] Implement loading and failed-data states on Staffing grid without showing invented results.
+- [P04-UI-04-R15] Keep all Staffing grid controls keyboard accessible with visible focus.
+- [P04-UI-04-R16] Provide reduced-motion behavior for Staffing grid transitions.
+- [P04-UI-04-R17] Keep motion purposeful; chart changes on Staffing grid must not conceal changed units or populations.
+- [P04-UI-04-R18] Verify Staffing grid at mobile, tablet and desktop widths with actual rendered output.
+- [P04-UI-04-R19] Verify Staffing grid at 200 percent zoom and with realistic dense data.
+- [P04-UI-04-R20] Ensure exports from Staffing grid match its scope or clearly explain full-population export behavior.
+- [P04-UI-04-R21] Provide navigation from Staffing grid to evidence, definitions and the case study.
+- [P04-UI-04-R22] Check console errors, broken assets and nested path handling for Staffing grid.
+- [P04-UI-04-R23] Record screenshot-review findings for Staffing grid; do not assert review from source inspection.
+- [P04-UI-04-R24] Link Staffing grid to its relevant workflow and metric contract IDs in the traceability matrix.
+### P04-UI-05: SLA review
+- [P04-UI-05-R01] Screen: SLA review.
+- [P04-UI-05-R02] Purpose and principal representation: Policy-specific numerator and denominator.
+- [P04-UI-05-R03] Choose a stable route under /serviceflow/ and verify direct navigation and reload for SLA review.
+- [P04-UI-05-R04] Use the project visual direction on SLA review: Service control room: midnight blue, cream, cyan; queue timeline and shift grid.
+- [P04-UI-05-R05] Give SLA review one clear main action related to the business decision.
+- [P04-UI-05-R06] Display the active time window, filters and data version on SLA review where applicable.
+- [P04-UI-05-R07] Show the synthetic/static-demo label without overwhelming SLA review.
+- [P04-UI-05-R08] Use real verified snapshot values on SLA review; do not hand-enter attractive KPI numbers.
+- [P04-UI-05-R09] Explain calculation meaning and units adjacent to important SLA review values.
+- [P04-UI-05-R10] Provide an accessible table or text alternative for analytical graphics on SLA review.
+- [P04-UI-05-R11] Use consistent category ordering and deterministic tie breaks on SLA review.
+- [P04-UI-05-R12] Handle long names, negative values, missing categories and large values on SLA review.
+- [P04-UI-05-R13] Implement a useful no-data state on SLA review, including a way to clear restrictive filters.
+- [P04-UI-05-R14] Implement loading and failed-data states on SLA review without showing invented results.
+- [P04-UI-05-R15] Keep all SLA review controls keyboard accessible with visible focus.
+- [P04-UI-05-R16] Provide reduced-motion behavior for SLA review transitions.
+- [P04-UI-05-R17] Keep motion purposeful; chart changes on SLA review must not conceal changed units or populations.
+- [P04-UI-05-R18] Verify SLA review at mobile, tablet and desktop widths with actual rendered output.
+- [P04-UI-05-R19] Verify SLA review at 200 percent zoom and with realistic dense data.
+- [P04-UI-05-R20] Ensure exports from SLA review match its scope or clearly explain full-population export behavior.
+- [P04-UI-05-R21] Provide navigation from SLA review to evidence, definitions and the case study.
+- [P04-UI-05-R22] Check console errors, broken assets and nested path handling for SLA review.
+- [P04-UI-05-R23] Record screenshot-review findings for SLA review; do not assert review from source inspection.
+- [P04-UI-05-R24] Link SLA review to its relevant workflow and metric contract IDs in the traceability matrix.
+### P04-UI-06: Simulation studio
+- [P04-UI-06-R01] Screen: Simulation studio.
+- [P04-UI-06-R02] Purpose and principal representation: Pauseable queue animation and data table.
+- [P04-UI-06-R03] Choose a stable route under /serviceflow/ and verify direct navigation and reload for Simulation studio.
+- [P04-UI-06-R04] Use the project visual direction on Simulation studio: Service control room: midnight blue, cream, cyan; queue timeline and shift grid.
+- [P04-UI-06-R05] Give Simulation studio one clear main action related to the business decision.
+- [P04-UI-06-R06] Display the active time window, filters and data version on Simulation studio where applicable.
+- [P04-UI-06-R07] Show the synthetic/static-demo label without overwhelming Simulation studio.
+- [P04-UI-06-R08] Use real verified snapshot values on Simulation studio; do not hand-enter attractive KPI numbers.
+- [P04-UI-06-R09] Explain calculation meaning and units adjacent to important Simulation studio values.
+- [P04-UI-06-R10] Provide an accessible table or text alternative for analytical graphics on Simulation studio.
+- [P04-UI-06-R11] Use consistent category ordering and deterministic tie breaks on Simulation studio.
+- [P04-UI-06-R12] Handle long names, negative values, missing categories and large values on Simulation studio.
+- [P04-UI-06-R13] Implement a useful no-data state on Simulation studio, including a way to clear restrictive filters.
+- [P04-UI-06-R14] Implement loading and failed-data states on Simulation studio without showing invented results.
+- [P04-UI-06-R15] Keep all Simulation studio controls keyboard accessible with visible focus.
+- [P04-UI-06-R16] Provide reduced-motion behavior for Simulation studio transitions.
+- [P04-UI-06-R17] Keep motion purposeful; chart changes on Simulation studio must not conceal changed units or populations.
+- [P04-UI-06-R18] Verify Simulation studio at mobile, tablet and desktop widths with actual rendered output.
+- [P04-UI-06-R19] Verify Simulation studio at 200 percent zoom and with realistic dense data.
+- [P04-UI-06-R20] Ensure exports from Simulation studio match its scope or clearly explain full-population export behavior.
+- [P04-UI-06-R21] Provide navigation from Simulation studio to evidence, definitions and the case study.
+- [P04-UI-06-R22] Check console errors, broken assets and nested path handling for Simulation studio.
+- [P04-UI-06-R23] Record screenshot-review findings for Simulation studio; do not assert review from source inspection.
+- [P04-UI-06-R24] Link Simulation studio to its relevant workflow and metric contract IDs in the traceability matrix.
+### P04-UI-07: Scenario comparison
+- [P04-UI-07-R01] Screen: Scenario comparison.
+- [P04-UI-07-R02] Purpose and principal representation: Wait distributions and staffing costs.
+- [P04-UI-07-R03] Choose a stable route under /serviceflow/ and verify direct navigation and reload for Scenario comparison.
+- [P04-UI-07-R04] Use the project visual direction on Scenario comparison: Service control room: midnight blue, cream, cyan; queue timeline and shift grid.
+- [P04-UI-07-R05] Give Scenario comparison one clear main action related to the business decision.
+- [P04-UI-07-R06] Display the active time window, filters and data version on Scenario comparison where applicable.
+- [P04-UI-07-R07] Show the synthetic/static-demo label without overwhelming Scenario comparison.
+- [P04-UI-07-R08] Use real verified snapshot values on Scenario comparison; do not hand-enter attractive KPI numbers.
+- [P04-UI-07-R09] Explain calculation meaning and units adjacent to important Scenario comparison values.
+- [P04-UI-07-R10] Provide an accessible table or text alternative for analytical graphics on Scenario comparison.
+- [P04-UI-07-R11] Use consistent category ordering and deterministic tie breaks on Scenario comparison.
+- [P04-UI-07-R12] Handle long names, negative values, missing categories and large values on Scenario comparison.
+- [P04-UI-07-R13] Implement a useful no-data state on Scenario comparison, including a way to clear restrictive filters.
+- [P04-UI-07-R14] Implement loading and failed-data states on Scenario comparison without showing invented results.
+- [P04-UI-07-R15] Keep all Scenario comparison controls keyboard accessible with visible focus.
+- [P04-UI-07-R16] Provide reduced-motion behavior for Scenario comparison transitions.
+- [P04-UI-07-R17] Keep motion purposeful; chart changes on Scenario comparison must not conceal changed units or populations.
+- [P04-UI-07-R18] Verify Scenario comparison at mobile, tablet and desktop widths with actual rendered output.
+- [P04-UI-07-R19] Verify Scenario comparison at 200 percent zoom and with realistic dense data.
+- [P04-UI-07-R20] Ensure exports from Scenario comparison match its scope or clearly explain full-population export behavior.
+- [P04-UI-07-R21] Provide navigation from Scenario comparison to evidence, definitions and the case study.
+- [P04-UI-07-R22] Check console errors, broken assets and nested path handling for Scenario comparison.
+- [P04-UI-07-R23] Record screenshot-review findings for Scenario comparison; do not assert review from source inspection.
+- [P04-UI-07-R24] Link Scenario comparison to its relevant workflow and metric contract IDs in the traceability matrix.
+### P04-UI-08: Survey analysis
+- [P04-UI-08-R01] Screen: Survey analysis.
+- [P04-UI-08-R02] Purpose and principal representation: CSAT with response bias disclosure.
+- [P04-UI-08-R03] Choose a stable route under /serviceflow/ and verify direct navigation and reload for Survey analysis.
+- [P04-UI-08-R04] Use the project visual direction on Survey analysis: Service control room: midnight blue, cream, cyan; queue timeline and shift grid.
+- [P04-UI-08-R05] Give Survey analysis one clear main action related to the business decision.
+- [P04-UI-08-R06] Display the active time window, filters and data version on Survey analysis where applicable.
+- [P04-UI-08-R07] Show the synthetic/static-demo label without overwhelming Survey analysis.
+- [P04-UI-08-R08] Use real verified snapshot values on Survey analysis; do not hand-enter attractive KPI numbers.
+- [P04-UI-08-R09] Explain calculation meaning and units adjacent to important Survey analysis values.
+- [P04-UI-08-R10] Provide an accessible table or text alternative for analytical graphics on Survey analysis.
+- [P04-UI-08-R11] Use consistent category ordering and deterministic tie breaks on Survey analysis.
+- [P04-UI-08-R12] Handle long names, negative values, missing categories and large values on Survey analysis.
+- [P04-UI-08-R13] Implement a useful no-data state on Survey analysis, including a way to clear restrictive filters.
+- [P04-UI-08-R14] Implement loading and failed-data states on Survey analysis without showing invented results.
+- [P04-UI-08-R15] Keep all Survey analysis controls keyboard accessible with visible focus.
+- [P04-UI-08-R16] Provide reduced-motion behavior for Survey analysis transitions.
+- [P04-UI-08-R17] Keep motion purposeful; chart changes on Survey analysis must not conceal changed units or populations.
+- [P04-UI-08-R18] Verify Survey analysis at mobile, tablet and desktop widths with actual rendered output.
+- [P04-UI-08-R19] Verify Survey analysis at 200 percent zoom and with realistic dense data.
+- [P04-UI-08-R20] Ensure exports from Survey analysis match its scope or clearly explain full-population export behavior.
+- [P04-UI-08-R21] Provide navigation from Survey analysis to evidence, definitions and the case study.
+- [P04-UI-08-R22] Check console errors, broken assets and nested path handling for Survey analysis.
+- [P04-UI-08-R23] Record screenshot-review findings for Survey analysis; do not assert review from source inspection.
+- [P04-UI-08-R24] Link Survey analysis to its relevant workflow and metric contract IDs in the traceability matrix.
+### P04-UI-09: Evidence ledger
+- [P04-UI-09-R01] Screen: Evidence ledger.
+- [P04-UI-09-R02] Purpose and principal representation: Run settings and reconciliation.
+- [P04-UI-09-R03] Choose a stable route under /serviceflow/ and verify direct navigation and reload for Evidence ledger.
+- [P04-UI-09-R04] Use the project visual direction on Evidence ledger: Service control room: midnight blue, cream, cyan; queue timeline and shift grid.
+- [P04-UI-09-R05] Give Evidence ledger one clear main action related to the business decision.
+- [P04-UI-09-R06] Display the active time window, filters and data version on Evidence ledger where applicable.
+- [P04-UI-09-R07] Show the synthetic/static-demo label without overwhelming Evidence ledger.
+- [P04-UI-09-R08] Use real verified snapshot values on Evidence ledger; do not hand-enter attractive KPI numbers.
+- [P04-UI-09-R09] Explain calculation meaning and units adjacent to important Evidence ledger values.
+- [P04-UI-09-R10] Provide an accessible table or text alternative for analytical graphics on Evidence ledger.
+- [P04-UI-09-R11] Use consistent category ordering and deterministic tie breaks on Evidence ledger.
+- [P04-UI-09-R12] Handle long names, negative values, missing categories and large values on Evidence ledger.
+- [P04-UI-09-R13] Implement a useful no-data state on Evidence ledger, including a way to clear restrictive filters.
+- [P04-UI-09-R14] Implement loading and failed-data states on Evidence ledger without showing invented results.
+- [P04-UI-09-R15] Keep all Evidence ledger controls keyboard accessible with visible focus.
+- [P04-UI-09-R16] Provide reduced-motion behavior for Evidence ledger transitions.
+- [P04-UI-09-R17] Keep motion purposeful; chart changes on Evidence ledger must not conceal changed units or populations.
+- [P04-UI-09-R18] Verify Evidence ledger at mobile, tablet and desktop widths with actual rendered output.
+- [P04-UI-09-R19] Verify Evidence ledger at 200 percent zoom and with realistic dense data.
+- [P04-UI-09-R20] Ensure exports from Evidence ledger match its scope or clearly explain full-population export behavior.
+- [P04-UI-09-R21] Provide navigation from Evidence ledger to evidence, definitions and the case study.
+- [P04-UI-09-R22] Check console errors, broken assets and nested path handling for Evidence ledger.
+- [P04-UI-09-R23] Record screenshot-review findings for Evidence ledger; do not assert review from source inspection.
+- [P04-UI-09-R24] Link Evidence ledger to its relevant workflow and metric contract IDs in the traceability matrix.
+### P04-UI-10: Case study
+- [P04-UI-10-R01] Screen: Case study.
+- [P04-UI-10-R02] Purpose and principal representation: Simulation validation and operational tradeoffs.
+- [P04-UI-10-R03] Choose a stable route under /serviceflow/ and verify direct navigation and reload for Case study.
+- [P04-UI-10-R04] Use the project visual direction on Case study: Service control room: midnight blue, cream, cyan; queue timeline and shift grid.
+- [P04-UI-10-R05] Give Case study one clear main action related to the business decision.
+- [P04-UI-10-R06] Display the active time window, filters and data version on Case study where applicable.
+- [P04-UI-10-R07] Show the synthetic/static-demo label without overwhelming Case study.
+- [P04-UI-10-R08] Use real verified snapshot values on Case study; do not hand-enter attractive KPI numbers.
+- [P04-UI-10-R09] Explain calculation meaning and units adjacent to important Case study values.
+- [P04-UI-10-R10] Provide an accessible table or text alternative for analytical graphics on Case study.
+- [P04-UI-10-R11] Use consistent category ordering and deterministic tie breaks on Case study.
+- [P04-UI-10-R12] Handle long names, negative values, missing categories and large values on Case study.
+- [P04-UI-10-R13] Implement a useful no-data state on Case study, including a way to clear restrictive filters.
+- [P04-UI-10-R14] Implement loading and failed-data states on Case study without showing invented results.
+- [P04-UI-10-R15] Keep all Case study controls keyboard accessible with visible focus.
+- [P04-UI-10-R16] Provide reduced-motion behavior for Case study transitions.
+- [P04-UI-10-R17] Keep motion purposeful; chart changes on Case study must not conceal changed units or populations.
+- [P04-UI-10-R18] Verify Case study at mobile, tablet and desktop widths with actual rendered output.
+- [P04-UI-10-R19] Verify Case study at 200 percent zoom and with realistic dense data.
+- [P04-UI-10-R20] Ensure exports from Case study match its scope or clearly explain full-population export behavior.
+- [P04-UI-10-R21] Provide navigation from Case study to evidence, definitions and the case study.
+- [P04-UI-10-R22] Check console errors, broken assets and nested path handling for Case study.
+- [P04-UI-10-R23] Record screenshot-review findings for Case study; do not assert review from source inspection.
+- [P04-UI-10-R24] Link Case study to its relevant workflow and metric contract IDs in the traceability matrix.
+
+## 07. Adversarial domain verification
+
+### P04-TEST-01-DETECT: Bot acknowledgement treated as human response — detect
+- [P04-TEST-01-DETECT-R01] Failure hypothesis: Bot acknowledgement treated as human response.
+- [P04-TEST-01-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P04-TEST-01-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Bot acknowledgement treated as human response.
+- [P04-TEST-01-DETECT-R04] Document the expected business outcome before executing P04-TEST-01-DETECT.
+- [P04-TEST-01-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-01-DETECT-R06] Capture the initial canonical state and dataset hash for P04-TEST-01-DETECT.
+- [P04-TEST-01-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-01-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-01-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-01-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-01-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-01-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-01-DETECT-R13] Use a separate reference calculation when P04-TEST-01-DETECT affects a key numerical total.
+- [P04-TEST-01-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Bot acknowledgement treated as human response.
+- [P04-TEST-01-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-01-DETECT.
+- [P04-TEST-01-DETECT-R16] If blocked by environment capability, mark P04-TEST-01-DETECT blocked and retain the executable test source.
+- [P04-TEST-01-DETECT-R17] Do not claim P04-TEST-01-DETECT passed from reading the implementation or from another test passing.
+- [P04-TEST-01-DETECT-R18] Rerun P04-TEST-01-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-01-RECOVER: Bot acknowledgement treated as human response — recover
+- [P04-TEST-01-RECOVER-R01] Failure hypothesis: Bot acknowledgement treated as human response.
+- [P04-TEST-01-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P04-TEST-01-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Bot acknowledgement treated as human response.
+- [P04-TEST-01-RECOVER-R04] Document the expected business outcome before executing P04-TEST-01-RECOVER.
+- [P04-TEST-01-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-01-RECOVER-R06] Capture the initial canonical state and dataset hash for P04-TEST-01-RECOVER.
+- [P04-TEST-01-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-01-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-01-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-01-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-01-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-01-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-01-RECOVER-R13] Use a separate reference calculation when P04-TEST-01-RECOVER affects a key numerical total.
+- [P04-TEST-01-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Bot acknowledgement treated as human response.
+- [P04-TEST-01-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-01-RECOVER.
+- [P04-TEST-01-RECOVER-R16] If blocked by environment capability, mark P04-TEST-01-RECOVER blocked and retain the executable test source.
+- [P04-TEST-01-RECOVER-R17] Do not claim P04-TEST-01-RECOVER passed from reading the implementation or from another test passing.
+- [P04-TEST-01-RECOVER-R18] Rerun P04-TEST-01-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-02-DETECT: Reopened ticket counted as two customers — detect
+- [P04-TEST-02-DETECT-R01] Failure hypothesis: Reopened ticket counted as two customers.
+- [P04-TEST-02-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P04-TEST-02-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Reopened ticket counted as two customers.
+- [P04-TEST-02-DETECT-R04] Document the expected business outcome before executing P04-TEST-02-DETECT.
+- [P04-TEST-02-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-02-DETECT-R06] Capture the initial canonical state and dataset hash for P04-TEST-02-DETECT.
+- [P04-TEST-02-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-02-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-02-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-02-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-02-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-02-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-02-DETECT-R13] Use a separate reference calculation when P04-TEST-02-DETECT affects a key numerical total.
+- [P04-TEST-02-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Reopened ticket counted as two customers.
+- [P04-TEST-02-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-02-DETECT.
+- [P04-TEST-02-DETECT-R16] If blocked by environment capability, mark P04-TEST-02-DETECT blocked and retain the executable test source.
+- [P04-TEST-02-DETECT-R17] Do not claim P04-TEST-02-DETECT passed from reading the implementation or from another test passing.
+- [P04-TEST-02-DETECT-R18] Rerun P04-TEST-02-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-02-RECOVER: Reopened ticket counted as two customers — recover
+- [P04-TEST-02-RECOVER-R01] Failure hypothesis: Reopened ticket counted as two customers.
+- [P04-TEST-02-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P04-TEST-02-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Reopened ticket counted as two customers.
+- [P04-TEST-02-RECOVER-R04] Document the expected business outcome before executing P04-TEST-02-RECOVER.
+- [P04-TEST-02-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-02-RECOVER-R06] Capture the initial canonical state and dataset hash for P04-TEST-02-RECOVER.
+- [P04-TEST-02-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-02-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-02-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-02-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-02-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-02-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-02-RECOVER-R13] Use a separate reference calculation when P04-TEST-02-RECOVER affects a key numerical total.
+- [P04-TEST-02-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Reopened ticket counted as two customers.
+- [P04-TEST-02-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-02-RECOVER.
+- [P04-TEST-02-RECOVER-R16] If blocked by environment capability, mark P04-TEST-02-RECOVER blocked and retain the executable test source.
+- [P04-TEST-02-RECOVER-R17] Do not claim P04-TEST-02-RECOVER passed from reading the implementation or from another test passing.
+- [P04-TEST-02-RECOVER-R18] Rerun P04-TEST-02-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-03-DETECT: Agent assigned incompatible skill — detect
+- [P04-TEST-03-DETECT-R01] Failure hypothesis: Agent assigned incompatible skill.
+- [P04-TEST-03-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P04-TEST-03-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Agent assigned incompatible skill.
+- [P04-TEST-03-DETECT-R04] Document the expected business outcome before executing P04-TEST-03-DETECT.
+- [P04-TEST-03-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-03-DETECT-R06] Capture the initial canonical state and dataset hash for P04-TEST-03-DETECT.
+- [P04-TEST-03-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-03-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-03-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-03-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-03-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-03-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-03-DETECT-R13] Use a separate reference calculation when P04-TEST-03-DETECT affects a key numerical total.
+- [P04-TEST-03-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Agent assigned incompatible skill.
+- [P04-TEST-03-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-03-DETECT.
+- [P04-TEST-03-DETECT-R16] If blocked by environment capability, mark P04-TEST-03-DETECT blocked and retain the executable test source.
+- [P04-TEST-03-DETECT-R17] Do not claim P04-TEST-03-DETECT passed from reading the implementation or from another test passing.
+- [P04-TEST-03-DETECT-R18] Rerun P04-TEST-03-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-03-RECOVER: Agent assigned incompatible skill — recover
+- [P04-TEST-03-RECOVER-R01] Failure hypothesis: Agent assigned incompatible skill.
+- [P04-TEST-03-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P04-TEST-03-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Agent assigned incompatible skill.
+- [P04-TEST-03-RECOVER-R04] Document the expected business outcome before executing P04-TEST-03-RECOVER.
+- [P04-TEST-03-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-03-RECOVER-R06] Capture the initial canonical state and dataset hash for P04-TEST-03-RECOVER.
+- [P04-TEST-03-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-03-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-03-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-03-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-03-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-03-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-03-RECOVER-R13] Use a separate reference calculation when P04-TEST-03-RECOVER affects a key numerical total.
+- [P04-TEST-03-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Agent assigned incompatible skill.
+- [P04-TEST-03-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-03-RECOVER.
+- [P04-TEST-03-RECOVER-R16] If blocked by environment capability, mark P04-TEST-03-RECOVER blocked and retain the executable test source.
+- [P04-TEST-03-RECOVER-R17] Do not claim P04-TEST-03-RECOVER passed from reading the implementation or from another test passing.
+- [P04-TEST-03-RECOVER-R18] Rerun P04-TEST-03-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-04-DETECT: Two simultaneous services exceed concurrency — detect
+- [P04-TEST-04-DETECT-R01] Failure hypothesis: Two simultaneous services exceed concurrency.
+- [P04-TEST-04-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P04-TEST-04-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Two simultaneous services exceed concurrency.
+- [P04-TEST-04-DETECT-R04] Document the expected business outcome before executing P04-TEST-04-DETECT.
+- [P04-TEST-04-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-04-DETECT-R06] Capture the initial canonical state and dataset hash for P04-TEST-04-DETECT.
+- [P04-TEST-04-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-04-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-04-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-04-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-04-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-04-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-04-DETECT-R13] Use a separate reference calculation when P04-TEST-04-DETECT affects a key numerical total.
+- [P04-TEST-04-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Two simultaneous services exceed concurrency.
+- [P04-TEST-04-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-04-DETECT.
+- [P04-TEST-04-DETECT-R16] If blocked by environment capability, mark P04-TEST-04-DETECT blocked and retain the executable test source.
+- [P04-TEST-04-DETECT-R17] Do not claim P04-TEST-04-DETECT passed from reading the implementation or from another test passing.
+- [P04-TEST-04-DETECT-R18] Rerun P04-TEST-04-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-04-RECOVER: Two simultaneous services exceed concurrency — recover
+- [P04-TEST-04-RECOVER-R01] Failure hypothesis: Two simultaneous services exceed concurrency.
+- [P04-TEST-04-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P04-TEST-04-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Two simultaneous services exceed concurrency.
+- [P04-TEST-04-RECOVER-R04] Document the expected business outcome before executing P04-TEST-04-RECOVER.
+- [P04-TEST-04-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-04-RECOVER-R06] Capture the initial canonical state and dataset hash for P04-TEST-04-RECOVER.
+- [P04-TEST-04-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-04-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-04-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-04-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-04-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-04-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-04-RECOVER-R13] Use a separate reference calculation when P04-TEST-04-RECOVER affects a key numerical total.
+- [P04-TEST-04-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Two simultaneous services exceed concurrency.
+- [P04-TEST-04-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-04-RECOVER.
+- [P04-TEST-04-RECOVER-R16] If blocked by environment capability, mark P04-TEST-04-RECOVER blocked and retain the executable test source.
+- [P04-TEST-04-RECOVER-R17] Do not claim P04-TEST-04-RECOVER passed from reading the implementation or from another test passing.
+- [P04-TEST-04-RECOVER-R18] Rerun P04-TEST-04-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-05-DETECT: Break time counted as available capacity — detect
+- [P04-TEST-05-DETECT-R01] Failure hypothesis: Break time counted as available capacity.
+- [P04-TEST-05-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P04-TEST-05-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Break time counted as available capacity.
+- [P04-TEST-05-DETECT-R04] Document the expected business outcome before executing P04-TEST-05-DETECT.
+- [P04-TEST-05-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-05-DETECT-R06] Capture the initial canonical state and dataset hash for P04-TEST-05-DETECT.
+- [P04-TEST-05-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-05-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-05-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-05-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-05-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-05-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-05-DETECT-R13] Use a separate reference calculation when P04-TEST-05-DETECT affects a key numerical total.
+- [P04-TEST-05-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Break time counted as available capacity.
+- [P04-TEST-05-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-05-DETECT.
+- [P04-TEST-05-DETECT-R16] If blocked by environment capability, mark P04-TEST-05-DETECT blocked and retain the executable test source.
+- [P04-TEST-05-DETECT-R17] Do not claim P04-TEST-05-DETECT passed from reading the implementation or from another test passing.
+- [P04-TEST-05-DETECT-R18] Rerun P04-TEST-05-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-05-RECOVER: Break time counted as available capacity — recover
+- [P04-TEST-05-RECOVER-R01] Failure hypothesis: Break time counted as available capacity.
+- [P04-TEST-05-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P04-TEST-05-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Break time counted as available capacity.
+- [P04-TEST-05-RECOVER-R04] Document the expected business outcome before executing P04-TEST-05-RECOVER.
+- [P04-TEST-05-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-05-RECOVER-R06] Capture the initial canonical state and dataset hash for P04-TEST-05-RECOVER.
+- [P04-TEST-05-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-05-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-05-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-05-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-05-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-05-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-05-RECOVER-R13] Use a separate reference calculation when P04-TEST-05-RECOVER affects a key numerical total.
+- [P04-TEST-05-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Break time counted as available capacity.
+- [P04-TEST-05-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-05-RECOVER.
+- [P04-TEST-05-RECOVER-R16] If blocked by environment capability, mark P04-TEST-05-RECOVER blocked and retain the executable test source.
+- [P04-TEST-05-RECOVER-R17] Do not claim P04-TEST-05-RECOVER passed from reading the implementation or from another test passing.
+- [P04-TEST-05-RECOVER-R18] Rerun P04-TEST-05-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-06-DETECT: Open overdue tickets omitted from risk view — detect
+- [P04-TEST-06-DETECT-R01] Failure hypothesis: Open overdue tickets omitted from risk view.
+- [P04-TEST-06-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P04-TEST-06-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Open overdue tickets omitted from risk view.
+- [P04-TEST-06-DETECT-R04] Document the expected business outcome before executing P04-TEST-06-DETECT.
+- [P04-TEST-06-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-06-DETECT-R06] Capture the initial canonical state and dataset hash for P04-TEST-06-DETECT.
+- [P04-TEST-06-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-06-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-06-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-06-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-06-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-06-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-06-DETECT-R13] Use a separate reference calculation when P04-TEST-06-DETECT affects a key numerical total.
+- [P04-TEST-06-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Open overdue tickets omitted from risk view.
+- [P04-TEST-06-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-06-DETECT.
+- [P04-TEST-06-DETECT-R16] If blocked by environment capability, mark P04-TEST-06-DETECT blocked and retain the executable test source.
+- [P04-TEST-06-DETECT-R17] Do not claim P04-TEST-06-DETECT passed from reading the implementation or from another test passing.
+- [P04-TEST-06-DETECT-R18] Rerun P04-TEST-06-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-06-RECOVER: Open overdue tickets omitted from risk view — recover
+- [P04-TEST-06-RECOVER-R01] Failure hypothesis: Open overdue tickets omitted from risk view.
+- [P04-TEST-06-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P04-TEST-06-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Open overdue tickets omitted from risk view.
+- [P04-TEST-06-RECOVER-R04] Document the expected business outcome before executing P04-TEST-06-RECOVER.
+- [P04-TEST-06-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-06-RECOVER-R06] Capture the initial canonical state and dataset hash for P04-TEST-06-RECOVER.
+- [P04-TEST-06-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-06-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-06-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-06-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-06-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-06-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-06-RECOVER-R13] Use a separate reference calculation when P04-TEST-06-RECOVER affects a key numerical total.
+- [P04-TEST-06-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Open overdue tickets omitted from risk view.
+- [P04-TEST-06-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-06-RECOVER.
+- [P04-TEST-06-RECOVER-R16] If blocked by environment capability, mark P04-TEST-06-RECOVER blocked and retain the executable test source.
+- [P04-TEST-06-RECOVER-R17] Do not claim P04-TEST-06-RECOVER passed from reading the implementation or from another test passing.
+- [P04-TEST-06-RECOVER-R18] Rerun P04-TEST-06-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-07-DETECT: Daylight saving changes shift duration — detect
+- [P04-TEST-07-DETECT-R01] Failure hypothesis: Daylight saving changes shift duration.
+- [P04-TEST-07-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P04-TEST-07-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Daylight saving changes shift duration.
+- [P04-TEST-07-DETECT-R04] Document the expected business outcome before executing P04-TEST-07-DETECT.
+- [P04-TEST-07-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-07-DETECT-R06] Capture the initial canonical state and dataset hash for P04-TEST-07-DETECT.
+- [P04-TEST-07-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-07-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-07-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-07-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-07-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-07-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-07-DETECT-R13] Use a separate reference calculation when P04-TEST-07-DETECT affects a key numerical total.
+- [P04-TEST-07-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Daylight saving changes shift duration.
+- [P04-TEST-07-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-07-DETECT.
+- [P04-TEST-07-DETECT-R16] If blocked by environment capability, mark P04-TEST-07-DETECT blocked and retain the executable test source.
+- [P04-TEST-07-DETECT-R17] Do not claim P04-TEST-07-DETECT passed from reading the implementation or from another test passing.
+- [P04-TEST-07-DETECT-R18] Rerun P04-TEST-07-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-07-RECOVER: Daylight saving changes shift duration — recover
+- [P04-TEST-07-RECOVER-R01] Failure hypothesis: Daylight saving changes shift duration.
+- [P04-TEST-07-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P04-TEST-07-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Daylight saving changes shift duration.
+- [P04-TEST-07-RECOVER-R04] Document the expected business outcome before executing P04-TEST-07-RECOVER.
+- [P04-TEST-07-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-07-RECOVER-R06] Capture the initial canonical state and dataset hash for P04-TEST-07-RECOVER.
+- [P04-TEST-07-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-07-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-07-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-07-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-07-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-07-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-07-RECOVER-R13] Use a separate reference calculation when P04-TEST-07-RECOVER affects a key numerical total.
+- [P04-TEST-07-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Daylight saving changes shift duration.
+- [P04-TEST-07-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-07-RECOVER.
+- [P04-TEST-07-RECOVER-R16] If blocked by environment capability, mark P04-TEST-07-RECOVER blocked and retain the executable test source.
+- [P04-TEST-07-RECOVER-R17] Do not claim P04-TEST-07-RECOVER passed from reading the implementation or from another test passing.
+- [P04-TEST-07-RECOVER-R18] Rerun P04-TEST-07-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-08-DETECT: Transfer resets original arrival — detect
+- [P04-TEST-08-DETECT-R01] Failure hypothesis: Transfer resets original arrival.
+- [P04-TEST-08-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P04-TEST-08-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Transfer resets original arrival.
+- [P04-TEST-08-DETECT-R04] Document the expected business outcome before executing P04-TEST-08-DETECT.
+- [P04-TEST-08-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-08-DETECT-R06] Capture the initial canonical state and dataset hash for P04-TEST-08-DETECT.
+- [P04-TEST-08-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-08-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-08-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-08-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-08-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-08-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-08-DETECT-R13] Use a separate reference calculation when P04-TEST-08-DETECT affects a key numerical total.
+- [P04-TEST-08-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Transfer resets original arrival.
+- [P04-TEST-08-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-08-DETECT.
+- [P04-TEST-08-DETECT-R16] If blocked by environment capability, mark P04-TEST-08-DETECT blocked and retain the executable test source.
+- [P04-TEST-08-DETECT-R17] Do not claim P04-TEST-08-DETECT passed from reading the implementation or from another test passing.
+- [P04-TEST-08-DETECT-R18] Rerun P04-TEST-08-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-08-RECOVER: Transfer resets original arrival — recover
+- [P04-TEST-08-RECOVER-R01] Failure hypothesis: Transfer resets original arrival.
+- [P04-TEST-08-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P04-TEST-08-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Transfer resets original arrival.
+- [P04-TEST-08-RECOVER-R04] Document the expected business outcome before executing P04-TEST-08-RECOVER.
+- [P04-TEST-08-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-08-RECOVER-R06] Capture the initial canonical state and dataset hash for P04-TEST-08-RECOVER.
+- [P04-TEST-08-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-08-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-08-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-08-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-08-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-08-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-08-RECOVER-R13] Use a separate reference calculation when P04-TEST-08-RECOVER affects a key numerical total.
+- [P04-TEST-08-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Transfer resets original arrival.
+- [P04-TEST-08-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-08-RECOVER.
+- [P04-TEST-08-RECOVER-R16] If blocked by environment capability, mark P04-TEST-08-RECOVER blocked and retain the executable test source.
+- [P04-TEST-08-RECOVER-R17] Do not claim P04-TEST-08-RECOVER passed from reading the implementation or from another test passing.
+- [P04-TEST-08-RECOVER-R18] Rerun P04-TEST-08-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-09-DETECT: Simulation includes warm-up observations — detect
+- [P04-TEST-09-DETECT-R01] Failure hypothesis: Simulation includes warm-up observations.
+- [P04-TEST-09-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P04-TEST-09-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Simulation includes warm-up observations.
+- [P04-TEST-09-DETECT-R04] Document the expected business outcome before executing P04-TEST-09-DETECT.
+- [P04-TEST-09-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-09-DETECT-R06] Capture the initial canonical state and dataset hash for P04-TEST-09-DETECT.
+- [P04-TEST-09-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-09-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-09-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-09-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-09-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-09-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-09-DETECT-R13] Use a separate reference calculation when P04-TEST-09-DETECT affects a key numerical total.
+- [P04-TEST-09-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Simulation includes warm-up observations.
+- [P04-TEST-09-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-09-DETECT.
+- [P04-TEST-09-DETECT-R16] If blocked by environment capability, mark P04-TEST-09-DETECT blocked and retain the executable test source.
+- [P04-TEST-09-DETECT-R17] Do not claim P04-TEST-09-DETECT passed from reading the implementation or from another test passing.
+- [P04-TEST-09-DETECT-R18] Rerun P04-TEST-09-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-09-RECOVER: Simulation includes warm-up observations — recover
+- [P04-TEST-09-RECOVER-R01] Failure hypothesis: Simulation includes warm-up observations.
+- [P04-TEST-09-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P04-TEST-09-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Simulation includes warm-up observations.
+- [P04-TEST-09-RECOVER-R04] Document the expected business outcome before executing P04-TEST-09-RECOVER.
+- [P04-TEST-09-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-09-RECOVER-R06] Capture the initial canonical state and dataset hash for P04-TEST-09-RECOVER.
+- [P04-TEST-09-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-09-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-09-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-09-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-09-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-09-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-09-RECOVER-R13] Use a separate reference calculation when P04-TEST-09-RECOVER affects a key numerical total.
+- [P04-TEST-09-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Simulation includes warm-up observations.
+- [P04-TEST-09-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-09-RECOVER.
+- [P04-TEST-09-RECOVER-R16] If blocked by environment capability, mark P04-TEST-09-RECOVER blocked and retain the executable test source.
+- [P04-TEST-09-RECOVER-R17] Do not claim P04-TEST-09-RECOVER passed from reading the implementation or from another test passing.
+- [P04-TEST-09-RECOVER-R18] Rerun P04-TEST-09-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-10-DETECT: Average wait hides high-priority tail — detect
+- [P04-TEST-10-DETECT-R01] Failure hypothesis: Average wait hides high-priority tail.
+- [P04-TEST-10-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P04-TEST-10-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Average wait hides high-priority tail.
+- [P04-TEST-10-DETECT-R04] Document the expected business outcome before executing P04-TEST-10-DETECT.
+- [P04-TEST-10-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-10-DETECT-R06] Capture the initial canonical state and dataset hash for P04-TEST-10-DETECT.
+- [P04-TEST-10-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-10-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-10-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-10-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-10-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-10-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-10-DETECT-R13] Use a separate reference calculation when P04-TEST-10-DETECT affects a key numerical total.
+- [P04-TEST-10-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Average wait hides high-priority tail.
+- [P04-TEST-10-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-10-DETECT.
+- [P04-TEST-10-DETECT-R16] If blocked by environment capability, mark P04-TEST-10-DETECT blocked and retain the executable test source.
+- [P04-TEST-10-DETECT-R17] Do not claim P04-TEST-10-DETECT passed from reading the implementation or from another test passing.
+- [P04-TEST-10-DETECT-R18] Rerun P04-TEST-10-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-10-RECOVER: Average wait hides high-priority tail — recover
+- [P04-TEST-10-RECOVER-R01] Failure hypothesis: Average wait hides high-priority tail.
+- [P04-TEST-10-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P04-TEST-10-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Average wait hides high-priority tail.
+- [P04-TEST-10-RECOVER-R04] Document the expected business outcome before executing P04-TEST-10-RECOVER.
+- [P04-TEST-10-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-10-RECOVER-R06] Capture the initial canonical state and dataset hash for P04-TEST-10-RECOVER.
+- [P04-TEST-10-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-10-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-10-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-10-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-10-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-10-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-10-RECOVER-R13] Use a separate reference calculation when P04-TEST-10-RECOVER affects a key numerical total.
+- [P04-TEST-10-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Average wait hides high-priority tail.
+- [P04-TEST-10-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-10-RECOVER.
+- [P04-TEST-10-RECOVER-R16] If blocked by environment capability, mark P04-TEST-10-RECOVER blocked and retain the executable test source.
+- [P04-TEST-10-RECOVER-R17] Do not claim P04-TEST-10-RECOVER passed from reading the implementation or from another test passing.
+- [P04-TEST-10-RECOVER-R18] Rerun P04-TEST-10-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-11-DETECT: CSAT ignores nonresponse bias — detect
+- [P04-TEST-11-DETECT-R01] Failure hypothesis: CSAT ignores nonresponse bias.
+- [P04-TEST-11-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P04-TEST-11-DETECT-R03] Construct the smallest synthetic fixture that reproduces: CSAT ignores nonresponse bias.
+- [P04-TEST-11-DETECT-R04] Document the expected business outcome before executing P04-TEST-11-DETECT.
+- [P04-TEST-11-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-11-DETECT-R06] Capture the initial canonical state and dataset hash for P04-TEST-11-DETECT.
+- [P04-TEST-11-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-11-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-11-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-11-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-11-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-11-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-11-DETECT-R13] Use a separate reference calculation when P04-TEST-11-DETECT affects a key numerical total.
+- [P04-TEST-11-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of CSAT ignores nonresponse bias.
+- [P04-TEST-11-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-11-DETECT.
+- [P04-TEST-11-DETECT-R16] If blocked by environment capability, mark P04-TEST-11-DETECT blocked and retain the executable test source.
+- [P04-TEST-11-DETECT-R17] Do not claim P04-TEST-11-DETECT passed from reading the implementation or from another test passing.
+- [P04-TEST-11-DETECT-R18] Rerun P04-TEST-11-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-11-RECOVER: CSAT ignores nonresponse bias — recover
+- [P04-TEST-11-RECOVER-R01] Failure hypothesis: CSAT ignores nonresponse bias.
+- [P04-TEST-11-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P04-TEST-11-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: CSAT ignores nonresponse bias.
+- [P04-TEST-11-RECOVER-R04] Document the expected business outcome before executing P04-TEST-11-RECOVER.
+- [P04-TEST-11-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-11-RECOVER-R06] Capture the initial canonical state and dataset hash for P04-TEST-11-RECOVER.
+- [P04-TEST-11-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-11-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-11-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-11-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-11-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-11-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-11-RECOVER-R13] Use a separate reference calculation when P04-TEST-11-RECOVER affects a key numerical total.
+- [P04-TEST-11-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of CSAT ignores nonresponse bias.
+- [P04-TEST-11-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-11-RECOVER.
+- [P04-TEST-11-RECOVER-R16] If blocked by environment capability, mark P04-TEST-11-RECOVER blocked and retain the executable test source.
+- [P04-TEST-11-RECOVER-R17] Do not claim P04-TEST-11-RECOVER passed from reading the implementation or from another test passing.
+- [P04-TEST-11-RECOVER-R18] Rerun P04-TEST-11-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-12-DETECT: Arrival intensity changes in holdout period — detect
+- [P04-TEST-12-DETECT-R01] Failure hypothesis: Arrival intensity changes in holdout period.
+- [P04-TEST-12-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P04-TEST-12-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Arrival intensity changes in holdout period.
+- [P04-TEST-12-DETECT-R04] Document the expected business outcome before executing P04-TEST-12-DETECT.
+- [P04-TEST-12-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-12-DETECT-R06] Capture the initial canonical state and dataset hash for P04-TEST-12-DETECT.
+- [P04-TEST-12-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-12-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-12-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-12-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-12-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-12-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-12-DETECT-R13] Use a separate reference calculation when P04-TEST-12-DETECT affects a key numerical total.
+- [P04-TEST-12-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Arrival intensity changes in holdout period.
+- [P04-TEST-12-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-12-DETECT.
+- [P04-TEST-12-DETECT-R16] If blocked by environment capability, mark P04-TEST-12-DETECT blocked and retain the executable test source.
+- [P04-TEST-12-DETECT-R17] Do not claim P04-TEST-12-DETECT passed from reading the implementation or from another test passing.
+- [P04-TEST-12-DETECT-R18] Rerun P04-TEST-12-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P04-TEST-12-RECOVER: Arrival intensity changes in holdout period — recover
+- [P04-TEST-12-RECOVER-R01] Failure hypothesis: Arrival intensity changes in holdout period.
+- [P04-TEST-12-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P04-TEST-12-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Arrival intensity changes in holdout period.
+- [P04-TEST-12-RECOVER-R04] Document the expected business outcome before executing P04-TEST-12-RECOVER.
+- [P04-TEST-12-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P04-TEST-12-RECOVER-R06] Capture the initial canonical state and dataset hash for P04-TEST-12-RECOVER.
+- [P04-TEST-12-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P04-TEST-12-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P04-TEST-12-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P04-TEST-12-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P04-TEST-12-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P04-TEST-12-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P04-TEST-12-RECOVER-R13] Use a separate reference calculation when P04-TEST-12-RECOVER affects a key numerical total.
+- [P04-TEST-12-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Arrival intensity changes in holdout period.
+- [P04-TEST-12-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P04-TEST-12-RECOVER.
+- [P04-TEST-12-RECOVER-R16] If blocked by environment capability, mark P04-TEST-12-RECOVER blocked and retain the executable test source.
+- [P04-TEST-12-RECOVER-R17] Do not claim P04-TEST-12-RECOVER passed from reading the implementation or from another test passing.
+- [P04-TEST-12-RECOVER-R18] Rerun P04-TEST-12-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+
+## 08. Business and technical deliverables
+
+### P04-ART-01: business-case
+- [P04-ART-01-R01] Deliver business-case for ServiceFlow.
+- [P04-ART-01-R02] Its required content is business problem, stakeholder map, scope, current/future-state process and decision criteria.
+- [P04-ART-01-R03] Use this business decision as its organizing question: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-ART-01-R04] Reference actual serviceflow entities, metrics and workflow IDs instead of generic template prose.
+- [P04-ART-01-R05] Keep business-case source files under the project directory in GitHub.
+- [P04-ART-01-R06] Generate binary business-case outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P04-ART-01-R07] Include the source dataset hash and implementation revision in business-case where relevant.
+- [P04-ART-01-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in business-case.
+- [P04-ART-01-R09] Check that important numbers in business-case reconcile with the independent reference calculation.
+- [P04-ART-01-R10] Use clear units, periods and population descriptions throughout business-case.
+- [P04-ART-01-R11] If business-case depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P04-ART-01-R12] Provide a brief read/use instruction for business-case without requiring laptop installation.
+- [P04-ART-01-R13] Use accessible headings, labels and tables in business-case.
+- [P04-ART-01-R14] Link business-case from the individual website evidence area when safe and useful.
+- [P04-ART-01-R15] Do not publish credentials, real personal records or internal secrets in business-case.
+- [P04-ART-01-R16] Have the appropriate specialist review business-case before coordinator integration.
+- [P04-ART-01-R17] Record the actual verification status of business-case in the release manifest.
+- [P04-ART-01-R18] Keep business-case claims consistent with the public case study and resume bullet suggestions.
+### P04-ART-02: requirements
+- [P04-ART-02-R01] Deliver requirements for ServiceFlow.
+- [P04-ART-02-R02] Its required content is functional requirements, nonfunctional requirements, user stories, acceptance criteria and traceability.
+- [P04-ART-02-R03] Use this business decision as its organizing question: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-ART-02-R04] Reference actual serviceflow entities, metrics and workflow IDs instead of generic template prose.
+- [P04-ART-02-R05] Keep requirements source files under the project directory in GitHub.
+- [P04-ART-02-R06] Generate binary requirements outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P04-ART-02-R07] Include the source dataset hash and implementation revision in requirements where relevant.
+- [P04-ART-02-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in requirements.
+- [P04-ART-02-R09] Check that important numbers in requirements reconcile with the independent reference calculation.
+- [P04-ART-02-R10] Use clear units, periods and population descriptions throughout requirements.
+- [P04-ART-02-R11] If requirements depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P04-ART-02-R12] Provide a brief read/use instruction for requirements without requiring laptop installation.
+- [P04-ART-02-R13] Use accessible headings, labels and tables in requirements.
+- [P04-ART-02-R14] Link requirements from the individual website evidence area when safe and useful.
+- [P04-ART-02-R15] Do not publish credentials, real personal records or internal secrets in requirements.
+- [P04-ART-02-R16] Have the appropriate specialist review requirements before coordinator integration.
+- [P04-ART-02-R17] Record the actual verification status of requirements in the release manifest.
+- [P04-ART-02-R18] Keep requirements claims consistent with the public case study and resume bullet suggestions.
+### P04-ART-03: data-dictionary
+- [P04-ART-03-R01] Deliver data-dictionary for ServiceFlow.
+- [P04-ART-03-R02] Its required content is entity grain, field types, source contracts, foreign keys and source-to-target mapping.
+- [P04-ART-03-R03] Use this business decision as its organizing question: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-ART-03-R04] Reference actual serviceflow entities, metrics and workflow IDs instead of generic template prose.
+- [P04-ART-03-R05] Keep data-dictionary source files under the project directory in GitHub.
+- [P04-ART-03-R06] Generate binary data-dictionary outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P04-ART-03-R07] Include the source dataset hash and implementation revision in data-dictionary where relevant.
+- [P04-ART-03-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in data-dictionary.
+- [P04-ART-03-R09] Check that important numbers in data-dictionary reconcile with the independent reference calculation.
+- [P04-ART-03-R10] Use clear units, periods and population descriptions throughout data-dictionary.
+- [P04-ART-03-R11] If data-dictionary depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P04-ART-03-R12] Provide a brief read/use instruction for data-dictionary without requiring laptop installation.
+- [P04-ART-03-R13] Use accessible headings, labels and tables in data-dictionary.
+- [P04-ART-03-R14] Link data-dictionary from the individual website evidence area when safe and useful.
+- [P04-ART-03-R15] Do not publish credentials, real personal records or internal secrets in data-dictionary.
+- [P04-ART-03-R16] Have the appropriate specialist review data-dictionary before coordinator integration.
+- [P04-ART-03-R17] Record the actual verification status of data-dictionary in the release manifest.
+- [P04-ART-03-R18] Keep data-dictionary claims consistent with the public case study and resume bullet suggestions.
+### P04-ART-04: sql-analysis
+- [P04-ART-04-R01] Deliver sql-analysis for ServiceFlow.
+- [P04-ART-04-R02] Its required content is executable SQL investigations with independently reconciled totals.
+- [P04-ART-04-R03] Use this business decision as its organizing question: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-ART-04-R04] Reference actual serviceflow entities, metrics and workflow IDs instead of generic template prose.
+- [P04-ART-04-R05] Keep sql-analysis source files under the project directory in GitHub.
+- [P04-ART-04-R06] Generate binary sql-analysis outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P04-ART-04-R07] Include the source dataset hash and implementation revision in sql-analysis where relevant.
+- [P04-ART-04-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in sql-analysis.
+- [P04-ART-04-R09] Check that important numbers in sql-analysis reconcile with the independent reference calculation.
+- [P04-ART-04-R10] Use clear units, periods and population descriptions throughout sql-analysis.
+- [P04-ART-04-R11] If sql-analysis depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P04-ART-04-R12] Provide a brief read/use instruction for sql-analysis without requiring laptop installation.
+- [P04-ART-04-R13] Use accessible headings, labels and tables in sql-analysis.
+- [P04-ART-04-R14] Link sql-analysis from the individual website evidence area when safe and useful.
+- [P04-ART-04-R15] Do not publish credentials, real personal records or internal secrets in sql-analysis.
+- [P04-ART-04-R16] Have the appropriate specialist review sql-analysis before coordinator integration.
+- [P04-ART-04-R17] Record the actual verification status of sql-analysis in the release manifest.
+- [P04-ART-04-R18] Keep sql-analysis claims consistent with the public case study and resume bullet suggestions.
+### P04-ART-05: excel-workbook
+- [P04-ART-05-R01] Deliver excel-workbook for ServiceFlow.
+- [P04-ART-05-R02] Its required content is formula-driven analyst workbook using project inputs and explicit assumptions.
+- [P04-ART-05-R03] Use this business decision as its organizing question: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-ART-05-R04] Reference actual serviceflow entities, metrics and workflow IDs instead of generic template prose.
+- [P04-ART-05-R05] Keep excel-workbook source files under the project directory in GitHub.
+- [P04-ART-05-R06] Generate binary excel-workbook outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P04-ART-05-R07] Include the source dataset hash and implementation revision in excel-workbook where relevant.
+- [P04-ART-05-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in excel-workbook.
+- [P04-ART-05-R09] Check that important numbers in excel-workbook reconcile with the independent reference calculation.
+- [P04-ART-05-R10] Use clear units, periods and population descriptions throughout excel-workbook.
+- [P04-ART-05-R11] If excel-workbook depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P04-ART-05-R12] Provide a brief read/use instruction for excel-workbook without requiring laptop installation.
+- [P04-ART-05-R13] Use accessible headings, labels and tables in excel-workbook.
+- [P04-ART-05-R14] Link excel-workbook from the individual website evidence area when safe and useful.
+- [P04-ART-05-R15] Do not publish credentials, real personal records or internal secrets in excel-workbook.
+- [P04-ART-05-R16] Have the appropriate specialist review excel-workbook before coordinator integration.
+- [P04-ART-05-R17] Record the actual verification status of excel-workbook in the release manifest.
+- [P04-ART-05-R18] Keep excel-workbook claims consistent with the public case study and resume bullet suggestions.
+### P04-ART-06: bi-package
+- [P04-ART-06-R01] Deliver bi-package for ServiceFlow.
+- [P04-ART-06-R02] Its required content is reusable metric model, relationships, DAX/Power Query where relevant and verification status.
+- [P04-ART-06-R03] Use this business decision as its organizing question: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-ART-06-R04] Reference actual serviceflow entities, metrics and workflow IDs instead of generic template prose.
+- [P04-ART-06-R05] Keep bi-package source files under the project directory in GitHub.
+- [P04-ART-06-R06] Generate binary bi-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P04-ART-06-R07] Include the source dataset hash and implementation revision in bi-package where relevant.
+- [P04-ART-06-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in bi-package.
+- [P04-ART-06-R09] Check that important numbers in bi-package reconcile with the independent reference calculation.
+- [P04-ART-06-R10] Use clear units, periods and population descriptions throughout bi-package.
+- [P04-ART-06-R11] If bi-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P04-ART-06-R12] Provide a brief read/use instruction for bi-package without requiring laptop installation.
+- [P04-ART-06-R13] Use accessible headings, labels and tables in bi-package.
+- [P04-ART-06-R14] Link bi-package from the individual website evidence area when safe and useful.
+- [P04-ART-06-R15] Do not publish credentials, real personal records or internal secrets in bi-package.
+- [P04-ART-06-R16] Have the appropriate specialist review bi-package before coordinator integration.
+- [P04-ART-06-R17] Record the actual verification status of bi-package in the release manifest.
+- [P04-ART-06-R18] Keep bi-package claims consistent with the public case study and resume bullet suggestions.
+### P04-ART-07: executive-memo
+- [P04-ART-07-R01] Deliver executive-memo for ServiceFlow.
+- [P04-ART-07-R02] Its required content is evidence-based recommendation, options, uncertainty and limitations.
+- [P04-ART-07-R03] Use this business decision as its organizing question: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-ART-07-R04] Reference actual serviceflow entities, metrics and workflow IDs instead of generic template prose.
+- [P04-ART-07-R05] Keep executive-memo source files under the project directory in GitHub.
+- [P04-ART-07-R06] Generate binary executive-memo outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P04-ART-07-R07] Include the source dataset hash and implementation revision in executive-memo where relevant.
+- [P04-ART-07-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in executive-memo.
+- [P04-ART-07-R09] Check that important numbers in executive-memo reconcile with the independent reference calculation.
+- [P04-ART-07-R10] Use clear units, periods and population descriptions throughout executive-memo.
+- [P04-ART-07-R11] If executive-memo depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P04-ART-07-R12] Provide a brief read/use instruction for executive-memo without requiring laptop installation.
+- [P04-ART-07-R13] Use accessible headings, labels and tables in executive-memo.
+- [P04-ART-07-R14] Link executive-memo from the individual website evidence area when safe and useful.
+- [P04-ART-07-R15] Do not publish credentials, real personal records or internal secrets in executive-memo.
+- [P04-ART-07-R16] Have the appropriate specialist review executive-memo before coordinator integration.
+- [P04-ART-07-R17] Record the actual verification status of executive-memo in the release manifest.
+- [P04-ART-07-R18] Keep executive-memo claims consistent with the public case study and resume bullet suggestions.
+### P04-ART-08: uat-evidence
+- [P04-ART-08-R01] Deliver uat-evidence for ServiceFlow.
+- [P04-ART-08-R02] Its required content is business scenarios with expected answers, actual observations and defect disposition.
+- [P04-ART-08-R03] Use this business decision as its organizing question: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-ART-08-R04] Reference actual serviceflow entities, metrics and workflow IDs instead of generic template prose.
+- [P04-ART-08-R05] Keep uat-evidence source files under the project directory in GitHub.
+- [P04-ART-08-R06] Generate binary uat-evidence outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P04-ART-08-R07] Include the source dataset hash and implementation revision in uat-evidence where relevant.
+- [P04-ART-08-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in uat-evidence.
+- [P04-ART-08-R09] Check that important numbers in uat-evidence reconcile with the independent reference calculation.
+- [P04-ART-08-R10] Use clear units, periods and population descriptions throughout uat-evidence.
+- [P04-ART-08-R11] If uat-evidence depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P04-ART-08-R12] Provide a brief read/use instruction for uat-evidence without requiring laptop installation.
+- [P04-ART-08-R13] Use accessible headings, labels and tables in uat-evidence.
+- [P04-ART-08-R14] Link uat-evidence from the individual website evidence area when safe and useful.
+- [P04-ART-08-R15] Do not publish credentials, real personal records or internal secrets in uat-evidence.
+- [P04-ART-08-R16] Have the appropriate specialist review uat-evidence before coordinator integration.
+- [P04-ART-08-R17] Record the actual verification status of uat-evidence in the release manifest.
+- [P04-ART-08-R18] Keep uat-evidence claims consistent with the public case study and resume bullet suggestions.
+### P04-ART-09: technical-case-study
+- [P04-ART-09-R01] Deliver technical-case-study for ServiceFlow.
+- [P04-ART-09-R02] Its required content is architecture, tradeoffs, recovery behavior, reproducible setup and measured evidence.
+- [P04-ART-09-R03] Use this business decision as its organizing question: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-ART-09-R04] Reference actual serviceflow entities, metrics and workflow IDs instead of generic template prose.
+- [P04-ART-09-R05] Keep technical-case-study source files under the project directory in GitHub.
+- [P04-ART-09-R06] Generate binary technical-case-study outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P04-ART-09-R07] Include the source dataset hash and implementation revision in technical-case-study where relevant.
+- [P04-ART-09-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in technical-case-study.
+- [P04-ART-09-R09] Check that important numbers in technical-case-study reconcile with the independent reference calculation.
+- [P04-ART-09-R10] Use clear units, periods and population descriptions throughout technical-case-study.
+- [P04-ART-09-R11] If technical-case-study depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P04-ART-09-R12] Provide a brief read/use instruction for technical-case-study without requiring laptop installation.
+- [P04-ART-09-R13] Use accessible headings, labels and tables in technical-case-study.
+- [P04-ART-09-R14] Link technical-case-study from the individual website evidence area when safe and useful.
+- [P04-ART-09-R15] Do not publish credentials, real personal records or internal secrets in technical-case-study.
+- [P04-ART-09-R16] Have the appropriate specialist review technical-case-study before coordinator integration.
+- [P04-ART-09-R17] Record the actual verification status of technical-case-study in the release manifest.
+- [P04-ART-09-R18] Keep technical-case-study claims consistent with the public case study and resume bullet suggestions.
+### P04-ART-10: release-package
+- [P04-ART-10-R01] Deliver release-package for ServiceFlow.
+- [P04-ART-10-R02] Its required content is individual site, source links, checksums, main portfolio metadata and rollback manifest.
+- [P04-ART-10-R03] Use this business decision as its organizing question: Which staffing or routing change meets support targets under uncertain workload?
+- [P04-ART-10-R04] Reference actual serviceflow entities, metrics and workflow IDs instead of generic template prose.
+- [P04-ART-10-R05] Keep release-package source files under the project directory in GitHub.
+- [P04-ART-10-R06] Generate binary release-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P04-ART-10-R07] Include the source dataset hash and implementation revision in release-package where relevant.
+- [P04-ART-10-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in release-package.
+- [P04-ART-10-R09] Check that important numbers in release-package reconcile with the independent reference calculation.
+- [P04-ART-10-R10] Use clear units, periods and population descriptions throughout release-package.
+- [P04-ART-10-R11] If release-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P04-ART-10-R12] Provide a brief read/use instruction for release-package without requiring laptop installation.
+- [P04-ART-10-R13] Use accessible headings, labels and tables in release-package.
+- [P04-ART-10-R14] Link release-package from the individual website evidence area when safe and useful.
+- [P04-ART-10-R15] Do not publish credentials, real personal records or internal secrets in release-package.
+- [P04-ART-10-R16] Have the appropriate specialist review release-package before coordinator integration.
+- [P04-ART-10-R17] Record the actual verification status of release-package in the release manifest.
+- [P04-ART-10-R18] Keep release-package claims consistent with the public case study and resume bullet suggestions.
+
+## 09. Remote implementation work packages
+
+### P04-WORK-01: contract
+- [P04-WORK-01-R01] Assign contract to the business-contract specialist; write and review concrete definitions before implementing.
+- [P04-WORK-01-R02] Fable coordinator must supply the relevant P04 contract IDs and explicit file ownership.
+- [P04-WORK-01-R03] Resolve the actual specialist model before dispatching P04-WORK-01.
+- [P04-WORK-01-R04] Record requested model, resolved model, task ID and parent assignment for P04-WORK-01.
+- [P04-WORK-01-R05] Run P04-WORK-01 only in a verified GitHub-hosted environment.
+- [P04-WORK-01-R06] Checkpoint the incoming code SHA and assumptions before P04-WORK-01 edits.
+- [P04-WORK-01-R07] Complete a bounded vertical slice in P04-WORK-01; do not redesign unrelated projects.
+- [P04-WORK-01-R08] Return changed paths, verification performed and unresolved issues from P04-WORK-01.
+- [P04-WORK-01-R09] Review the diff and run affected checks before integrating P04-WORK-01.
+- [P04-WORK-01-R10] Persist the resulting commit SHA and evidence URLs for P04-WORK-01.
+- [P04-WORK-01-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P04-WORK-01-R12] No routine permission request is needed at the end of P04-WORK-01; proceed according to the master authorization envelope.
+### P04-WORK-02: fixtures
+- [P04-WORK-02-R01] Assign fixtures to the verification specialist; establish known answers independently of product calculations.
+- [P04-WORK-02-R02] Fable coordinator must supply the relevant P04 contract IDs and explicit file ownership.
+- [P04-WORK-02-R03] Resolve the actual specialist model before dispatching P04-WORK-02.
+- [P04-WORK-02-R04] Record requested model, resolved model, task ID and parent assignment for P04-WORK-02.
+- [P04-WORK-02-R05] Run P04-WORK-02 only in a verified GitHub-hosted environment.
+- [P04-WORK-02-R06] Checkpoint the incoming code SHA and assumptions before P04-WORK-02 edits.
+- [P04-WORK-02-R07] Complete a bounded vertical slice in P04-WORK-02; do not redesign unrelated projects.
+- [P04-WORK-02-R08] Return changed paths, verification performed and unresolved issues from P04-WORK-02.
+- [P04-WORK-02-R09] Review the diff and run affected checks before integrating P04-WORK-02.
+- [P04-WORK-02-R10] Persist the resulting commit SHA and evidence URLs for P04-WORK-02.
+- [P04-WORK-02-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P04-WORK-02-R12] No routine permission request is needed at the end of P04-WORK-02; proceed according to the master authorization envelope.
+### P04-WORK-03: data
+- [P04-WORK-03-R01] Assign data to the data specialist; generate sources, validate and reconcile transformations.
+- [P04-WORK-03-R02] Fable coordinator must supply the relevant P04 contract IDs and explicit file ownership.
+- [P04-WORK-03-R03] Resolve the actual specialist model before dispatching P04-WORK-03.
+- [P04-WORK-03-R04] Record requested model, resolved model, task ID and parent assignment for P04-WORK-03.
+- [P04-WORK-03-R05] Run P04-WORK-03 only in a verified GitHub-hosted environment.
+- [P04-WORK-03-R06] Checkpoint the incoming code SHA and assumptions before P04-WORK-03 edits.
+- [P04-WORK-03-R07] Complete a bounded vertical slice in P04-WORK-03; do not redesign unrelated projects.
+- [P04-WORK-03-R08] Return changed paths, verification performed and unresolved issues from P04-WORK-03.
+- [P04-WORK-03-R09] Review the diff and run affected checks before integrating P04-WORK-03.
+- [P04-WORK-03-R10] Persist the resulting commit SHA and evidence URLs for P04-WORK-03.
+- [P04-WORK-03-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P04-WORK-03-R12] No routine permission request is needed at the end of P04-WORK-03; proceed according to the master authorization envelope.
+### P04-WORK-04: backend
+- [P04-WORK-04-R01] Assign backend to the backend specialist; implement tested transitions and API contracts on remote runners.
+- [P04-WORK-04-R02] Fable coordinator must supply the relevant P04 contract IDs and explicit file ownership.
+- [P04-WORK-04-R03] Resolve the actual specialist model before dispatching P04-WORK-04.
+- [P04-WORK-04-R04] Record requested model, resolved model, task ID and parent assignment for P04-WORK-04.
+- [P04-WORK-04-R05] Run P04-WORK-04 only in a verified GitHub-hosted environment.
+- [P04-WORK-04-R06] Checkpoint the incoming code SHA and assumptions before P04-WORK-04 edits.
+- [P04-WORK-04-R07] Complete a bounded vertical slice in P04-WORK-04; do not redesign unrelated projects.
+- [P04-WORK-04-R08] Return changed paths, verification performed and unresolved issues from P04-WORK-04.
+- [P04-WORK-04-R09] Review the diff and run affected checks before integrating P04-WORK-04.
+- [P04-WORK-04-R10] Persist the resulting commit SHA and evidence URLs for P04-WORK-04.
+- [P04-WORK-04-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P04-WORK-04-R12] No routine permission request is needed at the end of P04-WORK-04; proceed according to the master authorization envelope.
+### P04-WORK-05: web
+- [P04-WORK-05-R01] Assign web to the frontend specialist; connect the first decision journey to verified inputs.
+- [P04-WORK-05-R02] Fable coordinator must supply the relevant P04 contract IDs and explicit file ownership.
+- [P04-WORK-05-R03] Resolve the actual specialist model before dispatching P04-WORK-05.
+- [P04-WORK-05-R04] Record requested model, resolved model, task ID and parent assignment for P04-WORK-05.
+- [P04-WORK-05-R05] Run P04-WORK-05 only in a verified GitHub-hosted environment.
+- [P04-WORK-05-R06] Checkpoint the incoming code SHA and assumptions before P04-WORK-05 edits.
+- [P04-WORK-05-R07] Complete a bounded vertical slice in P04-WORK-05; do not redesign unrelated projects.
+- [P04-WORK-05-R08] Return changed paths, verification performed and unresolved issues from P04-WORK-05.
+- [P04-WORK-05-R09] Review the diff and run affected checks before integrating P04-WORK-05.
+- [P04-WORK-05-R10] Persist the resulting commit SHA and evidence URLs for P04-WORK-05.
+- [P04-WORK-05-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P04-WORK-05-R12] No routine permission request is needed at the end of P04-WORK-05; proceed according to the master authorization envelope.
+### P04-WORK-06: analytics
+- [P04-WORK-06-R01] Assign analytics to the quantitative specialist; verify calculations and domain-specific evaluation.
+- [P04-WORK-06-R02] Fable coordinator must supply the relevant P04 contract IDs and explicit file ownership.
+- [P04-WORK-06-R03] Resolve the actual specialist model before dispatching P04-WORK-06.
+- [P04-WORK-06-R04] Record requested model, resolved model, task ID and parent assignment for P04-WORK-06.
+- [P04-WORK-06-R05] Run P04-WORK-06 only in a verified GitHub-hosted environment.
+- [P04-WORK-06-R06] Checkpoint the incoming code SHA and assumptions before P04-WORK-06 edits.
+- [P04-WORK-06-R07] Complete a bounded vertical slice in P04-WORK-06; do not redesign unrelated projects.
+- [P04-WORK-06-R08] Return changed paths, verification performed and unresolved issues from P04-WORK-06.
+- [P04-WORK-06-R09] Review the diff and run affected checks before integrating P04-WORK-06.
+- [P04-WORK-06-R10] Persist the resulting commit SHA and evidence URLs for P04-WORK-06.
+- [P04-WORK-06-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P04-WORK-06-R12] No routine permission request is needed at the end of P04-WORK-06; proceed according to the master authorization envelope.
+### P04-WORK-07: review
+- [P04-WORK-07-R01] Assign review to the verification specialist; challenge invariants and inspect rendered evidence.
+- [P04-WORK-07-R02] Fable coordinator must supply the relevant P04 contract IDs and explicit file ownership.
+- [P04-WORK-07-R03] Resolve the actual specialist model before dispatching P04-WORK-07.
+- [P04-WORK-07-R04] Record requested model, resolved model, task ID and parent assignment for P04-WORK-07.
+- [P04-WORK-07-R05] Run P04-WORK-07 only in a verified GitHub-hosted environment.
+- [P04-WORK-07-R06] Checkpoint the incoming code SHA and assumptions before P04-WORK-07 edits.
+- [P04-WORK-07-R07] Complete a bounded vertical slice in P04-WORK-07; do not redesign unrelated projects.
+- [P04-WORK-07-R08] Return changed paths, verification performed and unresolved issues from P04-WORK-07.
+- [P04-WORK-07-R09] Review the diff and run affected checks before integrating P04-WORK-07.
+- [P04-WORK-07-R10] Persist the resulting commit SHA and evidence URLs for P04-WORK-07.
+- [P04-WORK-07-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P04-WORK-07-R12] No routine permission request is needed at the end of P04-WORK-07; proceed according to the master authorization envelope.
+### P04-WORK-08: artifacts
+- [P04-WORK-08-R01] Assign artifacts to the business-contract specialist; complete business and analytical deliverables.
+- [P04-WORK-08-R02] Fable coordinator must supply the relevant P04 contract IDs and explicit file ownership.
+- [P04-WORK-08-R03] Resolve the actual specialist model before dispatching P04-WORK-08.
+- [P04-WORK-08-R04] Record requested model, resolved model, task ID and parent assignment for P04-WORK-08.
+- [P04-WORK-08-R05] Run P04-WORK-08 only in a verified GitHub-hosted environment.
+- [P04-WORK-08-R06] Checkpoint the incoming code SHA and assumptions before P04-WORK-08 edits.
+- [P04-WORK-08-R07] Complete a bounded vertical slice in P04-WORK-08; do not redesign unrelated projects.
+- [P04-WORK-08-R08] Return changed paths, verification performed and unresolved issues from P04-WORK-08.
+- [P04-WORK-08-R09] Review the diff and run affected checks before integrating P04-WORK-08.
+- [P04-WORK-08-R10] Persist the resulting commit SHA and evidence URLs for P04-WORK-08.
+- [P04-WORK-08-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P04-WORK-08-R12] No routine permission request is needed at the end of P04-WORK-08; proceed according to the master authorization envelope.
+### P04-WORK-09: release
+- [P04-WORK-09-R01] Assign release to the release specialist; publish and verify the standalone static website.
+- [P04-WORK-09-R02] Fable coordinator must supply the relevant P04 contract IDs and explicit file ownership.
+- [P04-WORK-09-R03] Resolve the actual specialist model before dispatching P04-WORK-09.
+- [P04-WORK-09-R04] Record requested model, resolved model, task ID and parent assignment for P04-WORK-09.
+- [P04-WORK-09-R05] Run P04-WORK-09 only in a verified GitHub-hosted environment.
+- [P04-WORK-09-R06] Checkpoint the incoming code SHA and assumptions before P04-WORK-09 edits.
+- [P04-WORK-09-R07] Complete a bounded vertical slice in P04-WORK-09; do not redesign unrelated projects.
+- [P04-WORK-09-R08] Return changed paths, verification performed and unresolved issues from P04-WORK-09.
+- [P04-WORK-09-R09] Review the diff and run affected checks before integrating P04-WORK-09.
+- [P04-WORK-09-R10] Persist the resulting commit SHA and evidence URLs for P04-WORK-09.
+- [P04-WORK-09-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P04-WORK-09-R12] No routine permission request is needed at the end of P04-WORK-09; proceed according to the master authorization envelope.
+### P04-WORK-10: integrate
+- [P04-WORK-10-R01] Assign integrate to the release specialist; rebuild and verify the existing main portfolio entry.
+- [P04-WORK-10-R02] Fable coordinator must supply the relevant P04 contract IDs and explicit file ownership.
+- [P04-WORK-10-R03] Resolve the actual specialist model before dispatching P04-WORK-10.
+- [P04-WORK-10-R04] Record requested model, resolved model, task ID and parent assignment for P04-WORK-10.
+- [P04-WORK-10-R05] Run P04-WORK-10 only in a verified GitHub-hosted environment.
+- [P04-WORK-10-R06] Checkpoint the incoming code SHA and assumptions before P04-WORK-10 edits.
+- [P04-WORK-10-R07] Complete a bounded vertical slice in P04-WORK-10; do not redesign unrelated projects.
+- [P04-WORK-10-R08] Return changed paths, verification performed and unresolved issues from P04-WORK-10.
+- [P04-WORK-10-R09] Review the diff and run affected checks before integrating P04-WORK-10.
+- [P04-WORK-10-R10] Persist the resulting commit SHA and evidence URLs for P04-WORK-10.
+- [P04-WORK-10-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P04-WORK-10-R12] No routine permission request is needed at the end of P04-WORK-10; proceed according to the master authorization envelope.
+
+## 10. Release, individual website and main portfolio acceptance
+
+- [P04-REL-01] Build serviceflow as an independently navigable static product website with its own landing, demo and evidence routes.
+- [P04-REL-02] Publish under a unique verified GitHub Pages path; do not assume the path exists before deployment.
+- [P04-REL-03] Preserve all serviceflow durable source, contracts, data generation and evidence in GitHub.
+- [P04-REL-04] Use no laptop checkout, local database, downloaded workbook or browser persistent storage as a build dependency.
+- [P04-REL-05] Run the backend and relational acceptance suite in GitHub Actions with a transient PostgreSQL service.
+- [P04-REL-06] Document the distinction between verified backend execution and browser-only simulated actions.
+- [P04-REL-07] Check every public export for synthetic-only data and absence of secrets.
+- [P04-REL-08] Archive durable workbook/notebook/evidence outputs with checksums and code revision.
+- [P04-REL-09] Verify deployed HTTP responses, route reload, one real user journey, downloads and source links.
+- [P04-REL-10] Inspect the current main projects site schema and generate its required project.json record.
+- [P04-REL-11] Produce cover.jpg and required loop media from actual project visuals with accurate labels.
+- [P04-REL-12] Regenerate catalogue and case-study pages through the current portfolio build process.
+- [P04-REL-13] Preserve the existing Precision Atelier design system on the main site.
+- [P04-REL-14] Keep this individual product identity separate from the main site theme requirements.
+- [P04-REL-15] Add catalogue/search/category/navigation entries according to the existing source schema.
+- [P04-REL-16] Do not modify unrelated project metadata or replace the main opening animation.
+- [P04-REL-17] Confirm the individual website is reachable before its portfolio link is published.
+- [P04-REL-18] Verify the main portfolio case study links to this actual website, source and evidence.
+- [P04-REL-19] Run existing site checks and targeted new-project route checks in hosted compute.
+- [P04-REL-20] Record built, verified, published and integrated as separate release fields.
+- [P04-REL-21] If an external permission blocks publication, preserve a ready change and report its exact state.
+- [P04-REL-22] Do not label a source commit as a verified live release.
+- [P04-REL-23] Prepare rollback to the preceding known-good portfolio/site artifact.
+- [P04-REL-24] End the ServiceFlow handoff with the supported business decision, actual evidence and material limitations.
+
+## 11. Concrete implementation starting contracts
+
+These choices fix the default implementation shape. Change them only through a logged domain/architecture decision.
+Project directory: apps/serviceflow/.
+Web: React and TypeScript, static build, route base injected by build configuration.
+Backend verification: FastAPI with generated OpenAPI, exercised only on a GitHub-hosted runner by default.
+Relational verification: PostgreSQL service container populated from deterministic fixtures.
+Business logic: pure Python domain functions separated from database and HTTP adapters.
+Browser scenario logic: TypeScript implementation checked against the same independently calculated fixtures.
+Canonical timestamps: UTC instants; display calendars can use configured IANA time zones.
+Canonical identifiers: opaque stable text IDs derived from source identifiers, not mutable display names.
+Canonical currency for the small reference fixture: USD unless explicitly stated otherwise.
+Money: decimal strings in JSON and NUMERIC(20,6) in database; round to currency minor units only at the declared step.
+Probabilities and rates: numeric values in [0,1] where their definition is a proportion; percentage-point differences may be signed.
+Count fields: nonnegative integers unless a signed movement/variance is explicitly part of the business definition.
+Absence: JSON null; do not use NaN, Infinity, the string null, or an empty string as substitute.
+Collection ordering: documented stable field plus primary-key tie breaker.
+Pagination: limit default 50, maximum 200; opaque cursor on large evidence collections.
+Time filtering: from inclusive, to exclusive; reject invalid or reversed ranges.
+Snapshot consistency: all data returned for one analysis references one immutable dataset_version.
+Scenario consistency: baseline_version is immutable; scenario edits use a distinct scenario_id and version.
+Conflict behavior: return 409 for stale version or idempotency-key reuse with a different payload.
+Validation behavior: return 422 with field path, rule ID and safe user message.
+Authorization behavior on the verified backend: 401 for missing identity, 403 for forbidden action; never fake public auth.
+Read-model response: data, meta, warnings; meta includes dataset_version, code_sha, generated_at and applied_filters.
+Error response: error.code, error.message, error.details, request_id; never stack traces or tokens.
+Command request: input, expected_version where relevant, idempotency_key for state-changing operations.
+Audit event: event_id, entity_type, entity_id, action, actor_id, occurred_at, before_version, after_version, reason.
+Static mode: command requests use a local in-memory adapter and display that fact before an action is taken.
+Static mode: a refresh intentionally restores the published fixture; do not imply durable multi-user state.
+API boundaries below are backend contracts to implement and verify; they are not public Pages endpoints.
+Generate a static data manifest rather than requesting unavailable /api routes from GitHub Pages.
+Minimum request tests: valid, malformed, unknown resource, stale version, repeated command and unsupported action.
+Minimum read tests: no records, one record, multiple pages, invalid filter, stable ordering and evidence reconciliation.
+Create a route inventory in docs/api-contract.md before frontend integration.
+Do not publish synthetic actor role switching as proof of backend authorization.
+Only claim access-control verification from separate backend identities and direct request tests.
+Use an optimistic record version for mutable operational rows; keep immutable event rows append-only.
+Specify missing source references as quarantine or explicit unresolved records, not arbitrary placeholder joins.
+Use migrations and seed scripts that succeed from an empty database and on a second idempotent run.
+Keep CI data fixtures below a documented size; large benchmark generation is an opt-in workflow input.
+Archive the exact exported data used by the public static demo with its checksum.
+Do not accidentally archive a transient database connection URL in any manifest.
+### Command C01: Ingest ticket events
+- Contract endpoint: POST /api/v1/serviceflow/commands/ingest-ticket-events.
+- Business transition: Raw history -> ordered canonical events.
+- Hard validation: Preserve late arrivals.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C02: Assign queue
+- Contract endpoint: POST /api/v1/serviceflow/commands/assign-queue.
+- Business transition: New ticket -> queued.
+- Hard validation: Respect skill eligibility.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C03: Start service
+- Contract endpoint: POST /api/v1/serviceflow/commands/start-service.
+- Business transition: Queued -> in_service.
+- Hard validation: Agent available and qualified.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C04: Transfer ticket
+- Contract endpoint: POST /api/v1/serviceflow/commands/transfer-ticket.
+- Business transition: Queue A -> queue B.
+- Hard validation: Preserve original arrival and transfer wait.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C05: Pause work
+- Contract endpoint: POST /api/v1/serviceflow/commands/pause-work.
+- Business transition: In_service -> waiting_customer.
+- Hard validation: Differentiate SLA policy.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C06: Reopen ticket
+- Contract endpoint: POST /api/v1/serviceflow/commands/reopen-ticket.
+- Business transition: Resolved -> reopened.
+- Hard validation: Link prior resolution cycle.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C07: Build shift scenario
+- Contract endpoint: POST /api/v1/serviceflow/commands/build-shift-scenario.
+- Business transition: Baseline -> candidate schedule.
+- Hard validation: Respect availability and breaks.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C08: Run simulation
+- Contract endpoint: POST /api/v1/serviceflow/commands/run-simulation.
+- Business transition: Frozen config -> replicated outcomes.
+- Hard validation: Warm-up and seeds fixed.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C09: Compare policies
+- Contract endpoint: POST /api/v1/serviceflow/commands/compare-policies.
+- Business transition: Baseline versus proposal -> decision.
+- Hard validation: Same demand sample.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C10: Export recommendation
+- Contract endpoint: POST /api/v1/serviceflow/commands/export-recommendation.
+- Business transition: Reviewed scenario -> memo.
+- Hard validation: Include uncertainty and service targets.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Read contract: customers
+- Endpoint: GET /api/v1/serviceflow/data/customers.
+- Evidence fields: customer_id,segment,timezone,created_at,synthetic.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: queues
+- Endpoint: GET /api/v1/serviceflow/data/queues.
+- Evidence fields: queue_id,queue_name,priority_policy,calendar_id,active.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: tickets
+- Endpoint: GET /api/v1/serviceflow/data/tickets.
+- Evidence fields: ticket_id,customer_id,queue_id,priority,created_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: ticket_events
+- Endpoint: GET /api/v1/serviceflow/data/ticket_events.
+- Evidence fields: event_id,ticket_id,event_type,occurred_at,actor_id.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: agents
+- Endpoint: GET /api/v1/serviceflow/data/agents.
+- Evidence fields: agent_id,agent_name,timezone,employment_type,active.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: skills
+- Endpoint: GET /api/v1/serviceflow/data/skills.
+- Evidence fields: skill_id,skill_name,description,active,created_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: agent_skills
+- Endpoint: GET /api/v1/serviceflow/data/agent_skills.
+- Evidence fields: agent_skill_id,agent_id,skill_id,proficiency,effective_from.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: shifts
+- Endpoint: GET /api/v1/serviceflow/data/shifts.
+- Evidence fields: shift_id,agent_id,starts_at,ends_at,break_minutes.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: sla_policies
+- Endpoint: GET /api/v1/serviceflow/data/sla_policies.
+- Evidence fields: sla_policy_id,priority,first_response_minutes,resolution_minutes,calendar_id.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: surveys
+- Endpoint: GET /api/v1/serviceflow/data/surveys.
+- Evidence fields: survey_id,ticket_id,response_at,score,invited_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: simulation_runs
+- Endpoint: GET /api/v1/serviceflow/data/simulation_runs.
+- Evidence fields: simulation_id,seed,warmup_minutes,policy_version,horizon.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: simulation_events
+- Endpoint: GET /api/v1/serviceflow/data/simulation_events.
+- Evidence fields: simulation_event_id,simulation_id,ticket_id,event_type,event_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+
+## 12. Small versus large data profiles
+
+- golden: use the exact hand-checkable fixture in section 02; do not substitute random rows.
+- demo: start with approximately 500 primary business objects and enough linked events to demonstrate every required path.
+- analytical history: use the project-required observation horizon, including complete outcome windows and historical versions.
+- benchmark: optional input controls size; begin with 10,000 primary objects and increase only within observed runner resources.
+- store generator seed, config, schema version and injection manifest for every profile.
+- do not equate object count with event count; report each explicitly.
+- keep semantic distributions configurable; volume scaling must not change business rules.
+- do not use a large dataset to hide a failed small known-answer case.
+- no native software requirement may force a laptop download; preserve source and mark unsupported verification honestly.
+- acceptance evidence must state which profile each test used.

@@ -1,0 +1,2749 @@
+# P03 — SupplyScope: complete project build specification
+Version: 2026-10-26. Read MASTER-DIRECTIVE.md first. These are requirements, not claims that software already exists.
+
+## 01. Product mandate and business boundary
+
+- [P03-GOAL-01] Build a standalone product supporting this decision: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-GOAL-02] Primary portfolio roles: Operations Analyst; Data Engineer; Data Scientist.
+- [P03-GOAL-03] Visual direction: Warehouse planning atlas: graphite, pale grey, safety orange; inventory trajectories.
+- [P03-GOAL-04] Use app slug supplyscope; keep routes, fixtures, manifests and catalogue entries consistent.
+- [P03-GOAL-05] Execute code only on GitHub-hosted compute; retain durable deliverables in GitHub; never write project files to the laptop.
+- [P03-GOAL-06] Default public experience is static interactive synthetic demo; transactional backend evidence comes from remote CI.
+- [P03-GOAL-07] Use Fable 5.1 for coordination and real specialist-model invocations for implementation and verification.
+- [P03-GOAL-08] Resolve provider/model availability and record actual requested/resolved IDs without inventing capabilities.
+- [P03-GOAL-09] The entry milestone is one complete source-to-decision journey using the reference fixture and working export.
+- [P03-GOAL-10] The mid-level milestone adds the specified exceptions, robustness, versioning and recovery evidence.
+- [P03-GOAL-11] Do not open with a chatbot or require a paid inference API to use the demo.
+- [P03-GOAL-12] No live customer data, real payment, vendor commitment or operational write belongs in the default synthetic demo.
+- [P03-GOAL-13] All monetary, temporal and statistical meaning must be defined before interface implementation.
+- [P03-GOAL-14] If a proposed field/formula conflicts with an invariant, fix the specification through a logged decision before coding.
+- [P03-GOAL-15] Keep specifications addressable by the IDs in this file; do not paste the entire file into every worker prompt.
+- [P03-DOMAIN-01] Use seasonal-naive and naive baselines before complex forecasts.
+- [P03-DOMAIN-02] Define daily event order: receipts then demand then review.
+- [P03-DOMAIN-03] Report censored observed demand separately from generated latent demand.
+- [P03-DOMAIN-04] Use rolling-origin evaluation.
+- [P03-DOMAIN-05] Declare warm-up and repeated simulation settings.
+- [P03-DOMAIN-06] Keep recommendations separate from supplier commitments.
+
+## 02. Independent known-answer fixture
+
+- [P03-GOLD-01] On hand=40, on order=30, backorders=10 gives inventory position=60 under the declared no-reservation fixture. Reorder point=70 and target position=120 gives raw order=60. MOQ=50 and pack size=24 produces an order of 72 units. If position=80, no order is triggered.
+- [P03-GOLD-02] Encode the reference inputs under tests/fixtures/golden/ and preserve the human-readable calculation.
+- [P03-GOLD-03] Keep the expected-answer file independent of application helper functions and generated dashboard output.
+- [P03-GOLD-04] Have the verification specialist reproduce the answer from the source records before implementation review.
+- [P03-GOLD-05] Use explicit decimal tolerance for monetary results and justified tolerance for statistical/numerical results.
+- [P03-GOLD-06] Test the displayed value, exported value and backend result against the reference, not only against each other.
+- [P03-GOLD-07] Do not enlarge a numeric tolerance to conceal a business-rule disagreement.
+- [P03-GOLD-08] Create one rejected-record variant and show why rejection is correct.
+- [P03-GOLD-09] Create one empty-population variant and show the documented zero-denominator behavior.
+- [P03-GOLD-10] Persist fixture hashes and verification evidence with the code revision.
+- [P03-GOLD-11] If this fixture reveals a definition gap, resolve and version the definition before treating results as authoritative.
+
+## 03. Logical data model and field contracts
+
+### P03-DATA-01: products
+- [P03-DATA-01-R01] Create the products entity with a documented grain and one stable primary key: product_id.
+- [P03-DATA-01-R02] The minimum business fields are product_id, sku, unit_cost, pack_size, minimum_order_quantity; add technical metadata only with a documented purpose.
+- [P03-DATA-01-R03] Use the role of products in the product workflow to define authoritative source ownership.
+- [P03-DATA-01-R04] Write migrations for products; do not rely on ORM auto-create for the verified release.
+- [P03-DATA-01-R05] Create a small valid products fixture linked to the independently calculated project example.
+- [P03-DATA-01-R06] Create an invalid products fixture that demonstrates a real domain constraint.
+- [P03-DATA-01-R07] Choose explicit row-update semantics for products: immutable event, versioned dimension or mutable operational record.
+- [P03-DATA-01-R08] Preserve the original source identifier for products when a surrogate key is introduced.
+- [P03-DATA-01-R09] Document whether deletion of products is prohibited, reversible or represented by a tombstone.
+- [P03-DATA-01-R10] Reconcile products accepted, rejected and deduplicated row counts to the source batch.
+- [P03-DATA-01-R11] Expose only justified synthetic products fields to the public site; remove internal runner metadata.
+- [P03-DATA-01-R12] Index products according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P03-DATA-01-R13] Do not join products at a different grain without an explicit aggregation or allocation rule.
+- [P03-DATA-01-R14] Associate the published products snapshot with dataset hash and generator parameters.
+- [P03-DATA-01-R15] Define deterministic sorting and pagination for the products evidence view.
+- [P03-DATA-01-R16] Ensure an empty products dataset yields an understandable empty state instead of fabricated sample totals.
+- [P03-DATA-01-R17] Archive the products schema and sample rows in the data dictionary.
+- [P03-DATA-01-R18] Test that replaying the source import cannot unintentionally duplicate products business records.
+- [P03-DATA-01-F01-R01] Field products.product_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-01-F01-R02] Field products.product_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-01-F01-R03] Field products.product_id: make it non-null and unique as the primary key.
+- [P03-DATA-01-F01-R04] Field products.product_id: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-01-F01-R05] Field products.product_id: use stable source-to-key mapping across replays and regeneration.
+- [P03-DATA-01-F01-R06] Field products.product_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-01-F01-R07] Field products.product_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-01-F01-R08] Field products.product_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-01-F02-R01] Field products.sku: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-01-F02-R02] Field products.sku: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-01-F02-R03] Field products.sku: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-01-F02-R04] Field products.sku: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-01-F02-R05] Field products.sku: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-01-F02-R06] Field products.sku: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-01-F02-R07] Field products.sku: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-01-F02-R08] Field products.sku: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-01-F03-R01] Field products.unit_cost: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P03-DATA-01-F03-R02] Field products.unit_cost: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-01-F03-R03] Field products.unit_cost: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-01-F03-R04] Field products.unit_cost: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-01-F03-R05] Field products.unit_cost: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-01-F03-R06] Field products.unit_cost: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-01-F03-R07] Field products.unit_cost: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-01-F03-R08] Field products.unit_cost: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-01-F04-R01] Field products.pack_size: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P03-DATA-01-F04-R02] Field products.pack_size: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-01-F04-R03] Field products.pack_size: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-01-F04-R04] Field products.pack_size: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-01-F04-R05] Field products.pack_size: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-01-F04-R06] Field products.pack_size: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-01-F04-R07] Field products.pack_size: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-01-F04-R08] Field products.pack_size: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-01-F05-R01] Field products.minimum_order_quantity: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P03-DATA-01-F05-R02] Field products.minimum_order_quantity: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-01-F05-R03] Field products.minimum_order_quantity: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-01-F05-R04] Field products.minimum_order_quantity: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-01-F05-R05] Field products.minimum_order_quantity: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-01-F05-R06] Field products.minimum_order_quantity: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-01-F05-R07] Field products.minimum_order_quantity: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-01-F05-R08] Field products.minimum_order_quantity: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P03-DATA-02: locations
+- [P03-DATA-02-R01] Create the locations entity with a documented grain and one stable primary key: location_id.
+- [P03-DATA-02-R02] The minimum business fields are location_id, location_name, timezone, storage_capacity, active; add technical metadata only with a documented purpose.
+- [P03-DATA-02-R03] Use the role of locations in the product workflow to define authoritative source ownership.
+- [P03-DATA-02-R04] Write migrations for locations; do not rely on ORM auto-create for the verified release.
+- [P03-DATA-02-R05] Create a small valid locations fixture linked to the independently calculated project example.
+- [P03-DATA-02-R06] Create an invalid locations fixture that demonstrates a real domain constraint.
+- [P03-DATA-02-R07] Choose explicit row-update semantics for locations: immutable event, versioned dimension or mutable operational record.
+- [P03-DATA-02-R08] Preserve the original source identifier for locations when a surrogate key is introduced.
+- [P03-DATA-02-R09] Document whether deletion of locations is prohibited, reversible or represented by a tombstone.
+- [P03-DATA-02-R10] Reconcile locations accepted, rejected and deduplicated row counts to the source batch.
+- [P03-DATA-02-R11] Expose only justified synthetic locations fields to the public site; remove internal runner metadata.
+- [P03-DATA-02-R12] Index locations according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P03-DATA-02-R13] Do not join locations at a different grain without an explicit aggregation or allocation rule.
+- [P03-DATA-02-R14] Associate the published locations snapshot with dataset hash and generator parameters.
+- [P03-DATA-02-R15] Define deterministic sorting and pagination for the locations evidence view.
+- [P03-DATA-02-R16] Ensure an empty locations dataset yields an understandable empty state instead of fabricated sample totals.
+- [P03-DATA-02-R17] Archive the locations schema and sample rows in the data dictionary.
+- [P03-DATA-02-R18] Test that replaying the source import cannot unintentionally duplicate locations business records.
+- [P03-DATA-02-F01-R01] Field locations.location_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-02-F01-R02] Field locations.location_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-02-F01-R03] Field locations.location_id: make it non-null and unique as the primary key.
+- [P03-DATA-02-F01-R04] Field locations.location_id: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-02-F01-R05] Field locations.location_id: use stable source-to-key mapping across replays and regeneration.
+- [P03-DATA-02-F01-R06] Field locations.location_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-02-F01-R07] Field locations.location_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-02-F01-R08] Field locations.location_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-02-F02-R01] Field locations.location_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-02-F02-R02] Field locations.location_name: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-02-F02-R03] Field locations.location_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-02-F02-R04] Field locations.location_name: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-02-F02-R05] Field locations.location_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-02-F02-R06] Field locations.location_name: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-02-F02-R07] Field locations.location_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-02-F02-R08] Field locations.location_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-02-F03-R01] Field locations.timezone: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-02-F03-R02] Field locations.timezone: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-02-F03-R03] Field locations.timezone: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-02-F03-R04] Field locations.timezone: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-02-F03-R05] Field locations.timezone: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-02-F03-R06] Field locations.timezone: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-02-F03-R07] Field locations.timezone: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-02-F03-R08] Field locations.timezone: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-02-F04-R01] Field locations.storage_capacity: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P03-DATA-02-F04-R02] Field locations.storage_capacity: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-02-F04-R03] Field locations.storage_capacity: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-02-F04-R04] Field locations.storage_capacity: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-02-F04-R05] Field locations.storage_capacity: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-02-F04-R06] Field locations.storage_capacity: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-02-F04-R07] Field locations.storage_capacity: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-02-F04-R08] Field locations.storage_capacity: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-02-F05-R01] Field locations.active: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P03-DATA-02-F05-R02] Field locations.active: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-02-F05-R03] Field locations.active: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-02-F05-R04] Field locations.active: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-02-F05-R05] Field locations.active: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-02-F05-R06] Field locations.active: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-02-F05-R07] Field locations.active: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-02-F05-R08] Field locations.active: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P03-DATA-03: sales
+- [P03-DATA-03-R01] Create the sales entity with a documented grain and one stable primary key: sale_id.
+- [P03-DATA-03-R02] The minimum business fields are sale_id, product_id, location_id, sold_at, quantity; add technical metadata only with a documented purpose.
+- [P03-DATA-03-R03] Use the role of sales in the product workflow to define authoritative source ownership.
+- [P03-DATA-03-R04] Write migrations for sales; do not rely on ORM auto-create for the verified release.
+- [P03-DATA-03-R05] Create a small valid sales fixture linked to the independently calculated project example.
+- [P03-DATA-03-R06] Create an invalid sales fixture that demonstrates a real domain constraint.
+- [P03-DATA-03-R07] Choose explicit row-update semantics for sales: immutable event, versioned dimension or mutable operational record.
+- [P03-DATA-03-R08] Preserve the original source identifier for sales when a surrogate key is introduced.
+- [P03-DATA-03-R09] Document whether deletion of sales is prohibited, reversible or represented by a tombstone.
+- [P03-DATA-03-R10] Reconcile sales accepted, rejected and deduplicated row counts to the source batch.
+- [P03-DATA-03-R11] Expose only justified synthetic sales fields to the public site; remove internal runner metadata.
+- [P03-DATA-03-R12] Index sales according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P03-DATA-03-R13] Do not join sales at a different grain without an explicit aggregation or allocation rule.
+- [P03-DATA-03-R14] Associate the published sales snapshot with dataset hash and generator parameters.
+- [P03-DATA-03-R15] Define deterministic sorting and pagination for the sales evidence view.
+- [P03-DATA-03-R16] Ensure an empty sales dataset yields an understandable empty state instead of fabricated sample totals.
+- [P03-DATA-03-R17] Archive the sales schema and sample rows in the data dictionary.
+- [P03-DATA-03-R18] Test that replaying the source import cannot unintentionally duplicate sales business records.
+- [P03-DATA-03-F01-R01] Field sales.sale_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-03-F01-R02] Field sales.sale_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-03-F01-R03] Field sales.sale_id: make it non-null and unique as the primary key.
+- [P03-DATA-03-F01-R04] Field sales.sale_id: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-03-F01-R05] Field sales.sale_id: use stable source-to-key mapping across replays and regeneration.
+- [P03-DATA-03-F01-R06] Field sales.sale_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-03-F01-R07] Field sales.sale_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-03-F01-R08] Field sales.sale_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-03-F02-R01] Field sales.product_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-03-F02-R02] Field sales.product_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-03-F02-R03] Field sales.product_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-03-F02-R04] Field sales.product_id: validate its reference to products.product_id; explain deferred or quarantined unmatched records.
+- [P03-DATA-03-F02-R05] Field sales.product_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-03-F02-R06] Field sales.product_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-03-F02-R07] Field sales.product_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-03-F02-R08] Field sales.product_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-03-F03-R01] Field sales.location_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-03-F03-R02] Field sales.location_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-03-F03-R03] Field sales.location_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-03-F03-R04] Field sales.location_id: validate its reference to locations.location_id; explain deferred or quarantined unmatched records.
+- [P03-DATA-03-F03-R05] Field sales.location_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-03-F03-R06] Field sales.location_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-03-F03-R07] Field sales.location_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-03-F03-R08] Field sales.location_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-03-F04-R01] Field sales.sold_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P03-DATA-03-F04-R02] Field sales.sold_at: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-03-F04-R03] Field sales.sold_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-03-F04-R04] Field sales.sold_at: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-03-F04-R05] Field sales.sold_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-03-F04-R06] Field sales.sold_at: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-03-F04-R07] Field sales.sold_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-03-F04-R08] Field sales.sold_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-03-F05-R01] Field sales.quantity: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P03-DATA-03-F05-R02] Field sales.quantity: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-03-F05-R03] Field sales.quantity: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-03-F05-R04] Field sales.quantity: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-03-F05-R05] Field sales.quantity: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-03-F05-R06] Field sales.quantity: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-03-F05-R07] Field sales.quantity: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-03-F05-R08] Field sales.quantity: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P03-DATA-04: inventory_movements
+- [P03-DATA-04-R01] Create the inventory_movements entity with a documented grain and one stable primary key: movement_id.
+- [P03-DATA-04-R02] The minimum business fields are movement_id, product_id, location_id, quantity_delta, event_at; add technical metadata only with a documented purpose.
+- [P03-DATA-04-R03] Use the role of inventory_movements in the product workflow to define authoritative source ownership.
+- [P03-DATA-04-R04] Write migrations for inventory_movements; do not rely on ORM auto-create for the verified release.
+- [P03-DATA-04-R05] Create a small valid inventory_movements fixture linked to the independently calculated project example.
+- [P03-DATA-04-R06] Create an invalid inventory_movements fixture that demonstrates a real domain constraint.
+- [P03-DATA-04-R07] Choose explicit row-update semantics for inventory_movements: immutable event, versioned dimension or mutable operational record.
+- [P03-DATA-04-R08] Preserve the original source identifier for inventory_movements when a surrogate key is introduced.
+- [P03-DATA-04-R09] Document whether deletion of inventory_movements is prohibited, reversible or represented by a tombstone.
+- [P03-DATA-04-R10] Reconcile inventory_movements accepted, rejected and deduplicated row counts to the source batch.
+- [P03-DATA-04-R11] Expose only justified synthetic inventory_movements fields to the public site; remove internal runner metadata.
+- [P03-DATA-04-R12] Index inventory_movements according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P03-DATA-04-R13] Do not join inventory_movements at a different grain without an explicit aggregation or allocation rule.
+- [P03-DATA-04-R14] Associate the published inventory_movements snapshot with dataset hash and generator parameters.
+- [P03-DATA-04-R15] Define deterministic sorting and pagination for the inventory_movements evidence view.
+- [P03-DATA-04-R16] Ensure an empty inventory_movements dataset yields an understandable empty state instead of fabricated sample totals.
+- [P03-DATA-04-R17] Archive the inventory_movements schema and sample rows in the data dictionary.
+- [P03-DATA-04-R18] Test that replaying the source import cannot unintentionally duplicate inventory_movements business records.
+- [P03-DATA-04-F01-R01] Field inventory_movements.movement_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-04-F01-R02] Field inventory_movements.movement_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-04-F01-R03] Field inventory_movements.movement_id: make it non-null and unique as the primary key.
+- [P03-DATA-04-F01-R04] Field inventory_movements.movement_id: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-04-F01-R05] Field inventory_movements.movement_id: use stable source-to-key mapping across replays and regeneration.
+- [P03-DATA-04-F01-R06] Field inventory_movements.movement_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-04-F01-R07] Field inventory_movements.movement_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-04-F01-R08] Field inventory_movements.movement_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-04-F02-R01] Field inventory_movements.product_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-04-F02-R02] Field inventory_movements.product_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-04-F02-R03] Field inventory_movements.product_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-04-F02-R04] Field inventory_movements.product_id: validate its reference to products.product_id; explain deferred or quarantined unmatched records.
+- [P03-DATA-04-F02-R05] Field inventory_movements.product_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-04-F02-R06] Field inventory_movements.product_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-04-F02-R07] Field inventory_movements.product_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-04-F02-R08] Field inventory_movements.product_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-04-F03-R01] Field inventory_movements.location_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-04-F03-R02] Field inventory_movements.location_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-04-F03-R03] Field inventory_movements.location_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-04-F03-R04] Field inventory_movements.location_id: validate its reference to locations.location_id; explain deferred or quarantined unmatched records.
+- [P03-DATA-04-F03-R05] Field inventory_movements.location_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-04-F03-R06] Field inventory_movements.location_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-04-F03-R07] Field inventory_movements.location_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-04-F03-R08] Field inventory_movements.location_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-04-F04-R01] Field inventory_movements.quantity_delta: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P03-DATA-04-F04-R02] Field inventory_movements.quantity_delta: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-04-F04-R03] Field inventory_movements.quantity_delta: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-04-F04-R04] Field inventory_movements.quantity_delta: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-04-F04-R05] Field inventory_movements.quantity_delta: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-04-F04-R06] Field inventory_movements.quantity_delta: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-04-F04-R07] Field inventory_movements.quantity_delta: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-04-F04-R08] Field inventory_movements.quantity_delta: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-04-F05-R01] Field inventory_movements.event_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P03-DATA-04-F05-R02] Field inventory_movements.event_at: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-04-F05-R03] Field inventory_movements.event_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-04-F05-R04] Field inventory_movements.event_at: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-04-F05-R05] Field inventory_movements.event_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-04-F05-R06] Field inventory_movements.event_at: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-04-F05-R07] Field inventory_movements.event_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-04-F05-R08] Field inventory_movements.event_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P03-DATA-05: purchase_orders
+- [P03-DATA-05-R01] Create the purchase_orders entity with a documented grain and one stable primary key: purchase_order_id.
+- [P03-DATA-05-R02] The minimum business fields are purchase_order_id, supplier_id, ordered_at, status, currency; add technical metadata only with a documented purpose.
+- [P03-DATA-05-R03] Use the role of purchase_orders in the product workflow to define authoritative source ownership.
+- [P03-DATA-05-R04] Write migrations for purchase_orders; do not rely on ORM auto-create for the verified release.
+- [P03-DATA-05-R05] Create a small valid purchase_orders fixture linked to the independently calculated project example.
+- [P03-DATA-05-R06] Create an invalid purchase_orders fixture that demonstrates a real domain constraint.
+- [P03-DATA-05-R07] Choose explicit row-update semantics for purchase_orders: immutable event, versioned dimension or mutable operational record.
+- [P03-DATA-05-R08] Preserve the original source identifier for purchase_orders when a surrogate key is introduced.
+- [P03-DATA-05-R09] Document whether deletion of purchase_orders is prohibited, reversible or represented by a tombstone.
+- [P03-DATA-05-R10] Reconcile purchase_orders accepted, rejected and deduplicated row counts to the source batch.
+- [P03-DATA-05-R11] Expose only justified synthetic purchase_orders fields to the public site; remove internal runner metadata.
+- [P03-DATA-05-R12] Index purchase_orders according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P03-DATA-05-R13] Do not join purchase_orders at a different grain without an explicit aggregation or allocation rule.
+- [P03-DATA-05-R14] Associate the published purchase_orders snapshot with dataset hash and generator parameters.
+- [P03-DATA-05-R15] Define deterministic sorting and pagination for the purchase_orders evidence view.
+- [P03-DATA-05-R16] Ensure an empty purchase_orders dataset yields an understandable empty state instead of fabricated sample totals.
+- [P03-DATA-05-R17] Archive the purchase_orders schema and sample rows in the data dictionary.
+- [P03-DATA-05-R18] Test that replaying the source import cannot unintentionally duplicate purchase_orders business records.
+- [P03-DATA-05-F01-R01] Field purchase_orders.purchase_order_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-05-F01-R02] Field purchase_orders.purchase_order_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-05-F01-R03] Field purchase_orders.purchase_order_id: make it non-null and unique as the primary key.
+- [P03-DATA-05-F01-R04] Field purchase_orders.purchase_order_id: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-05-F01-R05] Field purchase_orders.purchase_order_id: use stable source-to-key mapping across replays and regeneration.
+- [P03-DATA-05-F01-R06] Field purchase_orders.purchase_order_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-05-F01-R07] Field purchase_orders.purchase_order_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-05-F01-R08] Field purchase_orders.purchase_order_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-05-F02-R01] Field purchase_orders.supplier_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-05-F02-R02] Field purchase_orders.supplier_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-05-F02-R03] Field purchase_orders.supplier_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-05-F02-R04] Field purchase_orders.supplier_id: validate its reference to suppliers.supplier_id; explain deferred or quarantined unmatched records.
+- [P03-DATA-05-F02-R05] Field purchase_orders.supplier_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-05-F02-R06] Field purchase_orders.supplier_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-05-F02-R07] Field purchase_orders.supplier_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-05-F02-R08] Field purchase_orders.supplier_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-05-F03-R01] Field purchase_orders.ordered_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P03-DATA-05-F03-R02] Field purchase_orders.ordered_at: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-05-F03-R03] Field purchase_orders.ordered_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-05-F03-R04] Field purchase_orders.ordered_at: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-05-F03-R05] Field purchase_orders.ordered_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-05-F03-R06] Field purchase_orders.ordered_at: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-05-F03-R07] Field purchase_orders.ordered_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-05-F03-R08] Field purchase_orders.ordered_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-05-F04-R01] Field purchase_orders.status: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-05-F04-R02] Field purchase_orders.status: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-05-F04-R03] Field purchase_orders.status: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-05-F04-R04] Field purchase_orders.status: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-05-F04-R05] Field purchase_orders.status: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-05-F04-R06] Field purchase_orders.status: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-05-F04-R07] Field purchase_orders.status: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-05-F04-R08] Field purchase_orders.status: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-05-F05-R01] Field purchase_orders.currency: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-05-F05-R02] Field purchase_orders.currency: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-05-F05-R03] Field purchase_orders.currency: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-05-F05-R04] Field purchase_orders.currency: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-05-F05-R05] Field purchase_orders.currency: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-05-F05-R06] Field purchase_orders.currency: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-05-F05-R07] Field purchase_orders.currency: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-05-F05-R08] Field purchase_orders.currency: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P03-DATA-06: purchase_order_lines
+- [P03-DATA-06-R01] Create the purchase_order_lines entity with a documented grain and one stable primary key: po_line_id.
+- [P03-DATA-06-R02] The minimum business fields are po_line_id, purchase_order_id, product_id, ordered_quantity, unit_cost; add technical metadata only with a documented purpose.
+- [P03-DATA-06-R03] Use the role of purchase_order_lines in the product workflow to define authoritative source ownership.
+- [P03-DATA-06-R04] Write migrations for purchase_order_lines; do not rely on ORM auto-create for the verified release.
+- [P03-DATA-06-R05] Create a small valid purchase_order_lines fixture linked to the independently calculated project example.
+- [P03-DATA-06-R06] Create an invalid purchase_order_lines fixture that demonstrates a real domain constraint.
+- [P03-DATA-06-R07] Choose explicit row-update semantics for purchase_order_lines: immutable event, versioned dimension or mutable operational record.
+- [P03-DATA-06-R08] Preserve the original source identifier for purchase_order_lines when a surrogate key is introduced.
+- [P03-DATA-06-R09] Document whether deletion of purchase_order_lines is prohibited, reversible or represented by a tombstone.
+- [P03-DATA-06-R10] Reconcile purchase_order_lines accepted, rejected and deduplicated row counts to the source batch.
+- [P03-DATA-06-R11] Expose only justified synthetic purchase_order_lines fields to the public site; remove internal runner metadata.
+- [P03-DATA-06-R12] Index purchase_order_lines according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P03-DATA-06-R13] Do not join purchase_order_lines at a different grain without an explicit aggregation or allocation rule.
+- [P03-DATA-06-R14] Associate the published purchase_order_lines snapshot with dataset hash and generator parameters.
+- [P03-DATA-06-R15] Define deterministic sorting and pagination for the purchase_order_lines evidence view.
+- [P03-DATA-06-R16] Ensure an empty purchase_order_lines dataset yields an understandable empty state instead of fabricated sample totals.
+- [P03-DATA-06-R17] Archive the purchase_order_lines schema and sample rows in the data dictionary.
+- [P03-DATA-06-R18] Test that replaying the source import cannot unintentionally duplicate purchase_order_lines business records.
+- [P03-DATA-06-F01-R01] Field purchase_order_lines.po_line_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-06-F01-R02] Field purchase_order_lines.po_line_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-06-F01-R03] Field purchase_order_lines.po_line_id: make it non-null and unique as the primary key.
+- [P03-DATA-06-F01-R04] Field purchase_order_lines.po_line_id: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-06-F01-R05] Field purchase_order_lines.po_line_id: use stable source-to-key mapping across replays and regeneration.
+- [P03-DATA-06-F01-R06] Field purchase_order_lines.po_line_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-06-F01-R07] Field purchase_order_lines.po_line_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-06-F01-R08] Field purchase_order_lines.po_line_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-06-F02-R01] Field purchase_order_lines.purchase_order_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-06-F02-R02] Field purchase_order_lines.purchase_order_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-06-F02-R03] Field purchase_order_lines.purchase_order_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-06-F02-R04] Field purchase_order_lines.purchase_order_id: validate its reference to purchase_orders.purchase_order_id; explain deferred or quarantined unmatched records.
+- [P03-DATA-06-F02-R05] Field purchase_order_lines.purchase_order_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-06-F02-R06] Field purchase_order_lines.purchase_order_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-06-F02-R07] Field purchase_order_lines.purchase_order_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-06-F02-R08] Field purchase_order_lines.purchase_order_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-06-F03-R01] Field purchase_order_lines.product_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-06-F03-R02] Field purchase_order_lines.product_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-06-F03-R03] Field purchase_order_lines.product_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-06-F03-R04] Field purchase_order_lines.product_id: validate its reference to products.product_id; explain deferred or quarantined unmatched records.
+- [P03-DATA-06-F03-R05] Field purchase_order_lines.product_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-06-F03-R06] Field purchase_order_lines.product_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-06-F03-R07] Field purchase_order_lines.product_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-06-F03-R08] Field purchase_order_lines.product_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-06-F04-R01] Field purchase_order_lines.ordered_quantity: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P03-DATA-06-F04-R02] Field purchase_order_lines.ordered_quantity: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-06-F04-R03] Field purchase_order_lines.ordered_quantity: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-06-F04-R04] Field purchase_order_lines.ordered_quantity: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-06-F04-R05] Field purchase_order_lines.ordered_quantity: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-06-F04-R06] Field purchase_order_lines.ordered_quantity: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-06-F04-R07] Field purchase_order_lines.ordered_quantity: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-06-F04-R08] Field purchase_order_lines.ordered_quantity: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-06-F05-R01] Field purchase_order_lines.unit_cost: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P03-DATA-06-F05-R02] Field purchase_order_lines.unit_cost: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-06-F05-R03] Field purchase_order_lines.unit_cost: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-06-F05-R04] Field purchase_order_lines.unit_cost: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-06-F05-R05] Field purchase_order_lines.unit_cost: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-06-F05-R06] Field purchase_order_lines.unit_cost: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-06-F05-R07] Field purchase_order_lines.unit_cost: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-06-F05-R08] Field purchase_order_lines.unit_cost: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P03-DATA-07: receipts
+- [P03-DATA-07-R01] Create the receipts entity with a documented grain and one stable primary key: receipt_id.
+- [P03-DATA-07-R02] The minimum business fields are receipt_id, po_line_id, location_id, received_quantity, received_at; add technical metadata only with a documented purpose.
+- [P03-DATA-07-R03] Use the role of receipts in the product workflow to define authoritative source ownership.
+- [P03-DATA-07-R04] Write migrations for receipts; do not rely on ORM auto-create for the verified release.
+- [P03-DATA-07-R05] Create a small valid receipts fixture linked to the independently calculated project example.
+- [P03-DATA-07-R06] Create an invalid receipts fixture that demonstrates a real domain constraint.
+- [P03-DATA-07-R07] Choose explicit row-update semantics for receipts: immutable event, versioned dimension or mutable operational record.
+- [P03-DATA-07-R08] Preserve the original source identifier for receipts when a surrogate key is introduced.
+- [P03-DATA-07-R09] Document whether deletion of receipts is prohibited, reversible or represented by a tombstone.
+- [P03-DATA-07-R10] Reconcile receipts accepted, rejected and deduplicated row counts to the source batch.
+- [P03-DATA-07-R11] Expose only justified synthetic receipts fields to the public site; remove internal runner metadata.
+- [P03-DATA-07-R12] Index receipts according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P03-DATA-07-R13] Do not join receipts at a different grain without an explicit aggregation or allocation rule.
+- [P03-DATA-07-R14] Associate the published receipts snapshot with dataset hash and generator parameters.
+- [P03-DATA-07-R15] Define deterministic sorting and pagination for the receipts evidence view.
+- [P03-DATA-07-R16] Ensure an empty receipts dataset yields an understandable empty state instead of fabricated sample totals.
+- [P03-DATA-07-R17] Archive the receipts schema and sample rows in the data dictionary.
+- [P03-DATA-07-R18] Test that replaying the source import cannot unintentionally duplicate receipts business records.
+- [P03-DATA-07-F01-R01] Field receipts.receipt_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-07-F01-R02] Field receipts.receipt_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-07-F01-R03] Field receipts.receipt_id: make it non-null and unique as the primary key.
+- [P03-DATA-07-F01-R04] Field receipts.receipt_id: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-07-F01-R05] Field receipts.receipt_id: use stable source-to-key mapping across replays and regeneration.
+- [P03-DATA-07-F01-R06] Field receipts.receipt_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-07-F01-R07] Field receipts.receipt_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-07-F01-R08] Field receipts.receipt_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-07-F02-R01] Field receipts.po_line_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-07-F02-R02] Field receipts.po_line_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-07-F02-R03] Field receipts.po_line_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-07-F02-R04] Field receipts.po_line_id: validate its reference to purchase_order_lines.po_line_id; explain deferred or quarantined unmatched records.
+- [P03-DATA-07-F02-R05] Field receipts.po_line_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-07-F02-R06] Field receipts.po_line_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-07-F02-R07] Field receipts.po_line_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-07-F02-R08] Field receipts.po_line_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-07-F03-R01] Field receipts.location_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-07-F03-R02] Field receipts.location_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-07-F03-R03] Field receipts.location_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-07-F03-R04] Field receipts.location_id: validate its reference to locations.location_id; explain deferred or quarantined unmatched records.
+- [P03-DATA-07-F03-R05] Field receipts.location_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-07-F03-R06] Field receipts.location_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-07-F03-R07] Field receipts.location_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-07-F03-R08] Field receipts.location_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-07-F04-R01] Field receipts.received_quantity: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P03-DATA-07-F04-R02] Field receipts.received_quantity: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-07-F04-R03] Field receipts.received_quantity: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-07-F04-R04] Field receipts.received_quantity: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-07-F04-R05] Field receipts.received_quantity: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-07-F04-R06] Field receipts.received_quantity: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-07-F04-R07] Field receipts.received_quantity: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-07-F04-R08] Field receipts.received_quantity: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-07-F05-R01] Field receipts.received_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P03-DATA-07-F05-R02] Field receipts.received_at: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-07-F05-R03] Field receipts.received_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-07-F05-R04] Field receipts.received_at: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-07-F05-R05] Field receipts.received_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-07-F05-R06] Field receipts.received_at: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-07-F05-R07] Field receipts.received_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-07-F05-R08] Field receipts.received_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P03-DATA-08: suppliers
+- [P03-DATA-08-R01] Create the suppliers entity with a documented grain and one stable primary key: supplier_id.
+- [P03-DATA-08-R02] The minimum business fields are supplier_id, supplier_name, calendar_id, quoted_lead_days, active; add technical metadata only with a documented purpose.
+- [P03-DATA-08-R03] Use the role of suppliers in the product workflow to define authoritative source ownership.
+- [P03-DATA-08-R04] Write migrations for suppliers; do not rely on ORM auto-create for the verified release.
+- [P03-DATA-08-R05] Create a small valid suppliers fixture linked to the independently calculated project example.
+- [P03-DATA-08-R06] Create an invalid suppliers fixture that demonstrates a real domain constraint.
+- [P03-DATA-08-R07] Choose explicit row-update semantics for suppliers: immutable event, versioned dimension or mutable operational record.
+- [P03-DATA-08-R08] Preserve the original source identifier for suppliers when a surrogate key is introduced.
+- [P03-DATA-08-R09] Document whether deletion of suppliers is prohibited, reversible or represented by a tombstone.
+- [P03-DATA-08-R10] Reconcile suppliers accepted, rejected and deduplicated row counts to the source batch.
+- [P03-DATA-08-R11] Expose only justified synthetic suppliers fields to the public site; remove internal runner metadata.
+- [P03-DATA-08-R12] Index suppliers according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P03-DATA-08-R13] Do not join suppliers at a different grain without an explicit aggregation or allocation rule.
+- [P03-DATA-08-R14] Associate the published suppliers snapshot with dataset hash and generator parameters.
+- [P03-DATA-08-R15] Define deterministic sorting and pagination for the suppliers evidence view.
+- [P03-DATA-08-R16] Ensure an empty suppliers dataset yields an understandable empty state instead of fabricated sample totals.
+- [P03-DATA-08-R17] Archive the suppliers schema and sample rows in the data dictionary.
+- [P03-DATA-08-R18] Test that replaying the source import cannot unintentionally duplicate suppliers business records.
+- [P03-DATA-08-F01-R01] Field suppliers.supplier_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-08-F01-R02] Field suppliers.supplier_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-08-F01-R03] Field suppliers.supplier_id: make it non-null and unique as the primary key.
+- [P03-DATA-08-F01-R04] Field suppliers.supplier_id: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-08-F01-R05] Field suppliers.supplier_id: use stable source-to-key mapping across replays and regeneration.
+- [P03-DATA-08-F01-R06] Field suppliers.supplier_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-08-F01-R07] Field suppliers.supplier_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-08-F01-R08] Field suppliers.supplier_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-08-F02-R01] Field suppliers.supplier_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-08-F02-R02] Field suppliers.supplier_name: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-08-F02-R03] Field suppliers.supplier_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-08-F02-R04] Field suppliers.supplier_name: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-08-F02-R05] Field suppliers.supplier_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-08-F02-R06] Field suppliers.supplier_name: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-08-F02-R07] Field suppliers.supplier_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-08-F02-R08] Field suppliers.supplier_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-08-F03-R01] Field suppliers.calendar_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-08-F03-R02] Field suppliers.calendar_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-08-F03-R03] Field suppliers.calendar_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-08-F03-R04] Field suppliers.calendar_id: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-08-F03-R05] Field suppliers.calendar_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-08-F03-R06] Field suppliers.calendar_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-08-F03-R07] Field suppliers.calendar_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-08-F03-R08] Field suppliers.calendar_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-08-F04-R01] Field suppliers.quoted_lead_days: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P03-DATA-08-F04-R02] Field suppliers.quoted_lead_days: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-08-F04-R03] Field suppliers.quoted_lead_days: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-08-F04-R04] Field suppliers.quoted_lead_days: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-08-F04-R05] Field suppliers.quoted_lead_days: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-08-F04-R06] Field suppliers.quoted_lead_days: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-08-F04-R07] Field suppliers.quoted_lead_days: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-08-F04-R08] Field suppliers.quoted_lead_days: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-08-F05-R01] Field suppliers.active: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P03-DATA-08-F05-R02] Field suppliers.active: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-08-F05-R03] Field suppliers.active: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-08-F05-R04] Field suppliers.active: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-08-F05-R05] Field suppliers.active: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-08-F05-R06] Field suppliers.active: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-08-F05-R07] Field suppliers.active: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-08-F05-R08] Field suppliers.active: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P03-DATA-09: promotions
+- [P03-DATA-09-R01] Create the promotions entity with a documented grain and one stable primary key: promotion_id.
+- [P03-DATA-09-R02] The minimum business fields are promotion_id, product_id, starts_at, ends_at, promo_factor; add technical metadata only with a documented purpose.
+- [P03-DATA-09-R03] Use the role of promotions in the product workflow to define authoritative source ownership.
+- [P03-DATA-09-R04] Write migrations for promotions; do not rely on ORM auto-create for the verified release.
+- [P03-DATA-09-R05] Create a small valid promotions fixture linked to the independently calculated project example.
+- [P03-DATA-09-R06] Create an invalid promotions fixture that demonstrates a real domain constraint.
+- [P03-DATA-09-R07] Choose explicit row-update semantics for promotions: immutable event, versioned dimension or mutable operational record.
+- [P03-DATA-09-R08] Preserve the original source identifier for promotions when a surrogate key is introduced.
+- [P03-DATA-09-R09] Document whether deletion of promotions is prohibited, reversible or represented by a tombstone.
+- [P03-DATA-09-R10] Reconcile promotions accepted, rejected and deduplicated row counts to the source batch.
+- [P03-DATA-09-R11] Expose only justified synthetic promotions fields to the public site; remove internal runner metadata.
+- [P03-DATA-09-R12] Index promotions according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P03-DATA-09-R13] Do not join promotions at a different grain without an explicit aggregation or allocation rule.
+- [P03-DATA-09-R14] Associate the published promotions snapshot with dataset hash and generator parameters.
+- [P03-DATA-09-R15] Define deterministic sorting and pagination for the promotions evidence view.
+- [P03-DATA-09-R16] Ensure an empty promotions dataset yields an understandable empty state instead of fabricated sample totals.
+- [P03-DATA-09-R17] Archive the promotions schema and sample rows in the data dictionary.
+- [P03-DATA-09-R18] Test that replaying the source import cannot unintentionally duplicate promotions business records.
+- [P03-DATA-09-F01-R01] Field promotions.promotion_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-09-F01-R02] Field promotions.promotion_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-09-F01-R03] Field promotions.promotion_id: make it non-null and unique as the primary key.
+- [P03-DATA-09-F01-R04] Field promotions.promotion_id: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-09-F01-R05] Field promotions.promotion_id: use stable source-to-key mapping across replays and regeneration.
+- [P03-DATA-09-F01-R06] Field promotions.promotion_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-09-F01-R07] Field promotions.promotion_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-09-F01-R08] Field promotions.promotion_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-09-F02-R01] Field promotions.product_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-09-F02-R02] Field promotions.product_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-09-F02-R03] Field promotions.product_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-09-F02-R04] Field promotions.product_id: validate its reference to products.product_id; explain deferred or quarantined unmatched records.
+- [P03-DATA-09-F02-R05] Field promotions.product_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-09-F02-R06] Field promotions.product_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-09-F02-R07] Field promotions.product_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-09-F02-R08] Field promotions.product_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-09-F03-R01] Field promotions.starts_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P03-DATA-09-F03-R02] Field promotions.starts_at: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-09-F03-R03] Field promotions.starts_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-09-F03-R04] Field promotions.starts_at: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-09-F03-R05] Field promotions.starts_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-09-F03-R06] Field promotions.starts_at: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-09-F03-R07] Field promotions.starts_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-09-F03-R08] Field promotions.starts_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-09-F04-R01] Field promotions.ends_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P03-DATA-09-F04-R02] Field promotions.ends_at: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-09-F04-R03] Field promotions.ends_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-09-F04-R04] Field promotions.ends_at: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-09-F04-R05] Field promotions.ends_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-09-F04-R06] Field promotions.ends_at: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-09-F04-R07] Field promotions.ends_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-09-F04-R08] Field promotions.ends_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-09-F05-R01] Field promotions.promo_factor: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P03-DATA-09-F05-R02] Field promotions.promo_factor: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-09-F05-R03] Field promotions.promo_factor: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-09-F05-R04] Field promotions.promo_factor: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-09-F05-R05] Field promotions.promo_factor: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-09-F05-R06] Field promotions.promo_factor: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-09-F05-R07] Field promotions.promo_factor: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-09-F05-R08] Field promotions.promo_factor: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P03-DATA-10: forecast_runs
+- [P03-DATA-10-R01] Create the forecast_runs entity with a documented grain and one stable primary key: forecast_run_id.
+- [P03-DATA-10-R02] The minimum business fields are forecast_run_id, cutoff_at, model_version, horizon, seed; add technical metadata only with a documented purpose.
+- [P03-DATA-10-R03] Use the role of forecast_runs in the product workflow to define authoritative source ownership.
+- [P03-DATA-10-R04] Write migrations for forecast_runs; do not rely on ORM auto-create for the verified release.
+- [P03-DATA-10-R05] Create a small valid forecast_runs fixture linked to the independently calculated project example.
+- [P03-DATA-10-R06] Create an invalid forecast_runs fixture that demonstrates a real domain constraint.
+- [P03-DATA-10-R07] Choose explicit row-update semantics for forecast_runs: immutable event, versioned dimension or mutable operational record.
+- [P03-DATA-10-R08] Preserve the original source identifier for forecast_runs when a surrogate key is introduced.
+- [P03-DATA-10-R09] Document whether deletion of forecast_runs is prohibited, reversible or represented by a tombstone.
+- [P03-DATA-10-R10] Reconcile forecast_runs accepted, rejected and deduplicated row counts to the source batch.
+- [P03-DATA-10-R11] Expose only justified synthetic forecast_runs fields to the public site; remove internal runner metadata.
+- [P03-DATA-10-R12] Index forecast_runs according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P03-DATA-10-R13] Do not join forecast_runs at a different grain without an explicit aggregation or allocation rule.
+- [P03-DATA-10-R14] Associate the published forecast_runs snapshot with dataset hash and generator parameters.
+- [P03-DATA-10-R15] Define deterministic sorting and pagination for the forecast_runs evidence view.
+- [P03-DATA-10-R16] Ensure an empty forecast_runs dataset yields an understandable empty state instead of fabricated sample totals.
+- [P03-DATA-10-R17] Archive the forecast_runs schema and sample rows in the data dictionary.
+- [P03-DATA-10-R18] Test that replaying the source import cannot unintentionally duplicate forecast_runs business records.
+- [P03-DATA-10-F01-R01] Field forecast_runs.forecast_run_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-10-F01-R02] Field forecast_runs.forecast_run_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-10-F01-R03] Field forecast_runs.forecast_run_id: make it non-null and unique as the primary key.
+- [P03-DATA-10-F01-R04] Field forecast_runs.forecast_run_id: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-10-F01-R05] Field forecast_runs.forecast_run_id: use stable source-to-key mapping across replays and regeneration.
+- [P03-DATA-10-F01-R06] Field forecast_runs.forecast_run_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-10-F01-R07] Field forecast_runs.forecast_run_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-10-F01-R08] Field forecast_runs.forecast_run_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-10-F02-R01] Field forecast_runs.cutoff_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P03-DATA-10-F02-R02] Field forecast_runs.cutoff_at: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-10-F02-R03] Field forecast_runs.cutoff_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-10-F02-R04] Field forecast_runs.cutoff_at: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-10-F02-R05] Field forecast_runs.cutoff_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-10-F02-R06] Field forecast_runs.cutoff_at: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-10-F02-R07] Field forecast_runs.cutoff_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-10-F02-R08] Field forecast_runs.cutoff_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-10-F03-R01] Field forecast_runs.model_version: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-10-F03-R02] Field forecast_runs.model_version: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-10-F03-R03] Field forecast_runs.model_version: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-10-F03-R04] Field forecast_runs.model_version: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-10-F03-R05] Field forecast_runs.model_version: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-10-F03-R06] Field forecast_runs.model_version: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-10-F03-R07] Field forecast_runs.model_version: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-10-F03-R08] Field forecast_runs.model_version: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-10-F04-R01] Field forecast_runs.horizon: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P03-DATA-10-F04-R02] Field forecast_runs.horizon: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-10-F04-R03] Field forecast_runs.horizon: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-10-F04-R04] Field forecast_runs.horizon: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-10-F04-R05] Field forecast_runs.horizon: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-10-F04-R06] Field forecast_runs.horizon: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-10-F04-R07] Field forecast_runs.horizon: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-10-F04-R08] Field forecast_runs.horizon: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-10-F05-R01] Field forecast_runs.seed: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-10-F05-R02] Field forecast_runs.seed: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-10-F05-R03] Field forecast_runs.seed: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-10-F05-R04] Field forecast_runs.seed: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-10-F05-R05] Field forecast_runs.seed: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-10-F05-R06] Field forecast_runs.seed: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-10-F05-R07] Field forecast_runs.seed: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-10-F05-R08] Field forecast_runs.seed: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P03-DATA-11: forecast_points
+- [P03-DATA-11-R01] Create the forecast_points entity with a documented grain and one stable primary key: forecast_point_id.
+- [P03-DATA-11-R02] The minimum business fields are forecast_point_id, forecast_run_id, product_id, target_date, predicted_quantity; add technical metadata only with a documented purpose.
+- [P03-DATA-11-R03] Use the role of forecast_points in the product workflow to define authoritative source ownership.
+- [P03-DATA-11-R04] Write migrations for forecast_points; do not rely on ORM auto-create for the verified release.
+- [P03-DATA-11-R05] Create a small valid forecast_points fixture linked to the independently calculated project example.
+- [P03-DATA-11-R06] Create an invalid forecast_points fixture that demonstrates a real domain constraint.
+- [P03-DATA-11-R07] Choose explicit row-update semantics for forecast_points: immutable event, versioned dimension or mutable operational record.
+- [P03-DATA-11-R08] Preserve the original source identifier for forecast_points when a surrogate key is introduced.
+- [P03-DATA-11-R09] Document whether deletion of forecast_points is prohibited, reversible or represented by a tombstone.
+- [P03-DATA-11-R10] Reconcile forecast_points accepted, rejected and deduplicated row counts to the source batch.
+- [P03-DATA-11-R11] Expose only justified synthetic forecast_points fields to the public site; remove internal runner metadata.
+- [P03-DATA-11-R12] Index forecast_points according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P03-DATA-11-R13] Do not join forecast_points at a different grain without an explicit aggregation or allocation rule.
+- [P03-DATA-11-R14] Associate the published forecast_points snapshot with dataset hash and generator parameters.
+- [P03-DATA-11-R15] Define deterministic sorting and pagination for the forecast_points evidence view.
+- [P03-DATA-11-R16] Ensure an empty forecast_points dataset yields an understandable empty state instead of fabricated sample totals.
+- [P03-DATA-11-R17] Archive the forecast_points schema and sample rows in the data dictionary.
+- [P03-DATA-11-R18] Test that replaying the source import cannot unintentionally duplicate forecast_points business records.
+- [P03-DATA-11-F01-R01] Field forecast_points.forecast_point_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-11-F01-R02] Field forecast_points.forecast_point_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-11-F01-R03] Field forecast_points.forecast_point_id: make it non-null and unique as the primary key.
+- [P03-DATA-11-F01-R04] Field forecast_points.forecast_point_id: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-11-F01-R05] Field forecast_points.forecast_point_id: use stable source-to-key mapping across replays and regeneration.
+- [P03-DATA-11-F01-R06] Field forecast_points.forecast_point_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-11-F01-R07] Field forecast_points.forecast_point_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-11-F01-R08] Field forecast_points.forecast_point_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-11-F02-R01] Field forecast_points.forecast_run_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-11-F02-R02] Field forecast_points.forecast_run_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-11-F02-R03] Field forecast_points.forecast_run_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-11-F02-R04] Field forecast_points.forecast_run_id: validate its reference to forecast_runs.forecast_run_id; explain deferred or quarantined unmatched records.
+- [P03-DATA-11-F02-R05] Field forecast_points.forecast_run_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-11-F02-R06] Field forecast_points.forecast_run_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-11-F02-R07] Field forecast_points.forecast_run_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-11-F02-R08] Field forecast_points.forecast_run_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-11-F03-R01] Field forecast_points.product_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-11-F03-R02] Field forecast_points.product_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-11-F03-R03] Field forecast_points.product_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-11-F03-R04] Field forecast_points.product_id: validate its reference to products.product_id; explain deferred or quarantined unmatched records.
+- [P03-DATA-11-F03-R05] Field forecast_points.product_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-11-F03-R06] Field forecast_points.product_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-11-F03-R07] Field forecast_points.product_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-11-F03-R08] Field forecast_points.product_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-11-F04-R01] Field forecast_points.target_date: use logical storage type date; resolve exact SQL precision/length before migration.
+- [P03-DATA-11-F04-R02] Field forecast_points.target_date: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-11-F04-R03] Field forecast_points.target_date: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-11-F04-R04] Field forecast_points.target_date: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-11-F04-R05] Field forecast_points.target_date: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-11-F04-R06] Field forecast_points.target_date: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-11-F04-R07] Field forecast_points.target_date: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-11-F04-R08] Field forecast_points.target_date: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-11-F05-R01] Field forecast_points.predicted_quantity: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P03-DATA-11-F05-R02] Field forecast_points.predicted_quantity: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-11-F05-R03] Field forecast_points.predicted_quantity: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-11-F05-R04] Field forecast_points.predicted_quantity: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-11-F05-R05] Field forecast_points.predicted_quantity: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-11-F05-R06] Field forecast_points.predicted_quantity: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-11-F05-R07] Field forecast_points.predicted_quantity: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-11-F05-R08] Field forecast_points.predicted_quantity: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P03-DATA-12: policy_scenarios
+- [P03-DATA-12-R01] Create the policy_scenarios entity with a documented grain and one stable primary key: scenario_id.
+- [P03-DATA-12-R02] The minimum business fields are scenario_id, service_target, holding_cost_rate, lost_sale_cost, seed; add technical metadata only with a documented purpose.
+- [P03-DATA-12-R03] Use the role of policy_scenarios in the product workflow to define authoritative source ownership.
+- [P03-DATA-12-R04] Write migrations for policy_scenarios; do not rely on ORM auto-create for the verified release.
+- [P03-DATA-12-R05] Create a small valid policy_scenarios fixture linked to the independently calculated project example.
+- [P03-DATA-12-R06] Create an invalid policy_scenarios fixture that demonstrates a real domain constraint.
+- [P03-DATA-12-R07] Choose explicit row-update semantics for policy_scenarios: immutable event, versioned dimension or mutable operational record.
+- [P03-DATA-12-R08] Preserve the original source identifier for policy_scenarios when a surrogate key is introduced.
+- [P03-DATA-12-R09] Document whether deletion of policy_scenarios is prohibited, reversible or represented by a tombstone.
+- [P03-DATA-12-R10] Reconcile policy_scenarios accepted, rejected and deduplicated row counts to the source batch.
+- [P03-DATA-12-R11] Expose only justified synthetic policy_scenarios fields to the public site; remove internal runner metadata.
+- [P03-DATA-12-R12] Index policy_scenarios according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P03-DATA-12-R13] Do not join policy_scenarios at a different grain without an explicit aggregation or allocation rule.
+- [P03-DATA-12-R14] Associate the published policy_scenarios snapshot with dataset hash and generator parameters.
+- [P03-DATA-12-R15] Define deterministic sorting and pagination for the policy_scenarios evidence view.
+- [P03-DATA-12-R16] Ensure an empty policy_scenarios dataset yields an understandable empty state instead of fabricated sample totals.
+- [P03-DATA-12-R17] Archive the policy_scenarios schema and sample rows in the data dictionary.
+- [P03-DATA-12-R18] Test that replaying the source import cannot unintentionally duplicate policy_scenarios business records.
+- [P03-DATA-12-F01-R01] Field policy_scenarios.scenario_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-12-F01-R02] Field policy_scenarios.scenario_id: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-12-F01-R03] Field policy_scenarios.scenario_id: make it non-null and unique as the primary key.
+- [P03-DATA-12-F01-R04] Field policy_scenarios.scenario_id: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-12-F01-R05] Field policy_scenarios.scenario_id: use stable source-to-key mapping across replays and regeneration.
+- [P03-DATA-12-F01-R06] Field policy_scenarios.scenario_id: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-12-F01-R07] Field policy_scenarios.scenario_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-12-F01-R08] Field policy_scenarios.scenario_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-12-F02-R01] Field policy_scenarios.service_target: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-12-F02-R02] Field policy_scenarios.service_target: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-12-F02-R03] Field policy_scenarios.service_target: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-12-F02-R04] Field policy_scenarios.service_target: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-12-F02-R05] Field policy_scenarios.service_target: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-12-F02-R06] Field policy_scenarios.service_target: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-12-F02-R07] Field policy_scenarios.service_target: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-12-F02-R08] Field policy_scenarios.service_target: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-12-F03-R01] Field policy_scenarios.holding_cost_rate: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P03-DATA-12-F03-R02] Field policy_scenarios.holding_cost_rate: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-12-F03-R03] Field policy_scenarios.holding_cost_rate: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-12-F03-R04] Field policy_scenarios.holding_cost_rate: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-12-F03-R05] Field policy_scenarios.holding_cost_rate: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-12-F03-R06] Field policy_scenarios.holding_cost_rate: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-12-F03-R07] Field policy_scenarios.holding_cost_rate: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-12-F03-R08] Field policy_scenarios.holding_cost_rate: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-12-F04-R01] Field policy_scenarios.lost_sale_cost: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P03-DATA-12-F04-R02] Field policy_scenarios.lost_sale_cost: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-12-F04-R03] Field policy_scenarios.lost_sale_cost: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-12-F04-R04] Field policy_scenarios.lost_sale_cost: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-12-F04-R05] Field policy_scenarios.lost_sale_cost: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-12-F04-R06] Field policy_scenarios.lost_sale_cost: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-12-F04-R07] Field policy_scenarios.lost_sale_cost: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-12-F04-R08] Field policy_scenarios.lost_sale_cost: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P03-DATA-12-F05-R01] Field policy_scenarios.seed: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P03-DATA-12-F05-R02] Field policy_scenarios.seed: define its business meaning in the dictionary and use the same label in exports.
+- [P03-DATA-12-F05-R03] Field policy_scenarios.seed: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P03-DATA-12-F05-R04] Field policy_scenarios.seed: define the allowed domain and reject structurally invalid values before publication.
+- [P03-DATA-12-F05-R05] Field policy_scenarios.seed: document normalization and preserve raw representation when normalization can lose meaning.
+- [P03-DATA-12-F05-R06] Field policy_scenarios.seed: create a round-trip test across source, validated model and exported representation.
+- [P03-DATA-12-F05-R07] Field policy_scenarios.seed: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P03-DATA-12-F05-R08] Field policy_scenarios.seed: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+
+## 04. Business metric contracts
+
+### P03-MET-01: On hand
+- [P03-MET-01-R01] Business metric: On hand.
+- [P03-MET-01-R02] Authoritative calculation rule: sum(posted inventory quantity deltas).
+- [P03-MET-01-R03] Output unit: units.
+- [P03-MET-01-R04] Important boundary: As of cutoff.
+- [P03-MET-01-R05] Explain how On hand informs the primary decision: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-MET-01-R06] Define the input grain for On hand; never infer it from the chart grouping.
+- [P03-MET-01-R07] Name each source field and transformation contributing to On hand.
+- [P03-MET-01-R08] Define the reporting population for On hand before applying user-selected filters.
+- [P03-MET-01-R09] Name the timestamp and timezone used by On hand.
+- [P03-MET-01-R10] Use a documented half-open interval for On hand time filtering.
+- [P03-MET-01-R11] List excluded statuses, invalid records and immature observations for On hand.
+- [P03-MET-01-R12] Display excluded-record counts when they materially change On hand.
+- [P03-MET-01-R13] Define On hand behavior for an empty eligible population.
+- [P03-MET-01-R14] Define On hand behavior when its denominator is zero or its required baseline is absent.
+- [P03-MET-01-R15] Do not replace unknown On hand values with zero without a documented business rule.
+- [P03-MET-01-R16] For On hand, aggregate underlying values correctly before applying ratios or summary functions.
+- [P03-MET-01-R17] Preserve original precision for On hand; round only at the stated calculation or presentation step.
+- [P03-MET-01-R18] Create a small manually calculated On hand fixture independent of the main implementation.
+- [P03-MET-01-R19] Implement an independent SQL/spreadsheet/reference check for the important On hand result.
+- [P03-MET-01-R20] Keep the browser On hand calculation consistent with the authoritative contract and verified fixture.
+- [P03-MET-01-R21] Show On hand definition, active scope and unit through a visible explanation affordance.
+- [P03-MET-01-R22] Allow drillthrough from On hand into contributing evidence or a transparent aggregate explanation.
+- [P03-MET-01-R23] Export On hand with contract version, filters, dataset hash and generated timestamp.
+- [P03-MET-01-R24] When On hand is a scenario estimate, visibly separate it from observed historical results.
+- [P03-MET-01-R25] Include a On hand regression assertion for one project-specific edge case.
+- [P03-MET-01-R26] If On hand is compared across periods, use comparable eligibility and disclose differences.
+- [P03-MET-01-R27] Keep On hand historical revisions traceable when late data changes published results.
+- [P03-MET-01-R28] Record a versioned decision if implementation requires changing On hand semantics.
+- [P03-MET-01-R29] Have a reviewer challenge whether On hand could be misleading despite being arithmetically correct.
+- [P03-MET-01-R30] Mark On hand verified only after the known-answer and presentation checks actually run.
+### P03-MET-02: Available inventory
+- [P03-MET-02-R01] Business metric: Available inventory.
+- [P03-MET-02-R02] Authoritative calculation rule: on hand - reserved units.
+- [P03-MET-02-R03] Output unit: units.
+- [P03-MET-02-R04] Important boundary: Do not subtract on-order.
+- [P03-MET-02-R05] Explain how Available inventory informs the primary decision: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-MET-02-R06] Define the input grain for Available inventory; never infer it from the chart grouping.
+- [P03-MET-02-R07] Name each source field and transformation contributing to Available inventory.
+- [P03-MET-02-R08] Define the reporting population for Available inventory before applying user-selected filters.
+- [P03-MET-02-R09] Name the timestamp and timezone used by Available inventory.
+- [P03-MET-02-R10] Use a documented half-open interval for Available inventory time filtering.
+- [P03-MET-02-R11] List excluded statuses, invalid records and immature observations for Available inventory.
+- [P03-MET-02-R12] Display excluded-record counts when they materially change Available inventory.
+- [P03-MET-02-R13] Define Available inventory behavior for an empty eligible population.
+- [P03-MET-02-R14] Define Available inventory behavior when its denominator is zero or its required baseline is absent.
+- [P03-MET-02-R15] Do not replace unknown Available inventory values with zero without a documented business rule.
+- [P03-MET-02-R16] For Available inventory, aggregate underlying values correctly before applying ratios or summary functions.
+- [P03-MET-02-R17] Preserve original precision for Available inventory; round only at the stated calculation or presentation step.
+- [P03-MET-02-R18] Create a small manually calculated Available inventory fixture independent of the main implementation.
+- [P03-MET-02-R19] Implement an independent SQL/spreadsheet/reference check for the important Available inventory result.
+- [P03-MET-02-R20] Keep the browser Available inventory calculation consistent with the authoritative contract and verified fixture.
+- [P03-MET-02-R21] Show Available inventory definition, active scope and unit through a visible explanation affordance.
+- [P03-MET-02-R22] Allow drillthrough from Available inventory into contributing evidence or a transparent aggregate explanation.
+- [P03-MET-02-R23] Export Available inventory with contract version, filters, dataset hash and generated timestamp.
+- [P03-MET-02-R24] When Available inventory is a scenario estimate, visibly separate it from observed historical results.
+- [P03-MET-02-R25] Include a Available inventory regression assertion for one project-specific edge case.
+- [P03-MET-02-R26] If Available inventory is compared across periods, use comparable eligibility and disclose differences.
+- [P03-MET-02-R27] Keep Available inventory historical revisions traceable when late data changes published results.
+- [P03-MET-02-R28] Record a versioned decision if implementation requires changing Available inventory semantics.
+- [P03-MET-02-R29] Have a reviewer challenge whether Available inventory could be misleading despite being arithmetically correct.
+- [P03-MET-02-R30] Mark Available inventory verified only after the known-answer and presentation checks actually run.
+### P03-MET-03: Inventory position
+- [P03-MET-03-R01] Business metric: Inventory position.
+- [P03-MET-03-R02] Authoritative calculation rule: on hand + confirmed on order - backorders.
+- [P03-MET-03-R03] Output unit: units.
+- [P03-MET-03-R04] Important boundary: Reserved handling explicitly defined.
+- [P03-MET-03-R05] Explain how Inventory position informs the primary decision: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-MET-03-R06] Define the input grain for Inventory position; never infer it from the chart grouping.
+- [P03-MET-03-R07] Name each source field and transformation contributing to Inventory position.
+- [P03-MET-03-R08] Define the reporting population for Inventory position before applying user-selected filters.
+- [P03-MET-03-R09] Name the timestamp and timezone used by Inventory position.
+- [P03-MET-03-R10] Use a documented half-open interval for Inventory position time filtering.
+- [P03-MET-03-R11] List excluded statuses, invalid records and immature observations for Inventory position.
+- [P03-MET-03-R12] Display excluded-record counts when they materially change Inventory position.
+- [P03-MET-03-R13] Define Inventory position behavior for an empty eligible population.
+- [P03-MET-03-R14] Define Inventory position behavior when its denominator is zero or its required baseline is absent.
+- [P03-MET-03-R15] Do not replace unknown Inventory position values with zero without a documented business rule.
+- [P03-MET-03-R16] For Inventory position, aggregate underlying values correctly before applying ratios or summary functions.
+- [P03-MET-03-R17] Preserve original precision for Inventory position; round only at the stated calculation or presentation step.
+- [P03-MET-03-R18] Create a small manually calculated Inventory position fixture independent of the main implementation.
+- [P03-MET-03-R19] Implement an independent SQL/spreadsheet/reference check for the important Inventory position result.
+- [P03-MET-03-R20] Keep the browser Inventory position calculation consistent with the authoritative contract and verified fixture.
+- [P03-MET-03-R21] Show Inventory position definition, active scope and unit through a visible explanation affordance.
+- [P03-MET-03-R22] Allow drillthrough from Inventory position into contributing evidence or a transparent aggregate explanation.
+- [P03-MET-03-R23] Export Inventory position with contract version, filters, dataset hash and generated timestamp.
+- [P03-MET-03-R24] When Inventory position is a scenario estimate, visibly separate it from observed historical results.
+- [P03-MET-03-R25] Include a Inventory position regression assertion for one project-specific edge case.
+- [P03-MET-03-R26] If Inventory position is compared across periods, use comparable eligibility and disclose differences.
+- [P03-MET-03-R27] Keep Inventory position historical revisions traceable when late data changes published results.
+- [P03-MET-03-R28] Record a versioned decision if implementation requires changing Inventory position semantics.
+- [P03-MET-03-R29] Have a reviewer challenge whether Inventory position could be misleading despite being arithmetically correct.
+- [P03-MET-03-R30] Mark Inventory position verified only after the known-answer and presentation checks actually run.
+### P03-MET-04: Fill rate
+- [P03-MET-04-R01] Business metric: Fill rate.
+- [P03-MET-04-R02] Authoritative calculation rule: immediately fulfilled demand units / requested demand units.
+- [P03-MET-04-R03] Output unit: percent.
+- [P03-MET-04-R04] Important boundary: Requires synthetic latent demand for simulation.
+- [P03-MET-04-R05] Explain how Fill rate informs the primary decision: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-MET-04-R06] Define the input grain for Fill rate; never infer it from the chart grouping.
+- [P03-MET-04-R07] Name each source field and transformation contributing to Fill rate.
+- [P03-MET-04-R08] Define the reporting population for Fill rate before applying user-selected filters.
+- [P03-MET-04-R09] Name the timestamp and timezone used by Fill rate.
+- [P03-MET-04-R10] Use a documented half-open interval for Fill rate time filtering.
+- [P03-MET-04-R11] List excluded statuses, invalid records and immature observations for Fill rate.
+- [P03-MET-04-R12] Display excluded-record counts when they materially change Fill rate.
+- [P03-MET-04-R13] Define Fill rate behavior for an empty eligible population.
+- [P03-MET-04-R14] Define Fill rate behavior when its denominator is zero or its required baseline is absent.
+- [P03-MET-04-R15] Do not replace unknown Fill rate values with zero without a documented business rule.
+- [P03-MET-04-R16] For Fill rate, aggregate underlying values correctly before applying ratios or summary functions.
+- [P03-MET-04-R17] Preserve original precision for Fill rate; round only at the stated calculation or presentation step.
+- [P03-MET-04-R18] Create a small manually calculated Fill rate fixture independent of the main implementation.
+- [P03-MET-04-R19] Implement an independent SQL/spreadsheet/reference check for the important Fill rate result.
+- [P03-MET-04-R20] Keep the browser Fill rate calculation consistent with the authoritative contract and verified fixture.
+- [P03-MET-04-R21] Show Fill rate definition, active scope and unit through a visible explanation affordance.
+- [P03-MET-04-R22] Allow drillthrough from Fill rate into contributing evidence or a transparent aggregate explanation.
+- [P03-MET-04-R23] Export Fill rate with contract version, filters, dataset hash and generated timestamp.
+- [P03-MET-04-R24] When Fill rate is a scenario estimate, visibly separate it from observed historical results.
+- [P03-MET-04-R25] Include a Fill rate regression assertion for one project-specific edge case.
+- [P03-MET-04-R26] If Fill rate is compared across periods, use comparable eligibility and disclose differences.
+- [P03-MET-04-R27] Keep Fill rate historical revisions traceable when late data changes published results.
+- [P03-MET-04-R28] Record a versioned decision if implementation requires changing Fill rate semantics.
+- [P03-MET-04-R29] Have a reviewer challenge whether Fill rate could be misleading despite being arithmetically correct.
+- [P03-MET-04-R30] Mark Fill rate verified only after the known-answer and presentation checks actually run.
+### P03-MET-05: Stockout days
+- [P03-MET-05-R01] Business metric: Stockout days.
+- [P03-MET-05-R02] Authoritative calculation rule: days with unmet demand / observed days.
+- [P03-MET-05-R03] Output unit: percent.
+- [P03-MET-05-R04] Important boundary: Distinct from zero-stock days.
+- [P03-MET-05-R05] Explain how Stockout days informs the primary decision: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-MET-05-R06] Define the input grain for Stockout days; never infer it from the chart grouping.
+- [P03-MET-05-R07] Name each source field and transformation contributing to Stockout days.
+- [P03-MET-05-R08] Define the reporting population for Stockout days before applying user-selected filters.
+- [P03-MET-05-R09] Name the timestamp and timezone used by Stockout days.
+- [P03-MET-05-R10] Use a documented half-open interval for Stockout days time filtering.
+- [P03-MET-05-R11] List excluded statuses, invalid records and immature observations for Stockout days.
+- [P03-MET-05-R12] Display excluded-record counts when they materially change Stockout days.
+- [P03-MET-05-R13] Define Stockout days behavior for an empty eligible population.
+- [P03-MET-05-R14] Define Stockout days behavior when its denominator is zero or its required baseline is absent.
+- [P03-MET-05-R15] Do not replace unknown Stockout days values with zero without a documented business rule.
+- [P03-MET-05-R16] For Stockout days, aggregate underlying values correctly before applying ratios or summary functions.
+- [P03-MET-05-R17] Preserve original precision for Stockout days; round only at the stated calculation or presentation step.
+- [P03-MET-05-R18] Create a small manually calculated Stockout days fixture independent of the main implementation.
+- [P03-MET-05-R19] Implement an independent SQL/spreadsheet/reference check for the important Stockout days result.
+- [P03-MET-05-R20] Keep the browser Stockout days calculation consistent with the authoritative contract and verified fixture.
+- [P03-MET-05-R21] Show Stockout days definition, active scope and unit through a visible explanation affordance.
+- [P03-MET-05-R22] Allow drillthrough from Stockout days into contributing evidence or a transparent aggregate explanation.
+- [P03-MET-05-R23] Export Stockout days with contract version, filters, dataset hash and generated timestamp.
+- [P03-MET-05-R24] When Stockout days is a scenario estimate, visibly separate it from observed historical results.
+- [P03-MET-05-R25] Include a Stockout days regression assertion for one project-specific edge case.
+- [P03-MET-05-R26] If Stockout days is compared across periods, use comparable eligibility and disclose differences.
+- [P03-MET-05-R27] Keep Stockout days historical revisions traceable when late data changes published results.
+- [P03-MET-05-R28] Record a versioned decision if implementation requires changing Stockout days semantics.
+- [P03-MET-05-R29] Have a reviewer challenge whether Stockout days could be misleading despite being arithmetically correct.
+- [P03-MET-05-R30] Mark Stockout days verified only after the known-answer and presentation checks actually run.
+### P03-MET-06: Inventory turnover
+- [P03-MET-06-R01] Business metric: Inventory turnover.
+- [P03-MET-06-R02] Authoritative calculation rule: annualized COGS / average inventory value.
+- [P03-MET-06-R03] Output unit: turns/year.
+- [P03-MET-06-R04] Important boundary: State averaging basis.
+- [P03-MET-06-R05] Explain how Inventory turnover informs the primary decision: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-MET-06-R06] Define the input grain for Inventory turnover; never infer it from the chart grouping.
+- [P03-MET-06-R07] Name each source field and transformation contributing to Inventory turnover.
+- [P03-MET-06-R08] Define the reporting population for Inventory turnover before applying user-selected filters.
+- [P03-MET-06-R09] Name the timestamp and timezone used by Inventory turnover.
+- [P03-MET-06-R10] Use a documented half-open interval for Inventory turnover time filtering.
+- [P03-MET-06-R11] List excluded statuses, invalid records and immature observations for Inventory turnover.
+- [P03-MET-06-R12] Display excluded-record counts when they materially change Inventory turnover.
+- [P03-MET-06-R13] Define Inventory turnover behavior for an empty eligible population.
+- [P03-MET-06-R14] Define Inventory turnover behavior when its denominator is zero or its required baseline is absent.
+- [P03-MET-06-R15] Do not replace unknown Inventory turnover values with zero without a documented business rule.
+- [P03-MET-06-R16] For Inventory turnover, aggregate underlying values correctly before applying ratios or summary functions.
+- [P03-MET-06-R17] Preserve original precision for Inventory turnover; round only at the stated calculation or presentation step.
+- [P03-MET-06-R18] Create a small manually calculated Inventory turnover fixture independent of the main implementation.
+- [P03-MET-06-R19] Implement an independent SQL/spreadsheet/reference check for the important Inventory turnover result.
+- [P03-MET-06-R20] Keep the browser Inventory turnover calculation consistent with the authoritative contract and verified fixture.
+- [P03-MET-06-R21] Show Inventory turnover definition, active scope and unit through a visible explanation affordance.
+- [P03-MET-06-R22] Allow drillthrough from Inventory turnover into contributing evidence or a transparent aggregate explanation.
+- [P03-MET-06-R23] Export Inventory turnover with contract version, filters, dataset hash and generated timestamp.
+- [P03-MET-06-R24] When Inventory turnover is a scenario estimate, visibly separate it from observed historical results.
+- [P03-MET-06-R25] Include a Inventory turnover regression assertion for one project-specific edge case.
+- [P03-MET-06-R26] If Inventory turnover is compared across periods, use comparable eligibility and disclose differences.
+- [P03-MET-06-R27] Keep Inventory turnover historical revisions traceable when late data changes published results.
+- [P03-MET-06-R28] Record a versioned decision if implementation requires changing Inventory turnover semantics.
+- [P03-MET-06-R29] Have a reviewer challenge whether Inventory turnover could be misleading despite being arithmetically correct.
+- [P03-MET-06-R30] Mark Inventory turnover verified only after the known-answer and presentation checks actually run.
+### P03-MET-07: Reorder point
+- [P03-MET-07-R01] Business metric: Reorder point.
+- [P03-MET-07-R02] Authoritative calculation rule: expected lead-time demand + safety stock.
+- [P03-MET-07-R03] Output unit: units.
+- [P03-MET-07-R04] Important boundary: Model variable lead times explicitly.
+- [P03-MET-07-R05] Explain how Reorder point informs the primary decision: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-MET-07-R06] Define the input grain for Reorder point; never infer it from the chart grouping.
+- [P03-MET-07-R07] Name each source field and transformation contributing to Reorder point.
+- [P03-MET-07-R08] Define the reporting population for Reorder point before applying user-selected filters.
+- [P03-MET-07-R09] Name the timestamp and timezone used by Reorder point.
+- [P03-MET-07-R10] Use a documented half-open interval for Reorder point time filtering.
+- [P03-MET-07-R11] List excluded statuses, invalid records and immature observations for Reorder point.
+- [P03-MET-07-R12] Display excluded-record counts when they materially change Reorder point.
+- [P03-MET-07-R13] Define Reorder point behavior for an empty eligible population.
+- [P03-MET-07-R14] Define Reorder point behavior when its denominator is zero or its required baseline is absent.
+- [P03-MET-07-R15] Do not replace unknown Reorder point values with zero without a documented business rule.
+- [P03-MET-07-R16] For Reorder point, aggregate underlying values correctly before applying ratios or summary functions.
+- [P03-MET-07-R17] Preserve original precision for Reorder point; round only at the stated calculation or presentation step.
+- [P03-MET-07-R18] Create a small manually calculated Reorder point fixture independent of the main implementation.
+- [P03-MET-07-R19] Implement an independent SQL/spreadsheet/reference check for the important Reorder point result.
+- [P03-MET-07-R20] Keep the browser Reorder point calculation consistent with the authoritative contract and verified fixture.
+- [P03-MET-07-R21] Show Reorder point definition, active scope and unit through a visible explanation affordance.
+- [P03-MET-07-R22] Allow drillthrough from Reorder point into contributing evidence or a transparent aggregate explanation.
+- [P03-MET-07-R23] Export Reorder point with contract version, filters, dataset hash and generated timestamp.
+- [P03-MET-07-R24] When Reorder point is a scenario estimate, visibly separate it from observed historical results.
+- [P03-MET-07-R25] Include a Reorder point regression assertion for one project-specific edge case.
+- [P03-MET-07-R26] If Reorder point is compared across periods, use comparable eligibility and disclose differences.
+- [P03-MET-07-R27] Keep Reorder point historical revisions traceable when late data changes published results.
+- [P03-MET-07-R28] Record a versioned decision if implementation requires changing Reorder point semantics.
+- [P03-MET-07-R29] Have a reviewer challenge whether Reorder point could be misleading despite being arithmetically correct.
+- [P03-MET-07-R30] Mark Reorder point verified only after the known-answer and presentation checks actually run.
+### P03-MET-08: Order quantity
+- [P03-MET-08-R01] Business metric: Order quantity.
+- [P03-MET-08-R02] Authoritative calculation rule: pack_round_up(max(target_position - position, minimum_order_quantity)).
+- [P03-MET-08-R03] Output unit: units.
+- [P03-MET-08-R04] Important boundary: Return zero when reorder not triggered.
+- [P03-MET-08-R05] Explain how Order quantity informs the primary decision: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-MET-08-R06] Define the input grain for Order quantity; never infer it from the chart grouping.
+- [P03-MET-08-R07] Name each source field and transformation contributing to Order quantity.
+- [P03-MET-08-R08] Define the reporting population for Order quantity before applying user-selected filters.
+- [P03-MET-08-R09] Name the timestamp and timezone used by Order quantity.
+- [P03-MET-08-R10] Use a documented half-open interval for Order quantity time filtering.
+- [P03-MET-08-R11] List excluded statuses, invalid records and immature observations for Order quantity.
+- [P03-MET-08-R12] Display excluded-record counts when they materially change Order quantity.
+- [P03-MET-08-R13] Define Order quantity behavior for an empty eligible population.
+- [P03-MET-08-R14] Define Order quantity behavior when its denominator is zero or its required baseline is absent.
+- [P03-MET-08-R15] Do not replace unknown Order quantity values with zero without a documented business rule.
+- [P03-MET-08-R16] For Order quantity, aggregate underlying values correctly before applying ratios or summary functions.
+- [P03-MET-08-R17] Preserve original precision for Order quantity; round only at the stated calculation or presentation step.
+- [P03-MET-08-R18] Create a small manually calculated Order quantity fixture independent of the main implementation.
+- [P03-MET-08-R19] Implement an independent SQL/spreadsheet/reference check for the important Order quantity result.
+- [P03-MET-08-R20] Keep the browser Order quantity calculation consistent with the authoritative contract and verified fixture.
+- [P03-MET-08-R21] Show Order quantity definition, active scope and unit through a visible explanation affordance.
+- [P03-MET-08-R22] Allow drillthrough from Order quantity into contributing evidence or a transparent aggregate explanation.
+- [P03-MET-08-R23] Export Order quantity with contract version, filters, dataset hash and generated timestamp.
+- [P03-MET-08-R24] When Order quantity is a scenario estimate, visibly separate it from observed historical results.
+- [P03-MET-08-R25] Include a Order quantity regression assertion for one project-specific edge case.
+- [P03-MET-08-R26] If Order quantity is compared across periods, use comparable eligibility and disclose differences.
+- [P03-MET-08-R27] Keep Order quantity historical revisions traceable when late data changes published results.
+- [P03-MET-08-R28] Record a versioned decision if implementation requires changing Order quantity semantics.
+- [P03-MET-08-R29] Have a reviewer challenge whether Order quantity could be misleading despite being arithmetically correct.
+- [P03-MET-08-R30] Mark Order quantity verified only after the known-answer and presentation checks actually run.
+### P03-MET-09: Forecast MAE
+- [P03-MET-09-R01] Business metric: Forecast MAE.
+- [P03-MET-09-R02] Authoritative calculation rule: mean(abs(actual - forecast)).
+- [P03-MET-09-R03] Output unit: units.
+- [P03-MET-09-R04] Important boundary: Observed sales versus latent demand disclosed.
+- [P03-MET-09-R05] Explain how Forecast MAE informs the primary decision: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-MET-09-R06] Define the input grain for Forecast MAE; never infer it from the chart grouping.
+- [P03-MET-09-R07] Name each source field and transformation contributing to Forecast MAE.
+- [P03-MET-09-R08] Define the reporting population for Forecast MAE before applying user-selected filters.
+- [P03-MET-09-R09] Name the timestamp and timezone used by Forecast MAE.
+- [P03-MET-09-R10] Use a documented half-open interval for Forecast MAE time filtering.
+- [P03-MET-09-R11] List excluded statuses, invalid records and immature observations for Forecast MAE.
+- [P03-MET-09-R12] Display excluded-record counts when they materially change Forecast MAE.
+- [P03-MET-09-R13] Define Forecast MAE behavior for an empty eligible population.
+- [P03-MET-09-R14] Define Forecast MAE behavior when its denominator is zero or its required baseline is absent.
+- [P03-MET-09-R15] Do not replace unknown Forecast MAE values with zero without a documented business rule.
+- [P03-MET-09-R16] For Forecast MAE, aggregate underlying values correctly before applying ratios or summary functions.
+- [P03-MET-09-R17] Preserve original precision for Forecast MAE; round only at the stated calculation or presentation step.
+- [P03-MET-09-R18] Create a small manually calculated Forecast MAE fixture independent of the main implementation.
+- [P03-MET-09-R19] Implement an independent SQL/spreadsheet/reference check for the important Forecast MAE result.
+- [P03-MET-09-R20] Keep the browser Forecast MAE calculation consistent with the authoritative contract and verified fixture.
+- [P03-MET-09-R21] Show Forecast MAE definition, active scope and unit through a visible explanation affordance.
+- [P03-MET-09-R22] Allow drillthrough from Forecast MAE into contributing evidence or a transparent aggregate explanation.
+- [P03-MET-09-R23] Export Forecast MAE with contract version, filters, dataset hash and generated timestamp.
+- [P03-MET-09-R24] When Forecast MAE is a scenario estimate, visibly separate it from observed historical results.
+- [P03-MET-09-R25] Include a Forecast MAE regression assertion for one project-specific edge case.
+- [P03-MET-09-R26] If Forecast MAE is compared across periods, use comparable eligibility and disclose differences.
+- [P03-MET-09-R27] Keep Forecast MAE historical revisions traceable when late data changes published results.
+- [P03-MET-09-R28] Record a versioned decision if implementation requires changing Forecast MAE semantics.
+- [P03-MET-09-R29] Have a reviewer challenge whether Forecast MAE could be misleading despite being arithmetically correct.
+- [P03-MET-09-R30] Mark Forecast MAE verified only after the known-answer and presentation checks actually run.
+### P03-MET-10: Forecast WAPE
+- [P03-MET-10-R01] Business metric: Forecast WAPE.
+- [P03-MET-10-R02] Authoritative calculation rule: sum(abs(error)) / sum(actual).
+- [P03-MET-10-R03] Output unit: percent.
+- [P03-MET-10-R04] Important boundary: Null for zero total demand.
+- [P03-MET-10-R05] Explain how Forecast WAPE informs the primary decision: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-MET-10-R06] Define the input grain for Forecast WAPE; never infer it from the chart grouping.
+- [P03-MET-10-R07] Name each source field and transformation contributing to Forecast WAPE.
+- [P03-MET-10-R08] Define the reporting population for Forecast WAPE before applying user-selected filters.
+- [P03-MET-10-R09] Name the timestamp and timezone used by Forecast WAPE.
+- [P03-MET-10-R10] Use a documented half-open interval for Forecast WAPE time filtering.
+- [P03-MET-10-R11] List excluded statuses, invalid records and immature observations for Forecast WAPE.
+- [P03-MET-10-R12] Display excluded-record counts when they materially change Forecast WAPE.
+- [P03-MET-10-R13] Define Forecast WAPE behavior for an empty eligible population.
+- [P03-MET-10-R14] Define Forecast WAPE behavior when its denominator is zero or its required baseline is absent.
+- [P03-MET-10-R15] Do not replace unknown Forecast WAPE values with zero without a documented business rule.
+- [P03-MET-10-R16] For Forecast WAPE, aggregate underlying values correctly before applying ratios or summary functions.
+- [P03-MET-10-R17] Preserve original precision for Forecast WAPE; round only at the stated calculation or presentation step.
+- [P03-MET-10-R18] Create a small manually calculated Forecast WAPE fixture independent of the main implementation.
+- [P03-MET-10-R19] Implement an independent SQL/spreadsheet/reference check for the important Forecast WAPE result.
+- [P03-MET-10-R20] Keep the browser Forecast WAPE calculation consistent with the authoritative contract and verified fixture.
+- [P03-MET-10-R21] Show Forecast WAPE definition, active scope and unit through a visible explanation affordance.
+- [P03-MET-10-R22] Allow drillthrough from Forecast WAPE into contributing evidence or a transparent aggregate explanation.
+- [P03-MET-10-R23] Export Forecast WAPE with contract version, filters, dataset hash and generated timestamp.
+- [P03-MET-10-R24] When Forecast WAPE is a scenario estimate, visibly separate it from observed historical results.
+- [P03-MET-10-R25] Include a Forecast WAPE regression assertion for one project-specific edge case.
+- [P03-MET-10-R26] If Forecast WAPE is compared across periods, use comparable eligibility and disclose differences.
+- [P03-MET-10-R27] Keep Forecast WAPE historical revisions traceable when late data changes published results.
+- [P03-MET-10-R28] Record a versioned decision if implementation requires changing Forecast WAPE semantics.
+- [P03-MET-10-R29] Have a reviewer challenge whether Forecast WAPE could be misleading despite being arithmetically correct.
+- [P03-MET-10-R30] Mark Forecast WAPE verified only after the known-answer and presentation checks actually run.
+### P03-MET-11: Supplier on time rate
+- [P03-MET-11-R01] Business metric: Supplier on time rate.
+- [P03-MET-11-R02] Authoritative calculation rule: receipts within promised deadline / eligible receipts.
+- [P03-MET-11-R03] Output unit: percent.
+- [P03-MET-11-R04] Important boundary: Partial receipt policy specified.
+- [P03-MET-11-R05] Explain how Supplier on time rate informs the primary decision: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-MET-11-R06] Define the input grain for Supplier on time rate; never infer it from the chart grouping.
+- [P03-MET-11-R07] Name each source field and transformation contributing to Supplier on time rate.
+- [P03-MET-11-R08] Define the reporting population for Supplier on time rate before applying user-selected filters.
+- [P03-MET-11-R09] Name the timestamp and timezone used by Supplier on time rate.
+- [P03-MET-11-R10] Use a documented half-open interval for Supplier on time rate time filtering.
+- [P03-MET-11-R11] List excluded statuses, invalid records and immature observations for Supplier on time rate.
+- [P03-MET-11-R12] Display excluded-record counts when they materially change Supplier on time rate.
+- [P03-MET-11-R13] Define Supplier on time rate behavior for an empty eligible population.
+- [P03-MET-11-R14] Define Supplier on time rate behavior when its denominator is zero or its required baseline is absent.
+- [P03-MET-11-R15] Do not replace unknown Supplier on time rate values with zero without a documented business rule.
+- [P03-MET-11-R16] For Supplier on time rate, aggregate underlying values correctly before applying ratios or summary functions.
+- [P03-MET-11-R17] Preserve original precision for Supplier on time rate; round only at the stated calculation or presentation step.
+- [P03-MET-11-R18] Create a small manually calculated Supplier on time rate fixture independent of the main implementation.
+- [P03-MET-11-R19] Implement an independent SQL/spreadsheet/reference check for the important Supplier on time rate result.
+- [P03-MET-11-R20] Keep the browser Supplier on time rate calculation consistent with the authoritative contract and verified fixture.
+- [P03-MET-11-R21] Show Supplier on time rate definition, active scope and unit through a visible explanation affordance.
+- [P03-MET-11-R22] Allow drillthrough from Supplier on time rate into contributing evidence or a transparent aggregate explanation.
+- [P03-MET-11-R23] Export Supplier on time rate with contract version, filters, dataset hash and generated timestamp.
+- [P03-MET-11-R24] When Supplier on time rate is a scenario estimate, visibly separate it from observed historical results.
+- [P03-MET-11-R25] Include a Supplier on time rate regression assertion for one project-specific edge case.
+- [P03-MET-11-R26] If Supplier on time rate is compared across periods, use comparable eligibility and disclose differences.
+- [P03-MET-11-R27] Keep Supplier on time rate historical revisions traceable when late data changes published results.
+- [P03-MET-11-R28] Record a versioned decision if implementation requires changing Supplier on time rate semantics.
+- [P03-MET-11-R29] Have a reviewer challenge whether Supplier on time rate could be misleading despite being arithmetically correct.
+- [P03-MET-11-R30] Mark Supplier on time rate verified only after the known-answer and presentation checks actually run.
+### P03-MET-12: Working capital
+- [P03-MET-12-R01] Business metric: Working capital.
+- [P03-MET-12-R02] Authoritative calculation rule: sum(on_hand * unit_cost).
+- [P03-MET-12-R03] Output unit: USD.
+- [P03-MET-12-R04] Important boundary: No negative stock valuation.
+- [P03-MET-12-R05] Explain how Working capital informs the primary decision: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-MET-12-R06] Define the input grain for Working capital; never infer it from the chart grouping.
+- [P03-MET-12-R07] Name each source field and transformation contributing to Working capital.
+- [P03-MET-12-R08] Define the reporting population for Working capital before applying user-selected filters.
+- [P03-MET-12-R09] Name the timestamp and timezone used by Working capital.
+- [P03-MET-12-R10] Use a documented half-open interval for Working capital time filtering.
+- [P03-MET-12-R11] List excluded statuses, invalid records and immature observations for Working capital.
+- [P03-MET-12-R12] Display excluded-record counts when they materially change Working capital.
+- [P03-MET-12-R13] Define Working capital behavior for an empty eligible population.
+- [P03-MET-12-R14] Define Working capital behavior when its denominator is zero or its required baseline is absent.
+- [P03-MET-12-R15] Do not replace unknown Working capital values with zero without a documented business rule.
+- [P03-MET-12-R16] For Working capital, aggregate underlying values correctly before applying ratios or summary functions.
+- [P03-MET-12-R17] Preserve original precision for Working capital; round only at the stated calculation or presentation step.
+- [P03-MET-12-R18] Create a small manually calculated Working capital fixture independent of the main implementation.
+- [P03-MET-12-R19] Implement an independent SQL/spreadsheet/reference check for the important Working capital result.
+- [P03-MET-12-R20] Keep the browser Working capital calculation consistent with the authoritative contract and verified fixture.
+- [P03-MET-12-R21] Show Working capital definition, active scope and unit through a visible explanation affordance.
+- [P03-MET-12-R22] Allow drillthrough from Working capital into contributing evidence or a transparent aggregate explanation.
+- [P03-MET-12-R23] Export Working capital with contract version, filters, dataset hash and generated timestamp.
+- [P03-MET-12-R24] When Working capital is a scenario estimate, visibly separate it from observed historical results.
+- [P03-MET-12-R25] Include a Working capital regression assertion for one project-specific edge case.
+- [P03-MET-12-R26] If Working capital is compared across periods, use comparable eligibility and disclose differences.
+- [P03-MET-12-R27] Keep Working capital historical revisions traceable when late data changes published results.
+- [P03-MET-12-R28] Record a versioned decision if implementation requires changing Working capital semantics.
+- [P03-MET-12-R29] Have a reviewer challenge whether Working capital could be misleading despite being arithmetically correct.
+- [P03-MET-12-R30] Mark Working capital verified only after the known-answer and presentation checks actually run.
+
+## 05. End-to-end workflow and transition contracts
+
+### P03-FLOW-01: Load movements
+- [P03-FLOW-01-R01] Workflow capability: Load movements.
+- [P03-FLOW-01-R02] Logical transition: Raw movement -> validated ledger.
+- [P03-FLOW-01-R03] Primary invariant: Reject duplicate movement identifiers.
+- [P03-FLOW-01-R04] Define the user goal and permitted actor for Load movements.
+- [P03-FLOW-01-R05] Define required inputs and source versions for Load movements.
+- [P03-FLOW-01-R06] Check preconditions before Load movements; reject violations with a specific user-facing explanation.
+- [P03-FLOW-01-R07] Document the authoritative output of Load movements and the next valid action.
+- [P03-FLOW-01-R08] Implement Load movements in a domain/service layer rather than hiding it in a UI callback.
+- [P03-FLOW-01-R09] Define the transaction boundary for Load movements when state changes.
+- [P03-FLOW-01-R10] Preserve an audit event for material Load movements decisions without recording secrets.
+- [P03-FLOW-01-R11] Define how Load movements behaves when the same request or input is repeated.
+- [P03-FLOW-01-R12] Define how Load movements behaves when its input dataset or record version is stale.
+- [P03-FLOW-01-R13] Prevent conflicting Load movements updates with version checks or another documented mechanism.
+- [P03-FLOW-01-R14] Keep original evidence immutable when Load movements creates a correction or new scenario.
+- [P03-FLOW-01-R15] Test the successful Load movements path using deterministic fixtures.
+- [P03-FLOW-01-R16] Test one rejected Load movements path against the stated invariant.
+- [P03-FLOW-01-R17] Test interrupted Load movements execution and prove safe recovery or explicit noncommit.
+- [P03-FLOW-01-R18] Test authorized versus unauthorized Load movements behavior where real backend roles apply.
+- [P03-FLOW-01-R19] In the static website, label Load movements mutations as browser-memory simulation.
+- [P03-FLOW-01-R20] Never make Load movements appear server-persistent in the GitHub Pages demo.
+- [P03-FLOW-01-R21] Expose progress, success and actionable failure feedback for Load movements.
+- [P03-FLOW-01-R22] Keep keyboard focus coherent after Load movements updates or opens a dialog.
+- [P03-FLOW-01-R23] Include Load movements in the UAT script and trace its acceptance criteria to tests.
+- [P03-FLOW-01-R24] Include actual Load movements verification results in the evidence ledger.
+- [P03-FLOW-01-R25] Use the resulting Load movements evidence in the case study only with its execution mode disclosed.
+- [P03-FLOW-01-R26] Have the coordinator approve the integrated Load movements diff after specialist review.
+### P03-FLOW-02: Reconstruct stock
+- [P03-FLOW-02-R01] Workflow capability: Reconstruct stock.
+- [P03-FLOW-02-R02] Logical transition: Ledger -> as-of inventory.
+- [P03-FLOW-02-R03] Primary invariant: Use complete historical order.
+- [P03-FLOW-02-R04] Define the user goal and permitted actor for Reconstruct stock.
+- [P03-FLOW-02-R05] Define required inputs and source versions for Reconstruct stock.
+- [P03-FLOW-02-R06] Check preconditions before Reconstruct stock; reject violations with a specific user-facing explanation.
+- [P03-FLOW-02-R07] Document the authoritative output of Reconstruct stock and the next valid action.
+- [P03-FLOW-02-R08] Implement Reconstruct stock in a domain/service layer rather than hiding it in a UI callback.
+- [P03-FLOW-02-R09] Define the transaction boundary for Reconstruct stock when state changes.
+- [P03-FLOW-02-R10] Preserve an audit event for material Reconstruct stock decisions without recording secrets.
+- [P03-FLOW-02-R11] Define how Reconstruct stock behaves when the same request or input is repeated.
+- [P03-FLOW-02-R12] Define how Reconstruct stock behaves when its input dataset or record version is stale.
+- [P03-FLOW-02-R13] Prevent conflicting Reconstruct stock updates with version checks or another documented mechanism.
+- [P03-FLOW-02-R14] Keep original evidence immutable when Reconstruct stock creates a correction or new scenario.
+- [P03-FLOW-02-R15] Test the successful Reconstruct stock path using deterministic fixtures.
+- [P03-FLOW-02-R16] Test one rejected Reconstruct stock path against the stated invariant.
+- [P03-FLOW-02-R17] Test interrupted Reconstruct stock execution and prove safe recovery or explicit noncommit.
+- [P03-FLOW-02-R18] Test authorized versus unauthorized Reconstruct stock behavior where real backend roles apply.
+- [P03-FLOW-02-R19] In the static website, label Reconstruct stock mutations as browser-memory simulation.
+- [P03-FLOW-02-R20] Never make Reconstruct stock appear server-persistent in the GitHub Pages demo.
+- [P03-FLOW-02-R21] Expose progress, success and actionable failure feedback for Reconstruct stock.
+- [P03-FLOW-02-R22] Keep keyboard focus coherent after Reconstruct stock updates or opens a dialog.
+- [P03-FLOW-02-R23] Include Reconstruct stock in the UAT script and trace its acceptance criteria to tests.
+- [P03-FLOW-02-R24] Include actual Reconstruct stock verification results in the evidence ledger.
+- [P03-FLOW-02-R25] Use the resulting Reconstruct stock evidence in the case study only with its execution mode disclosed.
+- [P03-FLOW-02-R26] Have the coordinator approve the integrated Reconstruct stock diff after specialist review.
+### P03-FLOW-03: Forecast demand
+- [P03-FLOW-03-R01] Workflow capability: Forecast demand.
+- [P03-FLOW-03-R02] Logical transition: Training cutoff -> future horizon.
+- [P03-FLOW-03-R03] Primary invariant: Fit only information available at cutoff.
+- [P03-FLOW-03-R04] Define the user goal and permitted actor for Forecast demand.
+- [P03-FLOW-03-R05] Define required inputs and source versions for Forecast demand.
+- [P03-FLOW-03-R06] Check preconditions before Forecast demand; reject violations with a specific user-facing explanation.
+- [P03-FLOW-03-R07] Document the authoritative output of Forecast demand and the next valid action.
+- [P03-FLOW-03-R08] Implement Forecast demand in a domain/service layer rather than hiding it in a UI callback.
+- [P03-FLOW-03-R09] Define the transaction boundary for Forecast demand when state changes.
+- [P03-FLOW-03-R10] Preserve an audit event for material Forecast demand decisions without recording secrets.
+- [P03-FLOW-03-R11] Define how Forecast demand behaves when the same request or input is repeated.
+- [P03-FLOW-03-R12] Define how Forecast demand behaves when its input dataset or record version is stale.
+- [P03-FLOW-03-R13] Prevent conflicting Forecast demand updates with version checks or another documented mechanism.
+- [P03-FLOW-03-R14] Keep original evidence immutable when Forecast demand creates a correction or new scenario.
+- [P03-FLOW-03-R15] Test the successful Forecast demand path using deterministic fixtures.
+- [P03-FLOW-03-R16] Test one rejected Forecast demand path against the stated invariant.
+- [P03-FLOW-03-R17] Test interrupted Forecast demand execution and prove safe recovery or explicit noncommit.
+- [P03-FLOW-03-R18] Test authorized versus unauthorized Forecast demand behavior where real backend roles apply.
+- [P03-FLOW-03-R19] In the static website, label Forecast demand mutations as browser-memory simulation.
+- [P03-FLOW-03-R20] Never make Forecast demand appear server-persistent in the GitHub Pages demo.
+- [P03-FLOW-03-R21] Expose progress, success and actionable failure feedback for Forecast demand.
+- [P03-FLOW-03-R22] Keep keyboard focus coherent after Forecast demand updates or opens a dialog.
+- [P03-FLOW-03-R23] Include Forecast demand in the UAT script and trace its acceptance criteria to tests.
+- [P03-FLOW-03-R24] Include actual Forecast demand verification results in the evidence ledger.
+- [P03-FLOW-03-R25] Use the resulting Forecast demand evidence in the case study only with its execution mode disclosed.
+- [P03-FLOW-03-R26] Have the coordinator approve the integrated Forecast demand diff after specialist review.
+### P03-FLOW-04: Classify SKUs
+- [P03-FLOW-04-R01] Workflow capability: Classify SKUs.
+- [P03-FLOW-04-R02] Logical transition: Annual consumption -> ABC class.
+- [P03-FLOW-04-R03] Primary invariant: Value-based ranking documented.
+- [P03-FLOW-04-R04] Define the user goal and permitted actor for Classify SKUs.
+- [P03-FLOW-04-R05] Define required inputs and source versions for Classify SKUs.
+- [P03-FLOW-04-R06] Check preconditions before Classify SKUs; reject violations with a specific user-facing explanation.
+- [P03-FLOW-04-R07] Document the authoritative output of Classify SKUs and the next valid action.
+- [P03-FLOW-04-R08] Implement Classify SKUs in a domain/service layer rather than hiding it in a UI callback.
+- [P03-FLOW-04-R09] Define the transaction boundary for Classify SKUs when state changes.
+- [P03-FLOW-04-R10] Preserve an audit event for material Classify SKUs decisions without recording secrets.
+- [P03-FLOW-04-R11] Define how Classify SKUs behaves when the same request or input is repeated.
+- [P03-FLOW-04-R12] Define how Classify SKUs behaves when its input dataset or record version is stale.
+- [P03-FLOW-04-R13] Prevent conflicting Classify SKUs updates with version checks or another documented mechanism.
+- [P03-FLOW-04-R14] Keep original evidence immutable when Classify SKUs creates a correction or new scenario.
+- [P03-FLOW-04-R15] Test the successful Classify SKUs path using deterministic fixtures.
+- [P03-FLOW-04-R16] Test one rejected Classify SKUs path against the stated invariant.
+- [P03-FLOW-04-R17] Test interrupted Classify SKUs execution and prove safe recovery or explicit noncommit.
+- [P03-FLOW-04-R18] Test authorized versus unauthorized Classify SKUs behavior where real backend roles apply.
+- [P03-FLOW-04-R19] In the static website, label Classify SKUs mutations as browser-memory simulation.
+- [P03-FLOW-04-R20] Never make Classify SKUs appear server-persistent in the GitHub Pages demo.
+- [P03-FLOW-04-R21] Expose progress, success and actionable failure feedback for Classify SKUs.
+- [P03-FLOW-04-R22] Keep keyboard focus coherent after Classify SKUs updates or opens a dialog.
+- [P03-FLOW-04-R23] Include Classify SKUs in the UAT script and trace its acceptance criteria to tests.
+- [P03-FLOW-04-R24] Include actual Classify SKUs verification results in the evidence ledger.
+- [P03-FLOW-04-R25] Use the resulting Classify SKUs evidence in the case study only with its execution mode disclosed.
+- [P03-FLOW-04-R26] Have the coordinator approve the integrated Classify SKUs diff after specialist review.
+### P03-FLOW-05: Calculate replenishment
+- [P03-FLOW-05-R01] Workflow capability: Calculate replenishment.
+- [P03-FLOW-05-R02] Logical transition: Position below trigger -> draft order.
+- [P03-FLOW-05-R03] Primary invariant: Apply packs and supplier calendar.
+- [P03-FLOW-05-R04] Define the user goal and permitted actor for Calculate replenishment.
+- [P03-FLOW-05-R05] Define required inputs and source versions for Calculate replenishment.
+- [P03-FLOW-05-R06] Check preconditions before Calculate replenishment; reject violations with a specific user-facing explanation.
+- [P03-FLOW-05-R07] Document the authoritative output of Calculate replenishment and the next valid action.
+- [P03-FLOW-05-R08] Implement Calculate replenishment in a domain/service layer rather than hiding it in a UI callback.
+- [P03-FLOW-05-R09] Define the transaction boundary for Calculate replenishment when state changes.
+- [P03-FLOW-05-R10] Preserve an audit event for material Calculate replenishment decisions without recording secrets.
+- [P03-FLOW-05-R11] Define how Calculate replenishment behaves when the same request or input is repeated.
+- [P03-FLOW-05-R12] Define how Calculate replenishment behaves when its input dataset or record version is stale.
+- [P03-FLOW-05-R13] Prevent conflicting Calculate replenishment updates with version checks or another documented mechanism.
+- [P03-FLOW-05-R14] Keep original evidence immutable when Calculate replenishment creates a correction or new scenario.
+- [P03-FLOW-05-R15] Test the successful Calculate replenishment path using deterministic fixtures.
+- [P03-FLOW-05-R16] Test one rejected Calculate replenishment path against the stated invariant.
+- [P03-FLOW-05-R17] Test interrupted Calculate replenishment execution and prove safe recovery or explicit noncommit.
+- [P03-FLOW-05-R18] Test authorized versus unauthorized Calculate replenishment behavior where real backend roles apply.
+- [P03-FLOW-05-R19] In the static website, label Calculate replenishment mutations as browser-memory simulation.
+- [P03-FLOW-05-R20] Never make Calculate replenishment appear server-persistent in the GitHub Pages demo.
+- [P03-FLOW-05-R21] Expose progress, success and actionable failure feedback for Calculate replenishment.
+- [P03-FLOW-05-R22] Keep keyboard focus coherent after Calculate replenishment updates or opens a dialog.
+- [P03-FLOW-05-R23] Include Calculate replenishment in the UAT script and trace its acceptance criteria to tests.
+- [P03-FLOW-05-R24] Include actual Calculate replenishment verification results in the evidence ledger.
+- [P03-FLOW-05-R25] Use the resulting Calculate replenishment evidence in the case study only with its execution mode disclosed.
+- [P03-FLOW-05-R26] Have the coordinator approve the integrated Calculate replenishment diff after specialist review.
+### P03-FLOW-06: Simulate arrival
+- [P03-FLOW-06-R01] Workflow capability: Simulate arrival.
+- [P03-FLOW-06-R02] Logical transition: Outstanding PO -> receipt.
+- [P03-FLOW-06-R03] Primary invariant: No receipt before lead-time elapsed.
+- [P03-FLOW-06-R04] Define the user goal and permitted actor for Simulate arrival.
+- [P03-FLOW-06-R05] Define required inputs and source versions for Simulate arrival.
+- [P03-FLOW-06-R06] Check preconditions before Simulate arrival; reject violations with a specific user-facing explanation.
+- [P03-FLOW-06-R07] Document the authoritative output of Simulate arrival and the next valid action.
+- [P03-FLOW-06-R08] Implement Simulate arrival in a domain/service layer rather than hiding it in a UI callback.
+- [P03-FLOW-06-R09] Define the transaction boundary for Simulate arrival when state changes.
+- [P03-FLOW-06-R10] Preserve an audit event for material Simulate arrival decisions without recording secrets.
+- [P03-FLOW-06-R11] Define how Simulate arrival behaves when the same request or input is repeated.
+- [P03-FLOW-06-R12] Define how Simulate arrival behaves when its input dataset or record version is stale.
+- [P03-FLOW-06-R13] Prevent conflicting Simulate arrival updates with version checks or another documented mechanism.
+- [P03-FLOW-06-R14] Keep original evidence immutable when Simulate arrival creates a correction or new scenario.
+- [P03-FLOW-06-R15] Test the successful Simulate arrival path using deterministic fixtures.
+- [P03-FLOW-06-R16] Test one rejected Simulate arrival path against the stated invariant.
+- [P03-FLOW-06-R17] Test interrupted Simulate arrival execution and prove safe recovery or explicit noncommit.
+- [P03-FLOW-06-R18] Test authorized versus unauthorized Simulate arrival behavior where real backend roles apply.
+- [P03-FLOW-06-R19] In the static website, label Simulate arrival mutations as browser-memory simulation.
+- [P03-FLOW-06-R20] Never make Simulate arrival appear server-persistent in the GitHub Pages demo.
+- [P03-FLOW-06-R21] Expose progress, success and actionable failure feedback for Simulate arrival.
+- [P03-FLOW-06-R22] Keep keyboard focus coherent after Simulate arrival updates or opens a dialog.
+- [P03-FLOW-06-R23] Include Simulate arrival in the UAT script and trace its acceptance criteria to tests.
+- [P03-FLOW-06-R24] Include actual Simulate arrival verification results in the evidence ledger.
+- [P03-FLOW-06-R25] Use the resulting Simulate arrival evidence in the case study only with its execution mode disclosed.
+- [P03-FLOW-06-R26] Have the coordinator approve the integrated Simulate arrival diff after specialist review.
+### P03-FLOW-07: Record unmet demand
+- [P03-FLOW-07-R01] Workflow capability: Record unmet demand.
+- [P03-FLOW-07-R02] Logical transition: Demand exceeds stock -> lost sale or backlog.
+- [P03-FLOW-07-R03] Primary invariant: Scenario selects one policy.
+- [P03-FLOW-07-R04] Define the user goal and permitted actor for Record unmet demand.
+- [P03-FLOW-07-R05] Define required inputs and source versions for Record unmet demand.
+- [P03-FLOW-07-R06] Check preconditions before Record unmet demand; reject violations with a specific user-facing explanation.
+- [P03-FLOW-07-R07] Document the authoritative output of Record unmet demand and the next valid action.
+- [P03-FLOW-07-R08] Implement Record unmet demand in a domain/service layer rather than hiding it in a UI callback.
+- [P03-FLOW-07-R09] Define the transaction boundary for Record unmet demand when state changes.
+- [P03-FLOW-07-R10] Preserve an audit event for material Record unmet demand decisions without recording secrets.
+- [P03-FLOW-07-R11] Define how Record unmet demand behaves when the same request or input is repeated.
+- [P03-FLOW-07-R12] Define how Record unmet demand behaves when its input dataset or record version is stale.
+- [P03-FLOW-07-R13] Prevent conflicting Record unmet demand updates with version checks or another documented mechanism.
+- [P03-FLOW-07-R14] Keep original evidence immutable when Record unmet demand creates a correction or new scenario.
+- [P03-FLOW-07-R15] Test the successful Record unmet demand path using deterministic fixtures.
+- [P03-FLOW-07-R16] Test one rejected Record unmet demand path against the stated invariant.
+- [P03-FLOW-07-R17] Test interrupted Record unmet demand execution and prove safe recovery or explicit noncommit.
+- [P03-FLOW-07-R18] Test authorized versus unauthorized Record unmet demand behavior where real backend roles apply.
+- [P03-FLOW-07-R19] In the static website, label Record unmet demand mutations as browser-memory simulation.
+- [P03-FLOW-07-R20] Never make Record unmet demand appear server-persistent in the GitHub Pages demo.
+- [P03-FLOW-07-R21] Expose progress, success and actionable failure feedback for Record unmet demand.
+- [P03-FLOW-07-R22] Keep keyboard focus coherent after Record unmet demand updates or opens a dialog.
+- [P03-FLOW-07-R23] Include Record unmet demand in the UAT script and trace its acceptance criteria to tests.
+- [P03-FLOW-07-R24] Include actual Record unmet demand verification results in the evidence ledger.
+- [P03-FLOW-07-R25] Use the resulting Record unmet demand evidence in the case study only with its execution mode disclosed.
+- [P03-FLOW-07-R26] Have the coordinator approve the integrated Record unmet demand diff after specialist review.
+### P03-FLOW-08: Compare policies
+- [P03-FLOW-08-R01] Workflow capability: Compare policies.
+- [P03-FLOW-08-R02] Logical transition: Common random paths -> outcome comparison.
+- [P03-FLOW-08-R03] Primary invariant: Same random demand and delays.
+- [P03-FLOW-08-R04] Define the user goal and permitted actor for Compare policies.
+- [P03-FLOW-08-R05] Define required inputs and source versions for Compare policies.
+- [P03-FLOW-08-R06] Check preconditions before Compare policies; reject violations with a specific user-facing explanation.
+- [P03-FLOW-08-R07] Document the authoritative output of Compare policies and the next valid action.
+- [P03-FLOW-08-R08] Implement Compare policies in a domain/service layer rather than hiding it in a UI callback.
+- [P03-FLOW-08-R09] Define the transaction boundary for Compare policies when state changes.
+- [P03-FLOW-08-R10] Preserve an audit event for material Compare policies decisions without recording secrets.
+- [P03-FLOW-08-R11] Define how Compare policies behaves when the same request or input is repeated.
+- [P03-FLOW-08-R12] Define how Compare policies behaves when its input dataset or record version is stale.
+- [P03-FLOW-08-R13] Prevent conflicting Compare policies updates with version checks or another documented mechanism.
+- [P03-FLOW-08-R14] Keep original evidence immutable when Compare policies creates a correction or new scenario.
+- [P03-FLOW-08-R15] Test the successful Compare policies path using deterministic fixtures.
+- [P03-FLOW-08-R16] Test one rejected Compare policies path against the stated invariant.
+- [P03-FLOW-08-R17] Test interrupted Compare policies execution and prove safe recovery or explicit noncommit.
+- [P03-FLOW-08-R18] Test authorized versus unauthorized Compare policies behavior where real backend roles apply.
+- [P03-FLOW-08-R19] In the static website, label Compare policies mutations as browser-memory simulation.
+- [P03-FLOW-08-R20] Never make Compare policies appear server-persistent in the GitHub Pages demo.
+- [P03-FLOW-08-R21] Expose progress, success and actionable failure feedback for Compare policies.
+- [P03-FLOW-08-R22] Keep keyboard focus coherent after Compare policies updates or opens a dialog.
+- [P03-FLOW-08-R23] Include Compare policies in the UAT script and trace its acceptance criteria to tests.
+- [P03-FLOW-08-R24] Include actual Compare policies verification results in the evidence ledger.
+- [P03-FLOW-08-R25] Use the resulting Compare policies evidence in the case study only with its execution mode disclosed.
+- [P03-FLOW-08-R26] Have the coordinator approve the integrated Compare policies diff after specialist review.
+### P03-FLOW-09: Review supplier
+- [P03-FLOW-09-R01] Workflow capability: Review supplier.
+- [P03-FLOW-09-R02] Logical transition: Promised versus actual receipts -> reliability.
+- [P03-FLOW-09-R03] Primary invariant: Avoid future receipt leakage.
+- [P03-FLOW-09-R04] Define the user goal and permitted actor for Review supplier.
+- [P03-FLOW-09-R05] Define required inputs and source versions for Review supplier.
+- [P03-FLOW-09-R06] Check preconditions before Review supplier; reject violations with a specific user-facing explanation.
+- [P03-FLOW-09-R07] Document the authoritative output of Review supplier and the next valid action.
+- [P03-FLOW-09-R08] Implement Review supplier in a domain/service layer rather than hiding it in a UI callback.
+- [P03-FLOW-09-R09] Define the transaction boundary for Review supplier when state changes.
+- [P03-FLOW-09-R10] Preserve an audit event for material Review supplier decisions without recording secrets.
+- [P03-FLOW-09-R11] Define how Review supplier behaves when the same request or input is repeated.
+- [P03-FLOW-09-R12] Define how Review supplier behaves when its input dataset or record version is stale.
+- [P03-FLOW-09-R13] Prevent conflicting Review supplier updates with version checks or another documented mechanism.
+- [P03-FLOW-09-R14] Keep original evidence immutable when Review supplier creates a correction or new scenario.
+- [P03-FLOW-09-R15] Test the successful Review supplier path using deterministic fixtures.
+- [P03-FLOW-09-R16] Test one rejected Review supplier path against the stated invariant.
+- [P03-FLOW-09-R17] Test interrupted Review supplier execution and prove safe recovery or explicit noncommit.
+- [P03-FLOW-09-R18] Test authorized versus unauthorized Review supplier behavior where real backend roles apply.
+- [P03-FLOW-09-R19] In the static website, label Review supplier mutations as browser-memory simulation.
+- [P03-FLOW-09-R20] Never make Review supplier appear server-persistent in the GitHub Pages demo.
+- [P03-FLOW-09-R21] Expose progress, success and actionable failure feedback for Review supplier.
+- [P03-FLOW-09-R22] Keep keyboard focus coherent after Review supplier updates or opens a dialog.
+- [P03-FLOW-09-R23] Include Review supplier in the UAT script and trace its acceptance criteria to tests.
+- [P03-FLOW-09-R24] Include actual Review supplier verification results in the evidence ledger.
+- [P03-FLOW-09-R25] Use the resulting Review supplier evidence in the case study only with its execution mode disclosed.
+- [P03-FLOW-09-R26] Have the coordinator approve the integrated Review supplier diff after specialist review.
+### P03-FLOW-10: Export buying plan
+- [P03-FLOW-10-R01] Workflow capability: Export buying plan.
+- [P03-FLOW-10-R02] Logical transition: Reviewed drafts -> CSV.
+- [P03-FLOW-10-R03] Primary invariant: Never submit real purchase orders.
+- [P03-FLOW-10-R04] Define the user goal and permitted actor for Export buying plan.
+- [P03-FLOW-10-R05] Define required inputs and source versions for Export buying plan.
+- [P03-FLOW-10-R06] Check preconditions before Export buying plan; reject violations with a specific user-facing explanation.
+- [P03-FLOW-10-R07] Document the authoritative output of Export buying plan and the next valid action.
+- [P03-FLOW-10-R08] Implement Export buying plan in a domain/service layer rather than hiding it in a UI callback.
+- [P03-FLOW-10-R09] Define the transaction boundary for Export buying plan when state changes.
+- [P03-FLOW-10-R10] Preserve an audit event for material Export buying plan decisions without recording secrets.
+- [P03-FLOW-10-R11] Define how Export buying plan behaves when the same request or input is repeated.
+- [P03-FLOW-10-R12] Define how Export buying plan behaves when its input dataset or record version is stale.
+- [P03-FLOW-10-R13] Prevent conflicting Export buying plan updates with version checks or another documented mechanism.
+- [P03-FLOW-10-R14] Keep original evidence immutable when Export buying plan creates a correction or new scenario.
+- [P03-FLOW-10-R15] Test the successful Export buying plan path using deterministic fixtures.
+- [P03-FLOW-10-R16] Test one rejected Export buying plan path against the stated invariant.
+- [P03-FLOW-10-R17] Test interrupted Export buying plan execution and prove safe recovery or explicit noncommit.
+- [P03-FLOW-10-R18] Test authorized versus unauthorized Export buying plan behavior where real backend roles apply.
+- [P03-FLOW-10-R19] In the static website, label Export buying plan mutations as browser-memory simulation.
+- [P03-FLOW-10-R20] Never make Export buying plan appear server-persistent in the GitHub Pages demo.
+- [P03-FLOW-10-R21] Expose progress, success and actionable failure feedback for Export buying plan.
+- [P03-FLOW-10-R22] Keep keyboard focus coherent after Export buying plan updates or opens a dialog.
+- [P03-FLOW-10-R23] Include Export buying plan in the UAT script and trace its acceptance criteria to tests.
+- [P03-FLOW-10-R24] Include actual Export buying plan verification results in the evidence ledger.
+- [P03-FLOW-10-R25] Use the resulting Export buying plan evidence in the case study only with its execution mode disclosed.
+- [P03-FLOW-10-R26] Have the coordinator approve the integrated Export buying plan diff after specialist review.
+
+## 06. Screen-by-screen product experience
+
+### P03-UI-01: Planning overview
+- [P03-UI-01-R01] Screen: Planning overview.
+- [P03-UI-01-R02] Purpose and principal representation: Stock risk and capital exposure.
+- [P03-UI-01-R03] Choose a stable route under /supplyscope/ and verify direct navigation and reload for Planning overview.
+- [P03-UI-01-R04] Use the project visual direction on Planning overview: Warehouse planning atlas: graphite, pale grey, safety orange; inventory trajectories.
+- [P03-UI-01-R05] Give Planning overview one clear main action related to the business decision.
+- [P03-UI-01-R06] Display the active time window, filters and data version on Planning overview where applicable.
+- [P03-UI-01-R07] Show the synthetic/static-demo label without overwhelming Planning overview.
+- [P03-UI-01-R08] Use real verified snapshot values on Planning overview; do not hand-enter attractive KPI numbers.
+- [P03-UI-01-R09] Explain calculation meaning and units adjacent to important Planning overview values.
+- [P03-UI-01-R10] Provide an accessible table or text alternative for analytical graphics on Planning overview.
+- [P03-UI-01-R11] Use consistent category ordering and deterministic tie breaks on Planning overview.
+- [P03-UI-01-R12] Handle long names, negative values, missing categories and large values on Planning overview.
+- [P03-UI-01-R13] Implement a useful no-data state on Planning overview, including a way to clear restrictive filters.
+- [P03-UI-01-R14] Implement loading and failed-data states on Planning overview without showing invented results.
+- [P03-UI-01-R15] Keep all Planning overview controls keyboard accessible with visible focus.
+- [P03-UI-01-R16] Provide reduced-motion behavior for Planning overview transitions.
+- [P03-UI-01-R17] Keep motion purposeful; chart changes on Planning overview must not conceal changed units or populations.
+- [P03-UI-01-R18] Verify Planning overview at mobile, tablet and desktop widths with actual rendered output.
+- [P03-UI-01-R19] Verify Planning overview at 200 percent zoom and with realistic dense data.
+- [P03-UI-01-R20] Ensure exports from Planning overview match its scope or clearly explain full-population export behavior.
+- [P03-UI-01-R21] Provide navigation from Planning overview to evidence, definitions and the case study.
+- [P03-UI-01-R22] Check console errors, broken assets and nested path handling for Planning overview.
+- [P03-UI-01-R23] Record screenshot-review findings for Planning overview; do not assert review from source inspection.
+- [P03-UI-01-R24] Link Planning overview to its relevant workflow and metric contract IDs in the traceability matrix.
+### P03-UI-02: SKU detail
+- [P03-UI-02-R01] Screen: SKU detail.
+- [P03-UI-02-R02] Purpose and principal representation: Demand, sales, stock and forecast.
+- [P03-UI-02-R03] Choose a stable route under /supplyscope/ and verify direct navigation and reload for SKU detail.
+- [P03-UI-02-R04] Use the project visual direction on SKU detail: Warehouse planning atlas: graphite, pale grey, safety orange; inventory trajectories.
+- [P03-UI-02-R05] Give SKU detail one clear main action related to the business decision.
+- [P03-UI-02-R06] Display the active time window, filters and data version on SKU detail where applicable.
+- [P03-UI-02-R07] Show the synthetic/static-demo label without overwhelming SKU detail.
+- [P03-UI-02-R08] Use real verified snapshot values on SKU detail; do not hand-enter attractive KPI numbers.
+- [P03-UI-02-R09] Explain calculation meaning and units adjacent to important SKU detail values.
+- [P03-UI-02-R10] Provide an accessible table or text alternative for analytical graphics on SKU detail.
+- [P03-UI-02-R11] Use consistent category ordering and deterministic tie breaks on SKU detail.
+- [P03-UI-02-R12] Handle long names, negative values, missing categories and large values on SKU detail.
+- [P03-UI-02-R13] Implement a useful no-data state on SKU detail, including a way to clear restrictive filters.
+- [P03-UI-02-R14] Implement loading and failed-data states on SKU detail without showing invented results.
+- [P03-UI-02-R15] Keep all SKU detail controls keyboard accessible with visible focus.
+- [P03-UI-02-R16] Provide reduced-motion behavior for SKU detail transitions.
+- [P03-UI-02-R17] Keep motion purposeful; chart changes on SKU detail must not conceal changed units or populations.
+- [P03-UI-02-R18] Verify SKU detail at mobile, tablet and desktop widths with actual rendered output.
+- [P03-UI-02-R19] Verify SKU detail at 200 percent zoom and with realistic dense data.
+- [P03-UI-02-R20] Ensure exports from SKU detail match its scope or clearly explain full-population export behavior.
+- [P03-UI-02-R21] Provide navigation from SKU detail to evidence, definitions and the case study.
+- [P03-UI-02-R22] Check console errors, broken assets and nested path handling for SKU detail.
+- [P03-UI-02-R23] Record screenshot-review findings for SKU detail; do not assert review from source inspection.
+- [P03-UI-02-R24] Link SKU detail to its relevant workflow and metric contract IDs in the traceability matrix.
+### P03-UI-03: Location matrix
+- [P03-UI-03-R01] Screen: Location matrix.
+- [P03-UI-03-R02] Purpose and principal representation: SKU-location coverage and heatmap.
+- [P03-UI-03-R03] Choose a stable route under /supplyscope/ and verify direct navigation and reload for Location matrix.
+- [P03-UI-03-R04] Use the project visual direction on Location matrix: Warehouse planning atlas: graphite, pale grey, safety orange; inventory trajectories.
+- [P03-UI-03-R05] Give Location matrix one clear main action related to the business decision.
+- [P03-UI-03-R06] Display the active time window, filters and data version on Location matrix where applicable.
+- [P03-UI-03-R07] Show the synthetic/static-demo label without overwhelming Location matrix.
+- [P03-UI-03-R08] Use real verified snapshot values on Location matrix; do not hand-enter attractive KPI numbers.
+- [P03-UI-03-R09] Explain calculation meaning and units adjacent to important Location matrix values.
+- [P03-UI-03-R10] Provide an accessible table or text alternative for analytical graphics on Location matrix.
+- [P03-UI-03-R11] Use consistent category ordering and deterministic tie breaks on Location matrix.
+- [P03-UI-03-R12] Handle long names, negative values, missing categories and large values on Location matrix.
+- [P03-UI-03-R13] Implement a useful no-data state on Location matrix, including a way to clear restrictive filters.
+- [P03-UI-03-R14] Implement loading and failed-data states on Location matrix without showing invented results.
+- [P03-UI-03-R15] Keep all Location matrix controls keyboard accessible with visible focus.
+- [P03-UI-03-R16] Provide reduced-motion behavior for Location matrix transitions.
+- [P03-UI-03-R17] Keep motion purposeful; chart changes on Location matrix must not conceal changed units or populations.
+- [P03-UI-03-R18] Verify Location matrix at mobile, tablet and desktop widths with actual rendered output.
+- [P03-UI-03-R19] Verify Location matrix at 200 percent zoom and with realistic dense data.
+- [P03-UI-03-R20] Ensure exports from Location matrix match its scope or clearly explain full-population export behavior.
+- [P03-UI-03-R21] Provide navigation from Location matrix to evidence, definitions and the case study.
+- [P03-UI-03-R22] Check console errors, broken assets and nested path handling for Location matrix.
+- [P03-UI-03-R23] Record screenshot-review findings for Location matrix; do not assert review from source inspection.
+- [P03-UI-03-R24] Link Location matrix to its relevant workflow and metric contract IDs in the traceability matrix.
+### P03-UI-04: Supplier desk
+- [P03-UI-04-R01] Screen: Supplier desk.
+- [P03-UI-04-R02] Purpose and principal representation: Lead times and late receipts.
+- [P03-UI-04-R03] Choose a stable route under /supplyscope/ and verify direct navigation and reload for Supplier desk.
+- [P03-UI-04-R04] Use the project visual direction on Supplier desk: Warehouse planning atlas: graphite, pale grey, safety orange; inventory trajectories.
+- [P03-UI-04-R05] Give Supplier desk one clear main action related to the business decision.
+- [P03-UI-04-R06] Display the active time window, filters and data version on Supplier desk where applicable.
+- [P03-UI-04-R07] Show the synthetic/static-demo label without overwhelming Supplier desk.
+- [P03-UI-04-R08] Use real verified snapshot values on Supplier desk; do not hand-enter attractive KPI numbers.
+- [P03-UI-04-R09] Explain calculation meaning and units adjacent to important Supplier desk values.
+- [P03-UI-04-R10] Provide an accessible table or text alternative for analytical graphics on Supplier desk.
+- [P03-UI-04-R11] Use consistent category ordering and deterministic tie breaks on Supplier desk.
+- [P03-UI-04-R12] Handle long names, negative values, missing categories and large values on Supplier desk.
+- [P03-UI-04-R13] Implement a useful no-data state on Supplier desk, including a way to clear restrictive filters.
+- [P03-UI-04-R14] Implement loading and failed-data states on Supplier desk without showing invented results.
+- [P03-UI-04-R15] Keep all Supplier desk controls keyboard accessible with visible focus.
+- [P03-UI-04-R16] Provide reduced-motion behavior for Supplier desk transitions.
+- [P03-UI-04-R17] Keep motion purposeful; chart changes on Supplier desk must not conceal changed units or populations.
+- [P03-UI-04-R18] Verify Supplier desk at mobile, tablet and desktop widths with actual rendered output.
+- [P03-UI-04-R19] Verify Supplier desk at 200 percent zoom and with realistic dense data.
+- [P03-UI-04-R20] Ensure exports from Supplier desk match its scope or clearly explain full-population export behavior.
+- [P03-UI-04-R21] Provide navigation from Supplier desk to evidence, definitions and the case study.
+- [P03-UI-04-R22] Check console errors, broken assets and nested path handling for Supplier desk.
+- [P03-UI-04-R23] Record screenshot-review findings for Supplier desk; do not assert review from source inspection.
+- [P03-UI-04-R24] Link Supplier desk to its relevant workflow and metric contract IDs in the traceability matrix.
+### P03-UI-05: Forecast evaluation
+- [P03-UI-05-R01] Screen: Forecast evaluation.
+- [P03-UI-05-R02] Purpose and principal representation: Baselines, folds and uncertainty.
+- [P03-UI-05-R03] Choose a stable route under /supplyscope/ and verify direct navigation and reload for Forecast evaluation.
+- [P03-UI-05-R04] Use the project visual direction on Forecast evaluation: Warehouse planning atlas: graphite, pale grey, safety orange; inventory trajectories.
+- [P03-UI-05-R05] Give Forecast evaluation one clear main action related to the business decision.
+- [P03-UI-05-R06] Display the active time window, filters and data version on Forecast evaluation where applicable.
+- [P03-UI-05-R07] Show the synthetic/static-demo label without overwhelming Forecast evaluation.
+- [P03-UI-05-R08] Use real verified snapshot values on Forecast evaluation; do not hand-enter attractive KPI numbers.
+- [P03-UI-05-R09] Explain calculation meaning and units adjacent to important Forecast evaluation values.
+- [P03-UI-05-R10] Provide an accessible table or text alternative for analytical graphics on Forecast evaluation.
+- [P03-UI-05-R11] Use consistent category ordering and deterministic tie breaks on Forecast evaluation.
+- [P03-UI-05-R12] Handle long names, negative values, missing categories and large values on Forecast evaluation.
+- [P03-UI-05-R13] Implement a useful no-data state on Forecast evaluation, including a way to clear restrictive filters.
+- [P03-UI-05-R14] Implement loading and failed-data states on Forecast evaluation without showing invented results.
+- [P03-UI-05-R15] Keep all Forecast evaluation controls keyboard accessible with visible focus.
+- [P03-UI-05-R16] Provide reduced-motion behavior for Forecast evaluation transitions.
+- [P03-UI-05-R17] Keep motion purposeful; chart changes on Forecast evaluation must not conceal changed units or populations.
+- [P03-UI-05-R18] Verify Forecast evaluation at mobile, tablet and desktop widths with actual rendered output.
+- [P03-UI-05-R19] Verify Forecast evaluation at 200 percent zoom and with realistic dense data.
+- [P03-UI-05-R20] Ensure exports from Forecast evaluation match its scope or clearly explain full-population export behavior.
+- [P03-UI-05-R21] Provide navigation from Forecast evaluation to evidence, definitions and the case study.
+- [P03-UI-05-R22] Check console errors, broken assets and nested path handling for Forecast evaluation.
+- [P03-UI-05-R23] Record screenshot-review findings for Forecast evaluation; do not assert review from source inspection.
+- [P03-UI-05-R24] Link Forecast evaluation to its relevant workflow and metric contract IDs in the traceability matrix.
+### P03-UI-06: Reorder workbench
+- [P03-UI-06-R01] Screen: Reorder workbench.
+- [P03-UI-06-R02] Purpose and principal representation: Packs, MOQ and calendar constraints.
+- [P03-UI-06-R03] Choose a stable route under /supplyscope/ and verify direct navigation and reload for Reorder workbench.
+- [P03-UI-06-R04] Use the project visual direction on Reorder workbench: Warehouse planning atlas: graphite, pale grey, safety orange; inventory trajectories.
+- [P03-UI-06-R05] Give Reorder workbench one clear main action related to the business decision.
+- [P03-UI-06-R06] Display the active time window, filters and data version on Reorder workbench where applicable.
+- [P03-UI-06-R07] Show the synthetic/static-demo label without overwhelming Reorder workbench.
+- [P03-UI-06-R08] Use real verified snapshot values on Reorder workbench; do not hand-enter attractive KPI numbers.
+- [P03-UI-06-R09] Explain calculation meaning and units adjacent to important Reorder workbench values.
+- [P03-UI-06-R10] Provide an accessible table or text alternative for analytical graphics on Reorder workbench.
+- [P03-UI-06-R11] Use consistent category ordering and deterministic tie breaks on Reorder workbench.
+- [P03-UI-06-R12] Handle long names, negative values, missing categories and large values on Reorder workbench.
+- [P03-UI-06-R13] Implement a useful no-data state on Reorder workbench, including a way to clear restrictive filters.
+- [P03-UI-06-R14] Implement loading and failed-data states on Reorder workbench without showing invented results.
+- [P03-UI-06-R15] Keep all Reorder workbench controls keyboard accessible with visible focus.
+- [P03-UI-06-R16] Provide reduced-motion behavior for Reorder workbench transitions.
+- [P03-UI-06-R17] Keep motion purposeful; chart changes on Reorder workbench must not conceal changed units or populations.
+- [P03-UI-06-R18] Verify Reorder workbench at mobile, tablet and desktop widths with actual rendered output.
+- [P03-UI-06-R19] Verify Reorder workbench at 200 percent zoom and with realistic dense data.
+- [P03-UI-06-R20] Ensure exports from Reorder workbench match its scope or clearly explain full-population export behavior.
+- [P03-UI-06-R21] Provide navigation from Reorder workbench to evidence, definitions and the case study.
+- [P03-UI-06-R22] Check console errors, broken assets and nested path handling for Reorder workbench.
+- [P03-UI-06-R23] Record screenshot-review findings for Reorder workbench; do not assert review from source inspection.
+- [P03-UI-06-R24] Link Reorder workbench to its relevant workflow and metric contract IDs in the traceability matrix.
+### P03-UI-07: Policy simulator
+- [P03-UI-07-R01] Screen: Policy simulator.
+- [P03-UI-07-R02] Purpose and principal representation: Replay inventory evolution.
+- [P03-UI-07-R03] Choose a stable route under /supplyscope/ and verify direct navigation and reload for Policy simulator.
+- [P03-UI-07-R04] Use the project visual direction on Policy simulator: Warehouse planning atlas: graphite, pale grey, safety orange; inventory trajectories.
+- [P03-UI-07-R05] Give Policy simulator one clear main action related to the business decision.
+- [P03-UI-07-R06] Display the active time window, filters and data version on Policy simulator where applicable.
+- [P03-UI-07-R07] Show the synthetic/static-demo label without overwhelming Policy simulator.
+- [P03-UI-07-R08] Use real verified snapshot values on Policy simulator; do not hand-enter attractive KPI numbers.
+- [P03-UI-07-R09] Explain calculation meaning and units adjacent to important Policy simulator values.
+- [P03-UI-07-R10] Provide an accessible table or text alternative for analytical graphics on Policy simulator.
+- [P03-UI-07-R11] Use consistent category ordering and deterministic tie breaks on Policy simulator.
+- [P03-UI-07-R12] Handle long names, negative values, missing categories and large values on Policy simulator.
+- [P03-UI-07-R13] Implement a useful no-data state on Policy simulator, including a way to clear restrictive filters.
+- [P03-UI-07-R14] Implement loading and failed-data states on Policy simulator without showing invented results.
+- [P03-UI-07-R15] Keep all Policy simulator controls keyboard accessible with visible focus.
+- [P03-UI-07-R16] Provide reduced-motion behavior for Policy simulator transitions.
+- [P03-UI-07-R17] Keep motion purposeful; chart changes on Policy simulator must not conceal changed units or populations.
+- [P03-UI-07-R18] Verify Policy simulator at mobile, tablet and desktop widths with actual rendered output.
+- [P03-UI-07-R19] Verify Policy simulator at 200 percent zoom and with realistic dense data.
+- [P03-UI-07-R20] Ensure exports from Policy simulator match its scope or clearly explain full-population export behavior.
+- [P03-UI-07-R21] Provide navigation from Policy simulator to evidence, definitions and the case study.
+- [P03-UI-07-R22] Check console errors, broken assets and nested path handling for Policy simulator.
+- [P03-UI-07-R23] Record screenshot-review findings for Policy simulator; do not assert review from source inspection.
+- [P03-UI-07-R24] Link Policy simulator to its relevant workflow and metric contract IDs in the traceability matrix.
+### P03-UI-08: Capital tradeoff
+- [P03-UI-08-R01] Screen: Capital tradeoff.
+- [P03-UI-08-R02] Purpose and principal representation: Service level versus average inventory.
+- [P03-UI-08-R03] Choose a stable route under /supplyscope/ and verify direct navigation and reload for Capital tradeoff.
+- [P03-UI-08-R04] Use the project visual direction on Capital tradeoff: Warehouse planning atlas: graphite, pale grey, safety orange; inventory trajectories.
+- [P03-UI-08-R05] Give Capital tradeoff one clear main action related to the business decision.
+- [P03-UI-08-R06] Display the active time window, filters and data version on Capital tradeoff where applicable.
+- [P03-UI-08-R07] Show the synthetic/static-demo label without overwhelming Capital tradeoff.
+- [P03-UI-08-R08] Use real verified snapshot values on Capital tradeoff; do not hand-enter attractive KPI numbers.
+- [P03-UI-08-R09] Explain calculation meaning and units adjacent to important Capital tradeoff values.
+- [P03-UI-08-R10] Provide an accessible table or text alternative for analytical graphics on Capital tradeoff.
+- [P03-UI-08-R11] Use consistent category ordering and deterministic tie breaks on Capital tradeoff.
+- [P03-UI-08-R12] Handle long names, negative values, missing categories and large values on Capital tradeoff.
+- [P03-UI-08-R13] Implement a useful no-data state on Capital tradeoff, including a way to clear restrictive filters.
+- [P03-UI-08-R14] Implement loading and failed-data states on Capital tradeoff without showing invented results.
+- [P03-UI-08-R15] Keep all Capital tradeoff controls keyboard accessible with visible focus.
+- [P03-UI-08-R16] Provide reduced-motion behavior for Capital tradeoff transitions.
+- [P03-UI-08-R17] Keep motion purposeful; chart changes on Capital tradeoff must not conceal changed units or populations.
+- [P03-UI-08-R18] Verify Capital tradeoff at mobile, tablet and desktop widths with actual rendered output.
+- [P03-UI-08-R19] Verify Capital tradeoff at 200 percent zoom and with realistic dense data.
+- [P03-UI-08-R20] Ensure exports from Capital tradeoff match its scope or clearly explain full-population export behavior.
+- [P03-UI-08-R21] Provide navigation from Capital tradeoff to evidence, definitions and the case study.
+- [P03-UI-08-R22] Check console errors, broken assets and nested path handling for Capital tradeoff.
+- [P03-UI-08-R23] Record screenshot-review findings for Capital tradeoff; do not assert review from source inspection.
+- [P03-UI-08-R24] Link Capital tradeoff to its relevant workflow and metric contract IDs in the traceability matrix.
+### P03-UI-09: Purchase draft
+- [P03-UI-09-R01] Screen: Purchase draft.
+- [P03-UI-09-R02] Purpose and principal representation: Auditable recommendation export.
+- [P03-UI-09-R03] Choose a stable route under /supplyscope/ and verify direct navigation and reload for Purchase draft.
+- [P03-UI-09-R04] Use the project visual direction on Purchase draft: Warehouse planning atlas: graphite, pale grey, safety orange; inventory trajectories.
+- [P03-UI-09-R05] Give Purchase draft one clear main action related to the business decision.
+- [P03-UI-09-R06] Display the active time window, filters and data version on Purchase draft where applicable.
+- [P03-UI-09-R07] Show the synthetic/static-demo label without overwhelming Purchase draft.
+- [P03-UI-09-R08] Use real verified snapshot values on Purchase draft; do not hand-enter attractive KPI numbers.
+- [P03-UI-09-R09] Explain calculation meaning and units adjacent to important Purchase draft values.
+- [P03-UI-09-R10] Provide an accessible table or text alternative for analytical graphics on Purchase draft.
+- [P03-UI-09-R11] Use consistent category ordering and deterministic tie breaks on Purchase draft.
+- [P03-UI-09-R12] Handle long names, negative values, missing categories and large values on Purchase draft.
+- [P03-UI-09-R13] Implement a useful no-data state on Purchase draft, including a way to clear restrictive filters.
+- [P03-UI-09-R14] Implement loading and failed-data states on Purchase draft without showing invented results.
+- [P03-UI-09-R15] Keep all Purchase draft controls keyboard accessible with visible focus.
+- [P03-UI-09-R16] Provide reduced-motion behavior for Purchase draft transitions.
+- [P03-UI-09-R17] Keep motion purposeful; chart changes on Purchase draft must not conceal changed units or populations.
+- [P03-UI-09-R18] Verify Purchase draft at mobile, tablet and desktop widths with actual rendered output.
+- [P03-UI-09-R19] Verify Purchase draft at 200 percent zoom and with realistic dense data.
+- [P03-UI-09-R20] Ensure exports from Purchase draft match its scope or clearly explain full-population export behavior.
+- [P03-UI-09-R21] Provide navigation from Purchase draft to evidence, definitions and the case study.
+- [P03-UI-09-R22] Check console errors, broken assets and nested path handling for Purchase draft.
+- [P03-UI-09-R23] Record screenshot-review findings for Purchase draft; do not assert review from source inspection.
+- [P03-UI-09-R24] Link Purchase draft to its relevant workflow and metric contract IDs in the traceability matrix.
+### P03-UI-10: Case study
+- [P03-UI-10-R01] Screen: Case study.
+- [P03-UI-10-R02] Purpose and principal representation: Censoring, backtest design and limitations.
+- [P03-UI-10-R03] Choose a stable route under /supplyscope/ and verify direct navigation and reload for Case study.
+- [P03-UI-10-R04] Use the project visual direction on Case study: Warehouse planning atlas: graphite, pale grey, safety orange; inventory trajectories.
+- [P03-UI-10-R05] Give Case study one clear main action related to the business decision.
+- [P03-UI-10-R06] Display the active time window, filters and data version on Case study where applicable.
+- [P03-UI-10-R07] Show the synthetic/static-demo label without overwhelming Case study.
+- [P03-UI-10-R08] Use real verified snapshot values on Case study; do not hand-enter attractive KPI numbers.
+- [P03-UI-10-R09] Explain calculation meaning and units adjacent to important Case study values.
+- [P03-UI-10-R10] Provide an accessible table or text alternative for analytical graphics on Case study.
+- [P03-UI-10-R11] Use consistent category ordering and deterministic tie breaks on Case study.
+- [P03-UI-10-R12] Handle long names, negative values, missing categories and large values on Case study.
+- [P03-UI-10-R13] Implement a useful no-data state on Case study, including a way to clear restrictive filters.
+- [P03-UI-10-R14] Implement loading and failed-data states on Case study without showing invented results.
+- [P03-UI-10-R15] Keep all Case study controls keyboard accessible with visible focus.
+- [P03-UI-10-R16] Provide reduced-motion behavior for Case study transitions.
+- [P03-UI-10-R17] Keep motion purposeful; chart changes on Case study must not conceal changed units or populations.
+- [P03-UI-10-R18] Verify Case study at mobile, tablet and desktop widths with actual rendered output.
+- [P03-UI-10-R19] Verify Case study at 200 percent zoom and with realistic dense data.
+- [P03-UI-10-R20] Ensure exports from Case study match its scope or clearly explain full-population export behavior.
+- [P03-UI-10-R21] Provide navigation from Case study to evidence, definitions and the case study.
+- [P03-UI-10-R22] Check console errors, broken assets and nested path handling for Case study.
+- [P03-UI-10-R23] Record screenshot-review findings for Case study; do not assert review from source inspection.
+- [P03-UI-10-R24] Link Case study to its relevant workflow and metric contract IDs in the traceability matrix.
+
+## 07. Adversarial domain verification
+
+### P03-TEST-01-DETECT: Sales censored during a stockout — detect
+- [P03-TEST-01-DETECT-R01] Failure hypothesis: Sales censored during a stockout.
+- [P03-TEST-01-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P03-TEST-01-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Sales censored during a stockout.
+- [P03-TEST-01-DETECT-R04] Document the expected business outcome before executing P03-TEST-01-DETECT.
+- [P03-TEST-01-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-01-DETECT-R06] Capture the initial canonical state and dataset hash for P03-TEST-01-DETECT.
+- [P03-TEST-01-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-01-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-01-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-01-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-01-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-01-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-01-DETECT-R13] Use a separate reference calculation when P03-TEST-01-DETECT affects a key numerical total.
+- [P03-TEST-01-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Sales censored during a stockout.
+- [P03-TEST-01-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-01-DETECT.
+- [P03-TEST-01-DETECT-R16] If blocked by environment capability, mark P03-TEST-01-DETECT blocked and retain the executable test source.
+- [P03-TEST-01-DETECT-R17] Do not claim P03-TEST-01-DETECT passed from reading the implementation or from another test passing.
+- [P03-TEST-01-DETECT-R18] Rerun P03-TEST-01-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-01-RECOVER: Sales censored during a stockout — recover
+- [P03-TEST-01-RECOVER-R01] Failure hypothesis: Sales censored during a stockout.
+- [P03-TEST-01-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P03-TEST-01-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Sales censored during a stockout.
+- [P03-TEST-01-RECOVER-R04] Document the expected business outcome before executing P03-TEST-01-RECOVER.
+- [P03-TEST-01-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-01-RECOVER-R06] Capture the initial canonical state and dataset hash for P03-TEST-01-RECOVER.
+- [P03-TEST-01-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-01-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-01-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-01-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-01-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-01-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-01-RECOVER-R13] Use a separate reference calculation when P03-TEST-01-RECOVER affects a key numerical total.
+- [P03-TEST-01-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Sales censored during a stockout.
+- [P03-TEST-01-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-01-RECOVER.
+- [P03-TEST-01-RECOVER-R16] If blocked by environment capability, mark P03-TEST-01-RECOVER blocked and retain the executable test source.
+- [P03-TEST-01-RECOVER-R17] Do not claim P03-TEST-01-RECOVER passed from reading the implementation or from another test passing.
+- [P03-TEST-01-RECOVER-R18] Rerun P03-TEST-01-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-02-DETECT: Forecast uses future promotion outcomes — detect
+- [P03-TEST-02-DETECT-R01] Failure hypothesis: Forecast uses future promotion outcomes.
+- [P03-TEST-02-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P03-TEST-02-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Forecast uses future promotion outcomes.
+- [P03-TEST-02-DETECT-R04] Document the expected business outcome before executing P03-TEST-02-DETECT.
+- [P03-TEST-02-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-02-DETECT-R06] Capture the initial canonical state and dataset hash for P03-TEST-02-DETECT.
+- [P03-TEST-02-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-02-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-02-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-02-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-02-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-02-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-02-DETECT-R13] Use a separate reference calculation when P03-TEST-02-DETECT affects a key numerical total.
+- [P03-TEST-02-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Forecast uses future promotion outcomes.
+- [P03-TEST-02-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-02-DETECT.
+- [P03-TEST-02-DETECT-R16] If blocked by environment capability, mark P03-TEST-02-DETECT blocked and retain the executable test source.
+- [P03-TEST-02-DETECT-R17] Do not claim P03-TEST-02-DETECT passed from reading the implementation or from another test passing.
+- [P03-TEST-02-DETECT-R18] Rerun P03-TEST-02-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-02-RECOVER: Forecast uses future promotion outcomes — recover
+- [P03-TEST-02-RECOVER-R01] Failure hypothesis: Forecast uses future promotion outcomes.
+- [P03-TEST-02-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P03-TEST-02-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Forecast uses future promotion outcomes.
+- [P03-TEST-02-RECOVER-R04] Document the expected business outcome before executing P03-TEST-02-RECOVER.
+- [P03-TEST-02-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-02-RECOVER-R06] Capture the initial canonical state and dataset hash for P03-TEST-02-RECOVER.
+- [P03-TEST-02-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-02-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-02-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-02-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-02-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-02-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-02-RECOVER-R13] Use a separate reference calculation when P03-TEST-02-RECOVER affects a key numerical total.
+- [P03-TEST-02-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Forecast uses future promotion outcomes.
+- [P03-TEST-02-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-02-RECOVER.
+- [P03-TEST-02-RECOVER-R16] If blocked by environment capability, mark P03-TEST-02-RECOVER blocked and retain the executable test source.
+- [P03-TEST-02-RECOVER-R17] Do not claim P03-TEST-02-RECOVER passed from reading the implementation or from another test passing.
+- [P03-TEST-02-RECOVER-R18] Rerun P03-TEST-02-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-03-DETECT: Pack rounding below minimum order — detect
+- [P03-TEST-03-DETECT-R01] Failure hypothesis: Pack rounding below minimum order.
+- [P03-TEST-03-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P03-TEST-03-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Pack rounding below minimum order.
+- [P03-TEST-03-DETECT-R04] Document the expected business outcome before executing P03-TEST-03-DETECT.
+- [P03-TEST-03-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-03-DETECT-R06] Capture the initial canonical state and dataset hash for P03-TEST-03-DETECT.
+- [P03-TEST-03-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-03-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-03-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-03-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-03-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-03-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-03-DETECT-R13] Use a separate reference calculation when P03-TEST-03-DETECT affects a key numerical total.
+- [P03-TEST-03-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Pack rounding below minimum order.
+- [P03-TEST-03-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-03-DETECT.
+- [P03-TEST-03-DETECT-R16] If blocked by environment capability, mark P03-TEST-03-DETECT blocked and retain the executable test source.
+- [P03-TEST-03-DETECT-R17] Do not claim P03-TEST-03-DETECT passed from reading the implementation or from another test passing.
+- [P03-TEST-03-DETECT-R18] Rerun P03-TEST-03-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-03-RECOVER: Pack rounding below minimum order — recover
+- [P03-TEST-03-RECOVER-R01] Failure hypothesis: Pack rounding below minimum order.
+- [P03-TEST-03-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P03-TEST-03-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Pack rounding below minimum order.
+- [P03-TEST-03-RECOVER-R04] Document the expected business outcome before executing P03-TEST-03-RECOVER.
+- [P03-TEST-03-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-03-RECOVER-R06] Capture the initial canonical state and dataset hash for P03-TEST-03-RECOVER.
+- [P03-TEST-03-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-03-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-03-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-03-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-03-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-03-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-03-RECOVER-R13] Use a separate reference calculation when P03-TEST-03-RECOVER affects a key numerical total.
+- [P03-TEST-03-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Pack rounding below minimum order.
+- [P03-TEST-03-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-03-RECOVER.
+- [P03-TEST-03-RECOVER-R16] If blocked by environment capability, mark P03-TEST-03-RECOVER blocked and retain the executable test source.
+- [P03-TEST-03-RECOVER-R17] Do not claim P03-TEST-03-RECOVER passed from reading the implementation or from another test passing.
+- [P03-TEST-03-RECOVER-R18] Rerun P03-TEST-03-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-04-DETECT: Negative inventory from duplicate shipment — detect
+- [P03-TEST-04-DETECT-R01] Failure hypothesis: Negative inventory from duplicate shipment.
+- [P03-TEST-04-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P03-TEST-04-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Negative inventory from duplicate shipment.
+- [P03-TEST-04-DETECT-R04] Document the expected business outcome before executing P03-TEST-04-DETECT.
+- [P03-TEST-04-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-04-DETECT-R06] Capture the initial canonical state and dataset hash for P03-TEST-04-DETECT.
+- [P03-TEST-04-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-04-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-04-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-04-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-04-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-04-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-04-DETECT-R13] Use a separate reference calculation when P03-TEST-04-DETECT affects a key numerical total.
+- [P03-TEST-04-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Negative inventory from duplicate shipment.
+- [P03-TEST-04-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-04-DETECT.
+- [P03-TEST-04-DETECT-R16] If blocked by environment capability, mark P03-TEST-04-DETECT blocked and retain the executable test source.
+- [P03-TEST-04-DETECT-R17] Do not claim P03-TEST-04-DETECT passed from reading the implementation or from another test passing.
+- [P03-TEST-04-DETECT-R18] Rerun P03-TEST-04-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-04-RECOVER: Negative inventory from duplicate shipment — recover
+- [P03-TEST-04-RECOVER-R01] Failure hypothesis: Negative inventory from duplicate shipment.
+- [P03-TEST-04-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P03-TEST-04-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Negative inventory from duplicate shipment.
+- [P03-TEST-04-RECOVER-R04] Document the expected business outcome before executing P03-TEST-04-RECOVER.
+- [P03-TEST-04-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-04-RECOVER-R06] Capture the initial canonical state and dataset hash for P03-TEST-04-RECOVER.
+- [P03-TEST-04-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-04-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-04-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-04-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-04-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-04-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-04-RECOVER-R13] Use a separate reference calculation when P03-TEST-04-RECOVER affects a key numerical total.
+- [P03-TEST-04-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Negative inventory from duplicate shipment.
+- [P03-TEST-04-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-04-RECOVER.
+- [P03-TEST-04-RECOVER-R16] If blocked by environment capability, mark P03-TEST-04-RECOVER blocked and retain the executable test source.
+- [P03-TEST-04-RECOVER-R17] Do not claim P03-TEST-04-RECOVER passed from reading the implementation or from another test passing.
+- [P03-TEST-04-RECOVER-R18] Rerun P03-TEST-04-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-05-DETECT: Lead time spans supplier closure — detect
+- [P03-TEST-05-DETECT-R01] Failure hypothesis: Lead time spans supplier closure.
+- [P03-TEST-05-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P03-TEST-05-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Lead time spans supplier closure.
+- [P03-TEST-05-DETECT-R04] Document the expected business outcome before executing P03-TEST-05-DETECT.
+- [P03-TEST-05-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-05-DETECT-R06] Capture the initial canonical state and dataset hash for P03-TEST-05-DETECT.
+- [P03-TEST-05-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-05-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-05-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-05-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-05-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-05-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-05-DETECT-R13] Use a separate reference calculation when P03-TEST-05-DETECT affects a key numerical total.
+- [P03-TEST-05-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Lead time spans supplier closure.
+- [P03-TEST-05-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-05-DETECT.
+- [P03-TEST-05-DETECT-R16] If blocked by environment capability, mark P03-TEST-05-DETECT blocked and retain the executable test source.
+- [P03-TEST-05-DETECT-R17] Do not claim P03-TEST-05-DETECT passed from reading the implementation or from another test passing.
+- [P03-TEST-05-DETECT-R18] Rerun P03-TEST-05-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-05-RECOVER: Lead time spans supplier closure — recover
+- [P03-TEST-05-RECOVER-R01] Failure hypothesis: Lead time spans supplier closure.
+- [P03-TEST-05-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P03-TEST-05-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Lead time spans supplier closure.
+- [P03-TEST-05-RECOVER-R04] Document the expected business outcome before executing P03-TEST-05-RECOVER.
+- [P03-TEST-05-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-05-RECOVER-R06] Capture the initial canonical state and dataset hash for P03-TEST-05-RECOVER.
+- [P03-TEST-05-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-05-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-05-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-05-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-05-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-05-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-05-RECOVER-R13] Use a separate reference calculation when P03-TEST-05-RECOVER affects a key numerical total.
+- [P03-TEST-05-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Lead time spans supplier closure.
+- [P03-TEST-05-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-05-RECOVER.
+- [P03-TEST-05-RECOVER-R16] If blocked by environment capability, mark P03-TEST-05-RECOVER blocked and retain the executable test source.
+- [P03-TEST-05-RECOVER-R17] Do not claim P03-TEST-05-RECOVER passed from reading the implementation or from another test passing.
+- [P03-TEST-05-RECOVER-R18] Rerun P03-TEST-05-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-06-DETECT: Intermittent SKU has zero evaluation demand — detect
+- [P03-TEST-06-DETECT-R01] Failure hypothesis: Intermittent SKU has zero evaluation demand.
+- [P03-TEST-06-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P03-TEST-06-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Intermittent SKU has zero evaluation demand.
+- [P03-TEST-06-DETECT-R04] Document the expected business outcome before executing P03-TEST-06-DETECT.
+- [P03-TEST-06-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-06-DETECT-R06] Capture the initial canonical state and dataset hash for P03-TEST-06-DETECT.
+- [P03-TEST-06-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-06-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-06-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-06-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-06-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-06-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-06-DETECT-R13] Use a separate reference calculation when P03-TEST-06-DETECT affects a key numerical total.
+- [P03-TEST-06-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Intermittent SKU has zero evaluation demand.
+- [P03-TEST-06-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-06-DETECT.
+- [P03-TEST-06-DETECT-R16] If blocked by environment capability, mark P03-TEST-06-DETECT blocked and retain the executable test source.
+- [P03-TEST-06-DETECT-R17] Do not claim P03-TEST-06-DETECT passed from reading the implementation or from another test passing.
+- [P03-TEST-06-DETECT-R18] Rerun P03-TEST-06-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-06-RECOVER: Intermittent SKU has zero evaluation demand — recover
+- [P03-TEST-06-RECOVER-R01] Failure hypothesis: Intermittent SKU has zero evaluation demand.
+- [P03-TEST-06-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P03-TEST-06-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Intermittent SKU has zero evaluation demand.
+- [P03-TEST-06-RECOVER-R04] Document the expected business outcome before executing P03-TEST-06-RECOVER.
+- [P03-TEST-06-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-06-RECOVER-R06] Capture the initial canonical state and dataset hash for P03-TEST-06-RECOVER.
+- [P03-TEST-06-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-06-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-06-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-06-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-06-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-06-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-06-RECOVER-R13] Use a separate reference calculation when P03-TEST-06-RECOVER affects a key numerical total.
+- [P03-TEST-06-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Intermittent SKU has zero evaluation demand.
+- [P03-TEST-06-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-06-RECOVER.
+- [P03-TEST-06-RECOVER-R16] If blocked by environment capability, mark P03-TEST-06-RECOVER blocked and retain the executable test source.
+- [P03-TEST-06-RECOVER-R17] Do not claim P03-TEST-06-RECOVER passed from reading the implementation or from another test passing.
+- [P03-TEST-06-RECOVER-R18] Rerun P03-TEST-06-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-07-DETECT: Partial PO receipt counted as complete — detect
+- [P03-TEST-07-DETECT-R01] Failure hypothesis: Partial PO receipt counted as complete.
+- [P03-TEST-07-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P03-TEST-07-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Partial PO receipt counted as complete.
+- [P03-TEST-07-DETECT-R04] Document the expected business outcome before executing P03-TEST-07-DETECT.
+- [P03-TEST-07-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-07-DETECT-R06] Capture the initial canonical state and dataset hash for P03-TEST-07-DETECT.
+- [P03-TEST-07-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-07-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-07-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-07-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-07-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-07-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-07-DETECT-R13] Use a separate reference calculation when P03-TEST-07-DETECT affects a key numerical total.
+- [P03-TEST-07-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Partial PO receipt counted as complete.
+- [P03-TEST-07-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-07-DETECT.
+- [P03-TEST-07-DETECT-R16] If blocked by environment capability, mark P03-TEST-07-DETECT blocked and retain the executable test source.
+- [P03-TEST-07-DETECT-R17] Do not claim P03-TEST-07-DETECT passed from reading the implementation or from another test passing.
+- [P03-TEST-07-DETECT-R18] Rerun P03-TEST-07-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-07-RECOVER: Partial PO receipt counted as complete — recover
+- [P03-TEST-07-RECOVER-R01] Failure hypothesis: Partial PO receipt counted as complete.
+- [P03-TEST-07-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P03-TEST-07-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Partial PO receipt counted as complete.
+- [P03-TEST-07-RECOVER-R04] Document the expected business outcome before executing P03-TEST-07-RECOVER.
+- [P03-TEST-07-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-07-RECOVER-R06] Capture the initial canonical state and dataset hash for P03-TEST-07-RECOVER.
+- [P03-TEST-07-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-07-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-07-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-07-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-07-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-07-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-07-RECOVER-R13] Use a separate reference calculation when P03-TEST-07-RECOVER affects a key numerical total.
+- [P03-TEST-07-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Partial PO receipt counted as complete.
+- [P03-TEST-07-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-07-RECOVER.
+- [P03-TEST-07-RECOVER-R16] If blocked by environment capability, mark P03-TEST-07-RECOVER blocked and retain the executable test source.
+- [P03-TEST-07-RECOVER-R17] Do not claim P03-TEST-07-RECOVER passed from reading the implementation or from another test passing.
+- [P03-TEST-07-RECOVER-R18] Rerun P03-TEST-07-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-08-DETECT: Backorder and lost sale counted together — detect
+- [P03-TEST-08-DETECT-R01] Failure hypothesis: Backorder and lost sale counted together.
+- [P03-TEST-08-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P03-TEST-08-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Backorder and lost sale counted together.
+- [P03-TEST-08-DETECT-R04] Document the expected business outcome before executing P03-TEST-08-DETECT.
+- [P03-TEST-08-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-08-DETECT-R06] Capture the initial canonical state and dataset hash for P03-TEST-08-DETECT.
+- [P03-TEST-08-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-08-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-08-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-08-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-08-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-08-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-08-DETECT-R13] Use a separate reference calculation when P03-TEST-08-DETECT affects a key numerical total.
+- [P03-TEST-08-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Backorder and lost sale counted together.
+- [P03-TEST-08-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-08-DETECT.
+- [P03-TEST-08-DETECT-R16] If blocked by environment capability, mark P03-TEST-08-DETECT blocked and retain the executable test source.
+- [P03-TEST-08-DETECT-R17] Do not claim P03-TEST-08-DETECT passed from reading the implementation or from another test passing.
+- [P03-TEST-08-DETECT-R18] Rerun P03-TEST-08-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-08-RECOVER: Backorder and lost sale counted together — recover
+- [P03-TEST-08-RECOVER-R01] Failure hypothesis: Backorder and lost sale counted together.
+- [P03-TEST-08-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P03-TEST-08-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Backorder and lost sale counted together.
+- [P03-TEST-08-RECOVER-R04] Document the expected business outcome before executing P03-TEST-08-RECOVER.
+- [P03-TEST-08-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-08-RECOVER-R06] Capture the initial canonical state and dataset hash for P03-TEST-08-RECOVER.
+- [P03-TEST-08-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-08-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-08-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-08-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-08-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-08-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-08-RECOVER-R13] Use a separate reference calculation when P03-TEST-08-RECOVER affects a key numerical total.
+- [P03-TEST-08-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Backorder and lost sale counted together.
+- [P03-TEST-08-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-08-RECOVER.
+- [P03-TEST-08-RECOVER-R16] If blocked by environment capability, mark P03-TEST-08-RECOVER blocked and retain the executable test source.
+- [P03-TEST-08-RECOVER-R17] Do not claim P03-TEST-08-RECOVER passed from reading the implementation or from another test passing.
+- [P03-TEST-08-RECOVER-R18] Rerun P03-TEST-08-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-09-DETECT: Two policies receive different demand samples — detect
+- [P03-TEST-09-DETECT-R01] Failure hypothesis: Two policies receive different demand samples.
+- [P03-TEST-09-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P03-TEST-09-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Two policies receive different demand samples.
+- [P03-TEST-09-DETECT-R04] Document the expected business outcome before executing P03-TEST-09-DETECT.
+- [P03-TEST-09-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-09-DETECT-R06] Capture the initial canonical state and dataset hash for P03-TEST-09-DETECT.
+- [P03-TEST-09-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-09-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-09-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-09-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-09-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-09-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-09-DETECT-R13] Use a separate reference calculation when P03-TEST-09-DETECT affects a key numerical total.
+- [P03-TEST-09-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Two policies receive different demand samples.
+- [P03-TEST-09-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-09-DETECT.
+- [P03-TEST-09-DETECT-R16] If blocked by environment capability, mark P03-TEST-09-DETECT blocked and retain the executable test source.
+- [P03-TEST-09-DETECT-R17] Do not claim P03-TEST-09-DETECT passed from reading the implementation or from another test passing.
+- [P03-TEST-09-DETECT-R18] Rerun P03-TEST-09-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-09-RECOVER: Two policies receive different demand samples — recover
+- [P03-TEST-09-RECOVER-R01] Failure hypothesis: Two policies receive different demand samples.
+- [P03-TEST-09-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P03-TEST-09-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Two policies receive different demand samples.
+- [P03-TEST-09-RECOVER-R04] Document the expected business outcome before executing P03-TEST-09-RECOVER.
+- [P03-TEST-09-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-09-RECOVER-R06] Capture the initial canonical state and dataset hash for P03-TEST-09-RECOVER.
+- [P03-TEST-09-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-09-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-09-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-09-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-09-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-09-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-09-RECOVER-R13] Use a separate reference calculation when P03-TEST-09-RECOVER affects a key numerical total.
+- [P03-TEST-09-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Two policies receive different demand samples.
+- [P03-TEST-09-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-09-RECOVER.
+- [P03-TEST-09-RECOVER-R16] If blocked by environment capability, mark P03-TEST-09-RECOVER blocked and retain the executable test source.
+- [P03-TEST-09-RECOVER-R17] Do not claim P03-TEST-09-RECOVER passed from reading the implementation or from another test passing.
+- [P03-TEST-09-RECOVER-R18] Rerun P03-TEST-09-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-10-DETECT: Inventory position double subtracts reserved stock — detect
+- [P03-TEST-10-DETECT-R01] Failure hypothesis: Inventory position double subtracts reserved stock.
+- [P03-TEST-10-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P03-TEST-10-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Inventory position double subtracts reserved stock.
+- [P03-TEST-10-DETECT-R04] Document the expected business outcome before executing P03-TEST-10-DETECT.
+- [P03-TEST-10-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-10-DETECT-R06] Capture the initial canonical state and dataset hash for P03-TEST-10-DETECT.
+- [P03-TEST-10-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-10-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-10-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-10-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-10-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-10-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-10-DETECT-R13] Use a separate reference calculation when P03-TEST-10-DETECT affects a key numerical total.
+- [P03-TEST-10-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Inventory position double subtracts reserved stock.
+- [P03-TEST-10-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-10-DETECT.
+- [P03-TEST-10-DETECT-R16] If blocked by environment capability, mark P03-TEST-10-DETECT blocked and retain the executable test source.
+- [P03-TEST-10-DETECT-R17] Do not claim P03-TEST-10-DETECT passed from reading the implementation or from another test passing.
+- [P03-TEST-10-DETECT-R18] Rerun P03-TEST-10-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-10-RECOVER: Inventory position double subtracts reserved stock — recover
+- [P03-TEST-10-RECOVER-R01] Failure hypothesis: Inventory position double subtracts reserved stock.
+- [P03-TEST-10-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P03-TEST-10-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Inventory position double subtracts reserved stock.
+- [P03-TEST-10-RECOVER-R04] Document the expected business outcome before executing P03-TEST-10-RECOVER.
+- [P03-TEST-10-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-10-RECOVER-R06] Capture the initial canonical state and dataset hash for P03-TEST-10-RECOVER.
+- [P03-TEST-10-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-10-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-10-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-10-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-10-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-10-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-10-RECOVER-R13] Use a separate reference calculation when P03-TEST-10-RECOVER affects a key numerical total.
+- [P03-TEST-10-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Inventory position double subtracts reserved stock.
+- [P03-TEST-10-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-10-RECOVER.
+- [P03-TEST-10-RECOVER-R16] If blocked by environment capability, mark P03-TEST-10-RECOVER blocked and retain the executable test source.
+- [P03-TEST-10-RECOVER-R17] Do not claim P03-TEST-10-RECOVER passed from reading the implementation or from another test passing.
+- [P03-TEST-10-RECOVER-R18] Rerun P03-TEST-10-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-11-DETECT: Receipt arrives before order date — detect
+- [P03-TEST-11-DETECT-R01] Failure hypothesis: Receipt arrives before order date.
+- [P03-TEST-11-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P03-TEST-11-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Receipt arrives before order date.
+- [P03-TEST-11-DETECT-R04] Document the expected business outcome before executing P03-TEST-11-DETECT.
+- [P03-TEST-11-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-11-DETECT-R06] Capture the initial canonical state and dataset hash for P03-TEST-11-DETECT.
+- [P03-TEST-11-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-11-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-11-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-11-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-11-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-11-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-11-DETECT-R13] Use a separate reference calculation when P03-TEST-11-DETECT affects a key numerical total.
+- [P03-TEST-11-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Receipt arrives before order date.
+- [P03-TEST-11-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-11-DETECT.
+- [P03-TEST-11-DETECT-R16] If blocked by environment capability, mark P03-TEST-11-DETECT blocked and retain the executable test source.
+- [P03-TEST-11-DETECT-R17] Do not claim P03-TEST-11-DETECT passed from reading the implementation or from another test passing.
+- [P03-TEST-11-DETECT-R18] Rerun P03-TEST-11-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-11-RECOVER: Receipt arrives before order date — recover
+- [P03-TEST-11-RECOVER-R01] Failure hypothesis: Receipt arrives before order date.
+- [P03-TEST-11-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P03-TEST-11-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Receipt arrives before order date.
+- [P03-TEST-11-RECOVER-R04] Document the expected business outcome before executing P03-TEST-11-RECOVER.
+- [P03-TEST-11-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-11-RECOVER-R06] Capture the initial canonical state and dataset hash for P03-TEST-11-RECOVER.
+- [P03-TEST-11-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-11-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-11-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-11-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-11-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-11-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-11-RECOVER-R13] Use a separate reference calculation when P03-TEST-11-RECOVER affects a key numerical total.
+- [P03-TEST-11-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Receipt arrives before order date.
+- [P03-TEST-11-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-11-RECOVER.
+- [P03-TEST-11-RECOVER-R16] If blocked by environment capability, mark P03-TEST-11-RECOVER blocked and retain the executable test source.
+- [P03-TEST-11-RECOVER-R17] Do not claim P03-TEST-11-RECOVER passed from reading the implementation or from another test passing.
+- [P03-TEST-11-RECOVER-R18] Rerun P03-TEST-11-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-12-DETECT: Unit cost changes within valuation period — detect
+- [P03-TEST-12-DETECT-R01] Failure hypothesis: Unit cost changes within valuation period.
+- [P03-TEST-12-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P03-TEST-12-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Unit cost changes within valuation period.
+- [P03-TEST-12-DETECT-R04] Document the expected business outcome before executing P03-TEST-12-DETECT.
+- [P03-TEST-12-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-12-DETECT-R06] Capture the initial canonical state and dataset hash for P03-TEST-12-DETECT.
+- [P03-TEST-12-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-12-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-12-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-12-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-12-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-12-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-12-DETECT-R13] Use a separate reference calculation when P03-TEST-12-DETECT affects a key numerical total.
+- [P03-TEST-12-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Unit cost changes within valuation period.
+- [P03-TEST-12-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-12-DETECT.
+- [P03-TEST-12-DETECT-R16] If blocked by environment capability, mark P03-TEST-12-DETECT blocked and retain the executable test source.
+- [P03-TEST-12-DETECT-R17] Do not claim P03-TEST-12-DETECT passed from reading the implementation or from another test passing.
+- [P03-TEST-12-DETECT-R18] Rerun P03-TEST-12-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P03-TEST-12-RECOVER: Unit cost changes within valuation period — recover
+- [P03-TEST-12-RECOVER-R01] Failure hypothesis: Unit cost changes within valuation period.
+- [P03-TEST-12-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P03-TEST-12-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Unit cost changes within valuation period.
+- [P03-TEST-12-RECOVER-R04] Document the expected business outcome before executing P03-TEST-12-RECOVER.
+- [P03-TEST-12-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P03-TEST-12-RECOVER-R06] Capture the initial canonical state and dataset hash for P03-TEST-12-RECOVER.
+- [P03-TEST-12-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P03-TEST-12-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P03-TEST-12-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P03-TEST-12-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P03-TEST-12-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P03-TEST-12-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P03-TEST-12-RECOVER-R13] Use a separate reference calculation when P03-TEST-12-RECOVER affects a key numerical total.
+- [P03-TEST-12-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Unit cost changes within valuation period.
+- [P03-TEST-12-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P03-TEST-12-RECOVER.
+- [P03-TEST-12-RECOVER-R16] If blocked by environment capability, mark P03-TEST-12-RECOVER blocked and retain the executable test source.
+- [P03-TEST-12-RECOVER-R17] Do not claim P03-TEST-12-RECOVER passed from reading the implementation or from another test passing.
+- [P03-TEST-12-RECOVER-R18] Rerun P03-TEST-12-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+
+## 08. Business and technical deliverables
+
+### P03-ART-01: business-case
+- [P03-ART-01-R01] Deliver business-case for SupplyScope.
+- [P03-ART-01-R02] Its required content is business problem, stakeholder map, scope, current/future-state process and decision criteria.
+- [P03-ART-01-R03] Use this business decision as its organizing question: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-ART-01-R04] Reference actual supplyscope entities, metrics and workflow IDs instead of generic template prose.
+- [P03-ART-01-R05] Keep business-case source files under the project directory in GitHub.
+- [P03-ART-01-R06] Generate binary business-case outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P03-ART-01-R07] Include the source dataset hash and implementation revision in business-case where relevant.
+- [P03-ART-01-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in business-case.
+- [P03-ART-01-R09] Check that important numbers in business-case reconcile with the independent reference calculation.
+- [P03-ART-01-R10] Use clear units, periods and population descriptions throughout business-case.
+- [P03-ART-01-R11] If business-case depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P03-ART-01-R12] Provide a brief read/use instruction for business-case without requiring laptop installation.
+- [P03-ART-01-R13] Use accessible headings, labels and tables in business-case.
+- [P03-ART-01-R14] Link business-case from the individual website evidence area when safe and useful.
+- [P03-ART-01-R15] Do not publish credentials, real personal records or internal secrets in business-case.
+- [P03-ART-01-R16] Have the appropriate specialist review business-case before coordinator integration.
+- [P03-ART-01-R17] Record the actual verification status of business-case in the release manifest.
+- [P03-ART-01-R18] Keep business-case claims consistent with the public case study and resume bullet suggestions.
+### P03-ART-02: requirements
+- [P03-ART-02-R01] Deliver requirements for SupplyScope.
+- [P03-ART-02-R02] Its required content is functional requirements, nonfunctional requirements, user stories, acceptance criteria and traceability.
+- [P03-ART-02-R03] Use this business decision as its organizing question: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-ART-02-R04] Reference actual supplyscope entities, metrics and workflow IDs instead of generic template prose.
+- [P03-ART-02-R05] Keep requirements source files under the project directory in GitHub.
+- [P03-ART-02-R06] Generate binary requirements outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P03-ART-02-R07] Include the source dataset hash and implementation revision in requirements where relevant.
+- [P03-ART-02-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in requirements.
+- [P03-ART-02-R09] Check that important numbers in requirements reconcile with the independent reference calculation.
+- [P03-ART-02-R10] Use clear units, periods and population descriptions throughout requirements.
+- [P03-ART-02-R11] If requirements depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P03-ART-02-R12] Provide a brief read/use instruction for requirements without requiring laptop installation.
+- [P03-ART-02-R13] Use accessible headings, labels and tables in requirements.
+- [P03-ART-02-R14] Link requirements from the individual website evidence area when safe and useful.
+- [P03-ART-02-R15] Do not publish credentials, real personal records or internal secrets in requirements.
+- [P03-ART-02-R16] Have the appropriate specialist review requirements before coordinator integration.
+- [P03-ART-02-R17] Record the actual verification status of requirements in the release manifest.
+- [P03-ART-02-R18] Keep requirements claims consistent with the public case study and resume bullet suggestions.
+### P03-ART-03: data-dictionary
+- [P03-ART-03-R01] Deliver data-dictionary for SupplyScope.
+- [P03-ART-03-R02] Its required content is entity grain, field types, source contracts, foreign keys and source-to-target mapping.
+- [P03-ART-03-R03] Use this business decision as its organizing question: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-ART-03-R04] Reference actual supplyscope entities, metrics and workflow IDs instead of generic template prose.
+- [P03-ART-03-R05] Keep data-dictionary source files under the project directory in GitHub.
+- [P03-ART-03-R06] Generate binary data-dictionary outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P03-ART-03-R07] Include the source dataset hash and implementation revision in data-dictionary where relevant.
+- [P03-ART-03-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in data-dictionary.
+- [P03-ART-03-R09] Check that important numbers in data-dictionary reconcile with the independent reference calculation.
+- [P03-ART-03-R10] Use clear units, periods and population descriptions throughout data-dictionary.
+- [P03-ART-03-R11] If data-dictionary depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P03-ART-03-R12] Provide a brief read/use instruction for data-dictionary without requiring laptop installation.
+- [P03-ART-03-R13] Use accessible headings, labels and tables in data-dictionary.
+- [P03-ART-03-R14] Link data-dictionary from the individual website evidence area when safe and useful.
+- [P03-ART-03-R15] Do not publish credentials, real personal records or internal secrets in data-dictionary.
+- [P03-ART-03-R16] Have the appropriate specialist review data-dictionary before coordinator integration.
+- [P03-ART-03-R17] Record the actual verification status of data-dictionary in the release manifest.
+- [P03-ART-03-R18] Keep data-dictionary claims consistent with the public case study and resume bullet suggestions.
+### P03-ART-04: sql-analysis
+- [P03-ART-04-R01] Deliver sql-analysis for SupplyScope.
+- [P03-ART-04-R02] Its required content is executable SQL investigations with independently reconciled totals.
+- [P03-ART-04-R03] Use this business decision as its organizing question: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-ART-04-R04] Reference actual supplyscope entities, metrics and workflow IDs instead of generic template prose.
+- [P03-ART-04-R05] Keep sql-analysis source files under the project directory in GitHub.
+- [P03-ART-04-R06] Generate binary sql-analysis outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P03-ART-04-R07] Include the source dataset hash and implementation revision in sql-analysis where relevant.
+- [P03-ART-04-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in sql-analysis.
+- [P03-ART-04-R09] Check that important numbers in sql-analysis reconcile with the independent reference calculation.
+- [P03-ART-04-R10] Use clear units, periods and population descriptions throughout sql-analysis.
+- [P03-ART-04-R11] If sql-analysis depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P03-ART-04-R12] Provide a brief read/use instruction for sql-analysis without requiring laptop installation.
+- [P03-ART-04-R13] Use accessible headings, labels and tables in sql-analysis.
+- [P03-ART-04-R14] Link sql-analysis from the individual website evidence area when safe and useful.
+- [P03-ART-04-R15] Do not publish credentials, real personal records or internal secrets in sql-analysis.
+- [P03-ART-04-R16] Have the appropriate specialist review sql-analysis before coordinator integration.
+- [P03-ART-04-R17] Record the actual verification status of sql-analysis in the release manifest.
+- [P03-ART-04-R18] Keep sql-analysis claims consistent with the public case study and resume bullet suggestions.
+### P03-ART-05: excel-workbook
+- [P03-ART-05-R01] Deliver excel-workbook for SupplyScope.
+- [P03-ART-05-R02] Its required content is formula-driven analyst workbook using project inputs and explicit assumptions.
+- [P03-ART-05-R03] Use this business decision as its organizing question: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-ART-05-R04] Reference actual supplyscope entities, metrics and workflow IDs instead of generic template prose.
+- [P03-ART-05-R05] Keep excel-workbook source files under the project directory in GitHub.
+- [P03-ART-05-R06] Generate binary excel-workbook outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P03-ART-05-R07] Include the source dataset hash and implementation revision in excel-workbook where relevant.
+- [P03-ART-05-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in excel-workbook.
+- [P03-ART-05-R09] Check that important numbers in excel-workbook reconcile with the independent reference calculation.
+- [P03-ART-05-R10] Use clear units, periods and population descriptions throughout excel-workbook.
+- [P03-ART-05-R11] If excel-workbook depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P03-ART-05-R12] Provide a brief read/use instruction for excel-workbook without requiring laptop installation.
+- [P03-ART-05-R13] Use accessible headings, labels and tables in excel-workbook.
+- [P03-ART-05-R14] Link excel-workbook from the individual website evidence area when safe and useful.
+- [P03-ART-05-R15] Do not publish credentials, real personal records or internal secrets in excel-workbook.
+- [P03-ART-05-R16] Have the appropriate specialist review excel-workbook before coordinator integration.
+- [P03-ART-05-R17] Record the actual verification status of excel-workbook in the release manifest.
+- [P03-ART-05-R18] Keep excel-workbook claims consistent with the public case study and resume bullet suggestions.
+### P03-ART-06: bi-package
+- [P03-ART-06-R01] Deliver bi-package for SupplyScope.
+- [P03-ART-06-R02] Its required content is reusable metric model, relationships, DAX/Power Query where relevant and verification status.
+- [P03-ART-06-R03] Use this business decision as its organizing question: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-ART-06-R04] Reference actual supplyscope entities, metrics and workflow IDs instead of generic template prose.
+- [P03-ART-06-R05] Keep bi-package source files under the project directory in GitHub.
+- [P03-ART-06-R06] Generate binary bi-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P03-ART-06-R07] Include the source dataset hash and implementation revision in bi-package where relevant.
+- [P03-ART-06-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in bi-package.
+- [P03-ART-06-R09] Check that important numbers in bi-package reconcile with the independent reference calculation.
+- [P03-ART-06-R10] Use clear units, periods and population descriptions throughout bi-package.
+- [P03-ART-06-R11] If bi-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P03-ART-06-R12] Provide a brief read/use instruction for bi-package without requiring laptop installation.
+- [P03-ART-06-R13] Use accessible headings, labels and tables in bi-package.
+- [P03-ART-06-R14] Link bi-package from the individual website evidence area when safe and useful.
+- [P03-ART-06-R15] Do not publish credentials, real personal records or internal secrets in bi-package.
+- [P03-ART-06-R16] Have the appropriate specialist review bi-package before coordinator integration.
+- [P03-ART-06-R17] Record the actual verification status of bi-package in the release manifest.
+- [P03-ART-06-R18] Keep bi-package claims consistent with the public case study and resume bullet suggestions.
+### P03-ART-07: executive-memo
+- [P03-ART-07-R01] Deliver executive-memo for SupplyScope.
+- [P03-ART-07-R02] Its required content is evidence-based recommendation, options, uncertainty and limitations.
+- [P03-ART-07-R03] Use this business decision as its organizing question: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-ART-07-R04] Reference actual supplyscope entities, metrics and workflow IDs instead of generic template prose.
+- [P03-ART-07-R05] Keep executive-memo source files under the project directory in GitHub.
+- [P03-ART-07-R06] Generate binary executive-memo outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P03-ART-07-R07] Include the source dataset hash and implementation revision in executive-memo where relevant.
+- [P03-ART-07-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in executive-memo.
+- [P03-ART-07-R09] Check that important numbers in executive-memo reconcile with the independent reference calculation.
+- [P03-ART-07-R10] Use clear units, periods and population descriptions throughout executive-memo.
+- [P03-ART-07-R11] If executive-memo depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P03-ART-07-R12] Provide a brief read/use instruction for executive-memo without requiring laptop installation.
+- [P03-ART-07-R13] Use accessible headings, labels and tables in executive-memo.
+- [P03-ART-07-R14] Link executive-memo from the individual website evidence area when safe and useful.
+- [P03-ART-07-R15] Do not publish credentials, real personal records or internal secrets in executive-memo.
+- [P03-ART-07-R16] Have the appropriate specialist review executive-memo before coordinator integration.
+- [P03-ART-07-R17] Record the actual verification status of executive-memo in the release manifest.
+- [P03-ART-07-R18] Keep executive-memo claims consistent with the public case study and resume bullet suggestions.
+### P03-ART-08: uat-evidence
+- [P03-ART-08-R01] Deliver uat-evidence for SupplyScope.
+- [P03-ART-08-R02] Its required content is business scenarios with expected answers, actual observations and defect disposition.
+- [P03-ART-08-R03] Use this business decision as its organizing question: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-ART-08-R04] Reference actual supplyscope entities, metrics and workflow IDs instead of generic template prose.
+- [P03-ART-08-R05] Keep uat-evidence source files under the project directory in GitHub.
+- [P03-ART-08-R06] Generate binary uat-evidence outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P03-ART-08-R07] Include the source dataset hash and implementation revision in uat-evidence where relevant.
+- [P03-ART-08-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in uat-evidence.
+- [P03-ART-08-R09] Check that important numbers in uat-evidence reconcile with the independent reference calculation.
+- [P03-ART-08-R10] Use clear units, periods and population descriptions throughout uat-evidence.
+- [P03-ART-08-R11] If uat-evidence depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P03-ART-08-R12] Provide a brief read/use instruction for uat-evidence without requiring laptop installation.
+- [P03-ART-08-R13] Use accessible headings, labels and tables in uat-evidence.
+- [P03-ART-08-R14] Link uat-evidence from the individual website evidence area when safe and useful.
+- [P03-ART-08-R15] Do not publish credentials, real personal records or internal secrets in uat-evidence.
+- [P03-ART-08-R16] Have the appropriate specialist review uat-evidence before coordinator integration.
+- [P03-ART-08-R17] Record the actual verification status of uat-evidence in the release manifest.
+- [P03-ART-08-R18] Keep uat-evidence claims consistent with the public case study and resume bullet suggestions.
+### P03-ART-09: technical-case-study
+- [P03-ART-09-R01] Deliver technical-case-study for SupplyScope.
+- [P03-ART-09-R02] Its required content is architecture, tradeoffs, recovery behavior, reproducible setup and measured evidence.
+- [P03-ART-09-R03] Use this business decision as its organizing question: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-ART-09-R04] Reference actual supplyscope entities, metrics and workflow IDs instead of generic template prose.
+- [P03-ART-09-R05] Keep technical-case-study source files under the project directory in GitHub.
+- [P03-ART-09-R06] Generate binary technical-case-study outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P03-ART-09-R07] Include the source dataset hash and implementation revision in technical-case-study where relevant.
+- [P03-ART-09-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in technical-case-study.
+- [P03-ART-09-R09] Check that important numbers in technical-case-study reconcile with the independent reference calculation.
+- [P03-ART-09-R10] Use clear units, periods and population descriptions throughout technical-case-study.
+- [P03-ART-09-R11] If technical-case-study depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P03-ART-09-R12] Provide a brief read/use instruction for technical-case-study without requiring laptop installation.
+- [P03-ART-09-R13] Use accessible headings, labels and tables in technical-case-study.
+- [P03-ART-09-R14] Link technical-case-study from the individual website evidence area when safe and useful.
+- [P03-ART-09-R15] Do not publish credentials, real personal records or internal secrets in technical-case-study.
+- [P03-ART-09-R16] Have the appropriate specialist review technical-case-study before coordinator integration.
+- [P03-ART-09-R17] Record the actual verification status of technical-case-study in the release manifest.
+- [P03-ART-09-R18] Keep technical-case-study claims consistent with the public case study and resume bullet suggestions.
+### P03-ART-10: release-package
+- [P03-ART-10-R01] Deliver release-package for SupplyScope.
+- [P03-ART-10-R02] Its required content is individual site, source links, checksums, main portfolio metadata and rollback manifest.
+- [P03-ART-10-R03] Use this business decision as its organizing question: What should be ordered, when, and under which service and working-capital assumptions?
+- [P03-ART-10-R04] Reference actual supplyscope entities, metrics and workflow IDs instead of generic template prose.
+- [P03-ART-10-R05] Keep release-package source files under the project directory in GitHub.
+- [P03-ART-10-R06] Generate binary release-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P03-ART-10-R07] Include the source dataset hash and implementation revision in release-package where relevant.
+- [P03-ART-10-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in release-package.
+- [P03-ART-10-R09] Check that important numbers in release-package reconcile with the independent reference calculation.
+- [P03-ART-10-R10] Use clear units, periods and population descriptions throughout release-package.
+- [P03-ART-10-R11] If release-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P03-ART-10-R12] Provide a brief read/use instruction for release-package without requiring laptop installation.
+- [P03-ART-10-R13] Use accessible headings, labels and tables in release-package.
+- [P03-ART-10-R14] Link release-package from the individual website evidence area when safe and useful.
+- [P03-ART-10-R15] Do not publish credentials, real personal records or internal secrets in release-package.
+- [P03-ART-10-R16] Have the appropriate specialist review release-package before coordinator integration.
+- [P03-ART-10-R17] Record the actual verification status of release-package in the release manifest.
+- [P03-ART-10-R18] Keep release-package claims consistent with the public case study and resume bullet suggestions.
+
+## 09. Remote implementation work packages
+
+### P03-WORK-01: contract
+- [P03-WORK-01-R01] Assign contract to the business-contract specialist; write and review concrete definitions before implementing.
+- [P03-WORK-01-R02] Fable coordinator must supply the relevant P03 contract IDs and explicit file ownership.
+- [P03-WORK-01-R03] Resolve the actual specialist model before dispatching P03-WORK-01.
+- [P03-WORK-01-R04] Record requested model, resolved model, task ID and parent assignment for P03-WORK-01.
+- [P03-WORK-01-R05] Run P03-WORK-01 only in a verified GitHub-hosted environment.
+- [P03-WORK-01-R06] Checkpoint the incoming code SHA and assumptions before P03-WORK-01 edits.
+- [P03-WORK-01-R07] Complete a bounded vertical slice in P03-WORK-01; do not redesign unrelated projects.
+- [P03-WORK-01-R08] Return changed paths, verification performed and unresolved issues from P03-WORK-01.
+- [P03-WORK-01-R09] Review the diff and run affected checks before integrating P03-WORK-01.
+- [P03-WORK-01-R10] Persist the resulting commit SHA and evidence URLs for P03-WORK-01.
+- [P03-WORK-01-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P03-WORK-01-R12] No routine permission request is needed at the end of P03-WORK-01; proceed according to the master authorization envelope.
+### P03-WORK-02: fixtures
+- [P03-WORK-02-R01] Assign fixtures to the verification specialist; establish known answers independently of product calculations.
+- [P03-WORK-02-R02] Fable coordinator must supply the relevant P03 contract IDs and explicit file ownership.
+- [P03-WORK-02-R03] Resolve the actual specialist model before dispatching P03-WORK-02.
+- [P03-WORK-02-R04] Record requested model, resolved model, task ID and parent assignment for P03-WORK-02.
+- [P03-WORK-02-R05] Run P03-WORK-02 only in a verified GitHub-hosted environment.
+- [P03-WORK-02-R06] Checkpoint the incoming code SHA and assumptions before P03-WORK-02 edits.
+- [P03-WORK-02-R07] Complete a bounded vertical slice in P03-WORK-02; do not redesign unrelated projects.
+- [P03-WORK-02-R08] Return changed paths, verification performed and unresolved issues from P03-WORK-02.
+- [P03-WORK-02-R09] Review the diff and run affected checks before integrating P03-WORK-02.
+- [P03-WORK-02-R10] Persist the resulting commit SHA and evidence URLs for P03-WORK-02.
+- [P03-WORK-02-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P03-WORK-02-R12] No routine permission request is needed at the end of P03-WORK-02; proceed according to the master authorization envelope.
+### P03-WORK-03: data
+- [P03-WORK-03-R01] Assign data to the data specialist; generate sources, validate and reconcile transformations.
+- [P03-WORK-03-R02] Fable coordinator must supply the relevant P03 contract IDs and explicit file ownership.
+- [P03-WORK-03-R03] Resolve the actual specialist model before dispatching P03-WORK-03.
+- [P03-WORK-03-R04] Record requested model, resolved model, task ID and parent assignment for P03-WORK-03.
+- [P03-WORK-03-R05] Run P03-WORK-03 only in a verified GitHub-hosted environment.
+- [P03-WORK-03-R06] Checkpoint the incoming code SHA and assumptions before P03-WORK-03 edits.
+- [P03-WORK-03-R07] Complete a bounded vertical slice in P03-WORK-03; do not redesign unrelated projects.
+- [P03-WORK-03-R08] Return changed paths, verification performed and unresolved issues from P03-WORK-03.
+- [P03-WORK-03-R09] Review the diff and run affected checks before integrating P03-WORK-03.
+- [P03-WORK-03-R10] Persist the resulting commit SHA and evidence URLs for P03-WORK-03.
+- [P03-WORK-03-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P03-WORK-03-R12] No routine permission request is needed at the end of P03-WORK-03; proceed according to the master authorization envelope.
+### P03-WORK-04: backend
+- [P03-WORK-04-R01] Assign backend to the backend specialist; implement tested transitions and API contracts on remote runners.
+- [P03-WORK-04-R02] Fable coordinator must supply the relevant P03 contract IDs and explicit file ownership.
+- [P03-WORK-04-R03] Resolve the actual specialist model before dispatching P03-WORK-04.
+- [P03-WORK-04-R04] Record requested model, resolved model, task ID and parent assignment for P03-WORK-04.
+- [P03-WORK-04-R05] Run P03-WORK-04 only in a verified GitHub-hosted environment.
+- [P03-WORK-04-R06] Checkpoint the incoming code SHA and assumptions before P03-WORK-04 edits.
+- [P03-WORK-04-R07] Complete a bounded vertical slice in P03-WORK-04; do not redesign unrelated projects.
+- [P03-WORK-04-R08] Return changed paths, verification performed and unresolved issues from P03-WORK-04.
+- [P03-WORK-04-R09] Review the diff and run affected checks before integrating P03-WORK-04.
+- [P03-WORK-04-R10] Persist the resulting commit SHA and evidence URLs for P03-WORK-04.
+- [P03-WORK-04-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P03-WORK-04-R12] No routine permission request is needed at the end of P03-WORK-04; proceed according to the master authorization envelope.
+### P03-WORK-05: web
+- [P03-WORK-05-R01] Assign web to the frontend specialist; connect the first decision journey to verified inputs.
+- [P03-WORK-05-R02] Fable coordinator must supply the relevant P03 contract IDs and explicit file ownership.
+- [P03-WORK-05-R03] Resolve the actual specialist model before dispatching P03-WORK-05.
+- [P03-WORK-05-R04] Record requested model, resolved model, task ID and parent assignment for P03-WORK-05.
+- [P03-WORK-05-R05] Run P03-WORK-05 only in a verified GitHub-hosted environment.
+- [P03-WORK-05-R06] Checkpoint the incoming code SHA and assumptions before P03-WORK-05 edits.
+- [P03-WORK-05-R07] Complete a bounded vertical slice in P03-WORK-05; do not redesign unrelated projects.
+- [P03-WORK-05-R08] Return changed paths, verification performed and unresolved issues from P03-WORK-05.
+- [P03-WORK-05-R09] Review the diff and run affected checks before integrating P03-WORK-05.
+- [P03-WORK-05-R10] Persist the resulting commit SHA and evidence URLs for P03-WORK-05.
+- [P03-WORK-05-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P03-WORK-05-R12] No routine permission request is needed at the end of P03-WORK-05; proceed according to the master authorization envelope.
+### P03-WORK-06: analytics
+- [P03-WORK-06-R01] Assign analytics to the quantitative specialist; verify calculations and domain-specific evaluation.
+- [P03-WORK-06-R02] Fable coordinator must supply the relevant P03 contract IDs and explicit file ownership.
+- [P03-WORK-06-R03] Resolve the actual specialist model before dispatching P03-WORK-06.
+- [P03-WORK-06-R04] Record requested model, resolved model, task ID and parent assignment for P03-WORK-06.
+- [P03-WORK-06-R05] Run P03-WORK-06 only in a verified GitHub-hosted environment.
+- [P03-WORK-06-R06] Checkpoint the incoming code SHA and assumptions before P03-WORK-06 edits.
+- [P03-WORK-06-R07] Complete a bounded vertical slice in P03-WORK-06; do not redesign unrelated projects.
+- [P03-WORK-06-R08] Return changed paths, verification performed and unresolved issues from P03-WORK-06.
+- [P03-WORK-06-R09] Review the diff and run affected checks before integrating P03-WORK-06.
+- [P03-WORK-06-R10] Persist the resulting commit SHA and evidence URLs for P03-WORK-06.
+- [P03-WORK-06-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P03-WORK-06-R12] No routine permission request is needed at the end of P03-WORK-06; proceed according to the master authorization envelope.
+### P03-WORK-07: review
+- [P03-WORK-07-R01] Assign review to the verification specialist; challenge invariants and inspect rendered evidence.
+- [P03-WORK-07-R02] Fable coordinator must supply the relevant P03 contract IDs and explicit file ownership.
+- [P03-WORK-07-R03] Resolve the actual specialist model before dispatching P03-WORK-07.
+- [P03-WORK-07-R04] Record requested model, resolved model, task ID and parent assignment for P03-WORK-07.
+- [P03-WORK-07-R05] Run P03-WORK-07 only in a verified GitHub-hosted environment.
+- [P03-WORK-07-R06] Checkpoint the incoming code SHA and assumptions before P03-WORK-07 edits.
+- [P03-WORK-07-R07] Complete a bounded vertical slice in P03-WORK-07; do not redesign unrelated projects.
+- [P03-WORK-07-R08] Return changed paths, verification performed and unresolved issues from P03-WORK-07.
+- [P03-WORK-07-R09] Review the diff and run affected checks before integrating P03-WORK-07.
+- [P03-WORK-07-R10] Persist the resulting commit SHA and evidence URLs for P03-WORK-07.
+- [P03-WORK-07-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P03-WORK-07-R12] No routine permission request is needed at the end of P03-WORK-07; proceed according to the master authorization envelope.
+### P03-WORK-08: artifacts
+- [P03-WORK-08-R01] Assign artifacts to the business-contract specialist; complete business and analytical deliverables.
+- [P03-WORK-08-R02] Fable coordinator must supply the relevant P03 contract IDs and explicit file ownership.
+- [P03-WORK-08-R03] Resolve the actual specialist model before dispatching P03-WORK-08.
+- [P03-WORK-08-R04] Record requested model, resolved model, task ID and parent assignment for P03-WORK-08.
+- [P03-WORK-08-R05] Run P03-WORK-08 only in a verified GitHub-hosted environment.
+- [P03-WORK-08-R06] Checkpoint the incoming code SHA and assumptions before P03-WORK-08 edits.
+- [P03-WORK-08-R07] Complete a bounded vertical slice in P03-WORK-08; do not redesign unrelated projects.
+- [P03-WORK-08-R08] Return changed paths, verification performed and unresolved issues from P03-WORK-08.
+- [P03-WORK-08-R09] Review the diff and run affected checks before integrating P03-WORK-08.
+- [P03-WORK-08-R10] Persist the resulting commit SHA and evidence URLs for P03-WORK-08.
+- [P03-WORK-08-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P03-WORK-08-R12] No routine permission request is needed at the end of P03-WORK-08; proceed according to the master authorization envelope.
+### P03-WORK-09: release
+- [P03-WORK-09-R01] Assign release to the release specialist; publish and verify the standalone static website.
+- [P03-WORK-09-R02] Fable coordinator must supply the relevant P03 contract IDs and explicit file ownership.
+- [P03-WORK-09-R03] Resolve the actual specialist model before dispatching P03-WORK-09.
+- [P03-WORK-09-R04] Record requested model, resolved model, task ID and parent assignment for P03-WORK-09.
+- [P03-WORK-09-R05] Run P03-WORK-09 only in a verified GitHub-hosted environment.
+- [P03-WORK-09-R06] Checkpoint the incoming code SHA and assumptions before P03-WORK-09 edits.
+- [P03-WORK-09-R07] Complete a bounded vertical slice in P03-WORK-09; do not redesign unrelated projects.
+- [P03-WORK-09-R08] Return changed paths, verification performed and unresolved issues from P03-WORK-09.
+- [P03-WORK-09-R09] Review the diff and run affected checks before integrating P03-WORK-09.
+- [P03-WORK-09-R10] Persist the resulting commit SHA and evidence URLs for P03-WORK-09.
+- [P03-WORK-09-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P03-WORK-09-R12] No routine permission request is needed at the end of P03-WORK-09; proceed according to the master authorization envelope.
+### P03-WORK-10: integrate
+- [P03-WORK-10-R01] Assign integrate to the release specialist; rebuild and verify the existing main portfolio entry.
+- [P03-WORK-10-R02] Fable coordinator must supply the relevant P03 contract IDs and explicit file ownership.
+- [P03-WORK-10-R03] Resolve the actual specialist model before dispatching P03-WORK-10.
+- [P03-WORK-10-R04] Record requested model, resolved model, task ID and parent assignment for P03-WORK-10.
+- [P03-WORK-10-R05] Run P03-WORK-10 only in a verified GitHub-hosted environment.
+- [P03-WORK-10-R06] Checkpoint the incoming code SHA and assumptions before P03-WORK-10 edits.
+- [P03-WORK-10-R07] Complete a bounded vertical slice in P03-WORK-10; do not redesign unrelated projects.
+- [P03-WORK-10-R08] Return changed paths, verification performed and unresolved issues from P03-WORK-10.
+- [P03-WORK-10-R09] Review the diff and run affected checks before integrating P03-WORK-10.
+- [P03-WORK-10-R10] Persist the resulting commit SHA and evidence URLs for P03-WORK-10.
+- [P03-WORK-10-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P03-WORK-10-R12] No routine permission request is needed at the end of P03-WORK-10; proceed according to the master authorization envelope.
+
+## 10. Release, individual website and main portfolio acceptance
+
+- [P03-REL-01] Build supplyscope as an independently navigable static product website with its own landing, demo and evidence routes.
+- [P03-REL-02] Publish under a unique verified GitHub Pages path; do not assume the path exists before deployment.
+- [P03-REL-03] Preserve all supplyscope durable source, contracts, data generation and evidence in GitHub.
+- [P03-REL-04] Use no laptop checkout, local database, downloaded workbook or browser persistent storage as a build dependency.
+- [P03-REL-05] Run the backend and relational acceptance suite in GitHub Actions with a transient PostgreSQL service.
+- [P03-REL-06] Document the distinction between verified backend execution and browser-only simulated actions.
+- [P03-REL-07] Check every public export for synthetic-only data and absence of secrets.
+- [P03-REL-08] Archive durable workbook/notebook/evidence outputs with checksums and code revision.
+- [P03-REL-09] Verify deployed HTTP responses, route reload, one real user journey, downloads and source links.
+- [P03-REL-10] Inspect the current main projects site schema and generate its required project.json record.
+- [P03-REL-11] Produce cover.jpg and required loop media from actual project visuals with accurate labels.
+- [P03-REL-12] Regenerate catalogue and case-study pages through the current portfolio build process.
+- [P03-REL-13] Preserve the existing Precision Atelier design system on the main site.
+- [P03-REL-14] Keep this individual product identity separate from the main site theme requirements.
+- [P03-REL-15] Add catalogue/search/category/navigation entries according to the existing source schema.
+- [P03-REL-16] Do not modify unrelated project metadata or replace the main opening animation.
+- [P03-REL-17] Confirm the individual website is reachable before its portfolio link is published.
+- [P03-REL-18] Verify the main portfolio case study links to this actual website, source and evidence.
+- [P03-REL-19] Run existing site checks and targeted new-project route checks in hosted compute.
+- [P03-REL-20] Record built, verified, published and integrated as separate release fields.
+- [P03-REL-21] If an external permission blocks publication, preserve a ready change and report its exact state.
+- [P03-REL-22] Do not label a source commit as a verified live release.
+- [P03-REL-23] Prepare rollback to the preceding known-good portfolio/site artifact.
+- [P03-REL-24] End the SupplyScope handoff with the supported business decision, actual evidence and material limitations.
+
+## 11. Concrete implementation starting contracts
+
+These choices fix the default implementation shape. Change them only through a logged domain/architecture decision.
+Project directory: apps/supplyscope/.
+Web: React and TypeScript, static build, route base injected by build configuration.
+Backend verification: FastAPI with generated OpenAPI, exercised only on a GitHub-hosted runner by default.
+Relational verification: PostgreSQL service container populated from deterministic fixtures.
+Business logic: pure Python domain functions separated from database and HTTP adapters.
+Browser scenario logic: TypeScript implementation checked against the same independently calculated fixtures.
+Canonical timestamps: UTC instants; display calendars can use configured IANA time zones.
+Canonical identifiers: opaque stable text IDs derived from source identifiers, not mutable display names.
+Canonical currency for the small reference fixture: USD unless explicitly stated otherwise.
+Money: decimal strings in JSON and NUMERIC(20,6) in database; round to currency minor units only at the declared step.
+Probabilities and rates: numeric values in [0,1] where their definition is a proportion; percentage-point differences may be signed.
+Count fields: nonnegative integers unless a signed movement/variance is explicitly part of the business definition.
+Absence: JSON null; do not use NaN, Infinity, the string null, or an empty string as substitute.
+Collection ordering: documented stable field plus primary-key tie breaker.
+Pagination: limit default 50, maximum 200; opaque cursor on large evidence collections.
+Time filtering: from inclusive, to exclusive; reject invalid or reversed ranges.
+Snapshot consistency: all data returned for one analysis references one immutable dataset_version.
+Scenario consistency: baseline_version is immutable; scenario edits use a distinct scenario_id and version.
+Conflict behavior: return 409 for stale version or idempotency-key reuse with a different payload.
+Validation behavior: return 422 with field path, rule ID and safe user message.
+Authorization behavior on the verified backend: 401 for missing identity, 403 for forbidden action; never fake public auth.
+Read-model response: data, meta, warnings; meta includes dataset_version, code_sha, generated_at and applied_filters.
+Error response: error.code, error.message, error.details, request_id; never stack traces or tokens.
+Command request: input, expected_version where relevant, idempotency_key for state-changing operations.
+Audit event: event_id, entity_type, entity_id, action, actor_id, occurred_at, before_version, after_version, reason.
+Static mode: command requests use a local in-memory adapter and display that fact before an action is taken.
+Static mode: a refresh intentionally restores the published fixture; do not imply durable multi-user state.
+API boundaries below are backend contracts to implement and verify; they are not public Pages endpoints.
+Generate a static data manifest rather than requesting unavailable /api routes from GitHub Pages.
+Minimum request tests: valid, malformed, unknown resource, stale version, repeated command and unsupported action.
+Minimum read tests: no records, one record, multiple pages, invalid filter, stable ordering and evidence reconciliation.
+Create a route inventory in docs/api-contract.md before frontend integration.
+Do not publish synthetic actor role switching as proof of backend authorization.
+Only claim access-control verification from separate backend identities and direct request tests.
+Use an optimistic record version for mutable operational rows; keep immutable event rows append-only.
+Specify missing source references as quarantine or explicit unresolved records, not arbitrary placeholder joins.
+Use migrations and seed scripts that succeed from an empty database and on a second idempotent run.
+Keep CI data fixtures below a documented size; large benchmark generation is an opt-in workflow input.
+Archive the exact exported data used by the public static demo with its checksum.
+Do not accidentally archive a transient database connection URL in any manifest.
+### Command C01: Load movements
+- Contract endpoint: POST /api/v1/supplyscope/commands/load-movements.
+- Business transition: Raw movement -> validated ledger.
+- Hard validation: Reject duplicate movement identifiers.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C02: Reconstruct stock
+- Contract endpoint: POST /api/v1/supplyscope/commands/reconstruct-stock.
+- Business transition: Ledger -> as-of inventory.
+- Hard validation: Use complete historical order.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C03: Forecast demand
+- Contract endpoint: POST /api/v1/supplyscope/commands/forecast-demand.
+- Business transition: Training cutoff -> future horizon.
+- Hard validation: Fit only information available at cutoff.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C04: Classify SKUs
+- Contract endpoint: POST /api/v1/supplyscope/commands/classify-skus.
+- Business transition: Annual consumption -> ABC class.
+- Hard validation: Value-based ranking documented.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C05: Calculate replenishment
+- Contract endpoint: POST /api/v1/supplyscope/commands/calculate-replenishment.
+- Business transition: Position below trigger -> draft order.
+- Hard validation: Apply packs and supplier calendar.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C06: Simulate arrival
+- Contract endpoint: POST /api/v1/supplyscope/commands/simulate-arrival.
+- Business transition: Outstanding PO -> receipt.
+- Hard validation: No receipt before lead-time elapsed.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C07: Record unmet demand
+- Contract endpoint: POST /api/v1/supplyscope/commands/record-unmet-demand.
+- Business transition: Demand exceeds stock -> lost sale or backlog.
+- Hard validation: Scenario selects one policy.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C08: Compare policies
+- Contract endpoint: POST /api/v1/supplyscope/commands/compare-policies.
+- Business transition: Common random paths -> outcome comparison.
+- Hard validation: Same random demand and delays.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C09: Review supplier
+- Contract endpoint: POST /api/v1/supplyscope/commands/review-supplier.
+- Business transition: Promised versus actual receipts -> reliability.
+- Hard validation: Avoid future receipt leakage.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C10: Export buying plan
+- Contract endpoint: POST /api/v1/supplyscope/commands/export-buying-plan.
+- Business transition: Reviewed drafts -> CSV.
+- Hard validation: Never submit real purchase orders.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Read contract: products
+- Endpoint: GET /api/v1/supplyscope/data/products.
+- Evidence fields: product_id,sku,unit_cost,pack_size,minimum_order_quantity.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: locations
+- Endpoint: GET /api/v1/supplyscope/data/locations.
+- Evidence fields: location_id,location_name,timezone,storage_capacity,active.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: sales
+- Endpoint: GET /api/v1/supplyscope/data/sales.
+- Evidence fields: sale_id,product_id,location_id,sold_at,quantity.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: inventory_movements
+- Endpoint: GET /api/v1/supplyscope/data/inventory_movements.
+- Evidence fields: movement_id,product_id,location_id,quantity_delta,event_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: purchase_orders
+- Endpoint: GET /api/v1/supplyscope/data/purchase_orders.
+- Evidence fields: purchase_order_id,supplier_id,ordered_at,status,currency.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: purchase_order_lines
+- Endpoint: GET /api/v1/supplyscope/data/purchase_order_lines.
+- Evidence fields: po_line_id,purchase_order_id,product_id,ordered_quantity,unit_cost.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: receipts
+- Endpoint: GET /api/v1/supplyscope/data/receipts.
+- Evidence fields: receipt_id,po_line_id,location_id,received_quantity,received_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: suppliers
+- Endpoint: GET /api/v1/supplyscope/data/suppliers.
+- Evidence fields: supplier_id,supplier_name,calendar_id,quoted_lead_days,active.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: promotions
+- Endpoint: GET /api/v1/supplyscope/data/promotions.
+- Evidence fields: promotion_id,product_id,starts_at,ends_at,promo_factor.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: forecast_runs
+- Endpoint: GET /api/v1/supplyscope/data/forecast_runs.
+- Evidence fields: forecast_run_id,cutoff_at,model_version,horizon,seed.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: forecast_points
+- Endpoint: GET /api/v1/supplyscope/data/forecast_points.
+- Evidence fields: forecast_point_id,forecast_run_id,product_id,target_date,predicted_quantity.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: policy_scenarios
+- Endpoint: GET /api/v1/supplyscope/data/policy_scenarios.
+- Evidence fields: scenario_id,service_target,holding_cost_rate,lost_sale_cost,seed.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+
+## 12. Small versus large data profiles
+
+- golden: use the exact hand-checkable fixture in section 02; do not substitute random rows.
+- demo: start with approximately 500 primary business objects and enough linked events to demonstrate every required path.
+- analytical history: use the project-required observation horizon, including complete outcome windows and historical versions.
+- benchmark: optional input controls size; begin with 10,000 primary objects and increase only within observed runner resources.
+- store generator seed, config, schema version and injection manifest for every profile.
+- do not equate object count with event count; report each explicitly.
+- keep semantic distributions configurable; volume scaling must not change business rules.
+- do not use a large dataset to hide a failed small known-answer case.
+- no native software requirement may force a laptop download; preserve source and mark unsupported verification honestly.
+- acceptance evidence must state which profile each test used.

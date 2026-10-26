@@ -1,0 +1,2749 @@
+# P05 — InvoiceBridge: complete project build specification
+Version: 2026-10-26. Read MASTER-DIRECTIVE.md first. These are requirements, not claims that software already exists.
+
+## 01. Product mandate and business boundary
+
+- [P05-GOAL-01] Build a standalone product supporting this decision: Which invoices may advance and which require exception review?
+- [P05-GOAL-02] Primary portfolio roles: Automation Analyst; Business Systems Analyst; Business Analyst.
+- [P05-GOAL-03] Visual direction: Document reconciliation desk: warm paper, charcoal, muted teal; evidence beside decision.
+- [P05-GOAL-04] Use app slug invoicebridge; keep routes, fixtures, manifests and catalogue entries consistent.
+- [P05-GOAL-05] Execute code only on GitHub-hosted compute; retain durable deliverables in GitHub; never write project files to the laptop.
+- [P05-GOAL-06] Default public experience is static interactive synthetic demo; transactional backend evidence comes from remote CI.
+- [P05-GOAL-07] Use Fable 5.1 for coordination and real specialist-model invocations for implementation and verification.
+- [P05-GOAL-08] Resolve provider/model availability and record actual requested/resolved IDs without inventing capabilities.
+- [P05-GOAL-09] The entry milestone is one complete source-to-decision journey using the reference fixture and working export.
+- [P05-GOAL-10] The mid-level milestone adds the specified exceptions, robustness, versioning and recovery evidence.
+- [P05-GOAL-11] Do not open with a chatbot or require a paid inference API to use the demo.
+- [P05-GOAL-12] No live customer data, real payment, vendor commitment or operational write belongs in the default synthetic demo.
+- [P05-GOAL-13] All monetary, temporal and statistical meaning must be defined before interface implementation.
+- [P05-GOAL-14] If a proposed field/formula conflicts with an invariant, fix the specification through a logged decision before coding.
+- [P05-GOAL-15] Keep specifications addressable by the IDs in this file; do not paste the entire file into every worker prompt.
+- [P05-DOMAIN-01] No real payments or bank connections.
+- [P05-DOMAIN-02] Use structured import as reliable core and optional OCR adapter.
+- [P05-DOMAIN-03] Decimal arithmetic never binary float for money.
+- [P05-DOMAIN-04] Matching does not confer approval.
+- [P05-DOMAIN-05] Require creator/reviewer distinction in backend controls.
+- [P05-DOMAIN-06] Preserve source bytes hash and correction lineage.
+
+## 02. Independent known-answer fixture
+
+- [P05-GOLD-01] PO 10 units at $20; accepted receipt 6 units; first invoice 6 units at $20 matches $120 before tax. A second invoice for 4 units is quantity-blocked until receipt arrives. Importing the first invoice twice must leave one obligation. With 10% tax and no other charges, first total=$132.
+- [P05-GOLD-02] Encode the reference inputs under tests/fixtures/golden/ and preserve the human-readable calculation.
+- [P05-GOLD-03] Keep the expected-answer file independent of application helper functions and generated dashboard output.
+- [P05-GOLD-04] Have the verification specialist reproduce the answer from the source records before implementation review.
+- [P05-GOLD-05] Use explicit decimal tolerance for monetary results and justified tolerance for statistical/numerical results.
+- [P05-GOLD-06] Test the displayed value, exported value and backend result against the reference, not only against each other.
+- [P05-GOLD-07] Do not enlarge a numeric tolerance to conceal a business-rule disagreement.
+- [P05-GOLD-08] Create one rejected-record variant and show why rejection is correct.
+- [P05-GOLD-09] Create one empty-population variant and show the documented zero-denominator behavior.
+- [P05-GOLD-10] Persist fixture hashes and verification evidence with the code revision.
+- [P05-GOLD-11] If this fixture reveals a definition gap, resolve and version the definition before treating results as authoritative.
+
+## 03. Logical data model and field contracts
+
+### P05-DATA-01: vendors
+- [P05-DATA-01-R01] Create the vendors entity with a documented grain and one stable primary key: vendor_id.
+- [P05-DATA-01-R02] The minimum business fields are vendor_id, vendor_name, tax_reference, currency, active; add technical metadata only with a documented purpose.
+- [P05-DATA-01-R03] Use the role of vendors in the product workflow to define authoritative source ownership.
+- [P05-DATA-01-R04] Write migrations for vendors; do not rely on ORM auto-create for the verified release.
+- [P05-DATA-01-R05] Create a small valid vendors fixture linked to the independently calculated project example.
+- [P05-DATA-01-R06] Create an invalid vendors fixture that demonstrates a real domain constraint.
+- [P05-DATA-01-R07] Choose explicit row-update semantics for vendors: immutable event, versioned dimension or mutable operational record.
+- [P05-DATA-01-R08] Preserve the original source identifier for vendors when a surrogate key is introduced.
+- [P05-DATA-01-R09] Document whether deletion of vendors is prohibited, reversible or represented by a tombstone.
+- [P05-DATA-01-R10] Reconcile vendors accepted, rejected and deduplicated row counts to the source batch.
+- [P05-DATA-01-R11] Expose only justified synthetic vendors fields to the public site; remove internal runner metadata.
+- [P05-DATA-01-R12] Index vendors according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P05-DATA-01-R13] Do not join vendors at a different grain without an explicit aggregation or allocation rule.
+- [P05-DATA-01-R14] Associate the published vendors snapshot with dataset hash and generator parameters.
+- [P05-DATA-01-R15] Define deterministic sorting and pagination for the vendors evidence view.
+- [P05-DATA-01-R16] Ensure an empty vendors dataset yields an understandable empty state instead of fabricated sample totals.
+- [P05-DATA-01-R17] Archive the vendors schema and sample rows in the data dictionary.
+- [P05-DATA-01-R18] Test that replaying the source import cannot unintentionally duplicate vendors business records.
+- [P05-DATA-01-F01-R01] Field vendors.vendor_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-01-F01-R02] Field vendors.vendor_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-01-F01-R03] Field vendors.vendor_id: make it non-null and unique as the primary key.
+- [P05-DATA-01-F01-R04] Field vendors.vendor_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-01-F01-R05] Field vendors.vendor_id: use stable source-to-key mapping across replays and regeneration.
+- [P05-DATA-01-F01-R06] Field vendors.vendor_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-01-F01-R07] Field vendors.vendor_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-01-F01-R08] Field vendors.vendor_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-01-F02-R01] Field vendors.vendor_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-01-F02-R02] Field vendors.vendor_name: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-01-F02-R03] Field vendors.vendor_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-01-F02-R04] Field vendors.vendor_name: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-01-F02-R05] Field vendors.vendor_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-01-F02-R06] Field vendors.vendor_name: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-01-F02-R07] Field vendors.vendor_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-01-F02-R08] Field vendors.vendor_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-01-F03-R01] Field vendors.tax_reference: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-01-F03-R02] Field vendors.tax_reference: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-01-F03-R03] Field vendors.tax_reference: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-01-F03-R04] Field vendors.tax_reference: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-01-F03-R05] Field vendors.tax_reference: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-01-F03-R06] Field vendors.tax_reference: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-01-F03-R07] Field vendors.tax_reference: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-01-F03-R08] Field vendors.tax_reference: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-01-F04-R01] Field vendors.currency: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-01-F04-R02] Field vendors.currency: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-01-F04-R03] Field vendors.currency: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-01-F04-R04] Field vendors.currency: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-01-F04-R05] Field vendors.currency: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-01-F04-R06] Field vendors.currency: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-01-F04-R07] Field vendors.currency: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-01-F04-R08] Field vendors.currency: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-01-F05-R01] Field vendors.active: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P05-DATA-01-F05-R02] Field vendors.active: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-01-F05-R03] Field vendors.active: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-01-F05-R04] Field vendors.active: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-01-F05-R05] Field vendors.active: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-01-F05-R06] Field vendors.active: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-01-F05-R07] Field vendors.active: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-01-F05-R08] Field vendors.active: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P05-DATA-02: purchase_orders
+- [P05-DATA-02-R01] Create the purchase_orders entity with a documented grain and one stable primary key: po_id.
+- [P05-DATA-02-R02] The minimum business fields are po_id, vendor_id, ordered_at, status, currency; add technical metadata only with a documented purpose.
+- [P05-DATA-02-R03] Use the role of purchase_orders in the product workflow to define authoritative source ownership.
+- [P05-DATA-02-R04] Write migrations for purchase_orders; do not rely on ORM auto-create for the verified release.
+- [P05-DATA-02-R05] Create a small valid purchase_orders fixture linked to the independently calculated project example.
+- [P05-DATA-02-R06] Create an invalid purchase_orders fixture that demonstrates a real domain constraint.
+- [P05-DATA-02-R07] Choose explicit row-update semantics for purchase_orders: immutable event, versioned dimension or mutable operational record.
+- [P05-DATA-02-R08] Preserve the original source identifier for purchase_orders when a surrogate key is introduced.
+- [P05-DATA-02-R09] Document whether deletion of purchase_orders is prohibited, reversible or represented by a tombstone.
+- [P05-DATA-02-R10] Reconcile purchase_orders accepted, rejected and deduplicated row counts to the source batch.
+- [P05-DATA-02-R11] Expose only justified synthetic purchase_orders fields to the public site; remove internal runner metadata.
+- [P05-DATA-02-R12] Index purchase_orders according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P05-DATA-02-R13] Do not join purchase_orders at a different grain without an explicit aggregation or allocation rule.
+- [P05-DATA-02-R14] Associate the published purchase_orders snapshot with dataset hash and generator parameters.
+- [P05-DATA-02-R15] Define deterministic sorting and pagination for the purchase_orders evidence view.
+- [P05-DATA-02-R16] Ensure an empty purchase_orders dataset yields an understandable empty state instead of fabricated sample totals.
+- [P05-DATA-02-R17] Archive the purchase_orders schema and sample rows in the data dictionary.
+- [P05-DATA-02-R18] Test that replaying the source import cannot unintentionally duplicate purchase_orders business records.
+- [P05-DATA-02-F01-R01] Field purchase_orders.po_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-02-F01-R02] Field purchase_orders.po_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-02-F01-R03] Field purchase_orders.po_id: make it non-null and unique as the primary key.
+- [P05-DATA-02-F01-R04] Field purchase_orders.po_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-02-F01-R05] Field purchase_orders.po_id: use stable source-to-key mapping across replays and regeneration.
+- [P05-DATA-02-F01-R06] Field purchase_orders.po_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-02-F01-R07] Field purchase_orders.po_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-02-F01-R08] Field purchase_orders.po_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-02-F02-R01] Field purchase_orders.vendor_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-02-F02-R02] Field purchase_orders.vendor_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-02-F02-R03] Field purchase_orders.vendor_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-02-F02-R04] Field purchase_orders.vendor_id: validate its reference to vendors.vendor_id; explain deferred or quarantined unmatched records.
+- [P05-DATA-02-F02-R05] Field purchase_orders.vendor_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-02-F02-R06] Field purchase_orders.vendor_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-02-F02-R07] Field purchase_orders.vendor_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-02-F02-R08] Field purchase_orders.vendor_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-02-F03-R01] Field purchase_orders.ordered_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P05-DATA-02-F03-R02] Field purchase_orders.ordered_at: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-02-F03-R03] Field purchase_orders.ordered_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-02-F03-R04] Field purchase_orders.ordered_at: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-02-F03-R05] Field purchase_orders.ordered_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-02-F03-R06] Field purchase_orders.ordered_at: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-02-F03-R07] Field purchase_orders.ordered_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-02-F03-R08] Field purchase_orders.ordered_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-02-F04-R01] Field purchase_orders.status: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-02-F04-R02] Field purchase_orders.status: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-02-F04-R03] Field purchase_orders.status: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-02-F04-R04] Field purchase_orders.status: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-02-F04-R05] Field purchase_orders.status: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-02-F04-R06] Field purchase_orders.status: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-02-F04-R07] Field purchase_orders.status: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-02-F04-R08] Field purchase_orders.status: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-02-F05-R01] Field purchase_orders.currency: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-02-F05-R02] Field purchase_orders.currency: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-02-F05-R03] Field purchase_orders.currency: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-02-F05-R04] Field purchase_orders.currency: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-02-F05-R05] Field purchase_orders.currency: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-02-F05-R06] Field purchase_orders.currency: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-02-F05-R07] Field purchase_orders.currency: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-02-F05-R08] Field purchase_orders.currency: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P05-DATA-03: po_lines
+- [P05-DATA-03-R01] Create the po_lines entity with a documented grain and one stable primary key: po_line_id.
+- [P05-DATA-03-R02] The minimum business fields are po_line_id, po_id, product_code, quantity, unit_price; add technical metadata only with a documented purpose.
+- [P05-DATA-03-R03] Use the role of po_lines in the product workflow to define authoritative source ownership.
+- [P05-DATA-03-R04] Write migrations for po_lines; do not rely on ORM auto-create for the verified release.
+- [P05-DATA-03-R05] Create a small valid po_lines fixture linked to the independently calculated project example.
+- [P05-DATA-03-R06] Create an invalid po_lines fixture that demonstrates a real domain constraint.
+- [P05-DATA-03-R07] Choose explicit row-update semantics for po_lines: immutable event, versioned dimension or mutable operational record.
+- [P05-DATA-03-R08] Preserve the original source identifier for po_lines when a surrogate key is introduced.
+- [P05-DATA-03-R09] Document whether deletion of po_lines is prohibited, reversible or represented by a tombstone.
+- [P05-DATA-03-R10] Reconcile po_lines accepted, rejected and deduplicated row counts to the source batch.
+- [P05-DATA-03-R11] Expose only justified synthetic po_lines fields to the public site; remove internal runner metadata.
+- [P05-DATA-03-R12] Index po_lines according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P05-DATA-03-R13] Do not join po_lines at a different grain without an explicit aggregation or allocation rule.
+- [P05-DATA-03-R14] Associate the published po_lines snapshot with dataset hash and generator parameters.
+- [P05-DATA-03-R15] Define deterministic sorting and pagination for the po_lines evidence view.
+- [P05-DATA-03-R16] Ensure an empty po_lines dataset yields an understandable empty state instead of fabricated sample totals.
+- [P05-DATA-03-R17] Archive the po_lines schema and sample rows in the data dictionary.
+- [P05-DATA-03-R18] Test that replaying the source import cannot unintentionally duplicate po_lines business records.
+- [P05-DATA-03-F01-R01] Field po_lines.po_line_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-03-F01-R02] Field po_lines.po_line_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-03-F01-R03] Field po_lines.po_line_id: make it non-null and unique as the primary key.
+- [P05-DATA-03-F01-R04] Field po_lines.po_line_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-03-F01-R05] Field po_lines.po_line_id: use stable source-to-key mapping across replays and regeneration.
+- [P05-DATA-03-F01-R06] Field po_lines.po_line_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-03-F01-R07] Field po_lines.po_line_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-03-F01-R08] Field po_lines.po_line_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-03-F02-R01] Field po_lines.po_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-03-F02-R02] Field po_lines.po_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-03-F02-R03] Field po_lines.po_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-03-F02-R04] Field po_lines.po_id: validate its reference to purchase_orders.po_id; explain deferred or quarantined unmatched records.
+- [P05-DATA-03-F02-R05] Field po_lines.po_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-03-F02-R06] Field po_lines.po_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-03-F02-R07] Field po_lines.po_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-03-F02-R08] Field po_lines.po_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-03-F03-R01] Field po_lines.product_code: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-03-F03-R02] Field po_lines.product_code: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-03-F03-R03] Field po_lines.product_code: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-03-F03-R04] Field po_lines.product_code: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-03-F03-R05] Field po_lines.product_code: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-03-F03-R06] Field po_lines.product_code: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-03-F03-R07] Field po_lines.product_code: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-03-F03-R08] Field po_lines.product_code: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-03-F04-R01] Field po_lines.quantity: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P05-DATA-03-F04-R02] Field po_lines.quantity: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-03-F04-R03] Field po_lines.quantity: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-03-F04-R04] Field po_lines.quantity: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-03-F04-R05] Field po_lines.quantity: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-03-F04-R06] Field po_lines.quantity: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-03-F04-R07] Field po_lines.quantity: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-03-F04-R08] Field po_lines.quantity: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-03-F05-R01] Field po_lines.unit_price: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P05-DATA-03-F05-R02] Field po_lines.unit_price: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-03-F05-R03] Field po_lines.unit_price: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-03-F05-R04] Field po_lines.unit_price: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-03-F05-R05] Field po_lines.unit_price: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-03-F05-R06] Field po_lines.unit_price: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-03-F05-R07] Field po_lines.unit_price: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-03-F05-R08] Field po_lines.unit_price: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P05-DATA-04: receipts
+- [P05-DATA-04-R01] Create the receipts entity with a documented grain and one stable primary key: receipt_id.
+- [P05-DATA-04-R02] The minimum business fields are receipt_id, po_line_id, received_quantity, received_at, reversed; add technical metadata only with a documented purpose.
+- [P05-DATA-04-R03] Use the role of receipts in the product workflow to define authoritative source ownership.
+- [P05-DATA-04-R04] Write migrations for receipts; do not rely on ORM auto-create for the verified release.
+- [P05-DATA-04-R05] Create a small valid receipts fixture linked to the independently calculated project example.
+- [P05-DATA-04-R06] Create an invalid receipts fixture that demonstrates a real domain constraint.
+- [P05-DATA-04-R07] Choose explicit row-update semantics for receipts: immutable event, versioned dimension or mutable operational record.
+- [P05-DATA-04-R08] Preserve the original source identifier for receipts when a surrogate key is introduced.
+- [P05-DATA-04-R09] Document whether deletion of receipts is prohibited, reversible or represented by a tombstone.
+- [P05-DATA-04-R10] Reconcile receipts accepted, rejected and deduplicated row counts to the source batch.
+- [P05-DATA-04-R11] Expose only justified synthetic receipts fields to the public site; remove internal runner metadata.
+- [P05-DATA-04-R12] Index receipts according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P05-DATA-04-R13] Do not join receipts at a different grain without an explicit aggregation or allocation rule.
+- [P05-DATA-04-R14] Associate the published receipts snapshot with dataset hash and generator parameters.
+- [P05-DATA-04-R15] Define deterministic sorting and pagination for the receipts evidence view.
+- [P05-DATA-04-R16] Ensure an empty receipts dataset yields an understandable empty state instead of fabricated sample totals.
+- [P05-DATA-04-R17] Archive the receipts schema and sample rows in the data dictionary.
+- [P05-DATA-04-R18] Test that replaying the source import cannot unintentionally duplicate receipts business records.
+- [P05-DATA-04-F01-R01] Field receipts.receipt_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-04-F01-R02] Field receipts.receipt_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-04-F01-R03] Field receipts.receipt_id: make it non-null and unique as the primary key.
+- [P05-DATA-04-F01-R04] Field receipts.receipt_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-04-F01-R05] Field receipts.receipt_id: use stable source-to-key mapping across replays and regeneration.
+- [P05-DATA-04-F01-R06] Field receipts.receipt_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-04-F01-R07] Field receipts.receipt_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-04-F01-R08] Field receipts.receipt_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-04-F02-R01] Field receipts.po_line_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-04-F02-R02] Field receipts.po_line_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-04-F02-R03] Field receipts.po_line_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-04-F02-R04] Field receipts.po_line_id: validate its reference to po_lines.po_line_id; explain deferred or quarantined unmatched records.
+- [P05-DATA-04-F02-R05] Field receipts.po_line_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-04-F02-R06] Field receipts.po_line_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-04-F02-R07] Field receipts.po_line_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-04-F02-R08] Field receipts.po_line_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-04-F03-R01] Field receipts.received_quantity: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P05-DATA-04-F03-R02] Field receipts.received_quantity: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-04-F03-R03] Field receipts.received_quantity: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-04-F03-R04] Field receipts.received_quantity: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-04-F03-R05] Field receipts.received_quantity: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-04-F03-R06] Field receipts.received_quantity: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-04-F03-R07] Field receipts.received_quantity: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-04-F03-R08] Field receipts.received_quantity: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-04-F04-R01] Field receipts.received_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P05-DATA-04-F04-R02] Field receipts.received_at: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-04-F04-R03] Field receipts.received_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-04-F04-R04] Field receipts.received_at: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-04-F04-R05] Field receipts.received_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-04-F04-R06] Field receipts.received_at: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-04-F04-R07] Field receipts.received_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-04-F04-R08] Field receipts.received_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-04-F05-R01] Field receipts.reversed: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P05-DATA-04-F05-R02] Field receipts.reversed: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-04-F05-R03] Field receipts.reversed: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-04-F05-R04] Field receipts.reversed: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-04-F05-R05] Field receipts.reversed: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-04-F05-R06] Field receipts.reversed: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-04-F05-R07] Field receipts.reversed: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-04-F05-R08] Field receipts.reversed: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P05-DATA-05: invoices
+- [P05-DATA-05-R01] Create the invoices entity with a documented grain and one stable primary key: invoice_id.
+- [P05-DATA-05-R02] The minimum business fields are invoice_id, vendor_id, invoice_number, invoice_date, currency; add technical metadata only with a documented purpose.
+- [P05-DATA-05-R03] Use the role of invoices in the product workflow to define authoritative source ownership.
+- [P05-DATA-05-R04] Write migrations for invoices; do not rely on ORM auto-create for the verified release.
+- [P05-DATA-05-R05] Create a small valid invoices fixture linked to the independently calculated project example.
+- [P05-DATA-05-R06] Create an invalid invoices fixture that demonstrates a real domain constraint.
+- [P05-DATA-05-R07] Choose explicit row-update semantics for invoices: immutable event, versioned dimension or mutable operational record.
+- [P05-DATA-05-R08] Preserve the original source identifier for invoices when a surrogate key is introduced.
+- [P05-DATA-05-R09] Document whether deletion of invoices is prohibited, reversible or represented by a tombstone.
+- [P05-DATA-05-R10] Reconcile invoices accepted, rejected and deduplicated row counts to the source batch.
+- [P05-DATA-05-R11] Expose only justified synthetic invoices fields to the public site; remove internal runner metadata.
+- [P05-DATA-05-R12] Index invoices according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P05-DATA-05-R13] Do not join invoices at a different grain without an explicit aggregation or allocation rule.
+- [P05-DATA-05-R14] Associate the published invoices snapshot with dataset hash and generator parameters.
+- [P05-DATA-05-R15] Define deterministic sorting and pagination for the invoices evidence view.
+- [P05-DATA-05-R16] Ensure an empty invoices dataset yields an understandable empty state instead of fabricated sample totals.
+- [P05-DATA-05-R17] Archive the invoices schema and sample rows in the data dictionary.
+- [P05-DATA-05-R18] Test that replaying the source import cannot unintentionally duplicate invoices business records.
+- [P05-DATA-05-F01-R01] Field invoices.invoice_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-05-F01-R02] Field invoices.invoice_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-05-F01-R03] Field invoices.invoice_id: make it non-null and unique as the primary key.
+- [P05-DATA-05-F01-R04] Field invoices.invoice_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-05-F01-R05] Field invoices.invoice_id: use stable source-to-key mapping across replays and regeneration.
+- [P05-DATA-05-F01-R06] Field invoices.invoice_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-05-F01-R07] Field invoices.invoice_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-05-F01-R08] Field invoices.invoice_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-05-F02-R01] Field invoices.vendor_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-05-F02-R02] Field invoices.vendor_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-05-F02-R03] Field invoices.vendor_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-05-F02-R04] Field invoices.vendor_id: validate its reference to vendors.vendor_id; explain deferred or quarantined unmatched records.
+- [P05-DATA-05-F02-R05] Field invoices.vendor_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-05-F02-R06] Field invoices.vendor_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-05-F02-R07] Field invoices.vendor_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-05-F02-R08] Field invoices.vendor_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-05-F03-R01] Field invoices.invoice_number: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-05-F03-R02] Field invoices.invoice_number: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-05-F03-R03] Field invoices.invoice_number: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-05-F03-R04] Field invoices.invoice_number: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-05-F03-R05] Field invoices.invoice_number: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-05-F03-R06] Field invoices.invoice_number: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-05-F03-R07] Field invoices.invoice_number: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-05-F03-R08] Field invoices.invoice_number: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-05-F04-R01] Field invoices.invoice_date: use logical storage type date; resolve exact SQL precision/length before migration.
+- [P05-DATA-05-F04-R02] Field invoices.invoice_date: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-05-F04-R03] Field invoices.invoice_date: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-05-F04-R04] Field invoices.invoice_date: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-05-F04-R05] Field invoices.invoice_date: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-05-F04-R06] Field invoices.invoice_date: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-05-F04-R07] Field invoices.invoice_date: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-05-F04-R08] Field invoices.invoice_date: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-05-F05-R01] Field invoices.currency: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-05-F05-R02] Field invoices.currency: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-05-F05-R03] Field invoices.currency: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-05-F05-R04] Field invoices.currency: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-05-F05-R05] Field invoices.currency: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-05-F05-R06] Field invoices.currency: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-05-F05-R07] Field invoices.currency: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-05-F05-R08] Field invoices.currency: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P05-DATA-06: invoice_lines
+- [P05-DATA-06-R01] Create the invoice_lines entity with a documented grain and one stable primary key: invoice_line_id.
+- [P05-DATA-06-R02] The minimum business fields are invoice_line_id, invoice_id, po_line_id, quantity, unit_price; add technical metadata only with a documented purpose.
+- [P05-DATA-06-R03] Use the role of invoice_lines in the product workflow to define authoritative source ownership.
+- [P05-DATA-06-R04] Write migrations for invoice_lines; do not rely on ORM auto-create for the verified release.
+- [P05-DATA-06-R05] Create a small valid invoice_lines fixture linked to the independently calculated project example.
+- [P05-DATA-06-R06] Create an invalid invoice_lines fixture that demonstrates a real domain constraint.
+- [P05-DATA-06-R07] Choose explicit row-update semantics for invoice_lines: immutable event, versioned dimension or mutable operational record.
+- [P05-DATA-06-R08] Preserve the original source identifier for invoice_lines when a surrogate key is introduced.
+- [P05-DATA-06-R09] Document whether deletion of invoice_lines is prohibited, reversible or represented by a tombstone.
+- [P05-DATA-06-R10] Reconcile invoice_lines accepted, rejected and deduplicated row counts to the source batch.
+- [P05-DATA-06-R11] Expose only justified synthetic invoice_lines fields to the public site; remove internal runner metadata.
+- [P05-DATA-06-R12] Index invoice_lines according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P05-DATA-06-R13] Do not join invoice_lines at a different grain without an explicit aggregation or allocation rule.
+- [P05-DATA-06-R14] Associate the published invoice_lines snapshot with dataset hash and generator parameters.
+- [P05-DATA-06-R15] Define deterministic sorting and pagination for the invoice_lines evidence view.
+- [P05-DATA-06-R16] Ensure an empty invoice_lines dataset yields an understandable empty state instead of fabricated sample totals.
+- [P05-DATA-06-R17] Archive the invoice_lines schema and sample rows in the data dictionary.
+- [P05-DATA-06-R18] Test that replaying the source import cannot unintentionally duplicate invoice_lines business records.
+- [P05-DATA-06-F01-R01] Field invoice_lines.invoice_line_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-06-F01-R02] Field invoice_lines.invoice_line_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-06-F01-R03] Field invoice_lines.invoice_line_id: make it non-null and unique as the primary key.
+- [P05-DATA-06-F01-R04] Field invoice_lines.invoice_line_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-06-F01-R05] Field invoice_lines.invoice_line_id: use stable source-to-key mapping across replays and regeneration.
+- [P05-DATA-06-F01-R06] Field invoice_lines.invoice_line_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-06-F01-R07] Field invoice_lines.invoice_line_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-06-F01-R08] Field invoice_lines.invoice_line_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-06-F02-R01] Field invoice_lines.invoice_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-06-F02-R02] Field invoice_lines.invoice_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-06-F02-R03] Field invoice_lines.invoice_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-06-F02-R04] Field invoice_lines.invoice_id: validate its reference to invoices.invoice_id; explain deferred or quarantined unmatched records.
+- [P05-DATA-06-F02-R05] Field invoice_lines.invoice_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-06-F02-R06] Field invoice_lines.invoice_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-06-F02-R07] Field invoice_lines.invoice_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-06-F02-R08] Field invoice_lines.invoice_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-06-F03-R01] Field invoice_lines.po_line_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-06-F03-R02] Field invoice_lines.po_line_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-06-F03-R03] Field invoice_lines.po_line_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-06-F03-R04] Field invoice_lines.po_line_id: validate its reference to po_lines.po_line_id; explain deferred or quarantined unmatched records.
+- [P05-DATA-06-F03-R05] Field invoice_lines.po_line_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-06-F03-R06] Field invoice_lines.po_line_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-06-F03-R07] Field invoice_lines.po_line_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-06-F03-R08] Field invoice_lines.po_line_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-06-F04-R01] Field invoice_lines.quantity: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P05-DATA-06-F04-R02] Field invoice_lines.quantity: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-06-F04-R03] Field invoice_lines.quantity: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-06-F04-R04] Field invoice_lines.quantity: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-06-F04-R05] Field invoice_lines.quantity: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-06-F04-R06] Field invoice_lines.quantity: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-06-F04-R07] Field invoice_lines.quantity: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-06-F04-R08] Field invoice_lines.quantity: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-06-F05-R01] Field invoice_lines.unit_price: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P05-DATA-06-F05-R02] Field invoice_lines.unit_price: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-06-F05-R03] Field invoice_lines.unit_price: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-06-F05-R04] Field invoice_lines.unit_price: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-06-F05-R05] Field invoice_lines.unit_price: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-06-F05-R06] Field invoice_lines.unit_price: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-06-F05-R07] Field invoice_lines.unit_price: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-06-F05-R08] Field invoice_lines.unit_price: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P05-DATA-07: credit_notes
+- [P05-DATA-07-R01] Create the credit_notes entity with a documented grain and one stable primary key: credit_id.
+- [P05-DATA-07-R02] The minimum business fields are credit_id, invoice_id, credit_amount, reason, issued_at; add technical metadata only with a documented purpose.
+- [P05-DATA-07-R03] Use the role of credit_notes in the product workflow to define authoritative source ownership.
+- [P05-DATA-07-R04] Write migrations for credit_notes; do not rely on ORM auto-create for the verified release.
+- [P05-DATA-07-R05] Create a small valid credit_notes fixture linked to the independently calculated project example.
+- [P05-DATA-07-R06] Create an invalid credit_notes fixture that demonstrates a real domain constraint.
+- [P05-DATA-07-R07] Choose explicit row-update semantics for credit_notes: immutable event, versioned dimension or mutable operational record.
+- [P05-DATA-07-R08] Preserve the original source identifier for credit_notes when a surrogate key is introduced.
+- [P05-DATA-07-R09] Document whether deletion of credit_notes is prohibited, reversible or represented by a tombstone.
+- [P05-DATA-07-R10] Reconcile credit_notes accepted, rejected and deduplicated row counts to the source batch.
+- [P05-DATA-07-R11] Expose only justified synthetic credit_notes fields to the public site; remove internal runner metadata.
+- [P05-DATA-07-R12] Index credit_notes according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P05-DATA-07-R13] Do not join credit_notes at a different grain without an explicit aggregation or allocation rule.
+- [P05-DATA-07-R14] Associate the published credit_notes snapshot with dataset hash and generator parameters.
+- [P05-DATA-07-R15] Define deterministic sorting and pagination for the credit_notes evidence view.
+- [P05-DATA-07-R16] Ensure an empty credit_notes dataset yields an understandable empty state instead of fabricated sample totals.
+- [P05-DATA-07-R17] Archive the credit_notes schema and sample rows in the data dictionary.
+- [P05-DATA-07-R18] Test that replaying the source import cannot unintentionally duplicate credit_notes business records.
+- [P05-DATA-07-F01-R01] Field credit_notes.credit_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-07-F01-R02] Field credit_notes.credit_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-07-F01-R03] Field credit_notes.credit_id: make it non-null and unique as the primary key.
+- [P05-DATA-07-F01-R04] Field credit_notes.credit_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-07-F01-R05] Field credit_notes.credit_id: use stable source-to-key mapping across replays and regeneration.
+- [P05-DATA-07-F01-R06] Field credit_notes.credit_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-07-F01-R07] Field credit_notes.credit_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-07-F01-R08] Field credit_notes.credit_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-07-F02-R01] Field credit_notes.invoice_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-07-F02-R02] Field credit_notes.invoice_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-07-F02-R03] Field credit_notes.invoice_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-07-F02-R04] Field credit_notes.invoice_id: validate its reference to invoices.invoice_id; explain deferred or quarantined unmatched records.
+- [P05-DATA-07-F02-R05] Field credit_notes.invoice_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-07-F02-R06] Field credit_notes.invoice_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-07-F02-R07] Field credit_notes.invoice_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-07-F02-R08] Field credit_notes.invoice_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-07-F03-R01] Field credit_notes.credit_amount: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P05-DATA-07-F03-R02] Field credit_notes.credit_amount: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-07-F03-R03] Field credit_notes.credit_amount: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-07-F03-R04] Field credit_notes.credit_amount: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-07-F03-R05] Field credit_notes.credit_amount: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-07-F03-R06] Field credit_notes.credit_amount: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-07-F03-R07] Field credit_notes.credit_amount: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-07-F03-R08] Field credit_notes.credit_amount: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-07-F04-R01] Field credit_notes.reason: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-07-F04-R02] Field credit_notes.reason: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-07-F04-R03] Field credit_notes.reason: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-07-F04-R04] Field credit_notes.reason: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-07-F04-R05] Field credit_notes.reason: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-07-F04-R06] Field credit_notes.reason: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-07-F04-R07] Field credit_notes.reason: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-07-F04-R08] Field credit_notes.reason: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-07-F05-R01] Field credit_notes.issued_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P05-DATA-07-F05-R02] Field credit_notes.issued_at: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-07-F05-R03] Field credit_notes.issued_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-07-F05-R04] Field credit_notes.issued_at: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-07-F05-R05] Field credit_notes.issued_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-07-F05-R06] Field credit_notes.issued_at: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-07-F05-R07] Field credit_notes.issued_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-07-F05-R08] Field credit_notes.issued_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P05-DATA-08: match_results
+- [P05-DATA-08-R01] Create the match_results entity with a documented grain and one stable primary key: match_id.
+- [P05-DATA-08-R02] The minimum business fields are match_id, invoice_line_id, rule_version, status, explanation; add technical metadata only with a documented purpose.
+- [P05-DATA-08-R03] Use the role of match_results in the product workflow to define authoritative source ownership.
+- [P05-DATA-08-R04] Write migrations for match_results; do not rely on ORM auto-create for the verified release.
+- [P05-DATA-08-R05] Create a small valid match_results fixture linked to the independently calculated project example.
+- [P05-DATA-08-R06] Create an invalid match_results fixture that demonstrates a real domain constraint.
+- [P05-DATA-08-R07] Choose explicit row-update semantics for match_results: immutable event, versioned dimension or mutable operational record.
+- [P05-DATA-08-R08] Preserve the original source identifier for match_results when a surrogate key is introduced.
+- [P05-DATA-08-R09] Document whether deletion of match_results is prohibited, reversible or represented by a tombstone.
+- [P05-DATA-08-R10] Reconcile match_results accepted, rejected and deduplicated row counts to the source batch.
+- [P05-DATA-08-R11] Expose only justified synthetic match_results fields to the public site; remove internal runner metadata.
+- [P05-DATA-08-R12] Index match_results according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P05-DATA-08-R13] Do not join match_results at a different grain without an explicit aggregation or allocation rule.
+- [P05-DATA-08-R14] Associate the published match_results snapshot with dataset hash and generator parameters.
+- [P05-DATA-08-R15] Define deterministic sorting and pagination for the match_results evidence view.
+- [P05-DATA-08-R16] Ensure an empty match_results dataset yields an understandable empty state instead of fabricated sample totals.
+- [P05-DATA-08-R17] Archive the match_results schema and sample rows in the data dictionary.
+- [P05-DATA-08-R18] Test that replaying the source import cannot unintentionally duplicate match_results business records.
+- [P05-DATA-08-F01-R01] Field match_results.match_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-08-F01-R02] Field match_results.match_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-08-F01-R03] Field match_results.match_id: make it non-null and unique as the primary key.
+- [P05-DATA-08-F01-R04] Field match_results.match_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-08-F01-R05] Field match_results.match_id: use stable source-to-key mapping across replays and regeneration.
+- [P05-DATA-08-F01-R06] Field match_results.match_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-08-F01-R07] Field match_results.match_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-08-F01-R08] Field match_results.match_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-08-F02-R01] Field match_results.invoice_line_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-08-F02-R02] Field match_results.invoice_line_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-08-F02-R03] Field match_results.invoice_line_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-08-F02-R04] Field match_results.invoice_line_id: validate its reference to invoice_lines.invoice_line_id; explain deferred or quarantined unmatched records.
+- [P05-DATA-08-F02-R05] Field match_results.invoice_line_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-08-F02-R06] Field match_results.invoice_line_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-08-F02-R07] Field match_results.invoice_line_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-08-F02-R08] Field match_results.invoice_line_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-08-F03-R01] Field match_results.rule_version: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-08-F03-R02] Field match_results.rule_version: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-08-F03-R03] Field match_results.rule_version: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-08-F03-R04] Field match_results.rule_version: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-08-F03-R05] Field match_results.rule_version: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-08-F03-R06] Field match_results.rule_version: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-08-F03-R07] Field match_results.rule_version: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-08-F03-R08] Field match_results.rule_version: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-08-F04-R01] Field match_results.status: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-08-F04-R02] Field match_results.status: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-08-F04-R03] Field match_results.status: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-08-F04-R04] Field match_results.status: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-08-F04-R05] Field match_results.status: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-08-F04-R06] Field match_results.status: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-08-F04-R07] Field match_results.status: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-08-F04-R08] Field match_results.status: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-08-F05-R01] Field match_results.explanation: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-08-F05-R02] Field match_results.explanation: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-08-F05-R03] Field match_results.explanation: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-08-F05-R04] Field match_results.explanation: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-08-F05-R05] Field match_results.explanation: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-08-F05-R06] Field match_results.explanation: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-08-F05-R07] Field match_results.explanation: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-08-F05-R08] Field match_results.explanation: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P05-DATA-09: approval_policies
+- [P05-DATA-09-R01] Create the approval_policies entity with a documented grain and one stable primary key: policy_id.
+- [P05-DATA-09-R02] The minimum business fields are policy_id, version_number, amount_limit, reviewer_role, effective_from; add technical metadata only with a documented purpose.
+- [P05-DATA-09-R03] Use the role of approval_policies in the product workflow to define authoritative source ownership.
+- [P05-DATA-09-R04] Write migrations for approval_policies; do not rely on ORM auto-create for the verified release.
+- [P05-DATA-09-R05] Create a small valid approval_policies fixture linked to the independently calculated project example.
+- [P05-DATA-09-R06] Create an invalid approval_policies fixture that demonstrates a real domain constraint.
+- [P05-DATA-09-R07] Choose explicit row-update semantics for approval_policies: immutable event, versioned dimension or mutable operational record.
+- [P05-DATA-09-R08] Preserve the original source identifier for approval_policies when a surrogate key is introduced.
+- [P05-DATA-09-R09] Document whether deletion of approval_policies is prohibited, reversible or represented by a tombstone.
+- [P05-DATA-09-R10] Reconcile approval_policies accepted, rejected and deduplicated row counts to the source batch.
+- [P05-DATA-09-R11] Expose only justified synthetic approval_policies fields to the public site; remove internal runner metadata.
+- [P05-DATA-09-R12] Index approval_policies according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P05-DATA-09-R13] Do not join approval_policies at a different grain without an explicit aggregation or allocation rule.
+- [P05-DATA-09-R14] Associate the published approval_policies snapshot with dataset hash and generator parameters.
+- [P05-DATA-09-R15] Define deterministic sorting and pagination for the approval_policies evidence view.
+- [P05-DATA-09-R16] Ensure an empty approval_policies dataset yields an understandable empty state instead of fabricated sample totals.
+- [P05-DATA-09-R17] Archive the approval_policies schema and sample rows in the data dictionary.
+- [P05-DATA-09-R18] Test that replaying the source import cannot unintentionally duplicate approval_policies business records.
+- [P05-DATA-09-F01-R01] Field approval_policies.policy_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-09-F01-R02] Field approval_policies.policy_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-09-F01-R03] Field approval_policies.policy_id: make it non-null and unique as the primary key.
+- [P05-DATA-09-F01-R04] Field approval_policies.policy_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-09-F01-R05] Field approval_policies.policy_id: use stable source-to-key mapping across replays and regeneration.
+- [P05-DATA-09-F01-R06] Field approval_policies.policy_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-09-F01-R07] Field approval_policies.policy_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-09-F01-R08] Field approval_policies.policy_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-09-F02-R01] Field approval_policies.version_number: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P05-DATA-09-F02-R02] Field approval_policies.version_number: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-09-F02-R03] Field approval_policies.version_number: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-09-F02-R04] Field approval_policies.version_number: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-09-F02-R05] Field approval_policies.version_number: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-09-F02-R06] Field approval_policies.version_number: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-09-F02-R07] Field approval_policies.version_number: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-09-F02-R08] Field approval_policies.version_number: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-09-F03-R01] Field approval_policies.amount_limit: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P05-DATA-09-F03-R02] Field approval_policies.amount_limit: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-09-F03-R03] Field approval_policies.amount_limit: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-09-F03-R04] Field approval_policies.amount_limit: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-09-F03-R05] Field approval_policies.amount_limit: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-09-F03-R06] Field approval_policies.amount_limit: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-09-F03-R07] Field approval_policies.amount_limit: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-09-F03-R08] Field approval_policies.amount_limit: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-09-F04-R01] Field approval_policies.reviewer_role: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-09-F04-R02] Field approval_policies.reviewer_role: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-09-F04-R03] Field approval_policies.reviewer_role: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-09-F04-R04] Field approval_policies.reviewer_role: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-09-F04-R05] Field approval_policies.reviewer_role: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-09-F04-R06] Field approval_policies.reviewer_role: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-09-F04-R07] Field approval_policies.reviewer_role: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-09-F04-R08] Field approval_policies.reviewer_role: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-09-F05-R01] Field approval_policies.effective_from: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P05-DATA-09-F05-R02] Field approval_policies.effective_from: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-09-F05-R03] Field approval_policies.effective_from: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-09-F05-R04] Field approval_policies.effective_from: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-09-F05-R05] Field approval_policies.effective_from: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-09-F05-R06] Field approval_policies.effective_from: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-09-F05-R07] Field approval_policies.effective_from: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-09-F05-R08] Field approval_policies.effective_from: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P05-DATA-10: approvals
+- [P05-DATA-10-R01] Create the approvals entity with a documented grain and one stable primary key: approval_id.
+- [P05-DATA-10-R02] The minimum business fields are approval_id, invoice_id, actor_id, decision, decided_at; add technical metadata only with a documented purpose.
+- [P05-DATA-10-R03] Use the role of approvals in the product workflow to define authoritative source ownership.
+- [P05-DATA-10-R04] Write migrations for approvals; do not rely on ORM auto-create for the verified release.
+- [P05-DATA-10-R05] Create a small valid approvals fixture linked to the independently calculated project example.
+- [P05-DATA-10-R06] Create an invalid approvals fixture that demonstrates a real domain constraint.
+- [P05-DATA-10-R07] Choose explicit row-update semantics for approvals: immutable event, versioned dimension or mutable operational record.
+- [P05-DATA-10-R08] Preserve the original source identifier for approvals when a surrogate key is introduced.
+- [P05-DATA-10-R09] Document whether deletion of approvals is prohibited, reversible or represented by a tombstone.
+- [P05-DATA-10-R10] Reconcile approvals accepted, rejected and deduplicated row counts to the source batch.
+- [P05-DATA-10-R11] Expose only justified synthetic approvals fields to the public site; remove internal runner metadata.
+- [P05-DATA-10-R12] Index approvals according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P05-DATA-10-R13] Do not join approvals at a different grain without an explicit aggregation or allocation rule.
+- [P05-DATA-10-R14] Associate the published approvals snapshot with dataset hash and generator parameters.
+- [P05-DATA-10-R15] Define deterministic sorting and pagination for the approvals evidence view.
+- [P05-DATA-10-R16] Ensure an empty approvals dataset yields an understandable empty state instead of fabricated sample totals.
+- [P05-DATA-10-R17] Archive the approvals schema and sample rows in the data dictionary.
+- [P05-DATA-10-R18] Test that replaying the source import cannot unintentionally duplicate approvals business records.
+- [P05-DATA-10-F01-R01] Field approvals.approval_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-10-F01-R02] Field approvals.approval_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-10-F01-R03] Field approvals.approval_id: make it non-null and unique as the primary key.
+- [P05-DATA-10-F01-R04] Field approvals.approval_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-10-F01-R05] Field approvals.approval_id: use stable source-to-key mapping across replays and regeneration.
+- [P05-DATA-10-F01-R06] Field approvals.approval_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-10-F01-R07] Field approvals.approval_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-10-F01-R08] Field approvals.approval_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-10-F02-R01] Field approvals.invoice_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-10-F02-R02] Field approvals.invoice_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-10-F02-R03] Field approvals.invoice_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-10-F02-R04] Field approvals.invoice_id: validate its reference to invoices.invoice_id; explain deferred or quarantined unmatched records.
+- [P05-DATA-10-F02-R05] Field approvals.invoice_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-10-F02-R06] Field approvals.invoice_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-10-F02-R07] Field approvals.invoice_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-10-F02-R08] Field approvals.invoice_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-10-F03-R01] Field approvals.actor_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-10-F03-R02] Field approvals.actor_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-10-F03-R03] Field approvals.actor_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-10-F03-R04] Field approvals.actor_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-10-F03-R05] Field approvals.actor_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-10-F03-R06] Field approvals.actor_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-10-F03-R07] Field approvals.actor_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-10-F03-R08] Field approvals.actor_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-10-F04-R01] Field approvals.decision: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-10-F04-R02] Field approvals.decision: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-10-F04-R03] Field approvals.decision: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-10-F04-R04] Field approvals.decision: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-10-F04-R05] Field approvals.decision: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-10-F04-R06] Field approvals.decision: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-10-F04-R07] Field approvals.decision: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-10-F04-R08] Field approvals.decision: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-10-F05-R01] Field approvals.decided_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P05-DATA-10-F05-R02] Field approvals.decided_at: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-10-F05-R03] Field approvals.decided_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-10-F05-R04] Field approvals.decided_at: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-10-F05-R05] Field approvals.decided_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-10-F05-R06] Field approvals.decided_at: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-10-F05-R07] Field approvals.decided_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-10-F05-R08] Field approvals.decided_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P05-DATA-11: exceptions
+- [P05-DATA-11-R01] Create the exceptions entity with a documented grain and one stable primary key: exception_id.
+- [P05-DATA-11-R02] The minimum business fields are exception_id, invoice_id, exception_type, owner_id, status; add technical metadata only with a documented purpose.
+- [P05-DATA-11-R03] Use the role of exceptions in the product workflow to define authoritative source ownership.
+- [P05-DATA-11-R04] Write migrations for exceptions; do not rely on ORM auto-create for the verified release.
+- [P05-DATA-11-R05] Create a small valid exceptions fixture linked to the independently calculated project example.
+- [P05-DATA-11-R06] Create an invalid exceptions fixture that demonstrates a real domain constraint.
+- [P05-DATA-11-R07] Choose explicit row-update semantics for exceptions: immutable event, versioned dimension or mutable operational record.
+- [P05-DATA-11-R08] Preserve the original source identifier for exceptions when a surrogate key is introduced.
+- [P05-DATA-11-R09] Document whether deletion of exceptions is prohibited, reversible or represented by a tombstone.
+- [P05-DATA-11-R10] Reconcile exceptions accepted, rejected and deduplicated row counts to the source batch.
+- [P05-DATA-11-R11] Expose only justified synthetic exceptions fields to the public site; remove internal runner metadata.
+- [P05-DATA-11-R12] Index exceptions according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P05-DATA-11-R13] Do not join exceptions at a different grain without an explicit aggregation or allocation rule.
+- [P05-DATA-11-R14] Associate the published exceptions snapshot with dataset hash and generator parameters.
+- [P05-DATA-11-R15] Define deterministic sorting and pagination for the exceptions evidence view.
+- [P05-DATA-11-R16] Ensure an empty exceptions dataset yields an understandable empty state instead of fabricated sample totals.
+- [P05-DATA-11-R17] Archive the exceptions schema and sample rows in the data dictionary.
+- [P05-DATA-11-R18] Test that replaying the source import cannot unintentionally duplicate exceptions business records.
+- [P05-DATA-11-F01-R01] Field exceptions.exception_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-11-F01-R02] Field exceptions.exception_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-11-F01-R03] Field exceptions.exception_id: make it non-null and unique as the primary key.
+- [P05-DATA-11-F01-R04] Field exceptions.exception_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-11-F01-R05] Field exceptions.exception_id: use stable source-to-key mapping across replays and regeneration.
+- [P05-DATA-11-F01-R06] Field exceptions.exception_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-11-F01-R07] Field exceptions.exception_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-11-F01-R08] Field exceptions.exception_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-11-F02-R01] Field exceptions.invoice_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-11-F02-R02] Field exceptions.invoice_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-11-F02-R03] Field exceptions.invoice_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-11-F02-R04] Field exceptions.invoice_id: validate its reference to invoices.invoice_id; explain deferred or quarantined unmatched records.
+- [P05-DATA-11-F02-R05] Field exceptions.invoice_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-11-F02-R06] Field exceptions.invoice_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-11-F02-R07] Field exceptions.invoice_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-11-F02-R08] Field exceptions.invoice_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-11-F03-R01] Field exceptions.exception_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-11-F03-R02] Field exceptions.exception_type: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-11-F03-R03] Field exceptions.exception_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-11-F03-R04] Field exceptions.exception_type: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-11-F03-R05] Field exceptions.exception_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-11-F03-R06] Field exceptions.exception_type: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-11-F03-R07] Field exceptions.exception_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-11-F03-R08] Field exceptions.exception_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-11-F04-R01] Field exceptions.owner_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-11-F04-R02] Field exceptions.owner_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-11-F04-R03] Field exceptions.owner_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-11-F04-R04] Field exceptions.owner_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-11-F04-R05] Field exceptions.owner_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-11-F04-R06] Field exceptions.owner_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-11-F04-R07] Field exceptions.owner_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-11-F04-R08] Field exceptions.owner_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-11-F05-R01] Field exceptions.status: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-11-F05-R02] Field exceptions.status: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-11-F05-R03] Field exceptions.status: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-11-F05-R04] Field exceptions.status: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-11-F05-R05] Field exceptions.status: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-11-F05-R06] Field exceptions.status: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-11-F05-R07] Field exceptions.status: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-11-F05-R08] Field exceptions.status: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P05-DATA-12: exports
+- [P05-DATA-12-R01] Create the exports entity with a documented grain and one stable primary key: export_id.
+- [P05-DATA-12-R02] The minimum business fields are export_id, invoice_id, batch_id, exported_at, content_hash; add technical metadata only with a documented purpose.
+- [P05-DATA-12-R03] Use the role of exports in the product workflow to define authoritative source ownership.
+- [P05-DATA-12-R04] Write migrations for exports; do not rely on ORM auto-create for the verified release.
+- [P05-DATA-12-R05] Create a small valid exports fixture linked to the independently calculated project example.
+- [P05-DATA-12-R06] Create an invalid exports fixture that demonstrates a real domain constraint.
+- [P05-DATA-12-R07] Choose explicit row-update semantics for exports: immutable event, versioned dimension or mutable operational record.
+- [P05-DATA-12-R08] Preserve the original source identifier for exports when a surrogate key is introduced.
+- [P05-DATA-12-R09] Document whether deletion of exports is prohibited, reversible or represented by a tombstone.
+- [P05-DATA-12-R10] Reconcile exports accepted, rejected and deduplicated row counts to the source batch.
+- [P05-DATA-12-R11] Expose only justified synthetic exports fields to the public site; remove internal runner metadata.
+- [P05-DATA-12-R12] Index exports according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P05-DATA-12-R13] Do not join exports at a different grain without an explicit aggregation or allocation rule.
+- [P05-DATA-12-R14] Associate the published exports snapshot with dataset hash and generator parameters.
+- [P05-DATA-12-R15] Define deterministic sorting and pagination for the exports evidence view.
+- [P05-DATA-12-R16] Ensure an empty exports dataset yields an understandable empty state instead of fabricated sample totals.
+- [P05-DATA-12-R17] Archive the exports schema and sample rows in the data dictionary.
+- [P05-DATA-12-R18] Test that replaying the source import cannot unintentionally duplicate exports business records.
+- [P05-DATA-12-F01-R01] Field exports.export_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-12-F01-R02] Field exports.export_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-12-F01-R03] Field exports.export_id: make it non-null and unique as the primary key.
+- [P05-DATA-12-F01-R04] Field exports.export_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-12-F01-R05] Field exports.export_id: use stable source-to-key mapping across replays and regeneration.
+- [P05-DATA-12-F01-R06] Field exports.export_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-12-F01-R07] Field exports.export_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-12-F01-R08] Field exports.export_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-12-F02-R01] Field exports.invoice_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-12-F02-R02] Field exports.invoice_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-12-F02-R03] Field exports.invoice_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-12-F02-R04] Field exports.invoice_id: validate its reference to invoices.invoice_id; explain deferred or quarantined unmatched records.
+- [P05-DATA-12-F02-R05] Field exports.invoice_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-12-F02-R06] Field exports.invoice_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-12-F02-R07] Field exports.invoice_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-12-F02-R08] Field exports.invoice_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-12-F03-R01] Field exports.batch_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-12-F03-R02] Field exports.batch_id: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-12-F03-R03] Field exports.batch_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-12-F03-R04] Field exports.batch_id: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-12-F03-R05] Field exports.batch_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-12-F03-R06] Field exports.batch_id: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-12-F03-R07] Field exports.batch_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-12-F03-R08] Field exports.batch_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-12-F04-R01] Field exports.exported_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P05-DATA-12-F04-R02] Field exports.exported_at: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-12-F04-R03] Field exports.exported_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-12-F04-R04] Field exports.exported_at: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-12-F04-R05] Field exports.exported_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-12-F04-R06] Field exports.exported_at: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-12-F04-R07] Field exports.exported_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-12-F04-R08] Field exports.exported_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P05-DATA-12-F05-R01] Field exports.content_hash: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P05-DATA-12-F05-R02] Field exports.content_hash: define its business meaning in the dictionary and use the same label in exports.
+- [P05-DATA-12-F05-R03] Field exports.content_hash: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P05-DATA-12-F05-R04] Field exports.content_hash: define the allowed domain and reject structurally invalid values before publication.
+- [P05-DATA-12-F05-R05] Field exports.content_hash: document normalization and preserve raw representation when normalization can lose meaning.
+- [P05-DATA-12-F05-R06] Field exports.content_hash: create a round-trip test across source, validated model and exported representation.
+- [P05-DATA-12-F05-R07] Field exports.content_hash: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P05-DATA-12-F05-R08] Field exports.content_hash: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+
+## 04. Business metric contracts
+
+### P05-MET-01: Invoice subtotal
+- [P05-MET-01-R01] Business metric: Invoice subtotal.
+- [P05-MET-01-R02] Authoritative calculation rule: sum(quantity * unit_price).
+- [P05-MET-01-R03] Output unit: currency units.
+- [P05-MET-01-R04] Important boundary: Decimal values before tax.
+- [P05-MET-01-R05] Explain how Invoice subtotal informs the primary decision: Which invoices may advance and which require exception review?
+- [P05-MET-01-R06] Define the input grain for Invoice subtotal; never infer it from the chart grouping.
+- [P05-MET-01-R07] Name each source field and transformation contributing to Invoice subtotal.
+- [P05-MET-01-R08] Define the reporting population for Invoice subtotal before applying user-selected filters.
+- [P05-MET-01-R09] Name the timestamp and timezone used by Invoice subtotal.
+- [P05-MET-01-R10] Use a documented half-open interval for Invoice subtotal time filtering.
+- [P05-MET-01-R11] List excluded statuses, invalid records and immature observations for Invoice subtotal.
+- [P05-MET-01-R12] Display excluded-record counts when they materially change Invoice subtotal.
+- [P05-MET-01-R13] Define Invoice subtotal behavior for an empty eligible population.
+- [P05-MET-01-R14] Define Invoice subtotal behavior when its denominator is zero or its required baseline is absent.
+- [P05-MET-01-R15] Do not replace unknown Invoice subtotal values with zero without a documented business rule.
+- [P05-MET-01-R16] For Invoice subtotal, aggregate underlying values correctly before applying ratios or summary functions.
+- [P05-MET-01-R17] Preserve original precision for Invoice subtotal; round only at the stated calculation or presentation step.
+- [P05-MET-01-R18] Create a small manually calculated Invoice subtotal fixture independent of the main implementation.
+- [P05-MET-01-R19] Implement an independent SQL/spreadsheet/reference check for the important Invoice subtotal result.
+- [P05-MET-01-R20] Keep the browser Invoice subtotal calculation consistent with the authoritative contract and verified fixture.
+- [P05-MET-01-R21] Show Invoice subtotal definition, active scope and unit through a visible explanation affordance.
+- [P05-MET-01-R22] Allow drillthrough from Invoice subtotal into contributing evidence or a transparent aggregate explanation.
+- [P05-MET-01-R23] Export Invoice subtotal with contract version, filters, dataset hash and generated timestamp.
+- [P05-MET-01-R24] When Invoice subtotal is a scenario estimate, visibly separate it from observed historical results.
+- [P05-MET-01-R25] Include a Invoice subtotal regression assertion for one project-specific edge case.
+- [P05-MET-01-R26] If Invoice subtotal is compared across periods, use comparable eligibility and disclose differences.
+- [P05-MET-01-R27] Keep Invoice subtotal historical revisions traceable when late data changes published results.
+- [P05-MET-01-R28] Record a versioned decision if implementation requires changing Invoice subtotal semantics.
+- [P05-MET-01-R29] Have a reviewer challenge whether Invoice subtotal could be misleading despite being arithmetically correct.
+- [P05-MET-01-R30] Mark Invoice subtotal verified only after the known-answer and presentation checks actually run.
+### P05-MET-02: Invoice total
+- [P05-MET-02-R01] Business metric: Invoice total.
+- [P05-MET-02-R02] Authoritative calculation rule: subtotal + tax + freight - invoice_discount.
+- [P05-MET-02-R03] Output unit: currency units.
+- [P05-MET-02-R04] Important boundary: Declared rounding sequence.
+- [P05-MET-02-R05] Explain how Invoice total informs the primary decision: Which invoices may advance and which require exception review?
+- [P05-MET-02-R06] Define the input grain for Invoice total; never infer it from the chart grouping.
+- [P05-MET-02-R07] Name each source field and transformation contributing to Invoice total.
+- [P05-MET-02-R08] Define the reporting population for Invoice total before applying user-selected filters.
+- [P05-MET-02-R09] Name the timestamp and timezone used by Invoice total.
+- [P05-MET-02-R10] Use a documented half-open interval for Invoice total time filtering.
+- [P05-MET-02-R11] List excluded statuses, invalid records and immature observations for Invoice total.
+- [P05-MET-02-R12] Display excluded-record counts when they materially change Invoice total.
+- [P05-MET-02-R13] Define Invoice total behavior for an empty eligible population.
+- [P05-MET-02-R14] Define Invoice total behavior when its denominator is zero or its required baseline is absent.
+- [P05-MET-02-R15] Do not replace unknown Invoice total values with zero without a documented business rule.
+- [P05-MET-02-R16] For Invoice total, aggregate underlying values correctly before applying ratios or summary functions.
+- [P05-MET-02-R17] Preserve original precision for Invoice total; round only at the stated calculation or presentation step.
+- [P05-MET-02-R18] Create a small manually calculated Invoice total fixture independent of the main implementation.
+- [P05-MET-02-R19] Implement an independent SQL/spreadsheet/reference check for the important Invoice total result.
+- [P05-MET-02-R20] Keep the browser Invoice total calculation consistent with the authoritative contract and verified fixture.
+- [P05-MET-02-R21] Show Invoice total definition, active scope and unit through a visible explanation affordance.
+- [P05-MET-02-R22] Allow drillthrough from Invoice total into contributing evidence or a transparent aggregate explanation.
+- [P05-MET-02-R23] Export Invoice total with contract version, filters, dataset hash and generated timestamp.
+- [P05-MET-02-R24] When Invoice total is a scenario estimate, visibly separate it from observed historical results.
+- [P05-MET-02-R25] Include a Invoice total regression assertion for one project-specific edge case.
+- [P05-MET-02-R26] If Invoice total is compared across periods, use comparable eligibility and disclose differences.
+- [P05-MET-02-R27] Keep Invoice total historical revisions traceable when late data changes published results.
+- [P05-MET-02-R28] Record a versioned decision if implementation requires changing Invoice total semantics.
+- [P05-MET-02-R29] Have a reviewer challenge whether Invoice total could be misleading despite being arithmetically correct.
+- [P05-MET-02-R30] Mark Invoice total verified only after the known-answer and presentation checks actually run.
+### P05-MET-03: Uninvoiced received quantity
+- [P05-MET-03-R01] Business metric: Uninvoiced received quantity.
+- [P05-MET-03-R02] Authoritative calculation rule: net received quantity - previously accepted invoiced quantity.
+- [P05-MET-03-R03] Output unit: units.
+- [P05-MET-03-R04] Important boundary: Exclude rejected invoices.
+- [P05-MET-03-R05] Explain how Uninvoiced received quantity informs the primary decision: Which invoices may advance and which require exception review?
+- [P05-MET-03-R06] Define the input grain for Uninvoiced received quantity; never infer it from the chart grouping.
+- [P05-MET-03-R07] Name each source field and transformation contributing to Uninvoiced received quantity.
+- [P05-MET-03-R08] Define the reporting population for Uninvoiced received quantity before applying user-selected filters.
+- [P05-MET-03-R09] Name the timestamp and timezone used by Uninvoiced received quantity.
+- [P05-MET-03-R10] Use a documented half-open interval for Uninvoiced received quantity time filtering.
+- [P05-MET-03-R11] List excluded statuses, invalid records and immature observations for Uninvoiced received quantity.
+- [P05-MET-03-R12] Display excluded-record counts when they materially change Uninvoiced received quantity.
+- [P05-MET-03-R13] Define Uninvoiced received quantity behavior for an empty eligible population.
+- [P05-MET-03-R14] Define Uninvoiced received quantity behavior when its denominator is zero or its required baseline is absent.
+- [P05-MET-03-R15] Do not replace unknown Uninvoiced received quantity values with zero without a documented business rule.
+- [P05-MET-03-R16] For Uninvoiced received quantity, aggregate underlying values correctly before applying ratios or summary functions.
+- [P05-MET-03-R17] Preserve original precision for Uninvoiced received quantity; round only at the stated calculation or presentation step.
+- [P05-MET-03-R18] Create a small manually calculated Uninvoiced received quantity fixture independent of the main implementation.
+- [P05-MET-03-R19] Implement an independent SQL/spreadsheet/reference check for the important Uninvoiced received quantity result.
+- [P05-MET-03-R20] Keep the browser Uninvoiced received quantity calculation consistent with the authoritative contract and verified fixture.
+- [P05-MET-03-R21] Show Uninvoiced received quantity definition, active scope and unit through a visible explanation affordance.
+- [P05-MET-03-R22] Allow drillthrough from Uninvoiced received quantity into contributing evidence or a transparent aggregate explanation.
+- [P05-MET-03-R23] Export Uninvoiced received quantity with contract version, filters, dataset hash and generated timestamp.
+- [P05-MET-03-R24] When Uninvoiced received quantity is a scenario estimate, visibly separate it from observed historical results.
+- [P05-MET-03-R25] Include a Uninvoiced received quantity regression assertion for one project-specific edge case.
+- [P05-MET-03-R26] If Uninvoiced received quantity is compared across periods, use comparable eligibility and disclose differences.
+- [P05-MET-03-R27] Keep Uninvoiced received quantity historical revisions traceable when late data changes published results.
+- [P05-MET-03-R28] Record a versioned decision if implementation requires changing Uninvoiced received quantity semantics.
+- [P05-MET-03-R29] Have a reviewer challenge whether Uninvoiced received quantity could be misleading despite being arithmetically correct.
+- [P05-MET-03-R30] Mark Uninvoiced received quantity verified only after the known-answer and presentation checks actually run.
+### P05-MET-04: Price variance
+- [P05-MET-04-R01] Business metric: Price variance.
+- [P05-MET-04-R02] Authoritative calculation rule: invoiced unit price - PO unit price.
+- [P05-MET-04-R03] Output unit: currency/unit.
+- [P05-MET-04-R04] Important boundary: Same currency and unit.
+- [P05-MET-04-R05] Explain how Price variance informs the primary decision: Which invoices may advance and which require exception review?
+- [P05-MET-04-R06] Define the input grain for Price variance; never infer it from the chart grouping.
+- [P05-MET-04-R07] Name each source field and transformation contributing to Price variance.
+- [P05-MET-04-R08] Define the reporting population for Price variance before applying user-selected filters.
+- [P05-MET-04-R09] Name the timestamp and timezone used by Price variance.
+- [P05-MET-04-R10] Use a documented half-open interval for Price variance time filtering.
+- [P05-MET-04-R11] List excluded statuses, invalid records and immature observations for Price variance.
+- [P05-MET-04-R12] Display excluded-record counts when they materially change Price variance.
+- [P05-MET-04-R13] Define Price variance behavior for an empty eligible population.
+- [P05-MET-04-R14] Define Price variance behavior when its denominator is zero or its required baseline is absent.
+- [P05-MET-04-R15] Do not replace unknown Price variance values with zero without a documented business rule.
+- [P05-MET-04-R16] For Price variance, aggregate underlying values correctly before applying ratios or summary functions.
+- [P05-MET-04-R17] Preserve original precision for Price variance; round only at the stated calculation or presentation step.
+- [P05-MET-04-R18] Create a small manually calculated Price variance fixture independent of the main implementation.
+- [P05-MET-04-R19] Implement an independent SQL/spreadsheet/reference check for the important Price variance result.
+- [P05-MET-04-R20] Keep the browser Price variance calculation consistent with the authoritative contract and verified fixture.
+- [P05-MET-04-R21] Show Price variance definition, active scope and unit through a visible explanation affordance.
+- [P05-MET-04-R22] Allow drillthrough from Price variance into contributing evidence or a transparent aggregate explanation.
+- [P05-MET-04-R23] Export Price variance with contract version, filters, dataset hash and generated timestamp.
+- [P05-MET-04-R24] When Price variance is a scenario estimate, visibly separate it from observed historical results.
+- [P05-MET-04-R25] Include a Price variance regression assertion for one project-specific edge case.
+- [P05-MET-04-R26] If Price variance is compared across periods, use comparable eligibility and disclose differences.
+- [P05-MET-04-R27] Keep Price variance historical revisions traceable when late data changes published results.
+- [P05-MET-04-R28] Record a versioned decision if implementation requires changing Price variance semantics.
+- [P05-MET-04-R29] Have a reviewer challenge whether Price variance could be misleading despite being arithmetically correct.
+- [P05-MET-04-R30] Mark Price variance verified only after the known-answer and presentation checks actually run.
+### P05-MET-05: Quantity variance
+- [P05-MET-05-R01] Business metric: Quantity variance.
+- [P05-MET-05-R02] Authoritative calculation rule: invoiced quantity - available received quantity.
+- [P05-MET-05-R03] Output unit: units.
+- [P05-MET-05-R04] Important boundary: Cumulative over prior invoices.
+- [P05-MET-05-R05] Explain how Quantity variance informs the primary decision: Which invoices may advance and which require exception review?
+- [P05-MET-05-R06] Define the input grain for Quantity variance; never infer it from the chart grouping.
+- [P05-MET-05-R07] Name each source field and transformation contributing to Quantity variance.
+- [P05-MET-05-R08] Define the reporting population for Quantity variance before applying user-selected filters.
+- [P05-MET-05-R09] Name the timestamp and timezone used by Quantity variance.
+- [P05-MET-05-R10] Use a documented half-open interval for Quantity variance time filtering.
+- [P05-MET-05-R11] List excluded statuses, invalid records and immature observations for Quantity variance.
+- [P05-MET-05-R12] Display excluded-record counts when they materially change Quantity variance.
+- [P05-MET-05-R13] Define Quantity variance behavior for an empty eligible population.
+- [P05-MET-05-R14] Define Quantity variance behavior when its denominator is zero or its required baseline is absent.
+- [P05-MET-05-R15] Do not replace unknown Quantity variance values with zero without a documented business rule.
+- [P05-MET-05-R16] For Quantity variance, aggregate underlying values correctly before applying ratios or summary functions.
+- [P05-MET-05-R17] Preserve original precision for Quantity variance; round only at the stated calculation or presentation step.
+- [P05-MET-05-R18] Create a small manually calculated Quantity variance fixture independent of the main implementation.
+- [P05-MET-05-R19] Implement an independent SQL/spreadsheet/reference check for the important Quantity variance result.
+- [P05-MET-05-R20] Keep the browser Quantity variance calculation consistent with the authoritative contract and verified fixture.
+- [P05-MET-05-R21] Show Quantity variance definition, active scope and unit through a visible explanation affordance.
+- [P05-MET-05-R22] Allow drillthrough from Quantity variance into contributing evidence or a transparent aggregate explanation.
+- [P05-MET-05-R23] Export Quantity variance with contract version, filters, dataset hash and generated timestamp.
+- [P05-MET-05-R24] When Quantity variance is a scenario estimate, visibly separate it from observed historical results.
+- [P05-MET-05-R25] Include a Quantity variance regression assertion for one project-specific edge case.
+- [P05-MET-05-R26] If Quantity variance is compared across periods, use comparable eligibility and disclose differences.
+- [P05-MET-05-R27] Keep Quantity variance historical revisions traceable when late data changes published results.
+- [P05-MET-05-R28] Record a versioned decision if implementation requires changing Quantity variance semantics.
+- [P05-MET-05-R29] Have a reviewer challenge whether Quantity variance could be misleading despite being arithmetically correct.
+- [P05-MET-05-R30] Mark Quantity variance verified only after the known-answer and presentation checks actually run.
+### P05-MET-06: Straight-through rate
+- [P05-MET-06-R01] Business metric: Straight-through rate.
+- [P05-MET-06-R02] Authoritative calculation rule: eligible invoices without manual exception / eligible invoices.
+- [P05-MET-06-R03] Output unit: percent.
+- [P05-MET-06-R04] Important boundary: Not equivalent to paid.
+- [P05-MET-06-R05] Explain how Straight-through rate informs the primary decision: Which invoices may advance and which require exception review?
+- [P05-MET-06-R06] Define the input grain for Straight-through rate; never infer it from the chart grouping.
+- [P05-MET-06-R07] Name each source field and transformation contributing to Straight-through rate.
+- [P05-MET-06-R08] Define the reporting population for Straight-through rate before applying user-selected filters.
+- [P05-MET-06-R09] Name the timestamp and timezone used by Straight-through rate.
+- [P05-MET-06-R10] Use a documented half-open interval for Straight-through rate time filtering.
+- [P05-MET-06-R11] List excluded statuses, invalid records and immature observations for Straight-through rate.
+- [P05-MET-06-R12] Display excluded-record counts when they materially change Straight-through rate.
+- [P05-MET-06-R13] Define Straight-through rate behavior for an empty eligible population.
+- [P05-MET-06-R14] Define Straight-through rate behavior when its denominator is zero or its required baseline is absent.
+- [P05-MET-06-R15] Do not replace unknown Straight-through rate values with zero without a documented business rule.
+- [P05-MET-06-R16] For Straight-through rate, aggregate underlying values correctly before applying ratios or summary functions.
+- [P05-MET-06-R17] Preserve original precision for Straight-through rate; round only at the stated calculation or presentation step.
+- [P05-MET-06-R18] Create a small manually calculated Straight-through rate fixture independent of the main implementation.
+- [P05-MET-06-R19] Implement an independent SQL/spreadsheet/reference check for the important Straight-through rate result.
+- [P05-MET-06-R20] Keep the browser Straight-through rate calculation consistent with the authoritative contract and verified fixture.
+- [P05-MET-06-R21] Show Straight-through rate definition, active scope and unit through a visible explanation affordance.
+- [P05-MET-06-R22] Allow drillthrough from Straight-through rate into contributing evidence or a transparent aggregate explanation.
+- [P05-MET-06-R23] Export Straight-through rate with contract version, filters, dataset hash and generated timestamp.
+- [P05-MET-06-R24] When Straight-through rate is a scenario estimate, visibly separate it from observed historical results.
+- [P05-MET-06-R25] Include a Straight-through rate regression assertion for one project-specific edge case.
+- [P05-MET-06-R26] If Straight-through rate is compared across periods, use comparable eligibility and disclose differences.
+- [P05-MET-06-R27] Keep Straight-through rate historical revisions traceable when late data changes published results.
+- [P05-MET-06-R28] Record a versioned decision if implementation requires changing Straight-through rate semantics.
+- [P05-MET-06-R29] Have a reviewer challenge whether Straight-through rate could be misleading despite being arithmetically correct.
+- [P05-MET-06-R30] Mark Straight-through rate verified only after the known-answer and presentation checks actually run.
+### P05-MET-07: Exception rate
+- [P05-MET-07-R01] Business metric: Exception rate.
+- [P05-MET-07-R02] Authoritative calculation rule: invoices with exceptions / validated invoices.
+- [P05-MET-07-R03] Output unit: percent.
+- [P05-MET-07-R04] Important boundary: Distinct invoice denominator.
+- [P05-MET-07-R05] Explain how Exception rate informs the primary decision: Which invoices may advance and which require exception review?
+- [P05-MET-07-R06] Define the input grain for Exception rate; never infer it from the chart grouping.
+- [P05-MET-07-R07] Name each source field and transformation contributing to Exception rate.
+- [P05-MET-07-R08] Define the reporting population for Exception rate before applying user-selected filters.
+- [P05-MET-07-R09] Name the timestamp and timezone used by Exception rate.
+- [P05-MET-07-R10] Use a documented half-open interval for Exception rate time filtering.
+- [P05-MET-07-R11] List excluded statuses, invalid records and immature observations for Exception rate.
+- [P05-MET-07-R12] Display excluded-record counts when they materially change Exception rate.
+- [P05-MET-07-R13] Define Exception rate behavior for an empty eligible population.
+- [P05-MET-07-R14] Define Exception rate behavior when its denominator is zero or its required baseline is absent.
+- [P05-MET-07-R15] Do not replace unknown Exception rate values with zero without a documented business rule.
+- [P05-MET-07-R16] For Exception rate, aggregate underlying values correctly before applying ratios or summary functions.
+- [P05-MET-07-R17] Preserve original precision for Exception rate; round only at the stated calculation or presentation step.
+- [P05-MET-07-R18] Create a small manually calculated Exception rate fixture independent of the main implementation.
+- [P05-MET-07-R19] Implement an independent SQL/spreadsheet/reference check for the important Exception rate result.
+- [P05-MET-07-R20] Keep the browser Exception rate calculation consistent with the authoritative contract and verified fixture.
+- [P05-MET-07-R21] Show Exception rate definition, active scope and unit through a visible explanation affordance.
+- [P05-MET-07-R22] Allow drillthrough from Exception rate into contributing evidence or a transparent aggregate explanation.
+- [P05-MET-07-R23] Export Exception rate with contract version, filters, dataset hash and generated timestamp.
+- [P05-MET-07-R24] When Exception rate is a scenario estimate, visibly separate it from observed historical results.
+- [P05-MET-07-R25] Include a Exception rate regression assertion for one project-specific edge case.
+- [P05-MET-07-R26] If Exception rate is compared across periods, use comparable eligibility and disclose differences.
+- [P05-MET-07-R27] Keep Exception rate historical revisions traceable when late data changes published results.
+- [P05-MET-07-R28] Record a versioned decision if implementation requires changing Exception rate semantics.
+- [P05-MET-07-R29] Have a reviewer challenge whether Exception rate could be misleading despite being arithmetically correct.
+- [P05-MET-07-R30] Mark Exception rate verified only after the known-answer and presentation checks actually run.
+### P05-MET-08: Processing time
+- [P05-MET-08-R01] Business metric: Processing time.
+- [P05-MET-08-R02] Authoritative calculation rule: approval_completed_at - imported_at.
+- [P05-MET-08-R03] Output unit: hours.
+- [P05-MET-08-R04] Important boundary: Pending population separate.
+- [P05-MET-08-R05] Explain how Processing time informs the primary decision: Which invoices may advance and which require exception review?
+- [P05-MET-08-R06] Define the input grain for Processing time; never infer it from the chart grouping.
+- [P05-MET-08-R07] Name each source field and transformation contributing to Processing time.
+- [P05-MET-08-R08] Define the reporting population for Processing time before applying user-selected filters.
+- [P05-MET-08-R09] Name the timestamp and timezone used by Processing time.
+- [P05-MET-08-R10] Use a documented half-open interval for Processing time time filtering.
+- [P05-MET-08-R11] List excluded statuses, invalid records and immature observations for Processing time.
+- [P05-MET-08-R12] Display excluded-record counts when they materially change Processing time.
+- [P05-MET-08-R13] Define Processing time behavior for an empty eligible population.
+- [P05-MET-08-R14] Define Processing time behavior when its denominator is zero or its required baseline is absent.
+- [P05-MET-08-R15] Do not replace unknown Processing time values with zero without a documented business rule.
+- [P05-MET-08-R16] For Processing time, aggregate underlying values correctly before applying ratios or summary functions.
+- [P05-MET-08-R17] Preserve original precision for Processing time; round only at the stated calculation or presentation step.
+- [P05-MET-08-R18] Create a small manually calculated Processing time fixture independent of the main implementation.
+- [P05-MET-08-R19] Implement an independent SQL/spreadsheet/reference check for the important Processing time result.
+- [P05-MET-08-R20] Keep the browser Processing time calculation consistent with the authoritative contract and verified fixture.
+- [P05-MET-08-R21] Show Processing time definition, active scope and unit through a visible explanation affordance.
+- [P05-MET-08-R22] Allow drillthrough from Processing time into contributing evidence or a transparent aggregate explanation.
+- [P05-MET-08-R23] Export Processing time with contract version, filters, dataset hash and generated timestamp.
+- [P05-MET-08-R24] When Processing time is a scenario estimate, visibly separate it from observed historical results.
+- [P05-MET-08-R25] Include a Processing time regression assertion for one project-specific edge case.
+- [P05-MET-08-R26] If Processing time is compared across periods, use comparable eligibility and disclose differences.
+- [P05-MET-08-R27] Keep Processing time historical revisions traceable when late data changes published results.
+- [P05-MET-08-R28] Record a versioned decision if implementation requires changing Processing time semantics.
+- [P05-MET-08-R29] Have a reviewer challenge whether Processing time could be misleading despite being arithmetically correct.
+- [P05-MET-08-R30] Mark Processing time verified only after the known-answer and presentation checks actually run.
+### P05-MET-09: Potential duplicate count
+- [P05-MET-09-R01] Business metric: Potential duplicate count.
+- [P05-MET-09-R02] Authoritative calculation rule: unresolved duplicate candidate groups.
+- [P05-MET-09-R03] Output unit: groups.
+- [P05-MET-09-R04] Important boundary: Avoid counting both pair directions.
+- [P05-MET-09-R05] Explain how Potential duplicate count informs the primary decision: Which invoices may advance and which require exception review?
+- [P05-MET-09-R06] Define the input grain for Potential duplicate count; never infer it from the chart grouping.
+- [P05-MET-09-R07] Name each source field and transformation contributing to Potential duplicate count.
+- [P05-MET-09-R08] Define the reporting population for Potential duplicate count before applying user-selected filters.
+- [P05-MET-09-R09] Name the timestamp and timezone used by Potential duplicate count.
+- [P05-MET-09-R10] Use a documented half-open interval for Potential duplicate count time filtering.
+- [P05-MET-09-R11] List excluded statuses, invalid records and immature observations for Potential duplicate count.
+- [P05-MET-09-R12] Display excluded-record counts when they materially change Potential duplicate count.
+- [P05-MET-09-R13] Define Potential duplicate count behavior for an empty eligible population.
+- [P05-MET-09-R14] Define Potential duplicate count behavior when its denominator is zero or its required baseline is absent.
+- [P05-MET-09-R15] Do not replace unknown Potential duplicate count values with zero without a documented business rule.
+- [P05-MET-09-R16] For Potential duplicate count, aggregate underlying values correctly before applying ratios or summary functions.
+- [P05-MET-09-R17] Preserve original precision for Potential duplicate count; round only at the stated calculation or presentation step.
+- [P05-MET-09-R18] Create a small manually calculated Potential duplicate count fixture independent of the main implementation.
+- [P05-MET-09-R19] Implement an independent SQL/spreadsheet/reference check for the important Potential duplicate count result.
+- [P05-MET-09-R20] Keep the browser Potential duplicate count calculation consistent with the authoritative contract and verified fixture.
+- [P05-MET-09-R21] Show Potential duplicate count definition, active scope and unit through a visible explanation affordance.
+- [P05-MET-09-R22] Allow drillthrough from Potential duplicate count into contributing evidence or a transparent aggregate explanation.
+- [P05-MET-09-R23] Export Potential duplicate count with contract version, filters, dataset hash and generated timestamp.
+- [P05-MET-09-R24] When Potential duplicate count is a scenario estimate, visibly separate it from observed historical results.
+- [P05-MET-09-R25] Include a Potential duplicate count regression assertion for one project-specific edge case.
+- [P05-MET-09-R26] If Potential duplicate count is compared across periods, use comparable eligibility and disclose differences.
+- [P05-MET-09-R27] Keep Potential duplicate count historical revisions traceable when late data changes published results.
+- [P05-MET-09-R28] Record a versioned decision if implementation requires changing Potential duplicate count semantics.
+- [P05-MET-09-R29] Have a reviewer challenge whether Potential duplicate count could be misleading despite being arithmetically correct.
+- [P05-MET-09-R30] Mark Potential duplicate count verified only after the known-answer and presentation checks actually run.
+### P05-MET-10: Approved payable
+- [P05-MET-10-R01] Business metric: Approved payable.
+- [P05-MET-10-R02] Authoritative calculation rule: approved invoice total - applicable credits.
+- [P05-MET-10-R03] Output unit: currency units.
+- [P05-MET-10-R04] Important boundary: Not payment execution.
+- [P05-MET-10-R05] Explain how Approved payable informs the primary decision: Which invoices may advance and which require exception review?
+- [P05-MET-10-R06] Define the input grain for Approved payable; never infer it from the chart grouping.
+- [P05-MET-10-R07] Name each source field and transformation contributing to Approved payable.
+- [P05-MET-10-R08] Define the reporting population for Approved payable before applying user-selected filters.
+- [P05-MET-10-R09] Name the timestamp and timezone used by Approved payable.
+- [P05-MET-10-R10] Use a documented half-open interval for Approved payable time filtering.
+- [P05-MET-10-R11] List excluded statuses, invalid records and immature observations for Approved payable.
+- [P05-MET-10-R12] Display excluded-record counts when they materially change Approved payable.
+- [P05-MET-10-R13] Define Approved payable behavior for an empty eligible population.
+- [P05-MET-10-R14] Define Approved payable behavior when its denominator is zero or its required baseline is absent.
+- [P05-MET-10-R15] Do not replace unknown Approved payable values with zero without a documented business rule.
+- [P05-MET-10-R16] For Approved payable, aggregate underlying values correctly before applying ratios or summary functions.
+- [P05-MET-10-R17] Preserve original precision for Approved payable; round only at the stated calculation or presentation step.
+- [P05-MET-10-R18] Create a small manually calculated Approved payable fixture independent of the main implementation.
+- [P05-MET-10-R19] Implement an independent SQL/spreadsheet/reference check for the important Approved payable result.
+- [P05-MET-10-R20] Keep the browser Approved payable calculation consistent with the authoritative contract and verified fixture.
+- [P05-MET-10-R21] Show Approved payable definition, active scope and unit through a visible explanation affordance.
+- [P05-MET-10-R22] Allow drillthrough from Approved payable into contributing evidence or a transparent aggregate explanation.
+- [P05-MET-10-R23] Export Approved payable with contract version, filters, dataset hash and generated timestamp.
+- [P05-MET-10-R24] When Approved payable is a scenario estimate, visibly separate it from observed historical results.
+- [P05-MET-10-R25] Include a Approved payable regression assertion for one project-specific edge case.
+- [P05-MET-10-R26] If Approved payable is compared across periods, use comparable eligibility and disclose differences.
+- [P05-MET-10-R27] Keep Approved payable historical revisions traceable when late data changes published results.
+- [P05-MET-10-R28] Record a versioned decision if implementation requires changing Approved payable semantics.
+- [P05-MET-10-R29] Have a reviewer challenge whether Approved payable could be misleading despite being arithmetically correct.
+- [P05-MET-10-R30] Mark Approved payable verified only after the known-answer and presentation checks actually run.
+### P05-MET-11: Export reconciliation
+- [P05-MET-11-R01] Business metric: Export reconciliation.
+- [P05-MET-11-R02] Authoritative calculation rule: accepted export total - eligible approved total.
+- [P05-MET-11-R03] Output unit: currency units.
+- [P05-MET-11-R04] Important boundary: Zero with explicit exclusions.
+- [P05-MET-11-R05] Explain how Export reconciliation informs the primary decision: Which invoices may advance and which require exception review?
+- [P05-MET-11-R06] Define the input grain for Export reconciliation; never infer it from the chart grouping.
+- [P05-MET-11-R07] Name each source field and transformation contributing to Export reconciliation.
+- [P05-MET-11-R08] Define the reporting population for Export reconciliation before applying user-selected filters.
+- [P05-MET-11-R09] Name the timestamp and timezone used by Export reconciliation.
+- [P05-MET-11-R10] Use a documented half-open interval for Export reconciliation time filtering.
+- [P05-MET-11-R11] List excluded statuses, invalid records and immature observations for Export reconciliation.
+- [P05-MET-11-R12] Display excluded-record counts when they materially change Export reconciliation.
+- [P05-MET-11-R13] Define Export reconciliation behavior for an empty eligible population.
+- [P05-MET-11-R14] Define Export reconciliation behavior when its denominator is zero or its required baseline is absent.
+- [P05-MET-11-R15] Do not replace unknown Export reconciliation values with zero without a documented business rule.
+- [P05-MET-11-R16] For Export reconciliation, aggregate underlying values correctly before applying ratios or summary functions.
+- [P05-MET-11-R17] Preserve original precision for Export reconciliation; round only at the stated calculation or presentation step.
+- [P05-MET-11-R18] Create a small manually calculated Export reconciliation fixture independent of the main implementation.
+- [P05-MET-11-R19] Implement an independent SQL/spreadsheet/reference check for the important Export reconciliation result.
+- [P05-MET-11-R20] Keep the browser Export reconciliation calculation consistent with the authoritative contract and verified fixture.
+- [P05-MET-11-R21] Show Export reconciliation definition, active scope and unit through a visible explanation affordance.
+- [P05-MET-11-R22] Allow drillthrough from Export reconciliation into contributing evidence or a transparent aggregate explanation.
+- [P05-MET-11-R23] Export Export reconciliation with contract version, filters, dataset hash and generated timestamp.
+- [P05-MET-11-R24] When Export reconciliation is a scenario estimate, visibly separate it from observed historical results.
+- [P05-MET-11-R25] Include a Export reconciliation regression assertion for one project-specific edge case.
+- [P05-MET-11-R26] If Export reconciliation is compared across periods, use comparable eligibility and disclose differences.
+- [P05-MET-11-R27] Keep Export reconciliation historical revisions traceable when late data changes published results.
+- [P05-MET-11-R28] Record a versioned decision if implementation requires changing Export reconciliation semantics.
+- [P05-MET-11-R29] Have a reviewer challenge whether Export reconciliation could be misleading despite being arithmetically correct.
+- [P05-MET-11-R30] Mark Export reconciliation verified only after the known-answer and presentation checks actually run.
+### P05-MET-12: Review backlog
+- [P05-MET-12-R01] Business metric: Review backlog.
+- [P05-MET-12-R02] Authoritative calculation rule: unresolved exceptions at cutoff.
+- [P05-MET-12-R03] Output unit: exceptions.
+- [P05-MET-12-R04] Important boundary: As-of status history.
+- [P05-MET-12-R05] Explain how Review backlog informs the primary decision: Which invoices may advance and which require exception review?
+- [P05-MET-12-R06] Define the input grain for Review backlog; never infer it from the chart grouping.
+- [P05-MET-12-R07] Name each source field and transformation contributing to Review backlog.
+- [P05-MET-12-R08] Define the reporting population for Review backlog before applying user-selected filters.
+- [P05-MET-12-R09] Name the timestamp and timezone used by Review backlog.
+- [P05-MET-12-R10] Use a documented half-open interval for Review backlog time filtering.
+- [P05-MET-12-R11] List excluded statuses, invalid records and immature observations for Review backlog.
+- [P05-MET-12-R12] Display excluded-record counts when they materially change Review backlog.
+- [P05-MET-12-R13] Define Review backlog behavior for an empty eligible population.
+- [P05-MET-12-R14] Define Review backlog behavior when its denominator is zero or its required baseline is absent.
+- [P05-MET-12-R15] Do not replace unknown Review backlog values with zero without a documented business rule.
+- [P05-MET-12-R16] For Review backlog, aggregate underlying values correctly before applying ratios or summary functions.
+- [P05-MET-12-R17] Preserve original precision for Review backlog; round only at the stated calculation or presentation step.
+- [P05-MET-12-R18] Create a small manually calculated Review backlog fixture independent of the main implementation.
+- [P05-MET-12-R19] Implement an independent SQL/spreadsheet/reference check for the important Review backlog result.
+- [P05-MET-12-R20] Keep the browser Review backlog calculation consistent with the authoritative contract and verified fixture.
+- [P05-MET-12-R21] Show Review backlog definition, active scope and unit through a visible explanation affordance.
+- [P05-MET-12-R22] Allow drillthrough from Review backlog into contributing evidence or a transparent aggregate explanation.
+- [P05-MET-12-R23] Export Review backlog with contract version, filters, dataset hash and generated timestamp.
+- [P05-MET-12-R24] When Review backlog is a scenario estimate, visibly separate it from observed historical results.
+- [P05-MET-12-R25] Include a Review backlog regression assertion for one project-specific edge case.
+- [P05-MET-12-R26] If Review backlog is compared across periods, use comparable eligibility and disclose differences.
+- [P05-MET-12-R27] Keep Review backlog historical revisions traceable when late data changes published results.
+- [P05-MET-12-R28] Record a versioned decision if implementation requires changing Review backlog semantics.
+- [P05-MET-12-R29] Have a reviewer challenge whether Review backlog could be misleading despite being arithmetically correct.
+- [P05-MET-12-R30] Mark Review backlog verified only after the known-answer and presentation checks actually run.
+
+## 05. End-to-end workflow and transition contracts
+
+### P05-FLOW-01: Import invoice
+- [P05-FLOW-01-R01] Workflow capability: Import invoice.
+- [P05-FLOW-01-R02] Logical transition: Absent -> received.
+- [P05-FLOW-01-R03] Primary invariant: Idempotency key and hash.
+- [P05-FLOW-01-R04] Define the user goal and permitted actor for Import invoice.
+- [P05-FLOW-01-R05] Define required inputs and source versions for Import invoice.
+- [P05-FLOW-01-R06] Check preconditions before Import invoice; reject violations with a specific user-facing explanation.
+- [P05-FLOW-01-R07] Document the authoritative output of Import invoice and the next valid action.
+- [P05-FLOW-01-R08] Implement Import invoice in a domain/service layer rather than hiding it in a UI callback.
+- [P05-FLOW-01-R09] Define the transaction boundary for Import invoice when state changes.
+- [P05-FLOW-01-R10] Preserve an audit event for material Import invoice decisions without recording secrets.
+- [P05-FLOW-01-R11] Define how Import invoice behaves when the same request or input is repeated.
+- [P05-FLOW-01-R12] Define how Import invoice behaves when its input dataset or record version is stale.
+- [P05-FLOW-01-R13] Prevent conflicting Import invoice updates with version checks or another documented mechanism.
+- [P05-FLOW-01-R14] Keep original evidence immutable when Import invoice creates a correction or new scenario.
+- [P05-FLOW-01-R15] Test the successful Import invoice path using deterministic fixtures.
+- [P05-FLOW-01-R16] Test one rejected Import invoice path against the stated invariant.
+- [P05-FLOW-01-R17] Test interrupted Import invoice execution and prove safe recovery or explicit noncommit.
+- [P05-FLOW-01-R18] Test authorized versus unauthorized Import invoice behavior where real backend roles apply.
+- [P05-FLOW-01-R19] In the static website, label Import invoice mutations as browser-memory simulation.
+- [P05-FLOW-01-R20] Never make Import invoice appear server-persistent in the GitHub Pages demo.
+- [P05-FLOW-01-R21] Expose progress, success and actionable failure feedback for Import invoice.
+- [P05-FLOW-01-R22] Keep keyboard focus coherent after Import invoice updates or opens a dialog.
+- [P05-FLOW-01-R23] Include Import invoice in the UAT script and trace its acceptance criteria to tests.
+- [P05-FLOW-01-R24] Include actual Import invoice verification results in the evidence ledger.
+- [P05-FLOW-01-R25] Use the resulting Import invoice evidence in the case study only with its execution mode disclosed.
+- [P05-FLOW-01-R26] Have the coordinator approve the integrated Import invoice diff after specialist review.
+### P05-FLOW-02: Validate invoice
+- [P05-FLOW-02-R01] Workflow capability: Validate invoice.
+- [P05-FLOW-02-R02] Logical transition: Received -> valid or invalid.
+- [P05-FLOW-02-R03] Primary invariant: Decimal totals and required fields.
+- [P05-FLOW-02-R04] Define the user goal and permitted actor for Validate invoice.
+- [P05-FLOW-02-R05] Define required inputs and source versions for Validate invoice.
+- [P05-FLOW-02-R06] Check preconditions before Validate invoice; reject violations with a specific user-facing explanation.
+- [P05-FLOW-02-R07] Document the authoritative output of Validate invoice and the next valid action.
+- [P05-FLOW-02-R08] Implement Validate invoice in a domain/service layer rather than hiding it in a UI callback.
+- [P05-FLOW-02-R09] Define the transaction boundary for Validate invoice when state changes.
+- [P05-FLOW-02-R10] Preserve an audit event for material Validate invoice decisions without recording secrets.
+- [P05-FLOW-02-R11] Define how Validate invoice behaves when the same request or input is repeated.
+- [P05-FLOW-02-R12] Define how Validate invoice behaves when its input dataset or record version is stale.
+- [P05-FLOW-02-R13] Prevent conflicting Validate invoice updates with version checks or another documented mechanism.
+- [P05-FLOW-02-R14] Keep original evidence immutable when Validate invoice creates a correction or new scenario.
+- [P05-FLOW-02-R15] Test the successful Validate invoice path using deterministic fixtures.
+- [P05-FLOW-02-R16] Test one rejected Validate invoice path against the stated invariant.
+- [P05-FLOW-02-R17] Test interrupted Validate invoice execution and prove safe recovery or explicit noncommit.
+- [P05-FLOW-02-R18] Test authorized versus unauthorized Validate invoice behavior where real backend roles apply.
+- [P05-FLOW-02-R19] In the static website, label Validate invoice mutations as browser-memory simulation.
+- [P05-FLOW-02-R20] Never make Validate invoice appear server-persistent in the GitHub Pages demo.
+- [P05-FLOW-02-R21] Expose progress, success and actionable failure feedback for Validate invoice.
+- [P05-FLOW-02-R22] Keep keyboard focus coherent after Validate invoice updates or opens a dialog.
+- [P05-FLOW-02-R23] Include Validate invoice in the UAT script and trace its acceptance criteria to tests.
+- [P05-FLOW-02-R24] Include actual Validate invoice verification results in the evidence ledger.
+- [P05-FLOW-02-R25] Use the resulting Validate invoice evidence in the case study only with its execution mode disclosed.
+- [P05-FLOW-02-R26] Have the coordinator approve the integrated Validate invoice diff after specialist review.
+### P05-FLOW-03: Find duplicates
+- [P05-FLOW-03-R01] Workflow capability: Find duplicates.
+- [P05-FLOW-03-R02] Logical transition: Valid -> candidate review.
+- [P05-FLOW-03-R03] Primary invariant: Explain matching fields.
+- [P05-FLOW-03-R04] Define the user goal and permitted actor for Find duplicates.
+- [P05-FLOW-03-R05] Define required inputs and source versions for Find duplicates.
+- [P05-FLOW-03-R06] Check preconditions before Find duplicates; reject violations with a specific user-facing explanation.
+- [P05-FLOW-03-R07] Document the authoritative output of Find duplicates and the next valid action.
+- [P05-FLOW-03-R08] Implement Find duplicates in a domain/service layer rather than hiding it in a UI callback.
+- [P05-FLOW-03-R09] Define the transaction boundary for Find duplicates when state changes.
+- [P05-FLOW-03-R10] Preserve an audit event for material Find duplicates decisions without recording secrets.
+- [P05-FLOW-03-R11] Define how Find duplicates behaves when the same request or input is repeated.
+- [P05-FLOW-03-R12] Define how Find duplicates behaves when its input dataset or record version is stale.
+- [P05-FLOW-03-R13] Prevent conflicting Find duplicates updates with version checks or another documented mechanism.
+- [P05-FLOW-03-R14] Keep original evidence immutable when Find duplicates creates a correction or new scenario.
+- [P05-FLOW-03-R15] Test the successful Find duplicates path using deterministic fixtures.
+- [P05-FLOW-03-R16] Test one rejected Find duplicates path against the stated invariant.
+- [P05-FLOW-03-R17] Test interrupted Find duplicates execution and prove safe recovery or explicit noncommit.
+- [P05-FLOW-03-R18] Test authorized versus unauthorized Find duplicates behavior where real backend roles apply.
+- [P05-FLOW-03-R19] In the static website, label Find duplicates mutations as browser-memory simulation.
+- [P05-FLOW-03-R20] Never make Find duplicates appear server-persistent in the GitHub Pages demo.
+- [P05-FLOW-03-R21] Expose progress, success and actionable failure feedback for Find duplicates.
+- [P05-FLOW-03-R22] Keep keyboard focus coherent after Find duplicates updates or opens a dialog.
+- [P05-FLOW-03-R23] Include Find duplicates in the UAT script and trace its acceptance criteria to tests.
+- [P05-FLOW-03-R24] Include actual Find duplicates verification results in the evidence ledger.
+- [P05-FLOW-03-R25] Use the resulting Find duplicates evidence in the case study only with its execution mode disclosed.
+- [P05-FLOW-03-R26] Have the coordinator approve the integrated Find duplicates diff after specialist review.
+### P05-FLOW-04: Match three ways
+- [P05-FLOW-04-R01] Workflow capability: Match three ways.
+- [P05-FLOW-04-R02] Logical transition: Valid -> matched or exception.
+- [P05-FLOW-04-R03] Primary invariant: PO, receipt and cumulative invoices.
+- [P05-FLOW-04-R04] Define the user goal and permitted actor for Match three ways.
+- [P05-FLOW-04-R05] Define required inputs and source versions for Match three ways.
+- [P05-FLOW-04-R06] Check preconditions before Match three ways; reject violations with a specific user-facing explanation.
+- [P05-FLOW-04-R07] Document the authoritative output of Match three ways and the next valid action.
+- [P05-FLOW-04-R08] Implement Match three ways in a domain/service layer rather than hiding it in a UI callback.
+- [P05-FLOW-04-R09] Define the transaction boundary for Match three ways when state changes.
+- [P05-FLOW-04-R10] Preserve an audit event for material Match three ways decisions without recording secrets.
+- [P05-FLOW-04-R11] Define how Match three ways behaves when the same request or input is repeated.
+- [P05-FLOW-04-R12] Define how Match three ways behaves when its input dataset or record version is stale.
+- [P05-FLOW-04-R13] Prevent conflicting Match three ways updates with version checks or another documented mechanism.
+- [P05-FLOW-04-R14] Keep original evidence immutable when Match three ways creates a correction or new scenario.
+- [P05-FLOW-04-R15] Test the successful Match three ways path using deterministic fixtures.
+- [P05-FLOW-04-R16] Test one rejected Match three ways path against the stated invariant.
+- [P05-FLOW-04-R17] Test interrupted Match three ways execution and prove safe recovery or explicit noncommit.
+- [P05-FLOW-04-R18] Test authorized versus unauthorized Match three ways behavior where real backend roles apply.
+- [P05-FLOW-04-R19] In the static website, label Match three ways mutations as browser-memory simulation.
+- [P05-FLOW-04-R20] Never make Match three ways appear server-persistent in the GitHub Pages demo.
+- [P05-FLOW-04-R21] Expose progress, success and actionable failure feedback for Match three ways.
+- [P05-FLOW-04-R22] Keep keyboard focus coherent after Match three ways updates or opens a dialog.
+- [P05-FLOW-04-R23] Include Match three ways in the UAT script and trace its acceptance criteria to tests.
+- [P05-FLOW-04-R24] Include actual Match three ways verification results in the evidence ledger.
+- [P05-FLOW-04-R25] Use the resulting Match three ways evidence in the case study only with its execution mode disclosed.
+- [P05-FLOW-04-R26] Have the coordinator approve the integrated Match three ways diff after specialist review.
+### P05-FLOW-05: Assign exception
+- [P05-FLOW-05-R01] Workflow capability: Assign exception.
+- [P05-FLOW-05-R02] Logical transition: Unowned -> assigned.
+- [P05-FLOW-05-R03] Primary invariant: Maintain assignment history.
+- [P05-FLOW-05-R04] Define the user goal and permitted actor for Assign exception.
+- [P05-FLOW-05-R05] Define required inputs and source versions for Assign exception.
+- [P05-FLOW-05-R06] Check preconditions before Assign exception; reject violations with a specific user-facing explanation.
+- [P05-FLOW-05-R07] Document the authoritative output of Assign exception and the next valid action.
+- [P05-FLOW-05-R08] Implement Assign exception in a domain/service layer rather than hiding it in a UI callback.
+- [P05-FLOW-05-R09] Define the transaction boundary for Assign exception when state changes.
+- [P05-FLOW-05-R10] Preserve an audit event for material Assign exception decisions without recording secrets.
+- [P05-FLOW-05-R11] Define how Assign exception behaves when the same request or input is repeated.
+- [P05-FLOW-05-R12] Define how Assign exception behaves when its input dataset or record version is stale.
+- [P05-FLOW-05-R13] Prevent conflicting Assign exception updates with version checks or another documented mechanism.
+- [P05-FLOW-05-R14] Keep original evidence immutable when Assign exception creates a correction or new scenario.
+- [P05-FLOW-05-R15] Test the successful Assign exception path using deterministic fixtures.
+- [P05-FLOW-05-R16] Test one rejected Assign exception path against the stated invariant.
+- [P05-FLOW-05-R17] Test interrupted Assign exception execution and prove safe recovery or explicit noncommit.
+- [P05-FLOW-05-R18] Test authorized versus unauthorized Assign exception behavior where real backend roles apply.
+- [P05-FLOW-05-R19] In the static website, label Assign exception mutations as browser-memory simulation.
+- [P05-FLOW-05-R20] Never make Assign exception appear server-persistent in the GitHub Pages demo.
+- [P05-FLOW-05-R21] Expose progress, success and actionable failure feedback for Assign exception.
+- [P05-FLOW-05-R22] Keep keyboard focus coherent after Assign exception updates or opens a dialog.
+- [P05-FLOW-05-R23] Include Assign exception in the UAT script and trace its acceptance criteria to tests.
+- [P05-FLOW-05-R24] Include actual Assign exception verification results in the evidence ledger.
+- [P05-FLOW-05-R25] Use the resulting Assign exception evidence in the case study only with its execution mode disclosed.
+- [P05-FLOW-05-R26] Have the coordinator approve the integrated Assign exception diff after specialist review.
+### P05-FLOW-06: Correct extraction
+- [P05-FLOW-06-R01] Workflow capability: Correct extraction.
+- [P05-FLOW-06-R02] Logical transition: Original -> versioned correction.
+- [P05-FLOW-06-R03] Primary invariant: Never overwrite source.
+- [P05-FLOW-06-R04] Define the user goal and permitted actor for Correct extraction.
+- [P05-FLOW-06-R05] Define required inputs and source versions for Correct extraction.
+- [P05-FLOW-06-R06] Check preconditions before Correct extraction; reject violations with a specific user-facing explanation.
+- [P05-FLOW-06-R07] Document the authoritative output of Correct extraction and the next valid action.
+- [P05-FLOW-06-R08] Implement Correct extraction in a domain/service layer rather than hiding it in a UI callback.
+- [P05-FLOW-06-R09] Define the transaction boundary for Correct extraction when state changes.
+- [P05-FLOW-06-R10] Preserve an audit event for material Correct extraction decisions without recording secrets.
+- [P05-FLOW-06-R11] Define how Correct extraction behaves when the same request or input is repeated.
+- [P05-FLOW-06-R12] Define how Correct extraction behaves when its input dataset or record version is stale.
+- [P05-FLOW-06-R13] Prevent conflicting Correct extraction updates with version checks or another documented mechanism.
+- [P05-FLOW-06-R14] Keep original evidence immutable when Correct extraction creates a correction or new scenario.
+- [P05-FLOW-06-R15] Test the successful Correct extraction path using deterministic fixtures.
+- [P05-FLOW-06-R16] Test one rejected Correct extraction path against the stated invariant.
+- [P05-FLOW-06-R17] Test interrupted Correct extraction execution and prove safe recovery or explicit noncommit.
+- [P05-FLOW-06-R18] Test authorized versus unauthorized Correct extraction behavior where real backend roles apply.
+- [P05-FLOW-06-R19] In the static website, label Correct extraction mutations as browser-memory simulation.
+- [P05-FLOW-06-R20] Never make Correct extraction appear server-persistent in the GitHub Pages demo.
+- [P05-FLOW-06-R21] Expose progress, success and actionable failure feedback for Correct extraction.
+- [P05-FLOW-06-R22] Keep keyboard focus coherent after Correct extraction updates or opens a dialog.
+- [P05-FLOW-06-R23] Include Correct extraction in the UAT script and trace its acceptance criteria to tests.
+- [P05-FLOW-06-R24] Include actual Correct extraction verification results in the evidence ledger.
+- [P05-FLOW-06-R25] Use the resulting Correct extraction evidence in the case study only with its execution mode disclosed.
+- [P05-FLOW-06-R26] Have the coordinator approve the integrated Correct extraction diff after specialist review.
+### P05-FLOW-07: Approve invoice
+- [P05-FLOW-07-R01] Workflow capability: Approve invoice.
+- [P05-FLOW-07-R02] Logical transition: Matched or resolved -> approved.
+- [P05-FLOW-07-R03] Primary invariant: Separation of duties.
+- [P05-FLOW-07-R04] Define the user goal and permitted actor for Approve invoice.
+- [P05-FLOW-07-R05] Define required inputs and source versions for Approve invoice.
+- [P05-FLOW-07-R06] Check preconditions before Approve invoice; reject violations with a specific user-facing explanation.
+- [P05-FLOW-07-R07] Document the authoritative output of Approve invoice and the next valid action.
+- [P05-FLOW-07-R08] Implement Approve invoice in a domain/service layer rather than hiding it in a UI callback.
+- [P05-FLOW-07-R09] Define the transaction boundary for Approve invoice when state changes.
+- [P05-FLOW-07-R10] Preserve an audit event for material Approve invoice decisions without recording secrets.
+- [P05-FLOW-07-R11] Define how Approve invoice behaves when the same request or input is repeated.
+- [P05-FLOW-07-R12] Define how Approve invoice behaves when its input dataset or record version is stale.
+- [P05-FLOW-07-R13] Prevent conflicting Approve invoice updates with version checks or another documented mechanism.
+- [P05-FLOW-07-R14] Keep original evidence immutable when Approve invoice creates a correction or new scenario.
+- [P05-FLOW-07-R15] Test the successful Approve invoice path using deterministic fixtures.
+- [P05-FLOW-07-R16] Test one rejected Approve invoice path against the stated invariant.
+- [P05-FLOW-07-R17] Test interrupted Approve invoice execution and prove safe recovery or explicit noncommit.
+- [P05-FLOW-07-R18] Test authorized versus unauthorized Approve invoice behavior where real backend roles apply.
+- [P05-FLOW-07-R19] In the static website, label Approve invoice mutations as browser-memory simulation.
+- [P05-FLOW-07-R20] Never make Approve invoice appear server-persistent in the GitHub Pages demo.
+- [P05-FLOW-07-R21] Expose progress, success and actionable failure feedback for Approve invoice.
+- [P05-FLOW-07-R22] Keep keyboard focus coherent after Approve invoice updates or opens a dialog.
+- [P05-FLOW-07-R23] Include Approve invoice in the UAT script and trace its acceptance criteria to tests.
+- [P05-FLOW-07-R24] Include actual Approve invoice verification results in the evidence ledger.
+- [P05-FLOW-07-R25] Use the resulting Approve invoice evidence in the case study only with its execution mode disclosed.
+- [P05-FLOW-07-R26] Have the coordinator approve the integrated Approve invoice diff after specialist review.
+### P05-FLOW-08: Reject invoice
+- [P05-FLOW-08-R01] Workflow capability: Reject invoice.
+- [P05-FLOW-08-R02] Logical transition: Reviewable -> rejected.
+- [P05-FLOW-08-R03] Primary invariant: Reason required.
+- [P05-FLOW-08-R04] Define the user goal and permitted actor for Reject invoice.
+- [P05-FLOW-08-R05] Define required inputs and source versions for Reject invoice.
+- [P05-FLOW-08-R06] Check preconditions before Reject invoice; reject violations with a specific user-facing explanation.
+- [P05-FLOW-08-R07] Document the authoritative output of Reject invoice and the next valid action.
+- [P05-FLOW-08-R08] Implement Reject invoice in a domain/service layer rather than hiding it in a UI callback.
+- [P05-FLOW-08-R09] Define the transaction boundary for Reject invoice when state changes.
+- [P05-FLOW-08-R10] Preserve an audit event for material Reject invoice decisions without recording secrets.
+- [P05-FLOW-08-R11] Define how Reject invoice behaves when the same request or input is repeated.
+- [P05-FLOW-08-R12] Define how Reject invoice behaves when its input dataset or record version is stale.
+- [P05-FLOW-08-R13] Prevent conflicting Reject invoice updates with version checks or another documented mechanism.
+- [P05-FLOW-08-R14] Keep original evidence immutable when Reject invoice creates a correction or new scenario.
+- [P05-FLOW-08-R15] Test the successful Reject invoice path using deterministic fixtures.
+- [P05-FLOW-08-R16] Test one rejected Reject invoice path against the stated invariant.
+- [P05-FLOW-08-R17] Test interrupted Reject invoice execution and prove safe recovery or explicit noncommit.
+- [P05-FLOW-08-R18] Test authorized versus unauthorized Reject invoice behavior where real backend roles apply.
+- [P05-FLOW-08-R19] In the static website, label Reject invoice mutations as browser-memory simulation.
+- [P05-FLOW-08-R20] Never make Reject invoice appear server-persistent in the GitHub Pages demo.
+- [P05-FLOW-08-R21] Expose progress, success and actionable failure feedback for Reject invoice.
+- [P05-FLOW-08-R22] Keep keyboard focus coherent after Reject invoice updates or opens a dialog.
+- [P05-FLOW-08-R23] Include Reject invoice in the UAT script and trace its acceptance criteria to tests.
+- [P05-FLOW-08-R24] Include actual Reject invoice verification results in the evidence ledger.
+- [P05-FLOW-08-R25] Use the resulting Reject invoice evidence in the case study only with its execution mode disclosed.
+- [P05-FLOW-08-R26] Have the coordinator approve the integrated Reject invoice diff after specialist review.
+### P05-FLOW-09: Export payable
+- [P05-FLOW-09-R01] Workflow capability: Export payable.
+- [P05-FLOW-09-R02] Logical transition: Approved -> exported.
+- [P05-FLOW-09-R03] Primary invariant: Idempotent export batch.
+- [P05-FLOW-09-R04] Define the user goal and permitted actor for Export payable.
+- [P05-FLOW-09-R05] Define required inputs and source versions for Export payable.
+- [P05-FLOW-09-R06] Check preconditions before Export payable; reject violations with a specific user-facing explanation.
+- [P05-FLOW-09-R07] Document the authoritative output of Export payable and the next valid action.
+- [P05-FLOW-09-R08] Implement Export payable in a domain/service layer rather than hiding it in a UI callback.
+- [P05-FLOW-09-R09] Define the transaction boundary for Export payable when state changes.
+- [P05-FLOW-09-R10] Preserve an audit event for material Export payable decisions without recording secrets.
+- [P05-FLOW-09-R11] Define how Export payable behaves when the same request or input is repeated.
+- [P05-FLOW-09-R12] Define how Export payable behaves when its input dataset or record version is stale.
+- [P05-FLOW-09-R13] Prevent conflicting Export payable updates with version checks or another documented mechanism.
+- [P05-FLOW-09-R14] Keep original evidence immutable when Export payable creates a correction or new scenario.
+- [P05-FLOW-09-R15] Test the successful Export payable path using deterministic fixtures.
+- [P05-FLOW-09-R16] Test one rejected Export payable path against the stated invariant.
+- [P05-FLOW-09-R17] Test interrupted Export payable execution and prove safe recovery or explicit noncommit.
+- [P05-FLOW-09-R18] Test authorized versus unauthorized Export payable behavior where real backend roles apply.
+- [P05-FLOW-09-R19] In the static website, label Export payable mutations as browser-memory simulation.
+- [P05-FLOW-09-R20] Never make Export payable appear server-persistent in the GitHub Pages demo.
+- [P05-FLOW-09-R21] Expose progress, success and actionable failure feedback for Export payable.
+- [P05-FLOW-09-R22] Keep keyboard focus coherent after Export payable updates or opens a dialog.
+- [P05-FLOW-09-R23] Include Export payable in the UAT script and trace its acceptance criteria to tests.
+- [P05-FLOW-09-R24] Include actual Export payable verification results in the evidence ledger.
+- [P05-FLOW-09-R25] Use the resulting Export payable evidence in the case study only with its execution mode disclosed.
+- [P05-FLOW-09-R26] Have the coordinator approve the integrated Export payable diff after specialist review.
+### P05-FLOW-10: Apply credit note
+- [P05-FLOW-10-R01] Workflow capability: Apply credit note.
+- [P05-FLOW-10-R02] Logical transition: Approved invoice -> adjusted balance.
+- [P05-FLOW-10-R03] Primary invariant: No fictitious cash movement.
+- [P05-FLOW-10-R04] Define the user goal and permitted actor for Apply credit note.
+- [P05-FLOW-10-R05] Define required inputs and source versions for Apply credit note.
+- [P05-FLOW-10-R06] Check preconditions before Apply credit note; reject violations with a specific user-facing explanation.
+- [P05-FLOW-10-R07] Document the authoritative output of Apply credit note and the next valid action.
+- [P05-FLOW-10-R08] Implement Apply credit note in a domain/service layer rather than hiding it in a UI callback.
+- [P05-FLOW-10-R09] Define the transaction boundary for Apply credit note when state changes.
+- [P05-FLOW-10-R10] Preserve an audit event for material Apply credit note decisions without recording secrets.
+- [P05-FLOW-10-R11] Define how Apply credit note behaves when the same request or input is repeated.
+- [P05-FLOW-10-R12] Define how Apply credit note behaves when its input dataset or record version is stale.
+- [P05-FLOW-10-R13] Prevent conflicting Apply credit note updates with version checks or another documented mechanism.
+- [P05-FLOW-10-R14] Keep original evidence immutable when Apply credit note creates a correction or new scenario.
+- [P05-FLOW-10-R15] Test the successful Apply credit note path using deterministic fixtures.
+- [P05-FLOW-10-R16] Test one rejected Apply credit note path against the stated invariant.
+- [P05-FLOW-10-R17] Test interrupted Apply credit note execution and prove safe recovery or explicit noncommit.
+- [P05-FLOW-10-R18] Test authorized versus unauthorized Apply credit note behavior where real backend roles apply.
+- [P05-FLOW-10-R19] In the static website, label Apply credit note mutations as browser-memory simulation.
+- [P05-FLOW-10-R20] Never make Apply credit note appear server-persistent in the GitHub Pages demo.
+- [P05-FLOW-10-R21] Expose progress, success and actionable failure feedback for Apply credit note.
+- [P05-FLOW-10-R22] Keep keyboard focus coherent after Apply credit note updates or opens a dialog.
+- [P05-FLOW-10-R23] Include Apply credit note in the UAT script and trace its acceptance criteria to tests.
+- [P05-FLOW-10-R24] Include actual Apply credit note verification results in the evidence ledger.
+- [P05-FLOW-10-R25] Use the resulting Apply credit note evidence in the case study only with its execution mode disclosed.
+- [P05-FLOW-10-R26] Have the coordinator approve the integrated Apply credit note diff after specialist review.
+
+## 06. Screen-by-screen product experience
+
+### P05-UI-01: Intake desk
+- [P05-UI-01-R01] Screen: Intake desk.
+- [P05-UI-01-R02] Purpose and principal representation: Upload synthetic fixture and parse feedback.
+- [P05-UI-01-R03] Choose a stable route under /invoicebridge/ and verify direct navigation and reload for Intake desk.
+- [P05-UI-01-R04] Use the project visual direction on Intake desk: Document reconciliation desk: warm paper, charcoal, muted teal; evidence beside decision.
+- [P05-UI-01-R05] Give Intake desk one clear main action related to the business decision.
+- [P05-UI-01-R06] Display the active time window, filters and data version on Intake desk where applicable.
+- [P05-UI-01-R07] Show the synthetic/static-demo label without overwhelming Intake desk.
+- [P05-UI-01-R08] Use real verified snapshot values on Intake desk; do not hand-enter attractive KPI numbers.
+- [P05-UI-01-R09] Explain calculation meaning and units adjacent to important Intake desk values.
+- [P05-UI-01-R10] Provide an accessible table or text alternative for analytical graphics on Intake desk.
+- [P05-UI-01-R11] Use consistent category ordering and deterministic tie breaks on Intake desk.
+- [P05-UI-01-R12] Handle long names, negative values, missing categories and large values on Intake desk.
+- [P05-UI-01-R13] Implement a useful no-data state on Intake desk, including a way to clear restrictive filters.
+- [P05-UI-01-R14] Implement loading and failed-data states on Intake desk without showing invented results.
+- [P05-UI-01-R15] Keep all Intake desk controls keyboard accessible with visible focus.
+- [P05-UI-01-R16] Provide reduced-motion behavior for Intake desk transitions.
+- [P05-UI-01-R17] Keep motion purposeful; chart changes on Intake desk must not conceal changed units or populations.
+- [P05-UI-01-R18] Verify Intake desk at mobile, tablet and desktop widths with actual rendered output.
+- [P05-UI-01-R19] Verify Intake desk at 200 percent zoom and with realistic dense data.
+- [P05-UI-01-R20] Ensure exports from Intake desk match its scope or clearly explain full-population export behavior.
+- [P05-UI-01-R21] Provide navigation from Intake desk to evidence, definitions and the case study.
+- [P05-UI-01-R22] Check console errors, broken assets and nested path handling for Intake desk.
+- [P05-UI-01-R23] Record screenshot-review findings for Intake desk; do not assert review from source inspection.
+- [P05-UI-01-R24] Link Intake desk to its relevant workflow and metric contract IDs in the traceability matrix.
+### P05-UI-02: Invoice detail
+- [P05-UI-02-R01] Screen: Invoice detail.
+- [P05-UI-02-R02] Purpose and principal representation: Source fields and versioned correction.
+- [P05-UI-02-R03] Choose a stable route under /invoicebridge/ and verify direct navigation and reload for Invoice detail.
+- [P05-UI-02-R04] Use the project visual direction on Invoice detail: Document reconciliation desk: warm paper, charcoal, muted teal; evidence beside decision.
+- [P05-UI-02-R05] Give Invoice detail one clear main action related to the business decision.
+- [P05-UI-02-R06] Display the active time window, filters and data version on Invoice detail where applicable.
+- [P05-UI-02-R07] Show the synthetic/static-demo label without overwhelming Invoice detail.
+- [P05-UI-02-R08] Use real verified snapshot values on Invoice detail; do not hand-enter attractive KPI numbers.
+- [P05-UI-02-R09] Explain calculation meaning and units adjacent to important Invoice detail values.
+- [P05-UI-02-R10] Provide an accessible table or text alternative for analytical graphics on Invoice detail.
+- [P05-UI-02-R11] Use consistent category ordering and deterministic tie breaks on Invoice detail.
+- [P05-UI-02-R12] Handle long names, negative values, missing categories and large values on Invoice detail.
+- [P05-UI-02-R13] Implement a useful no-data state on Invoice detail, including a way to clear restrictive filters.
+- [P05-UI-02-R14] Implement loading and failed-data states on Invoice detail without showing invented results.
+- [P05-UI-02-R15] Keep all Invoice detail controls keyboard accessible with visible focus.
+- [P05-UI-02-R16] Provide reduced-motion behavior for Invoice detail transitions.
+- [P05-UI-02-R17] Keep motion purposeful; chart changes on Invoice detail must not conceal changed units or populations.
+- [P05-UI-02-R18] Verify Invoice detail at mobile, tablet and desktop widths with actual rendered output.
+- [P05-UI-02-R19] Verify Invoice detail at 200 percent zoom and with realistic dense data.
+- [P05-UI-02-R20] Ensure exports from Invoice detail match its scope or clearly explain full-population export behavior.
+- [P05-UI-02-R21] Provide navigation from Invoice detail to evidence, definitions and the case study.
+- [P05-UI-02-R22] Check console errors, broken assets and nested path handling for Invoice detail.
+- [P05-UI-02-R23] Record screenshot-review findings for Invoice detail; do not assert review from source inspection.
+- [P05-UI-02-R24] Link Invoice detail to its relevant workflow and metric contract IDs in the traceability matrix.
+### P05-UI-03: Matching panel
+- [P05-UI-03-R01] Screen: Matching panel.
+- [P05-UI-03-R02] Purpose and principal representation: PO, receipt and invoice side by side.
+- [P05-UI-03-R03] Choose a stable route under /invoicebridge/ and verify direct navigation and reload for Matching panel.
+- [P05-UI-03-R04] Use the project visual direction on Matching panel: Document reconciliation desk: warm paper, charcoal, muted teal; evidence beside decision.
+- [P05-UI-03-R05] Give Matching panel one clear main action related to the business decision.
+- [P05-UI-03-R06] Display the active time window, filters and data version on Matching panel where applicable.
+- [P05-UI-03-R07] Show the synthetic/static-demo label without overwhelming Matching panel.
+- [P05-UI-03-R08] Use real verified snapshot values on Matching panel; do not hand-enter attractive KPI numbers.
+- [P05-UI-03-R09] Explain calculation meaning and units adjacent to important Matching panel values.
+- [P05-UI-03-R10] Provide an accessible table or text alternative for analytical graphics on Matching panel.
+- [P05-UI-03-R11] Use consistent category ordering and deterministic tie breaks on Matching panel.
+- [P05-UI-03-R12] Handle long names, negative values, missing categories and large values on Matching panel.
+- [P05-UI-03-R13] Implement a useful no-data state on Matching panel, including a way to clear restrictive filters.
+- [P05-UI-03-R14] Implement loading and failed-data states on Matching panel without showing invented results.
+- [P05-UI-03-R15] Keep all Matching panel controls keyboard accessible with visible focus.
+- [P05-UI-03-R16] Provide reduced-motion behavior for Matching panel transitions.
+- [P05-UI-03-R17] Keep motion purposeful; chart changes on Matching panel must not conceal changed units or populations.
+- [P05-UI-03-R18] Verify Matching panel at mobile, tablet and desktop widths with actual rendered output.
+- [P05-UI-03-R19] Verify Matching panel at 200 percent zoom and with realistic dense data.
+- [P05-UI-03-R20] Ensure exports from Matching panel match its scope or clearly explain full-population export behavior.
+- [P05-UI-03-R21] Provide navigation from Matching panel to evidence, definitions and the case study.
+- [P05-UI-03-R22] Check console errors, broken assets and nested path handling for Matching panel.
+- [P05-UI-03-R23] Record screenshot-review findings for Matching panel; do not assert review from source inspection.
+- [P05-UI-03-R24] Link Matching panel to its relevant workflow and metric contract IDs in the traceability matrix.
+### P05-UI-04: Duplicate review
+- [P05-UI-04-R01] Screen: Duplicate review.
+- [P05-UI-04-R02] Purpose and principal representation: Candidate evidence and human decision.
+- [P05-UI-04-R03] Choose a stable route under /invoicebridge/ and verify direct navigation and reload for Duplicate review.
+- [P05-UI-04-R04] Use the project visual direction on Duplicate review: Document reconciliation desk: warm paper, charcoal, muted teal; evidence beside decision.
+- [P05-UI-04-R05] Give Duplicate review one clear main action related to the business decision.
+- [P05-UI-04-R06] Display the active time window, filters and data version on Duplicate review where applicable.
+- [P05-UI-04-R07] Show the synthetic/static-demo label without overwhelming Duplicate review.
+- [P05-UI-04-R08] Use real verified snapshot values on Duplicate review; do not hand-enter attractive KPI numbers.
+- [P05-UI-04-R09] Explain calculation meaning and units adjacent to important Duplicate review values.
+- [P05-UI-04-R10] Provide an accessible table or text alternative for analytical graphics on Duplicate review.
+- [P05-UI-04-R11] Use consistent category ordering and deterministic tie breaks on Duplicate review.
+- [P05-UI-04-R12] Handle long names, negative values, missing categories and large values on Duplicate review.
+- [P05-UI-04-R13] Implement a useful no-data state on Duplicate review, including a way to clear restrictive filters.
+- [P05-UI-04-R14] Implement loading and failed-data states on Duplicate review without showing invented results.
+- [P05-UI-04-R15] Keep all Duplicate review controls keyboard accessible with visible focus.
+- [P05-UI-04-R16] Provide reduced-motion behavior for Duplicate review transitions.
+- [P05-UI-04-R17] Keep motion purposeful; chart changes on Duplicate review must not conceal changed units or populations.
+- [P05-UI-04-R18] Verify Duplicate review at mobile, tablet and desktop widths with actual rendered output.
+- [P05-UI-04-R19] Verify Duplicate review at 200 percent zoom and with realistic dense data.
+- [P05-UI-04-R20] Ensure exports from Duplicate review match its scope or clearly explain full-population export behavior.
+- [P05-UI-04-R21] Provide navigation from Duplicate review to evidence, definitions and the case study.
+- [P05-UI-04-R22] Check console errors, broken assets and nested path handling for Duplicate review.
+- [P05-UI-04-R23] Record screenshot-review findings for Duplicate review; do not assert review from source inspection.
+- [P05-UI-04-R24] Link Duplicate review to its relevant workflow and metric contract IDs in the traceability matrix.
+### P05-UI-05: Exception queue
+- [P05-UI-05-R01] Screen: Exception queue.
+- [P05-UI-05-R02] Purpose and principal representation: Severity, ownership and aging.
+- [P05-UI-05-R03] Choose a stable route under /invoicebridge/ and verify direct navigation and reload for Exception queue.
+- [P05-UI-05-R04] Use the project visual direction on Exception queue: Document reconciliation desk: warm paper, charcoal, muted teal; evidence beside decision.
+- [P05-UI-05-R05] Give Exception queue one clear main action related to the business decision.
+- [P05-UI-05-R06] Display the active time window, filters and data version on Exception queue where applicable.
+- [P05-UI-05-R07] Show the synthetic/static-demo label without overwhelming Exception queue.
+- [P05-UI-05-R08] Use real verified snapshot values on Exception queue; do not hand-enter attractive KPI numbers.
+- [P05-UI-05-R09] Explain calculation meaning and units adjacent to important Exception queue values.
+- [P05-UI-05-R10] Provide an accessible table or text alternative for analytical graphics on Exception queue.
+- [P05-UI-05-R11] Use consistent category ordering and deterministic tie breaks on Exception queue.
+- [P05-UI-05-R12] Handle long names, negative values, missing categories and large values on Exception queue.
+- [P05-UI-05-R13] Implement a useful no-data state on Exception queue, including a way to clear restrictive filters.
+- [P05-UI-05-R14] Implement loading and failed-data states on Exception queue without showing invented results.
+- [P05-UI-05-R15] Keep all Exception queue controls keyboard accessible with visible focus.
+- [P05-UI-05-R16] Provide reduced-motion behavior for Exception queue transitions.
+- [P05-UI-05-R17] Keep motion purposeful; chart changes on Exception queue must not conceal changed units or populations.
+- [P05-UI-05-R18] Verify Exception queue at mobile, tablet and desktop widths with actual rendered output.
+- [P05-UI-05-R19] Verify Exception queue at 200 percent zoom and with realistic dense data.
+- [P05-UI-05-R20] Ensure exports from Exception queue match its scope or clearly explain full-population export behavior.
+- [P05-UI-05-R21] Provide navigation from Exception queue to evidence, definitions and the case study.
+- [P05-UI-05-R22] Check console errors, broken assets and nested path handling for Exception queue.
+- [P05-UI-05-R23] Record screenshot-review findings for Exception queue; do not assert review from source inspection.
+- [P05-UI-05-R24] Link Exception queue to its relevant workflow and metric contract IDs in the traceability matrix.
+### P05-UI-06: Approval desk
+- [P05-UI-06-R01] Screen: Approval desk.
+- [P05-UI-06-R02] Purpose and principal representation: Policy and authorized action.
+- [P05-UI-06-R03] Choose a stable route under /invoicebridge/ and verify direct navigation and reload for Approval desk.
+- [P05-UI-06-R04] Use the project visual direction on Approval desk: Document reconciliation desk: warm paper, charcoal, muted teal; evidence beside decision.
+- [P05-UI-06-R05] Give Approval desk one clear main action related to the business decision.
+- [P05-UI-06-R06] Display the active time window, filters and data version on Approval desk where applicable.
+- [P05-UI-06-R07] Show the synthetic/static-demo label without overwhelming Approval desk.
+- [P05-UI-06-R08] Use real verified snapshot values on Approval desk; do not hand-enter attractive KPI numbers.
+- [P05-UI-06-R09] Explain calculation meaning and units adjacent to important Approval desk values.
+- [P05-UI-06-R10] Provide an accessible table or text alternative for analytical graphics on Approval desk.
+- [P05-UI-06-R11] Use consistent category ordering and deterministic tie breaks on Approval desk.
+- [P05-UI-06-R12] Handle long names, negative values, missing categories and large values on Approval desk.
+- [P05-UI-06-R13] Implement a useful no-data state on Approval desk, including a way to clear restrictive filters.
+- [P05-UI-06-R14] Implement loading and failed-data states on Approval desk without showing invented results.
+- [P05-UI-06-R15] Keep all Approval desk controls keyboard accessible with visible focus.
+- [P05-UI-06-R16] Provide reduced-motion behavior for Approval desk transitions.
+- [P05-UI-06-R17] Keep motion purposeful; chart changes on Approval desk must not conceal changed units or populations.
+- [P05-UI-06-R18] Verify Approval desk at mobile, tablet and desktop widths with actual rendered output.
+- [P05-UI-06-R19] Verify Approval desk at 200 percent zoom and with realistic dense data.
+- [P05-UI-06-R20] Ensure exports from Approval desk match its scope or clearly explain full-population export behavior.
+- [P05-UI-06-R21] Provide navigation from Approval desk to evidence, definitions and the case study.
+- [P05-UI-06-R22] Check console errors, broken assets and nested path handling for Approval desk.
+- [P05-UI-06-R23] Record screenshot-review findings for Approval desk; do not assert review from source inspection.
+- [P05-UI-06-R24] Link Approval desk to its relevant workflow and metric contract IDs in the traceability matrix.
+### P05-UI-07: Vendor view
+- [P05-UI-07-R01] Screen: Vendor view.
+- [P05-UI-07-R02] Purpose and principal representation: Invoices, credits and outstanding totals.
+- [P05-UI-07-R03] Choose a stable route under /invoicebridge/ and verify direct navigation and reload for Vendor view.
+- [P05-UI-07-R04] Use the project visual direction on Vendor view: Document reconciliation desk: warm paper, charcoal, muted teal; evidence beside decision.
+- [P05-UI-07-R05] Give Vendor view one clear main action related to the business decision.
+- [P05-UI-07-R06] Display the active time window, filters and data version on Vendor view where applicable.
+- [P05-UI-07-R07] Show the synthetic/static-demo label without overwhelming Vendor view.
+- [P05-UI-07-R08] Use real verified snapshot values on Vendor view; do not hand-enter attractive KPI numbers.
+- [P05-UI-07-R09] Explain calculation meaning and units adjacent to important Vendor view values.
+- [P05-UI-07-R10] Provide an accessible table or text alternative for analytical graphics on Vendor view.
+- [P05-UI-07-R11] Use consistent category ordering and deterministic tie breaks on Vendor view.
+- [P05-UI-07-R12] Handle long names, negative values, missing categories and large values on Vendor view.
+- [P05-UI-07-R13] Implement a useful no-data state on Vendor view, including a way to clear restrictive filters.
+- [P05-UI-07-R14] Implement loading and failed-data states on Vendor view without showing invented results.
+- [P05-UI-07-R15] Keep all Vendor view controls keyboard accessible with visible focus.
+- [P05-UI-07-R16] Provide reduced-motion behavior for Vendor view transitions.
+- [P05-UI-07-R17] Keep motion purposeful; chart changes on Vendor view must not conceal changed units or populations.
+- [P05-UI-07-R18] Verify Vendor view at mobile, tablet and desktop widths with actual rendered output.
+- [P05-UI-07-R19] Verify Vendor view at 200 percent zoom and with realistic dense data.
+- [P05-UI-07-R20] Ensure exports from Vendor view match its scope or clearly explain full-population export behavior.
+- [P05-UI-07-R21] Provide navigation from Vendor view to evidence, definitions and the case study.
+- [P05-UI-07-R22] Check console errors, broken assets and nested path handling for Vendor view.
+- [P05-UI-07-R23] Record screenshot-review findings for Vendor view; do not assert review from source inspection.
+- [P05-UI-07-R24] Link Vendor view to its relevant workflow and metric contract IDs in the traceability matrix.
+### P05-UI-08: Export review
+- [P05-UI-08-R01] Screen: Export review.
+- [P05-UI-08-R02] Purpose and principal representation: Batch preview and reconciliation.
+- [P05-UI-08-R03] Choose a stable route under /invoicebridge/ and verify direct navigation and reload for Export review.
+- [P05-UI-08-R04] Use the project visual direction on Export review: Document reconciliation desk: warm paper, charcoal, muted teal; evidence beside decision.
+- [P05-UI-08-R05] Give Export review one clear main action related to the business decision.
+- [P05-UI-08-R06] Display the active time window, filters and data version on Export review where applicable.
+- [P05-UI-08-R07] Show the synthetic/static-demo label without overwhelming Export review.
+- [P05-UI-08-R08] Use real verified snapshot values on Export review; do not hand-enter attractive KPI numbers.
+- [P05-UI-08-R09] Explain calculation meaning and units adjacent to important Export review values.
+- [P05-UI-08-R10] Provide an accessible table or text alternative for analytical graphics on Export review.
+- [P05-UI-08-R11] Use consistent category ordering and deterministic tie breaks on Export review.
+- [P05-UI-08-R12] Handle long names, negative values, missing categories and large values on Export review.
+- [P05-UI-08-R13] Implement a useful no-data state on Export review, including a way to clear restrictive filters.
+- [P05-UI-08-R14] Implement loading and failed-data states on Export review without showing invented results.
+- [P05-UI-08-R15] Keep all Export review controls keyboard accessible with visible focus.
+- [P05-UI-08-R16] Provide reduced-motion behavior for Export review transitions.
+- [P05-UI-08-R17] Keep motion purposeful; chart changes on Export review must not conceal changed units or populations.
+- [P05-UI-08-R18] Verify Export review at mobile, tablet and desktop widths with actual rendered output.
+- [P05-UI-08-R19] Verify Export review at 200 percent zoom and with realistic dense data.
+- [P05-UI-08-R20] Ensure exports from Export review match its scope or clearly explain full-population export behavior.
+- [P05-UI-08-R21] Provide navigation from Export review to evidence, definitions and the case study.
+- [P05-UI-08-R22] Check console errors, broken assets and nested path handling for Export review.
+- [P05-UI-08-R23] Record screenshot-review findings for Export review; do not assert review from source inspection.
+- [P05-UI-08-R24] Link Export review to its relevant workflow and metric contract IDs in the traceability matrix.
+### P05-UI-09: Audit timeline
+- [P05-UI-09-R01] Screen: Audit timeline.
+- [P05-UI-09-R02] Purpose and principal representation: Immutable action and rule history.
+- [P05-UI-09-R03] Choose a stable route under /invoicebridge/ and verify direct navigation and reload for Audit timeline.
+- [P05-UI-09-R04] Use the project visual direction on Audit timeline: Document reconciliation desk: warm paper, charcoal, muted teal; evidence beside decision.
+- [P05-UI-09-R05] Give Audit timeline one clear main action related to the business decision.
+- [P05-UI-09-R06] Display the active time window, filters and data version on Audit timeline where applicable.
+- [P05-UI-09-R07] Show the synthetic/static-demo label without overwhelming Audit timeline.
+- [P05-UI-09-R08] Use real verified snapshot values on Audit timeline; do not hand-enter attractive KPI numbers.
+- [P05-UI-09-R09] Explain calculation meaning and units adjacent to important Audit timeline values.
+- [P05-UI-09-R10] Provide an accessible table or text alternative for analytical graphics on Audit timeline.
+- [P05-UI-09-R11] Use consistent category ordering and deterministic tie breaks on Audit timeline.
+- [P05-UI-09-R12] Handle long names, negative values, missing categories and large values on Audit timeline.
+- [P05-UI-09-R13] Implement a useful no-data state on Audit timeline, including a way to clear restrictive filters.
+- [P05-UI-09-R14] Implement loading and failed-data states on Audit timeline without showing invented results.
+- [P05-UI-09-R15] Keep all Audit timeline controls keyboard accessible with visible focus.
+- [P05-UI-09-R16] Provide reduced-motion behavior for Audit timeline transitions.
+- [P05-UI-09-R17] Keep motion purposeful; chart changes on Audit timeline must not conceal changed units or populations.
+- [P05-UI-09-R18] Verify Audit timeline at mobile, tablet and desktop widths with actual rendered output.
+- [P05-UI-09-R19] Verify Audit timeline at 200 percent zoom and with realistic dense data.
+- [P05-UI-09-R20] Ensure exports from Audit timeline match its scope or clearly explain full-population export behavior.
+- [P05-UI-09-R21] Provide navigation from Audit timeline to evidence, definitions and the case study.
+- [P05-UI-09-R22] Check console errors, broken assets and nested path handling for Audit timeline.
+- [P05-UI-09-R23] Record screenshot-review findings for Audit timeline; do not assert review from source inspection.
+- [P05-UI-09-R24] Link Audit timeline to its relevant workflow and metric contract IDs in the traceability matrix.
+### P05-UI-10: Case study
+- [P05-UI-10-R01] Screen: Case study.
+- [P05-UI-10-R02] Purpose and principal representation: Controls, matching rules and test evidence.
+- [P05-UI-10-R03] Choose a stable route under /invoicebridge/ and verify direct navigation and reload for Case study.
+- [P05-UI-10-R04] Use the project visual direction on Case study: Document reconciliation desk: warm paper, charcoal, muted teal; evidence beside decision.
+- [P05-UI-10-R05] Give Case study one clear main action related to the business decision.
+- [P05-UI-10-R06] Display the active time window, filters and data version on Case study where applicable.
+- [P05-UI-10-R07] Show the synthetic/static-demo label without overwhelming Case study.
+- [P05-UI-10-R08] Use real verified snapshot values on Case study; do not hand-enter attractive KPI numbers.
+- [P05-UI-10-R09] Explain calculation meaning and units adjacent to important Case study values.
+- [P05-UI-10-R10] Provide an accessible table or text alternative for analytical graphics on Case study.
+- [P05-UI-10-R11] Use consistent category ordering and deterministic tie breaks on Case study.
+- [P05-UI-10-R12] Handle long names, negative values, missing categories and large values on Case study.
+- [P05-UI-10-R13] Implement a useful no-data state on Case study, including a way to clear restrictive filters.
+- [P05-UI-10-R14] Implement loading and failed-data states on Case study without showing invented results.
+- [P05-UI-10-R15] Keep all Case study controls keyboard accessible with visible focus.
+- [P05-UI-10-R16] Provide reduced-motion behavior for Case study transitions.
+- [P05-UI-10-R17] Keep motion purposeful; chart changes on Case study must not conceal changed units or populations.
+- [P05-UI-10-R18] Verify Case study at mobile, tablet and desktop widths with actual rendered output.
+- [P05-UI-10-R19] Verify Case study at 200 percent zoom and with realistic dense data.
+- [P05-UI-10-R20] Ensure exports from Case study match its scope or clearly explain full-population export behavior.
+- [P05-UI-10-R21] Provide navigation from Case study to evidence, definitions and the case study.
+- [P05-UI-10-R22] Check console errors, broken assets and nested path handling for Case study.
+- [P05-UI-10-R23] Record screenshot-review findings for Case study; do not assert review from source inspection.
+- [P05-UI-10-R24] Link Case study to its relevant workflow and metric contract IDs in the traceability matrix.
+
+## 07. Adversarial domain verification
+
+### P05-TEST-01-DETECT: Same invoice imported under different filename — detect
+- [P05-TEST-01-DETECT-R01] Failure hypothesis: Same invoice imported under different filename.
+- [P05-TEST-01-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P05-TEST-01-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Same invoice imported under different filename.
+- [P05-TEST-01-DETECT-R04] Document the expected business outcome before executing P05-TEST-01-DETECT.
+- [P05-TEST-01-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-01-DETECT-R06] Capture the initial canonical state and dataset hash for P05-TEST-01-DETECT.
+- [P05-TEST-01-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-01-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-01-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-01-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-01-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-01-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-01-DETECT-R13] Use a separate reference calculation when P05-TEST-01-DETECT affects a key numerical total.
+- [P05-TEST-01-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Same invoice imported under different filename.
+- [P05-TEST-01-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-01-DETECT.
+- [P05-TEST-01-DETECT-R16] If blocked by environment capability, mark P05-TEST-01-DETECT blocked and retain the executable test source.
+- [P05-TEST-01-DETECT-R17] Do not claim P05-TEST-01-DETECT passed from reading the implementation or from another test passing.
+- [P05-TEST-01-DETECT-R18] Rerun P05-TEST-01-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-01-RECOVER: Same invoice imported under different filename — recover
+- [P05-TEST-01-RECOVER-R01] Failure hypothesis: Same invoice imported under different filename.
+- [P05-TEST-01-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P05-TEST-01-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Same invoice imported under different filename.
+- [P05-TEST-01-RECOVER-R04] Document the expected business outcome before executing P05-TEST-01-RECOVER.
+- [P05-TEST-01-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-01-RECOVER-R06] Capture the initial canonical state and dataset hash for P05-TEST-01-RECOVER.
+- [P05-TEST-01-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-01-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-01-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-01-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-01-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-01-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-01-RECOVER-R13] Use a separate reference calculation when P05-TEST-01-RECOVER affects a key numerical total.
+- [P05-TEST-01-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Same invoice imported under different filename.
+- [P05-TEST-01-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-01-RECOVER.
+- [P05-TEST-01-RECOVER-R16] If blocked by environment capability, mark P05-TEST-01-RECOVER blocked and retain the executable test source.
+- [P05-TEST-01-RECOVER-R17] Do not claim P05-TEST-01-RECOVER passed from reading the implementation or from another test passing.
+- [P05-TEST-01-RECOVER-R18] Rerun P05-TEST-01-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-02-DETECT: Invoice number reused by different vendor — detect
+- [P05-TEST-02-DETECT-R01] Failure hypothesis: Invoice number reused by different vendor.
+- [P05-TEST-02-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P05-TEST-02-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Invoice number reused by different vendor.
+- [P05-TEST-02-DETECT-R04] Document the expected business outcome before executing P05-TEST-02-DETECT.
+- [P05-TEST-02-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-02-DETECT-R06] Capture the initial canonical state and dataset hash for P05-TEST-02-DETECT.
+- [P05-TEST-02-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-02-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-02-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-02-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-02-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-02-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-02-DETECT-R13] Use a separate reference calculation when P05-TEST-02-DETECT affects a key numerical total.
+- [P05-TEST-02-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Invoice number reused by different vendor.
+- [P05-TEST-02-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-02-DETECT.
+- [P05-TEST-02-DETECT-R16] If blocked by environment capability, mark P05-TEST-02-DETECT blocked and retain the executable test source.
+- [P05-TEST-02-DETECT-R17] Do not claim P05-TEST-02-DETECT passed from reading the implementation or from another test passing.
+- [P05-TEST-02-DETECT-R18] Rerun P05-TEST-02-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-02-RECOVER: Invoice number reused by different vendor — recover
+- [P05-TEST-02-RECOVER-R01] Failure hypothesis: Invoice number reused by different vendor.
+- [P05-TEST-02-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P05-TEST-02-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Invoice number reused by different vendor.
+- [P05-TEST-02-RECOVER-R04] Document the expected business outcome before executing P05-TEST-02-RECOVER.
+- [P05-TEST-02-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-02-RECOVER-R06] Capture the initial canonical state and dataset hash for P05-TEST-02-RECOVER.
+- [P05-TEST-02-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-02-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-02-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-02-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-02-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-02-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-02-RECOVER-R13] Use a separate reference calculation when P05-TEST-02-RECOVER affects a key numerical total.
+- [P05-TEST-02-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Invoice number reused by different vendor.
+- [P05-TEST-02-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-02-RECOVER.
+- [P05-TEST-02-RECOVER-R16] If blocked by environment capability, mark P05-TEST-02-RECOVER blocked and retain the executable test source.
+- [P05-TEST-02-RECOVER-R17] Do not claim P05-TEST-02-RECOVER passed from reading the implementation or from another test passing.
+- [P05-TEST-02-RECOVER-R18] Rerun P05-TEST-02-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-03-DETECT: Partial receipts insufficient for invoiced quantity — detect
+- [P05-TEST-03-DETECT-R01] Failure hypothesis: Partial receipts insufficient for invoiced quantity.
+- [P05-TEST-03-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P05-TEST-03-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Partial receipts insufficient for invoiced quantity.
+- [P05-TEST-03-DETECT-R04] Document the expected business outcome before executing P05-TEST-03-DETECT.
+- [P05-TEST-03-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-03-DETECT-R06] Capture the initial canonical state and dataset hash for P05-TEST-03-DETECT.
+- [P05-TEST-03-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-03-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-03-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-03-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-03-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-03-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-03-DETECT-R13] Use a separate reference calculation when P05-TEST-03-DETECT affects a key numerical total.
+- [P05-TEST-03-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Partial receipts insufficient for invoiced quantity.
+- [P05-TEST-03-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-03-DETECT.
+- [P05-TEST-03-DETECT-R16] If blocked by environment capability, mark P05-TEST-03-DETECT blocked and retain the executable test source.
+- [P05-TEST-03-DETECT-R17] Do not claim P05-TEST-03-DETECT passed from reading the implementation or from another test passing.
+- [P05-TEST-03-DETECT-R18] Rerun P05-TEST-03-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-03-RECOVER: Partial receipts insufficient for invoiced quantity — recover
+- [P05-TEST-03-RECOVER-R01] Failure hypothesis: Partial receipts insufficient for invoiced quantity.
+- [P05-TEST-03-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P05-TEST-03-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Partial receipts insufficient for invoiced quantity.
+- [P05-TEST-03-RECOVER-R04] Document the expected business outcome before executing P05-TEST-03-RECOVER.
+- [P05-TEST-03-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-03-RECOVER-R06] Capture the initial canonical state and dataset hash for P05-TEST-03-RECOVER.
+- [P05-TEST-03-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-03-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-03-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-03-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-03-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-03-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-03-RECOVER-R13] Use a separate reference calculation when P05-TEST-03-RECOVER affects a key numerical total.
+- [P05-TEST-03-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Partial receipts insufficient for invoiced quantity.
+- [P05-TEST-03-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-03-RECOVER.
+- [P05-TEST-03-RECOVER-R16] If blocked by environment capability, mark P05-TEST-03-RECOVER blocked and retain the executable test source.
+- [P05-TEST-03-RECOVER-R17] Do not claim P05-TEST-03-RECOVER passed from reading the implementation or from another test passing.
+- [P05-TEST-03-RECOVER-R18] Rerun P05-TEST-03-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-04-DETECT: Previous invoices consume available receipt — detect
+- [P05-TEST-04-DETECT-R01] Failure hypothesis: Previous invoices consume available receipt.
+- [P05-TEST-04-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P05-TEST-04-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Previous invoices consume available receipt.
+- [P05-TEST-04-DETECT-R04] Document the expected business outcome before executing P05-TEST-04-DETECT.
+- [P05-TEST-04-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-04-DETECT-R06] Capture the initial canonical state and dataset hash for P05-TEST-04-DETECT.
+- [P05-TEST-04-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-04-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-04-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-04-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-04-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-04-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-04-DETECT-R13] Use a separate reference calculation when P05-TEST-04-DETECT affects a key numerical total.
+- [P05-TEST-04-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Previous invoices consume available receipt.
+- [P05-TEST-04-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-04-DETECT.
+- [P05-TEST-04-DETECT-R16] If blocked by environment capability, mark P05-TEST-04-DETECT blocked and retain the executable test source.
+- [P05-TEST-04-DETECT-R17] Do not claim P05-TEST-04-DETECT passed from reading the implementation or from another test passing.
+- [P05-TEST-04-DETECT-R18] Rerun P05-TEST-04-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-04-RECOVER: Previous invoices consume available receipt — recover
+- [P05-TEST-04-RECOVER-R01] Failure hypothesis: Previous invoices consume available receipt.
+- [P05-TEST-04-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P05-TEST-04-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Previous invoices consume available receipt.
+- [P05-TEST-04-RECOVER-R04] Document the expected business outcome before executing P05-TEST-04-RECOVER.
+- [P05-TEST-04-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-04-RECOVER-R06] Capture the initial canonical state and dataset hash for P05-TEST-04-RECOVER.
+- [P05-TEST-04-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-04-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-04-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-04-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-04-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-04-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-04-RECOVER-R13] Use a separate reference calculation when P05-TEST-04-RECOVER affects a key numerical total.
+- [P05-TEST-04-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Previous invoices consume available receipt.
+- [P05-TEST-04-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-04-RECOVER.
+- [P05-TEST-04-RECOVER-R16] If blocked by environment capability, mark P05-TEST-04-RECOVER blocked and retain the executable test source.
+- [P05-TEST-04-RECOVER-R17] Do not claim P05-TEST-04-RECOVER passed from reading the implementation or from another test passing.
+- [P05-TEST-04-RECOVER-R18] Rerun P05-TEST-04-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-05-DETECT: Rounding difference exceeds tolerance — detect
+- [P05-TEST-05-DETECT-R01] Failure hypothesis: Rounding difference exceeds tolerance.
+- [P05-TEST-05-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P05-TEST-05-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Rounding difference exceeds tolerance.
+- [P05-TEST-05-DETECT-R04] Document the expected business outcome before executing P05-TEST-05-DETECT.
+- [P05-TEST-05-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-05-DETECT-R06] Capture the initial canonical state and dataset hash for P05-TEST-05-DETECT.
+- [P05-TEST-05-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-05-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-05-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-05-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-05-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-05-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-05-DETECT-R13] Use a separate reference calculation when P05-TEST-05-DETECT affects a key numerical total.
+- [P05-TEST-05-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Rounding difference exceeds tolerance.
+- [P05-TEST-05-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-05-DETECT.
+- [P05-TEST-05-DETECT-R16] If blocked by environment capability, mark P05-TEST-05-DETECT blocked and retain the executable test source.
+- [P05-TEST-05-DETECT-R17] Do not claim P05-TEST-05-DETECT passed from reading the implementation or from another test passing.
+- [P05-TEST-05-DETECT-R18] Rerun P05-TEST-05-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-05-RECOVER: Rounding difference exceeds tolerance — recover
+- [P05-TEST-05-RECOVER-R01] Failure hypothesis: Rounding difference exceeds tolerance.
+- [P05-TEST-05-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P05-TEST-05-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Rounding difference exceeds tolerance.
+- [P05-TEST-05-RECOVER-R04] Document the expected business outcome before executing P05-TEST-05-RECOVER.
+- [P05-TEST-05-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-05-RECOVER-R06] Capture the initial canonical state and dataset hash for P05-TEST-05-RECOVER.
+- [P05-TEST-05-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-05-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-05-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-05-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-05-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-05-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-05-RECOVER-R13] Use a separate reference calculation when P05-TEST-05-RECOVER affects a key numerical total.
+- [P05-TEST-05-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Rounding difference exceeds tolerance.
+- [P05-TEST-05-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-05-RECOVER.
+- [P05-TEST-05-RECOVER-R16] If blocked by environment capability, mark P05-TEST-05-RECOVER blocked and retain the executable test source.
+- [P05-TEST-05-RECOVER-R17] Do not claim P05-TEST-05-RECOVER passed from reading the implementation or from another test passing.
+- [P05-TEST-05-RECOVER-R18] Rerun P05-TEST-05-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-06-DETECT: User approves invoice they created — detect
+- [P05-TEST-06-DETECT-R01] Failure hypothesis: User approves invoice they created.
+- [P05-TEST-06-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P05-TEST-06-DETECT-R03] Construct the smallest synthetic fixture that reproduces: User approves invoice they created.
+- [P05-TEST-06-DETECT-R04] Document the expected business outcome before executing P05-TEST-06-DETECT.
+- [P05-TEST-06-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-06-DETECT-R06] Capture the initial canonical state and dataset hash for P05-TEST-06-DETECT.
+- [P05-TEST-06-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-06-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-06-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-06-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-06-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-06-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-06-DETECT-R13] Use a separate reference calculation when P05-TEST-06-DETECT affects a key numerical total.
+- [P05-TEST-06-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of User approves invoice they created.
+- [P05-TEST-06-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-06-DETECT.
+- [P05-TEST-06-DETECT-R16] If blocked by environment capability, mark P05-TEST-06-DETECT blocked and retain the executable test source.
+- [P05-TEST-06-DETECT-R17] Do not claim P05-TEST-06-DETECT passed from reading the implementation or from another test passing.
+- [P05-TEST-06-DETECT-R18] Rerun P05-TEST-06-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-06-RECOVER: User approves invoice they created — recover
+- [P05-TEST-06-RECOVER-R01] Failure hypothesis: User approves invoice they created.
+- [P05-TEST-06-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P05-TEST-06-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: User approves invoice they created.
+- [P05-TEST-06-RECOVER-R04] Document the expected business outcome before executing P05-TEST-06-RECOVER.
+- [P05-TEST-06-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-06-RECOVER-R06] Capture the initial canonical state and dataset hash for P05-TEST-06-RECOVER.
+- [P05-TEST-06-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-06-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-06-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-06-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-06-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-06-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-06-RECOVER-R13] Use a separate reference calculation when P05-TEST-06-RECOVER affects a key numerical total.
+- [P05-TEST-06-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of User approves invoice they created.
+- [P05-TEST-06-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-06-RECOVER.
+- [P05-TEST-06-RECOVER-R16] If blocked by environment capability, mark P05-TEST-06-RECOVER blocked and retain the executable test source.
+- [P05-TEST-06-RECOVER-R17] Do not claim P05-TEST-06-RECOVER passed from reading the implementation or from another test passing.
+- [P05-TEST-06-RECOVER-R18] Rerun P05-TEST-06-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-07-DETECT: Two approvals race — detect
+- [P05-TEST-07-DETECT-R01] Failure hypothesis: Two approvals race.
+- [P05-TEST-07-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P05-TEST-07-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Two approvals race.
+- [P05-TEST-07-DETECT-R04] Document the expected business outcome before executing P05-TEST-07-DETECT.
+- [P05-TEST-07-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-07-DETECT-R06] Capture the initial canonical state and dataset hash for P05-TEST-07-DETECT.
+- [P05-TEST-07-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-07-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-07-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-07-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-07-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-07-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-07-DETECT-R13] Use a separate reference calculation when P05-TEST-07-DETECT affects a key numerical total.
+- [P05-TEST-07-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Two approvals race.
+- [P05-TEST-07-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-07-DETECT.
+- [P05-TEST-07-DETECT-R16] If blocked by environment capability, mark P05-TEST-07-DETECT blocked and retain the executable test source.
+- [P05-TEST-07-DETECT-R17] Do not claim P05-TEST-07-DETECT passed from reading the implementation or from another test passing.
+- [P05-TEST-07-DETECT-R18] Rerun P05-TEST-07-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-07-RECOVER: Two approvals race — recover
+- [P05-TEST-07-RECOVER-R01] Failure hypothesis: Two approvals race.
+- [P05-TEST-07-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P05-TEST-07-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Two approvals race.
+- [P05-TEST-07-RECOVER-R04] Document the expected business outcome before executing P05-TEST-07-RECOVER.
+- [P05-TEST-07-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-07-RECOVER-R06] Capture the initial canonical state and dataset hash for P05-TEST-07-RECOVER.
+- [P05-TEST-07-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-07-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-07-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-07-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-07-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-07-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-07-RECOVER-R13] Use a separate reference calculation when P05-TEST-07-RECOVER affects a key numerical total.
+- [P05-TEST-07-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Two approvals race.
+- [P05-TEST-07-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-07-RECOVER.
+- [P05-TEST-07-RECOVER-R16] If blocked by environment capability, mark P05-TEST-07-RECOVER blocked and retain the executable test source.
+- [P05-TEST-07-RECOVER-R17] Do not claim P05-TEST-07-RECOVER passed from reading the implementation or from another test passing.
+- [P05-TEST-07-RECOVER-R18] Rerun P05-TEST-07-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-08-DETECT: Credit note applied twice — detect
+- [P05-TEST-08-DETECT-R01] Failure hypothesis: Credit note applied twice.
+- [P05-TEST-08-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P05-TEST-08-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Credit note applied twice.
+- [P05-TEST-08-DETECT-R04] Document the expected business outcome before executing P05-TEST-08-DETECT.
+- [P05-TEST-08-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-08-DETECT-R06] Capture the initial canonical state and dataset hash for P05-TEST-08-DETECT.
+- [P05-TEST-08-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-08-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-08-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-08-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-08-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-08-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-08-DETECT-R13] Use a separate reference calculation when P05-TEST-08-DETECT affects a key numerical total.
+- [P05-TEST-08-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Credit note applied twice.
+- [P05-TEST-08-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-08-DETECT.
+- [P05-TEST-08-DETECT-R16] If blocked by environment capability, mark P05-TEST-08-DETECT blocked and retain the executable test source.
+- [P05-TEST-08-DETECT-R17] Do not claim P05-TEST-08-DETECT passed from reading the implementation or from another test passing.
+- [P05-TEST-08-DETECT-R18] Rerun P05-TEST-08-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-08-RECOVER: Credit note applied twice — recover
+- [P05-TEST-08-RECOVER-R01] Failure hypothesis: Credit note applied twice.
+- [P05-TEST-08-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P05-TEST-08-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Credit note applied twice.
+- [P05-TEST-08-RECOVER-R04] Document the expected business outcome before executing P05-TEST-08-RECOVER.
+- [P05-TEST-08-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-08-RECOVER-R06] Capture the initial canonical state and dataset hash for P05-TEST-08-RECOVER.
+- [P05-TEST-08-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-08-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-08-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-08-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-08-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-08-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-08-RECOVER-R13] Use a separate reference calculation when P05-TEST-08-RECOVER affects a key numerical total.
+- [P05-TEST-08-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Credit note applied twice.
+- [P05-TEST-08-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-08-RECOVER.
+- [P05-TEST-08-RECOVER-R16] If blocked by environment capability, mark P05-TEST-08-RECOVER blocked and retain the executable test source.
+- [P05-TEST-08-RECOVER-R17] Do not claim P05-TEST-08-RECOVER passed from reading the implementation or from another test passing.
+- [P05-TEST-08-RECOVER-R18] Rerun P05-TEST-08-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-09-DETECT: Different currency compared without conversion — detect
+- [P05-TEST-09-DETECT-R01] Failure hypothesis: Different currency compared without conversion.
+- [P05-TEST-09-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P05-TEST-09-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Different currency compared without conversion.
+- [P05-TEST-09-DETECT-R04] Document the expected business outcome before executing P05-TEST-09-DETECT.
+- [P05-TEST-09-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-09-DETECT-R06] Capture the initial canonical state and dataset hash for P05-TEST-09-DETECT.
+- [P05-TEST-09-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-09-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-09-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-09-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-09-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-09-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-09-DETECT-R13] Use a separate reference calculation when P05-TEST-09-DETECT affects a key numerical total.
+- [P05-TEST-09-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Different currency compared without conversion.
+- [P05-TEST-09-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-09-DETECT.
+- [P05-TEST-09-DETECT-R16] If blocked by environment capability, mark P05-TEST-09-DETECT blocked and retain the executable test source.
+- [P05-TEST-09-DETECT-R17] Do not claim P05-TEST-09-DETECT passed from reading the implementation or from another test passing.
+- [P05-TEST-09-DETECT-R18] Rerun P05-TEST-09-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-09-RECOVER: Different currency compared without conversion — recover
+- [P05-TEST-09-RECOVER-R01] Failure hypothesis: Different currency compared without conversion.
+- [P05-TEST-09-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P05-TEST-09-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Different currency compared without conversion.
+- [P05-TEST-09-RECOVER-R04] Document the expected business outcome before executing P05-TEST-09-RECOVER.
+- [P05-TEST-09-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-09-RECOVER-R06] Capture the initial canonical state and dataset hash for P05-TEST-09-RECOVER.
+- [P05-TEST-09-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-09-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-09-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-09-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-09-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-09-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-09-RECOVER-R13] Use a separate reference calculation when P05-TEST-09-RECOVER affects a key numerical total.
+- [P05-TEST-09-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Different currency compared without conversion.
+- [P05-TEST-09-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-09-RECOVER.
+- [P05-TEST-09-RECOVER-R16] If blocked by environment capability, mark P05-TEST-09-RECOVER blocked and retain the executable test source.
+- [P05-TEST-09-RECOVER-R17] Do not claim P05-TEST-09-RECOVER passed from reading the implementation or from another test passing.
+- [P05-TEST-09-RECOVER-R18] Rerun P05-TEST-09-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-10-DETECT: Corrected field erases original OCR value — detect
+- [P05-TEST-10-DETECT-R01] Failure hypothesis: Corrected field erases original OCR value.
+- [P05-TEST-10-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P05-TEST-10-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Corrected field erases original OCR value.
+- [P05-TEST-10-DETECT-R04] Document the expected business outcome before executing P05-TEST-10-DETECT.
+- [P05-TEST-10-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-10-DETECT-R06] Capture the initial canonical state and dataset hash for P05-TEST-10-DETECT.
+- [P05-TEST-10-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-10-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-10-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-10-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-10-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-10-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-10-DETECT-R13] Use a separate reference calculation when P05-TEST-10-DETECT affects a key numerical total.
+- [P05-TEST-10-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Corrected field erases original OCR value.
+- [P05-TEST-10-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-10-DETECT.
+- [P05-TEST-10-DETECT-R16] If blocked by environment capability, mark P05-TEST-10-DETECT blocked and retain the executable test source.
+- [P05-TEST-10-DETECT-R17] Do not claim P05-TEST-10-DETECT passed from reading the implementation or from another test passing.
+- [P05-TEST-10-DETECT-R18] Rerun P05-TEST-10-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-10-RECOVER: Corrected field erases original OCR value — recover
+- [P05-TEST-10-RECOVER-R01] Failure hypothesis: Corrected field erases original OCR value.
+- [P05-TEST-10-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P05-TEST-10-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Corrected field erases original OCR value.
+- [P05-TEST-10-RECOVER-R04] Document the expected business outcome before executing P05-TEST-10-RECOVER.
+- [P05-TEST-10-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-10-RECOVER-R06] Capture the initial canonical state and dataset hash for P05-TEST-10-RECOVER.
+- [P05-TEST-10-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-10-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-10-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-10-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-10-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-10-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-10-RECOVER-R13] Use a separate reference calculation when P05-TEST-10-RECOVER affects a key numerical total.
+- [P05-TEST-10-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Corrected field erases original OCR value.
+- [P05-TEST-10-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-10-RECOVER.
+- [P05-TEST-10-RECOVER-R16] If blocked by environment capability, mark P05-TEST-10-RECOVER blocked and retain the executable test source.
+- [P05-TEST-10-RECOVER-R17] Do not claim P05-TEST-10-RECOVER passed from reading the implementation or from another test passing.
+- [P05-TEST-10-RECOVER-R18] Rerun P05-TEST-10-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-11-DETECT: Export repeated after network timeout — detect
+- [P05-TEST-11-DETECT-R01] Failure hypothesis: Export repeated after network timeout.
+- [P05-TEST-11-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P05-TEST-11-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Export repeated after network timeout.
+- [P05-TEST-11-DETECT-R04] Document the expected business outcome before executing P05-TEST-11-DETECT.
+- [P05-TEST-11-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-11-DETECT-R06] Capture the initial canonical state and dataset hash for P05-TEST-11-DETECT.
+- [P05-TEST-11-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-11-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-11-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-11-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-11-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-11-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-11-DETECT-R13] Use a separate reference calculation when P05-TEST-11-DETECT affects a key numerical total.
+- [P05-TEST-11-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Export repeated after network timeout.
+- [P05-TEST-11-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-11-DETECT.
+- [P05-TEST-11-DETECT-R16] If blocked by environment capability, mark P05-TEST-11-DETECT blocked and retain the executable test source.
+- [P05-TEST-11-DETECT-R17] Do not claim P05-TEST-11-DETECT passed from reading the implementation or from another test passing.
+- [P05-TEST-11-DETECT-R18] Rerun P05-TEST-11-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-11-RECOVER: Export repeated after network timeout — recover
+- [P05-TEST-11-RECOVER-R01] Failure hypothesis: Export repeated after network timeout.
+- [P05-TEST-11-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P05-TEST-11-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Export repeated after network timeout.
+- [P05-TEST-11-RECOVER-R04] Document the expected business outcome before executing P05-TEST-11-RECOVER.
+- [P05-TEST-11-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-11-RECOVER-R06] Capture the initial canonical state and dataset hash for P05-TEST-11-RECOVER.
+- [P05-TEST-11-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-11-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-11-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-11-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-11-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-11-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-11-RECOVER-R13] Use a separate reference calculation when P05-TEST-11-RECOVER affects a key numerical total.
+- [P05-TEST-11-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Export repeated after network timeout.
+- [P05-TEST-11-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-11-RECOVER.
+- [P05-TEST-11-RECOVER-R16] If blocked by environment capability, mark P05-TEST-11-RECOVER blocked and retain the executable test source.
+- [P05-TEST-11-RECOVER-R17] Do not claim P05-TEST-11-RECOVER passed from reading the implementation or from another test passing.
+- [P05-TEST-11-RECOVER-R18] Rerun P05-TEST-11-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-12-DETECT: Matched invoice incorrectly marked paid — detect
+- [P05-TEST-12-DETECT-R01] Failure hypothesis: Matched invoice incorrectly marked paid.
+- [P05-TEST-12-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P05-TEST-12-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Matched invoice incorrectly marked paid.
+- [P05-TEST-12-DETECT-R04] Document the expected business outcome before executing P05-TEST-12-DETECT.
+- [P05-TEST-12-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-12-DETECT-R06] Capture the initial canonical state and dataset hash for P05-TEST-12-DETECT.
+- [P05-TEST-12-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-12-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-12-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-12-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-12-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-12-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-12-DETECT-R13] Use a separate reference calculation when P05-TEST-12-DETECT affects a key numerical total.
+- [P05-TEST-12-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Matched invoice incorrectly marked paid.
+- [P05-TEST-12-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-12-DETECT.
+- [P05-TEST-12-DETECT-R16] If blocked by environment capability, mark P05-TEST-12-DETECT blocked and retain the executable test source.
+- [P05-TEST-12-DETECT-R17] Do not claim P05-TEST-12-DETECT passed from reading the implementation or from another test passing.
+- [P05-TEST-12-DETECT-R18] Rerun P05-TEST-12-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P05-TEST-12-RECOVER: Matched invoice incorrectly marked paid — recover
+- [P05-TEST-12-RECOVER-R01] Failure hypothesis: Matched invoice incorrectly marked paid.
+- [P05-TEST-12-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P05-TEST-12-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Matched invoice incorrectly marked paid.
+- [P05-TEST-12-RECOVER-R04] Document the expected business outcome before executing P05-TEST-12-RECOVER.
+- [P05-TEST-12-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P05-TEST-12-RECOVER-R06] Capture the initial canonical state and dataset hash for P05-TEST-12-RECOVER.
+- [P05-TEST-12-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P05-TEST-12-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P05-TEST-12-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P05-TEST-12-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P05-TEST-12-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P05-TEST-12-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P05-TEST-12-RECOVER-R13] Use a separate reference calculation when P05-TEST-12-RECOVER affects a key numerical total.
+- [P05-TEST-12-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Matched invoice incorrectly marked paid.
+- [P05-TEST-12-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P05-TEST-12-RECOVER.
+- [P05-TEST-12-RECOVER-R16] If blocked by environment capability, mark P05-TEST-12-RECOVER blocked and retain the executable test source.
+- [P05-TEST-12-RECOVER-R17] Do not claim P05-TEST-12-RECOVER passed from reading the implementation or from another test passing.
+- [P05-TEST-12-RECOVER-R18] Rerun P05-TEST-12-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+
+## 08. Business and technical deliverables
+
+### P05-ART-01: business-case
+- [P05-ART-01-R01] Deliver business-case for InvoiceBridge.
+- [P05-ART-01-R02] Its required content is business problem, stakeholder map, scope, current/future-state process and decision criteria.
+- [P05-ART-01-R03] Use this business decision as its organizing question: Which invoices may advance and which require exception review?
+- [P05-ART-01-R04] Reference actual invoicebridge entities, metrics and workflow IDs instead of generic template prose.
+- [P05-ART-01-R05] Keep business-case source files under the project directory in GitHub.
+- [P05-ART-01-R06] Generate binary business-case outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P05-ART-01-R07] Include the source dataset hash and implementation revision in business-case where relevant.
+- [P05-ART-01-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in business-case.
+- [P05-ART-01-R09] Check that important numbers in business-case reconcile with the independent reference calculation.
+- [P05-ART-01-R10] Use clear units, periods and population descriptions throughout business-case.
+- [P05-ART-01-R11] If business-case depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P05-ART-01-R12] Provide a brief read/use instruction for business-case without requiring laptop installation.
+- [P05-ART-01-R13] Use accessible headings, labels and tables in business-case.
+- [P05-ART-01-R14] Link business-case from the individual website evidence area when safe and useful.
+- [P05-ART-01-R15] Do not publish credentials, real personal records or internal secrets in business-case.
+- [P05-ART-01-R16] Have the appropriate specialist review business-case before coordinator integration.
+- [P05-ART-01-R17] Record the actual verification status of business-case in the release manifest.
+- [P05-ART-01-R18] Keep business-case claims consistent with the public case study and resume bullet suggestions.
+### P05-ART-02: requirements
+- [P05-ART-02-R01] Deliver requirements for InvoiceBridge.
+- [P05-ART-02-R02] Its required content is functional requirements, nonfunctional requirements, user stories, acceptance criteria and traceability.
+- [P05-ART-02-R03] Use this business decision as its organizing question: Which invoices may advance and which require exception review?
+- [P05-ART-02-R04] Reference actual invoicebridge entities, metrics and workflow IDs instead of generic template prose.
+- [P05-ART-02-R05] Keep requirements source files under the project directory in GitHub.
+- [P05-ART-02-R06] Generate binary requirements outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P05-ART-02-R07] Include the source dataset hash and implementation revision in requirements where relevant.
+- [P05-ART-02-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in requirements.
+- [P05-ART-02-R09] Check that important numbers in requirements reconcile with the independent reference calculation.
+- [P05-ART-02-R10] Use clear units, periods and population descriptions throughout requirements.
+- [P05-ART-02-R11] If requirements depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P05-ART-02-R12] Provide a brief read/use instruction for requirements without requiring laptop installation.
+- [P05-ART-02-R13] Use accessible headings, labels and tables in requirements.
+- [P05-ART-02-R14] Link requirements from the individual website evidence area when safe and useful.
+- [P05-ART-02-R15] Do not publish credentials, real personal records or internal secrets in requirements.
+- [P05-ART-02-R16] Have the appropriate specialist review requirements before coordinator integration.
+- [P05-ART-02-R17] Record the actual verification status of requirements in the release manifest.
+- [P05-ART-02-R18] Keep requirements claims consistent with the public case study and resume bullet suggestions.
+### P05-ART-03: data-dictionary
+- [P05-ART-03-R01] Deliver data-dictionary for InvoiceBridge.
+- [P05-ART-03-R02] Its required content is entity grain, field types, source contracts, foreign keys and source-to-target mapping.
+- [P05-ART-03-R03] Use this business decision as its organizing question: Which invoices may advance and which require exception review?
+- [P05-ART-03-R04] Reference actual invoicebridge entities, metrics and workflow IDs instead of generic template prose.
+- [P05-ART-03-R05] Keep data-dictionary source files under the project directory in GitHub.
+- [P05-ART-03-R06] Generate binary data-dictionary outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P05-ART-03-R07] Include the source dataset hash and implementation revision in data-dictionary where relevant.
+- [P05-ART-03-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in data-dictionary.
+- [P05-ART-03-R09] Check that important numbers in data-dictionary reconcile with the independent reference calculation.
+- [P05-ART-03-R10] Use clear units, periods and population descriptions throughout data-dictionary.
+- [P05-ART-03-R11] If data-dictionary depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P05-ART-03-R12] Provide a brief read/use instruction for data-dictionary without requiring laptop installation.
+- [P05-ART-03-R13] Use accessible headings, labels and tables in data-dictionary.
+- [P05-ART-03-R14] Link data-dictionary from the individual website evidence area when safe and useful.
+- [P05-ART-03-R15] Do not publish credentials, real personal records or internal secrets in data-dictionary.
+- [P05-ART-03-R16] Have the appropriate specialist review data-dictionary before coordinator integration.
+- [P05-ART-03-R17] Record the actual verification status of data-dictionary in the release manifest.
+- [P05-ART-03-R18] Keep data-dictionary claims consistent with the public case study and resume bullet suggestions.
+### P05-ART-04: sql-analysis
+- [P05-ART-04-R01] Deliver sql-analysis for InvoiceBridge.
+- [P05-ART-04-R02] Its required content is executable SQL investigations with independently reconciled totals.
+- [P05-ART-04-R03] Use this business decision as its organizing question: Which invoices may advance and which require exception review?
+- [P05-ART-04-R04] Reference actual invoicebridge entities, metrics and workflow IDs instead of generic template prose.
+- [P05-ART-04-R05] Keep sql-analysis source files under the project directory in GitHub.
+- [P05-ART-04-R06] Generate binary sql-analysis outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P05-ART-04-R07] Include the source dataset hash and implementation revision in sql-analysis where relevant.
+- [P05-ART-04-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in sql-analysis.
+- [P05-ART-04-R09] Check that important numbers in sql-analysis reconcile with the independent reference calculation.
+- [P05-ART-04-R10] Use clear units, periods and population descriptions throughout sql-analysis.
+- [P05-ART-04-R11] If sql-analysis depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P05-ART-04-R12] Provide a brief read/use instruction for sql-analysis without requiring laptop installation.
+- [P05-ART-04-R13] Use accessible headings, labels and tables in sql-analysis.
+- [P05-ART-04-R14] Link sql-analysis from the individual website evidence area when safe and useful.
+- [P05-ART-04-R15] Do not publish credentials, real personal records or internal secrets in sql-analysis.
+- [P05-ART-04-R16] Have the appropriate specialist review sql-analysis before coordinator integration.
+- [P05-ART-04-R17] Record the actual verification status of sql-analysis in the release manifest.
+- [P05-ART-04-R18] Keep sql-analysis claims consistent with the public case study and resume bullet suggestions.
+### P05-ART-05: excel-workbook
+- [P05-ART-05-R01] Deliver excel-workbook for InvoiceBridge.
+- [P05-ART-05-R02] Its required content is formula-driven analyst workbook using project inputs and explicit assumptions.
+- [P05-ART-05-R03] Use this business decision as its organizing question: Which invoices may advance and which require exception review?
+- [P05-ART-05-R04] Reference actual invoicebridge entities, metrics and workflow IDs instead of generic template prose.
+- [P05-ART-05-R05] Keep excel-workbook source files under the project directory in GitHub.
+- [P05-ART-05-R06] Generate binary excel-workbook outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P05-ART-05-R07] Include the source dataset hash and implementation revision in excel-workbook where relevant.
+- [P05-ART-05-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in excel-workbook.
+- [P05-ART-05-R09] Check that important numbers in excel-workbook reconcile with the independent reference calculation.
+- [P05-ART-05-R10] Use clear units, periods and population descriptions throughout excel-workbook.
+- [P05-ART-05-R11] If excel-workbook depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P05-ART-05-R12] Provide a brief read/use instruction for excel-workbook without requiring laptop installation.
+- [P05-ART-05-R13] Use accessible headings, labels and tables in excel-workbook.
+- [P05-ART-05-R14] Link excel-workbook from the individual website evidence area when safe and useful.
+- [P05-ART-05-R15] Do not publish credentials, real personal records or internal secrets in excel-workbook.
+- [P05-ART-05-R16] Have the appropriate specialist review excel-workbook before coordinator integration.
+- [P05-ART-05-R17] Record the actual verification status of excel-workbook in the release manifest.
+- [P05-ART-05-R18] Keep excel-workbook claims consistent with the public case study and resume bullet suggestions.
+### P05-ART-06: bi-package
+- [P05-ART-06-R01] Deliver bi-package for InvoiceBridge.
+- [P05-ART-06-R02] Its required content is reusable metric model, relationships, DAX/Power Query where relevant and verification status.
+- [P05-ART-06-R03] Use this business decision as its organizing question: Which invoices may advance and which require exception review?
+- [P05-ART-06-R04] Reference actual invoicebridge entities, metrics and workflow IDs instead of generic template prose.
+- [P05-ART-06-R05] Keep bi-package source files under the project directory in GitHub.
+- [P05-ART-06-R06] Generate binary bi-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P05-ART-06-R07] Include the source dataset hash and implementation revision in bi-package where relevant.
+- [P05-ART-06-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in bi-package.
+- [P05-ART-06-R09] Check that important numbers in bi-package reconcile with the independent reference calculation.
+- [P05-ART-06-R10] Use clear units, periods and population descriptions throughout bi-package.
+- [P05-ART-06-R11] If bi-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P05-ART-06-R12] Provide a brief read/use instruction for bi-package without requiring laptop installation.
+- [P05-ART-06-R13] Use accessible headings, labels and tables in bi-package.
+- [P05-ART-06-R14] Link bi-package from the individual website evidence area when safe and useful.
+- [P05-ART-06-R15] Do not publish credentials, real personal records or internal secrets in bi-package.
+- [P05-ART-06-R16] Have the appropriate specialist review bi-package before coordinator integration.
+- [P05-ART-06-R17] Record the actual verification status of bi-package in the release manifest.
+- [P05-ART-06-R18] Keep bi-package claims consistent with the public case study and resume bullet suggestions.
+### P05-ART-07: executive-memo
+- [P05-ART-07-R01] Deliver executive-memo for InvoiceBridge.
+- [P05-ART-07-R02] Its required content is evidence-based recommendation, options, uncertainty and limitations.
+- [P05-ART-07-R03] Use this business decision as its organizing question: Which invoices may advance and which require exception review?
+- [P05-ART-07-R04] Reference actual invoicebridge entities, metrics and workflow IDs instead of generic template prose.
+- [P05-ART-07-R05] Keep executive-memo source files under the project directory in GitHub.
+- [P05-ART-07-R06] Generate binary executive-memo outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P05-ART-07-R07] Include the source dataset hash and implementation revision in executive-memo where relevant.
+- [P05-ART-07-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in executive-memo.
+- [P05-ART-07-R09] Check that important numbers in executive-memo reconcile with the independent reference calculation.
+- [P05-ART-07-R10] Use clear units, periods and population descriptions throughout executive-memo.
+- [P05-ART-07-R11] If executive-memo depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P05-ART-07-R12] Provide a brief read/use instruction for executive-memo without requiring laptop installation.
+- [P05-ART-07-R13] Use accessible headings, labels and tables in executive-memo.
+- [P05-ART-07-R14] Link executive-memo from the individual website evidence area when safe and useful.
+- [P05-ART-07-R15] Do not publish credentials, real personal records or internal secrets in executive-memo.
+- [P05-ART-07-R16] Have the appropriate specialist review executive-memo before coordinator integration.
+- [P05-ART-07-R17] Record the actual verification status of executive-memo in the release manifest.
+- [P05-ART-07-R18] Keep executive-memo claims consistent with the public case study and resume bullet suggestions.
+### P05-ART-08: uat-evidence
+- [P05-ART-08-R01] Deliver uat-evidence for InvoiceBridge.
+- [P05-ART-08-R02] Its required content is business scenarios with expected answers, actual observations and defect disposition.
+- [P05-ART-08-R03] Use this business decision as its organizing question: Which invoices may advance and which require exception review?
+- [P05-ART-08-R04] Reference actual invoicebridge entities, metrics and workflow IDs instead of generic template prose.
+- [P05-ART-08-R05] Keep uat-evidence source files under the project directory in GitHub.
+- [P05-ART-08-R06] Generate binary uat-evidence outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P05-ART-08-R07] Include the source dataset hash and implementation revision in uat-evidence where relevant.
+- [P05-ART-08-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in uat-evidence.
+- [P05-ART-08-R09] Check that important numbers in uat-evidence reconcile with the independent reference calculation.
+- [P05-ART-08-R10] Use clear units, periods and population descriptions throughout uat-evidence.
+- [P05-ART-08-R11] If uat-evidence depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P05-ART-08-R12] Provide a brief read/use instruction for uat-evidence without requiring laptop installation.
+- [P05-ART-08-R13] Use accessible headings, labels and tables in uat-evidence.
+- [P05-ART-08-R14] Link uat-evidence from the individual website evidence area when safe and useful.
+- [P05-ART-08-R15] Do not publish credentials, real personal records or internal secrets in uat-evidence.
+- [P05-ART-08-R16] Have the appropriate specialist review uat-evidence before coordinator integration.
+- [P05-ART-08-R17] Record the actual verification status of uat-evidence in the release manifest.
+- [P05-ART-08-R18] Keep uat-evidence claims consistent with the public case study and resume bullet suggestions.
+### P05-ART-09: technical-case-study
+- [P05-ART-09-R01] Deliver technical-case-study for InvoiceBridge.
+- [P05-ART-09-R02] Its required content is architecture, tradeoffs, recovery behavior, reproducible setup and measured evidence.
+- [P05-ART-09-R03] Use this business decision as its organizing question: Which invoices may advance and which require exception review?
+- [P05-ART-09-R04] Reference actual invoicebridge entities, metrics and workflow IDs instead of generic template prose.
+- [P05-ART-09-R05] Keep technical-case-study source files under the project directory in GitHub.
+- [P05-ART-09-R06] Generate binary technical-case-study outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P05-ART-09-R07] Include the source dataset hash and implementation revision in technical-case-study where relevant.
+- [P05-ART-09-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in technical-case-study.
+- [P05-ART-09-R09] Check that important numbers in technical-case-study reconcile with the independent reference calculation.
+- [P05-ART-09-R10] Use clear units, periods and population descriptions throughout technical-case-study.
+- [P05-ART-09-R11] If technical-case-study depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P05-ART-09-R12] Provide a brief read/use instruction for technical-case-study without requiring laptop installation.
+- [P05-ART-09-R13] Use accessible headings, labels and tables in technical-case-study.
+- [P05-ART-09-R14] Link technical-case-study from the individual website evidence area when safe and useful.
+- [P05-ART-09-R15] Do not publish credentials, real personal records or internal secrets in technical-case-study.
+- [P05-ART-09-R16] Have the appropriate specialist review technical-case-study before coordinator integration.
+- [P05-ART-09-R17] Record the actual verification status of technical-case-study in the release manifest.
+- [P05-ART-09-R18] Keep technical-case-study claims consistent with the public case study and resume bullet suggestions.
+### P05-ART-10: release-package
+- [P05-ART-10-R01] Deliver release-package for InvoiceBridge.
+- [P05-ART-10-R02] Its required content is individual site, source links, checksums, main portfolio metadata and rollback manifest.
+- [P05-ART-10-R03] Use this business decision as its organizing question: Which invoices may advance and which require exception review?
+- [P05-ART-10-R04] Reference actual invoicebridge entities, metrics and workflow IDs instead of generic template prose.
+- [P05-ART-10-R05] Keep release-package source files under the project directory in GitHub.
+- [P05-ART-10-R06] Generate binary release-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P05-ART-10-R07] Include the source dataset hash and implementation revision in release-package where relevant.
+- [P05-ART-10-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in release-package.
+- [P05-ART-10-R09] Check that important numbers in release-package reconcile with the independent reference calculation.
+- [P05-ART-10-R10] Use clear units, periods and population descriptions throughout release-package.
+- [P05-ART-10-R11] If release-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P05-ART-10-R12] Provide a brief read/use instruction for release-package without requiring laptop installation.
+- [P05-ART-10-R13] Use accessible headings, labels and tables in release-package.
+- [P05-ART-10-R14] Link release-package from the individual website evidence area when safe and useful.
+- [P05-ART-10-R15] Do not publish credentials, real personal records or internal secrets in release-package.
+- [P05-ART-10-R16] Have the appropriate specialist review release-package before coordinator integration.
+- [P05-ART-10-R17] Record the actual verification status of release-package in the release manifest.
+- [P05-ART-10-R18] Keep release-package claims consistent with the public case study and resume bullet suggestions.
+
+## 09. Remote implementation work packages
+
+### P05-WORK-01: contract
+- [P05-WORK-01-R01] Assign contract to the business-contract specialist; write and review concrete definitions before implementing.
+- [P05-WORK-01-R02] Fable coordinator must supply the relevant P05 contract IDs and explicit file ownership.
+- [P05-WORK-01-R03] Resolve the actual specialist model before dispatching P05-WORK-01.
+- [P05-WORK-01-R04] Record requested model, resolved model, task ID and parent assignment for P05-WORK-01.
+- [P05-WORK-01-R05] Run P05-WORK-01 only in a verified GitHub-hosted environment.
+- [P05-WORK-01-R06] Checkpoint the incoming code SHA and assumptions before P05-WORK-01 edits.
+- [P05-WORK-01-R07] Complete a bounded vertical slice in P05-WORK-01; do not redesign unrelated projects.
+- [P05-WORK-01-R08] Return changed paths, verification performed and unresolved issues from P05-WORK-01.
+- [P05-WORK-01-R09] Review the diff and run affected checks before integrating P05-WORK-01.
+- [P05-WORK-01-R10] Persist the resulting commit SHA and evidence URLs for P05-WORK-01.
+- [P05-WORK-01-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P05-WORK-01-R12] No routine permission request is needed at the end of P05-WORK-01; proceed according to the master authorization envelope.
+### P05-WORK-02: fixtures
+- [P05-WORK-02-R01] Assign fixtures to the verification specialist; establish known answers independently of product calculations.
+- [P05-WORK-02-R02] Fable coordinator must supply the relevant P05 contract IDs and explicit file ownership.
+- [P05-WORK-02-R03] Resolve the actual specialist model before dispatching P05-WORK-02.
+- [P05-WORK-02-R04] Record requested model, resolved model, task ID and parent assignment for P05-WORK-02.
+- [P05-WORK-02-R05] Run P05-WORK-02 only in a verified GitHub-hosted environment.
+- [P05-WORK-02-R06] Checkpoint the incoming code SHA and assumptions before P05-WORK-02 edits.
+- [P05-WORK-02-R07] Complete a bounded vertical slice in P05-WORK-02; do not redesign unrelated projects.
+- [P05-WORK-02-R08] Return changed paths, verification performed and unresolved issues from P05-WORK-02.
+- [P05-WORK-02-R09] Review the diff and run affected checks before integrating P05-WORK-02.
+- [P05-WORK-02-R10] Persist the resulting commit SHA and evidence URLs for P05-WORK-02.
+- [P05-WORK-02-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P05-WORK-02-R12] No routine permission request is needed at the end of P05-WORK-02; proceed according to the master authorization envelope.
+### P05-WORK-03: data
+- [P05-WORK-03-R01] Assign data to the data specialist; generate sources, validate and reconcile transformations.
+- [P05-WORK-03-R02] Fable coordinator must supply the relevant P05 contract IDs and explicit file ownership.
+- [P05-WORK-03-R03] Resolve the actual specialist model before dispatching P05-WORK-03.
+- [P05-WORK-03-R04] Record requested model, resolved model, task ID and parent assignment for P05-WORK-03.
+- [P05-WORK-03-R05] Run P05-WORK-03 only in a verified GitHub-hosted environment.
+- [P05-WORK-03-R06] Checkpoint the incoming code SHA and assumptions before P05-WORK-03 edits.
+- [P05-WORK-03-R07] Complete a bounded vertical slice in P05-WORK-03; do not redesign unrelated projects.
+- [P05-WORK-03-R08] Return changed paths, verification performed and unresolved issues from P05-WORK-03.
+- [P05-WORK-03-R09] Review the diff and run affected checks before integrating P05-WORK-03.
+- [P05-WORK-03-R10] Persist the resulting commit SHA and evidence URLs for P05-WORK-03.
+- [P05-WORK-03-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P05-WORK-03-R12] No routine permission request is needed at the end of P05-WORK-03; proceed according to the master authorization envelope.
+### P05-WORK-04: backend
+- [P05-WORK-04-R01] Assign backend to the backend specialist; implement tested transitions and API contracts on remote runners.
+- [P05-WORK-04-R02] Fable coordinator must supply the relevant P05 contract IDs and explicit file ownership.
+- [P05-WORK-04-R03] Resolve the actual specialist model before dispatching P05-WORK-04.
+- [P05-WORK-04-R04] Record requested model, resolved model, task ID and parent assignment for P05-WORK-04.
+- [P05-WORK-04-R05] Run P05-WORK-04 only in a verified GitHub-hosted environment.
+- [P05-WORK-04-R06] Checkpoint the incoming code SHA and assumptions before P05-WORK-04 edits.
+- [P05-WORK-04-R07] Complete a bounded vertical slice in P05-WORK-04; do not redesign unrelated projects.
+- [P05-WORK-04-R08] Return changed paths, verification performed and unresolved issues from P05-WORK-04.
+- [P05-WORK-04-R09] Review the diff and run affected checks before integrating P05-WORK-04.
+- [P05-WORK-04-R10] Persist the resulting commit SHA and evidence URLs for P05-WORK-04.
+- [P05-WORK-04-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P05-WORK-04-R12] No routine permission request is needed at the end of P05-WORK-04; proceed according to the master authorization envelope.
+### P05-WORK-05: web
+- [P05-WORK-05-R01] Assign web to the frontend specialist; connect the first decision journey to verified inputs.
+- [P05-WORK-05-R02] Fable coordinator must supply the relevant P05 contract IDs and explicit file ownership.
+- [P05-WORK-05-R03] Resolve the actual specialist model before dispatching P05-WORK-05.
+- [P05-WORK-05-R04] Record requested model, resolved model, task ID and parent assignment for P05-WORK-05.
+- [P05-WORK-05-R05] Run P05-WORK-05 only in a verified GitHub-hosted environment.
+- [P05-WORK-05-R06] Checkpoint the incoming code SHA and assumptions before P05-WORK-05 edits.
+- [P05-WORK-05-R07] Complete a bounded vertical slice in P05-WORK-05; do not redesign unrelated projects.
+- [P05-WORK-05-R08] Return changed paths, verification performed and unresolved issues from P05-WORK-05.
+- [P05-WORK-05-R09] Review the diff and run affected checks before integrating P05-WORK-05.
+- [P05-WORK-05-R10] Persist the resulting commit SHA and evidence URLs for P05-WORK-05.
+- [P05-WORK-05-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P05-WORK-05-R12] No routine permission request is needed at the end of P05-WORK-05; proceed according to the master authorization envelope.
+### P05-WORK-06: analytics
+- [P05-WORK-06-R01] Assign analytics to the quantitative specialist; verify calculations and domain-specific evaluation.
+- [P05-WORK-06-R02] Fable coordinator must supply the relevant P05 contract IDs and explicit file ownership.
+- [P05-WORK-06-R03] Resolve the actual specialist model before dispatching P05-WORK-06.
+- [P05-WORK-06-R04] Record requested model, resolved model, task ID and parent assignment for P05-WORK-06.
+- [P05-WORK-06-R05] Run P05-WORK-06 only in a verified GitHub-hosted environment.
+- [P05-WORK-06-R06] Checkpoint the incoming code SHA and assumptions before P05-WORK-06 edits.
+- [P05-WORK-06-R07] Complete a bounded vertical slice in P05-WORK-06; do not redesign unrelated projects.
+- [P05-WORK-06-R08] Return changed paths, verification performed and unresolved issues from P05-WORK-06.
+- [P05-WORK-06-R09] Review the diff and run affected checks before integrating P05-WORK-06.
+- [P05-WORK-06-R10] Persist the resulting commit SHA and evidence URLs for P05-WORK-06.
+- [P05-WORK-06-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P05-WORK-06-R12] No routine permission request is needed at the end of P05-WORK-06; proceed according to the master authorization envelope.
+### P05-WORK-07: review
+- [P05-WORK-07-R01] Assign review to the verification specialist; challenge invariants and inspect rendered evidence.
+- [P05-WORK-07-R02] Fable coordinator must supply the relevant P05 contract IDs and explicit file ownership.
+- [P05-WORK-07-R03] Resolve the actual specialist model before dispatching P05-WORK-07.
+- [P05-WORK-07-R04] Record requested model, resolved model, task ID and parent assignment for P05-WORK-07.
+- [P05-WORK-07-R05] Run P05-WORK-07 only in a verified GitHub-hosted environment.
+- [P05-WORK-07-R06] Checkpoint the incoming code SHA and assumptions before P05-WORK-07 edits.
+- [P05-WORK-07-R07] Complete a bounded vertical slice in P05-WORK-07; do not redesign unrelated projects.
+- [P05-WORK-07-R08] Return changed paths, verification performed and unresolved issues from P05-WORK-07.
+- [P05-WORK-07-R09] Review the diff and run affected checks before integrating P05-WORK-07.
+- [P05-WORK-07-R10] Persist the resulting commit SHA and evidence URLs for P05-WORK-07.
+- [P05-WORK-07-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P05-WORK-07-R12] No routine permission request is needed at the end of P05-WORK-07; proceed according to the master authorization envelope.
+### P05-WORK-08: artifacts
+- [P05-WORK-08-R01] Assign artifacts to the business-contract specialist; complete business and analytical deliverables.
+- [P05-WORK-08-R02] Fable coordinator must supply the relevant P05 contract IDs and explicit file ownership.
+- [P05-WORK-08-R03] Resolve the actual specialist model before dispatching P05-WORK-08.
+- [P05-WORK-08-R04] Record requested model, resolved model, task ID and parent assignment for P05-WORK-08.
+- [P05-WORK-08-R05] Run P05-WORK-08 only in a verified GitHub-hosted environment.
+- [P05-WORK-08-R06] Checkpoint the incoming code SHA and assumptions before P05-WORK-08 edits.
+- [P05-WORK-08-R07] Complete a bounded vertical slice in P05-WORK-08; do not redesign unrelated projects.
+- [P05-WORK-08-R08] Return changed paths, verification performed and unresolved issues from P05-WORK-08.
+- [P05-WORK-08-R09] Review the diff and run affected checks before integrating P05-WORK-08.
+- [P05-WORK-08-R10] Persist the resulting commit SHA and evidence URLs for P05-WORK-08.
+- [P05-WORK-08-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P05-WORK-08-R12] No routine permission request is needed at the end of P05-WORK-08; proceed according to the master authorization envelope.
+### P05-WORK-09: release
+- [P05-WORK-09-R01] Assign release to the release specialist; publish and verify the standalone static website.
+- [P05-WORK-09-R02] Fable coordinator must supply the relevant P05 contract IDs and explicit file ownership.
+- [P05-WORK-09-R03] Resolve the actual specialist model before dispatching P05-WORK-09.
+- [P05-WORK-09-R04] Record requested model, resolved model, task ID and parent assignment for P05-WORK-09.
+- [P05-WORK-09-R05] Run P05-WORK-09 only in a verified GitHub-hosted environment.
+- [P05-WORK-09-R06] Checkpoint the incoming code SHA and assumptions before P05-WORK-09 edits.
+- [P05-WORK-09-R07] Complete a bounded vertical slice in P05-WORK-09; do not redesign unrelated projects.
+- [P05-WORK-09-R08] Return changed paths, verification performed and unresolved issues from P05-WORK-09.
+- [P05-WORK-09-R09] Review the diff and run affected checks before integrating P05-WORK-09.
+- [P05-WORK-09-R10] Persist the resulting commit SHA and evidence URLs for P05-WORK-09.
+- [P05-WORK-09-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P05-WORK-09-R12] No routine permission request is needed at the end of P05-WORK-09; proceed according to the master authorization envelope.
+### P05-WORK-10: integrate
+- [P05-WORK-10-R01] Assign integrate to the release specialist; rebuild and verify the existing main portfolio entry.
+- [P05-WORK-10-R02] Fable coordinator must supply the relevant P05 contract IDs and explicit file ownership.
+- [P05-WORK-10-R03] Resolve the actual specialist model before dispatching P05-WORK-10.
+- [P05-WORK-10-R04] Record requested model, resolved model, task ID and parent assignment for P05-WORK-10.
+- [P05-WORK-10-R05] Run P05-WORK-10 only in a verified GitHub-hosted environment.
+- [P05-WORK-10-R06] Checkpoint the incoming code SHA and assumptions before P05-WORK-10 edits.
+- [P05-WORK-10-R07] Complete a bounded vertical slice in P05-WORK-10; do not redesign unrelated projects.
+- [P05-WORK-10-R08] Return changed paths, verification performed and unresolved issues from P05-WORK-10.
+- [P05-WORK-10-R09] Review the diff and run affected checks before integrating P05-WORK-10.
+- [P05-WORK-10-R10] Persist the resulting commit SHA and evidence URLs for P05-WORK-10.
+- [P05-WORK-10-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P05-WORK-10-R12] No routine permission request is needed at the end of P05-WORK-10; proceed according to the master authorization envelope.
+
+## 10. Release, individual website and main portfolio acceptance
+
+- [P05-REL-01] Build invoicebridge as an independently navigable static product website with its own landing, demo and evidence routes.
+- [P05-REL-02] Publish under a unique verified GitHub Pages path; do not assume the path exists before deployment.
+- [P05-REL-03] Preserve all invoicebridge durable source, contracts, data generation and evidence in GitHub.
+- [P05-REL-04] Use no laptop checkout, local database, downloaded workbook or browser persistent storage as a build dependency.
+- [P05-REL-05] Run the backend and relational acceptance suite in GitHub Actions with a transient PostgreSQL service.
+- [P05-REL-06] Document the distinction between verified backend execution and browser-only simulated actions.
+- [P05-REL-07] Check every public export for synthetic-only data and absence of secrets.
+- [P05-REL-08] Archive durable workbook/notebook/evidence outputs with checksums and code revision.
+- [P05-REL-09] Verify deployed HTTP responses, route reload, one real user journey, downloads and source links.
+- [P05-REL-10] Inspect the current main projects site schema and generate its required project.json record.
+- [P05-REL-11] Produce cover.jpg and required loop media from actual project visuals with accurate labels.
+- [P05-REL-12] Regenerate catalogue and case-study pages through the current portfolio build process.
+- [P05-REL-13] Preserve the existing Precision Atelier design system on the main site.
+- [P05-REL-14] Keep this individual product identity separate from the main site theme requirements.
+- [P05-REL-15] Add catalogue/search/category/navigation entries according to the existing source schema.
+- [P05-REL-16] Do not modify unrelated project metadata or replace the main opening animation.
+- [P05-REL-17] Confirm the individual website is reachable before its portfolio link is published.
+- [P05-REL-18] Verify the main portfolio case study links to this actual website, source and evidence.
+- [P05-REL-19] Run existing site checks and targeted new-project route checks in hosted compute.
+- [P05-REL-20] Record built, verified, published and integrated as separate release fields.
+- [P05-REL-21] If an external permission blocks publication, preserve a ready change and report its exact state.
+- [P05-REL-22] Do not label a source commit as a verified live release.
+- [P05-REL-23] Prepare rollback to the preceding known-good portfolio/site artifact.
+- [P05-REL-24] End the InvoiceBridge handoff with the supported business decision, actual evidence and material limitations.
+
+## 11. Concrete implementation starting contracts
+
+These choices fix the default implementation shape. Change them only through a logged domain/architecture decision.
+Project directory: apps/invoicebridge/.
+Web: React and TypeScript, static build, route base injected by build configuration.
+Backend verification: FastAPI with generated OpenAPI, exercised only on a GitHub-hosted runner by default.
+Relational verification: PostgreSQL service container populated from deterministic fixtures.
+Business logic: pure Python domain functions separated from database and HTTP adapters.
+Browser scenario logic: TypeScript implementation checked against the same independently calculated fixtures.
+Canonical timestamps: UTC instants; display calendars can use configured IANA time zones.
+Canonical identifiers: opaque stable text IDs derived from source identifiers, not mutable display names.
+Canonical currency for the small reference fixture: USD unless explicitly stated otherwise.
+Money: decimal strings in JSON and NUMERIC(20,6) in database; round to currency minor units only at the declared step.
+Probabilities and rates: numeric values in [0,1] where their definition is a proportion; percentage-point differences may be signed.
+Count fields: nonnegative integers unless a signed movement/variance is explicitly part of the business definition.
+Absence: JSON null; do not use NaN, Infinity, the string null, or an empty string as substitute.
+Collection ordering: documented stable field plus primary-key tie breaker.
+Pagination: limit default 50, maximum 200; opaque cursor on large evidence collections.
+Time filtering: from inclusive, to exclusive; reject invalid or reversed ranges.
+Snapshot consistency: all data returned for one analysis references one immutable dataset_version.
+Scenario consistency: baseline_version is immutable; scenario edits use a distinct scenario_id and version.
+Conflict behavior: return 409 for stale version or idempotency-key reuse with a different payload.
+Validation behavior: return 422 with field path, rule ID and safe user message.
+Authorization behavior on the verified backend: 401 for missing identity, 403 for forbidden action; never fake public auth.
+Read-model response: data, meta, warnings; meta includes dataset_version, code_sha, generated_at and applied_filters.
+Error response: error.code, error.message, error.details, request_id; never stack traces or tokens.
+Command request: input, expected_version where relevant, idempotency_key for state-changing operations.
+Audit event: event_id, entity_type, entity_id, action, actor_id, occurred_at, before_version, after_version, reason.
+Static mode: command requests use a local in-memory adapter and display that fact before an action is taken.
+Static mode: a refresh intentionally restores the published fixture; do not imply durable multi-user state.
+API boundaries below are backend contracts to implement and verify; they are not public Pages endpoints.
+Generate a static data manifest rather than requesting unavailable /api routes from GitHub Pages.
+Minimum request tests: valid, malformed, unknown resource, stale version, repeated command and unsupported action.
+Minimum read tests: no records, one record, multiple pages, invalid filter, stable ordering and evidence reconciliation.
+Create a route inventory in docs/api-contract.md before frontend integration.
+Do not publish synthetic actor role switching as proof of backend authorization.
+Only claim access-control verification from separate backend identities and direct request tests.
+Use an optimistic record version for mutable operational rows; keep immutable event rows append-only.
+Specify missing source references as quarantine or explicit unresolved records, not arbitrary placeholder joins.
+Use migrations and seed scripts that succeed from an empty database and on a second idempotent run.
+Keep CI data fixtures below a documented size; large benchmark generation is an opt-in workflow input.
+Archive the exact exported data used by the public static demo with its checksum.
+Do not accidentally archive a transient database connection URL in any manifest.
+### Command C01: Import invoice
+- Contract endpoint: POST /api/v1/invoicebridge/commands/import-invoice.
+- Business transition: Absent -> received.
+- Hard validation: Idempotency key and hash.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C02: Validate invoice
+- Contract endpoint: POST /api/v1/invoicebridge/commands/validate-invoice.
+- Business transition: Received -> valid or invalid.
+- Hard validation: Decimal totals and required fields.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C03: Find duplicates
+- Contract endpoint: POST /api/v1/invoicebridge/commands/find-duplicates.
+- Business transition: Valid -> candidate review.
+- Hard validation: Explain matching fields.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C04: Match three ways
+- Contract endpoint: POST /api/v1/invoicebridge/commands/match-three-ways.
+- Business transition: Valid -> matched or exception.
+- Hard validation: PO, receipt and cumulative invoices.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C05: Assign exception
+- Contract endpoint: POST /api/v1/invoicebridge/commands/assign-exception.
+- Business transition: Unowned -> assigned.
+- Hard validation: Maintain assignment history.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C06: Correct extraction
+- Contract endpoint: POST /api/v1/invoicebridge/commands/correct-extraction.
+- Business transition: Original -> versioned correction.
+- Hard validation: Never overwrite source.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C07: Approve invoice
+- Contract endpoint: POST /api/v1/invoicebridge/commands/approve-invoice.
+- Business transition: Matched or resolved -> approved.
+- Hard validation: Separation of duties.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C08: Reject invoice
+- Contract endpoint: POST /api/v1/invoicebridge/commands/reject-invoice.
+- Business transition: Reviewable -> rejected.
+- Hard validation: Reason required.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C09: Export payable
+- Contract endpoint: POST /api/v1/invoicebridge/commands/export-payable.
+- Business transition: Approved -> exported.
+- Hard validation: Idempotent export batch.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C10: Apply credit note
+- Contract endpoint: POST /api/v1/invoicebridge/commands/apply-credit-note.
+- Business transition: Approved invoice -> adjusted balance.
+- Hard validation: No fictitious cash movement.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Read contract: vendors
+- Endpoint: GET /api/v1/invoicebridge/data/vendors.
+- Evidence fields: vendor_id,vendor_name,tax_reference,currency,active.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: purchase_orders
+- Endpoint: GET /api/v1/invoicebridge/data/purchase_orders.
+- Evidence fields: po_id,vendor_id,ordered_at,status,currency.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: po_lines
+- Endpoint: GET /api/v1/invoicebridge/data/po_lines.
+- Evidence fields: po_line_id,po_id,product_code,quantity,unit_price.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: receipts
+- Endpoint: GET /api/v1/invoicebridge/data/receipts.
+- Evidence fields: receipt_id,po_line_id,received_quantity,received_at,reversed.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: invoices
+- Endpoint: GET /api/v1/invoicebridge/data/invoices.
+- Evidence fields: invoice_id,vendor_id,invoice_number,invoice_date,currency.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: invoice_lines
+- Endpoint: GET /api/v1/invoicebridge/data/invoice_lines.
+- Evidence fields: invoice_line_id,invoice_id,po_line_id,quantity,unit_price.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: credit_notes
+- Endpoint: GET /api/v1/invoicebridge/data/credit_notes.
+- Evidence fields: credit_id,invoice_id,credit_amount,reason,issued_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: match_results
+- Endpoint: GET /api/v1/invoicebridge/data/match_results.
+- Evidence fields: match_id,invoice_line_id,rule_version,status,explanation.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: approval_policies
+- Endpoint: GET /api/v1/invoicebridge/data/approval_policies.
+- Evidence fields: policy_id,version_number,amount_limit,reviewer_role,effective_from.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: approvals
+- Endpoint: GET /api/v1/invoicebridge/data/approvals.
+- Evidence fields: approval_id,invoice_id,actor_id,decision,decided_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: exceptions
+- Endpoint: GET /api/v1/invoicebridge/data/exceptions.
+- Evidence fields: exception_id,invoice_id,exception_type,owner_id,status.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: exports
+- Endpoint: GET /api/v1/invoicebridge/data/exports.
+- Evidence fields: export_id,invoice_id,batch_id,exported_at,content_hash.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+
+## 12. Small versus large data profiles
+
+- golden: use the exact hand-checkable fixture in section 02; do not substitute random rows.
+- demo: start with approximately 500 primary business objects and enough linked events to demonstrate every required path.
+- analytical history: use the project-required observation horizon, including complete outcome windows and historical versions.
+- benchmark: optional input controls size; begin with 10,000 primary objects and increase only within observed runner resources.
+- store generator seed, config, schema version and injection manifest for every profile.
+- do not equate object count with event count; report each explicitly.
+- keep semantic distributions configurable; volume scaling must not change business rules.
+- do not use a large dataset to hide a failed small known-answer case.
+- no native software requirement may force a laptop download; preserve source and mark unsupported verification honestly.
+- acceptance evidence must state which profile each test used.

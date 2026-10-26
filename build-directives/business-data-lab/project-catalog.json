@@ -1,0 +1,2482 @@
+[
+  {
+    "slug": "revenue-atlas",
+    "name": "Revenue Atlas",
+    "decision": "Which customer, product, region, or discount policy explains declining contribution margin?",
+    "roles": "Data Analyst; BI Developer; Analytics Engineer",
+    "style": "Editorial financial atlas: ivory, deep ink, restrained copper; waterfall and transaction ledger",
+    "entities": [
+      [
+        "customers",
+        "customer_id,customer_name,region_id,segment,effective_from"
+      ],
+      [
+        "products",
+        "product_id,sku,category_id,unit_of_measure,active"
+      ],
+      [
+        "orders",
+        "order_id,customer_id,order_date,currency,status"
+      ],
+      [
+        "order_lines",
+        "line_id,order_id,product_id,quantity,unit_price"
+      ],
+      [
+        "discounts",
+        "discount_id,line_id,discount_amount,reason_code,approved_by"
+      ],
+      [
+        "shipments",
+        "shipment_id,order_id,shipped_at,shipping_cost,currency"
+      ],
+      [
+        "shipment_lines",
+        "shipment_line_id,shipment_id,line_id,shipped_quantity,cost_version_id"
+      ],
+      [
+        "returns",
+        "return_id,shipment_line_id,returned_quantity,credit_amount,credit_date"
+      ],
+      [
+        "cost_versions",
+        "cost_version_id,product_id,unit_cost,valid_from,valid_to"
+      ],
+      [
+        "exchange_rates",
+        "rate_id,currency,reporting_currency,rate_date,rate"
+      ],
+      [
+        "quotas",
+        "quota_id,rep_id,period_start,quota_amount,currency"
+      ],
+      [
+        "scenario_versions",
+        "scenario_id,baseline_run_id,discount_delta,shipping_delta,created_at"
+      ]
+    ],
+    "metrics": [
+      [
+        "Gross sales",
+        "sum(shipped_quantity * unit_price)",
+        "USD",
+        "Shipment date and shipped line grain"
+      ],
+      [
+        "Net merchandise sales",
+        "gross sales - allocated discounts - merchandise credits",
+        "USD",
+        "Exclude sales tax and shipping revenue"
+      ],
+      [
+        "Cost of goods sold",
+        "sum(shipped_quantity * historical_unit_cost) - recoverable_return_cost",
+        "USD",
+        "Use cost version at shipment"
+      ],
+      [
+        "Gross profit",
+        "net merchandise sales - cost of goods sold",
+        "USD",
+        "Do not label as net income"
+      ],
+      [
+        "Contribution margin",
+        "gross profit + shipping_revenue - shipping_cost - other_declared_variable_costs",
+        "USD",
+        "Allocated shared costs must reconcile"
+      ],
+      [
+        "Contribution margin rate",
+        "contribution margin / eligible net revenue",
+        "percent",
+        "Null when denominator is zero"
+      ],
+      [
+        "Discount rate",
+        "discount_amount / eligible gross sales",
+        "percent",
+        "Weighted totals not mean of row rates"
+      ],
+      [
+        "Return rate",
+        "returned_units / shipped_units_for_selected_cohort",
+        "percent",
+        "Disclose cohort maturity"
+      ],
+      [
+        "Average order value",
+        "eligible net sales / distinct eligible orders",
+        "USD/order",
+        "Declare credit timing"
+      ],
+      [
+        "Quota attainment",
+        "eligible sales / applicable quota",
+        "percent",
+        "Do not replicate quota on each transaction"
+      ],
+      [
+        "Year over year change",
+        "(current - prior) / abs(prior)",
+        "percent",
+        "Null for zero prior baseline"
+      ],
+      [
+        "Allocation residual",
+        "source shipping total - sum(allocated shipping)",
+        "USD",
+        "Must equal zero after documented rounding"
+      ]
+    ],
+    "flows": [
+      [
+        "Ingest sales",
+        "Unvalidated batch -> validated batch",
+        "Reject malformed currencies and preserve raw rows"
+      ],
+      [
+        "Resolve historical cost",
+        "Shipped line -> costed line",
+        "Exactly one effective cost version per shipment"
+      ],
+      [
+        "Post a partial return",
+        "Shipped -> partially returned",
+        "Return quantity cannot exceed remaining shipped quantity"
+      ],
+      [
+        "Allocate freight",
+        "Order freight -> line allocations",
+        "Deterministic remainder assignment"
+      ],
+      [
+        "Investigate margin decline",
+        "Overview -> segment -> transactions",
+        "Keep scope and time basis visible"
+      ],
+      [
+        "Compare regional results",
+        "Selected regions -> reconciled comparison",
+        "Handle unassigned region explicitly"
+      ],
+      [
+        "Create scenario",
+        "Published baseline -> new draft scenario",
+        "Immutable baseline reference"
+      ],
+      [
+        "Adjust discounts",
+        "Draft scenario -> recalculated scenario",
+        "Never mutate historical sales"
+      ],
+      [
+        "Export findings",
+        "Reviewed analysis -> evidence export",
+        "Embed filters and metric versions"
+      ],
+      [
+        "Publish snapshot",
+        "Verified run -> static snapshot",
+        "Include source and build hashes"
+      ]
+    ],
+    "screens": [
+      [
+        "Executive overview",
+        "Revenue and contribution trend with explicit date basis"
+      ],
+      [
+        "Margin bridge",
+        "Reconciled waterfall with interaction disclosure"
+      ],
+      [
+        "Product matrix",
+        "Sortable sales-margin scatter and accessible table"
+      ],
+      [
+        "Customer explorer",
+        "Customer contribution with drillthrough"
+      ],
+      [
+        "Regional review",
+        "Comparable regional totals and unassigned bucket"
+      ],
+      [
+        "Returns desk",
+        "Mature cohorts and credit timing"
+      ],
+      [
+        "Discount lab",
+        "Observed discounts beside scenario assumptions"
+      ],
+      [
+        "Transaction evidence",
+        "Source line, costs, freight, credits, FX"
+      ],
+      [
+        "Scenario comparison",
+        "Baseline and draft differences"
+      ],
+      [
+        "Case study",
+        "Problem, analytical choices, evidence and limits"
+      ]
+    ],
+    "edges": [
+      "Order freight allocated twice after a many-to-many join",
+      "Partial return posted after period close",
+      "Overlapping product cost validity ranges",
+      "Missing exchange rate on a reporting date",
+      "Zero revenue with nonzero costs",
+      "Negative credit entered with reversed sign",
+      "Customer changes sales territory",
+      "Quota joined to daily transactions",
+      "Order cancelled before shipment",
+      "Return exceeds remaining shipped quantity",
+      "Filter excludes unassigned region unintentionally",
+      "Scenario overwrites published actuals"
+    ],
+    "fixture": "Two shipped lines: 2 units at $100 with $20 total discount and $60 unit cost; 1 unit at $50 with $5 discount and $20 unit cost. Net merchandise sales=$225; COGS=$140; gross profit=$85. Shipping cost=$15, no shipping revenue or other variable costs: contribution=$70. Freight weights by gross sales are 200/250 and 50/250, giving $12 and $3. Returning one first-line unit credits $90 and reverses $60 cost; after unchanged freight contribution=$40.",
+    "special": [
+      "Use shipment-date operational sales rather than claiming statutory revenue recognition",
+      "Keep bookings, invoices, cash receipts and shipment sales distinct",
+      "Convert transaction values with dated FX and preserve original currency",
+      "Use decimal arithmetic and reconcile rounding remainders",
+      "Explain whether margin attribution is exact additive or order-dependent",
+      "Deliver Power BI star schema, DAX pack and reconciled Excel workbook"
+    ]
+  },
+  {
+    "slug": "onboard-studio",
+    "name": "Onboard Studio",
+    "decision": "Which onboarding workflow should be adopted and how should exceptions be handled?",
+    "roles": "Business Analyst; Business Systems Analyst; Transformation Analyst",
+    "style": "Tactile process studio: paper ground, indigo paths, amber exceptions; timeline first",
+    "entities": [
+      [
+        "organizations",
+        "organization_id,organization_name,segment,region,created_at"
+      ],
+      [
+        "cases",
+        "case_id,organization_id,workflow_version_id,status,opened_at"
+      ],
+      [
+        "workflow_versions",
+        "workflow_version_id,template_id,version_number,published_at,definition_hash"
+      ],
+      [
+        "step_definitions",
+        "step_definition_id,workflow_version_id,step_name,required,role_key"
+      ],
+      [
+        "dependencies",
+        "dependency_id,step_definition_id,prerequisite_id,dependency_type,created_at"
+      ],
+      [
+        "step_instances",
+        "step_instance_id,case_id,step_definition_id,status,version_number"
+      ],
+      [
+        "assignments",
+        "assignment_id,step_instance_id,assignee_id,assigned_at,ended_at"
+      ],
+      [
+        "document_versions",
+        "document_version_id,case_id,document_type,content_hash,review_status"
+      ],
+      [
+        "approvals",
+        "approval_id,step_instance_id,reviewer_id,decision,decided_at"
+      ],
+      [
+        "sla_rules",
+        "sla_rule_id,workflow_version_id,business_minutes,pause_policy,calendar_id"
+      ],
+      [
+        "calendar_intervals",
+        "calendar_interval_id,calendar_id,starts_at,ends_at,timezone"
+      ],
+      [
+        "case_events",
+        "event_id,case_id,event_type,actor_id,occurred_at"
+      ]
+    ],
+    "metrics": [
+      [
+        "Calendar cycle time",
+        "completed_at - opened_at",
+        "hours",
+        "Completed cases only"
+      ],
+      [
+        "Business cycle time",
+        "sum(calendar overlap for open intervals)",
+        "business hours",
+        "Use assigned calendar"
+      ],
+      [
+        "Paused time",
+        "sum(eligible waiting intervals)",
+        "hours",
+        "Pause reasons versioned"
+      ],
+      [
+        "Active elapsed time",
+        "business cycle time - eligible paused business time",
+        "hours",
+        "No negative durations"
+      ],
+      [
+        "SLA attainment",
+        "completed eligible cases within SLA / completed eligible cases",
+        "percent",
+        "Open cases shown separately"
+      ],
+      [
+        "Open backlog",
+        "count(open cases at cutoff)",
+        "cases",
+        "As-of reconstruction"
+      ],
+      [
+        "Rework rate",
+        "cases with rejected submission / submitted cases",
+        "percent",
+        "Case-level denominator"
+      ],
+      [
+        "Handoff count",
+        "count(assignee changes)",
+        "handoffs",
+        "Exclude duplicate assignment replay"
+      ],
+      [
+        "Step waiting time",
+        "first work timestamp - ready timestamp",
+        "hours",
+        "Use actual readiness after prerequisites"
+      ],
+      [
+        "First pass approval",
+        "approved first submissions / first submissions reviewed",
+        "percent",
+        "Pending reviews excluded"
+      ],
+      [
+        "Document completeness",
+        "required accepted types present / required types",
+        "percent",
+        "Workflow-version rules"
+      ],
+      [
+        "Simulated capacity gain",
+        "proposed modeled throughput - baseline modeled throughput",
+        "cases/period",
+        "Present direction and assumptions, never realized savings"
+      ]
+    ],
+    "flows": [
+      [
+        "Create case",
+        "Absent -> open",
+        "Bind immutable workflow version"
+      ],
+      [
+        "Submit document",
+        "Missing -> submitted",
+        "Use synthetic placeholder only"
+      ],
+      [
+        "Reject submission",
+        "Submitted -> changes_requested",
+        "Record reviewer reason"
+      ],
+      [
+        "Resubmit document",
+        "Changes_requested -> submitted",
+        "New document version preserves original"
+      ],
+      [
+        "Unlock dependent step",
+        "Blocked -> ready",
+        "All mandatory prerequisites accepted"
+      ],
+      [
+        "Approve step",
+        "In_review -> approved",
+        "Authorized independent reviewer"
+      ],
+      [
+        "Reassign work",
+        "Assigned -> reassigned",
+        "Close prior assignment interval"
+      ],
+      [
+        "Pause SLA",
+        "Active -> waiting_external",
+        "Only configured pause reason"
+      ],
+      [
+        "Complete case",
+        "Open -> complete",
+        "All required steps and documents satisfied"
+      ],
+      [
+        "Migrate workflow",
+        "Old version -> explicitly migrated",
+        "Audit mapping and unresolved steps"
+      ]
+    ],
+    "screens": [
+      [
+        "Case intake",
+        "Progressive form with validation"
+      ],
+      [
+        "Work queue",
+        "Owners, readiness, deadline and reason"
+      ],
+      [
+        "Case timeline",
+        "Events and document versions"
+      ],
+      [
+        "Workflow canvas",
+        "Dependencies and accessible ordered list"
+      ],
+      [
+        "Document review",
+        "Version comparison and explicit decision"
+      ],
+      [
+        "SLA explorer",
+        "Business versus calendar time"
+      ],
+      [
+        "Bottleneck analysis",
+        "Step-level waits and cohort counts"
+      ],
+      [
+        "Workflow version comparison",
+        "Changed rules and migration impacts"
+      ],
+      [
+        "Process simulation",
+        "Hypothetical baseline versus proposal"
+      ],
+      [
+        "Case study",
+        "Requirements, BPMN, UAT, adoption assumptions"
+      ]
+    ],
+    "edges": [
+      "Case completed with mandatory document missing",
+      "Two reviewers submit conflicting decisions",
+      "SLA paused outside a working interval",
+      "Workflow changes while old case is open",
+      "Dependency cycle in workflow definition",
+      "Document resubmission overwrites old version",
+      "Reassignment erases prior waiting time",
+      "Holiday overlaps weekend",
+      "Customer waiting time counted as active work",
+      "Unauthorized user approves own restricted step",
+      "Case reopened after completion",
+      "Migration loses an already accepted document"
+    ],
+    "fixture": "Calendar Monday-Friday 09:00-17:00 UTC, no holidays: case opens Friday 16:00 and completes Monday 10:00. Calendar elapsed=66 hours, working elapsed=2 hours. Waiting interval Friday 16:30 to Monday 09:30 overlaps one working hour, so active working elapsed=1 hour when that reason is pause-eligible.",
+    "special": [
+      "Preserve workflow version for each case",
+      "Block dependency cycles before publishing a template",
+      "Separate customer wait from employee processing time",
+      "Store calendar interval boundaries with explicit timezone",
+      "Provide requirements-to-UAT traceability",
+      "Do not claim real stakeholder interviews or measured adoption"
+    ]
+  },
+  {
+    "slug": "supplyscope",
+    "name": "SupplyScope",
+    "decision": "What should be ordered, when, and under which service and working-capital assumptions?",
+    "roles": "Operations Analyst; Data Engineer; Data Scientist",
+    "style": "Warehouse planning atlas: graphite, pale grey, safety orange; inventory trajectories",
+    "entities": [
+      [
+        "products",
+        "product_id,sku,unit_cost,pack_size,minimum_order_quantity"
+      ],
+      [
+        "locations",
+        "location_id,location_name,timezone,storage_capacity,active"
+      ],
+      [
+        "sales",
+        "sale_id,product_id,location_id,sold_at,quantity"
+      ],
+      [
+        "inventory_movements",
+        "movement_id,product_id,location_id,quantity_delta,event_at"
+      ],
+      [
+        "purchase_orders",
+        "purchase_order_id,supplier_id,ordered_at,status,currency"
+      ],
+      [
+        "purchase_order_lines",
+        "po_line_id,purchase_order_id,product_id,ordered_quantity,unit_cost"
+      ],
+      [
+        "receipts",
+        "receipt_id,po_line_id,location_id,received_quantity,received_at"
+      ],
+      [
+        "suppliers",
+        "supplier_id,supplier_name,calendar_id,quoted_lead_days,active"
+      ],
+      [
+        "promotions",
+        "promotion_id,product_id,starts_at,ends_at,promo_factor"
+      ],
+      [
+        "forecast_runs",
+        "forecast_run_id,cutoff_at,model_version,horizon,seed"
+      ],
+      [
+        "forecast_points",
+        "forecast_point_id,forecast_run_id,product_id,target_date,predicted_quantity"
+      ],
+      [
+        "policy_scenarios",
+        "scenario_id,service_target,holding_cost_rate,lost_sale_cost,seed"
+      ]
+    ],
+    "metrics": [
+      [
+        "On hand",
+        "sum(posted inventory quantity deltas)",
+        "units",
+        "As of cutoff"
+      ],
+      [
+        "Available inventory",
+        "on hand - reserved units",
+        "units",
+        "Do not subtract on-order"
+      ],
+      [
+        "Inventory position",
+        "on hand + confirmed on order - backorders",
+        "units",
+        "Reserved handling explicitly defined"
+      ],
+      [
+        "Fill rate",
+        "immediately fulfilled demand units / requested demand units",
+        "percent",
+        "Requires synthetic latent demand for simulation"
+      ],
+      [
+        "Stockout days",
+        "days with unmet demand / observed days",
+        "percent",
+        "Distinct from zero-stock days"
+      ],
+      [
+        "Inventory turnover",
+        "annualized COGS / average inventory value",
+        "turns/year",
+        "State averaging basis"
+      ],
+      [
+        "Reorder point",
+        "expected lead-time demand + safety stock",
+        "units",
+        "Model variable lead times explicitly"
+      ],
+      [
+        "Order quantity",
+        "pack_round_up(max(target_position - position, minimum_order_quantity))",
+        "units",
+        "Return zero when reorder not triggered"
+      ],
+      [
+        "Forecast MAE",
+        "mean(abs(actual - forecast))",
+        "units",
+        "Observed sales versus latent demand disclosed"
+      ],
+      [
+        "Forecast WAPE",
+        "sum(abs(error)) / sum(actual)",
+        "percent",
+        "Null for zero total demand"
+      ],
+      [
+        "Supplier on time rate",
+        "receipts within promised deadline / eligible receipts",
+        "percent",
+        "Partial receipt policy specified"
+      ],
+      [
+        "Working capital",
+        "sum(on_hand * unit_cost)",
+        "USD",
+        "No negative stock valuation"
+      ]
+    ],
+    "flows": [
+      [
+        "Load movements",
+        "Raw movement -> validated ledger",
+        "Reject duplicate movement identifiers"
+      ],
+      [
+        "Reconstruct stock",
+        "Ledger -> as-of inventory",
+        "Use complete historical order"
+      ],
+      [
+        "Forecast demand",
+        "Training cutoff -> future horizon",
+        "Fit only information available at cutoff"
+      ],
+      [
+        "Classify SKUs",
+        "Annual consumption -> ABC class",
+        "Value-based ranking documented"
+      ],
+      [
+        "Calculate replenishment",
+        "Position below trigger -> draft order",
+        "Apply packs and supplier calendar"
+      ],
+      [
+        "Simulate arrival",
+        "Outstanding PO -> receipt",
+        "No receipt before lead-time elapsed"
+      ],
+      [
+        "Record unmet demand",
+        "Demand exceeds stock -> lost sale or backlog",
+        "Scenario selects one policy"
+      ],
+      [
+        "Compare policies",
+        "Common random paths -> outcome comparison",
+        "Same random demand and delays"
+      ],
+      [
+        "Review supplier",
+        "Promised versus actual receipts -> reliability",
+        "Avoid future receipt leakage"
+      ],
+      [
+        "Export buying plan",
+        "Reviewed drafts -> CSV",
+        "Never submit real purchase orders"
+      ]
+    ],
+    "screens": [
+      [
+        "Planning overview",
+        "Stock risk and capital exposure"
+      ],
+      [
+        "SKU detail",
+        "Demand, sales, stock and forecast"
+      ],
+      [
+        "Location matrix",
+        "SKU-location coverage and heatmap"
+      ],
+      [
+        "Supplier desk",
+        "Lead times and late receipts"
+      ],
+      [
+        "Forecast evaluation",
+        "Baselines, folds and uncertainty"
+      ],
+      [
+        "Reorder workbench",
+        "Packs, MOQ and calendar constraints"
+      ],
+      [
+        "Policy simulator",
+        "Replay inventory evolution"
+      ],
+      [
+        "Capital tradeoff",
+        "Service level versus average inventory"
+      ],
+      [
+        "Purchase draft",
+        "Auditable recommendation export"
+      ],
+      [
+        "Case study",
+        "Censoring, backtest design and limitations"
+      ]
+    ],
+    "edges": [
+      "Sales censored during a stockout",
+      "Forecast uses future promotion outcomes",
+      "Pack rounding below minimum order",
+      "Negative inventory from duplicate shipment",
+      "Lead time spans supplier closure",
+      "Intermittent SKU has zero evaluation demand",
+      "Partial PO receipt counted as complete",
+      "Backorder and lost sale counted together",
+      "Two policies receive different demand samples",
+      "Inventory position double subtracts reserved stock",
+      "Receipt arrives before order date",
+      "Unit cost changes within valuation period"
+    ],
+    "fixture": "On hand=40, on order=30, backorders=10 gives inventory position=60 under the declared no-reservation fixture. Reorder point=70 and target position=120 gives raw order=60. MOQ=50 and pack size=24 produces an order of 72 units. If position=80, no order is triggered.",
+    "special": [
+      "Use seasonal-naive and naive baselines before complex forecasts",
+      "Define daily event order: receipts then demand then review",
+      "Report censored observed demand separately from generated latent demand",
+      "Use rolling-origin evaluation",
+      "Declare warm-up and repeated simulation settings",
+      "Keep recommendations separate from supplier commitments"
+    ]
+  },
+  {
+    "slug": "serviceflow",
+    "name": "ServiceFlow",
+    "decision": "Which staffing or routing change meets support targets under uncertain workload?",
+    "roles": "Operations Analyst; BI Analyst; Transformation Analyst",
+    "style": "Service control room: midnight blue, cream, cyan; queue timeline and shift grid",
+    "entities": [
+      [
+        "customers",
+        "customer_id,segment,timezone,created_at,synthetic"
+      ],
+      [
+        "queues",
+        "queue_id,queue_name,priority_policy,calendar_id,active"
+      ],
+      [
+        "tickets",
+        "ticket_id,customer_id,queue_id,priority,created_at"
+      ],
+      [
+        "ticket_events",
+        "event_id,ticket_id,event_type,occurred_at,actor_id"
+      ],
+      [
+        "agents",
+        "agent_id,agent_name,timezone,employment_type,active"
+      ],
+      [
+        "skills",
+        "skill_id,skill_name,description,active,created_at"
+      ],
+      [
+        "agent_skills",
+        "agent_skill_id,agent_id,skill_id,proficiency,effective_from"
+      ],
+      [
+        "shifts",
+        "shift_id,agent_id,starts_at,ends_at,break_minutes"
+      ],
+      [
+        "sla_policies",
+        "sla_policy_id,priority,first_response_minutes,resolution_minutes,calendar_id"
+      ],
+      [
+        "surveys",
+        "survey_id,ticket_id,response_at,score,invited_at"
+      ],
+      [
+        "simulation_runs",
+        "simulation_id,seed,warmup_minutes,policy_version,horizon"
+      ],
+      [
+        "simulation_events",
+        "simulation_event_id,simulation_id,ticket_id,event_type,event_at"
+      ]
+    ],
+    "metrics": [
+      [
+        "Arrival rate",
+        "eligible arrivals / interval duration",
+        "tickets/hour",
+        "Split by queue and priority"
+      ],
+      [
+        "Completion rate",
+        "resolved tickets / interval duration",
+        "tickets/hour",
+        "Reopen logic explicit"
+      ],
+      [
+        "Backlog at cutoff",
+        "arrived unresolved tickets at cutoff",
+        "tickets",
+        "Reconstruct event history"
+      ],
+      [
+        "First response",
+        "first human reply - arrival",
+        "minutes",
+        "Automated acknowledgements excluded"
+      ],
+      [
+        "Resolution duration",
+        "final resolution - arrival",
+        "minutes",
+        "Show reopened handling"
+      ],
+      [
+        "Handling duration",
+        "sum(active service intervals)",
+        "minutes",
+        "Exclude idle wait"
+      ],
+      [
+        "P90 first response",
+        "90th percentile eligible response durations",
+        "minutes",
+        "Document quantile implementation"
+      ],
+      [
+        "SLA compliance",
+        "eligible tickets within policy / eligible tickets",
+        "percent",
+        "Open overdue shown separately"
+      ],
+      [
+        "Agent occupancy",
+        "active handling / staffed available time",
+        "percent",
+        "Multichannel concurrency explicitly bounded"
+      ],
+      [
+        "Abandonment rate",
+        "abandoned eligible contacts / eligible arrivals",
+        "percent",
+        "Only channels with abandonment"
+      ],
+      [
+        "CSAT",
+        "positive responses / valid responses",
+        "percent",
+        "Show invitation and response rates"
+      ],
+      [
+        "Simulated wait improvement",
+        "baseline wait - scenario wait",
+        "minutes",
+        "Repeated runs and intervals"
+      ]
+    ],
+    "flows": [
+      [
+        "Ingest ticket events",
+        "Raw history -> ordered canonical events",
+        "Preserve late arrivals"
+      ],
+      [
+        "Assign queue",
+        "New ticket -> queued",
+        "Respect skill eligibility"
+      ],
+      [
+        "Start service",
+        "Queued -> in_service",
+        "Agent available and qualified"
+      ],
+      [
+        "Transfer ticket",
+        "Queue A -> queue B",
+        "Preserve original arrival and transfer wait"
+      ],
+      [
+        "Pause work",
+        "In_service -> waiting_customer",
+        "Differentiate SLA policy"
+      ],
+      [
+        "Reopen ticket",
+        "Resolved -> reopened",
+        "Link prior resolution cycle"
+      ],
+      [
+        "Build shift scenario",
+        "Baseline -> candidate schedule",
+        "Respect availability and breaks"
+      ],
+      [
+        "Run simulation",
+        "Frozen config -> replicated outcomes",
+        "Warm-up and seeds fixed"
+      ],
+      [
+        "Compare policies",
+        "Baseline versus proposal -> decision",
+        "Same demand sample"
+      ],
+      [
+        "Export recommendation",
+        "Reviewed scenario -> memo",
+        "Include uncertainty and service targets"
+      ]
+    ],
+    "screens": [
+      [
+        "Operations overview",
+        "Backlog, arrivals and service targets"
+      ],
+      [
+        "Queue explorer",
+        "Priority and skill-level breakdown"
+      ],
+      [
+        "Ticket timeline",
+        "Human response and status history"
+      ],
+      [
+        "Staffing grid",
+        "Coverage and breaks by interval"
+      ],
+      [
+        "SLA review",
+        "Policy-specific numerator and denominator"
+      ],
+      [
+        "Simulation studio",
+        "Pauseable queue animation and data table"
+      ],
+      [
+        "Scenario comparison",
+        "Wait distributions and staffing costs"
+      ],
+      [
+        "Survey analysis",
+        "CSAT with response bias disclosure"
+      ],
+      [
+        "Evidence ledger",
+        "Run settings and reconciliation"
+      ],
+      [
+        "Case study",
+        "Simulation validation and operational tradeoffs"
+      ]
+    ],
+    "edges": [
+      "Bot acknowledgement treated as human response",
+      "Reopened ticket counted as two customers",
+      "Agent assigned incompatible skill",
+      "Two simultaneous services exceed concurrency",
+      "Break time counted as available capacity",
+      "Open overdue tickets omitted from risk view",
+      "Daylight saving changes shift duration",
+      "Transfer resets original arrival",
+      "Simulation includes warm-up observations",
+      "Average wait hides high-priority tail",
+      "CSAT ignores nonresponse bias",
+      "Arrival intensity changes in holdout period"
+    ],
+    "fixture": "One agent and three tickets arriving at minute 0 with deterministic 10-minute service under FIFO: service starts at 0, 10, 20; waits are 0, 10, 20; mean wait=10 minutes; final completion at minute 30. Reproduce this exact case before using random arrivals.",
+    "special": [
+      "Define FIFO within priority class unless overridden",
+      "Estimate arrival distributions from training window only",
+      "Validate on a separate historical window",
+      "Show utilization and waiting tails separately",
+      "Use repeated seeds and comparable demand paths",
+      "Distinguish simulation estimates from realized staffing benefits"
+    ]
+  },
+  {
+    "slug": "invoicebridge",
+    "name": "InvoiceBridge",
+    "decision": "Which invoices may advance and which require exception review?",
+    "roles": "Automation Analyst; Business Systems Analyst; Business Analyst",
+    "style": "Document reconciliation desk: warm paper, charcoal, muted teal; evidence beside decision",
+    "entities": [
+      [
+        "vendors",
+        "vendor_id,vendor_name,tax_reference,currency,active"
+      ],
+      [
+        "purchase_orders",
+        "po_id,vendor_id,ordered_at,status,currency"
+      ],
+      [
+        "po_lines",
+        "po_line_id,po_id,product_code,quantity,unit_price"
+      ],
+      [
+        "receipts",
+        "receipt_id,po_line_id,received_quantity,received_at,reversed"
+      ],
+      [
+        "invoices",
+        "invoice_id,vendor_id,invoice_number,invoice_date,currency"
+      ],
+      [
+        "invoice_lines",
+        "invoice_line_id,invoice_id,po_line_id,quantity,unit_price"
+      ],
+      [
+        "credit_notes",
+        "credit_id,invoice_id,credit_amount,reason,issued_at"
+      ],
+      [
+        "match_results",
+        "match_id,invoice_line_id,rule_version,status,explanation"
+      ],
+      [
+        "approval_policies",
+        "policy_id,version_number,amount_limit,reviewer_role,effective_from"
+      ],
+      [
+        "approvals",
+        "approval_id,invoice_id,actor_id,decision,decided_at"
+      ],
+      [
+        "exceptions",
+        "exception_id,invoice_id,exception_type,owner_id,status"
+      ],
+      [
+        "exports",
+        "export_id,invoice_id,batch_id,exported_at,content_hash"
+      ]
+    ],
+    "metrics": [
+      [
+        "Invoice subtotal",
+        "sum(quantity * unit_price)",
+        "currency units",
+        "Decimal values before tax"
+      ],
+      [
+        "Invoice total",
+        "subtotal + tax + freight - invoice_discount",
+        "currency units",
+        "Declared rounding sequence"
+      ],
+      [
+        "Uninvoiced received quantity",
+        "net received quantity - previously accepted invoiced quantity",
+        "units",
+        "Exclude rejected invoices"
+      ],
+      [
+        "Price variance",
+        "invoiced unit price - PO unit price",
+        "currency/unit",
+        "Same currency and unit"
+      ],
+      [
+        "Quantity variance",
+        "invoiced quantity - available received quantity",
+        "units",
+        "Cumulative over prior invoices"
+      ],
+      [
+        "Straight-through rate",
+        "eligible invoices without manual exception / eligible invoices",
+        "percent",
+        "Not equivalent to paid"
+      ],
+      [
+        "Exception rate",
+        "invoices with exceptions / validated invoices",
+        "percent",
+        "Distinct invoice denominator"
+      ],
+      [
+        "Processing time",
+        "approval_completed_at - imported_at",
+        "hours",
+        "Pending population separate"
+      ],
+      [
+        "Potential duplicate count",
+        "unresolved duplicate candidate groups",
+        "groups",
+        "Avoid counting both pair directions"
+      ],
+      [
+        "Approved payable",
+        "approved invoice total - applicable credits",
+        "currency units",
+        "Not payment execution"
+      ],
+      [
+        "Export reconciliation",
+        "accepted export total - eligible approved total",
+        "currency units",
+        "Zero with explicit exclusions"
+      ],
+      [
+        "Review backlog",
+        "unresolved exceptions at cutoff",
+        "exceptions",
+        "As-of status history"
+      ]
+    ],
+    "flows": [
+      [
+        "Import invoice",
+        "Absent -> received",
+        "Idempotency key and hash"
+      ],
+      [
+        "Validate invoice",
+        "Received -> valid or invalid",
+        "Decimal totals and required fields"
+      ],
+      [
+        "Find duplicates",
+        "Valid -> candidate review",
+        "Explain matching fields"
+      ],
+      [
+        "Match three ways",
+        "Valid -> matched or exception",
+        "PO, receipt and cumulative invoices"
+      ],
+      [
+        "Assign exception",
+        "Unowned -> assigned",
+        "Maintain assignment history"
+      ],
+      [
+        "Correct extraction",
+        "Original -> versioned correction",
+        "Never overwrite source"
+      ],
+      [
+        "Approve invoice",
+        "Matched or resolved -> approved",
+        "Separation of duties"
+      ],
+      [
+        "Reject invoice",
+        "Reviewable -> rejected",
+        "Reason required"
+      ],
+      [
+        "Export payable",
+        "Approved -> exported",
+        "Idempotent export batch"
+      ],
+      [
+        "Apply credit note",
+        "Approved invoice -> adjusted balance",
+        "No fictitious cash movement"
+      ]
+    ],
+    "screens": [
+      [
+        "Intake desk",
+        "Upload synthetic fixture and parse feedback"
+      ],
+      [
+        "Invoice detail",
+        "Source fields and versioned correction"
+      ],
+      [
+        "Matching panel",
+        "PO, receipt and invoice side by side"
+      ],
+      [
+        "Duplicate review",
+        "Candidate evidence and human decision"
+      ],
+      [
+        "Exception queue",
+        "Severity, ownership and aging"
+      ],
+      [
+        "Approval desk",
+        "Policy and authorized action"
+      ],
+      [
+        "Vendor view",
+        "Invoices, credits and outstanding totals"
+      ],
+      [
+        "Export review",
+        "Batch preview and reconciliation"
+      ],
+      [
+        "Audit timeline",
+        "Immutable action and rule history"
+      ],
+      [
+        "Case study",
+        "Controls, matching rules and test evidence"
+      ]
+    ],
+    "edges": [
+      "Same invoice imported under different filename",
+      "Invoice number reused by different vendor",
+      "Partial receipts insufficient for invoiced quantity",
+      "Previous invoices consume available receipt",
+      "Rounding difference exceeds tolerance",
+      "User approves invoice they created",
+      "Two approvals race",
+      "Credit note applied twice",
+      "Different currency compared without conversion",
+      "Corrected field erases original OCR value",
+      "Export repeated after network timeout",
+      "Matched invoice incorrectly marked paid"
+    ],
+    "fixture": "PO 10 units at $20; accepted receipt 6 units; first invoice 6 units at $20 matches $120 before tax. A second invoice for 4 units is quantity-blocked until receipt arrives. Importing the first invoice twice must leave one obligation. With 10% tax and no other charges, first total=$132.",
+    "special": [
+      "No real payments or bank connections",
+      "Use structured import as reliable core and optional OCR adapter",
+      "Decimal arithmetic never binary float for money",
+      "Matching does not confer approval",
+      "Require creator/reviewer distinction in backend controls",
+      "Preserve source bytes hash and correction lineage"
+    ]
+  },
+  {
+    "slug": "productsignal",
+    "name": "ProductSignal",
+    "decision": "Should an onboarding change ship, stop, or receive more investigation?",
+    "roles": "Product Analyst; Data Analyst; Experimentation Analyst",
+    "style": "Product journey laboratory: warm white, cobalt, violet; funnel and cohort grid",
+    "entities": [
+      [
+        "accounts",
+        "account_id,plan,segment,created_at,internal"
+      ],
+      [
+        "users",
+        "user_id,account_id,created_at,timezone,bot_flag"
+      ],
+      [
+        "identity_links",
+        "identity_link_id,anonymous_id,user_id,linked_at,rule_version"
+      ],
+      [
+        "sessions",
+        "session_id,user_id,started_at,ended_at,device_type"
+      ],
+      [
+        "events",
+        "event_id,user_id,event_name,event_at,received_at"
+      ],
+      [
+        "event_properties",
+        "property_id,event_id,property_key,property_value,value_type"
+      ],
+      [
+        "subscriptions",
+        "subscription_id,account_id,starts_at,ends_at,status"
+      ],
+      [
+        "experiment_versions",
+        "experiment_version_id,name,unit_type,primary_metric,planned_end"
+      ],
+      [
+        "assignments",
+        "assignment_id,experiment_version_id,unit_id,variant,assigned_at"
+      ],
+      [
+        "exposures",
+        "exposure_id,assignment_id,exposed_at,surface,event_id"
+      ],
+      [
+        "metric_observations",
+        "observation_id,assignment_id,metric_name,value,window_end"
+      ],
+      [
+        "analysis_runs",
+        "analysis_id,experiment_version_id,cutoff_at,config_hash,created_at"
+      ]
+    ],
+    "metrics": [
+      [
+        "Signup conversion",
+        "eligible registered units / eligible visitors",
+        "percent",
+        "Identity denominator documented"
+      ],
+      [
+        "Activation rate",
+        "eligible units activating within 7 days / mature eligible signup units",
+        "percent",
+        "Complete seven-day observation"
+      ],
+      [
+        "Funnel step conversion",
+        "units reaching next ordered step / units reaching prior step",
+        "percent",
+        "Fixed ordering and window"
+      ],
+      [
+        "Day 7 retention",
+        "units returning on exact day 7 / mature cohort",
+        "percent",
+        "Separate on-or-after retention"
+      ],
+      [
+        "Week 4 retention",
+        "units active during days 28-34 / mature cohort",
+        "percent",
+        "Account timezone rule"
+      ],
+      [
+        "Feature adoption",
+        "eligible active units using feature / eligible active units",
+        "percent",
+        "Eligibility independent of treatment outcomes"
+      ],
+      [
+        "Experiment lift",
+        "treatment conversion - control conversion",
+        "percentage points",
+        "Unit-level aggregation"
+      ],
+      [
+        "Relative lift",
+        "(treatment - control) / control",
+        "percent",
+        "Null at zero control"
+      ],
+      [
+        "Exposure rate",
+        "exposed assigned units / assigned units",
+        "percent",
+        "Do not silently switch ITT population"
+      ],
+      [
+        "Sample ratio discrepancy",
+        "observed allocation versus prespecified allocation",
+        "test statistic",
+        "Appropriate test and low-count handling"
+      ],
+      [
+        "Guardrail error rate",
+        "units with product error / eligible assigned units",
+        "percent",
+        "Prespecified window"
+      ],
+      [
+        "Revenue per assigned account",
+        "eligible revenue / assigned accounts",
+        "USD/account",
+        "Account randomization and clustering"
+      ]
+    ],
+    "flows": [
+      [
+        "Validate tracking",
+        "Raw events -> canonical events",
+        "Schema and deduplication"
+      ],
+      [
+        "Resolve identity",
+        "Anonymous -> linked identity",
+        "Time-aware deterministic rules"
+      ],
+      [
+        "Define funnel",
+        "Draft -> versioned funnel",
+        "Steps, ordering and maximum gap"
+      ],
+      [
+        "Assign experiment",
+        "Eligible unit -> fixed variant",
+        "Stable assignment before outcomes"
+      ],
+      [
+        "Record exposure",
+        "Assigned -> exposed",
+        "Preserve ITT membership"
+      ],
+      [
+        "Freeze analysis plan",
+        "Draft -> registered plan",
+        "Before outcome inspection"
+      ],
+      [
+        "Check maturity",
+        "Assigned cohort -> eligible observation",
+        "Avoid incomplete windows"
+      ],
+      [
+        "Analyze experiment",
+        "Frozen plan -> results",
+        "Assignment unit respected"
+      ],
+      [
+        "Review guardrails",
+        "Result -> decision evidence",
+        "Business and statistical meaning"
+      ],
+      [
+        "Record decision",
+        "Evidence -> ship or stop or inconclusive",
+        "No automatic product release"
+      ]
+    ],
+    "screens": [
+      [
+        "Journey overview",
+        "Visitors to activation with sample sizes"
+      ],
+      [
+        "Funnel explorer",
+        "Ordered events and exclusions"
+      ],
+      [
+        "Cohort laboratory",
+        "Maturity-aware retention grid"
+      ],
+      [
+        "Tracking quality",
+        "Duplicates, unknown identities and delayed events"
+      ],
+      [
+        "Experiment registry",
+        "Plan and assignment information"
+      ],
+      [
+        "Experiment result",
+        "Absolute effects, intervals and guardrails"
+      ],
+      [
+        "Population explorer",
+        "Assigned versus exposed denominators"
+      ],
+      [
+        "Segment analysis",
+        "Exploratory label and multiplicity caveat"
+      ],
+      [
+        "Decision memo",
+        "Evidence and inconclusive options"
+      ],
+      [
+        "Case study",
+        "Measurement design and limitations"
+      ]
+    ],
+    "edges": [
+      "Experiment randomized by account but analyzed as independent users",
+      "Treatment-dependent exclusion biases result",
+      "Repeated peeking presented as fixed-horizon evidence",
+      "New cohort lacks seven days of observation",
+      "Duplicate events inflate activation",
+      "Late event changes historical funnel",
+      "Identity links future information backward",
+      "Sample ratio mismatch ignored",
+      "Multiple segment tests cherry picked",
+      "Zero control conversions breaks relative lift",
+      "Exposure occurs before assignment timestamp",
+      "Retention mixes exact-day and rolling definitions"
+    ],
+    "fixture": "Control: 20 activations among 100 mature assigned accounts; treatment: 30 among 100. Absolute lift=10 percentage points; relative lift=50%. These counts alone do not guarantee a statistically conclusive result. Retention fixture: 5 of 20 mature accounts returning on day 7 gives 25%.",
+    "special": [
+      "Use account randomization for shared B2B accounts",
+      "Report intention-to-treat primary analysis",
+      "Prespecify primary outcome, guardrails and horizon",
+      "Check sample ratio mismatch before interpretation",
+      "No causal conclusions from observational feature correlations",
+      "Label segment exploration separately from confirmatory results"
+    ]
+  },
+  {
+    "slug": "trustledger",
+    "name": "TrustLedger",
+    "decision": "Which data issues should be fixed first and who is accountable?",
+    "roles": "Data Governance Analyst; Data Quality Analyst; Analytics Engineer",
+    "style": "Evidence library: ivory, forest, restrained vermilion; glossary and lineage",
+    "entities": [
+      [
+        "datasets",
+        "dataset_id,dataset_name,source_system,owner_id,classification"
+      ],
+      [
+        "fields",
+        "field_id,dataset_id,field_name,data_type,nullable"
+      ],
+      [
+        "owners",
+        "owner_id,owner_name,team,role,active"
+      ],
+      [
+        "metric_versions",
+        "metric_version_id,metric_name,definition,valid_from,status"
+      ],
+      [
+        "quality_rules",
+        "rule_id,dataset_id,rule_type,severity,version_number"
+      ],
+      [
+        "rule_runs",
+        "rule_run_id,rule_id,run_at,eligible_count,failure_count"
+      ],
+      [
+        "quality_issues",
+        "issue_id,rule_run_id,owner_id,status,detected_at"
+      ],
+      [
+        "lineage_edges",
+        "edge_id,source_dataset_id,target_dataset_id,evidence_type,observed_at"
+      ],
+      [
+        "customer_records",
+        "record_id,source_system,source_customer_id,normalized_name,address_key"
+      ],
+      [
+        "match_candidates",
+        "candidate_id,left_record_id,right_record_id,score,explanation"
+      ],
+      [
+        "merge_decisions",
+        "merge_id,candidate_id,reviewer_id,decision,decided_at"
+      ],
+      [
+        "definition_changes",
+        "change_id,metric_version_id,reason,approved_by,changed_at"
+      ]
+    ],
+    "metrics": [
+      [
+        "Completeness",
+        "nonmissing eligible values / eligible values",
+        "percent",
+        "Whitespace missing policy"
+      ],
+      [
+        "Validity",
+        "eligible values passing domain rule / eligible values",
+        "percent",
+        "Not equivalent to correctness"
+      ],
+      [
+        "Uniqueness",
+        "unique eligible keys / eligible keys",
+        "percent",
+        "Define duplicate-group versus duplicate-row measure"
+      ],
+      [
+        "Relationship integrity",
+        "matched eligible foreign keys / eligible foreign keys",
+        "percent",
+        "Null handling explicit"
+      ],
+      [
+        "Timeliness",
+        "datasets refreshed within target / monitored datasets",
+        "percent",
+        "Expected schedule and timezone"
+      ],
+      [
+        "Weighted quality score",
+        "sum(dimension_score * weight) / sum(active_weights)",
+        "score/100",
+        "Critical failures shown independently"
+      ],
+      [
+        "Critical failures",
+        "count(open critical rule failures)",
+        "failures",
+        "Never hidden by averages"
+      ],
+      [
+        "Issue resolution time",
+        "resolved_at - detected_at",
+        "hours",
+        "Reopened issues tracked"
+      ],
+      [
+        "Ownership coverage",
+        "datasets with accountable owner / datasets",
+        "percent",
+        "Inactive owner not eligible"
+      ],
+      [
+        "Definition coverage",
+        "published metrics with complete contracts / published metrics",
+        "percent",
+        "Versioned checklist"
+      ],
+      [
+        "Match precision",
+        "correct reviewed proposed matches / reviewed proposed matches",
+        "percent",
+        "Synthetic truth held outside matcher"
+      ],
+      [
+        "Observed lineage coverage",
+        "observed edges / expected declared edges",
+        "percent",
+        "Separate declared and observed graph"
+      ]
+    ],
+    "flows": [
+      [
+        "Register dataset",
+        "Absent -> cataloged",
+        "Required owner and classification"
+      ],
+      [
+        "Publish definition",
+        "Draft -> reviewed -> published",
+        "Preserve version history"
+      ],
+      [
+        "Run quality rule",
+        "Active rule -> measured result",
+        "Store eligible and failing counts"
+      ],
+      [
+        "Open issue",
+        "Failure -> owned issue",
+        "Link run and severity"
+      ],
+      [
+        "Triage issue",
+        "Open -> investigating",
+        "Owner and due date"
+      ],
+      [
+        "Suggest match",
+        "Distinct source records -> candidate",
+        "Explain features and uncertainty"
+      ],
+      [
+        "Approve merge",
+        "Candidate -> linked identity",
+        "Human review and audit"
+      ],
+      [
+        "Reverse merge",
+        "Merged -> reversed mapping",
+        "Restore distinct source identities"
+      ],
+      [
+        "Disable rule",
+        "Active -> disabled",
+        "History and reason retained"
+      ],
+      [
+        "Verify remediation",
+        "Resolved claim -> rerun confirmed",
+        "Do not equate suppression with repair"
+      ]
+    ],
+    "screens": [
+      [
+        "Catalog home",
+        "Search datasets, fields and owners"
+      ],
+      [
+        "Glossary",
+        "Competing definitions and versions"
+      ],
+      [
+        "Quality scorecard",
+        "Dimensions and critical overrides"
+      ],
+      [
+        "Rule detail",
+        "Eligible population and failed examples"
+      ],
+      [
+        "Issue workbench",
+        "Ownership, aging and remediation"
+      ],
+      [
+        "Lineage explorer",
+        "Declared versus observed edge styling"
+      ],
+      [
+        "Duplicate review",
+        "Side-by-side identity evidence"
+      ],
+      [
+        "Merge history",
+        "Reversible mapping decisions"
+      ],
+      [
+        "Impact preview",
+        "Downstream metrics affected by change"
+      ],
+      [
+        "Case study",
+        "Governance process and evidence"
+      ]
+    ],
+    "edges": [
+      "Overall score hides critical missing keys",
+      "Disabled rule makes history disappear",
+      "Two people share a name and address",
+      "Foreign key nulls silently excluded",
+      "Weights change without version",
+      "Merged identity cannot be reversed",
+      "Inactive owner counted as covered",
+      "Lineage inferred but presented as observed",
+      "Issue closed without successful rerun",
+      "Duplicate pair stored in both directions",
+      "Metric definition rewritten in place",
+      "Rule denominator changes between comparisons"
+    ],
+    "fixture": "100 eligible customer rows with 5 missing required emails gives completeness=95%. Of 95 populated emails, 90 pass the validity rule gives populated-only validity=90/95, not 90/100; show both if useful with labels. A critical key failure must remain visible even if a weighted aggregate exceeds 95.",
+    "special": [
+      "Keep quality dimensions separate",
+      "No automated ambiguous identity merges",
+      "Store match truth only in verification fixtures",
+      "Version rule weights and denominators",
+      "Distinguish correctness from format validity",
+      "Use synthetic personal details only"
+    ]
+  },
+  {
+    "slug": "pipeline-observatory",
+    "name": "Pipeline Observatory",
+    "decision": "Is this dataset safe, complete, and fresh enough to publish?",
+    "roles": "Data Engineer; Analytics Engineer; Data Reliability Analyst",
+    "style": "Engineering observatory: dark slate, pale text, electric cyan; run evidence and DAG",
+    "entities": [
+      [
+        "source_contracts",
+        "source_id,source_name,schema_version,expected_frequency,owner_id"
+      ],
+      [
+        "ingestion_batches",
+        "batch_id,source_id,source_cursor,started_at,status"
+      ],
+      [
+        "raw_records",
+        "raw_record_id,batch_id,source_key,payload_hash,payload_json"
+      ],
+      [
+        "quarantine_records",
+        "quarantine_id,batch_id,source_key,reason_code,payload_hash"
+      ],
+      [
+        "checkpoints",
+        "checkpoint_id,source_id,committed_cursor,committed_at,version_number"
+      ],
+      [
+        "model_definitions",
+        "model_id,model_name,grain,version_number,definition_hash"
+      ],
+      [
+        "pipeline_runs",
+        "run_id,started_at,finished_at,status,code_sha"
+      ],
+      [
+        "task_runs",
+        "task_run_id,run_id,task_name,status,attempt"
+      ],
+      [
+        "quality_results",
+        "quality_result_id,task_run_id,rule_name,eligible_count,failure_count"
+      ],
+      [
+        "publications",
+        "publication_id,run_id,dataset_name,published_at,content_hash"
+      ],
+      [
+        "incidents",
+        "incident_id,run_id,severity,status,opened_at"
+      ],
+      [
+        "backfill_requests",
+        "backfill_id,source_id,start_at,end_at,status"
+      ]
+    ],
+    "metrics": [
+      [
+        "Source freshness",
+        "cutoff - latest source event timestamp",
+        "minutes",
+        "Different from ingestion age"
+      ],
+      [
+        "Ingestion age",
+        "cutoff - last successful ingestion",
+        "minutes",
+        "Explicit successful definition"
+      ],
+      [
+        "Completeness",
+        "accepted expected records / expected records",
+        "percent",
+        "Use known synthetic expectation"
+      ],
+      [
+        "Rejection rate",
+        "quarantined records / received records",
+        "percent",
+        "Duplicates classified separately"
+      ],
+      [
+        "Duplicate rate",
+        "duplicate received records / received records",
+        "percent",
+        "Business key and replay policy"
+      ],
+      [
+        "Pipeline duration",
+        "finished_at - started_at",
+        "seconds",
+        "Failed and successful distributions separate"
+      ],
+      [
+        "Task success rate",
+        "successful terminal tasks / terminal tasks",
+        "percent",
+        "Attempts not conflated with tasks"
+      ],
+      [
+        "Publication lag",
+        "published_at - latest included source event",
+        "minutes",
+        "Publish watermark disclosed"
+      ],
+      [
+        "Reconciliation residual",
+        "source business total - published business total - explained exclusions",
+        "units",
+        "Zero for golden fixture"
+      ],
+      [
+        "Recovery time",
+        "verified recovery - incident detection",
+        "minutes",
+        "Not merely process restart"
+      ],
+      [
+        "Backfill coverage",
+        "verified requested partitions / requested partitions",
+        "percent",
+        "Half-open partition ranges"
+      ],
+      [
+        "Observed processing rate",
+        "accepted records / measured processing seconds",
+        "records/second",
+        "Hardware and warm cache disclosed"
+      ]
+    ],
+    "flows": [
+      [
+        "Fetch source page",
+        "Cursor -> raw page",
+        "Paginated API with retry headers"
+      ],
+      [
+        "Validate contract",
+        "Raw record -> accepted or quarantined",
+        "Schema and semantic checks"
+      ],
+      [
+        "Commit batch",
+        "Staged records -> durable batch",
+        "Atomic checkpoint behavior"
+      ],
+      [
+        "Transform models",
+        "Validated staging -> analytical tables",
+        "Test keys and relationships"
+      ],
+      [
+        "Run quality gate",
+        "Candidate tables -> pass or block",
+        "Fail closed for critical defects"
+      ],
+      [
+        "Publish snapshot",
+        "Passed candidate -> current version",
+        "Atomic publication pointer"
+      ],
+      [
+        "Inject fault",
+        "Healthy dependency -> controlled failure",
+        "Only synthetic sandbox"
+      ],
+      [
+        "Request backfill",
+        "Range -> scheduled partitions",
+        "Reject overlapping unsafe execution"
+      ],
+      [
+        "Recover incident",
+        "Failed run -> verified recovered",
+        "Reconcile before closing"
+      ],
+      [
+        "Archive evidence",
+        "Completed run -> release evidence",
+        "Hashes and retention mapping"
+      ]
+    ],
+    "screens": [
+      [
+        "Platform overview",
+        "Freshness independent of green job status"
+      ],
+      [
+        "Dependency graph",
+        "Source-model-publication relationships"
+      ],
+      [
+        "Run detail",
+        "Actual steps, attempts and logs"
+      ],
+      [
+        "Source contract",
+        "Schema and version comparison"
+      ],
+      [
+        "Quarantine desk",
+        "Invalid rows and retry disposition"
+      ],
+      [
+        "Quality gate",
+        "Critical checks and publication decision"
+      ],
+      [
+        "Backfill console",
+        "Partitions, overlaps and progress"
+      ],
+      [
+        "Incident timeline",
+        "Detection, diagnosis and recovery"
+      ],
+      [
+        "Benchmark evidence",
+        "Measured hardware, size and duration"
+      ],
+      [
+        "Case study",
+        "Delivery guarantees and failure experiments"
+      ]
+    ],
+    "edges": [
+      "Crash after data write before checkpoint",
+      "Overlapping backfills duplicate output",
+      "Rate limit retries ignore retry-after",
+      "Schema adds required field unexpectedly",
+      "Malformed row disappears silently",
+      "Job succeeds but source is stale",
+      "Failed run replaces valid publication",
+      "Delete event not propagated",
+      "Late event falls behind watermark",
+      "Pagination token repeats forever",
+      "Secret appears in structured logs",
+      "Workflow recursively triggers itself"
+    ],
+    "fixture": "Source supplies 10 rows: 8 valid unique rows, 1 duplicate of a valid key, 1 invalid negative quantity. Received=10, accepted unique=8, duplicate=1, quarantined=1. Replaying the batch leaves 8 accepted unique records. A crash before checkpoint must not create a ninth accepted business record.",
+    "special": [
+      "Use PostgreSQL service containers only on GitHub-hosted runners",
+      "GitHub repository is canonical durable state and data source",
+      "Reconstruct transient databases from versioned sources on each run",
+      "No claim of exactly-once without boundary proof",
+      "Publish immutable static snapshots for Pages",
+      "Archive durable results in GitHub releases or compact versioned files"
+    ]
+  },
+  {
+    "slug": "changeworks",
+    "name": "ChangeWorks",
+    "decision": "Which transformation initiative should be funded and how will success be established?",
+    "roles": "Transformation Analyst; Business Analyst; Financial Analyst",
+    "style": "Strategy atelier: parchment, deep green, brass; roadmap and financial assumptions",
+    "entities": [
+      [
+        "initiatives",
+        "initiative_id,title,sponsor_id,status,baseline_version"
+      ],
+      [
+        "process_baselines",
+        "baseline_id,initiative_id,volume,minutes_per_case,error_rate"
+      ],
+      [
+        "assumption_versions",
+        "assumption_id,initiative_id,name,value,version_number"
+      ],
+      [
+        "cost_items",
+        "cost_id,initiative_id,cost_type,amount,period_index"
+      ],
+      [
+        "benefit_items",
+        "benefit_id,initiative_id,benefit_type,amount,period_index"
+      ],
+      [
+        "dependencies",
+        "dependency_id,initiative_id,prerequisite_id,dependency_type,lag_periods"
+      ],
+      [
+        "stakeholder_groups",
+        "group_id,group_name,owner_id,affected_count,impact_level"
+      ],
+      [
+        "readiness_assessments",
+        "assessment_id,group_id,dimension,score,assessed_at"
+      ],
+      [
+        "adoption_observations",
+        "observation_id,initiative_id,eligible_count,adopted_count,observed_at"
+      ],
+      [
+        "benefit_observations",
+        "benefit_observation_id,benefit_id,measured_value,evidence_ref,observed_at"
+      ],
+      [
+        "risk_items",
+        "risk_id,initiative_id,probability,impact,mitigation"
+      ],
+      [
+        "scenario_versions",
+        "scenario_id,baseline_version,discount_rate,horizon_periods,created_at"
+      ]
+    ],
+    "metrics": [
+      [
+        "Net cash flow",
+        "cash benefits - cash costs",
+        "USD/period",
+        "Exclude capacity hours without conversion"
+      ],
+      [
+        "NPV",
+        "sum(cash_flow_t / (1 + rate)^t)",
+        "USD",
+        "Rate period matches cash-flow period"
+      ],
+      [
+        "Discounted payback",
+        "first cumulative discounted cash flow crossing zero",
+        "periods",
+        "Null if never crossed"
+      ],
+      [
+        "Capacity released",
+        "volume * minutes_saved / 60",
+        "hours",
+        "Not automatic payroll saving"
+      ],
+      [
+        "Adoption rate",
+        "adopted eligible people / eligible people",
+        "percent",
+        "Eligibility definition fixed"
+      ],
+      [
+        "Benefit realization",
+        "observed comparable benefit / planned comparable benefit",
+        "percent",
+        "Do not mix benefit types"
+      ],
+      [
+        "Cost variance",
+        "actual cost - approved baseline cost",
+        "USD",
+        "Preserve approved baseline"
+      ],
+      [
+        "Readiness score",
+        "weighted declared readiness dimensions",
+        "score",
+        "Subjective assessment not probability"
+      ],
+      [
+        "Risk exposure",
+        "declared probability * declared financial impact",
+        "USD",
+        "Scenario estimate not precise prediction"
+      ],
+      [
+        "Dependency delay",
+        "feasible start - unconstrained start",
+        "periods",
+        "Resource constraints separate"
+      ],
+      [
+        "Training completion",
+        "completed eligible trainees / eligible trainees",
+        "percent",
+        "Distinct from proficiency"
+      ],
+      [
+        "Double-count residual",
+        "portfolio benefits - nonoverlapping attributable benefits",
+        "USD",
+        "Must be explained or removed"
+      ]
+    ],
+    "flows": [
+      [
+        "Establish baseline",
+        "Unmeasured -> versioned baseline",
+        "Evidence and assumptions separated"
+      ],
+      [
+        "Assess opportunity",
+        "Candidate -> scored option",
+        "Weights and rationale explicit"
+      ],
+      [
+        "Build cash flows",
+        "Assumptions -> dated financial model",
+        "One-time and recurring costs"
+      ],
+      [
+        "Map impacts",
+        "Initiative -> affected groups",
+        "Describe operating changes"
+      ],
+      [
+        "Assess readiness",
+        "Group -> dimension assessment",
+        "Synthetic stakeholder labels"
+      ],
+      [
+        "Plan roadmap",
+        "Options -> feasible schedule",
+        "Dependencies and shared capacity"
+      ],
+      [
+        "Select scenario",
+        "Compared options -> proposed portfolio",
+        "Do not claim actual funding"
+      ],
+      [
+        "Record adoption",
+        "Observation -> adoption series",
+        "Preserve denominator"
+      ],
+      [
+        "Track benefits",
+        "Forecast -> observed comparison",
+        "Attribution caveat"
+      ],
+      [
+        "Revise forecast",
+        "Baseline -> new forecast version",
+        "Never overwrite original approval"
+      ]
+    ],
+    "screens": [
+      [
+        "Portfolio overview",
+        "Costs, benefits and confidence labels"
+      ],
+      [
+        "Baseline evidence",
+        "Volumes, effort and errors"
+      ],
+      [
+        "Business case",
+        "Cash-flow model and assumptions"
+      ],
+      [
+        "Sensitivity lab",
+        "Rates, adoption ramp and cost scenarios"
+      ],
+      [
+        "Roadmap",
+        "Dependencies and resource conflicts"
+      ],
+      [
+        "Change impact",
+        "Stakeholder groups and operating changes"
+      ],
+      [
+        "Readiness review",
+        "ADKAR-inspired dimensions with labels"
+      ],
+      [
+        "Benefits register",
+        "Owners and observation evidence"
+      ],
+      [
+        "Forecast comparison",
+        "Original versus revised versus observed"
+      ],
+      [
+        "Case study",
+        "Investment logic and attribution limits"
+      ]
+    ],
+    "edges": [
+      "Time savings counted as cash savings without staffing change",
+      "Two initiatives claim same released capacity",
+      "Annual discount rate applied monthly without conversion",
+      "Benefits start before deployment",
+      "Training completion mistaken for adoption",
+      "Forecast overwrite hides missed target",
+      "Initiative dependency cycle",
+      "Negative cash flow never pays back",
+      "Shared specialist overallocated",
+      "Observed improvement attributed entirely to rollout",
+      "One-time cost recurs accidentally",
+      "Cost avoidance added to realized cash savings"
+    ],
+    "fixture": "At annual period 0 cost=$1000; year 1 net cash inflow=$600; year 2=$600; annual discount rate=10%. NPV=-1000+600/1.1+600/1.1^2=approximately $41.32. Simple payback and discounted payback must be separately labeled; capacity hours are excluded from cash flow unless a defensible conversion is supplied.",
+    "special": [
+      "Distinguish cash, avoided future cost, revenue and capacity benefits",
+      "Maintain immutable approved baseline",
+      "Model adoption ramp and benefit lag",
+      "Avoid double-counted cross-initiative benefits",
+      "Record uncertainty without false precision",
+      "Deliver formula-driven Excel workbook and executive recommendation"
+    ]
+  },
+  {
+    "slug": "retentionlab",
+    "name": "RetentionLab",
+    "decision": "Which accounts deserve limited retention attention under uncertain intervention value?",
+    "roles": "Data Scientist; Data Analyst; BI Analyst",
+    "style": "Customer intelligence lab: dark plum, soft cream, coral; risk evidence and calibration",
+    "entities": [
+      [
+        "accounts",
+        "account_id,created_at,segment,region,synthetic"
+      ],
+      [
+        "subscription_events",
+        "subscription_event_id,account_id,event_type,event_at,available_at"
+      ],
+      [
+        "billing_events",
+        "billing_event_id,account_id,amount,event_at,available_at"
+      ],
+      [
+        "usage_events",
+        "usage_event_id,account_id,event_name,event_at,available_at"
+      ],
+      [
+        "support_events",
+        "support_event_id,account_id,severity,event_at,available_at"
+      ],
+      [
+        "prediction_cutoffs",
+        "cutoff_id,account_id,prediction_at,horizon_end,observation_start"
+      ],
+      [
+        "feature_rows",
+        "feature_row_id,cutoff_id,feature_version,features_json,max_available_at"
+      ],
+      [
+        "labels",
+        "label_id,cutoff_id,churned,label_end,mature"
+      ],
+      [
+        "training_runs",
+        "training_run_id,train_end,validation_end,test_end,config_hash"
+      ],
+      [
+        "predictions",
+        "prediction_id,training_run_id,cutoff_id,probability,scored_at"
+      ],
+      [
+        "intervention_scenarios",
+        "scenario_id,capacity,contact_cost,assumed_effect,margin_value"
+      ],
+      [
+        "outreach_events",
+        "outreach_event_id,account_id,scenario_id,action,status"
+      ]
+    ],
+    "metrics": [
+      [
+        "Churn rate",
+        "mature eligible churned accounts / mature eligible accounts",
+        "percent",
+        "Fixed horizon and subscription definition"
+      ],
+      [
+        "Precision at capacity",
+        "true churners among top K / K",
+        "percent",
+        "K cannot exceed eligible accounts"
+      ],
+      [
+        "Recall at capacity",
+        "true churners among top K / total eligible churners",
+        "percent",
+        "Null when no positive outcomes"
+      ],
+      [
+        "Average precision",
+        "precision-recall ranking summary",
+        "score",
+        "Use library definition and baseline"
+      ],
+      [
+        "Brier score",
+        "mean((probability - outcome)^2)",
+        "score",
+        "Lower better, same evaluation population"
+      ],
+      [
+        "Calibration gap",
+        "mean predicted risk - observed churn in bin",
+        "percentage points",
+        "Show bin counts"
+      ],
+      [
+        "Contact budget",
+        "selected accounts * contact_cost",
+        "USD",
+        "Capacity constrained"
+      ],
+      [
+        "Expected intervention value",
+        "sum(assumed incremental retention benefit - contact cost)",
+        "USD",
+        "Assumption-based unless experiment supports effect"
+      ],
+      [
+        "Risk lift at K",
+        "top K churn rate / overall churn rate",
+        "ratio",
+        "Not treatment uplift"
+      ],
+      [
+        "Feature missingness",
+        "missing eligible feature values / eligible values",
+        "percent",
+        "By observation period"
+      ],
+      [
+        "Population drift",
+        "declared distribution distance versus reference",
+        "score",
+        "Threshold is diagnostic not proof"
+      ],
+      [
+        "Scoring freshness",
+        "cutoff - latest completed scoring publication",
+        "hours",
+        "Separate data freshness"
+      ]
+    ],
+    "flows": [
+      [
+        "Build point-in-time features",
+        "Cutoff -> features",
+        "Event and availability timestamps both valid"
+      ],
+      [
+        "Define label",
+        "Mature horizon -> outcome",
+        "Exclude censored outcomes"
+      ],
+      [
+        "Split evaluation",
+        "Time ranges -> train validation test",
+        "Purge overlapping outcome windows"
+      ],
+      [
+        "Fit preprocessing",
+        "Training only -> fitted transformer",
+        "No evaluation leakage"
+      ],
+      [
+        "Train baseline",
+        "Training rows -> business-rule and logistic models",
+        "Keep simple reference"
+      ],
+      [
+        "Calibrate model",
+        "Validation only -> calibration mapping",
+        "Test remains untouched"
+      ],
+      [
+        "Score accounts",
+        "Frozen model -> risk probabilities",
+        "Model and feature versions"
+      ],
+      [
+        "Prioritize outreach",
+        "Scores -> capacity-limited draft queue",
+        "Risk not assumed treatment responsiveness"
+      ],
+      [
+        "Simulate economics",
+        "Queue plus assumptions -> expected value",
+        "Clearly hypothetical"
+      ],
+      [
+        "Monitor refresh",
+        "New cohort -> drift and performance checks",
+        "Labels may arrive later"
+      ]
+    ],
+    "screens": [
+      [
+        "Retention overview",
+        "Mature cohorts and churn definition"
+      ],
+      [
+        "Cohort explorer",
+        "Plan and tenure context"
+      ],
+      [
+        "Feature evidence",
+        "Point-in-time lineage and availability"
+      ],
+      [
+        "Model comparison",
+        "Baselines and holdout metrics"
+      ],
+      [
+        "Calibration lab",
+        "Reliability curve with sample counts"
+      ],
+      [
+        "Capacity planner",
+        "Top K precision recall and contact cost"
+      ],
+      [
+        "Account explanation",
+        "Risk factors without causal claims"
+      ],
+      [
+        "Outreach queue",
+        "Synthetic draft actions and status"
+      ],
+      [
+        "Monitoring view",
+        "Data drift, maturity and scoring freshness"
+      ],
+      [
+        "Case study",
+        "Model card, evaluation and intervention limits"
+      ]
+    ],
+    "edges": [
+      "Cancellation reason enters pre-cancellation features",
+      "Feature event occurred earlier but arrived after cutoff",
+      "Same account leaks repeated observations across split",
+      "Label windows overlap train and test boundaries",
+      "Preprocessing fits on complete dataset",
+      "Threshold selected on final test",
+      "Incomplete customer outcomes labeled nonchurn",
+      "Synthetic truth label exposed as feature",
+      "High churn risk mistaken for offer responsiveness",
+      "Capacity exceeds eligible population",
+      "Calibration evaluated on calibration training data",
+      "Generator seed memorized by complex model"
+    ],
+    "fixture": "Four accounts have predicted risks .8, .6, .4, .1 and outcomes 1,0,1,0. At K=2 precision=.5 and recall=.5. Brier score=(.04+.36+.36+.01)/4=.1925. A high-risk selection alone supplies no treatment effect estimate.",
+    "special": [
+      "Point-in-time correctness uses available_at as well as event_at",
+      "Use chronological splits with label-window purge",
+      "Keep generator latent truth outside predictor inputs",
+      "Compare logistic regression to random and simple rules",
+      "No claim of real retention improvement from synthetic evaluation",
+      "Design a future randomized intervention experiment separately"
+    ]
+  }
+]

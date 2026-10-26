@@ -1,0 +1,2749 @@
+# P02 — Onboard Studio: complete project build specification
+Version: 2026-10-26. Read MASTER-DIRECTIVE.md first. These are requirements, not claims that software already exists.
+
+## 01. Product mandate and business boundary
+
+- [P02-GOAL-01] Build a standalone product supporting this decision: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-GOAL-02] Primary portfolio roles: Business Analyst; Business Systems Analyst; Transformation Analyst.
+- [P02-GOAL-03] Visual direction: Tactile process studio: paper ground, indigo paths, amber exceptions; timeline first.
+- [P02-GOAL-04] Use app slug onboard-studio; keep routes, fixtures, manifests and catalogue entries consistent.
+- [P02-GOAL-05] Execute code only on GitHub-hosted compute; retain durable deliverables in GitHub; never write project files to the laptop.
+- [P02-GOAL-06] Default public experience is static interactive synthetic demo; transactional backend evidence comes from remote CI.
+- [P02-GOAL-07] Use Fable 5.1 for coordination and real specialist-model invocations for implementation and verification.
+- [P02-GOAL-08] Resolve provider/model availability and record actual requested/resolved IDs without inventing capabilities.
+- [P02-GOAL-09] The entry milestone is one complete source-to-decision journey using the reference fixture and working export.
+- [P02-GOAL-10] The mid-level milestone adds the specified exceptions, robustness, versioning and recovery evidence.
+- [P02-GOAL-11] Do not open with a chatbot or require a paid inference API to use the demo.
+- [P02-GOAL-12] No live customer data, real payment, vendor commitment or operational write belongs in the default synthetic demo.
+- [P02-GOAL-13] All monetary, temporal and statistical meaning must be defined before interface implementation.
+- [P02-GOAL-14] If a proposed field/formula conflicts with an invariant, fix the specification through a logged decision before coding.
+- [P02-GOAL-15] Keep specifications addressable by the IDs in this file; do not paste the entire file into every worker prompt.
+- [P02-DOMAIN-01] Preserve workflow version for each case.
+- [P02-DOMAIN-02] Block dependency cycles before publishing a template.
+- [P02-DOMAIN-03] Separate customer wait from employee processing time.
+- [P02-DOMAIN-04] Store calendar interval boundaries with explicit timezone.
+- [P02-DOMAIN-05] Provide requirements-to-UAT traceability.
+- [P02-DOMAIN-06] Do not claim real stakeholder interviews or measured adoption.
+
+## 02. Independent known-answer fixture
+
+- [P02-GOLD-01] Calendar Monday-Friday 09:00-17:00 UTC, no holidays: case opens Friday 16:00 and completes Monday 10:00. Calendar elapsed=66 hours, working elapsed=2 hours. Waiting interval Friday 16:30 to Monday 09:30 overlaps one working hour, so active working elapsed=1 hour when that reason is pause-eligible.
+- [P02-GOLD-02] Encode the reference inputs under tests/fixtures/golden/ and preserve the human-readable calculation.
+- [P02-GOLD-03] Keep the expected-answer file independent of application helper functions and generated dashboard output.
+- [P02-GOLD-04] Have the verification specialist reproduce the answer from the source records before implementation review.
+- [P02-GOLD-05] Use explicit decimal tolerance for monetary results and justified tolerance for statistical/numerical results.
+- [P02-GOLD-06] Test the displayed value, exported value and backend result against the reference, not only against each other.
+- [P02-GOLD-07] Do not enlarge a numeric tolerance to conceal a business-rule disagreement.
+- [P02-GOLD-08] Create one rejected-record variant and show why rejection is correct.
+- [P02-GOLD-09] Create one empty-population variant and show the documented zero-denominator behavior.
+- [P02-GOLD-10] Persist fixture hashes and verification evidence with the code revision.
+- [P02-GOLD-11] If this fixture reveals a definition gap, resolve and version the definition before treating results as authoritative.
+
+## 03. Logical data model and field contracts
+
+### P02-DATA-01: organizations
+- [P02-DATA-01-R01] Create the organizations entity with a documented grain and one stable primary key: organization_id.
+- [P02-DATA-01-R02] The minimum business fields are organization_id, organization_name, segment, region, created_at; add technical metadata only with a documented purpose.
+- [P02-DATA-01-R03] Use the role of organizations in the product workflow to define authoritative source ownership.
+- [P02-DATA-01-R04] Write migrations for organizations; do not rely on ORM auto-create for the verified release.
+- [P02-DATA-01-R05] Create a small valid organizations fixture linked to the independently calculated project example.
+- [P02-DATA-01-R06] Create an invalid organizations fixture that demonstrates a real domain constraint.
+- [P02-DATA-01-R07] Choose explicit row-update semantics for organizations: immutable event, versioned dimension or mutable operational record.
+- [P02-DATA-01-R08] Preserve the original source identifier for organizations when a surrogate key is introduced.
+- [P02-DATA-01-R09] Document whether deletion of organizations is prohibited, reversible or represented by a tombstone.
+- [P02-DATA-01-R10] Reconcile organizations accepted, rejected and deduplicated row counts to the source batch.
+- [P02-DATA-01-R11] Expose only justified synthetic organizations fields to the public site; remove internal runner metadata.
+- [P02-DATA-01-R12] Index organizations according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P02-DATA-01-R13] Do not join organizations at a different grain without an explicit aggregation or allocation rule.
+- [P02-DATA-01-R14] Associate the published organizations snapshot with dataset hash and generator parameters.
+- [P02-DATA-01-R15] Define deterministic sorting and pagination for the organizations evidence view.
+- [P02-DATA-01-R16] Ensure an empty organizations dataset yields an understandable empty state instead of fabricated sample totals.
+- [P02-DATA-01-R17] Archive the organizations schema and sample rows in the data dictionary.
+- [P02-DATA-01-R18] Test that replaying the source import cannot unintentionally duplicate organizations business records.
+- [P02-DATA-01-F01-R01] Field organizations.organization_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-01-F01-R02] Field organizations.organization_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-01-F01-R03] Field organizations.organization_id: make it non-null and unique as the primary key.
+- [P02-DATA-01-F01-R04] Field organizations.organization_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-01-F01-R05] Field organizations.organization_id: use stable source-to-key mapping across replays and regeneration.
+- [P02-DATA-01-F01-R06] Field organizations.organization_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-01-F01-R07] Field organizations.organization_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-01-F01-R08] Field organizations.organization_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-01-F02-R01] Field organizations.organization_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-01-F02-R02] Field organizations.organization_name: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-01-F02-R03] Field organizations.organization_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-01-F02-R04] Field organizations.organization_name: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-01-F02-R05] Field organizations.organization_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-01-F02-R06] Field organizations.organization_name: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-01-F02-R07] Field organizations.organization_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-01-F02-R08] Field organizations.organization_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-01-F03-R01] Field organizations.segment: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-01-F03-R02] Field organizations.segment: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-01-F03-R03] Field organizations.segment: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-01-F03-R04] Field organizations.segment: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-01-F03-R05] Field organizations.segment: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-01-F03-R06] Field organizations.segment: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-01-F03-R07] Field organizations.segment: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-01-F03-R08] Field organizations.segment: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-01-F04-R01] Field organizations.region: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-01-F04-R02] Field organizations.region: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-01-F04-R03] Field organizations.region: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-01-F04-R04] Field organizations.region: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-01-F04-R05] Field organizations.region: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-01-F04-R06] Field organizations.region: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-01-F04-R07] Field organizations.region: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-01-F04-R08] Field organizations.region: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-01-F05-R01] Field organizations.created_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P02-DATA-01-F05-R02] Field organizations.created_at: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-01-F05-R03] Field organizations.created_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-01-F05-R04] Field organizations.created_at: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-01-F05-R05] Field organizations.created_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-01-F05-R06] Field organizations.created_at: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-01-F05-R07] Field organizations.created_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-01-F05-R08] Field organizations.created_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P02-DATA-02: cases
+- [P02-DATA-02-R01] Create the cases entity with a documented grain and one stable primary key: case_id.
+- [P02-DATA-02-R02] The minimum business fields are case_id, organization_id, workflow_version_id, status, opened_at; add technical metadata only with a documented purpose.
+- [P02-DATA-02-R03] Use the role of cases in the product workflow to define authoritative source ownership.
+- [P02-DATA-02-R04] Write migrations for cases; do not rely on ORM auto-create for the verified release.
+- [P02-DATA-02-R05] Create a small valid cases fixture linked to the independently calculated project example.
+- [P02-DATA-02-R06] Create an invalid cases fixture that demonstrates a real domain constraint.
+- [P02-DATA-02-R07] Choose explicit row-update semantics for cases: immutable event, versioned dimension or mutable operational record.
+- [P02-DATA-02-R08] Preserve the original source identifier for cases when a surrogate key is introduced.
+- [P02-DATA-02-R09] Document whether deletion of cases is prohibited, reversible or represented by a tombstone.
+- [P02-DATA-02-R10] Reconcile cases accepted, rejected and deduplicated row counts to the source batch.
+- [P02-DATA-02-R11] Expose only justified synthetic cases fields to the public site; remove internal runner metadata.
+- [P02-DATA-02-R12] Index cases according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P02-DATA-02-R13] Do not join cases at a different grain without an explicit aggregation or allocation rule.
+- [P02-DATA-02-R14] Associate the published cases snapshot with dataset hash and generator parameters.
+- [P02-DATA-02-R15] Define deterministic sorting and pagination for the cases evidence view.
+- [P02-DATA-02-R16] Ensure an empty cases dataset yields an understandable empty state instead of fabricated sample totals.
+- [P02-DATA-02-R17] Archive the cases schema and sample rows in the data dictionary.
+- [P02-DATA-02-R18] Test that replaying the source import cannot unintentionally duplicate cases business records.
+- [P02-DATA-02-F01-R01] Field cases.case_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-02-F01-R02] Field cases.case_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-02-F01-R03] Field cases.case_id: make it non-null and unique as the primary key.
+- [P02-DATA-02-F01-R04] Field cases.case_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-02-F01-R05] Field cases.case_id: use stable source-to-key mapping across replays and regeneration.
+- [P02-DATA-02-F01-R06] Field cases.case_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-02-F01-R07] Field cases.case_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-02-F01-R08] Field cases.case_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-02-F02-R01] Field cases.organization_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-02-F02-R02] Field cases.organization_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-02-F02-R03] Field cases.organization_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-02-F02-R04] Field cases.organization_id: validate its reference to organizations.organization_id; explain deferred or quarantined unmatched records.
+- [P02-DATA-02-F02-R05] Field cases.organization_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-02-F02-R06] Field cases.organization_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-02-F02-R07] Field cases.organization_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-02-F02-R08] Field cases.organization_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-02-F03-R01] Field cases.workflow_version_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-02-F03-R02] Field cases.workflow_version_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-02-F03-R03] Field cases.workflow_version_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-02-F03-R04] Field cases.workflow_version_id: validate its reference to workflow_versions.workflow_version_id; explain deferred or quarantined unmatched records.
+- [P02-DATA-02-F03-R05] Field cases.workflow_version_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-02-F03-R06] Field cases.workflow_version_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-02-F03-R07] Field cases.workflow_version_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-02-F03-R08] Field cases.workflow_version_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-02-F04-R01] Field cases.status: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-02-F04-R02] Field cases.status: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-02-F04-R03] Field cases.status: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-02-F04-R04] Field cases.status: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-02-F04-R05] Field cases.status: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-02-F04-R06] Field cases.status: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-02-F04-R07] Field cases.status: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-02-F04-R08] Field cases.status: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-02-F05-R01] Field cases.opened_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P02-DATA-02-F05-R02] Field cases.opened_at: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-02-F05-R03] Field cases.opened_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-02-F05-R04] Field cases.opened_at: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-02-F05-R05] Field cases.opened_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-02-F05-R06] Field cases.opened_at: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-02-F05-R07] Field cases.opened_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-02-F05-R08] Field cases.opened_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P02-DATA-03: workflow_versions
+- [P02-DATA-03-R01] Create the workflow_versions entity with a documented grain and one stable primary key: workflow_version_id.
+- [P02-DATA-03-R02] The minimum business fields are workflow_version_id, template_id, version_number, published_at, definition_hash; add technical metadata only with a documented purpose.
+- [P02-DATA-03-R03] Use the role of workflow_versions in the product workflow to define authoritative source ownership.
+- [P02-DATA-03-R04] Write migrations for workflow_versions; do not rely on ORM auto-create for the verified release.
+- [P02-DATA-03-R05] Create a small valid workflow_versions fixture linked to the independently calculated project example.
+- [P02-DATA-03-R06] Create an invalid workflow_versions fixture that demonstrates a real domain constraint.
+- [P02-DATA-03-R07] Choose explicit row-update semantics for workflow_versions: immutable event, versioned dimension or mutable operational record.
+- [P02-DATA-03-R08] Preserve the original source identifier for workflow_versions when a surrogate key is introduced.
+- [P02-DATA-03-R09] Document whether deletion of workflow_versions is prohibited, reversible or represented by a tombstone.
+- [P02-DATA-03-R10] Reconcile workflow_versions accepted, rejected and deduplicated row counts to the source batch.
+- [P02-DATA-03-R11] Expose only justified synthetic workflow_versions fields to the public site; remove internal runner metadata.
+- [P02-DATA-03-R12] Index workflow_versions according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P02-DATA-03-R13] Do not join workflow_versions at a different grain without an explicit aggregation or allocation rule.
+- [P02-DATA-03-R14] Associate the published workflow_versions snapshot with dataset hash and generator parameters.
+- [P02-DATA-03-R15] Define deterministic sorting and pagination for the workflow_versions evidence view.
+- [P02-DATA-03-R16] Ensure an empty workflow_versions dataset yields an understandable empty state instead of fabricated sample totals.
+- [P02-DATA-03-R17] Archive the workflow_versions schema and sample rows in the data dictionary.
+- [P02-DATA-03-R18] Test that replaying the source import cannot unintentionally duplicate workflow_versions business records.
+- [P02-DATA-03-F01-R01] Field workflow_versions.workflow_version_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-03-F01-R02] Field workflow_versions.workflow_version_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-03-F01-R03] Field workflow_versions.workflow_version_id: make it non-null and unique as the primary key.
+- [P02-DATA-03-F01-R04] Field workflow_versions.workflow_version_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-03-F01-R05] Field workflow_versions.workflow_version_id: use stable source-to-key mapping across replays and regeneration.
+- [P02-DATA-03-F01-R06] Field workflow_versions.workflow_version_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-03-F01-R07] Field workflow_versions.workflow_version_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-03-F01-R08] Field workflow_versions.workflow_version_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-03-F02-R01] Field workflow_versions.template_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-03-F02-R02] Field workflow_versions.template_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-03-F02-R03] Field workflow_versions.template_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-03-F02-R04] Field workflow_versions.template_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-03-F02-R05] Field workflow_versions.template_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-03-F02-R06] Field workflow_versions.template_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-03-F02-R07] Field workflow_versions.template_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-03-F02-R08] Field workflow_versions.template_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-03-F03-R01] Field workflow_versions.version_number: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P02-DATA-03-F03-R02] Field workflow_versions.version_number: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-03-F03-R03] Field workflow_versions.version_number: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-03-F03-R04] Field workflow_versions.version_number: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-03-F03-R05] Field workflow_versions.version_number: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-03-F03-R06] Field workflow_versions.version_number: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-03-F03-R07] Field workflow_versions.version_number: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-03-F03-R08] Field workflow_versions.version_number: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-03-F04-R01] Field workflow_versions.published_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P02-DATA-03-F04-R02] Field workflow_versions.published_at: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-03-F04-R03] Field workflow_versions.published_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-03-F04-R04] Field workflow_versions.published_at: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-03-F04-R05] Field workflow_versions.published_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-03-F04-R06] Field workflow_versions.published_at: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-03-F04-R07] Field workflow_versions.published_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-03-F04-R08] Field workflow_versions.published_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-03-F05-R01] Field workflow_versions.definition_hash: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-03-F05-R02] Field workflow_versions.definition_hash: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-03-F05-R03] Field workflow_versions.definition_hash: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-03-F05-R04] Field workflow_versions.definition_hash: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-03-F05-R05] Field workflow_versions.definition_hash: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-03-F05-R06] Field workflow_versions.definition_hash: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-03-F05-R07] Field workflow_versions.definition_hash: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-03-F05-R08] Field workflow_versions.definition_hash: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P02-DATA-04: step_definitions
+- [P02-DATA-04-R01] Create the step_definitions entity with a documented grain and one stable primary key: step_definition_id.
+- [P02-DATA-04-R02] The minimum business fields are step_definition_id, workflow_version_id, step_name, required, role_key; add technical metadata only with a documented purpose.
+- [P02-DATA-04-R03] Use the role of step_definitions in the product workflow to define authoritative source ownership.
+- [P02-DATA-04-R04] Write migrations for step_definitions; do not rely on ORM auto-create for the verified release.
+- [P02-DATA-04-R05] Create a small valid step_definitions fixture linked to the independently calculated project example.
+- [P02-DATA-04-R06] Create an invalid step_definitions fixture that demonstrates a real domain constraint.
+- [P02-DATA-04-R07] Choose explicit row-update semantics for step_definitions: immutable event, versioned dimension or mutable operational record.
+- [P02-DATA-04-R08] Preserve the original source identifier for step_definitions when a surrogate key is introduced.
+- [P02-DATA-04-R09] Document whether deletion of step_definitions is prohibited, reversible or represented by a tombstone.
+- [P02-DATA-04-R10] Reconcile step_definitions accepted, rejected and deduplicated row counts to the source batch.
+- [P02-DATA-04-R11] Expose only justified synthetic step_definitions fields to the public site; remove internal runner metadata.
+- [P02-DATA-04-R12] Index step_definitions according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P02-DATA-04-R13] Do not join step_definitions at a different grain without an explicit aggregation or allocation rule.
+- [P02-DATA-04-R14] Associate the published step_definitions snapshot with dataset hash and generator parameters.
+- [P02-DATA-04-R15] Define deterministic sorting and pagination for the step_definitions evidence view.
+- [P02-DATA-04-R16] Ensure an empty step_definitions dataset yields an understandable empty state instead of fabricated sample totals.
+- [P02-DATA-04-R17] Archive the step_definitions schema and sample rows in the data dictionary.
+- [P02-DATA-04-R18] Test that replaying the source import cannot unintentionally duplicate step_definitions business records.
+- [P02-DATA-04-F01-R01] Field step_definitions.step_definition_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-04-F01-R02] Field step_definitions.step_definition_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-04-F01-R03] Field step_definitions.step_definition_id: make it non-null and unique as the primary key.
+- [P02-DATA-04-F01-R04] Field step_definitions.step_definition_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-04-F01-R05] Field step_definitions.step_definition_id: use stable source-to-key mapping across replays and regeneration.
+- [P02-DATA-04-F01-R06] Field step_definitions.step_definition_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-04-F01-R07] Field step_definitions.step_definition_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-04-F01-R08] Field step_definitions.step_definition_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-04-F02-R01] Field step_definitions.workflow_version_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-04-F02-R02] Field step_definitions.workflow_version_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-04-F02-R03] Field step_definitions.workflow_version_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-04-F02-R04] Field step_definitions.workflow_version_id: validate its reference to workflow_versions.workflow_version_id; explain deferred or quarantined unmatched records.
+- [P02-DATA-04-F02-R05] Field step_definitions.workflow_version_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-04-F02-R06] Field step_definitions.workflow_version_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-04-F02-R07] Field step_definitions.workflow_version_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-04-F02-R08] Field step_definitions.workflow_version_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-04-F03-R01] Field step_definitions.step_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-04-F03-R02] Field step_definitions.step_name: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-04-F03-R03] Field step_definitions.step_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-04-F03-R04] Field step_definitions.step_name: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-04-F03-R05] Field step_definitions.step_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-04-F03-R06] Field step_definitions.step_name: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-04-F03-R07] Field step_definitions.step_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-04-F03-R08] Field step_definitions.step_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-04-F04-R01] Field step_definitions.required: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P02-DATA-04-F04-R02] Field step_definitions.required: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-04-F04-R03] Field step_definitions.required: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-04-F04-R04] Field step_definitions.required: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-04-F04-R05] Field step_definitions.required: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-04-F04-R06] Field step_definitions.required: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-04-F04-R07] Field step_definitions.required: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-04-F04-R08] Field step_definitions.required: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-04-F05-R01] Field step_definitions.role_key: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-04-F05-R02] Field step_definitions.role_key: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-04-F05-R03] Field step_definitions.role_key: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-04-F05-R04] Field step_definitions.role_key: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-04-F05-R05] Field step_definitions.role_key: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-04-F05-R06] Field step_definitions.role_key: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-04-F05-R07] Field step_definitions.role_key: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-04-F05-R08] Field step_definitions.role_key: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P02-DATA-05: dependencies
+- [P02-DATA-05-R01] Create the dependencies entity with a documented grain and one stable primary key: dependency_id.
+- [P02-DATA-05-R02] The minimum business fields are dependency_id, step_definition_id, prerequisite_id, dependency_type, created_at; add technical metadata only with a documented purpose.
+- [P02-DATA-05-R03] Use the role of dependencies in the product workflow to define authoritative source ownership.
+- [P02-DATA-05-R04] Write migrations for dependencies; do not rely on ORM auto-create for the verified release.
+- [P02-DATA-05-R05] Create a small valid dependencies fixture linked to the independently calculated project example.
+- [P02-DATA-05-R06] Create an invalid dependencies fixture that demonstrates a real domain constraint.
+- [P02-DATA-05-R07] Choose explicit row-update semantics for dependencies: immutable event, versioned dimension or mutable operational record.
+- [P02-DATA-05-R08] Preserve the original source identifier for dependencies when a surrogate key is introduced.
+- [P02-DATA-05-R09] Document whether deletion of dependencies is prohibited, reversible or represented by a tombstone.
+- [P02-DATA-05-R10] Reconcile dependencies accepted, rejected and deduplicated row counts to the source batch.
+- [P02-DATA-05-R11] Expose only justified synthetic dependencies fields to the public site; remove internal runner metadata.
+- [P02-DATA-05-R12] Index dependencies according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P02-DATA-05-R13] Do not join dependencies at a different grain without an explicit aggregation or allocation rule.
+- [P02-DATA-05-R14] Associate the published dependencies snapshot with dataset hash and generator parameters.
+- [P02-DATA-05-R15] Define deterministic sorting and pagination for the dependencies evidence view.
+- [P02-DATA-05-R16] Ensure an empty dependencies dataset yields an understandable empty state instead of fabricated sample totals.
+- [P02-DATA-05-R17] Archive the dependencies schema and sample rows in the data dictionary.
+- [P02-DATA-05-R18] Test that replaying the source import cannot unintentionally duplicate dependencies business records.
+- [P02-DATA-05-F01-R01] Field dependencies.dependency_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-05-F01-R02] Field dependencies.dependency_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-05-F01-R03] Field dependencies.dependency_id: make it non-null and unique as the primary key.
+- [P02-DATA-05-F01-R04] Field dependencies.dependency_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-05-F01-R05] Field dependencies.dependency_id: use stable source-to-key mapping across replays and regeneration.
+- [P02-DATA-05-F01-R06] Field dependencies.dependency_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-05-F01-R07] Field dependencies.dependency_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-05-F01-R08] Field dependencies.dependency_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-05-F02-R01] Field dependencies.step_definition_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-05-F02-R02] Field dependencies.step_definition_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-05-F02-R03] Field dependencies.step_definition_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-05-F02-R04] Field dependencies.step_definition_id: validate its reference to step_definitions.step_definition_id; explain deferred or quarantined unmatched records.
+- [P02-DATA-05-F02-R05] Field dependencies.step_definition_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-05-F02-R06] Field dependencies.step_definition_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-05-F02-R07] Field dependencies.step_definition_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-05-F02-R08] Field dependencies.step_definition_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-05-F03-R01] Field dependencies.prerequisite_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-05-F03-R02] Field dependencies.prerequisite_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-05-F03-R03] Field dependencies.prerequisite_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-05-F03-R04] Field dependencies.prerequisite_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-05-F03-R05] Field dependencies.prerequisite_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-05-F03-R06] Field dependencies.prerequisite_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-05-F03-R07] Field dependencies.prerequisite_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-05-F03-R08] Field dependencies.prerequisite_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-05-F04-R01] Field dependencies.dependency_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-05-F04-R02] Field dependencies.dependency_type: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-05-F04-R03] Field dependencies.dependency_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-05-F04-R04] Field dependencies.dependency_type: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-05-F04-R05] Field dependencies.dependency_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-05-F04-R06] Field dependencies.dependency_type: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-05-F04-R07] Field dependencies.dependency_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-05-F04-R08] Field dependencies.dependency_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-05-F05-R01] Field dependencies.created_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P02-DATA-05-F05-R02] Field dependencies.created_at: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-05-F05-R03] Field dependencies.created_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-05-F05-R04] Field dependencies.created_at: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-05-F05-R05] Field dependencies.created_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-05-F05-R06] Field dependencies.created_at: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-05-F05-R07] Field dependencies.created_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-05-F05-R08] Field dependencies.created_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P02-DATA-06: step_instances
+- [P02-DATA-06-R01] Create the step_instances entity with a documented grain and one stable primary key: step_instance_id.
+- [P02-DATA-06-R02] The minimum business fields are step_instance_id, case_id, step_definition_id, status, version_number; add technical metadata only with a documented purpose.
+- [P02-DATA-06-R03] Use the role of step_instances in the product workflow to define authoritative source ownership.
+- [P02-DATA-06-R04] Write migrations for step_instances; do not rely on ORM auto-create for the verified release.
+- [P02-DATA-06-R05] Create a small valid step_instances fixture linked to the independently calculated project example.
+- [P02-DATA-06-R06] Create an invalid step_instances fixture that demonstrates a real domain constraint.
+- [P02-DATA-06-R07] Choose explicit row-update semantics for step_instances: immutable event, versioned dimension or mutable operational record.
+- [P02-DATA-06-R08] Preserve the original source identifier for step_instances when a surrogate key is introduced.
+- [P02-DATA-06-R09] Document whether deletion of step_instances is prohibited, reversible or represented by a tombstone.
+- [P02-DATA-06-R10] Reconcile step_instances accepted, rejected and deduplicated row counts to the source batch.
+- [P02-DATA-06-R11] Expose only justified synthetic step_instances fields to the public site; remove internal runner metadata.
+- [P02-DATA-06-R12] Index step_instances according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P02-DATA-06-R13] Do not join step_instances at a different grain without an explicit aggregation or allocation rule.
+- [P02-DATA-06-R14] Associate the published step_instances snapshot with dataset hash and generator parameters.
+- [P02-DATA-06-R15] Define deterministic sorting and pagination for the step_instances evidence view.
+- [P02-DATA-06-R16] Ensure an empty step_instances dataset yields an understandable empty state instead of fabricated sample totals.
+- [P02-DATA-06-R17] Archive the step_instances schema and sample rows in the data dictionary.
+- [P02-DATA-06-R18] Test that replaying the source import cannot unintentionally duplicate step_instances business records.
+- [P02-DATA-06-F01-R01] Field step_instances.step_instance_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-06-F01-R02] Field step_instances.step_instance_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-06-F01-R03] Field step_instances.step_instance_id: make it non-null and unique as the primary key.
+- [P02-DATA-06-F01-R04] Field step_instances.step_instance_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-06-F01-R05] Field step_instances.step_instance_id: use stable source-to-key mapping across replays and regeneration.
+- [P02-DATA-06-F01-R06] Field step_instances.step_instance_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-06-F01-R07] Field step_instances.step_instance_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-06-F01-R08] Field step_instances.step_instance_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-06-F02-R01] Field step_instances.case_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-06-F02-R02] Field step_instances.case_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-06-F02-R03] Field step_instances.case_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-06-F02-R04] Field step_instances.case_id: validate its reference to cases.case_id; explain deferred or quarantined unmatched records.
+- [P02-DATA-06-F02-R05] Field step_instances.case_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-06-F02-R06] Field step_instances.case_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-06-F02-R07] Field step_instances.case_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-06-F02-R08] Field step_instances.case_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-06-F03-R01] Field step_instances.step_definition_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-06-F03-R02] Field step_instances.step_definition_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-06-F03-R03] Field step_instances.step_definition_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-06-F03-R04] Field step_instances.step_definition_id: validate its reference to step_definitions.step_definition_id; explain deferred or quarantined unmatched records.
+- [P02-DATA-06-F03-R05] Field step_instances.step_definition_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-06-F03-R06] Field step_instances.step_definition_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-06-F03-R07] Field step_instances.step_definition_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-06-F03-R08] Field step_instances.step_definition_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-06-F04-R01] Field step_instances.status: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-06-F04-R02] Field step_instances.status: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-06-F04-R03] Field step_instances.status: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-06-F04-R04] Field step_instances.status: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-06-F04-R05] Field step_instances.status: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-06-F04-R06] Field step_instances.status: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-06-F04-R07] Field step_instances.status: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-06-F04-R08] Field step_instances.status: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-06-F05-R01] Field step_instances.version_number: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P02-DATA-06-F05-R02] Field step_instances.version_number: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-06-F05-R03] Field step_instances.version_number: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-06-F05-R04] Field step_instances.version_number: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-06-F05-R05] Field step_instances.version_number: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-06-F05-R06] Field step_instances.version_number: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-06-F05-R07] Field step_instances.version_number: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-06-F05-R08] Field step_instances.version_number: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P02-DATA-07: assignments
+- [P02-DATA-07-R01] Create the assignments entity with a documented grain and one stable primary key: assignment_id.
+- [P02-DATA-07-R02] The minimum business fields are assignment_id, step_instance_id, assignee_id, assigned_at, ended_at; add technical metadata only with a documented purpose.
+- [P02-DATA-07-R03] Use the role of assignments in the product workflow to define authoritative source ownership.
+- [P02-DATA-07-R04] Write migrations for assignments; do not rely on ORM auto-create for the verified release.
+- [P02-DATA-07-R05] Create a small valid assignments fixture linked to the independently calculated project example.
+- [P02-DATA-07-R06] Create an invalid assignments fixture that demonstrates a real domain constraint.
+- [P02-DATA-07-R07] Choose explicit row-update semantics for assignments: immutable event, versioned dimension or mutable operational record.
+- [P02-DATA-07-R08] Preserve the original source identifier for assignments when a surrogate key is introduced.
+- [P02-DATA-07-R09] Document whether deletion of assignments is prohibited, reversible or represented by a tombstone.
+- [P02-DATA-07-R10] Reconcile assignments accepted, rejected and deduplicated row counts to the source batch.
+- [P02-DATA-07-R11] Expose only justified synthetic assignments fields to the public site; remove internal runner metadata.
+- [P02-DATA-07-R12] Index assignments according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P02-DATA-07-R13] Do not join assignments at a different grain without an explicit aggregation or allocation rule.
+- [P02-DATA-07-R14] Associate the published assignments snapshot with dataset hash and generator parameters.
+- [P02-DATA-07-R15] Define deterministic sorting and pagination for the assignments evidence view.
+- [P02-DATA-07-R16] Ensure an empty assignments dataset yields an understandable empty state instead of fabricated sample totals.
+- [P02-DATA-07-R17] Archive the assignments schema and sample rows in the data dictionary.
+- [P02-DATA-07-R18] Test that replaying the source import cannot unintentionally duplicate assignments business records.
+- [P02-DATA-07-F01-R01] Field assignments.assignment_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-07-F01-R02] Field assignments.assignment_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-07-F01-R03] Field assignments.assignment_id: make it non-null and unique as the primary key.
+- [P02-DATA-07-F01-R04] Field assignments.assignment_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-07-F01-R05] Field assignments.assignment_id: use stable source-to-key mapping across replays and regeneration.
+- [P02-DATA-07-F01-R06] Field assignments.assignment_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-07-F01-R07] Field assignments.assignment_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-07-F01-R08] Field assignments.assignment_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-07-F02-R01] Field assignments.step_instance_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-07-F02-R02] Field assignments.step_instance_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-07-F02-R03] Field assignments.step_instance_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-07-F02-R04] Field assignments.step_instance_id: validate its reference to step_instances.step_instance_id; explain deferred or quarantined unmatched records.
+- [P02-DATA-07-F02-R05] Field assignments.step_instance_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-07-F02-R06] Field assignments.step_instance_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-07-F02-R07] Field assignments.step_instance_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-07-F02-R08] Field assignments.step_instance_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-07-F03-R01] Field assignments.assignee_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-07-F03-R02] Field assignments.assignee_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-07-F03-R03] Field assignments.assignee_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-07-F03-R04] Field assignments.assignee_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-07-F03-R05] Field assignments.assignee_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-07-F03-R06] Field assignments.assignee_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-07-F03-R07] Field assignments.assignee_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-07-F03-R08] Field assignments.assignee_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-07-F04-R01] Field assignments.assigned_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P02-DATA-07-F04-R02] Field assignments.assigned_at: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-07-F04-R03] Field assignments.assigned_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-07-F04-R04] Field assignments.assigned_at: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-07-F04-R05] Field assignments.assigned_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-07-F04-R06] Field assignments.assigned_at: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-07-F04-R07] Field assignments.assigned_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-07-F04-R08] Field assignments.assigned_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-07-F05-R01] Field assignments.ended_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P02-DATA-07-F05-R02] Field assignments.ended_at: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-07-F05-R03] Field assignments.ended_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-07-F05-R04] Field assignments.ended_at: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-07-F05-R05] Field assignments.ended_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-07-F05-R06] Field assignments.ended_at: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-07-F05-R07] Field assignments.ended_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-07-F05-R08] Field assignments.ended_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P02-DATA-08: document_versions
+- [P02-DATA-08-R01] Create the document_versions entity with a documented grain and one stable primary key: document_version_id.
+- [P02-DATA-08-R02] The minimum business fields are document_version_id, case_id, document_type, content_hash, review_status; add technical metadata only with a documented purpose.
+- [P02-DATA-08-R03] Use the role of document_versions in the product workflow to define authoritative source ownership.
+- [P02-DATA-08-R04] Write migrations for document_versions; do not rely on ORM auto-create for the verified release.
+- [P02-DATA-08-R05] Create a small valid document_versions fixture linked to the independently calculated project example.
+- [P02-DATA-08-R06] Create an invalid document_versions fixture that demonstrates a real domain constraint.
+- [P02-DATA-08-R07] Choose explicit row-update semantics for document_versions: immutable event, versioned dimension or mutable operational record.
+- [P02-DATA-08-R08] Preserve the original source identifier for document_versions when a surrogate key is introduced.
+- [P02-DATA-08-R09] Document whether deletion of document_versions is prohibited, reversible or represented by a tombstone.
+- [P02-DATA-08-R10] Reconcile document_versions accepted, rejected and deduplicated row counts to the source batch.
+- [P02-DATA-08-R11] Expose only justified synthetic document_versions fields to the public site; remove internal runner metadata.
+- [P02-DATA-08-R12] Index document_versions according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P02-DATA-08-R13] Do not join document_versions at a different grain without an explicit aggregation or allocation rule.
+- [P02-DATA-08-R14] Associate the published document_versions snapshot with dataset hash and generator parameters.
+- [P02-DATA-08-R15] Define deterministic sorting and pagination for the document_versions evidence view.
+- [P02-DATA-08-R16] Ensure an empty document_versions dataset yields an understandable empty state instead of fabricated sample totals.
+- [P02-DATA-08-R17] Archive the document_versions schema and sample rows in the data dictionary.
+- [P02-DATA-08-R18] Test that replaying the source import cannot unintentionally duplicate document_versions business records.
+- [P02-DATA-08-F01-R01] Field document_versions.document_version_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-08-F01-R02] Field document_versions.document_version_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-08-F01-R03] Field document_versions.document_version_id: make it non-null and unique as the primary key.
+- [P02-DATA-08-F01-R04] Field document_versions.document_version_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-08-F01-R05] Field document_versions.document_version_id: use stable source-to-key mapping across replays and regeneration.
+- [P02-DATA-08-F01-R06] Field document_versions.document_version_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-08-F01-R07] Field document_versions.document_version_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-08-F01-R08] Field document_versions.document_version_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-08-F02-R01] Field document_versions.case_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-08-F02-R02] Field document_versions.case_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-08-F02-R03] Field document_versions.case_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-08-F02-R04] Field document_versions.case_id: validate its reference to cases.case_id; explain deferred or quarantined unmatched records.
+- [P02-DATA-08-F02-R05] Field document_versions.case_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-08-F02-R06] Field document_versions.case_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-08-F02-R07] Field document_versions.case_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-08-F02-R08] Field document_versions.case_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-08-F03-R01] Field document_versions.document_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-08-F03-R02] Field document_versions.document_type: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-08-F03-R03] Field document_versions.document_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-08-F03-R04] Field document_versions.document_type: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-08-F03-R05] Field document_versions.document_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-08-F03-R06] Field document_versions.document_type: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-08-F03-R07] Field document_versions.document_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-08-F03-R08] Field document_versions.document_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-08-F04-R01] Field document_versions.content_hash: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-08-F04-R02] Field document_versions.content_hash: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-08-F04-R03] Field document_versions.content_hash: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-08-F04-R04] Field document_versions.content_hash: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-08-F04-R05] Field document_versions.content_hash: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-08-F04-R06] Field document_versions.content_hash: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-08-F04-R07] Field document_versions.content_hash: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-08-F04-R08] Field document_versions.content_hash: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-08-F05-R01] Field document_versions.review_status: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-08-F05-R02] Field document_versions.review_status: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-08-F05-R03] Field document_versions.review_status: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-08-F05-R04] Field document_versions.review_status: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-08-F05-R05] Field document_versions.review_status: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-08-F05-R06] Field document_versions.review_status: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-08-F05-R07] Field document_versions.review_status: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-08-F05-R08] Field document_versions.review_status: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P02-DATA-09: approvals
+- [P02-DATA-09-R01] Create the approvals entity with a documented grain and one stable primary key: approval_id.
+- [P02-DATA-09-R02] The minimum business fields are approval_id, step_instance_id, reviewer_id, decision, decided_at; add technical metadata only with a documented purpose.
+- [P02-DATA-09-R03] Use the role of approvals in the product workflow to define authoritative source ownership.
+- [P02-DATA-09-R04] Write migrations for approvals; do not rely on ORM auto-create for the verified release.
+- [P02-DATA-09-R05] Create a small valid approvals fixture linked to the independently calculated project example.
+- [P02-DATA-09-R06] Create an invalid approvals fixture that demonstrates a real domain constraint.
+- [P02-DATA-09-R07] Choose explicit row-update semantics for approvals: immutable event, versioned dimension or mutable operational record.
+- [P02-DATA-09-R08] Preserve the original source identifier for approvals when a surrogate key is introduced.
+- [P02-DATA-09-R09] Document whether deletion of approvals is prohibited, reversible or represented by a tombstone.
+- [P02-DATA-09-R10] Reconcile approvals accepted, rejected and deduplicated row counts to the source batch.
+- [P02-DATA-09-R11] Expose only justified synthetic approvals fields to the public site; remove internal runner metadata.
+- [P02-DATA-09-R12] Index approvals according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P02-DATA-09-R13] Do not join approvals at a different grain without an explicit aggregation or allocation rule.
+- [P02-DATA-09-R14] Associate the published approvals snapshot with dataset hash and generator parameters.
+- [P02-DATA-09-R15] Define deterministic sorting and pagination for the approvals evidence view.
+- [P02-DATA-09-R16] Ensure an empty approvals dataset yields an understandable empty state instead of fabricated sample totals.
+- [P02-DATA-09-R17] Archive the approvals schema and sample rows in the data dictionary.
+- [P02-DATA-09-R18] Test that replaying the source import cannot unintentionally duplicate approvals business records.
+- [P02-DATA-09-F01-R01] Field approvals.approval_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-09-F01-R02] Field approvals.approval_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-09-F01-R03] Field approvals.approval_id: make it non-null and unique as the primary key.
+- [P02-DATA-09-F01-R04] Field approvals.approval_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-09-F01-R05] Field approvals.approval_id: use stable source-to-key mapping across replays and regeneration.
+- [P02-DATA-09-F01-R06] Field approvals.approval_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-09-F01-R07] Field approvals.approval_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-09-F01-R08] Field approvals.approval_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-09-F02-R01] Field approvals.step_instance_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-09-F02-R02] Field approvals.step_instance_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-09-F02-R03] Field approvals.step_instance_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-09-F02-R04] Field approvals.step_instance_id: validate its reference to step_instances.step_instance_id; explain deferred or quarantined unmatched records.
+- [P02-DATA-09-F02-R05] Field approvals.step_instance_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-09-F02-R06] Field approvals.step_instance_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-09-F02-R07] Field approvals.step_instance_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-09-F02-R08] Field approvals.step_instance_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-09-F03-R01] Field approvals.reviewer_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-09-F03-R02] Field approvals.reviewer_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-09-F03-R03] Field approvals.reviewer_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-09-F03-R04] Field approvals.reviewer_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-09-F03-R05] Field approvals.reviewer_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-09-F03-R06] Field approvals.reviewer_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-09-F03-R07] Field approvals.reviewer_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-09-F03-R08] Field approvals.reviewer_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-09-F04-R01] Field approvals.decision: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-09-F04-R02] Field approvals.decision: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-09-F04-R03] Field approvals.decision: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-09-F04-R04] Field approvals.decision: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-09-F04-R05] Field approvals.decision: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-09-F04-R06] Field approvals.decision: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-09-F04-R07] Field approvals.decision: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-09-F04-R08] Field approvals.decision: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-09-F05-R01] Field approvals.decided_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P02-DATA-09-F05-R02] Field approvals.decided_at: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-09-F05-R03] Field approvals.decided_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-09-F05-R04] Field approvals.decided_at: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-09-F05-R05] Field approvals.decided_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-09-F05-R06] Field approvals.decided_at: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-09-F05-R07] Field approvals.decided_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-09-F05-R08] Field approvals.decided_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P02-DATA-10: sla_rules
+- [P02-DATA-10-R01] Create the sla_rules entity with a documented grain and one stable primary key: sla_rule_id.
+- [P02-DATA-10-R02] The minimum business fields are sla_rule_id, workflow_version_id, business_minutes, pause_policy, calendar_id; add technical metadata only with a documented purpose.
+- [P02-DATA-10-R03] Use the role of sla_rules in the product workflow to define authoritative source ownership.
+- [P02-DATA-10-R04] Write migrations for sla_rules; do not rely on ORM auto-create for the verified release.
+- [P02-DATA-10-R05] Create a small valid sla_rules fixture linked to the independently calculated project example.
+- [P02-DATA-10-R06] Create an invalid sla_rules fixture that demonstrates a real domain constraint.
+- [P02-DATA-10-R07] Choose explicit row-update semantics for sla_rules: immutable event, versioned dimension or mutable operational record.
+- [P02-DATA-10-R08] Preserve the original source identifier for sla_rules when a surrogate key is introduced.
+- [P02-DATA-10-R09] Document whether deletion of sla_rules is prohibited, reversible or represented by a tombstone.
+- [P02-DATA-10-R10] Reconcile sla_rules accepted, rejected and deduplicated row counts to the source batch.
+- [P02-DATA-10-R11] Expose only justified synthetic sla_rules fields to the public site; remove internal runner metadata.
+- [P02-DATA-10-R12] Index sla_rules according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P02-DATA-10-R13] Do not join sla_rules at a different grain without an explicit aggregation or allocation rule.
+- [P02-DATA-10-R14] Associate the published sla_rules snapshot with dataset hash and generator parameters.
+- [P02-DATA-10-R15] Define deterministic sorting and pagination for the sla_rules evidence view.
+- [P02-DATA-10-R16] Ensure an empty sla_rules dataset yields an understandable empty state instead of fabricated sample totals.
+- [P02-DATA-10-R17] Archive the sla_rules schema and sample rows in the data dictionary.
+- [P02-DATA-10-R18] Test that replaying the source import cannot unintentionally duplicate sla_rules business records.
+- [P02-DATA-10-F01-R01] Field sla_rules.sla_rule_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-10-F01-R02] Field sla_rules.sla_rule_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-10-F01-R03] Field sla_rules.sla_rule_id: make it non-null and unique as the primary key.
+- [P02-DATA-10-F01-R04] Field sla_rules.sla_rule_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-10-F01-R05] Field sla_rules.sla_rule_id: use stable source-to-key mapping across replays and regeneration.
+- [P02-DATA-10-F01-R06] Field sla_rules.sla_rule_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-10-F01-R07] Field sla_rules.sla_rule_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-10-F01-R08] Field sla_rules.sla_rule_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-10-F02-R01] Field sla_rules.workflow_version_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-10-F02-R02] Field sla_rules.workflow_version_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-10-F02-R03] Field sla_rules.workflow_version_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-10-F02-R04] Field sla_rules.workflow_version_id: validate its reference to workflow_versions.workflow_version_id; explain deferred or quarantined unmatched records.
+- [P02-DATA-10-F02-R05] Field sla_rules.workflow_version_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-10-F02-R06] Field sla_rules.workflow_version_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-10-F02-R07] Field sla_rules.workflow_version_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-10-F02-R08] Field sla_rules.workflow_version_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-10-F03-R01] Field sla_rules.business_minutes: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P02-DATA-10-F03-R02] Field sla_rules.business_minutes: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-10-F03-R03] Field sla_rules.business_minutes: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-10-F03-R04] Field sla_rules.business_minutes: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-10-F03-R05] Field sla_rules.business_minutes: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-10-F03-R06] Field sla_rules.business_minutes: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-10-F03-R07] Field sla_rules.business_minutes: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-10-F03-R08] Field sla_rules.business_minutes: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-10-F04-R01] Field sla_rules.pause_policy: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-10-F04-R02] Field sla_rules.pause_policy: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-10-F04-R03] Field sla_rules.pause_policy: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-10-F04-R04] Field sla_rules.pause_policy: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-10-F04-R05] Field sla_rules.pause_policy: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-10-F04-R06] Field sla_rules.pause_policy: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-10-F04-R07] Field sla_rules.pause_policy: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-10-F04-R08] Field sla_rules.pause_policy: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-10-F05-R01] Field sla_rules.calendar_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-10-F05-R02] Field sla_rules.calendar_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-10-F05-R03] Field sla_rules.calendar_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-10-F05-R04] Field sla_rules.calendar_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-10-F05-R05] Field sla_rules.calendar_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-10-F05-R06] Field sla_rules.calendar_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-10-F05-R07] Field sla_rules.calendar_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-10-F05-R08] Field sla_rules.calendar_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P02-DATA-11: calendar_intervals
+- [P02-DATA-11-R01] Create the calendar_intervals entity with a documented grain and one stable primary key: calendar_interval_id.
+- [P02-DATA-11-R02] The minimum business fields are calendar_interval_id, calendar_id, starts_at, ends_at, timezone; add technical metadata only with a documented purpose.
+- [P02-DATA-11-R03] Use the role of calendar_intervals in the product workflow to define authoritative source ownership.
+- [P02-DATA-11-R04] Write migrations for calendar_intervals; do not rely on ORM auto-create for the verified release.
+- [P02-DATA-11-R05] Create a small valid calendar_intervals fixture linked to the independently calculated project example.
+- [P02-DATA-11-R06] Create an invalid calendar_intervals fixture that demonstrates a real domain constraint.
+- [P02-DATA-11-R07] Choose explicit row-update semantics for calendar_intervals: immutable event, versioned dimension or mutable operational record.
+- [P02-DATA-11-R08] Preserve the original source identifier for calendar_intervals when a surrogate key is introduced.
+- [P02-DATA-11-R09] Document whether deletion of calendar_intervals is prohibited, reversible or represented by a tombstone.
+- [P02-DATA-11-R10] Reconcile calendar_intervals accepted, rejected and deduplicated row counts to the source batch.
+- [P02-DATA-11-R11] Expose only justified synthetic calendar_intervals fields to the public site; remove internal runner metadata.
+- [P02-DATA-11-R12] Index calendar_intervals according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P02-DATA-11-R13] Do not join calendar_intervals at a different grain without an explicit aggregation or allocation rule.
+- [P02-DATA-11-R14] Associate the published calendar_intervals snapshot with dataset hash and generator parameters.
+- [P02-DATA-11-R15] Define deterministic sorting and pagination for the calendar_intervals evidence view.
+- [P02-DATA-11-R16] Ensure an empty calendar_intervals dataset yields an understandable empty state instead of fabricated sample totals.
+- [P02-DATA-11-R17] Archive the calendar_intervals schema and sample rows in the data dictionary.
+- [P02-DATA-11-R18] Test that replaying the source import cannot unintentionally duplicate calendar_intervals business records.
+- [P02-DATA-11-F01-R01] Field calendar_intervals.calendar_interval_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-11-F01-R02] Field calendar_intervals.calendar_interval_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-11-F01-R03] Field calendar_intervals.calendar_interval_id: make it non-null and unique as the primary key.
+- [P02-DATA-11-F01-R04] Field calendar_intervals.calendar_interval_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-11-F01-R05] Field calendar_intervals.calendar_interval_id: use stable source-to-key mapping across replays and regeneration.
+- [P02-DATA-11-F01-R06] Field calendar_intervals.calendar_interval_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-11-F01-R07] Field calendar_intervals.calendar_interval_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-11-F01-R08] Field calendar_intervals.calendar_interval_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-11-F02-R01] Field calendar_intervals.calendar_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-11-F02-R02] Field calendar_intervals.calendar_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-11-F02-R03] Field calendar_intervals.calendar_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-11-F02-R04] Field calendar_intervals.calendar_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-11-F02-R05] Field calendar_intervals.calendar_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-11-F02-R06] Field calendar_intervals.calendar_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-11-F02-R07] Field calendar_intervals.calendar_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-11-F02-R08] Field calendar_intervals.calendar_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-11-F03-R01] Field calendar_intervals.starts_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P02-DATA-11-F03-R02] Field calendar_intervals.starts_at: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-11-F03-R03] Field calendar_intervals.starts_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-11-F03-R04] Field calendar_intervals.starts_at: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-11-F03-R05] Field calendar_intervals.starts_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-11-F03-R06] Field calendar_intervals.starts_at: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-11-F03-R07] Field calendar_intervals.starts_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-11-F03-R08] Field calendar_intervals.starts_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-11-F04-R01] Field calendar_intervals.ends_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P02-DATA-11-F04-R02] Field calendar_intervals.ends_at: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-11-F04-R03] Field calendar_intervals.ends_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-11-F04-R04] Field calendar_intervals.ends_at: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-11-F04-R05] Field calendar_intervals.ends_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-11-F04-R06] Field calendar_intervals.ends_at: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-11-F04-R07] Field calendar_intervals.ends_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-11-F04-R08] Field calendar_intervals.ends_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-11-F05-R01] Field calendar_intervals.timezone: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-11-F05-R02] Field calendar_intervals.timezone: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-11-F05-R03] Field calendar_intervals.timezone: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-11-F05-R04] Field calendar_intervals.timezone: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-11-F05-R05] Field calendar_intervals.timezone: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-11-F05-R06] Field calendar_intervals.timezone: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-11-F05-R07] Field calendar_intervals.timezone: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-11-F05-R08] Field calendar_intervals.timezone: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P02-DATA-12: case_events
+- [P02-DATA-12-R01] Create the case_events entity with a documented grain and one stable primary key: event_id.
+- [P02-DATA-12-R02] The minimum business fields are event_id, case_id, event_type, actor_id, occurred_at; add technical metadata only with a documented purpose.
+- [P02-DATA-12-R03] Use the role of case_events in the product workflow to define authoritative source ownership.
+- [P02-DATA-12-R04] Write migrations for case_events; do not rely on ORM auto-create for the verified release.
+- [P02-DATA-12-R05] Create a small valid case_events fixture linked to the independently calculated project example.
+- [P02-DATA-12-R06] Create an invalid case_events fixture that demonstrates a real domain constraint.
+- [P02-DATA-12-R07] Choose explicit row-update semantics for case_events: immutable event, versioned dimension or mutable operational record.
+- [P02-DATA-12-R08] Preserve the original source identifier for case_events when a surrogate key is introduced.
+- [P02-DATA-12-R09] Document whether deletion of case_events is prohibited, reversible or represented by a tombstone.
+- [P02-DATA-12-R10] Reconcile case_events accepted, rejected and deduplicated row counts to the source batch.
+- [P02-DATA-12-R11] Expose only justified synthetic case_events fields to the public site; remove internal runner metadata.
+- [P02-DATA-12-R12] Index case_events according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P02-DATA-12-R13] Do not join case_events at a different grain without an explicit aggregation or allocation rule.
+- [P02-DATA-12-R14] Associate the published case_events snapshot with dataset hash and generator parameters.
+- [P02-DATA-12-R15] Define deterministic sorting and pagination for the case_events evidence view.
+- [P02-DATA-12-R16] Ensure an empty case_events dataset yields an understandable empty state instead of fabricated sample totals.
+- [P02-DATA-12-R17] Archive the case_events schema and sample rows in the data dictionary.
+- [P02-DATA-12-R18] Test that replaying the source import cannot unintentionally duplicate case_events business records.
+- [P02-DATA-12-F01-R01] Field case_events.event_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-12-F01-R02] Field case_events.event_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-12-F01-R03] Field case_events.event_id: make it non-null and unique as the primary key.
+- [P02-DATA-12-F01-R04] Field case_events.event_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-12-F01-R05] Field case_events.event_id: use stable source-to-key mapping across replays and regeneration.
+- [P02-DATA-12-F01-R06] Field case_events.event_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-12-F01-R07] Field case_events.event_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-12-F01-R08] Field case_events.event_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-12-F02-R01] Field case_events.case_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-12-F02-R02] Field case_events.case_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-12-F02-R03] Field case_events.case_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-12-F02-R04] Field case_events.case_id: validate its reference to cases.case_id; explain deferred or quarantined unmatched records.
+- [P02-DATA-12-F02-R05] Field case_events.case_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-12-F02-R06] Field case_events.case_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-12-F02-R07] Field case_events.case_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-12-F02-R08] Field case_events.case_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-12-F03-R01] Field case_events.event_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-12-F03-R02] Field case_events.event_type: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-12-F03-R03] Field case_events.event_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-12-F03-R04] Field case_events.event_type: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-12-F03-R05] Field case_events.event_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-12-F03-R06] Field case_events.event_type: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-12-F03-R07] Field case_events.event_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-12-F03-R08] Field case_events.event_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-12-F04-R01] Field case_events.actor_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P02-DATA-12-F04-R02] Field case_events.actor_id: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-12-F04-R03] Field case_events.actor_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-12-F04-R04] Field case_events.actor_id: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-12-F04-R05] Field case_events.actor_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-12-F04-R06] Field case_events.actor_id: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-12-F04-R07] Field case_events.actor_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-12-F04-R08] Field case_events.actor_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P02-DATA-12-F05-R01] Field case_events.occurred_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P02-DATA-12-F05-R02] Field case_events.occurred_at: define its business meaning in the dictionary and use the same label in exports.
+- [P02-DATA-12-F05-R03] Field case_events.occurred_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P02-DATA-12-F05-R04] Field case_events.occurred_at: define the allowed domain and reject structurally invalid values before publication.
+- [P02-DATA-12-F05-R05] Field case_events.occurred_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P02-DATA-12-F05-R06] Field case_events.occurred_at: create a round-trip test across source, validated model and exported representation.
+- [P02-DATA-12-F05-R07] Field case_events.occurred_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P02-DATA-12-F05-R08] Field case_events.occurred_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+
+## 04. Business metric contracts
+
+### P02-MET-01: Calendar cycle time
+- [P02-MET-01-R01] Business metric: Calendar cycle time.
+- [P02-MET-01-R02] Authoritative calculation rule: completed_at - opened_at.
+- [P02-MET-01-R03] Output unit: hours.
+- [P02-MET-01-R04] Important boundary: Completed cases only.
+- [P02-MET-01-R05] Explain how Calendar cycle time informs the primary decision: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-MET-01-R06] Define the input grain for Calendar cycle time; never infer it from the chart grouping.
+- [P02-MET-01-R07] Name each source field and transformation contributing to Calendar cycle time.
+- [P02-MET-01-R08] Define the reporting population for Calendar cycle time before applying user-selected filters.
+- [P02-MET-01-R09] Name the timestamp and timezone used by Calendar cycle time.
+- [P02-MET-01-R10] Use a documented half-open interval for Calendar cycle time time filtering.
+- [P02-MET-01-R11] List excluded statuses, invalid records and immature observations for Calendar cycle time.
+- [P02-MET-01-R12] Display excluded-record counts when they materially change Calendar cycle time.
+- [P02-MET-01-R13] Define Calendar cycle time behavior for an empty eligible population.
+- [P02-MET-01-R14] Define Calendar cycle time behavior when its denominator is zero or its required baseline is absent.
+- [P02-MET-01-R15] Do not replace unknown Calendar cycle time values with zero without a documented business rule.
+- [P02-MET-01-R16] For Calendar cycle time, aggregate underlying values correctly before applying ratios or summary functions.
+- [P02-MET-01-R17] Preserve original precision for Calendar cycle time; round only at the stated calculation or presentation step.
+- [P02-MET-01-R18] Create a small manually calculated Calendar cycle time fixture independent of the main implementation.
+- [P02-MET-01-R19] Implement an independent SQL/spreadsheet/reference check for the important Calendar cycle time result.
+- [P02-MET-01-R20] Keep the browser Calendar cycle time calculation consistent with the authoritative contract and verified fixture.
+- [P02-MET-01-R21] Show Calendar cycle time definition, active scope and unit through a visible explanation affordance.
+- [P02-MET-01-R22] Allow drillthrough from Calendar cycle time into contributing evidence or a transparent aggregate explanation.
+- [P02-MET-01-R23] Export Calendar cycle time with contract version, filters, dataset hash and generated timestamp.
+- [P02-MET-01-R24] When Calendar cycle time is a scenario estimate, visibly separate it from observed historical results.
+- [P02-MET-01-R25] Include a Calendar cycle time regression assertion for one project-specific edge case.
+- [P02-MET-01-R26] If Calendar cycle time is compared across periods, use comparable eligibility and disclose differences.
+- [P02-MET-01-R27] Keep Calendar cycle time historical revisions traceable when late data changes published results.
+- [P02-MET-01-R28] Record a versioned decision if implementation requires changing Calendar cycle time semantics.
+- [P02-MET-01-R29] Have a reviewer challenge whether Calendar cycle time could be misleading despite being arithmetically correct.
+- [P02-MET-01-R30] Mark Calendar cycle time verified only after the known-answer and presentation checks actually run.
+### P02-MET-02: Business cycle time
+- [P02-MET-02-R01] Business metric: Business cycle time.
+- [P02-MET-02-R02] Authoritative calculation rule: sum(calendar overlap for open intervals).
+- [P02-MET-02-R03] Output unit: business hours.
+- [P02-MET-02-R04] Important boundary: Use assigned calendar.
+- [P02-MET-02-R05] Explain how Business cycle time informs the primary decision: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-MET-02-R06] Define the input grain for Business cycle time; never infer it from the chart grouping.
+- [P02-MET-02-R07] Name each source field and transformation contributing to Business cycle time.
+- [P02-MET-02-R08] Define the reporting population for Business cycle time before applying user-selected filters.
+- [P02-MET-02-R09] Name the timestamp and timezone used by Business cycle time.
+- [P02-MET-02-R10] Use a documented half-open interval for Business cycle time time filtering.
+- [P02-MET-02-R11] List excluded statuses, invalid records and immature observations for Business cycle time.
+- [P02-MET-02-R12] Display excluded-record counts when they materially change Business cycle time.
+- [P02-MET-02-R13] Define Business cycle time behavior for an empty eligible population.
+- [P02-MET-02-R14] Define Business cycle time behavior when its denominator is zero or its required baseline is absent.
+- [P02-MET-02-R15] Do not replace unknown Business cycle time values with zero without a documented business rule.
+- [P02-MET-02-R16] For Business cycle time, aggregate underlying values correctly before applying ratios or summary functions.
+- [P02-MET-02-R17] Preserve original precision for Business cycle time; round only at the stated calculation or presentation step.
+- [P02-MET-02-R18] Create a small manually calculated Business cycle time fixture independent of the main implementation.
+- [P02-MET-02-R19] Implement an independent SQL/spreadsheet/reference check for the important Business cycle time result.
+- [P02-MET-02-R20] Keep the browser Business cycle time calculation consistent with the authoritative contract and verified fixture.
+- [P02-MET-02-R21] Show Business cycle time definition, active scope and unit through a visible explanation affordance.
+- [P02-MET-02-R22] Allow drillthrough from Business cycle time into contributing evidence or a transparent aggregate explanation.
+- [P02-MET-02-R23] Export Business cycle time with contract version, filters, dataset hash and generated timestamp.
+- [P02-MET-02-R24] When Business cycle time is a scenario estimate, visibly separate it from observed historical results.
+- [P02-MET-02-R25] Include a Business cycle time regression assertion for one project-specific edge case.
+- [P02-MET-02-R26] If Business cycle time is compared across periods, use comparable eligibility and disclose differences.
+- [P02-MET-02-R27] Keep Business cycle time historical revisions traceable when late data changes published results.
+- [P02-MET-02-R28] Record a versioned decision if implementation requires changing Business cycle time semantics.
+- [P02-MET-02-R29] Have a reviewer challenge whether Business cycle time could be misleading despite being arithmetically correct.
+- [P02-MET-02-R30] Mark Business cycle time verified only after the known-answer and presentation checks actually run.
+### P02-MET-03: Paused time
+- [P02-MET-03-R01] Business metric: Paused time.
+- [P02-MET-03-R02] Authoritative calculation rule: sum(eligible waiting intervals).
+- [P02-MET-03-R03] Output unit: hours.
+- [P02-MET-03-R04] Important boundary: Pause reasons versioned.
+- [P02-MET-03-R05] Explain how Paused time informs the primary decision: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-MET-03-R06] Define the input grain for Paused time; never infer it from the chart grouping.
+- [P02-MET-03-R07] Name each source field and transformation contributing to Paused time.
+- [P02-MET-03-R08] Define the reporting population for Paused time before applying user-selected filters.
+- [P02-MET-03-R09] Name the timestamp and timezone used by Paused time.
+- [P02-MET-03-R10] Use a documented half-open interval for Paused time time filtering.
+- [P02-MET-03-R11] List excluded statuses, invalid records and immature observations for Paused time.
+- [P02-MET-03-R12] Display excluded-record counts when they materially change Paused time.
+- [P02-MET-03-R13] Define Paused time behavior for an empty eligible population.
+- [P02-MET-03-R14] Define Paused time behavior when its denominator is zero or its required baseline is absent.
+- [P02-MET-03-R15] Do not replace unknown Paused time values with zero without a documented business rule.
+- [P02-MET-03-R16] For Paused time, aggregate underlying values correctly before applying ratios or summary functions.
+- [P02-MET-03-R17] Preserve original precision for Paused time; round only at the stated calculation or presentation step.
+- [P02-MET-03-R18] Create a small manually calculated Paused time fixture independent of the main implementation.
+- [P02-MET-03-R19] Implement an independent SQL/spreadsheet/reference check for the important Paused time result.
+- [P02-MET-03-R20] Keep the browser Paused time calculation consistent with the authoritative contract and verified fixture.
+- [P02-MET-03-R21] Show Paused time definition, active scope and unit through a visible explanation affordance.
+- [P02-MET-03-R22] Allow drillthrough from Paused time into contributing evidence or a transparent aggregate explanation.
+- [P02-MET-03-R23] Export Paused time with contract version, filters, dataset hash and generated timestamp.
+- [P02-MET-03-R24] When Paused time is a scenario estimate, visibly separate it from observed historical results.
+- [P02-MET-03-R25] Include a Paused time regression assertion for one project-specific edge case.
+- [P02-MET-03-R26] If Paused time is compared across periods, use comparable eligibility and disclose differences.
+- [P02-MET-03-R27] Keep Paused time historical revisions traceable when late data changes published results.
+- [P02-MET-03-R28] Record a versioned decision if implementation requires changing Paused time semantics.
+- [P02-MET-03-R29] Have a reviewer challenge whether Paused time could be misleading despite being arithmetically correct.
+- [P02-MET-03-R30] Mark Paused time verified only after the known-answer and presentation checks actually run.
+### P02-MET-04: Active elapsed time
+- [P02-MET-04-R01] Business metric: Active elapsed time.
+- [P02-MET-04-R02] Authoritative calculation rule: business cycle time - eligible paused business time.
+- [P02-MET-04-R03] Output unit: hours.
+- [P02-MET-04-R04] Important boundary: No negative durations.
+- [P02-MET-04-R05] Explain how Active elapsed time informs the primary decision: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-MET-04-R06] Define the input grain for Active elapsed time; never infer it from the chart grouping.
+- [P02-MET-04-R07] Name each source field and transformation contributing to Active elapsed time.
+- [P02-MET-04-R08] Define the reporting population for Active elapsed time before applying user-selected filters.
+- [P02-MET-04-R09] Name the timestamp and timezone used by Active elapsed time.
+- [P02-MET-04-R10] Use a documented half-open interval for Active elapsed time time filtering.
+- [P02-MET-04-R11] List excluded statuses, invalid records and immature observations for Active elapsed time.
+- [P02-MET-04-R12] Display excluded-record counts when they materially change Active elapsed time.
+- [P02-MET-04-R13] Define Active elapsed time behavior for an empty eligible population.
+- [P02-MET-04-R14] Define Active elapsed time behavior when its denominator is zero or its required baseline is absent.
+- [P02-MET-04-R15] Do not replace unknown Active elapsed time values with zero without a documented business rule.
+- [P02-MET-04-R16] For Active elapsed time, aggregate underlying values correctly before applying ratios or summary functions.
+- [P02-MET-04-R17] Preserve original precision for Active elapsed time; round only at the stated calculation or presentation step.
+- [P02-MET-04-R18] Create a small manually calculated Active elapsed time fixture independent of the main implementation.
+- [P02-MET-04-R19] Implement an independent SQL/spreadsheet/reference check for the important Active elapsed time result.
+- [P02-MET-04-R20] Keep the browser Active elapsed time calculation consistent with the authoritative contract and verified fixture.
+- [P02-MET-04-R21] Show Active elapsed time definition, active scope and unit through a visible explanation affordance.
+- [P02-MET-04-R22] Allow drillthrough from Active elapsed time into contributing evidence or a transparent aggregate explanation.
+- [P02-MET-04-R23] Export Active elapsed time with contract version, filters, dataset hash and generated timestamp.
+- [P02-MET-04-R24] When Active elapsed time is a scenario estimate, visibly separate it from observed historical results.
+- [P02-MET-04-R25] Include a Active elapsed time regression assertion for one project-specific edge case.
+- [P02-MET-04-R26] If Active elapsed time is compared across periods, use comparable eligibility and disclose differences.
+- [P02-MET-04-R27] Keep Active elapsed time historical revisions traceable when late data changes published results.
+- [P02-MET-04-R28] Record a versioned decision if implementation requires changing Active elapsed time semantics.
+- [P02-MET-04-R29] Have a reviewer challenge whether Active elapsed time could be misleading despite being arithmetically correct.
+- [P02-MET-04-R30] Mark Active elapsed time verified only after the known-answer and presentation checks actually run.
+### P02-MET-05: SLA attainment
+- [P02-MET-05-R01] Business metric: SLA attainment.
+- [P02-MET-05-R02] Authoritative calculation rule: completed eligible cases within SLA / completed eligible cases.
+- [P02-MET-05-R03] Output unit: percent.
+- [P02-MET-05-R04] Important boundary: Open cases shown separately.
+- [P02-MET-05-R05] Explain how SLA attainment informs the primary decision: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-MET-05-R06] Define the input grain for SLA attainment; never infer it from the chart grouping.
+- [P02-MET-05-R07] Name each source field and transformation contributing to SLA attainment.
+- [P02-MET-05-R08] Define the reporting population for SLA attainment before applying user-selected filters.
+- [P02-MET-05-R09] Name the timestamp and timezone used by SLA attainment.
+- [P02-MET-05-R10] Use a documented half-open interval for SLA attainment time filtering.
+- [P02-MET-05-R11] List excluded statuses, invalid records and immature observations for SLA attainment.
+- [P02-MET-05-R12] Display excluded-record counts when they materially change SLA attainment.
+- [P02-MET-05-R13] Define SLA attainment behavior for an empty eligible population.
+- [P02-MET-05-R14] Define SLA attainment behavior when its denominator is zero or its required baseline is absent.
+- [P02-MET-05-R15] Do not replace unknown SLA attainment values with zero without a documented business rule.
+- [P02-MET-05-R16] For SLA attainment, aggregate underlying values correctly before applying ratios or summary functions.
+- [P02-MET-05-R17] Preserve original precision for SLA attainment; round only at the stated calculation or presentation step.
+- [P02-MET-05-R18] Create a small manually calculated SLA attainment fixture independent of the main implementation.
+- [P02-MET-05-R19] Implement an independent SQL/spreadsheet/reference check for the important SLA attainment result.
+- [P02-MET-05-R20] Keep the browser SLA attainment calculation consistent with the authoritative contract and verified fixture.
+- [P02-MET-05-R21] Show SLA attainment definition, active scope and unit through a visible explanation affordance.
+- [P02-MET-05-R22] Allow drillthrough from SLA attainment into contributing evidence or a transparent aggregate explanation.
+- [P02-MET-05-R23] Export SLA attainment with contract version, filters, dataset hash and generated timestamp.
+- [P02-MET-05-R24] When SLA attainment is a scenario estimate, visibly separate it from observed historical results.
+- [P02-MET-05-R25] Include a SLA attainment regression assertion for one project-specific edge case.
+- [P02-MET-05-R26] If SLA attainment is compared across periods, use comparable eligibility and disclose differences.
+- [P02-MET-05-R27] Keep SLA attainment historical revisions traceable when late data changes published results.
+- [P02-MET-05-R28] Record a versioned decision if implementation requires changing SLA attainment semantics.
+- [P02-MET-05-R29] Have a reviewer challenge whether SLA attainment could be misleading despite being arithmetically correct.
+- [P02-MET-05-R30] Mark SLA attainment verified only after the known-answer and presentation checks actually run.
+### P02-MET-06: Open backlog
+- [P02-MET-06-R01] Business metric: Open backlog.
+- [P02-MET-06-R02] Authoritative calculation rule: count(open cases at cutoff).
+- [P02-MET-06-R03] Output unit: cases.
+- [P02-MET-06-R04] Important boundary: As-of reconstruction.
+- [P02-MET-06-R05] Explain how Open backlog informs the primary decision: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-MET-06-R06] Define the input grain for Open backlog; never infer it from the chart grouping.
+- [P02-MET-06-R07] Name each source field and transformation contributing to Open backlog.
+- [P02-MET-06-R08] Define the reporting population for Open backlog before applying user-selected filters.
+- [P02-MET-06-R09] Name the timestamp and timezone used by Open backlog.
+- [P02-MET-06-R10] Use a documented half-open interval for Open backlog time filtering.
+- [P02-MET-06-R11] List excluded statuses, invalid records and immature observations for Open backlog.
+- [P02-MET-06-R12] Display excluded-record counts when they materially change Open backlog.
+- [P02-MET-06-R13] Define Open backlog behavior for an empty eligible population.
+- [P02-MET-06-R14] Define Open backlog behavior when its denominator is zero or its required baseline is absent.
+- [P02-MET-06-R15] Do not replace unknown Open backlog values with zero without a documented business rule.
+- [P02-MET-06-R16] For Open backlog, aggregate underlying values correctly before applying ratios or summary functions.
+- [P02-MET-06-R17] Preserve original precision for Open backlog; round only at the stated calculation or presentation step.
+- [P02-MET-06-R18] Create a small manually calculated Open backlog fixture independent of the main implementation.
+- [P02-MET-06-R19] Implement an independent SQL/spreadsheet/reference check for the important Open backlog result.
+- [P02-MET-06-R20] Keep the browser Open backlog calculation consistent with the authoritative contract and verified fixture.
+- [P02-MET-06-R21] Show Open backlog definition, active scope and unit through a visible explanation affordance.
+- [P02-MET-06-R22] Allow drillthrough from Open backlog into contributing evidence or a transparent aggregate explanation.
+- [P02-MET-06-R23] Export Open backlog with contract version, filters, dataset hash and generated timestamp.
+- [P02-MET-06-R24] When Open backlog is a scenario estimate, visibly separate it from observed historical results.
+- [P02-MET-06-R25] Include a Open backlog regression assertion for one project-specific edge case.
+- [P02-MET-06-R26] If Open backlog is compared across periods, use comparable eligibility and disclose differences.
+- [P02-MET-06-R27] Keep Open backlog historical revisions traceable when late data changes published results.
+- [P02-MET-06-R28] Record a versioned decision if implementation requires changing Open backlog semantics.
+- [P02-MET-06-R29] Have a reviewer challenge whether Open backlog could be misleading despite being arithmetically correct.
+- [P02-MET-06-R30] Mark Open backlog verified only after the known-answer and presentation checks actually run.
+### P02-MET-07: Rework rate
+- [P02-MET-07-R01] Business metric: Rework rate.
+- [P02-MET-07-R02] Authoritative calculation rule: cases with rejected submission / submitted cases.
+- [P02-MET-07-R03] Output unit: percent.
+- [P02-MET-07-R04] Important boundary: Case-level denominator.
+- [P02-MET-07-R05] Explain how Rework rate informs the primary decision: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-MET-07-R06] Define the input grain for Rework rate; never infer it from the chart grouping.
+- [P02-MET-07-R07] Name each source field and transformation contributing to Rework rate.
+- [P02-MET-07-R08] Define the reporting population for Rework rate before applying user-selected filters.
+- [P02-MET-07-R09] Name the timestamp and timezone used by Rework rate.
+- [P02-MET-07-R10] Use a documented half-open interval for Rework rate time filtering.
+- [P02-MET-07-R11] List excluded statuses, invalid records and immature observations for Rework rate.
+- [P02-MET-07-R12] Display excluded-record counts when they materially change Rework rate.
+- [P02-MET-07-R13] Define Rework rate behavior for an empty eligible population.
+- [P02-MET-07-R14] Define Rework rate behavior when its denominator is zero or its required baseline is absent.
+- [P02-MET-07-R15] Do not replace unknown Rework rate values with zero without a documented business rule.
+- [P02-MET-07-R16] For Rework rate, aggregate underlying values correctly before applying ratios or summary functions.
+- [P02-MET-07-R17] Preserve original precision for Rework rate; round only at the stated calculation or presentation step.
+- [P02-MET-07-R18] Create a small manually calculated Rework rate fixture independent of the main implementation.
+- [P02-MET-07-R19] Implement an independent SQL/spreadsheet/reference check for the important Rework rate result.
+- [P02-MET-07-R20] Keep the browser Rework rate calculation consistent with the authoritative contract and verified fixture.
+- [P02-MET-07-R21] Show Rework rate definition, active scope and unit through a visible explanation affordance.
+- [P02-MET-07-R22] Allow drillthrough from Rework rate into contributing evidence or a transparent aggregate explanation.
+- [P02-MET-07-R23] Export Rework rate with contract version, filters, dataset hash and generated timestamp.
+- [P02-MET-07-R24] When Rework rate is a scenario estimate, visibly separate it from observed historical results.
+- [P02-MET-07-R25] Include a Rework rate regression assertion for one project-specific edge case.
+- [P02-MET-07-R26] If Rework rate is compared across periods, use comparable eligibility and disclose differences.
+- [P02-MET-07-R27] Keep Rework rate historical revisions traceable when late data changes published results.
+- [P02-MET-07-R28] Record a versioned decision if implementation requires changing Rework rate semantics.
+- [P02-MET-07-R29] Have a reviewer challenge whether Rework rate could be misleading despite being arithmetically correct.
+- [P02-MET-07-R30] Mark Rework rate verified only after the known-answer and presentation checks actually run.
+### P02-MET-08: Handoff count
+- [P02-MET-08-R01] Business metric: Handoff count.
+- [P02-MET-08-R02] Authoritative calculation rule: count(assignee changes).
+- [P02-MET-08-R03] Output unit: handoffs.
+- [P02-MET-08-R04] Important boundary: Exclude duplicate assignment replay.
+- [P02-MET-08-R05] Explain how Handoff count informs the primary decision: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-MET-08-R06] Define the input grain for Handoff count; never infer it from the chart grouping.
+- [P02-MET-08-R07] Name each source field and transformation contributing to Handoff count.
+- [P02-MET-08-R08] Define the reporting population for Handoff count before applying user-selected filters.
+- [P02-MET-08-R09] Name the timestamp and timezone used by Handoff count.
+- [P02-MET-08-R10] Use a documented half-open interval for Handoff count time filtering.
+- [P02-MET-08-R11] List excluded statuses, invalid records and immature observations for Handoff count.
+- [P02-MET-08-R12] Display excluded-record counts when they materially change Handoff count.
+- [P02-MET-08-R13] Define Handoff count behavior for an empty eligible population.
+- [P02-MET-08-R14] Define Handoff count behavior when its denominator is zero or its required baseline is absent.
+- [P02-MET-08-R15] Do not replace unknown Handoff count values with zero without a documented business rule.
+- [P02-MET-08-R16] For Handoff count, aggregate underlying values correctly before applying ratios or summary functions.
+- [P02-MET-08-R17] Preserve original precision for Handoff count; round only at the stated calculation or presentation step.
+- [P02-MET-08-R18] Create a small manually calculated Handoff count fixture independent of the main implementation.
+- [P02-MET-08-R19] Implement an independent SQL/spreadsheet/reference check for the important Handoff count result.
+- [P02-MET-08-R20] Keep the browser Handoff count calculation consistent with the authoritative contract and verified fixture.
+- [P02-MET-08-R21] Show Handoff count definition, active scope and unit through a visible explanation affordance.
+- [P02-MET-08-R22] Allow drillthrough from Handoff count into contributing evidence or a transparent aggregate explanation.
+- [P02-MET-08-R23] Export Handoff count with contract version, filters, dataset hash and generated timestamp.
+- [P02-MET-08-R24] When Handoff count is a scenario estimate, visibly separate it from observed historical results.
+- [P02-MET-08-R25] Include a Handoff count regression assertion for one project-specific edge case.
+- [P02-MET-08-R26] If Handoff count is compared across periods, use comparable eligibility and disclose differences.
+- [P02-MET-08-R27] Keep Handoff count historical revisions traceable when late data changes published results.
+- [P02-MET-08-R28] Record a versioned decision if implementation requires changing Handoff count semantics.
+- [P02-MET-08-R29] Have a reviewer challenge whether Handoff count could be misleading despite being arithmetically correct.
+- [P02-MET-08-R30] Mark Handoff count verified only after the known-answer and presentation checks actually run.
+### P02-MET-09: Step waiting time
+- [P02-MET-09-R01] Business metric: Step waiting time.
+- [P02-MET-09-R02] Authoritative calculation rule: first work timestamp - ready timestamp.
+- [P02-MET-09-R03] Output unit: hours.
+- [P02-MET-09-R04] Important boundary: Use actual readiness after prerequisites.
+- [P02-MET-09-R05] Explain how Step waiting time informs the primary decision: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-MET-09-R06] Define the input grain for Step waiting time; never infer it from the chart grouping.
+- [P02-MET-09-R07] Name each source field and transformation contributing to Step waiting time.
+- [P02-MET-09-R08] Define the reporting population for Step waiting time before applying user-selected filters.
+- [P02-MET-09-R09] Name the timestamp and timezone used by Step waiting time.
+- [P02-MET-09-R10] Use a documented half-open interval for Step waiting time time filtering.
+- [P02-MET-09-R11] List excluded statuses, invalid records and immature observations for Step waiting time.
+- [P02-MET-09-R12] Display excluded-record counts when they materially change Step waiting time.
+- [P02-MET-09-R13] Define Step waiting time behavior for an empty eligible population.
+- [P02-MET-09-R14] Define Step waiting time behavior when its denominator is zero or its required baseline is absent.
+- [P02-MET-09-R15] Do not replace unknown Step waiting time values with zero without a documented business rule.
+- [P02-MET-09-R16] For Step waiting time, aggregate underlying values correctly before applying ratios or summary functions.
+- [P02-MET-09-R17] Preserve original precision for Step waiting time; round only at the stated calculation or presentation step.
+- [P02-MET-09-R18] Create a small manually calculated Step waiting time fixture independent of the main implementation.
+- [P02-MET-09-R19] Implement an independent SQL/spreadsheet/reference check for the important Step waiting time result.
+- [P02-MET-09-R20] Keep the browser Step waiting time calculation consistent with the authoritative contract and verified fixture.
+- [P02-MET-09-R21] Show Step waiting time definition, active scope and unit through a visible explanation affordance.
+- [P02-MET-09-R22] Allow drillthrough from Step waiting time into contributing evidence or a transparent aggregate explanation.
+- [P02-MET-09-R23] Export Step waiting time with contract version, filters, dataset hash and generated timestamp.
+- [P02-MET-09-R24] When Step waiting time is a scenario estimate, visibly separate it from observed historical results.
+- [P02-MET-09-R25] Include a Step waiting time regression assertion for one project-specific edge case.
+- [P02-MET-09-R26] If Step waiting time is compared across periods, use comparable eligibility and disclose differences.
+- [P02-MET-09-R27] Keep Step waiting time historical revisions traceable when late data changes published results.
+- [P02-MET-09-R28] Record a versioned decision if implementation requires changing Step waiting time semantics.
+- [P02-MET-09-R29] Have a reviewer challenge whether Step waiting time could be misleading despite being arithmetically correct.
+- [P02-MET-09-R30] Mark Step waiting time verified only after the known-answer and presentation checks actually run.
+### P02-MET-10: First pass approval
+- [P02-MET-10-R01] Business metric: First pass approval.
+- [P02-MET-10-R02] Authoritative calculation rule: approved first submissions / first submissions reviewed.
+- [P02-MET-10-R03] Output unit: percent.
+- [P02-MET-10-R04] Important boundary: Pending reviews excluded.
+- [P02-MET-10-R05] Explain how First pass approval informs the primary decision: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-MET-10-R06] Define the input grain for First pass approval; never infer it from the chart grouping.
+- [P02-MET-10-R07] Name each source field and transformation contributing to First pass approval.
+- [P02-MET-10-R08] Define the reporting population for First pass approval before applying user-selected filters.
+- [P02-MET-10-R09] Name the timestamp and timezone used by First pass approval.
+- [P02-MET-10-R10] Use a documented half-open interval for First pass approval time filtering.
+- [P02-MET-10-R11] List excluded statuses, invalid records and immature observations for First pass approval.
+- [P02-MET-10-R12] Display excluded-record counts when they materially change First pass approval.
+- [P02-MET-10-R13] Define First pass approval behavior for an empty eligible population.
+- [P02-MET-10-R14] Define First pass approval behavior when its denominator is zero or its required baseline is absent.
+- [P02-MET-10-R15] Do not replace unknown First pass approval values with zero without a documented business rule.
+- [P02-MET-10-R16] For First pass approval, aggregate underlying values correctly before applying ratios or summary functions.
+- [P02-MET-10-R17] Preserve original precision for First pass approval; round only at the stated calculation or presentation step.
+- [P02-MET-10-R18] Create a small manually calculated First pass approval fixture independent of the main implementation.
+- [P02-MET-10-R19] Implement an independent SQL/spreadsheet/reference check for the important First pass approval result.
+- [P02-MET-10-R20] Keep the browser First pass approval calculation consistent with the authoritative contract and verified fixture.
+- [P02-MET-10-R21] Show First pass approval definition, active scope and unit through a visible explanation affordance.
+- [P02-MET-10-R22] Allow drillthrough from First pass approval into contributing evidence or a transparent aggregate explanation.
+- [P02-MET-10-R23] Export First pass approval with contract version, filters, dataset hash and generated timestamp.
+- [P02-MET-10-R24] When First pass approval is a scenario estimate, visibly separate it from observed historical results.
+- [P02-MET-10-R25] Include a First pass approval regression assertion for one project-specific edge case.
+- [P02-MET-10-R26] If First pass approval is compared across periods, use comparable eligibility and disclose differences.
+- [P02-MET-10-R27] Keep First pass approval historical revisions traceable when late data changes published results.
+- [P02-MET-10-R28] Record a versioned decision if implementation requires changing First pass approval semantics.
+- [P02-MET-10-R29] Have a reviewer challenge whether First pass approval could be misleading despite being arithmetically correct.
+- [P02-MET-10-R30] Mark First pass approval verified only after the known-answer and presentation checks actually run.
+### P02-MET-11: Document completeness
+- [P02-MET-11-R01] Business metric: Document completeness.
+- [P02-MET-11-R02] Authoritative calculation rule: required accepted types present / required types.
+- [P02-MET-11-R03] Output unit: percent.
+- [P02-MET-11-R04] Important boundary: Workflow-version rules.
+- [P02-MET-11-R05] Explain how Document completeness informs the primary decision: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-MET-11-R06] Define the input grain for Document completeness; never infer it from the chart grouping.
+- [P02-MET-11-R07] Name each source field and transformation contributing to Document completeness.
+- [P02-MET-11-R08] Define the reporting population for Document completeness before applying user-selected filters.
+- [P02-MET-11-R09] Name the timestamp and timezone used by Document completeness.
+- [P02-MET-11-R10] Use a documented half-open interval for Document completeness time filtering.
+- [P02-MET-11-R11] List excluded statuses, invalid records and immature observations for Document completeness.
+- [P02-MET-11-R12] Display excluded-record counts when they materially change Document completeness.
+- [P02-MET-11-R13] Define Document completeness behavior for an empty eligible population.
+- [P02-MET-11-R14] Define Document completeness behavior when its denominator is zero or its required baseline is absent.
+- [P02-MET-11-R15] Do not replace unknown Document completeness values with zero without a documented business rule.
+- [P02-MET-11-R16] For Document completeness, aggregate underlying values correctly before applying ratios or summary functions.
+- [P02-MET-11-R17] Preserve original precision for Document completeness; round only at the stated calculation or presentation step.
+- [P02-MET-11-R18] Create a small manually calculated Document completeness fixture independent of the main implementation.
+- [P02-MET-11-R19] Implement an independent SQL/spreadsheet/reference check for the important Document completeness result.
+- [P02-MET-11-R20] Keep the browser Document completeness calculation consistent with the authoritative contract and verified fixture.
+- [P02-MET-11-R21] Show Document completeness definition, active scope and unit through a visible explanation affordance.
+- [P02-MET-11-R22] Allow drillthrough from Document completeness into contributing evidence or a transparent aggregate explanation.
+- [P02-MET-11-R23] Export Document completeness with contract version, filters, dataset hash and generated timestamp.
+- [P02-MET-11-R24] When Document completeness is a scenario estimate, visibly separate it from observed historical results.
+- [P02-MET-11-R25] Include a Document completeness regression assertion for one project-specific edge case.
+- [P02-MET-11-R26] If Document completeness is compared across periods, use comparable eligibility and disclose differences.
+- [P02-MET-11-R27] Keep Document completeness historical revisions traceable when late data changes published results.
+- [P02-MET-11-R28] Record a versioned decision if implementation requires changing Document completeness semantics.
+- [P02-MET-11-R29] Have a reviewer challenge whether Document completeness could be misleading despite being arithmetically correct.
+- [P02-MET-11-R30] Mark Document completeness verified only after the known-answer and presentation checks actually run.
+### P02-MET-12: Simulated capacity gain
+- [P02-MET-12-R01] Business metric: Simulated capacity gain.
+- [P02-MET-12-R02] Authoritative calculation rule: proposed modeled throughput - baseline modeled throughput.
+- [P02-MET-12-R03] Output unit: cases/period.
+- [P02-MET-12-R04] Important boundary: Present direction and assumptions, never realized savings.
+- [P02-MET-12-R05] Explain how Simulated capacity gain informs the primary decision: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-MET-12-R06] Define the input grain for Simulated capacity gain; never infer it from the chart grouping.
+- [P02-MET-12-R07] Name each source field and transformation contributing to Simulated capacity gain.
+- [P02-MET-12-R08] Define the reporting population for Simulated capacity gain before applying user-selected filters.
+- [P02-MET-12-R09] Name the timestamp and timezone used by Simulated capacity gain.
+- [P02-MET-12-R10] Use a documented half-open interval for Simulated capacity gain time filtering.
+- [P02-MET-12-R11] List excluded statuses, invalid records and immature observations for Simulated capacity gain.
+- [P02-MET-12-R12] Display excluded-record counts when they materially change Simulated capacity gain.
+- [P02-MET-12-R13] Define Simulated capacity gain behavior for an empty eligible population.
+- [P02-MET-12-R14] Define Simulated capacity gain behavior when its denominator is zero or its required baseline is absent.
+- [P02-MET-12-R15] Do not replace unknown Simulated capacity gain values with zero without a documented business rule.
+- [P02-MET-12-R16] For Simulated capacity gain, aggregate underlying values correctly before applying ratios or summary functions.
+- [P02-MET-12-R17] Preserve original precision for Simulated capacity gain; round only at the stated calculation or presentation step.
+- [P02-MET-12-R18] Create a small manually calculated Simulated capacity gain fixture independent of the main implementation.
+- [P02-MET-12-R19] Implement an independent SQL/spreadsheet/reference check for the important Simulated capacity gain result.
+- [P02-MET-12-R20] Keep the browser Simulated capacity gain calculation consistent with the authoritative contract and verified fixture.
+- [P02-MET-12-R21] Show Simulated capacity gain definition, active scope and unit through a visible explanation affordance.
+- [P02-MET-12-R22] Allow drillthrough from Simulated capacity gain into contributing evidence or a transparent aggregate explanation.
+- [P02-MET-12-R23] Export Simulated capacity gain with contract version, filters, dataset hash and generated timestamp.
+- [P02-MET-12-R24] When Simulated capacity gain is a scenario estimate, visibly separate it from observed historical results.
+- [P02-MET-12-R25] Include a Simulated capacity gain regression assertion for one project-specific edge case.
+- [P02-MET-12-R26] If Simulated capacity gain is compared across periods, use comparable eligibility and disclose differences.
+- [P02-MET-12-R27] Keep Simulated capacity gain historical revisions traceable when late data changes published results.
+- [P02-MET-12-R28] Record a versioned decision if implementation requires changing Simulated capacity gain semantics.
+- [P02-MET-12-R29] Have a reviewer challenge whether Simulated capacity gain could be misleading despite being arithmetically correct.
+- [P02-MET-12-R30] Mark Simulated capacity gain verified only after the known-answer and presentation checks actually run.
+
+## 05. End-to-end workflow and transition contracts
+
+### P02-FLOW-01: Create case
+- [P02-FLOW-01-R01] Workflow capability: Create case.
+- [P02-FLOW-01-R02] Logical transition: Absent -> open.
+- [P02-FLOW-01-R03] Primary invariant: Bind immutable workflow version.
+- [P02-FLOW-01-R04] Define the user goal and permitted actor for Create case.
+- [P02-FLOW-01-R05] Define required inputs and source versions for Create case.
+- [P02-FLOW-01-R06] Check preconditions before Create case; reject violations with a specific user-facing explanation.
+- [P02-FLOW-01-R07] Document the authoritative output of Create case and the next valid action.
+- [P02-FLOW-01-R08] Implement Create case in a domain/service layer rather than hiding it in a UI callback.
+- [P02-FLOW-01-R09] Define the transaction boundary for Create case when state changes.
+- [P02-FLOW-01-R10] Preserve an audit event for material Create case decisions without recording secrets.
+- [P02-FLOW-01-R11] Define how Create case behaves when the same request or input is repeated.
+- [P02-FLOW-01-R12] Define how Create case behaves when its input dataset or record version is stale.
+- [P02-FLOW-01-R13] Prevent conflicting Create case updates with version checks or another documented mechanism.
+- [P02-FLOW-01-R14] Keep original evidence immutable when Create case creates a correction or new scenario.
+- [P02-FLOW-01-R15] Test the successful Create case path using deterministic fixtures.
+- [P02-FLOW-01-R16] Test one rejected Create case path against the stated invariant.
+- [P02-FLOW-01-R17] Test interrupted Create case execution and prove safe recovery or explicit noncommit.
+- [P02-FLOW-01-R18] Test authorized versus unauthorized Create case behavior where real backend roles apply.
+- [P02-FLOW-01-R19] In the static website, label Create case mutations as browser-memory simulation.
+- [P02-FLOW-01-R20] Never make Create case appear server-persistent in the GitHub Pages demo.
+- [P02-FLOW-01-R21] Expose progress, success and actionable failure feedback for Create case.
+- [P02-FLOW-01-R22] Keep keyboard focus coherent after Create case updates or opens a dialog.
+- [P02-FLOW-01-R23] Include Create case in the UAT script and trace its acceptance criteria to tests.
+- [P02-FLOW-01-R24] Include actual Create case verification results in the evidence ledger.
+- [P02-FLOW-01-R25] Use the resulting Create case evidence in the case study only with its execution mode disclosed.
+- [P02-FLOW-01-R26] Have the coordinator approve the integrated Create case diff after specialist review.
+### P02-FLOW-02: Submit document
+- [P02-FLOW-02-R01] Workflow capability: Submit document.
+- [P02-FLOW-02-R02] Logical transition: Missing -> submitted.
+- [P02-FLOW-02-R03] Primary invariant: Use synthetic placeholder only.
+- [P02-FLOW-02-R04] Define the user goal and permitted actor for Submit document.
+- [P02-FLOW-02-R05] Define required inputs and source versions for Submit document.
+- [P02-FLOW-02-R06] Check preconditions before Submit document; reject violations with a specific user-facing explanation.
+- [P02-FLOW-02-R07] Document the authoritative output of Submit document and the next valid action.
+- [P02-FLOW-02-R08] Implement Submit document in a domain/service layer rather than hiding it in a UI callback.
+- [P02-FLOW-02-R09] Define the transaction boundary for Submit document when state changes.
+- [P02-FLOW-02-R10] Preserve an audit event for material Submit document decisions without recording secrets.
+- [P02-FLOW-02-R11] Define how Submit document behaves when the same request or input is repeated.
+- [P02-FLOW-02-R12] Define how Submit document behaves when its input dataset or record version is stale.
+- [P02-FLOW-02-R13] Prevent conflicting Submit document updates with version checks or another documented mechanism.
+- [P02-FLOW-02-R14] Keep original evidence immutable when Submit document creates a correction or new scenario.
+- [P02-FLOW-02-R15] Test the successful Submit document path using deterministic fixtures.
+- [P02-FLOW-02-R16] Test one rejected Submit document path against the stated invariant.
+- [P02-FLOW-02-R17] Test interrupted Submit document execution and prove safe recovery or explicit noncommit.
+- [P02-FLOW-02-R18] Test authorized versus unauthorized Submit document behavior where real backend roles apply.
+- [P02-FLOW-02-R19] In the static website, label Submit document mutations as browser-memory simulation.
+- [P02-FLOW-02-R20] Never make Submit document appear server-persistent in the GitHub Pages demo.
+- [P02-FLOW-02-R21] Expose progress, success and actionable failure feedback for Submit document.
+- [P02-FLOW-02-R22] Keep keyboard focus coherent after Submit document updates or opens a dialog.
+- [P02-FLOW-02-R23] Include Submit document in the UAT script and trace its acceptance criteria to tests.
+- [P02-FLOW-02-R24] Include actual Submit document verification results in the evidence ledger.
+- [P02-FLOW-02-R25] Use the resulting Submit document evidence in the case study only with its execution mode disclosed.
+- [P02-FLOW-02-R26] Have the coordinator approve the integrated Submit document diff after specialist review.
+### P02-FLOW-03: Reject submission
+- [P02-FLOW-03-R01] Workflow capability: Reject submission.
+- [P02-FLOW-03-R02] Logical transition: Submitted -> changes_requested.
+- [P02-FLOW-03-R03] Primary invariant: Record reviewer reason.
+- [P02-FLOW-03-R04] Define the user goal and permitted actor for Reject submission.
+- [P02-FLOW-03-R05] Define required inputs and source versions for Reject submission.
+- [P02-FLOW-03-R06] Check preconditions before Reject submission; reject violations with a specific user-facing explanation.
+- [P02-FLOW-03-R07] Document the authoritative output of Reject submission and the next valid action.
+- [P02-FLOW-03-R08] Implement Reject submission in a domain/service layer rather than hiding it in a UI callback.
+- [P02-FLOW-03-R09] Define the transaction boundary for Reject submission when state changes.
+- [P02-FLOW-03-R10] Preserve an audit event for material Reject submission decisions without recording secrets.
+- [P02-FLOW-03-R11] Define how Reject submission behaves when the same request or input is repeated.
+- [P02-FLOW-03-R12] Define how Reject submission behaves when its input dataset or record version is stale.
+- [P02-FLOW-03-R13] Prevent conflicting Reject submission updates with version checks or another documented mechanism.
+- [P02-FLOW-03-R14] Keep original evidence immutable when Reject submission creates a correction or new scenario.
+- [P02-FLOW-03-R15] Test the successful Reject submission path using deterministic fixtures.
+- [P02-FLOW-03-R16] Test one rejected Reject submission path against the stated invariant.
+- [P02-FLOW-03-R17] Test interrupted Reject submission execution and prove safe recovery or explicit noncommit.
+- [P02-FLOW-03-R18] Test authorized versus unauthorized Reject submission behavior where real backend roles apply.
+- [P02-FLOW-03-R19] In the static website, label Reject submission mutations as browser-memory simulation.
+- [P02-FLOW-03-R20] Never make Reject submission appear server-persistent in the GitHub Pages demo.
+- [P02-FLOW-03-R21] Expose progress, success and actionable failure feedback for Reject submission.
+- [P02-FLOW-03-R22] Keep keyboard focus coherent after Reject submission updates or opens a dialog.
+- [P02-FLOW-03-R23] Include Reject submission in the UAT script and trace its acceptance criteria to tests.
+- [P02-FLOW-03-R24] Include actual Reject submission verification results in the evidence ledger.
+- [P02-FLOW-03-R25] Use the resulting Reject submission evidence in the case study only with its execution mode disclosed.
+- [P02-FLOW-03-R26] Have the coordinator approve the integrated Reject submission diff after specialist review.
+### P02-FLOW-04: Resubmit document
+- [P02-FLOW-04-R01] Workflow capability: Resubmit document.
+- [P02-FLOW-04-R02] Logical transition: Changes_requested -> submitted.
+- [P02-FLOW-04-R03] Primary invariant: New document version preserves original.
+- [P02-FLOW-04-R04] Define the user goal and permitted actor for Resubmit document.
+- [P02-FLOW-04-R05] Define required inputs and source versions for Resubmit document.
+- [P02-FLOW-04-R06] Check preconditions before Resubmit document; reject violations with a specific user-facing explanation.
+- [P02-FLOW-04-R07] Document the authoritative output of Resubmit document and the next valid action.
+- [P02-FLOW-04-R08] Implement Resubmit document in a domain/service layer rather than hiding it in a UI callback.
+- [P02-FLOW-04-R09] Define the transaction boundary for Resubmit document when state changes.
+- [P02-FLOW-04-R10] Preserve an audit event for material Resubmit document decisions without recording secrets.
+- [P02-FLOW-04-R11] Define how Resubmit document behaves when the same request or input is repeated.
+- [P02-FLOW-04-R12] Define how Resubmit document behaves when its input dataset or record version is stale.
+- [P02-FLOW-04-R13] Prevent conflicting Resubmit document updates with version checks or another documented mechanism.
+- [P02-FLOW-04-R14] Keep original evidence immutable when Resubmit document creates a correction or new scenario.
+- [P02-FLOW-04-R15] Test the successful Resubmit document path using deterministic fixtures.
+- [P02-FLOW-04-R16] Test one rejected Resubmit document path against the stated invariant.
+- [P02-FLOW-04-R17] Test interrupted Resubmit document execution and prove safe recovery or explicit noncommit.
+- [P02-FLOW-04-R18] Test authorized versus unauthorized Resubmit document behavior where real backend roles apply.
+- [P02-FLOW-04-R19] In the static website, label Resubmit document mutations as browser-memory simulation.
+- [P02-FLOW-04-R20] Never make Resubmit document appear server-persistent in the GitHub Pages demo.
+- [P02-FLOW-04-R21] Expose progress, success and actionable failure feedback for Resubmit document.
+- [P02-FLOW-04-R22] Keep keyboard focus coherent after Resubmit document updates or opens a dialog.
+- [P02-FLOW-04-R23] Include Resubmit document in the UAT script and trace its acceptance criteria to tests.
+- [P02-FLOW-04-R24] Include actual Resubmit document verification results in the evidence ledger.
+- [P02-FLOW-04-R25] Use the resulting Resubmit document evidence in the case study only with its execution mode disclosed.
+- [P02-FLOW-04-R26] Have the coordinator approve the integrated Resubmit document diff after specialist review.
+### P02-FLOW-05: Unlock dependent step
+- [P02-FLOW-05-R01] Workflow capability: Unlock dependent step.
+- [P02-FLOW-05-R02] Logical transition: Blocked -> ready.
+- [P02-FLOW-05-R03] Primary invariant: All mandatory prerequisites accepted.
+- [P02-FLOW-05-R04] Define the user goal and permitted actor for Unlock dependent step.
+- [P02-FLOW-05-R05] Define required inputs and source versions for Unlock dependent step.
+- [P02-FLOW-05-R06] Check preconditions before Unlock dependent step; reject violations with a specific user-facing explanation.
+- [P02-FLOW-05-R07] Document the authoritative output of Unlock dependent step and the next valid action.
+- [P02-FLOW-05-R08] Implement Unlock dependent step in a domain/service layer rather than hiding it in a UI callback.
+- [P02-FLOW-05-R09] Define the transaction boundary for Unlock dependent step when state changes.
+- [P02-FLOW-05-R10] Preserve an audit event for material Unlock dependent step decisions without recording secrets.
+- [P02-FLOW-05-R11] Define how Unlock dependent step behaves when the same request or input is repeated.
+- [P02-FLOW-05-R12] Define how Unlock dependent step behaves when its input dataset or record version is stale.
+- [P02-FLOW-05-R13] Prevent conflicting Unlock dependent step updates with version checks or another documented mechanism.
+- [P02-FLOW-05-R14] Keep original evidence immutable when Unlock dependent step creates a correction or new scenario.
+- [P02-FLOW-05-R15] Test the successful Unlock dependent step path using deterministic fixtures.
+- [P02-FLOW-05-R16] Test one rejected Unlock dependent step path against the stated invariant.
+- [P02-FLOW-05-R17] Test interrupted Unlock dependent step execution and prove safe recovery or explicit noncommit.
+- [P02-FLOW-05-R18] Test authorized versus unauthorized Unlock dependent step behavior where real backend roles apply.
+- [P02-FLOW-05-R19] In the static website, label Unlock dependent step mutations as browser-memory simulation.
+- [P02-FLOW-05-R20] Never make Unlock dependent step appear server-persistent in the GitHub Pages demo.
+- [P02-FLOW-05-R21] Expose progress, success and actionable failure feedback for Unlock dependent step.
+- [P02-FLOW-05-R22] Keep keyboard focus coherent after Unlock dependent step updates or opens a dialog.
+- [P02-FLOW-05-R23] Include Unlock dependent step in the UAT script and trace its acceptance criteria to tests.
+- [P02-FLOW-05-R24] Include actual Unlock dependent step verification results in the evidence ledger.
+- [P02-FLOW-05-R25] Use the resulting Unlock dependent step evidence in the case study only with its execution mode disclosed.
+- [P02-FLOW-05-R26] Have the coordinator approve the integrated Unlock dependent step diff after specialist review.
+### P02-FLOW-06: Approve step
+- [P02-FLOW-06-R01] Workflow capability: Approve step.
+- [P02-FLOW-06-R02] Logical transition: In_review -> approved.
+- [P02-FLOW-06-R03] Primary invariant: Authorized independent reviewer.
+- [P02-FLOW-06-R04] Define the user goal and permitted actor for Approve step.
+- [P02-FLOW-06-R05] Define required inputs and source versions for Approve step.
+- [P02-FLOW-06-R06] Check preconditions before Approve step; reject violations with a specific user-facing explanation.
+- [P02-FLOW-06-R07] Document the authoritative output of Approve step and the next valid action.
+- [P02-FLOW-06-R08] Implement Approve step in a domain/service layer rather than hiding it in a UI callback.
+- [P02-FLOW-06-R09] Define the transaction boundary for Approve step when state changes.
+- [P02-FLOW-06-R10] Preserve an audit event for material Approve step decisions without recording secrets.
+- [P02-FLOW-06-R11] Define how Approve step behaves when the same request or input is repeated.
+- [P02-FLOW-06-R12] Define how Approve step behaves when its input dataset or record version is stale.
+- [P02-FLOW-06-R13] Prevent conflicting Approve step updates with version checks or another documented mechanism.
+- [P02-FLOW-06-R14] Keep original evidence immutable when Approve step creates a correction or new scenario.
+- [P02-FLOW-06-R15] Test the successful Approve step path using deterministic fixtures.
+- [P02-FLOW-06-R16] Test one rejected Approve step path against the stated invariant.
+- [P02-FLOW-06-R17] Test interrupted Approve step execution and prove safe recovery or explicit noncommit.
+- [P02-FLOW-06-R18] Test authorized versus unauthorized Approve step behavior where real backend roles apply.
+- [P02-FLOW-06-R19] In the static website, label Approve step mutations as browser-memory simulation.
+- [P02-FLOW-06-R20] Never make Approve step appear server-persistent in the GitHub Pages demo.
+- [P02-FLOW-06-R21] Expose progress, success and actionable failure feedback for Approve step.
+- [P02-FLOW-06-R22] Keep keyboard focus coherent after Approve step updates or opens a dialog.
+- [P02-FLOW-06-R23] Include Approve step in the UAT script and trace its acceptance criteria to tests.
+- [P02-FLOW-06-R24] Include actual Approve step verification results in the evidence ledger.
+- [P02-FLOW-06-R25] Use the resulting Approve step evidence in the case study only with its execution mode disclosed.
+- [P02-FLOW-06-R26] Have the coordinator approve the integrated Approve step diff after specialist review.
+### P02-FLOW-07: Reassign work
+- [P02-FLOW-07-R01] Workflow capability: Reassign work.
+- [P02-FLOW-07-R02] Logical transition: Assigned -> reassigned.
+- [P02-FLOW-07-R03] Primary invariant: Close prior assignment interval.
+- [P02-FLOW-07-R04] Define the user goal and permitted actor for Reassign work.
+- [P02-FLOW-07-R05] Define required inputs and source versions for Reassign work.
+- [P02-FLOW-07-R06] Check preconditions before Reassign work; reject violations with a specific user-facing explanation.
+- [P02-FLOW-07-R07] Document the authoritative output of Reassign work and the next valid action.
+- [P02-FLOW-07-R08] Implement Reassign work in a domain/service layer rather than hiding it in a UI callback.
+- [P02-FLOW-07-R09] Define the transaction boundary for Reassign work when state changes.
+- [P02-FLOW-07-R10] Preserve an audit event for material Reassign work decisions without recording secrets.
+- [P02-FLOW-07-R11] Define how Reassign work behaves when the same request or input is repeated.
+- [P02-FLOW-07-R12] Define how Reassign work behaves when its input dataset or record version is stale.
+- [P02-FLOW-07-R13] Prevent conflicting Reassign work updates with version checks or another documented mechanism.
+- [P02-FLOW-07-R14] Keep original evidence immutable when Reassign work creates a correction or new scenario.
+- [P02-FLOW-07-R15] Test the successful Reassign work path using deterministic fixtures.
+- [P02-FLOW-07-R16] Test one rejected Reassign work path against the stated invariant.
+- [P02-FLOW-07-R17] Test interrupted Reassign work execution and prove safe recovery or explicit noncommit.
+- [P02-FLOW-07-R18] Test authorized versus unauthorized Reassign work behavior where real backend roles apply.
+- [P02-FLOW-07-R19] In the static website, label Reassign work mutations as browser-memory simulation.
+- [P02-FLOW-07-R20] Never make Reassign work appear server-persistent in the GitHub Pages demo.
+- [P02-FLOW-07-R21] Expose progress, success and actionable failure feedback for Reassign work.
+- [P02-FLOW-07-R22] Keep keyboard focus coherent after Reassign work updates or opens a dialog.
+- [P02-FLOW-07-R23] Include Reassign work in the UAT script and trace its acceptance criteria to tests.
+- [P02-FLOW-07-R24] Include actual Reassign work verification results in the evidence ledger.
+- [P02-FLOW-07-R25] Use the resulting Reassign work evidence in the case study only with its execution mode disclosed.
+- [P02-FLOW-07-R26] Have the coordinator approve the integrated Reassign work diff after specialist review.
+### P02-FLOW-08: Pause SLA
+- [P02-FLOW-08-R01] Workflow capability: Pause SLA.
+- [P02-FLOW-08-R02] Logical transition: Active -> waiting_external.
+- [P02-FLOW-08-R03] Primary invariant: Only configured pause reason.
+- [P02-FLOW-08-R04] Define the user goal and permitted actor for Pause SLA.
+- [P02-FLOW-08-R05] Define required inputs and source versions for Pause SLA.
+- [P02-FLOW-08-R06] Check preconditions before Pause SLA; reject violations with a specific user-facing explanation.
+- [P02-FLOW-08-R07] Document the authoritative output of Pause SLA and the next valid action.
+- [P02-FLOW-08-R08] Implement Pause SLA in a domain/service layer rather than hiding it in a UI callback.
+- [P02-FLOW-08-R09] Define the transaction boundary for Pause SLA when state changes.
+- [P02-FLOW-08-R10] Preserve an audit event for material Pause SLA decisions without recording secrets.
+- [P02-FLOW-08-R11] Define how Pause SLA behaves when the same request or input is repeated.
+- [P02-FLOW-08-R12] Define how Pause SLA behaves when its input dataset or record version is stale.
+- [P02-FLOW-08-R13] Prevent conflicting Pause SLA updates with version checks or another documented mechanism.
+- [P02-FLOW-08-R14] Keep original evidence immutable when Pause SLA creates a correction or new scenario.
+- [P02-FLOW-08-R15] Test the successful Pause SLA path using deterministic fixtures.
+- [P02-FLOW-08-R16] Test one rejected Pause SLA path against the stated invariant.
+- [P02-FLOW-08-R17] Test interrupted Pause SLA execution and prove safe recovery or explicit noncommit.
+- [P02-FLOW-08-R18] Test authorized versus unauthorized Pause SLA behavior where real backend roles apply.
+- [P02-FLOW-08-R19] In the static website, label Pause SLA mutations as browser-memory simulation.
+- [P02-FLOW-08-R20] Never make Pause SLA appear server-persistent in the GitHub Pages demo.
+- [P02-FLOW-08-R21] Expose progress, success and actionable failure feedback for Pause SLA.
+- [P02-FLOW-08-R22] Keep keyboard focus coherent after Pause SLA updates or opens a dialog.
+- [P02-FLOW-08-R23] Include Pause SLA in the UAT script and trace its acceptance criteria to tests.
+- [P02-FLOW-08-R24] Include actual Pause SLA verification results in the evidence ledger.
+- [P02-FLOW-08-R25] Use the resulting Pause SLA evidence in the case study only with its execution mode disclosed.
+- [P02-FLOW-08-R26] Have the coordinator approve the integrated Pause SLA diff after specialist review.
+### P02-FLOW-09: Complete case
+- [P02-FLOW-09-R01] Workflow capability: Complete case.
+- [P02-FLOW-09-R02] Logical transition: Open -> complete.
+- [P02-FLOW-09-R03] Primary invariant: All required steps and documents satisfied.
+- [P02-FLOW-09-R04] Define the user goal and permitted actor for Complete case.
+- [P02-FLOW-09-R05] Define required inputs and source versions for Complete case.
+- [P02-FLOW-09-R06] Check preconditions before Complete case; reject violations with a specific user-facing explanation.
+- [P02-FLOW-09-R07] Document the authoritative output of Complete case and the next valid action.
+- [P02-FLOW-09-R08] Implement Complete case in a domain/service layer rather than hiding it in a UI callback.
+- [P02-FLOW-09-R09] Define the transaction boundary for Complete case when state changes.
+- [P02-FLOW-09-R10] Preserve an audit event for material Complete case decisions without recording secrets.
+- [P02-FLOW-09-R11] Define how Complete case behaves when the same request or input is repeated.
+- [P02-FLOW-09-R12] Define how Complete case behaves when its input dataset or record version is stale.
+- [P02-FLOW-09-R13] Prevent conflicting Complete case updates with version checks or another documented mechanism.
+- [P02-FLOW-09-R14] Keep original evidence immutable when Complete case creates a correction or new scenario.
+- [P02-FLOW-09-R15] Test the successful Complete case path using deterministic fixtures.
+- [P02-FLOW-09-R16] Test one rejected Complete case path against the stated invariant.
+- [P02-FLOW-09-R17] Test interrupted Complete case execution and prove safe recovery or explicit noncommit.
+- [P02-FLOW-09-R18] Test authorized versus unauthorized Complete case behavior where real backend roles apply.
+- [P02-FLOW-09-R19] In the static website, label Complete case mutations as browser-memory simulation.
+- [P02-FLOW-09-R20] Never make Complete case appear server-persistent in the GitHub Pages demo.
+- [P02-FLOW-09-R21] Expose progress, success and actionable failure feedback for Complete case.
+- [P02-FLOW-09-R22] Keep keyboard focus coherent after Complete case updates or opens a dialog.
+- [P02-FLOW-09-R23] Include Complete case in the UAT script and trace its acceptance criteria to tests.
+- [P02-FLOW-09-R24] Include actual Complete case verification results in the evidence ledger.
+- [P02-FLOW-09-R25] Use the resulting Complete case evidence in the case study only with its execution mode disclosed.
+- [P02-FLOW-09-R26] Have the coordinator approve the integrated Complete case diff after specialist review.
+### P02-FLOW-10: Migrate workflow
+- [P02-FLOW-10-R01] Workflow capability: Migrate workflow.
+- [P02-FLOW-10-R02] Logical transition: Old version -> explicitly migrated.
+- [P02-FLOW-10-R03] Primary invariant: Audit mapping and unresolved steps.
+- [P02-FLOW-10-R04] Define the user goal and permitted actor for Migrate workflow.
+- [P02-FLOW-10-R05] Define required inputs and source versions for Migrate workflow.
+- [P02-FLOW-10-R06] Check preconditions before Migrate workflow; reject violations with a specific user-facing explanation.
+- [P02-FLOW-10-R07] Document the authoritative output of Migrate workflow and the next valid action.
+- [P02-FLOW-10-R08] Implement Migrate workflow in a domain/service layer rather than hiding it in a UI callback.
+- [P02-FLOW-10-R09] Define the transaction boundary for Migrate workflow when state changes.
+- [P02-FLOW-10-R10] Preserve an audit event for material Migrate workflow decisions without recording secrets.
+- [P02-FLOW-10-R11] Define how Migrate workflow behaves when the same request or input is repeated.
+- [P02-FLOW-10-R12] Define how Migrate workflow behaves when its input dataset or record version is stale.
+- [P02-FLOW-10-R13] Prevent conflicting Migrate workflow updates with version checks or another documented mechanism.
+- [P02-FLOW-10-R14] Keep original evidence immutable when Migrate workflow creates a correction or new scenario.
+- [P02-FLOW-10-R15] Test the successful Migrate workflow path using deterministic fixtures.
+- [P02-FLOW-10-R16] Test one rejected Migrate workflow path against the stated invariant.
+- [P02-FLOW-10-R17] Test interrupted Migrate workflow execution and prove safe recovery or explicit noncommit.
+- [P02-FLOW-10-R18] Test authorized versus unauthorized Migrate workflow behavior where real backend roles apply.
+- [P02-FLOW-10-R19] In the static website, label Migrate workflow mutations as browser-memory simulation.
+- [P02-FLOW-10-R20] Never make Migrate workflow appear server-persistent in the GitHub Pages demo.
+- [P02-FLOW-10-R21] Expose progress, success and actionable failure feedback for Migrate workflow.
+- [P02-FLOW-10-R22] Keep keyboard focus coherent after Migrate workflow updates or opens a dialog.
+- [P02-FLOW-10-R23] Include Migrate workflow in the UAT script and trace its acceptance criteria to tests.
+- [P02-FLOW-10-R24] Include actual Migrate workflow verification results in the evidence ledger.
+- [P02-FLOW-10-R25] Use the resulting Migrate workflow evidence in the case study only with its execution mode disclosed.
+- [P02-FLOW-10-R26] Have the coordinator approve the integrated Migrate workflow diff after specialist review.
+
+## 06. Screen-by-screen product experience
+
+### P02-UI-01: Case intake
+- [P02-UI-01-R01] Screen: Case intake.
+- [P02-UI-01-R02] Purpose and principal representation: Progressive form with validation.
+- [P02-UI-01-R03] Choose a stable route under /onboard-studio/ and verify direct navigation and reload for Case intake.
+- [P02-UI-01-R04] Use the project visual direction on Case intake: Tactile process studio: paper ground, indigo paths, amber exceptions; timeline first.
+- [P02-UI-01-R05] Give Case intake one clear main action related to the business decision.
+- [P02-UI-01-R06] Display the active time window, filters and data version on Case intake where applicable.
+- [P02-UI-01-R07] Show the synthetic/static-demo label without overwhelming Case intake.
+- [P02-UI-01-R08] Use real verified snapshot values on Case intake; do not hand-enter attractive KPI numbers.
+- [P02-UI-01-R09] Explain calculation meaning and units adjacent to important Case intake values.
+- [P02-UI-01-R10] Provide an accessible table or text alternative for analytical graphics on Case intake.
+- [P02-UI-01-R11] Use consistent category ordering and deterministic tie breaks on Case intake.
+- [P02-UI-01-R12] Handle long names, negative values, missing categories and large values on Case intake.
+- [P02-UI-01-R13] Implement a useful no-data state on Case intake, including a way to clear restrictive filters.
+- [P02-UI-01-R14] Implement loading and failed-data states on Case intake without showing invented results.
+- [P02-UI-01-R15] Keep all Case intake controls keyboard accessible with visible focus.
+- [P02-UI-01-R16] Provide reduced-motion behavior for Case intake transitions.
+- [P02-UI-01-R17] Keep motion purposeful; chart changes on Case intake must not conceal changed units or populations.
+- [P02-UI-01-R18] Verify Case intake at mobile, tablet and desktop widths with actual rendered output.
+- [P02-UI-01-R19] Verify Case intake at 200 percent zoom and with realistic dense data.
+- [P02-UI-01-R20] Ensure exports from Case intake match its scope or clearly explain full-population export behavior.
+- [P02-UI-01-R21] Provide navigation from Case intake to evidence, definitions and the case study.
+- [P02-UI-01-R22] Check console errors, broken assets and nested path handling for Case intake.
+- [P02-UI-01-R23] Record screenshot-review findings for Case intake; do not assert review from source inspection.
+- [P02-UI-01-R24] Link Case intake to its relevant workflow and metric contract IDs in the traceability matrix.
+### P02-UI-02: Work queue
+- [P02-UI-02-R01] Screen: Work queue.
+- [P02-UI-02-R02] Purpose and principal representation: Owners, readiness, deadline and reason.
+- [P02-UI-02-R03] Choose a stable route under /onboard-studio/ and verify direct navigation and reload for Work queue.
+- [P02-UI-02-R04] Use the project visual direction on Work queue: Tactile process studio: paper ground, indigo paths, amber exceptions; timeline first.
+- [P02-UI-02-R05] Give Work queue one clear main action related to the business decision.
+- [P02-UI-02-R06] Display the active time window, filters and data version on Work queue where applicable.
+- [P02-UI-02-R07] Show the synthetic/static-demo label without overwhelming Work queue.
+- [P02-UI-02-R08] Use real verified snapshot values on Work queue; do not hand-enter attractive KPI numbers.
+- [P02-UI-02-R09] Explain calculation meaning and units adjacent to important Work queue values.
+- [P02-UI-02-R10] Provide an accessible table or text alternative for analytical graphics on Work queue.
+- [P02-UI-02-R11] Use consistent category ordering and deterministic tie breaks on Work queue.
+- [P02-UI-02-R12] Handle long names, negative values, missing categories and large values on Work queue.
+- [P02-UI-02-R13] Implement a useful no-data state on Work queue, including a way to clear restrictive filters.
+- [P02-UI-02-R14] Implement loading and failed-data states on Work queue without showing invented results.
+- [P02-UI-02-R15] Keep all Work queue controls keyboard accessible with visible focus.
+- [P02-UI-02-R16] Provide reduced-motion behavior for Work queue transitions.
+- [P02-UI-02-R17] Keep motion purposeful; chart changes on Work queue must not conceal changed units or populations.
+- [P02-UI-02-R18] Verify Work queue at mobile, tablet and desktop widths with actual rendered output.
+- [P02-UI-02-R19] Verify Work queue at 200 percent zoom and with realistic dense data.
+- [P02-UI-02-R20] Ensure exports from Work queue match its scope or clearly explain full-population export behavior.
+- [P02-UI-02-R21] Provide navigation from Work queue to evidence, definitions and the case study.
+- [P02-UI-02-R22] Check console errors, broken assets and nested path handling for Work queue.
+- [P02-UI-02-R23] Record screenshot-review findings for Work queue; do not assert review from source inspection.
+- [P02-UI-02-R24] Link Work queue to its relevant workflow and metric contract IDs in the traceability matrix.
+### P02-UI-03: Case timeline
+- [P02-UI-03-R01] Screen: Case timeline.
+- [P02-UI-03-R02] Purpose and principal representation: Events and document versions.
+- [P02-UI-03-R03] Choose a stable route under /onboard-studio/ and verify direct navigation and reload for Case timeline.
+- [P02-UI-03-R04] Use the project visual direction on Case timeline: Tactile process studio: paper ground, indigo paths, amber exceptions; timeline first.
+- [P02-UI-03-R05] Give Case timeline one clear main action related to the business decision.
+- [P02-UI-03-R06] Display the active time window, filters and data version on Case timeline where applicable.
+- [P02-UI-03-R07] Show the synthetic/static-demo label without overwhelming Case timeline.
+- [P02-UI-03-R08] Use real verified snapshot values on Case timeline; do not hand-enter attractive KPI numbers.
+- [P02-UI-03-R09] Explain calculation meaning and units adjacent to important Case timeline values.
+- [P02-UI-03-R10] Provide an accessible table or text alternative for analytical graphics on Case timeline.
+- [P02-UI-03-R11] Use consistent category ordering and deterministic tie breaks on Case timeline.
+- [P02-UI-03-R12] Handle long names, negative values, missing categories and large values on Case timeline.
+- [P02-UI-03-R13] Implement a useful no-data state on Case timeline, including a way to clear restrictive filters.
+- [P02-UI-03-R14] Implement loading and failed-data states on Case timeline without showing invented results.
+- [P02-UI-03-R15] Keep all Case timeline controls keyboard accessible with visible focus.
+- [P02-UI-03-R16] Provide reduced-motion behavior for Case timeline transitions.
+- [P02-UI-03-R17] Keep motion purposeful; chart changes on Case timeline must not conceal changed units or populations.
+- [P02-UI-03-R18] Verify Case timeline at mobile, tablet and desktop widths with actual rendered output.
+- [P02-UI-03-R19] Verify Case timeline at 200 percent zoom and with realistic dense data.
+- [P02-UI-03-R20] Ensure exports from Case timeline match its scope or clearly explain full-population export behavior.
+- [P02-UI-03-R21] Provide navigation from Case timeline to evidence, definitions and the case study.
+- [P02-UI-03-R22] Check console errors, broken assets and nested path handling for Case timeline.
+- [P02-UI-03-R23] Record screenshot-review findings for Case timeline; do not assert review from source inspection.
+- [P02-UI-03-R24] Link Case timeline to its relevant workflow and metric contract IDs in the traceability matrix.
+### P02-UI-04: Workflow canvas
+- [P02-UI-04-R01] Screen: Workflow canvas.
+- [P02-UI-04-R02] Purpose and principal representation: Dependencies and accessible ordered list.
+- [P02-UI-04-R03] Choose a stable route under /onboard-studio/ and verify direct navigation and reload for Workflow canvas.
+- [P02-UI-04-R04] Use the project visual direction on Workflow canvas: Tactile process studio: paper ground, indigo paths, amber exceptions; timeline first.
+- [P02-UI-04-R05] Give Workflow canvas one clear main action related to the business decision.
+- [P02-UI-04-R06] Display the active time window, filters and data version on Workflow canvas where applicable.
+- [P02-UI-04-R07] Show the synthetic/static-demo label without overwhelming Workflow canvas.
+- [P02-UI-04-R08] Use real verified snapshot values on Workflow canvas; do not hand-enter attractive KPI numbers.
+- [P02-UI-04-R09] Explain calculation meaning and units adjacent to important Workflow canvas values.
+- [P02-UI-04-R10] Provide an accessible table or text alternative for analytical graphics on Workflow canvas.
+- [P02-UI-04-R11] Use consistent category ordering and deterministic tie breaks on Workflow canvas.
+- [P02-UI-04-R12] Handle long names, negative values, missing categories and large values on Workflow canvas.
+- [P02-UI-04-R13] Implement a useful no-data state on Workflow canvas, including a way to clear restrictive filters.
+- [P02-UI-04-R14] Implement loading and failed-data states on Workflow canvas without showing invented results.
+- [P02-UI-04-R15] Keep all Workflow canvas controls keyboard accessible with visible focus.
+- [P02-UI-04-R16] Provide reduced-motion behavior for Workflow canvas transitions.
+- [P02-UI-04-R17] Keep motion purposeful; chart changes on Workflow canvas must not conceal changed units or populations.
+- [P02-UI-04-R18] Verify Workflow canvas at mobile, tablet and desktop widths with actual rendered output.
+- [P02-UI-04-R19] Verify Workflow canvas at 200 percent zoom and with realistic dense data.
+- [P02-UI-04-R20] Ensure exports from Workflow canvas match its scope or clearly explain full-population export behavior.
+- [P02-UI-04-R21] Provide navigation from Workflow canvas to evidence, definitions and the case study.
+- [P02-UI-04-R22] Check console errors, broken assets and nested path handling for Workflow canvas.
+- [P02-UI-04-R23] Record screenshot-review findings for Workflow canvas; do not assert review from source inspection.
+- [P02-UI-04-R24] Link Workflow canvas to its relevant workflow and metric contract IDs in the traceability matrix.
+### P02-UI-05: Document review
+- [P02-UI-05-R01] Screen: Document review.
+- [P02-UI-05-R02] Purpose and principal representation: Version comparison and explicit decision.
+- [P02-UI-05-R03] Choose a stable route under /onboard-studio/ and verify direct navigation and reload for Document review.
+- [P02-UI-05-R04] Use the project visual direction on Document review: Tactile process studio: paper ground, indigo paths, amber exceptions; timeline first.
+- [P02-UI-05-R05] Give Document review one clear main action related to the business decision.
+- [P02-UI-05-R06] Display the active time window, filters and data version on Document review where applicable.
+- [P02-UI-05-R07] Show the synthetic/static-demo label without overwhelming Document review.
+- [P02-UI-05-R08] Use real verified snapshot values on Document review; do not hand-enter attractive KPI numbers.
+- [P02-UI-05-R09] Explain calculation meaning and units adjacent to important Document review values.
+- [P02-UI-05-R10] Provide an accessible table or text alternative for analytical graphics on Document review.
+- [P02-UI-05-R11] Use consistent category ordering and deterministic tie breaks on Document review.
+- [P02-UI-05-R12] Handle long names, negative values, missing categories and large values on Document review.
+- [P02-UI-05-R13] Implement a useful no-data state on Document review, including a way to clear restrictive filters.
+- [P02-UI-05-R14] Implement loading and failed-data states on Document review without showing invented results.
+- [P02-UI-05-R15] Keep all Document review controls keyboard accessible with visible focus.
+- [P02-UI-05-R16] Provide reduced-motion behavior for Document review transitions.
+- [P02-UI-05-R17] Keep motion purposeful; chart changes on Document review must not conceal changed units or populations.
+- [P02-UI-05-R18] Verify Document review at mobile, tablet and desktop widths with actual rendered output.
+- [P02-UI-05-R19] Verify Document review at 200 percent zoom and with realistic dense data.
+- [P02-UI-05-R20] Ensure exports from Document review match its scope or clearly explain full-population export behavior.
+- [P02-UI-05-R21] Provide navigation from Document review to evidence, definitions and the case study.
+- [P02-UI-05-R22] Check console errors, broken assets and nested path handling for Document review.
+- [P02-UI-05-R23] Record screenshot-review findings for Document review; do not assert review from source inspection.
+- [P02-UI-05-R24] Link Document review to its relevant workflow and metric contract IDs in the traceability matrix.
+### P02-UI-06: SLA explorer
+- [P02-UI-06-R01] Screen: SLA explorer.
+- [P02-UI-06-R02] Purpose and principal representation: Business versus calendar time.
+- [P02-UI-06-R03] Choose a stable route under /onboard-studio/ and verify direct navigation and reload for SLA explorer.
+- [P02-UI-06-R04] Use the project visual direction on SLA explorer: Tactile process studio: paper ground, indigo paths, amber exceptions; timeline first.
+- [P02-UI-06-R05] Give SLA explorer one clear main action related to the business decision.
+- [P02-UI-06-R06] Display the active time window, filters and data version on SLA explorer where applicable.
+- [P02-UI-06-R07] Show the synthetic/static-demo label without overwhelming SLA explorer.
+- [P02-UI-06-R08] Use real verified snapshot values on SLA explorer; do not hand-enter attractive KPI numbers.
+- [P02-UI-06-R09] Explain calculation meaning and units adjacent to important SLA explorer values.
+- [P02-UI-06-R10] Provide an accessible table or text alternative for analytical graphics on SLA explorer.
+- [P02-UI-06-R11] Use consistent category ordering and deterministic tie breaks on SLA explorer.
+- [P02-UI-06-R12] Handle long names, negative values, missing categories and large values on SLA explorer.
+- [P02-UI-06-R13] Implement a useful no-data state on SLA explorer, including a way to clear restrictive filters.
+- [P02-UI-06-R14] Implement loading and failed-data states on SLA explorer without showing invented results.
+- [P02-UI-06-R15] Keep all SLA explorer controls keyboard accessible with visible focus.
+- [P02-UI-06-R16] Provide reduced-motion behavior for SLA explorer transitions.
+- [P02-UI-06-R17] Keep motion purposeful; chart changes on SLA explorer must not conceal changed units or populations.
+- [P02-UI-06-R18] Verify SLA explorer at mobile, tablet and desktop widths with actual rendered output.
+- [P02-UI-06-R19] Verify SLA explorer at 200 percent zoom and with realistic dense data.
+- [P02-UI-06-R20] Ensure exports from SLA explorer match its scope or clearly explain full-population export behavior.
+- [P02-UI-06-R21] Provide navigation from SLA explorer to evidence, definitions and the case study.
+- [P02-UI-06-R22] Check console errors, broken assets and nested path handling for SLA explorer.
+- [P02-UI-06-R23] Record screenshot-review findings for SLA explorer; do not assert review from source inspection.
+- [P02-UI-06-R24] Link SLA explorer to its relevant workflow and metric contract IDs in the traceability matrix.
+### P02-UI-07: Bottleneck analysis
+- [P02-UI-07-R01] Screen: Bottleneck analysis.
+- [P02-UI-07-R02] Purpose and principal representation: Step-level waits and cohort counts.
+- [P02-UI-07-R03] Choose a stable route under /onboard-studio/ and verify direct navigation and reload for Bottleneck analysis.
+- [P02-UI-07-R04] Use the project visual direction on Bottleneck analysis: Tactile process studio: paper ground, indigo paths, amber exceptions; timeline first.
+- [P02-UI-07-R05] Give Bottleneck analysis one clear main action related to the business decision.
+- [P02-UI-07-R06] Display the active time window, filters and data version on Bottleneck analysis where applicable.
+- [P02-UI-07-R07] Show the synthetic/static-demo label without overwhelming Bottleneck analysis.
+- [P02-UI-07-R08] Use real verified snapshot values on Bottleneck analysis; do not hand-enter attractive KPI numbers.
+- [P02-UI-07-R09] Explain calculation meaning and units adjacent to important Bottleneck analysis values.
+- [P02-UI-07-R10] Provide an accessible table or text alternative for analytical graphics on Bottleneck analysis.
+- [P02-UI-07-R11] Use consistent category ordering and deterministic tie breaks on Bottleneck analysis.
+- [P02-UI-07-R12] Handle long names, negative values, missing categories and large values on Bottleneck analysis.
+- [P02-UI-07-R13] Implement a useful no-data state on Bottleneck analysis, including a way to clear restrictive filters.
+- [P02-UI-07-R14] Implement loading and failed-data states on Bottleneck analysis without showing invented results.
+- [P02-UI-07-R15] Keep all Bottleneck analysis controls keyboard accessible with visible focus.
+- [P02-UI-07-R16] Provide reduced-motion behavior for Bottleneck analysis transitions.
+- [P02-UI-07-R17] Keep motion purposeful; chart changes on Bottleneck analysis must not conceal changed units or populations.
+- [P02-UI-07-R18] Verify Bottleneck analysis at mobile, tablet and desktop widths with actual rendered output.
+- [P02-UI-07-R19] Verify Bottleneck analysis at 200 percent zoom and with realistic dense data.
+- [P02-UI-07-R20] Ensure exports from Bottleneck analysis match its scope or clearly explain full-population export behavior.
+- [P02-UI-07-R21] Provide navigation from Bottleneck analysis to evidence, definitions and the case study.
+- [P02-UI-07-R22] Check console errors, broken assets and nested path handling for Bottleneck analysis.
+- [P02-UI-07-R23] Record screenshot-review findings for Bottleneck analysis; do not assert review from source inspection.
+- [P02-UI-07-R24] Link Bottleneck analysis to its relevant workflow and metric contract IDs in the traceability matrix.
+### P02-UI-08: Workflow version comparison
+- [P02-UI-08-R01] Screen: Workflow version comparison.
+- [P02-UI-08-R02] Purpose and principal representation: Changed rules and migration impacts.
+- [P02-UI-08-R03] Choose a stable route under /onboard-studio/ and verify direct navigation and reload for Workflow version comparison.
+- [P02-UI-08-R04] Use the project visual direction on Workflow version comparison: Tactile process studio: paper ground, indigo paths, amber exceptions; timeline first.
+- [P02-UI-08-R05] Give Workflow version comparison one clear main action related to the business decision.
+- [P02-UI-08-R06] Display the active time window, filters and data version on Workflow version comparison where applicable.
+- [P02-UI-08-R07] Show the synthetic/static-demo label without overwhelming Workflow version comparison.
+- [P02-UI-08-R08] Use real verified snapshot values on Workflow version comparison; do not hand-enter attractive KPI numbers.
+- [P02-UI-08-R09] Explain calculation meaning and units adjacent to important Workflow version comparison values.
+- [P02-UI-08-R10] Provide an accessible table or text alternative for analytical graphics on Workflow version comparison.
+- [P02-UI-08-R11] Use consistent category ordering and deterministic tie breaks on Workflow version comparison.
+- [P02-UI-08-R12] Handle long names, negative values, missing categories and large values on Workflow version comparison.
+- [P02-UI-08-R13] Implement a useful no-data state on Workflow version comparison, including a way to clear restrictive filters.
+- [P02-UI-08-R14] Implement loading and failed-data states on Workflow version comparison without showing invented results.
+- [P02-UI-08-R15] Keep all Workflow version comparison controls keyboard accessible with visible focus.
+- [P02-UI-08-R16] Provide reduced-motion behavior for Workflow version comparison transitions.
+- [P02-UI-08-R17] Keep motion purposeful; chart changes on Workflow version comparison must not conceal changed units or populations.
+- [P02-UI-08-R18] Verify Workflow version comparison at mobile, tablet and desktop widths with actual rendered output.
+- [P02-UI-08-R19] Verify Workflow version comparison at 200 percent zoom and with realistic dense data.
+- [P02-UI-08-R20] Ensure exports from Workflow version comparison match its scope or clearly explain full-population export behavior.
+- [P02-UI-08-R21] Provide navigation from Workflow version comparison to evidence, definitions and the case study.
+- [P02-UI-08-R22] Check console errors, broken assets and nested path handling for Workflow version comparison.
+- [P02-UI-08-R23] Record screenshot-review findings for Workflow version comparison; do not assert review from source inspection.
+- [P02-UI-08-R24] Link Workflow version comparison to its relevant workflow and metric contract IDs in the traceability matrix.
+### P02-UI-09: Process simulation
+- [P02-UI-09-R01] Screen: Process simulation.
+- [P02-UI-09-R02] Purpose and principal representation: Hypothetical baseline versus proposal.
+- [P02-UI-09-R03] Choose a stable route under /onboard-studio/ and verify direct navigation and reload for Process simulation.
+- [P02-UI-09-R04] Use the project visual direction on Process simulation: Tactile process studio: paper ground, indigo paths, amber exceptions; timeline first.
+- [P02-UI-09-R05] Give Process simulation one clear main action related to the business decision.
+- [P02-UI-09-R06] Display the active time window, filters and data version on Process simulation where applicable.
+- [P02-UI-09-R07] Show the synthetic/static-demo label without overwhelming Process simulation.
+- [P02-UI-09-R08] Use real verified snapshot values on Process simulation; do not hand-enter attractive KPI numbers.
+- [P02-UI-09-R09] Explain calculation meaning and units adjacent to important Process simulation values.
+- [P02-UI-09-R10] Provide an accessible table or text alternative for analytical graphics on Process simulation.
+- [P02-UI-09-R11] Use consistent category ordering and deterministic tie breaks on Process simulation.
+- [P02-UI-09-R12] Handle long names, negative values, missing categories and large values on Process simulation.
+- [P02-UI-09-R13] Implement a useful no-data state on Process simulation, including a way to clear restrictive filters.
+- [P02-UI-09-R14] Implement loading and failed-data states on Process simulation without showing invented results.
+- [P02-UI-09-R15] Keep all Process simulation controls keyboard accessible with visible focus.
+- [P02-UI-09-R16] Provide reduced-motion behavior for Process simulation transitions.
+- [P02-UI-09-R17] Keep motion purposeful; chart changes on Process simulation must not conceal changed units or populations.
+- [P02-UI-09-R18] Verify Process simulation at mobile, tablet and desktop widths with actual rendered output.
+- [P02-UI-09-R19] Verify Process simulation at 200 percent zoom and with realistic dense data.
+- [P02-UI-09-R20] Ensure exports from Process simulation match its scope or clearly explain full-population export behavior.
+- [P02-UI-09-R21] Provide navigation from Process simulation to evidence, definitions and the case study.
+- [P02-UI-09-R22] Check console errors, broken assets and nested path handling for Process simulation.
+- [P02-UI-09-R23] Record screenshot-review findings for Process simulation; do not assert review from source inspection.
+- [P02-UI-09-R24] Link Process simulation to its relevant workflow and metric contract IDs in the traceability matrix.
+### P02-UI-10: Case study
+- [P02-UI-10-R01] Screen: Case study.
+- [P02-UI-10-R02] Purpose and principal representation: Requirements, BPMN, UAT, adoption assumptions.
+- [P02-UI-10-R03] Choose a stable route under /onboard-studio/ and verify direct navigation and reload for Case study.
+- [P02-UI-10-R04] Use the project visual direction on Case study: Tactile process studio: paper ground, indigo paths, amber exceptions; timeline first.
+- [P02-UI-10-R05] Give Case study one clear main action related to the business decision.
+- [P02-UI-10-R06] Display the active time window, filters and data version on Case study where applicable.
+- [P02-UI-10-R07] Show the synthetic/static-demo label without overwhelming Case study.
+- [P02-UI-10-R08] Use real verified snapshot values on Case study; do not hand-enter attractive KPI numbers.
+- [P02-UI-10-R09] Explain calculation meaning and units adjacent to important Case study values.
+- [P02-UI-10-R10] Provide an accessible table or text alternative for analytical graphics on Case study.
+- [P02-UI-10-R11] Use consistent category ordering and deterministic tie breaks on Case study.
+- [P02-UI-10-R12] Handle long names, negative values, missing categories and large values on Case study.
+- [P02-UI-10-R13] Implement a useful no-data state on Case study, including a way to clear restrictive filters.
+- [P02-UI-10-R14] Implement loading and failed-data states on Case study without showing invented results.
+- [P02-UI-10-R15] Keep all Case study controls keyboard accessible with visible focus.
+- [P02-UI-10-R16] Provide reduced-motion behavior for Case study transitions.
+- [P02-UI-10-R17] Keep motion purposeful; chart changes on Case study must not conceal changed units or populations.
+- [P02-UI-10-R18] Verify Case study at mobile, tablet and desktop widths with actual rendered output.
+- [P02-UI-10-R19] Verify Case study at 200 percent zoom and with realistic dense data.
+- [P02-UI-10-R20] Ensure exports from Case study match its scope or clearly explain full-population export behavior.
+- [P02-UI-10-R21] Provide navigation from Case study to evidence, definitions and the case study.
+- [P02-UI-10-R22] Check console errors, broken assets and nested path handling for Case study.
+- [P02-UI-10-R23] Record screenshot-review findings for Case study; do not assert review from source inspection.
+- [P02-UI-10-R24] Link Case study to its relevant workflow and metric contract IDs in the traceability matrix.
+
+## 07. Adversarial domain verification
+
+### P02-TEST-01-DETECT: Case completed with mandatory document missing — detect
+- [P02-TEST-01-DETECT-R01] Failure hypothesis: Case completed with mandatory document missing.
+- [P02-TEST-01-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P02-TEST-01-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Case completed with mandatory document missing.
+- [P02-TEST-01-DETECT-R04] Document the expected business outcome before executing P02-TEST-01-DETECT.
+- [P02-TEST-01-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-01-DETECT-R06] Capture the initial canonical state and dataset hash for P02-TEST-01-DETECT.
+- [P02-TEST-01-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-01-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-01-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-01-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-01-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-01-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-01-DETECT-R13] Use a separate reference calculation when P02-TEST-01-DETECT affects a key numerical total.
+- [P02-TEST-01-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Case completed with mandatory document missing.
+- [P02-TEST-01-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-01-DETECT.
+- [P02-TEST-01-DETECT-R16] If blocked by environment capability, mark P02-TEST-01-DETECT blocked and retain the executable test source.
+- [P02-TEST-01-DETECT-R17] Do not claim P02-TEST-01-DETECT passed from reading the implementation or from another test passing.
+- [P02-TEST-01-DETECT-R18] Rerun P02-TEST-01-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-01-RECOVER: Case completed with mandatory document missing — recover
+- [P02-TEST-01-RECOVER-R01] Failure hypothesis: Case completed with mandatory document missing.
+- [P02-TEST-01-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P02-TEST-01-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Case completed with mandatory document missing.
+- [P02-TEST-01-RECOVER-R04] Document the expected business outcome before executing P02-TEST-01-RECOVER.
+- [P02-TEST-01-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-01-RECOVER-R06] Capture the initial canonical state and dataset hash for P02-TEST-01-RECOVER.
+- [P02-TEST-01-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-01-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-01-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-01-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-01-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-01-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-01-RECOVER-R13] Use a separate reference calculation when P02-TEST-01-RECOVER affects a key numerical total.
+- [P02-TEST-01-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Case completed with mandatory document missing.
+- [P02-TEST-01-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-01-RECOVER.
+- [P02-TEST-01-RECOVER-R16] If blocked by environment capability, mark P02-TEST-01-RECOVER blocked and retain the executable test source.
+- [P02-TEST-01-RECOVER-R17] Do not claim P02-TEST-01-RECOVER passed from reading the implementation or from another test passing.
+- [P02-TEST-01-RECOVER-R18] Rerun P02-TEST-01-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-02-DETECT: Two reviewers submit conflicting decisions — detect
+- [P02-TEST-02-DETECT-R01] Failure hypothesis: Two reviewers submit conflicting decisions.
+- [P02-TEST-02-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P02-TEST-02-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Two reviewers submit conflicting decisions.
+- [P02-TEST-02-DETECT-R04] Document the expected business outcome before executing P02-TEST-02-DETECT.
+- [P02-TEST-02-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-02-DETECT-R06] Capture the initial canonical state and dataset hash for P02-TEST-02-DETECT.
+- [P02-TEST-02-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-02-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-02-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-02-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-02-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-02-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-02-DETECT-R13] Use a separate reference calculation when P02-TEST-02-DETECT affects a key numerical total.
+- [P02-TEST-02-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Two reviewers submit conflicting decisions.
+- [P02-TEST-02-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-02-DETECT.
+- [P02-TEST-02-DETECT-R16] If blocked by environment capability, mark P02-TEST-02-DETECT blocked and retain the executable test source.
+- [P02-TEST-02-DETECT-R17] Do not claim P02-TEST-02-DETECT passed from reading the implementation or from another test passing.
+- [P02-TEST-02-DETECT-R18] Rerun P02-TEST-02-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-02-RECOVER: Two reviewers submit conflicting decisions — recover
+- [P02-TEST-02-RECOVER-R01] Failure hypothesis: Two reviewers submit conflicting decisions.
+- [P02-TEST-02-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P02-TEST-02-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Two reviewers submit conflicting decisions.
+- [P02-TEST-02-RECOVER-R04] Document the expected business outcome before executing P02-TEST-02-RECOVER.
+- [P02-TEST-02-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-02-RECOVER-R06] Capture the initial canonical state and dataset hash for P02-TEST-02-RECOVER.
+- [P02-TEST-02-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-02-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-02-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-02-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-02-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-02-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-02-RECOVER-R13] Use a separate reference calculation when P02-TEST-02-RECOVER affects a key numerical total.
+- [P02-TEST-02-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Two reviewers submit conflicting decisions.
+- [P02-TEST-02-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-02-RECOVER.
+- [P02-TEST-02-RECOVER-R16] If blocked by environment capability, mark P02-TEST-02-RECOVER blocked and retain the executable test source.
+- [P02-TEST-02-RECOVER-R17] Do not claim P02-TEST-02-RECOVER passed from reading the implementation or from another test passing.
+- [P02-TEST-02-RECOVER-R18] Rerun P02-TEST-02-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-03-DETECT: SLA paused outside a working interval — detect
+- [P02-TEST-03-DETECT-R01] Failure hypothesis: SLA paused outside a working interval.
+- [P02-TEST-03-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P02-TEST-03-DETECT-R03] Construct the smallest synthetic fixture that reproduces: SLA paused outside a working interval.
+- [P02-TEST-03-DETECT-R04] Document the expected business outcome before executing P02-TEST-03-DETECT.
+- [P02-TEST-03-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-03-DETECT-R06] Capture the initial canonical state and dataset hash for P02-TEST-03-DETECT.
+- [P02-TEST-03-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-03-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-03-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-03-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-03-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-03-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-03-DETECT-R13] Use a separate reference calculation when P02-TEST-03-DETECT affects a key numerical total.
+- [P02-TEST-03-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of SLA paused outside a working interval.
+- [P02-TEST-03-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-03-DETECT.
+- [P02-TEST-03-DETECT-R16] If blocked by environment capability, mark P02-TEST-03-DETECT blocked and retain the executable test source.
+- [P02-TEST-03-DETECT-R17] Do not claim P02-TEST-03-DETECT passed from reading the implementation or from another test passing.
+- [P02-TEST-03-DETECT-R18] Rerun P02-TEST-03-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-03-RECOVER: SLA paused outside a working interval — recover
+- [P02-TEST-03-RECOVER-R01] Failure hypothesis: SLA paused outside a working interval.
+- [P02-TEST-03-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P02-TEST-03-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: SLA paused outside a working interval.
+- [P02-TEST-03-RECOVER-R04] Document the expected business outcome before executing P02-TEST-03-RECOVER.
+- [P02-TEST-03-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-03-RECOVER-R06] Capture the initial canonical state and dataset hash for P02-TEST-03-RECOVER.
+- [P02-TEST-03-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-03-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-03-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-03-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-03-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-03-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-03-RECOVER-R13] Use a separate reference calculation when P02-TEST-03-RECOVER affects a key numerical total.
+- [P02-TEST-03-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of SLA paused outside a working interval.
+- [P02-TEST-03-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-03-RECOVER.
+- [P02-TEST-03-RECOVER-R16] If blocked by environment capability, mark P02-TEST-03-RECOVER blocked and retain the executable test source.
+- [P02-TEST-03-RECOVER-R17] Do not claim P02-TEST-03-RECOVER passed from reading the implementation or from another test passing.
+- [P02-TEST-03-RECOVER-R18] Rerun P02-TEST-03-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-04-DETECT: Workflow changes while old case is open — detect
+- [P02-TEST-04-DETECT-R01] Failure hypothesis: Workflow changes while old case is open.
+- [P02-TEST-04-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P02-TEST-04-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Workflow changes while old case is open.
+- [P02-TEST-04-DETECT-R04] Document the expected business outcome before executing P02-TEST-04-DETECT.
+- [P02-TEST-04-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-04-DETECT-R06] Capture the initial canonical state and dataset hash for P02-TEST-04-DETECT.
+- [P02-TEST-04-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-04-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-04-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-04-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-04-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-04-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-04-DETECT-R13] Use a separate reference calculation when P02-TEST-04-DETECT affects a key numerical total.
+- [P02-TEST-04-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Workflow changes while old case is open.
+- [P02-TEST-04-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-04-DETECT.
+- [P02-TEST-04-DETECT-R16] If blocked by environment capability, mark P02-TEST-04-DETECT blocked and retain the executable test source.
+- [P02-TEST-04-DETECT-R17] Do not claim P02-TEST-04-DETECT passed from reading the implementation or from another test passing.
+- [P02-TEST-04-DETECT-R18] Rerun P02-TEST-04-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-04-RECOVER: Workflow changes while old case is open — recover
+- [P02-TEST-04-RECOVER-R01] Failure hypothesis: Workflow changes while old case is open.
+- [P02-TEST-04-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P02-TEST-04-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Workflow changes while old case is open.
+- [P02-TEST-04-RECOVER-R04] Document the expected business outcome before executing P02-TEST-04-RECOVER.
+- [P02-TEST-04-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-04-RECOVER-R06] Capture the initial canonical state and dataset hash for P02-TEST-04-RECOVER.
+- [P02-TEST-04-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-04-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-04-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-04-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-04-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-04-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-04-RECOVER-R13] Use a separate reference calculation when P02-TEST-04-RECOVER affects a key numerical total.
+- [P02-TEST-04-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Workflow changes while old case is open.
+- [P02-TEST-04-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-04-RECOVER.
+- [P02-TEST-04-RECOVER-R16] If blocked by environment capability, mark P02-TEST-04-RECOVER blocked and retain the executable test source.
+- [P02-TEST-04-RECOVER-R17] Do not claim P02-TEST-04-RECOVER passed from reading the implementation or from another test passing.
+- [P02-TEST-04-RECOVER-R18] Rerun P02-TEST-04-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-05-DETECT: Dependency cycle in workflow definition — detect
+- [P02-TEST-05-DETECT-R01] Failure hypothesis: Dependency cycle in workflow definition.
+- [P02-TEST-05-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P02-TEST-05-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Dependency cycle in workflow definition.
+- [P02-TEST-05-DETECT-R04] Document the expected business outcome before executing P02-TEST-05-DETECT.
+- [P02-TEST-05-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-05-DETECT-R06] Capture the initial canonical state and dataset hash for P02-TEST-05-DETECT.
+- [P02-TEST-05-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-05-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-05-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-05-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-05-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-05-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-05-DETECT-R13] Use a separate reference calculation when P02-TEST-05-DETECT affects a key numerical total.
+- [P02-TEST-05-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Dependency cycle in workflow definition.
+- [P02-TEST-05-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-05-DETECT.
+- [P02-TEST-05-DETECT-R16] If blocked by environment capability, mark P02-TEST-05-DETECT blocked and retain the executable test source.
+- [P02-TEST-05-DETECT-R17] Do not claim P02-TEST-05-DETECT passed from reading the implementation or from another test passing.
+- [P02-TEST-05-DETECT-R18] Rerun P02-TEST-05-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-05-RECOVER: Dependency cycle in workflow definition — recover
+- [P02-TEST-05-RECOVER-R01] Failure hypothesis: Dependency cycle in workflow definition.
+- [P02-TEST-05-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P02-TEST-05-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Dependency cycle in workflow definition.
+- [P02-TEST-05-RECOVER-R04] Document the expected business outcome before executing P02-TEST-05-RECOVER.
+- [P02-TEST-05-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-05-RECOVER-R06] Capture the initial canonical state and dataset hash for P02-TEST-05-RECOVER.
+- [P02-TEST-05-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-05-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-05-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-05-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-05-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-05-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-05-RECOVER-R13] Use a separate reference calculation when P02-TEST-05-RECOVER affects a key numerical total.
+- [P02-TEST-05-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Dependency cycle in workflow definition.
+- [P02-TEST-05-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-05-RECOVER.
+- [P02-TEST-05-RECOVER-R16] If blocked by environment capability, mark P02-TEST-05-RECOVER blocked and retain the executable test source.
+- [P02-TEST-05-RECOVER-R17] Do not claim P02-TEST-05-RECOVER passed from reading the implementation or from another test passing.
+- [P02-TEST-05-RECOVER-R18] Rerun P02-TEST-05-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-06-DETECT: Document resubmission overwrites old version — detect
+- [P02-TEST-06-DETECT-R01] Failure hypothesis: Document resubmission overwrites old version.
+- [P02-TEST-06-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P02-TEST-06-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Document resubmission overwrites old version.
+- [P02-TEST-06-DETECT-R04] Document the expected business outcome before executing P02-TEST-06-DETECT.
+- [P02-TEST-06-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-06-DETECT-R06] Capture the initial canonical state and dataset hash for P02-TEST-06-DETECT.
+- [P02-TEST-06-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-06-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-06-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-06-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-06-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-06-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-06-DETECT-R13] Use a separate reference calculation when P02-TEST-06-DETECT affects a key numerical total.
+- [P02-TEST-06-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Document resubmission overwrites old version.
+- [P02-TEST-06-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-06-DETECT.
+- [P02-TEST-06-DETECT-R16] If blocked by environment capability, mark P02-TEST-06-DETECT blocked and retain the executable test source.
+- [P02-TEST-06-DETECT-R17] Do not claim P02-TEST-06-DETECT passed from reading the implementation or from another test passing.
+- [P02-TEST-06-DETECT-R18] Rerun P02-TEST-06-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-06-RECOVER: Document resubmission overwrites old version — recover
+- [P02-TEST-06-RECOVER-R01] Failure hypothesis: Document resubmission overwrites old version.
+- [P02-TEST-06-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P02-TEST-06-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Document resubmission overwrites old version.
+- [P02-TEST-06-RECOVER-R04] Document the expected business outcome before executing P02-TEST-06-RECOVER.
+- [P02-TEST-06-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-06-RECOVER-R06] Capture the initial canonical state and dataset hash for P02-TEST-06-RECOVER.
+- [P02-TEST-06-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-06-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-06-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-06-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-06-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-06-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-06-RECOVER-R13] Use a separate reference calculation when P02-TEST-06-RECOVER affects a key numerical total.
+- [P02-TEST-06-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Document resubmission overwrites old version.
+- [P02-TEST-06-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-06-RECOVER.
+- [P02-TEST-06-RECOVER-R16] If blocked by environment capability, mark P02-TEST-06-RECOVER blocked and retain the executable test source.
+- [P02-TEST-06-RECOVER-R17] Do not claim P02-TEST-06-RECOVER passed from reading the implementation or from another test passing.
+- [P02-TEST-06-RECOVER-R18] Rerun P02-TEST-06-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-07-DETECT: Reassignment erases prior waiting time — detect
+- [P02-TEST-07-DETECT-R01] Failure hypothesis: Reassignment erases prior waiting time.
+- [P02-TEST-07-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P02-TEST-07-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Reassignment erases prior waiting time.
+- [P02-TEST-07-DETECT-R04] Document the expected business outcome before executing P02-TEST-07-DETECT.
+- [P02-TEST-07-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-07-DETECT-R06] Capture the initial canonical state and dataset hash for P02-TEST-07-DETECT.
+- [P02-TEST-07-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-07-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-07-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-07-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-07-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-07-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-07-DETECT-R13] Use a separate reference calculation when P02-TEST-07-DETECT affects a key numerical total.
+- [P02-TEST-07-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Reassignment erases prior waiting time.
+- [P02-TEST-07-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-07-DETECT.
+- [P02-TEST-07-DETECT-R16] If blocked by environment capability, mark P02-TEST-07-DETECT blocked and retain the executable test source.
+- [P02-TEST-07-DETECT-R17] Do not claim P02-TEST-07-DETECT passed from reading the implementation or from another test passing.
+- [P02-TEST-07-DETECT-R18] Rerun P02-TEST-07-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-07-RECOVER: Reassignment erases prior waiting time — recover
+- [P02-TEST-07-RECOVER-R01] Failure hypothesis: Reassignment erases prior waiting time.
+- [P02-TEST-07-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P02-TEST-07-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Reassignment erases prior waiting time.
+- [P02-TEST-07-RECOVER-R04] Document the expected business outcome before executing P02-TEST-07-RECOVER.
+- [P02-TEST-07-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-07-RECOVER-R06] Capture the initial canonical state and dataset hash for P02-TEST-07-RECOVER.
+- [P02-TEST-07-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-07-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-07-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-07-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-07-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-07-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-07-RECOVER-R13] Use a separate reference calculation when P02-TEST-07-RECOVER affects a key numerical total.
+- [P02-TEST-07-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Reassignment erases prior waiting time.
+- [P02-TEST-07-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-07-RECOVER.
+- [P02-TEST-07-RECOVER-R16] If blocked by environment capability, mark P02-TEST-07-RECOVER blocked and retain the executable test source.
+- [P02-TEST-07-RECOVER-R17] Do not claim P02-TEST-07-RECOVER passed from reading the implementation or from another test passing.
+- [P02-TEST-07-RECOVER-R18] Rerun P02-TEST-07-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-08-DETECT: Holiday overlaps weekend — detect
+- [P02-TEST-08-DETECT-R01] Failure hypothesis: Holiday overlaps weekend.
+- [P02-TEST-08-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P02-TEST-08-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Holiday overlaps weekend.
+- [P02-TEST-08-DETECT-R04] Document the expected business outcome before executing P02-TEST-08-DETECT.
+- [P02-TEST-08-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-08-DETECT-R06] Capture the initial canonical state and dataset hash for P02-TEST-08-DETECT.
+- [P02-TEST-08-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-08-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-08-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-08-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-08-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-08-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-08-DETECT-R13] Use a separate reference calculation when P02-TEST-08-DETECT affects a key numerical total.
+- [P02-TEST-08-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Holiday overlaps weekend.
+- [P02-TEST-08-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-08-DETECT.
+- [P02-TEST-08-DETECT-R16] If blocked by environment capability, mark P02-TEST-08-DETECT blocked and retain the executable test source.
+- [P02-TEST-08-DETECT-R17] Do not claim P02-TEST-08-DETECT passed from reading the implementation or from another test passing.
+- [P02-TEST-08-DETECT-R18] Rerun P02-TEST-08-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-08-RECOVER: Holiday overlaps weekend — recover
+- [P02-TEST-08-RECOVER-R01] Failure hypothesis: Holiday overlaps weekend.
+- [P02-TEST-08-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P02-TEST-08-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Holiday overlaps weekend.
+- [P02-TEST-08-RECOVER-R04] Document the expected business outcome before executing P02-TEST-08-RECOVER.
+- [P02-TEST-08-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-08-RECOVER-R06] Capture the initial canonical state and dataset hash for P02-TEST-08-RECOVER.
+- [P02-TEST-08-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-08-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-08-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-08-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-08-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-08-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-08-RECOVER-R13] Use a separate reference calculation when P02-TEST-08-RECOVER affects a key numerical total.
+- [P02-TEST-08-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Holiday overlaps weekend.
+- [P02-TEST-08-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-08-RECOVER.
+- [P02-TEST-08-RECOVER-R16] If blocked by environment capability, mark P02-TEST-08-RECOVER blocked and retain the executable test source.
+- [P02-TEST-08-RECOVER-R17] Do not claim P02-TEST-08-RECOVER passed from reading the implementation or from another test passing.
+- [P02-TEST-08-RECOVER-R18] Rerun P02-TEST-08-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-09-DETECT: Customer waiting time counted as active work — detect
+- [P02-TEST-09-DETECT-R01] Failure hypothesis: Customer waiting time counted as active work.
+- [P02-TEST-09-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P02-TEST-09-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Customer waiting time counted as active work.
+- [P02-TEST-09-DETECT-R04] Document the expected business outcome before executing P02-TEST-09-DETECT.
+- [P02-TEST-09-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-09-DETECT-R06] Capture the initial canonical state and dataset hash for P02-TEST-09-DETECT.
+- [P02-TEST-09-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-09-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-09-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-09-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-09-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-09-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-09-DETECT-R13] Use a separate reference calculation when P02-TEST-09-DETECT affects a key numerical total.
+- [P02-TEST-09-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Customer waiting time counted as active work.
+- [P02-TEST-09-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-09-DETECT.
+- [P02-TEST-09-DETECT-R16] If blocked by environment capability, mark P02-TEST-09-DETECT blocked and retain the executable test source.
+- [P02-TEST-09-DETECT-R17] Do not claim P02-TEST-09-DETECT passed from reading the implementation or from another test passing.
+- [P02-TEST-09-DETECT-R18] Rerun P02-TEST-09-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-09-RECOVER: Customer waiting time counted as active work — recover
+- [P02-TEST-09-RECOVER-R01] Failure hypothesis: Customer waiting time counted as active work.
+- [P02-TEST-09-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P02-TEST-09-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Customer waiting time counted as active work.
+- [P02-TEST-09-RECOVER-R04] Document the expected business outcome before executing P02-TEST-09-RECOVER.
+- [P02-TEST-09-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-09-RECOVER-R06] Capture the initial canonical state and dataset hash for P02-TEST-09-RECOVER.
+- [P02-TEST-09-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-09-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-09-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-09-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-09-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-09-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-09-RECOVER-R13] Use a separate reference calculation when P02-TEST-09-RECOVER affects a key numerical total.
+- [P02-TEST-09-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Customer waiting time counted as active work.
+- [P02-TEST-09-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-09-RECOVER.
+- [P02-TEST-09-RECOVER-R16] If blocked by environment capability, mark P02-TEST-09-RECOVER blocked and retain the executable test source.
+- [P02-TEST-09-RECOVER-R17] Do not claim P02-TEST-09-RECOVER passed from reading the implementation or from another test passing.
+- [P02-TEST-09-RECOVER-R18] Rerun P02-TEST-09-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-10-DETECT: Unauthorized user approves own restricted step — detect
+- [P02-TEST-10-DETECT-R01] Failure hypothesis: Unauthorized user approves own restricted step.
+- [P02-TEST-10-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P02-TEST-10-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Unauthorized user approves own restricted step.
+- [P02-TEST-10-DETECT-R04] Document the expected business outcome before executing P02-TEST-10-DETECT.
+- [P02-TEST-10-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-10-DETECT-R06] Capture the initial canonical state and dataset hash for P02-TEST-10-DETECT.
+- [P02-TEST-10-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-10-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-10-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-10-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-10-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-10-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-10-DETECT-R13] Use a separate reference calculation when P02-TEST-10-DETECT affects a key numerical total.
+- [P02-TEST-10-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Unauthorized user approves own restricted step.
+- [P02-TEST-10-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-10-DETECT.
+- [P02-TEST-10-DETECT-R16] If blocked by environment capability, mark P02-TEST-10-DETECT blocked and retain the executable test source.
+- [P02-TEST-10-DETECT-R17] Do not claim P02-TEST-10-DETECT passed from reading the implementation or from another test passing.
+- [P02-TEST-10-DETECT-R18] Rerun P02-TEST-10-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-10-RECOVER: Unauthorized user approves own restricted step — recover
+- [P02-TEST-10-RECOVER-R01] Failure hypothesis: Unauthorized user approves own restricted step.
+- [P02-TEST-10-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P02-TEST-10-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Unauthorized user approves own restricted step.
+- [P02-TEST-10-RECOVER-R04] Document the expected business outcome before executing P02-TEST-10-RECOVER.
+- [P02-TEST-10-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-10-RECOVER-R06] Capture the initial canonical state and dataset hash for P02-TEST-10-RECOVER.
+- [P02-TEST-10-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-10-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-10-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-10-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-10-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-10-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-10-RECOVER-R13] Use a separate reference calculation when P02-TEST-10-RECOVER affects a key numerical total.
+- [P02-TEST-10-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Unauthorized user approves own restricted step.
+- [P02-TEST-10-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-10-RECOVER.
+- [P02-TEST-10-RECOVER-R16] If blocked by environment capability, mark P02-TEST-10-RECOVER blocked and retain the executable test source.
+- [P02-TEST-10-RECOVER-R17] Do not claim P02-TEST-10-RECOVER passed from reading the implementation or from another test passing.
+- [P02-TEST-10-RECOVER-R18] Rerun P02-TEST-10-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-11-DETECT: Case reopened after completion — detect
+- [P02-TEST-11-DETECT-R01] Failure hypothesis: Case reopened after completion.
+- [P02-TEST-11-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P02-TEST-11-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Case reopened after completion.
+- [P02-TEST-11-DETECT-R04] Document the expected business outcome before executing P02-TEST-11-DETECT.
+- [P02-TEST-11-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-11-DETECT-R06] Capture the initial canonical state and dataset hash for P02-TEST-11-DETECT.
+- [P02-TEST-11-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-11-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-11-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-11-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-11-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-11-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-11-DETECT-R13] Use a separate reference calculation when P02-TEST-11-DETECT affects a key numerical total.
+- [P02-TEST-11-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Case reopened after completion.
+- [P02-TEST-11-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-11-DETECT.
+- [P02-TEST-11-DETECT-R16] If blocked by environment capability, mark P02-TEST-11-DETECT blocked and retain the executable test source.
+- [P02-TEST-11-DETECT-R17] Do not claim P02-TEST-11-DETECT passed from reading the implementation or from another test passing.
+- [P02-TEST-11-DETECT-R18] Rerun P02-TEST-11-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-11-RECOVER: Case reopened after completion — recover
+- [P02-TEST-11-RECOVER-R01] Failure hypothesis: Case reopened after completion.
+- [P02-TEST-11-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P02-TEST-11-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Case reopened after completion.
+- [P02-TEST-11-RECOVER-R04] Document the expected business outcome before executing P02-TEST-11-RECOVER.
+- [P02-TEST-11-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-11-RECOVER-R06] Capture the initial canonical state and dataset hash for P02-TEST-11-RECOVER.
+- [P02-TEST-11-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-11-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-11-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-11-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-11-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-11-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-11-RECOVER-R13] Use a separate reference calculation when P02-TEST-11-RECOVER affects a key numerical total.
+- [P02-TEST-11-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Case reopened after completion.
+- [P02-TEST-11-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-11-RECOVER.
+- [P02-TEST-11-RECOVER-R16] If blocked by environment capability, mark P02-TEST-11-RECOVER blocked and retain the executable test source.
+- [P02-TEST-11-RECOVER-R17] Do not claim P02-TEST-11-RECOVER passed from reading the implementation or from another test passing.
+- [P02-TEST-11-RECOVER-R18] Rerun P02-TEST-11-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-12-DETECT: Migration loses an already accepted document — detect
+- [P02-TEST-12-DETECT-R01] Failure hypothesis: Migration loses an already accepted document.
+- [P02-TEST-12-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P02-TEST-12-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Migration loses an already accepted document.
+- [P02-TEST-12-DETECT-R04] Document the expected business outcome before executing P02-TEST-12-DETECT.
+- [P02-TEST-12-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-12-DETECT-R06] Capture the initial canonical state and dataset hash for P02-TEST-12-DETECT.
+- [P02-TEST-12-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-12-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-12-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-12-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-12-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-12-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-12-DETECT-R13] Use a separate reference calculation when P02-TEST-12-DETECT affects a key numerical total.
+- [P02-TEST-12-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Migration loses an already accepted document.
+- [P02-TEST-12-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-12-DETECT.
+- [P02-TEST-12-DETECT-R16] If blocked by environment capability, mark P02-TEST-12-DETECT blocked and retain the executable test source.
+- [P02-TEST-12-DETECT-R17] Do not claim P02-TEST-12-DETECT passed from reading the implementation or from another test passing.
+- [P02-TEST-12-DETECT-R18] Rerun P02-TEST-12-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P02-TEST-12-RECOVER: Migration loses an already accepted document — recover
+- [P02-TEST-12-RECOVER-R01] Failure hypothesis: Migration loses an already accepted document.
+- [P02-TEST-12-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P02-TEST-12-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Migration loses an already accepted document.
+- [P02-TEST-12-RECOVER-R04] Document the expected business outcome before executing P02-TEST-12-RECOVER.
+- [P02-TEST-12-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P02-TEST-12-RECOVER-R06] Capture the initial canonical state and dataset hash for P02-TEST-12-RECOVER.
+- [P02-TEST-12-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P02-TEST-12-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P02-TEST-12-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P02-TEST-12-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P02-TEST-12-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P02-TEST-12-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P02-TEST-12-RECOVER-R13] Use a separate reference calculation when P02-TEST-12-RECOVER affects a key numerical total.
+- [P02-TEST-12-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Migration loses an already accepted document.
+- [P02-TEST-12-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P02-TEST-12-RECOVER.
+- [P02-TEST-12-RECOVER-R16] If blocked by environment capability, mark P02-TEST-12-RECOVER blocked and retain the executable test source.
+- [P02-TEST-12-RECOVER-R17] Do not claim P02-TEST-12-RECOVER passed from reading the implementation or from another test passing.
+- [P02-TEST-12-RECOVER-R18] Rerun P02-TEST-12-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+
+## 08. Business and technical deliverables
+
+### P02-ART-01: business-case
+- [P02-ART-01-R01] Deliver business-case for Onboard Studio.
+- [P02-ART-01-R02] Its required content is business problem, stakeholder map, scope, current/future-state process and decision criteria.
+- [P02-ART-01-R03] Use this business decision as its organizing question: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-ART-01-R04] Reference actual onboard-studio entities, metrics and workflow IDs instead of generic template prose.
+- [P02-ART-01-R05] Keep business-case source files under the project directory in GitHub.
+- [P02-ART-01-R06] Generate binary business-case outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P02-ART-01-R07] Include the source dataset hash and implementation revision in business-case where relevant.
+- [P02-ART-01-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in business-case.
+- [P02-ART-01-R09] Check that important numbers in business-case reconcile with the independent reference calculation.
+- [P02-ART-01-R10] Use clear units, periods and population descriptions throughout business-case.
+- [P02-ART-01-R11] If business-case depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P02-ART-01-R12] Provide a brief read/use instruction for business-case without requiring laptop installation.
+- [P02-ART-01-R13] Use accessible headings, labels and tables in business-case.
+- [P02-ART-01-R14] Link business-case from the individual website evidence area when safe and useful.
+- [P02-ART-01-R15] Do not publish credentials, real personal records or internal secrets in business-case.
+- [P02-ART-01-R16] Have the appropriate specialist review business-case before coordinator integration.
+- [P02-ART-01-R17] Record the actual verification status of business-case in the release manifest.
+- [P02-ART-01-R18] Keep business-case claims consistent with the public case study and resume bullet suggestions.
+### P02-ART-02: requirements
+- [P02-ART-02-R01] Deliver requirements for Onboard Studio.
+- [P02-ART-02-R02] Its required content is functional requirements, nonfunctional requirements, user stories, acceptance criteria and traceability.
+- [P02-ART-02-R03] Use this business decision as its organizing question: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-ART-02-R04] Reference actual onboard-studio entities, metrics and workflow IDs instead of generic template prose.
+- [P02-ART-02-R05] Keep requirements source files under the project directory in GitHub.
+- [P02-ART-02-R06] Generate binary requirements outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P02-ART-02-R07] Include the source dataset hash and implementation revision in requirements where relevant.
+- [P02-ART-02-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in requirements.
+- [P02-ART-02-R09] Check that important numbers in requirements reconcile with the independent reference calculation.
+- [P02-ART-02-R10] Use clear units, periods and population descriptions throughout requirements.
+- [P02-ART-02-R11] If requirements depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P02-ART-02-R12] Provide a brief read/use instruction for requirements without requiring laptop installation.
+- [P02-ART-02-R13] Use accessible headings, labels and tables in requirements.
+- [P02-ART-02-R14] Link requirements from the individual website evidence area when safe and useful.
+- [P02-ART-02-R15] Do not publish credentials, real personal records or internal secrets in requirements.
+- [P02-ART-02-R16] Have the appropriate specialist review requirements before coordinator integration.
+- [P02-ART-02-R17] Record the actual verification status of requirements in the release manifest.
+- [P02-ART-02-R18] Keep requirements claims consistent with the public case study and resume bullet suggestions.
+### P02-ART-03: data-dictionary
+- [P02-ART-03-R01] Deliver data-dictionary for Onboard Studio.
+- [P02-ART-03-R02] Its required content is entity grain, field types, source contracts, foreign keys and source-to-target mapping.
+- [P02-ART-03-R03] Use this business decision as its organizing question: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-ART-03-R04] Reference actual onboard-studio entities, metrics and workflow IDs instead of generic template prose.
+- [P02-ART-03-R05] Keep data-dictionary source files under the project directory in GitHub.
+- [P02-ART-03-R06] Generate binary data-dictionary outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P02-ART-03-R07] Include the source dataset hash and implementation revision in data-dictionary where relevant.
+- [P02-ART-03-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in data-dictionary.
+- [P02-ART-03-R09] Check that important numbers in data-dictionary reconcile with the independent reference calculation.
+- [P02-ART-03-R10] Use clear units, periods and population descriptions throughout data-dictionary.
+- [P02-ART-03-R11] If data-dictionary depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P02-ART-03-R12] Provide a brief read/use instruction for data-dictionary without requiring laptop installation.
+- [P02-ART-03-R13] Use accessible headings, labels and tables in data-dictionary.
+- [P02-ART-03-R14] Link data-dictionary from the individual website evidence area when safe and useful.
+- [P02-ART-03-R15] Do not publish credentials, real personal records or internal secrets in data-dictionary.
+- [P02-ART-03-R16] Have the appropriate specialist review data-dictionary before coordinator integration.
+- [P02-ART-03-R17] Record the actual verification status of data-dictionary in the release manifest.
+- [P02-ART-03-R18] Keep data-dictionary claims consistent with the public case study and resume bullet suggestions.
+### P02-ART-04: sql-analysis
+- [P02-ART-04-R01] Deliver sql-analysis for Onboard Studio.
+- [P02-ART-04-R02] Its required content is executable SQL investigations with independently reconciled totals.
+- [P02-ART-04-R03] Use this business decision as its organizing question: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-ART-04-R04] Reference actual onboard-studio entities, metrics and workflow IDs instead of generic template prose.
+- [P02-ART-04-R05] Keep sql-analysis source files under the project directory in GitHub.
+- [P02-ART-04-R06] Generate binary sql-analysis outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P02-ART-04-R07] Include the source dataset hash and implementation revision in sql-analysis where relevant.
+- [P02-ART-04-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in sql-analysis.
+- [P02-ART-04-R09] Check that important numbers in sql-analysis reconcile with the independent reference calculation.
+- [P02-ART-04-R10] Use clear units, periods and population descriptions throughout sql-analysis.
+- [P02-ART-04-R11] If sql-analysis depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P02-ART-04-R12] Provide a brief read/use instruction for sql-analysis without requiring laptop installation.
+- [P02-ART-04-R13] Use accessible headings, labels and tables in sql-analysis.
+- [P02-ART-04-R14] Link sql-analysis from the individual website evidence area when safe and useful.
+- [P02-ART-04-R15] Do not publish credentials, real personal records or internal secrets in sql-analysis.
+- [P02-ART-04-R16] Have the appropriate specialist review sql-analysis before coordinator integration.
+- [P02-ART-04-R17] Record the actual verification status of sql-analysis in the release manifest.
+- [P02-ART-04-R18] Keep sql-analysis claims consistent with the public case study and resume bullet suggestions.
+### P02-ART-05: excel-workbook
+- [P02-ART-05-R01] Deliver excel-workbook for Onboard Studio.
+- [P02-ART-05-R02] Its required content is formula-driven analyst workbook using project inputs and explicit assumptions.
+- [P02-ART-05-R03] Use this business decision as its organizing question: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-ART-05-R04] Reference actual onboard-studio entities, metrics and workflow IDs instead of generic template prose.
+- [P02-ART-05-R05] Keep excel-workbook source files under the project directory in GitHub.
+- [P02-ART-05-R06] Generate binary excel-workbook outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P02-ART-05-R07] Include the source dataset hash and implementation revision in excel-workbook where relevant.
+- [P02-ART-05-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in excel-workbook.
+- [P02-ART-05-R09] Check that important numbers in excel-workbook reconcile with the independent reference calculation.
+- [P02-ART-05-R10] Use clear units, periods and population descriptions throughout excel-workbook.
+- [P02-ART-05-R11] If excel-workbook depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P02-ART-05-R12] Provide a brief read/use instruction for excel-workbook without requiring laptop installation.
+- [P02-ART-05-R13] Use accessible headings, labels and tables in excel-workbook.
+- [P02-ART-05-R14] Link excel-workbook from the individual website evidence area when safe and useful.
+- [P02-ART-05-R15] Do not publish credentials, real personal records or internal secrets in excel-workbook.
+- [P02-ART-05-R16] Have the appropriate specialist review excel-workbook before coordinator integration.
+- [P02-ART-05-R17] Record the actual verification status of excel-workbook in the release manifest.
+- [P02-ART-05-R18] Keep excel-workbook claims consistent with the public case study and resume bullet suggestions.
+### P02-ART-06: bi-package
+- [P02-ART-06-R01] Deliver bi-package for Onboard Studio.
+- [P02-ART-06-R02] Its required content is reusable metric model, relationships, DAX/Power Query where relevant and verification status.
+- [P02-ART-06-R03] Use this business decision as its organizing question: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-ART-06-R04] Reference actual onboard-studio entities, metrics and workflow IDs instead of generic template prose.
+- [P02-ART-06-R05] Keep bi-package source files under the project directory in GitHub.
+- [P02-ART-06-R06] Generate binary bi-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P02-ART-06-R07] Include the source dataset hash and implementation revision in bi-package where relevant.
+- [P02-ART-06-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in bi-package.
+- [P02-ART-06-R09] Check that important numbers in bi-package reconcile with the independent reference calculation.
+- [P02-ART-06-R10] Use clear units, periods and population descriptions throughout bi-package.
+- [P02-ART-06-R11] If bi-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P02-ART-06-R12] Provide a brief read/use instruction for bi-package without requiring laptop installation.
+- [P02-ART-06-R13] Use accessible headings, labels and tables in bi-package.
+- [P02-ART-06-R14] Link bi-package from the individual website evidence area when safe and useful.
+- [P02-ART-06-R15] Do not publish credentials, real personal records or internal secrets in bi-package.
+- [P02-ART-06-R16] Have the appropriate specialist review bi-package before coordinator integration.
+- [P02-ART-06-R17] Record the actual verification status of bi-package in the release manifest.
+- [P02-ART-06-R18] Keep bi-package claims consistent with the public case study and resume bullet suggestions.
+### P02-ART-07: executive-memo
+- [P02-ART-07-R01] Deliver executive-memo for Onboard Studio.
+- [P02-ART-07-R02] Its required content is evidence-based recommendation, options, uncertainty and limitations.
+- [P02-ART-07-R03] Use this business decision as its organizing question: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-ART-07-R04] Reference actual onboard-studio entities, metrics and workflow IDs instead of generic template prose.
+- [P02-ART-07-R05] Keep executive-memo source files under the project directory in GitHub.
+- [P02-ART-07-R06] Generate binary executive-memo outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P02-ART-07-R07] Include the source dataset hash and implementation revision in executive-memo where relevant.
+- [P02-ART-07-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in executive-memo.
+- [P02-ART-07-R09] Check that important numbers in executive-memo reconcile with the independent reference calculation.
+- [P02-ART-07-R10] Use clear units, periods and population descriptions throughout executive-memo.
+- [P02-ART-07-R11] If executive-memo depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P02-ART-07-R12] Provide a brief read/use instruction for executive-memo without requiring laptop installation.
+- [P02-ART-07-R13] Use accessible headings, labels and tables in executive-memo.
+- [P02-ART-07-R14] Link executive-memo from the individual website evidence area when safe and useful.
+- [P02-ART-07-R15] Do not publish credentials, real personal records or internal secrets in executive-memo.
+- [P02-ART-07-R16] Have the appropriate specialist review executive-memo before coordinator integration.
+- [P02-ART-07-R17] Record the actual verification status of executive-memo in the release manifest.
+- [P02-ART-07-R18] Keep executive-memo claims consistent with the public case study and resume bullet suggestions.
+### P02-ART-08: uat-evidence
+- [P02-ART-08-R01] Deliver uat-evidence for Onboard Studio.
+- [P02-ART-08-R02] Its required content is business scenarios with expected answers, actual observations and defect disposition.
+- [P02-ART-08-R03] Use this business decision as its organizing question: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-ART-08-R04] Reference actual onboard-studio entities, metrics and workflow IDs instead of generic template prose.
+- [P02-ART-08-R05] Keep uat-evidence source files under the project directory in GitHub.
+- [P02-ART-08-R06] Generate binary uat-evidence outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P02-ART-08-R07] Include the source dataset hash and implementation revision in uat-evidence where relevant.
+- [P02-ART-08-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in uat-evidence.
+- [P02-ART-08-R09] Check that important numbers in uat-evidence reconcile with the independent reference calculation.
+- [P02-ART-08-R10] Use clear units, periods and population descriptions throughout uat-evidence.
+- [P02-ART-08-R11] If uat-evidence depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P02-ART-08-R12] Provide a brief read/use instruction for uat-evidence without requiring laptop installation.
+- [P02-ART-08-R13] Use accessible headings, labels and tables in uat-evidence.
+- [P02-ART-08-R14] Link uat-evidence from the individual website evidence area when safe and useful.
+- [P02-ART-08-R15] Do not publish credentials, real personal records or internal secrets in uat-evidence.
+- [P02-ART-08-R16] Have the appropriate specialist review uat-evidence before coordinator integration.
+- [P02-ART-08-R17] Record the actual verification status of uat-evidence in the release manifest.
+- [P02-ART-08-R18] Keep uat-evidence claims consistent with the public case study and resume bullet suggestions.
+### P02-ART-09: technical-case-study
+- [P02-ART-09-R01] Deliver technical-case-study for Onboard Studio.
+- [P02-ART-09-R02] Its required content is architecture, tradeoffs, recovery behavior, reproducible setup and measured evidence.
+- [P02-ART-09-R03] Use this business decision as its organizing question: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-ART-09-R04] Reference actual onboard-studio entities, metrics and workflow IDs instead of generic template prose.
+- [P02-ART-09-R05] Keep technical-case-study source files under the project directory in GitHub.
+- [P02-ART-09-R06] Generate binary technical-case-study outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P02-ART-09-R07] Include the source dataset hash and implementation revision in technical-case-study where relevant.
+- [P02-ART-09-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in technical-case-study.
+- [P02-ART-09-R09] Check that important numbers in technical-case-study reconcile with the independent reference calculation.
+- [P02-ART-09-R10] Use clear units, periods and population descriptions throughout technical-case-study.
+- [P02-ART-09-R11] If technical-case-study depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P02-ART-09-R12] Provide a brief read/use instruction for technical-case-study without requiring laptop installation.
+- [P02-ART-09-R13] Use accessible headings, labels and tables in technical-case-study.
+- [P02-ART-09-R14] Link technical-case-study from the individual website evidence area when safe and useful.
+- [P02-ART-09-R15] Do not publish credentials, real personal records or internal secrets in technical-case-study.
+- [P02-ART-09-R16] Have the appropriate specialist review technical-case-study before coordinator integration.
+- [P02-ART-09-R17] Record the actual verification status of technical-case-study in the release manifest.
+- [P02-ART-09-R18] Keep technical-case-study claims consistent with the public case study and resume bullet suggestions.
+### P02-ART-10: release-package
+- [P02-ART-10-R01] Deliver release-package for Onboard Studio.
+- [P02-ART-10-R02] Its required content is individual site, source links, checksums, main portfolio metadata and rollback manifest.
+- [P02-ART-10-R03] Use this business decision as its organizing question: Which onboarding workflow should be adopted and how should exceptions be handled?
+- [P02-ART-10-R04] Reference actual onboard-studio entities, metrics and workflow IDs instead of generic template prose.
+- [P02-ART-10-R05] Keep release-package source files under the project directory in GitHub.
+- [P02-ART-10-R06] Generate binary release-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P02-ART-10-R07] Include the source dataset hash and implementation revision in release-package where relevant.
+- [P02-ART-10-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in release-package.
+- [P02-ART-10-R09] Check that important numbers in release-package reconcile with the independent reference calculation.
+- [P02-ART-10-R10] Use clear units, periods and population descriptions throughout release-package.
+- [P02-ART-10-R11] If release-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P02-ART-10-R12] Provide a brief read/use instruction for release-package without requiring laptop installation.
+- [P02-ART-10-R13] Use accessible headings, labels and tables in release-package.
+- [P02-ART-10-R14] Link release-package from the individual website evidence area when safe and useful.
+- [P02-ART-10-R15] Do not publish credentials, real personal records or internal secrets in release-package.
+- [P02-ART-10-R16] Have the appropriate specialist review release-package before coordinator integration.
+- [P02-ART-10-R17] Record the actual verification status of release-package in the release manifest.
+- [P02-ART-10-R18] Keep release-package claims consistent with the public case study and resume bullet suggestions.
+
+## 09. Remote implementation work packages
+
+### P02-WORK-01: contract
+- [P02-WORK-01-R01] Assign contract to the business-contract specialist; write and review concrete definitions before implementing.
+- [P02-WORK-01-R02] Fable coordinator must supply the relevant P02 contract IDs and explicit file ownership.
+- [P02-WORK-01-R03] Resolve the actual specialist model before dispatching P02-WORK-01.
+- [P02-WORK-01-R04] Record requested model, resolved model, task ID and parent assignment for P02-WORK-01.
+- [P02-WORK-01-R05] Run P02-WORK-01 only in a verified GitHub-hosted environment.
+- [P02-WORK-01-R06] Checkpoint the incoming code SHA and assumptions before P02-WORK-01 edits.
+- [P02-WORK-01-R07] Complete a bounded vertical slice in P02-WORK-01; do not redesign unrelated projects.
+- [P02-WORK-01-R08] Return changed paths, verification performed and unresolved issues from P02-WORK-01.
+- [P02-WORK-01-R09] Review the diff and run affected checks before integrating P02-WORK-01.
+- [P02-WORK-01-R10] Persist the resulting commit SHA and evidence URLs for P02-WORK-01.
+- [P02-WORK-01-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P02-WORK-01-R12] No routine permission request is needed at the end of P02-WORK-01; proceed according to the master authorization envelope.
+### P02-WORK-02: fixtures
+- [P02-WORK-02-R01] Assign fixtures to the verification specialist; establish known answers independently of product calculations.
+- [P02-WORK-02-R02] Fable coordinator must supply the relevant P02 contract IDs and explicit file ownership.
+- [P02-WORK-02-R03] Resolve the actual specialist model before dispatching P02-WORK-02.
+- [P02-WORK-02-R04] Record requested model, resolved model, task ID and parent assignment for P02-WORK-02.
+- [P02-WORK-02-R05] Run P02-WORK-02 only in a verified GitHub-hosted environment.
+- [P02-WORK-02-R06] Checkpoint the incoming code SHA and assumptions before P02-WORK-02 edits.
+- [P02-WORK-02-R07] Complete a bounded vertical slice in P02-WORK-02; do not redesign unrelated projects.
+- [P02-WORK-02-R08] Return changed paths, verification performed and unresolved issues from P02-WORK-02.
+- [P02-WORK-02-R09] Review the diff and run affected checks before integrating P02-WORK-02.
+- [P02-WORK-02-R10] Persist the resulting commit SHA and evidence URLs for P02-WORK-02.
+- [P02-WORK-02-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P02-WORK-02-R12] No routine permission request is needed at the end of P02-WORK-02; proceed according to the master authorization envelope.
+### P02-WORK-03: data
+- [P02-WORK-03-R01] Assign data to the data specialist; generate sources, validate and reconcile transformations.
+- [P02-WORK-03-R02] Fable coordinator must supply the relevant P02 contract IDs and explicit file ownership.
+- [P02-WORK-03-R03] Resolve the actual specialist model before dispatching P02-WORK-03.
+- [P02-WORK-03-R04] Record requested model, resolved model, task ID and parent assignment for P02-WORK-03.
+- [P02-WORK-03-R05] Run P02-WORK-03 only in a verified GitHub-hosted environment.
+- [P02-WORK-03-R06] Checkpoint the incoming code SHA and assumptions before P02-WORK-03 edits.
+- [P02-WORK-03-R07] Complete a bounded vertical slice in P02-WORK-03; do not redesign unrelated projects.
+- [P02-WORK-03-R08] Return changed paths, verification performed and unresolved issues from P02-WORK-03.
+- [P02-WORK-03-R09] Review the diff and run affected checks before integrating P02-WORK-03.
+- [P02-WORK-03-R10] Persist the resulting commit SHA and evidence URLs for P02-WORK-03.
+- [P02-WORK-03-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P02-WORK-03-R12] No routine permission request is needed at the end of P02-WORK-03; proceed according to the master authorization envelope.
+### P02-WORK-04: backend
+- [P02-WORK-04-R01] Assign backend to the backend specialist; implement tested transitions and API contracts on remote runners.
+- [P02-WORK-04-R02] Fable coordinator must supply the relevant P02 contract IDs and explicit file ownership.
+- [P02-WORK-04-R03] Resolve the actual specialist model before dispatching P02-WORK-04.
+- [P02-WORK-04-R04] Record requested model, resolved model, task ID and parent assignment for P02-WORK-04.
+- [P02-WORK-04-R05] Run P02-WORK-04 only in a verified GitHub-hosted environment.
+- [P02-WORK-04-R06] Checkpoint the incoming code SHA and assumptions before P02-WORK-04 edits.
+- [P02-WORK-04-R07] Complete a bounded vertical slice in P02-WORK-04; do not redesign unrelated projects.
+- [P02-WORK-04-R08] Return changed paths, verification performed and unresolved issues from P02-WORK-04.
+- [P02-WORK-04-R09] Review the diff and run affected checks before integrating P02-WORK-04.
+- [P02-WORK-04-R10] Persist the resulting commit SHA and evidence URLs for P02-WORK-04.
+- [P02-WORK-04-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P02-WORK-04-R12] No routine permission request is needed at the end of P02-WORK-04; proceed according to the master authorization envelope.
+### P02-WORK-05: web
+- [P02-WORK-05-R01] Assign web to the frontend specialist; connect the first decision journey to verified inputs.
+- [P02-WORK-05-R02] Fable coordinator must supply the relevant P02 contract IDs and explicit file ownership.
+- [P02-WORK-05-R03] Resolve the actual specialist model before dispatching P02-WORK-05.
+- [P02-WORK-05-R04] Record requested model, resolved model, task ID and parent assignment for P02-WORK-05.
+- [P02-WORK-05-R05] Run P02-WORK-05 only in a verified GitHub-hosted environment.
+- [P02-WORK-05-R06] Checkpoint the incoming code SHA and assumptions before P02-WORK-05 edits.
+- [P02-WORK-05-R07] Complete a bounded vertical slice in P02-WORK-05; do not redesign unrelated projects.
+- [P02-WORK-05-R08] Return changed paths, verification performed and unresolved issues from P02-WORK-05.
+- [P02-WORK-05-R09] Review the diff and run affected checks before integrating P02-WORK-05.
+- [P02-WORK-05-R10] Persist the resulting commit SHA and evidence URLs for P02-WORK-05.
+- [P02-WORK-05-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P02-WORK-05-R12] No routine permission request is needed at the end of P02-WORK-05; proceed according to the master authorization envelope.
+### P02-WORK-06: analytics
+- [P02-WORK-06-R01] Assign analytics to the quantitative specialist; verify calculations and domain-specific evaluation.
+- [P02-WORK-06-R02] Fable coordinator must supply the relevant P02 contract IDs and explicit file ownership.
+- [P02-WORK-06-R03] Resolve the actual specialist model before dispatching P02-WORK-06.
+- [P02-WORK-06-R04] Record requested model, resolved model, task ID and parent assignment for P02-WORK-06.
+- [P02-WORK-06-R05] Run P02-WORK-06 only in a verified GitHub-hosted environment.
+- [P02-WORK-06-R06] Checkpoint the incoming code SHA and assumptions before P02-WORK-06 edits.
+- [P02-WORK-06-R07] Complete a bounded vertical slice in P02-WORK-06; do not redesign unrelated projects.
+- [P02-WORK-06-R08] Return changed paths, verification performed and unresolved issues from P02-WORK-06.
+- [P02-WORK-06-R09] Review the diff and run affected checks before integrating P02-WORK-06.
+- [P02-WORK-06-R10] Persist the resulting commit SHA and evidence URLs for P02-WORK-06.
+- [P02-WORK-06-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P02-WORK-06-R12] No routine permission request is needed at the end of P02-WORK-06; proceed according to the master authorization envelope.
+### P02-WORK-07: review
+- [P02-WORK-07-R01] Assign review to the verification specialist; challenge invariants and inspect rendered evidence.
+- [P02-WORK-07-R02] Fable coordinator must supply the relevant P02 contract IDs and explicit file ownership.
+- [P02-WORK-07-R03] Resolve the actual specialist model before dispatching P02-WORK-07.
+- [P02-WORK-07-R04] Record requested model, resolved model, task ID and parent assignment for P02-WORK-07.
+- [P02-WORK-07-R05] Run P02-WORK-07 only in a verified GitHub-hosted environment.
+- [P02-WORK-07-R06] Checkpoint the incoming code SHA and assumptions before P02-WORK-07 edits.
+- [P02-WORK-07-R07] Complete a bounded vertical slice in P02-WORK-07; do not redesign unrelated projects.
+- [P02-WORK-07-R08] Return changed paths, verification performed and unresolved issues from P02-WORK-07.
+- [P02-WORK-07-R09] Review the diff and run affected checks before integrating P02-WORK-07.
+- [P02-WORK-07-R10] Persist the resulting commit SHA and evidence URLs for P02-WORK-07.
+- [P02-WORK-07-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P02-WORK-07-R12] No routine permission request is needed at the end of P02-WORK-07; proceed according to the master authorization envelope.
+### P02-WORK-08: artifacts
+- [P02-WORK-08-R01] Assign artifacts to the business-contract specialist; complete business and analytical deliverables.
+- [P02-WORK-08-R02] Fable coordinator must supply the relevant P02 contract IDs and explicit file ownership.
+- [P02-WORK-08-R03] Resolve the actual specialist model before dispatching P02-WORK-08.
+- [P02-WORK-08-R04] Record requested model, resolved model, task ID and parent assignment for P02-WORK-08.
+- [P02-WORK-08-R05] Run P02-WORK-08 only in a verified GitHub-hosted environment.
+- [P02-WORK-08-R06] Checkpoint the incoming code SHA and assumptions before P02-WORK-08 edits.
+- [P02-WORK-08-R07] Complete a bounded vertical slice in P02-WORK-08; do not redesign unrelated projects.
+- [P02-WORK-08-R08] Return changed paths, verification performed and unresolved issues from P02-WORK-08.
+- [P02-WORK-08-R09] Review the diff and run affected checks before integrating P02-WORK-08.
+- [P02-WORK-08-R10] Persist the resulting commit SHA and evidence URLs for P02-WORK-08.
+- [P02-WORK-08-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P02-WORK-08-R12] No routine permission request is needed at the end of P02-WORK-08; proceed according to the master authorization envelope.
+### P02-WORK-09: release
+- [P02-WORK-09-R01] Assign release to the release specialist; publish and verify the standalone static website.
+- [P02-WORK-09-R02] Fable coordinator must supply the relevant P02 contract IDs and explicit file ownership.
+- [P02-WORK-09-R03] Resolve the actual specialist model before dispatching P02-WORK-09.
+- [P02-WORK-09-R04] Record requested model, resolved model, task ID and parent assignment for P02-WORK-09.
+- [P02-WORK-09-R05] Run P02-WORK-09 only in a verified GitHub-hosted environment.
+- [P02-WORK-09-R06] Checkpoint the incoming code SHA and assumptions before P02-WORK-09 edits.
+- [P02-WORK-09-R07] Complete a bounded vertical slice in P02-WORK-09; do not redesign unrelated projects.
+- [P02-WORK-09-R08] Return changed paths, verification performed and unresolved issues from P02-WORK-09.
+- [P02-WORK-09-R09] Review the diff and run affected checks before integrating P02-WORK-09.
+- [P02-WORK-09-R10] Persist the resulting commit SHA and evidence URLs for P02-WORK-09.
+- [P02-WORK-09-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P02-WORK-09-R12] No routine permission request is needed at the end of P02-WORK-09; proceed according to the master authorization envelope.
+### P02-WORK-10: integrate
+- [P02-WORK-10-R01] Assign integrate to the release specialist; rebuild and verify the existing main portfolio entry.
+- [P02-WORK-10-R02] Fable coordinator must supply the relevant P02 contract IDs and explicit file ownership.
+- [P02-WORK-10-R03] Resolve the actual specialist model before dispatching P02-WORK-10.
+- [P02-WORK-10-R04] Record requested model, resolved model, task ID and parent assignment for P02-WORK-10.
+- [P02-WORK-10-R05] Run P02-WORK-10 only in a verified GitHub-hosted environment.
+- [P02-WORK-10-R06] Checkpoint the incoming code SHA and assumptions before P02-WORK-10 edits.
+- [P02-WORK-10-R07] Complete a bounded vertical slice in P02-WORK-10; do not redesign unrelated projects.
+- [P02-WORK-10-R08] Return changed paths, verification performed and unresolved issues from P02-WORK-10.
+- [P02-WORK-10-R09] Review the diff and run affected checks before integrating P02-WORK-10.
+- [P02-WORK-10-R10] Persist the resulting commit SHA and evidence URLs for P02-WORK-10.
+- [P02-WORK-10-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P02-WORK-10-R12] No routine permission request is needed at the end of P02-WORK-10; proceed according to the master authorization envelope.
+
+## 10. Release, individual website and main portfolio acceptance
+
+- [P02-REL-01] Build onboard-studio as an independently navigable static product website with its own landing, demo and evidence routes.
+- [P02-REL-02] Publish under a unique verified GitHub Pages path; do not assume the path exists before deployment.
+- [P02-REL-03] Preserve all onboard-studio durable source, contracts, data generation and evidence in GitHub.
+- [P02-REL-04] Use no laptop checkout, local database, downloaded workbook or browser persistent storage as a build dependency.
+- [P02-REL-05] Run the backend and relational acceptance suite in GitHub Actions with a transient PostgreSQL service.
+- [P02-REL-06] Document the distinction between verified backend execution and browser-only simulated actions.
+- [P02-REL-07] Check every public export for synthetic-only data and absence of secrets.
+- [P02-REL-08] Archive durable workbook/notebook/evidence outputs with checksums and code revision.
+- [P02-REL-09] Verify deployed HTTP responses, route reload, one real user journey, downloads and source links.
+- [P02-REL-10] Inspect the current main projects site schema and generate its required project.json record.
+- [P02-REL-11] Produce cover.jpg and required loop media from actual project visuals with accurate labels.
+- [P02-REL-12] Regenerate catalogue and case-study pages through the current portfolio build process.
+- [P02-REL-13] Preserve the existing Precision Atelier design system on the main site.
+- [P02-REL-14] Keep this individual product identity separate from the main site theme requirements.
+- [P02-REL-15] Add catalogue/search/category/navigation entries according to the existing source schema.
+- [P02-REL-16] Do not modify unrelated project metadata or replace the main opening animation.
+- [P02-REL-17] Confirm the individual website is reachable before its portfolio link is published.
+- [P02-REL-18] Verify the main portfolio case study links to this actual website, source and evidence.
+- [P02-REL-19] Run existing site checks and targeted new-project route checks in hosted compute.
+- [P02-REL-20] Record built, verified, published and integrated as separate release fields.
+- [P02-REL-21] If an external permission blocks publication, preserve a ready change and report its exact state.
+- [P02-REL-22] Do not label a source commit as a verified live release.
+- [P02-REL-23] Prepare rollback to the preceding known-good portfolio/site artifact.
+- [P02-REL-24] End the Onboard Studio handoff with the supported business decision, actual evidence and material limitations.
+
+## 11. Concrete implementation starting contracts
+
+These choices fix the default implementation shape. Change them only through a logged domain/architecture decision.
+Project directory: apps/onboard-studio/.
+Web: React and TypeScript, static build, route base injected by build configuration.
+Backend verification: FastAPI with generated OpenAPI, exercised only on a GitHub-hosted runner by default.
+Relational verification: PostgreSQL service container populated from deterministic fixtures.
+Business logic: pure Python domain functions separated from database and HTTP adapters.
+Browser scenario logic: TypeScript implementation checked against the same independently calculated fixtures.
+Canonical timestamps: UTC instants; display calendars can use configured IANA time zones.
+Canonical identifiers: opaque stable text IDs derived from source identifiers, not mutable display names.
+Canonical currency for the small reference fixture: USD unless explicitly stated otherwise.
+Money: decimal strings in JSON and NUMERIC(20,6) in database; round to currency minor units only at the declared step.
+Probabilities and rates: numeric values in [0,1] where their definition is a proportion; percentage-point differences may be signed.
+Count fields: nonnegative integers unless a signed movement/variance is explicitly part of the business definition.
+Absence: JSON null; do not use NaN, Infinity, the string null, or an empty string as substitute.
+Collection ordering: documented stable field plus primary-key tie breaker.
+Pagination: limit default 50, maximum 200; opaque cursor on large evidence collections.
+Time filtering: from inclusive, to exclusive; reject invalid or reversed ranges.
+Snapshot consistency: all data returned for one analysis references one immutable dataset_version.
+Scenario consistency: baseline_version is immutable; scenario edits use a distinct scenario_id and version.
+Conflict behavior: return 409 for stale version or idempotency-key reuse with a different payload.
+Validation behavior: return 422 with field path, rule ID and safe user message.
+Authorization behavior on the verified backend: 401 for missing identity, 403 for forbidden action; never fake public auth.
+Read-model response: data, meta, warnings; meta includes dataset_version, code_sha, generated_at and applied_filters.
+Error response: error.code, error.message, error.details, request_id; never stack traces or tokens.
+Command request: input, expected_version where relevant, idempotency_key for state-changing operations.
+Audit event: event_id, entity_type, entity_id, action, actor_id, occurred_at, before_version, after_version, reason.
+Static mode: command requests use a local in-memory adapter and display that fact before an action is taken.
+Static mode: a refresh intentionally restores the published fixture; do not imply durable multi-user state.
+API boundaries below are backend contracts to implement and verify; they are not public Pages endpoints.
+Generate a static data manifest rather than requesting unavailable /api routes from GitHub Pages.
+Minimum request tests: valid, malformed, unknown resource, stale version, repeated command and unsupported action.
+Minimum read tests: no records, one record, multiple pages, invalid filter, stable ordering and evidence reconciliation.
+Create a route inventory in docs/api-contract.md before frontend integration.
+Do not publish synthetic actor role switching as proof of backend authorization.
+Only claim access-control verification from separate backend identities and direct request tests.
+Use an optimistic record version for mutable operational rows; keep immutable event rows append-only.
+Specify missing source references as quarantine or explicit unresolved records, not arbitrary placeholder joins.
+Use migrations and seed scripts that succeed from an empty database and on a second idempotent run.
+Keep CI data fixtures below a documented size; large benchmark generation is an opt-in workflow input.
+Archive the exact exported data used by the public static demo with its checksum.
+Do not accidentally archive a transient database connection URL in any manifest.
+### Command C01: Create case
+- Contract endpoint: POST /api/v1/onboard-studio/commands/create-case.
+- Business transition: Absent -> open.
+- Hard validation: Bind immutable workflow version.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C02: Submit document
+- Contract endpoint: POST /api/v1/onboard-studio/commands/submit-document.
+- Business transition: Missing -> submitted.
+- Hard validation: Use synthetic placeholder only.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C03: Reject submission
+- Contract endpoint: POST /api/v1/onboard-studio/commands/reject-submission.
+- Business transition: Submitted -> changes_requested.
+- Hard validation: Record reviewer reason.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C04: Resubmit document
+- Contract endpoint: POST /api/v1/onboard-studio/commands/resubmit-document.
+- Business transition: Changes_requested -> submitted.
+- Hard validation: New document version preserves original.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C05: Unlock dependent step
+- Contract endpoint: POST /api/v1/onboard-studio/commands/unlock-dependent-step.
+- Business transition: Blocked -> ready.
+- Hard validation: All mandatory prerequisites accepted.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C06: Approve step
+- Contract endpoint: POST /api/v1/onboard-studio/commands/approve-step.
+- Business transition: In_review -> approved.
+- Hard validation: Authorized independent reviewer.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C07: Reassign work
+- Contract endpoint: POST /api/v1/onboard-studio/commands/reassign-work.
+- Business transition: Assigned -> reassigned.
+- Hard validation: Close prior assignment interval.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C08: Pause SLA
+- Contract endpoint: POST /api/v1/onboard-studio/commands/pause-sla.
+- Business transition: Active -> waiting_external.
+- Hard validation: Only configured pause reason.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C09: Complete case
+- Contract endpoint: POST /api/v1/onboard-studio/commands/complete-case.
+- Business transition: Open -> complete.
+- Hard validation: All required steps and documents satisfied.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C10: Migrate workflow
+- Contract endpoint: POST /api/v1/onboard-studio/commands/migrate-workflow.
+- Business transition: Old version -> explicitly migrated.
+- Hard validation: Audit mapping and unresolved steps.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Read contract: organizations
+- Endpoint: GET /api/v1/onboard-studio/data/organizations.
+- Evidence fields: organization_id,organization_name,segment,region,created_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: cases
+- Endpoint: GET /api/v1/onboard-studio/data/cases.
+- Evidence fields: case_id,organization_id,workflow_version_id,status,opened_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: workflow_versions
+- Endpoint: GET /api/v1/onboard-studio/data/workflow_versions.
+- Evidence fields: workflow_version_id,template_id,version_number,published_at,definition_hash.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: step_definitions
+- Endpoint: GET /api/v1/onboard-studio/data/step_definitions.
+- Evidence fields: step_definition_id,workflow_version_id,step_name,required,role_key.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: dependencies
+- Endpoint: GET /api/v1/onboard-studio/data/dependencies.
+- Evidence fields: dependency_id,step_definition_id,prerequisite_id,dependency_type,created_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: step_instances
+- Endpoint: GET /api/v1/onboard-studio/data/step_instances.
+- Evidence fields: step_instance_id,case_id,step_definition_id,status,version_number.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: assignments
+- Endpoint: GET /api/v1/onboard-studio/data/assignments.
+- Evidence fields: assignment_id,step_instance_id,assignee_id,assigned_at,ended_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: document_versions
+- Endpoint: GET /api/v1/onboard-studio/data/document_versions.
+- Evidence fields: document_version_id,case_id,document_type,content_hash,review_status.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: approvals
+- Endpoint: GET /api/v1/onboard-studio/data/approvals.
+- Evidence fields: approval_id,step_instance_id,reviewer_id,decision,decided_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: sla_rules
+- Endpoint: GET /api/v1/onboard-studio/data/sla_rules.
+- Evidence fields: sla_rule_id,workflow_version_id,business_minutes,pause_policy,calendar_id.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: calendar_intervals
+- Endpoint: GET /api/v1/onboard-studio/data/calendar_intervals.
+- Evidence fields: calendar_interval_id,calendar_id,starts_at,ends_at,timezone.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: case_events
+- Endpoint: GET /api/v1/onboard-studio/data/case_events.
+- Evidence fields: event_id,case_id,event_type,actor_id,occurred_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+
+## 12. Small versus large data profiles
+
+- golden: use the exact hand-checkable fixture in section 02; do not substitute random rows.
+- demo: start with approximately 500 primary business objects and enough linked events to demonstrate every required path.
+- analytical history: use the project-required observation horizon, including complete outcome windows and historical versions.
+- benchmark: optional input controls size; begin with 10,000 primary objects and increase only within observed runner resources.
+- store generator seed, config, schema version and injection manifest for every profile.
+- do not equate object count with event count; report each explicitly.
+- keep semantic distributions configurable; volume scaling must not change business rules.
+- do not use a large dataset to hide a failed small known-answer case.
+- no native software requirement may force a laptop download; preserve source and mark unsupported verification honestly.
+- acceptance evidence must state which profile each test used.

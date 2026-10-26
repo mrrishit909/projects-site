@@ -1,0 +1,2749 @@
+# P06 — ProductSignal: complete project build specification
+Version: 2026-10-26. Read MASTER-DIRECTIVE.md first. These are requirements, not claims that software already exists.
+
+## 01. Product mandate and business boundary
+
+- [P06-GOAL-01] Build a standalone product supporting this decision: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-GOAL-02] Primary portfolio roles: Product Analyst; Data Analyst; Experimentation Analyst.
+- [P06-GOAL-03] Visual direction: Product journey laboratory: warm white, cobalt, violet; funnel and cohort grid.
+- [P06-GOAL-04] Use app slug productsignal; keep routes, fixtures, manifests and catalogue entries consistent.
+- [P06-GOAL-05] Execute code only on GitHub-hosted compute; retain durable deliverables in GitHub; never write project files to the laptop.
+- [P06-GOAL-06] Default public experience is static interactive synthetic demo; transactional backend evidence comes from remote CI.
+- [P06-GOAL-07] Use Fable 5.1 for coordination and real specialist-model invocations for implementation and verification.
+- [P06-GOAL-08] Resolve provider/model availability and record actual requested/resolved IDs without inventing capabilities.
+- [P06-GOAL-09] The entry milestone is one complete source-to-decision journey using the reference fixture and working export.
+- [P06-GOAL-10] The mid-level milestone adds the specified exceptions, robustness, versioning and recovery evidence.
+- [P06-GOAL-11] Do not open with a chatbot or require a paid inference API to use the demo.
+- [P06-GOAL-12] No live customer data, real payment, vendor commitment or operational write belongs in the default synthetic demo.
+- [P06-GOAL-13] All monetary, temporal and statistical meaning must be defined before interface implementation.
+- [P06-GOAL-14] If a proposed field/formula conflicts with an invariant, fix the specification through a logged decision before coding.
+- [P06-GOAL-15] Keep specifications addressable by the IDs in this file; do not paste the entire file into every worker prompt.
+- [P06-DOMAIN-01] Use account randomization for shared B2B accounts.
+- [P06-DOMAIN-02] Report intention-to-treat primary analysis.
+- [P06-DOMAIN-03] Prespecify primary outcome, guardrails and horizon.
+- [P06-DOMAIN-04] Check sample ratio mismatch before interpretation.
+- [P06-DOMAIN-05] No causal conclusions from observational feature correlations.
+- [P06-DOMAIN-06] Label segment exploration separately from confirmatory results.
+
+## 02. Independent known-answer fixture
+
+- [P06-GOLD-01] Control: 20 activations among 100 mature assigned accounts; treatment: 30 among 100. Absolute lift=10 percentage points; relative lift=50%. These counts alone do not guarantee a statistically conclusive result. Retention fixture: 5 of 20 mature accounts returning on day 7 gives 25%.
+- [P06-GOLD-02] Encode the reference inputs under tests/fixtures/golden/ and preserve the human-readable calculation.
+- [P06-GOLD-03] Keep the expected-answer file independent of application helper functions and generated dashboard output.
+- [P06-GOLD-04] Have the verification specialist reproduce the answer from the source records before implementation review.
+- [P06-GOLD-05] Use explicit decimal tolerance for monetary results and justified tolerance for statistical/numerical results.
+- [P06-GOLD-06] Test the displayed value, exported value and backend result against the reference, not only against each other.
+- [P06-GOLD-07] Do not enlarge a numeric tolerance to conceal a business-rule disagreement.
+- [P06-GOLD-08] Create one rejected-record variant and show why rejection is correct.
+- [P06-GOLD-09] Create one empty-population variant and show the documented zero-denominator behavior.
+- [P06-GOLD-10] Persist fixture hashes and verification evidence with the code revision.
+- [P06-GOLD-11] If this fixture reveals a definition gap, resolve and version the definition before treating results as authoritative.
+
+## 03. Logical data model and field contracts
+
+### P06-DATA-01: accounts
+- [P06-DATA-01-R01] Create the accounts entity with a documented grain and one stable primary key: account_id.
+- [P06-DATA-01-R02] The minimum business fields are account_id, plan, segment, created_at, internal; add technical metadata only with a documented purpose.
+- [P06-DATA-01-R03] Use the role of accounts in the product workflow to define authoritative source ownership.
+- [P06-DATA-01-R04] Write migrations for accounts; do not rely on ORM auto-create for the verified release.
+- [P06-DATA-01-R05] Create a small valid accounts fixture linked to the independently calculated project example.
+- [P06-DATA-01-R06] Create an invalid accounts fixture that demonstrates a real domain constraint.
+- [P06-DATA-01-R07] Choose explicit row-update semantics for accounts: immutable event, versioned dimension or mutable operational record.
+- [P06-DATA-01-R08] Preserve the original source identifier for accounts when a surrogate key is introduced.
+- [P06-DATA-01-R09] Document whether deletion of accounts is prohibited, reversible or represented by a tombstone.
+- [P06-DATA-01-R10] Reconcile accounts accepted, rejected and deduplicated row counts to the source batch.
+- [P06-DATA-01-R11] Expose only justified synthetic accounts fields to the public site; remove internal runner metadata.
+- [P06-DATA-01-R12] Index accounts according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P06-DATA-01-R13] Do not join accounts at a different grain without an explicit aggregation or allocation rule.
+- [P06-DATA-01-R14] Associate the published accounts snapshot with dataset hash and generator parameters.
+- [P06-DATA-01-R15] Define deterministic sorting and pagination for the accounts evidence view.
+- [P06-DATA-01-R16] Ensure an empty accounts dataset yields an understandable empty state instead of fabricated sample totals.
+- [P06-DATA-01-R17] Archive the accounts schema and sample rows in the data dictionary.
+- [P06-DATA-01-R18] Test that replaying the source import cannot unintentionally duplicate accounts business records.
+- [P06-DATA-01-F01-R01] Field accounts.account_id: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P06-DATA-01-F01-R02] Field accounts.account_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-01-F01-R03] Field accounts.account_id: make it non-null and unique as the primary key.
+- [P06-DATA-01-F01-R04] Field accounts.account_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-01-F01-R05] Field accounts.account_id: use stable source-to-key mapping across replays and regeneration.
+- [P06-DATA-01-F01-R06] Field accounts.account_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-01-F01-R07] Field accounts.account_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-01-F01-R08] Field accounts.account_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-01-F02-R01] Field accounts.plan: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-01-F02-R02] Field accounts.plan: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-01-F02-R03] Field accounts.plan: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-01-F02-R04] Field accounts.plan: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-01-F02-R05] Field accounts.plan: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-01-F02-R06] Field accounts.plan: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-01-F02-R07] Field accounts.plan: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-01-F02-R08] Field accounts.plan: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-01-F03-R01] Field accounts.segment: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-01-F03-R02] Field accounts.segment: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-01-F03-R03] Field accounts.segment: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-01-F03-R04] Field accounts.segment: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-01-F03-R05] Field accounts.segment: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-01-F03-R06] Field accounts.segment: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-01-F03-R07] Field accounts.segment: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-01-F03-R08] Field accounts.segment: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-01-F04-R01] Field accounts.created_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P06-DATA-01-F04-R02] Field accounts.created_at: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-01-F04-R03] Field accounts.created_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-01-F04-R04] Field accounts.created_at: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-01-F04-R05] Field accounts.created_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-01-F04-R06] Field accounts.created_at: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-01-F04-R07] Field accounts.created_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-01-F04-R08] Field accounts.created_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-01-F05-R01] Field accounts.internal: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P06-DATA-01-F05-R02] Field accounts.internal: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-01-F05-R03] Field accounts.internal: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-01-F05-R04] Field accounts.internal: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-01-F05-R05] Field accounts.internal: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-01-F05-R06] Field accounts.internal: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-01-F05-R07] Field accounts.internal: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-01-F05-R08] Field accounts.internal: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P06-DATA-02: users
+- [P06-DATA-02-R01] Create the users entity with a documented grain and one stable primary key: user_id.
+- [P06-DATA-02-R02] The minimum business fields are user_id, account_id, created_at, timezone, bot_flag; add technical metadata only with a documented purpose.
+- [P06-DATA-02-R03] Use the role of users in the product workflow to define authoritative source ownership.
+- [P06-DATA-02-R04] Write migrations for users; do not rely on ORM auto-create for the verified release.
+- [P06-DATA-02-R05] Create a small valid users fixture linked to the independently calculated project example.
+- [P06-DATA-02-R06] Create an invalid users fixture that demonstrates a real domain constraint.
+- [P06-DATA-02-R07] Choose explicit row-update semantics for users: immutable event, versioned dimension or mutable operational record.
+- [P06-DATA-02-R08] Preserve the original source identifier for users when a surrogate key is introduced.
+- [P06-DATA-02-R09] Document whether deletion of users is prohibited, reversible or represented by a tombstone.
+- [P06-DATA-02-R10] Reconcile users accepted, rejected and deduplicated row counts to the source batch.
+- [P06-DATA-02-R11] Expose only justified synthetic users fields to the public site; remove internal runner metadata.
+- [P06-DATA-02-R12] Index users according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P06-DATA-02-R13] Do not join users at a different grain without an explicit aggregation or allocation rule.
+- [P06-DATA-02-R14] Associate the published users snapshot with dataset hash and generator parameters.
+- [P06-DATA-02-R15] Define deterministic sorting and pagination for the users evidence view.
+- [P06-DATA-02-R16] Ensure an empty users dataset yields an understandable empty state instead of fabricated sample totals.
+- [P06-DATA-02-R17] Archive the users schema and sample rows in the data dictionary.
+- [P06-DATA-02-R18] Test that replaying the source import cannot unintentionally duplicate users business records.
+- [P06-DATA-02-F01-R01] Field users.user_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-02-F01-R02] Field users.user_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-02-F01-R03] Field users.user_id: make it non-null and unique as the primary key.
+- [P06-DATA-02-F01-R04] Field users.user_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-02-F01-R05] Field users.user_id: use stable source-to-key mapping across replays and regeneration.
+- [P06-DATA-02-F01-R06] Field users.user_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-02-F01-R07] Field users.user_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-02-F01-R08] Field users.user_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-02-F02-R01] Field users.account_id: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P06-DATA-02-F02-R02] Field users.account_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-02-F02-R03] Field users.account_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-02-F02-R04] Field users.account_id: validate its reference to accounts.account_id; explain deferred or quarantined unmatched records.
+- [P06-DATA-02-F02-R05] Field users.account_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-02-F02-R06] Field users.account_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-02-F02-R07] Field users.account_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-02-F02-R08] Field users.account_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-02-F03-R01] Field users.created_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P06-DATA-02-F03-R02] Field users.created_at: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-02-F03-R03] Field users.created_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-02-F03-R04] Field users.created_at: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-02-F03-R05] Field users.created_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-02-F03-R06] Field users.created_at: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-02-F03-R07] Field users.created_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-02-F03-R08] Field users.created_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-02-F04-R01] Field users.timezone: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-02-F04-R02] Field users.timezone: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-02-F04-R03] Field users.timezone: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-02-F04-R04] Field users.timezone: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-02-F04-R05] Field users.timezone: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-02-F04-R06] Field users.timezone: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-02-F04-R07] Field users.timezone: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-02-F04-R08] Field users.timezone: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-02-F05-R01] Field users.bot_flag: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P06-DATA-02-F05-R02] Field users.bot_flag: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-02-F05-R03] Field users.bot_flag: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-02-F05-R04] Field users.bot_flag: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-02-F05-R05] Field users.bot_flag: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-02-F05-R06] Field users.bot_flag: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-02-F05-R07] Field users.bot_flag: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-02-F05-R08] Field users.bot_flag: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P06-DATA-03: identity_links
+- [P06-DATA-03-R01] Create the identity_links entity with a documented grain and one stable primary key: identity_link_id.
+- [P06-DATA-03-R02] The minimum business fields are identity_link_id, anonymous_id, user_id, linked_at, rule_version; add technical metadata only with a documented purpose.
+- [P06-DATA-03-R03] Use the role of identity_links in the product workflow to define authoritative source ownership.
+- [P06-DATA-03-R04] Write migrations for identity_links; do not rely on ORM auto-create for the verified release.
+- [P06-DATA-03-R05] Create a small valid identity_links fixture linked to the independently calculated project example.
+- [P06-DATA-03-R06] Create an invalid identity_links fixture that demonstrates a real domain constraint.
+- [P06-DATA-03-R07] Choose explicit row-update semantics for identity_links: immutable event, versioned dimension or mutable operational record.
+- [P06-DATA-03-R08] Preserve the original source identifier for identity_links when a surrogate key is introduced.
+- [P06-DATA-03-R09] Document whether deletion of identity_links is prohibited, reversible or represented by a tombstone.
+- [P06-DATA-03-R10] Reconcile identity_links accepted, rejected and deduplicated row counts to the source batch.
+- [P06-DATA-03-R11] Expose only justified synthetic identity_links fields to the public site; remove internal runner metadata.
+- [P06-DATA-03-R12] Index identity_links according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P06-DATA-03-R13] Do not join identity_links at a different grain without an explicit aggregation or allocation rule.
+- [P06-DATA-03-R14] Associate the published identity_links snapshot with dataset hash and generator parameters.
+- [P06-DATA-03-R15] Define deterministic sorting and pagination for the identity_links evidence view.
+- [P06-DATA-03-R16] Ensure an empty identity_links dataset yields an understandable empty state instead of fabricated sample totals.
+- [P06-DATA-03-R17] Archive the identity_links schema and sample rows in the data dictionary.
+- [P06-DATA-03-R18] Test that replaying the source import cannot unintentionally duplicate identity_links business records.
+- [P06-DATA-03-F01-R01] Field identity_links.identity_link_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-03-F01-R02] Field identity_links.identity_link_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-03-F01-R03] Field identity_links.identity_link_id: make it non-null and unique as the primary key.
+- [P06-DATA-03-F01-R04] Field identity_links.identity_link_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-03-F01-R05] Field identity_links.identity_link_id: use stable source-to-key mapping across replays and regeneration.
+- [P06-DATA-03-F01-R06] Field identity_links.identity_link_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-03-F01-R07] Field identity_links.identity_link_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-03-F01-R08] Field identity_links.identity_link_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-03-F02-R01] Field identity_links.anonymous_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-03-F02-R02] Field identity_links.anonymous_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-03-F02-R03] Field identity_links.anonymous_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-03-F02-R04] Field identity_links.anonymous_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-03-F02-R05] Field identity_links.anonymous_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-03-F02-R06] Field identity_links.anonymous_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-03-F02-R07] Field identity_links.anonymous_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-03-F02-R08] Field identity_links.anonymous_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-03-F03-R01] Field identity_links.user_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-03-F03-R02] Field identity_links.user_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-03-F03-R03] Field identity_links.user_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-03-F03-R04] Field identity_links.user_id: validate its reference to users.user_id; explain deferred or quarantined unmatched records.
+- [P06-DATA-03-F03-R05] Field identity_links.user_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-03-F03-R06] Field identity_links.user_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-03-F03-R07] Field identity_links.user_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-03-F03-R08] Field identity_links.user_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-03-F04-R01] Field identity_links.linked_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P06-DATA-03-F04-R02] Field identity_links.linked_at: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-03-F04-R03] Field identity_links.linked_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-03-F04-R04] Field identity_links.linked_at: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-03-F04-R05] Field identity_links.linked_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-03-F04-R06] Field identity_links.linked_at: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-03-F04-R07] Field identity_links.linked_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-03-F04-R08] Field identity_links.linked_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-03-F05-R01] Field identity_links.rule_version: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-03-F05-R02] Field identity_links.rule_version: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-03-F05-R03] Field identity_links.rule_version: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-03-F05-R04] Field identity_links.rule_version: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-03-F05-R05] Field identity_links.rule_version: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-03-F05-R06] Field identity_links.rule_version: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-03-F05-R07] Field identity_links.rule_version: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-03-F05-R08] Field identity_links.rule_version: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P06-DATA-04: sessions
+- [P06-DATA-04-R01] Create the sessions entity with a documented grain and one stable primary key: session_id.
+- [P06-DATA-04-R02] The minimum business fields are session_id, user_id, started_at, ended_at, device_type; add technical metadata only with a documented purpose.
+- [P06-DATA-04-R03] Use the role of sessions in the product workflow to define authoritative source ownership.
+- [P06-DATA-04-R04] Write migrations for sessions; do not rely on ORM auto-create for the verified release.
+- [P06-DATA-04-R05] Create a small valid sessions fixture linked to the independently calculated project example.
+- [P06-DATA-04-R06] Create an invalid sessions fixture that demonstrates a real domain constraint.
+- [P06-DATA-04-R07] Choose explicit row-update semantics for sessions: immutable event, versioned dimension or mutable operational record.
+- [P06-DATA-04-R08] Preserve the original source identifier for sessions when a surrogate key is introduced.
+- [P06-DATA-04-R09] Document whether deletion of sessions is prohibited, reversible or represented by a tombstone.
+- [P06-DATA-04-R10] Reconcile sessions accepted, rejected and deduplicated row counts to the source batch.
+- [P06-DATA-04-R11] Expose only justified synthetic sessions fields to the public site; remove internal runner metadata.
+- [P06-DATA-04-R12] Index sessions according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P06-DATA-04-R13] Do not join sessions at a different grain without an explicit aggregation or allocation rule.
+- [P06-DATA-04-R14] Associate the published sessions snapshot with dataset hash and generator parameters.
+- [P06-DATA-04-R15] Define deterministic sorting and pagination for the sessions evidence view.
+- [P06-DATA-04-R16] Ensure an empty sessions dataset yields an understandable empty state instead of fabricated sample totals.
+- [P06-DATA-04-R17] Archive the sessions schema and sample rows in the data dictionary.
+- [P06-DATA-04-R18] Test that replaying the source import cannot unintentionally duplicate sessions business records.
+- [P06-DATA-04-F01-R01] Field sessions.session_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-04-F01-R02] Field sessions.session_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-04-F01-R03] Field sessions.session_id: make it non-null and unique as the primary key.
+- [P06-DATA-04-F01-R04] Field sessions.session_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-04-F01-R05] Field sessions.session_id: use stable source-to-key mapping across replays and regeneration.
+- [P06-DATA-04-F01-R06] Field sessions.session_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-04-F01-R07] Field sessions.session_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-04-F01-R08] Field sessions.session_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-04-F02-R01] Field sessions.user_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-04-F02-R02] Field sessions.user_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-04-F02-R03] Field sessions.user_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-04-F02-R04] Field sessions.user_id: validate its reference to users.user_id; explain deferred or quarantined unmatched records.
+- [P06-DATA-04-F02-R05] Field sessions.user_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-04-F02-R06] Field sessions.user_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-04-F02-R07] Field sessions.user_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-04-F02-R08] Field sessions.user_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-04-F03-R01] Field sessions.started_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P06-DATA-04-F03-R02] Field sessions.started_at: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-04-F03-R03] Field sessions.started_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-04-F03-R04] Field sessions.started_at: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-04-F03-R05] Field sessions.started_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-04-F03-R06] Field sessions.started_at: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-04-F03-R07] Field sessions.started_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-04-F03-R08] Field sessions.started_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-04-F04-R01] Field sessions.ended_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P06-DATA-04-F04-R02] Field sessions.ended_at: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-04-F04-R03] Field sessions.ended_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-04-F04-R04] Field sessions.ended_at: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-04-F04-R05] Field sessions.ended_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-04-F04-R06] Field sessions.ended_at: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-04-F04-R07] Field sessions.ended_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-04-F04-R08] Field sessions.ended_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-04-F05-R01] Field sessions.device_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-04-F05-R02] Field sessions.device_type: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-04-F05-R03] Field sessions.device_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-04-F05-R04] Field sessions.device_type: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-04-F05-R05] Field sessions.device_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-04-F05-R06] Field sessions.device_type: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-04-F05-R07] Field sessions.device_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-04-F05-R08] Field sessions.device_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P06-DATA-05: events
+- [P06-DATA-05-R01] Create the events entity with a documented grain and one stable primary key: event_id.
+- [P06-DATA-05-R02] The minimum business fields are event_id, user_id, event_name, event_at, received_at; add technical metadata only with a documented purpose.
+- [P06-DATA-05-R03] Use the role of events in the product workflow to define authoritative source ownership.
+- [P06-DATA-05-R04] Write migrations for events; do not rely on ORM auto-create for the verified release.
+- [P06-DATA-05-R05] Create a small valid events fixture linked to the independently calculated project example.
+- [P06-DATA-05-R06] Create an invalid events fixture that demonstrates a real domain constraint.
+- [P06-DATA-05-R07] Choose explicit row-update semantics for events: immutable event, versioned dimension or mutable operational record.
+- [P06-DATA-05-R08] Preserve the original source identifier for events when a surrogate key is introduced.
+- [P06-DATA-05-R09] Document whether deletion of events is prohibited, reversible or represented by a tombstone.
+- [P06-DATA-05-R10] Reconcile events accepted, rejected and deduplicated row counts to the source batch.
+- [P06-DATA-05-R11] Expose only justified synthetic events fields to the public site; remove internal runner metadata.
+- [P06-DATA-05-R12] Index events according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P06-DATA-05-R13] Do not join events at a different grain without an explicit aggregation or allocation rule.
+- [P06-DATA-05-R14] Associate the published events snapshot with dataset hash and generator parameters.
+- [P06-DATA-05-R15] Define deterministic sorting and pagination for the events evidence view.
+- [P06-DATA-05-R16] Ensure an empty events dataset yields an understandable empty state instead of fabricated sample totals.
+- [P06-DATA-05-R17] Archive the events schema and sample rows in the data dictionary.
+- [P06-DATA-05-R18] Test that replaying the source import cannot unintentionally duplicate events business records.
+- [P06-DATA-05-F01-R01] Field events.event_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-05-F01-R02] Field events.event_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-05-F01-R03] Field events.event_id: make it non-null and unique as the primary key.
+- [P06-DATA-05-F01-R04] Field events.event_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-05-F01-R05] Field events.event_id: use stable source-to-key mapping across replays and regeneration.
+- [P06-DATA-05-F01-R06] Field events.event_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-05-F01-R07] Field events.event_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-05-F01-R08] Field events.event_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-05-F02-R01] Field events.user_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-05-F02-R02] Field events.user_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-05-F02-R03] Field events.user_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-05-F02-R04] Field events.user_id: validate its reference to users.user_id; explain deferred or quarantined unmatched records.
+- [P06-DATA-05-F02-R05] Field events.user_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-05-F02-R06] Field events.user_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-05-F02-R07] Field events.user_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-05-F02-R08] Field events.user_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-05-F03-R01] Field events.event_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-05-F03-R02] Field events.event_name: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-05-F03-R03] Field events.event_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-05-F03-R04] Field events.event_name: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-05-F03-R05] Field events.event_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-05-F03-R06] Field events.event_name: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-05-F03-R07] Field events.event_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-05-F03-R08] Field events.event_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-05-F04-R01] Field events.event_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P06-DATA-05-F04-R02] Field events.event_at: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-05-F04-R03] Field events.event_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-05-F04-R04] Field events.event_at: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-05-F04-R05] Field events.event_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-05-F04-R06] Field events.event_at: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-05-F04-R07] Field events.event_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-05-F04-R08] Field events.event_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-05-F05-R01] Field events.received_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P06-DATA-05-F05-R02] Field events.received_at: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-05-F05-R03] Field events.received_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-05-F05-R04] Field events.received_at: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-05-F05-R05] Field events.received_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-05-F05-R06] Field events.received_at: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-05-F05-R07] Field events.received_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-05-F05-R08] Field events.received_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P06-DATA-06: event_properties
+- [P06-DATA-06-R01] Create the event_properties entity with a documented grain and one stable primary key: property_id.
+- [P06-DATA-06-R02] The minimum business fields are property_id, event_id, property_key, property_value, value_type; add technical metadata only with a documented purpose.
+- [P06-DATA-06-R03] Use the role of event_properties in the product workflow to define authoritative source ownership.
+- [P06-DATA-06-R04] Write migrations for event_properties; do not rely on ORM auto-create for the verified release.
+- [P06-DATA-06-R05] Create a small valid event_properties fixture linked to the independently calculated project example.
+- [P06-DATA-06-R06] Create an invalid event_properties fixture that demonstrates a real domain constraint.
+- [P06-DATA-06-R07] Choose explicit row-update semantics for event_properties: immutable event, versioned dimension or mutable operational record.
+- [P06-DATA-06-R08] Preserve the original source identifier for event_properties when a surrogate key is introduced.
+- [P06-DATA-06-R09] Document whether deletion of event_properties is prohibited, reversible or represented by a tombstone.
+- [P06-DATA-06-R10] Reconcile event_properties accepted, rejected and deduplicated row counts to the source batch.
+- [P06-DATA-06-R11] Expose only justified synthetic event_properties fields to the public site; remove internal runner metadata.
+- [P06-DATA-06-R12] Index event_properties according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P06-DATA-06-R13] Do not join event_properties at a different grain without an explicit aggregation or allocation rule.
+- [P06-DATA-06-R14] Associate the published event_properties snapshot with dataset hash and generator parameters.
+- [P06-DATA-06-R15] Define deterministic sorting and pagination for the event_properties evidence view.
+- [P06-DATA-06-R16] Ensure an empty event_properties dataset yields an understandable empty state instead of fabricated sample totals.
+- [P06-DATA-06-R17] Archive the event_properties schema and sample rows in the data dictionary.
+- [P06-DATA-06-R18] Test that replaying the source import cannot unintentionally duplicate event_properties business records.
+- [P06-DATA-06-F01-R01] Field event_properties.property_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-06-F01-R02] Field event_properties.property_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-06-F01-R03] Field event_properties.property_id: make it non-null and unique as the primary key.
+- [P06-DATA-06-F01-R04] Field event_properties.property_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-06-F01-R05] Field event_properties.property_id: use stable source-to-key mapping across replays and regeneration.
+- [P06-DATA-06-F01-R06] Field event_properties.property_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-06-F01-R07] Field event_properties.property_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-06-F01-R08] Field event_properties.property_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-06-F02-R01] Field event_properties.event_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-06-F02-R02] Field event_properties.event_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-06-F02-R03] Field event_properties.event_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-06-F02-R04] Field event_properties.event_id: validate its reference to events.event_id; explain deferred or quarantined unmatched records.
+- [P06-DATA-06-F02-R05] Field event_properties.event_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-06-F02-R06] Field event_properties.event_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-06-F02-R07] Field event_properties.event_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-06-F02-R08] Field event_properties.event_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-06-F03-R01] Field event_properties.property_key: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-06-F03-R02] Field event_properties.property_key: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-06-F03-R03] Field event_properties.property_key: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-06-F03-R04] Field event_properties.property_key: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-06-F03-R05] Field event_properties.property_key: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-06-F03-R06] Field event_properties.property_key: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-06-F03-R07] Field event_properties.property_key: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-06-F03-R08] Field event_properties.property_key: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-06-F04-R01] Field event_properties.property_value: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-06-F04-R02] Field event_properties.property_value: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-06-F04-R03] Field event_properties.property_value: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-06-F04-R04] Field event_properties.property_value: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-06-F04-R05] Field event_properties.property_value: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-06-F04-R06] Field event_properties.property_value: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-06-F04-R07] Field event_properties.property_value: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-06-F04-R08] Field event_properties.property_value: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-06-F05-R01] Field event_properties.value_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-06-F05-R02] Field event_properties.value_type: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-06-F05-R03] Field event_properties.value_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-06-F05-R04] Field event_properties.value_type: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-06-F05-R05] Field event_properties.value_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-06-F05-R06] Field event_properties.value_type: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-06-F05-R07] Field event_properties.value_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-06-F05-R08] Field event_properties.value_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P06-DATA-07: subscriptions
+- [P06-DATA-07-R01] Create the subscriptions entity with a documented grain and one stable primary key: subscription_id.
+- [P06-DATA-07-R02] The minimum business fields are subscription_id, account_id, starts_at, ends_at, status; add technical metadata only with a documented purpose.
+- [P06-DATA-07-R03] Use the role of subscriptions in the product workflow to define authoritative source ownership.
+- [P06-DATA-07-R04] Write migrations for subscriptions; do not rely on ORM auto-create for the verified release.
+- [P06-DATA-07-R05] Create a small valid subscriptions fixture linked to the independently calculated project example.
+- [P06-DATA-07-R06] Create an invalid subscriptions fixture that demonstrates a real domain constraint.
+- [P06-DATA-07-R07] Choose explicit row-update semantics for subscriptions: immutable event, versioned dimension or mutable operational record.
+- [P06-DATA-07-R08] Preserve the original source identifier for subscriptions when a surrogate key is introduced.
+- [P06-DATA-07-R09] Document whether deletion of subscriptions is prohibited, reversible or represented by a tombstone.
+- [P06-DATA-07-R10] Reconcile subscriptions accepted, rejected and deduplicated row counts to the source batch.
+- [P06-DATA-07-R11] Expose only justified synthetic subscriptions fields to the public site; remove internal runner metadata.
+- [P06-DATA-07-R12] Index subscriptions according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P06-DATA-07-R13] Do not join subscriptions at a different grain without an explicit aggregation or allocation rule.
+- [P06-DATA-07-R14] Associate the published subscriptions snapshot with dataset hash and generator parameters.
+- [P06-DATA-07-R15] Define deterministic sorting and pagination for the subscriptions evidence view.
+- [P06-DATA-07-R16] Ensure an empty subscriptions dataset yields an understandable empty state instead of fabricated sample totals.
+- [P06-DATA-07-R17] Archive the subscriptions schema and sample rows in the data dictionary.
+- [P06-DATA-07-R18] Test that replaying the source import cannot unintentionally duplicate subscriptions business records.
+- [P06-DATA-07-F01-R01] Field subscriptions.subscription_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-07-F01-R02] Field subscriptions.subscription_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-07-F01-R03] Field subscriptions.subscription_id: make it non-null and unique as the primary key.
+- [P06-DATA-07-F01-R04] Field subscriptions.subscription_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-07-F01-R05] Field subscriptions.subscription_id: use stable source-to-key mapping across replays and regeneration.
+- [P06-DATA-07-F01-R06] Field subscriptions.subscription_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-07-F01-R07] Field subscriptions.subscription_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-07-F01-R08] Field subscriptions.subscription_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-07-F02-R01] Field subscriptions.account_id: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P06-DATA-07-F02-R02] Field subscriptions.account_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-07-F02-R03] Field subscriptions.account_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-07-F02-R04] Field subscriptions.account_id: validate its reference to accounts.account_id; explain deferred or quarantined unmatched records.
+- [P06-DATA-07-F02-R05] Field subscriptions.account_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-07-F02-R06] Field subscriptions.account_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-07-F02-R07] Field subscriptions.account_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-07-F02-R08] Field subscriptions.account_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-07-F03-R01] Field subscriptions.starts_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P06-DATA-07-F03-R02] Field subscriptions.starts_at: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-07-F03-R03] Field subscriptions.starts_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-07-F03-R04] Field subscriptions.starts_at: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-07-F03-R05] Field subscriptions.starts_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-07-F03-R06] Field subscriptions.starts_at: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-07-F03-R07] Field subscriptions.starts_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-07-F03-R08] Field subscriptions.starts_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-07-F04-R01] Field subscriptions.ends_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P06-DATA-07-F04-R02] Field subscriptions.ends_at: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-07-F04-R03] Field subscriptions.ends_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-07-F04-R04] Field subscriptions.ends_at: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-07-F04-R05] Field subscriptions.ends_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-07-F04-R06] Field subscriptions.ends_at: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-07-F04-R07] Field subscriptions.ends_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-07-F04-R08] Field subscriptions.ends_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-07-F05-R01] Field subscriptions.status: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-07-F05-R02] Field subscriptions.status: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-07-F05-R03] Field subscriptions.status: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-07-F05-R04] Field subscriptions.status: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-07-F05-R05] Field subscriptions.status: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-07-F05-R06] Field subscriptions.status: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-07-F05-R07] Field subscriptions.status: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-07-F05-R08] Field subscriptions.status: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P06-DATA-08: experiment_versions
+- [P06-DATA-08-R01] Create the experiment_versions entity with a documented grain and one stable primary key: experiment_version_id.
+- [P06-DATA-08-R02] The minimum business fields are experiment_version_id, name, unit_type, primary_metric, planned_end; add technical metadata only with a documented purpose.
+- [P06-DATA-08-R03] Use the role of experiment_versions in the product workflow to define authoritative source ownership.
+- [P06-DATA-08-R04] Write migrations for experiment_versions; do not rely on ORM auto-create for the verified release.
+- [P06-DATA-08-R05] Create a small valid experiment_versions fixture linked to the independently calculated project example.
+- [P06-DATA-08-R06] Create an invalid experiment_versions fixture that demonstrates a real domain constraint.
+- [P06-DATA-08-R07] Choose explicit row-update semantics for experiment_versions: immutable event, versioned dimension or mutable operational record.
+- [P06-DATA-08-R08] Preserve the original source identifier for experiment_versions when a surrogate key is introduced.
+- [P06-DATA-08-R09] Document whether deletion of experiment_versions is prohibited, reversible or represented by a tombstone.
+- [P06-DATA-08-R10] Reconcile experiment_versions accepted, rejected and deduplicated row counts to the source batch.
+- [P06-DATA-08-R11] Expose only justified synthetic experiment_versions fields to the public site; remove internal runner metadata.
+- [P06-DATA-08-R12] Index experiment_versions according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P06-DATA-08-R13] Do not join experiment_versions at a different grain without an explicit aggregation or allocation rule.
+- [P06-DATA-08-R14] Associate the published experiment_versions snapshot with dataset hash and generator parameters.
+- [P06-DATA-08-R15] Define deterministic sorting and pagination for the experiment_versions evidence view.
+- [P06-DATA-08-R16] Ensure an empty experiment_versions dataset yields an understandable empty state instead of fabricated sample totals.
+- [P06-DATA-08-R17] Archive the experiment_versions schema and sample rows in the data dictionary.
+- [P06-DATA-08-R18] Test that replaying the source import cannot unintentionally duplicate experiment_versions business records.
+- [P06-DATA-08-F01-R01] Field experiment_versions.experiment_version_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-08-F01-R02] Field experiment_versions.experiment_version_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-08-F01-R03] Field experiment_versions.experiment_version_id: make it non-null and unique as the primary key.
+- [P06-DATA-08-F01-R04] Field experiment_versions.experiment_version_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-08-F01-R05] Field experiment_versions.experiment_version_id: use stable source-to-key mapping across replays and regeneration.
+- [P06-DATA-08-F01-R06] Field experiment_versions.experiment_version_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-08-F01-R07] Field experiment_versions.experiment_version_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-08-F01-R08] Field experiment_versions.experiment_version_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-08-F02-R01] Field experiment_versions.name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-08-F02-R02] Field experiment_versions.name: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-08-F02-R03] Field experiment_versions.name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-08-F02-R04] Field experiment_versions.name: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-08-F02-R05] Field experiment_versions.name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-08-F02-R06] Field experiment_versions.name: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-08-F02-R07] Field experiment_versions.name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-08-F02-R08] Field experiment_versions.name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-08-F03-R01] Field experiment_versions.unit_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-08-F03-R02] Field experiment_versions.unit_type: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-08-F03-R03] Field experiment_versions.unit_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-08-F03-R04] Field experiment_versions.unit_type: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-08-F03-R05] Field experiment_versions.unit_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-08-F03-R06] Field experiment_versions.unit_type: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-08-F03-R07] Field experiment_versions.unit_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-08-F03-R08] Field experiment_versions.unit_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-08-F04-R01] Field experiment_versions.primary_metric: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-08-F04-R02] Field experiment_versions.primary_metric: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-08-F04-R03] Field experiment_versions.primary_metric: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-08-F04-R04] Field experiment_versions.primary_metric: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-08-F04-R05] Field experiment_versions.primary_metric: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-08-F04-R06] Field experiment_versions.primary_metric: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-08-F04-R07] Field experiment_versions.primary_metric: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-08-F04-R08] Field experiment_versions.primary_metric: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-08-F05-R01] Field experiment_versions.planned_end: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-08-F05-R02] Field experiment_versions.planned_end: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-08-F05-R03] Field experiment_versions.planned_end: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-08-F05-R04] Field experiment_versions.planned_end: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-08-F05-R05] Field experiment_versions.planned_end: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-08-F05-R06] Field experiment_versions.planned_end: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-08-F05-R07] Field experiment_versions.planned_end: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-08-F05-R08] Field experiment_versions.planned_end: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P06-DATA-09: assignments
+- [P06-DATA-09-R01] Create the assignments entity with a documented grain and one stable primary key: assignment_id.
+- [P06-DATA-09-R02] The minimum business fields are assignment_id, experiment_version_id, unit_id, variant, assigned_at; add technical metadata only with a documented purpose.
+- [P06-DATA-09-R03] Use the role of assignments in the product workflow to define authoritative source ownership.
+- [P06-DATA-09-R04] Write migrations for assignments; do not rely on ORM auto-create for the verified release.
+- [P06-DATA-09-R05] Create a small valid assignments fixture linked to the independently calculated project example.
+- [P06-DATA-09-R06] Create an invalid assignments fixture that demonstrates a real domain constraint.
+- [P06-DATA-09-R07] Choose explicit row-update semantics for assignments: immutable event, versioned dimension or mutable operational record.
+- [P06-DATA-09-R08] Preserve the original source identifier for assignments when a surrogate key is introduced.
+- [P06-DATA-09-R09] Document whether deletion of assignments is prohibited, reversible or represented by a tombstone.
+- [P06-DATA-09-R10] Reconcile assignments accepted, rejected and deduplicated row counts to the source batch.
+- [P06-DATA-09-R11] Expose only justified synthetic assignments fields to the public site; remove internal runner metadata.
+- [P06-DATA-09-R12] Index assignments according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P06-DATA-09-R13] Do not join assignments at a different grain without an explicit aggregation or allocation rule.
+- [P06-DATA-09-R14] Associate the published assignments snapshot with dataset hash and generator parameters.
+- [P06-DATA-09-R15] Define deterministic sorting and pagination for the assignments evidence view.
+- [P06-DATA-09-R16] Ensure an empty assignments dataset yields an understandable empty state instead of fabricated sample totals.
+- [P06-DATA-09-R17] Archive the assignments schema and sample rows in the data dictionary.
+- [P06-DATA-09-R18] Test that replaying the source import cannot unintentionally duplicate assignments business records.
+- [P06-DATA-09-F01-R01] Field assignments.assignment_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-09-F01-R02] Field assignments.assignment_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-09-F01-R03] Field assignments.assignment_id: make it non-null and unique as the primary key.
+- [P06-DATA-09-F01-R04] Field assignments.assignment_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-09-F01-R05] Field assignments.assignment_id: use stable source-to-key mapping across replays and regeneration.
+- [P06-DATA-09-F01-R06] Field assignments.assignment_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-09-F01-R07] Field assignments.assignment_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-09-F01-R08] Field assignments.assignment_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-09-F02-R01] Field assignments.experiment_version_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-09-F02-R02] Field assignments.experiment_version_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-09-F02-R03] Field assignments.experiment_version_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-09-F02-R04] Field assignments.experiment_version_id: validate its reference to experiment_versions.experiment_version_id; explain deferred or quarantined unmatched records.
+- [P06-DATA-09-F02-R05] Field assignments.experiment_version_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-09-F02-R06] Field assignments.experiment_version_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-09-F02-R07] Field assignments.experiment_version_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-09-F02-R08] Field assignments.experiment_version_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-09-F03-R01] Field assignments.unit_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-09-F03-R02] Field assignments.unit_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-09-F03-R03] Field assignments.unit_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-09-F03-R04] Field assignments.unit_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-09-F03-R05] Field assignments.unit_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-09-F03-R06] Field assignments.unit_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-09-F03-R07] Field assignments.unit_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-09-F03-R08] Field assignments.unit_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-09-F04-R01] Field assignments.variant: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-09-F04-R02] Field assignments.variant: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-09-F04-R03] Field assignments.variant: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-09-F04-R04] Field assignments.variant: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-09-F04-R05] Field assignments.variant: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-09-F04-R06] Field assignments.variant: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-09-F04-R07] Field assignments.variant: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-09-F04-R08] Field assignments.variant: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-09-F05-R01] Field assignments.assigned_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P06-DATA-09-F05-R02] Field assignments.assigned_at: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-09-F05-R03] Field assignments.assigned_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-09-F05-R04] Field assignments.assigned_at: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-09-F05-R05] Field assignments.assigned_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-09-F05-R06] Field assignments.assigned_at: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-09-F05-R07] Field assignments.assigned_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-09-F05-R08] Field assignments.assigned_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P06-DATA-10: exposures
+- [P06-DATA-10-R01] Create the exposures entity with a documented grain and one stable primary key: exposure_id.
+- [P06-DATA-10-R02] The minimum business fields are exposure_id, assignment_id, exposed_at, surface, event_id; add technical metadata only with a documented purpose.
+- [P06-DATA-10-R03] Use the role of exposures in the product workflow to define authoritative source ownership.
+- [P06-DATA-10-R04] Write migrations for exposures; do not rely on ORM auto-create for the verified release.
+- [P06-DATA-10-R05] Create a small valid exposures fixture linked to the independently calculated project example.
+- [P06-DATA-10-R06] Create an invalid exposures fixture that demonstrates a real domain constraint.
+- [P06-DATA-10-R07] Choose explicit row-update semantics for exposures: immutable event, versioned dimension or mutable operational record.
+- [P06-DATA-10-R08] Preserve the original source identifier for exposures when a surrogate key is introduced.
+- [P06-DATA-10-R09] Document whether deletion of exposures is prohibited, reversible or represented by a tombstone.
+- [P06-DATA-10-R10] Reconcile exposures accepted, rejected and deduplicated row counts to the source batch.
+- [P06-DATA-10-R11] Expose only justified synthetic exposures fields to the public site; remove internal runner metadata.
+- [P06-DATA-10-R12] Index exposures according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P06-DATA-10-R13] Do not join exposures at a different grain without an explicit aggregation or allocation rule.
+- [P06-DATA-10-R14] Associate the published exposures snapshot with dataset hash and generator parameters.
+- [P06-DATA-10-R15] Define deterministic sorting and pagination for the exposures evidence view.
+- [P06-DATA-10-R16] Ensure an empty exposures dataset yields an understandable empty state instead of fabricated sample totals.
+- [P06-DATA-10-R17] Archive the exposures schema and sample rows in the data dictionary.
+- [P06-DATA-10-R18] Test that replaying the source import cannot unintentionally duplicate exposures business records.
+- [P06-DATA-10-F01-R01] Field exposures.exposure_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-10-F01-R02] Field exposures.exposure_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-10-F01-R03] Field exposures.exposure_id: make it non-null and unique as the primary key.
+- [P06-DATA-10-F01-R04] Field exposures.exposure_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-10-F01-R05] Field exposures.exposure_id: use stable source-to-key mapping across replays and regeneration.
+- [P06-DATA-10-F01-R06] Field exposures.exposure_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-10-F01-R07] Field exposures.exposure_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-10-F01-R08] Field exposures.exposure_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-10-F02-R01] Field exposures.assignment_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-10-F02-R02] Field exposures.assignment_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-10-F02-R03] Field exposures.assignment_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-10-F02-R04] Field exposures.assignment_id: validate its reference to assignments.assignment_id; explain deferred or quarantined unmatched records.
+- [P06-DATA-10-F02-R05] Field exposures.assignment_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-10-F02-R06] Field exposures.assignment_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-10-F02-R07] Field exposures.assignment_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-10-F02-R08] Field exposures.assignment_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-10-F03-R01] Field exposures.exposed_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P06-DATA-10-F03-R02] Field exposures.exposed_at: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-10-F03-R03] Field exposures.exposed_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-10-F03-R04] Field exposures.exposed_at: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-10-F03-R05] Field exposures.exposed_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-10-F03-R06] Field exposures.exposed_at: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-10-F03-R07] Field exposures.exposed_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-10-F03-R08] Field exposures.exposed_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-10-F04-R01] Field exposures.surface: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-10-F04-R02] Field exposures.surface: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-10-F04-R03] Field exposures.surface: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-10-F04-R04] Field exposures.surface: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-10-F04-R05] Field exposures.surface: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-10-F04-R06] Field exposures.surface: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-10-F04-R07] Field exposures.surface: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-10-F04-R08] Field exposures.surface: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-10-F05-R01] Field exposures.event_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-10-F05-R02] Field exposures.event_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-10-F05-R03] Field exposures.event_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-10-F05-R04] Field exposures.event_id: validate its reference to events.event_id; explain deferred or quarantined unmatched records.
+- [P06-DATA-10-F05-R05] Field exposures.event_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-10-F05-R06] Field exposures.event_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-10-F05-R07] Field exposures.event_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-10-F05-R08] Field exposures.event_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P06-DATA-11: metric_observations
+- [P06-DATA-11-R01] Create the metric_observations entity with a documented grain and one stable primary key: observation_id.
+- [P06-DATA-11-R02] The minimum business fields are observation_id, assignment_id, metric_name, value, window_end; add technical metadata only with a documented purpose.
+- [P06-DATA-11-R03] Use the role of metric_observations in the product workflow to define authoritative source ownership.
+- [P06-DATA-11-R04] Write migrations for metric_observations; do not rely on ORM auto-create for the verified release.
+- [P06-DATA-11-R05] Create a small valid metric_observations fixture linked to the independently calculated project example.
+- [P06-DATA-11-R06] Create an invalid metric_observations fixture that demonstrates a real domain constraint.
+- [P06-DATA-11-R07] Choose explicit row-update semantics for metric_observations: immutable event, versioned dimension or mutable operational record.
+- [P06-DATA-11-R08] Preserve the original source identifier for metric_observations when a surrogate key is introduced.
+- [P06-DATA-11-R09] Document whether deletion of metric_observations is prohibited, reversible or represented by a tombstone.
+- [P06-DATA-11-R10] Reconcile metric_observations accepted, rejected and deduplicated row counts to the source batch.
+- [P06-DATA-11-R11] Expose only justified synthetic metric_observations fields to the public site; remove internal runner metadata.
+- [P06-DATA-11-R12] Index metric_observations according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P06-DATA-11-R13] Do not join metric_observations at a different grain without an explicit aggregation or allocation rule.
+- [P06-DATA-11-R14] Associate the published metric_observations snapshot with dataset hash and generator parameters.
+- [P06-DATA-11-R15] Define deterministic sorting and pagination for the metric_observations evidence view.
+- [P06-DATA-11-R16] Ensure an empty metric_observations dataset yields an understandable empty state instead of fabricated sample totals.
+- [P06-DATA-11-R17] Archive the metric_observations schema and sample rows in the data dictionary.
+- [P06-DATA-11-R18] Test that replaying the source import cannot unintentionally duplicate metric_observations business records.
+- [P06-DATA-11-F01-R01] Field metric_observations.observation_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-11-F01-R02] Field metric_observations.observation_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-11-F01-R03] Field metric_observations.observation_id: make it non-null and unique as the primary key.
+- [P06-DATA-11-F01-R04] Field metric_observations.observation_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-11-F01-R05] Field metric_observations.observation_id: use stable source-to-key mapping across replays and regeneration.
+- [P06-DATA-11-F01-R06] Field metric_observations.observation_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-11-F01-R07] Field metric_observations.observation_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-11-F01-R08] Field metric_observations.observation_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-11-F02-R01] Field metric_observations.assignment_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-11-F02-R02] Field metric_observations.assignment_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-11-F02-R03] Field metric_observations.assignment_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-11-F02-R04] Field metric_observations.assignment_id: validate its reference to assignments.assignment_id; explain deferred or quarantined unmatched records.
+- [P06-DATA-11-F02-R05] Field metric_observations.assignment_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-11-F02-R06] Field metric_observations.assignment_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-11-F02-R07] Field metric_observations.assignment_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-11-F02-R08] Field metric_observations.assignment_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-11-F03-R01] Field metric_observations.metric_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-11-F03-R02] Field metric_observations.metric_name: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-11-F03-R03] Field metric_observations.metric_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-11-F03-R04] Field metric_observations.metric_name: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-11-F03-R05] Field metric_observations.metric_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-11-F03-R06] Field metric_observations.metric_name: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-11-F03-R07] Field metric_observations.metric_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-11-F03-R08] Field metric_observations.metric_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-11-F04-R01] Field metric_observations.value: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P06-DATA-11-F04-R02] Field metric_observations.value: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-11-F04-R03] Field metric_observations.value: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-11-F04-R04] Field metric_observations.value: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-11-F04-R05] Field metric_observations.value: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-11-F04-R06] Field metric_observations.value: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-11-F04-R07] Field metric_observations.value: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-11-F04-R08] Field metric_observations.value: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-11-F05-R01] Field metric_observations.window_end: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-11-F05-R02] Field metric_observations.window_end: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-11-F05-R03] Field metric_observations.window_end: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-11-F05-R04] Field metric_observations.window_end: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-11-F05-R05] Field metric_observations.window_end: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-11-F05-R06] Field metric_observations.window_end: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-11-F05-R07] Field metric_observations.window_end: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-11-F05-R08] Field metric_observations.window_end: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P06-DATA-12: analysis_runs
+- [P06-DATA-12-R01] Create the analysis_runs entity with a documented grain and one stable primary key: analysis_id.
+- [P06-DATA-12-R02] The minimum business fields are analysis_id, experiment_version_id, cutoff_at, config_hash, created_at; add technical metadata only with a documented purpose.
+- [P06-DATA-12-R03] Use the role of analysis_runs in the product workflow to define authoritative source ownership.
+- [P06-DATA-12-R04] Write migrations for analysis_runs; do not rely on ORM auto-create for the verified release.
+- [P06-DATA-12-R05] Create a small valid analysis_runs fixture linked to the independently calculated project example.
+- [P06-DATA-12-R06] Create an invalid analysis_runs fixture that demonstrates a real domain constraint.
+- [P06-DATA-12-R07] Choose explicit row-update semantics for analysis_runs: immutable event, versioned dimension or mutable operational record.
+- [P06-DATA-12-R08] Preserve the original source identifier for analysis_runs when a surrogate key is introduced.
+- [P06-DATA-12-R09] Document whether deletion of analysis_runs is prohibited, reversible or represented by a tombstone.
+- [P06-DATA-12-R10] Reconcile analysis_runs accepted, rejected and deduplicated row counts to the source batch.
+- [P06-DATA-12-R11] Expose only justified synthetic analysis_runs fields to the public site; remove internal runner metadata.
+- [P06-DATA-12-R12] Index analysis_runs according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P06-DATA-12-R13] Do not join analysis_runs at a different grain without an explicit aggregation or allocation rule.
+- [P06-DATA-12-R14] Associate the published analysis_runs snapshot with dataset hash and generator parameters.
+- [P06-DATA-12-R15] Define deterministic sorting and pagination for the analysis_runs evidence view.
+- [P06-DATA-12-R16] Ensure an empty analysis_runs dataset yields an understandable empty state instead of fabricated sample totals.
+- [P06-DATA-12-R17] Archive the analysis_runs schema and sample rows in the data dictionary.
+- [P06-DATA-12-R18] Test that replaying the source import cannot unintentionally duplicate analysis_runs business records.
+- [P06-DATA-12-F01-R01] Field analysis_runs.analysis_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-12-F01-R02] Field analysis_runs.analysis_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-12-F01-R03] Field analysis_runs.analysis_id: make it non-null and unique as the primary key.
+- [P06-DATA-12-F01-R04] Field analysis_runs.analysis_id: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-12-F01-R05] Field analysis_runs.analysis_id: use stable source-to-key mapping across replays and regeneration.
+- [P06-DATA-12-F01-R06] Field analysis_runs.analysis_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-12-F01-R07] Field analysis_runs.analysis_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-12-F01-R08] Field analysis_runs.analysis_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-12-F02-R01] Field analysis_runs.experiment_version_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-12-F02-R02] Field analysis_runs.experiment_version_id: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-12-F02-R03] Field analysis_runs.experiment_version_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-12-F02-R04] Field analysis_runs.experiment_version_id: validate its reference to experiment_versions.experiment_version_id; explain deferred or quarantined unmatched records.
+- [P06-DATA-12-F02-R05] Field analysis_runs.experiment_version_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-12-F02-R06] Field analysis_runs.experiment_version_id: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-12-F02-R07] Field analysis_runs.experiment_version_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-12-F02-R08] Field analysis_runs.experiment_version_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-12-F03-R01] Field analysis_runs.cutoff_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P06-DATA-12-F03-R02] Field analysis_runs.cutoff_at: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-12-F03-R03] Field analysis_runs.cutoff_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-12-F03-R04] Field analysis_runs.cutoff_at: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-12-F03-R05] Field analysis_runs.cutoff_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-12-F03-R06] Field analysis_runs.cutoff_at: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-12-F03-R07] Field analysis_runs.cutoff_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-12-F03-R08] Field analysis_runs.cutoff_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-12-F04-R01] Field analysis_runs.config_hash: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P06-DATA-12-F04-R02] Field analysis_runs.config_hash: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-12-F04-R03] Field analysis_runs.config_hash: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-12-F04-R04] Field analysis_runs.config_hash: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-12-F04-R05] Field analysis_runs.config_hash: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-12-F04-R06] Field analysis_runs.config_hash: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-12-F04-R07] Field analysis_runs.config_hash: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-12-F04-R08] Field analysis_runs.config_hash: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P06-DATA-12-F05-R01] Field analysis_runs.created_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P06-DATA-12-F05-R02] Field analysis_runs.created_at: define its business meaning in the dictionary and use the same label in exports.
+- [P06-DATA-12-F05-R03] Field analysis_runs.created_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P06-DATA-12-F05-R04] Field analysis_runs.created_at: define the allowed domain and reject structurally invalid values before publication.
+- [P06-DATA-12-F05-R05] Field analysis_runs.created_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P06-DATA-12-F05-R06] Field analysis_runs.created_at: create a round-trip test across source, validated model and exported representation.
+- [P06-DATA-12-F05-R07] Field analysis_runs.created_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P06-DATA-12-F05-R08] Field analysis_runs.created_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+
+## 04. Business metric contracts
+
+### P06-MET-01: Signup conversion
+- [P06-MET-01-R01] Business metric: Signup conversion.
+- [P06-MET-01-R02] Authoritative calculation rule: eligible registered units / eligible visitors.
+- [P06-MET-01-R03] Output unit: percent.
+- [P06-MET-01-R04] Important boundary: Identity denominator documented.
+- [P06-MET-01-R05] Explain how Signup conversion informs the primary decision: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-MET-01-R06] Define the input grain for Signup conversion; never infer it from the chart grouping.
+- [P06-MET-01-R07] Name each source field and transformation contributing to Signup conversion.
+- [P06-MET-01-R08] Define the reporting population for Signup conversion before applying user-selected filters.
+- [P06-MET-01-R09] Name the timestamp and timezone used by Signup conversion.
+- [P06-MET-01-R10] Use a documented half-open interval for Signup conversion time filtering.
+- [P06-MET-01-R11] List excluded statuses, invalid records and immature observations for Signup conversion.
+- [P06-MET-01-R12] Display excluded-record counts when they materially change Signup conversion.
+- [P06-MET-01-R13] Define Signup conversion behavior for an empty eligible population.
+- [P06-MET-01-R14] Define Signup conversion behavior when its denominator is zero or its required baseline is absent.
+- [P06-MET-01-R15] Do not replace unknown Signup conversion values with zero without a documented business rule.
+- [P06-MET-01-R16] For Signup conversion, aggregate underlying values correctly before applying ratios or summary functions.
+- [P06-MET-01-R17] Preserve original precision for Signup conversion; round only at the stated calculation or presentation step.
+- [P06-MET-01-R18] Create a small manually calculated Signup conversion fixture independent of the main implementation.
+- [P06-MET-01-R19] Implement an independent SQL/spreadsheet/reference check for the important Signup conversion result.
+- [P06-MET-01-R20] Keep the browser Signup conversion calculation consistent with the authoritative contract and verified fixture.
+- [P06-MET-01-R21] Show Signup conversion definition, active scope and unit through a visible explanation affordance.
+- [P06-MET-01-R22] Allow drillthrough from Signup conversion into contributing evidence or a transparent aggregate explanation.
+- [P06-MET-01-R23] Export Signup conversion with contract version, filters, dataset hash and generated timestamp.
+- [P06-MET-01-R24] When Signup conversion is a scenario estimate, visibly separate it from observed historical results.
+- [P06-MET-01-R25] Include a Signup conversion regression assertion for one project-specific edge case.
+- [P06-MET-01-R26] If Signup conversion is compared across periods, use comparable eligibility and disclose differences.
+- [P06-MET-01-R27] Keep Signup conversion historical revisions traceable when late data changes published results.
+- [P06-MET-01-R28] Record a versioned decision if implementation requires changing Signup conversion semantics.
+- [P06-MET-01-R29] Have a reviewer challenge whether Signup conversion could be misleading despite being arithmetically correct.
+- [P06-MET-01-R30] Mark Signup conversion verified only after the known-answer and presentation checks actually run.
+### P06-MET-02: Activation rate
+- [P06-MET-02-R01] Business metric: Activation rate.
+- [P06-MET-02-R02] Authoritative calculation rule: eligible units activating within 7 days / mature eligible signup units.
+- [P06-MET-02-R03] Output unit: percent.
+- [P06-MET-02-R04] Important boundary: Complete seven-day observation.
+- [P06-MET-02-R05] Explain how Activation rate informs the primary decision: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-MET-02-R06] Define the input grain for Activation rate; never infer it from the chart grouping.
+- [P06-MET-02-R07] Name each source field and transformation contributing to Activation rate.
+- [P06-MET-02-R08] Define the reporting population for Activation rate before applying user-selected filters.
+- [P06-MET-02-R09] Name the timestamp and timezone used by Activation rate.
+- [P06-MET-02-R10] Use a documented half-open interval for Activation rate time filtering.
+- [P06-MET-02-R11] List excluded statuses, invalid records and immature observations for Activation rate.
+- [P06-MET-02-R12] Display excluded-record counts when they materially change Activation rate.
+- [P06-MET-02-R13] Define Activation rate behavior for an empty eligible population.
+- [P06-MET-02-R14] Define Activation rate behavior when its denominator is zero or its required baseline is absent.
+- [P06-MET-02-R15] Do not replace unknown Activation rate values with zero without a documented business rule.
+- [P06-MET-02-R16] For Activation rate, aggregate underlying values correctly before applying ratios or summary functions.
+- [P06-MET-02-R17] Preserve original precision for Activation rate; round only at the stated calculation or presentation step.
+- [P06-MET-02-R18] Create a small manually calculated Activation rate fixture independent of the main implementation.
+- [P06-MET-02-R19] Implement an independent SQL/spreadsheet/reference check for the important Activation rate result.
+- [P06-MET-02-R20] Keep the browser Activation rate calculation consistent with the authoritative contract and verified fixture.
+- [P06-MET-02-R21] Show Activation rate definition, active scope and unit through a visible explanation affordance.
+- [P06-MET-02-R22] Allow drillthrough from Activation rate into contributing evidence or a transparent aggregate explanation.
+- [P06-MET-02-R23] Export Activation rate with contract version, filters, dataset hash and generated timestamp.
+- [P06-MET-02-R24] When Activation rate is a scenario estimate, visibly separate it from observed historical results.
+- [P06-MET-02-R25] Include a Activation rate regression assertion for one project-specific edge case.
+- [P06-MET-02-R26] If Activation rate is compared across periods, use comparable eligibility and disclose differences.
+- [P06-MET-02-R27] Keep Activation rate historical revisions traceable when late data changes published results.
+- [P06-MET-02-R28] Record a versioned decision if implementation requires changing Activation rate semantics.
+- [P06-MET-02-R29] Have a reviewer challenge whether Activation rate could be misleading despite being arithmetically correct.
+- [P06-MET-02-R30] Mark Activation rate verified only after the known-answer and presentation checks actually run.
+### P06-MET-03: Funnel step conversion
+- [P06-MET-03-R01] Business metric: Funnel step conversion.
+- [P06-MET-03-R02] Authoritative calculation rule: units reaching next ordered step / units reaching prior step.
+- [P06-MET-03-R03] Output unit: percent.
+- [P06-MET-03-R04] Important boundary: Fixed ordering and window.
+- [P06-MET-03-R05] Explain how Funnel step conversion informs the primary decision: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-MET-03-R06] Define the input grain for Funnel step conversion; never infer it from the chart grouping.
+- [P06-MET-03-R07] Name each source field and transformation contributing to Funnel step conversion.
+- [P06-MET-03-R08] Define the reporting population for Funnel step conversion before applying user-selected filters.
+- [P06-MET-03-R09] Name the timestamp and timezone used by Funnel step conversion.
+- [P06-MET-03-R10] Use a documented half-open interval for Funnel step conversion time filtering.
+- [P06-MET-03-R11] List excluded statuses, invalid records and immature observations for Funnel step conversion.
+- [P06-MET-03-R12] Display excluded-record counts when they materially change Funnel step conversion.
+- [P06-MET-03-R13] Define Funnel step conversion behavior for an empty eligible population.
+- [P06-MET-03-R14] Define Funnel step conversion behavior when its denominator is zero or its required baseline is absent.
+- [P06-MET-03-R15] Do not replace unknown Funnel step conversion values with zero without a documented business rule.
+- [P06-MET-03-R16] For Funnel step conversion, aggregate underlying values correctly before applying ratios or summary functions.
+- [P06-MET-03-R17] Preserve original precision for Funnel step conversion; round only at the stated calculation or presentation step.
+- [P06-MET-03-R18] Create a small manually calculated Funnel step conversion fixture independent of the main implementation.
+- [P06-MET-03-R19] Implement an independent SQL/spreadsheet/reference check for the important Funnel step conversion result.
+- [P06-MET-03-R20] Keep the browser Funnel step conversion calculation consistent with the authoritative contract and verified fixture.
+- [P06-MET-03-R21] Show Funnel step conversion definition, active scope and unit through a visible explanation affordance.
+- [P06-MET-03-R22] Allow drillthrough from Funnel step conversion into contributing evidence or a transparent aggregate explanation.
+- [P06-MET-03-R23] Export Funnel step conversion with contract version, filters, dataset hash and generated timestamp.
+- [P06-MET-03-R24] When Funnel step conversion is a scenario estimate, visibly separate it from observed historical results.
+- [P06-MET-03-R25] Include a Funnel step conversion regression assertion for one project-specific edge case.
+- [P06-MET-03-R26] If Funnel step conversion is compared across periods, use comparable eligibility and disclose differences.
+- [P06-MET-03-R27] Keep Funnel step conversion historical revisions traceable when late data changes published results.
+- [P06-MET-03-R28] Record a versioned decision if implementation requires changing Funnel step conversion semantics.
+- [P06-MET-03-R29] Have a reviewer challenge whether Funnel step conversion could be misleading despite being arithmetically correct.
+- [P06-MET-03-R30] Mark Funnel step conversion verified only after the known-answer and presentation checks actually run.
+### P06-MET-04: Day 7 retention
+- [P06-MET-04-R01] Business metric: Day 7 retention.
+- [P06-MET-04-R02] Authoritative calculation rule: units returning on exact day 7 / mature cohort.
+- [P06-MET-04-R03] Output unit: percent.
+- [P06-MET-04-R04] Important boundary: Separate on-or-after retention.
+- [P06-MET-04-R05] Explain how Day 7 retention informs the primary decision: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-MET-04-R06] Define the input grain for Day 7 retention; never infer it from the chart grouping.
+- [P06-MET-04-R07] Name each source field and transformation contributing to Day 7 retention.
+- [P06-MET-04-R08] Define the reporting population for Day 7 retention before applying user-selected filters.
+- [P06-MET-04-R09] Name the timestamp and timezone used by Day 7 retention.
+- [P06-MET-04-R10] Use a documented half-open interval for Day 7 retention time filtering.
+- [P06-MET-04-R11] List excluded statuses, invalid records and immature observations for Day 7 retention.
+- [P06-MET-04-R12] Display excluded-record counts when they materially change Day 7 retention.
+- [P06-MET-04-R13] Define Day 7 retention behavior for an empty eligible population.
+- [P06-MET-04-R14] Define Day 7 retention behavior when its denominator is zero or its required baseline is absent.
+- [P06-MET-04-R15] Do not replace unknown Day 7 retention values with zero without a documented business rule.
+- [P06-MET-04-R16] For Day 7 retention, aggregate underlying values correctly before applying ratios or summary functions.
+- [P06-MET-04-R17] Preserve original precision for Day 7 retention; round only at the stated calculation or presentation step.
+- [P06-MET-04-R18] Create a small manually calculated Day 7 retention fixture independent of the main implementation.
+- [P06-MET-04-R19] Implement an independent SQL/spreadsheet/reference check for the important Day 7 retention result.
+- [P06-MET-04-R20] Keep the browser Day 7 retention calculation consistent with the authoritative contract and verified fixture.
+- [P06-MET-04-R21] Show Day 7 retention definition, active scope and unit through a visible explanation affordance.
+- [P06-MET-04-R22] Allow drillthrough from Day 7 retention into contributing evidence or a transparent aggregate explanation.
+- [P06-MET-04-R23] Export Day 7 retention with contract version, filters, dataset hash and generated timestamp.
+- [P06-MET-04-R24] When Day 7 retention is a scenario estimate, visibly separate it from observed historical results.
+- [P06-MET-04-R25] Include a Day 7 retention regression assertion for one project-specific edge case.
+- [P06-MET-04-R26] If Day 7 retention is compared across periods, use comparable eligibility and disclose differences.
+- [P06-MET-04-R27] Keep Day 7 retention historical revisions traceable when late data changes published results.
+- [P06-MET-04-R28] Record a versioned decision if implementation requires changing Day 7 retention semantics.
+- [P06-MET-04-R29] Have a reviewer challenge whether Day 7 retention could be misleading despite being arithmetically correct.
+- [P06-MET-04-R30] Mark Day 7 retention verified only after the known-answer and presentation checks actually run.
+### P06-MET-05: Week 4 retention
+- [P06-MET-05-R01] Business metric: Week 4 retention.
+- [P06-MET-05-R02] Authoritative calculation rule: units active during days 28-34 / mature cohort.
+- [P06-MET-05-R03] Output unit: percent.
+- [P06-MET-05-R04] Important boundary: Account timezone rule.
+- [P06-MET-05-R05] Explain how Week 4 retention informs the primary decision: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-MET-05-R06] Define the input grain for Week 4 retention; never infer it from the chart grouping.
+- [P06-MET-05-R07] Name each source field and transformation contributing to Week 4 retention.
+- [P06-MET-05-R08] Define the reporting population for Week 4 retention before applying user-selected filters.
+- [P06-MET-05-R09] Name the timestamp and timezone used by Week 4 retention.
+- [P06-MET-05-R10] Use a documented half-open interval for Week 4 retention time filtering.
+- [P06-MET-05-R11] List excluded statuses, invalid records and immature observations for Week 4 retention.
+- [P06-MET-05-R12] Display excluded-record counts when they materially change Week 4 retention.
+- [P06-MET-05-R13] Define Week 4 retention behavior for an empty eligible population.
+- [P06-MET-05-R14] Define Week 4 retention behavior when its denominator is zero or its required baseline is absent.
+- [P06-MET-05-R15] Do not replace unknown Week 4 retention values with zero without a documented business rule.
+- [P06-MET-05-R16] For Week 4 retention, aggregate underlying values correctly before applying ratios or summary functions.
+- [P06-MET-05-R17] Preserve original precision for Week 4 retention; round only at the stated calculation or presentation step.
+- [P06-MET-05-R18] Create a small manually calculated Week 4 retention fixture independent of the main implementation.
+- [P06-MET-05-R19] Implement an independent SQL/spreadsheet/reference check for the important Week 4 retention result.
+- [P06-MET-05-R20] Keep the browser Week 4 retention calculation consistent with the authoritative contract and verified fixture.
+- [P06-MET-05-R21] Show Week 4 retention definition, active scope and unit through a visible explanation affordance.
+- [P06-MET-05-R22] Allow drillthrough from Week 4 retention into contributing evidence or a transparent aggregate explanation.
+- [P06-MET-05-R23] Export Week 4 retention with contract version, filters, dataset hash and generated timestamp.
+- [P06-MET-05-R24] When Week 4 retention is a scenario estimate, visibly separate it from observed historical results.
+- [P06-MET-05-R25] Include a Week 4 retention regression assertion for one project-specific edge case.
+- [P06-MET-05-R26] If Week 4 retention is compared across periods, use comparable eligibility and disclose differences.
+- [P06-MET-05-R27] Keep Week 4 retention historical revisions traceable when late data changes published results.
+- [P06-MET-05-R28] Record a versioned decision if implementation requires changing Week 4 retention semantics.
+- [P06-MET-05-R29] Have a reviewer challenge whether Week 4 retention could be misleading despite being arithmetically correct.
+- [P06-MET-05-R30] Mark Week 4 retention verified only after the known-answer and presentation checks actually run.
+### P06-MET-06: Feature adoption
+- [P06-MET-06-R01] Business metric: Feature adoption.
+- [P06-MET-06-R02] Authoritative calculation rule: eligible active units using feature / eligible active units.
+- [P06-MET-06-R03] Output unit: percent.
+- [P06-MET-06-R04] Important boundary: Eligibility independent of treatment outcomes.
+- [P06-MET-06-R05] Explain how Feature adoption informs the primary decision: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-MET-06-R06] Define the input grain for Feature adoption; never infer it from the chart grouping.
+- [P06-MET-06-R07] Name each source field and transformation contributing to Feature adoption.
+- [P06-MET-06-R08] Define the reporting population for Feature adoption before applying user-selected filters.
+- [P06-MET-06-R09] Name the timestamp and timezone used by Feature adoption.
+- [P06-MET-06-R10] Use a documented half-open interval for Feature adoption time filtering.
+- [P06-MET-06-R11] List excluded statuses, invalid records and immature observations for Feature adoption.
+- [P06-MET-06-R12] Display excluded-record counts when they materially change Feature adoption.
+- [P06-MET-06-R13] Define Feature adoption behavior for an empty eligible population.
+- [P06-MET-06-R14] Define Feature adoption behavior when its denominator is zero or its required baseline is absent.
+- [P06-MET-06-R15] Do not replace unknown Feature adoption values with zero without a documented business rule.
+- [P06-MET-06-R16] For Feature adoption, aggregate underlying values correctly before applying ratios or summary functions.
+- [P06-MET-06-R17] Preserve original precision for Feature adoption; round only at the stated calculation or presentation step.
+- [P06-MET-06-R18] Create a small manually calculated Feature adoption fixture independent of the main implementation.
+- [P06-MET-06-R19] Implement an independent SQL/spreadsheet/reference check for the important Feature adoption result.
+- [P06-MET-06-R20] Keep the browser Feature adoption calculation consistent with the authoritative contract and verified fixture.
+- [P06-MET-06-R21] Show Feature adoption definition, active scope and unit through a visible explanation affordance.
+- [P06-MET-06-R22] Allow drillthrough from Feature adoption into contributing evidence or a transparent aggregate explanation.
+- [P06-MET-06-R23] Export Feature adoption with contract version, filters, dataset hash and generated timestamp.
+- [P06-MET-06-R24] When Feature adoption is a scenario estimate, visibly separate it from observed historical results.
+- [P06-MET-06-R25] Include a Feature adoption regression assertion for one project-specific edge case.
+- [P06-MET-06-R26] If Feature adoption is compared across periods, use comparable eligibility and disclose differences.
+- [P06-MET-06-R27] Keep Feature adoption historical revisions traceable when late data changes published results.
+- [P06-MET-06-R28] Record a versioned decision if implementation requires changing Feature adoption semantics.
+- [P06-MET-06-R29] Have a reviewer challenge whether Feature adoption could be misleading despite being arithmetically correct.
+- [P06-MET-06-R30] Mark Feature adoption verified only after the known-answer and presentation checks actually run.
+### P06-MET-07: Experiment lift
+- [P06-MET-07-R01] Business metric: Experiment lift.
+- [P06-MET-07-R02] Authoritative calculation rule: treatment conversion - control conversion.
+- [P06-MET-07-R03] Output unit: percentage points.
+- [P06-MET-07-R04] Important boundary: Unit-level aggregation.
+- [P06-MET-07-R05] Explain how Experiment lift informs the primary decision: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-MET-07-R06] Define the input grain for Experiment lift; never infer it from the chart grouping.
+- [P06-MET-07-R07] Name each source field and transformation contributing to Experiment lift.
+- [P06-MET-07-R08] Define the reporting population for Experiment lift before applying user-selected filters.
+- [P06-MET-07-R09] Name the timestamp and timezone used by Experiment lift.
+- [P06-MET-07-R10] Use a documented half-open interval for Experiment lift time filtering.
+- [P06-MET-07-R11] List excluded statuses, invalid records and immature observations for Experiment lift.
+- [P06-MET-07-R12] Display excluded-record counts when they materially change Experiment lift.
+- [P06-MET-07-R13] Define Experiment lift behavior for an empty eligible population.
+- [P06-MET-07-R14] Define Experiment lift behavior when its denominator is zero or its required baseline is absent.
+- [P06-MET-07-R15] Do not replace unknown Experiment lift values with zero without a documented business rule.
+- [P06-MET-07-R16] For Experiment lift, aggregate underlying values correctly before applying ratios or summary functions.
+- [P06-MET-07-R17] Preserve original precision for Experiment lift; round only at the stated calculation or presentation step.
+- [P06-MET-07-R18] Create a small manually calculated Experiment lift fixture independent of the main implementation.
+- [P06-MET-07-R19] Implement an independent SQL/spreadsheet/reference check for the important Experiment lift result.
+- [P06-MET-07-R20] Keep the browser Experiment lift calculation consistent with the authoritative contract and verified fixture.
+- [P06-MET-07-R21] Show Experiment lift definition, active scope and unit through a visible explanation affordance.
+- [P06-MET-07-R22] Allow drillthrough from Experiment lift into contributing evidence or a transparent aggregate explanation.
+- [P06-MET-07-R23] Export Experiment lift with contract version, filters, dataset hash and generated timestamp.
+- [P06-MET-07-R24] When Experiment lift is a scenario estimate, visibly separate it from observed historical results.
+- [P06-MET-07-R25] Include a Experiment lift regression assertion for one project-specific edge case.
+- [P06-MET-07-R26] If Experiment lift is compared across periods, use comparable eligibility and disclose differences.
+- [P06-MET-07-R27] Keep Experiment lift historical revisions traceable when late data changes published results.
+- [P06-MET-07-R28] Record a versioned decision if implementation requires changing Experiment lift semantics.
+- [P06-MET-07-R29] Have a reviewer challenge whether Experiment lift could be misleading despite being arithmetically correct.
+- [P06-MET-07-R30] Mark Experiment lift verified only after the known-answer and presentation checks actually run.
+### P06-MET-08: Relative lift
+- [P06-MET-08-R01] Business metric: Relative lift.
+- [P06-MET-08-R02] Authoritative calculation rule: (treatment - control) / control.
+- [P06-MET-08-R03] Output unit: percent.
+- [P06-MET-08-R04] Important boundary: Null at zero control.
+- [P06-MET-08-R05] Explain how Relative lift informs the primary decision: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-MET-08-R06] Define the input grain for Relative lift; never infer it from the chart grouping.
+- [P06-MET-08-R07] Name each source field and transformation contributing to Relative lift.
+- [P06-MET-08-R08] Define the reporting population for Relative lift before applying user-selected filters.
+- [P06-MET-08-R09] Name the timestamp and timezone used by Relative lift.
+- [P06-MET-08-R10] Use a documented half-open interval for Relative lift time filtering.
+- [P06-MET-08-R11] List excluded statuses, invalid records and immature observations for Relative lift.
+- [P06-MET-08-R12] Display excluded-record counts when they materially change Relative lift.
+- [P06-MET-08-R13] Define Relative lift behavior for an empty eligible population.
+- [P06-MET-08-R14] Define Relative lift behavior when its denominator is zero or its required baseline is absent.
+- [P06-MET-08-R15] Do not replace unknown Relative lift values with zero without a documented business rule.
+- [P06-MET-08-R16] For Relative lift, aggregate underlying values correctly before applying ratios or summary functions.
+- [P06-MET-08-R17] Preserve original precision for Relative lift; round only at the stated calculation or presentation step.
+- [P06-MET-08-R18] Create a small manually calculated Relative lift fixture independent of the main implementation.
+- [P06-MET-08-R19] Implement an independent SQL/spreadsheet/reference check for the important Relative lift result.
+- [P06-MET-08-R20] Keep the browser Relative lift calculation consistent with the authoritative contract and verified fixture.
+- [P06-MET-08-R21] Show Relative lift definition, active scope and unit through a visible explanation affordance.
+- [P06-MET-08-R22] Allow drillthrough from Relative lift into contributing evidence or a transparent aggregate explanation.
+- [P06-MET-08-R23] Export Relative lift with contract version, filters, dataset hash and generated timestamp.
+- [P06-MET-08-R24] When Relative lift is a scenario estimate, visibly separate it from observed historical results.
+- [P06-MET-08-R25] Include a Relative lift regression assertion for one project-specific edge case.
+- [P06-MET-08-R26] If Relative lift is compared across periods, use comparable eligibility and disclose differences.
+- [P06-MET-08-R27] Keep Relative lift historical revisions traceable when late data changes published results.
+- [P06-MET-08-R28] Record a versioned decision if implementation requires changing Relative lift semantics.
+- [P06-MET-08-R29] Have a reviewer challenge whether Relative lift could be misleading despite being arithmetically correct.
+- [P06-MET-08-R30] Mark Relative lift verified only after the known-answer and presentation checks actually run.
+### P06-MET-09: Exposure rate
+- [P06-MET-09-R01] Business metric: Exposure rate.
+- [P06-MET-09-R02] Authoritative calculation rule: exposed assigned units / assigned units.
+- [P06-MET-09-R03] Output unit: percent.
+- [P06-MET-09-R04] Important boundary: Do not silently switch ITT population.
+- [P06-MET-09-R05] Explain how Exposure rate informs the primary decision: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-MET-09-R06] Define the input grain for Exposure rate; never infer it from the chart grouping.
+- [P06-MET-09-R07] Name each source field and transformation contributing to Exposure rate.
+- [P06-MET-09-R08] Define the reporting population for Exposure rate before applying user-selected filters.
+- [P06-MET-09-R09] Name the timestamp and timezone used by Exposure rate.
+- [P06-MET-09-R10] Use a documented half-open interval for Exposure rate time filtering.
+- [P06-MET-09-R11] List excluded statuses, invalid records and immature observations for Exposure rate.
+- [P06-MET-09-R12] Display excluded-record counts when they materially change Exposure rate.
+- [P06-MET-09-R13] Define Exposure rate behavior for an empty eligible population.
+- [P06-MET-09-R14] Define Exposure rate behavior when its denominator is zero or its required baseline is absent.
+- [P06-MET-09-R15] Do not replace unknown Exposure rate values with zero without a documented business rule.
+- [P06-MET-09-R16] For Exposure rate, aggregate underlying values correctly before applying ratios or summary functions.
+- [P06-MET-09-R17] Preserve original precision for Exposure rate; round only at the stated calculation or presentation step.
+- [P06-MET-09-R18] Create a small manually calculated Exposure rate fixture independent of the main implementation.
+- [P06-MET-09-R19] Implement an independent SQL/spreadsheet/reference check for the important Exposure rate result.
+- [P06-MET-09-R20] Keep the browser Exposure rate calculation consistent with the authoritative contract and verified fixture.
+- [P06-MET-09-R21] Show Exposure rate definition, active scope and unit through a visible explanation affordance.
+- [P06-MET-09-R22] Allow drillthrough from Exposure rate into contributing evidence or a transparent aggregate explanation.
+- [P06-MET-09-R23] Export Exposure rate with contract version, filters, dataset hash and generated timestamp.
+- [P06-MET-09-R24] When Exposure rate is a scenario estimate, visibly separate it from observed historical results.
+- [P06-MET-09-R25] Include a Exposure rate regression assertion for one project-specific edge case.
+- [P06-MET-09-R26] If Exposure rate is compared across periods, use comparable eligibility and disclose differences.
+- [P06-MET-09-R27] Keep Exposure rate historical revisions traceable when late data changes published results.
+- [P06-MET-09-R28] Record a versioned decision if implementation requires changing Exposure rate semantics.
+- [P06-MET-09-R29] Have a reviewer challenge whether Exposure rate could be misleading despite being arithmetically correct.
+- [P06-MET-09-R30] Mark Exposure rate verified only after the known-answer and presentation checks actually run.
+### P06-MET-10: Sample ratio discrepancy
+- [P06-MET-10-R01] Business metric: Sample ratio discrepancy.
+- [P06-MET-10-R02] Authoritative calculation rule: observed allocation versus prespecified allocation.
+- [P06-MET-10-R03] Output unit: test statistic.
+- [P06-MET-10-R04] Important boundary: Appropriate test and low-count handling.
+- [P06-MET-10-R05] Explain how Sample ratio discrepancy informs the primary decision: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-MET-10-R06] Define the input grain for Sample ratio discrepancy; never infer it from the chart grouping.
+- [P06-MET-10-R07] Name each source field and transformation contributing to Sample ratio discrepancy.
+- [P06-MET-10-R08] Define the reporting population for Sample ratio discrepancy before applying user-selected filters.
+- [P06-MET-10-R09] Name the timestamp and timezone used by Sample ratio discrepancy.
+- [P06-MET-10-R10] Use a documented half-open interval for Sample ratio discrepancy time filtering.
+- [P06-MET-10-R11] List excluded statuses, invalid records and immature observations for Sample ratio discrepancy.
+- [P06-MET-10-R12] Display excluded-record counts when they materially change Sample ratio discrepancy.
+- [P06-MET-10-R13] Define Sample ratio discrepancy behavior for an empty eligible population.
+- [P06-MET-10-R14] Define Sample ratio discrepancy behavior when its denominator is zero or its required baseline is absent.
+- [P06-MET-10-R15] Do not replace unknown Sample ratio discrepancy values with zero without a documented business rule.
+- [P06-MET-10-R16] For Sample ratio discrepancy, aggregate underlying values correctly before applying ratios or summary functions.
+- [P06-MET-10-R17] Preserve original precision for Sample ratio discrepancy; round only at the stated calculation or presentation step.
+- [P06-MET-10-R18] Create a small manually calculated Sample ratio discrepancy fixture independent of the main implementation.
+- [P06-MET-10-R19] Implement an independent SQL/spreadsheet/reference check for the important Sample ratio discrepancy result.
+- [P06-MET-10-R20] Keep the browser Sample ratio discrepancy calculation consistent with the authoritative contract and verified fixture.
+- [P06-MET-10-R21] Show Sample ratio discrepancy definition, active scope and unit through a visible explanation affordance.
+- [P06-MET-10-R22] Allow drillthrough from Sample ratio discrepancy into contributing evidence or a transparent aggregate explanation.
+- [P06-MET-10-R23] Export Sample ratio discrepancy with contract version, filters, dataset hash and generated timestamp.
+- [P06-MET-10-R24] When Sample ratio discrepancy is a scenario estimate, visibly separate it from observed historical results.
+- [P06-MET-10-R25] Include a Sample ratio discrepancy regression assertion for one project-specific edge case.
+- [P06-MET-10-R26] If Sample ratio discrepancy is compared across periods, use comparable eligibility and disclose differences.
+- [P06-MET-10-R27] Keep Sample ratio discrepancy historical revisions traceable when late data changes published results.
+- [P06-MET-10-R28] Record a versioned decision if implementation requires changing Sample ratio discrepancy semantics.
+- [P06-MET-10-R29] Have a reviewer challenge whether Sample ratio discrepancy could be misleading despite being arithmetically correct.
+- [P06-MET-10-R30] Mark Sample ratio discrepancy verified only after the known-answer and presentation checks actually run.
+### P06-MET-11: Guardrail error rate
+- [P06-MET-11-R01] Business metric: Guardrail error rate.
+- [P06-MET-11-R02] Authoritative calculation rule: units with product error / eligible assigned units.
+- [P06-MET-11-R03] Output unit: percent.
+- [P06-MET-11-R04] Important boundary: Prespecified window.
+- [P06-MET-11-R05] Explain how Guardrail error rate informs the primary decision: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-MET-11-R06] Define the input grain for Guardrail error rate; never infer it from the chart grouping.
+- [P06-MET-11-R07] Name each source field and transformation contributing to Guardrail error rate.
+- [P06-MET-11-R08] Define the reporting population for Guardrail error rate before applying user-selected filters.
+- [P06-MET-11-R09] Name the timestamp and timezone used by Guardrail error rate.
+- [P06-MET-11-R10] Use a documented half-open interval for Guardrail error rate time filtering.
+- [P06-MET-11-R11] List excluded statuses, invalid records and immature observations for Guardrail error rate.
+- [P06-MET-11-R12] Display excluded-record counts when they materially change Guardrail error rate.
+- [P06-MET-11-R13] Define Guardrail error rate behavior for an empty eligible population.
+- [P06-MET-11-R14] Define Guardrail error rate behavior when its denominator is zero or its required baseline is absent.
+- [P06-MET-11-R15] Do not replace unknown Guardrail error rate values with zero without a documented business rule.
+- [P06-MET-11-R16] For Guardrail error rate, aggregate underlying values correctly before applying ratios or summary functions.
+- [P06-MET-11-R17] Preserve original precision for Guardrail error rate; round only at the stated calculation or presentation step.
+- [P06-MET-11-R18] Create a small manually calculated Guardrail error rate fixture independent of the main implementation.
+- [P06-MET-11-R19] Implement an independent SQL/spreadsheet/reference check for the important Guardrail error rate result.
+- [P06-MET-11-R20] Keep the browser Guardrail error rate calculation consistent with the authoritative contract and verified fixture.
+- [P06-MET-11-R21] Show Guardrail error rate definition, active scope and unit through a visible explanation affordance.
+- [P06-MET-11-R22] Allow drillthrough from Guardrail error rate into contributing evidence or a transparent aggregate explanation.
+- [P06-MET-11-R23] Export Guardrail error rate with contract version, filters, dataset hash and generated timestamp.
+- [P06-MET-11-R24] When Guardrail error rate is a scenario estimate, visibly separate it from observed historical results.
+- [P06-MET-11-R25] Include a Guardrail error rate regression assertion for one project-specific edge case.
+- [P06-MET-11-R26] If Guardrail error rate is compared across periods, use comparable eligibility and disclose differences.
+- [P06-MET-11-R27] Keep Guardrail error rate historical revisions traceable when late data changes published results.
+- [P06-MET-11-R28] Record a versioned decision if implementation requires changing Guardrail error rate semantics.
+- [P06-MET-11-R29] Have a reviewer challenge whether Guardrail error rate could be misleading despite being arithmetically correct.
+- [P06-MET-11-R30] Mark Guardrail error rate verified only after the known-answer and presentation checks actually run.
+### P06-MET-12: Revenue per assigned account
+- [P06-MET-12-R01] Business metric: Revenue per assigned account.
+- [P06-MET-12-R02] Authoritative calculation rule: eligible revenue / assigned accounts.
+- [P06-MET-12-R03] Output unit: USD/account.
+- [P06-MET-12-R04] Important boundary: Account randomization and clustering.
+- [P06-MET-12-R05] Explain how Revenue per assigned account informs the primary decision: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-MET-12-R06] Define the input grain for Revenue per assigned account; never infer it from the chart grouping.
+- [P06-MET-12-R07] Name each source field and transformation contributing to Revenue per assigned account.
+- [P06-MET-12-R08] Define the reporting population for Revenue per assigned account before applying user-selected filters.
+- [P06-MET-12-R09] Name the timestamp and timezone used by Revenue per assigned account.
+- [P06-MET-12-R10] Use a documented half-open interval for Revenue per assigned account time filtering.
+- [P06-MET-12-R11] List excluded statuses, invalid records and immature observations for Revenue per assigned account.
+- [P06-MET-12-R12] Display excluded-record counts when they materially change Revenue per assigned account.
+- [P06-MET-12-R13] Define Revenue per assigned account behavior for an empty eligible population.
+- [P06-MET-12-R14] Define Revenue per assigned account behavior when its denominator is zero or its required baseline is absent.
+- [P06-MET-12-R15] Do not replace unknown Revenue per assigned account values with zero without a documented business rule.
+- [P06-MET-12-R16] For Revenue per assigned account, aggregate underlying values correctly before applying ratios or summary functions.
+- [P06-MET-12-R17] Preserve original precision for Revenue per assigned account; round only at the stated calculation or presentation step.
+- [P06-MET-12-R18] Create a small manually calculated Revenue per assigned account fixture independent of the main implementation.
+- [P06-MET-12-R19] Implement an independent SQL/spreadsheet/reference check for the important Revenue per assigned account result.
+- [P06-MET-12-R20] Keep the browser Revenue per assigned account calculation consistent with the authoritative contract and verified fixture.
+- [P06-MET-12-R21] Show Revenue per assigned account definition, active scope and unit through a visible explanation affordance.
+- [P06-MET-12-R22] Allow drillthrough from Revenue per assigned account into contributing evidence or a transparent aggregate explanation.
+- [P06-MET-12-R23] Export Revenue per assigned account with contract version, filters, dataset hash and generated timestamp.
+- [P06-MET-12-R24] When Revenue per assigned account is a scenario estimate, visibly separate it from observed historical results.
+- [P06-MET-12-R25] Include a Revenue per assigned account regression assertion for one project-specific edge case.
+- [P06-MET-12-R26] If Revenue per assigned account is compared across periods, use comparable eligibility and disclose differences.
+- [P06-MET-12-R27] Keep Revenue per assigned account historical revisions traceable when late data changes published results.
+- [P06-MET-12-R28] Record a versioned decision if implementation requires changing Revenue per assigned account semantics.
+- [P06-MET-12-R29] Have a reviewer challenge whether Revenue per assigned account could be misleading despite being arithmetically correct.
+- [P06-MET-12-R30] Mark Revenue per assigned account verified only after the known-answer and presentation checks actually run.
+
+## 05. End-to-end workflow and transition contracts
+
+### P06-FLOW-01: Validate tracking
+- [P06-FLOW-01-R01] Workflow capability: Validate tracking.
+- [P06-FLOW-01-R02] Logical transition: Raw events -> canonical events.
+- [P06-FLOW-01-R03] Primary invariant: Schema and deduplication.
+- [P06-FLOW-01-R04] Define the user goal and permitted actor for Validate tracking.
+- [P06-FLOW-01-R05] Define required inputs and source versions for Validate tracking.
+- [P06-FLOW-01-R06] Check preconditions before Validate tracking; reject violations with a specific user-facing explanation.
+- [P06-FLOW-01-R07] Document the authoritative output of Validate tracking and the next valid action.
+- [P06-FLOW-01-R08] Implement Validate tracking in a domain/service layer rather than hiding it in a UI callback.
+- [P06-FLOW-01-R09] Define the transaction boundary for Validate tracking when state changes.
+- [P06-FLOW-01-R10] Preserve an audit event for material Validate tracking decisions without recording secrets.
+- [P06-FLOW-01-R11] Define how Validate tracking behaves when the same request or input is repeated.
+- [P06-FLOW-01-R12] Define how Validate tracking behaves when its input dataset or record version is stale.
+- [P06-FLOW-01-R13] Prevent conflicting Validate tracking updates with version checks or another documented mechanism.
+- [P06-FLOW-01-R14] Keep original evidence immutable when Validate tracking creates a correction or new scenario.
+- [P06-FLOW-01-R15] Test the successful Validate tracking path using deterministic fixtures.
+- [P06-FLOW-01-R16] Test one rejected Validate tracking path against the stated invariant.
+- [P06-FLOW-01-R17] Test interrupted Validate tracking execution and prove safe recovery or explicit noncommit.
+- [P06-FLOW-01-R18] Test authorized versus unauthorized Validate tracking behavior where real backend roles apply.
+- [P06-FLOW-01-R19] In the static website, label Validate tracking mutations as browser-memory simulation.
+- [P06-FLOW-01-R20] Never make Validate tracking appear server-persistent in the GitHub Pages demo.
+- [P06-FLOW-01-R21] Expose progress, success and actionable failure feedback for Validate tracking.
+- [P06-FLOW-01-R22] Keep keyboard focus coherent after Validate tracking updates or opens a dialog.
+- [P06-FLOW-01-R23] Include Validate tracking in the UAT script and trace its acceptance criteria to tests.
+- [P06-FLOW-01-R24] Include actual Validate tracking verification results in the evidence ledger.
+- [P06-FLOW-01-R25] Use the resulting Validate tracking evidence in the case study only with its execution mode disclosed.
+- [P06-FLOW-01-R26] Have the coordinator approve the integrated Validate tracking diff after specialist review.
+### P06-FLOW-02: Resolve identity
+- [P06-FLOW-02-R01] Workflow capability: Resolve identity.
+- [P06-FLOW-02-R02] Logical transition: Anonymous -> linked identity.
+- [P06-FLOW-02-R03] Primary invariant: Time-aware deterministic rules.
+- [P06-FLOW-02-R04] Define the user goal and permitted actor for Resolve identity.
+- [P06-FLOW-02-R05] Define required inputs and source versions for Resolve identity.
+- [P06-FLOW-02-R06] Check preconditions before Resolve identity; reject violations with a specific user-facing explanation.
+- [P06-FLOW-02-R07] Document the authoritative output of Resolve identity and the next valid action.
+- [P06-FLOW-02-R08] Implement Resolve identity in a domain/service layer rather than hiding it in a UI callback.
+- [P06-FLOW-02-R09] Define the transaction boundary for Resolve identity when state changes.
+- [P06-FLOW-02-R10] Preserve an audit event for material Resolve identity decisions without recording secrets.
+- [P06-FLOW-02-R11] Define how Resolve identity behaves when the same request or input is repeated.
+- [P06-FLOW-02-R12] Define how Resolve identity behaves when its input dataset or record version is stale.
+- [P06-FLOW-02-R13] Prevent conflicting Resolve identity updates with version checks or another documented mechanism.
+- [P06-FLOW-02-R14] Keep original evidence immutable when Resolve identity creates a correction or new scenario.
+- [P06-FLOW-02-R15] Test the successful Resolve identity path using deterministic fixtures.
+- [P06-FLOW-02-R16] Test one rejected Resolve identity path against the stated invariant.
+- [P06-FLOW-02-R17] Test interrupted Resolve identity execution and prove safe recovery or explicit noncommit.
+- [P06-FLOW-02-R18] Test authorized versus unauthorized Resolve identity behavior where real backend roles apply.
+- [P06-FLOW-02-R19] In the static website, label Resolve identity mutations as browser-memory simulation.
+- [P06-FLOW-02-R20] Never make Resolve identity appear server-persistent in the GitHub Pages demo.
+- [P06-FLOW-02-R21] Expose progress, success and actionable failure feedback for Resolve identity.
+- [P06-FLOW-02-R22] Keep keyboard focus coherent after Resolve identity updates or opens a dialog.
+- [P06-FLOW-02-R23] Include Resolve identity in the UAT script and trace its acceptance criteria to tests.
+- [P06-FLOW-02-R24] Include actual Resolve identity verification results in the evidence ledger.
+- [P06-FLOW-02-R25] Use the resulting Resolve identity evidence in the case study only with its execution mode disclosed.
+- [P06-FLOW-02-R26] Have the coordinator approve the integrated Resolve identity diff after specialist review.
+### P06-FLOW-03: Define funnel
+- [P06-FLOW-03-R01] Workflow capability: Define funnel.
+- [P06-FLOW-03-R02] Logical transition: Draft -> versioned funnel.
+- [P06-FLOW-03-R03] Primary invariant: Steps, ordering and maximum gap.
+- [P06-FLOW-03-R04] Define the user goal and permitted actor for Define funnel.
+- [P06-FLOW-03-R05] Define required inputs and source versions for Define funnel.
+- [P06-FLOW-03-R06] Check preconditions before Define funnel; reject violations with a specific user-facing explanation.
+- [P06-FLOW-03-R07] Document the authoritative output of Define funnel and the next valid action.
+- [P06-FLOW-03-R08] Implement Define funnel in a domain/service layer rather than hiding it in a UI callback.
+- [P06-FLOW-03-R09] Define the transaction boundary for Define funnel when state changes.
+- [P06-FLOW-03-R10] Preserve an audit event for material Define funnel decisions without recording secrets.
+- [P06-FLOW-03-R11] Define how Define funnel behaves when the same request or input is repeated.
+- [P06-FLOW-03-R12] Define how Define funnel behaves when its input dataset or record version is stale.
+- [P06-FLOW-03-R13] Prevent conflicting Define funnel updates with version checks or another documented mechanism.
+- [P06-FLOW-03-R14] Keep original evidence immutable when Define funnel creates a correction or new scenario.
+- [P06-FLOW-03-R15] Test the successful Define funnel path using deterministic fixtures.
+- [P06-FLOW-03-R16] Test one rejected Define funnel path against the stated invariant.
+- [P06-FLOW-03-R17] Test interrupted Define funnel execution and prove safe recovery or explicit noncommit.
+- [P06-FLOW-03-R18] Test authorized versus unauthorized Define funnel behavior where real backend roles apply.
+- [P06-FLOW-03-R19] In the static website, label Define funnel mutations as browser-memory simulation.
+- [P06-FLOW-03-R20] Never make Define funnel appear server-persistent in the GitHub Pages demo.
+- [P06-FLOW-03-R21] Expose progress, success and actionable failure feedback for Define funnel.
+- [P06-FLOW-03-R22] Keep keyboard focus coherent after Define funnel updates or opens a dialog.
+- [P06-FLOW-03-R23] Include Define funnel in the UAT script and trace its acceptance criteria to tests.
+- [P06-FLOW-03-R24] Include actual Define funnel verification results in the evidence ledger.
+- [P06-FLOW-03-R25] Use the resulting Define funnel evidence in the case study only with its execution mode disclosed.
+- [P06-FLOW-03-R26] Have the coordinator approve the integrated Define funnel diff after specialist review.
+### P06-FLOW-04: Assign experiment
+- [P06-FLOW-04-R01] Workflow capability: Assign experiment.
+- [P06-FLOW-04-R02] Logical transition: Eligible unit -> fixed variant.
+- [P06-FLOW-04-R03] Primary invariant: Stable assignment before outcomes.
+- [P06-FLOW-04-R04] Define the user goal and permitted actor for Assign experiment.
+- [P06-FLOW-04-R05] Define required inputs and source versions for Assign experiment.
+- [P06-FLOW-04-R06] Check preconditions before Assign experiment; reject violations with a specific user-facing explanation.
+- [P06-FLOW-04-R07] Document the authoritative output of Assign experiment and the next valid action.
+- [P06-FLOW-04-R08] Implement Assign experiment in a domain/service layer rather than hiding it in a UI callback.
+- [P06-FLOW-04-R09] Define the transaction boundary for Assign experiment when state changes.
+- [P06-FLOW-04-R10] Preserve an audit event for material Assign experiment decisions without recording secrets.
+- [P06-FLOW-04-R11] Define how Assign experiment behaves when the same request or input is repeated.
+- [P06-FLOW-04-R12] Define how Assign experiment behaves when its input dataset or record version is stale.
+- [P06-FLOW-04-R13] Prevent conflicting Assign experiment updates with version checks or another documented mechanism.
+- [P06-FLOW-04-R14] Keep original evidence immutable when Assign experiment creates a correction or new scenario.
+- [P06-FLOW-04-R15] Test the successful Assign experiment path using deterministic fixtures.
+- [P06-FLOW-04-R16] Test one rejected Assign experiment path against the stated invariant.
+- [P06-FLOW-04-R17] Test interrupted Assign experiment execution and prove safe recovery or explicit noncommit.
+- [P06-FLOW-04-R18] Test authorized versus unauthorized Assign experiment behavior where real backend roles apply.
+- [P06-FLOW-04-R19] In the static website, label Assign experiment mutations as browser-memory simulation.
+- [P06-FLOW-04-R20] Never make Assign experiment appear server-persistent in the GitHub Pages demo.
+- [P06-FLOW-04-R21] Expose progress, success and actionable failure feedback for Assign experiment.
+- [P06-FLOW-04-R22] Keep keyboard focus coherent after Assign experiment updates or opens a dialog.
+- [P06-FLOW-04-R23] Include Assign experiment in the UAT script and trace its acceptance criteria to tests.
+- [P06-FLOW-04-R24] Include actual Assign experiment verification results in the evidence ledger.
+- [P06-FLOW-04-R25] Use the resulting Assign experiment evidence in the case study only with its execution mode disclosed.
+- [P06-FLOW-04-R26] Have the coordinator approve the integrated Assign experiment diff after specialist review.
+### P06-FLOW-05: Record exposure
+- [P06-FLOW-05-R01] Workflow capability: Record exposure.
+- [P06-FLOW-05-R02] Logical transition: Assigned -> exposed.
+- [P06-FLOW-05-R03] Primary invariant: Preserve ITT membership.
+- [P06-FLOW-05-R04] Define the user goal and permitted actor for Record exposure.
+- [P06-FLOW-05-R05] Define required inputs and source versions for Record exposure.
+- [P06-FLOW-05-R06] Check preconditions before Record exposure; reject violations with a specific user-facing explanation.
+- [P06-FLOW-05-R07] Document the authoritative output of Record exposure and the next valid action.
+- [P06-FLOW-05-R08] Implement Record exposure in a domain/service layer rather than hiding it in a UI callback.
+- [P06-FLOW-05-R09] Define the transaction boundary for Record exposure when state changes.
+- [P06-FLOW-05-R10] Preserve an audit event for material Record exposure decisions without recording secrets.
+- [P06-FLOW-05-R11] Define how Record exposure behaves when the same request or input is repeated.
+- [P06-FLOW-05-R12] Define how Record exposure behaves when its input dataset or record version is stale.
+- [P06-FLOW-05-R13] Prevent conflicting Record exposure updates with version checks or another documented mechanism.
+- [P06-FLOW-05-R14] Keep original evidence immutable when Record exposure creates a correction or new scenario.
+- [P06-FLOW-05-R15] Test the successful Record exposure path using deterministic fixtures.
+- [P06-FLOW-05-R16] Test one rejected Record exposure path against the stated invariant.
+- [P06-FLOW-05-R17] Test interrupted Record exposure execution and prove safe recovery or explicit noncommit.
+- [P06-FLOW-05-R18] Test authorized versus unauthorized Record exposure behavior where real backend roles apply.
+- [P06-FLOW-05-R19] In the static website, label Record exposure mutations as browser-memory simulation.
+- [P06-FLOW-05-R20] Never make Record exposure appear server-persistent in the GitHub Pages demo.
+- [P06-FLOW-05-R21] Expose progress, success and actionable failure feedback for Record exposure.
+- [P06-FLOW-05-R22] Keep keyboard focus coherent after Record exposure updates or opens a dialog.
+- [P06-FLOW-05-R23] Include Record exposure in the UAT script and trace its acceptance criteria to tests.
+- [P06-FLOW-05-R24] Include actual Record exposure verification results in the evidence ledger.
+- [P06-FLOW-05-R25] Use the resulting Record exposure evidence in the case study only with its execution mode disclosed.
+- [P06-FLOW-05-R26] Have the coordinator approve the integrated Record exposure diff after specialist review.
+### P06-FLOW-06: Freeze analysis plan
+- [P06-FLOW-06-R01] Workflow capability: Freeze analysis plan.
+- [P06-FLOW-06-R02] Logical transition: Draft -> registered plan.
+- [P06-FLOW-06-R03] Primary invariant: Before outcome inspection.
+- [P06-FLOW-06-R04] Define the user goal and permitted actor for Freeze analysis plan.
+- [P06-FLOW-06-R05] Define required inputs and source versions for Freeze analysis plan.
+- [P06-FLOW-06-R06] Check preconditions before Freeze analysis plan; reject violations with a specific user-facing explanation.
+- [P06-FLOW-06-R07] Document the authoritative output of Freeze analysis plan and the next valid action.
+- [P06-FLOW-06-R08] Implement Freeze analysis plan in a domain/service layer rather than hiding it in a UI callback.
+- [P06-FLOW-06-R09] Define the transaction boundary for Freeze analysis plan when state changes.
+- [P06-FLOW-06-R10] Preserve an audit event for material Freeze analysis plan decisions without recording secrets.
+- [P06-FLOW-06-R11] Define how Freeze analysis plan behaves when the same request or input is repeated.
+- [P06-FLOW-06-R12] Define how Freeze analysis plan behaves when its input dataset or record version is stale.
+- [P06-FLOW-06-R13] Prevent conflicting Freeze analysis plan updates with version checks or another documented mechanism.
+- [P06-FLOW-06-R14] Keep original evidence immutable when Freeze analysis plan creates a correction or new scenario.
+- [P06-FLOW-06-R15] Test the successful Freeze analysis plan path using deterministic fixtures.
+- [P06-FLOW-06-R16] Test one rejected Freeze analysis plan path against the stated invariant.
+- [P06-FLOW-06-R17] Test interrupted Freeze analysis plan execution and prove safe recovery or explicit noncommit.
+- [P06-FLOW-06-R18] Test authorized versus unauthorized Freeze analysis plan behavior where real backend roles apply.
+- [P06-FLOW-06-R19] In the static website, label Freeze analysis plan mutations as browser-memory simulation.
+- [P06-FLOW-06-R20] Never make Freeze analysis plan appear server-persistent in the GitHub Pages demo.
+- [P06-FLOW-06-R21] Expose progress, success and actionable failure feedback for Freeze analysis plan.
+- [P06-FLOW-06-R22] Keep keyboard focus coherent after Freeze analysis plan updates or opens a dialog.
+- [P06-FLOW-06-R23] Include Freeze analysis plan in the UAT script and trace its acceptance criteria to tests.
+- [P06-FLOW-06-R24] Include actual Freeze analysis plan verification results in the evidence ledger.
+- [P06-FLOW-06-R25] Use the resulting Freeze analysis plan evidence in the case study only with its execution mode disclosed.
+- [P06-FLOW-06-R26] Have the coordinator approve the integrated Freeze analysis plan diff after specialist review.
+### P06-FLOW-07: Check maturity
+- [P06-FLOW-07-R01] Workflow capability: Check maturity.
+- [P06-FLOW-07-R02] Logical transition: Assigned cohort -> eligible observation.
+- [P06-FLOW-07-R03] Primary invariant: Avoid incomplete windows.
+- [P06-FLOW-07-R04] Define the user goal and permitted actor for Check maturity.
+- [P06-FLOW-07-R05] Define required inputs and source versions for Check maturity.
+- [P06-FLOW-07-R06] Check preconditions before Check maturity; reject violations with a specific user-facing explanation.
+- [P06-FLOW-07-R07] Document the authoritative output of Check maturity and the next valid action.
+- [P06-FLOW-07-R08] Implement Check maturity in a domain/service layer rather than hiding it in a UI callback.
+- [P06-FLOW-07-R09] Define the transaction boundary for Check maturity when state changes.
+- [P06-FLOW-07-R10] Preserve an audit event for material Check maturity decisions without recording secrets.
+- [P06-FLOW-07-R11] Define how Check maturity behaves when the same request or input is repeated.
+- [P06-FLOW-07-R12] Define how Check maturity behaves when its input dataset or record version is stale.
+- [P06-FLOW-07-R13] Prevent conflicting Check maturity updates with version checks or another documented mechanism.
+- [P06-FLOW-07-R14] Keep original evidence immutable when Check maturity creates a correction or new scenario.
+- [P06-FLOW-07-R15] Test the successful Check maturity path using deterministic fixtures.
+- [P06-FLOW-07-R16] Test one rejected Check maturity path against the stated invariant.
+- [P06-FLOW-07-R17] Test interrupted Check maturity execution and prove safe recovery or explicit noncommit.
+- [P06-FLOW-07-R18] Test authorized versus unauthorized Check maturity behavior where real backend roles apply.
+- [P06-FLOW-07-R19] In the static website, label Check maturity mutations as browser-memory simulation.
+- [P06-FLOW-07-R20] Never make Check maturity appear server-persistent in the GitHub Pages demo.
+- [P06-FLOW-07-R21] Expose progress, success and actionable failure feedback for Check maturity.
+- [P06-FLOW-07-R22] Keep keyboard focus coherent after Check maturity updates or opens a dialog.
+- [P06-FLOW-07-R23] Include Check maturity in the UAT script and trace its acceptance criteria to tests.
+- [P06-FLOW-07-R24] Include actual Check maturity verification results in the evidence ledger.
+- [P06-FLOW-07-R25] Use the resulting Check maturity evidence in the case study only with its execution mode disclosed.
+- [P06-FLOW-07-R26] Have the coordinator approve the integrated Check maturity diff after specialist review.
+### P06-FLOW-08: Analyze experiment
+- [P06-FLOW-08-R01] Workflow capability: Analyze experiment.
+- [P06-FLOW-08-R02] Logical transition: Frozen plan -> results.
+- [P06-FLOW-08-R03] Primary invariant: Assignment unit respected.
+- [P06-FLOW-08-R04] Define the user goal and permitted actor for Analyze experiment.
+- [P06-FLOW-08-R05] Define required inputs and source versions for Analyze experiment.
+- [P06-FLOW-08-R06] Check preconditions before Analyze experiment; reject violations with a specific user-facing explanation.
+- [P06-FLOW-08-R07] Document the authoritative output of Analyze experiment and the next valid action.
+- [P06-FLOW-08-R08] Implement Analyze experiment in a domain/service layer rather than hiding it in a UI callback.
+- [P06-FLOW-08-R09] Define the transaction boundary for Analyze experiment when state changes.
+- [P06-FLOW-08-R10] Preserve an audit event for material Analyze experiment decisions without recording secrets.
+- [P06-FLOW-08-R11] Define how Analyze experiment behaves when the same request or input is repeated.
+- [P06-FLOW-08-R12] Define how Analyze experiment behaves when its input dataset or record version is stale.
+- [P06-FLOW-08-R13] Prevent conflicting Analyze experiment updates with version checks or another documented mechanism.
+- [P06-FLOW-08-R14] Keep original evidence immutable when Analyze experiment creates a correction or new scenario.
+- [P06-FLOW-08-R15] Test the successful Analyze experiment path using deterministic fixtures.
+- [P06-FLOW-08-R16] Test one rejected Analyze experiment path against the stated invariant.
+- [P06-FLOW-08-R17] Test interrupted Analyze experiment execution and prove safe recovery or explicit noncommit.
+- [P06-FLOW-08-R18] Test authorized versus unauthorized Analyze experiment behavior where real backend roles apply.
+- [P06-FLOW-08-R19] In the static website, label Analyze experiment mutations as browser-memory simulation.
+- [P06-FLOW-08-R20] Never make Analyze experiment appear server-persistent in the GitHub Pages demo.
+- [P06-FLOW-08-R21] Expose progress, success and actionable failure feedback for Analyze experiment.
+- [P06-FLOW-08-R22] Keep keyboard focus coherent after Analyze experiment updates or opens a dialog.
+- [P06-FLOW-08-R23] Include Analyze experiment in the UAT script and trace its acceptance criteria to tests.
+- [P06-FLOW-08-R24] Include actual Analyze experiment verification results in the evidence ledger.
+- [P06-FLOW-08-R25] Use the resulting Analyze experiment evidence in the case study only with its execution mode disclosed.
+- [P06-FLOW-08-R26] Have the coordinator approve the integrated Analyze experiment diff after specialist review.
+### P06-FLOW-09: Review guardrails
+- [P06-FLOW-09-R01] Workflow capability: Review guardrails.
+- [P06-FLOW-09-R02] Logical transition: Result -> decision evidence.
+- [P06-FLOW-09-R03] Primary invariant: Business and statistical meaning.
+- [P06-FLOW-09-R04] Define the user goal and permitted actor for Review guardrails.
+- [P06-FLOW-09-R05] Define required inputs and source versions for Review guardrails.
+- [P06-FLOW-09-R06] Check preconditions before Review guardrails; reject violations with a specific user-facing explanation.
+- [P06-FLOW-09-R07] Document the authoritative output of Review guardrails and the next valid action.
+- [P06-FLOW-09-R08] Implement Review guardrails in a domain/service layer rather than hiding it in a UI callback.
+- [P06-FLOW-09-R09] Define the transaction boundary for Review guardrails when state changes.
+- [P06-FLOW-09-R10] Preserve an audit event for material Review guardrails decisions without recording secrets.
+- [P06-FLOW-09-R11] Define how Review guardrails behaves when the same request or input is repeated.
+- [P06-FLOW-09-R12] Define how Review guardrails behaves when its input dataset or record version is stale.
+- [P06-FLOW-09-R13] Prevent conflicting Review guardrails updates with version checks or another documented mechanism.
+- [P06-FLOW-09-R14] Keep original evidence immutable when Review guardrails creates a correction or new scenario.
+- [P06-FLOW-09-R15] Test the successful Review guardrails path using deterministic fixtures.
+- [P06-FLOW-09-R16] Test one rejected Review guardrails path against the stated invariant.
+- [P06-FLOW-09-R17] Test interrupted Review guardrails execution and prove safe recovery or explicit noncommit.
+- [P06-FLOW-09-R18] Test authorized versus unauthorized Review guardrails behavior where real backend roles apply.
+- [P06-FLOW-09-R19] In the static website, label Review guardrails mutations as browser-memory simulation.
+- [P06-FLOW-09-R20] Never make Review guardrails appear server-persistent in the GitHub Pages demo.
+- [P06-FLOW-09-R21] Expose progress, success and actionable failure feedback for Review guardrails.
+- [P06-FLOW-09-R22] Keep keyboard focus coherent after Review guardrails updates or opens a dialog.
+- [P06-FLOW-09-R23] Include Review guardrails in the UAT script and trace its acceptance criteria to tests.
+- [P06-FLOW-09-R24] Include actual Review guardrails verification results in the evidence ledger.
+- [P06-FLOW-09-R25] Use the resulting Review guardrails evidence in the case study only with its execution mode disclosed.
+- [P06-FLOW-09-R26] Have the coordinator approve the integrated Review guardrails diff after specialist review.
+### P06-FLOW-10: Record decision
+- [P06-FLOW-10-R01] Workflow capability: Record decision.
+- [P06-FLOW-10-R02] Logical transition: Evidence -> ship or stop or inconclusive.
+- [P06-FLOW-10-R03] Primary invariant: No automatic product release.
+- [P06-FLOW-10-R04] Define the user goal and permitted actor for Record decision.
+- [P06-FLOW-10-R05] Define required inputs and source versions for Record decision.
+- [P06-FLOW-10-R06] Check preconditions before Record decision; reject violations with a specific user-facing explanation.
+- [P06-FLOW-10-R07] Document the authoritative output of Record decision and the next valid action.
+- [P06-FLOW-10-R08] Implement Record decision in a domain/service layer rather than hiding it in a UI callback.
+- [P06-FLOW-10-R09] Define the transaction boundary for Record decision when state changes.
+- [P06-FLOW-10-R10] Preserve an audit event for material Record decision decisions without recording secrets.
+- [P06-FLOW-10-R11] Define how Record decision behaves when the same request or input is repeated.
+- [P06-FLOW-10-R12] Define how Record decision behaves when its input dataset or record version is stale.
+- [P06-FLOW-10-R13] Prevent conflicting Record decision updates with version checks or another documented mechanism.
+- [P06-FLOW-10-R14] Keep original evidence immutable when Record decision creates a correction or new scenario.
+- [P06-FLOW-10-R15] Test the successful Record decision path using deterministic fixtures.
+- [P06-FLOW-10-R16] Test one rejected Record decision path against the stated invariant.
+- [P06-FLOW-10-R17] Test interrupted Record decision execution and prove safe recovery or explicit noncommit.
+- [P06-FLOW-10-R18] Test authorized versus unauthorized Record decision behavior where real backend roles apply.
+- [P06-FLOW-10-R19] In the static website, label Record decision mutations as browser-memory simulation.
+- [P06-FLOW-10-R20] Never make Record decision appear server-persistent in the GitHub Pages demo.
+- [P06-FLOW-10-R21] Expose progress, success and actionable failure feedback for Record decision.
+- [P06-FLOW-10-R22] Keep keyboard focus coherent after Record decision updates or opens a dialog.
+- [P06-FLOW-10-R23] Include Record decision in the UAT script and trace its acceptance criteria to tests.
+- [P06-FLOW-10-R24] Include actual Record decision verification results in the evidence ledger.
+- [P06-FLOW-10-R25] Use the resulting Record decision evidence in the case study only with its execution mode disclosed.
+- [P06-FLOW-10-R26] Have the coordinator approve the integrated Record decision diff after specialist review.
+
+## 06. Screen-by-screen product experience
+
+### P06-UI-01: Journey overview
+- [P06-UI-01-R01] Screen: Journey overview.
+- [P06-UI-01-R02] Purpose and principal representation: Visitors to activation with sample sizes.
+- [P06-UI-01-R03] Choose a stable route under /productsignal/ and verify direct navigation and reload for Journey overview.
+- [P06-UI-01-R04] Use the project visual direction on Journey overview: Product journey laboratory: warm white, cobalt, violet; funnel and cohort grid.
+- [P06-UI-01-R05] Give Journey overview one clear main action related to the business decision.
+- [P06-UI-01-R06] Display the active time window, filters and data version on Journey overview where applicable.
+- [P06-UI-01-R07] Show the synthetic/static-demo label without overwhelming Journey overview.
+- [P06-UI-01-R08] Use real verified snapshot values on Journey overview; do not hand-enter attractive KPI numbers.
+- [P06-UI-01-R09] Explain calculation meaning and units adjacent to important Journey overview values.
+- [P06-UI-01-R10] Provide an accessible table or text alternative for analytical graphics on Journey overview.
+- [P06-UI-01-R11] Use consistent category ordering and deterministic tie breaks on Journey overview.
+- [P06-UI-01-R12] Handle long names, negative values, missing categories and large values on Journey overview.
+- [P06-UI-01-R13] Implement a useful no-data state on Journey overview, including a way to clear restrictive filters.
+- [P06-UI-01-R14] Implement loading and failed-data states on Journey overview without showing invented results.
+- [P06-UI-01-R15] Keep all Journey overview controls keyboard accessible with visible focus.
+- [P06-UI-01-R16] Provide reduced-motion behavior for Journey overview transitions.
+- [P06-UI-01-R17] Keep motion purposeful; chart changes on Journey overview must not conceal changed units or populations.
+- [P06-UI-01-R18] Verify Journey overview at mobile, tablet and desktop widths with actual rendered output.
+- [P06-UI-01-R19] Verify Journey overview at 200 percent zoom and with realistic dense data.
+- [P06-UI-01-R20] Ensure exports from Journey overview match its scope or clearly explain full-population export behavior.
+- [P06-UI-01-R21] Provide navigation from Journey overview to evidence, definitions and the case study.
+- [P06-UI-01-R22] Check console errors, broken assets and nested path handling for Journey overview.
+- [P06-UI-01-R23] Record screenshot-review findings for Journey overview; do not assert review from source inspection.
+- [P06-UI-01-R24] Link Journey overview to its relevant workflow and metric contract IDs in the traceability matrix.
+### P06-UI-02: Funnel explorer
+- [P06-UI-02-R01] Screen: Funnel explorer.
+- [P06-UI-02-R02] Purpose and principal representation: Ordered events and exclusions.
+- [P06-UI-02-R03] Choose a stable route under /productsignal/ and verify direct navigation and reload for Funnel explorer.
+- [P06-UI-02-R04] Use the project visual direction on Funnel explorer: Product journey laboratory: warm white, cobalt, violet; funnel and cohort grid.
+- [P06-UI-02-R05] Give Funnel explorer one clear main action related to the business decision.
+- [P06-UI-02-R06] Display the active time window, filters and data version on Funnel explorer where applicable.
+- [P06-UI-02-R07] Show the synthetic/static-demo label without overwhelming Funnel explorer.
+- [P06-UI-02-R08] Use real verified snapshot values on Funnel explorer; do not hand-enter attractive KPI numbers.
+- [P06-UI-02-R09] Explain calculation meaning and units adjacent to important Funnel explorer values.
+- [P06-UI-02-R10] Provide an accessible table or text alternative for analytical graphics on Funnel explorer.
+- [P06-UI-02-R11] Use consistent category ordering and deterministic tie breaks on Funnel explorer.
+- [P06-UI-02-R12] Handle long names, negative values, missing categories and large values on Funnel explorer.
+- [P06-UI-02-R13] Implement a useful no-data state on Funnel explorer, including a way to clear restrictive filters.
+- [P06-UI-02-R14] Implement loading and failed-data states on Funnel explorer without showing invented results.
+- [P06-UI-02-R15] Keep all Funnel explorer controls keyboard accessible with visible focus.
+- [P06-UI-02-R16] Provide reduced-motion behavior for Funnel explorer transitions.
+- [P06-UI-02-R17] Keep motion purposeful; chart changes on Funnel explorer must not conceal changed units or populations.
+- [P06-UI-02-R18] Verify Funnel explorer at mobile, tablet and desktop widths with actual rendered output.
+- [P06-UI-02-R19] Verify Funnel explorer at 200 percent zoom and with realistic dense data.
+- [P06-UI-02-R20] Ensure exports from Funnel explorer match its scope or clearly explain full-population export behavior.
+- [P06-UI-02-R21] Provide navigation from Funnel explorer to evidence, definitions and the case study.
+- [P06-UI-02-R22] Check console errors, broken assets and nested path handling for Funnel explorer.
+- [P06-UI-02-R23] Record screenshot-review findings for Funnel explorer; do not assert review from source inspection.
+- [P06-UI-02-R24] Link Funnel explorer to its relevant workflow and metric contract IDs in the traceability matrix.
+### P06-UI-03: Cohort laboratory
+- [P06-UI-03-R01] Screen: Cohort laboratory.
+- [P06-UI-03-R02] Purpose and principal representation: Maturity-aware retention grid.
+- [P06-UI-03-R03] Choose a stable route under /productsignal/ and verify direct navigation and reload for Cohort laboratory.
+- [P06-UI-03-R04] Use the project visual direction on Cohort laboratory: Product journey laboratory: warm white, cobalt, violet; funnel and cohort grid.
+- [P06-UI-03-R05] Give Cohort laboratory one clear main action related to the business decision.
+- [P06-UI-03-R06] Display the active time window, filters and data version on Cohort laboratory where applicable.
+- [P06-UI-03-R07] Show the synthetic/static-demo label without overwhelming Cohort laboratory.
+- [P06-UI-03-R08] Use real verified snapshot values on Cohort laboratory; do not hand-enter attractive KPI numbers.
+- [P06-UI-03-R09] Explain calculation meaning and units adjacent to important Cohort laboratory values.
+- [P06-UI-03-R10] Provide an accessible table or text alternative for analytical graphics on Cohort laboratory.
+- [P06-UI-03-R11] Use consistent category ordering and deterministic tie breaks on Cohort laboratory.
+- [P06-UI-03-R12] Handle long names, negative values, missing categories and large values on Cohort laboratory.
+- [P06-UI-03-R13] Implement a useful no-data state on Cohort laboratory, including a way to clear restrictive filters.
+- [P06-UI-03-R14] Implement loading and failed-data states on Cohort laboratory without showing invented results.
+- [P06-UI-03-R15] Keep all Cohort laboratory controls keyboard accessible with visible focus.
+- [P06-UI-03-R16] Provide reduced-motion behavior for Cohort laboratory transitions.
+- [P06-UI-03-R17] Keep motion purposeful; chart changes on Cohort laboratory must not conceal changed units or populations.
+- [P06-UI-03-R18] Verify Cohort laboratory at mobile, tablet and desktop widths with actual rendered output.
+- [P06-UI-03-R19] Verify Cohort laboratory at 200 percent zoom and with realistic dense data.
+- [P06-UI-03-R20] Ensure exports from Cohort laboratory match its scope or clearly explain full-population export behavior.
+- [P06-UI-03-R21] Provide navigation from Cohort laboratory to evidence, definitions and the case study.
+- [P06-UI-03-R22] Check console errors, broken assets and nested path handling for Cohort laboratory.
+- [P06-UI-03-R23] Record screenshot-review findings for Cohort laboratory; do not assert review from source inspection.
+- [P06-UI-03-R24] Link Cohort laboratory to its relevant workflow and metric contract IDs in the traceability matrix.
+### P06-UI-04: Tracking quality
+- [P06-UI-04-R01] Screen: Tracking quality.
+- [P06-UI-04-R02] Purpose and principal representation: Duplicates, unknown identities and delayed events.
+- [P06-UI-04-R03] Choose a stable route under /productsignal/ and verify direct navigation and reload for Tracking quality.
+- [P06-UI-04-R04] Use the project visual direction on Tracking quality: Product journey laboratory: warm white, cobalt, violet; funnel and cohort grid.
+- [P06-UI-04-R05] Give Tracking quality one clear main action related to the business decision.
+- [P06-UI-04-R06] Display the active time window, filters and data version on Tracking quality where applicable.
+- [P06-UI-04-R07] Show the synthetic/static-demo label without overwhelming Tracking quality.
+- [P06-UI-04-R08] Use real verified snapshot values on Tracking quality; do not hand-enter attractive KPI numbers.
+- [P06-UI-04-R09] Explain calculation meaning and units adjacent to important Tracking quality values.
+- [P06-UI-04-R10] Provide an accessible table or text alternative for analytical graphics on Tracking quality.
+- [P06-UI-04-R11] Use consistent category ordering and deterministic tie breaks on Tracking quality.
+- [P06-UI-04-R12] Handle long names, negative values, missing categories and large values on Tracking quality.
+- [P06-UI-04-R13] Implement a useful no-data state on Tracking quality, including a way to clear restrictive filters.
+- [P06-UI-04-R14] Implement loading and failed-data states on Tracking quality without showing invented results.
+- [P06-UI-04-R15] Keep all Tracking quality controls keyboard accessible with visible focus.
+- [P06-UI-04-R16] Provide reduced-motion behavior for Tracking quality transitions.
+- [P06-UI-04-R17] Keep motion purposeful; chart changes on Tracking quality must not conceal changed units or populations.
+- [P06-UI-04-R18] Verify Tracking quality at mobile, tablet and desktop widths with actual rendered output.
+- [P06-UI-04-R19] Verify Tracking quality at 200 percent zoom and with realistic dense data.
+- [P06-UI-04-R20] Ensure exports from Tracking quality match its scope or clearly explain full-population export behavior.
+- [P06-UI-04-R21] Provide navigation from Tracking quality to evidence, definitions and the case study.
+- [P06-UI-04-R22] Check console errors, broken assets and nested path handling for Tracking quality.
+- [P06-UI-04-R23] Record screenshot-review findings for Tracking quality; do not assert review from source inspection.
+- [P06-UI-04-R24] Link Tracking quality to its relevant workflow and metric contract IDs in the traceability matrix.
+### P06-UI-05: Experiment registry
+- [P06-UI-05-R01] Screen: Experiment registry.
+- [P06-UI-05-R02] Purpose and principal representation: Plan and assignment information.
+- [P06-UI-05-R03] Choose a stable route under /productsignal/ and verify direct navigation and reload for Experiment registry.
+- [P06-UI-05-R04] Use the project visual direction on Experiment registry: Product journey laboratory: warm white, cobalt, violet; funnel and cohort grid.
+- [P06-UI-05-R05] Give Experiment registry one clear main action related to the business decision.
+- [P06-UI-05-R06] Display the active time window, filters and data version on Experiment registry where applicable.
+- [P06-UI-05-R07] Show the synthetic/static-demo label without overwhelming Experiment registry.
+- [P06-UI-05-R08] Use real verified snapshot values on Experiment registry; do not hand-enter attractive KPI numbers.
+- [P06-UI-05-R09] Explain calculation meaning and units adjacent to important Experiment registry values.
+- [P06-UI-05-R10] Provide an accessible table or text alternative for analytical graphics on Experiment registry.
+- [P06-UI-05-R11] Use consistent category ordering and deterministic tie breaks on Experiment registry.
+- [P06-UI-05-R12] Handle long names, negative values, missing categories and large values on Experiment registry.
+- [P06-UI-05-R13] Implement a useful no-data state on Experiment registry, including a way to clear restrictive filters.
+- [P06-UI-05-R14] Implement loading and failed-data states on Experiment registry without showing invented results.
+- [P06-UI-05-R15] Keep all Experiment registry controls keyboard accessible with visible focus.
+- [P06-UI-05-R16] Provide reduced-motion behavior for Experiment registry transitions.
+- [P06-UI-05-R17] Keep motion purposeful; chart changes on Experiment registry must not conceal changed units or populations.
+- [P06-UI-05-R18] Verify Experiment registry at mobile, tablet and desktop widths with actual rendered output.
+- [P06-UI-05-R19] Verify Experiment registry at 200 percent zoom and with realistic dense data.
+- [P06-UI-05-R20] Ensure exports from Experiment registry match its scope or clearly explain full-population export behavior.
+- [P06-UI-05-R21] Provide navigation from Experiment registry to evidence, definitions and the case study.
+- [P06-UI-05-R22] Check console errors, broken assets and nested path handling for Experiment registry.
+- [P06-UI-05-R23] Record screenshot-review findings for Experiment registry; do not assert review from source inspection.
+- [P06-UI-05-R24] Link Experiment registry to its relevant workflow and metric contract IDs in the traceability matrix.
+### P06-UI-06: Experiment result
+- [P06-UI-06-R01] Screen: Experiment result.
+- [P06-UI-06-R02] Purpose and principal representation: Absolute effects, intervals and guardrails.
+- [P06-UI-06-R03] Choose a stable route under /productsignal/ and verify direct navigation and reload for Experiment result.
+- [P06-UI-06-R04] Use the project visual direction on Experiment result: Product journey laboratory: warm white, cobalt, violet; funnel and cohort grid.
+- [P06-UI-06-R05] Give Experiment result one clear main action related to the business decision.
+- [P06-UI-06-R06] Display the active time window, filters and data version on Experiment result where applicable.
+- [P06-UI-06-R07] Show the synthetic/static-demo label without overwhelming Experiment result.
+- [P06-UI-06-R08] Use real verified snapshot values on Experiment result; do not hand-enter attractive KPI numbers.
+- [P06-UI-06-R09] Explain calculation meaning and units adjacent to important Experiment result values.
+- [P06-UI-06-R10] Provide an accessible table or text alternative for analytical graphics on Experiment result.
+- [P06-UI-06-R11] Use consistent category ordering and deterministic tie breaks on Experiment result.
+- [P06-UI-06-R12] Handle long names, negative values, missing categories and large values on Experiment result.
+- [P06-UI-06-R13] Implement a useful no-data state on Experiment result, including a way to clear restrictive filters.
+- [P06-UI-06-R14] Implement loading and failed-data states on Experiment result without showing invented results.
+- [P06-UI-06-R15] Keep all Experiment result controls keyboard accessible with visible focus.
+- [P06-UI-06-R16] Provide reduced-motion behavior for Experiment result transitions.
+- [P06-UI-06-R17] Keep motion purposeful; chart changes on Experiment result must not conceal changed units or populations.
+- [P06-UI-06-R18] Verify Experiment result at mobile, tablet and desktop widths with actual rendered output.
+- [P06-UI-06-R19] Verify Experiment result at 200 percent zoom and with realistic dense data.
+- [P06-UI-06-R20] Ensure exports from Experiment result match its scope or clearly explain full-population export behavior.
+- [P06-UI-06-R21] Provide navigation from Experiment result to evidence, definitions and the case study.
+- [P06-UI-06-R22] Check console errors, broken assets and nested path handling for Experiment result.
+- [P06-UI-06-R23] Record screenshot-review findings for Experiment result; do not assert review from source inspection.
+- [P06-UI-06-R24] Link Experiment result to its relevant workflow and metric contract IDs in the traceability matrix.
+### P06-UI-07: Population explorer
+- [P06-UI-07-R01] Screen: Population explorer.
+- [P06-UI-07-R02] Purpose and principal representation: Assigned versus exposed denominators.
+- [P06-UI-07-R03] Choose a stable route under /productsignal/ and verify direct navigation and reload for Population explorer.
+- [P06-UI-07-R04] Use the project visual direction on Population explorer: Product journey laboratory: warm white, cobalt, violet; funnel and cohort grid.
+- [P06-UI-07-R05] Give Population explorer one clear main action related to the business decision.
+- [P06-UI-07-R06] Display the active time window, filters and data version on Population explorer where applicable.
+- [P06-UI-07-R07] Show the synthetic/static-demo label without overwhelming Population explorer.
+- [P06-UI-07-R08] Use real verified snapshot values on Population explorer; do not hand-enter attractive KPI numbers.
+- [P06-UI-07-R09] Explain calculation meaning and units adjacent to important Population explorer values.
+- [P06-UI-07-R10] Provide an accessible table or text alternative for analytical graphics on Population explorer.
+- [P06-UI-07-R11] Use consistent category ordering and deterministic tie breaks on Population explorer.
+- [P06-UI-07-R12] Handle long names, negative values, missing categories and large values on Population explorer.
+- [P06-UI-07-R13] Implement a useful no-data state on Population explorer, including a way to clear restrictive filters.
+- [P06-UI-07-R14] Implement loading and failed-data states on Population explorer without showing invented results.
+- [P06-UI-07-R15] Keep all Population explorer controls keyboard accessible with visible focus.
+- [P06-UI-07-R16] Provide reduced-motion behavior for Population explorer transitions.
+- [P06-UI-07-R17] Keep motion purposeful; chart changes on Population explorer must not conceal changed units or populations.
+- [P06-UI-07-R18] Verify Population explorer at mobile, tablet and desktop widths with actual rendered output.
+- [P06-UI-07-R19] Verify Population explorer at 200 percent zoom and with realistic dense data.
+- [P06-UI-07-R20] Ensure exports from Population explorer match its scope or clearly explain full-population export behavior.
+- [P06-UI-07-R21] Provide navigation from Population explorer to evidence, definitions and the case study.
+- [P06-UI-07-R22] Check console errors, broken assets and nested path handling for Population explorer.
+- [P06-UI-07-R23] Record screenshot-review findings for Population explorer; do not assert review from source inspection.
+- [P06-UI-07-R24] Link Population explorer to its relevant workflow and metric contract IDs in the traceability matrix.
+### P06-UI-08: Segment analysis
+- [P06-UI-08-R01] Screen: Segment analysis.
+- [P06-UI-08-R02] Purpose and principal representation: Exploratory label and multiplicity caveat.
+- [P06-UI-08-R03] Choose a stable route under /productsignal/ and verify direct navigation and reload for Segment analysis.
+- [P06-UI-08-R04] Use the project visual direction on Segment analysis: Product journey laboratory: warm white, cobalt, violet; funnel and cohort grid.
+- [P06-UI-08-R05] Give Segment analysis one clear main action related to the business decision.
+- [P06-UI-08-R06] Display the active time window, filters and data version on Segment analysis where applicable.
+- [P06-UI-08-R07] Show the synthetic/static-demo label without overwhelming Segment analysis.
+- [P06-UI-08-R08] Use real verified snapshot values on Segment analysis; do not hand-enter attractive KPI numbers.
+- [P06-UI-08-R09] Explain calculation meaning and units adjacent to important Segment analysis values.
+- [P06-UI-08-R10] Provide an accessible table or text alternative for analytical graphics on Segment analysis.
+- [P06-UI-08-R11] Use consistent category ordering and deterministic tie breaks on Segment analysis.
+- [P06-UI-08-R12] Handle long names, negative values, missing categories and large values on Segment analysis.
+- [P06-UI-08-R13] Implement a useful no-data state on Segment analysis, including a way to clear restrictive filters.
+- [P06-UI-08-R14] Implement loading and failed-data states on Segment analysis without showing invented results.
+- [P06-UI-08-R15] Keep all Segment analysis controls keyboard accessible with visible focus.
+- [P06-UI-08-R16] Provide reduced-motion behavior for Segment analysis transitions.
+- [P06-UI-08-R17] Keep motion purposeful; chart changes on Segment analysis must not conceal changed units or populations.
+- [P06-UI-08-R18] Verify Segment analysis at mobile, tablet and desktop widths with actual rendered output.
+- [P06-UI-08-R19] Verify Segment analysis at 200 percent zoom and with realistic dense data.
+- [P06-UI-08-R20] Ensure exports from Segment analysis match its scope or clearly explain full-population export behavior.
+- [P06-UI-08-R21] Provide navigation from Segment analysis to evidence, definitions and the case study.
+- [P06-UI-08-R22] Check console errors, broken assets and nested path handling for Segment analysis.
+- [P06-UI-08-R23] Record screenshot-review findings for Segment analysis; do not assert review from source inspection.
+- [P06-UI-08-R24] Link Segment analysis to its relevant workflow and metric contract IDs in the traceability matrix.
+### P06-UI-09: Decision memo
+- [P06-UI-09-R01] Screen: Decision memo.
+- [P06-UI-09-R02] Purpose and principal representation: Evidence and inconclusive options.
+- [P06-UI-09-R03] Choose a stable route under /productsignal/ and verify direct navigation and reload for Decision memo.
+- [P06-UI-09-R04] Use the project visual direction on Decision memo: Product journey laboratory: warm white, cobalt, violet; funnel and cohort grid.
+- [P06-UI-09-R05] Give Decision memo one clear main action related to the business decision.
+- [P06-UI-09-R06] Display the active time window, filters and data version on Decision memo where applicable.
+- [P06-UI-09-R07] Show the synthetic/static-demo label without overwhelming Decision memo.
+- [P06-UI-09-R08] Use real verified snapshot values on Decision memo; do not hand-enter attractive KPI numbers.
+- [P06-UI-09-R09] Explain calculation meaning and units adjacent to important Decision memo values.
+- [P06-UI-09-R10] Provide an accessible table or text alternative for analytical graphics on Decision memo.
+- [P06-UI-09-R11] Use consistent category ordering and deterministic tie breaks on Decision memo.
+- [P06-UI-09-R12] Handle long names, negative values, missing categories and large values on Decision memo.
+- [P06-UI-09-R13] Implement a useful no-data state on Decision memo, including a way to clear restrictive filters.
+- [P06-UI-09-R14] Implement loading and failed-data states on Decision memo without showing invented results.
+- [P06-UI-09-R15] Keep all Decision memo controls keyboard accessible with visible focus.
+- [P06-UI-09-R16] Provide reduced-motion behavior for Decision memo transitions.
+- [P06-UI-09-R17] Keep motion purposeful; chart changes on Decision memo must not conceal changed units or populations.
+- [P06-UI-09-R18] Verify Decision memo at mobile, tablet and desktop widths with actual rendered output.
+- [P06-UI-09-R19] Verify Decision memo at 200 percent zoom and with realistic dense data.
+- [P06-UI-09-R20] Ensure exports from Decision memo match its scope or clearly explain full-population export behavior.
+- [P06-UI-09-R21] Provide navigation from Decision memo to evidence, definitions and the case study.
+- [P06-UI-09-R22] Check console errors, broken assets and nested path handling for Decision memo.
+- [P06-UI-09-R23] Record screenshot-review findings for Decision memo; do not assert review from source inspection.
+- [P06-UI-09-R24] Link Decision memo to its relevant workflow and metric contract IDs in the traceability matrix.
+### P06-UI-10: Case study
+- [P06-UI-10-R01] Screen: Case study.
+- [P06-UI-10-R02] Purpose and principal representation: Measurement design and limitations.
+- [P06-UI-10-R03] Choose a stable route under /productsignal/ and verify direct navigation and reload for Case study.
+- [P06-UI-10-R04] Use the project visual direction on Case study: Product journey laboratory: warm white, cobalt, violet; funnel and cohort grid.
+- [P06-UI-10-R05] Give Case study one clear main action related to the business decision.
+- [P06-UI-10-R06] Display the active time window, filters and data version on Case study where applicable.
+- [P06-UI-10-R07] Show the synthetic/static-demo label without overwhelming Case study.
+- [P06-UI-10-R08] Use real verified snapshot values on Case study; do not hand-enter attractive KPI numbers.
+- [P06-UI-10-R09] Explain calculation meaning and units adjacent to important Case study values.
+- [P06-UI-10-R10] Provide an accessible table or text alternative for analytical graphics on Case study.
+- [P06-UI-10-R11] Use consistent category ordering and deterministic tie breaks on Case study.
+- [P06-UI-10-R12] Handle long names, negative values, missing categories and large values on Case study.
+- [P06-UI-10-R13] Implement a useful no-data state on Case study, including a way to clear restrictive filters.
+- [P06-UI-10-R14] Implement loading and failed-data states on Case study without showing invented results.
+- [P06-UI-10-R15] Keep all Case study controls keyboard accessible with visible focus.
+- [P06-UI-10-R16] Provide reduced-motion behavior for Case study transitions.
+- [P06-UI-10-R17] Keep motion purposeful; chart changes on Case study must not conceal changed units or populations.
+- [P06-UI-10-R18] Verify Case study at mobile, tablet and desktop widths with actual rendered output.
+- [P06-UI-10-R19] Verify Case study at 200 percent zoom and with realistic dense data.
+- [P06-UI-10-R20] Ensure exports from Case study match its scope or clearly explain full-population export behavior.
+- [P06-UI-10-R21] Provide navigation from Case study to evidence, definitions and the case study.
+- [P06-UI-10-R22] Check console errors, broken assets and nested path handling for Case study.
+- [P06-UI-10-R23] Record screenshot-review findings for Case study; do not assert review from source inspection.
+- [P06-UI-10-R24] Link Case study to its relevant workflow and metric contract IDs in the traceability matrix.
+
+## 07. Adversarial domain verification
+
+### P06-TEST-01-DETECT: Experiment randomized by account but analyzed as independent users — detect
+- [P06-TEST-01-DETECT-R01] Failure hypothesis: Experiment randomized by account but analyzed as independent users.
+- [P06-TEST-01-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P06-TEST-01-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Experiment randomized by account but analyzed as independent users.
+- [P06-TEST-01-DETECT-R04] Document the expected business outcome before executing P06-TEST-01-DETECT.
+- [P06-TEST-01-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-01-DETECT-R06] Capture the initial canonical state and dataset hash for P06-TEST-01-DETECT.
+- [P06-TEST-01-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-01-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-01-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-01-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-01-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-01-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-01-DETECT-R13] Use a separate reference calculation when P06-TEST-01-DETECT affects a key numerical total.
+- [P06-TEST-01-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Experiment randomized by account but analyzed as independent users.
+- [P06-TEST-01-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-01-DETECT.
+- [P06-TEST-01-DETECT-R16] If blocked by environment capability, mark P06-TEST-01-DETECT blocked and retain the executable test source.
+- [P06-TEST-01-DETECT-R17] Do not claim P06-TEST-01-DETECT passed from reading the implementation or from another test passing.
+- [P06-TEST-01-DETECT-R18] Rerun P06-TEST-01-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-01-RECOVER: Experiment randomized by account but analyzed as independent users — recover
+- [P06-TEST-01-RECOVER-R01] Failure hypothesis: Experiment randomized by account but analyzed as independent users.
+- [P06-TEST-01-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P06-TEST-01-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Experiment randomized by account but analyzed as independent users.
+- [P06-TEST-01-RECOVER-R04] Document the expected business outcome before executing P06-TEST-01-RECOVER.
+- [P06-TEST-01-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-01-RECOVER-R06] Capture the initial canonical state and dataset hash for P06-TEST-01-RECOVER.
+- [P06-TEST-01-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-01-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-01-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-01-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-01-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-01-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-01-RECOVER-R13] Use a separate reference calculation when P06-TEST-01-RECOVER affects a key numerical total.
+- [P06-TEST-01-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Experiment randomized by account but analyzed as independent users.
+- [P06-TEST-01-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-01-RECOVER.
+- [P06-TEST-01-RECOVER-R16] If blocked by environment capability, mark P06-TEST-01-RECOVER blocked and retain the executable test source.
+- [P06-TEST-01-RECOVER-R17] Do not claim P06-TEST-01-RECOVER passed from reading the implementation or from another test passing.
+- [P06-TEST-01-RECOVER-R18] Rerun P06-TEST-01-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-02-DETECT: Treatment-dependent exclusion biases result — detect
+- [P06-TEST-02-DETECT-R01] Failure hypothesis: Treatment-dependent exclusion biases result.
+- [P06-TEST-02-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P06-TEST-02-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Treatment-dependent exclusion biases result.
+- [P06-TEST-02-DETECT-R04] Document the expected business outcome before executing P06-TEST-02-DETECT.
+- [P06-TEST-02-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-02-DETECT-R06] Capture the initial canonical state and dataset hash for P06-TEST-02-DETECT.
+- [P06-TEST-02-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-02-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-02-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-02-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-02-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-02-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-02-DETECT-R13] Use a separate reference calculation when P06-TEST-02-DETECT affects a key numerical total.
+- [P06-TEST-02-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Treatment-dependent exclusion biases result.
+- [P06-TEST-02-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-02-DETECT.
+- [P06-TEST-02-DETECT-R16] If blocked by environment capability, mark P06-TEST-02-DETECT blocked and retain the executable test source.
+- [P06-TEST-02-DETECT-R17] Do not claim P06-TEST-02-DETECT passed from reading the implementation or from another test passing.
+- [P06-TEST-02-DETECT-R18] Rerun P06-TEST-02-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-02-RECOVER: Treatment-dependent exclusion biases result — recover
+- [P06-TEST-02-RECOVER-R01] Failure hypothesis: Treatment-dependent exclusion biases result.
+- [P06-TEST-02-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P06-TEST-02-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Treatment-dependent exclusion biases result.
+- [P06-TEST-02-RECOVER-R04] Document the expected business outcome before executing P06-TEST-02-RECOVER.
+- [P06-TEST-02-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-02-RECOVER-R06] Capture the initial canonical state and dataset hash for P06-TEST-02-RECOVER.
+- [P06-TEST-02-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-02-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-02-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-02-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-02-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-02-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-02-RECOVER-R13] Use a separate reference calculation when P06-TEST-02-RECOVER affects a key numerical total.
+- [P06-TEST-02-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Treatment-dependent exclusion biases result.
+- [P06-TEST-02-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-02-RECOVER.
+- [P06-TEST-02-RECOVER-R16] If blocked by environment capability, mark P06-TEST-02-RECOVER blocked and retain the executable test source.
+- [P06-TEST-02-RECOVER-R17] Do not claim P06-TEST-02-RECOVER passed from reading the implementation or from another test passing.
+- [P06-TEST-02-RECOVER-R18] Rerun P06-TEST-02-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-03-DETECT: Repeated peeking presented as fixed-horizon evidence — detect
+- [P06-TEST-03-DETECT-R01] Failure hypothesis: Repeated peeking presented as fixed-horizon evidence.
+- [P06-TEST-03-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P06-TEST-03-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Repeated peeking presented as fixed-horizon evidence.
+- [P06-TEST-03-DETECT-R04] Document the expected business outcome before executing P06-TEST-03-DETECT.
+- [P06-TEST-03-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-03-DETECT-R06] Capture the initial canonical state and dataset hash for P06-TEST-03-DETECT.
+- [P06-TEST-03-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-03-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-03-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-03-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-03-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-03-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-03-DETECT-R13] Use a separate reference calculation when P06-TEST-03-DETECT affects a key numerical total.
+- [P06-TEST-03-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Repeated peeking presented as fixed-horizon evidence.
+- [P06-TEST-03-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-03-DETECT.
+- [P06-TEST-03-DETECT-R16] If blocked by environment capability, mark P06-TEST-03-DETECT blocked and retain the executable test source.
+- [P06-TEST-03-DETECT-R17] Do not claim P06-TEST-03-DETECT passed from reading the implementation or from another test passing.
+- [P06-TEST-03-DETECT-R18] Rerun P06-TEST-03-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-03-RECOVER: Repeated peeking presented as fixed-horizon evidence — recover
+- [P06-TEST-03-RECOVER-R01] Failure hypothesis: Repeated peeking presented as fixed-horizon evidence.
+- [P06-TEST-03-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P06-TEST-03-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Repeated peeking presented as fixed-horizon evidence.
+- [P06-TEST-03-RECOVER-R04] Document the expected business outcome before executing P06-TEST-03-RECOVER.
+- [P06-TEST-03-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-03-RECOVER-R06] Capture the initial canonical state and dataset hash for P06-TEST-03-RECOVER.
+- [P06-TEST-03-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-03-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-03-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-03-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-03-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-03-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-03-RECOVER-R13] Use a separate reference calculation when P06-TEST-03-RECOVER affects a key numerical total.
+- [P06-TEST-03-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Repeated peeking presented as fixed-horizon evidence.
+- [P06-TEST-03-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-03-RECOVER.
+- [P06-TEST-03-RECOVER-R16] If blocked by environment capability, mark P06-TEST-03-RECOVER blocked and retain the executable test source.
+- [P06-TEST-03-RECOVER-R17] Do not claim P06-TEST-03-RECOVER passed from reading the implementation or from another test passing.
+- [P06-TEST-03-RECOVER-R18] Rerun P06-TEST-03-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-04-DETECT: New cohort lacks seven days of observation — detect
+- [P06-TEST-04-DETECT-R01] Failure hypothesis: New cohort lacks seven days of observation.
+- [P06-TEST-04-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P06-TEST-04-DETECT-R03] Construct the smallest synthetic fixture that reproduces: New cohort lacks seven days of observation.
+- [P06-TEST-04-DETECT-R04] Document the expected business outcome before executing P06-TEST-04-DETECT.
+- [P06-TEST-04-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-04-DETECT-R06] Capture the initial canonical state and dataset hash for P06-TEST-04-DETECT.
+- [P06-TEST-04-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-04-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-04-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-04-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-04-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-04-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-04-DETECT-R13] Use a separate reference calculation when P06-TEST-04-DETECT affects a key numerical total.
+- [P06-TEST-04-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of New cohort lacks seven days of observation.
+- [P06-TEST-04-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-04-DETECT.
+- [P06-TEST-04-DETECT-R16] If blocked by environment capability, mark P06-TEST-04-DETECT blocked and retain the executable test source.
+- [P06-TEST-04-DETECT-R17] Do not claim P06-TEST-04-DETECT passed from reading the implementation or from another test passing.
+- [P06-TEST-04-DETECT-R18] Rerun P06-TEST-04-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-04-RECOVER: New cohort lacks seven days of observation — recover
+- [P06-TEST-04-RECOVER-R01] Failure hypothesis: New cohort lacks seven days of observation.
+- [P06-TEST-04-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P06-TEST-04-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: New cohort lacks seven days of observation.
+- [P06-TEST-04-RECOVER-R04] Document the expected business outcome before executing P06-TEST-04-RECOVER.
+- [P06-TEST-04-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-04-RECOVER-R06] Capture the initial canonical state and dataset hash for P06-TEST-04-RECOVER.
+- [P06-TEST-04-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-04-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-04-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-04-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-04-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-04-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-04-RECOVER-R13] Use a separate reference calculation when P06-TEST-04-RECOVER affects a key numerical total.
+- [P06-TEST-04-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of New cohort lacks seven days of observation.
+- [P06-TEST-04-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-04-RECOVER.
+- [P06-TEST-04-RECOVER-R16] If blocked by environment capability, mark P06-TEST-04-RECOVER blocked and retain the executable test source.
+- [P06-TEST-04-RECOVER-R17] Do not claim P06-TEST-04-RECOVER passed from reading the implementation or from another test passing.
+- [P06-TEST-04-RECOVER-R18] Rerun P06-TEST-04-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-05-DETECT: Duplicate events inflate activation — detect
+- [P06-TEST-05-DETECT-R01] Failure hypothesis: Duplicate events inflate activation.
+- [P06-TEST-05-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P06-TEST-05-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Duplicate events inflate activation.
+- [P06-TEST-05-DETECT-R04] Document the expected business outcome before executing P06-TEST-05-DETECT.
+- [P06-TEST-05-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-05-DETECT-R06] Capture the initial canonical state and dataset hash for P06-TEST-05-DETECT.
+- [P06-TEST-05-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-05-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-05-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-05-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-05-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-05-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-05-DETECT-R13] Use a separate reference calculation when P06-TEST-05-DETECT affects a key numerical total.
+- [P06-TEST-05-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Duplicate events inflate activation.
+- [P06-TEST-05-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-05-DETECT.
+- [P06-TEST-05-DETECT-R16] If blocked by environment capability, mark P06-TEST-05-DETECT blocked and retain the executable test source.
+- [P06-TEST-05-DETECT-R17] Do not claim P06-TEST-05-DETECT passed from reading the implementation or from another test passing.
+- [P06-TEST-05-DETECT-R18] Rerun P06-TEST-05-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-05-RECOVER: Duplicate events inflate activation — recover
+- [P06-TEST-05-RECOVER-R01] Failure hypothesis: Duplicate events inflate activation.
+- [P06-TEST-05-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P06-TEST-05-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Duplicate events inflate activation.
+- [P06-TEST-05-RECOVER-R04] Document the expected business outcome before executing P06-TEST-05-RECOVER.
+- [P06-TEST-05-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-05-RECOVER-R06] Capture the initial canonical state and dataset hash for P06-TEST-05-RECOVER.
+- [P06-TEST-05-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-05-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-05-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-05-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-05-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-05-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-05-RECOVER-R13] Use a separate reference calculation when P06-TEST-05-RECOVER affects a key numerical total.
+- [P06-TEST-05-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Duplicate events inflate activation.
+- [P06-TEST-05-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-05-RECOVER.
+- [P06-TEST-05-RECOVER-R16] If blocked by environment capability, mark P06-TEST-05-RECOVER blocked and retain the executable test source.
+- [P06-TEST-05-RECOVER-R17] Do not claim P06-TEST-05-RECOVER passed from reading the implementation or from another test passing.
+- [P06-TEST-05-RECOVER-R18] Rerun P06-TEST-05-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-06-DETECT: Late event changes historical funnel — detect
+- [P06-TEST-06-DETECT-R01] Failure hypothesis: Late event changes historical funnel.
+- [P06-TEST-06-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P06-TEST-06-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Late event changes historical funnel.
+- [P06-TEST-06-DETECT-R04] Document the expected business outcome before executing P06-TEST-06-DETECT.
+- [P06-TEST-06-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-06-DETECT-R06] Capture the initial canonical state and dataset hash for P06-TEST-06-DETECT.
+- [P06-TEST-06-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-06-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-06-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-06-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-06-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-06-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-06-DETECT-R13] Use a separate reference calculation when P06-TEST-06-DETECT affects a key numerical total.
+- [P06-TEST-06-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Late event changes historical funnel.
+- [P06-TEST-06-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-06-DETECT.
+- [P06-TEST-06-DETECT-R16] If blocked by environment capability, mark P06-TEST-06-DETECT blocked and retain the executable test source.
+- [P06-TEST-06-DETECT-R17] Do not claim P06-TEST-06-DETECT passed from reading the implementation or from another test passing.
+- [P06-TEST-06-DETECT-R18] Rerun P06-TEST-06-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-06-RECOVER: Late event changes historical funnel — recover
+- [P06-TEST-06-RECOVER-R01] Failure hypothesis: Late event changes historical funnel.
+- [P06-TEST-06-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P06-TEST-06-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Late event changes historical funnel.
+- [P06-TEST-06-RECOVER-R04] Document the expected business outcome before executing P06-TEST-06-RECOVER.
+- [P06-TEST-06-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-06-RECOVER-R06] Capture the initial canonical state and dataset hash for P06-TEST-06-RECOVER.
+- [P06-TEST-06-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-06-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-06-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-06-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-06-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-06-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-06-RECOVER-R13] Use a separate reference calculation when P06-TEST-06-RECOVER affects a key numerical total.
+- [P06-TEST-06-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Late event changes historical funnel.
+- [P06-TEST-06-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-06-RECOVER.
+- [P06-TEST-06-RECOVER-R16] If blocked by environment capability, mark P06-TEST-06-RECOVER blocked and retain the executable test source.
+- [P06-TEST-06-RECOVER-R17] Do not claim P06-TEST-06-RECOVER passed from reading the implementation or from another test passing.
+- [P06-TEST-06-RECOVER-R18] Rerun P06-TEST-06-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-07-DETECT: Identity links future information backward — detect
+- [P06-TEST-07-DETECT-R01] Failure hypothesis: Identity links future information backward.
+- [P06-TEST-07-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P06-TEST-07-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Identity links future information backward.
+- [P06-TEST-07-DETECT-R04] Document the expected business outcome before executing P06-TEST-07-DETECT.
+- [P06-TEST-07-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-07-DETECT-R06] Capture the initial canonical state and dataset hash for P06-TEST-07-DETECT.
+- [P06-TEST-07-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-07-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-07-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-07-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-07-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-07-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-07-DETECT-R13] Use a separate reference calculation when P06-TEST-07-DETECT affects a key numerical total.
+- [P06-TEST-07-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Identity links future information backward.
+- [P06-TEST-07-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-07-DETECT.
+- [P06-TEST-07-DETECT-R16] If blocked by environment capability, mark P06-TEST-07-DETECT blocked and retain the executable test source.
+- [P06-TEST-07-DETECT-R17] Do not claim P06-TEST-07-DETECT passed from reading the implementation or from another test passing.
+- [P06-TEST-07-DETECT-R18] Rerun P06-TEST-07-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-07-RECOVER: Identity links future information backward — recover
+- [P06-TEST-07-RECOVER-R01] Failure hypothesis: Identity links future information backward.
+- [P06-TEST-07-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P06-TEST-07-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Identity links future information backward.
+- [P06-TEST-07-RECOVER-R04] Document the expected business outcome before executing P06-TEST-07-RECOVER.
+- [P06-TEST-07-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-07-RECOVER-R06] Capture the initial canonical state and dataset hash for P06-TEST-07-RECOVER.
+- [P06-TEST-07-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-07-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-07-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-07-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-07-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-07-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-07-RECOVER-R13] Use a separate reference calculation when P06-TEST-07-RECOVER affects a key numerical total.
+- [P06-TEST-07-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Identity links future information backward.
+- [P06-TEST-07-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-07-RECOVER.
+- [P06-TEST-07-RECOVER-R16] If blocked by environment capability, mark P06-TEST-07-RECOVER blocked and retain the executable test source.
+- [P06-TEST-07-RECOVER-R17] Do not claim P06-TEST-07-RECOVER passed from reading the implementation or from another test passing.
+- [P06-TEST-07-RECOVER-R18] Rerun P06-TEST-07-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-08-DETECT: Sample ratio mismatch ignored — detect
+- [P06-TEST-08-DETECT-R01] Failure hypothesis: Sample ratio mismatch ignored.
+- [P06-TEST-08-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P06-TEST-08-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Sample ratio mismatch ignored.
+- [P06-TEST-08-DETECT-R04] Document the expected business outcome before executing P06-TEST-08-DETECT.
+- [P06-TEST-08-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-08-DETECT-R06] Capture the initial canonical state and dataset hash for P06-TEST-08-DETECT.
+- [P06-TEST-08-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-08-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-08-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-08-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-08-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-08-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-08-DETECT-R13] Use a separate reference calculation when P06-TEST-08-DETECT affects a key numerical total.
+- [P06-TEST-08-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Sample ratio mismatch ignored.
+- [P06-TEST-08-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-08-DETECT.
+- [P06-TEST-08-DETECT-R16] If blocked by environment capability, mark P06-TEST-08-DETECT blocked and retain the executable test source.
+- [P06-TEST-08-DETECT-R17] Do not claim P06-TEST-08-DETECT passed from reading the implementation or from another test passing.
+- [P06-TEST-08-DETECT-R18] Rerun P06-TEST-08-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-08-RECOVER: Sample ratio mismatch ignored — recover
+- [P06-TEST-08-RECOVER-R01] Failure hypothesis: Sample ratio mismatch ignored.
+- [P06-TEST-08-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P06-TEST-08-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Sample ratio mismatch ignored.
+- [P06-TEST-08-RECOVER-R04] Document the expected business outcome before executing P06-TEST-08-RECOVER.
+- [P06-TEST-08-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-08-RECOVER-R06] Capture the initial canonical state and dataset hash for P06-TEST-08-RECOVER.
+- [P06-TEST-08-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-08-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-08-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-08-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-08-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-08-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-08-RECOVER-R13] Use a separate reference calculation when P06-TEST-08-RECOVER affects a key numerical total.
+- [P06-TEST-08-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Sample ratio mismatch ignored.
+- [P06-TEST-08-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-08-RECOVER.
+- [P06-TEST-08-RECOVER-R16] If blocked by environment capability, mark P06-TEST-08-RECOVER blocked and retain the executable test source.
+- [P06-TEST-08-RECOVER-R17] Do not claim P06-TEST-08-RECOVER passed from reading the implementation or from another test passing.
+- [P06-TEST-08-RECOVER-R18] Rerun P06-TEST-08-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-09-DETECT: Multiple segment tests cherry picked — detect
+- [P06-TEST-09-DETECT-R01] Failure hypothesis: Multiple segment tests cherry picked.
+- [P06-TEST-09-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P06-TEST-09-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Multiple segment tests cherry picked.
+- [P06-TEST-09-DETECT-R04] Document the expected business outcome before executing P06-TEST-09-DETECT.
+- [P06-TEST-09-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-09-DETECT-R06] Capture the initial canonical state and dataset hash for P06-TEST-09-DETECT.
+- [P06-TEST-09-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-09-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-09-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-09-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-09-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-09-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-09-DETECT-R13] Use a separate reference calculation when P06-TEST-09-DETECT affects a key numerical total.
+- [P06-TEST-09-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Multiple segment tests cherry picked.
+- [P06-TEST-09-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-09-DETECT.
+- [P06-TEST-09-DETECT-R16] If blocked by environment capability, mark P06-TEST-09-DETECT blocked and retain the executable test source.
+- [P06-TEST-09-DETECT-R17] Do not claim P06-TEST-09-DETECT passed from reading the implementation or from another test passing.
+- [P06-TEST-09-DETECT-R18] Rerun P06-TEST-09-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-09-RECOVER: Multiple segment tests cherry picked — recover
+- [P06-TEST-09-RECOVER-R01] Failure hypothesis: Multiple segment tests cherry picked.
+- [P06-TEST-09-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P06-TEST-09-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Multiple segment tests cherry picked.
+- [P06-TEST-09-RECOVER-R04] Document the expected business outcome before executing P06-TEST-09-RECOVER.
+- [P06-TEST-09-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-09-RECOVER-R06] Capture the initial canonical state and dataset hash for P06-TEST-09-RECOVER.
+- [P06-TEST-09-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-09-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-09-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-09-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-09-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-09-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-09-RECOVER-R13] Use a separate reference calculation when P06-TEST-09-RECOVER affects a key numerical total.
+- [P06-TEST-09-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Multiple segment tests cherry picked.
+- [P06-TEST-09-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-09-RECOVER.
+- [P06-TEST-09-RECOVER-R16] If blocked by environment capability, mark P06-TEST-09-RECOVER blocked and retain the executable test source.
+- [P06-TEST-09-RECOVER-R17] Do not claim P06-TEST-09-RECOVER passed from reading the implementation or from another test passing.
+- [P06-TEST-09-RECOVER-R18] Rerun P06-TEST-09-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-10-DETECT: Zero control conversions breaks relative lift — detect
+- [P06-TEST-10-DETECT-R01] Failure hypothesis: Zero control conversions breaks relative lift.
+- [P06-TEST-10-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P06-TEST-10-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Zero control conversions breaks relative lift.
+- [P06-TEST-10-DETECT-R04] Document the expected business outcome before executing P06-TEST-10-DETECT.
+- [P06-TEST-10-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-10-DETECT-R06] Capture the initial canonical state and dataset hash for P06-TEST-10-DETECT.
+- [P06-TEST-10-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-10-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-10-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-10-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-10-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-10-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-10-DETECT-R13] Use a separate reference calculation when P06-TEST-10-DETECT affects a key numerical total.
+- [P06-TEST-10-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Zero control conversions breaks relative lift.
+- [P06-TEST-10-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-10-DETECT.
+- [P06-TEST-10-DETECT-R16] If blocked by environment capability, mark P06-TEST-10-DETECT blocked and retain the executable test source.
+- [P06-TEST-10-DETECT-R17] Do not claim P06-TEST-10-DETECT passed from reading the implementation or from another test passing.
+- [P06-TEST-10-DETECT-R18] Rerun P06-TEST-10-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-10-RECOVER: Zero control conversions breaks relative lift — recover
+- [P06-TEST-10-RECOVER-R01] Failure hypothesis: Zero control conversions breaks relative lift.
+- [P06-TEST-10-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P06-TEST-10-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Zero control conversions breaks relative lift.
+- [P06-TEST-10-RECOVER-R04] Document the expected business outcome before executing P06-TEST-10-RECOVER.
+- [P06-TEST-10-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-10-RECOVER-R06] Capture the initial canonical state and dataset hash for P06-TEST-10-RECOVER.
+- [P06-TEST-10-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-10-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-10-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-10-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-10-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-10-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-10-RECOVER-R13] Use a separate reference calculation when P06-TEST-10-RECOVER affects a key numerical total.
+- [P06-TEST-10-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Zero control conversions breaks relative lift.
+- [P06-TEST-10-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-10-RECOVER.
+- [P06-TEST-10-RECOVER-R16] If blocked by environment capability, mark P06-TEST-10-RECOVER blocked and retain the executable test source.
+- [P06-TEST-10-RECOVER-R17] Do not claim P06-TEST-10-RECOVER passed from reading the implementation or from another test passing.
+- [P06-TEST-10-RECOVER-R18] Rerun P06-TEST-10-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-11-DETECT: Exposure occurs before assignment timestamp — detect
+- [P06-TEST-11-DETECT-R01] Failure hypothesis: Exposure occurs before assignment timestamp.
+- [P06-TEST-11-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P06-TEST-11-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Exposure occurs before assignment timestamp.
+- [P06-TEST-11-DETECT-R04] Document the expected business outcome before executing P06-TEST-11-DETECT.
+- [P06-TEST-11-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-11-DETECT-R06] Capture the initial canonical state and dataset hash for P06-TEST-11-DETECT.
+- [P06-TEST-11-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-11-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-11-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-11-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-11-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-11-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-11-DETECT-R13] Use a separate reference calculation when P06-TEST-11-DETECT affects a key numerical total.
+- [P06-TEST-11-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Exposure occurs before assignment timestamp.
+- [P06-TEST-11-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-11-DETECT.
+- [P06-TEST-11-DETECT-R16] If blocked by environment capability, mark P06-TEST-11-DETECT blocked and retain the executable test source.
+- [P06-TEST-11-DETECT-R17] Do not claim P06-TEST-11-DETECT passed from reading the implementation or from another test passing.
+- [P06-TEST-11-DETECT-R18] Rerun P06-TEST-11-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-11-RECOVER: Exposure occurs before assignment timestamp — recover
+- [P06-TEST-11-RECOVER-R01] Failure hypothesis: Exposure occurs before assignment timestamp.
+- [P06-TEST-11-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P06-TEST-11-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Exposure occurs before assignment timestamp.
+- [P06-TEST-11-RECOVER-R04] Document the expected business outcome before executing P06-TEST-11-RECOVER.
+- [P06-TEST-11-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-11-RECOVER-R06] Capture the initial canonical state and dataset hash for P06-TEST-11-RECOVER.
+- [P06-TEST-11-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-11-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-11-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-11-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-11-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-11-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-11-RECOVER-R13] Use a separate reference calculation when P06-TEST-11-RECOVER affects a key numerical total.
+- [P06-TEST-11-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Exposure occurs before assignment timestamp.
+- [P06-TEST-11-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-11-RECOVER.
+- [P06-TEST-11-RECOVER-R16] If blocked by environment capability, mark P06-TEST-11-RECOVER blocked and retain the executable test source.
+- [P06-TEST-11-RECOVER-R17] Do not claim P06-TEST-11-RECOVER passed from reading the implementation or from another test passing.
+- [P06-TEST-11-RECOVER-R18] Rerun P06-TEST-11-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-12-DETECT: Retention mixes exact-day and rolling definitions — detect
+- [P06-TEST-12-DETECT-R01] Failure hypothesis: Retention mixes exact-day and rolling definitions.
+- [P06-TEST-12-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P06-TEST-12-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Retention mixes exact-day and rolling definitions.
+- [P06-TEST-12-DETECT-R04] Document the expected business outcome before executing P06-TEST-12-DETECT.
+- [P06-TEST-12-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-12-DETECT-R06] Capture the initial canonical state and dataset hash for P06-TEST-12-DETECT.
+- [P06-TEST-12-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-12-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-12-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-12-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-12-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-12-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-12-DETECT-R13] Use a separate reference calculation when P06-TEST-12-DETECT affects a key numerical total.
+- [P06-TEST-12-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Retention mixes exact-day and rolling definitions.
+- [P06-TEST-12-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-12-DETECT.
+- [P06-TEST-12-DETECT-R16] If blocked by environment capability, mark P06-TEST-12-DETECT blocked and retain the executable test source.
+- [P06-TEST-12-DETECT-R17] Do not claim P06-TEST-12-DETECT passed from reading the implementation or from another test passing.
+- [P06-TEST-12-DETECT-R18] Rerun P06-TEST-12-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P06-TEST-12-RECOVER: Retention mixes exact-day and rolling definitions — recover
+- [P06-TEST-12-RECOVER-R01] Failure hypothesis: Retention mixes exact-day and rolling definitions.
+- [P06-TEST-12-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P06-TEST-12-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Retention mixes exact-day and rolling definitions.
+- [P06-TEST-12-RECOVER-R04] Document the expected business outcome before executing P06-TEST-12-RECOVER.
+- [P06-TEST-12-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P06-TEST-12-RECOVER-R06] Capture the initial canonical state and dataset hash for P06-TEST-12-RECOVER.
+- [P06-TEST-12-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P06-TEST-12-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P06-TEST-12-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P06-TEST-12-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P06-TEST-12-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P06-TEST-12-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P06-TEST-12-RECOVER-R13] Use a separate reference calculation when P06-TEST-12-RECOVER affects a key numerical total.
+- [P06-TEST-12-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Retention mixes exact-day and rolling definitions.
+- [P06-TEST-12-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P06-TEST-12-RECOVER.
+- [P06-TEST-12-RECOVER-R16] If blocked by environment capability, mark P06-TEST-12-RECOVER blocked and retain the executable test source.
+- [P06-TEST-12-RECOVER-R17] Do not claim P06-TEST-12-RECOVER passed from reading the implementation or from another test passing.
+- [P06-TEST-12-RECOVER-R18] Rerun P06-TEST-12-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+
+## 08. Business and technical deliverables
+
+### P06-ART-01: business-case
+- [P06-ART-01-R01] Deliver business-case for ProductSignal.
+- [P06-ART-01-R02] Its required content is business problem, stakeholder map, scope, current/future-state process and decision criteria.
+- [P06-ART-01-R03] Use this business decision as its organizing question: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-ART-01-R04] Reference actual productsignal entities, metrics and workflow IDs instead of generic template prose.
+- [P06-ART-01-R05] Keep business-case source files under the project directory in GitHub.
+- [P06-ART-01-R06] Generate binary business-case outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P06-ART-01-R07] Include the source dataset hash and implementation revision in business-case where relevant.
+- [P06-ART-01-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in business-case.
+- [P06-ART-01-R09] Check that important numbers in business-case reconcile with the independent reference calculation.
+- [P06-ART-01-R10] Use clear units, periods and population descriptions throughout business-case.
+- [P06-ART-01-R11] If business-case depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P06-ART-01-R12] Provide a brief read/use instruction for business-case without requiring laptop installation.
+- [P06-ART-01-R13] Use accessible headings, labels and tables in business-case.
+- [P06-ART-01-R14] Link business-case from the individual website evidence area when safe and useful.
+- [P06-ART-01-R15] Do not publish credentials, real personal records or internal secrets in business-case.
+- [P06-ART-01-R16] Have the appropriate specialist review business-case before coordinator integration.
+- [P06-ART-01-R17] Record the actual verification status of business-case in the release manifest.
+- [P06-ART-01-R18] Keep business-case claims consistent with the public case study and resume bullet suggestions.
+### P06-ART-02: requirements
+- [P06-ART-02-R01] Deliver requirements for ProductSignal.
+- [P06-ART-02-R02] Its required content is functional requirements, nonfunctional requirements, user stories, acceptance criteria and traceability.
+- [P06-ART-02-R03] Use this business decision as its organizing question: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-ART-02-R04] Reference actual productsignal entities, metrics and workflow IDs instead of generic template prose.
+- [P06-ART-02-R05] Keep requirements source files under the project directory in GitHub.
+- [P06-ART-02-R06] Generate binary requirements outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P06-ART-02-R07] Include the source dataset hash and implementation revision in requirements where relevant.
+- [P06-ART-02-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in requirements.
+- [P06-ART-02-R09] Check that important numbers in requirements reconcile with the independent reference calculation.
+- [P06-ART-02-R10] Use clear units, periods and population descriptions throughout requirements.
+- [P06-ART-02-R11] If requirements depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P06-ART-02-R12] Provide a brief read/use instruction for requirements without requiring laptop installation.
+- [P06-ART-02-R13] Use accessible headings, labels and tables in requirements.
+- [P06-ART-02-R14] Link requirements from the individual website evidence area when safe and useful.
+- [P06-ART-02-R15] Do not publish credentials, real personal records or internal secrets in requirements.
+- [P06-ART-02-R16] Have the appropriate specialist review requirements before coordinator integration.
+- [P06-ART-02-R17] Record the actual verification status of requirements in the release manifest.
+- [P06-ART-02-R18] Keep requirements claims consistent with the public case study and resume bullet suggestions.
+### P06-ART-03: data-dictionary
+- [P06-ART-03-R01] Deliver data-dictionary for ProductSignal.
+- [P06-ART-03-R02] Its required content is entity grain, field types, source contracts, foreign keys and source-to-target mapping.
+- [P06-ART-03-R03] Use this business decision as its organizing question: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-ART-03-R04] Reference actual productsignal entities, metrics and workflow IDs instead of generic template prose.
+- [P06-ART-03-R05] Keep data-dictionary source files under the project directory in GitHub.
+- [P06-ART-03-R06] Generate binary data-dictionary outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P06-ART-03-R07] Include the source dataset hash and implementation revision in data-dictionary where relevant.
+- [P06-ART-03-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in data-dictionary.
+- [P06-ART-03-R09] Check that important numbers in data-dictionary reconcile with the independent reference calculation.
+- [P06-ART-03-R10] Use clear units, periods and population descriptions throughout data-dictionary.
+- [P06-ART-03-R11] If data-dictionary depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P06-ART-03-R12] Provide a brief read/use instruction for data-dictionary without requiring laptop installation.
+- [P06-ART-03-R13] Use accessible headings, labels and tables in data-dictionary.
+- [P06-ART-03-R14] Link data-dictionary from the individual website evidence area when safe and useful.
+- [P06-ART-03-R15] Do not publish credentials, real personal records or internal secrets in data-dictionary.
+- [P06-ART-03-R16] Have the appropriate specialist review data-dictionary before coordinator integration.
+- [P06-ART-03-R17] Record the actual verification status of data-dictionary in the release manifest.
+- [P06-ART-03-R18] Keep data-dictionary claims consistent with the public case study and resume bullet suggestions.
+### P06-ART-04: sql-analysis
+- [P06-ART-04-R01] Deliver sql-analysis for ProductSignal.
+- [P06-ART-04-R02] Its required content is executable SQL investigations with independently reconciled totals.
+- [P06-ART-04-R03] Use this business decision as its organizing question: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-ART-04-R04] Reference actual productsignal entities, metrics and workflow IDs instead of generic template prose.
+- [P06-ART-04-R05] Keep sql-analysis source files under the project directory in GitHub.
+- [P06-ART-04-R06] Generate binary sql-analysis outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P06-ART-04-R07] Include the source dataset hash and implementation revision in sql-analysis where relevant.
+- [P06-ART-04-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in sql-analysis.
+- [P06-ART-04-R09] Check that important numbers in sql-analysis reconcile with the independent reference calculation.
+- [P06-ART-04-R10] Use clear units, periods and population descriptions throughout sql-analysis.
+- [P06-ART-04-R11] If sql-analysis depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P06-ART-04-R12] Provide a brief read/use instruction for sql-analysis without requiring laptop installation.
+- [P06-ART-04-R13] Use accessible headings, labels and tables in sql-analysis.
+- [P06-ART-04-R14] Link sql-analysis from the individual website evidence area when safe and useful.
+- [P06-ART-04-R15] Do not publish credentials, real personal records or internal secrets in sql-analysis.
+- [P06-ART-04-R16] Have the appropriate specialist review sql-analysis before coordinator integration.
+- [P06-ART-04-R17] Record the actual verification status of sql-analysis in the release manifest.
+- [P06-ART-04-R18] Keep sql-analysis claims consistent with the public case study and resume bullet suggestions.
+### P06-ART-05: excel-workbook
+- [P06-ART-05-R01] Deliver excel-workbook for ProductSignal.
+- [P06-ART-05-R02] Its required content is formula-driven analyst workbook using project inputs and explicit assumptions.
+- [P06-ART-05-R03] Use this business decision as its organizing question: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-ART-05-R04] Reference actual productsignal entities, metrics and workflow IDs instead of generic template prose.
+- [P06-ART-05-R05] Keep excel-workbook source files under the project directory in GitHub.
+- [P06-ART-05-R06] Generate binary excel-workbook outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P06-ART-05-R07] Include the source dataset hash and implementation revision in excel-workbook where relevant.
+- [P06-ART-05-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in excel-workbook.
+- [P06-ART-05-R09] Check that important numbers in excel-workbook reconcile with the independent reference calculation.
+- [P06-ART-05-R10] Use clear units, periods and population descriptions throughout excel-workbook.
+- [P06-ART-05-R11] If excel-workbook depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P06-ART-05-R12] Provide a brief read/use instruction for excel-workbook without requiring laptop installation.
+- [P06-ART-05-R13] Use accessible headings, labels and tables in excel-workbook.
+- [P06-ART-05-R14] Link excel-workbook from the individual website evidence area when safe and useful.
+- [P06-ART-05-R15] Do not publish credentials, real personal records or internal secrets in excel-workbook.
+- [P06-ART-05-R16] Have the appropriate specialist review excel-workbook before coordinator integration.
+- [P06-ART-05-R17] Record the actual verification status of excel-workbook in the release manifest.
+- [P06-ART-05-R18] Keep excel-workbook claims consistent with the public case study and resume bullet suggestions.
+### P06-ART-06: bi-package
+- [P06-ART-06-R01] Deliver bi-package for ProductSignal.
+- [P06-ART-06-R02] Its required content is reusable metric model, relationships, DAX/Power Query where relevant and verification status.
+- [P06-ART-06-R03] Use this business decision as its organizing question: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-ART-06-R04] Reference actual productsignal entities, metrics and workflow IDs instead of generic template prose.
+- [P06-ART-06-R05] Keep bi-package source files under the project directory in GitHub.
+- [P06-ART-06-R06] Generate binary bi-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P06-ART-06-R07] Include the source dataset hash and implementation revision in bi-package where relevant.
+- [P06-ART-06-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in bi-package.
+- [P06-ART-06-R09] Check that important numbers in bi-package reconcile with the independent reference calculation.
+- [P06-ART-06-R10] Use clear units, periods and population descriptions throughout bi-package.
+- [P06-ART-06-R11] If bi-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P06-ART-06-R12] Provide a brief read/use instruction for bi-package without requiring laptop installation.
+- [P06-ART-06-R13] Use accessible headings, labels and tables in bi-package.
+- [P06-ART-06-R14] Link bi-package from the individual website evidence area when safe and useful.
+- [P06-ART-06-R15] Do not publish credentials, real personal records or internal secrets in bi-package.
+- [P06-ART-06-R16] Have the appropriate specialist review bi-package before coordinator integration.
+- [P06-ART-06-R17] Record the actual verification status of bi-package in the release manifest.
+- [P06-ART-06-R18] Keep bi-package claims consistent with the public case study and resume bullet suggestions.
+### P06-ART-07: executive-memo
+- [P06-ART-07-R01] Deliver executive-memo for ProductSignal.
+- [P06-ART-07-R02] Its required content is evidence-based recommendation, options, uncertainty and limitations.
+- [P06-ART-07-R03] Use this business decision as its organizing question: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-ART-07-R04] Reference actual productsignal entities, metrics and workflow IDs instead of generic template prose.
+- [P06-ART-07-R05] Keep executive-memo source files under the project directory in GitHub.
+- [P06-ART-07-R06] Generate binary executive-memo outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P06-ART-07-R07] Include the source dataset hash and implementation revision in executive-memo where relevant.
+- [P06-ART-07-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in executive-memo.
+- [P06-ART-07-R09] Check that important numbers in executive-memo reconcile with the independent reference calculation.
+- [P06-ART-07-R10] Use clear units, periods and population descriptions throughout executive-memo.
+- [P06-ART-07-R11] If executive-memo depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P06-ART-07-R12] Provide a brief read/use instruction for executive-memo without requiring laptop installation.
+- [P06-ART-07-R13] Use accessible headings, labels and tables in executive-memo.
+- [P06-ART-07-R14] Link executive-memo from the individual website evidence area when safe and useful.
+- [P06-ART-07-R15] Do not publish credentials, real personal records or internal secrets in executive-memo.
+- [P06-ART-07-R16] Have the appropriate specialist review executive-memo before coordinator integration.
+- [P06-ART-07-R17] Record the actual verification status of executive-memo in the release manifest.
+- [P06-ART-07-R18] Keep executive-memo claims consistent with the public case study and resume bullet suggestions.
+### P06-ART-08: uat-evidence
+- [P06-ART-08-R01] Deliver uat-evidence for ProductSignal.
+- [P06-ART-08-R02] Its required content is business scenarios with expected answers, actual observations and defect disposition.
+- [P06-ART-08-R03] Use this business decision as its organizing question: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-ART-08-R04] Reference actual productsignal entities, metrics and workflow IDs instead of generic template prose.
+- [P06-ART-08-R05] Keep uat-evidence source files under the project directory in GitHub.
+- [P06-ART-08-R06] Generate binary uat-evidence outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P06-ART-08-R07] Include the source dataset hash and implementation revision in uat-evidence where relevant.
+- [P06-ART-08-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in uat-evidence.
+- [P06-ART-08-R09] Check that important numbers in uat-evidence reconcile with the independent reference calculation.
+- [P06-ART-08-R10] Use clear units, periods and population descriptions throughout uat-evidence.
+- [P06-ART-08-R11] If uat-evidence depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P06-ART-08-R12] Provide a brief read/use instruction for uat-evidence without requiring laptop installation.
+- [P06-ART-08-R13] Use accessible headings, labels and tables in uat-evidence.
+- [P06-ART-08-R14] Link uat-evidence from the individual website evidence area when safe and useful.
+- [P06-ART-08-R15] Do not publish credentials, real personal records or internal secrets in uat-evidence.
+- [P06-ART-08-R16] Have the appropriate specialist review uat-evidence before coordinator integration.
+- [P06-ART-08-R17] Record the actual verification status of uat-evidence in the release manifest.
+- [P06-ART-08-R18] Keep uat-evidence claims consistent with the public case study and resume bullet suggestions.
+### P06-ART-09: technical-case-study
+- [P06-ART-09-R01] Deliver technical-case-study for ProductSignal.
+- [P06-ART-09-R02] Its required content is architecture, tradeoffs, recovery behavior, reproducible setup and measured evidence.
+- [P06-ART-09-R03] Use this business decision as its organizing question: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-ART-09-R04] Reference actual productsignal entities, metrics and workflow IDs instead of generic template prose.
+- [P06-ART-09-R05] Keep technical-case-study source files under the project directory in GitHub.
+- [P06-ART-09-R06] Generate binary technical-case-study outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P06-ART-09-R07] Include the source dataset hash and implementation revision in technical-case-study where relevant.
+- [P06-ART-09-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in technical-case-study.
+- [P06-ART-09-R09] Check that important numbers in technical-case-study reconcile with the independent reference calculation.
+- [P06-ART-09-R10] Use clear units, periods and population descriptions throughout technical-case-study.
+- [P06-ART-09-R11] If technical-case-study depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P06-ART-09-R12] Provide a brief read/use instruction for technical-case-study without requiring laptop installation.
+- [P06-ART-09-R13] Use accessible headings, labels and tables in technical-case-study.
+- [P06-ART-09-R14] Link technical-case-study from the individual website evidence area when safe and useful.
+- [P06-ART-09-R15] Do not publish credentials, real personal records or internal secrets in technical-case-study.
+- [P06-ART-09-R16] Have the appropriate specialist review technical-case-study before coordinator integration.
+- [P06-ART-09-R17] Record the actual verification status of technical-case-study in the release manifest.
+- [P06-ART-09-R18] Keep technical-case-study claims consistent with the public case study and resume bullet suggestions.
+### P06-ART-10: release-package
+- [P06-ART-10-R01] Deliver release-package for ProductSignal.
+- [P06-ART-10-R02] Its required content is individual site, source links, checksums, main portfolio metadata and rollback manifest.
+- [P06-ART-10-R03] Use this business decision as its organizing question: Should an onboarding change ship, stop, or receive more investigation?
+- [P06-ART-10-R04] Reference actual productsignal entities, metrics and workflow IDs instead of generic template prose.
+- [P06-ART-10-R05] Keep release-package source files under the project directory in GitHub.
+- [P06-ART-10-R06] Generate binary release-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P06-ART-10-R07] Include the source dataset hash and implementation revision in release-package where relevant.
+- [P06-ART-10-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in release-package.
+- [P06-ART-10-R09] Check that important numbers in release-package reconcile with the independent reference calculation.
+- [P06-ART-10-R10] Use clear units, periods and population descriptions throughout release-package.
+- [P06-ART-10-R11] If release-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P06-ART-10-R12] Provide a brief read/use instruction for release-package without requiring laptop installation.
+- [P06-ART-10-R13] Use accessible headings, labels and tables in release-package.
+- [P06-ART-10-R14] Link release-package from the individual website evidence area when safe and useful.
+- [P06-ART-10-R15] Do not publish credentials, real personal records or internal secrets in release-package.
+- [P06-ART-10-R16] Have the appropriate specialist review release-package before coordinator integration.
+- [P06-ART-10-R17] Record the actual verification status of release-package in the release manifest.
+- [P06-ART-10-R18] Keep release-package claims consistent with the public case study and resume bullet suggestions.
+
+## 09. Remote implementation work packages
+
+### P06-WORK-01: contract
+- [P06-WORK-01-R01] Assign contract to the business-contract specialist; write and review concrete definitions before implementing.
+- [P06-WORK-01-R02] Fable coordinator must supply the relevant P06 contract IDs and explicit file ownership.
+- [P06-WORK-01-R03] Resolve the actual specialist model before dispatching P06-WORK-01.
+- [P06-WORK-01-R04] Record requested model, resolved model, task ID and parent assignment for P06-WORK-01.
+- [P06-WORK-01-R05] Run P06-WORK-01 only in a verified GitHub-hosted environment.
+- [P06-WORK-01-R06] Checkpoint the incoming code SHA and assumptions before P06-WORK-01 edits.
+- [P06-WORK-01-R07] Complete a bounded vertical slice in P06-WORK-01; do not redesign unrelated projects.
+- [P06-WORK-01-R08] Return changed paths, verification performed and unresolved issues from P06-WORK-01.
+- [P06-WORK-01-R09] Review the diff and run affected checks before integrating P06-WORK-01.
+- [P06-WORK-01-R10] Persist the resulting commit SHA and evidence URLs for P06-WORK-01.
+- [P06-WORK-01-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P06-WORK-01-R12] No routine permission request is needed at the end of P06-WORK-01; proceed according to the master authorization envelope.
+### P06-WORK-02: fixtures
+- [P06-WORK-02-R01] Assign fixtures to the verification specialist; establish known answers independently of product calculations.
+- [P06-WORK-02-R02] Fable coordinator must supply the relevant P06 contract IDs and explicit file ownership.
+- [P06-WORK-02-R03] Resolve the actual specialist model before dispatching P06-WORK-02.
+- [P06-WORK-02-R04] Record requested model, resolved model, task ID and parent assignment for P06-WORK-02.
+- [P06-WORK-02-R05] Run P06-WORK-02 only in a verified GitHub-hosted environment.
+- [P06-WORK-02-R06] Checkpoint the incoming code SHA and assumptions before P06-WORK-02 edits.
+- [P06-WORK-02-R07] Complete a bounded vertical slice in P06-WORK-02; do not redesign unrelated projects.
+- [P06-WORK-02-R08] Return changed paths, verification performed and unresolved issues from P06-WORK-02.
+- [P06-WORK-02-R09] Review the diff and run affected checks before integrating P06-WORK-02.
+- [P06-WORK-02-R10] Persist the resulting commit SHA and evidence URLs for P06-WORK-02.
+- [P06-WORK-02-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P06-WORK-02-R12] No routine permission request is needed at the end of P06-WORK-02; proceed according to the master authorization envelope.
+### P06-WORK-03: data
+- [P06-WORK-03-R01] Assign data to the data specialist; generate sources, validate and reconcile transformations.
+- [P06-WORK-03-R02] Fable coordinator must supply the relevant P06 contract IDs and explicit file ownership.
+- [P06-WORK-03-R03] Resolve the actual specialist model before dispatching P06-WORK-03.
+- [P06-WORK-03-R04] Record requested model, resolved model, task ID and parent assignment for P06-WORK-03.
+- [P06-WORK-03-R05] Run P06-WORK-03 only in a verified GitHub-hosted environment.
+- [P06-WORK-03-R06] Checkpoint the incoming code SHA and assumptions before P06-WORK-03 edits.
+- [P06-WORK-03-R07] Complete a bounded vertical slice in P06-WORK-03; do not redesign unrelated projects.
+- [P06-WORK-03-R08] Return changed paths, verification performed and unresolved issues from P06-WORK-03.
+- [P06-WORK-03-R09] Review the diff and run affected checks before integrating P06-WORK-03.
+- [P06-WORK-03-R10] Persist the resulting commit SHA and evidence URLs for P06-WORK-03.
+- [P06-WORK-03-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P06-WORK-03-R12] No routine permission request is needed at the end of P06-WORK-03; proceed according to the master authorization envelope.
+### P06-WORK-04: backend
+- [P06-WORK-04-R01] Assign backend to the backend specialist; implement tested transitions and API contracts on remote runners.
+- [P06-WORK-04-R02] Fable coordinator must supply the relevant P06 contract IDs and explicit file ownership.
+- [P06-WORK-04-R03] Resolve the actual specialist model before dispatching P06-WORK-04.
+- [P06-WORK-04-R04] Record requested model, resolved model, task ID and parent assignment for P06-WORK-04.
+- [P06-WORK-04-R05] Run P06-WORK-04 only in a verified GitHub-hosted environment.
+- [P06-WORK-04-R06] Checkpoint the incoming code SHA and assumptions before P06-WORK-04 edits.
+- [P06-WORK-04-R07] Complete a bounded vertical slice in P06-WORK-04; do not redesign unrelated projects.
+- [P06-WORK-04-R08] Return changed paths, verification performed and unresolved issues from P06-WORK-04.
+- [P06-WORK-04-R09] Review the diff and run affected checks before integrating P06-WORK-04.
+- [P06-WORK-04-R10] Persist the resulting commit SHA and evidence URLs for P06-WORK-04.
+- [P06-WORK-04-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P06-WORK-04-R12] No routine permission request is needed at the end of P06-WORK-04; proceed according to the master authorization envelope.
+### P06-WORK-05: web
+- [P06-WORK-05-R01] Assign web to the frontend specialist; connect the first decision journey to verified inputs.
+- [P06-WORK-05-R02] Fable coordinator must supply the relevant P06 contract IDs and explicit file ownership.
+- [P06-WORK-05-R03] Resolve the actual specialist model before dispatching P06-WORK-05.
+- [P06-WORK-05-R04] Record requested model, resolved model, task ID and parent assignment for P06-WORK-05.
+- [P06-WORK-05-R05] Run P06-WORK-05 only in a verified GitHub-hosted environment.
+- [P06-WORK-05-R06] Checkpoint the incoming code SHA and assumptions before P06-WORK-05 edits.
+- [P06-WORK-05-R07] Complete a bounded vertical slice in P06-WORK-05; do not redesign unrelated projects.
+- [P06-WORK-05-R08] Return changed paths, verification performed and unresolved issues from P06-WORK-05.
+- [P06-WORK-05-R09] Review the diff and run affected checks before integrating P06-WORK-05.
+- [P06-WORK-05-R10] Persist the resulting commit SHA and evidence URLs for P06-WORK-05.
+- [P06-WORK-05-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P06-WORK-05-R12] No routine permission request is needed at the end of P06-WORK-05; proceed according to the master authorization envelope.
+### P06-WORK-06: analytics
+- [P06-WORK-06-R01] Assign analytics to the quantitative specialist; verify calculations and domain-specific evaluation.
+- [P06-WORK-06-R02] Fable coordinator must supply the relevant P06 contract IDs and explicit file ownership.
+- [P06-WORK-06-R03] Resolve the actual specialist model before dispatching P06-WORK-06.
+- [P06-WORK-06-R04] Record requested model, resolved model, task ID and parent assignment for P06-WORK-06.
+- [P06-WORK-06-R05] Run P06-WORK-06 only in a verified GitHub-hosted environment.
+- [P06-WORK-06-R06] Checkpoint the incoming code SHA and assumptions before P06-WORK-06 edits.
+- [P06-WORK-06-R07] Complete a bounded vertical slice in P06-WORK-06; do not redesign unrelated projects.
+- [P06-WORK-06-R08] Return changed paths, verification performed and unresolved issues from P06-WORK-06.
+- [P06-WORK-06-R09] Review the diff and run affected checks before integrating P06-WORK-06.
+- [P06-WORK-06-R10] Persist the resulting commit SHA and evidence URLs for P06-WORK-06.
+- [P06-WORK-06-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P06-WORK-06-R12] No routine permission request is needed at the end of P06-WORK-06; proceed according to the master authorization envelope.
+### P06-WORK-07: review
+- [P06-WORK-07-R01] Assign review to the verification specialist; challenge invariants and inspect rendered evidence.
+- [P06-WORK-07-R02] Fable coordinator must supply the relevant P06 contract IDs and explicit file ownership.
+- [P06-WORK-07-R03] Resolve the actual specialist model before dispatching P06-WORK-07.
+- [P06-WORK-07-R04] Record requested model, resolved model, task ID and parent assignment for P06-WORK-07.
+- [P06-WORK-07-R05] Run P06-WORK-07 only in a verified GitHub-hosted environment.
+- [P06-WORK-07-R06] Checkpoint the incoming code SHA and assumptions before P06-WORK-07 edits.
+- [P06-WORK-07-R07] Complete a bounded vertical slice in P06-WORK-07; do not redesign unrelated projects.
+- [P06-WORK-07-R08] Return changed paths, verification performed and unresolved issues from P06-WORK-07.
+- [P06-WORK-07-R09] Review the diff and run affected checks before integrating P06-WORK-07.
+- [P06-WORK-07-R10] Persist the resulting commit SHA and evidence URLs for P06-WORK-07.
+- [P06-WORK-07-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P06-WORK-07-R12] No routine permission request is needed at the end of P06-WORK-07; proceed according to the master authorization envelope.
+### P06-WORK-08: artifacts
+- [P06-WORK-08-R01] Assign artifacts to the business-contract specialist; complete business and analytical deliverables.
+- [P06-WORK-08-R02] Fable coordinator must supply the relevant P06 contract IDs and explicit file ownership.
+- [P06-WORK-08-R03] Resolve the actual specialist model before dispatching P06-WORK-08.
+- [P06-WORK-08-R04] Record requested model, resolved model, task ID and parent assignment for P06-WORK-08.
+- [P06-WORK-08-R05] Run P06-WORK-08 only in a verified GitHub-hosted environment.
+- [P06-WORK-08-R06] Checkpoint the incoming code SHA and assumptions before P06-WORK-08 edits.
+- [P06-WORK-08-R07] Complete a bounded vertical slice in P06-WORK-08; do not redesign unrelated projects.
+- [P06-WORK-08-R08] Return changed paths, verification performed and unresolved issues from P06-WORK-08.
+- [P06-WORK-08-R09] Review the diff and run affected checks before integrating P06-WORK-08.
+- [P06-WORK-08-R10] Persist the resulting commit SHA and evidence URLs for P06-WORK-08.
+- [P06-WORK-08-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P06-WORK-08-R12] No routine permission request is needed at the end of P06-WORK-08; proceed according to the master authorization envelope.
+### P06-WORK-09: release
+- [P06-WORK-09-R01] Assign release to the release specialist; publish and verify the standalone static website.
+- [P06-WORK-09-R02] Fable coordinator must supply the relevant P06 contract IDs and explicit file ownership.
+- [P06-WORK-09-R03] Resolve the actual specialist model before dispatching P06-WORK-09.
+- [P06-WORK-09-R04] Record requested model, resolved model, task ID and parent assignment for P06-WORK-09.
+- [P06-WORK-09-R05] Run P06-WORK-09 only in a verified GitHub-hosted environment.
+- [P06-WORK-09-R06] Checkpoint the incoming code SHA and assumptions before P06-WORK-09 edits.
+- [P06-WORK-09-R07] Complete a bounded vertical slice in P06-WORK-09; do not redesign unrelated projects.
+- [P06-WORK-09-R08] Return changed paths, verification performed and unresolved issues from P06-WORK-09.
+- [P06-WORK-09-R09] Review the diff and run affected checks before integrating P06-WORK-09.
+- [P06-WORK-09-R10] Persist the resulting commit SHA and evidence URLs for P06-WORK-09.
+- [P06-WORK-09-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P06-WORK-09-R12] No routine permission request is needed at the end of P06-WORK-09; proceed according to the master authorization envelope.
+### P06-WORK-10: integrate
+- [P06-WORK-10-R01] Assign integrate to the release specialist; rebuild and verify the existing main portfolio entry.
+- [P06-WORK-10-R02] Fable coordinator must supply the relevant P06 contract IDs and explicit file ownership.
+- [P06-WORK-10-R03] Resolve the actual specialist model before dispatching P06-WORK-10.
+- [P06-WORK-10-R04] Record requested model, resolved model, task ID and parent assignment for P06-WORK-10.
+- [P06-WORK-10-R05] Run P06-WORK-10 only in a verified GitHub-hosted environment.
+- [P06-WORK-10-R06] Checkpoint the incoming code SHA and assumptions before P06-WORK-10 edits.
+- [P06-WORK-10-R07] Complete a bounded vertical slice in P06-WORK-10; do not redesign unrelated projects.
+- [P06-WORK-10-R08] Return changed paths, verification performed and unresolved issues from P06-WORK-10.
+- [P06-WORK-10-R09] Review the diff and run affected checks before integrating P06-WORK-10.
+- [P06-WORK-10-R10] Persist the resulting commit SHA and evidence URLs for P06-WORK-10.
+- [P06-WORK-10-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P06-WORK-10-R12] No routine permission request is needed at the end of P06-WORK-10; proceed according to the master authorization envelope.
+
+## 10. Release, individual website and main portfolio acceptance
+
+- [P06-REL-01] Build productsignal as an independently navigable static product website with its own landing, demo and evidence routes.
+- [P06-REL-02] Publish under a unique verified GitHub Pages path; do not assume the path exists before deployment.
+- [P06-REL-03] Preserve all productsignal durable source, contracts, data generation and evidence in GitHub.
+- [P06-REL-04] Use no laptop checkout, local database, downloaded workbook or browser persistent storage as a build dependency.
+- [P06-REL-05] Run the backend and relational acceptance suite in GitHub Actions with a transient PostgreSQL service.
+- [P06-REL-06] Document the distinction between verified backend execution and browser-only simulated actions.
+- [P06-REL-07] Check every public export for synthetic-only data and absence of secrets.
+- [P06-REL-08] Archive durable workbook/notebook/evidence outputs with checksums and code revision.
+- [P06-REL-09] Verify deployed HTTP responses, route reload, one real user journey, downloads and source links.
+- [P06-REL-10] Inspect the current main projects site schema and generate its required project.json record.
+- [P06-REL-11] Produce cover.jpg and required loop media from actual project visuals with accurate labels.
+- [P06-REL-12] Regenerate catalogue and case-study pages through the current portfolio build process.
+- [P06-REL-13] Preserve the existing Precision Atelier design system on the main site.
+- [P06-REL-14] Keep this individual product identity separate from the main site theme requirements.
+- [P06-REL-15] Add catalogue/search/category/navigation entries according to the existing source schema.
+- [P06-REL-16] Do not modify unrelated project metadata or replace the main opening animation.
+- [P06-REL-17] Confirm the individual website is reachable before its portfolio link is published.
+- [P06-REL-18] Verify the main portfolio case study links to this actual website, source and evidence.
+- [P06-REL-19] Run existing site checks and targeted new-project route checks in hosted compute.
+- [P06-REL-20] Record built, verified, published and integrated as separate release fields.
+- [P06-REL-21] If an external permission blocks publication, preserve a ready change and report its exact state.
+- [P06-REL-22] Do not label a source commit as a verified live release.
+- [P06-REL-23] Prepare rollback to the preceding known-good portfolio/site artifact.
+- [P06-REL-24] End the ProductSignal handoff with the supported business decision, actual evidence and material limitations.
+
+## 11. Concrete implementation starting contracts
+
+These choices fix the default implementation shape. Change them only through a logged domain/architecture decision.
+Project directory: apps/productsignal/.
+Web: React and TypeScript, static build, route base injected by build configuration.
+Backend verification: FastAPI with generated OpenAPI, exercised only on a GitHub-hosted runner by default.
+Relational verification: PostgreSQL service container populated from deterministic fixtures.
+Business logic: pure Python domain functions separated from database and HTTP adapters.
+Browser scenario logic: TypeScript implementation checked against the same independently calculated fixtures.
+Canonical timestamps: UTC instants; display calendars can use configured IANA time zones.
+Canonical identifiers: opaque stable text IDs derived from source identifiers, not mutable display names.
+Canonical currency for the small reference fixture: USD unless explicitly stated otherwise.
+Money: decimal strings in JSON and NUMERIC(20,6) in database; round to currency minor units only at the declared step.
+Probabilities and rates: numeric values in [0,1] where their definition is a proportion; percentage-point differences may be signed.
+Count fields: nonnegative integers unless a signed movement/variance is explicitly part of the business definition.
+Absence: JSON null; do not use NaN, Infinity, the string null, or an empty string as substitute.
+Collection ordering: documented stable field plus primary-key tie breaker.
+Pagination: limit default 50, maximum 200; opaque cursor on large evidence collections.
+Time filtering: from inclusive, to exclusive; reject invalid or reversed ranges.
+Snapshot consistency: all data returned for one analysis references one immutable dataset_version.
+Scenario consistency: baseline_version is immutable; scenario edits use a distinct scenario_id and version.
+Conflict behavior: return 409 for stale version or idempotency-key reuse with a different payload.
+Validation behavior: return 422 with field path, rule ID and safe user message.
+Authorization behavior on the verified backend: 401 for missing identity, 403 for forbidden action; never fake public auth.
+Read-model response: data, meta, warnings; meta includes dataset_version, code_sha, generated_at and applied_filters.
+Error response: error.code, error.message, error.details, request_id; never stack traces or tokens.
+Command request: input, expected_version where relevant, idempotency_key for state-changing operations.
+Audit event: event_id, entity_type, entity_id, action, actor_id, occurred_at, before_version, after_version, reason.
+Static mode: command requests use a local in-memory adapter and display that fact before an action is taken.
+Static mode: a refresh intentionally restores the published fixture; do not imply durable multi-user state.
+API boundaries below are backend contracts to implement and verify; they are not public Pages endpoints.
+Generate a static data manifest rather than requesting unavailable /api routes from GitHub Pages.
+Minimum request tests: valid, malformed, unknown resource, stale version, repeated command and unsupported action.
+Minimum read tests: no records, one record, multiple pages, invalid filter, stable ordering and evidence reconciliation.
+Create a route inventory in docs/api-contract.md before frontend integration.
+Do not publish synthetic actor role switching as proof of backend authorization.
+Only claim access-control verification from separate backend identities and direct request tests.
+Use an optimistic record version for mutable operational rows; keep immutable event rows append-only.
+Specify missing source references as quarantine or explicit unresolved records, not arbitrary placeholder joins.
+Use migrations and seed scripts that succeed from an empty database and on a second idempotent run.
+Keep CI data fixtures below a documented size; large benchmark generation is an opt-in workflow input.
+Archive the exact exported data used by the public static demo with its checksum.
+Do not accidentally archive a transient database connection URL in any manifest.
+### Command C01: Validate tracking
+- Contract endpoint: POST /api/v1/productsignal/commands/validate-tracking.
+- Business transition: Raw events -> canonical events.
+- Hard validation: Schema and deduplication.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C02: Resolve identity
+- Contract endpoint: POST /api/v1/productsignal/commands/resolve-identity.
+- Business transition: Anonymous -> linked identity.
+- Hard validation: Time-aware deterministic rules.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C03: Define funnel
+- Contract endpoint: POST /api/v1/productsignal/commands/define-funnel.
+- Business transition: Draft -> versioned funnel.
+- Hard validation: Steps, ordering and maximum gap.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C04: Assign experiment
+- Contract endpoint: POST /api/v1/productsignal/commands/assign-experiment.
+- Business transition: Eligible unit -> fixed variant.
+- Hard validation: Stable assignment before outcomes.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C05: Record exposure
+- Contract endpoint: POST /api/v1/productsignal/commands/record-exposure.
+- Business transition: Assigned -> exposed.
+- Hard validation: Preserve ITT membership.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C06: Freeze analysis plan
+- Contract endpoint: POST /api/v1/productsignal/commands/freeze-analysis-plan.
+- Business transition: Draft -> registered plan.
+- Hard validation: Before outcome inspection.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C07: Check maturity
+- Contract endpoint: POST /api/v1/productsignal/commands/check-maturity.
+- Business transition: Assigned cohort -> eligible observation.
+- Hard validation: Avoid incomplete windows.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C08: Analyze experiment
+- Contract endpoint: POST /api/v1/productsignal/commands/analyze-experiment.
+- Business transition: Frozen plan -> results.
+- Hard validation: Assignment unit respected.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C09: Review guardrails
+- Contract endpoint: POST /api/v1/productsignal/commands/review-guardrails.
+- Business transition: Result -> decision evidence.
+- Hard validation: Business and statistical meaning.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C10: Record decision
+- Contract endpoint: POST /api/v1/productsignal/commands/record-decision.
+- Business transition: Evidence -> ship or stop or inconclusive.
+- Hard validation: No automatic product release.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Read contract: accounts
+- Endpoint: GET /api/v1/productsignal/data/accounts.
+- Evidence fields: account_id,plan,segment,created_at,internal.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: users
+- Endpoint: GET /api/v1/productsignal/data/users.
+- Evidence fields: user_id,account_id,created_at,timezone,bot_flag.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: identity_links
+- Endpoint: GET /api/v1/productsignal/data/identity_links.
+- Evidence fields: identity_link_id,anonymous_id,user_id,linked_at,rule_version.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: sessions
+- Endpoint: GET /api/v1/productsignal/data/sessions.
+- Evidence fields: session_id,user_id,started_at,ended_at,device_type.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: events
+- Endpoint: GET /api/v1/productsignal/data/events.
+- Evidence fields: event_id,user_id,event_name,event_at,received_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: event_properties
+- Endpoint: GET /api/v1/productsignal/data/event_properties.
+- Evidence fields: property_id,event_id,property_key,property_value,value_type.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: subscriptions
+- Endpoint: GET /api/v1/productsignal/data/subscriptions.
+- Evidence fields: subscription_id,account_id,starts_at,ends_at,status.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: experiment_versions
+- Endpoint: GET /api/v1/productsignal/data/experiment_versions.
+- Evidence fields: experiment_version_id,name,unit_type,primary_metric,planned_end.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: assignments
+- Endpoint: GET /api/v1/productsignal/data/assignments.
+- Evidence fields: assignment_id,experiment_version_id,unit_id,variant,assigned_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: exposures
+- Endpoint: GET /api/v1/productsignal/data/exposures.
+- Evidence fields: exposure_id,assignment_id,exposed_at,surface,event_id.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: metric_observations
+- Endpoint: GET /api/v1/productsignal/data/metric_observations.
+- Evidence fields: observation_id,assignment_id,metric_name,value,window_end.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: analysis_runs
+- Endpoint: GET /api/v1/productsignal/data/analysis_runs.
+- Evidence fields: analysis_id,experiment_version_id,cutoff_at,config_hash,created_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+
+## 12. Small versus large data profiles
+
+- golden: use the exact hand-checkable fixture in section 02; do not substitute random rows.
+- demo: start with approximately 500 primary business objects and enough linked events to demonstrate every required path.
+- analytical history: use the project-required observation horizon, including complete outcome windows and historical versions.
+- benchmark: optional input controls size; begin with 10,000 primary objects and increase only within observed runner resources.
+- store generator seed, config, schema version and injection manifest for every profile.
+- do not equate object count with event count; report each explicitly.
+- keep semantic distributions configurable; volume scaling must not change business rules.
+- do not use a large dataset to hide a failed small known-answer case.
+- no native software requirement may force a laptop download; preserve source and mark unsupported verification honestly.
+- acceptance evidence must state which profile each test used.

@@ -1,0 +1,2749 @@
+# P10 — RetentionLab: complete project build specification
+Version: 2026-10-26. Read MASTER-DIRECTIVE.md first. These are requirements, not claims that software already exists.
+
+## 01. Product mandate and business boundary
+
+- [P10-GOAL-01] Build a standalone product supporting this decision: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-GOAL-02] Primary portfolio roles: Data Scientist; Data Analyst; BI Analyst.
+- [P10-GOAL-03] Visual direction: Customer intelligence lab: dark plum, soft cream, coral; risk evidence and calibration.
+- [P10-GOAL-04] Use app slug retentionlab; keep routes, fixtures, manifests and catalogue entries consistent.
+- [P10-GOAL-05] Execute code only on GitHub-hosted compute; retain durable deliverables in GitHub; never write project files to the laptop.
+- [P10-GOAL-06] Default public experience is static interactive synthetic demo; transactional backend evidence comes from remote CI.
+- [P10-GOAL-07] Use Fable 5.1 for coordination and real specialist-model invocations for implementation and verification.
+- [P10-GOAL-08] Resolve provider/model availability and record actual requested/resolved IDs without inventing capabilities.
+- [P10-GOAL-09] The entry milestone is one complete source-to-decision journey using the reference fixture and working export.
+- [P10-GOAL-10] The mid-level milestone adds the specified exceptions, robustness, versioning and recovery evidence.
+- [P10-GOAL-11] Do not open with a chatbot or require a paid inference API to use the demo.
+- [P10-GOAL-12] No live customer data, real payment, vendor commitment or operational write belongs in the default synthetic demo.
+- [P10-GOAL-13] All monetary, temporal and statistical meaning must be defined before interface implementation.
+- [P10-GOAL-14] If a proposed field/formula conflicts with an invariant, fix the specification through a logged decision before coding.
+- [P10-GOAL-15] Keep specifications addressable by the IDs in this file; do not paste the entire file into every worker prompt.
+- [P10-DOMAIN-01] Point-in-time correctness uses available_at as well as event_at.
+- [P10-DOMAIN-02] Use chronological splits with label-window purge.
+- [P10-DOMAIN-03] Keep generator latent truth outside predictor inputs.
+- [P10-DOMAIN-04] Compare logistic regression to random and simple rules.
+- [P10-DOMAIN-05] No claim of real retention improvement from synthetic evaluation.
+- [P10-DOMAIN-06] Design a future randomized intervention experiment separately.
+
+## 02. Independent known-answer fixture
+
+- [P10-GOLD-01] Four accounts have predicted risks .8, .6, .4, .1 and outcomes 1,0,1,0. At K=2 precision=.5 and recall=.5. Brier score=(.04+.36+.36+.01)/4=.1925. A high-risk selection alone supplies no treatment effect estimate.
+- [P10-GOLD-02] Encode the reference inputs under tests/fixtures/golden/ and preserve the human-readable calculation.
+- [P10-GOLD-03] Keep the expected-answer file independent of application helper functions and generated dashboard output.
+- [P10-GOLD-04] Have the verification specialist reproduce the answer from the source records before implementation review.
+- [P10-GOLD-05] Use explicit decimal tolerance for monetary results and justified tolerance for statistical/numerical results.
+- [P10-GOLD-06] Test the displayed value, exported value and backend result against the reference, not only against each other.
+- [P10-GOLD-07] Do not enlarge a numeric tolerance to conceal a business-rule disagreement.
+- [P10-GOLD-08] Create one rejected-record variant and show why rejection is correct.
+- [P10-GOLD-09] Create one empty-population variant and show the documented zero-denominator behavior.
+- [P10-GOLD-10] Persist fixture hashes and verification evidence with the code revision.
+- [P10-GOLD-11] If this fixture reveals a definition gap, resolve and version the definition before treating results as authoritative.
+
+## 03. Logical data model and field contracts
+
+### P10-DATA-01: accounts
+- [P10-DATA-01-R01] Create the accounts entity with a documented grain and one stable primary key: account_id.
+- [P10-DATA-01-R02] The minimum business fields are account_id, created_at, segment, region, synthetic; add technical metadata only with a documented purpose.
+- [P10-DATA-01-R03] Use the role of accounts in the product workflow to define authoritative source ownership.
+- [P10-DATA-01-R04] Write migrations for accounts; do not rely on ORM auto-create for the verified release.
+- [P10-DATA-01-R05] Create a small valid accounts fixture linked to the independently calculated project example.
+- [P10-DATA-01-R06] Create an invalid accounts fixture that demonstrates a real domain constraint.
+- [P10-DATA-01-R07] Choose explicit row-update semantics for accounts: immutable event, versioned dimension or mutable operational record.
+- [P10-DATA-01-R08] Preserve the original source identifier for accounts when a surrogate key is introduced.
+- [P10-DATA-01-R09] Document whether deletion of accounts is prohibited, reversible or represented by a tombstone.
+- [P10-DATA-01-R10] Reconcile accounts accepted, rejected and deduplicated row counts to the source batch.
+- [P10-DATA-01-R11] Expose only justified synthetic accounts fields to the public site; remove internal runner metadata.
+- [P10-DATA-01-R12] Index accounts according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P10-DATA-01-R13] Do not join accounts at a different grain without an explicit aggregation or allocation rule.
+- [P10-DATA-01-R14] Associate the published accounts snapshot with dataset hash and generator parameters.
+- [P10-DATA-01-R15] Define deterministic sorting and pagination for the accounts evidence view.
+- [P10-DATA-01-R16] Ensure an empty accounts dataset yields an understandable empty state instead of fabricated sample totals.
+- [P10-DATA-01-R17] Archive the accounts schema and sample rows in the data dictionary.
+- [P10-DATA-01-R18] Test that replaying the source import cannot unintentionally duplicate accounts business records.
+- [P10-DATA-01-F01-R01] Field accounts.account_id: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P10-DATA-01-F01-R02] Field accounts.account_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-01-F01-R03] Field accounts.account_id: make it non-null and unique as the primary key.
+- [P10-DATA-01-F01-R04] Field accounts.account_id: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-01-F01-R05] Field accounts.account_id: use stable source-to-key mapping across replays and regeneration.
+- [P10-DATA-01-F01-R06] Field accounts.account_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-01-F01-R07] Field accounts.account_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-01-F01-R08] Field accounts.account_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-01-F02-R01] Field accounts.created_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-01-F02-R02] Field accounts.created_at: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-01-F02-R03] Field accounts.created_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-01-F02-R04] Field accounts.created_at: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-01-F02-R05] Field accounts.created_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-01-F02-R06] Field accounts.created_at: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-01-F02-R07] Field accounts.created_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-01-F02-R08] Field accounts.created_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-01-F03-R01] Field accounts.segment: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-01-F03-R02] Field accounts.segment: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-01-F03-R03] Field accounts.segment: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-01-F03-R04] Field accounts.segment: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-01-F03-R05] Field accounts.segment: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-01-F03-R06] Field accounts.segment: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-01-F03-R07] Field accounts.segment: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-01-F03-R08] Field accounts.segment: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-01-F04-R01] Field accounts.region: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-01-F04-R02] Field accounts.region: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-01-F04-R03] Field accounts.region: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-01-F04-R04] Field accounts.region: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-01-F04-R05] Field accounts.region: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-01-F04-R06] Field accounts.region: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-01-F04-R07] Field accounts.region: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-01-F04-R08] Field accounts.region: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-01-F05-R01] Field accounts.synthetic: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P10-DATA-01-F05-R02] Field accounts.synthetic: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-01-F05-R03] Field accounts.synthetic: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-01-F05-R04] Field accounts.synthetic: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-01-F05-R05] Field accounts.synthetic: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-01-F05-R06] Field accounts.synthetic: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-01-F05-R07] Field accounts.synthetic: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-01-F05-R08] Field accounts.synthetic: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P10-DATA-02: subscription_events
+- [P10-DATA-02-R01] Create the subscription_events entity with a documented grain and one stable primary key: subscription_event_id.
+- [P10-DATA-02-R02] The minimum business fields are subscription_event_id, account_id, event_type, event_at, available_at; add technical metadata only with a documented purpose.
+- [P10-DATA-02-R03] Use the role of subscription_events in the product workflow to define authoritative source ownership.
+- [P10-DATA-02-R04] Write migrations for subscription_events; do not rely on ORM auto-create for the verified release.
+- [P10-DATA-02-R05] Create a small valid subscription_events fixture linked to the independently calculated project example.
+- [P10-DATA-02-R06] Create an invalid subscription_events fixture that demonstrates a real domain constraint.
+- [P10-DATA-02-R07] Choose explicit row-update semantics for subscription_events: immutable event, versioned dimension or mutable operational record.
+- [P10-DATA-02-R08] Preserve the original source identifier for subscription_events when a surrogate key is introduced.
+- [P10-DATA-02-R09] Document whether deletion of subscription_events is prohibited, reversible or represented by a tombstone.
+- [P10-DATA-02-R10] Reconcile subscription_events accepted, rejected and deduplicated row counts to the source batch.
+- [P10-DATA-02-R11] Expose only justified synthetic subscription_events fields to the public site; remove internal runner metadata.
+- [P10-DATA-02-R12] Index subscription_events according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P10-DATA-02-R13] Do not join subscription_events at a different grain without an explicit aggregation or allocation rule.
+- [P10-DATA-02-R14] Associate the published subscription_events snapshot with dataset hash and generator parameters.
+- [P10-DATA-02-R15] Define deterministic sorting and pagination for the subscription_events evidence view.
+- [P10-DATA-02-R16] Ensure an empty subscription_events dataset yields an understandable empty state instead of fabricated sample totals.
+- [P10-DATA-02-R17] Archive the subscription_events schema and sample rows in the data dictionary.
+- [P10-DATA-02-R18] Test that replaying the source import cannot unintentionally duplicate subscription_events business records.
+- [P10-DATA-02-F01-R01] Field subscription_events.subscription_event_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-02-F01-R02] Field subscription_events.subscription_event_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-02-F01-R03] Field subscription_events.subscription_event_id: make it non-null and unique as the primary key.
+- [P10-DATA-02-F01-R04] Field subscription_events.subscription_event_id: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-02-F01-R05] Field subscription_events.subscription_event_id: use stable source-to-key mapping across replays and regeneration.
+- [P10-DATA-02-F01-R06] Field subscription_events.subscription_event_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-02-F01-R07] Field subscription_events.subscription_event_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-02-F01-R08] Field subscription_events.subscription_event_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-02-F02-R01] Field subscription_events.account_id: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P10-DATA-02-F02-R02] Field subscription_events.account_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-02-F02-R03] Field subscription_events.account_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-02-F02-R04] Field subscription_events.account_id: validate its reference to accounts.account_id; explain deferred or quarantined unmatched records.
+- [P10-DATA-02-F02-R05] Field subscription_events.account_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-02-F02-R06] Field subscription_events.account_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-02-F02-R07] Field subscription_events.account_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-02-F02-R08] Field subscription_events.account_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-02-F03-R01] Field subscription_events.event_type: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-02-F03-R02] Field subscription_events.event_type: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-02-F03-R03] Field subscription_events.event_type: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-02-F03-R04] Field subscription_events.event_type: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-02-F03-R05] Field subscription_events.event_type: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-02-F03-R06] Field subscription_events.event_type: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-02-F03-R07] Field subscription_events.event_type: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-02-F03-R08] Field subscription_events.event_type: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-02-F04-R01] Field subscription_events.event_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-02-F04-R02] Field subscription_events.event_at: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-02-F04-R03] Field subscription_events.event_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-02-F04-R04] Field subscription_events.event_at: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-02-F04-R05] Field subscription_events.event_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-02-F04-R06] Field subscription_events.event_at: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-02-F04-R07] Field subscription_events.event_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-02-F04-R08] Field subscription_events.event_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-02-F05-R01] Field subscription_events.available_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-02-F05-R02] Field subscription_events.available_at: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-02-F05-R03] Field subscription_events.available_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-02-F05-R04] Field subscription_events.available_at: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-02-F05-R05] Field subscription_events.available_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-02-F05-R06] Field subscription_events.available_at: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-02-F05-R07] Field subscription_events.available_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-02-F05-R08] Field subscription_events.available_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P10-DATA-03: billing_events
+- [P10-DATA-03-R01] Create the billing_events entity with a documented grain and one stable primary key: billing_event_id.
+- [P10-DATA-03-R02] The minimum business fields are billing_event_id, account_id, amount, event_at, available_at; add technical metadata only with a documented purpose.
+- [P10-DATA-03-R03] Use the role of billing_events in the product workflow to define authoritative source ownership.
+- [P10-DATA-03-R04] Write migrations for billing_events; do not rely on ORM auto-create for the verified release.
+- [P10-DATA-03-R05] Create a small valid billing_events fixture linked to the independently calculated project example.
+- [P10-DATA-03-R06] Create an invalid billing_events fixture that demonstrates a real domain constraint.
+- [P10-DATA-03-R07] Choose explicit row-update semantics for billing_events: immutable event, versioned dimension or mutable operational record.
+- [P10-DATA-03-R08] Preserve the original source identifier for billing_events when a surrogate key is introduced.
+- [P10-DATA-03-R09] Document whether deletion of billing_events is prohibited, reversible or represented by a tombstone.
+- [P10-DATA-03-R10] Reconcile billing_events accepted, rejected and deduplicated row counts to the source batch.
+- [P10-DATA-03-R11] Expose only justified synthetic billing_events fields to the public site; remove internal runner metadata.
+- [P10-DATA-03-R12] Index billing_events according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P10-DATA-03-R13] Do not join billing_events at a different grain without an explicit aggregation or allocation rule.
+- [P10-DATA-03-R14] Associate the published billing_events snapshot with dataset hash and generator parameters.
+- [P10-DATA-03-R15] Define deterministic sorting and pagination for the billing_events evidence view.
+- [P10-DATA-03-R16] Ensure an empty billing_events dataset yields an understandable empty state instead of fabricated sample totals.
+- [P10-DATA-03-R17] Archive the billing_events schema and sample rows in the data dictionary.
+- [P10-DATA-03-R18] Test that replaying the source import cannot unintentionally duplicate billing_events business records.
+- [P10-DATA-03-F01-R01] Field billing_events.billing_event_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-03-F01-R02] Field billing_events.billing_event_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-03-F01-R03] Field billing_events.billing_event_id: make it non-null and unique as the primary key.
+- [P10-DATA-03-F01-R04] Field billing_events.billing_event_id: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-03-F01-R05] Field billing_events.billing_event_id: use stable source-to-key mapping across replays and regeneration.
+- [P10-DATA-03-F01-R06] Field billing_events.billing_event_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-03-F01-R07] Field billing_events.billing_event_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-03-F01-R08] Field billing_events.billing_event_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-03-F02-R01] Field billing_events.account_id: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P10-DATA-03-F02-R02] Field billing_events.account_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-03-F02-R03] Field billing_events.account_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-03-F02-R04] Field billing_events.account_id: validate its reference to accounts.account_id; explain deferred or quarantined unmatched records.
+- [P10-DATA-03-F02-R05] Field billing_events.account_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-03-F02-R06] Field billing_events.account_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-03-F02-R07] Field billing_events.account_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-03-F02-R08] Field billing_events.account_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-03-F03-R01] Field billing_events.amount: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P10-DATA-03-F03-R02] Field billing_events.amount: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-03-F03-R03] Field billing_events.amount: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-03-F03-R04] Field billing_events.amount: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-03-F03-R05] Field billing_events.amount: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-03-F03-R06] Field billing_events.amount: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-03-F03-R07] Field billing_events.amount: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-03-F03-R08] Field billing_events.amount: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-03-F04-R01] Field billing_events.event_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-03-F04-R02] Field billing_events.event_at: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-03-F04-R03] Field billing_events.event_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-03-F04-R04] Field billing_events.event_at: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-03-F04-R05] Field billing_events.event_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-03-F04-R06] Field billing_events.event_at: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-03-F04-R07] Field billing_events.event_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-03-F04-R08] Field billing_events.event_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-03-F05-R01] Field billing_events.available_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-03-F05-R02] Field billing_events.available_at: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-03-F05-R03] Field billing_events.available_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-03-F05-R04] Field billing_events.available_at: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-03-F05-R05] Field billing_events.available_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-03-F05-R06] Field billing_events.available_at: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-03-F05-R07] Field billing_events.available_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-03-F05-R08] Field billing_events.available_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P10-DATA-04: usage_events
+- [P10-DATA-04-R01] Create the usage_events entity with a documented grain and one stable primary key: usage_event_id.
+- [P10-DATA-04-R02] The minimum business fields are usage_event_id, account_id, event_name, event_at, available_at; add technical metadata only with a documented purpose.
+- [P10-DATA-04-R03] Use the role of usage_events in the product workflow to define authoritative source ownership.
+- [P10-DATA-04-R04] Write migrations for usage_events; do not rely on ORM auto-create for the verified release.
+- [P10-DATA-04-R05] Create a small valid usage_events fixture linked to the independently calculated project example.
+- [P10-DATA-04-R06] Create an invalid usage_events fixture that demonstrates a real domain constraint.
+- [P10-DATA-04-R07] Choose explicit row-update semantics for usage_events: immutable event, versioned dimension or mutable operational record.
+- [P10-DATA-04-R08] Preserve the original source identifier for usage_events when a surrogate key is introduced.
+- [P10-DATA-04-R09] Document whether deletion of usage_events is prohibited, reversible or represented by a tombstone.
+- [P10-DATA-04-R10] Reconcile usage_events accepted, rejected and deduplicated row counts to the source batch.
+- [P10-DATA-04-R11] Expose only justified synthetic usage_events fields to the public site; remove internal runner metadata.
+- [P10-DATA-04-R12] Index usage_events according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P10-DATA-04-R13] Do not join usage_events at a different grain without an explicit aggregation or allocation rule.
+- [P10-DATA-04-R14] Associate the published usage_events snapshot with dataset hash and generator parameters.
+- [P10-DATA-04-R15] Define deterministic sorting and pagination for the usage_events evidence view.
+- [P10-DATA-04-R16] Ensure an empty usage_events dataset yields an understandable empty state instead of fabricated sample totals.
+- [P10-DATA-04-R17] Archive the usage_events schema and sample rows in the data dictionary.
+- [P10-DATA-04-R18] Test that replaying the source import cannot unintentionally duplicate usage_events business records.
+- [P10-DATA-04-F01-R01] Field usage_events.usage_event_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-04-F01-R02] Field usage_events.usage_event_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-04-F01-R03] Field usage_events.usage_event_id: make it non-null and unique as the primary key.
+- [P10-DATA-04-F01-R04] Field usage_events.usage_event_id: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-04-F01-R05] Field usage_events.usage_event_id: use stable source-to-key mapping across replays and regeneration.
+- [P10-DATA-04-F01-R06] Field usage_events.usage_event_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-04-F01-R07] Field usage_events.usage_event_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-04-F01-R08] Field usage_events.usage_event_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-04-F02-R01] Field usage_events.account_id: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P10-DATA-04-F02-R02] Field usage_events.account_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-04-F02-R03] Field usage_events.account_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-04-F02-R04] Field usage_events.account_id: validate its reference to accounts.account_id; explain deferred or quarantined unmatched records.
+- [P10-DATA-04-F02-R05] Field usage_events.account_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-04-F02-R06] Field usage_events.account_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-04-F02-R07] Field usage_events.account_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-04-F02-R08] Field usage_events.account_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-04-F03-R01] Field usage_events.event_name: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-04-F03-R02] Field usage_events.event_name: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-04-F03-R03] Field usage_events.event_name: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-04-F03-R04] Field usage_events.event_name: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-04-F03-R05] Field usage_events.event_name: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-04-F03-R06] Field usage_events.event_name: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-04-F03-R07] Field usage_events.event_name: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-04-F03-R08] Field usage_events.event_name: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-04-F04-R01] Field usage_events.event_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-04-F04-R02] Field usage_events.event_at: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-04-F04-R03] Field usage_events.event_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-04-F04-R04] Field usage_events.event_at: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-04-F04-R05] Field usage_events.event_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-04-F04-R06] Field usage_events.event_at: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-04-F04-R07] Field usage_events.event_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-04-F04-R08] Field usage_events.event_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-04-F05-R01] Field usage_events.available_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-04-F05-R02] Field usage_events.available_at: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-04-F05-R03] Field usage_events.available_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-04-F05-R04] Field usage_events.available_at: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-04-F05-R05] Field usage_events.available_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-04-F05-R06] Field usage_events.available_at: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-04-F05-R07] Field usage_events.available_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-04-F05-R08] Field usage_events.available_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P10-DATA-05: support_events
+- [P10-DATA-05-R01] Create the support_events entity with a documented grain and one stable primary key: support_event_id.
+- [P10-DATA-05-R02] The minimum business fields are support_event_id, account_id, severity, event_at, available_at; add technical metadata only with a documented purpose.
+- [P10-DATA-05-R03] Use the role of support_events in the product workflow to define authoritative source ownership.
+- [P10-DATA-05-R04] Write migrations for support_events; do not rely on ORM auto-create for the verified release.
+- [P10-DATA-05-R05] Create a small valid support_events fixture linked to the independently calculated project example.
+- [P10-DATA-05-R06] Create an invalid support_events fixture that demonstrates a real domain constraint.
+- [P10-DATA-05-R07] Choose explicit row-update semantics for support_events: immutable event, versioned dimension or mutable operational record.
+- [P10-DATA-05-R08] Preserve the original source identifier for support_events when a surrogate key is introduced.
+- [P10-DATA-05-R09] Document whether deletion of support_events is prohibited, reversible or represented by a tombstone.
+- [P10-DATA-05-R10] Reconcile support_events accepted, rejected and deduplicated row counts to the source batch.
+- [P10-DATA-05-R11] Expose only justified synthetic support_events fields to the public site; remove internal runner metadata.
+- [P10-DATA-05-R12] Index support_events according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P10-DATA-05-R13] Do not join support_events at a different grain without an explicit aggregation or allocation rule.
+- [P10-DATA-05-R14] Associate the published support_events snapshot with dataset hash and generator parameters.
+- [P10-DATA-05-R15] Define deterministic sorting and pagination for the support_events evidence view.
+- [P10-DATA-05-R16] Ensure an empty support_events dataset yields an understandable empty state instead of fabricated sample totals.
+- [P10-DATA-05-R17] Archive the support_events schema and sample rows in the data dictionary.
+- [P10-DATA-05-R18] Test that replaying the source import cannot unintentionally duplicate support_events business records.
+- [P10-DATA-05-F01-R01] Field support_events.support_event_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-05-F01-R02] Field support_events.support_event_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-05-F01-R03] Field support_events.support_event_id: make it non-null and unique as the primary key.
+- [P10-DATA-05-F01-R04] Field support_events.support_event_id: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-05-F01-R05] Field support_events.support_event_id: use stable source-to-key mapping across replays and regeneration.
+- [P10-DATA-05-F01-R06] Field support_events.support_event_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-05-F01-R07] Field support_events.support_event_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-05-F01-R08] Field support_events.support_event_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-05-F02-R01] Field support_events.account_id: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P10-DATA-05-F02-R02] Field support_events.account_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-05-F02-R03] Field support_events.account_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-05-F02-R04] Field support_events.account_id: validate its reference to accounts.account_id; explain deferred or quarantined unmatched records.
+- [P10-DATA-05-F02-R05] Field support_events.account_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-05-F02-R06] Field support_events.account_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-05-F02-R07] Field support_events.account_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-05-F02-R08] Field support_events.account_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-05-F03-R01] Field support_events.severity: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-05-F03-R02] Field support_events.severity: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-05-F03-R03] Field support_events.severity: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-05-F03-R04] Field support_events.severity: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-05-F03-R05] Field support_events.severity: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-05-F03-R06] Field support_events.severity: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-05-F03-R07] Field support_events.severity: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-05-F03-R08] Field support_events.severity: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-05-F04-R01] Field support_events.event_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-05-F04-R02] Field support_events.event_at: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-05-F04-R03] Field support_events.event_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-05-F04-R04] Field support_events.event_at: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-05-F04-R05] Field support_events.event_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-05-F04-R06] Field support_events.event_at: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-05-F04-R07] Field support_events.event_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-05-F04-R08] Field support_events.event_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-05-F05-R01] Field support_events.available_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-05-F05-R02] Field support_events.available_at: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-05-F05-R03] Field support_events.available_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-05-F05-R04] Field support_events.available_at: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-05-F05-R05] Field support_events.available_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-05-F05-R06] Field support_events.available_at: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-05-F05-R07] Field support_events.available_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-05-F05-R08] Field support_events.available_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P10-DATA-06: prediction_cutoffs
+- [P10-DATA-06-R01] Create the prediction_cutoffs entity with a documented grain and one stable primary key: cutoff_id.
+- [P10-DATA-06-R02] The minimum business fields are cutoff_id, account_id, prediction_at, horizon_end, observation_start; add technical metadata only with a documented purpose.
+- [P10-DATA-06-R03] Use the role of prediction_cutoffs in the product workflow to define authoritative source ownership.
+- [P10-DATA-06-R04] Write migrations for prediction_cutoffs; do not rely on ORM auto-create for the verified release.
+- [P10-DATA-06-R05] Create a small valid prediction_cutoffs fixture linked to the independently calculated project example.
+- [P10-DATA-06-R06] Create an invalid prediction_cutoffs fixture that demonstrates a real domain constraint.
+- [P10-DATA-06-R07] Choose explicit row-update semantics for prediction_cutoffs: immutable event, versioned dimension or mutable operational record.
+- [P10-DATA-06-R08] Preserve the original source identifier for prediction_cutoffs when a surrogate key is introduced.
+- [P10-DATA-06-R09] Document whether deletion of prediction_cutoffs is prohibited, reversible or represented by a tombstone.
+- [P10-DATA-06-R10] Reconcile prediction_cutoffs accepted, rejected and deduplicated row counts to the source batch.
+- [P10-DATA-06-R11] Expose only justified synthetic prediction_cutoffs fields to the public site; remove internal runner metadata.
+- [P10-DATA-06-R12] Index prediction_cutoffs according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P10-DATA-06-R13] Do not join prediction_cutoffs at a different grain without an explicit aggregation or allocation rule.
+- [P10-DATA-06-R14] Associate the published prediction_cutoffs snapshot with dataset hash and generator parameters.
+- [P10-DATA-06-R15] Define deterministic sorting and pagination for the prediction_cutoffs evidence view.
+- [P10-DATA-06-R16] Ensure an empty prediction_cutoffs dataset yields an understandable empty state instead of fabricated sample totals.
+- [P10-DATA-06-R17] Archive the prediction_cutoffs schema and sample rows in the data dictionary.
+- [P10-DATA-06-R18] Test that replaying the source import cannot unintentionally duplicate prediction_cutoffs business records.
+- [P10-DATA-06-F01-R01] Field prediction_cutoffs.cutoff_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-06-F01-R02] Field prediction_cutoffs.cutoff_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-06-F01-R03] Field prediction_cutoffs.cutoff_id: make it non-null and unique as the primary key.
+- [P10-DATA-06-F01-R04] Field prediction_cutoffs.cutoff_id: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-06-F01-R05] Field prediction_cutoffs.cutoff_id: use stable source-to-key mapping across replays and regeneration.
+- [P10-DATA-06-F01-R06] Field prediction_cutoffs.cutoff_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-06-F01-R07] Field prediction_cutoffs.cutoff_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-06-F01-R08] Field prediction_cutoffs.cutoff_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-06-F02-R01] Field prediction_cutoffs.account_id: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P10-DATA-06-F02-R02] Field prediction_cutoffs.account_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-06-F02-R03] Field prediction_cutoffs.account_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-06-F02-R04] Field prediction_cutoffs.account_id: validate its reference to accounts.account_id; explain deferred or quarantined unmatched records.
+- [P10-DATA-06-F02-R05] Field prediction_cutoffs.account_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-06-F02-R06] Field prediction_cutoffs.account_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-06-F02-R07] Field prediction_cutoffs.account_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-06-F02-R08] Field prediction_cutoffs.account_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-06-F03-R01] Field prediction_cutoffs.prediction_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-06-F03-R02] Field prediction_cutoffs.prediction_at: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-06-F03-R03] Field prediction_cutoffs.prediction_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-06-F03-R04] Field prediction_cutoffs.prediction_at: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-06-F03-R05] Field prediction_cutoffs.prediction_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-06-F03-R06] Field prediction_cutoffs.prediction_at: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-06-F03-R07] Field prediction_cutoffs.prediction_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-06-F03-R08] Field prediction_cutoffs.prediction_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-06-F04-R01] Field prediction_cutoffs.horizon_end: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-06-F04-R02] Field prediction_cutoffs.horizon_end: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-06-F04-R03] Field prediction_cutoffs.horizon_end: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-06-F04-R04] Field prediction_cutoffs.horizon_end: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-06-F04-R05] Field prediction_cutoffs.horizon_end: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-06-F04-R06] Field prediction_cutoffs.horizon_end: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-06-F04-R07] Field prediction_cutoffs.horizon_end: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-06-F04-R08] Field prediction_cutoffs.horizon_end: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-06-F05-R01] Field prediction_cutoffs.observation_start: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-06-F05-R02] Field prediction_cutoffs.observation_start: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-06-F05-R03] Field prediction_cutoffs.observation_start: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-06-F05-R04] Field prediction_cutoffs.observation_start: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-06-F05-R05] Field prediction_cutoffs.observation_start: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-06-F05-R06] Field prediction_cutoffs.observation_start: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-06-F05-R07] Field prediction_cutoffs.observation_start: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-06-F05-R08] Field prediction_cutoffs.observation_start: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P10-DATA-07: feature_rows
+- [P10-DATA-07-R01] Create the feature_rows entity with a documented grain and one stable primary key: feature_row_id.
+- [P10-DATA-07-R02] The minimum business fields are feature_row_id, cutoff_id, feature_version, features_json, max_available_at; add technical metadata only with a documented purpose.
+- [P10-DATA-07-R03] Use the role of feature_rows in the product workflow to define authoritative source ownership.
+- [P10-DATA-07-R04] Write migrations for feature_rows; do not rely on ORM auto-create for the verified release.
+- [P10-DATA-07-R05] Create a small valid feature_rows fixture linked to the independently calculated project example.
+- [P10-DATA-07-R06] Create an invalid feature_rows fixture that demonstrates a real domain constraint.
+- [P10-DATA-07-R07] Choose explicit row-update semantics for feature_rows: immutable event, versioned dimension or mutable operational record.
+- [P10-DATA-07-R08] Preserve the original source identifier for feature_rows when a surrogate key is introduced.
+- [P10-DATA-07-R09] Document whether deletion of feature_rows is prohibited, reversible or represented by a tombstone.
+- [P10-DATA-07-R10] Reconcile feature_rows accepted, rejected and deduplicated row counts to the source batch.
+- [P10-DATA-07-R11] Expose only justified synthetic feature_rows fields to the public site; remove internal runner metadata.
+- [P10-DATA-07-R12] Index feature_rows according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P10-DATA-07-R13] Do not join feature_rows at a different grain without an explicit aggregation or allocation rule.
+- [P10-DATA-07-R14] Associate the published feature_rows snapshot with dataset hash and generator parameters.
+- [P10-DATA-07-R15] Define deterministic sorting and pagination for the feature_rows evidence view.
+- [P10-DATA-07-R16] Ensure an empty feature_rows dataset yields an understandable empty state instead of fabricated sample totals.
+- [P10-DATA-07-R17] Archive the feature_rows schema and sample rows in the data dictionary.
+- [P10-DATA-07-R18] Test that replaying the source import cannot unintentionally duplicate feature_rows business records.
+- [P10-DATA-07-F01-R01] Field feature_rows.feature_row_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-07-F01-R02] Field feature_rows.feature_row_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-07-F01-R03] Field feature_rows.feature_row_id: make it non-null and unique as the primary key.
+- [P10-DATA-07-F01-R04] Field feature_rows.feature_row_id: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-07-F01-R05] Field feature_rows.feature_row_id: use stable source-to-key mapping across replays and regeneration.
+- [P10-DATA-07-F01-R06] Field feature_rows.feature_row_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-07-F01-R07] Field feature_rows.feature_row_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-07-F01-R08] Field feature_rows.feature_row_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-07-F02-R01] Field feature_rows.cutoff_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-07-F02-R02] Field feature_rows.cutoff_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-07-F02-R03] Field feature_rows.cutoff_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-07-F02-R04] Field feature_rows.cutoff_id: validate its reference to prediction_cutoffs.cutoff_id; explain deferred or quarantined unmatched records.
+- [P10-DATA-07-F02-R05] Field feature_rows.cutoff_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-07-F02-R06] Field feature_rows.cutoff_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-07-F02-R07] Field feature_rows.cutoff_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-07-F02-R08] Field feature_rows.cutoff_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-07-F03-R01] Field feature_rows.feature_version: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-07-F03-R02] Field feature_rows.feature_version: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-07-F03-R03] Field feature_rows.feature_version: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-07-F03-R04] Field feature_rows.feature_version: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-07-F03-R05] Field feature_rows.feature_version: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-07-F03-R06] Field feature_rows.feature_version: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-07-F03-R07] Field feature_rows.feature_version: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-07-F03-R08] Field feature_rows.feature_version: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-07-F04-R01] Field feature_rows.features_json: use logical storage type jsonb; resolve exact SQL precision/length before migration.
+- [P10-DATA-07-F04-R02] Field feature_rows.features_json: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-07-F04-R03] Field feature_rows.features_json: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-07-F04-R04] Field feature_rows.features_json: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-07-F04-R05] Field feature_rows.features_json: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-07-F04-R06] Field feature_rows.features_json: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-07-F04-R07] Field feature_rows.features_json: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-07-F04-R08] Field feature_rows.features_json: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-07-F05-R01] Field feature_rows.max_available_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-07-F05-R02] Field feature_rows.max_available_at: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-07-F05-R03] Field feature_rows.max_available_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-07-F05-R04] Field feature_rows.max_available_at: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-07-F05-R05] Field feature_rows.max_available_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-07-F05-R06] Field feature_rows.max_available_at: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-07-F05-R07] Field feature_rows.max_available_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-07-F05-R08] Field feature_rows.max_available_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P10-DATA-08: labels
+- [P10-DATA-08-R01] Create the labels entity with a documented grain and one stable primary key: label_id.
+- [P10-DATA-08-R02] The minimum business fields are label_id, cutoff_id, churned, label_end, mature; add technical metadata only with a documented purpose.
+- [P10-DATA-08-R03] Use the role of labels in the product workflow to define authoritative source ownership.
+- [P10-DATA-08-R04] Write migrations for labels; do not rely on ORM auto-create for the verified release.
+- [P10-DATA-08-R05] Create a small valid labels fixture linked to the independently calculated project example.
+- [P10-DATA-08-R06] Create an invalid labels fixture that demonstrates a real domain constraint.
+- [P10-DATA-08-R07] Choose explicit row-update semantics for labels: immutable event, versioned dimension or mutable operational record.
+- [P10-DATA-08-R08] Preserve the original source identifier for labels when a surrogate key is introduced.
+- [P10-DATA-08-R09] Document whether deletion of labels is prohibited, reversible or represented by a tombstone.
+- [P10-DATA-08-R10] Reconcile labels accepted, rejected and deduplicated row counts to the source batch.
+- [P10-DATA-08-R11] Expose only justified synthetic labels fields to the public site; remove internal runner metadata.
+- [P10-DATA-08-R12] Index labels according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P10-DATA-08-R13] Do not join labels at a different grain without an explicit aggregation or allocation rule.
+- [P10-DATA-08-R14] Associate the published labels snapshot with dataset hash and generator parameters.
+- [P10-DATA-08-R15] Define deterministic sorting and pagination for the labels evidence view.
+- [P10-DATA-08-R16] Ensure an empty labels dataset yields an understandable empty state instead of fabricated sample totals.
+- [P10-DATA-08-R17] Archive the labels schema and sample rows in the data dictionary.
+- [P10-DATA-08-R18] Test that replaying the source import cannot unintentionally duplicate labels business records.
+- [P10-DATA-08-F01-R01] Field labels.label_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-08-F01-R02] Field labels.label_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-08-F01-R03] Field labels.label_id: make it non-null and unique as the primary key.
+- [P10-DATA-08-F01-R04] Field labels.label_id: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-08-F01-R05] Field labels.label_id: use stable source-to-key mapping across replays and regeneration.
+- [P10-DATA-08-F01-R06] Field labels.label_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-08-F01-R07] Field labels.label_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-08-F01-R08] Field labels.label_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-08-F02-R01] Field labels.cutoff_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-08-F02-R02] Field labels.cutoff_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-08-F02-R03] Field labels.cutoff_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-08-F02-R04] Field labels.cutoff_id: validate its reference to prediction_cutoffs.cutoff_id; explain deferred or quarantined unmatched records.
+- [P10-DATA-08-F02-R05] Field labels.cutoff_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-08-F02-R06] Field labels.cutoff_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-08-F02-R07] Field labels.cutoff_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-08-F02-R08] Field labels.cutoff_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-08-F03-R01] Field labels.churned: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P10-DATA-08-F03-R02] Field labels.churned: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-08-F03-R03] Field labels.churned: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-08-F03-R04] Field labels.churned: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-08-F03-R05] Field labels.churned: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-08-F03-R06] Field labels.churned: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-08-F03-R07] Field labels.churned: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-08-F03-R08] Field labels.churned: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-08-F04-R01] Field labels.label_end: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-08-F04-R02] Field labels.label_end: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-08-F04-R03] Field labels.label_end: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-08-F04-R04] Field labels.label_end: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-08-F04-R05] Field labels.label_end: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-08-F04-R06] Field labels.label_end: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-08-F04-R07] Field labels.label_end: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-08-F04-R08] Field labels.label_end: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-08-F05-R01] Field labels.mature: use logical storage type boolean; resolve exact SQL precision/length before migration.
+- [P10-DATA-08-F05-R02] Field labels.mature: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-08-F05-R03] Field labels.mature: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-08-F05-R04] Field labels.mature: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-08-F05-R05] Field labels.mature: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-08-F05-R06] Field labels.mature: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-08-F05-R07] Field labels.mature: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-08-F05-R08] Field labels.mature: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P10-DATA-09: training_runs
+- [P10-DATA-09-R01] Create the training_runs entity with a documented grain and one stable primary key: training_run_id.
+- [P10-DATA-09-R02] The minimum business fields are training_run_id, train_end, validation_end, test_end, config_hash; add technical metadata only with a documented purpose.
+- [P10-DATA-09-R03] Use the role of training_runs in the product workflow to define authoritative source ownership.
+- [P10-DATA-09-R04] Write migrations for training_runs; do not rely on ORM auto-create for the verified release.
+- [P10-DATA-09-R05] Create a small valid training_runs fixture linked to the independently calculated project example.
+- [P10-DATA-09-R06] Create an invalid training_runs fixture that demonstrates a real domain constraint.
+- [P10-DATA-09-R07] Choose explicit row-update semantics for training_runs: immutable event, versioned dimension or mutable operational record.
+- [P10-DATA-09-R08] Preserve the original source identifier for training_runs when a surrogate key is introduced.
+- [P10-DATA-09-R09] Document whether deletion of training_runs is prohibited, reversible or represented by a tombstone.
+- [P10-DATA-09-R10] Reconcile training_runs accepted, rejected and deduplicated row counts to the source batch.
+- [P10-DATA-09-R11] Expose only justified synthetic training_runs fields to the public site; remove internal runner metadata.
+- [P10-DATA-09-R12] Index training_runs according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P10-DATA-09-R13] Do not join training_runs at a different grain without an explicit aggregation or allocation rule.
+- [P10-DATA-09-R14] Associate the published training_runs snapshot with dataset hash and generator parameters.
+- [P10-DATA-09-R15] Define deterministic sorting and pagination for the training_runs evidence view.
+- [P10-DATA-09-R16] Ensure an empty training_runs dataset yields an understandable empty state instead of fabricated sample totals.
+- [P10-DATA-09-R17] Archive the training_runs schema and sample rows in the data dictionary.
+- [P10-DATA-09-R18] Test that replaying the source import cannot unintentionally duplicate training_runs business records.
+- [P10-DATA-09-F01-R01] Field training_runs.training_run_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-09-F01-R02] Field training_runs.training_run_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-09-F01-R03] Field training_runs.training_run_id: make it non-null and unique as the primary key.
+- [P10-DATA-09-F01-R04] Field training_runs.training_run_id: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-09-F01-R05] Field training_runs.training_run_id: use stable source-to-key mapping across replays and regeneration.
+- [P10-DATA-09-F01-R06] Field training_runs.training_run_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-09-F01-R07] Field training_runs.training_run_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-09-F01-R08] Field training_runs.training_run_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-09-F02-R01] Field training_runs.train_end: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-09-F02-R02] Field training_runs.train_end: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-09-F02-R03] Field training_runs.train_end: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-09-F02-R04] Field training_runs.train_end: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-09-F02-R05] Field training_runs.train_end: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-09-F02-R06] Field training_runs.train_end: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-09-F02-R07] Field training_runs.train_end: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-09-F02-R08] Field training_runs.train_end: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-09-F03-R01] Field training_runs.validation_end: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-09-F03-R02] Field training_runs.validation_end: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-09-F03-R03] Field training_runs.validation_end: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-09-F03-R04] Field training_runs.validation_end: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-09-F03-R05] Field training_runs.validation_end: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-09-F03-R06] Field training_runs.validation_end: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-09-F03-R07] Field training_runs.validation_end: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-09-F03-R08] Field training_runs.validation_end: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-09-F04-R01] Field training_runs.test_end: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-09-F04-R02] Field training_runs.test_end: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-09-F04-R03] Field training_runs.test_end: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-09-F04-R04] Field training_runs.test_end: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-09-F04-R05] Field training_runs.test_end: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-09-F04-R06] Field training_runs.test_end: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-09-F04-R07] Field training_runs.test_end: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-09-F04-R08] Field training_runs.test_end: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-09-F05-R01] Field training_runs.config_hash: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-09-F05-R02] Field training_runs.config_hash: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-09-F05-R03] Field training_runs.config_hash: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-09-F05-R04] Field training_runs.config_hash: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-09-F05-R05] Field training_runs.config_hash: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-09-F05-R06] Field training_runs.config_hash: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-09-F05-R07] Field training_runs.config_hash: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-09-F05-R08] Field training_runs.config_hash: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P10-DATA-10: predictions
+- [P10-DATA-10-R01] Create the predictions entity with a documented grain and one stable primary key: prediction_id.
+- [P10-DATA-10-R02] The minimum business fields are prediction_id, training_run_id, cutoff_id, probability, scored_at; add technical metadata only with a documented purpose.
+- [P10-DATA-10-R03] Use the role of predictions in the product workflow to define authoritative source ownership.
+- [P10-DATA-10-R04] Write migrations for predictions; do not rely on ORM auto-create for the verified release.
+- [P10-DATA-10-R05] Create a small valid predictions fixture linked to the independently calculated project example.
+- [P10-DATA-10-R06] Create an invalid predictions fixture that demonstrates a real domain constraint.
+- [P10-DATA-10-R07] Choose explicit row-update semantics for predictions: immutable event, versioned dimension or mutable operational record.
+- [P10-DATA-10-R08] Preserve the original source identifier for predictions when a surrogate key is introduced.
+- [P10-DATA-10-R09] Document whether deletion of predictions is prohibited, reversible or represented by a tombstone.
+- [P10-DATA-10-R10] Reconcile predictions accepted, rejected and deduplicated row counts to the source batch.
+- [P10-DATA-10-R11] Expose only justified synthetic predictions fields to the public site; remove internal runner metadata.
+- [P10-DATA-10-R12] Index predictions according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P10-DATA-10-R13] Do not join predictions at a different grain without an explicit aggregation or allocation rule.
+- [P10-DATA-10-R14] Associate the published predictions snapshot with dataset hash and generator parameters.
+- [P10-DATA-10-R15] Define deterministic sorting and pagination for the predictions evidence view.
+- [P10-DATA-10-R16] Ensure an empty predictions dataset yields an understandable empty state instead of fabricated sample totals.
+- [P10-DATA-10-R17] Archive the predictions schema and sample rows in the data dictionary.
+- [P10-DATA-10-R18] Test that replaying the source import cannot unintentionally duplicate predictions business records.
+- [P10-DATA-10-F01-R01] Field predictions.prediction_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-10-F01-R02] Field predictions.prediction_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-10-F01-R03] Field predictions.prediction_id: make it non-null and unique as the primary key.
+- [P10-DATA-10-F01-R04] Field predictions.prediction_id: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-10-F01-R05] Field predictions.prediction_id: use stable source-to-key mapping across replays and regeneration.
+- [P10-DATA-10-F01-R06] Field predictions.prediction_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-10-F01-R07] Field predictions.prediction_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-10-F01-R08] Field predictions.prediction_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-10-F02-R01] Field predictions.training_run_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-10-F02-R02] Field predictions.training_run_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-10-F02-R03] Field predictions.training_run_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-10-F02-R04] Field predictions.training_run_id: validate its reference to training_runs.training_run_id; explain deferred or quarantined unmatched records.
+- [P10-DATA-10-F02-R05] Field predictions.training_run_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-10-F02-R06] Field predictions.training_run_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-10-F02-R07] Field predictions.training_run_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-10-F02-R08] Field predictions.training_run_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-10-F03-R01] Field predictions.cutoff_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-10-F03-R02] Field predictions.cutoff_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-10-F03-R03] Field predictions.cutoff_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-10-F03-R04] Field predictions.cutoff_id: validate its reference to prediction_cutoffs.cutoff_id; explain deferred or quarantined unmatched records.
+- [P10-DATA-10-F03-R05] Field predictions.cutoff_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-10-F03-R06] Field predictions.cutoff_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-10-F03-R07] Field predictions.cutoff_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-10-F03-R08] Field predictions.cutoff_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-10-F04-R01] Field predictions.probability: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P10-DATA-10-F04-R02] Field predictions.probability: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-10-F04-R03] Field predictions.probability: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-10-F04-R04] Field predictions.probability: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-10-F04-R05] Field predictions.probability: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-10-F04-R06] Field predictions.probability: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-10-F04-R07] Field predictions.probability: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-10-F04-R08] Field predictions.probability: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-10-F05-R01] Field predictions.scored_at: use logical storage type timestamptz; resolve exact SQL precision/length before migration.
+- [P10-DATA-10-F05-R02] Field predictions.scored_at: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-10-F05-R03] Field predictions.scored_at: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-10-F05-R04] Field predictions.scored_at: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-10-F05-R05] Field predictions.scored_at: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-10-F05-R06] Field predictions.scored_at: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-10-F05-R07] Field predictions.scored_at: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-10-F05-R08] Field predictions.scored_at: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P10-DATA-11: intervention_scenarios
+- [P10-DATA-11-R01] Create the intervention_scenarios entity with a documented grain and one stable primary key: scenario_id.
+- [P10-DATA-11-R02] The minimum business fields are scenario_id, capacity, contact_cost, assumed_effect, margin_value; add technical metadata only with a documented purpose.
+- [P10-DATA-11-R03] Use the role of intervention_scenarios in the product workflow to define authoritative source ownership.
+- [P10-DATA-11-R04] Write migrations for intervention_scenarios; do not rely on ORM auto-create for the verified release.
+- [P10-DATA-11-R05] Create a small valid intervention_scenarios fixture linked to the independently calculated project example.
+- [P10-DATA-11-R06] Create an invalid intervention_scenarios fixture that demonstrates a real domain constraint.
+- [P10-DATA-11-R07] Choose explicit row-update semantics for intervention_scenarios: immutable event, versioned dimension or mutable operational record.
+- [P10-DATA-11-R08] Preserve the original source identifier for intervention_scenarios when a surrogate key is introduced.
+- [P10-DATA-11-R09] Document whether deletion of intervention_scenarios is prohibited, reversible or represented by a tombstone.
+- [P10-DATA-11-R10] Reconcile intervention_scenarios accepted, rejected and deduplicated row counts to the source batch.
+- [P10-DATA-11-R11] Expose only justified synthetic intervention_scenarios fields to the public site; remove internal runner metadata.
+- [P10-DATA-11-R12] Index intervention_scenarios according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P10-DATA-11-R13] Do not join intervention_scenarios at a different grain without an explicit aggregation or allocation rule.
+- [P10-DATA-11-R14] Associate the published intervention_scenarios snapshot with dataset hash and generator parameters.
+- [P10-DATA-11-R15] Define deterministic sorting and pagination for the intervention_scenarios evidence view.
+- [P10-DATA-11-R16] Ensure an empty intervention_scenarios dataset yields an understandable empty state instead of fabricated sample totals.
+- [P10-DATA-11-R17] Archive the intervention_scenarios schema and sample rows in the data dictionary.
+- [P10-DATA-11-R18] Test that replaying the source import cannot unintentionally duplicate intervention_scenarios business records.
+- [P10-DATA-11-F01-R01] Field intervention_scenarios.scenario_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-11-F01-R02] Field intervention_scenarios.scenario_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-11-F01-R03] Field intervention_scenarios.scenario_id: make it non-null and unique as the primary key.
+- [P10-DATA-11-F01-R04] Field intervention_scenarios.scenario_id: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-11-F01-R05] Field intervention_scenarios.scenario_id: use stable source-to-key mapping across replays and regeneration.
+- [P10-DATA-11-F01-R06] Field intervention_scenarios.scenario_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-11-F01-R07] Field intervention_scenarios.scenario_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-11-F01-R08] Field intervention_scenarios.scenario_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-11-F02-R01] Field intervention_scenarios.capacity: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P10-DATA-11-F02-R02] Field intervention_scenarios.capacity: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-11-F02-R03] Field intervention_scenarios.capacity: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-11-F02-R04] Field intervention_scenarios.capacity: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-11-F02-R05] Field intervention_scenarios.capacity: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-11-F02-R06] Field intervention_scenarios.capacity: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-11-F02-R07] Field intervention_scenarios.capacity: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-11-F02-R08] Field intervention_scenarios.capacity: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-11-F03-R01] Field intervention_scenarios.contact_cost: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P10-DATA-11-F03-R02] Field intervention_scenarios.contact_cost: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-11-F03-R03] Field intervention_scenarios.contact_cost: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-11-F03-R04] Field intervention_scenarios.contact_cost: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-11-F03-R05] Field intervention_scenarios.contact_cost: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-11-F03-R06] Field intervention_scenarios.contact_cost: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-11-F03-R07] Field intervention_scenarios.contact_cost: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-11-F03-R08] Field intervention_scenarios.contact_cost: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-11-F04-R01] Field intervention_scenarios.assumed_effect: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-11-F04-R02] Field intervention_scenarios.assumed_effect: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-11-F04-R03] Field intervention_scenarios.assumed_effect: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-11-F04-R04] Field intervention_scenarios.assumed_effect: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-11-F04-R05] Field intervention_scenarios.assumed_effect: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-11-F04-R06] Field intervention_scenarios.assumed_effect: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-11-F04-R07] Field intervention_scenarios.assumed_effect: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-11-F04-R08] Field intervention_scenarios.assumed_effect: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-11-F05-R01] Field intervention_scenarios.margin_value: use logical storage type numeric with explicit precision and scale in migration; resolve exact SQL precision/length before migration.
+- [P10-DATA-11-F05-R02] Field intervention_scenarios.margin_value: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-11-F05-R03] Field intervention_scenarios.margin_value: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-11-F05-R04] Field intervention_scenarios.margin_value: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-11-F05-R05] Field intervention_scenarios.margin_value: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-11-F05-R06] Field intervention_scenarios.margin_value: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-11-F05-R07] Field intervention_scenarios.margin_value: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-11-F05-R08] Field intervention_scenarios.margin_value: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+### P10-DATA-12: outreach_events
+- [P10-DATA-12-R01] Create the outreach_events entity with a documented grain and one stable primary key: outreach_event_id.
+- [P10-DATA-12-R02] The minimum business fields are outreach_event_id, account_id, scenario_id, action, status; add technical metadata only with a documented purpose.
+- [P10-DATA-12-R03] Use the role of outreach_events in the product workflow to define authoritative source ownership.
+- [P10-DATA-12-R04] Write migrations for outreach_events; do not rely on ORM auto-create for the verified release.
+- [P10-DATA-12-R05] Create a small valid outreach_events fixture linked to the independently calculated project example.
+- [P10-DATA-12-R06] Create an invalid outreach_events fixture that demonstrates a real domain constraint.
+- [P10-DATA-12-R07] Choose explicit row-update semantics for outreach_events: immutable event, versioned dimension or mutable operational record.
+- [P10-DATA-12-R08] Preserve the original source identifier for outreach_events when a surrogate key is introduced.
+- [P10-DATA-12-R09] Document whether deletion of outreach_events is prohibited, reversible or represented by a tombstone.
+- [P10-DATA-12-R10] Reconcile outreach_events accepted, rejected and deduplicated row counts to the source batch.
+- [P10-DATA-12-R11] Expose only justified synthetic outreach_events fields to the public site; remove internal runner metadata.
+- [P10-DATA-12-R12] Index outreach_events according to actual joins and filters, then record an observed query plan for expensive paths.
+- [P10-DATA-12-R13] Do not join outreach_events at a different grain without an explicit aggregation or allocation rule.
+- [P10-DATA-12-R14] Associate the published outreach_events snapshot with dataset hash and generator parameters.
+- [P10-DATA-12-R15] Define deterministic sorting and pagination for the outreach_events evidence view.
+- [P10-DATA-12-R16] Ensure an empty outreach_events dataset yields an understandable empty state instead of fabricated sample totals.
+- [P10-DATA-12-R17] Archive the outreach_events schema and sample rows in the data dictionary.
+- [P10-DATA-12-R18] Test that replaying the source import cannot unintentionally duplicate outreach_events business records.
+- [P10-DATA-12-F01-R01] Field outreach_events.outreach_event_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-12-F01-R02] Field outreach_events.outreach_event_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-12-F01-R03] Field outreach_events.outreach_event_id: make it non-null and unique as the primary key.
+- [P10-DATA-12-F01-R04] Field outreach_events.outreach_event_id: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-12-F01-R05] Field outreach_events.outreach_event_id: use stable source-to-key mapping across replays and regeneration.
+- [P10-DATA-12-F01-R06] Field outreach_events.outreach_event_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-12-F01-R07] Field outreach_events.outreach_event_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-12-F01-R08] Field outreach_events.outreach_event_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-12-F02-R01] Field outreach_events.account_id: use logical storage type integer unless fractional business units are explicitly specified; resolve exact SQL precision/length before migration.
+- [P10-DATA-12-F02-R02] Field outreach_events.account_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-12-F02-R03] Field outreach_events.account_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-12-F02-R04] Field outreach_events.account_id: validate its reference to accounts.account_id; explain deferred or quarantined unmatched records.
+- [P10-DATA-12-F02-R05] Field outreach_events.account_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-12-F02-R06] Field outreach_events.account_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-12-F02-R07] Field outreach_events.account_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-12-F02-R08] Field outreach_events.account_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-12-F03-R01] Field outreach_events.scenario_id: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-12-F03-R02] Field outreach_events.scenario_id: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-12-F03-R03] Field outreach_events.scenario_id: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-12-F03-R04] Field outreach_events.scenario_id: validate its reference to intervention_scenarios.scenario_id; explain deferred or quarantined unmatched records.
+- [P10-DATA-12-F03-R05] Field outreach_events.scenario_id: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-12-F03-R06] Field outreach_events.scenario_id: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-12-F03-R07] Field outreach_events.scenario_id: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-12-F03-R08] Field outreach_events.scenario_id: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-12-F04-R01] Field outreach_events.action: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-12-F04-R02] Field outreach_events.action: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-12-F04-R03] Field outreach_events.action: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-12-F04-R04] Field outreach_events.action: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-12-F04-R05] Field outreach_events.action: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-12-F04-R06] Field outreach_events.action: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-12-F04-R07] Field outreach_events.action: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-12-F04-R08] Field outreach_events.action: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+- [P10-DATA-12-F05-R01] Field outreach_events.status: use logical storage type text with documented length and domain constraints; resolve exact SQL precision/length before migration.
+- [P10-DATA-12-F05-R02] Field outreach_events.status: define its business meaning in the dictionary and use the same label in exports.
+- [P10-DATA-12-F05-R03] Field outreach_events.status: declare nullability explicitly; null must not silently mean zero, false or an empty identifier.
+- [P10-DATA-12-F05-R04] Field outreach_events.status: define the allowed domain and reject structurally invalid values before publication.
+- [P10-DATA-12-F05-R05] Field outreach_events.status: document normalization and preserve raw representation when normalization can lose meaning.
+- [P10-DATA-12-F05-R06] Field outreach_events.status: create a round-trip test across source, validated model and exported representation.
+- [P10-DATA-12-F05-R07] Field outreach_events.status: prevent imported text from becoming executable HTML, SQL, shell code or spreadsheet formulas.
+- [P10-DATA-12-F05-R08] Field outreach_events.status: verify one ordinary value and one boundary/missing-value case with explicit expected behavior.
+
+## 04. Business metric contracts
+
+### P10-MET-01: Churn rate
+- [P10-MET-01-R01] Business metric: Churn rate.
+- [P10-MET-01-R02] Authoritative calculation rule: mature eligible churned accounts / mature eligible accounts.
+- [P10-MET-01-R03] Output unit: percent.
+- [P10-MET-01-R04] Important boundary: Fixed horizon and subscription definition.
+- [P10-MET-01-R05] Explain how Churn rate informs the primary decision: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-MET-01-R06] Define the input grain for Churn rate; never infer it from the chart grouping.
+- [P10-MET-01-R07] Name each source field and transformation contributing to Churn rate.
+- [P10-MET-01-R08] Define the reporting population for Churn rate before applying user-selected filters.
+- [P10-MET-01-R09] Name the timestamp and timezone used by Churn rate.
+- [P10-MET-01-R10] Use a documented half-open interval for Churn rate time filtering.
+- [P10-MET-01-R11] List excluded statuses, invalid records and immature observations for Churn rate.
+- [P10-MET-01-R12] Display excluded-record counts when they materially change Churn rate.
+- [P10-MET-01-R13] Define Churn rate behavior for an empty eligible population.
+- [P10-MET-01-R14] Define Churn rate behavior when its denominator is zero or its required baseline is absent.
+- [P10-MET-01-R15] Do not replace unknown Churn rate values with zero without a documented business rule.
+- [P10-MET-01-R16] For Churn rate, aggregate underlying values correctly before applying ratios or summary functions.
+- [P10-MET-01-R17] Preserve original precision for Churn rate; round only at the stated calculation or presentation step.
+- [P10-MET-01-R18] Create a small manually calculated Churn rate fixture independent of the main implementation.
+- [P10-MET-01-R19] Implement an independent SQL/spreadsheet/reference check for the important Churn rate result.
+- [P10-MET-01-R20] Keep the browser Churn rate calculation consistent with the authoritative contract and verified fixture.
+- [P10-MET-01-R21] Show Churn rate definition, active scope and unit through a visible explanation affordance.
+- [P10-MET-01-R22] Allow drillthrough from Churn rate into contributing evidence or a transparent aggregate explanation.
+- [P10-MET-01-R23] Export Churn rate with contract version, filters, dataset hash and generated timestamp.
+- [P10-MET-01-R24] When Churn rate is a scenario estimate, visibly separate it from observed historical results.
+- [P10-MET-01-R25] Include a Churn rate regression assertion for one project-specific edge case.
+- [P10-MET-01-R26] If Churn rate is compared across periods, use comparable eligibility and disclose differences.
+- [P10-MET-01-R27] Keep Churn rate historical revisions traceable when late data changes published results.
+- [P10-MET-01-R28] Record a versioned decision if implementation requires changing Churn rate semantics.
+- [P10-MET-01-R29] Have a reviewer challenge whether Churn rate could be misleading despite being arithmetically correct.
+- [P10-MET-01-R30] Mark Churn rate verified only after the known-answer and presentation checks actually run.
+### P10-MET-02: Precision at capacity
+- [P10-MET-02-R01] Business metric: Precision at capacity.
+- [P10-MET-02-R02] Authoritative calculation rule: true churners among top K / K.
+- [P10-MET-02-R03] Output unit: percent.
+- [P10-MET-02-R04] Important boundary: K cannot exceed eligible accounts.
+- [P10-MET-02-R05] Explain how Precision at capacity informs the primary decision: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-MET-02-R06] Define the input grain for Precision at capacity; never infer it from the chart grouping.
+- [P10-MET-02-R07] Name each source field and transformation contributing to Precision at capacity.
+- [P10-MET-02-R08] Define the reporting population for Precision at capacity before applying user-selected filters.
+- [P10-MET-02-R09] Name the timestamp and timezone used by Precision at capacity.
+- [P10-MET-02-R10] Use a documented half-open interval for Precision at capacity time filtering.
+- [P10-MET-02-R11] List excluded statuses, invalid records and immature observations for Precision at capacity.
+- [P10-MET-02-R12] Display excluded-record counts when they materially change Precision at capacity.
+- [P10-MET-02-R13] Define Precision at capacity behavior for an empty eligible population.
+- [P10-MET-02-R14] Define Precision at capacity behavior when its denominator is zero or its required baseline is absent.
+- [P10-MET-02-R15] Do not replace unknown Precision at capacity values with zero without a documented business rule.
+- [P10-MET-02-R16] For Precision at capacity, aggregate underlying values correctly before applying ratios or summary functions.
+- [P10-MET-02-R17] Preserve original precision for Precision at capacity; round only at the stated calculation or presentation step.
+- [P10-MET-02-R18] Create a small manually calculated Precision at capacity fixture independent of the main implementation.
+- [P10-MET-02-R19] Implement an independent SQL/spreadsheet/reference check for the important Precision at capacity result.
+- [P10-MET-02-R20] Keep the browser Precision at capacity calculation consistent with the authoritative contract and verified fixture.
+- [P10-MET-02-R21] Show Precision at capacity definition, active scope and unit through a visible explanation affordance.
+- [P10-MET-02-R22] Allow drillthrough from Precision at capacity into contributing evidence or a transparent aggregate explanation.
+- [P10-MET-02-R23] Export Precision at capacity with contract version, filters, dataset hash and generated timestamp.
+- [P10-MET-02-R24] When Precision at capacity is a scenario estimate, visibly separate it from observed historical results.
+- [P10-MET-02-R25] Include a Precision at capacity regression assertion for one project-specific edge case.
+- [P10-MET-02-R26] If Precision at capacity is compared across periods, use comparable eligibility and disclose differences.
+- [P10-MET-02-R27] Keep Precision at capacity historical revisions traceable when late data changes published results.
+- [P10-MET-02-R28] Record a versioned decision if implementation requires changing Precision at capacity semantics.
+- [P10-MET-02-R29] Have a reviewer challenge whether Precision at capacity could be misleading despite being arithmetically correct.
+- [P10-MET-02-R30] Mark Precision at capacity verified only after the known-answer and presentation checks actually run.
+### P10-MET-03: Recall at capacity
+- [P10-MET-03-R01] Business metric: Recall at capacity.
+- [P10-MET-03-R02] Authoritative calculation rule: true churners among top K / total eligible churners.
+- [P10-MET-03-R03] Output unit: percent.
+- [P10-MET-03-R04] Important boundary: Null when no positive outcomes.
+- [P10-MET-03-R05] Explain how Recall at capacity informs the primary decision: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-MET-03-R06] Define the input grain for Recall at capacity; never infer it from the chart grouping.
+- [P10-MET-03-R07] Name each source field and transformation contributing to Recall at capacity.
+- [P10-MET-03-R08] Define the reporting population for Recall at capacity before applying user-selected filters.
+- [P10-MET-03-R09] Name the timestamp and timezone used by Recall at capacity.
+- [P10-MET-03-R10] Use a documented half-open interval for Recall at capacity time filtering.
+- [P10-MET-03-R11] List excluded statuses, invalid records and immature observations for Recall at capacity.
+- [P10-MET-03-R12] Display excluded-record counts when they materially change Recall at capacity.
+- [P10-MET-03-R13] Define Recall at capacity behavior for an empty eligible population.
+- [P10-MET-03-R14] Define Recall at capacity behavior when its denominator is zero or its required baseline is absent.
+- [P10-MET-03-R15] Do not replace unknown Recall at capacity values with zero without a documented business rule.
+- [P10-MET-03-R16] For Recall at capacity, aggregate underlying values correctly before applying ratios or summary functions.
+- [P10-MET-03-R17] Preserve original precision for Recall at capacity; round only at the stated calculation or presentation step.
+- [P10-MET-03-R18] Create a small manually calculated Recall at capacity fixture independent of the main implementation.
+- [P10-MET-03-R19] Implement an independent SQL/spreadsheet/reference check for the important Recall at capacity result.
+- [P10-MET-03-R20] Keep the browser Recall at capacity calculation consistent with the authoritative contract and verified fixture.
+- [P10-MET-03-R21] Show Recall at capacity definition, active scope and unit through a visible explanation affordance.
+- [P10-MET-03-R22] Allow drillthrough from Recall at capacity into contributing evidence or a transparent aggregate explanation.
+- [P10-MET-03-R23] Export Recall at capacity with contract version, filters, dataset hash and generated timestamp.
+- [P10-MET-03-R24] When Recall at capacity is a scenario estimate, visibly separate it from observed historical results.
+- [P10-MET-03-R25] Include a Recall at capacity regression assertion for one project-specific edge case.
+- [P10-MET-03-R26] If Recall at capacity is compared across periods, use comparable eligibility and disclose differences.
+- [P10-MET-03-R27] Keep Recall at capacity historical revisions traceable when late data changes published results.
+- [P10-MET-03-R28] Record a versioned decision if implementation requires changing Recall at capacity semantics.
+- [P10-MET-03-R29] Have a reviewer challenge whether Recall at capacity could be misleading despite being arithmetically correct.
+- [P10-MET-03-R30] Mark Recall at capacity verified only after the known-answer and presentation checks actually run.
+### P10-MET-04: Average precision
+- [P10-MET-04-R01] Business metric: Average precision.
+- [P10-MET-04-R02] Authoritative calculation rule: precision-recall ranking summary.
+- [P10-MET-04-R03] Output unit: score.
+- [P10-MET-04-R04] Important boundary: Use library definition and baseline.
+- [P10-MET-04-R05] Explain how Average precision informs the primary decision: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-MET-04-R06] Define the input grain for Average precision; never infer it from the chart grouping.
+- [P10-MET-04-R07] Name each source field and transformation contributing to Average precision.
+- [P10-MET-04-R08] Define the reporting population for Average precision before applying user-selected filters.
+- [P10-MET-04-R09] Name the timestamp and timezone used by Average precision.
+- [P10-MET-04-R10] Use a documented half-open interval for Average precision time filtering.
+- [P10-MET-04-R11] List excluded statuses, invalid records and immature observations for Average precision.
+- [P10-MET-04-R12] Display excluded-record counts when they materially change Average precision.
+- [P10-MET-04-R13] Define Average precision behavior for an empty eligible population.
+- [P10-MET-04-R14] Define Average precision behavior when its denominator is zero or its required baseline is absent.
+- [P10-MET-04-R15] Do not replace unknown Average precision values with zero without a documented business rule.
+- [P10-MET-04-R16] For Average precision, aggregate underlying values correctly before applying ratios or summary functions.
+- [P10-MET-04-R17] Preserve original precision for Average precision; round only at the stated calculation or presentation step.
+- [P10-MET-04-R18] Create a small manually calculated Average precision fixture independent of the main implementation.
+- [P10-MET-04-R19] Implement an independent SQL/spreadsheet/reference check for the important Average precision result.
+- [P10-MET-04-R20] Keep the browser Average precision calculation consistent with the authoritative contract and verified fixture.
+- [P10-MET-04-R21] Show Average precision definition, active scope and unit through a visible explanation affordance.
+- [P10-MET-04-R22] Allow drillthrough from Average precision into contributing evidence or a transparent aggregate explanation.
+- [P10-MET-04-R23] Export Average precision with contract version, filters, dataset hash and generated timestamp.
+- [P10-MET-04-R24] When Average precision is a scenario estimate, visibly separate it from observed historical results.
+- [P10-MET-04-R25] Include a Average precision regression assertion for one project-specific edge case.
+- [P10-MET-04-R26] If Average precision is compared across periods, use comparable eligibility and disclose differences.
+- [P10-MET-04-R27] Keep Average precision historical revisions traceable when late data changes published results.
+- [P10-MET-04-R28] Record a versioned decision if implementation requires changing Average precision semantics.
+- [P10-MET-04-R29] Have a reviewer challenge whether Average precision could be misleading despite being arithmetically correct.
+- [P10-MET-04-R30] Mark Average precision verified only after the known-answer and presentation checks actually run.
+### P10-MET-05: Brier score
+- [P10-MET-05-R01] Business metric: Brier score.
+- [P10-MET-05-R02] Authoritative calculation rule: mean((probability - outcome)^2).
+- [P10-MET-05-R03] Output unit: score.
+- [P10-MET-05-R04] Important boundary: Lower better, same evaluation population.
+- [P10-MET-05-R05] Explain how Brier score informs the primary decision: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-MET-05-R06] Define the input grain for Brier score; never infer it from the chart grouping.
+- [P10-MET-05-R07] Name each source field and transformation contributing to Brier score.
+- [P10-MET-05-R08] Define the reporting population for Brier score before applying user-selected filters.
+- [P10-MET-05-R09] Name the timestamp and timezone used by Brier score.
+- [P10-MET-05-R10] Use a documented half-open interval for Brier score time filtering.
+- [P10-MET-05-R11] List excluded statuses, invalid records and immature observations for Brier score.
+- [P10-MET-05-R12] Display excluded-record counts when they materially change Brier score.
+- [P10-MET-05-R13] Define Brier score behavior for an empty eligible population.
+- [P10-MET-05-R14] Define Brier score behavior when its denominator is zero or its required baseline is absent.
+- [P10-MET-05-R15] Do not replace unknown Brier score values with zero without a documented business rule.
+- [P10-MET-05-R16] For Brier score, aggregate underlying values correctly before applying ratios or summary functions.
+- [P10-MET-05-R17] Preserve original precision for Brier score; round only at the stated calculation or presentation step.
+- [P10-MET-05-R18] Create a small manually calculated Brier score fixture independent of the main implementation.
+- [P10-MET-05-R19] Implement an independent SQL/spreadsheet/reference check for the important Brier score result.
+- [P10-MET-05-R20] Keep the browser Brier score calculation consistent with the authoritative contract and verified fixture.
+- [P10-MET-05-R21] Show Brier score definition, active scope and unit through a visible explanation affordance.
+- [P10-MET-05-R22] Allow drillthrough from Brier score into contributing evidence or a transparent aggregate explanation.
+- [P10-MET-05-R23] Export Brier score with contract version, filters, dataset hash and generated timestamp.
+- [P10-MET-05-R24] When Brier score is a scenario estimate, visibly separate it from observed historical results.
+- [P10-MET-05-R25] Include a Brier score regression assertion for one project-specific edge case.
+- [P10-MET-05-R26] If Brier score is compared across periods, use comparable eligibility and disclose differences.
+- [P10-MET-05-R27] Keep Brier score historical revisions traceable when late data changes published results.
+- [P10-MET-05-R28] Record a versioned decision if implementation requires changing Brier score semantics.
+- [P10-MET-05-R29] Have a reviewer challenge whether Brier score could be misleading despite being arithmetically correct.
+- [P10-MET-05-R30] Mark Brier score verified only after the known-answer and presentation checks actually run.
+### P10-MET-06: Calibration gap
+- [P10-MET-06-R01] Business metric: Calibration gap.
+- [P10-MET-06-R02] Authoritative calculation rule: mean predicted risk - observed churn in bin.
+- [P10-MET-06-R03] Output unit: percentage points.
+- [P10-MET-06-R04] Important boundary: Show bin counts.
+- [P10-MET-06-R05] Explain how Calibration gap informs the primary decision: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-MET-06-R06] Define the input grain for Calibration gap; never infer it from the chart grouping.
+- [P10-MET-06-R07] Name each source field and transformation contributing to Calibration gap.
+- [P10-MET-06-R08] Define the reporting population for Calibration gap before applying user-selected filters.
+- [P10-MET-06-R09] Name the timestamp and timezone used by Calibration gap.
+- [P10-MET-06-R10] Use a documented half-open interval for Calibration gap time filtering.
+- [P10-MET-06-R11] List excluded statuses, invalid records and immature observations for Calibration gap.
+- [P10-MET-06-R12] Display excluded-record counts when they materially change Calibration gap.
+- [P10-MET-06-R13] Define Calibration gap behavior for an empty eligible population.
+- [P10-MET-06-R14] Define Calibration gap behavior when its denominator is zero or its required baseline is absent.
+- [P10-MET-06-R15] Do not replace unknown Calibration gap values with zero without a documented business rule.
+- [P10-MET-06-R16] For Calibration gap, aggregate underlying values correctly before applying ratios or summary functions.
+- [P10-MET-06-R17] Preserve original precision for Calibration gap; round only at the stated calculation or presentation step.
+- [P10-MET-06-R18] Create a small manually calculated Calibration gap fixture independent of the main implementation.
+- [P10-MET-06-R19] Implement an independent SQL/spreadsheet/reference check for the important Calibration gap result.
+- [P10-MET-06-R20] Keep the browser Calibration gap calculation consistent with the authoritative contract and verified fixture.
+- [P10-MET-06-R21] Show Calibration gap definition, active scope and unit through a visible explanation affordance.
+- [P10-MET-06-R22] Allow drillthrough from Calibration gap into contributing evidence or a transparent aggregate explanation.
+- [P10-MET-06-R23] Export Calibration gap with contract version, filters, dataset hash and generated timestamp.
+- [P10-MET-06-R24] When Calibration gap is a scenario estimate, visibly separate it from observed historical results.
+- [P10-MET-06-R25] Include a Calibration gap regression assertion for one project-specific edge case.
+- [P10-MET-06-R26] If Calibration gap is compared across periods, use comparable eligibility and disclose differences.
+- [P10-MET-06-R27] Keep Calibration gap historical revisions traceable when late data changes published results.
+- [P10-MET-06-R28] Record a versioned decision if implementation requires changing Calibration gap semantics.
+- [P10-MET-06-R29] Have a reviewer challenge whether Calibration gap could be misleading despite being arithmetically correct.
+- [P10-MET-06-R30] Mark Calibration gap verified only after the known-answer and presentation checks actually run.
+### P10-MET-07: Contact budget
+- [P10-MET-07-R01] Business metric: Contact budget.
+- [P10-MET-07-R02] Authoritative calculation rule: selected accounts * contact_cost.
+- [P10-MET-07-R03] Output unit: USD.
+- [P10-MET-07-R04] Important boundary: Capacity constrained.
+- [P10-MET-07-R05] Explain how Contact budget informs the primary decision: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-MET-07-R06] Define the input grain for Contact budget; never infer it from the chart grouping.
+- [P10-MET-07-R07] Name each source field and transformation contributing to Contact budget.
+- [P10-MET-07-R08] Define the reporting population for Contact budget before applying user-selected filters.
+- [P10-MET-07-R09] Name the timestamp and timezone used by Contact budget.
+- [P10-MET-07-R10] Use a documented half-open interval for Contact budget time filtering.
+- [P10-MET-07-R11] List excluded statuses, invalid records and immature observations for Contact budget.
+- [P10-MET-07-R12] Display excluded-record counts when they materially change Contact budget.
+- [P10-MET-07-R13] Define Contact budget behavior for an empty eligible population.
+- [P10-MET-07-R14] Define Contact budget behavior when its denominator is zero or its required baseline is absent.
+- [P10-MET-07-R15] Do not replace unknown Contact budget values with zero without a documented business rule.
+- [P10-MET-07-R16] For Contact budget, aggregate underlying values correctly before applying ratios or summary functions.
+- [P10-MET-07-R17] Preserve original precision for Contact budget; round only at the stated calculation or presentation step.
+- [P10-MET-07-R18] Create a small manually calculated Contact budget fixture independent of the main implementation.
+- [P10-MET-07-R19] Implement an independent SQL/spreadsheet/reference check for the important Contact budget result.
+- [P10-MET-07-R20] Keep the browser Contact budget calculation consistent with the authoritative contract and verified fixture.
+- [P10-MET-07-R21] Show Contact budget definition, active scope and unit through a visible explanation affordance.
+- [P10-MET-07-R22] Allow drillthrough from Contact budget into contributing evidence or a transparent aggregate explanation.
+- [P10-MET-07-R23] Export Contact budget with contract version, filters, dataset hash and generated timestamp.
+- [P10-MET-07-R24] When Contact budget is a scenario estimate, visibly separate it from observed historical results.
+- [P10-MET-07-R25] Include a Contact budget regression assertion for one project-specific edge case.
+- [P10-MET-07-R26] If Contact budget is compared across periods, use comparable eligibility and disclose differences.
+- [P10-MET-07-R27] Keep Contact budget historical revisions traceable when late data changes published results.
+- [P10-MET-07-R28] Record a versioned decision if implementation requires changing Contact budget semantics.
+- [P10-MET-07-R29] Have a reviewer challenge whether Contact budget could be misleading despite being arithmetically correct.
+- [P10-MET-07-R30] Mark Contact budget verified only after the known-answer and presentation checks actually run.
+### P10-MET-08: Expected intervention value
+- [P10-MET-08-R01] Business metric: Expected intervention value.
+- [P10-MET-08-R02] Authoritative calculation rule: sum(assumed incremental retention benefit - contact cost).
+- [P10-MET-08-R03] Output unit: USD.
+- [P10-MET-08-R04] Important boundary: Assumption-based unless experiment supports effect.
+- [P10-MET-08-R05] Explain how Expected intervention value informs the primary decision: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-MET-08-R06] Define the input grain for Expected intervention value; never infer it from the chart grouping.
+- [P10-MET-08-R07] Name each source field and transformation contributing to Expected intervention value.
+- [P10-MET-08-R08] Define the reporting population for Expected intervention value before applying user-selected filters.
+- [P10-MET-08-R09] Name the timestamp and timezone used by Expected intervention value.
+- [P10-MET-08-R10] Use a documented half-open interval for Expected intervention value time filtering.
+- [P10-MET-08-R11] List excluded statuses, invalid records and immature observations for Expected intervention value.
+- [P10-MET-08-R12] Display excluded-record counts when they materially change Expected intervention value.
+- [P10-MET-08-R13] Define Expected intervention value behavior for an empty eligible population.
+- [P10-MET-08-R14] Define Expected intervention value behavior when its denominator is zero or its required baseline is absent.
+- [P10-MET-08-R15] Do not replace unknown Expected intervention value values with zero without a documented business rule.
+- [P10-MET-08-R16] For Expected intervention value, aggregate underlying values correctly before applying ratios or summary functions.
+- [P10-MET-08-R17] Preserve original precision for Expected intervention value; round only at the stated calculation or presentation step.
+- [P10-MET-08-R18] Create a small manually calculated Expected intervention value fixture independent of the main implementation.
+- [P10-MET-08-R19] Implement an independent SQL/spreadsheet/reference check for the important Expected intervention value result.
+- [P10-MET-08-R20] Keep the browser Expected intervention value calculation consistent with the authoritative contract and verified fixture.
+- [P10-MET-08-R21] Show Expected intervention value definition, active scope and unit through a visible explanation affordance.
+- [P10-MET-08-R22] Allow drillthrough from Expected intervention value into contributing evidence or a transparent aggregate explanation.
+- [P10-MET-08-R23] Export Expected intervention value with contract version, filters, dataset hash and generated timestamp.
+- [P10-MET-08-R24] When Expected intervention value is a scenario estimate, visibly separate it from observed historical results.
+- [P10-MET-08-R25] Include a Expected intervention value regression assertion for one project-specific edge case.
+- [P10-MET-08-R26] If Expected intervention value is compared across periods, use comparable eligibility and disclose differences.
+- [P10-MET-08-R27] Keep Expected intervention value historical revisions traceable when late data changes published results.
+- [P10-MET-08-R28] Record a versioned decision if implementation requires changing Expected intervention value semantics.
+- [P10-MET-08-R29] Have a reviewer challenge whether Expected intervention value could be misleading despite being arithmetically correct.
+- [P10-MET-08-R30] Mark Expected intervention value verified only after the known-answer and presentation checks actually run.
+### P10-MET-09: Risk lift at K
+- [P10-MET-09-R01] Business metric: Risk lift at K.
+- [P10-MET-09-R02] Authoritative calculation rule: top K churn rate / overall churn rate.
+- [P10-MET-09-R03] Output unit: ratio.
+- [P10-MET-09-R04] Important boundary: Not treatment uplift.
+- [P10-MET-09-R05] Explain how Risk lift at K informs the primary decision: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-MET-09-R06] Define the input grain for Risk lift at K; never infer it from the chart grouping.
+- [P10-MET-09-R07] Name each source field and transformation contributing to Risk lift at K.
+- [P10-MET-09-R08] Define the reporting population for Risk lift at K before applying user-selected filters.
+- [P10-MET-09-R09] Name the timestamp and timezone used by Risk lift at K.
+- [P10-MET-09-R10] Use a documented half-open interval for Risk lift at K time filtering.
+- [P10-MET-09-R11] List excluded statuses, invalid records and immature observations for Risk lift at K.
+- [P10-MET-09-R12] Display excluded-record counts when they materially change Risk lift at K.
+- [P10-MET-09-R13] Define Risk lift at K behavior for an empty eligible population.
+- [P10-MET-09-R14] Define Risk lift at K behavior when its denominator is zero or its required baseline is absent.
+- [P10-MET-09-R15] Do not replace unknown Risk lift at K values with zero without a documented business rule.
+- [P10-MET-09-R16] For Risk lift at K, aggregate underlying values correctly before applying ratios or summary functions.
+- [P10-MET-09-R17] Preserve original precision for Risk lift at K; round only at the stated calculation or presentation step.
+- [P10-MET-09-R18] Create a small manually calculated Risk lift at K fixture independent of the main implementation.
+- [P10-MET-09-R19] Implement an independent SQL/spreadsheet/reference check for the important Risk lift at K result.
+- [P10-MET-09-R20] Keep the browser Risk lift at K calculation consistent with the authoritative contract and verified fixture.
+- [P10-MET-09-R21] Show Risk lift at K definition, active scope and unit through a visible explanation affordance.
+- [P10-MET-09-R22] Allow drillthrough from Risk lift at K into contributing evidence or a transparent aggregate explanation.
+- [P10-MET-09-R23] Export Risk lift at K with contract version, filters, dataset hash and generated timestamp.
+- [P10-MET-09-R24] When Risk lift at K is a scenario estimate, visibly separate it from observed historical results.
+- [P10-MET-09-R25] Include a Risk lift at K regression assertion for one project-specific edge case.
+- [P10-MET-09-R26] If Risk lift at K is compared across periods, use comparable eligibility and disclose differences.
+- [P10-MET-09-R27] Keep Risk lift at K historical revisions traceable when late data changes published results.
+- [P10-MET-09-R28] Record a versioned decision if implementation requires changing Risk lift at K semantics.
+- [P10-MET-09-R29] Have a reviewer challenge whether Risk lift at K could be misleading despite being arithmetically correct.
+- [P10-MET-09-R30] Mark Risk lift at K verified only after the known-answer and presentation checks actually run.
+### P10-MET-10: Feature missingness
+- [P10-MET-10-R01] Business metric: Feature missingness.
+- [P10-MET-10-R02] Authoritative calculation rule: missing eligible feature values / eligible values.
+- [P10-MET-10-R03] Output unit: percent.
+- [P10-MET-10-R04] Important boundary: By observation period.
+- [P10-MET-10-R05] Explain how Feature missingness informs the primary decision: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-MET-10-R06] Define the input grain for Feature missingness; never infer it from the chart grouping.
+- [P10-MET-10-R07] Name each source field and transformation contributing to Feature missingness.
+- [P10-MET-10-R08] Define the reporting population for Feature missingness before applying user-selected filters.
+- [P10-MET-10-R09] Name the timestamp and timezone used by Feature missingness.
+- [P10-MET-10-R10] Use a documented half-open interval for Feature missingness time filtering.
+- [P10-MET-10-R11] List excluded statuses, invalid records and immature observations for Feature missingness.
+- [P10-MET-10-R12] Display excluded-record counts when they materially change Feature missingness.
+- [P10-MET-10-R13] Define Feature missingness behavior for an empty eligible population.
+- [P10-MET-10-R14] Define Feature missingness behavior when its denominator is zero or its required baseline is absent.
+- [P10-MET-10-R15] Do not replace unknown Feature missingness values with zero without a documented business rule.
+- [P10-MET-10-R16] For Feature missingness, aggregate underlying values correctly before applying ratios or summary functions.
+- [P10-MET-10-R17] Preserve original precision for Feature missingness; round only at the stated calculation or presentation step.
+- [P10-MET-10-R18] Create a small manually calculated Feature missingness fixture independent of the main implementation.
+- [P10-MET-10-R19] Implement an independent SQL/spreadsheet/reference check for the important Feature missingness result.
+- [P10-MET-10-R20] Keep the browser Feature missingness calculation consistent with the authoritative contract and verified fixture.
+- [P10-MET-10-R21] Show Feature missingness definition, active scope and unit through a visible explanation affordance.
+- [P10-MET-10-R22] Allow drillthrough from Feature missingness into contributing evidence or a transparent aggregate explanation.
+- [P10-MET-10-R23] Export Feature missingness with contract version, filters, dataset hash and generated timestamp.
+- [P10-MET-10-R24] When Feature missingness is a scenario estimate, visibly separate it from observed historical results.
+- [P10-MET-10-R25] Include a Feature missingness regression assertion for one project-specific edge case.
+- [P10-MET-10-R26] If Feature missingness is compared across periods, use comparable eligibility and disclose differences.
+- [P10-MET-10-R27] Keep Feature missingness historical revisions traceable when late data changes published results.
+- [P10-MET-10-R28] Record a versioned decision if implementation requires changing Feature missingness semantics.
+- [P10-MET-10-R29] Have a reviewer challenge whether Feature missingness could be misleading despite being arithmetically correct.
+- [P10-MET-10-R30] Mark Feature missingness verified only after the known-answer and presentation checks actually run.
+### P10-MET-11: Population drift
+- [P10-MET-11-R01] Business metric: Population drift.
+- [P10-MET-11-R02] Authoritative calculation rule: declared distribution distance versus reference.
+- [P10-MET-11-R03] Output unit: score.
+- [P10-MET-11-R04] Important boundary: Threshold is diagnostic not proof.
+- [P10-MET-11-R05] Explain how Population drift informs the primary decision: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-MET-11-R06] Define the input grain for Population drift; never infer it from the chart grouping.
+- [P10-MET-11-R07] Name each source field and transformation contributing to Population drift.
+- [P10-MET-11-R08] Define the reporting population for Population drift before applying user-selected filters.
+- [P10-MET-11-R09] Name the timestamp and timezone used by Population drift.
+- [P10-MET-11-R10] Use a documented half-open interval for Population drift time filtering.
+- [P10-MET-11-R11] List excluded statuses, invalid records and immature observations for Population drift.
+- [P10-MET-11-R12] Display excluded-record counts when they materially change Population drift.
+- [P10-MET-11-R13] Define Population drift behavior for an empty eligible population.
+- [P10-MET-11-R14] Define Population drift behavior when its denominator is zero or its required baseline is absent.
+- [P10-MET-11-R15] Do not replace unknown Population drift values with zero without a documented business rule.
+- [P10-MET-11-R16] For Population drift, aggregate underlying values correctly before applying ratios or summary functions.
+- [P10-MET-11-R17] Preserve original precision for Population drift; round only at the stated calculation or presentation step.
+- [P10-MET-11-R18] Create a small manually calculated Population drift fixture independent of the main implementation.
+- [P10-MET-11-R19] Implement an independent SQL/spreadsheet/reference check for the important Population drift result.
+- [P10-MET-11-R20] Keep the browser Population drift calculation consistent with the authoritative contract and verified fixture.
+- [P10-MET-11-R21] Show Population drift definition, active scope and unit through a visible explanation affordance.
+- [P10-MET-11-R22] Allow drillthrough from Population drift into contributing evidence or a transparent aggregate explanation.
+- [P10-MET-11-R23] Export Population drift with contract version, filters, dataset hash and generated timestamp.
+- [P10-MET-11-R24] When Population drift is a scenario estimate, visibly separate it from observed historical results.
+- [P10-MET-11-R25] Include a Population drift regression assertion for one project-specific edge case.
+- [P10-MET-11-R26] If Population drift is compared across periods, use comparable eligibility and disclose differences.
+- [P10-MET-11-R27] Keep Population drift historical revisions traceable when late data changes published results.
+- [P10-MET-11-R28] Record a versioned decision if implementation requires changing Population drift semantics.
+- [P10-MET-11-R29] Have a reviewer challenge whether Population drift could be misleading despite being arithmetically correct.
+- [P10-MET-11-R30] Mark Population drift verified only after the known-answer and presentation checks actually run.
+### P10-MET-12: Scoring freshness
+- [P10-MET-12-R01] Business metric: Scoring freshness.
+- [P10-MET-12-R02] Authoritative calculation rule: cutoff - latest completed scoring publication.
+- [P10-MET-12-R03] Output unit: hours.
+- [P10-MET-12-R04] Important boundary: Separate data freshness.
+- [P10-MET-12-R05] Explain how Scoring freshness informs the primary decision: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-MET-12-R06] Define the input grain for Scoring freshness; never infer it from the chart grouping.
+- [P10-MET-12-R07] Name each source field and transformation contributing to Scoring freshness.
+- [P10-MET-12-R08] Define the reporting population for Scoring freshness before applying user-selected filters.
+- [P10-MET-12-R09] Name the timestamp and timezone used by Scoring freshness.
+- [P10-MET-12-R10] Use a documented half-open interval for Scoring freshness time filtering.
+- [P10-MET-12-R11] List excluded statuses, invalid records and immature observations for Scoring freshness.
+- [P10-MET-12-R12] Display excluded-record counts when they materially change Scoring freshness.
+- [P10-MET-12-R13] Define Scoring freshness behavior for an empty eligible population.
+- [P10-MET-12-R14] Define Scoring freshness behavior when its denominator is zero or its required baseline is absent.
+- [P10-MET-12-R15] Do not replace unknown Scoring freshness values with zero without a documented business rule.
+- [P10-MET-12-R16] For Scoring freshness, aggregate underlying values correctly before applying ratios or summary functions.
+- [P10-MET-12-R17] Preserve original precision for Scoring freshness; round only at the stated calculation or presentation step.
+- [P10-MET-12-R18] Create a small manually calculated Scoring freshness fixture independent of the main implementation.
+- [P10-MET-12-R19] Implement an independent SQL/spreadsheet/reference check for the important Scoring freshness result.
+- [P10-MET-12-R20] Keep the browser Scoring freshness calculation consistent with the authoritative contract and verified fixture.
+- [P10-MET-12-R21] Show Scoring freshness definition, active scope and unit through a visible explanation affordance.
+- [P10-MET-12-R22] Allow drillthrough from Scoring freshness into contributing evidence or a transparent aggregate explanation.
+- [P10-MET-12-R23] Export Scoring freshness with contract version, filters, dataset hash and generated timestamp.
+- [P10-MET-12-R24] When Scoring freshness is a scenario estimate, visibly separate it from observed historical results.
+- [P10-MET-12-R25] Include a Scoring freshness regression assertion for one project-specific edge case.
+- [P10-MET-12-R26] If Scoring freshness is compared across periods, use comparable eligibility and disclose differences.
+- [P10-MET-12-R27] Keep Scoring freshness historical revisions traceable when late data changes published results.
+- [P10-MET-12-R28] Record a versioned decision if implementation requires changing Scoring freshness semantics.
+- [P10-MET-12-R29] Have a reviewer challenge whether Scoring freshness could be misleading despite being arithmetically correct.
+- [P10-MET-12-R30] Mark Scoring freshness verified only after the known-answer and presentation checks actually run.
+
+## 05. End-to-end workflow and transition contracts
+
+### P10-FLOW-01: Build point-in-time features
+- [P10-FLOW-01-R01] Workflow capability: Build point-in-time features.
+- [P10-FLOW-01-R02] Logical transition: Cutoff -> features.
+- [P10-FLOW-01-R03] Primary invariant: Event and availability timestamps both valid.
+- [P10-FLOW-01-R04] Define the user goal and permitted actor for Build point-in-time features.
+- [P10-FLOW-01-R05] Define required inputs and source versions for Build point-in-time features.
+- [P10-FLOW-01-R06] Check preconditions before Build point-in-time features; reject violations with a specific user-facing explanation.
+- [P10-FLOW-01-R07] Document the authoritative output of Build point-in-time features and the next valid action.
+- [P10-FLOW-01-R08] Implement Build point-in-time features in a domain/service layer rather than hiding it in a UI callback.
+- [P10-FLOW-01-R09] Define the transaction boundary for Build point-in-time features when state changes.
+- [P10-FLOW-01-R10] Preserve an audit event for material Build point-in-time features decisions without recording secrets.
+- [P10-FLOW-01-R11] Define how Build point-in-time features behaves when the same request or input is repeated.
+- [P10-FLOW-01-R12] Define how Build point-in-time features behaves when its input dataset or record version is stale.
+- [P10-FLOW-01-R13] Prevent conflicting Build point-in-time features updates with version checks or another documented mechanism.
+- [P10-FLOW-01-R14] Keep original evidence immutable when Build point-in-time features creates a correction or new scenario.
+- [P10-FLOW-01-R15] Test the successful Build point-in-time features path using deterministic fixtures.
+- [P10-FLOW-01-R16] Test one rejected Build point-in-time features path against the stated invariant.
+- [P10-FLOW-01-R17] Test interrupted Build point-in-time features execution and prove safe recovery or explicit noncommit.
+- [P10-FLOW-01-R18] Test authorized versus unauthorized Build point-in-time features behavior where real backend roles apply.
+- [P10-FLOW-01-R19] In the static website, label Build point-in-time features mutations as browser-memory simulation.
+- [P10-FLOW-01-R20] Never make Build point-in-time features appear server-persistent in the GitHub Pages demo.
+- [P10-FLOW-01-R21] Expose progress, success and actionable failure feedback for Build point-in-time features.
+- [P10-FLOW-01-R22] Keep keyboard focus coherent after Build point-in-time features updates or opens a dialog.
+- [P10-FLOW-01-R23] Include Build point-in-time features in the UAT script and trace its acceptance criteria to tests.
+- [P10-FLOW-01-R24] Include actual Build point-in-time features verification results in the evidence ledger.
+- [P10-FLOW-01-R25] Use the resulting Build point-in-time features evidence in the case study only with its execution mode disclosed.
+- [P10-FLOW-01-R26] Have the coordinator approve the integrated Build point-in-time features diff after specialist review.
+### P10-FLOW-02: Define label
+- [P10-FLOW-02-R01] Workflow capability: Define label.
+- [P10-FLOW-02-R02] Logical transition: Mature horizon -> outcome.
+- [P10-FLOW-02-R03] Primary invariant: Exclude censored outcomes.
+- [P10-FLOW-02-R04] Define the user goal and permitted actor for Define label.
+- [P10-FLOW-02-R05] Define required inputs and source versions for Define label.
+- [P10-FLOW-02-R06] Check preconditions before Define label; reject violations with a specific user-facing explanation.
+- [P10-FLOW-02-R07] Document the authoritative output of Define label and the next valid action.
+- [P10-FLOW-02-R08] Implement Define label in a domain/service layer rather than hiding it in a UI callback.
+- [P10-FLOW-02-R09] Define the transaction boundary for Define label when state changes.
+- [P10-FLOW-02-R10] Preserve an audit event for material Define label decisions without recording secrets.
+- [P10-FLOW-02-R11] Define how Define label behaves when the same request or input is repeated.
+- [P10-FLOW-02-R12] Define how Define label behaves when its input dataset or record version is stale.
+- [P10-FLOW-02-R13] Prevent conflicting Define label updates with version checks or another documented mechanism.
+- [P10-FLOW-02-R14] Keep original evidence immutable when Define label creates a correction or new scenario.
+- [P10-FLOW-02-R15] Test the successful Define label path using deterministic fixtures.
+- [P10-FLOW-02-R16] Test one rejected Define label path against the stated invariant.
+- [P10-FLOW-02-R17] Test interrupted Define label execution and prove safe recovery or explicit noncommit.
+- [P10-FLOW-02-R18] Test authorized versus unauthorized Define label behavior where real backend roles apply.
+- [P10-FLOW-02-R19] In the static website, label Define label mutations as browser-memory simulation.
+- [P10-FLOW-02-R20] Never make Define label appear server-persistent in the GitHub Pages demo.
+- [P10-FLOW-02-R21] Expose progress, success and actionable failure feedback for Define label.
+- [P10-FLOW-02-R22] Keep keyboard focus coherent after Define label updates or opens a dialog.
+- [P10-FLOW-02-R23] Include Define label in the UAT script and trace its acceptance criteria to tests.
+- [P10-FLOW-02-R24] Include actual Define label verification results in the evidence ledger.
+- [P10-FLOW-02-R25] Use the resulting Define label evidence in the case study only with its execution mode disclosed.
+- [P10-FLOW-02-R26] Have the coordinator approve the integrated Define label diff after specialist review.
+### P10-FLOW-03: Split evaluation
+- [P10-FLOW-03-R01] Workflow capability: Split evaluation.
+- [P10-FLOW-03-R02] Logical transition: Time ranges -> train validation test.
+- [P10-FLOW-03-R03] Primary invariant: Purge overlapping outcome windows.
+- [P10-FLOW-03-R04] Define the user goal and permitted actor for Split evaluation.
+- [P10-FLOW-03-R05] Define required inputs and source versions for Split evaluation.
+- [P10-FLOW-03-R06] Check preconditions before Split evaluation; reject violations with a specific user-facing explanation.
+- [P10-FLOW-03-R07] Document the authoritative output of Split evaluation and the next valid action.
+- [P10-FLOW-03-R08] Implement Split evaluation in a domain/service layer rather than hiding it in a UI callback.
+- [P10-FLOW-03-R09] Define the transaction boundary for Split evaluation when state changes.
+- [P10-FLOW-03-R10] Preserve an audit event for material Split evaluation decisions without recording secrets.
+- [P10-FLOW-03-R11] Define how Split evaluation behaves when the same request or input is repeated.
+- [P10-FLOW-03-R12] Define how Split evaluation behaves when its input dataset or record version is stale.
+- [P10-FLOW-03-R13] Prevent conflicting Split evaluation updates with version checks or another documented mechanism.
+- [P10-FLOW-03-R14] Keep original evidence immutable when Split evaluation creates a correction or new scenario.
+- [P10-FLOW-03-R15] Test the successful Split evaluation path using deterministic fixtures.
+- [P10-FLOW-03-R16] Test one rejected Split evaluation path against the stated invariant.
+- [P10-FLOW-03-R17] Test interrupted Split evaluation execution and prove safe recovery or explicit noncommit.
+- [P10-FLOW-03-R18] Test authorized versus unauthorized Split evaluation behavior where real backend roles apply.
+- [P10-FLOW-03-R19] In the static website, label Split evaluation mutations as browser-memory simulation.
+- [P10-FLOW-03-R20] Never make Split evaluation appear server-persistent in the GitHub Pages demo.
+- [P10-FLOW-03-R21] Expose progress, success and actionable failure feedback for Split evaluation.
+- [P10-FLOW-03-R22] Keep keyboard focus coherent after Split evaluation updates or opens a dialog.
+- [P10-FLOW-03-R23] Include Split evaluation in the UAT script and trace its acceptance criteria to tests.
+- [P10-FLOW-03-R24] Include actual Split evaluation verification results in the evidence ledger.
+- [P10-FLOW-03-R25] Use the resulting Split evaluation evidence in the case study only with its execution mode disclosed.
+- [P10-FLOW-03-R26] Have the coordinator approve the integrated Split evaluation diff after specialist review.
+### P10-FLOW-04: Fit preprocessing
+- [P10-FLOW-04-R01] Workflow capability: Fit preprocessing.
+- [P10-FLOW-04-R02] Logical transition: Training only -> fitted transformer.
+- [P10-FLOW-04-R03] Primary invariant: No evaluation leakage.
+- [P10-FLOW-04-R04] Define the user goal and permitted actor for Fit preprocessing.
+- [P10-FLOW-04-R05] Define required inputs and source versions for Fit preprocessing.
+- [P10-FLOW-04-R06] Check preconditions before Fit preprocessing; reject violations with a specific user-facing explanation.
+- [P10-FLOW-04-R07] Document the authoritative output of Fit preprocessing and the next valid action.
+- [P10-FLOW-04-R08] Implement Fit preprocessing in a domain/service layer rather than hiding it in a UI callback.
+- [P10-FLOW-04-R09] Define the transaction boundary for Fit preprocessing when state changes.
+- [P10-FLOW-04-R10] Preserve an audit event for material Fit preprocessing decisions without recording secrets.
+- [P10-FLOW-04-R11] Define how Fit preprocessing behaves when the same request or input is repeated.
+- [P10-FLOW-04-R12] Define how Fit preprocessing behaves when its input dataset or record version is stale.
+- [P10-FLOW-04-R13] Prevent conflicting Fit preprocessing updates with version checks or another documented mechanism.
+- [P10-FLOW-04-R14] Keep original evidence immutable when Fit preprocessing creates a correction or new scenario.
+- [P10-FLOW-04-R15] Test the successful Fit preprocessing path using deterministic fixtures.
+- [P10-FLOW-04-R16] Test one rejected Fit preprocessing path against the stated invariant.
+- [P10-FLOW-04-R17] Test interrupted Fit preprocessing execution and prove safe recovery or explicit noncommit.
+- [P10-FLOW-04-R18] Test authorized versus unauthorized Fit preprocessing behavior where real backend roles apply.
+- [P10-FLOW-04-R19] In the static website, label Fit preprocessing mutations as browser-memory simulation.
+- [P10-FLOW-04-R20] Never make Fit preprocessing appear server-persistent in the GitHub Pages demo.
+- [P10-FLOW-04-R21] Expose progress, success and actionable failure feedback for Fit preprocessing.
+- [P10-FLOW-04-R22] Keep keyboard focus coherent after Fit preprocessing updates or opens a dialog.
+- [P10-FLOW-04-R23] Include Fit preprocessing in the UAT script and trace its acceptance criteria to tests.
+- [P10-FLOW-04-R24] Include actual Fit preprocessing verification results in the evidence ledger.
+- [P10-FLOW-04-R25] Use the resulting Fit preprocessing evidence in the case study only with its execution mode disclosed.
+- [P10-FLOW-04-R26] Have the coordinator approve the integrated Fit preprocessing diff after specialist review.
+### P10-FLOW-05: Train baseline
+- [P10-FLOW-05-R01] Workflow capability: Train baseline.
+- [P10-FLOW-05-R02] Logical transition: Training rows -> business-rule and logistic models.
+- [P10-FLOW-05-R03] Primary invariant: Keep simple reference.
+- [P10-FLOW-05-R04] Define the user goal and permitted actor for Train baseline.
+- [P10-FLOW-05-R05] Define required inputs and source versions for Train baseline.
+- [P10-FLOW-05-R06] Check preconditions before Train baseline; reject violations with a specific user-facing explanation.
+- [P10-FLOW-05-R07] Document the authoritative output of Train baseline and the next valid action.
+- [P10-FLOW-05-R08] Implement Train baseline in a domain/service layer rather than hiding it in a UI callback.
+- [P10-FLOW-05-R09] Define the transaction boundary for Train baseline when state changes.
+- [P10-FLOW-05-R10] Preserve an audit event for material Train baseline decisions without recording secrets.
+- [P10-FLOW-05-R11] Define how Train baseline behaves when the same request or input is repeated.
+- [P10-FLOW-05-R12] Define how Train baseline behaves when its input dataset or record version is stale.
+- [P10-FLOW-05-R13] Prevent conflicting Train baseline updates with version checks or another documented mechanism.
+- [P10-FLOW-05-R14] Keep original evidence immutable when Train baseline creates a correction or new scenario.
+- [P10-FLOW-05-R15] Test the successful Train baseline path using deterministic fixtures.
+- [P10-FLOW-05-R16] Test one rejected Train baseline path against the stated invariant.
+- [P10-FLOW-05-R17] Test interrupted Train baseline execution and prove safe recovery or explicit noncommit.
+- [P10-FLOW-05-R18] Test authorized versus unauthorized Train baseline behavior where real backend roles apply.
+- [P10-FLOW-05-R19] In the static website, label Train baseline mutations as browser-memory simulation.
+- [P10-FLOW-05-R20] Never make Train baseline appear server-persistent in the GitHub Pages demo.
+- [P10-FLOW-05-R21] Expose progress, success and actionable failure feedback for Train baseline.
+- [P10-FLOW-05-R22] Keep keyboard focus coherent after Train baseline updates or opens a dialog.
+- [P10-FLOW-05-R23] Include Train baseline in the UAT script and trace its acceptance criteria to tests.
+- [P10-FLOW-05-R24] Include actual Train baseline verification results in the evidence ledger.
+- [P10-FLOW-05-R25] Use the resulting Train baseline evidence in the case study only with its execution mode disclosed.
+- [P10-FLOW-05-R26] Have the coordinator approve the integrated Train baseline diff after specialist review.
+### P10-FLOW-06: Calibrate model
+- [P10-FLOW-06-R01] Workflow capability: Calibrate model.
+- [P10-FLOW-06-R02] Logical transition: Validation only -> calibration mapping.
+- [P10-FLOW-06-R03] Primary invariant: Test remains untouched.
+- [P10-FLOW-06-R04] Define the user goal and permitted actor for Calibrate model.
+- [P10-FLOW-06-R05] Define required inputs and source versions for Calibrate model.
+- [P10-FLOW-06-R06] Check preconditions before Calibrate model; reject violations with a specific user-facing explanation.
+- [P10-FLOW-06-R07] Document the authoritative output of Calibrate model and the next valid action.
+- [P10-FLOW-06-R08] Implement Calibrate model in a domain/service layer rather than hiding it in a UI callback.
+- [P10-FLOW-06-R09] Define the transaction boundary for Calibrate model when state changes.
+- [P10-FLOW-06-R10] Preserve an audit event for material Calibrate model decisions without recording secrets.
+- [P10-FLOW-06-R11] Define how Calibrate model behaves when the same request or input is repeated.
+- [P10-FLOW-06-R12] Define how Calibrate model behaves when its input dataset or record version is stale.
+- [P10-FLOW-06-R13] Prevent conflicting Calibrate model updates with version checks or another documented mechanism.
+- [P10-FLOW-06-R14] Keep original evidence immutable when Calibrate model creates a correction or new scenario.
+- [P10-FLOW-06-R15] Test the successful Calibrate model path using deterministic fixtures.
+- [P10-FLOW-06-R16] Test one rejected Calibrate model path against the stated invariant.
+- [P10-FLOW-06-R17] Test interrupted Calibrate model execution and prove safe recovery or explicit noncommit.
+- [P10-FLOW-06-R18] Test authorized versus unauthorized Calibrate model behavior where real backend roles apply.
+- [P10-FLOW-06-R19] In the static website, label Calibrate model mutations as browser-memory simulation.
+- [P10-FLOW-06-R20] Never make Calibrate model appear server-persistent in the GitHub Pages demo.
+- [P10-FLOW-06-R21] Expose progress, success and actionable failure feedback for Calibrate model.
+- [P10-FLOW-06-R22] Keep keyboard focus coherent after Calibrate model updates or opens a dialog.
+- [P10-FLOW-06-R23] Include Calibrate model in the UAT script and trace its acceptance criteria to tests.
+- [P10-FLOW-06-R24] Include actual Calibrate model verification results in the evidence ledger.
+- [P10-FLOW-06-R25] Use the resulting Calibrate model evidence in the case study only with its execution mode disclosed.
+- [P10-FLOW-06-R26] Have the coordinator approve the integrated Calibrate model diff after specialist review.
+### P10-FLOW-07: Score accounts
+- [P10-FLOW-07-R01] Workflow capability: Score accounts.
+- [P10-FLOW-07-R02] Logical transition: Frozen model -> risk probabilities.
+- [P10-FLOW-07-R03] Primary invariant: Model and feature versions.
+- [P10-FLOW-07-R04] Define the user goal and permitted actor for Score accounts.
+- [P10-FLOW-07-R05] Define required inputs and source versions for Score accounts.
+- [P10-FLOW-07-R06] Check preconditions before Score accounts; reject violations with a specific user-facing explanation.
+- [P10-FLOW-07-R07] Document the authoritative output of Score accounts and the next valid action.
+- [P10-FLOW-07-R08] Implement Score accounts in a domain/service layer rather than hiding it in a UI callback.
+- [P10-FLOW-07-R09] Define the transaction boundary for Score accounts when state changes.
+- [P10-FLOW-07-R10] Preserve an audit event for material Score accounts decisions without recording secrets.
+- [P10-FLOW-07-R11] Define how Score accounts behaves when the same request or input is repeated.
+- [P10-FLOW-07-R12] Define how Score accounts behaves when its input dataset or record version is stale.
+- [P10-FLOW-07-R13] Prevent conflicting Score accounts updates with version checks or another documented mechanism.
+- [P10-FLOW-07-R14] Keep original evidence immutable when Score accounts creates a correction or new scenario.
+- [P10-FLOW-07-R15] Test the successful Score accounts path using deterministic fixtures.
+- [P10-FLOW-07-R16] Test one rejected Score accounts path against the stated invariant.
+- [P10-FLOW-07-R17] Test interrupted Score accounts execution and prove safe recovery or explicit noncommit.
+- [P10-FLOW-07-R18] Test authorized versus unauthorized Score accounts behavior where real backend roles apply.
+- [P10-FLOW-07-R19] In the static website, label Score accounts mutations as browser-memory simulation.
+- [P10-FLOW-07-R20] Never make Score accounts appear server-persistent in the GitHub Pages demo.
+- [P10-FLOW-07-R21] Expose progress, success and actionable failure feedback for Score accounts.
+- [P10-FLOW-07-R22] Keep keyboard focus coherent after Score accounts updates or opens a dialog.
+- [P10-FLOW-07-R23] Include Score accounts in the UAT script and trace its acceptance criteria to tests.
+- [P10-FLOW-07-R24] Include actual Score accounts verification results in the evidence ledger.
+- [P10-FLOW-07-R25] Use the resulting Score accounts evidence in the case study only with its execution mode disclosed.
+- [P10-FLOW-07-R26] Have the coordinator approve the integrated Score accounts diff after specialist review.
+### P10-FLOW-08: Prioritize outreach
+- [P10-FLOW-08-R01] Workflow capability: Prioritize outreach.
+- [P10-FLOW-08-R02] Logical transition: Scores -> capacity-limited draft queue.
+- [P10-FLOW-08-R03] Primary invariant: Risk not assumed treatment responsiveness.
+- [P10-FLOW-08-R04] Define the user goal and permitted actor for Prioritize outreach.
+- [P10-FLOW-08-R05] Define required inputs and source versions for Prioritize outreach.
+- [P10-FLOW-08-R06] Check preconditions before Prioritize outreach; reject violations with a specific user-facing explanation.
+- [P10-FLOW-08-R07] Document the authoritative output of Prioritize outreach and the next valid action.
+- [P10-FLOW-08-R08] Implement Prioritize outreach in a domain/service layer rather than hiding it in a UI callback.
+- [P10-FLOW-08-R09] Define the transaction boundary for Prioritize outreach when state changes.
+- [P10-FLOW-08-R10] Preserve an audit event for material Prioritize outreach decisions without recording secrets.
+- [P10-FLOW-08-R11] Define how Prioritize outreach behaves when the same request or input is repeated.
+- [P10-FLOW-08-R12] Define how Prioritize outreach behaves when its input dataset or record version is stale.
+- [P10-FLOW-08-R13] Prevent conflicting Prioritize outreach updates with version checks or another documented mechanism.
+- [P10-FLOW-08-R14] Keep original evidence immutable when Prioritize outreach creates a correction or new scenario.
+- [P10-FLOW-08-R15] Test the successful Prioritize outreach path using deterministic fixtures.
+- [P10-FLOW-08-R16] Test one rejected Prioritize outreach path against the stated invariant.
+- [P10-FLOW-08-R17] Test interrupted Prioritize outreach execution and prove safe recovery or explicit noncommit.
+- [P10-FLOW-08-R18] Test authorized versus unauthorized Prioritize outreach behavior where real backend roles apply.
+- [P10-FLOW-08-R19] In the static website, label Prioritize outreach mutations as browser-memory simulation.
+- [P10-FLOW-08-R20] Never make Prioritize outreach appear server-persistent in the GitHub Pages demo.
+- [P10-FLOW-08-R21] Expose progress, success and actionable failure feedback for Prioritize outreach.
+- [P10-FLOW-08-R22] Keep keyboard focus coherent after Prioritize outreach updates or opens a dialog.
+- [P10-FLOW-08-R23] Include Prioritize outreach in the UAT script and trace its acceptance criteria to tests.
+- [P10-FLOW-08-R24] Include actual Prioritize outreach verification results in the evidence ledger.
+- [P10-FLOW-08-R25] Use the resulting Prioritize outreach evidence in the case study only with its execution mode disclosed.
+- [P10-FLOW-08-R26] Have the coordinator approve the integrated Prioritize outreach diff after specialist review.
+### P10-FLOW-09: Simulate economics
+- [P10-FLOW-09-R01] Workflow capability: Simulate economics.
+- [P10-FLOW-09-R02] Logical transition: Queue plus assumptions -> expected value.
+- [P10-FLOW-09-R03] Primary invariant: Clearly hypothetical.
+- [P10-FLOW-09-R04] Define the user goal and permitted actor for Simulate economics.
+- [P10-FLOW-09-R05] Define required inputs and source versions for Simulate economics.
+- [P10-FLOW-09-R06] Check preconditions before Simulate economics; reject violations with a specific user-facing explanation.
+- [P10-FLOW-09-R07] Document the authoritative output of Simulate economics and the next valid action.
+- [P10-FLOW-09-R08] Implement Simulate economics in a domain/service layer rather than hiding it in a UI callback.
+- [P10-FLOW-09-R09] Define the transaction boundary for Simulate economics when state changes.
+- [P10-FLOW-09-R10] Preserve an audit event for material Simulate economics decisions without recording secrets.
+- [P10-FLOW-09-R11] Define how Simulate economics behaves when the same request or input is repeated.
+- [P10-FLOW-09-R12] Define how Simulate economics behaves when its input dataset or record version is stale.
+- [P10-FLOW-09-R13] Prevent conflicting Simulate economics updates with version checks or another documented mechanism.
+- [P10-FLOW-09-R14] Keep original evidence immutable when Simulate economics creates a correction or new scenario.
+- [P10-FLOW-09-R15] Test the successful Simulate economics path using deterministic fixtures.
+- [P10-FLOW-09-R16] Test one rejected Simulate economics path against the stated invariant.
+- [P10-FLOW-09-R17] Test interrupted Simulate economics execution and prove safe recovery or explicit noncommit.
+- [P10-FLOW-09-R18] Test authorized versus unauthorized Simulate economics behavior where real backend roles apply.
+- [P10-FLOW-09-R19] In the static website, label Simulate economics mutations as browser-memory simulation.
+- [P10-FLOW-09-R20] Never make Simulate economics appear server-persistent in the GitHub Pages demo.
+- [P10-FLOW-09-R21] Expose progress, success and actionable failure feedback for Simulate economics.
+- [P10-FLOW-09-R22] Keep keyboard focus coherent after Simulate economics updates or opens a dialog.
+- [P10-FLOW-09-R23] Include Simulate economics in the UAT script and trace its acceptance criteria to tests.
+- [P10-FLOW-09-R24] Include actual Simulate economics verification results in the evidence ledger.
+- [P10-FLOW-09-R25] Use the resulting Simulate economics evidence in the case study only with its execution mode disclosed.
+- [P10-FLOW-09-R26] Have the coordinator approve the integrated Simulate economics diff after specialist review.
+### P10-FLOW-10: Monitor refresh
+- [P10-FLOW-10-R01] Workflow capability: Monitor refresh.
+- [P10-FLOW-10-R02] Logical transition: New cohort -> drift and performance checks.
+- [P10-FLOW-10-R03] Primary invariant: Labels may arrive later.
+- [P10-FLOW-10-R04] Define the user goal and permitted actor for Monitor refresh.
+- [P10-FLOW-10-R05] Define required inputs and source versions for Monitor refresh.
+- [P10-FLOW-10-R06] Check preconditions before Monitor refresh; reject violations with a specific user-facing explanation.
+- [P10-FLOW-10-R07] Document the authoritative output of Monitor refresh and the next valid action.
+- [P10-FLOW-10-R08] Implement Monitor refresh in a domain/service layer rather than hiding it in a UI callback.
+- [P10-FLOW-10-R09] Define the transaction boundary for Monitor refresh when state changes.
+- [P10-FLOW-10-R10] Preserve an audit event for material Monitor refresh decisions without recording secrets.
+- [P10-FLOW-10-R11] Define how Monitor refresh behaves when the same request or input is repeated.
+- [P10-FLOW-10-R12] Define how Monitor refresh behaves when its input dataset or record version is stale.
+- [P10-FLOW-10-R13] Prevent conflicting Monitor refresh updates with version checks or another documented mechanism.
+- [P10-FLOW-10-R14] Keep original evidence immutable when Monitor refresh creates a correction or new scenario.
+- [P10-FLOW-10-R15] Test the successful Monitor refresh path using deterministic fixtures.
+- [P10-FLOW-10-R16] Test one rejected Monitor refresh path against the stated invariant.
+- [P10-FLOW-10-R17] Test interrupted Monitor refresh execution and prove safe recovery or explicit noncommit.
+- [P10-FLOW-10-R18] Test authorized versus unauthorized Monitor refresh behavior where real backend roles apply.
+- [P10-FLOW-10-R19] In the static website, label Monitor refresh mutations as browser-memory simulation.
+- [P10-FLOW-10-R20] Never make Monitor refresh appear server-persistent in the GitHub Pages demo.
+- [P10-FLOW-10-R21] Expose progress, success and actionable failure feedback for Monitor refresh.
+- [P10-FLOW-10-R22] Keep keyboard focus coherent after Monitor refresh updates or opens a dialog.
+- [P10-FLOW-10-R23] Include Monitor refresh in the UAT script and trace its acceptance criteria to tests.
+- [P10-FLOW-10-R24] Include actual Monitor refresh verification results in the evidence ledger.
+- [P10-FLOW-10-R25] Use the resulting Monitor refresh evidence in the case study only with its execution mode disclosed.
+- [P10-FLOW-10-R26] Have the coordinator approve the integrated Monitor refresh diff after specialist review.
+
+## 06. Screen-by-screen product experience
+
+### P10-UI-01: Retention overview
+- [P10-UI-01-R01] Screen: Retention overview.
+- [P10-UI-01-R02] Purpose and principal representation: Mature cohorts and churn definition.
+- [P10-UI-01-R03] Choose a stable route under /retentionlab/ and verify direct navigation and reload for Retention overview.
+- [P10-UI-01-R04] Use the project visual direction on Retention overview: Customer intelligence lab: dark plum, soft cream, coral; risk evidence and calibration.
+- [P10-UI-01-R05] Give Retention overview one clear main action related to the business decision.
+- [P10-UI-01-R06] Display the active time window, filters and data version on Retention overview where applicable.
+- [P10-UI-01-R07] Show the synthetic/static-demo label without overwhelming Retention overview.
+- [P10-UI-01-R08] Use real verified snapshot values on Retention overview; do not hand-enter attractive KPI numbers.
+- [P10-UI-01-R09] Explain calculation meaning and units adjacent to important Retention overview values.
+- [P10-UI-01-R10] Provide an accessible table or text alternative for analytical graphics on Retention overview.
+- [P10-UI-01-R11] Use consistent category ordering and deterministic tie breaks on Retention overview.
+- [P10-UI-01-R12] Handle long names, negative values, missing categories and large values on Retention overview.
+- [P10-UI-01-R13] Implement a useful no-data state on Retention overview, including a way to clear restrictive filters.
+- [P10-UI-01-R14] Implement loading and failed-data states on Retention overview without showing invented results.
+- [P10-UI-01-R15] Keep all Retention overview controls keyboard accessible with visible focus.
+- [P10-UI-01-R16] Provide reduced-motion behavior for Retention overview transitions.
+- [P10-UI-01-R17] Keep motion purposeful; chart changes on Retention overview must not conceal changed units or populations.
+- [P10-UI-01-R18] Verify Retention overview at mobile, tablet and desktop widths with actual rendered output.
+- [P10-UI-01-R19] Verify Retention overview at 200 percent zoom and with realistic dense data.
+- [P10-UI-01-R20] Ensure exports from Retention overview match its scope or clearly explain full-population export behavior.
+- [P10-UI-01-R21] Provide navigation from Retention overview to evidence, definitions and the case study.
+- [P10-UI-01-R22] Check console errors, broken assets and nested path handling for Retention overview.
+- [P10-UI-01-R23] Record screenshot-review findings for Retention overview; do not assert review from source inspection.
+- [P10-UI-01-R24] Link Retention overview to its relevant workflow and metric contract IDs in the traceability matrix.
+### P10-UI-02: Cohort explorer
+- [P10-UI-02-R01] Screen: Cohort explorer.
+- [P10-UI-02-R02] Purpose and principal representation: Plan and tenure context.
+- [P10-UI-02-R03] Choose a stable route under /retentionlab/ and verify direct navigation and reload for Cohort explorer.
+- [P10-UI-02-R04] Use the project visual direction on Cohort explorer: Customer intelligence lab: dark plum, soft cream, coral; risk evidence and calibration.
+- [P10-UI-02-R05] Give Cohort explorer one clear main action related to the business decision.
+- [P10-UI-02-R06] Display the active time window, filters and data version on Cohort explorer where applicable.
+- [P10-UI-02-R07] Show the synthetic/static-demo label without overwhelming Cohort explorer.
+- [P10-UI-02-R08] Use real verified snapshot values on Cohort explorer; do not hand-enter attractive KPI numbers.
+- [P10-UI-02-R09] Explain calculation meaning and units adjacent to important Cohort explorer values.
+- [P10-UI-02-R10] Provide an accessible table or text alternative for analytical graphics on Cohort explorer.
+- [P10-UI-02-R11] Use consistent category ordering and deterministic tie breaks on Cohort explorer.
+- [P10-UI-02-R12] Handle long names, negative values, missing categories and large values on Cohort explorer.
+- [P10-UI-02-R13] Implement a useful no-data state on Cohort explorer, including a way to clear restrictive filters.
+- [P10-UI-02-R14] Implement loading and failed-data states on Cohort explorer without showing invented results.
+- [P10-UI-02-R15] Keep all Cohort explorer controls keyboard accessible with visible focus.
+- [P10-UI-02-R16] Provide reduced-motion behavior for Cohort explorer transitions.
+- [P10-UI-02-R17] Keep motion purposeful; chart changes on Cohort explorer must not conceal changed units or populations.
+- [P10-UI-02-R18] Verify Cohort explorer at mobile, tablet and desktop widths with actual rendered output.
+- [P10-UI-02-R19] Verify Cohort explorer at 200 percent zoom and with realistic dense data.
+- [P10-UI-02-R20] Ensure exports from Cohort explorer match its scope or clearly explain full-population export behavior.
+- [P10-UI-02-R21] Provide navigation from Cohort explorer to evidence, definitions and the case study.
+- [P10-UI-02-R22] Check console errors, broken assets and nested path handling for Cohort explorer.
+- [P10-UI-02-R23] Record screenshot-review findings for Cohort explorer; do not assert review from source inspection.
+- [P10-UI-02-R24] Link Cohort explorer to its relevant workflow and metric contract IDs in the traceability matrix.
+### P10-UI-03: Feature evidence
+- [P10-UI-03-R01] Screen: Feature evidence.
+- [P10-UI-03-R02] Purpose and principal representation: Point-in-time lineage and availability.
+- [P10-UI-03-R03] Choose a stable route under /retentionlab/ and verify direct navigation and reload for Feature evidence.
+- [P10-UI-03-R04] Use the project visual direction on Feature evidence: Customer intelligence lab: dark plum, soft cream, coral; risk evidence and calibration.
+- [P10-UI-03-R05] Give Feature evidence one clear main action related to the business decision.
+- [P10-UI-03-R06] Display the active time window, filters and data version on Feature evidence where applicable.
+- [P10-UI-03-R07] Show the synthetic/static-demo label without overwhelming Feature evidence.
+- [P10-UI-03-R08] Use real verified snapshot values on Feature evidence; do not hand-enter attractive KPI numbers.
+- [P10-UI-03-R09] Explain calculation meaning and units adjacent to important Feature evidence values.
+- [P10-UI-03-R10] Provide an accessible table or text alternative for analytical graphics on Feature evidence.
+- [P10-UI-03-R11] Use consistent category ordering and deterministic tie breaks on Feature evidence.
+- [P10-UI-03-R12] Handle long names, negative values, missing categories and large values on Feature evidence.
+- [P10-UI-03-R13] Implement a useful no-data state on Feature evidence, including a way to clear restrictive filters.
+- [P10-UI-03-R14] Implement loading and failed-data states on Feature evidence without showing invented results.
+- [P10-UI-03-R15] Keep all Feature evidence controls keyboard accessible with visible focus.
+- [P10-UI-03-R16] Provide reduced-motion behavior for Feature evidence transitions.
+- [P10-UI-03-R17] Keep motion purposeful; chart changes on Feature evidence must not conceal changed units or populations.
+- [P10-UI-03-R18] Verify Feature evidence at mobile, tablet and desktop widths with actual rendered output.
+- [P10-UI-03-R19] Verify Feature evidence at 200 percent zoom and with realistic dense data.
+- [P10-UI-03-R20] Ensure exports from Feature evidence match its scope or clearly explain full-population export behavior.
+- [P10-UI-03-R21] Provide navigation from Feature evidence to evidence, definitions and the case study.
+- [P10-UI-03-R22] Check console errors, broken assets and nested path handling for Feature evidence.
+- [P10-UI-03-R23] Record screenshot-review findings for Feature evidence; do not assert review from source inspection.
+- [P10-UI-03-R24] Link Feature evidence to its relevant workflow and metric contract IDs in the traceability matrix.
+### P10-UI-04: Model comparison
+- [P10-UI-04-R01] Screen: Model comparison.
+- [P10-UI-04-R02] Purpose and principal representation: Baselines and holdout metrics.
+- [P10-UI-04-R03] Choose a stable route under /retentionlab/ and verify direct navigation and reload for Model comparison.
+- [P10-UI-04-R04] Use the project visual direction on Model comparison: Customer intelligence lab: dark plum, soft cream, coral; risk evidence and calibration.
+- [P10-UI-04-R05] Give Model comparison one clear main action related to the business decision.
+- [P10-UI-04-R06] Display the active time window, filters and data version on Model comparison where applicable.
+- [P10-UI-04-R07] Show the synthetic/static-demo label without overwhelming Model comparison.
+- [P10-UI-04-R08] Use real verified snapshot values on Model comparison; do not hand-enter attractive KPI numbers.
+- [P10-UI-04-R09] Explain calculation meaning and units adjacent to important Model comparison values.
+- [P10-UI-04-R10] Provide an accessible table or text alternative for analytical graphics on Model comparison.
+- [P10-UI-04-R11] Use consistent category ordering and deterministic tie breaks on Model comparison.
+- [P10-UI-04-R12] Handle long names, negative values, missing categories and large values on Model comparison.
+- [P10-UI-04-R13] Implement a useful no-data state on Model comparison, including a way to clear restrictive filters.
+- [P10-UI-04-R14] Implement loading and failed-data states on Model comparison without showing invented results.
+- [P10-UI-04-R15] Keep all Model comparison controls keyboard accessible with visible focus.
+- [P10-UI-04-R16] Provide reduced-motion behavior for Model comparison transitions.
+- [P10-UI-04-R17] Keep motion purposeful; chart changes on Model comparison must not conceal changed units or populations.
+- [P10-UI-04-R18] Verify Model comparison at mobile, tablet and desktop widths with actual rendered output.
+- [P10-UI-04-R19] Verify Model comparison at 200 percent zoom and with realistic dense data.
+- [P10-UI-04-R20] Ensure exports from Model comparison match its scope or clearly explain full-population export behavior.
+- [P10-UI-04-R21] Provide navigation from Model comparison to evidence, definitions and the case study.
+- [P10-UI-04-R22] Check console errors, broken assets and nested path handling for Model comparison.
+- [P10-UI-04-R23] Record screenshot-review findings for Model comparison; do not assert review from source inspection.
+- [P10-UI-04-R24] Link Model comparison to its relevant workflow and metric contract IDs in the traceability matrix.
+### P10-UI-05: Calibration lab
+- [P10-UI-05-R01] Screen: Calibration lab.
+- [P10-UI-05-R02] Purpose and principal representation: Reliability curve with sample counts.
+- [P10-UI-05-R03] Choose a stable route under /retentionlab/ and verify direct navigation and reload for Calibration lab.
+- [P10-UI-05-R04] Use the project visual direction on Calibration lab: Customer intelligence lab: dark plum, soft cream, coral; risk evidence and calibration.
+- [P10-UI-05-R05] Give Calibration lab one clear main action related to the business decision.
+- [P10-UI-05-R06] Display the active time window, filters and data version on Calibration lab where applicable.
+- [P10-UI-05-R07] Show the synthetic/static-demo label without overwhelming Calibration lab.
+- [P10-UI-05-R08] Use real verified snapshot values on Calibration lab; do not hand-enter attractive KPI numbers.
+- [P10-UI-05-R09] Explain calculation meaning and units adjacent to important Calibration lab values.
+- [P10-UI-05-R10] Provide an accessible table or text alternative for analytical graphics on Calibration lab.
+- [P10-UI-05-R11] Use consistent category ordering and deterministic tie breaks on Calibration lab.
+- [P10-UI-05-R12] Handle long names, negative values, missing categories and large values on Calibration lab.
+- [P10-UI-05-R13] Implement a useful no-data state on Calibration lab, including a way to clear restrictive filters.
+- [P10-UI-05-R14] Implement loading and failed-data states on Calibration lab without showing invented results.
+- [P10-UI-05-R15] Keep all Calibration lab controls keyboard accessible with visible focus.
+- [P10-UI-05-R16] Provide reduced-motion behavior for Calibration lab transitions.
+- [P10-UI-05-R17] Keep motion purposeful; chart changes on Calibration lab must not conceal changed units or populations.
+- [P10-UI-05-R18] Verify Calibration lab at mobile, tablet and desktop widths with actual rendered output.
+- [P10-UI-05-R19] Verify Calibration lab at 200 percent zoom and with realistic dense data.
+- [P10-UI-05-R20] Ensure exports from Calibration lab match its scope or clearly explain full-population export behavior.
+- [P10-UI-05-R21] Provide navigation from Calibration lab to evidence, definitions and the case study.
+- [P10-UI-05-R22] Check console errors, broken assets and nested path handling for Calibration lab.
+- [P10-UI-05-R23] Record screenshot-review findings for Calibration lab; do not assert review from source inspection.
+- [P10-UI-05-R24] Link Calibration lab to its relevant workflow and metric contract IDs in the traceability matrix.
+### P10-UI-06: Capacity planner
+- [P10-UI-06-R01] Screen: Capacity planner.
+- [P10-UI-06-R02] Purpose and principal representation: Top K precision recall and contact cost.
+- [P10-UI-06-R03] Choose a stable route under /retentionlab/ and verify direct navigation and reload for Capacity planner.
+- [P10-UI-06-R04] Use the project visual direction on Capacity planner: Customer intelligence lab: dark plum, soft cream, coral; risk evidence and calibration.
+- [P10-UI-06-R05] Give Capacity planner one clear main action related to the business decision.
+- [P10-UI-06-R06] Display the active time window, filters and data version on Capacity planner where applicable.
+- [P10-UI-06-R07] Show the synthetic/static-demo label without overwhelming Capacity planner.
+- [P10-UI-06-R08] Use real verified snapshot values on Capacity planner; do not hand-enter attractive KPI numbers.
+- [P10-UI-06-R09] Explain calculation meaning and units adjacent to important Capacity planner values.
+- [P10-UI-06-R10] Provide an accessible table or text alternative for analytical graphics on Capacity planner.
+- [P10-UI-06-R11] Use consistent category ordering and deterministic tie breaks on Capacity planner.
+- [P10-UI-06-R12] Handle long names, negative values, missing categories and large values on Capacity planner.
+- [P10-UI-06-R13] Implement a useful no-data state on Capacity planner, including a way to clear restrictive filters.
+- [P10-UI-06-R14] Implement loading and failed-data states on Capacity planner without showing invented results.
+- [P10-UI-06-R15] Keep all Capacity planner controls keyboard accessible with visible focus.
+- [P10-UI-06-R16] Provide reduced-motion behavior for Capacity planner transitions.
+- [P10-UI-06-R17] Keep motion purposeful; chart changes on Capacity planner must not conceal changed units or populations.
+- [P10-UI-06-R18] Verify Capacity planner at mobile, tablet and desktop widths with actual rendered output.
+- [P10-UI-06-R19] Verify Capacity planner at 200 percent zoom and with realistic dense data.
+- [P10-UI-06-R20] Ensure exports from Capacity planner match its scope or clearly explain full-population export behavior.
+- [P10-UI-06-R21] Provide navigation from Capacity planner to evidence, definitions and the case study.
+- [P10-UI-06-R22] Check console errors, broken assets and nested path handling for Capacity planner.
+- [P10-UI-06-R23] Record screenshot-review findings for Capacity planner; do not assert review from source inspection.
+- [P10-UI-06-R24] Link Capacity planner to its relevant workflow and metric contract IDs in the traceability matrix.
+### P10-UI-07: Account explanation
+- [P10-UI-07-R01] Screen: Account explanation.
+- [P10-UI-07-R02] Purpose and principal representation: Risk factors without causal claims.
+- [P10-UI-07-R03] Choose a stable route under /retentionlab/ and verify direct navigation and reload for Account explanation.
+- [P10-UI-07-R04] Use the project visual direction on Account explanation: Customer intelligence lab: dark plum, soft cream, coral; risk evidence and calibration.
+- [P10-UI-07-R05] Give Account explanation one clear main action related to the business decision.
+- [P10-UI-07-R06] Display the active time window, filters and data version on Account explanation where applicable.
+- [P10-UI-07-R07] Show the synthetic/static-demo label without overwhelming Account explanation.
+- [P10-UI-07-R08] Use real verified snapshot values on Account explanation; do not hand-enter attractive KPI numbers.
+- [P10-UI-07-R09] Explain calculation meaning and units adjacent to important Account explanation values.
+- [P10-UI-07-R10] Provide an accessible table or text alternative for analytical graphics on Account explanation.
+- [P10-UI-07-R11] Use consistent category ordering and deterministic tie breaks on Account explanation.
+- [P10-UI-07-R12] Handle long names, negative values, missing categories and large values on Account explanation.
+- [P10-UI-07-R13] Implement a useful no-data state on Account explanation, including a way to clear restrictive filters.
+- [P10-UI-07-R14] Implement loading and failed-data states on Account explanation without showing invented results.
+- [P10-UI-07-R15] Keep all Account explanation controls keyboard accessible with visible focus.
+- [P10-UI-07-R16] Provide reduced-motion behavior for Account explanation transitions.
+- [P10-UI-07-R17] Keep motion purposeful; chart changes on Account explanation must not conceal changed units or populations.
+- [P10-UI-07-R18] Verify Account explanation at mobile, tablet and desktop widths with actual rendered output.
+- [P10-UI-07-R19] Verify Account explanation at 200 percent zoom and with realistic dense data.
+- [P10-UI-07-R20] Ensure exports from Account explanation match its scope or clearly explain full-population export behavior.
+- [P10-UI-07-R21] Provide navigation from Account explanation to evidence, definitions and the case study.
+- [P10-UI-07-R22] Check console errors, broken assets and nested path handling for Account explanation.
+- [P10-UI-07-R23] Record screenshot-review findings for Account explanation; do not assert review from source inspection.
+- [P10-UI-07-R24] Link Account explanation to its relevant workflow and metric contract IDs in the traceability matrix.
+### P10-UI-08: Outreach queue
+- [P10-UI-08-R01] Screen: Outreach queue.
+- [P10-UI-08-R02] Purpose and principal representation: Synthetic draft actions and status.
+- [P10-UI-08-R03] Choose a stable route under /retentionlab/ and verify direct navigation and reload for Outreach queue.
+- [P10-UI-08-R04] Use the project visual direction on Outreach queue: Customer intelligence lab: dark plum, soft cream, coral; risk evidence and calibration.
+- [P10-UI-08-R05] Give Outreach queue one clear main action related to the business decision.
+- [P10-UI-08-R06] Display the active time window, filters and data version on Outreach queue where applicable.
+- [P10-UI-08-R07] Show the synthetic/static-demo label without overwhelming Outreach queue.
+- [P10-UI-08-R08] Use real verified snapshot values on Outreach queue; do not hand-enter attractive KPI numbers.
+- [P10-UI-08-R09] Explain calculation meaning and units adjacent to important Outreach queue values.
+- [P10-UI-08-R10] Provide an accessible table or text alternative for analytical graphics on Outreach queue.
+- [P10-UI-08-R11] Use consistent category ordering and deterministic tie breaks on Outreach queue.
+- [P10-UI-08-R12] Handle long names, negative values, missing categories and large values on Outreach queue.
+- [P10-UI-08-R13] Implement a useful no-data state on Outreach queue, including a way to clear restrictive filters.
+- [P10-UI-08-R14] Implement loading and failed-data states on Outreach queue without showing invented results.
+- [P10-UI-08-R15] Keep all Outreach queue controls keyboard accessible with visible focus.
+- [P10-UI-08-R16] Provide reduced-motion behavior for Outreach queue transitions.
+- [P10-UI-08-R17] Keep motion purposeful; chart changes on Outreach queue must not conceal changed units or populations.
+- [P10-UI-08-R18] Verify Outreach queue at mobile, tablet and desktop widths with actual rendered output.
+- [P10-UI-08-R19] Verify Outreach queue at 200 percent zoom and with realistic dense data.
+- [P10-UI-08-R20] Ensure exports from Outreach queue match its scope or clearly explain full-population export behavior.
+- [P10-UI-08-R21] Provide navigation from Outreach queue to evidence, definitions and the case study.
+- [P10-UI-08-R22] Check console errors, broken assets and nested path handling for Outreach queue.
+- [P10-UI-08-R23] Record screenshot-review findings for Outreach queue; do not assert review from source inspection.
+- [P10-UI-08-R24] Link Outreach queue to its relevant workflow and metric contract IDs in the traceability matrix.
+### P10-UI-09: Monitoring view
+- [P10-UI-09-R01] Screen: Monitoring view.
+- [P10-UI-09-R02] Purpose and principal representation: Data drift, maturity and scoring freshness.
+- [P10-UI-09-R03] Choose a stable route under /retentionlab/ and verify direct navigation and reload for Monitoring view.
+- [P10-UI-09-R04] Use the project visual direction on Monitoring view: Customer intelligence lab: dark plum, soft cream, coral; risk evidence and calibration.
+- [P10-UI-09-R05] Give Monitoring view one clear main action related to the business decision.
+- [P10-UI-09-R06] Display the active time window, filters and data version on Monitoring view where applicable.
+- [P10-UI-09-R07] Show the synthetic/static-demo label without overwhelming Monitoring view.
+- [P10-UI-09-R08] Use real verified snapshot values on Monitoring view; do not hand-enter attractive KPI numbers.
+- [P10-UI-09-R09] Explain calculation meaning and units adjacent to important Monitoring view values.
+- [P10-UI-09-R10] Provide an accessible table or text alternative for analytical graphics on Monitoring view.
+- [P10-UI-09-R11] Use consistent category ordering and deterministic tie breaks on Monitoring view.
+- [P10-UI-09-R12] Handle long names, negative values, missing categories and large values on Monitoring view.
+- [P10-UI-09-R13] Implement a useful no-data state on Monitoring view, including a way to clear restrictive filters.
+- [P10-UI-09-R14] Implement loading and failed-data states on Monitoring view without showing invented results.
+- [P10-UI-09-R15] Keep all Monitoring view controls keyboard accessible with visible focus.
+- [P10-UI-09-R16] Provide reduced-motion behavior for Monitoring view transitions.
+- [P10-UI-09-R17] Keep motion purposeful; chart changes on Monitoring view must not conceal changed units or populations.
+- [P10-UI-09-R18] Verify Monitoring view at mobile, tablet and desktop widths with actual rendered output.
+- [P10-UI-09-R19] Verify Monitoring view at 200 percent zoom and with realistic dense data.
+- [P10-UI-09-R20] Ensure exports from Monitoring view match its scope or clearly explain full-population export behavior.
+- [P10-UI-09-R21] Provide navigation from Monitoring view to evidence, definitions and the case study.
+- [P10-UI-09-R22] Check console errors, broken assets and nested path handling for Monitoring view.
+- [P10-UI-09-R23] Record screenshot-review findings for Monitoring view; do not assert review from source inspection.
+- [P10-UI-09-R24] Link Monitoring view to its relevant workflow and metric contract IDs in the traceability matrix.
+### P10-UI-10: Case study
+- [P10-UI-10-R01] Screen: Case study.
+- [P10-UI-10-R02] Purpose and principal representation: Model card, evaluation and intervention limits.
+- [P10-UI-10-R03] Choose a stable route under /retentionlab/ and verify direct navigation and reload for Case study.
+- [P10-UI-10-R04] Use the project visual direction on Case study: Customer intelligence lab: dark plum, soft cream, coral; risk evidence and calibration.
+- [P10-UI-10-R05] Give Case study one clear main action related to the business decision.
+- [P10-UI-10-R06] Display the active time window, filters and data version on Case study where applicable.
+- [P10-UI-10-R07] Show the synthetic/static-demo label without overwhelming Case study.
+- [P10-UI-10-R08] Use real verified snapshot values on Case study; do not hand-enter attractive KPI numbers.
+- [P10-UI-10-R09] Explain calculation meaning and units adjacent to important Case study values.
+- [P10-UI-10-R10] Provide an accessible table or text alternative for analytical graphics on Case study.
+- [P10-UI-10-R11] Use consistent category ordering and deterministic tie breaks on Case study.
+- [P10-UI-10-R12] Handle long names, negative values, missing categories and large values on Case study.
+- [P10-UI-10-R13] Implement a useful no-data state on Case study, including a way to clear restrictive filters.
+- [P10-UI-10-R14] Implement loading and failed-data states on Case study without showing invented results.
+- [P10-UI-10-R15] Keep all Case study controls keyboard accessible with visible focus.
+- [P10-UI-10-R16] Provide reduced-motion behavior for Case study transitions.
+- [P10-UI-10-R17] Keep motion purposeful; chart changes on Case study must not conceal changed units or populations.
+- [P10-UI-10-R18] Verify Case study at mobile, tablet and desktop widths with actual rendered output.
+- [P10-UI-10-R19] Verify Case study at 200 percent zoom and with realistic dense data.
+- [P10-UI-10-R20] Ensure exports from Case study match its scope or clearly explain full-population export behavior.
+- [P10-UI-10-R21] Provide navigation from Case study to evidence, definitions and the case study.
+- [P10-UI-10-R22] Check console errors, broken assets and nested path handling for Case study.
+- [P10-UI-10-R23] Record screenshot-review findings for Case study; do not assert review from source inspection.
+- [P10-UI-10-R24] Link Case study to its relevant workflow and metric contract IDs in the traceability matrix.
+
+## 07. Adversarial domain verification
+
+### P10-TEST-01-DETECT: Cancellation reason enters pre-cancellation features — detect
+- [P10-TEST-01-DETECT-R01] Failure hypothesis: Cancellation reason enters pre-cancellation features.
+- [P10-TEST-01-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P10-TEST-01-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Cancellation reason enters pre-cancellation features.
+- [P10-TEST-01-DETECT-R04] Document the expected business outcome before executing P10-TEST-01-DETECT.
+- [P10-TEST-01-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-01-DETECT-R06] Capture the initial canonical state and dataset hash for P10-TEST-01-DETECT.
+- [P10-TEST-01-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-01-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-01-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-01-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-01-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-01-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-01-DETECT-R13] Use a separate reference calculation when P10-TEST-01-DETECT affects a key numerical total.
+- [P10-TEST-01-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Cancellation reason enters pre-cancellation features.
+- [P10-TEST-01-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-01-DETECT.
+- [P10-TEST-01-DETECT-R16] If blocked by environment capability, mark P10-TEST-01-DETECT blocked and retain the executable test source.
+- [P10-TEST-01-DETECT-R17] Do not claim P10-TEST-01-DETECT passed from reading the implementation or from another test passing.
+- [P10-TEST-01-DETECT-R18] Rerun P10-TEST-01-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-01-RECOVER: Cancellation reason enters pre-cancellation features — recover
+- [P10-TEST-01-RECOVER-R01] Failure hypothesis: Cancellation reason enters pre-cancellation features.
+- [P10-TEST-01-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P10-TEST-01-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Cancellation reason enters pre-cancellation features.
+- [P10-TEST-01-RECOVER-R04] Document the expected business outcome before executing P10-TEST-01-RECOVER.
+- [P10-TEST-01-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-01-RECOVER-R06] Capture the initial canonical state and dataset hash for P10-TEST-01-RECOVER.
+- [P10-TEST-01-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-01-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-01-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-01-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-01-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-01-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-01-RECOVER-R13] Use a separate reference calculation when P10-TEST-01-RECOVER affects a key numerical total.
+- [P10-TEST-01-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Cancellation reason enters pre-cancellation features.
+- [P10-TEST-01-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-01-RECOVER.
+- [P10-TEST-01-RECOVER-R16] If blocked by environment capability, mark P10-TEST-01-RECOVER blocked and retain the executable test source.
+- [P10-TEST-01-RECOVER-R17] Do not claim P10-TEST-01-RECOVER passed from reading the implementation or from another test passing.
+- [P10-TEST-01-RECOVER-R18] Rerun P10-TEST-01-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-02-DETECT: Feature event occurred earlier but arrived after cutoff — detect
+- [P10-TEST-02-DETECT-R01] Failure hypothesis: Feature event occurred earlier but arrived after cutoff.
+- [P10-TEST-02-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P10-TEST-02-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Feature event occurred earlier but arrived after cutoff.
+- [P10-TEST-02-DETECT-R04] Document the expected business outcome before executing P10-TEST-02-DETECT.
+- [P10-TEST-02-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-02-DETECT-R06] Capture the initial canonical state and dataset hash for P10-TEST-02-DETECT.
+- [P10-TEST-02-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-02-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-02-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-02-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-02-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-02-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-02-DETECT-R13] Use a separate reference calculation when P10-TEST-02-DETECT affects a key numerical total.
+- [P10-TEST-02-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Feature event occurred earlier but arrived after cutoff.
+- [P10-TEST-02-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-02-DETECT.
+- [P10-TEST-02-DETECT-R16] If blocked by environment capability, mark P10-TEST-02-DETECT blocked and retain the executable test source.
+- [P10-TEST-02-DETECT-R17] Do not claim P10-TEST-02-DETECT passed from reading the implementation or from another test passing.
+- [P10-TEST-02-DETECT-R18] Rerun P10-TEST-02-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-02-RECOVER: Feature event occurred earlier but arrived after cutoff — recover
+- [P10-TEST-02-RECOVER-R01] Failure hypothesis: Feature event occurred earlier but arrived after cutoff.
+- [P10-TEST-02-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P10-TEST-02-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Feature event occurred earlier but arrived after cutoff.
+- [P10-TEST-02-RECOVER-R04] Document the expected business outcome before executing P10-TEST-02-RECOVER.
+- [P10-TEST-02-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-02-RECOVER-R06] Capture the initial canonical state and dataset hash for P10-TEST-02-RECOVER.
+- [P10-TEST-02-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-02-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-02-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-02-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-02-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-02-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-02-RECOVER-R13] Use a separate reference calculation when P10-TEST-02-RECOVER affects a key numerical total.
+- [P10-TEST-02-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Feature event occurred earlier but arrived after cutoff.
+- [P10-TEST-02-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-02-RECOVER.
+- [P10-TEST-02-RECOVER-R16] If blocked by environment capability, mark P10-TEST-02-RECOVER blocked and retain the executable test source.
+- [P10-TEST-02-RECOVER-R17] Do not claim P10-TEST-02-RECOVER passed from reading the implementation or from another test passing.
+- [P10-TEST-02-RECOVER-R18] Rerun P10-TEST-02-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-03-DETECT: Same account leaks repeated observations across split — detect
+- [P10-TEST-03-DETECT-R01] Failure hypothesis: Same account leaks repeated observations across split.
+- [P10-TEST-03-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P10-TEST-03-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Same account leaks repeated observations across split.
+- [P10-TEST-03-DETECT-R04] Document the expected business outcome before executing P10-TEST-03-DETECT.
+- [P10-TEST-03-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-03-DETECT-R06] Capture the initial canonical state and dataset hash for P10-TEST-03-DETECT.
+- [P10-TEST-03-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-03-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-03-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-03-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-03-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-03-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-03-DETECT-R13] Use a separate reference calculation when P10-TEST-03-DETECT affects a key numerical total.
+- [P10-TEST-03-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Same account leaks repeated observations across split.
+- [P10-TEST-03-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-03-DETECT.
+- [P10-TEST-03-DETECT-R16] If blocked by environment capability, mark P10-TEST-03-DETECT blocked and retain the executable test source.
+- [P10-TEST-03-DETECT-R17] Do not claim P10-TEST-03-DETECT passed from reading the implementation or from another test passing.
+- [P10-TEST-03-DETECT-R18] Rerun P10-TEST-03-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-03-RECOVER: Same account leaks repeated observations across split — recover
+- [P10-TEST-03-RECOVER-R01] Failure hypothesis: Same account leaks repeated observations across split.
+- [P10-TEST-03-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P10-TEST-03-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Same account leaks repeated observations across split.
+- [P10-TEST-03-RECOVER-R04] Document the expected business outcome before executing P10-TEST-03-RECOVER.
+- [P10-TEST-03-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-03-RECOVER-R06] Capture the initial canonical state and dataset hash for P10-TEST-03-RECOVER.
+- [P10-TEST-03-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-03-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-03-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-03-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-03-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-03-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-03-RECOVER-R13] Use a separate reference calculation when P10-TEST-03-RECOVER affects a key numerical total.
+- [P10-TEST-03-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Same account leaks repeated observations across split.
+- [P10-TEST-03-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-03-RECOVER.
+- [P10-TEST-03-RECOVER-R16] If blocked by environment capability, mark P10-TEST-03-RECOVER blocked and retain the executable test source.
+- [P10-TEST-03-RECOVER-R17] Do not claim P10-TEST-03-RECOVER passed from reading the implementation or from another test passing.
+- [P10-TEST-03-RECOVER-R18] Rerun P10-TEST-03-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-04-DETECT: Label windows overlap train and test boundaries — detect
+- [P10-TEST-04-DETECT-R01] Failure hypothesis: Label windows overlap train and test boundaries.
+- [P10-TEST-04-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P10-TEST-04-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Label windows overlap train and test boundaries.
+- [P10-TEST-04-DETECT-R04] Document the expected business outcome before executing P10-TEST-04-DETECT.
+- [P10-TEST-04-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-04-DETECT-R06] Capture the initial canonical state and dataset hash for P10-TEST-04-DETECT.
+- [P10-TEST-04-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-04-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-04-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-04-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-04-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-04-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-04-DETECT-R13] Use a separate reference calculation when P10-TEST-04-DETECT affects a key numerical total.
+- [P10-TEST-04-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Label windows overlap train and test boundaries.
+- [P10-TEST-04-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-04-DETECT.
+- [P10-TEST-04-DETECT-R16] If blocked by environment capability, mark P10-TEST-04-DETECT blocked and retain the executable test source.
+- [P10-TEST-04-DETECT-R17] Do not claim P10-TEST-04-DETECT passed from reading the implementation or from another test passing.
+- [P10-TEST-04-DETECT-R18] Rerun P10-TEST-04-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-04-RECOVER: Label windows overlap train and test boundaries — recover
+- [P10-TEST-04-RECOVER-R01] Failure hypothesis: Label windows overlap train and test boundaries.
+- [P10-TEST-04-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P10-TEST-04-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Label windows overlap train and test boundaries.
+- [P10-TEST-04-RECOVER-R04] Document the expected business outcome before executing P10-TEST-04-RECOVER.
+- [P10-TEST-04-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-04-RECOVER-R06] Capture the initial canonical state and dataset hash for P10-TEST-04-RECOVER.
+- [P10-TEST-04-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-04-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-04-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-04-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-04-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-04-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-04-RECOVER-R13] Use a separate reference calculation when P10-TEST-04-RECOVER affects a key numerical total.
+- [P10-TEST-04-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Label windows overlap train and test boundaries.
+- [P10-TEST-04-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-04-RECOVER.
+- [P10-TEST-04-RECOVER-R16] If blocked by environment capability, mark P10-TEST-04-RECOVER blocked and retain the executable test source.
+- [P10-TEST-04-RECOVER-R17] Do not claim P10-TEST-04-RECOVER passed from reading the implementation or from another test passing.
+- [P10-TEST-04-RECOVER-R18] Rerun P10-TEST-04-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-05-DETECT: Preprocessing fits on complete dataset — detect
+- [P10-TEST-05-DETECT-R01] Failure hypothesis: Preprocessing fits on complete dataset.
+- [P10-TEST-05-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P10-TEST-05-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Preprocessing fits on complete dataset.
+- [P10-TEST-05-DETECT-R04] Document the expected business outcome before executing P10-TEST-05-DETECT.
+- [P10-TEST-05-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-05-DETECT-R06] Capture the initial canonical state and dataset hash for P10-TEST-05-DETECT.
+- [P10-TEST-05-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-05-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-05-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-05-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-05-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-05-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-05-DETECT-R13] Use a separate reference calculation when P10-TEST-05-DETECT affects a key numerical total.
+- [P10-TEST-05-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Preprocessing fits on complete dataset.
+- [P10-TEST-05-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-05-DETECT.
+- [P10-TEST-05-DETECT-R16] If blocked by environment capability, mark P10-TEST-05-DETECT blocked and retain the executable test source.
+- [P10-TEST-05-DETECT-R17] Do not claim P10-TEST-05-DETECT passed from reading the implementation or from another test passing.
+- [P10-TEST-05-DETECT-R18] Rerun P10-TEST-05-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-05-RECOVER: Preprocessing fits on complete dataset — recover
+- [P10-TEST-05-RECOVER-R01] Failure hypothesis: Preprocessing fits on complete dataset.
+- [P10-TEST-05-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P10-TEST-05-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Preprocessing fits on complete dataset.
+- [P10-TEST-05-RECOVER-R04] Document the expected business outcome before executing P10-TEST-05-RECOVER.
+- [P10-TEST-05-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-05-RECOVER-R06] Capture the initial canonical state and dataset hash for P10-TEST-05-RECOVER.
+- [P10-TEST-05-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-05-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-05-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-05-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-05-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-05-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-05-RECOVER-R13] Use a separate reference calculation when P10-TEST-05-RECOVER affects a key numerical total.
+- [P10-TEST-05-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Preprocessing fits on complete dataset.
+- [P10-TEST-05-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-05-RECOVER.
+- [P10-TEST-05-RECOVER-R16] If blocked by environment capability, mark P10-TEST-05-RECOVER blocked and retain the executable test source.
+- [P10-TEST-05-RECOVER-R17] Do not claim P10-TEST-05-RECOVER passed from reading the implementation or from another test passing.
+- [P10-TEST-05-RECOVER-R18] Rerun P10-TEST-05-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-06-DETECT: Threshold selected on final test — detect
+- [P10-TEST-06-DETECT-R01] Failure hypothesis: Threshold selected on final test.
+- [P10-TEST-06-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P10-TEST-06-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Threshold selected on final test.
+- [P10-TEST-06-DETECT-R04] Document the expected business outcome before executing P10-TEST-06-DETECT.
+- [P10-TEST-06-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-06-DETECT-R06] Capture the initial canonical state and dataset hash for P10-TEST-06-DETECT.
+- [P10-TEST-06-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-06-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-06-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-06-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-06-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-06-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-06-DETECT-R13] Use a separate reference calculation when P10-TEST-06-DETECT affects a key numerical total.
+- [P10-TEST-06-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Threshold selected on final test.
+- [P10-TEST-06-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-06-DETECT.
+- [P10-TEST-06-DETECT-R16] If blocked by environment capability, mark P10-TEST-06-DETECT blocked and retain the executable test source.
+- [P10-TEST-06-DETECT-R17] Do not claim P10-TEST-06-DETECT passed from reading the implementation or from another test passing.
+- [P10-TEST-06-DETECT-R18] Rerun P10-TEST-06-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-06-RECOVER: Threshold selected on final test — recover
+- [P10-TEST-06-RECOVER-R01] Failure hypothesis: Threshold selected on final test.
+- [P10-TEST-06-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P10-TEST-06-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Threshold selected on final test.
+- [P10-TEST-06-RECOVER-R04] Document the expected business outcome before executing P10-TEST-06-RECOVER.
+- [P10-TEST-06-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-06-RECOVER-R06] Capture the initial canonical state and dataset hash for P10-TEST-06-RECOVER.
+- [P10-TEST-06-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-06-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-06-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-06-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-06-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-06-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-06-RECOVER-R13] Use a separate reference calculation when P10-TEST-06-RECOVER affects a key numerical total.
+- [P10-TEST-06-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Threshold selected on final test.
+- [P10-TEST-06-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-06-RECOVER.
+- [P10-TEST-06-RECOVER-R16] If blocked by environment capability, mark P10-TEST-06-RECOVER blocked and retain the executable test source.
+- [P10-TEST-06-RECOVER-R17] Do not claim P10-TEST-06-RECOVER passed from reading the implementation or from another test passing.
+- [P10-TEST-06-RECOVER-R18] Rerun P10-TEST-06-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-07-DETECT: Incomplete customer outcomes labeled nonchurn — detect
+- [P10-TEST-07-DETECT-R01] Failure hypothesis: Incomplete customer outcomes labeled nonchurn.
+- [P10-TEST-07-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P10-TEST-07-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Incomplete customer outcomes labeled nonchurn.
+- [P10-TEST-07-DETECT-R04] Document the expected business outcome before executing P10-TEST-07-DETECT.
+- [P10-TEST-07-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-07-DETECT-R06] Capture the initial canonical state and dataset hash for P10-TEST-07-DETECT.
+- [P10-TEST-07-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-07-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-07-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-07-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-07-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-07-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-07-DETECT-R13] Use a separate reference calculation when P10-TEST-07-DETECT affects a key numerical total.
+- [P10-TEST-07-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Incomplete customer outcomes labeled nonchurn.
+- [P10-TEST-07-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-07-DETECT.
+- [P10-TEST-07-DETECT-R16] If blocked by environment capability, mark P10-TEST-07-DETECT blocked and retain the executable test source.
+- [P10-TEST-07-DETECT-R17] Do not claim P10-TEST-07-DETECT passed from reading the implementation or from another test passing.
+- [P10-TEST-07-DETECT-R18] Rerun P10-TEST-07-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-07-RECOVER: Incomplete customer outcomes labeled nonchurn — recover
+- [P10-TEST-07-RECOVER-R01] Failure hypothesis: Incomplete customer outcomes labeled nonchurn.
+- [P10-TEST-07-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P10-TEST-07-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Incomplete customer outcomes labeled nonchurn.
+- [P10-TEST-07-RECOVER-R04] Document the expected business outcome before executing P10-TEST-07-RECOVER.
+- [P10-TEST-07-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-07-RECOVER-R06] Capture the initial canonical state and dataset hash for P10-TEST-07-RECOVER.
+- [P10-TEST-07-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-07-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-07-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-07-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-07-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-07-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-07-RECOVER-R13] Use a separate reference calculation when P10-TEST-07-RECOVER affects a key numerical total.
+- [P10-TEST-07-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Incomplete customer outcomes labeled nonchurn.
+- [P10-TEST-07-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-07-RECOVER.
+- [P10-TEST-07-RECOVER-R16] If blocked by environment capability, mark P10-TEST-07-RECOVER blocked and retain the executable test source.
+- [P10-TEST-07-RECOVER-R17] Do not claim P10-TEST-07-RECOVER passed from reading the implementation or from another test passing.
+- [P10-TEST-07-RECOVER-R18] Rerun P10-TEST-07-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-08-DETECT: Synthetic truth label exposed as feature — detect
+- [P10-TEST-08-DETECT-R01] Failure hypothesis: Synthetic truth label exposed as feature.
+- [P10-TEST-08-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P10-TEST-08-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Synthetic truth label exposed as feature.
+- [P10-TEST-08-DETECT-R04] Document the expected business outcome before executing P10-TEST-08-DETECT.
+- [P10-TEST-08-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-08-DETECT-R06] Capture the initial canonical state and dataset hash for P10-TEST-08-DETECT.
+- [P10-TEST-08-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-08-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-08-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-08-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-08-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-08-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-08-DETECT-R13] Use a separate reference calculation when P10-TEST-08-DETECT affects a key numerical total.
+- [P10-TEST-08-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Synthetic truth label exposed as feature.
+- [P10-TEST-08-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-08-DETECT.
+- [P10-TEST-08-DETECT-R16] If blocked by environment capability, mark P10-TEST-08-DETECT blocked and retain the executable test source.
+- [P10-TEST-08-DETECT-R17] Do not claim P10-TEST-08-DETECT passed from reading the implementation or from another test passing.
+- [P10-TEST-08-DETECT-R18] Rerun P10-TEST-08-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-08-RECOVER: Synthetic truth label exposed as feature — recover
+- [P10-TEST-08-RECOVER-R01] Failure hypothesis: Synthetic truth label exposed as feature.
+- [P10-TEST-08-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P10-TEST-08-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Synthetic truth label exposed as feature.
+- [P10-TEST-08-RECOVER-R04] Document the expected business outcome before executing P10-TEST-08-RECOVER.
+- [P10-TEST-08-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-08-RECOVER-R06] Capture the initial canonical state and dataset hash for P10-TEST-08-RECOVER.
+- [P10-TEST-08-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-08-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-08-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-08-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-08-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-08-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-08-RECOVER-R13] Use a separate reference calculation when P10-TEST-08-RECOVER affects a key numerical total.
+- [P10-TEST-08-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Synthetic truth label exposed as feature.
+- [P10-TEST-08-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-08-RECOVER.
+- [P10-TEST-08-RECOVER-R16] If blocked by environment capability, mark P10-TEST-08-RECOVER blocked and retain the executable test source.
+- [P10-TEST-08-RECOVER-R17] Do not claim P10-TEST-08-RECOVER passed from reading the implementation or from another test passing.
+- [P10-TEST-08-RECOVER-R18] Rerun P10-TEST-08-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-09-DETECT: High churn risk mistaken for offer responsiveness — detect
+- [P10-TEST-09-DETECT-R01] Failure hypothesis: High churn risk mistaken for offer responsiveness.
+- [P10-TEST-09-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P10-TEST-09-DETECT-R03] Construct the smallest synthetic fixture that reproduces: High churn risk mistaken for offer responsiveness.
+- [P10-TEST-09-DETECT-R04] Document the expected business outcome before executing P10-TEST-09-DETECT.
+- [P10-TEST-09-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-09-DETECT-R06] Capture the initial canonical state and dataset hash for P10-TEST-09-DETECT.
+- [P10-TEST-09-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-09-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-09-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-09-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-09-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-09-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-09-DETECT-R13] Use a separate reference calculation when P10-TEST-09-DETECT affects a key numerical total.
+- [P10-TEST-09-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of High churn risk mistaken for offer responsiveness.
+- [P10-TEST-09-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-09-DETECT.
+- [P10-TEST-09-DETECT-R16] If blocked by environment capability, mark P10-TEST-09-DETECT blocked and retain the executable test source.
+- [P10-TEST-09-DETECT-R17] Do not claim P10-TEST-09-DETECT passed from reading the implementation or from another test passing.
+- [P10-TEST-09-DETECT-R18] Rerun P10-TEST-09-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-09-RECOVER: High churn risk mistaken for offer responsiveness — recover
+- [P10-TEST-09-RECOVER-R01] Failure hypothesis: High churn risk mistaken for offer responsiveness.
+- [P10-TEST-09-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P10-TEST-09-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: High churn risk mistaken for offer responsiveness.
+- [P10-TEST-09-RECOVER-R04] Document the expected business outcome before executing P10-TEST-09-RECOVER.
+- [P10-TEST-09-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-09-RECOVER-R06] Capture the initial canonical state and dataset hash for P10-TEST-09-RECOVER.
+- [P10-TEST-09-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-09-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-09-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-09-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-09-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-09-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-09-RECOVER-R13] Use a separate reference calculation when P10-TEST-09-RECOVER affects a key numerical total.
+- [P10-TEST-09-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of High churn risk mistaken for offer responsiveness.
+- [P10-TEST-09-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-09-RECOVER.
+- [P10-TEST-09-RECOVER-R16] If blocked by environment capability, mark P10-TEST-09-RECOVER blocked and retain the executable test source.
+- [P10-TEST-09-RECOVER-R17] Do not claim P10-TEST-09-RECOVER passed from reading the implementation or from another test passing.
+- [P10-TEST-09-RECOVER-R18] Rerun P10-TEST-09-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-10-DETECT: Capacity exceeds eligible population — detect
+- [P10-TEST-10-DETECT-R01] Failure hypothesis: Capacity exceeds eligible population.
+- [P10-TEST-10-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P10-TEST-10-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Capacity exceeds eligible population.
+- [P10-TEST-10-DETECT-R04] Document the expected business outcome before executing P10-TEST-10-DETECT.
+- [P10-TEST-10-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-10-DETECT-R06] Capture the initial canonical state and dataset hash for P10-TEST-10-DETECT.
+- [P10-TEST-10-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-10-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-10-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-10-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-10-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-10-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-10-DETECT-R13] Use a separate reference calculation when P10-TEST-10-DETECT affects a key numerical total.
+- [P10-TEST-10-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Capacity exceeds eligible population.
+- [P10-TEST-10-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-10-DETECT.
+- [P10-TEST-10-DETECT-R16] If blocked by environment capability, mark P10-TEST-10-DETECT blocked and retain the executable test source.
+- [P10-TEST-10-DETECT-R17] Do not claim P10-TEST-10-DETECT passed from reading the implementation or from another test passing.
+- [P10-TEST-10-DETECT-R18] Rerun P10-TEST-10-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-10-RECOVER: Capacity exceeds eligible population — recover
+- [P10-TEST-10-RECOVER-R01] Failure hypothesis: Capacity exceeds eligible population.
+- [P10-TEST-10-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P10-TEST-10-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Capacity exceeds eligible population.
+- [P10-TEST-10-RECOVER-R04] Document the expected business outcome before executing P10-TEST-10-RECOVER.
+- [P10-TEST-10-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-10-RECOVER-R06] Capture the initial canonical state and dataset hash for P10-TEST-10-RECOVER.
+- [P10-TEST-10-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-10-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-10-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-10-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-10-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-10-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-10-RECOVER-R13] Use a separate reference calculation when P10-TEST-10-RECOVER affects a key numerical total.
+- [P10-TEST-10-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Capacity exceeds eligible population.
+- [P10-TEST-10-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-10-RECOVER.
+- [P10-TEST-10-RECOVER-R16] If blocked by environment capability, mark P10-TEST-10-RECOVER blocked and retain the executable test source.
+- [P10-TEST-10-RECOVER-R17] Do not claim P10-TEST-10-RECOVER passed from reading the implementation or from another test passing.
+- [P10-TEST-10-RECOVER-R18] Rerun P10-TEST-10-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-11-DETECT: Calibration evaluated on calibration training data — detect
+- [P10-TEST-11-DETECT-R01] Failure hypothesis: Calibration evaluated on calibration training data.
+- [P10-TEST-11-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P10-TEST-11-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Calibration evaluated on calibration training data.
+- [P10-TEST-11-DETECT-R04] Document the expected business outcome before executing P10-TEST-11-DETECT.
+- [P10-TEST-11-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-11-DETECT-R06] Capture the initial canonical state and dataset hash for P10-TEST-11-DETECT.
+- [P10-TEST-11-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-11-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-11-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-11-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-11-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-11-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-11-DETECT-R13] Use a separate reference calculation when P10-TEST-11-DETECT affects a key numerical total.
+- [P10-TEST-11-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Calibration evaluated on calibration training data.
+- [P10-TEST-11-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-11-DETECT.
+- [P10-TEST-11-DETECT-R16] If blocked by environment capability, mark P10-TEST-11-DETECT blocked and retain the executable test source.
+- [P10-TEST-11-DETECT-R17] Do not claim P10-TEST-11-DETECT passed from reading the implementation or from another test passing.
+- [P10-TEST-11-DETECT-R18] Rerun P10-TEST-11-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-11-RECOVER: Calibration evaluated on calibration training data — recover
+- [P10-TEST-11-RECOVER-R01] Failure hypothesis: Calibration evaluated on calibration training data.
+- [P10-TEST-11-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P10-TEST-11-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Calibration evaluated on calibration training data.
+- [P10-TEST-11-RECOVER-R04] Document the expected business outcome before executing P10-TEST-11-RECOVER.
+- [P10-TEST-11-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-11-RECOVER-R06] Capture the initial canonical state and dataset hash for P10-TEST-11-RECOVER.
+- [P10-TEST-11-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-11-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-11-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-11-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-11-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-11-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-11-RECOVER-R13] Use a separate reference calculation when P10-TEST-11-RECOVER affects a key numerical total.
+- [P10-TEST-11-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Calibration evaluated on calibration training data.
+- [P10-TEST-11-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-11-RECOVER.
+- [P10-TEST-11-RECOVER-R16] If blocked by environment capability, mark P10-TEST-11-RECOVER blocked and retain the executable test source.
+- [P10-TEST-11-RECOVER-R17] Do not claim P10-TEST-11-RECOVER passed from reading the implementation or from another test passing.
+- [P10-TEST-11-RECOVER-R18] Rerun P10-TEST-11-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-12-DETECT: Generator seed memorized by complex model — detect
+- [P10-TEST-12-DETECT-R01] Failure hypothesis: Generator seed memorized by complex model.
+- [P10-TEST-12-DETECT-R02] Verification objective: detect the violation before a misleading result or invalid state is accepted.
+- [P10-TEST-12-DETECT-R03] Construct the smallest synthetic fixture that reproduces: Generator seed memorized by complex model.
+- [P10-TEST-12-DETECT-R04] Document the expected business outcome before executing P10-TEST-12-DETECT.
+- [P10-TEST-12-DETECT-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-12-DETECT-R06] Capture the initial canonical state and dataset hash for P10-TEST-12-DETECT.
+- [P10-TEST-12-DETECT-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-12-DETECT-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-12-DETECT-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-12-DETECT-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-12-DETECT-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-12-DETECT-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-12-DETECT-R13] Use a separate reference calculation when P10-TEST-12-DETECT affects a key numerical total.
+- [P10-TEST-12-DETECT-R14] If browser-visible, verify the displayed and exported interpretation of Generator seed memorized by complex model.
+- [P10-TEST-12-DETECT-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-12-DETECT.
+- [P10-TEST-12-DETECT-R16] If blocked by environment capability, mark P10-TEST-12-DETECT blocked and retain the executable test source.
+- [P10-TEST-12-DETECT-R17] Do not claim P10-TEST-12-DETECT passed from reading the implementation or from another test passing.
+- [P10-TEST-12-DETECT-R18] Rerun P10-TEST-12-DETECT after a confirmed fix and retain the defect explanation in the verification ledger.
+### P10-TEST-12-RECOVER: Generator seed memorized by complex model — recover
+- [P10-TEST-12-RECOVER-R01] Failure hypothesis: Generator seed memorized by complex model.
+- [P10-TEST-12-RECOVER-R02] Verification objective: apply a valid correction or safe replay and demonstrate restored consistency.
+- [P10-TEST-12-RECOVER-R03] Construct the smallest synthetic fixture that reproduces: Generator seed memorized by complex model.
+- [P10-TEST-12-RECOVER-R04] Document the expected business outcome before executing P10-TEST-12-RECOVER.
+- [P10-TEST-12-RECOVER-R05] Identify the affected entity, metric or workflow contract rather than testing a generic exception only.
+- [P10-TEST-12-RECOVER-R06] Capture the initial canonical state and dataset hash for P10-TEST-12-RECOVER.
+- [P10-TEST-12-RECOVER-R07] Execute the relevant ingestion, calculation or user action through the actual application path.
+- [P10-TEST-12-RECOVER-R08] Assert accepted, rejected and quarantined record counts where ingestion is involved.
+- [P10-TEST-12-RECOVER-R09] Assert the business value/state, not only HTTP status or component visibility.
+- [P10-TEST-12-RECOVER-R10] Check that unrelated valid records and prior verified publications remain intact.
+- [P10-TEST-12-RECOVER-R11] Check that the user receives a specific explanation without internal secret leakage.
+- [P10-TEST-12-RECOVER-R12] Check that retrying the action does not silently introduce duplicate side effects.
+- [P10-TEST-12-RECOVER-R13] Use a separate reference calculation when P10-TEST-12-RECOVER affects a key numerical total.
+- [P10-TEST-12-RECOVER-R14] If browser-visible, verify the displayed and exported interpretation of Generator seed memorized by complex model.
+- [P10-TEST-12-RECOVER-R15] Record command, exit code, code SHA, expected result and actual result for P10-TEST-12-RECOVER.
+- [P10-TEST-12-RECOVER-R16] If blocked by environment capability, mark P10-TEST-12-RECOVER blocked and retain the executable test source.
+- [P10-TEST-12-RECOVER-R17] Do not claim P10-TEST-12-RECOVER passed from reading the implementation or from another test passing.
+- [P10-TEST-12-RECOVER-R18] Rerun P10-TEST-12-RECOVER after a confirmed fix and retain the defect explanation in the verification ledger.
+
+## 08. Business and technical deliverables
+
+### P10-ART-01: business-case
+- [P10-ART-01-R01] Deliver business-case for RetentionLab.
+- [P10-ART-01-R02] Its required content is business problem, stakeholder map, scope, current/future-state process and decision criteria.
+- [P10-ART-01-R03] Use this business decision as its organizing question: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-ART-01-R04] Reference actual retentionlab entities, metrics and workflow IDs instead of generic template prose.
+- [P10-ART-01-R05] Keep business-case source files under the project directory in GitHub.
+- [P10-ART-01-R06] Generate binary business-case outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P10-ART-01-R07] Include the source dataset hash and implementation revision in business-case where relevant.
+- [P10-ART-01-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in business-case.
+- [P10-ART-01-R09] Check that important numbers in business-case reconcile with the independent reference calculation.
+- [P10-ART-01-R10] Use clear units, periods and population descriptions throughout business-case.
+- [P10-ART-01-R11] If business-case depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P10-ART-01-R12] Provide a brief read/use instruction for business-case without requiring laptop installation.
+- [P10-ART-01-R13] Use accessible headings, labels and tables in business-case.
+- [P10-ART-01-R14] Link business-case from the individual website evidence area when safe and useful.
+- [P10-ART-01-R15] Do not publish credentials, real personal records or internal secrets in business-case.
+- [P10-ART-01-R16] Have the appropriate specialist review business-case before coordinator integration.
+- [P10-ART-01-R17] Record the actual verification status of business-case in the release manifest.
+- [P10-ART-01-R18] Keep business-case claims consistent with the public case study and resume bullet suggestions.
+### P10-ART-02: requirements
+- [P10-ART-02-R01] Deliver requirements for RetentionLab.
+- [P10-ART-02-R02] Its required content is functional requirements, nonfunctional requirements, user stories, acceptance criteria and traceability.
+- [P10-ART-02-R03] Use this business decision as its organizing question: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-ART-02-R04] Reference actual retentionlab entities, metrics and workflow IDs instead of generic template prose.
+- [P10-ART-02-R05] Keep requirements source files under the project directory in GitHub.
+- [P10-ART-02-R06] Generate binary requirements outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P10-ART-02-R07] Include the source dataset hash and implementation revision in requirements where relevant.
+- [P10-ART-02-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in requirements.
+- [P10-ART-02-R09] Check that important numbers in requirements reconcile with the independent reference calculation.
+- [P10-ART-02-R10] Use clear units, periods and population descriptions throughout requirements.
+- [P10-ART-02-R11] If requirements depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P10-ART-02-R12] Provide a brief read/use instruction for requirements without requiring laptop installation.
+- [P10-ART-02-R13] Use accessible headings, labels and tables in requirements.
+- [P10-ART-02-R14] Link requirements from the individual website evidence area when safe and useful.
+- [P10-ART-02-R15] Do not publish credentials, real personal records or internal secrets in requirements.
+- [P10-ART-02-R16] Have the appropriate specialist review requirements before coordinator integration.
+- [P10-ART-02-R17] Record the actual verification status of requirements in the release manifest.
+- [P10-ART-02-R18] Keep requirements claims consistent with the public case study and resume bullet suggestions.
+### P10-ART-03: data-dictionary
+- [P10-ART-03-R01] Deliver data-dictionary for RetentionLab.
+- [P10-ART-03-R02] Its required content is entity grain, field types, source contracts, foreign keys and source-to-target mapping.
+- [P10-ART-03-R03] Use this business decision as its organizing question: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-ART-03-R04] Reference actual retentionlab entities, metrics and workflow IDs instead of generic template prose.
+- [P10-ART-03-R05] Keep data-dictionary source files under the project directory in GitHub.
+- [P10-ART-03-R06] Generate binary data-dictionary outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P10-ART-03-R07] Include the source dataset hash and implementation revision in data-dictionary where relevant.
+- [P10-ART-03-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in data-dictionary.
+- [P10-ART-03-R09] Check that important numbers in data-dictionary reconcile with the independent reference calculation.
+- [P10-ART-03-R10] Use clear units, periods and population descriptions throughout data-dictionary.
+- [P10-ART-03-R11] If data-dictionary depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P10-ART-03-R12] Provide a brief read/use instruction for data-dictionary without requiring laptop installation.
+- [P10-ART-03-R13] Use accessible headings, labels and tables in data-dictionary.
+- [P10-ART-03-R14] Link data-dictionary from the individual website evidence area when safe and useful.
+- [P10-ART-03-R15] Do not publish credentials, real personal records or internal secrets in data-dictionary.
+- [P10-ART-03-R16] Have the appropriate specialist review data-dictionary before coordinator integration.
+- [P10-ART-03-R17] Record the actual verification status of data-dictionary in the release manifest.
+- [P10-ART-03-R18] Keep data-dictionary claims consistent with the public case study and resume bullet suggestions.
+### P10-ART-04: sql-analysis
+- [P10-ART-04-R01] Deliver sql-analysis for RetentionLab.
+- [P10-ART-04-R02] Its required content is executable SQL investigations with independently reconciled totals.
+- [P10-ART-04-R03] Use this business decision as its organizing question: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-ART-04-R04] Reference actual retentionlab entities, metrics and workflow IDs instead of generic template prose.
+- [P10-ART-04-R05] Keep sql-analysis source files under the project directory in GitHub.
+- [P10-ART-04-R06] Generate binary sql-analysis outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P10-ART-04-R07] Include the source dataset hash and implementation revision in sql-analysis where relevant.
+- [P10-ART-04-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in sql-analysis.
+- [P10-ART-04-R09] Check that important numbers in sql-analysis reconcile with the independent reference calculation.
+- [P10-ART-04-R10] Use clear units, periods and population descriptions throughout sql-analysis.
+- [P10-ART-04-R11] If sql-analysis depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P10-ART-04-R12] Provide a brief read/use instruction for sql-analysis without requiring laptop installation.
+- [P10-ART-04-R13] Use accessible headings, labels and tables in sql-analysis.
+- [P10-ART-04-R14] Link sql-analysis from the individual website evidence area when safe and useful.
+- [P10-ART-04-R15] Do not publish credentials, real personal records or internal secrets in sql-analysis.
+- [P10-ART-04-R16] Have the appropriate specialist review sql-analysis before coordinator integration.
+- [P10-ART-04-R17] Record the actual verification status of sql-analysis in the release manifest.
+- [P10-ART-04-R18] Keep sql-analysis claims consistent with the public case study and resume bullet suggestions.
+### P10-ART-05: excel-workbook
+- [P10-ART-05-R01] Deliver excel-workbook for RetentionLab.
+- [P10-ART-05-R02] Its required content is formula-driven analyst workbook using project inputs and explicit assumptions.
+- [P10-ART-05-R03] Use this business decision as its organizing question: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-ART-05-R04] Reference actual retentionlab entities, metrics and workflow IDs instead of generic template prose.
+- [P10-ART-05-R05] Keep excel-workbook source files under the project directory in GitHub.
+- [P10-ART-05-R06] Generate binary excel-workbook outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P10-ART-05-R07] Include the source dataset hash and implementation revision in excel-workbook where relevant.
+- [P10-ART-05-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in excel-workbook.
+- [P10-ART-05-R09] Check that important numbers in excel-workbook reconcile with the independent reference calculation.
+- [P10-ART-05-R10] Use clear units, periods and population descriptions throughout excel-workbook.
+- [P10-ART-05-R11] If excel-workbook depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P10-ART-05-R12] Provide a brief read/use instruction for excel-workbook without requiring laptop installation.
+- [P10-ART-05-R13] Use accessible headings, labels and tables in excel-workbook.
+- [P10-ART-05-R14] Link excel-workbook from the individual website evidence area when safe and useful.
+- [P10-ART-05-R15] Do not publish credentials, real personal records or internal secrets in excel-workbook.
+- [P10-ART-05-R16] Have the appropriate specialist review excel-workbook before coordinator integration.
+- [P10-ART-05-R17] Record the actual verification status of excel-workbook in the release manifest.
+- [P10-ART-05-R18] Keep excel-workbook claims consistent with the public case study and resume bullet suggestions.
+### P10-ART-06: bi-package
+- [P10-ART-06-R01] Deliver bi-package for RetentionLab.
+- [P10-ART-06-R02] Its required content is reusable metric model, relationships, DAX/Power Query where relevant and verification status.
+- [P10-ART-06-R03] Use this business decision as its organizing question: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-ART-06-R04] Reference actual retentionlab entities, metrics and workflow IDs instead of generic template prose.
+- [P10-ART-06-R05] Keep bi-package source files under the project directory in GitHub.
+- [P10-ART-06-R06] Generate binary bi-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P10-ART-06-R07] Include the source dataset hash and implementation revision in bi-package where relevant.
+- [P10-ART-06-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in bi-package.
+- [P10-ART-06-R09] Check that important numbers in bi-package reconcile with the independent reference calculation.
+- [P10-ART-06-R10] Use clear units, periods and population descriptions throughout bi-package.
+- [P10-ART-06-R11] If bi-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P10-ART-06-R12] Provide a brief read/use instruction for bi-package without requiring laptop installation.
+- [P10-ART-06-R13] Use accessible headings, labels and tables in bi-package.
+- [P10-ART-06-R14] Link bi-package from the individual website evidence area when safe and useful.
+- [P10-ART-06-R15] Do not publish credentials, real personal records or internal secrets in bi-package.
+- [P10-ART-06-R16] Have the appropriate specialist review bi-package before coordinator integration.
+- [P10-ART-06-R17] Record the actual verification status of bi-package in the release manifest.
+- [P10-ART-06-R18] Keep bi-package claims consistent with the public case study and resume bullet suggestions.
+### P10-ART-07: executive-memo
+- [P10-ART-07-R01] Deliver executive-memo for RetentionLab.
+- [P10-ART-07-R02] Its required content is evidence-based recommendation, options, uncertainty and limitations.
+- [P10-ART-07-R03] Use this business decision as its organizing question: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-ART-07-R04] Reference actual retentionlab entities, metrics and workflow IDs instead of generic template prose.
+- [P10-ART-07-R05] Keep executive-memo source files under the project directory in GitHub.
+- [P10-ART-07-R06] Generate binary executive-memo outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P10-ART-07-R07] Include the source dataset hash and implementation revision in executive-memo where relevant.
+- [P10-ART-07-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in executive-memo.
+- [P10-ART-07-R09] Check that important numbers in executive-memo reconcile with the independent reference calculation.
+- [P10-ART-07-R10] Use clear units, periods and population descriptions throughout executive-memo.
+- [P10-ART-07-R11] If executive-memo depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P10-ART-07-R12] Provide a brief read/use instruction for executive-memo without requiring laptop installation.
+- [P10-ART-07-R13] Use accessible headings, labels and tables in executive-memo.
+- [P10-ART-07-R14] Link executive-memo from the individual website evidence area when safe and useful.
+- [P10-ART-07-R15] Do not publish credentials, real personal records or internal secrets in executive-memo.
+- [P10-ART-07-R16] Have the appropriate specialist review executive-memo before coordinator integration.
+- [P10-ART-07-R17] Record the actual verification status of executive-memo in the release manifest.
+- [P10-ART-07-R18] Keep executive-memo claims consistent with the public case study and resume bullet suggestions.
+### P10-ART-08: uat-evidence
+- [P10-ART-08-R01] Deliver uat-evidence for RetentionLab.
+- [P10-ART-08-R02] Its required content is business scenarios with expected answers, actual observations and defect disposition.
+- [P10-ART-08-R03] Use this business decision as its organizing question: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-ART-08-R04] Reference actual retentionlab entities, metrics and workflow IDs instead of generic template prose.
+- [P10-ART-08-R05] Keep uat-evidence source files under the project directory in GitHub.
+- [P10-ART-08-R06] Generate binary uat-evidence outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P10-ART-08-R07] Include the source dataset hash and implementation revision in uat-evidence where relevant.
+- [P10-ART-08-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in uat-evidence.
+- [P10-ART-08-R09] Check that important numbers in uat-evidence reconcile with the independent reference calculation.
+- [P10-ART-08-R10] Use clear units, periods and population descriptions throughout uat-evidence.
+- [P10-ART-08-R11] If uat-evidence depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P10-ART-08-R12] Provide a brief read/use instruction for uat-evidence without requiring laptop installation.
+- [P10-ART-08-R13] Use accessible headings, labels and tables in uat-evidence.
+- [P10-ART-08-R14] Link uat-evidence from the individual website evidence area when safe and useful.
+- [P10-ART-08-R15] Do not publish credentials, real personal records or internal secrets in uat-evidence.
+- [P10-ART-08-R16] Have the appropriate specialist review uat-evidence before coordinator integration.
+- [P10-ART-08-R17] Record the actual verification status of uat-evidence in the release manifest.
+- [P10-ART-08-R18] Keep uat-evidence claims consistent with the public case study and resume bullet suggestions.
+### P10-ART-09: technical-case-study
+- [P10-ART-09-R01] Deliver technical-case-study for RetentionLab.
+- [P10-ART-09-R02] Its required content is architecture, tradeoffs, recovery behavior, reproducible setup and measured evidence.
+- [P10-ART-09-R03] Use this business decision as its organizing question: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-ART-09-R04] Reference actual retentionlab entities, metrics and workflow IDs instead of generic template prose.
+- [P10-ART-09-R05] Keep technical-case-study source files under the project directory in GitHub.
+- [P10-ART-09-R06] Generate binary technical-case-study outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P10-ART-09-R07] Include the source dataset hash and implementation revision in technical-case-study where relevant.
+- [P10-ART-09-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in technical-case-study.
+- [P10-ART-09-R09] Check that important numbers in technical-case-study reconcile with the independent reference calculation.
+- [P10-ART-09-R10] Use clear units, periods and population descriptions throughout technical-case-study.
+- [P10-ART-09-R11] If technical-case-study depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P10-ART-09-R12] Provide a brief read/use instruction for technical-case-study without requiring laptop installation.
+- [P10-ART-09-R13] Use accessible headings, labels and tables in technical-case-study.
+- [P10-ART-09-R14] Link technical-case-study from the individual website evidence area when safe and useful.
+- [P10-ART-09-R15] Do not publish credentials, real personal records or internal secrets in technical-case-study.
+- [P10-ART-09-R16] Have the appropriate specialist review technical-case-study before coordinator integration.
+- [P10-ART-09-R17] Record the actual verification status of technical-case-study in the release manifest.
+- [P10-ART-09-R18] Keep technical-case-study claims consistent with the public case study and resume bullet suggestions.
+### P10-ART-10: release-package
+- [P10-ART-10-R01] Deliver release-package for RetentionLab.
+- [P10-ART-10-R02] Its required content is individual site, source links, checksums, main portfolio metadata and rollback manifest.
+- [P10-ART-10-R03] Use this business decision as its organizing question: Which accounts deserve limited retention attention under uncertain intervention value?
+- [P10-ART-10-R04] Reference actual retentionlab entities, metrics and workflow IDs instead of generic template prose.
+- [P10-ART-10-R05] Keep release-package source files under the project directory in GitHub.
+- [P10-ART-10-R06] Generate binary release-package outputs only on hosted compute and preserve durable versions in GitHub releases.
+- [P10-ART-10-R07] Include the source dataset hash and implementation revision in release-package where relevant.
+- [P10-ART-10-R08] Distinguish observed results, simulated outcomes and hypothetical real-world benefits in release-package.
+- [P10-ART-10-R09] Check that important numbers in release-package reconcile with the independent reference calculation.
+- [P10-ART-10-R10] Use clear units, periods and population descriptions throughout release-package.
+- [P10-ART-10-R11] If release-package depends on unavailable proprietary software, preserve usable source and disclose the missing verification.
+- [P10-ART-10-R12] Provide a brief read/use instruction for release-package without requiring laptop installation.
+- [P10-ART-10-R13] Use accessible headings, labels and tables in release-package.
+- [P10-ART-10-R14] Link release-package from the individual website evidence area when safe and useful.
+- [P10-ART-10-R15] Do not publish credentials, real personal records or internal secrets in release-package.
+- [P10-ART-10-R16] Have the appropriate specialist review release-package before coordinator integration.
+- [P10-ART-10-R17] Record the actual verification status of release-package in the release manifest.
+- [P10-ART-10-R18] Keep release-package claims consistent with the public case study and resume bullet suggestions.
+
+## 09. Remote implementation work packages
+
+### P10-WORK-01: contract
+- [P10-WORK-01-R01] Assign contract to the business-contract specialist; write and review concrete definitions before implementing.
+- [P10-WORK-01-R02] Fable coordinator must supply the relevant P10 contract IDs and explicit file ownership.
+- [P10-WORK-01-R03] Resolve the actual specialist model before dispatching P10-WORK-01.
+- [P10-WORK-01-R04] Record requested model, resolved model, task ID and parent assignment for P10-WORK-01.
+- [P10-WORK-01-R05] Run P10-WORK-01 only in a verified GitHub-hosted environment.
+- [P10-WORK-01-R06] Checkpoint the incoming code SHA and assumptions before P10-WORK-01 edits.
+- [P10-WORK-01-R07] Complete a bounded vertical slice in P10-WORK-01; do not redesign unrelated projects.
+- [P10-WORK-01-R08] Return changed paths, verification performed and unresolved issues from P10-WORK-01.
+- [P10-WORK-01-R09] Review the diff and run affected checks before integrating P10-WORK-01.
+- [P10-WORK-01-R10] Persist the resulting commit SHA and evidence URLs for P10-WORK-01.
+- [P10-WORK-01-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P10-WORK-01-R12] No routine permission request is needed at the end of P10-WORK-01; proceed according to the master authorization envelope.
+### P10-WORK-02: fixtures
+- [P10-WORK-02-R01] Assign fixtures to the verification specialist; establish known answers independently of product calculations.
+- [P10-WORK-02-R02] Fable coordinator must supply the relevant P10 contract IDs and explicit file ownership.
+- [P10-WORK-02-R03] Resolve the actual specialist model before dispatching P10-WORK-02.
+- [P10-WORK-02-R04] Record requested model, resolved model, task ID and parent assignment for P10-WORK-02.
+- [P10-WORK-02-R05] Run P10-WORK-02 only in a verified GitHub-hosted environment.
+- [P10-WORK-02-R06] Checkpoint the incoming code SHA and assumptions before P10-WORK-02 edits.
+- [P10-WORK-02-R07] Complete a bounded vertical slice in P10-WORK-02; do not redesign unrelated projects.
+- [P10-WORK-02-R08] Return changed paths, verification performed and unresolved issues from P10-WORK-02.
+- [P10-WORK-02-R09] Review the diff and run affected checks before integrating P10-WORK-02.
+- [P10-WORK-02-R10] Persist the resulting commit SHA and evidence URLs for P10-WORK-02.
+- [P10-WORK-02-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P10-WORK-02-R12] No routine permission request is needed at the end of P10-WORK-02; proceed according to the master authorization envelope.
+### P10-WORK-03: data
+- [P10-WORK-03-R01] Assign data to the data specialist; generate sources, validate and reconcile transformations.
+- [P10-WORK-03-R02] Fable coordinator must supply the relevant P10 contract IDs and explicit file ownership.
+- [P10-WORK-03-R03] Resolve the actual specialist model before dispatching P10-WORK-03.
+- [P10-WORK-03-R04] Record requested model, resolved model, task ID and parent assignment for P10-WORK-03.
+- [P10-WORK-03-R05] Run P10-WORK-03 only in a verified GitHub-hosted environment.
+- [P10-WORK-03-R06] Checkpoint the incoming code SHA and assumptions before P10-WORK-03 edits.
+- [P10-WORK-03-R07] Complete a bounded vertical slice in P10-WORK-03; do not redesign unrelated projects.
+- [P10-WORK-03-R08] Return changed paths, verification performed and unresolved issues from P10-WORK-03.
+- [P10-WORK-03-R09] Review the diff and run affected checks before integrating P10-WORK-03.
+- [P10-WORK-03-R10] Persist the resulting commit SHA and evidence URLs for P10-WORK-03.
+- [P10-WORK-03-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P10-WORK-03-R12] No routine permission request is needed at the end of P10-WORK-03; proceed according to the master authorization envelope.
+### P10-WORK-04: backend
+- [P10-WORK-04-R01] Assign backend to the backend specialist; implement tested transitions and API contracts on remote runners.
+- [P10-WORK-04-R02] Fable coordinator must supply the relevant P10 contract IDs and explicit file ownership.
+- [P10-WORK-04-R03] Resolve the actual specialist model before dispatching P10-WORK-04.
+- [P10-WORK-04-R04] Record requested model, resolved model, task ID and parent assignment for P10-WORK-04.
+- [P10-WORK-04-R05] Run P10-WORK-04 only in a verified GitHub-hosted environment.
+- [P10-WORK-04-R06] Checkpoint the incoming code SHA and assumptions before P10-WORK-04 edits.
+- [P10-WORK-04-R07] Complete a bounded vertical slice in P10-WORK-04; do not redesign unrelated projects.
+- [P10-WORK-04-R08] Return changed paths, verification performed and unresolved issues from P10-WORK-04.
+- [P10-WORK-04-R09] Review the diff and run affected checks before integrating P10-WORK-04.
+- [P10-WORK-04-R10] Persist the resulting commit SHA and evidence URLs for P10-WORK-04.
+- [P10-WORK-04-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P10-WORK-04-R12] No routine permission request is needed at the end of P10-WORK-04; proceed according to the master authorization envelope.
+### P10-WORK-05: web
+- [P10-WORK-05-R01] Assign web to the frontend specialist; connect the first decision journey to verified inputs.
+- [P10-WORK-05-R02] Fable coordinator must supply the relevant P10 contract IDs and explicit file ownership.
+- [P10-WORK-05-R03] Resolve the actual specialist model before dispatching P10-WORK-05.
+- [P10-WORK-05-R04] Record requested model, resolved model, task ID and parent assignment for P10-WORK-05.
+- [P10-WORK-05-R05] Run P10-WORK-05 only in a verified GitHub-hosted environment.
+- [P10-WORK-05-R06] Checkpoint the incoming code SHA and assumptions before P10-WORK-05 edits.
+- [P10-WORK-05-R07] Complete a bounded vertical slice in P10-WORK-05; do not redesign unrelated projects.
+- [P10-WORK-05-R08] Return changed paths, verification performed and unresolved issues from P10-WORK-05.
+- [P10-WORK-05-R09] Review the diff and run affected checks before integrating P10-WORK-05.
+- [P10-WORK-05-R10] Persist the resulting commit SHA and evidence URLs for P10-WORK-05.
+- [P10-WORK-05-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P10-WORK-05-R12] No routine permission request is needed at the end of P10-WORK-05; proceed according to the master authorization envelope.
+### P10-WORK-06: analytics
+- [P10-WORK-06-R01] Assign analytics to the quantitative specialist; verify calculations and domain-specific evaluation.
+- [P10-WORK-06-R02] Fable coordinator must supply the relevant P10 contract IDs and explicit file ownership.
+- [P10-WORK-06-R03] Resolve the actual specialist model before dispatching P10-WORK-06.
+- [P10-WORK-06-R04] Record requested model, resolved model, task ID and parent assignment for P10-WORK-06.
+- [P10-WORK-06-R05] Run P10-WORK-06 only in a verified GitHub-hosted environment.
+- [P10-WORK-06-R06] Checkpoint the incoming code SHA and assumptions before P10-WORK-06 edits.
+- [P10-WORK-06-R07] Complete a bounded vertical slice in P10-WORK-06; do not redesign unrelated projects.
+- [P10-WORK-06-R08] Return changed paths, verification performed and unresolved issues from P10-WORK-06.
+- [P10-WORK-06-R09] Review the diff and run affected checks before integrating P10-WORK-06.
+- [P10-WORK-06-R10] Persist the resulting commit SHA and evidence URLs for P10-WORK-06.
+- [P10-WORK-06-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P10-WORK-06-R12] No routine permission request is needed at the end of P10-WORK-06; proceed according to the master authorization envelope.
+### P10-WORK-07: review
+- [P10-WORK-07-R01] Assign review to the verification specialist; challenge invariants and inspect rendered evidence.
+- [P10-WORK-07-R02] Fable coordinator must supply the relevant P10 contract IDs and explicit file ownership.
+- [P10-WORK-07-R03] Resolve the actual specialist model before dispatching P10-WORK-07.
+- [P10-WORK-07-R04] Record requested model, resolved model, task ID and parent assignment for P10-WORK-07.
+- [P10-WORK-07-R05] Run P10-WORK-07 only in a verified GitHub-hosted environment.
+- [P10-WORK-07-R06] Checkpoint the incoming code SHA and assumptions before P10-WORK-07 edits.
+- [P10-WORK-07-R07] Complete a bounded vertical slice in P10-WORK-07; do not redesign unrelated projects.
+- [P10-WORK-07-R08] Return changed paths, verification performed and unresolved issues from P10-WORK-07.
+- [P10-WORK-07-R09] Review the diff and run affected checks before integrating P10-WORK-07.
+- [P10-WORK-07-R10] Persist the resulting commit SHA and evidence URLs for P10-WORK-07.
+- [P10-WORK-07-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P10-WORK-07-R12] No routine permission request is needed at the end of P10-WORK-07; proceed according to the master authorization envelope.
+### P10-WORK-08: artifacts
+- [P10-WORK-08-R01] Assign artifacts to the business-contract specialist; complete business and analytical deliverables.
+- [P10-WORK-08-R02] Fable coordinator must supply the relevant P10 contract IDs and explicit file ownership.
+- [P10-WORK-08-R03] Resolve the actual specialist model before dispatching P10-WORK-08.
+- [P10-WORK-08-R04] Record requested model, resolved model, task ID and parent assignment for P10-WORK-08.
+- [P10-WORK-08-R05] Run P10-WORK-08 only in a verified GitHub-hosted environment.
+- [P10-WORK-08-R06] Checkpoint the incoming code SHA and assumptions before P10-WORK-08 edits.
+- [P10-WORK-08-R07] Complete a bounded vertical slice in P10-WORK-08; do not redesign unrelated projects.
+- [P10-WORK-08-R08] Return changed paths, verification performed and unresolved issues from P10-WORK-08.
+- [P10-WORK-08-R09] Review the diff and run affected checks before integrating P10-WORK-08.
+- [P10-WORK-08-R10] Persist the resulting commit SHA and evidence URLs for P10-WORK-08.
+- [P10-WORK-08-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P10-WORK-08-R12] No routine permission request is needed at the end of P10-WORK-08; proceed according to the master authorization envelope.
+### P10-WORK-09: release
+- [P10-WORK-09-R01] Assign release to the release specialist; publish and verify the standalone static website.
+- [P10-WORK-09-R02] Fable coordinator must supply the relevant P10 contract IDs and explicit file ownership.
+- [P10-WORK-09-R03] Resolve the actual specialist model before dispatching P10-WORK-09.
+- [P10-WORK-09-R04] Record requested model, resolved model, task ID and parent assignment for P10-WORK-09.
+- [P10-WORK-09-R05] Run P10-WORK-09 only in a verified GitHub-hosted environment.
+- [P10-WORK-09-R06] Checkpoint the incoming code SHA and assumptions before P10-WORK-09 edits.
+- [P10-WORK-09-R07] Complete a bounded vertical slice in P10-WORK-09; do not redesign unrelated projects.
+- [P10-WORK-09-R08] Return changed paths, verification performed and unresolved issues from P10-WORK-09.
+- [P10-WORK-09-R09] Review the diff and run affected checks before integrating P10-WORK-09.
+- [P10-WORK-09-R10] Persist the resulting commit SHA and evidence URLs for P10-WORK-09.
+- [P10-WORK-09-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P10-WORK-09-R12] No routine permission request is needed at the end of P10-WORK-09; proceed according to the master authorization envelope.
+### P10-WORK-10: integrate
+- [P10-WORK-10-R01] Assign integrate to the release specialist; rebuild and verify the existing main portfolio entry.
+- [P10-WORK-10-R02] Fable coordinator must supply the relevant P10 contract IDs and explicit file ownership.
+- [P10-WORK-10-R03] Resolve the actual specialist model before dispatching P10-WORK-10.
+- [P10-WORK-10-R04] Record requested model, resolved model, task ID and parent assignment for P10-WORK-10.
+- [P10-WORK-10-R05] Run P10-WORK-10 only in a verified GitHub-hosted environment.
+- [P10-WORK-10-R06] Checkpoint the incoming code SHA and assumptions before P10-WORK-10 edits.
+- [P10-WORK-10-R07] Complete a bounded vertical slice in P10-WORK-10; do not redesign unrelated projects.
+- [P10-WORK-10-R08] Return changed paths, verification performed and unresolved issues from P10-WORK-10.
+- [P10-WORK-10-R09] Review the diff and run affected checks before integrating P10-WORK-10.
+- [P10-WORK-10-R10] Persist the resulting commit SHA and evidence URLs for P10-WORK-10.
+- [P10-WORK-10-R11] If blocked, write the specific blocker and continue an independent authorized work package.
+- [P10-WORK-10-R12] No routine permission request is needed at the end of P10-WORK-10; proceed according to the master authorization envelope.
+
+## 10. Release, individual website and main portfolio acceptance
+
+- [P10-REL-01] Build retentionlab as an independently navigable static product website with its own landing, demo and evidence routes.
+- [P10-REL-02] Publish under a unique verified GitHub Pages path; do not assume the path exists before deployment.
+- [P10-REL-03] Preserve all retentionlab durable source, contracts, data generation and evidence in GitHub.
+- [P10-REL-04] Use no laptop checkout, local database, downloaded workbook or browser persistent storage as a build dependency.
+- [P10-REL-05] Run the backend and relational acceptance suite in GitHub Actions with a transient PostgreSQL service.
+- [P10-REL-06] Document the distinction between verified backend execution and browser-only simulated actions.
+- [P10-REL-07] Check every public export for synthetic-only data and absence of secrets.
+- [P10-REL-08] Archive durable workbook/notebook/evidence outputs with checksums and code revision.
+- [P10-REL-09] Verify deployed HTTP responses, route reload, one real user journey, downloads and source links.
+- [P10-REL-10] Inspect the current main projects site schema and generate its required project.json record.
+- [P10-REL-11] Produce cover.jpg and required loop media from actual project visuals with accurate labels.
+- [P10-REL-12] Regenerate catalogue and case-study pages through the current portfolio build process.
+- [P10-REL-13] Preserve the existing Precision Atelier design system on the main site.
+- [P10-REL-14] Keep this individual product identity separate from the main site theme requirements.
+- [P10-REL-15] Add catalogue/search/category/navigation entries according to the existing source schema.
+- [P10-REL-16] Do not modify unrelated project metadata or replace the main opening animation.
+- [P10-REL-17] Confirm the individual website is reachable before its portfolio link is published.
+- [P10-REL-18] Verify the main portfolio case study links to this actual website, source and evidence.
+- [P10-REL-19] Run existing site checks and targeted new-project route checks in hosted compute.
+- [P10-REL-20] Record built, verified, published and integrated as separate release fields.
+- [P10-REL-21] If an external permission blocks publication, preserve a ready change and report its exact state.
+- [P10-REL-22] Do not label a source commit as a verified live release.
+- [P10-REL-23] Prepare rollback to the preceding known-good portfolio/site artifact.
+- [P10-REL-24] End the RetentionLab handoff with the supported business decision, actual evidence and material limitations.
+
+## 11. Concrete implementation starting contracts
+
+These choices fix the default implementation shape. Change them only through a logged domain/architecture decision.
+Project directory: apps/retentionlab/.
+Web: React and TypeScript, static build, route base injected by build configuration.
+Backend verification: FastAPI with generated OpenAPI, exercised only on a GitHub-hosted runner by default.
+Relational verification: PostgreSQL service container populated from deterministic fixtures.
+Business logic: pure Python domain functions separated from database and HTTP adapters.
+Browser scenario logic: TypeScript implementation checked against the same independently calculated fixtures.
+Canonical timestamps: UTC instants; display calendars can use configured IANA time zones.
+Canonical identifiers: opaque stable text IDs derived from source identifiers, not mutable display names.
+Canonical currency for the small reference fixture: USD unless explicitly stated otherwise.
+Money: decimal strings in JSON and NUMERIC(20,6) in database; round to currency minor units only at the declared step.
+Probabilities and rates: numeric values in [0,1] where their definition is a proportion; percentage-point differences may be signed.
+Count fields: nonnegative integers unless a signed movement/variance is explicitly part of the business definition.
+Absence: JSON null; do not use NaN, Infinity, the string null, or an empty string as substitute.
+Collection ordering: documented stable field plus primary-key tie breaker.
+Pagination: limit default 50, maximum 200; opaque cursor on large evidence collections.
+Time filtering: from inclusive, to exclusive; reject invalid or reversed ranges.
+Snapshot consistency: all data returned for one analysis references one immutable dataset_version.
+Scenario consistency: baseline_version is immutable; scenario edits use a distinct scenario_id and version.
+Conflict behavior: return 409 for stale version or idempotency-key reuse with a different payload.
+Validation behavior: return 422 with field path, rule ID and safe user message.
+Authorization behavior on the verified backend: 401 for missing identity, 403 for forbidden action; never fake public auth.
+Read-model response: data, meta, warnings; meta includes dataset_version, code_sha, generated_at and applied_filters.
+Error response: error.code, error.message, error.details, request_id; never stack traces or tokens.
+Command request: input, expected_version where relevant, idempotency_key for state-changing operations.
+Audit event: event_id, entity_type, entity_id, action, actor_id, occurred_at, before_version, after_version, reason.
+Static mode: command requests use a local in-memory adapter and display that fact before an action is taken.
+Static mode: a refresh intentionally restores the published fixture; do not imply durable multi-user state.
+API boundaries below are backend contracts to implement and verify; they are not public Pages endpoints.
+Generate a static data manifest rather than requesting unavailable /api routes from GitHub Pages.
+Minimum request tests: valid, malformed, unknown resource, stale version, repeated command and unsupported action.
+Minimum read tests: no records, one record, multiple pages, invalid filter, stable ordering and evidence reconciliation.
+Create a route inventory in docs/api-contract.md before frontend integration.
+Do not publish synthetic actor role switching as proof of backend authorization.
+Only claim access-control verification from separate backend identities and direct request tests.
+Use an optimistic record version for mutable operational rows; keep immutable event rows append-only.
+Specify missing source references as quarantine or explicit unresolved records, not arbitrary placeholder joins.
+Use migrations and seed scripts that succeed from an empty database and on a second idempotent run.
+Keep CI data fixtures below a documented size; large benchmark generation is an opt-in workflow input.
+Archive the exact exported data used by the public static demo with its checksum.
+Do not accidentally archive a transient database connection URL in any manifest.
+### Command C01: Build point-in-time features
+- Contract endpoint: POST /api/v1/retentionlab/commands/build-point-in-time-features.
+- Business transition: Cutoff -> features.
+- Hard validation: Event and availability timestamps both valid.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C02: Define label
+- Contract endpoint: POST /api/v1/retentionlab/commands/define-label.
+- Business transition: Mature horizon -> outcome.
+- Hard validation: Exclude censored outcomes.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C03: Split evaluation
+- Contract endpoint: POST /api/v1/retentionlab/commands/split-evaluation.
+- Business transition: Time ranges -> train validation test.
+- Hard validation: Purge overlapping outcome windows.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C04: Fit preprocessing
+- Contract endpoint: POST /api/v1/retentionlab/commands/fit-preprocessing.
+- Business transition: Training only -> fitted transformer.
+- Hard validation: No evaluation leakage.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C05: Train baseline
+- Contract endpoint: POST /api/v1/retentionlab/commands/train-baseline.
+- Business transition: Training rows -> business-rule and logistic models.
+- Hard validation: Keep simple reference.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C06: Calibrate model
+- Contract endpoint: POST /api/v1/retentionlab/commands/calibrate-model.
+- Business transition: Validation only -> calibration mapping.
+- Hard validation: Test remains untouched.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C07: Score accounts
+- Contract endpoint: POST /api/v1/retentionlab/commands/score-accounts.
+- Business transition: Frozen model -> risk probabilities.
+- Hard validation: Model and feature versions.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C08: Prioritize outreach
+- Contract endpoint: POST /api/v1/retentionlab/commands/prioritize-outreach.
+- Business transition: Scores -> capacity-limited draft queue.
+- Hard validation: Risk not assumed treatment responsiveness.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C09: Simulate economics
+- Contract endpoint: POST /api/v1/retentionlab/commands/simulate-economics.
+- Business transition: Queue plus assumptions -> expected value.
+- Hard validation: Clearly hypothetical.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Command C10: Monitor refresh
+- Contract endpoint: POST /api/v1/retentionlab/commands/monitor-refresh.
+- Business transition: New cohort -> drift and performance checks.
+- Hard validation: Labels may arrive later.
+- Required envelope: request_id, dataset_version, input and idempotency_key when the operation mutates a record.
+- Result envelope: command_id, status, result, warnings and resulting version when applicable.
+- On repeat with same key and same normalized payload: return the prior result without duplicate side effects.
+- On repeat with same key and different normalized payload: reject with conflict.
+- Reject malformed input before writing audit or business state, except a safe rejected-attempt security log.
+- Ensure command effects and its committed business audit record are atomic where applicable.
+- Provide a deterministic contract test and a corresponding static-demo adapter test.
+- Do not expose this write contract unauthenticated on a real public backend.
+### Read contract: accounts
+- Endpoint: GET /api/v1/retentionlab/data/accounts.
+- Evidence fields: account_id,created_at,segment,region,synthetic.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: subscription_events
+- Endpoint: GET /api/v1/retentionlab/data/subscription_events.
+- Evidence fields: subscription_event_id,account_id,event_type,event_at,available_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: billing_events
+- Endpoint: GET /api/v1/retentionlab/data/billing_events.
+- Evidence fields: billing_event_id,account_id,amount,event_at,available_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: usage_events
+- Endpoint: GET /api/v1/retentionlab/data/usage_events.
+- Evidence fields: usage_event_id,account_id,event_name,event_at,available_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: support_events
+- Endpoint: GET /api/v1/retentionlab/data/support_events.
+- Evidence fields: support_event_id,account_id,severity,event_at,available_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: prediction_cutoffs
+- Endpoint: GET /api/v1/retentionlab/data/prediction_cutoffs.
+- Evidence fields: cutoff_id,account_id,prediction_at,horizon_end,observation_start.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: feature_rows
+- Endpoint: GET /api/v1/retentionlab/data/feature_rows.
+- Evidence fields: feature_row_id,cutoff_id,feature_version,features_json,max_available_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: labels
+- Endpoint: GET /api/v1/retentionlab/data/labels.
+- Evidence fields: label_id,cutoff_id,churned,label_end,mature.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: training_runs
+- Endpoint: GET /api/v1/retentionlab/data/training_runs.
+- Evidence fields: training_run_id,train_end,validation_end,test_end,config_hash.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: predictions
+- Endpoint: GET /api/v1/retentionlab/data/predictions.
+- Evidence fields: prediction_id,training_run_id,cutoff_id,probability,scored_at.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: intervention_scenarios
+- Endpoint: GET /api/v1/retentionlab/data/intervention_scenarios.
+- Evidence fields: scenario_id,capacity,contact_cost,assumed_effect,margin_value.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+### Read contract: outreach_events
+- Endpoint: GET /api/v1/retentionlab/data/outreach_events.
+- Evidence fields: outreach_event_id,account_id,scenario_id,action,status.
+- Apply declared population and filters on the backend before pagination.
+- Expose total matching count separately from returned page length.
+- Return a stable next_cursor or null; reject an expired or incompatible dataset cursor.
+- Public static equivalent: prebuilt synthetic JSON or CSV referenced by the release manifest.
+- Escape display text and neutralize spreadsheet formula injection on textual CSV cells.
+- Preserve numeric and date types rather than formatting all values as locale-dependent strings.
+
+## 12. Small versus large data profiles
+
+- golden: use the exact hand-checkable fixture in section 02; do not substitute random rows.
+- demo: start with approximately 500 primary business objects and enough linked events to demonstrate every required path.
+- analytical history: use the project-required observation horizon, including complete outcome windows and historical versions.
+- benchmark: optional input controls size; begin with 10,000 primary objects and increase only within observed runner resources.
+- store generator seed, config, schema version and injection manifest for every profile.
+- do not equate object count with event count; report each explicitly.
+- keep semantic distributions configurable; volume scaling must not change business rules.
+- do not use a large dataset to hide a failed small known-answer case.
+- no native software requirement may force a laptop download; preserve source and mark unsupported verification honestly.
+- acceptance evidence must state which profile each test used.
