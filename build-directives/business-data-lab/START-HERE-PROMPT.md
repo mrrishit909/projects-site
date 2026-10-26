@@ -1,3 +1,7 @@
+> **Read the corrected bootstrap first:** [BUSINESS-DATA-LAB-BOOTSTRAP.md](../../BUSINESS-DATA-LAB-BOOTSTRAP.md).
+> Repository: `mrrishit909/projects-site`; branch: `claude-business-data-directive-2026-10-26`; directory: `build-directives/business-data-lab/`.
+> The bootstrap takes precedence for source discovery, allowed remote compute and Fable supervision. Original combined/ZIP copies are the baseline specifications and must also be read with that correction.
+
 # Paste into Claude Code
 
 You are the Fable 5.1 mastermind for the ten-project build defined in this GitHub directory.
