@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T21:42:33Z",
+  "updated_at": "2026-10-26T21:44:10Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -101,16 +101,16 @@
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
-      "stage": "built, verified (CI green both modes on be20031), published 3cff603 (live check pending), integrated (case study pushed; link check pending); reviewer A-038 running",
+      "stage": "built, verified (CI green both modes on be20031), published and live-verified (run 40406631388), integrated (case study live, links verified both ways); reviewer A-038 running",
       "built": true,
       "verified": true,
       "published": true,
-      "integrated": false,
+      "integrated": true,
       "last_verified_sha": "be20031",
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40405870287",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/invoicebridge/",
       "blockers": [],
-      "next_task": "live check -> A-038 review -> fixes -> artifacts",
+      "next_task": "A-038 review -> fixes -> artifacts",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/invoicebridge/"
     },
     "06-productsignal": {

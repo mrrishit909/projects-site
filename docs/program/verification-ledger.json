@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T21:42:33Z",
+  "updated_at": "2026-10-26T21:44:10Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1012,6 +1012,17 @@
       "code_sha": "be20031",
       "evidence": "docs/program/release-manifest.json",
       "ts": "2026-10-26T21:42:33Z"
+    },
+    {
+      "requirement": "P05-REL-09/17/18: live site on github-hosted runner (deploy-wait matched code_sha be20031, 11 routes 200, manifest served, case study links to the site and the site links back, 360/1280 browser journey with no console errors); all five sites green",
+      "project": "05-invoicebridge",
+      "status": "verified",
+      "command": "live-check.yml run 40406631388 (matrix)",
+      "exit_code": 0,
+      "actual": "all jobs success",
+      "code_sha": "be20031 / portfolio 3cff603",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40406631388",
+      "ts": "2026-10-26T21:44:10Z"
     }
   ]
 }
