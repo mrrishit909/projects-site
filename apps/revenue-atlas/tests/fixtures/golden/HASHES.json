@@ -1,0 +1,12 @@
+{
+  "algorithm": "sha256",
+  "sha256": {
+    "inputs.json": "6b0f21f9407e50368edf5c7a62835aa4ff4daf274fee453fa1f069cdc414a424",
+    "expected.json": "d73735e3ac5c211e1572740a8f6de224e5be63baca7a5e7e1ca320740b255245",
+    "CALCULATION.md": "26ad473eb10836e674b2087c8a745f6c28e745af02d1ab4c6d207b135f0209cf",
+    "variant-rejected/inputs.json": "a93042166f357c76d89608917402ebc21ce0754138d82e43ad5d29aeddd684e6",
+    "variant-rejected/expected.json": "8a0d6c9993733a44d55890d6adefc45446695dfa269a770ad33e432f8f17d22a",
+    "variant-empty/inputs.json": "f0f3653fa3446de6208f9bb1f72e80a851b5c9481f5e7f9b3b96730bd3949e9f",
+    "variant-empty/expected.json": "03706092b11a19fac3d05e44ac31ec275776960dfee0d21aff07e1df2e09edc0"
+  }
+}

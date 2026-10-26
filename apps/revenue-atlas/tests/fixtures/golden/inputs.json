@@ -1,0 +1,130 @@
+{
+  "fixture_id": "revenue-atlas-golden-v1",
+  "contract": "v1",
+  "reporting_currency": "USD",
+  "customers": [
+    {
+      "customer_id": "cust-001",
+      "customer_name": "Golden Customer",
+      "region_id": "reg-001",
+      "segment": "SMB",
+      "effective_from": "2025-01-01"
+    }
+  ],
+  "products": [
+    {
+      "product_id": "prod-001",
+      "sku": "SKU-A",
+      "category_id": "cat-001",
+      "unit_of_measure": "each",
+      "active": true
+    },
+    {
+      "product_id": "prod-002",
+      "sku": "SKU-B",
+      "category_id": "cat-001",
+      "unit_of_measure": "each",
+      "active": true
+    }
+  ],
+  "orders": [
+    {
+      "order_id": "ord-001",
+      "customer_id": "cust-001",
+      "order_date": "2026-03-08",
+      "currency": "USD",
+      "status": "shipped"
+    }
+  ],
+  "order_lines": [
+    {
+      "line_id": "line-001",
+      "order_id": "ord-001",
+      "product_id": "prod-001",
+      "quantity": 2,
+      "unit_price": "100.00"
+    },
+    {
+      "line_id": "line-002",
+      "order_id": "ord-001",
+      "product_id": "prod-002",
+      "quantity": 1,
+      "unit_price": "50.00"
+    }
+  ],
+  "discounts": [
+    {
+      "discount_id": "disc-001",
+      "line_id": "line-001",
+      "discount_amount": "20.00",
+      "reason_code": "VOLUME",
+      "approved_by": "mgr-001"
+    },
+    {
+      "discount_id": "disc-002",
+      "line_id": "line-002",
+      "discount_amount": "5.00",
+      "reason_code": "PROMO",
+      "approved_by": "mgr-001"
+    }
+  ],
+  "shipments": [
+    {
+      "shipment_id": "shp-001",
+      "order_id": "ord-001",
+      "shipped_at": "2026-03-10T14:30:00Z",
+      "shipping_cost": "15.00",
+      "currency": "USD"
+    }
+  ],
+  "shipment_lines": [
+    {
+      "shipment_line_id": "sl-001",
+      "shipment_id": "shp-001",
+      "line_id": "line-001",
+      "shipped_quantity": 2,
+      "cost_version_id": "cv-001"
+    },
+    {
+      "shipment_line_id": "sl-002",
+      "shipment_id": "shp-001",
+      "line_id": "line-002",
+      "shipped_quantity": 1,
+      "cost_version_id": "cv-002"
+    }
+  ],
+  "returns": [
+    {
+      "return_id": "ret-001",
+      "shipment_line_id": "sl-001",
+      "returned_quantity": 1,
+      "credit_amount": "90.00",
+      "credit_date": "2026-03-20"
+    }
+  ],
+  "cost_versions": [
+    {
+      "cost_version_id": "cv-001",
+      "product_id": "prod-001",
+      "unit_cost": "60.00",
+      "valid_from": "2026-01-01",
+      "valid_to": null
+    },
+    {
+      "cost_version_id": "cv-002",
+      "product_id": "prod-002",
+      "unit_cost": "20.00",
+      "valid_from": "2026-01-01",
+      "valid_to": null
+    }
+  ],
+  "exchange_rates": [
+    {
+      "rate_id": "fx-001",
+      "currency": "USD",
+      "reporting_currency": "USD",
+      "rate_date": "2026-01-01",
+      "rate": "1.0"
+    }
+  ]
+}

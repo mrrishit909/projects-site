@@ -1,7 +1,29 @@
 {
-  "updated_at": "2026-10-26T09:52:16Z",
+  "updated_at": "2026-10-26T09:56:53Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
-    {"requirement": "PACK-HASH-01", "project": "program", "status": "verified", "command": "git show origin/claude-business-data-directive-2026-10-26:build-directives/business-data-lab/projects/01-revenue-atlas.md | sha256sum", "exit_code": 0, "expected": "b145a4e24d55e4c7e97fd91ebfa0188ef7ef61c6655f019f614d3c6c86e70c80", "actual": "b145a4e24d55e4c7e97fd91ebfa0188ef7ef61c6655f019f614d3c6c86e70c80", "code_sha": "dc462761151c54ca88f1e09698fd7f709c54e72b", "ts": "2026-10-26T09:52:16Z"}
+    {
+      "requirement": "PACK-HASH-01",
+      "project": "program",
+      "status": "verified",
+      "command": "git show origin/claude-business-data-directive-2026-10-26:build-directives/business-data-lab/projects/01-revenue-atlas.md | sha256sum",
+      "exit_code": 0,
+      "expected": "b145a4e24d55e4c7e97fd91ebfa0188ef7ef61c6655f019f614d3c6c86e70c80",
+      "actual": "b145a4e24d55e4c7e97fd91ebfa0188ef7ef61c6655f019f614d3c6c86e70c80",
+      "code_sha": "dc462761151c54ca88f1e09698fd7f709c54e72b",
+      "ts": "2026-10-26T09:52:16Z"
+    },
+    {
+      "requirement": "P01-GOLD-01..10",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "python3 -I apps/revenue-atlas/tests/reference_check.py",
+      "exit_code": 0,
+      "expected": "net 225.00, cogs 140.00, gp 85.00, freight 12.00/3.00, contribution 70.00; after return net 135.00, cogs 80.00, contribution 40.00; rejected variant totals equal baseline; empty variant rates null",
+      "actual": "ALL OK (0 mismatches), 187 checks, 7 fixture hashes verified",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T09:56:53Z",
+      "note": "independent stdlib reference by worker A-001; coordinator re-ran it"
+    }
   ]
 }

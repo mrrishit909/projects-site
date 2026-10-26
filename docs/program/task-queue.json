@@ -1,19 +1,138 @@
 {
-  "updated_at": "2026-10-26T09:52:16Z",
+  "updated_at": "2026-10-26T09:56:53Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
-    {"id": "T-00-01", "project": "program", "title": "Program ledgers on isolated branch", "status": "in_progress", "prereqs": [], "retries": 0, "acceptance": "docs/program/* pushed to origin/business-data-lab"},
-    {"id": "T-01-01", "project": "01-revenue-atlas", "title": "Contract decisions (P01-WORK-01): grain, time basis, rounding, allocation rule, returns, FX", "status": "pending", "prereqs": ["T-00-01"], "retries": 0, "acceptance": "apps/revenue-atlas/docs/contracts.md records every P01-MET-*/FLOW-* rule the slice implements, with versioned decisions"},
-    {"id": "T-01-02", "project": "01-revenue-atlas", "title": "Golden fixture + independent reference check (P01-WORK-02, P01-GOLD-01..11)", "status": "pending", "prereqs": ["T-00-01"], "retries": 0, "acceptance": "tests/reference_check.py (stdlib only) reproduces P01-GOLD-01 exactly; rejected and empty variants documented"},
-    {"id": "T-01-03", "project": "01-revenue-atlas", "title": "Domain functions + unit tests (costing, freight allocation, returns, metrics)", "status": "pending", "prereqs": ["T-01-01", "T-01-02"], "retries": 0, "acceptance": "pytest passes; domain result equals expected.json without reading it through shared helpers"},
-    {"id": "T-01-04", "project": "01-revenue-atlas", "title": "Postgres migrations + seed + SQL reference totals", "status": "pending", "prereqs": ["T-01-03"], "retries": 0, "acceptance": "migrations run from empty DB twice; SQL totals equal expected.json"},
-    {"id": "T-01-05", "project": "01-revenue-atlas", "title": "FastAPI commands C01-C04 + reads + request tests + CI with postgres service", "status": "pending", "prereqs": ["T-01-04"], "retries": 0, "acceptance": "GitHub Actions run green on business-data-lab; run URL recorded"},
-    {"id": "T-01-06", "project": "01-revenue-atlas", "title": "Static web demo (entry screens) + TS golden check + Playwright screenshots at 360/768/1280/1920", "status": "pending", "prereqs": ["T-01-03"], "retries": 0, "acceptance": "CI uploads screenshots; TS metric check equals expected.json"},
-    {"id": "T-01-07", "project": "01-revenue-atlas", "title": "Adversarial tests P01-TEST-01..12 detect/recover", "status": "pending", "prereqs": ["T-01-05"], "retries": 0, "acceptance": "each test recorded in verification-ledger.json as verified/failed/blocked"},
-    {"id": "T-01-08", "project": "01-revenue-atlas", "title": "Remaining screens UI-03..UI-10, scenario flows C05-C10, exports", "status": "pending", "prereqs": ["T-01-06"], "retries": 0, "acceptance": "browser journey test passes; exports embed filters, versions, dataset hash"},
-    {"id": "T-01-09", "project": "01-revenue-atlas", "title": "Artifacts P01-ART-01..10 (business case, dictionary, SQL, workbook, BI pack, memo, UAT, case study, release package)", "status": "pending", "prereqs": ["T-01-08"], "retries": 0, "acceptance": "files exist with checksums in release-manifest.json; workbook formulas verified or disclosed"},
-    {"id": "T-01-10", "project": "01-revenue-atlas", "title": "Publish site to unified-portfolio/labs/revenue-atlas and verify live from Actions", "status": "pending", "prereqs": ["T-01-08"], "retries": 0, "acceptance": "HTTP 200 + screenshot artifact from a hosted runner; site_url recorded"},
-    {"id": "T-01-11", "project": "01-revenue-atlas", "title": "Portfolio integration (project.json, cover, motion tile, build.py, portfolio-check)", "status": "pending", "prereqs": ["T-01-10"], "retries": 0, "acceptance": "case study live and linking to site, source and evidence"}
+    {
+      "id": "T-00-01",
+      "project": "program",
+      "title": "Program ledgers on isolated branch",
+      "status": "done",
+      "prereqs": [],
+      "retries": 0,
+      "acceptance": "docs/program/* pushed to origin/business-data-lab"
+    },
+    {
+      "id": "T-01-01",
+      "project": "01-revenue-atlas",
+      "title": "Contract decisions (P01-WORK-01): grain, time basis, rounding, allocation rule, returns, FX",
+      "status": "done",
+      "prereqs": [
+        "T-00-01"
+      ],
+      "retries": 0,
+      "acceptance": "apps/revenue-atlas/docs/contracts.md records every P01-MET-*/FLOW-* rule the slice implements, with versioned decisions"
+    },
+    {
+      "id": "T-01-02",
+      "project": "01-revenue-atlas",
+      "title": "Golden fixture + independent reference check (P01-WORK-02, P01-GOLD-01..11)",
+      "status": "done",
+      "prereqs": [
+        "T-00-01"
+      ],
+      "retries": 0,
+      "acceptance": "tests/reference_check.py (stdlib only) reproduces P01-GOLD-01 exactly; rejected and empty variants documented"
+    },
+    {
+      "id": "T-01-03",
+      "project": "01-revenue-atlas",
+      "title": "Domain functions + unit tests (costing, freight allocation, returns, metrics)",
+      "status": "pending",
+      "prereqs": [
+        "T-01-01",
+        "T-01-02"
+      ],
+      "retries": 0,
+      "acceptance": "pytest passes; domain result equals expected.json without reading it through shared helpers"
+    },
+    {
+      "id": "T-01-04",
+      "project": "01-revenue-atlas",
+      "title": "Postgres migrations + seed + SQL reference totals",
+      "status": "pending",
+      "prereqs": [
+        "T-01-03"
+      ],
+      "retries": 0,
+      "acceptance": "migrations run from empty DB twice; SQL totals equal expected.json"
+    },
+    {
+      "id": "T-01-05",
+      "project": "01-revenue-atlas",
+      "title": "FastAPI commands C01-C04 + reads + request tests + CI with postgres service",
+      "status": "pending",
+      "prereqs": [
+        "T-01-04"
+      ],
+      "retries": 0,
+      "acceptance": "GitHub Actions run green on business-data-lab; run URL recorded"
+    },
+    {
+      "id": "T-01-06",
+      "project": "01-revenue-atlas",
+      "title": "Static web demo (entry screens) + TS golden check + Playwright screenshots at 360/768/1280/1920",
+      "status": "pending",
+      "prereqs": [
+        "T-01-03"
+      ],
+      "retries": 0,
+      "acceptance": "CI uploads screenshots; TS metric check equals expected.json"
+    },
+    {
+      "id": "T-01-07",
+      "project": "01-revenue-atlas",
+      "title": "Adversarial tests P01-TEST-01..12 detect/recover",
+      "status": "pending",
+      "prereqs": [
+        "T-01-05"
+      ],
+      "retries": 0,
+      "acceptance": "each test recorded in verification-ledger.json as verified/failed/blocked"
+    },
+    {
+      "id": "T-01-08",
+      "project": "01-revenue-atlas",
+      "title": "Remaining screens UI-03..UI-10, scenario flows C05-C10, exports",
+      "status": "pending",
+      "prereqs": [
+        "T-01-06"
+      ],
+      "retries": 0,
+      "acceptance": "browser journey test passes; exports embed filters, versions, dataset hash"
+    },
+    {
+      "id": "T-01-09",
+      "project": "01-revenue-atlas",
+      "title": "Artifacts P01-ART-01..10 (business case, dictionary, SQL, workbook, BI pack, memo, UAT, case study, release package)",
+      "status": "pending",
+      "prereqs": [
+        "T-01-08"
+      ],
+      "retries": 0,
+      "acceptance": "files exist with checksums in release-manifest.json; workbook formulas verified or disclosed"
+    },
+    {
+      "id": "T-01-10",
+      "project": "01-revenue-atlas",
+      "title": "Publish site to unified-portfolio/labs/revenue-atlas and verify live from Actions",
+      "status": "pending",
+      "prereqs": [
+        "T-01-08"
+      ],
+      "retries": 0,
+      "acceptance": "HTTP 200 + screenshot artifact from a hosted runner; site_url recorded"
+    },
+    {
+      "id": "T-01-11",
+      "project": "01-revenue-atlas",
+      "title": "Portfolio integration (project.json, cover, motion tile, build.py, portfolio-check)",
+      "status": "pending",
+      "prereqs": [
+        "T-01-10"
+      ],
+      "retries": 0,
+      "acceptance": "case study live and linking to site, source and evidence"
+    }
   ]
 }

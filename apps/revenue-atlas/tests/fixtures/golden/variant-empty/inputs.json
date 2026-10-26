@@ -1,0 +1,61 @@
+{
+  "fixture_id": "revenue-atlas-golden-v1-empty",
+  "contract": "v1",
+  "reporting_currency": "USD",
+  "customers": [
+    {
+      "customer_id": "cust-001",
+      "customer_name": "Golden Customer",
+      "region_id": "reg-001",
+      "segment": "SMB",
+      "effective_from": "2025-01-01"
+    }
+  ],
+  "products": [
+    {
+      "product_id": "prod-001",
+      "sku": "SKU-A",
+      "category_id": "cat-001",
+      "unit_of_measure": "each",
+      "active": true
+    },
+    {
+      "product_id": "prod-002",
+      "sku": "SKU-B",
+      "category_id": "cat-001",
+      "unit_of_measure": "each",
+      "active": true
+    }
+  ],
+  "orders": [],
+  "order_lines": [],
+  "discounts": [],
+  "shipments": [],
+  "shipment_lines": [],
+  "returns": [],
+  "cost_versions": [
+    {
+      "cost_version_id": "cv-001",
+      "product_id": "prod-001",
+      "unit_cost": "60.00",
+      "valid_from": "2026-01-01",
+      "valid_to": null
+    },
+    {
+      "cost_version_id": "cv-002",
+      "product_id": "prod-002",
+      "unit_cost": "20.00",
+      "valid_from": "2026-01-01",
+      "valid_to": null
+    }
+  ],
+  "exchange_rates": [
+    {
+      "rate_id": "fx-001",
+      "currency": "USD",
+      "reporting_currency": "USD",
+      "rate_date": "2026-01-01",
+      "rate": "1.0"
+    }
+  ]
+}

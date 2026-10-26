@@ -1,0 +1,132 @@
+{
+  "fixture_id": "revenue-atlas-golden-v1",
+  "note": "Hand-derived literals; see CALCULATION.md. Independent of application code.",
+  "tolerance": {
+    "money_decimal_places": 2,
+    "rate_decimal_places": 6,
+    "comparison": "exact equality after quantizing"
+  },
+  "ingest": {
+    "counts": {
+      "customers": {
+        "accepted": 1,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "products": {
+        "accepted": 2,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "orders": {
+        "accepted": 1,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "order_lines": {
+        "accepted": 2,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "discounts": {
+        "accepted": 2,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "shipments": {
+        "accepted": 1,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "shipment_lines": {
+        "accepted": 2,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "returns": {
+        "accepted": 1,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "cost_versions": {
+        "accepted": 2,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "exchange_rates": {
+        "accepted": 1,
+        "rejected": 0,
+        "quarantined": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "states": {
+    "baseline": {
+      "metrics": {
+        "gross_sales": "250.00",
+        "allocated_discounts": "25.00",
+        "merchandise_credits": "0.00",
+        "net_merchandise_sales": "225.00",
+        "cogs": "140.00",
+        "recoverable_return_cost": "0.00",
+        "gross_profit": "85.00",
+        "shipping_revenue": "0.00",
+        "shipping_cost": "15.00",
+        "other_variable_costs": "0.00",
+        "contribution_margin": "70.00",
+        "eligible_net_revenue": "225.00",
+        "contribution_margin_rate": "0.311111",
+        "discount_rate": "0.100000",
+        "return_rate": "0.000000",
+        "average_order_value": "225.00",
+        "allocation_residual": "0.00",
+        "eligible_orders": 1,
+        "eligible_shipment_lines": 2,
+        "shipped_units": 3,
+        "returned_units": 0
+      },
+      "discount_by_shipment_line": {
+        "sl-001": "20.00",
+        "sl-002": "5.00"
+      },
+      "freight_by_shipment_line": {
+        "sl-001": "12.00",
+        "sl-002": "3.00"
+      }
+    },
+    "after_return": {
+      "metrics": {
+        "gross_sales": "250.00",
+        "allocated_discounts": "25.00",
+        "merchandise_credits": "90.00",
+        "net_merchandise_sales": "135.00",
+        "cogs": "80.00",
+        "recoverable_return_cost": "60.00",
+        "gross_profit": "55.00",
+        "shipping_revenue": "0.00",
+        "shipping_cost": "15.00",
+        "other_variable_costs": "0.00",
+        "contribution_margin": "40.00",
+        "eligible_net_revenue": "135.00",
+        "contribution_margin_rate": "0.296296",
+        "discount_rate": "0.100000",
+        "return_rate": "0.333333",
+        "average_order_value": "135.00",
+        "allocation_residual": "0.00",
+        "eligible_orders": 1,
+        "eligible_shipment_lines": 2,
+        "shipped_units": 3,
+        "returned_units": 1
+      },
+      "discount_by_shipment_line": {
+        "sl-001": "20.00",
+        "sl-002": "5.00"
+      },
+      "freight_by_shipment_line": {
+        "sl-001": "12.00",
+        "sl-002": "3.00"
+      }
+    }
+  }
+}

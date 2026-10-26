@@ -1,0 +1,121 @@
+{
+  "fixture_id": "revenue-atlas-golden-v1-empty",
+  "empty_population": true,
+  "note": "Zero-denominator behavior: sums are 0.00; every ratio whose denominator is 0 (eligible net revenue, eligible gross sales, shipped units, distinct orders) is JSON null, never 0 and never an error.",
+  "tolerance": {
+    "money_decimal_places": 2,
+    "rate_decimal_places": 6,
+    "comparison": "exact equality after quantizing"
+  },
+  "ingest": {
+    "counts": {
+      "customers": {
+        "accepted": 1,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "products": {
+        "accepted": 2,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "orders": {
+        "accepted": 0,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "order_lines": {
+        "accepted": 0,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "discounts": {
+        "accepted": 0,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "shipments": {
+        "accepted": 0,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "shipment_lines": {
+        "accepted": 0,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "returns": {
+        "accepted": 0,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "cost_versions": {
+        "accepted": 2,
+        "rejected": 0,
+        "quarantined": 0
+      },
+      "exchange_rates": {
+        "accepted": 1,
+        "rejected": 0,
+        "quarantined": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "states": {
+    "baseline": {
+      "metrics": {
+        "gross_sales": "0.00",
+        "allocated_discounts": "0.00",
+        "merchandise_credits": "0.00",
+        "net_merchandise_sales": "0.00",
+        "cogs": "0.00",
+        "recoverable_return_cost": "0.00",
+        "gross_profit": "0.00",
+        "shipping_revenue": "0.00",
+        "shipping_cost": "0.00",
+        "other_variable_costs": "0.00",
+        "contribution_margin": "0.00",
+        "eligible_net_revenue": "0.00",
+        "contribution_margin_rate": null,
+        "discount_rate": null,
+        "return_rate": null,
+        "average_order_value": null,
+        "allocation_residual": "0.00",
+        "eligible_orders": 0,
+        "eligible_shipment_lines": 0,
+        "shipped_units": 0,
+        "returned_units": 0
+      },
+      "discount_by_shipment_line": {},
+      "freight_by_shipment_line": {}
+    },
+    "after_return": {
+      "metrics": {
+        "gross_sales": "0.00",
+        "allocated_discounts": "0.00",
+        "merchandise_credits": "0.00",
+        "net_merchandise_sales": "0.00",
+        "cogs": "0.00",
+        "recoverable_return_cost": "0.00",
+        "gross_profit": "0.00",
+        "shipping_revenue": "0.00",
+        "shipping_cost": "0.00",
+        "other_variable_costs": "0.00",
+        "contribution_margin": "0.00",
+        "eligible_net_revenue": "0.00",
+        "contribution_margin_rate": null,
+        "discount_rate": null,
+        "return_rate": null,
+        "average_order_value": null,
+        "allocation_residual": "0.00",
+        "eligible_orders": 0,
+        "eligible_shipment_lines": 0,
+        "shipped_units": 0,
+        "returned_units": 0
+      },
+      "discount_by_shipment_line": {},
+      "freight_by_shipment_line": {}
+    }
+  }
+}
