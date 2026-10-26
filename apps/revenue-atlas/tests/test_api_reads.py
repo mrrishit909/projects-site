@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import base64
+import os
 
 from support_db import PREFIX, client, command, conn, db_url, expected, golden_inputs, seed_db  # noqa: F401
 
@@ -33,7 +34,7 @@ def test_read_no_records_returns_empty_page_with_full_envelope(client):
     assert set(body["meta"]) == META_KEYS
     assert body["meta"]["total_count"] == 0 and body["meta"]["next_cursor"] is None
     assert body["meta"]["dataset_version"] == "unversioned"
-    assert body["meta"]["contract_version"] == "v1" and body["meta"]["code_sha"] == "dev"
+    assert body["meta"]["contract_version"] == "v1" and body["meta"]["code_sha"] == os.environ.get("CODE_SHA", "dev")
     assert body["meta"]["applied_filters"]["limit"] == 50
 
 
