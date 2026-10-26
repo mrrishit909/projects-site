@@ -28,6 +28,10 @@ for (const width of WIDTHS) {
         await ready(page);
         await page.locator(r.wait).first().waitFor();
         const o = await overflow(page);
+        if (o.scrollWidth > o.innerWidth) {
+          const wide = await page.evaluate((iw) => Array.from(document.querySelectorAll('body *')).map((el) => { const r = el.getBoundingClientRect(); return [Math.round(r.right), el.tagName, String(el.className).slice(0, 40), (el.textContent || '').trim().slice(0, 30)]; }).filter((x) => (x[0] as number) > iw).slice(0, 20), o.innerWidth);
+          writeFileSync(`${EVIDENCE}/overflow-${r.name}-${width}.json`, JSON.stringify(wide, null, 1));
+        }
         expect(o.scrollWidth, `${r.name} overflows at ${width}`).toBeLessThanOrEqual(o.innerWidth);
         const file = `${r.name}-${width}.png`;
         await page.screenshot({ path: `${EVIDENCE}/${file}`, fullPage: true });
