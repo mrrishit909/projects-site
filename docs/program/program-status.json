@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T11:10:40Z",
+  "updated_at": "2026-10-26T11:17:30Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -56,7 +56,7 @@
     },
     "02-onboard-studio": {
       "slug": "onboard-studio",
-      "stage": "queued",
+      "stage": "gate-A started (contracts v1 written; spec hash verified e26d1733...)",
       "built": false,
       "verified": false,
       "published": false,
@@ -65,7 +65,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": null
+      "next_task": "T-02-02 golden fixture (P02-GOLD-01 calendar arithmetic) + stdlib reference check"
     },
     "03-supplyscope": {
       "slug": "supplyscope",

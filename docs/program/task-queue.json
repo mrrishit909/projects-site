@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T11:14:47Z",
+  "updated_at": "2026-10-26T11:17:30Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
@@ -155,6 +155,48 @@
       ],
       "retries": 0,
       "acceptance": "xfail tests pass without the marker; golden/variants unchanged or re-versioned; CI green"
+    },
+    {
+      "id": "T-02-01",
+      "project": "02-onboard-studio",
+      "title": "Contract decisions v1",
+      "status": "done",
+      "prereqs": [],
+      "retries": 0,
+      "acceptance": "apps/onboard-studio/docs/contracts.md"
+    },
+    {
+      "id": "T-02-02",
+      "project": "02-onboard-studio",
+      "title": "Golden fixture + stdlib reference check (P02-GOLD-01..11)",
+      "status": "pending",
+      "prereqs": [
+        "T-01-09"
+      ],
+      "retries": 0,
+      "acceptance": "reference_check.py reproduces calendar 66h, business 2h, active 1h/2h"
+    },
+    {
+      "id": "T-02-03",
+      "project": "02-onboard-studio",
+      "title": "Domain + Postgres + FastAPI slice + CI",
+      "status": "pending",
+      "prereqs": [
+        "T-02-02"
+      ],
+      "retries": 0,
+      "acceptance": "CI Mode A green"
+    },
+    {
+      "id": "T-02-04",
+      "project": "02-onboard-studio",
+      "title": "Generator + web (timeline-first) + e2e + publish + integrate",
+      "status": "pending",
+      "prereqs": [
+        "T-02-03"
+      ],
+      "retries": 0,
+      "acceptance": "live-check green; case study live"
     }
   ]
 }
