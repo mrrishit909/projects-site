@@ -9,7 +9,7 @@ Baseline commit before this build: bff4f13 (THE BLOCK). Baseline captures: evide
 ## Current phase
 
 All phases A to G DONE on the final build; H (delivery) in progress: committed on unified-portfolio and pushed to the
-private remote (hash recorded below after the commit). The public site is untouched.
+private remote (commit f48d7ca, docs commit follows). The public site is untouched.
 
 ## Verified state (facts)
 

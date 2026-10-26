@@ -1,7 +1,7 @@
 # Phase gates: Precision Atelier (2026-10-25)
 
-Statuses: PASS, FAIL, BLOCKED, NOT APPLICABLE (with a reason). Tested commit: the working tree that becomes the
-"Precision Atelier" commit on `unified-portfolio` (recorded in docs/ATELIER_PROGRESS.md after the commit). Conditions:
+Statuses: PASS, FAIL, BLOCKED, NOT APPLICABLE (with a reason). Tested commit: f48d7ca on `unified-portfolio` (the
+suite, Lighthouse, pacing and recordings ran on this build; the docs commit that follows changes no page). Conditions:
 Apple M3 Pro, macOS, Chromium (Playwright) with ANGLE Metal and Chrome 156 (the owner's browser through the extension),
 local `python3 -m http.server 8800` for behaviour and `serve` with gzip on 8801 for Lighthouse. Evidence root:
 `~/projects-site-evidence/atelier-2026-10-25/` (paths below are relative to it).
