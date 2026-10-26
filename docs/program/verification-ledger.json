@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T22:02:27Z",
+  "updated_at": "2026-10-26T23:00:36Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1034,6 +1034,17 @@
       "code_sha": "2e0d922",
       "evidence": "apps/productsignal/tests/fixtures/golden/",
       "ts": "2026-10-26T22:01:31Z"
+    },
+    {
+      "requirement": "P06 domain/API slice: golden and variants key by key through domain, SQL and API; P06-TEST-01..12 through the API; concurrency (assignment, decision, idempotency); stale dataset_version",
+      "project": "06-productsignal",
+      "status": "verified",
+      "command": "reference_check.py; DATABASE_URL=... pytest -q; env -u DATABASE_URL pytest -q",
+      "exit_code": 0,
+      "actual": "ALL OK (706); 277 passed; 118 passed 159 skipped (local; CI Mode A pending)",
+      "code_sha": "a3f8f74",
+      "evidence": "apps/productsignal/tests/",
+      "ts": "2026-10-26T23:00:36Z"
     }
   ]
 }

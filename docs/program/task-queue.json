@@ -417,7 +417,7 @@
       "id": "T-06-03",
       "project": "06-productsignal",
       "title": "Domain + Postgres + FastAPI slice + CI",
-      "status": "in_progress",
+      "status": "done (local); CI pending",
       "prereqs": [
         "T-06-02"
       ],
@@ -428,7 +428,7 @@
       "id": "T-06-04",
       "project": "06-productsignal",
       "title": "Generator + web + e2e + publish + integrate",
-      "status": "pending",
+      "status": "in_progress",
       "prereqs": [
         "T-06-03"
       ],
