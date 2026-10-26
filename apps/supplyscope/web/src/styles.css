@@ -154,3 +154,8 @@ tbody tr:hover { background: #f6f7f8; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* Long tokens (URLs, hashes, ids) must never widen the page at 360 px: a 1 px overflow was
+   measured on a GitHub-hosted runner with different font metrics (CI run 40347373758). */
+main a, main code, main td, main th, main p, main li { overflow-wrap: anywhere; }
+main, main * { min-width: 0; }
