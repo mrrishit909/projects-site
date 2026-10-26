@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T17:18:16Z",
+  "updated_at": "2026-10-26T17:34:12Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -86,7 +86,7 @@
     },
     "04-serviceflow": {
       "slug": "serviceflow",
-      "stage": "built, verified (CI green both modes on 6a753e8), published and live-verified (run 40367109366), integrated (case study live, links verified both ways); reviewer A-031 running",
+      "stage": "built, verified (provisional: reviewer findings R4-01..R4-05 open, fixes A-032 running), published and live-verified, integrated (case study corrected 60e8838)",
       "built": true,
       "verified": true,
       "published": true,
@@ -95,8 +95,9 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40364940392",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/serviceflow/",
       "blockers": [],
-      "next_task": "A-031 reviewer -> fixes -> artifacts",
-      "portfolio_case_study": "https://mrrishit909.github.io/projects-site/serviceflow/"
+      "next_task": "A-032 fixes -> republish -> live check -> artifacts",
+      "portfolio_case_study": "https://mrrishit909.github.io/projects-site/serviceflow/",
+      "verified_note": "Entry journey + reviewer disproof pass; 5 code defects open (none affects the three published windows); published wording corrected"
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
