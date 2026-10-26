@@ -3,10 +3,11 @@
 # folder (captures, recordings with contact sheets, pacing, context loss, throttled, fallbacks, responsive, Lighthouse
 # JSON, suite output), the scripts that produced them (tests/evidence), a manifest, tool versions and checksums.
 # Run from ~/projects-site after the evidence has been produced on the committed candidate:
-#   zsh tools/package.sh <commit>      -> ~/Downloads/precision-atelier-review-<date>-<commit>.zip (+ .sha256)
+#   zsh tools/package.sh <commit> [tested-code-commit]      -> ~/Downloads/precision-atelier-review-<date>-<commit>.zip (+ .sha256)
 set -e
 cd ~/projects-site
 COMMIT=${1:-$(git rev-parse --short HEAD)}
+TESTED=${2:-$COMMIT}   # the commit the evidence was produced on, when a docs-only commit follows it
 DATE=$(date +%Y-%m-%d)
 E=${EVIDENCE_OUT:-$HOME/projects-site-evidence/atelier-2026-10-25}
 STAGE=$(mktemp -d)/precision-atelier-review-$DATE-$COMMIT
@@ -19,7 +20,7 @@ git archive --format=tar HEAD | tar -x -C "$STAGE/site"
 rsync -a --exclude '.DS_Store' "$E/" "$STAGE/evidence/"
 # 3. tool versions and conditions
 {
-  echo "tested commit: $COMMIT ($(git log -1 --format=%cI HEAD))"
+  echo "packaged commit: $COMMIT ($(git log -1 --format=%cI HEAD)); evidence produced on commit: $TESTED (the commits between change documents only)"
   echo "packaged: $(date -Iseconds)"
   echo "machine: $(sysctl -n machdep.cpu.brand_string), macOS $(sw_vers -productVersion)"
   echo "node: $(node -v); playwright: $(node -e "console.log(require(require('path').join(require('child_process').execSync('npm root -g').toString().trim(),'playwright/package.json')).version)")"
