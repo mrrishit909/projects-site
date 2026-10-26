@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T20:28:36Z",
+  "updated_at": "2026-10-26T20:30:41Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -957,6 +957,17 @@
       "code_sha": "a381e53",
       "evidence": "apps/invoicebridge/tests/",
       "ts": "2026-10-26T20:28:36Z"
+    },
+    {
+      "requirement": "P05 domain/API slice Mode A on github-hosted (reference check, domain, postgres:16 service, API, adversarial; 285 tests)",
+      "project": "05-invoicebridge",
+      "status": "verified",
+      "command": "invoicebridge-ci.yml run 40395845883 job 'Mode A'",
+      "exit_code": 0,
+      "actual": "Mode A success; Mode B failing until the site source exists",
+      "code_sha": "a381e53",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40395845883",
+      "ts": "2026-10-26T20:30:41Z"
     }
   ]
 }

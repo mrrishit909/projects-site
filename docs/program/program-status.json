@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T20:28:36Z",
+  "updated_at": "2026-10-26T20:30:41Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -101,13 +101,13 @@
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
-      "stage": "gate-A passed; backend slice committed a381e53 (285 tests local); CI Mode A pending; generator A-036 running",
+      "stage": "gate-A passed; backend slice CI-green Mode A (a381e53, run 40395845883); motion tile committed to the portfolio (c535aa0); generator A-036 running",
       "built": false,
       "verified": false,
       "published": false,
       "integrated": false,
-      "last_verified_sha": null,
-      "latest_run_url": null,
+      "last_verified_sha": "a381e53 (Mode A)",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40395845883",
       "site_url": null,
       "blockers": [],
       "next_task": "T-05-04 (A-036 generator -> web -> publish -> integrate)"

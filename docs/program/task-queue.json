@@ -375,7 +375,7 @@
       "id": "T-05-03",
       "project": "05-invoicebridge",
       "title": "Domain + Postgres + FastAPI slice + CI",
-      "status": "done (local); CI pending",
+      "status": "done",
       "prereqs": [
         "T-05-02"
       ],
