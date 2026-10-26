@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T10:18:41Z",
+  "updated_at": "2026-10-26T10:38:46Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -41,7 +41,7 @@
   "projects": {
     "01-revenue-atlas": {
       "slug": "revenue-atlas",
-      "stage": "gate-B passed (Mode A verified on hosted runner: 63 tests incl. PostgreSQL service); generator + web in progress",
+      "stage": "gate-C in progress (TS domain verified; entry screens + e2e being built by A-006)",
       "built": false,
       "verified": false,
       "published": false,
@@ -50,7 +50,7 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40306213772",
       "site_url": null,
       "blockers": [],
-      "next_task": "T-01-05b generator (A-004 running), then T-01-06 web"
+      "next_task": "T-01-06: web part 2 (overview, bridge, evidence, case study, Playwright evidence); then publish T-01-10"
     },
     "02-onboard-studio": {
       "slug": "onboard-studio",
@@ -172,7 +172,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "If apps/revenue-atlas/api and data/migrations exist: run DATABASE_URL=... pytest; commit; else re-dispatch A-003 per task-queue T-01-04/05",
-    "acceptance": "CI Mode A green with SQL reference totals equal to expected.json"
+    "next_concrete_task": "If apps/revenue-atlas/web/e2e/journey.spec.ts exists and `npm run e2e` passes: commit, then tools/publish-site.sh revenue-atlas apps/revenue-atlas/web/dist /home/user/projects-site (unified-portfolio), push, then dispatch live-check.yml via workflow_dispatch. Else re-dispatch A-006 per task-queue T-01-06.",
+    "acceptance": "CI Mode B green with screenshots artifact at 360/768/1280/1920; bridge on ?dataset=golden shows contribution 40.00"
   }
 }
