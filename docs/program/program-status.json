@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T22:01:31Z",
+  "updated_at": "2026-10-26T22:02:27Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -116,7 +116,7 @@
     },
     "06-productsignal": {
       "slug": "productsignal",
-      "stage": "gate-A passed (fixture verified, 706 checks); backend next",
+      "stage": "gate-A passed (fixture 2e0d922, 706 checks); backend A-041 running",
       "built": false,
       "verified": false,
       "published": false,
@@ -125,7 +125,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": "T-06-03 backend worker"
+      "next_task": "T-06-03 (A-041)"
     },
     "07-trustledger": {
       "slug": "trustledger",
@@ -182,7 +182,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 05 InvoiceBridge: A-038 reviewer hand-back -> fix worker -> republish -> artifacts. Project 06 ProductSignal: A-039 fixture hand-back -> D-05 -> backend worker -> generator -> web -> publish -> integrate -> review -> artifacts.",
+    "next_concrete_task": "Project 05: A-040 fix hand-back -> verify (reference, pytest, harness cases, api attacks, fuzz, web check/build/e2e) -> commit -> republish -> manifest -> live check -> artifacts worker. Project 06: A-041 backend hand-back -> verify -> D-06 -> commit -> CI Mode A -> generator -> web -> publish -> integrate -> review -> artifacts.",
     "acceptance": "see task-queue.json"
   }
 }

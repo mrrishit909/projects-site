@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T22:01:31Z",
+  "updated_at": "2026-10-26T22:02:27Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1031,7 +1031,7 @@
       "command": "python3 -I apps/productsignal/tests/reference_check.py",
       "exit_code": 0,
       "actual": "ALL OK (706 checks)",
-      "code_sha": "pending-commit",
+      "code_sha": "2e0d922",
       "evidence": "apps/productsignal/tests/fixtures/golden/",
       "ts": "2026-10-26T22:01:31Z"
     }
