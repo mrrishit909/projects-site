@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T12:02:13Z",
+  "updated_at": "2026-10-26T12:04:33Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -332,7 +332,7 @@
         "planted relationships detectable; enterprise apparel return rate 1.2x on units (site) vs 3x on lines"
       ],
       "command": "scratch scripts under scratchpad/review/",
-      "code_sha": "pending-commit",
+      "code_sha": "50e72e1 (hosted run 40319480592 success)",
       "ts": "2026-10-26T11:22:52Z",
       "resolution": "R-01,02,03,04,06,07(-0.00),08 fixed in A-011 with regression tests (tests/test_review_findings.py, web/scripts/review-check.ts, e2e R-04); R-05 documented as limitation (D-04); R-07 idempotency text-hash/actor binding left open (G-10)"
     },
@@ -377,7 +377,7 @@
       "status": "verified after fix",
       "defect": "R-08 stored allocations sum 50,319.35 vs 50,607.14 over population lines (41 shipments); API metrics unaffected",
       "command": "data/sql/analysis/09_stored_vs_contract_freight.sql",
-      "code_sha": "pending-commit",
+      "code_sha": "50e72e1 (hosted run 40319480592 success)",
       "ts": "2026-10-26T11:36:16Z",
       "actual": "query 09 gap 287.78 -> 0.00"
     },
@@ -392,6 +392,18 @@
       "code_sha": "workflow commit on business-data-lab; site release 92b9c66",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40316433768",
       "ts": "2026-10-26T11:38:24Z"
+    },
+    {
+      "requirement": "CI after reviewer fixes: Mode A (128 tests, postgres:16 service) and Mode B (235 TS checks, 25 Playwright tests, screenshots) on hosted runner",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "revenue-atlas-ci.yml",
+      "exit_code": 0,
+      "expected": "both jobs success",
+      "actual": "success",
+      "code_sha": "50e72e1",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40319480592",
+      "ts": "2026-10-26T12:04:33Z"
     }
   ]
 }
