@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:08:32Z",
+  "updated_at": "2026-10-26T14:12:22Z",
   "active_project": "01-revenue-atlas",
   "policy": "one implementation worker at a time; a task is done only when its acceptance check passes; retries bounded to 3",
   "tasks": [
@@ -228,6 +228,46 @@
       "prereqs": [],
       "retries": 0,
       "acceptance": "checksums + tests"
+    },
+    {
+      "id": "T-03-01",
+      "project": "03-supplyscope",
+      "title": "Contract decisions v1",
+      "status": "done",
+      "prereqs": [],
+      "retries": 0,
+      "acceptance": "docs/contracts.md"
+    },
+    {
+      "id": "T-03-02",
+      "project": "03-supplyscope",
+      "title": "Golden fixture + reference check",
+      "status": "done",
+      "prereqs": [],
+      "retries": 0,
+      "acceptance": "reference_check exit 0"
+    },
+    {
+      "id": "T-03-03",
+      "project": "03-supplyscope",
+      "title": "Domain + Postgres + FastAPI slice + CI",
+      "status": "in_progress",
+      "prereqs": [
+        "T-03-02"
+      ],
+      "retries": 0,
+      "acceptance": "CI Mode A green"
+    },
+    {
+      "id": "T-03-04",
+      "project": "03-supplyscope",
+      "title": "Generator + web + e2e + publish + integrate",
+      "status": "pending",
+      "prereqs": [
+        "T-03-03"
+      ],
+      "retries": 0,
+      "acceptance": "live-check green; case study live"
     }
   ]
 }

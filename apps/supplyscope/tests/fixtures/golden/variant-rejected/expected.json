@@ -1,0 +1,161 @@
+{
+  "fixture_id": "supplyscope-variant-rejected-v1",
+  "note": "Hand-derived literals; see CALCULATION.md. Independent of application code. Totals equal the golden fixture.",
+  "tolerance": {
+    "units": "exact integers",
+    "money_decimal_places": 2,
+    "rate_decimal_places": 6,
+    "comparison": "exact equality after quantizing (ROUND_HALF_UP)"
+  },
+  "ingest": {
+    "counts": {
+      "products": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "locations": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "sales": {
+        "accepted": 4,
+        "rejected": 0
+      },
+      "inventory_movements": {
+        "accepted": 7,
+        "rejected": 1
+      },
+      "purchase_orders": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "purchase_order_lines": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "receipts": {
+        "accepted": 0,
+        "rejected": 1
+      },
+      "suppliers": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "promotions": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "forecast_runs": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "forecast_points": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "policy_scenarios": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "backorders": {
+        "accepted": 2,
+        "rejected": 0
+      },
+      "reservations": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "replenishment_params": {
+        "accepted": 1,
+        "rejected": 0
+      }
+    },
+    "rejected_records": [
+      {
+        "entity": "inventory_movements",
+        "id": "mv-002",
+        "status": "rejected",
+        "reason_code": "DUPLICATE_MOVEMENT_ID",
+        "raw_row": {
+          "movement_id": "mv-002",
+          "product_id": "prod-001",
+          "location_id": "loc-001",
+          "quantity_delta": -25,
+          "event_at": "2026-03-05T10:00:00Z",
+          "movement_type": "sale"
+        }
+      },
+      {
+        "entity": "receipts",
+        "id": "rcpt-001",
+        "status": "rejected",
+        "reason_code": "RECEIPT_BEFORE_ORDER",
+        "raw_row": {
+          "receipt_id": "rcpt-001",
+          "po_line_id": "pol-001",
+          "location_id": "loc-001",
+          "received_quantity": 30,
+          "received_at": "2026-03-18T10:00:00Z"
+        }
+      }
+    ]
+  },
+  "states": {
+    "golden": {
+      "metrics": {
+        "fill_rate": "0.950000",
+        "requested_units": 100,
+        "fulfilled_units": 95,
+        "unmet_units": 5,
+        "observed_days": 31,
+        "stockout_day_count": 1,
+        "stockout_days": "0.032258",
+        "running_stock_min": 0,
+        "timestamp_order_stock_min": -35,
+        "negative_stock": false,
+        "working_capital": "500.00",
+        "empty_population": false,
+        "on_hand": 40,
+        "on_order": 30,
+        "backorders": 10,
+        "reserved": 0,
+        "available": 40,
+        "inventory_position": 60,
+        "reorder_point": 70,
+        "target_position": 120,
+        "reorder_triggered": true,
+        "raw_order": 60,
+        "order_after_moq": 60,
+        "order_quantity": 72
+      }
+    },
+    "position_80": {
+      "metrics": {
+        "fill_rate": "0.950000",
+        "requested_units": 100,
+        "fulfilled_units": 95,
+        "unmet_units": 5,
+        "observed_days": 31,
+        "stockout_day_count": 1,
+        "stockout_days": "0.032258",
+        "running_stock_min": 0,
+        "timestamp_order_stock_min": -35,
+        "negative_stock": false,
+        "working_capital": "500.00",
+        "empty_population": false,
+        "on_hand": 40,
+        "on_order": 50,
+        "backorders": 10,
+        "reserved": 0,
+        "available": 40,
+        "inventory_position": 80,
+        "reorder_point": 70,
+        "target_position": 120,
+        "reorder_triggered": false,
+        "raw_order": 0,
+        "order_after_moq": 0,
+        "order_quantity": 0
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:10:14Z",
+  "updated_at": "2026-10-26T14:12:22Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -603,6 +603,17 @@
       "code_sha": "1a27a0e",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40336881726",
       "ts": "2026-10-26T14:10:14Z"
+    },
+    {
+      "requirement": "P03-GOLD-01..10",
+      "project": "03-supplyscope",
+      "status": "verified",
+      "command": "python3 -I apps/supplyscope/tests/reference_check.py",
+      "exit_code": 0,
+      "expected": "position 60, raw 60, MOQ 60, order 72; position 80 -> 0; fill 0.950000; stockout 0.032258; WC 500.00",
+      "actual": "ALL OK (184 checks)",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T14:12:22Z"
     }
   ]
 }

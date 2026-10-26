@@ -1,0 +1,105 @@
+{
+  "fixture_id": "supplyscope-variant-empty-v1",
+  "note": "Hand-derived literals; see CALCULATION.md. Independent of application code. No parameters: reorder_triggered and order_quantity are null (not evaluated), not false/0.",
+  "tolerance": {
+    "units": "exact integers",
+    "money_decimal_places": 2,
+    "rate_decimal_places": 6,
+    "comparison": "exact equality after quantizing (ROUND_HALF_UP)"
+  },
+  "ingest": {
+    "counts": {
+      "products": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "locations": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "sales": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "inventory_movements": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "purchase_orders": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "purchase_order_lines": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "receipts": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "suppliers": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "promotions": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "forecast_runs": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "forecast_points": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "policy_scenarios": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "backorders": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "reservations": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "replenishment_params": {
+        "accepted": 0,
+        "rejected": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "states": {
+    "empty": {
+      "metrics": {
+        "on_hand": 0,
+        "on_order": 0,
+        "backorders": 0,
+        "reserved": 0,
+        "available": 0,
+        "inventory_position": 0,
+        "reorder_point": null,
+        "target_position": null,
+        "reorder_triggered": null,
+        "raw_order": null,
+        "order_after_moq": null,
+        "order_quantity": null,
+        "working_capital": "0.00",
+        "requested_units": 0,
+        "fulfilled_units": 0,
+        "unmet_units": 0,
+        "fill_rate": null,
+        "observed_days": 31,
+        "stockout_day_count": 0,
+        "stockout_days": null,
+        "running_stock_min": 0,
+        "timestamp_order_stock_min": 0,
+        "negative_stock": false,
+        "empty_population": true
+      }
+    }
+  }
+}

@@ -64,3 +64,10 @@ submitting real purchase orders, supplier commitments, live feeds (P03-DOMAIN-06
 Mode A: Python domain + PostgreSQL + FastAPI verified on GitHub-hosted runners. Mode B:
 TypeScript re-implementation over the published snapshot; the simulator runs in the browser
 on a copy with the published seed; nothing is persisted.
+
+## D-06 Fixture-driven clarifications (2026-10-26, adopted from A-020)
+Requested demand = immediately fulfilled sales + backorders opened in the window; a stockout
+day is a date on which a backorder opened; raw, MOQ and pack quantities are 0 when the reorder
+is not triggered (position ≥ reorder point); with no replenishment parameters the replenishment
+fields are null ("not evaluated"); exact replays of a movement id are rejected as
+`DUPLICATE_MOVEMENT_ID` with the first occurrence kept.

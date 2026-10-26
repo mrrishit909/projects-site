@@ -1,0 +1,51 @@
+{
+  "products": [
+    {
+      "product_id": "prod-001",
+      "sku": "SKU-001",
+      "unit_cost": "12.50",
+      "pack_size": 24,
+      "minimum_order_quantity": 50
+    }
+  ],
+  "locations": [
+    {
+      "location_id": "loc-001",
+      "location_name": "Main DC",
+      "timezone": "UTC",
+      "storage_capacity": 1000,
+      "active": true
+    }
+  ],
+  "sales": [],
+  "inventory_movements": [],
+  "purchase_orders": [],
+  "purchase_order_lines": [],
+  "receipts": [],
+  "suppliers": [
+    {
+      "supplier_id": "sup-001",
+      "supplier_name": "Supplier One",
+      "calendar_id": "cal-001",
+      "quoted_lead_days": 7,
+      "active": true
+    }
+  ],
+  "promotions": [],
+  "forecast_runs": [],
+  "forecast_points": [],
+  "policy_scenarios": [],
+  "backorders": [],
+  "reservations": [],
+  "replenishment_params": [],
+  "fixture_id": "supplyscope-variant-empty-v1",
+  "contract_version": 1,
+  "as_of": "2026-03-31T23:59:59Z",
+  "window_start": "2026-03-01T00:00:00Z",
+  "fixture_declaration": "products, locations and suppliers only; no replenishment_params, so the order is not evaluated (null)",
+  "states": {
+    "empty": {
+      "add_purchase_order_lines": []
+    }
+  }
+}
