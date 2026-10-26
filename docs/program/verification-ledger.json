@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T10:55:24Z",
+  "updated_at": "2026-10-26T11:01:58Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -118,17 +118,6 @@
       "ts": "2026-10-26T10:15:32Z"
     },
     {
-      "requirement": "P01-TEST-02,04,05,07,08,11,12",
-      "project": "01-revenue-atlas",
-      "status": "not_checked",
-      "command": null,
-      "exit_code": null,
-      "expected": "see spec",
-      "actual": "domain-level rules exist for 04,05,07,11 (tests/test_rules.py); application-path tests pending T-01-07",
-      "code_sha": null,
-      "ts": "2026-10-26T10:15:32Z"
-    },
-    {
       "requirement": "P01-REL-05 backend and relational suite on GitHub Actions with transient PostgreSQL",
       "project": "01-revenue-atlas",
       "status": "verified",
@@ -207,6 +196,95 @@
       "code_sha": "7c08797",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40310810960/artifacts/12643684666",
       "ts": "2026-10-26T10:55:24Z"
+    },
+    {
+      "requirement": "P01-TEST-02-DETECT/RECOVER (late return after period close)",
+      "project": "01-revenue-atlas",
+      "status": "failed",
+      "defect": "G-01 credits windowed by shipped_at; contract D-01 requires credit_date",
+      "command": "pytest tests/test_adversarial_2.py -k TEST_02",
+      "exit_code": 0,
+      "expected": "closed-window net stays 225.00; later window shows credit 90.00",
+      "actual": "net 135.00 in the shipment window; 0.00 credits in the credit month; audit row verified",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T11:01:58Z"
+    },
+    {
+      "requirement": "P01-TEST-04-DETECT/RECOVER (missing FX rate)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "defect": "DEFECT-1: /data/quarantined_records does not list FX_RATE_MISSING (computed per run, not persisted) \u2014 xfail kept",
+      "command": "pytest tests/test_adversarial_2.py -k TEST_04",
+      "exit_code": 0,
+      "expected": "line quarantined, totals equal golden; rate ingest admits line",
+      "actual": "as expected; after rate: gross 338.00, CM 93.60",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T11:01:58Z"
+    },
+    {
+      "requirement": "P01-TEST-05-DETECT/RECOVER (zero revenue, nonzero costs)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "pytest -k TEST_05",
+      "exit_code": 0,
+      "expected": "CM negative, rates null, freight by quantity",
+      "actual": "CM -207.00, rates null, freight 5.25/1.75",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T11:01:58Z"
+    },
+    {
+      "requirement": "P01-TEST-07-DETECT/RECOVER (territory change)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "pytest -k TEST_07",
+      "exit_code": 0,
+      "expected": "region by version effective at shipped_at; regions sum to total",
+      "actual": "as expected (net 325.00, CM 105.00)",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T11:01:58Z"
+    },
+    {
+      "requirement": "P01-TEST-08-DETECT/RECOVER (quota joined to transactions)",
+      "project": "01-revenue-atlas",
+      "status": "blocked",
+      "reason": "no quota attainment calculation in the slice; absence verified (no table, 404, no metric key)",
+      "command": "pytest -k TEST_08",
+      "exit_code": 0,
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T11:01:58Z"
+    },
+    {
+      "requirement": "P01-TEST-11-DETECT/RECOVER (unassigned region excluded by filter)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "pytest -k TEST_11",
+      "exit_code": 0,
+      "expected": "UNASSIGNED group present; groups sum to total",
+      "actual": "as expected (UNASSIGNED net 80.00)",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T11:01:58Z"
+    },
+    {
+      "requirement": "P01-TEST-12-DETECT/RECOVER (scenario overwrites actuals)",
+      "project": "01-revenue-atlas",
+      "status": "verified (domain + snapshot); backend C07/C08 blocked: not implemented",
+      "command": "pytest -k TEST_12",
+      "exit_code": 0,
+      "expected": "baseline metrics unchanged after scenario; snapshot hash equals recomputation",
+      "actual": "as expected (scenario CM 40.50 vs actual 40.00)",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T11:01:58Z"
+    },
+    {
+      "requirement": "Injection events replay (INJ-05 duplicate line, INJ-06 over-quantity returns, negative credit, double C04)",
+      "project": "01-revenue-atlas",
+      "status": "verified",
+      "command": "pytest -k injection",
+      "exit_code": 0,
+      "expected": "no writes; 409/422 with rule ids",
+      "actual": "as expected; duplicate line batch rejected ORPHAN_REFERENCE without parents, no-op with parents",
+      "code_sha": "pending-commit",
+      "ts": "2026-10-26T11:01:58Z"
     }
   ]
 }
