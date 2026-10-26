@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-26T16:03:03Z",
+  "updated_at": "2026-10-26T16:17:46Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -71,7 +71,7 @@
     },
     "03-supplyscope": {
       "slug": "supplyscope",
-      "stage": "built, verified (provisional: reviewer findings R3-01..R3-07 open, fixes queued), published (live-verified), integrated (links verified both ways); artifacts A-025 running",
+      "stage": "built, verified (reviewer findings R3-01..R3-07, S-02, S-03 fixed and regression-tested at ca3e626), republished 22e92a6 (live check pending), integrated; artifacts regenerated",
       "built": true,
       "verified": true,
       "published": true,
@@ -80,9 +80,9 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40348560761",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/supplyscope/",
       "blockers": [],
-      "next_task": "A-025 artifacts -> A-026 fixes -> republish -> project 04",
+      "next_task": "confirm supplyscope-ci.yml on ca3e626 and live-check on the manifest commit; then nothing open except deferred extensions (C04, five stub screens)",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/supplyscope/",
-      "verified_note": "Entry journey + 12 adversarial cases + reviewer pass; R3-02 (scenario unmet demand double count) and R3-04 (multi-location position) are real defects pending fix"
+      "verified_note": "Entry journey + 12 adversarial cases + reviewer pass; all nine findings fixed in T-03-07 with tests in Python, SQL and TypeScript"
     },
     "04-serviceflow": {
       "slug": "serviceflow",

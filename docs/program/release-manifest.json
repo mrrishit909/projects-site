@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T15:24:58Z",
+  "updated_at": "2026-10-26T16:17:46Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -46,18 +46,19 @@
       "slug": "supplyscope",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/supplyscope/",
       "site_path": "labs/supplyscope/ on unified-portfolio",
-      "release_commit_unified_portfolio": "7df1914",
-      "rollback_commit_unified_portfolio": "244acba",
-      "source_commit_business_data_lab": "12f866f385202f93c90eaff3f3a68560b29356fa",
-      "published_tree_sha256": "7c25780b5586ec6ff10973bca78c4e5a4bea5b3bab7db674964e765b2f637a70",
+      "release_commit_unified_portfolio": "22e92a6",
+      "rollback_commit_unified_portfolio": "7df1914",
+      "source_commit_business_data_lab": "ca3e626ae395592987dfb2cc647fd177f95adc8c",
+      "published_tree_sha256": "6ed87a1d1af7e2664ad7669930899d181cc454c9026ccafc98a34e8f5b6da0e7",
       "files": 55,
       "dataset_version": "ss-20261026-20261026",
       "dataset_hash": "5bdabb50eea4b192e3b17e1e5b1a79dc6b26feb4a2b8b78ad094acde9f8bcc8c",
       "contract_version": "v1",
-      "publication_status": "published, live-verified and integrated (case study live, links verified both ways, run 40348856013)",
+      "publication_status": "republished after T-03-07 reviewer fixes (22e92a6); live check pending",
       "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40347873614",
-        "verified_at": "2026-10-26T15:23:27Z"
+        "run_url": null,
+        "verified_at": null,
+        "previous_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40348856013"
       }
     }
   ]

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T16:03:03Z",
+  "updated_at": "2026-10-26T16:17:46Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -792,6 +792,17 @@
       "code_sha": "99e219b",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40354858820",
       "ts": "2026-10-26T16:03:03Z"
+    },
+    {
+      "requirement": "P03 reviewer findings R3-01..R3-07, S-02, S-03 fixed (T-03-07)",
+      "project": "03-supplyscope",
+      "status": "verified",
+      "command": "reference_check.py; DATABASE_URL=... pytest -q; sha256sum -c artifacts/CHECKSUMS.txt; npm run check; npm run build:pages; npm run e2e",
+      "exit_code": 0,
+      "actual": "ALL OK (184); 176 passed 1 skipped; 30 OK; 221 golden + 40 review; 36 e2e passed; stockout_days 0.013108 (SKU-day) with calendar share 0.529197",
+      "code_sha": "ca3e626",
+      "evidence": "apps/supplyscope/docs/uat-evidence.md; tests/test_review_findings.py; web/scripts/review-check.ts",
+      "ts": "2026-10-26T16:17:46Z"
     }
   ]
 }
