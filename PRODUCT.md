@@ -46,8 +46,10 @@ says so. Vendored: Three.js r170 (tree-shaken), GSAP 3.13 + ScrollTrigger, Lenis
   operations, TraceRT business analyst with the 22% report-turnaround figure, Microsoft Power BI Data Analyst Associate,
   B.S. Business Analytics and Information Systems May 2026, M.S. candidate expected May 2028). No phone number on the
   site (owner's privacy choice).
-- Binding visual rules from the owner (recorded, not expanded here): loud colour; one dominant 3D object; huge type; little
-  text; no blur of any kind; no thumbnail wall. No em dashes anywhere.
+- Binding visual rules from the owner (2026-10-25, Precision Atelier supersedes the earlier loud-red direction): racing green,
+  ivory and champagne metal; one dominant instrument with several meaningful configurations; large composed type with
+  little introductory text; no blur, frosted glass, depth-of-field or motion blur (shadows and reflections allowed); no
+  thumbnail wall, equal card grid, stock orb, particle cloud, meaningless terminal or ornamental dashboard. No em dashes anywhere.
 - Undecided: whether the public site is ever switched to this home (owner decides).
 
 ## Brand Commitments

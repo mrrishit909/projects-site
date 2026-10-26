@@ -146,22 +146,18 @@ def contrast(a, b):
 
 
 def low_contrast_text():
-    css = (ROOT / "theme.css").read_text() + (ROOT / "site.css").read_text()   # site.css defines its own tokens now
+    css = (ROOT / "atelier.css").read_text()
     tokens = dict(re.findall(r"--([\w-]+):\s*(#[0-9a-fA-F]{6})\b", css))
-    aliases = dict(re.findall(r"--([\w-]+):\s*var\(--([\w-]+)\)", css))     # semantic -> primitive chains
+    aliases = dict(re.findall(r"--([\w-]+):\s*var\(--([\w-]+)\)", css))
 
     def resolve(tok, depth=0):
         return tokens.get(tok) if tok in tokens or depth > 8 else resolve(aliases.get(tok, ""), depth + 1)
-    paper = resolve("paper")
+    checks = [("mute-on-green", "deep"), ("ivory", "deep"), ("champagne", "deep"), ("mute-on-ivory", "ivory"), ("ink", "ivory"), ("champagne-2", "ivory")]
     bad = []
-    for name in ("site.css",):   # portfolio.css (the fog environment) is checked from computed styles by tests/portfolio-check.cjs
-        for sel, decls in re.findall(r"([^{}]+)\{([^{}]*)\}", (ROOT / name).read_text()):
-            if "::marker" in sel:
-                continue
-            for tok in re.findall(r"(?<![-\w])color:\s*var\(--([\w-]+)\)", decls):
-                hexv = resolve(tok)
-                if hexv and tok not in ("paper", "ink", "sheet", "s-canvas", "s-text-inverse", "p-color-white") and contrast(hexv, paper) < 4.5:
-                    bad.append(f"{name}: {sel.strip()[-60:]} uses --{tok} ({contrast(hexv, paper):.2f}:1)")
+    for tok, ground in checks:
+        c = contrast(resolve(tok), resolve(ground))
+        if c < 4.5:
+            bad.append(f"--{tok} on --{ground}: {c:.2f}:1")
     return bad
 
 
@@ -170,18 +166,28 @@ def asset_version(name):
     return hashlib.sha1((ROOT / name).read_bytes()).hexdigest()[:10]
 
 
-def page(title, desc, body):
+def page(title, desc, body, slug, cover_url=None):
+    og = f'<meta property="og:image" content="{PORTFOLIO}projects/{slug}/{cover_url}">' if cover_url else ""
     return f"""<!doctype html>
-<html lang="en">
+<html lang="en" class="case">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="{escape(desc)}">
 <title>{escape(title)}</title>
-<meta name="theme-color" content="#07070c">
+<meta name="theme-color" content="#071d16">
+<meta property="og:title" content="{escape(title)}">
+<meta property="og:description" content="{escape(desc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{PORTFOLIO}projects/{slug}/">
+{og}
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="{PORTFOLIO}projects/{slug}/">
 <link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Bricolage-latin.woff2" crossorigin>
-<link rel="stylesheet" href="../site.css?v={asset_version("site.css")}">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2307070c'/%3E%3Crect x='7' y='9' width='18' height='14' fill='%23ff4d00'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../atelier.css?v={asset_version("atelier.css")}">
+<link rel="icon" href="{ICON}">
+<script type="importmap">{{ "imports": {{ "three": "../vendor/three/three.module.min.js" }} }}</script>
+<script>document.documentElement.classList.add("js")</script>
 <script src="../case.js?v={asset_version("case.js")}" defer></script>
 </head>
 <body>
@@ -191,26 +197,62 @@ def page(title, desc, body):
 """
 
 
+ICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23071d16'/%3E"
+        "%3Crect x='7' y='7' width='18' height='4' fill='%23c4ab7d'/%3E%3Crect x='9' y='13' width='14' height='6' fill='%23c4ab7d'/%3E%3Crect x='7' y='21' width='18' height='4' fill='%23c4ab7d'/%3E%3C/svg%3E")
+
+# ---- the instrument's arrangement per kind: the case page's object and its four marks (the engraved plate's words) ----
+CONFIGS = {
+    "network": ["Facts", "Dimensions", "Measures", "Report"], "pipeline": ["Source", "Staging", "Transform", "Output"],
+    "timeline": ["Observed", "Model", "Estimate", "Range"], "documents": ["Corpus", "Passage", "Answer", "Refusal"],
+    "open": ["Chassis", "Frames", "Inserts", "Pins"], "closed": ["Records", "Pipeline", "API", "Tests"],
+}
+KIND_STATE = {"Power BI": "network", "Dashboard": "network", "Data story": "network", "Excel": "network", "Jira": "network",
+              "Statistics": "timeline", "R": "timeline", "SAS": "timeline", "Social science": "timeline", "Requirements analysis": "timeline",
+              "LLM": "documents", "Blender": "open", "TypeScript": "open", "React": "open", "CRM": "closed"}
+
+
+def config_for(p):
+    """(state, marks) for a case page: the flagship's own chapter arrangement, else by the kind's first word."""
+    feat = featured().get(p["slug"])
+    if feat and feat.get("atelier"):
+        return feat["atelier"]["state"], feat["atelier"]["marks"]
+    head = p["kind"].split("\u00b7")[0].strip()
+    state = KIND_STATE.get(head, "pipeline")
+    return state, CONFIGS[state]
+
+
+def plain(html, n=200):
+    """The first sentence(s) of an HTML fragment as plain text, for the summary block."""
+    t = re.sub(r"<[^>]+>", "", html).replace("&nbsp;", " ").strip()
+    t = re.sub(r"\s+", " ", t)
+    return t if len(t) <= n else t[:n].rsplit(" ", 1)[0] + "\u2026"
+
+
 def featured():
     """featured.json by slug: the four flagships whose printed object opens their case study."""
     return {f["slug"]: f for f in json.loads((ROOT / "featured.json").read_text())}
 
 
-def project_page(p, nxt):
+def project_page(p, prev, nxt):
     steps = []
     for i, s in enumerate(p["steps"], 1):
         code = f'<pre><code>{escape(s["code"])}</code></pre>' if s.get("code") else ""
         steps.append(f'<li><span class="n">{i:02d}</span><div><h3>{escape(s["title"])}</h3>{s["body"]}{code}</div></li>')
-    links = [f'<a href="{escape(p["repo"])}" target="_blank" rel="noopener">Code on GitHub &#8599;</a>']
+    g = p.get("gh") or {}
+    links = [f'<a href="{escape(p["repo"])}" target="_blank" rel="noopener">Code on GitHub</a>']
     if p.get("demo"):
-        links.insert(0, f'<a href="{escape(p["demo"])}">{escape(p.get("demo_label", "See it"))} &#8599;</a>')
-    cover = (f'<figure class="cover"><img src="{escape(p["cover"])}" srcset="cover-800.webp 800w, {escape(p["cover"])} 1400w" sizes="(max-width: 900px) calc(100vw - 40px), 1068px" alt="Screenshot of {escape(p["title"])}" width="1400" height="{round(1400 / (p.get("aspect") or 1.75))}" fetchpriority="high" decoding="async"></figure>'
+        links.insert(0, f'<a href="{escape(p["demo"])}">{escape(p.get("demo_label", "See it"))}</a>')
+    if g.get("homepage") and g["homepage"].rstrip("/") not in (p.get("demo") or "").rstrip("/"):
+        links.append(f'<a href="{escape(g["homepage"])}" target="_blank" rel="noopener">Live site</a>')
+    state, marks = config_for(p)
+    feat = featured().get(p["slug"])
+    home = f"../#feature-{p['slug']}" if feat else "../#work"
+    status = "Archived: kept exactly as published" if p.get("frozen") else ("Case study with a live demo" if p.get("demo") else "Case study with a public repository")
+    if g.get("pushed_at"):
+        status += f'; last push {g["pushed_at"][:10]}'
+    cover = (f'<figure class="cover"><img src="{escape(p["cover"])}" srcset="cover-800.webp 800w, {escape(p["cover"])} 1400w" sizes="(max-width: 900px) calc(100vw - 40px), 1068px" alt="Screenshot of {escape(p["title"])}" width="1400" height="{round(1400 / (p.get("aspect") or 1.75))}" fetchpriority="high" decoding="async"><figcaption>The project as it runs: {escape(p["tagline"])}</figcaption></figure>'
              if p.get("cover") else "")
     note = f'<p class="note">{p["note"]}</p>' if p.get("note") else ""
-    feat = featured().get(p["slug"])
-    obj = ""
-    home = f"../#feature-{p['slug']}" if feat else "../"
-    g = p.get("gh")
     facts = ""
     if g:
         langs = sorted(g.get("languages", {}).items(), key=lambda kv: -kv[1])
@@ -228,34 +270,50 @@ def project_page(p, nxt):
                  + (f'<div><dt>Topics</dt><dd>{topics}</dd></div>' if topics else "")
                  + (f'<div><dt>Licence</dt><dd>{escape(g["license"])}</dd></div>' if g.get("license") else "")
                  + '</dl>')
-    field = ' class="is-flagship"' if feat else ""
-    # the next project's motion tile, played by case.js while the link is on screen
-    peek = ("".join([f'<video muted loop playsinline preload="none" aria-hidden="true" poster="../{nxt["slug"]}/cover-800.webp">' if nxt.get("cover") else
-                     '<video muted loop playsinline preload="none" aria-hidden="true">'] +
+    peek = ("".join([f'<video muted loop playsinline preload="none" aria-hidden="true" poster="../{nxt["slug"]}/cover-800.webp">'] +
                     [f'<source src="../{nxt["slug"]}/{f}" type="video/{f.split(".")[1]}">' for f in sorted(nxt["loops"], reverse=True)] + ["</video>"])
             if nxt.get("loops") else "")
     sections = [("The problem", p["problem"]), ("What I built", p["built"]),
                 ("How it was built", f'<ol class="steps">{"".join(steps)}</ol>'),
                 ("Results", p["results"]), ("What I'd do next", p["next"])]
     ids = ["problem", "built", "how", "results", "next-steps"]
-    secs = "".join(f'<section class="s" id="{ids[n - 1]}"><h2 class="cap">{n:02d} / {escape(t)}</h2><div class="body">{b}</div></section>'
+    secs = "".join(f'<section class="s" id="{ids[n - 1]}"><h2><span class="n">{n:02d}</span>{escape(t)}</h2><div class="body">{b}</div></section>'
                    for n, (t, b) in enumerate(sections, 1))
-    body = f"""<header class="bar"><a href="{PORTFOLIO}">Rishit Raj Mathur</a><nav><a href="{home}">Home</a><a href="../all.html">Index</a><a href="{PORTFOLIO}resume.pdf">Résumé</a></nav></header>
-<main class="wrap">
-  <div class="hero"{field}>
-    <p class="cap dim"><span>{escape(p["kind"])}</span> &middot; {escape(p["date"])}</p>
-    <h1>{escape(p["title"])}</h1>
-    <p class="tagline">{escape(p["tagline"])}</p>
-    <div class="meta cap"><span class="tech">{" &middot; ".join(escape(t) for t in p["tech"])}</span><span class="links">{"".join(links)}</span></div>
-  </div>
+    long = ' class="display long"' if len(p["title"]) > 34 else ' class="display"'
+    marks_html = "".join(f"<span>{escape(m)}</span>" for m in marks)
+    words = json.dumps(marks, ensure_ascii=False).replace('"', "&quot;")
+    body = f"""<a class="skip" href="#reading">Skip to the case study</a>
+<header class="top on-green"><a class="brand" href="{PORTFOLIO}projects/">Rishit Raj Mathur</a><nav aria-label="Site"><a href="{home}">Home</a><a href="../all.html">Archive</a><a href="{PORTFOLIO}resume.pdf">Résumé</a><a href="../#contact">Contact</a></nav></header>
+<main>
+<section class="case-hero on-green" aria-labelledby="title">
+  <p class="kicker label"><span>{escape(p["kind"])} &middot; {escape(p["date"])}</span></p>
+  <h1{long} id="title">{escape(p["title"])}</h1>
+  <p class="tagline lead">{escape(p["tagline"])}</p>
+  <div class="object" aria-hidden="true"><canvas class="case-canvas" data-config="{state}" data-words="{words}"></canvas><p class="marks label">{marks_html}</p></div>
+  <dl class="summary">
+    <div><dt>Problem</dt><dd>{escape(plain(p["problem"], 190))}</dd></div>
+    <div><dt>Role</dt><dd>Built and written by Rishit Raj Mathur; the case study names its sources and checks.</dd></div>
+    <div><dt>Tools</dt><dd>{escape(", ".join(p["tech"]))}</dd></div>
+    <div><dt>Status</dt><dd>{escape(status)}</dd></div>
+    <div><dt>Evidence</dt><dd>{" &middot; ".join(links)}</dd></div>
+  </dl>
+</section>
+<div class="handoff" aria-hidden="true"></div>
+<div class="reading on-ivory" id="reading">
+<div class="wrap">
   {cover}
   {facts}
   {note}
   {secs}
-  <a class="next" href="../{nxt["slug"]}/"><span class="cap">Next project</span><span class="t">{escape(nxt["title"])} &rarr;</span>{peek}</a>
-</main>
-<footer class="cap"><span>&copy; 2026 Rishit Raj Mathur</span><a href="https://github.com/mrrishit909">GitHub</a></footer>"""
-    return page(f'{p["title"]} · Rishit Mathur', p["tagline"], body)
+  <nav class="neighbours" aria-label="Neighbouring case studies">
+    <a class="prev-link" href="../{prev["slug"]}/"><span class="label">Previous</span><span class="t">{escape(prev["title"])}</span></a>
+    <a class="next-link" href="../{nxt["slug"]}/"><span class="label">Next</span><span class="t">{escape(nxt["title"])}</span>{peek}</a>
+  </nav>
+</div>
+<footer class="foot case-foot"><span>&copy; 2026 Rishit Raj Mathur</span><nav aria-label="Footer"><a href="{home}">Home</a><a href="../all.html">Archive</a><a href="{PORTFOLIO}resume.pdf">Résumé</a><a href="../#contact">Contact</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
+</div>
+</main>"""
+    return page(f'{p["title"]} · Rishit Raj Mathur', p["tagline"], body, p["slug"], "cover.jpg" if p.get("cover") else None)
 
 
 def demo_url(p):
@@ -268,49 +326,59 @@ def unit_split(sc):
     return f"{sc['value']:g}", sc["unit"].strip()
 
 
+CONTROLS = {
+    "florida-flight-delays": ('<form class="hour-form" onsubmit="return false"><label for="hour">Departure hour, Florida airports (published hourly rates)</label>'
+                              '<input type="range" id="hour" name="hour" min="5" max="23" step="1" value="8" aria-describedby="hour-line"><output for="hour" id="hour-out">8 a.m.</output></form>'
+                              '<p class="counter" id="hour-line"><b id="hour-v">88.7</b>% arrived on time; <span id="hour-n">38,946 flights left between 8 and 9 a.m.</span></p>'),
+    "retail-dbt": '<p class="counter"><b id="tests-n">0</b> of 31 tests pinned into the frames as you scroll.</p>',
+    "us-retail-forecast": '<p class="stage-note">The columns stand at the real monthly series, Aug 2024 to Jul 2026; the bars ahead follow last year\u2019s shape and fan out by the backtest\u2019s error at each horizon. An illustrative shape: the chart below is the data.</p>',
+    "sec-10k-rag": '<p class="stage-note">One passage lifts out of the index and faces you. Keep scrolling and the drawer closes: the refusal, when the filing does not hold the answer.</p>',
+}
+
+
 def home_page(projects):
-    """The home (index.template.html + home.css + home.js + block.js): THE BLOCK. One object; each flagship from
-    featured.json is a panel with its question, its figure and range, one line, its links and a live fragment of its own
-    interface (motion/scenes/<slug>.js); the check reads the published hourly on-time rates from the Florida preview data;
-    the archive lists the twelve most recent case studies; the counts come from the repository inventory."""
+    """The home (index.template.html + atelier.css + home.js + instrument.js): Precision Atelier. One instrument; each
+    flagship from featured.json is a chapter that rearranges it (atelier.state) under four marks, with its figure, its
+    definition and a live evidence fragment of its own interface (motion/scenes/<slug>.js); the Florida chapter's hour
+    control reads the published hourly on-time rates from the project's preview data; the archive lists the twelve most
+    recent case studies; the counts come from the repository inventory."""
     by_slug = {p["slug"]: p for p in projects}
     gh = github()
-    feats, scenes = [], []
+    chapters, orient, scenes = [], [], []
     for i, f in enumerate(json.loads((ROOT / "featured.json").read_text()), 1):
-        p, sc = by_slug[f["slug"]], f["scale"]
+        p, sc, at = by_slug[f["slug"]], f["scale"], f["atelier"]
         big, unit = unit_split(sc)
-        line = f["result"].split(". ")[0].rstrip(".") + "."
-        links = [f'<a class="btn fill" href="{p["slug"]}/">Open the case study</a>', f'<a class="btn" href="{escape(p["repo"])}" target="_blank" rel="noopener">Code</a>']
+        links = [f'<a class="btn fill" href="{p["slug"]}/">View project <span class="arrow" aria-hidden="true">&rarr;</span></a>', f'<a class="btn" href="{escape(p["repo"])}" target="_blank" rel="noopener">Code</a>']
         if p.get("demo"):
             links.append(f'<a class="btn" href="{escape(demo_url(p))}">{escape(p.get("demo_label", "Demo"))}</a>')
-        rng = f'{sc.get("min", 0):g} to {sc["max"]:g}{"" if unit.startswith("of") else unit}'
         w, h = webp_size(ROOT / p["slug"] / "cover-800.webp")
-        feats.append(
-            f'<article class="panel" id="feature-{p["slug"]}" data-state="{f["op"]}" data-slug="{p["slug"]}"{" data-series=" + chr(39) + json.dumps({"series": f["series"], "fan": f["fan"]}, separators=(",", ":")) + chr(39) if f.get("series") else ""} aria-labelledby="t-{p["slug"]}"><div class="panel-in">'
-            f'<h3 id="t-{p["slug"]}"><a href="{p["slug"]}/">{escape(p["title"])}</a></h3>'
-            f'<p class="q">{escape(f["card"])}</p>'
-            f'<p class="fig"><b class="fig-v">{big}</b><span class="fig-u">{escape(unit)}</span><span class="fig-m">{escape(sc["metric"])}</span></p>'
-            f'<p class="src">{escape(sc["evidence"])}, {escape(rng)}, checked. {escape(sc["note"])}.</p>'
-            f'<p class="op">{escape(f["op_label"])}</p>'
-            f'<p class="line">{escape(line)}</p>'
-            f'<p class="btns">{"".join(links)}</p>'
-            f'<figure class="frag" data-ui><a class="frag-link" href="{p["slug"]}/" aria-label="Open the case study. {escape(f["caption"], quote=True)}"><canvas data-slug="{p["slug"]}" width="840" height="{round(840 / (featured_aspect(p["slug"])))}" role="img" aria-label="{escape(f["caption"], quote=True)}"></canvas>'
-            f'<img src="{p["slug"]}/cover-800.webp" alt="{escape(f["caption"], quote=True)}" width="{w}" height="{h}" loading="lazy" decoding="async"></a></figure>'
-            f'</div></article>')
+        series = (" data-series=" + chr(39) + json.dumps({"series": f["series"], "fan": f["fan"]}, separators=(",", ":")) + chr(39)) if f.get("series") else ""
+        chapters.append(
+            f'<section class="chapter" id="feature-{p["slug"]}" data-chapter="work-{i}" data-label="{escape(p["title"], quote=True)}" data-state="{at["state"]}" data-slug="{p["slug"]}"{series} aria-labelledby="t-{p["slug"]}"><div class="chapter-in">'
+            f'<p class="kicker label">{i:02d} / {escape(f["area"])}</p>'
+            f'<div class="text"><h2 class="display" id="t-{p["slug"]}">{escape(p["title"])}<span class="dot" aria-hidden="true"></span></h2>'
+            f'<p class="lead">{escape(at["lead"])}</p>'
+            f'<p class="figure"><b>{big}</b><span class="unit">{escape(unit)}</span><span class="def">{escape(at["definition"])}</span></p>'
+            f'{CONTROLS.get(p["slug"], "")}<p class="btns">{"".join(links)}</p></div>'
+            f'<p class="marks label">{"".join(f"<span>{escape(m)}</span>" for m in at["marks"])}</p>'
+            f'<figure class="evidence"><a href="{p["slug"]}/" aria-label="Open the case study. {escape(f["caption"], quote=True)}"><canvas data-slug="{p["slug"]}" width="800" height="{round(800 / (featured_aspect(p["slug"])))}" role="img" aria-label="{escape(f["caption"], quote=True)}"></canvas>'
+            f'<img src="{p["slug"]}/cover-800.webp" alt="{escape(f["caption"], quote=True)}" width="{w}" height="{h}" loading="lazy" decoding="async"></a><figcaption>{escape(f["caption"])}</figcaption></figure>'
+            f'</div></section>')
+        orient.append(f'<li><a href="#feature-{p["slug"]}"><span class="n mono">{i:02d}</span><span class="t">{escape(p["title"])}</span><span class="k">{escape(f["area"])}</span></a></li>')
         scenes.append(f'<script src="motion/scenes/{p["slug"]}.js?v={asset_version("motion/scenes/" + p["slug"] + ".js")}" defer></script>')
     hours = json.loads((ROOT / "florida-flight-delays" / "preview" / "data.json").read_text())["slices"]["ALL"]["hours"]
     hours = [{"h": x["h"], "n": x["n"], "otp": round(x["otp"], 4)} for x in hours if 5 <= x["h"] <= 23]
     recent = []
     for p in projects[:12]:
         g = p.get("gh") or {}
-        recent.append(f'<tr><td><a href="{p["slug"]}/">{escape(p["title"])}</a></td><td>{escape(p["kind"].split(chr(183))[0].strip())}</td><td class="n">{p["date"][:4]}</td><td class="n">{g.get("commits") or 0} commits</td></tr>')
+        recent.append(f'<tr><td><a href="{p["slug"]}/">{escape(p["title"])}</a></td><td>{escape(p["kind"].split(chr(183))[0].strip())}</td><td class="n">{p["date"][:4]}</td><td class="n">{g.get("commits") or 0}</td></tr>')
     last = max((r["pushed_at"][:10] for r in gh.values()), default="")
     tpl = (ROOT / "index.template.html").read_text()
-    assert "{{FEATURED}}" in tpl and "{{SCENES}}" in tpl and "/*HOURS*/[]" in tpl and "{{RECENT}}" in tpl
-    return (tpl.replace("{{FEATURED}}", "\n".join(feats)).replace("{{SCENES}}", "".join(scenes)).replace("{{RECENT}}", "\n".join(recent))
+    assert all(k in tpl for k in ("{{FEATURED}}", "{{ORIENT}}", "{{SCENES}}", "/*HOURS*/[]", "{{RECENT}}"))
+    return (tpl.replace("{{FEATURED}}", "\n".join(chapters)).replace("{{ORIENT}}", "".join(orient)).replace("{{SCENES}}", "".join(scenes)).replace("{{RECENT}}", "\n".join(recent))
                .replace("{{COUNT}}", str(len(projects))).replace("{{REPOS}}", str(len(gh))).replace("{{LAST_PUSH}}", last)
                .replace("/*HOURS*/[]", json.dumps(hours, separators=(",", ":")))
-               .replace("{{HOME_CSS}}", asset_version("home.css")).replace("{{HOME_JS}}", asset_version("home.js")))
+               .replace("{{CSS}}", asset_version("atelier.css")).replace("{{HOME_JS}}", asset_version("home.js") + asset_version("instrument.js")[:4]))
 
 
 def featured_aspect(slug):
@@ -370,17 +438,17 @@ def all_page(projects):
     assert "{{CATALOG}}" in tpl and "/*DATA*/[]" in tpl
     return (tpl.replace("{{CATALOG}}", "".join(tiles)).replace("/*DATA*/[]", json.dumps(data).replace("</", "<\\/"))
                .replace("{{COUNT}}", str(len(projects))).replace("{{REPOS}}", str(len(github()))).replace("{{KINDS_OPTIONS}}", options).replace("{{KINDS_TABS}}", tabs).replace("{{KINDS}}", kinds)
-               .replace("{{PORTFOLIO_CSS}}", asset_version("portfolio.css")).replace("{{CATALOG_JS}}", asset_version("catalog.js")))
+               .replace("{{CSS}}", asset_version("atelier.css")).replace("{{CATALOG_JS}}", asset_version("catalog.js")))
 
 
 if __name__ == "__main__":
     bad = low_contrast_text()
-    assert not bad, "text under 4.5:1 on the paper (use --muted or darker; see theme.css):\n  " + "\n  ".join(bad)
+    assert not bad, "text tokens under 4.5:1 on their ground (atelier.css):\n  " + "\n  ".join(bad)
     projects = load()
     for i, p in enumerate(projects):
         if p.get("frozen"):   # page kept exactly as published; its old style.css stays too
             continue
-        (ROOT / p["slug"] / "index.html").write_text(project_page(p, projects[(i + 1) % len(projects)]))
+        (ROOT / p["slug"] / "index.html").write_text(project_page(p, projects[i - 1], projects[(i + 1) % len(projects)]))
     (ROOT / "index.html").write_text(home_page(projects))
     (ROOT / "all.html").write_text(all_page(projects))
     nfrozen = sum(bool(p.get("frozen")) for p in projects)

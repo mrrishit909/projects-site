@@ -1,35 +1,33 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="catalogue">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>All 224 projects, Rishit Mathur</title>
-<meta name="description" content="Every project Rishit Mathur has built, each with a written case study: Python, Blender, TypeScript, CRM, SQL and more. Search by title, technology or kind.">
-<meta name="theme-color" content="#e4e4e4">
-<link rel="preconnect" href="https://api.fontshare.com">
-<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
-<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="portfolio.css?v=0dac284a00">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23cf2419'/%3E%3Crect x='7' y='10' width='18' height='3' fill='%23f0f0f0'/%3E%3Crect x='7' y='15' width='18' height='3' fill='%23f0f0f0'/%3E%3Crect x='7' y='20' width='18' height='3' fill='%23f0f0f0'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>All 224 projects, Rishit Raj Mathur</title>
+<meta name="description" content="Every project Rishit Raj Mathur has built, each with a written case study: Python, Blender, TypeScript, CRM, SQL and more. Search by title, technology or kind.">
+<meta name="theme-color" content="#f0ebe1">
+<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Bricolage-latin.woff2" crossorigin>
+<link rel="stylesheet" href="atelier.css?v=0cd5fc768c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23071d16'/%3E%3Crect x='7' y='7' width='18' height='4' fill='%23c4ab7d'/%3E%3Crect x='9' y='13' width='14' height='6' fill='%23c4ab7d'/%3E%3Crect x='7' y='21' width='18' height='4' fill='%23c4ab7d'/%3E%3C/svg%3E">
 <script>document.documentElement.classList.add("js")</script>
 </head>
-<body class="catalogue-page">
+<body class="catalogue-page on-ivory">
 <a class="skip" href="#main">Skip to content</a>
 
-<header class="nav" id="nav">
-  <a class="wordmark" href="./">Rishit Raj Mathur</a>
-  <nav class="nav-links" id="nav-links" aria-label="Site"><a href="./#work">Work</a><a href="all.html" aria-current="page">Archive</a><a href="./#contact">Contact</a></nav>
-  <p class="strip mono" aria-label="Live"><span>224 case studies</span><span>219 repos</span></p>
+<header class="top on-ivory" id="nav">
+  <a class="brand" href="./">Rishit Raj Mathur</a>
+  <nav aria-label="Site"><a href="./#work">Work</a><a href="all.html" aria-current="page">Archive</a><a href="./#about">About</a><a href="./#contact">Contact</a></nav>
+  <p class="count label" aria-label="Live">224 case studies &middot; 219 repos</p>
 </header>
 
 <main id="main">
 <section class="projects" id="projects" aria-labelledby="projects-title">
   <header class="catalog-head">
-    <h1 id="projects-title" class="display">The index.</h1>
-    <p class="section-lede">224 case studies, one per project, each with its repository's language, year and commit count. Query by language, kind, year, commits, live, or any word in a title or tool.</p>
+    <p class="kicker label">Archive</p><h1 id="projects-title" class="display">All 224.</h1>
+    <p class="lead">224 case studies, one per project, each with its repository's language, year and commit count. Query by language, kind, year, commits, live, or any word in a title or tool.</p>
   </header>
   <form class="toolbar" id="toolbar" role="search" onsubmit="return false">
-    <div class="query field-row"><label class="visually-hidden" for="search">Query</label><span class="mono prompt" aria-hidden="true">WHERE</span><input class="mono" id="search" type="search" placeholder="language:python year:2026 commits>10 forecast" autocomplete="off" spellcheck="false"><button class="clear" id="clear" type="button" aria-label="Clear query" hidden>×</button></div>
+    <div class="query field-row"><label class="visually-hidden" for="search">Query</label><span class="prompt mono" aria-hidden="true">WHERE</span><input class="mono" id="search" type="search" placeholder="language:python year:2026 commits>10 forecast" autocomplete="off" spellcheck="false"><button class="clear" id="clear" type="button" aria-label="Clear query" hidden>×</button></div>
     <div class="kinds" id="kinds" role="group" aria-label="Filter by kind"><span class="kinds-pill" aria-hidden="true"></span><button class="kind-tab" type="button" data-kind="" aria-pressed="true">All kinds</button><button class="kind-tab" type="button" data-kind="Python" aria-pressed="false">Python</button><button class="kind-tab" type="button" data-kind="Blender" aria-pressed="false">Blender</button><button class="kind-tab" type="button" data-kind="TypeScript" aria-pressed="false">TypeScript</button><button class="kind-tab" type="button" data-kind="CRM" aria-pressed="false">CRM</button><button class="kind-tab" type="button" data-kind="SQL" aria-pressed="false">SQL</button></div>
     <div class="field field-select"><label class="visually-hidden" for="kind">Filter by kind</label><select class="control" id="kind"><option value="">Any kind (full list)</option><option value="Python">Python (125)</option><option value="Blender">Blender (20)</option><option value="TypeScript">TypeScript (15)</option><option value="CRM">CRM (11)</option><option value="SQL">SQL (9)</option><option value="Data story">Data story (9)</option><option value="R">R (6)</option><option value="Statistics">Statistics (5)</option><option value="React">React (4)</option><option value="LLM">LLM (3)</option><option value="Requirements analysis">Requirements analysis (2)</option><option value="Apache Spark">Apache Spark (2)</option><option value="SAS">SAS (2)</option><option value="Java">Java (1)</option><option value="Analytics engineering">Analytics engineering (1)</option><option value="Excel">Excel (1)</option><option value="Dashboard">Dashboard (1)</option><option value="Social science">Social science (1)</option><option value="SQL &amp; NoSQL">SQL &amp; NoSQL (1)</option><option value="Data wrangling">Data wrangling (1)</option><option value="NoSQL">NoSQL (1)</option><option value="Jira">Jira (1)</option><option value="PySpark">PySpark (1)</option><option value="Power BI">Power BI (1)</option></select></div>
     <div class="views" role="group" aria-label="View"><button class="view-btn" id="view-grid" type="button" aria-pressed="true">Covers</button><button class="view-btn" id="view-table" type="button" aria-pressed="false">Table</button></div>
@@ -41,7 +39,7 @@
   <p class="more"><button class="pill pill-ink" id="more" type="button" hidden>Show more projects</button><span class="more-count" id="shown"></span></p>
 </section>
 </main>
-<footer class="foot mono"><span>© 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="./">Home</a><a href="./#contact">Contact</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
+<footer class="foot"><span>© 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="./">Home</a><a href="./#contact">Contact</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
 
 <dialog class="detail" id="detail" aria-labelledby="detail-title">
   <div class="detail-body">

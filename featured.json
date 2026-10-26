@@ -2,13 +2,13 @@
  {
   "slug": "florida-flight-delays",
   "area": "Business intelligence",
-  "headline": "75.5% on time across 635,459 flights",
+  "headline": "75.5% of flights on time (arrivals), 635,459 departures",
   "problem": "US DOT publishes a year of Florida departures as 6.5 million raw rows with 109 columns. Travellers and operators want plain answers: which airports, airlines and hours run late, and why.",
   "contribution": "Solo project. I built the star schema (635,459 flights, four dimensions), the DAX measures with a whole-Florida benchmark, the Power BI report, and a pandas script that recomputes every card to test it.",
   "result": "Time of day matters about twice as much as the airline; late-arriving aircraft cause 42.5% of delay minutes. The web preview here is built from the same model; the .pbix is in the repo.",
   "caption": "The report page: KPI cards, on-time rate by month and departure hour, airlines ranked, delay causes, and the airport table.",
   "scale": {
-   "metric": "On-time departures",
+   "metric": "On-time arrivals",
    "unit": "%",
    "min": 0,
    "max": 100,
@@ -22,7 +22,18 @@
   "card": "When does a flight run late?",
   "stage": "wall",
   "op": "slice",
-  "op_label": "The block cut into the star schema: one fact table in the middle, four dimensions stepping out of its corners."
+  "op_label": "The block cut into the star schema: one fact table in the middle, four dimensions stepping out of its corners.",
+  "atelier": {
+   "state": "network",
+   "marks": [
+    "Airports",
+    "Time",
+    "Carriers",
+    "Observations"
+   ],
+   "definition": "of completed flights arrived within 15 minutes of schedule. 635,459 scheduled departures, Aug 2025 to Jul 2026, BTS on-time data.",
+   "lead": "When does a flight run late? A star schema of 635,459 Florida departures, four dimensions around one fact table, and a Power BI report whose every card is recomputed by a second script."
+  }
  },
  {
   "slug": "retail-dbt",
@@ -48,7 +59,18 @@
   "card": "Can a pipeline prove itself?",
   "stage": "floor",
   "op": "layer",
-  "op_label": "The block split into dbt’s three layers, staging, intermediate and marts; 31 slips light as the tests pass."
+  "op_label": "The block split into dbt’s three layers, staging, intermediate and marts; 31 slips light as the tests pass.",
+  "atelier": {
+   "state": "pipeline",
+   "marks": [
+    "Source",
+    "Staging",
+    "Intermediate",
+    "Marts"
+   ],
+   "definition": "data tests passing over 1.07 million invoice lines, as reported in the repository. Not re-run on this site.",
+   "lead": "Can a pipeline prove itself? Staging, intermediate and mart layers in dbt on DuckDB, with 31 tests attached to the transformations they guard."
+  }
  },
  {
   "slug": "us-retail-forecast",
@@ -115,7 +137,18 @@
    2.09,
    1.66,
    2.59
-  ]
+  ],
+  "atelier": {
+   "state": "timeline",
+   "marks": [
+    "Observed",
+    "Now",
+    "Forecast",
+    "80% range"
+   ],
+   "definition": "backtest MAPE of the ETS + SARIMA average, rolling origin, 14 origins by 12 months. Backtest accuracy, not a promise about future months.",
+   "lead": "How wrong is a forecast? Five methods on US Census retail sales since 1992, backtested from 14 origins, with ranges calibrated on the backtest's own errors."
+  }
  },
  {
   "slug": "sec-10k-rag",
@@ -140,6 +173,17 @@
   "card": "Can an answer cite its source?",
   "stage": "float",
   "op": "open",
-  "op_label": "The stack opened at the cited passage: one slip lifted out and turned to face you."
+  "op_label": "The stack opened at the cited passage: one slip lifted out and turned to face you.",
+  "atelier": {
+   "state": "documents",
+   "marks": [
+    "Filings",
+    "Passage",
+    "Answer",
+    "Refusal"
+   ],
+   "definition": "money questions answered within 0.5% of XBRL in a 30-question evaluation; 5 of 5 refusals when the answer was absent. A recorded demo, not live AI.",
+   "lead": "Can an answer cite its source? Five companies' 10-Ks parsed into 730 passages; every answer carries the passage it came from, and the model refuses when the filing is silent."
+  }
  }
 ]

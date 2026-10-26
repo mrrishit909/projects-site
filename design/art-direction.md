@@ -1,89 +1,76 @@
-# Art direction: THE BLOCK (2026-10-25)
+# Art direction: Precision Atelier (2026-10-25)
 
-The sixth direction for the home of mrrishit909.github.io/projects/. It replaces THE HALL (an architectural hall of 224
-thumbnail screens, which the owner's current rules forbid: no thumbnail wall, one dominant object, loud colour).
+Owner-selected direction; the concept image is the target: `~/projects-site-evidence/atelier-2026-10-25/refs/precision-atelier-concept.png`.
+Supersedes THE BLOCK (loud red, record slips) and every earlier home. Directive: Precision_Atelier_Claude_Code_Master_Build_Prompt.md.
 
-## Visual thesis
+## The idea in one sentence
 
-What visitors see: one solid block made of 1,400 thin slips, the body of work as a physical stack of records, standing
-on a loud red field with the name in huge type above it. What it means: the analyst's material is rows from public
-sources, and the work is what happens to the stack. What they do: scroll, and the block is cut, layered, bent and opened
-by each flagship project; set a departure hour and watch the block sort into on-time and late; open a case study. What
-changes: the ground alternates red field and grey paper by chapter, the block inverts (paper on red, red on paper) and
-performs a different operation per project. How it leads into real projects: each operation is the project's own method
-(a star schema is a cut; dbt is layers and tests; a backtest bends a series; retrieval opens the stack to a cited page),
-with the real figure, its source and a live fragment of the real interface beside it, and a button into the case study.
-
-With animation paused the first frame is a red poster: a huge name, a white block of records, a small paper card with
-four facts and two actions.
-
-## Three candidates compared
-
-| | A. THE BLOCK (chosen) | B. THE INSTRUMENT | C. THE LEDGER PAGE |
-|---|---|---|---|
-| Object | one block of 1,400 record slips that is machined per project | one bespoke measuring instrument (a balance: claim on one pan, source on the other) | one huge sheet of ruled paper the numbers are written on, folded per chapter |
-| Connection to the work | records transformed, the literal material of data engineering | the check against a source, the site's claim | the written-down number |
-| First-frame impact | solid monument, loud field, huge name | a single mechanical object, elegant but familiar (justice, jewellery) | typographic, flat |
-| Still-frame quality | strong silhouette, lit faces | good | weak without motion |
-| Legibility | type stays off the object | pans and beams compete with type | good |
-| Interaction | sort by hour, drag to turn, cut and open per chapter | place a number on a pan | turn a page |
-| Mobile | block in the top 40svh, copy below | the beam needs width | fine |
-| Assets | none; primitives in code | none | none |
-| Performance | one InstancedMesh, one draw call, Lambert, no post pass | low | lowest |
-| Risk | reads as a bar chart if the transforms are timid | reads as a stock "scales" icon; the owner rejected printed objects before | reads as a document, not a statement piece |
-
-A wins on connection, first frame and interaction. The risk is answered by treating the block as one solid that is
-cut, delaminated, bent and opened (machining moves on one object), never scattered into a particle field (THE INDEX was
-rejected for that), and by the loud two-colour field.
-
-## The direction dealt by the taste skill
-
-`design-taste-frontend` dealt three directions (name-as-monument, type-only-statement, pinned-poster); `pinned-poster`
-was chosen because its device (one element holds while the series passes under it) is the only one that can carry one
-persistent object. Full sheet: `.taste-skill/direction.json` (seed 1110276553). Redraws: none. Adaptations, each with
-its reason:
-
-- The pinned element is the block and the name, not a title over photographs (the brief pins one 3D object).
-- Hero blueprint "Card over a dim room": kept the flat panel with facts, one action and one link that shrinks to a stub
-  bottom-left on scroll; the "photograph of the room" is the block on the red field; the three title words become the
-  name at display size (the brief pins huge type).
-- Work blueprint "Title torn at the seam": kept the split stage (text left, picture right), one project per 150svh,
-  the two-word section heading top-left; dropped the clip-path tear because the block is the right pane.
-- "Pinned title, portraits pass" (about) became the experience chapter as a line-up (the list blueprint), since there are
-  no portraits; the archive takes the list blueprint as dealt.
-- Contact "The email as display type": as dealt, on the inverse colours, as a curtain under the page.
-- Palette "Oxblood and grey": dealt proportions kept (grey paper holds the reading chapters; a solid red field takes the
-  hero, the check and the footer). The red is pushed from oxblood #7d0c14 to a signal red #d7261e for the fields and the
-  block because the owner's rule is loud colour; oxblood stays as the text ink on paper. The brief wins over the deal.
-- Type "General Sans": as dealt, from Fontshare (ITF Free Font License), with Archivo (vendored) as the fallback.
-- Photographs: the dealt sky set is not used; the real pictures on the page are the four live interface fragments drawn
-  by the projects' own scenes (software shows its own interface) and the block itself.
-
-The impeccable concept seed (`seed:f1db7f229cc74ef4`, mode experience) assigned grounded candidate 7 and dealt six
-challengers. The brief-pinned direction beats the roll; the challengers were weighed and three donated a discipline:
-oscilloscope (everything measured against the graticule): every figure carries its min-max range and its evidence;
-azulejo (recompose by whole tiles): the block only ever moves whole slips, never fractional shapes; suminagashi basin
-(the surface answers the pointer at 60 fps): the block answers drag and pointer tilt every frame. Declined on both axes:
-multiplane dawn, Ray Gun layout desk, village coffeehouse (none can carry an analyst's truth).
+An exquisitely engineered instrument, a register of brass, lacquer and marble, assembles on arrival and is taken apart
+by each flagship project into the structure of that project's work: a star schema, a pipeline, a forecast, a document
+index. The site is the atelier the instrument sits in.
 
 ## Tokens
 
-```
---paper: #e4e4e4   ground of the reading chapters
---paper-2: #d6d6d6 a step for panels on paper
---red: #d7261e     the field, the block on paper, the one filled button
---red-2: #b81d16   pressed state, block shadow faces on paper
---ink: #7d0c14     text on paper (contrast 9.3:1), small lines
---on-red: #f3efe9  text and the block on the red field (5.4:1 at body size)
-type: General Sans 700 for display (tracking -0.02em, leading 0.9), 400/500 for text (leading 1.45)
-steps: --xl clamp(64px, 11vw, 190px) the name and the figures; --lg clamp(36px, 5.6vw, 96px) section lines;
-       --lead clamp(20px, 1.5vw, 26px); --body 17px; --small 14px
-motion: entrance cubic-bezier(0.16, 1, 0.3, 1); travel cubic-bezier(0.65, 0, 0.35, 1); block lerp 1 - 0.004^dt
-radius: 0 everywhere (the block has square slips; the page has square corners)
-depth: none in CSS (no shadows, no hairlines); depth is the block's lighting
-```
+| Role | Value | Where |
+|---|---|---|
+| deep ground | #071D16 | the home's scene, case-page heroes, the top bar on case pages |
+| racing green | #0B3025 | reserved (panels, future) |
+| secondary green | #174C38 | reserved |
+| ivory | #F0EBE1 | the reading ground (About, Archive, Contact, case bodies, the archive) |
+| ivory 2 | #E6E0D3 | cards on ivory (notes) |
+| champagne | #C4AB7D | accent on green: rules, outlines, the filled button, the dot, focus rings |
+| champagne 2 | #7A6436 | accent on ivory (4.65:1 on ivory; the directive's #C4AB7D fails 4.5:1 as text on ivory, so it stays a mark there) |
+| muted on green | #B8C7BA | secondary text on green (9.1:1) |
+| ink | #142E24 | text on ivory (14:1) |
+| muted on ivory | #4F5F56 | secondary text on ivory (5.5:1) |
 
-## What is refused
+The renderer's materials are not these tokens (docs/INSTRUMENT.md); the canvas is transparent so there is no scene
+background to mismatch the CSS ground; the shadow plane darkens whichever ground is under it.
 
-Gradients, glass, blur of any kind, thumbnails, cards as structure, eyebrows, numbering, monospace outside figures,
-custom cursor, autoplay sound, em dashes, claims not in the résumé or a repository.
+## Type
+
+- Display: Bricolage Grotesque, variable, width 75% (condensed), weight 800, uppercase, line-height 0.86. Chosen for
+  the concept's heavy condensed grotesk; self-hosted (OFL, 131 KB). Hero clamp(66px, 11.6vw, 188px); chapter titles
+  clamp(46px, 7.4vw, 128px); figures 700 at 80% width.
+- Reading: Geist 400/500 (OFL, vendored). Body 17px/1.55; lead clamp(18px, 1.45vw, 23px); small 14px; labels 13px
+  uppercase with 0.08em tracking (moderate, never tiny).
+- Figures and data: JetBrains Mono (OFL, vendored).
+- Fontshare (General Sans) dependency removed: no third-party request on first view.
+
+## Layout, grid, borders, focus, icons
+
+12-column feel as a 5.4 / 6.6 split on desktop (text left, the instrument's room right); one pair of gutters
+clamp(20px, 5vw, 72px); 1 px rules in champagne at 38% on green, ink at 22% on ivory; square corners; focus is a 2 px
+champagne outline offset 4 px; icons are typographic (arrows, a triangle play glyph, four bars for sound, a pause
+glyph), no icon font.
+
+## Motion tokens
+
+--ease cubic-bezier(.16, 1, .3, 1) for entrances; --travel cubic-bezier(.65, 0, .35, 1) for the ground colour; durations
+240 / 480 / 900 ms. The instrument lerps per frame with time-based rates (docs/INSTRUMENT.md). Reduced motion removes
+entrances, the opening's travel and the ground transition.
+
+## The two grounds and the handoff
+
+Green from the hero through the four chapters and the system chapter (spatial continuity: one object, one scene).
+A cut ivory edge (clip-path wedge) hands off to the reading ground at About; the ground colour of the document
+follows at the handoff so the instrument stays in the same world (it rests, assembled, on ivory at About, Archive and
+Contact). No alternation beyond this single handoff.
+
+## What the taste draw said, and the conflict
+
+`draw.mjs --sector personal-portfolio --tone luxury --options 3` dealt "dark-room" (one dark field, lit exhibits) and
+"name-as-monument" (the name at 16 to 24 vw). The owner's selected concept puts a statement ("Built with intent.") left
+and the object right, not the name as the monument. Conflict recorded; the selection stands. Taken from dark-room: one
+continuous deep ground with the object as the brightest thing on each screen.
+
+## Compositions (verified by screenshots in ~/projects-site-evidence/atelier-2026-10-25/r*/)
+
+- Desktop 1440x900: hero split, the instrument at 71% / 52% of the viewport at scale 1; chapters pinned 100svh with the
+  object at 69% / 46% (0.72 to 0.88 scale by arrangement) under four marks; the evidence fragment bottom right.
+- Tablet 768x1024: the same split at 1 / 0.7.
+- Phone 390x844: the instrument in the top 30 to 44 svh at 0.42 to 0.55 scale, the words below; it leaves at the handoff (no room beside the words on ivory); the four marks as one
+  row of four small labels; the evidence fragment hidden (the case study carries it); the brand and controls on one row,
+  the nav on the next.
+- Protected text area: the left column at every state; the object never enters it on desktop (stage x >= 0.66, the
+  pipeline and timeline at reduced scale), and sits above the text on the phone.

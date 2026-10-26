@@ -49,74 +49,61 @@ A project's record sleeve on the home page, and the "Next project" link on the c
 
 ## How the site is laid out (so it can be changed safely)
 
-* **`/projects/` (index.html) is the home: THE BLOCK** (2026-10-25, the sixth direction; see `BRIEF.md`,
-  `design/art-direction.md`, `design/storyboard.md`). One object: a block of 1,440 record slips (an InstancedMesh in
-  `block.js`) on a loud red field, that each flagship machines as the visitor scrolls (SLICE, LAYER, BEND, OPEN), that the
-  check chapter cuts at the published on-time rate for a chosen departure hour (HOUR), that the archive spreads into a
-  sheet (SHEET). Files: `index.template.html` + `home.css` + `home.js` (chapters from scroll, the field colour on
-  `html[data-pal]`, the opening sequence with GSAP (loosen, the band collects, settle; Skip and Replay), the live interface fragments drawn by `motion/scenes/<slug>.js` into
-  DOM canvases at device resolution, the hour input, sound, copy e-mail, View Transitions into the case studies) +
-  `block.js` (Three.js r170 tree-shaken in `vendor/three/`; states as target arrays lerped per frame; a shadow-casting
-  key light over a shadow-only ground; adaptive pixel ratio; context loss). The forecast state reads the project's real
-  series and backtest fan from `featured.json` (`series`, `fan`, `op_label`). `build.py` `home_page()` emits one `.panel` per `featured.json` entry (`card` the question, `op`
-  the block's operation, `scale` the figure and range), the hourly rates from `florida-flight-delays/preview/data.json`,
-  the twelve most recent case studies, and the counts from `data/github.json` (`tools/github.sh` refreshes it; **re-run it
-  then `python3 build.py` after pushing new repositories**). The poster for the first paint and for browsers without
-  WebGL is `assets/block-poster.webp` (+ `-m` for phones), rendered by `NODE_PATH=$(npm root -g) node tools/poster.cjs`
-  against the local server; re-render it when the hero's object changes. Type: General Sans from Fontshare (ITF Free
-  Font License; Archivo vendored as the fallback), Geist only inside the fragments. Palette: paper #e4e4e4, red #cf2419,
-  oxblood #7d0c14 text, #f0f0f0 on red. House rules from the taste skill apply (no eyebrows, numbering, glass, gradients,
-  hairlines, shadows at rest, tracked caps). Professional facts come from the résumé at ~/portfolio/resume.pdf; do not
-  add claims not in it. The Three.js bundle is limited to the symbols block.js uses; rebuild it with
-  `export { ... } from './three.module.js'` through `npx esbuild@0.24.0 --bundle --minify --format=esm` if a new
-  `THREE.*` symbol is used (the 0.170.0 source is in ~/portfolio-tunnel/tunnel/vendor/three-0.170.0/build/).
-* **Selected Work** is filled by `build.py` from `featured.json` (four slugs; `card` the question, `op` one of slice /
-  layer / bend / open, `scale` {metric, unit, min, max, value, evidence, note}, `result` for the one line, `caption` for
-  the fragment's accessible name). Each becomes an `article.panel[data-state][data-slug]` with the title link, the
-  question, the figure with unit and metric, the source line (evidence, range, note), one line, the buttons and the
-  fragment (`canvas[data-slug]` plus the `cover-800.webp` still for no JavaScript).
-* **The check** is one native range input over the published hourly on-time rates; **Experience** is a line-up from the
-  résumé; **Archive** on the home is a form that submits `?q=` to `all.html` plus the twelve most recent case studies;
-  **Contact** is the e-mail as display type. `404.html` is a plain page in the same type.
-* **Into a case study and back**: cross-document View Transitions carry the clicked title (`pageswap` / `pagereveal`).
-  Flagship case pages link back to `../#feature-<slug>`.
-* **Case studies** (`site.css`, self-contained tokens; Bricolage + JetBrains Mono, unchanged in this pass): an ink hero
-  block with the kind in hot, the cover, the **facts strip** from the repository (commits, last push, created, languages, live, topics,
-  licence), the sections, the next project as an ink block. case.js is unchanged.
-* **`all.html` is the archive** (`all.template.html` + `portfolio.css` + `catalog.js`; `portfolio.css` now carries THE
-  BLOCK's tokens, paper ground and oxblood text, General Sans): every project as a real link with its
-  thumbnail and its repository's language, year and commit count (`data-lang`, `data-year`, `data-commits`, `data-live`).
-  The query bar accepts free words and clauses (`language:`, `kind:`, `year:`, `commits>`, `commits<`, `live:yes`) in any
-  order (`parse` / `matches` in catalog.js); two views, Covers and Table (`#view-grid` / `#view-table`, remembered in
-  localStorage). Old addresses on the home (`#projects`, `#<slug>`, `?q=` / `?kind=`) are forwarded there by an inline
-  script in the home's head, so case studies' "All projects" link (`../#projects`) and the archive redirect keep working.
-* **Catalogue thumbnails.** `python3 tools/thumbs.py` (sips + cwebp) writes `assets/thumbs/<slug>.webp` at 880x503, twice the
-  widest tile, cropped to the top-left 72% of the cover so its headline or chart title stays legible. True colours, no filter.
-  **Run it after adding a project**, then `python3 build.py` (the build warns when a thumbnail is missing). The first row loads
-  at once; the rest get their source from `catalog.js` just after the page's load event and are lazy images from then on
-  (without JavaScript a `<noscript>` copy shows).
-* **The catalogue** is static HTML (219 links) in a 3 / 2 / 1 column grid, so 12 always fills whole rows; `catalog.js` adds
-  search + kind filter (five kind tabs with a sliding pill, synchronised with the full select; also from `?q=` / `?kind=`),
-  reveal of 12 at a time on "Show more projects", and a `<dialog>` addressable as `#<slug>` with explicit history ownership
-  (a click pushes one entry with `state.pushed`; Previous / Next replace it; Close steps back only over an entry this page
-  pushed). `/projects/archive/` redirects to `/projects/#projects`, which forwards to `all.html`.
+* **`/projects/` (index.html) is the home: PRECISION ATELIER** (2026-10-25, the owner-selected direction; the concept
+  image is the target; see `design/art-direction.md`, `design/storyboard.md`, `docs/INSTRUMENT.md`, `docs/AUDIO.md`,
+  `docs/ROUTES.md`, `docs/ATELIER_PROGRESS.md`). One object: a 32-part register of brushed champagne brass, racing-green
+  lacquer and marble (`instrument.js`, procedural Three.js r170, tree-shaken in `vendor/three/`, rebuilt from
+  `docs/BUILD-THREE.md`) that assembles on arrival, unlocks into the exploded hero, and is rearranged by each flagship
+  chapter into that project's structure (network = the star schema, pipeline = dbt's four layers with 31 test pins,
+  timeline = the real monthly series with a fanning forecast, documents = a card index with a lifted passage and the
+  refusal), then rests assembled on the ivory reading ground. Files: `index.template.html` + `atelier.css` (the one
+  stylesheet for every page) + `home.js` (the opening with GSAP, Skip and Replay; chapters from scroll; the ground on
+  `html[data-field]` switching at the `.handoff`; the system chapter's arrangement buttons, separate slider, turn
+  buttons and arrow keys; pointer drag on fine pointers; Pause; the audio manager; the hour input; the evidence
+  fragments drawn by `motion/scenes/<slug>.js`; View Transitions into the case studies) + `instrument.js` (parts,
+  materials, states, the arrival trajectories, adaptive pixel ratio, context loss). `build.py` `home_page()` emits one
+  `.chapter` per `featured.json` entry from its `atelier` block (`state`, `marks`, `lead`, `definition`) with the figure
+  from `scale`, the hourly rates from `florida-flight-delays/preview/data.json`, the twelve most recent case studies and
+  the counts from `data/github.json` (`tools/github.sh` refreshes it; **re-run it then `python3 build.py` after pushing new
+  repositories**). The posters for the first paint and for browsers without WebGL are `assets/atelier-poster.webp` and
+  `-m`, rendered by `NODE_PATH=$(npm root -g) node tools/poster.cjs` against the local server from
+  `motion/instrument-lab.html`; re-render them when the hero changes. Type: Bricolage Grotesque condensed for display,
+  Geist for reading, JetBrains Mono for figures, all vendored (no Fontshare). Palette: deep #071d16, ivory #f0ebe1,
+  champagne #c4ab7d (#7a6436 as text on ivory), muted #b8c7ba on green, ink #142e24 on ivory. Professional facts come
+  from the résumé at ~/portfolio/resume.pdf; do not add claims not in it. The Florida figure is on-time ARRIVALS within
+  15 minutes (never departures); the dbt tests are repository-reported; the forecast MAPE is a backtest; the 10-K demo is
+  recorded, not live.
+* **Case studies** share the same system: `build.py` `project_page()` writes the green hero (kind and date, the title,
+  the tagline, the instrument in the arrangement of the project's kind (`KIND_STATE`; flagships use their chapter's) with
+  four marks that are also the engraved plate's words, the five-field summary: problem, role, tools, status, evidence),
+  the ivory reading body (cover with caption, facts strip, note, the five sections, previous and next), and the footer.
+  `case.js` adds the instrument after load (quality lite), reading progress, section chips, reveal, copy buttons, zoom,
+  sortable tables, the next loop, and the title's View Transition. `trading-bot` stays frozen (its own `style.css` +
+  `theme.css`) by the owner's rule; it is the one page outside the system.
+* **`all.html` is the archive** (`all.template.html` + `atelier.css` + `catalog.js`, unchanged behaviour): every project
+  as a real link with its thumbnail and its repository's language, year and commit count; the query bar with clauses;
+  Covers and Table views; a `<dialog>` addressable as `#<slug>` with explicit history ownership. Old home addresses
+  (`#projects`, `#<slug>`, `?q=`, `?kind=`) forward there from the home's inline script.
+* **Catalogue thumbnails.** `python3 tools/thumbs.py` (sips + cwebp) writes `assets/thumbs/<slug>.webp` at 880x503.
+  **Run it after adding a project**, then `python3 build.py`.
 * **Checks:** `python3 -m http.server 8800 --bind 127.0.0.1 &` then `NODE_PATH=$(npm root -g) node tests/portfolio-check.cjs`
-  (both pages without JavaScript, every internal link on disk, the panels against featured.json, the hourly data, the
-  opening and its skip, no opening on a return / hash / second visit, reduced motion, no WebGL, the canvas rendering, the
-  field colour and chapter label per section, panels is-in and fragments drawing, the hour input, sound, copy e-mail,
-  the archive's search / tabs / reveal / dialog / history, deep links and forwards, keyboard order, overflow at five
-  widths, console errors). The suite launches Chromium on the GPU (`--use-angle=metal`); `SOFTGL=1` forces the software
-  renderer. Frame pacing: `~/projects-site-evidence/redesign-2026-10-25/pace.cjs`; captures: `shots.cjs`; Lighthouse
-  12.8.2 mobile with gzip (`npx serve@14.2.4 -l 8801 -s .`): numbers in `docs/PERFORMANCE.md`.
-* `theme.css` and `site.css` style the case studies; `vendor/` holds Lenis, Three.js and the fonts with their licences.
-  `vendor/three/three.module.min.js` is a tree-shaken esbuild bundle of three@0.170.0 limited to the symbols home.js uses
-  (`export { ... } from './three.module.js'` through `npx esbuild@0.24.0 --bundle --minify --format=esm`); rebuild it the
-  same way if home.js starts using a new `THREE.*` symbol, or the import fails.
-* Case-study pages use `site.css`. A project marked `"frozen": true` in its `project.json` is never rebuilt.
+  (the home and the archive without JavaScript, every internal link on disk, the chapters against featured.json, the hour
+  data, the opening and its skip and replay, no opening on a return / hash / second visit / reduced motion, no WebGL, the
+  canvas rendering, the ground per section, chapters is-in and fragments drawing, the test counter, the refusal, the
+  arrangement controls, pause, sound, copy e-mail, every case-study route's fields, a case page's instrument, chips and
+  zoom, the archive's search / tabs / dialog / history, deep links and forwards, overflow at five widths on four pages,
+  palette contrast, console errors). The suite launches Chromium on the GPU (`--use-angle=metal`); `SOFTGL=1` forces the
+  software renderer. Evidence scripts (pacing with p50/p95/p99, context loss, recordings, screenshots, Lighthouse) live in
+  `~/projects-site-evidence/atelier-2026-10-25/`; numbers in `docs/PERFORMANCE.md`, gates in `docs/EVIDENCE.md`, the
+  rubric in `docs/REVIEW.md`.
+* `vendor/` holds GSAP, Lenis (unused by the home; native scrolling), Three.js and the fonts with their licences. The
+  Three.js bundle is limited to the symbols instrument.js uses; rebuild it per `docs/BUILD-THREE.md` if a new `THREE.*`
+  symbol is used, or the import fails.
 
-Evidence folders under ~/projects-site-evidence/ (earlier designs): perf-2026-10-19 (the first unified page), refine-2026-10-19,
-redesign-2026-10-19 (the instrument), transform-2026-10-19 (the lens), statement-2026-10-20 (the corridor),
-proof-2026-10-24 (the approval proof: opening + object transition, plus INSTAGRAM-LESSONS.md), world-2026-10-24 (the desk, whole), field-2026-10-24 (the colour fields), index-2026-10-24 (THE INDEX: RESEARCH.md of the first research passes), tower-2026-10-24 (THE TOWER and THE HALL: RESEARCH.md
-with the Awwwards crawl and Webflow sheets, storyboards, shots, recordings, README), **redesign-2026-10-25 (THE BLOCK,
-CURRENT: baseline/ of the hall, refs/ of the reference sites, r1..r3 rounds, pace.json, lh-*.json, portfolio-check.txt,
-README)**; the Awwwards crawl itself and the Webflow harvest live in `~/projects-site-evidence/awwwards/`.
+Evidence folders under ~/projects-site-evidence/ (earlier designs): perf-2026-10-19, refine-2026-10-19,
+redesign-2026-10-19 (the instrument, first attempt), transform-2026-10-19 (the lens), statement-2026-10-20 (the corridor),
+proof-2026-10-24, world-2026-10-24 (the desk), field-2026-10-24 (the colour fields), index-2026-10-24 (THE INDEX),
+tower-2026-10-24 (THE TOWER and THE HALL), redesign-2026-10-25 (THE BLOCK), **atelier-2026-10-25 (PRECISION ATELIER,
+CURRENT: baseline/ of THE BLOCK, refs/ with the concept image, spike/ and spike2/ of the instrument lab, r1.. rounds,
+recordings/, pace.json, gl-loss.json, lh-*.json, portfolio-check.txt)**; the Awwwards crawl and the Webflow harvest live
+in `~/projects-site-evidence/awwwards/`.

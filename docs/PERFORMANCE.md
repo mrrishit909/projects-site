@@ -1,62 +1,90 @@
-# Performance: THE BLOCK (measured 2026-10-25, second pass)
+# Performance: budgets and measurements (Precision Atelier, 2026-10-25)
 
-Conditions: MacBook (Apple Silicon, macOS 27, 60 Hz display), Playwright Chromium 1.64 with ANGLE Metal, local servers
-(`python3 -m http.server 8800` for the suite, captures and pacing; `npx serve@14.2.4 -l 8801 -s .` with gzip for
-Lighthouse). Lighthouse 12.8.2, mobile preset (simulated Moto G Power, slow 4G, 4x CPU throttle). Laboratory numbers; no
-field data and no real phone were measured. Pacing samples requestAnimationFrame deltas in the page, warm cache, over
-the stated windows. Build: the working tree committed as the second THE BLOCK commit (see README).
+Machine: Apple M3 Pro, macOS, 60 Hz display. Browsers: Chromium (Playwright) with ANGLE Metal for behaviour and
+pacing; Lighthouse 12.8.2's headless Chrome for the lab scores. Phone rows are viewport emulation (390x844 at 3x,
+CPU throttled 4x where stated), not a real device. Raw files: `~/projects-site-evidence/atelier-2026-10-25/`
+(pace.json, throttled.json, gl-loss.json, lh-*.json, lighthouse.log).
 
-## Budgets
+## Budgets (set before the production assets)
 
-| Budget | Target | Before (2d0763a) | After | Evidence |
-|---|---|---|---|---|
-| First view transferred | about 1.5 MB | 420 KiB | 430 KiB (the poster grew with the shadow) | lh-index-mobile.json |
-| Lighthouse mobile, home | 90 / 95 / 90 / 90 | 98 / 100 / 100 / 100 | 98 / 100 / 100 / 100 | lh-index-mobile.json (a run with another Chrome session open scored 76 with TBT 1,000 ms; two clean reruns gave 98, TBT 30 and 50 ms) |
-| Lighthouse mobile, archive | same | 97 / 100 / 100 / 100 | unchanged (not retouched this pass) | lh-all-mobile.json |
-| LCP / CLS / TBT, home | 2.5 s / 0.1 / low | 2.0 s / 0.003 / 0 ms | 2.0 s / 0.004 / 50 ms | same |
+| Budget | Target | Result |
+|---|---|---|
+| First view transferred (home, cold) | <= 1.5 MB | 506 KiB mobile / 531 KiB desktop (Lighthouse total-byte-weight, gzip) |
+| LCP / CLS (lab) | <= 2.5 s / <= 0.1 | desktop 0.7 s / 0; mobile (slow 4G, 4x CPU) 3.3 s / 0: LCP over on the mobile preset, see below |
+| INP | not claimed | no field data; lab TBT reported below and not called INP |
+| Draw calls / triangles / materials / lights | <= 100 / <= 50k / <= 8 / 1 shadow light | 41 (81 in the pipeline) / 17,202 / 7 / 1 |
+| Shadow map | one 1024 px, full quality only | desktop only; phones and case pages run lite (no shadow) |
+| Pixel ratio | 1, rising to 1.75 (home desktop) / 1.5 (lite) with hysteresis | rose to 1.75 in Chrome 156 on the test Mac |
+| Texture memory | about 1 MB, 6 canvas textures | 512 px marble on desktop, 320 px on phones, 384 / 256 on case pages |
+| Frame pacing | p50 <= 16.7 ms, p99 <= 33 ms | met everywhere below except the opening's single compile frame |
 
-## Frame pacing (pace.json; before in pace-before-2d0763a.json)
+## First-view weight (home)
 
-Desktop 1440x900, device scale 2:
-
-| Path | Window | Median | p95 | p99 | Max | Over 33 ms |
-|---|---|---|---|---|---|---|
-| Opening (from first paint) | 3 s | 16.7 | 16.7 | 33.3 | 130 | 2 (the first rendered frame: shader and shadow-map compile) |
-| Scroll down | 14 s | 16.7 | 16.8 | 16.8 | 16.8 | 0 |
-| Fast flick | 0.9 s | 16.7 | 16.7 | 16.8 | 16.8 | 0 |
-| Reverse scroll | 6 s | 16.7 | 16.7 | 16.8 | 183 | 1 (one frame; not reproduced in the earlier run of the same build, nor on the phone viewport) |
-| Hour sweep | 4 s | 16.7 | 16.8 | 16.8 | 16.8 | 0 |
-| Return from a case study | 2 s | 16.7 | 16.8 | 16.8 | 16.8 | 0 |
-| Project jumps (four panels, 700 ms apart) | 5.6 s | 16.7 | 16.8 | 16.8 | 16.8 | 0 |
-| Replay | 3 s | 16.7 | 16.8 | 16.8 | 16.8 | 0 |
-
-Phone viewport 390x844 (emulated on this Mac, not a device): identical medians; the opening's first frame 114 ms; no
-other frame over 20 ms. JS heap after the whole run: 5 to 6 MB.
-
-Visible recordings (recordings/final/*.webm) were read as contact sheets; no visible hitch beyond the first frame.
-
-## Scene budget
-
-| Item | Value |
+| Resource | Size |
 |---|---|
-| Draw calls | 2 (the instanced slips and the shadow-only ground), plus the shadow pass |
-| Instances | 1,440 desktop, 1,008 phone; 1 BoxGeometry, 1 Lambert material, 1 ShadowMaterial |
-| Lights | 1 hemisphere, 1 directional key with a 1024 px PCF shadow map, 1 directional fill |
-| Textures | none on the GPU (the fragments are DOM canvases) |
-| Pixel ratio | starts at 1; rises to min(1.5, device) after 90 fast frames; drops to 1 after 40 slow frames and locks 20 s |
-| Idle | the draw is skipped after 12 settled frames outside the opening; fragments draw only while on screen |
-| Per frame on the CPU | 1,440 x 10 lerps, one matrix compose and one colour per slip; during the opening two more evaluations per slip |
+| Bricolage Grotesque (variable, latin) | 129 KB |
+| Three.js bundle (gzip) | 122 KB |
+| Geist Regular + Medium, JetBrains Mono, Geist Mono (the fragments) | 44 + 46 + 31 + 49 KB |
+| GSAP (gzip) | 28 KB |
+| posters | 37 KB desktop, 12 KB phone |
+| HTML + atelier.css + home.js + instrument.js + four scenes (gzip) | about 60 KB |
 
-## Graphics failure (gl-loss.json)
+## Lighthouse 12.8.2 (production files served with gzip by `serve` on 8801; final run on the committed build)
 
-Five forced losses and restores: poster shown on loss, canvas back on restore, one render loop throughout, heap flat
-at 6 MB, no errors. WebGL unavailable: poster, counts final, Replay harmless. Poster missing: no error. Module delayed
-4 s: the HTML frame is readable at once and the sequence runs when the module arrives.
+| Page | Preset | Perf | A11y | BP | SEO | LCP | CLS | TBT | Bytes | LCP element |
+|---|---|---|---|---|---|---|---|---|---|---|
+| home | desktop | 100 | 100 | | | 0.7 s | 0 | 10 ms | 531 KiB | h1 |
+| home | mobile | 89 | 100 | 100 | 100 | 3.3 s | 0 | 160 ms | 506 KiB | h1 |
+| case (florida-flight-delays) | desktop | 100 | 100 | | | 0.8 s | 0 | 0 ms | 628 KiB | h1 |
+| case | mobile | 94 | 100 | 100 | 100 | 3.0 s | 0 | 90 ms | 475 KiB | summary dd |
+| case, long title (workforce-scheduler) | desktop / mobile | 99 / 86 | 100 / 100 | | | 0.8 / 4.1 s | 0.006 / 0 | 0 / 90 ms | 711 / 641 KiB | h1 / tagline |
+| archive | desktop / mobile | 100 / 88 | 100 / 100 | | | 0.7 / 3.6 s | 0.012 / 0.021 | 0 / 0 ms | 618 / 577 KiB | first thumbnail |
 
-## Deviations and limits
+An earlier run of the same pages (before phones were switched to the lite quality and smaller textures) scored the
+home at 61 on mobile with a TBT of 3,020 ms. Lighthouse's headless Chrome renders WebGL in software (SwiftShader), so
+the physical materials and the shadow map were being drawn on the CPU inside the animation frames; the lite quality
+removed most of that and the final mobile TBT is 160 ms. With the GPU on and the CPU throttled 4x through CDP
+(throttled.cjs, the same phone viewport), the long tasks during load plus the whole opening sum to:
 
-- INP is not measured in the field; the proxies are TBT 50 ms and the hour sweep's pacing.
-- No real phone; the phone numbers are a phone viewport on this Mac's GPU.
-- One long frame at the first render (shader compile with the shadow map) is covered by the poster; it could be moved
-  earlier with a warm-up render behind the poster, not done.
-- One 183 ms frame appeared once during the reverse scroll on one desktop run and not on the others; cause not found.
+| Page | Long tasks (> 50 ms) | Sum over 50 ms (TBT-like) |
+|---|---|---|
+| home, phone 390x844, CPU 4x, GPU on | 298 ms (textures + first compile), 52 ms | 250 ms |
+| home, desktop 1440x900, CPU 4x, GPU on | 59 ms, 333 ms | 292 ms |
+| case, phone, CPU 4x, GPU on | 61, 175, 59 ms | 145 ms |
+
+The remaining mobile deviations are the lab LCP on the simulated slow 4G (3.0 to 4.1 s against the 2.5 s target): the
+largest text repaints when the 129 KB display font arrives, which is the font swap, not a blocked render; the fallback
+text paints at once. A further subset of Bricolage would cut it; it is listed as a remaining limitation rather than
+done. Desktop meets every target; mobile performance scores sit at 86 to 94 against the portfolio gate's 90.
+
+## Frame pacing (pace.cjs; frames in ms)
+
+| Path | Desktop 1440x900 at 2x | Phone 390x844 at 3x (emulated) |
+|---|---|---|
+| opening (3.4 s) | p50 16.7, p95 16.8, p99 33.4, max 200 (one compile frame) | p50 16.7, p99 16.8, max 100 (one) |
+| slow scroll down 14 s | p50 16.7, p95 16.8, p99 16.8, 0 over 20 | same |
+| flick up 0.7 s | p50 16.7, p99 16.8 | same |
+| reverse scroll | p50 16.7, p99 16.8 | same |
+| drag (desktop) | p50 16.7, p99 16.8 | not applicable (no drag on touch) |
+| arrangement controls, separate slider | p50 16.7, p99 16.8 | same |
+| case entry / Back | 5 ms / 135 ms navigation; case instrument p50 16.7 | 4 / 125 ms |
+| resize x4 | p99 33.4 (one frame per resize) | same |
+| requestAnimationFrame loops | 61 per second (one loop) | 61 |
+| JS heap | 6 MB after the opening, 16 MB after Back | 12 / 19 MB |
+
+## Graphics failure and recovery (gl-loss.cjs)
+
+Five forced context losses: on loss the poster shows and the page stays usable (the hour input still updates, scroll
+works); on restore the canvas draws again, one requestAnimationFrame loop (60 per second), heap flat at 13 MB, no
+errors. WebGL unavailable: poster, entered, Replay harmless; case page reads with its words and summary. Poster
+missing: no error, the canvas carries. home.js delayed 4 s: the headline and nav are readable at 1 s, the sequence
+runs on arrival. Three.js failing to load: the poster stays, the headline is visible, navigation works, no unhandled
+rejection.
+
+## Limitations
+
+- One machine; no real phone. The lite quality on phones (no shadow map, 320 px textures, pixel ratio capped at 1.5) is
+  the mitigation, not proof of a mid-range Android's behaviour.
+- INP not measured. Lighthouse's TBT on mobile is dominated by software GL in its headless Chrome; the throttled
+  measurement above is the honest JavaScript figure, and both are reported.
+- The opening's first rendered frame is one long task (shader compile, 100 to 200 ms unthrottled) under the poster.

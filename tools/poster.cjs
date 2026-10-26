@@ -1,23 +1,14 @@
-// The art-directed poster: the block in its hero pose, rendered by the real scene and saved with transparency, so the
-// first paint and browsers without WebGL show the same object. Writes assets/block-poster.webp (1440x900) and
-// assets/block-poster-m.webp (390x844). Needs the local server on 8800, Playwright's Chromium and cwebp.
-// NODE_PATH=$(npm root -g) node tools/poster.cjs
-const { chromium } = require('playwright'); const { execFileSync } = require('child_process'); const path = require('path'); const fs = require('fs');
-const ROOT = path.join(__dirname, '..');
+// The hero poster: the instrument in its exploded hero arrangement, rendered with alpha from the lab at the home's stage
+// (desktop 1440x900 at 70% / 52%, phone 390x844 at 50% / 27%), for the first paint and for browsers without WebGL.
+// NODE_PATH=$(npm root -g) node tools/poster.cjs   (needs the local server on 8800 and cwebp)
+const { chromium } = require('playwright'); const { execSync } = require('child_process'); const path = require('path');
 (async () => {
   const b = await chromium.launch({ args: ['--use-angle=metal', '--ignore-gpu-blocklist'] });
-  for (const [name, vp, mobile] of [['block-poster', { width: 1440, height: 900 }, false], ['block-poster-m', { width: 390, height: 844 }, true]]) {
-    const ctx = await b.newContext({ viewport: vp, deviceScaleFactor: 1, isMobile: mobile, hasTouch: mobile });
-    const p = await ctx.newPage();
-    await p.addInitScript(() => { try { sessionStorage.setItem('seen', '1'); } catch (_) {} });
-    await p.goto('http://127.0.0.1:8800/index.html', { waitUntil: 'load' }); await p.waitForTimeout(2600);
-    await p.addStyleTag({ content: 'html, body { background: transparent !important; } main, header, footer, .hud-chapter, .skip-intro, .poster { visibility: hidden !important; }' });
-    await p.waitForTimeout(400);
-    const png = path.join(ROOT, 'assets', name + '.png'), webp = path.join(ROOT, 'assets', name + '.webp');
-    await p.screenshot({ path: png, omitBackground: true });
-    execFileSync('cwebp', ['-q', '82', '-alpha_q', '90', '-quiet', png, '-o', webp]); fs.unlinkSync(png);
-    console.log(name, fs.statSync(webp).size, 'bytes');
-    await ctx.close();
+  for (const [name, vp, q] of [['atelier-poster', { width: 1440, height: 900 }, 'sx=0.71&sy=0.52&ss=1'], ['atelier-poster-m', { width: 390, height: 844 }, 'sx=0.5&sy=0.27&ss=0.62']]) {
+    const ctx = await b.newContext({ viewport: vp, deviceScaleFactor: 1 }); const p = await ctx.newPage();
+    await p.goto(`http://127.0.0.1:8800/motion/instrument-lab.html?state=open&poster=1&${q}`, { waitUntil: 'networkidle' }); await p.waitForTimeout(3000);
+    const png = path.join(__dirname, '..', 'assets', name + '.png'); await p.screenshot({ path: png, omitBackground: true });
+    execSync(`cwebp -q 82 -alpha_q 90 "${png}" -o "${png.replace('.png', '.webp')}"`); execSync(`rm "${png}"`); await ctx.close();
   }
-  await b.close();
+  await b.close(); console.log('posters written');
 })();

@@ -64,3 +64,20 @@ into the session scratchpad; page counts from mdls. "Affects" names where a find
 | mrrishit909/us-retail-forecast `data/retail_sales.csv` and `results/backtest_by_horizon.csv` (via gh api) | READ | the forecast operation's columns are the last 24 real months; the fan is the backtest's MAPE by horizon |
 | Google Chrome 156 (the owner's browser, through the Claude in Chrome extension) | USED | interactive verification of the cross-document transitions, Back/Forward, focus, rapid clicks, the Home link, Replay |
 | WEBGL_lose_context (Chromium) | USED | forced context loss and recovery |
+
+## Precision Atelier pass (2026-10-25, afternoon)
+
+| Source | Path | Sections read | Status | Principle | Decision | Evidence |
+|---|---|---|---|---|---|---|
+| Precision_Atelier_Claude_Code_Master_Build_Prompt.md | ~/Downloads | all 21 sections | READ | the creative contract, the phase gates, the pitfalls table | this build; docs/EVIDENCE.md follows its gates | docs/ATELIER_PROGRESS.md |
+| The concept image | ~/projects-site-evidence/atelier-2026-10-25/refs/precision-atelier-concept.png | the whole image (two frames: the hero on green, the row on ivory) | READ (image) | an exploded register of brass bars, frames, green and ivory slabs, pins; a heavy condensed statement left; four labelled marks over the row | the instrument's parts list, the hero composition, the marks | docs/INSTRUMENT.md, r2/d-02-hero.png |
+| Rishit_Website_Building_Master_Playbook.pdf | ~/Downloads | read this morning as page images (ledger above) | READ | authority order; intro as a sequence with a carried element; status labels | unchanged | |
+| Advanced Engineering Build Book Vol VII (Blender-to-web) | ~/Downloads | the method (graybox, deterministic build, validate, GLB, re-import, browser-owned motion, still fallbacks), the asset contract, deliverables | PARTIAL (grepped lines and the text around them) | Blender owns the editable asset only when the asset needs it; still fallbacks for mobile, reduced motion, graphics failure; an asset contract with names and pivots | the spike chose procedural geometry; the contract is written anyway (docs/INSTRUMENT.md); the posters are the stills | spike2/, gl-loss.json |
+| Advanced Engineering Build Book Vol VIII (cinematic, WebGPU) | ~/Downloads | opening cinematic (the intro must become the first usable product state through a shared object), performance budget, release questions | PARTIAL | the intro hands the same object to the first chapter; explicit budgets | the handoff: the hero's exploded instrument is the first chapter's starting state; docs/PERFORMANCE.md budgets | design/storyboard.md |
+| Three.js 0.170.0 source | ~/portfolio-tunnel/tunnel/vendor/three-0.170.0 | MeshPhysicalMaterial (anisotropy), RoundedBoxGeometry, PMREMGenerator.fromScene, ShadowMaterial | READ (the vendored source is the version shipped) | | the materials and the environment | docs/BUILD-THREE.md |
+| website-playbook | ~/.claude/skills/website-playbook | SKILL.md, quality-rubric.md | READ | the eight criteria; evidence before completion; the mobile pass | docs/REVIEW.md grades by it | |
+| design-taste-frontend | scripts/draw.mjs | `--list sectors`; `--sector personal-portfolio --tone luxury --options 3` | RUN | dealt dark-room and name-as-monument | the conflict with the selected concept is recorded; one principle taken | design/art-direction.md |
+| impeccable 4.7.1 | scripts/impeccable | `context --target index.template.html`; detect and critique after the build | RUN | PRODUCT.md loaded; mode Experience | PRODUCT.md updated for the new rules | docs/REVIEW.md |
+| img2threejs | | not used | NOT APPLICABLE | the instrument is procedural modelling by hand from a concept image, not a run of that pipeline | described as procedural | |
+| Blender 4.5 | ~/Applications | not used in this pass (available) | NOT USED | | the procedural path was chosen after the spike | docs/INSTRUMENT.md |
+| Higgsfield, Figma, Canva, Adobe | connectors | not used | NOT USED | no credit spend was authorised; nothing needed them | | |

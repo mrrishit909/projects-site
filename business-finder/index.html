@@ -1,29 +1,49 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="case">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Type a US city, get a cleaned table of its local businesses, each labeled likely active, unknown or likely closed.">
-<title>Business Finder · Rishit Mathur</title>
-<meta name="theme-color" content="#07070c">
+<title>Business Finder · Rishit Raj Mathur</title>
+<meta name="theme-color" content="#071d16">
+<meta property="og:title" content="Business Finder · Rishit Raj Mathur">
+<meta property="og:description" content="Type a US city, get a cleaned table of its local businesses, each labeled likely active, unknown or likely closed.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mrrishit909.github.io/projects/business-finder/">
+<meta property="og:image" content="https://mrrishit909.github.io/projects/business-finder/cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://mrrishit909.github.io/projects/business-finder/">
 <link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Bricolage-latin.woff2" crossorigin>
-<link rel="stylesheet" href="../site.css?v=8e910f7231">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2307070c'/%3E%3Crect x='7' y='9' width='18' height='14' fill='%23ff4d00'/%3E%3C/svg%3E">
-<script src="../case.js?v=b6bd6114a1" defer></script>
+<link rel="stylesheet" href="../atelier.css?v=0cd5fc768c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23071d16'/%3E%3Crect x='7' y='7' width='18' height='4' fill='%23c4ab7d'/%3E%3Crect x='9' y='13' width='14' height='6' fill='%23c4ab7d'/%3E%3Crect x='7' y='21' width='18' height='4' fill='%23c4ab7d'/%3E%3C/svg%3E">
+<script type="importmap">{ "imports": { "three": "../vendor/three/three.module.min.js" } }</script>
+<script>document.documentElement.classList.add("js")</script>
+<script src="../case.js?v=05d343ae52" defer></script>
 </head>
 <body>
-<header class="bar"><a href="https://mrrishit909.github.io/">Rishit Raj Mathur</a><nav><a href="../">Home</a><a href="../all.html">Index</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a></nav></header>
-<main class="wrap">
-  <div class="hero">
-    <p class="cap dim"><span>Python · Data pipeline</span> &middot; 2026-08</p>
-    <h1>Business Finder</h1>
-    <p class="tagline">Type a US city, get a cleaned table of its local businesses, each labeled likely active, unknown or likely closed.</p>
-    <div class="meta cap"><span class="tech">Python &middot; SQLite &middot; FastAPI &middot; OpenStreetMap &middot; US Census &middot; Chart.js &middot; Leaflet</span><span class="links"><a href="https://github.com/mrrishit909/business-finder" target="_blank" rel="noopener">Code on GitHub &#8599;</a></span></div>
-  </div>
-  <figure class="cover"><img src="cover.jpg" srcset="cover-800.webp 800w, cover.jpg 1400w" sizes="(max-width: 900px) calc(100vw - 40px), 1068px" alt="Screenshot of Business Finder" width="1400" height="867" fetchpriority="high" decoding="async"></figure>
+<a class="skip" href="#reading">Skip to the case study</a>
+<header class="top on-green"><a class="brand" href="https://mrrishit909.github.io/projects/">Rishit Raj Mathur</a><nav aria-label="Site"><a href="../#work">Home</a><a href="../all.html">Archive</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="../#contact">Contact</a></nav></header>
+<main>
+<section class="case-hero on-green" aria-labelledby="title">
+  <p class="kicker label"><span>Python · Data pipeline &middot; 2026-08</span></p>
+  <h1 class="display" id="title">Business Finder</h1>
+  <p class="tagline lead">Type a US city, get a cleaned table of its local businesses, each labeled likely active, unknown or likely closed.</p>
+  <div class="object" aria-hidden="true"><canvas class="case-canvas" data-config="pipeline" data-words="[&quot;Source&quot;, &quot;Staging&quot;, &quot;Transform&quot;, &quot;Output&quot;]"></canvas><p class="marks label"><span>Source</span><span>Staging</span><span>Transform</span><span>Output</span></p></div>
+  <dl class="summary">
+    <div><dt>Problem</dt><dd>Market research often starts with a simple question: how many businesses of each kind are in this city, and where? Paid lead databases answer it, but they cost money and hide how they…</dd></div>
+    <div><dt>Role</dt><dd>Built and written by Rishit Raj Mathur; the case study names its sources and checks.</dd></div>
+    <div><dt>Tools</dt><dd>Python, SQLite, FastAPI, OpenStreetMap, US Census, Chart.js, Leaflet</dd></div>
+    <div><dt>Status</dt><dd>Case study with a public repository; last push 2026-09-30</dd></div>
+    <div><dt>Evidence</dt><dd><a href="https://github.com/mrrishit909/business-finder" target="_blank" rel="noopener">Code on GitHub</a></dd></div>
+  </dl>
+</section>
+<div class="handoff" aria-hidden="true"></div>
+<div class="reading on-ivory" id="reading">
+<div class="wrap">
+  <figure class="cover"><img src="cover.jpg" srcset="cover-800.webp 800w, cover.jpg 1400w" sizes="(max-width: 900px) calc(100vw - 40px), 1068px" alt="Screenshot of Business Finder" width="1400" height="867" fetchpriority="high" decoding="async"><figcaption>The project as it runs: Type a US city, get a cleaned table of its local businesses, each labeled likely active, unknown or likely closed.</figcaption></figure>
   <dl class="facts-strip" aria-label="From the repository"><div><dt>Repository</dt><dd><a href="https://github.com/mrrishit909/business-finder" target="_blank" rel="noopener">github.com/mrrishit909/business-finder</a></dd></div><div><dt>Commits</dt><dd>1</dd></div><div><dt>Last push</dt><dd>2026-09-30</dd></div><div><dt>Created</dt><dd>2026-09-30</dd></div><div><dt>Languages</dt><dd>Python 74%, HTML 10%, CSS 8%</dd></div></dl>
   
-  <section class="s" id="problem"><h2 class="cap">01 / The problem</h2><div class="body"><p>Market research often starts with a simple question: <em>how many businesses of each kind are in this city, and where?</em> Paid lead databases answer it, but they cost money and hide how they count. I wanted the same answer from free, public data, and I wanted to know how much to trust each row.</p></div></section><section class="s" id="built"><h2 class="cap">02 / What I built</h2><div class="body"><p>A pipeline that turns a city name into a clean business table, plus a local web app on top of it.</p><ul><li><b>Input:</b> a city like <code>Tampa, FL</code>.</li><li><b>Sources:</b> GeoNames ZIP list, US Census ZIP areas (ZCTA gazetteer), OpenStreetMap via the Overpass API. All free.</li><li><b>Output:</b> a SQLite table and a CSV: name, category, address, ZIP, phone, website, plus a status label and the reason for it.</li><li><b>Web app:</b> FastAPI with three tabs: a filterable table, a Chart.js dashboard and a Leaflet map.</li></ul></div></section><section class="s" id="how"><h2 class="cap">03 / How it was built</h2><div class="body"><ol class="steps"><li><span class="n">01</span><div><h3>City to ZIP codes</h3><p>Downloaded the GeoNames US ZIP list and the Census ZIP-area list once into SQLite. Many ZIPs are PO-box-only and cover no land, so each ZIP is tagged <code>is_real</code> using the Census list, with its center point and land area.</p></div></li><li><span class="n">02</span><div><h3>Give every real ZIP a search box</h3><p>Fake ZIPs are dropped. Each real one gets a map box sized from its Census land area (a circle radius clamped between 0.6 and 6 miles, padded 15% so neighbors overlap and nothing falls through the gaps).</p></div></li><li><span class="n">03</span><div><h3>Ask OpenStreetMap for every business</h3><p>One Overpass query covers the whole city: shops, offices, crafts, healthcare, and hand-picked amenity/tourism/leisure values (restaurants yes, park benches no). Raw JSON is cached to disk, and the fetch retries with backoff when the server is busy.</p><p>Gotcha I hit: the output line has to be <code>out tags center meta;</code>. Writing <code>out center meta tags;</code> silently drops the edit timestamps that step 5 depends on.</p><pre><code>[out:json][timeout:180];
+  <section class="s" id="problem"><h2><span class="n">01</span>The problem</h2><div class="body"><p>Market research often starts with a simple question: <em>how many businesses of each kind are in this city, and where?</em> Paid lead databases answer it, but they cost money and hide how they count. I wanted the same answer from free, public data, and I wanted to know how much to trust each row.</p></div></section><section class="s" id="built"><h2><span class="n">02</span>What I built</h2><div class="body"><p>A pipeline that turns a city name into a clean business table, plus a local web app on top of it.</p><ul><li><b>Input:</b> a city like <code>Tampa, FL</code>.</li><li><b>Sources:</b> GeoNames ZIP list, US Census ZIP areas (ZCTA gazetteer), OpenStreetMap via the Overpass API. All free.</li><li><b>Output:</b> a SQLite table and a CSV: name, category, address, ZIP, phone, website, plus a status label and the reason for it.</li><li><b>Web app:</b> FastAPI with three tabs: a filterable table, a Chart.js dashboard and a Leaflet map.</li></ul></div></section><section class="s" id="how"><h2><span class="n">03</span>How it was built</h2><div class="body"><ol class="steps"><li><span class="n">01</span><div><h3>City to ZIP codes</h3><p>Downloaded the GeoNames US ZIP list and the Census ZIP-area list once into SQLite. Many ZIPs are PO-box-only and cover no land, so each ZIP is tagged <code>is_real</code> using the Census list, with its center point and land area.</p></div></li><li><span class="n">02</span><div><h3>Give every real ZIP a search box</h3><p>Fake ZIPs are dropped. Each real one gets a map box sized from its Census land area (a circle radius clamped between 0.6 and 6 miles, padded 15% so neighbors overlap and nothing falls through the gaps).</p></div></li><li><span class="n">03</span><div><h3>Ask OpenStreetMap for every business</h3><p>One Overpass query covers the whole city: shops, offices, crafts, healthcare, and hand-picked amenity/tourism/leisure values (restaurants yes, park benches no). Raw JSON is cached to disk, and the fetch retries with backoff when the server is busy.</p><p>Gotcha I hit: the output line has to be <code>out tags center meta;</code>. Writing <code>out center meta tags;</code> silently drops the edit timestamps that step 5 depends on.</p><pre><code>[out:json][timeout:180];
 (
   nwr[&quot;shop&quot;](bbox);
   nwr[&quot;office&quot;](bbox);
@@ -38,9 +58,14 @@ if edited &gt;= 7:     score -= 1   # untouched for years
 if has_hours:       score += 1
 if phone and address: score += 1
 
-label = &#x27;likely active&#x27; if score &gt;= 2 else &#x27;likely closed&#x27; if score &lt;= -2 else &#x27;unknown&#x27;</code></pre></div></li><li><span class="n">06</span><div><h3>One command for the whole pipeline</h3><p><code>run.py "Tampa, FL"</code> runs steps 1 to 5 and writes a CSV. The first run checks about 2,500 websites in parallel (about 3 minutes); everything is cached, so re-runs take about 20 seconds.</p></div></li><li><span class="n">07</span><div><h3>The web app</h3><p>A FastAPI site: type a city, watch a progress bar while the build runs in the background, then explore three tabs: <b>Table</b> (filter, sort, search, download CSV), <b>Dashboard</b> (businesses by category, status split, density per square mile by ZIP) and <b>Map</b> (every business as a dot colored by status).</p></div></li></ol></div></section><section class="s" id="results"><h2 class="cap">04 / Results</h2><div class="body"><p>Tampa, FL. Status counts are for all 6,298 businesses, border area included; the screenshot above shows the 5,425 inside city limits.</p><table><tr><th>Measure</th><th class="num">Value</th></tr><tr><td>Businesses after cleaning</td><td class="num">6,298</td></tr><tr><td>Inside city limits</td><td class="num">5,425</td></tr><tr><td>Likely active (all 6,298)</td><td class="num">2,466 (39%)</td></tr><tr><td>Unknown (all 6,298)</td><td class="num">3,766 (60%)</td></tr><tr><td>Likely closed (all 6,298)</td><td class="num">66 (1%)</td></tr><tr><td>Largest group (in city)</td><td class="num">Food &amp; Drink, 1,526</td></tr></table><p>The big "unknown" bucket is honest rather than a bug: most small businesses on OpenStreetMap have no website or verification date, so there is simply not enough evidence either way.</p></div></section><section class="s" id="next-steps"><h2 class="cap">05 / What I&#x27;d do next</h2><div class="body"><ul><li>Add Census population to show businesses per 1,000 residents, not just per square mile.</li><li>Deploy it (Postgres plus a real job queue) instead of running locally.</li><li>Spot-check a random sample of "unknown" rows by hand to measure how often the labels are right.</li></ul></div></section>
-  <a class="next" href="../trading-bot/"><span class="cap">Next project</span><span class="t">Trading Bot &rarr;</span><video muted loop playsinline preload="none" aria-hidden="true" poster="../trading-bot/cover-800.webp"><source src="../trading-bot/loop.webm" type="video/webm"><source src="../trading-bot/loop.mp4" type="video/mp4"></video></a>
+label = &#x27;likely active&#x27; if score &gt;= 2 else &#x27;likely closed&#x27; if score &lt;= -2 else &#x27;unknown&#x27;</code></pre></div></li><li><span class="n">06</span><div><h3>One command for the whole pipeline</h3><p><code>run.py "Tampa, FL"</code> runs steps 1 to 5 and writes a CSV. The first run checks about 2,500 websites in parallel (about 3 minutes); everything is cached, so re-runs take about 20 seconds.</p></div></li><li><span class="n">07</span><div><h3>The web app</h3><p>A FastAPI site: type a city, watch a progress bar while the build runs in the background, then explore three tabs: <b>Table</b> (filter, sort, search, download CSV), <b>Dashboard</b> (businesses by category, status split, density per square mile by ZIP) and <b>Map</b> (every business as a dot colored by status).</p></div></li></ol></div></section><section class="s" id="results"><h2><span class="n">04</span>Results</h2><div class="body"><p>Tampa, FL. Status counts are for all 6,298 businesses, border area included; the screenshot above shows the 5,425 inside city limits.</p><table><tr><th>Measure</th><th class="num">Value</th></tr><tr><td>Businesses after cleaning</td><td class="num">6,298</td></tr><tr><td>Inside city limits</td><td class="num">5,425</td></tr><tr><td>Likely active (all 6,298)</td><td class="num">2,466 (39%)</td></tr><tr><td>Unknown (all 6,298)</td><td class="num">3,766 (60%)</td></tr><tr><td>Likely closed (all 6,298)</td><td class="num">66 (1%)</td></tr><tr><td>Largest group (in city)</td><td class="num">Food &amp; Drink, 1,526</td></tr></table><p>The big "unknown" bucket is honest rather than a bug: most small businesses on OpenStreetMap have no website or verification date, so there is simply not enough evidence either way.</p></div></section><section class="s" id="next-steps"><h2><span class="n">05</span>What I&#x27;d do next</h2><div class="body"><ul><li>Add Census population to show businesses per 1,000 residents, not just per square mile.</li><li>Deploy it (Postgres plus a real job queue) instead of running locally.</li><li>Spot-check a random sample of "unknown" rows by hand to measure how often the labels are right.</li></ul></div></section>
+  <nav class="neighbours" aria-label="Neighbouring case studies">
+    <a class="prev-link" href="../florida-flight-delays/"><span class="label">Previous</span><span class="t">Florida Flight Delays</span></a>
+    <a class="next-link" href="../trading-bot/"><span class="label">Next</span><span class="t">Trading Bot</span><video muted loop playsinline preload="none" aria-hidden="true" poster="../trading-bot/cover-800.webp"><source src="../trading-bot/loop.webm" type="video/webm"><source src="../trading-bot/loop.mp4" type="video/mp4"></video></a>
+  </nav>
+</div>
+<footer class="foot case-foot"><span>&copy; 2026 Rishit Raj Mathur</span><nav aria-label="Footer"><a href="../#work">Home</a><a href="../all.html">Archive</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="../#contact">Contact</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
+</div>
 </main>
-<footer class="cap"><span>&copy; 2026 Rishit Raj Mathur</span><a href="https://github.com/mrrishit909">GitHub</a></footer>
 </body>
 </html>

@@ -1,141 +1,149 @@
 <!doctype html>
-<html lang="en" data-pal="red">
+<html lang="en" class="home" data-field="green">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Rishit Raj Mathur, data analyst</title>
-<meta name="description" content="Rishit Raj Mathur, data analyst in Tampa. 224 case studies and 219 public repositories on GitHub, every number checked against its source. SQL, Python, Power BI, dbt, forecasting, retrieval.">
-<meta name="theme-color" content="#cf2419">
+<meta name="description" content="Rishit Raj Mathur, data analyst in Tampa. 224 case studies and 219 public repositories: data analytics, Python, data engineering, cloud security and AI orchestration, every number checked against its source.">
+<meta name="theme-color" content="#071d16">
 <meta property="og:title" content="Rishit Raj Mathur, data analyst">
 <meta property="og:description" content="224 case studies, 219 public repositories, every number checked against its source.">
 <meta property="og:image" content="https://mrrishit909.github.io/projects/assets/og-index.jpg">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://api.fontshare.com">
-<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
-<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="home.css?v=e60024d142">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23cf2419'/%3E%3Crect x='7' y='10' width='18' height='3' fill='%23f3efe9'/%3E%3Crect x='7' y='15' width='18' height='3' fill='%23f3efe9'/%3E%3Crect x='7' y='20' width='18' height='3' fill='%23f3efe9'/%3E%3C/svg%3E">
+<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Bricolage-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Geist-Regular.woff2" crossorigin>
+<link rel="stylesheet" href="atelier.css?v=0cd5fc768c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23071d16'/%3E%3Crect x='7' y='7' width='18' height='4' fill='%23c4ab7d'/%3E%3Crect x='9' y='13' width='14' height='6' fill='%23c4ab7d'/%3E%3Crect x='7' y='21' width='18' height='4' fill='%23c4ab7d'/%3E%3C/svg%3E">
 <script type="importmap">{ "imports": { "three": "./vendor/three/three.module.min.js" } }</script>
 <script>
 (function () { var h = location.hash.slice(1), q = location.search;
-  if (/[?&](q|kind)=/.test(q) || (h && !/^(top|main|work|check|experience|archive|contact|feature-[\w-]+)$/.test(h))) location.replace("all.html" + q + (h && h !== "projects" ? "#" + h : "")); })();
+  if (/[?&](q|kind)=/.test(q) || (h && !/^(top|main|work|system|about|archive|contact|feature-[\w-]+)$/.test(h))) location.replace("all.html" + q + (h && h !== "projects" ? "#" + h : "")); })();
 document.documentElement.classList.add("js");
-// the opening event plays once per session on a top arrival; a hash, a return from a case study or reduced motion skips it
+// the opening plays once per session on a top arrival; a hash, a return from a case study or reduced motion skips it
 (function () { var seen = false; try { seen = !!sessionStorage.getItem("seen") || !!sessionStorage.getItem("vt"); } catch (_) {}
   if (!location.hash && !seen && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("opening"); })();
 </script>
 </head>
-<body class="home">
+<body>
 <a class="skip" href="#main">Skip to content</a>
-<canvas class="block" id="block" aria-hidden="true"></canvas>
-<div class="poster" aria-hidden="true"><img src="assets/block-poster.webp" alt="" width="1440" height="900" fetchpriority="high" decoding="async"></div>
+<canvas class="instrument" id="instrument" aria-hidden="true"></canvas>
+<div class="poster" aria-hidden="true"><picture><source media="(max-width: 760px)" srcset="assets/atelier-poster-m.webp"><img src="assets/atelier-poster.webp" alt="" width="1440" height="900" fetchpriority="high" decoding="async"></picture></div>
 
 <header class="top" id="top-bar">
   <a class="brand" href="#top">Rishit Raj Mathur</a>
-  <nav class="links" aria-label="Site"><a href="#work">Work</a><a href="all.html">Archive</a><a href="#contact">Contact</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a></nav>
-  <button class="replay" id="replay" type="button">Replay opening</button>
-  <button class="sound" id="sound" type="button" aria-pressed="false"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sound-label">Sound off</span></button>
+  <nav aria-label="Site"><a href="#work">Work</a><a href="#about">About</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="#contact">Contact</a></nav>
+  <div class="controls">
+    <button id="replay" type="button" aria-label="Replay the opening"><span aria-hidden="true">&#9654;</span><span class="text">Replay</span></button>
+    <button id="pause" type="button" aria-pressed="false" aria-label="Pause motion"><span class="pause-icon" aria-hidden="true"><i></i><i></i></span><span class="text">Pause</span></button>
+    <button id="sound" type="button" aria-pressed="false"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="text sound-label">Sound off</span></button>
+  </div>
 </header>
 
 <main id="main">
-<section class="hero" id="top" data-chapter="hero" data-pal="red" aria-labelledby="name">
-  <h1 class="name" id="name"><span>Rishit Raj</span> <span>Mathur</span></h1>
-  <p class="role-line">Data analyst in Tampa. Every number on this site was checked against its source.</p>
-  <div class="card">
-    <p class="role">What is here</p>
-    <ul class="facts">
-      <li><b class="count" data-count="224">224</b> case studies</li>
-      <li><b class="count" data-count="219">219</b> public repositories</li>
-      <li>The block stands for the records behind the work; each project below machines it. It is not a count.</li>
-    </ul>
-    <p class="btns"><a class="btn fill" href="#work">See the work</a><a class="btn" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a></p>
+<section class="hero" id="top" data-chapter="hero" data-state="open" aria-labelledby="name">
+  <p class="kicker label">Rishit Raj Mathur, data analyst, Tampa</p>
+  <div class="block">
+    <h1 class="display" id="name"><span>Built</span><br><span>with</span><br><span>intent.</span><span class="dot" aria-hidden="true"></span></h1>
+    <p class="lead">Data analytics, Python, data engineering, cloud security and AI orchestration. 224 case studies, every number checked against its source.</p>
+    <p class="btns"><a class="btn fill" href="#work">Explore the work <span class="arrow" aria-hidden="true">&rarr;</span></a><button class="btn play" id="replay-hero" type="button">Replay opening</button></p>
   </div>
-  <button class="skip-intro" id="skip" type="button">Skip the opening</button>
+  <p class="domains label"><span>Data</span><span>Cloud security</span><span>AI orchestration</span></p>
+  <p class="foot-lines small"><span>M.S. candidate, University of South Florida.</span><span>Microsoft Power BI Data Analyst Associate.</span><span>219 public repositories, last push 2026-10-24.</span></p>
+  <button class="btn skip-intro" id="skip" type="button">Skip opening</button>
 </section>
 
-<section class="work" id="work" data-chapter="work" data-pal="paper" aria-labelledby="work-title">
-  <h2 class="chapter-title" id="work-title">Selected work</h2>
-<article class="panel" id="feature-florida-flight-delays" data-state="slice" data-slug="florida-flight-delays" aria-labelledby="t-florida-flight-delays"><div class="panel-in"><h3 id="t-florida-flight-delays"><a href="florida-flight-delays/">Florida Flight Delays</a></h3><p class="q">When does a flight run late?</p><p class="fig"><b class="fig-v">75.5</b><span class="fig-u">%</span><span class="fig-m">On-time departures</span></p><p class="src">Power BI report page, 0 to 100%, checked. 635,459 flights, Aug 2025 to Jul 2026.</p><p class="op">The block cut into the star schema: one fact table in the middle, four dimensions stepping out of its corners.</p><p class="line">Time of day matters about twice as much as the airline; late-arriving aircraft cause 42.5% of delay minutes.</p><p class="btns"><a class="btn fill" href="florida-flight-delays/">Open the case study</a><a class="btn" href="https://github.com/mrrishit909/florida-flight-delays" target="_blank" rel="noopener">Code</a><a class="btn" href="florida-flight-delays/preview/">Open the dashboard preview</a></p><figure class="frag" data-ui><a class="frag-link" href="florida-flight-delays/" aria-label="Open the case study. The report page: KPI cards, on-time rate by month and departure hour, airlines ranked, delay causes, and the airport table."><canvas data-slug="florida-flight-delays" width="840" height="520" role="img" aria-label="The report page: KPI cards, on-time rate by month and departure hour, airlines ranked, delay causes, and the airport table."></canvas><img src="florida-flight-delays/cover-800.webp" alt="The report page: KPI cards, on-time rate by month and departure hour, airlines ranked, delay causes, and the airport table." width="800" height="443" loading="lazy" decoding="async"></a></figure></div></article>
-<article class="panel" id="feature-retail-dbt" data-state="layer" data-slug="retail-dbt" aria-labelledby="t-retail-dbt"><div class="panel-in"><h3 id="t-retail-dbt"><a href="retail-dbt/">Retail Pipeline in dbt</a></h3><p class="q">Can a pipeline prove itself?</p><p class="fig"><b class="fig-v">31</b><span class="fig-u">of 31</span><span class="fig-m">Data tests passing</span></p><p class="src">dbt lineage graph, 0 to 31, checked. 1.07M invoice lines.</p><p class="op">The block split into dbt’s three layers, staging, intermediate and marts; 31 slips light as the tests pass.</p><p class="line">Net sales £18.18M after £1.46M of cancellations; champions are 25.1% of customers and 70.8% of revenue.</p><p class="btns"><a class="btn fill" href="retail-dbt/">Open the case study</a><a class="btn" href="https://github.com/mrrishit909/retail-dbt" target="_blank" rel="noopener">Code</a><a class="btn" href="retail-dbt/docs/">Open the dbt docs and lineage</a></p><figure class="frag" data-ui><a class="frag-link" href="retail-dbt/" aria-label="Open the case study. A mart built by the pipeline: monthly product sales, net plus cancelled equals gross (December 2011 has only nine days of data). The lineage graph and data tests are in the case study."><canvas data-slug="retail-dbt" width="840" height="520" role="img" aria-label="A mart built by the pipeline: monthly product sales, net plus cancelled equals gross (December 2011 has only nine days of data). The lineage graph and data tests are in the case study."></canvas><img src="retail-dbt/cover-800.webp" alt="A mart built by the pipeline: monthly product sales, net plus cancelled equals gross (December 2011 has only nine days of data). The lineage graph and data tests are in the case study." width="800" height="371" loading="lazy" decoding="async"></a></figure></div></article>
-<article class="panel" id="feature-us-retail-forecast" data-state="bend" data-slug="us-retail-forecast" data-series='{"series":[622421,579083,622738,630399,691312,566662,543970,624954,623756,647306,616031,644493,640803,611277,642315,640201,716924,582287,564663,657586,654070,685550,671109,677249],"fan":[1.67,1.01,1.96,1.47,1.09,2.44,1.61,1.4,2.67,2.09,1.66,2.59]}' aria-labelledby="t-us-retail-forecast"><div class="panel-in"><h3 id="t-us-retail-forecast"><a href="us-retail-forecast/">US Retail Sales Forecast</a></h3><p class="q">How wrong is a forecast?</p><p class="fig"><b class="fig-v">1.81</b><span class="fig-u">%</span><span class="fig-m">Backtest MAPE</span></p><p class="src">Forecast chart, 0 to 10%, checked. rolling origin, 14 origins x 12 months.</p><p class="op">The block laid out as the last 24 months of the real series (Aug 2024 to Jul 2026, US Census via FRED, $ millions), then 12 months that follow last year’s shape and fan out by the backtest’s error at each horizon.</p><p class="line">The ETS + SARIMA average had 35% smaller backtest errors than &#x27;same month last year&#x27;.</p><p class="btns"><a class="btn fill" href="us-retail-forecast/">Open the case study</a><a class="btn" href="https://github.com/mrrishit909/us-retail-forecast" target="_blank" rel="noopener">Code</a><a class="btn" href="us-retail-forecast/report.html">Read the forecast report</a></p><figure class="frag" data-ui><a class="frag-link" href="us-retail-forecast/" aria-label="Open the case study. The next 12 months: actual monthly sales, the ETS + SARIMA forecast, and the 80% range calibrated on the backtest."><canvas data-slug="us-retail-forecast" width="840" height="483" role="img" aria-label="The next 12 months: actual monthly sales, the ETS + SARIMA forecast, and the 80% range calibrated on the backtest."></canvas><img src="us-retail-forecast/cover-800.webp" alt="The next 12 months: actual monthly sales, the ETS + SARIMA forecast, and the 80% range calibrated on the backtest." width="800" height="335" loading="lazy" decoding="async"></a></figure></div></article>
-<article class="panel" id="feature-sec-10k-rag" data-state="open" data-slug="sec-10k-rag" aria-labelledby="t-sec-10k-rag"><div class="panel-in"><h3 id="t-sec-10k-rag"><a href="sec-10k-rag/">Ask the 10-K</a></h3><p class="q">Can an answer cite its source?</p><p class="fig"><b class="fig-v">20</b><span class="fig-u">of 20</span><span class="fig-m">Figures within 0.5% of XBRL</span></p><p class="src">Recorded demo, 0 to 20, checked. 5 of 5 refusals when the answer is absent.</p><p class="op">The stack opened at the cited passage: one slip lifted out and turned to face you.</p><p class="line">Every money answer landed within 0.5% of XBRL with the figure in the cited passage; $0.10 for all 30 questions.</p><p class="btns"><a class="btn fill" href="sec-10k-rag/">Open the case study</a><a class="btn" href="https://github.com/mrrishit909/sec-10k-rag" target="_blank" rel="noopener">Code</a><a class="btn" href="sec-10k-rag/demo/">Try the recorded demo</a></p><figure class="frag" data-ui><a class="frag-link" href="sec-10k-rag/" aria-label="Open the case study. The recorded demo: a question, the answer from the filings, and the cited 10-K passage with the figure highlighted."><canvas data-slug="sec-10k-rag" width="840" height="520" role="img" aria-label="The recorded demo: a question, the answer from the filings, and the cited 10-K passage with the figure highlighted."></canvas><img src="sec-10k-rag/cover-800.webp" alt="The recorded demo: a question, the answer from the filings, and the cited 10-K passage with the figure highlighted." width="800" height="452" loading="lazy" decoding="async"></a></figure></div></article>
+<section class="orient" id="work" data-chapter="orient" data-state="open" aria-labelledby="work-title">
+  <p class="kicker label">Selected work</p>
+  <h2 class="display" id="work-title">Four systems.</h2>
+  <p class="lead">Each flagship takes the instrument apart in its own way: a star schema, a pipeline, a forecast, a document index. Scroll through them, or open one.</p>
+  <ol><li><a href="#feature-florida-flight-delays"><span class="n mono">01</span><span class="t">Florida Flight Delays</span><span class="k">Business intelligence</span></a></li><li><a href="#feature-retail-dbt"><span class="n mono">02</span><span class="t">Retail Pipeline in dbt</span><span class="k">Data engineering</span></a></li><li><a href="#feature-us-retail-forecast"><span class="n mono">03</span><span class="t">US Retail Sales Forecast</span><span class="k">Forecasting</span></a></li><li><a href="#feature-sec-10k-rag"><span class="n mono">04</span><span class="t">Ask the 10-K</span><span class="k">AI-enabled software</span></a></li></ol>
 </section>
 
-<section class="check" id="check" data-chapter="check" data-pal="red" aria-labelledby="check-title">
-  <div class="check-in">
-    <h2 class="q" id="check-title">Pick an hour.</h2>
-    <form class="hour-form" onsubmit="return false">
-      <label for="hour">Departure hour, Florida airports</label>
-      <input type="range" id="hour" name="hour" min="5" max="23" step="1" value="8" aria-describedby="check-fig">
-      <output for="hour" id="hour-out">8 a.m.</output>
-    </form>
-    <p class="fig" id="check-fig"><b class="fig-v" id="check-v">88.7</b><span class="fig-u">%</span><span class="fig-m">left on time</span></p>
-    <p class="line" id="check-n">38,946 flights left between 8 and 9 a.m.</p>
-    <p class="src">From the published model: BTS on-time data, Aug 2025 to Jul 2026, recomputed by check_powerbi.py. A demonstration from the case study, not live data.</p>
-    <p class="btns"><a class="btn fill" href="florida-flight-delays/">Open the Florida case study</a></p>
+<section class="chapter" id="feature-florida-flight-delays" data-chapter="work-1" data-label="Florida Flight Delays" data-state="network" data-slug="florida-flight-delays" aria-labelledby="t-florida-flight-delays"><div class="chapter-in"><p class="kicker label">01 / Business intelligence</p><div class="text"><h2 class="display" id="t-florida-flight-delays">Florida Flight Delays<span class="dot" aria-hidden="true"></span></h2><p class="lead">When does a flight run late? A star schema of 635,459 Florida departures, four dimensions around one fact table, and a Power BI report whose every card is recomputed by a second script.</p><p class="figure"><b>75.5</b><span class="unit">%</span><span class="def">of completed flights arrived within 15 minutes of schedule. 635,459 scheduled departures, Aug 2025 to Jul 2026, BTS on-time data.</span></p><form class="hour-form" onsubmit="return false"><label for="hour">Departure hour, Florida airports (published hourly rates)</label><input type="range" id="hour" name="hour" min="5" max="23" step="1" value="8" aria-describedby="hour-line"><output for="hour" id="hour-out">8 a.m.</output></form><p class="counter" id="hour-line"><b id="hour-v">88.7</b>% arrived on time; <span id="hour-n">38,946 flights left between 8 and 9 a.m.</span></p><p class="btns"><a class="btn fill" href="florida-flight-delays/">View project <span class="arrow" aria-hidden="true">&rarr;</span></a><a class="btn" href="https://github.com/mrrishit909/florida-flight-delays" target="_blank" rel="noopener">Code</a><a class="btn" href="florida-flight-delays/preview/">Open the dashboard preview</a></p></div><p class="marks label"><span>Airports</span><span>Time</span><span>Carriers</span><span>Observations</span></p><figure class="evidence"><a href="florida-flight-delays/" aria-label="Open the case study. The report page: KPI cards, on-time rate by month and departure hour, airlines ranked, delay causes, and the airport table."><canvas data-slug="florida-flight-delays" width="800" height="496" role="img" aria-label="The report page: KPI cards, on-time rate by month and departure hour, airlines ranked, delay causes, and the airport table."></canvas><img src="florida-flight-delays/cover-800.webp" alt="The report page: KPI cards, on-time rate by month and departure hour, airlines ranked, delay causes, and the airport table." width="800" height="443" loading="lazy" decoding="async"></a><figcaption>The report page: KPI cards, on-time rate by month and departure hour, airlines ranked, delay causes, and the airport table.</figcaption></figure></div></section>
+<section class="chapter" id="feature-retail-dbt" data-chapter="work-2" data-label="Retail Pipeline in dbt" data-state="pipeline" data-slug="retail-dbt" aria-labelledby="t-retail-dbt"><div class="chapter-in"><p class="kicker label">02 / Data engineering</p><div class="text"><h2 class="display" id="t-retail-dbt">Retail Pipeline in dbt<span class="dot" aria-hidden="true"></span></h2><p class="lead">Can a pipeline prove itself? Staging, intermediate and mart layers in dbt on DuckDB, with 31 tests attached to the transformations they guard.</p><p class="figure"><b>31</b><span class="unit">of 31</span><span class="def">data tests passing over 1.07 million invoice lines, as reported in the repository. Not re-run on this site.</span></p><p class="counter"><b id="tests-n">0</b> of 31 tests pinned into the frames as you scroll.</p><p class="btns"><a class="btn fill" href="retail-dbt/">View project <span class="arrow" aria-hidden="true">&rarr;</span></a><a class="btn" href="https://github.com/mrrishit909/retail-dbt" target="_blank" rel="noopener">Code</a><a class="btn" href="retail-dbt/docs/">Open the dbt docs and lineage</a></p></div><p class="marks label"><span>Source</span><span>Staging</span><span>Intermediate</span><span>Marts</span></p><figure class="evidence"><a href="retail-dbt/" aria-label="Open the case study. A mart built by the pipeline: monthly product sales, net plus cancelled equals gross (December 2011 has only nine days of data). The lineage graph and data tests are in the case study."><canvas data-slug="retail-dbt" width="800" height="496" role="img" aria-label="A mart built by the pipeline: monthly product sales, net plus cancelled equals gross (December 2011 has only nine days of data). The lineage graph and data tests are in the case study."></canvas><img src="retail-dbt/cover-800.webp" alt="A mart built by the pipeline: monthly product sales, net plus cancelled equals gross (December 2011 has only nine days of data). The lineage graph and data tests are in the case study." width="800" height="371" loading="lazy" decoding="async"></a><figcaption>A mart built by the pipeline: monthly product sales, net plus cancelled equals gross (December 2011 has only nine days of data). The lineage graph and data tests are in the case study.</figcaption></figure></div></section>
+<section class="chapter" id="feature-us-retail-forecast" data-chapter="work-3" data-label="US Retail Sales Forecast" data-state="timeline" data-slug="us-retail-forecast" data-series='{"series":[622421,579083,622738,630399,691312,566662,543970,624954,623756,647306,616031,644493,640803,611277,642315,640201,716924,582287,564663,657586,654070,685550,671109,677249],"fan":[1.67,1.01,1.96,1.47,1.09,2.44,1.61,1.4,2.67,2.09,1.66,2.59]}' aria-labelledby="t-us-retail-forecast"><div class="chapter-in"><p class="kicker label">03 / Forecasting</p><div class="text"><h2 class="display" id="t-us-retail-forecast">US Retail Sales Forecast<span class="dot" aria-hidden="true"></span></h2><p class="lead">How wrong is a forecast? Five methods on US Census retail sales since 1992, backtested from 14 origins, with ranges calibrated on the backtest&#x27;s own errors.</p><p class="figure"><b>1.81</b><span class="unit">%</span><span class="def">backtest MAPE of the ETS + SARIMA average, rolling origin, 14 origins by 12 months. Backtest accuracy, not a promise about future months.</span></p><p class="stage-note">The columns stand at the real monthly series, Aug 2024 to Jul 2026; the bars ahead follow last year’s shape and fan out by the backtest’s error at each horizon. An illustrative shape: the chart below is the data.</p><p class="btns"><a class="btn fill" href="us-retail-forecast/">View project <span class="arrow" aria-hidden="true">&rarr;</span></a><a class="btn" href="https://github.com/mrrishit909/us-retail-forecast" target="_blank" rel="noopener">Code</a><a class="btn" href="us-retail-forecast/report.html">Read the forecast report</a></p></div><p class="marks label"><span>Observed</span><span>Now</span><span>Forecast</span><span>80% range</span></p><figure class="evidence"><a href="us-retail-forecast/" aria-label="Open the case study. The next 12 months: actual monthly sales, the ETS + SARIMA forecast, and the 80% range calibrated on the backtest."><canvas data-slug="us-retail-forecast" width="800" height="460" role="img" aria-label="The next 12 months: actual monthly sales, the ETS + SARIMA forecast, and the 80% range calibrated on the backtest."></canvas><img src="us-retail-forecast/cover-800.webp" alt="The next 12 months: actual monthly sales, the ETS + SARIMA forecast, and the 80% range calibrated on the backtest." width="800" height="335" loading="lazy" decoding="async"></a><figcaption>The next 12 months: actual monthly sales, the ETS + SARIMA forecast, and the 80% range calibrated on the backtest.</figcaption></figure></div></section>
+<section class="chapter" id="feature-sec-10k-rag" data-chapter="work-4" data-label="Ask the 10-K" data-state="documents" data-slug="sec-10k-rag" aria-labelledby="t-sec-10k-rag"><div class="chapter-in"><p class="kicker label">04 / AI-enabled software</p><div class="text"><h2 class="display" id="t-sec-10k-rag">Ask the 10-K<span class="dot" aria-hidden="true"></span></h2><p class="lead">Can an answer cite its source? Five companies&#x27; 10-Ks parsed into 730 passages; every answer carries the passage it came from, and the model refuses when the filing is silent.</p><p class="figure"><b>20</b><span class="unit">of 20</span><span class="def">money questions answered within 0.5% of XBRL in a 30-question evaluation; 5 of 5 refusals when the answer was absent. A recorded demo, not live AI.</span></p><p class="stage-note">One passage lifts out of the index and faces you. Keep scrolling and the drawer closes: the refusal, when the filing does not hold the answer.</p><p class="btns"><a class="btn fill" href="sec-10k-rag/">View project <span class="arrow" aria-hidden="true">&rarr;</span></a><a class="btn" href="https://github.com/mrrishit909/sec-10k-rag" target="_blank" rel="noopener">Code</a><a class="btn" href="sec-10k-rag/demo/">Try the recorded demo</a></p></div><p class="marks label"><span>Filings</span><span>Passage</span><span>Answer</span><span>Refusal</span></p><figure class="evidence"><a href="sec-10k-rag/" aria-label="Open the case study. The recorded demo: a question, the answer from the filings, and the cited 10-K passage with the figure highlighted."><canvas data-slug="sec-10k-rag" width="800" height="496" role="img" aria-label="The recorded demo: a question, the answer from the filings, and the cited 10-K passage with the figure highlighted."></canvas><img src="sec-10k-rag/cover-800.webp" alt="The recorded demo: a question, the answer from the filings, and the cited 10-K passage with the figure highlighted." width="800" height="452" loading="lazy" decoding="async"></a><figcaption>The recorded demo: a question, the answer from the filings, and the cited 10-K passage with the figure highlighted.</figcaption></figure></div></section>
+
+<section class="system" id="system" data-chapter="system" data-state="open" aria-labelledby="system-title">
+  <p class="kicker label">The instrument</p>
+  <div class="text">
+    <h2 class="display" id="system-title">One register, four arrangements.</h2>
+    <p class="lead">Thirty-two parts: a brass rail and cap, two frames, an engraved plate between green lacquer and marble, four pins, a lacquer base. Nothing on it is a count; every arrangement above is drawn from a project's real structure and labelled where it could be mistaken for data.</p>
+    <div class="config" role="group" aria-label="Arrangement">
+      <button class="btn" type="button" data-config="closed">Assembled</button><button class="btn" type="button" data-config="open" aria-pressed="true">Exploded</button><button class="btn" type="button" data-config="network">Star schema</button><button class="btn" type="button" data-config="pipeline">Pipeline</button><button class="btn" type="button" data-config="timeline">Forecast</button><button class="btn" type="button" data-config="documents">Index</button>
+    </div>
+    <form class="separate" onsubmit="return false"><label for="separate">Separate the parts</label><input type="range" id="separate" min="0" max="1" step="0.01" value="1"></form>
+    <div class="turn" role="group" aria-label="Turn the instrument"><button class="btn" type="button" id="turn-left" aria-label="Turn left">&larr;</button><button class="btn" type="button" id="turn-right" aria-label="Turn right">&rarr;</button><button class="btn" type="button" id="turn-reset">Reset view</button><span class="stage-note">Drag with a mouse, or use the buttons; arrow keys turn it while a button has focus.</span></div>
   </div>
-  <script type="application/json" id="hours-data">[{"h":5,"n":9580,"otp":0.9255},{"h":6,"n":46533,"otp":0.9204},{"h":7,"n":53478,"otp":0.9063},{"h":8,"n":38946,"otp":0.8874},{"h":9,"n":34210,"otp":0.8576},{"h":10,"n":30503,"otp":0.8298},{"h":11,"n":41152,"otp":0.8037},{"h":12,"n":37526,"otp":0.7542},{"h":13,"n":32481,"otp":0.7407},{"h":14,"n":34412,"otp":0.7105},{"h":15,"n":37723,"otp":0.6847},{"h":16,"n":37707,"otp":0.6588},{"h":17,"n":41097,"otp":0.6426},{"h":18,"n":38514,"otp":0.6369},{"h":19,"n":42604,"otp":0.6355},{"h":20,"n":33337,"otp":0.626},{"h":21,"n":20619,"otp":0.6322},{"h":22,"n":10418,"otp":0.657},{"h":23,"n":1267,"otp":0.7403}]</script>
+  <p class="legend"><b>Materials</b> brushed brass (champagne), racing-green lacquer, green and ivory marble, four steel-finish pins. Rendered live in WebGL from procedural geometry (<a href="motion/instrument-lab.html">open the lab</a>).</p>
 </section>
+</main>
 
-<section class="exp" id="experience" data-chapter="experience" data-pal="paper" aria-labelledby="exp-title">
-  <h2 class="chapter-title" id="exp-title">Experience</h2>
-  <p class="fig"><b class="fig-v">22</b><span class="fig-u">%</span><span class="fig-m">less report turnaround at TraceRT, from the Power BI dashboards I built there (résumé)</span></p>
+<div class="handoff" aria-hidden="true"></div>
+<div class="reading on-ivory">
+<section class="about" id="about" data-chapter="about" data-state="closed" aria-labelledby="about-title">
+  <p class="kicker label">About</p>
+  <h2 class="display" id="about-title">Rishit Raj Mathur.</h2>
+  <p class="lead">Data analyst with hands-on SQL and Python experience turning high-volume datasets into dashboards and reports that inform decisions. B.S. in Business Analytics and Information Systems; M.S. candidate at the University of South Florida.</p>
   <table class="lineup">
     <thead><tr><th scope="col">Role</th><th scope="col">Organisation</th><th scope="col">When</th><th scope="col">What</th></tr></thead>
     <tbody>
-      <tr><td>Research Assistant</td><td>USF REACH Lab</td><td>Sep 2025 to now</td><td>Data workflows and dashboards for experimental findings</td></tr>
-      <tr><td>Ticketing Operations</td><td>USF Athletics</td><td>May 2025 to now</td><td>Ticket sales, attendance and entry datasets</td></tr>
-      <tr><td>Business Analyst</td><td>TraceRT</td><td>May to Aug 2025</td><td>Power BI dashboards that cut report turnaround by 22%</td></tr>
-      <tr><td>Power BI Data Analyst Associate</td><td>Microsoft</td><td>Certified</td><td>Pursuing PMI-CAPM and AWS Cloud Practitioner</td></tr>
-      <tr><td>M.S. Business and Enterprise Integration</td><td>University of South Florida</td><td>Expected May 2028</td><td>Enterprise data analytics, agentic AI, security and governance</td></tr>
-      <tr><td>B.S. Business Analytics and Information Systems</td><td>USF Muma College of Business</td><td>May 2026</td><td>Dean's List, Fall 2024</td></tr>
+      <tr><td>Research Assistant</td><td>USF REACH Lab</td><td class="n">Sep 2025 to now</td><td>End-to-end data workflows and interactive dashboards for experimental findings</td></tr>
+      <tr><td>Student Assistant, Ticketing Operations</td><td>USF Athletics</td><td class="n">May 2025 to now</td><td>Ticket sales, attendance and entry datasets; transaction and customer records</td></tr>
+      <tr><td>Business Analyst</td><td>TraceRT</td><td class="n">May to Aug 2025</td><td>Power BI dashboards that cut report turnaround by 22% and lifted NPS by one point</td></tr>
+      <tr><td>M.S. Business and Enterprise Integration</td><td>University of South Florida</td><td class="n">Expected May 2028</td><td>Enterprise data analytics, agentic AI, security, privacy and governance, enterprise architecture</td></tr>
+      <tr><td>B.S. Business Analytics and Information Systems</td><td>USF Muma College of Business</td><td class="n">May 2026</td><td>Dean's List, Fall 2024</td></tr>
     </tbody>
   </table>
-  <p class="btns"><a class="btn fill" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a><a class="btn" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="btn" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></p>
+  <p class="btns"><a class="btn fill" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a><a class="btn keep" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="btn keep" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></p>
+  <dl class="facts"><div><dt><b>Certification</b></dt><dd>Microsoft Power BI Data Analyst Associate; pursuing PMI-CAPM and AWS Certified Cloud Practitioner (CLF-C02)</dd></div><div><dt><b>Tools</b></dt><dd>SQL, Python, R, Power BI, Excel, Tableau, Power Query, DAX; PostgreSQL, Oracle, SQL Server, SQLite</dd></div><div><dt><b>Source</b></dt><dd>Every line here is from the résumé; nothing on this site claims more than it does.</dd></div></dl>
 </section>
 
-<section class="archive" id="archive" data-chapter="archive" data-pal="paper" aria-labelledby="archive-title">
-  <h2 class="q" id="archive-title">All 224.</h2>
+<section class="archive" id="archive" data-chapter="archive" data-state="closed" aria-labelledby="archive-title">
+  <p class="kicker label">Archive</p>
+  <h2 class="display" id="archive-title">All 224.</h2>
+  <p class="lead">Every project has a written case study with its repository's language, year and commit count. Query by free words, or by language, kind, year, commits, live.</p>
   <form class="query" action="all.html" method="get" role="search">
     <label class="visually-hidden" for="q">Search the case studies</label>
     <input id="q" name="q" type="search" placeholder="language:python year:2026 commits>10" autocomplete="off" spellcheck="false">
     <button class="btn fill" type="submit">Search</button>
   </form>
-  <p class="src">Free words, or language, kind, year, commits, live. The twelve most recent:</p>
+  <p class="small">The twelve most recent:</p>
   <table class="lineup">
     <thead><tr><th scope="col">Case study</th><th scope="col">Kind</th><th scope="col">Year</th><th scope="col">Commits</th></tr></thead>
     <tbody>
-<tr><td><a href="sec-10k-rag/">Ask the 10-K</a></td><td>LLM</td><td class="n">2026</td><td class="n">9 commits</td></tr>
-<tr><td><a href="chicago-bike-share/">How Chicago Rides</a></td><td>SQL</td><td class="n">2026</td><td class="n">8 commits</td></tr>
-<tr><td><a href="us-retail-forecast/">US Retail Sales Forecast</a></td><td>Python</td><td class="n">2026</td><td class="n">7 commits</td></tr>
-<tr><td><a href="csv-quality-checker/">CSV Data-Quality Checker</a></td><td>Java</td><td class="n">2026</td><td class="n">6 commits</td></tr>
-<tr><td><a href="flight-delay-model/">Will My Flight Be Disrupted?</a></td><td>Python</td><td class="n">2026</td><td class="n">6 commits</td></tr>
-<tr><td><a href="email-ab-test/">E-mail A/B Test Readout</a></td><td>Statistics</td><td class="n">2026</td><td class="n">9 commits</td></tr>
-<tr><td><a href="complaint-sorter/">Complaint Sorter</a></td><td>LLM</td><td class="n">2026</td><td class="n">10 commits</td></tr>
-<tr><td><a href="retail-dbt/">Retail Pipeline in dbt</a></td><td>Analytics engineering</td><td class="n">2026</td><td class="n">9 commits</td></tr>
-<tr><td><a href="customer-clv/">Who Will Buy Again?</a></td><td>Python</td><td class="n">2026</td><td class="n">6 commits</td></tr>
-<tr><td><a href="excel-model/">Costco Model in Excel</a></td><td>Excel</td><td class="n">2026</td><td class="n">5 commits</td></tr>
-<tr><td><a href="ca-fast-food-wage/">California&#x27;s $20 Fast-Food Wage</a></td><td>Statistics</td><td class="n">2026</td><td class="n">4 commits</td></tr>
-<tr><td><a href="us-jobs-dashboard/">Where America&#x27;s Jobs Grew</a></td><td>Dashboard</td><td class="n">2026</td><td class="n">3 commits</td></tr>
+<tr><td><a href="sec-10k-rag/">Ask the 10-K</a></td><td>LLM</td><td class="n">2026</td><td class="n">9</td></tr>
+<tr><td><a href="chicago-bike-share/">How Chicago Rides</a></td><td>SQL</td><td class="n">2026</td><td class="n">8</td></tr>
+<tr><td><a href="us-retail-forecast/">US Retail Sales Forecast</a></td><td>Python</td><td class="n">2026</td><td class="n">7</td></tr>
+<tr><td><a href="csv-quality-checker/">CSV Data-Quality Checker</a></td><td>Java</td><td class="n">2026</td><td class="n">6</td></tr>
+<tr><td><a href="flight-delay-model/">Will My Flight Be Disrupted?</a></td><td>Python</td><td class="n">2026</td><td class="n">6</td></tr>
+<tr><td><a href="email-ab-test/">E-mail A/B Test Readout</a></td><td>Statistics</td><td class="n">2026</td><td class="n">9</td></tr>
+<tr><td><a href="complaint-sorter/">Complaint Sorter</a></td><td>LLM</td><td class="n">2026</td><td class="n">10</td></tr>
+<tr><td><a href="retail-dbt/">Retail Pipeline in dbt</a></td><td>Analytics engineering</td><td class="n">2026</td><td class="n">9</td></tr>
+<tr><td><a href="customer-clv/">Who Will Buy Again?</a></td><td>Python</td><td class="n">2026</td><td class="n">6</td></tr>
+<tr><td><a href="excel-model/">Costco Model in Excel</a></td><td>Excel</td><td class="n">2026</td><td class="n">5</td></tr>
+<tr><td><a href="ca-fast-food-wage/">California&#x27;s $20 Fast-Food Wage</a></td><td>Statistics</td><td class="n">2026</td><td class="n">4</td></tr>
+<tr><td><a href="us-jobs-dashboard/">Where America&#x27;s Jobs Grew</a></td><td>Dashboard</td><td class="n">2026</td><td class="n">3</td></tr>
     </tbody>
   </table>
-  <p class="btns"><a class="btn" href="all.html">Every case study</a></p>
+  <p class="btns"><a class="btn keep" href="all.html">Every case study <span class="arrow" aria-hidden="true">&rarr;</span></a></p>
 </section>
 
-<section class="contact" id="contact" data-chapter="contact" data-pal="red" aria-labelledby="contact-title">
+<section class="contact" id="contact" data-chapter="contact" data-state="closed" aria-labelledby="contact-title">
+  <p class="kicker label">Contact</p>
   <h2 class="visually-hidden" id="contact-title">Contact</h2>
-  <p class="line ask">Open to entry-level data and business analyst roles, US-wide and remote. Write about a role, a dataset or a case study.</p>
-  <a class="mail" href="mailto:rishit.mathur@yahoo.com">rishit.mathur@<br>yahoo.com</a>
-  <p class="corners"><span><span id="clock"></span> Tampa, FL</span><span class="btns"><button class="btn" id="copy-mail" type="button" data-mail="rishit.mathur@yahoo.com" hidden><span class="copy-text">Copy e-mail</span></button><a class="btn" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="btn" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a><a class="btn" href="https://mrrishit909.github.io/resume.pdf">Résumé</a></span></p>
+  <p class="lead">Open to entry-level data and business analyst roles, US-wide and remote. Write about a role, a dataset or a case study.</p>
+  <a class="mail" href="mailto:rishit.mathur@yahoo.com">rishit.mathur<br>@yahoo.com</a>
+  <p class="corners"><span><span id="clock"></span> Tampa, FL</span><span class="btns"><button class="btn keep" id="copy-mail" type="button" data-mail="rishit.mathur@yahoo.com" hidden><span class="copy-text">Copy e-mail</span></button><a class="btn keep" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="btn keep" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></span></p>
   <p class="visually-hidden" id="copy-status" aria-live="polite"></p>
 </section>
-</main>
-<footer class="foot"><span>© 2026 Rishit Raj Mathur, Tampa, FL. Type: General Sans by Indian Type Foundry, via Fontshare.</span><nav aria-label="Footer"><a href="all.html">Archive</a><a href="#experience">Experience</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
-<p class="hud-chapter" id="chapter" aria-hidden="true"></p>
+<footer class="foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL. Type: Bricolage Grotesque (OFL), Geist (OFL), JetBrains Mono (OFL).</span><nav aria-label="Footer"><a href="all.html">Archive</a><a href="#about">About</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a><a href="motion/instrument-lab.html">Instrument lab</a></nav></footer>
+</div>
+<script type="application/json" id="hours-data">[{"h":5,"n":9580,"otp":0.9255},{"h":6,"n":46533,"otp":0.9204},{"h":7,"n":53478,"otp":0.9063},{"h":8,"n":38946,"otp":0.8874},{"h":9,"n":34210,"otp":0.8576},{"h":10,"n":30503,"otp":0.8298},{"h":11,"n":41152,"otp":0.8037},{"h":12,"n":37526,"otp":0.7542},{"h":13,"n":32481,"otp":0.7407},{"h":14,"n":34412,"otp":0.7105},{"h":15,"n":37723,"otp":0.6847},{"h":16,"n":37707,"otp":0.6588},{"h":17,"n":41097,"otp":0.6426},{"h":18,"n":38514,"otp":0.6369},{"h":19,"n":42604,"otp":0.6355},{"h":20,"n":33337,"otp":0.626},{"h":21,"n":20619,"otp":0.6322},{"h":22,"n":10418,"otp":0.657},{"h":23,"n":1267,"otp":0.7403}]</script>
 <script src="vendor/gsap/gsap.min.js" defer></script>
 <script src="motion/toolkit.js" defer></script>
 <script src="motion/scenes/florida-flight-delays.js?v=9611bc337b" defer></script><script src="motion/scenes/retail-dbt.js?v=45ae347d1e" defer></script><script src="motion/scenes/us-retail-forecast.js?v=1e30be80dc" defer></script><script src="motion/scenes/sec-10k-rag.js?v=8574e53815" defer></script>
-<script type="module" src="home.js?v=72d4d971c8"></script>
+<script type="module" src="home.js?v=bb576154e072e2"></script>
 </body>
 </html>

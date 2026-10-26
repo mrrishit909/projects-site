@@ -1,124 +1,132 @@
 <!doctype html>
-<html lang="en" data-pal="red">
+<html lang="en" class="home" data-field="green">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Rishit Raj Mathur, data analyst</title>
-<meta name="description" content="Rishit Raj Mathur, data analyst in Tampa. {{COUNT}} case studies and {{REPOS}} public repositories on GitHub, every number checked against its source. SQL, Python, Power BI, dbt, forecasting, retrieval.">
-<meta name="theme-color" content="#cf2419">
+<meta name="description" content="Rishit Raj Mathur, data analyst in Tampa. {{COUNT}} case studies and {{REPOS}} public repositories: data analytics, Python, data engineering, cloud security and AI orchestration, every number checked against its source.">
+<meta name="theme-color" content="#071d16">
 <meta property="og:title" content="Rishit Raj Mathur, data analyst">
 <meta property="og:description" content="{{COUNT}} case studies, {{REPOS}} public repositories, every number checked against its source.">
 <meta property="og:image" content="https://mrrishit909.github.io/projects/assets/og-index.jpg">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://api.fontshare.com">
-<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
-<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="home.css?v={{HOME_CSS}}">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23cf2419'/%3E%3Crect x='7' y='10' width='18' height='3' fill='%23f3efe9'/%3E%3Crect x='7' y='15' width='18' height='3' fill='%23f3efe9'/%3E%3Crect x='7' y='20' width='18' height='3' fill='%23f3efe9'/%3E%3C/svg%3E">
+<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Bricolage-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="vendor/fonts/Geist-Regular.woff2" crossorigin>
+<link rel="stylesheet" href="atelier.css?v={{CSS}}">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23071d16'/%3E%3Crect x='7' y='7' width='18' height='4' fill='%23c4ab7d'/%3E%3Crect x='9' y='13' width='14' height='6' fill='%23c4ab7d'/%3E%3Crect x='7' y='21' width='18' height='4' fill='%23c4ab7d'/%3E%3C/svg%3E">
 <script type="importmap">{ "imports": { "three": "./vendor/three/three.module.min.js" } }</script>
 <script>
 (function () { var h = location.hash.slice(1), q = location.search;
-  if (/[?&](q|kind)=/.test(q) || (h && !/^(top|main|work|check|experience|archive|contact|feature-[\w-]+)$/.test(h))) location.replace("all.html" + q + (h && h !== "projects" ? "#" + h : "")); })();
+  if (/[?&](q|kind)=/.test(q) || (h && !/^(top|main|work|system|about|archive|contact|feature-[\w-]+)$/.test(h))) location.replace("all.html" + q + (h && h !== "projects" ? "#" + h : "")); })();
 document.documentElement.classList.add("js");
-// the opening event plays once per session on a top arrival; a hash, a return from a case study or reduced motion skips it
+// the opening plays once per session on a top arrival; a hash, a return from a case study or reduced motion skips it
 (function () { var seen = false; try { seen = !!sessionStorage.getItem("seen") || !!sessionStorage.getItem("vt"); } catch (_) {}
   if (!location.hash && !seen && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("opening"); })();
 </script>
 </head>
-<body class="home">
+<body>
 <a class="skip" href="#main">Skip to content</a>
-<canvas class="block" id="block" aria-hidden="true"></canvas>
-<div class="poster" aria-hidden="true"><img src="assets/block-poster.webp" alt="" width="1440" height="900" fetchpriority="high" decoding="async"></div>
+<canvas class="instrument" id="instrument" aria-hidden="true"></canvas>
+<div class="poster" aria-hidden="true"><picture><source media="(max-width: 760px)" srcset="assets/atelier-poster-m.webp"><img src="assets/atelier-poster.webp" alt="" width="1440" height="900" fetchpriority="high" decoding="async"></picture></div>
 
 <header class="top" id="top-bar">
   <a class="brand" href="#top">Rishit Raj Mathur</a>
-  <nav class="links" aria-label="Site"><a href="#work">Work</a><a href="all.html">Archive</a><a href="#contact">Contact</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a></nav>
-  <button class="replay" id="replay" type="button">Replay opening</button>
-  <button class="sound" id="sound" type="button" aria-pressed="false"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sound-label">Sound off</span></button>
+  <nav aria-label="Site"><a href="#work">Work</a><a href="#about">About</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="#contact">Contact</a></nav>
+  <div class="controls">
+    <button id="replay" type="button" aria-label="Replay the opening"><span aria-hidden="true">&#9654;</span><span class="text">Replay</span></button>
+    <button id="pause" type="button" aria-pressed="false" aria-label="Pause motion"><span class="pause-icon" aria-hidden="true"><i></i><i></i></span><span class="text">Pause</span></button>
+    <button id="sound" type="button" aria-pressed="false"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="text sound-label">Sound off</span></button>
+  </div>
 </header>
 
 <main id="main">
-<section class="hero" id="top" data-chapter="hero" data-pal="red" aria-labelledby="name">
-  <h1 class="name" id="name"><span>Rishit Raj</span> <span>Mathur</span></h1>
-  <p class="role-line">Data analyst in Tampa. Every number on this site was checked against its source.</p>
-  <div class="card">
-    <p class="role">What is here</p>
-    <ul class="facts">
-      <li><b class="count" data-count="{{COUNT}}">{{COUNT}}</b> case studies</li>
-      <li><b class="count" data-count="{{REPOS}}">{{REPOS}}</b> public repositories</li>
-      <li>The block stands for the records behind the work; each project below machines it. It is not a count.</li>
-    </ul>
-    <p class="btns"><a class="btn fill" href="#work">See the work</a><a class="btn" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a></p>
+<section class="hero" id="top" data-chapter="hero" data-state="open" aria-labelledby="name">
+  <p class="kicker label">Rishit Raj Mathur, data analyst, Tampa</p>
+  <div class="block">
+    <h1 class="display" id="name"><span>Built</span><br><span>with</span><br><span>intent.</span><span class="dot" aria-hidden="true"></span></h1>
+    <p class="lead">Data analytics, Python, data engineering, cloud security and AI orchestration. {{COUNT}} case studies, every number checked against its source.</p>
+    <p class="btns"><a class="btn fill" href="#work">Explore the work <span class="arrow" aria-hidden="true">&rarr;</span></a><button class="btn play" id="replay-hero" type="button">Replay opening</button></p>
   </div>
-  <button class="skip-intro" id="skip" type="button">Skip the opening</button>
+  <p class="domains label"><span>Data</span><span>Cloud security</span><span>AI orchestration</span></p>
+  <p class="foot-lines small"><span>M.S. candidate, University of South Florida.</span><span>Microsoft Power BI Data Analyst Associate.</span><span>{{REPOS}} public repositories, last push {{LAST_PUSH}}.</span></p>
+  <button class="btn skip-intro" id="skip" type="button">Skip opening</button>
 </section>
 
-<section class="work" id="work" data-chapter="work" data-pal="paper" aria-labelledby="work-title">
-  <h2 class="chapter-title" id="work-title">Selected work</h2>
+<section class="orient" id="work" data-chapter="orient" data-state="open" aria-labelledby="work-title">
+  <p class="kicker label">Selected work</p>
+  <h2 class="display" id="work-title">Four systems.</h2>
+  <p class="lead">Each flagship takes the instrument apart in its own way: a star schema, a pipeline, a forecast, a document index. Scroll through them, or open one.</p>
+  <ol>{{ORIENT}}</ol>
+</section>
+
 {{FEATURED}}
-</section>
 
-<section class="check" id="check" data-chapter="check" data-pal="red" aria-labelledby="check-title">
-  <div class="check-in">
-    <h2 class="q" id="check-title">Pick an hour.</h2>
-    <form class="hour-form" onsubmit="return false">
-      <label for="hour">Departure hour, Florida airports</label>
-      <input type="range" id="hour" name="hour" min="5" max="23" step="1" value="8" aria-describedby="check-fig">
-      <output for="hour" id="hour-out">8 a.m.</output>
-    </form>
-    <p class="fig" id="check-fig"><b class="fig-v" id="check-v">88.7</b><span class="fig-u">%</span><span class="fig-m">left on time</span></p>
-    <p class="line" id="check-n">38,946 flights left between 8 and 9 a.m.</p>
-    <p class="src">From the published model: BTS on-time data, Aug 2025 to Jul 2026, recomputed by check_powerbi.py. A demonstration from the case study, not live data.</p>
-    <p class="btns"><a class="btn fill" href="florida-flight-delays/">Open the Florida case study</a></p>
+<section class="system" id="system" data-chapter="system" data-state="open" aria-labelledby="system-title">
+  <p class="kicker label">The instrument</p>
+  <div class="text">
+    <h2 class="display" id="system-title">One register, four arrangements.</h2>
+    <p class="lead">Thirty-two parts: a brass rail and cap, two frames, an engraved plate between green lacquer and marble, four pins, a lacquer base. Nothing on it is a count; every arrangement above is drawn from a project's real structure and labelled where it could be mistaken for data.</p>
+    <div class="config" role="group" aria-label="Arrangement">
+      <button class="btn" type="button" data-config="closed">Assembled</button><button class="btn" type="button" data-config="open" aria-pressed="true">Exploded</button><button class="btn" type="button" data-config="network">Star schema</button><button class="btn" type="button" data-config="pipeline">Pipeline</button><button class="btn" type="button" data-config="timeline">Forecast</button><button class="btn" type="button" data-config="documents">Index</button>
+    </div>
+    <form class="separate" onsubmit="return false"><label for="separate">Separate the parts</label><input type="range" id="separate" min="0" max="1" step="0.01" value="1"></form>
+    <div class="turn" role="group" aria-label="Turn the instrument"><button class="btn" type="button" id="turn-left" aria-label="Turn left">&larr;</button><button class="btn" type="button" id="turn-right" aria-label="Turn right">&rarr;</button><button class="btn" type="button" id="turn-reset">Reset view</button><span class="stage-note">Drag with a mouse, or use the buttons; arrow keys turn it while a button has focus.</span></div>
   </div>
-  <script type="application/json" id="hours-data">/*HOURS*/[]</script>
+  <p class="legend"><b>Materials</b> brushed brass (champagne), racing-green lacquer, green and ivory marble, four steel-finish pins. Rendered live in WebGL from procedural geometry (<a href="motion/instrument-lab.html">open the lab</a>).</p>
 </section>
+</main>
 
-<section class="exp" id="experience" data-chapter="experience" data-pal="paper" aria-labelledby="exp-title">
-  <h2 class="chapter-title" id="exp-title">Experience</h2>
-  <p class="fig"><b class="fig-v">22</b><span class="fig-u">%</span><span class="fig-m">less report turnaround at TraceRT, from the Power BI dashboards I built there (résumé)</span></p>
+<div class="handoff" aria-hidden="true"></div>
+<div class="reading on-ivory">
+<section class="about" id="about" data-chapter="about" data-state="closed" aria-labelledby="about-title">
+  <p class="kicker label">About</p>
+  <h2 class="display" id="about-title">Rishit Raj Mathur.</h2>
+  <p class="lead">Data analyst with hands-on SQL and Python experience turning high-volume datasets into dashboards and reports that inform decisions. B.S. in Business Analytics and Information Systems; M.S. candidate at the University of South Florida.</p>
   <table class="lineup">
     <thead><tr><th scope="col">Role</th><th scope="col">Organisation</th><th scope="col">When</th><th scope="col">What</th></tr></thead>
     <tbody>
-      <tr><td>Research Assistant</td><td>USF REACH Lab</td><td>Sep 2025 to now</td><td>Data workflows and dashboards for experimental findings</td></tr>
-      <tr><td>Ticketing Operations</td><td>USF Athletics</td><td>May 2025 to now</td><td>Ticket sales, attendance and entry datasets</td></tr>
-      <tr><td>Business Analyst</td><td>TraceRT</td><td>May to Aug 2025</td><td>Power BI dashboards that cut report turnaround by 22%</td></tr>
-      <tr><td>Power BI Data Analyst Associate</td><td>Microsoft</td><td>Certified</td><td>Pursuing PMI-CAPM and AWS Cloud Practitioner</td></tr>
-      <tr><td>M.S. Business and Enterprise Integration</td><td>University of South Florida</td><td>Expected May 2028</td><td>Enterprise data analytics, agentic AI, security and governance</td></tr>
-      <tr><td>B.S. Business Analytics and Information Systems</td><td>USF Muma College of Business</td><td>May 2026</td><td>Dean's List, Fall 2024</td></tr>
+      <tr><td>Research Assistant</td><td>USF REACH Lab</td><td class="n">Sep 2025 to now</td><td>End-to-end data workflows and interactive dashboards for experimental findings</td></tr>
+      <tr><td>Student Assistant, Ticketing Operations</td><td>USF Athletics</td><td class="n">May 2025 to now</td><td>Ticket sales, attendance and entry datasets; transaction and customer records</td></tr>
+      <tr><td>Business Analyst</td><td>TraceRT</td><td class="n">May to Aug 2025</td><td>Power BI dashboards that cut report turnaround by 22% and lifted NPS by one point</td></tr>
+      <tr><td>M.S. Business and Enterprise Integration</td><td>University of South Florida</td><td class="n">Expected May 2028</td><td>Enterprise data analytics, agentic AI, security, privacy and governance, enterprise architecture</td></tr>
+      <tr><td>B.S. Business Analytics and Information Systems</td><td>USF Muma College of Business</td><td class="n">May 2026</td><td>Dean's List, Fall 2024</td></tr>
     </tbody>
   </table>
-  <p class="btns"><a class="btn fill" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a><a class="btn" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="btn" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></p>
+  <p class="btns"><a class="btn fill" href="https://mrrishit909.github.io/resume.pdf">Résumé (PDF)</a><a class="btn keep" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="btn keep" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></p>
+  <dl class="facts"><div><dt><b>Certification</b></dt><dd>Microsoft Power BI Data Analyst Associate; pursuing PMI-CAPM and AWS Certified Cloud Practitioner (CLF-C02)</dd></div><div><dt><b>Tools</b></dt><dd>SQL, Python, R, Power BI, Excel, Tableau, Power Query, DAX; PostgreSQL, Oracle, SQL Server, SQLite</dd></div><div><dt><b>Source</b></dt><dd>Every line here is from the résumé; nothing on this site claims more than it does.</dd></div></dl>
 </section>
 
-<section class="archive" id="archive" data-chapter="archive" data-pal="paper" aria-labelledby="archive-title">
-  <h2 class="q" id="archive-title">All {{COUNT}}.</h2>
+<section class="archive" id="archive" data-chapter="archive" data-state="closed" aria-labelledby="archive-title">
+  <p class="kicker label">Archive</p>
+  <h2 class="display" id="archive-title">All {{COUNT}}.</h2>
+  <p class="lead">Every project has a written case study with its repository's language, year and commit count. Query by free words, or by language, kind, year, commits, live.</p>
   <form class="query" action="all.html" method="get" role="search">
     <label class="visually-hidden" for="q">Search the case studies</label>
     <input id="q" name="q" type="search" placeholder="language:python year:2026 commits>10" autocomplete="off" spellcheck="false">
     <button class="btn fill" type="submit">Search</button>
   </form>
-  <p class="src">Free words, or language, kind, year, commits, live. The twelve most recent:</p>
+  <p class="small">The twelve most recent:</p>
   <table class="lineup">
     <thead><tr><th scope="col">Case study</th><th scope="col">Kind</th><th scope="col">Year</th><th scope="col">Commits</th></tr></thead>
     <tbody>
 {{RECENT}}
     </tbody>
   </table>
-  <p class="btns"><a class="btn" href="all.html">Every case study</a></p>
+  <p class="btns"><a class="btn keep" href="all.html">Every case study <span class="arrow" aria-hidden="true">&rarr;</span></a></p>
 </section>
 
-<section class="contact" id="contact" data-chapter="contact" data-pal="red" aria-labelledby="contact-title">
+<section class="contact" id="contact" data-chapter="contact" data-state="closed" aria-labelledby="contact-title">
+  <p class="kicker label">Contact</p>
   <h2 class="visually-hidden" id="contact-title">Contact</h2>
-  <p class="line ask">Open to entry-level data and business analyst roles, US-wide and remote. Write about a role, a dataset or a case study.</p>
-  <a class="mail" href="mailto:rishit.mathur@yahoo.com">rishit.mathur@<br>yahoo.com</a>
-  <p class="corners"><span><span id="clock"></span> Tampa, FL</span><span class="btns"><button class="btn" id="copy-mail" type="button" data-mail="rishit.mathur@yahoo.com" hidden><span class="copy-text">Copy e-mail</span></button><a class="btn" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="btn" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a><a class="btn" href="https://mrrishit909.github.io/resume.pdf">Résumé</a></span></p>
+  <p class="lead">Open to entry-level data and business analyst roles, US-wide and remote. Write about a role, a dataset or a case study.</p>
+  <a class="mail" href="mailto:rishit.mathur@yahoo.com">rishit.mathur<br>@yahoo.com</a>
+  <p class="corners"><span><span id="clock"></span> Tampa, FL</span><span class="btns"><button class="btn keep" id="copy-mail" type="button" data-mail="rishit.mathur@yahoo.com" hidden><span class="copy-text">Copy e-mail</span></button><a class="btn keep" href="https://www.linkedin.com/in/rishitrajmathur" target="_blank" rel="noopener">LinkedIn</a><a class="btn keep" href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></span></p>
   <p class="visually-hidden" id="copy-status" aria-live="polite"></p>
 </section>
-</main>
-<footer class="foot"><span>© 2026 Rishit Raj Mathur, Tampa, FL. Type: General Sans by Indian Type Foundry, via Fontshare.</span><nav aria-label="Footer"><a href="all.html">Archive</a><a href="#experience">Experience</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
-<p class="hud-chapter" id="chapter" aria-hidden="true"></p>
+<footer class="foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL. Type: Bricolage Grotesque (OFL), Geist (OFL), JetBrains Mono (OFL).</span><nav aria-label="Footer"><a href="all.html">Archive</a><a href="#about">About</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a><a href="motion/instrument-lab.html">Instrument lab</a></nav></footer>
+</div>
+<script type="application/json" id="hours-data">/*HOURS*/[]</script>
 <script src="vendor/gsap/gsap.min.js" defer></script>
 <script src="motion/toolkit.js" defer></script>
 {{SCENES}}

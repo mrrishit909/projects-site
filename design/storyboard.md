@@ -1,72 +1,55 @@
-# Storyboard and motion score: THE BLOCK (revised 2026-10-25, second pass)
+# Storyboard and motion score: Precision Atelier
 
-Playback: the opening is autoplay (one 2.6 s sequence, skippable, replayable); everything after is scroll-controlled
-(the block's state is a function of scroll position; nothing is pinned by hijacking; native scroll, no Lenis). Sound is
-off by default and never carries information. Timing budget for the opening: first paint at HTML, the sequence starts
-when the module has loaded, ends at 2.6 s, navigation live throughout.
+Evidence: screenshots in `~/projects-site-evidence/atelier-2026-10-25/r*/`, recordings in `recordings/final/`.
 
-## What the slips are
+## The opening (measured 3.1 s on the GSAP clock; about 3.4 s from first render on the test Mac)
 
-The block is 6 x 40 x 6 = 1,440 slips on desktop (6 x 28 x 6 = 1,008 on phones). The count is an artistic construction
-chosen for the silhouette and the frame budget; it is not a record count, a case-study count or a repository count. The
-page says so on the hero card ("It is not a count."). The counts that are facts (224 case studies, 219 public
-repositories) are read from the data at build time and shown as numbers.
+| t | Object (instrument.js, k = introK) | Words (CSS, html.opening / .words) | Sound |
+|---|---|---|---|
+| 0.0 | the parts are off-axis at their families' approach distances (the instrument starts there when the opening will play); the group turned 1.2 rad | brand, nav, kicker and the headline are in the first frame; the poster shows until the first WebGL frame | silence |
+| 0.0 to 2.0 | k 0 to 1 (power2.inOut): rails from above, the core from the front, slabs from the sides, the lower block from the left, frames from behind, the inner frame, brackets from below, pins from the depth, pads last; each unwinds its yaw as it lands; the group's turn settles | at 0.5 s the lead, the buttons, the domains and the corner lines rise (staggered 120 to 400 ms) | click at 1.9 s when the register locks |
+| 2.0 to 2.9 | the signature: closed blends to open (power3.inOut 0.9 s); the register unlocks into the exploded hero | the words are settled; nothing competes | a short texture at 2.0 s |
+| 2.9 to 3.1 | rest; html.entered; Replay appears, Skip disappears | | |
 
-## The entrance, five states
+Controls: Skip (button, wheel, touch, key) sets the timeline to its end: k = 1, u = 1, entered. Replay kills the timeline
+and its listeners (AbortController), scrolls to the top, cuts the ground to green, and runs again. Repeat visits in a
+session, hash arrivals and returns from case studies skip the sequence. Reduced motion: no travel; k and u still run in
+0.8 + 0.6 s with `introStill`.
 
-| State | Time | What is on screen | Block | Camera | Type | Owner | Fallback |
-|---|---|---|---|---|---|---|---|
-| 1 Opening frame | 0 s | Red field; name at 11vw top-left; the line under it; nav top-right (Work, Archive, Contact, Résumé); the card bottom-left (what is here, the two counts, the note that the block is not a count, See the work, Résumé); the block as the poster, centre-right | poster image of the settled block | fixed, 32° fov, the block at 70% / 56% of the viewport | all visible and selectable | HTML + CSS + `assets/block-poster.webp` | this is the page without JavaScript or WebGL |
-| 2 Anticipation | 0 to 0.8 s | the canvas replaces the poster; the slips loosen apart from the top row down, each lifting and tilting a little; the counts read 0; the block is turned 12° further away | loose (per-slip offsets from a seeded table, up to 1.4 units) | still | the two counts show 0 | block.js from `intro.k` 0 to 0.3 | reduced motion: not run |
-| 3 Signature event | 0.8 to 2.2 s | a band of light passes from the top of the block to the bottom; every row it passes is collected back into place (the check reads each record and files it); the counts roll up from 0 to 224 and 219 in step | collected row by row behind the plane; the band lights the rows it touches | the block turns back toward the visitor through the pass | counts rolling | block.js `introAt(k)`, GSAP on the counts | reduced motion: the band alone passes down the settled block (1.4 s), the counts show final |
-| 4 Resolution | 2.2 to 2.6 s | the last rows settle, the band leaves at the base, the block is whole, the Replay control appears in the top bar | settled, scale eases from 94% to 100% | settled | counts final | block.js | |
-| 5 Handoff | on scroll | the name scrolls away while the block holds its stage; the top bar takes the name as a stub; at the work chapter the field turns red to paper and the block paper to red over 600 ms, and the first operation begins as the panel's words arrive | BLOCK to SLICE from 12% of the first panel | same axis, the block moves 4% up the screen | panel words rise | scroll | reduced motion: instant changes |
+## Chapters (scroll-driven; each a pinned screen inside a 185 svh section)
 
-Skip: wheel, touch, any key or the Skip button ends the sequence immediately; the counts land. Replay: the top bar's
-"Replay opening" (visible once entered) scrolls to the top, cuts the field to red, kills the previous timeline and its
-listeners (an AbortController per run), and runs the sequence again; under reduced motion it runs the reduced version.
-Once per session for normal visits (sessionStorage `seen`); never on a return from a case study or a hash arrival.
+| Chapter | Entry (u 0 to 0.04) | Development (u 0.04 to 0.54) | Settled reading state (u 0.54 to 1) | Interaction | Out |
+|---|---|---|---|---|---|
+| Hero | the opening | | the exploded hero | drag, tilt (fine pointers); Replay | the words scroll off, the object holds |
+| Selected work (orient) | | the object holds | the list of four | links to the chapters | |
+| 01 Florida: network | from the previous arrangement (open) | the plate becomes the fact table; the two slabs and two lacquer plates travel to the corners; the pins turn into connectors from the plate's corners; the rails settle as a base | the star schema under AIRPORTS / TIME / CARRIERS / OBSERVATIONS | the departure-hour range (published rates, figure in HTML) | the next chapter's blend |
+| 02 dbt: pipeline | from network | four standing frames line up on two long rails: source bars, staging plates, intermediate slabs, the engraved plate as the marts; 31 test pins slot into the frames' top bars from u 0.3 to 0.8 | the row under SOURCE / STAGING / INTERMEDIATE / MARTS, 31 of 31 | the counter follows the scroll both ways; ticks | |
+| 03 Forecast: timeline | from pipeline | twelve solid parts stand in time order at the real series' height; twelve thin bars stand ahead at last year's shape and fan apart by the backtest's error; the pins lie as the axis; the bracket marks now | OBSERVED / NOW / FORECAST / 80% RANGE; the figure 1.81% with its backtest definition | | |
+| 04 10-K: documents | from timeline | the drawer forms; cards fan back from a shared edge; the ivory passage lifts out and turns to face the visitor (u 0.08 to 0.48) | the answer with its passage; then (u 0.7 to 0.98) the drawer closes and the brackets cross: the refusal (`refusing` class) | | |
+| The instrument (system) | | user-controlled: six arrangements, the separate slider (closed to open), turn left/right/reset, drag, arrow keys | | buttons, slider, keys | |
+| Handoff | the ivory wedge cuts in; the document ground follows at 92% of the viewport | | | | |
+| About (ivory) | | the register rests assembled at 82% / 36%, 0.55 (desktop); on phones it leaves at the handoff (shrinks away below the screen) | the résumé line-up | résumé, LinkedIn, GitHub | |
+| Archive (ivory) | | the register small at 86% / 55% | the query and the twelve most recent | the query form | |
+| Contact (ivory) | | the register assembled, turning slowly (sin t / 9 s, ± 0.25 rad) | the e-mail as display type | copy e-mail | footer |
 
-Recordings: `~/projects-site-evidence/redesign-2026-10-25/recordings/final/opening-fresh.webm` (a fresh session),
-`opening-replay.webm` (scroll, then Replay), `opening-reduced.webm` (reduced motion, then Replay), with six-frame contact
-sheets beside them.
+Reverse scrolling reverses every blend (targets are functions of scroll; the lerp follows either way). Fast scrolling
+jumps the targets and the lerp settles in about 0.5 s. Navigation links arrive at the chapter's target directly.
 
-## Chapters and what carries across each boundary
+## Motion contracts (one owner per property)
 
-| Boundary | What carries | What changes |
-|---|---|---|
-| Opening to hero | the block, its position and axis; the name and card were there from the first frame | the band leaves; Replay appears |
-| Hero to work | the block holds its stage while the name scrolls off; the top bar keeps the name | field red to paper, block paper to red (600 ms); the block begins to cut |
-| Panel to panel | the block returns to BLOCK between operations, same stage, same axis; the fragment column stays in place | the operation; the words |
-| Work to the check | the block's stage and axis | field back to red, block back to paper; the operation becomes the hour cut |
-| The check to experience | the block, shrinking to the upper right | field to paper; the block rests (the chapter is a rest) |
-| Experience to archive | the block | the block spreads into the sheet of 224 lit slips and gathers again |
-| Archive to contact | the block, small, upper right | field to red; the e-mail is the statement |
-
-Between panels the scroll runway (0 to 12% of each panel) is where the block returns to BLOCK, so each operation starts
-from the same solid and the transformations never overlap.
-
-## Motion score (one owner per property)
-
-| Effect | Purpose | Owner | Trigger | Start / end | Duration or range | Ease | Reverse | Interrupt | Replay | Keyboard / touch | Reduced motion | Cost |
+| Motion | Purpose | Trigger | Space | Duration / interval | Easing | Owner | Interrupt | Reverse | Replay | Touch | Reduced motion | Cost |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Loosen | anticipation | block.js `introAt` | sequence start | tight / loose | 0.8 s | smoothstep per slip | no | skip jumps to end | yes, via Replay | any key or tap skips | not run | 1 draw call plus the shadow pass |
-| The band and the collection | the check reads and files every record | block.js `introAt` | 0.8 s | top / bottom of the block | 1.4 s | smoothstep | no | with skip | yes | same | band only | per-instance colour |
-| Counts roll | the facts arrive with the collection | home.js, GSAP | 1.0 s | 0 / final | 1.1 s | power2 out | no | skip lands them | yes | same | shown final | none |
-| Settle | resolution | block.js | 2.2 s | 94% / 100% scale, 12° / 0° | 0.4 s | smoothstep | no | with skip | yes | | not run | none |
-| Field colour | chapter edges | CSS on `html[data-pal]` | chapter change | red / paper | 600 ms | travel | yes | n/a | cut on Replay | n/a | instant | background-color on two elements |
-| Block operation | the project's method | block.js targets lerped | scroll inside the panel (12% to 67%) | BLOCK / SLICE, LAYER, BEND, OPEN | per panel | smoothstep on u, frame lerp | yes | n/a | always | n/a | holds end states | 1 draw call |
-| Tests lighting | 31 tests pass | block.js `layer(tests)` | scroll 30% to 90% of panel 2 | 0 / 31 lit | | linear | yes | | | | end state | per-instance colour |
-| Block stage | where the block sits | block.js group target | chapter | per chapter and viewport | lerp | frame lerp | yes | n/a | always | n/a | instant | none |
-| Pointer tilt / drag | exploration | block.js | pointer | ±6° / drag angle | continuous | lerp | yes | n/a | always | fine pointers only | off | none |
-| Panel words rise | hierarchy on arrival | CSS `.is-in` | panel 20% in view | 18 px below / 0 | 700 ms, stagger 60 ms | entrance | class toggles off | n/a | each arrival | n/a | none | transform, opacity |
-| Fragment loop | the real interface at work | home.js | fragment 20% in view | u 0 / 0.92 | 6 s once, then holds | the scene's | no | pauses offscreen | on each arrival | n/a | final frame | one 2D canvas while visible |
-| Hour cut | a visible consequence | block.js from the input | input | previous / chosen hour | lerp | frame lerp | yes | last value wins | always | native range | instant | per-instance colour |
-| Title and cover into the case study | continuity | cross-document View Transitions (`title`, `cover`) | click | panel title and fragment / case heading and cover | 560 ms | travel | Back reverses | native | always | native links | none | compositor |
-| Button press | feedback | CSS | hover, focus, active | 0 / -2 px | 160 ms | entrance | yes | n/a | always | focus-visible ring | colour only | none |
+| Opening arrival | state, causality (parts have axes) | first top arrival in a session; Replay | instrument local | 2.0 s | power2.inOut on k; per-part smoothstep windows | GSAP (k) + instrument.js (matrices) | Skip jumps to the end | n/a | kill + restart | same | no travel (introStill) | 41 draw calls at DPR 1 |
+| Signature unlock | reveals the object's purpose (it comes apart) | k reaches 1 | instrument local | 0.9 s | power3.inOut | GSAP (u) | Skip | n/a | yes | same | 0.6 s | same |
+| Words arrive | hierarchy | 0.5 s into the opening | CSS | 900 ms staggered | --ease | CSS transitions on html.words | none needed | n/a | class removed and re-added | same | none | trivial |
+| Chapter blend | state | scroll position in the chapter | instrument local | u 0.04 to 0.54 of the section | smoothstep per part with a 3% stagger | scroll (targets) + instrument.js (lerp) | scroll | yes | n/a | native scroll | end states, no stagger (ease 1) | same |
+| Test pins | causality (tests attach to transforms) | scroll u 0.3 to 0.8 of chapter 2 | instrument local | per scroll | step | scroll | scroll | yes | n/a | same | same | +40 draw calls |
+| Passage lift / refusal | time, state | scroll in chapter 4 | instrument local | u 0.08 to 0.48 and 0.7 to 0.98 | smoothstep | scroll | scroll | yes | n/a | same | same | none |
+| Ground handoff | space (green scene to ivory reading) | the handoff reaching 92% of the viewport | document | 900 ms | --travel | CSS transition on html[data-field] | none | yes | n/a | same | none (instant) | trivial |
+| Chapter words | hierarchy | IntersectionObserver is-in | CSS | 900 ms staggered 80 ms | --ease | CSS | none | re-enter | n/a | same | none | trivial |
+| Tilt / drag / turn | exploration | pointer, buttons, keys | group rotation | continuous, 0.985 decay | time-based lerp | instrument.js | reset button | yes | n/a | buttons only (no drag on touch; scroll never trapped) | ease 1 | none |
+| Contact turn | rest | time | group rotation | ± 0.25 rad over 9 s | sine | instrument.js | pause | n/a | n/a | same | still | draws every frame (force) |
+| Pause | control | the Pause button | all owners | | | home.js | | | | same | | stops the renderer, GSAP, fragments, audio |
 
-Rests: Experience (the block small, upper right, still) and Contact (the block resting, the e-mail as the statement).
-
-Owners: GSAP owns `intro.k` and the counts only; block.js owns every instance matrix and colour, the shadow and the
-group's transform; CSS owns every DOM transform and colour; home.js toggles classes, sets custom properties and feeds
-block.js. No property has two owners.
+Delta time is bounded at 50 ms (a hidden tab's return cannot jump); every rate is `1 - base^dt`, independent of the
+monitor's refresh; one requestAnimationFrame loop on the home (home.js `tick`), one on a case page (case.js).
