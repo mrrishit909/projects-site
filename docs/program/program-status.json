@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T04:28:46Z",
+  "updated_at": "2026-10-27T04:38:06Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -250,6 +250,10 @@
       "portfolio_prep": {
         "motion_tile": "changeworks/loop.mp4+webm on unified-portfolio (a1ee8fe)",
         "case_study_draft": "scratchpad/p09/project.json (placeholders __TESTS__, __NOTE__, __WEBCHECKS__, __WORLD__, __RESULTS__)"
+      },
+      "generator": {
+        "commit": "f77a589",
+        "status": "done"
       }
     },
     "10-retentionlab": {
@@ -289,7 +293,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 07: live-verified on e205202; A-069 artifacts hand-back -> verify -> commit -> complete. Project 08: generator 9743a33; A-070 web hand-back -> verify -> D-08 -> commit -> CI Mode B -> publish labs/pipeline-observatory -> manifest -> live check -> portfolio case study + motion tile -> review -> fixes -> artifacts. Project 09: A-067 generator hand-back -> ... Project 10: A-068 generator hand-back -> ...",
+    "next_concrete_task": "Project 07: A-069 artifacts hand-back -> verify -> commit -> complete. Project 08: A-070 web hand-back -> verify -> D-08 -> commit -> CI -> publish -> manifest -> live check -> case study (draft in scratchpad/p08) -> review -> fixes -> artifacts. Project 09: generator f77a589; A-071 web hand-back -> same chain (draft in scratchpad/p09; payback rule + PARTIAL_TREND_COVERAGE in the fix round). Project 10: A-068 generator hand-back -> verify -> D-07 -> commit -> web -> ...",
     "acceptance": "see task-queue.json"
   }
 }

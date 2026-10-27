@@ -616,7 +616,7 @@
       "project": "09-changeworks",
       "title": "Generator, Mode B site, Playwright evidence, publish, integrate",
       "status": "in_progress",
-      "assignment": "A-067 (generator); web next"
+      "assignment": "A-067 generator done (f77a589); A-071 web"
     },
     {
       "id": "T-09-05",
