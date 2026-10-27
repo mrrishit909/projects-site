@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T04:03:28Z",
+  "updated_at": "2026-10-27T04:08:15Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -178,7 +178,7 @@
         "assignment": "A-060",
         "defects": 8,
         "documentation": 12,
-        "status": "fixes in progress (A-063)",
+        "status": "fixes committed 1e0283f; CI pending; republish next",
         "case_study_wording_fixed": "031705d"
       }
     },
@@ -235,7 +235,7 @@
       "backend": {
         "commit": "83158f5",
         "tests": 346,
-        "status": "done; CI pending"
+        "status": "done; Mode A green on hosted runner (run 40447123155)"
       }
     },
     "10-retentionlab": {
@@ -265,13 +265,13 @@
       "backend": {
         "commit": "4b957ca",
         "tests": 299,
-        "status": "done; CI pending"
+        "status": "done; Mode A green on hosted runner (run 40447567631)"
       }
     }
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 07: A-063 fix hand-back -> verify -> commit -> CI -> republish -> live check -> case study -> artifacts. Project 08: A-065 generator hand-back -> verify -> D-07 -> commit -> web -> publish -> integrate -> review -> artifacts. Project 09: backend 83158f5 (CI poll running); A-067 generator hand-back -> verify -> D-07 -> commit -> web -> publish -> integrate -> review (incl. PARTIAL_TREND_COVERAGE rule) -> artifacts. Project 10: backend 4b957ca (CI poll running); A-068 generator hand-back -> verify -> D-07 -> commit -> web -> publish -> integrate -> review -> artifacts.",
+    "next_concrete_task": "Project 07: fixes 1e0283f -> CI poll -> republish labs/trustledger -> manifest -> live check -> case study 'Found by review, then fixed' -> artifacts worker. Project 08: A-065 generator hand-back -> verify -> D-07 -> commit -> web -> publish -> integrate -> review -> artifacts. Project 09: A-067 generator hand-back -> ... Project 10: A-068 generator hand-back -> ...",
     "acceptance": "see task-queue.json"
   }
 }
