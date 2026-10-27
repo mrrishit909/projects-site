@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T00:32:14Z",
+  "updated_at": "2026-10-27T01:54:30Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -102,19 +102,19 @@
       "slug": "productsignal",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/productsignal/",
       "site_path": "labs/productsignal/ on unified-portfolio",
-      "release_commit_unified_portfolio": "6e381bf",
-      "rollback_commit_unified_portfolio": "188e409",
-      "source_commit_business_data_lab": "ccf70f52fc2af7c9c15f4d0ffb1d82df449a8990",
-      "published_tree_sha256": "d98ebb4dd2ba8d869251d892539fb3a2c51d01fd055025d83fa14e6ff4e6dd5a",
+      "release_commit_unified_portfolio": "e360bf1",
+      "rollback_commit_unified_portfolio": "6e381bf",
+      "source_commit_business_data_lab": "fdf911a1eb1977d5d6c3c55f467a2a1223befc75",
+      "published_tree_sha256": "ef39beb5a4a6f7c0799ad304322339489252904022840cd963249344b48d33d3",
       "files": 43,
       "dataset_version": "ps-20261026-20261026",
       "dataset_hash": "12672f9c39402517083bbbbe9164cbefe3435361dff086eb0d9e16e60f9b66f8",
       "contract_version": "v1",
-      "publication_status": "published, live-verified (12 routes 200, live code_sha matched, case study links both ways, browser journey clean; run 40426869172) and integrated (6e381bf)",
+      "publication_status": "republished after T-06-07 reviewer fixes (e360bf1); CI and live check pending",
       "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40426869172",
-        "verified_at": "2026-10-27T00:32:14Z",
-        "live_code_sha_matched": "ccf70f52fc2af7c9c15f4d0ffb1d82df449a8990"
+        "run_url": null,
+        "verified_at": null,
+        "previous_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40426869172"
       }
     }
   ]

@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T01:32:40Z",
+  "updated_at": "2026-10-27T01:54:30Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -53,7 +53,7 @@
       "id": "BLK-005",
       "ts": "2026-10-27T01:32:40Z",
       "what": "third cloud container restart; PostgreSQL down afterwards (restarted); fix worker A-053 lost mid-task (resumed as A-054); coordinator's own pytest run killed (exit 137) and rerun",
-      "status": "recovering"
+      "status": "recovered (A-052 and A-054 accepted)"
     }
   ],
   "projects": {
@@ -134,18 +134,18 @@
     },
     "06-productsignal": {
       "slug": "productsignal",
-      "stage": "built, verified (provisional: reviewer findings R6-01..R6-07, R6-09 open, fixes A-053 running), published and live-verified, integrated (case study corrected b99a4e9 incl. the INJ-10 gap disclosure)",
+      "stage": "built, verified (reviewer findings fixed and regression-tested at fdf911a), republished e360bf1 (CI and live check pending), integrated (case study updated); artifacts A-056 running",
       "built": true,
       "verified": true,
       "published": true,
       "integrated": true,
-      "last_verified_sha": "d7111f1",
+      "last_verified_sha": "fdf911a (local)",
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40426536267",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/productsignal/",
       "blockers": [],
-      "next_task": "A-053 fixes -> republish -> live check -> artifacts",
+      "next_task": "confirm CI and live check; A-056 artifacts",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/productsignal/",
-      "verified_note": "Entry journey + reviewer disproof pass; 7 rule defects open; published lift now disclosed as carrying an injected gap (drawn +11.50 vs published +9.50)"
+      "verified_note": "Entry journey + reviewer disproof pass; all 14 findings fixed in T-06-07 with tests in Python, SQL, TypeScript and the API; the INJ-10 gap inside the published lift disclosed"
     },
     "07-trustledger": {
       "slug": "trustledger",
@@ -202,7 +202,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 06: A-054 fix hand-back -> verify -> commit -> republish -> manifest -> live check -> artifacts. Project 07: confirm trustledger-ci.yml Mode A; A-055 generator hand-back -> verify -> commit -> web worker -> publish -> integrate -> review -> artifacts. Then project 08.",
+    "next_concrete_task": "Project 06: confirm productsignal-ci.yml on fdf911a and live-check; A-056 artifacts hand-back -> verify -> commit. Project 07: confirm trustledger-ci.yml Mode A on 9e0adb0; A-055 generator hand-back -> verify -> commit -> web worker -> publish -> integrate -> review -> artifacts. Then project 08 pipeline-observatory (contracts first).",
     "acceptance": "see task-queue.json"
   }
 }

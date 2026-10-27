@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T01:32:40Z",
+  "updated_at": "2026-10-27T01:54:30Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1196,9 +1196,20 @@
       "command": "reference_check.py; DATABASE_URL=... pytest -q; env -u DATABASE_URL pytest -q",
       "exit_code": 0,
       "actual": "ALL OK (736); 274 passed; 133 passed 141 skipped (local; CI Mode A pending)",
-      "code_sha": "pending-commit",
+      "code_sha": "9e0adb0",
       "evidence": "apps/trustledger/tests/",
       "ts": "2026-10-27T01:32:40Z"
+    },
+    {
+      "requirement": "P06 reviewer findings R6-01..R6-14 fixed (T-06-07); reviewer harness agrees hand/py/sql/ts on 13 cases and H_three as a rejection; timezone-independent SQL under three session zones",
+      "project": "06-productsignal",
+      "status": "verified",
+      "command": "reference_check.py; DATABASE_URL=... pytest -q; npm run check; npm run build:pages; npm run e2e",
+      "exit_code": 0,
+      "actual": "ALL OK (706); 357 passed; 2519 golden + 36 review; 77 e2e",
+      "code_sha": "fdf911a",
+      "evidence": "apps/productsignal/docs/uat-evidence.md; tests/test_review_findings.py; web/scripts/review-check.ts",
+      "ts": "2026-10-27T01:54:30Z"
     }
   ]
 }
