@@ -1,0 +1,8 @@
+rule_name,severity,gates
+completeness_vs_expectation,warning,1328
+freshness_within_target,critical,1328
+keys_unique,critical,1328
+late_events_included,critical,1328
+reconciliation_residual_zero,critical,1328
+relationships_intact,critical,1328
+scope_complete,critical,1328

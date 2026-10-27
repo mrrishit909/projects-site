@@ -1,0 +1,7 @@
+failure_kind,stage,description
+freshness,blocked_at_gate,freshness_within_target failed: a source was older than its declared target
+gate_infra,failed_before_gate,the quality_gate task itself failed on all three attempts: no check result exists
+ingest,failed_before_gate,the ingest task failed on all three attempts
+relationships,blocked_at_gate,relationships_intact failed: a candidate row had no parent
+residual,blocked_at_gate,"reconciliation_residual_zero failed: source total, published total and explained exclusions did not balance"
+transform,failed_before_gate,the transform task failed on all three attempts

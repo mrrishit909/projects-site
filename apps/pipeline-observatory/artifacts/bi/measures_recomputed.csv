@@ -1,0 +1,109 @@
+measure,slice,scope,value,numerator,denominator,status,note
+received,all,complete_world,39901,,,value,committed batches only
+accepted_unique,all,complete_world,37248,,,value,
+duplicate,all,complete_world,2101,,,value,
+quarantined,all,complete_world,429,,,value,
+deleted,all,complete_world,123,,,value,
+rejection_rate,all,complete_world,0.010752,429,39901,value,quarantined / received; the schema-quarantined batch is not in it
+duplicate_rate,all,complete_world,0.052655,2101,39901,value,duplicate / received
+received,src-inventory,complete_world,1723,,,value,
+accepted_unique,src-inventory,complete_world,1630,,,value,
+duplicate,src-inventory,complete_world,72,,,value,
+quarantined,src-inventory,complete_world,21,,,value,
+deleted,src-inventory,complete_world,0,,,value,
+rejection_rate,src-inventory,complete_world,0.012188,21,1723,value,quarantined / received; the schema-quarantined batch is not in it
+duplicate_rate,src-inventory,complete_world,0.041788,72,1723,value,duplicate / received
+received,src-orders,complete_world,16815,,,value,
+accepted_unique,src-orders,complete_world,16066,,,value,
+duplicate,src-orders,complete_world,502,,,value,
+quarantined,src-orders,complete_world,181,,,value,
+deleted,src-orders,complete_world,66,,,value,
+rejection_rate,src-orders,complete_world,0.010764,181,16815,value,quarantined / received; the schema-quarantined batch is not in it
+duplicate_rate,src-orders,complete_world,0.029854,502,16815,value,duplicate / received
+received,src-payments,complete_world,10805,,,value,
+accepted_unique,src-payments,complete_world,10125,,,value,
+duplicate,src-payments,complete_world,522,,,value,
+quarantined,src-payments,complete_world,123,,,value,
+deleted,src-payments,complete_world,35,,,value,
+rejection_rate,src-payments,complete_world,0.011384,123,10805,value,quarantined / received; the schema-quarantined batch is not in it
+duplicate_rate,src-payments,complete_world,0.048311,522,10805,value,duplicate / received
+received,src-refunds,complete_world,4295,,,value,
+accepted_unique,src-refunds,complete_world,3785,,,value,
+duplicate,src-refunds,complete_world,468,,,value,
+quarantined,src-refunds,complete_world,42,,,value,
+deleted,src-refunds,complete_world,0,,,value,
+rejection_rate,src-refunds,complete_world,0.009779,42,4295,value,quarantined / received; the schema-quarantined batch is not in it
+duplicate_rate,src-refunds,complete_world,0.108964,468,4295,value,duplicate / received
+received,src-shipments,complete_world,4410,,,value,
+accepted_unique,src-shipments,complete_world,3985,,,value,
+duplicate,src-shipments,complete_world,368,,,value,
+quarantined,src-shipments,complete_world,35,,,value,
+deleted,src-shipments,complete_world,22,,,value,
+rejection_rate,src-shipments,complete_world,0.007937,35,4410,value,quarantined / received; the schema-quarantined batch is not in it
+duplicate_rate,src-shipments,complete_world,0.083447,368,4410,value,duplicate / received
+received,src-web-events,complete_world,1853,,,value,
+accepted_unique,src-web-events,complete_world,1657,,,value,
+duplicate,src-web-events,complete_world,169,,,value,
+quarantined,src-web-events,complete_world,27,,,value,
+deleted,src-web-events,complete_world,0,,,value,
+rejection_rate,src-web-events,complete_world,0.014571,27,1853,value,quarantined / received; the schema-quarantined batch is not in it
+duplicate_rate,src-web-events,complete_world,0.091203,169,1853,value,duplicate / received
+schema_quarantined_rows,all,complete_world,17,,,value,rows of the batch refused whole for SCHEMA_CHANGED; listed apart from every rate
+runs,all,complete_world,1343,,,value,
+reached_gate,all,complete_world,1328,,,value,
+allowed,all,complete_world,1318,,,value,
+blocked_at_gate,all,complete_world,10,,,value,
+failed_before_gate,all,complete_world,15,,,value,
+failed_runs,kind: freshness,complete_world,5,,,value,
+failed_runs,kind: gate_infra,complete_world,3,,,value,
+failed_runs,kind: ingest,complete_world,3,,,value,
+failed_runs,kind: relationships,complete_world,4,,,value,
+failed_runs,kind: residual,complete_world,1,,,value,
+failed_runs,kind: transform,complete_world,9,,,value,
+task_success_rate,all,complete_world,0.995311,5307,5332,value,successful terminal tasks / terminal tasks
+attempt_success_rate,all,complete_world,0.971622,5307,5462,value,attempts are not tasks
+ingestion_age_seconds,src-inventory,complete_world,67674,,,value,
+freshness_seconds,src-inventory,recorded,79203,,,value,seconds recomputed from the recorded latest accepted event
+silent,src-inventory,recorded,false,,,value,freshness above two declared cadences (display rule)
+completeness,src-inventory,complete_world,0.990881,1630,1645,value,accepted unique / expected over all partitions
+ingestion_age_seconds,src-orders,complete_world,13887,,,value,
+freshness_seconds,src-orders,recorded,14514,,,value,seconds recomputed from the recorded latest accepted event
+silent,src-orders,recorded,false,,,value,freshness above two declared cadences (display rule)
+completeness,src-orders,complete_world,0.993200,16066,16176,value,accepted unique / expected over all partitions
+ingestion_age_seconds,src-payments,complete_world,6638,,,value,
+freshness_seconds,src-payments,recorded,7766,,,value,seconds recomputed from the recorded latest accepted event
+silent,src-payments,recorded,false,,,value,freshness above two declared cadences (display rule)
+completeness,src-payments,complete_world,0.991966,10125,10207,value,accepted unique / expected over all partitions
+ingestion_age_seconds,src-refunds,complete_world,17363,,,value,
+freshness_seconds,src-refunds,recorded,262378,,,value,seconds recomputed from the recorded latest accepted event
+silent,src-refunds,recorded,true,,,value,freshness above two declared cadences (display rule)
+completeness,src-refunds,complete_world,0.945541,3785,4003,value,accepted unique / expected over all partitions
+ingestion_age_seconds,src-shipments,complete_world,9931,,,value,
+freshness_seconds,src-shipments,recorded,11789,,,value,seconds recomputed from the recorded latest accepted event
+silent,src-shipments,recorded,false,,,value,freshness above two declared cadences (display rule)
+completeness,src-shipments,complete_world,0.995255,3985,4004,value,accepted unique / expected over all partitions
+ingestion_age_seconds,src-web-events,complete_world,20724,,,value,
+freshness_seconds,src-web-events,recorded,21398,,,value,seconds recomputed from the recorded latest accepted event
+silent,src-web-events,recorded,false,,,value,freshness above two declared cadences (display rule)
+completeness,src-web-events,complete_world,0.987485,1657,1678,value,accepted unique / expected over all partitions
+silent_sources,all,recorded,1,,,value,
+incidents,all,complete_world,25,,,value,
+mean_recovery_minutes,all,complete_world,60.6827,,,value,verified recovery minus detection
+mean_recovery_minutes,kind: freshness,complete_world,66.7800,,,value,
+mean_recovery_minutes,kind: gate_infra,complete_world,56.5278,,,value,
+mean_recovery_minutes,kind: ingest,complete_world,65.2778,,,value,
+mean_recovery_minutes,kind: relationships,complete_world,64.1000,,,value,
+mean_recovery_minutes,kind: residual,complete_world,63.1000,,,value,
+mean_recovery_minutes,kind: transform,complete_world,55.3611,,,value,
+backfill_coverage,all,complete_world,0.733333,11,15,value,verified / requested partitions of the accepted requests
+refused_backfill_partitions,all,complete_world,4,,,value,"beside the coverage, never inside it"
+retries_honoured,all,complete_world,1.000000,49,49,value,retries that waited at least the retry-after hint / retries
+fetches,status: cursor_loop,complete_world,1,,,value,
+fetches,status: ok,complete_world,1263,,,value,
+fetches,status: rate_limited,complete_world,49,,,value,
+fetches,status: refetch,complete_world,48,,,value,
+late_events,complete world,recorded,,,,recorded_only,"the generator records 757 (manifest stats.late_events: backfill 707, corrections 41, designed 9), all included in the next publication, none lost; the published files cannot recompute it"
+late_events,"2,000-row sample",sample,,,,sample_only,"the reference SQL and the domain both count 141 over the sample; it describes the sample, not the world"
+reconciliation_residual,all publications,recorded,,,,recorded_only,needs the amount of every raw row: the manifest records 0 of 1318 publications and 1 of 1331 candidates with a residual other than 0.00 (DR-05); only that one candidate is recomputed (investigation 06)
+publication_content_hash_ok,complete world,recorded,,,,recorded_only,the manifest records 1318 of 1318 (stats.publications.content_hash_ok)
+publication_content_hash_ok,"2,000-row sample",sample,,,,not_verifiable_from_the_sample,"0 of 1318 publications have every included batch in the sample, so the recomputed check is false for all of them (investigation 10)"

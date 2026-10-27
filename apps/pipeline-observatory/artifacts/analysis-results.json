@@ -1,0 +1,6346 @@
+{
+ "meta": [
+  {
+   "dataset_hash": "0a90687778634365c402c5431661b56625de20785e28d9b2388d36c0cad19aab",
+   "dataset_version": "po-20261026-20261026",
+   "code_revision": "ed7eb5a",
+   "contract_version": 1,
+   "seed": 20261026,
+   "as_of": "2026-10-05T00:00:00Z",
+   "golden_dataset_hash": "08049a5cd68353d0d05faebffa5dd8efd406c746d4c7a2f3bcc5ac2ef20267ca",
+   "runs": 1343,
+   "batches": 1311,
+   "raw_rows_written": 40191,
+   "sample_rows": 2000,
+   "reconciliation_rows": 204,
+   "reconciliation_equal": 204,
+   "result_sets": 64,
+   "result_rows": 303
+  }
+ ],
+ "01_ingestion_by_source__by_source": [
+  {
+   "source_id": "src-inventory",
+   "committed_batches": "61",
+   "received": "1723",
+   "accepted_unique": "1630",
+   "duplicate": "72",
+   "quarantined": "21",
+   "deleted": "0",
+   "rejection_rate": "0.012188",
+   "duplicate_rate": "0.041788"
+  },
+  {
+   "source_id": "src-orders",
+   "committed_batches": "335",
+   "received": "16815",
+   "accepted_unique": "16066",
+   "duplicate": "502",
+   "quarantined": "181",
+   "deleted": "66",
+   "rejection_rate": "0.010764",
+   "duplicate_rate": "0.029854"
+  },
+  {
+   "source_id": "src-payments",
+   "committed_batches": "336",
+   "received": "10805",
+   "accepted_unique": "10125",
+   "duplicate": "522",
+   "quarantined": "123",
+   "deleted": "35",
+   "rejection_rate": "0.011384",
+   "duplicate_rate": "0.048311"
+  },
+  {
+   "source_id": "src-refunds",
+   "committed_batches": "228",
+   "received": "4295",
+   "accepted_unique": "3785",
+   "duplicate": "468",
+   "quarantined": "42",
+   "deleted": "0",
+   "rejection_rate": "0.009779",
+   "duplicate_rate": "0.108964"
+  },
+  {
+   "source_id": "src-shipments",
+   "committed_batches": "226",
+   "received": "4410",
+   "accepted_unique": "3985",
+   "duplicate": "368",
+   "quarantined": "35",
+   "deleted": "22",
+   "rejection_rate": "0.007937",
+   "duplicate_rate": "0.083447"
+  },
+  {
+   "source_id": "src-web-events",
+   "committed_batches": "116",
+   "received": "1853",
+   "accepted_unique": "1657",
+   "duplicate": "169",
+   "quarantined": "27",
+   "deleted": "0",
+   "rejection_rate": "0.014571",
+   "duplicate_rate": "0.091203"
+  }
+ ],
+ "01_ingestion_by_source__overall": [
+  {
+   "committed_batches": "1302",
+   "received": "39901",
+   "accepted_unique": "37248",
+   "duplicate": "2101",
+   "quarantined": "429",
+   "deleted": "123",
+   "rejection_rate": "0.010752",
+   "duplicate_rate": "0.052655",
+   "unclassified": "0"
+  }
+ ],
+ "01_ingestion_by_source__quarantine_distinct_keys": [
+  {
+   "source_id": "src-inventory",
+   "quarantine_rows": "21",
+   "distinct_keys": "21",
+   "rows_without_key": "0"
+  },
+  {
+   "source_id": "src-orders",
+   "quarantine_rows": "181",
+   "distinct_keys": "166",
+   "rows_without_key": "1"
+  },
+  {
+   "source_id": "src-payments",
+   "quarantine_rows": "123",
+   "distinct_keys": "115",
+   "rows_without_key": "0"
+  },
+  {
+   "source_id": "src-refunds",
+   "quarantine_rows": "42",
+   "distinct_keys": "42",
+   "rows_without_key": "0"
+  },
+  {
+   "source_id": "src-shipments",
+   "quarantine_rows": "35",
+   "distinct_keys": "32",
+   "rows_without_key": "0"
+  },
+  {
+   "source_id": "src-web-events",
+   "quarantine_rows": "27",
+   "distinct_keys": "27",
+   "rows_without_key": "0"
+  }
+ ],
+ "01_ingestion_by_source__quarantine_by_reason": [
+  {
+   "reason_code": "DELETE_TARGET_UNKNOWN",
+   "in_committed_batches": "25",
+   "in_schema_quarantined_batch": "0",
+   "in_other_batches": "0",
+   "all_rows": "25"
+  },
+  {
+   "reason_code": "INVALID_FIELD",
+   "in_committed_batches": "85",
+   "in_schema_quarantined_batch": "0",
+   "in_other_batches": "0",
+   "all_rows": "85"
+  },
+  {
+   "reason_code": "MISSING_FIELD",
+   "in_committed_batches": "96",
+   "in_schema_quarantined_batch": "0",
+   "in_other_batches": "0",
+   "all_rows": "96"
+  },
+  {
+   "reason_code": "NEGATIVE_QUANTITY",
+   "in_committed_batches": "220",
+   "in_schema_quarantined_batch": "0",
+   "in_other_batches": "0",
+   "all_rows": "220"
+  },
+  {
+   "reason_code": "SCHEMA_CHANGED",
+   "in_committed_batches": "0",
+   "in_schema_quarantined_batch": "17",
+   "in_other_batches": "0",
+   "all_rows": "17"
+  },
+  {
+   "reason_code": "UNKNOWN_OP",
+   "in_committed_batches": "3",
+   "in_schema_quarantined_batch": "0",
+   "in_other_batches": "0",
+   "all_rows": "3"
+  }
+ ],
+ "01_ingestion_by_source__schema_quarantined": [
+  {
+   "batch_id": "b-0847",
+   "source_id": "src-payments",
+   "status": "quarantined",
+   "started_at": "2026-09-15T02:04:17Z",
+   "source_cursor": "off-006575",
+   "kind": "schema_q",
+   "written_rows": "17",
+   "schema_changed_rows": "17",
+   "checkpoints": "0",
+   "contract_schema_version": "2"
+  },
+  {
+   "batch_id": "b-0848",
+   "source_id": "src-payments",
+   "status": "committed",
+   "started_at": "2026-09-15T02:41:37Z",
+   "source_cursor": "off-006575",
+   "kind": "schema_refetch",
+   "written_rows": "17",
+   "schema_changed_rows": "0",
+   "checkpoints": "1",
+   "contract_schema_version": "2"
+  }
+ ],
+ "01_ingestion_by_source__by_batch_kind": [
+  {
+   "kind": "aborted",
+   "status": "aborted",
+   "batches": "8",
+   "written_rows": "273",
+   "received": "0",
+   "accepted_unique": "0",
+   "duplicate": "0",
+   "checkpoints": "0"
+  },
+  {
+   "kind": "backfill",
+   "status": "committed",
+   "batches": "15",
+   "written_rows": "715",
+   "received": "715",
+   "accepted_unique": "707",
+   "duplicate": "0",
+   "checkpoints": "15"
+  },
+  {
+   "kind": "live",
+   "status": "committed",
+   "batches": "1278",
+   "written_rows": "38896",
+   "received": "38896",
+   "accepted_unique": "36271",
+   "duplicate": "2087",
+   "checkpoints": "1278"
+  },
+  {
+   "kind": "replay",
+   "status": "committed",
+   "batches": "8",
+   "written_rows": "273",
+   "received": "273",
+   "accepted_unique": "255",
+   "duplicate": "12",
+   "checkpoints": "8"
+  },
+  {
+   "kind": "schema_q",
+   "status": "quarantined",
+   "batches": "1",
+   "written_rows": "17",
+   "received": "0",
+   "accepted_unique": "0",
+   "duplicate": "0",
+   "checkpoints": "0"
+  },
+  {
+   "kind": "schema_refetch",
+   "status": "committed",
+   "batches": "1",
+   "written_rows": "17",
+   "received": "17",
+   "accepted_unique": "15",
+   "duplicate": "2",
+   "checkpoints": "1"
+  }
+ ],
+ "01_ingestion_by_source__crash_replay": [
+  {
+   "aborted_batch": "b-0165",
+   "source_id": "src-orders",
+   "aborted_rows": "18",
+   "aborted_checkpoints": "0",
+   "replay_batch": "b-0166",
+   "replay_received": "18",
+   "replay_accepted": "15",
+   "replay_duplicate": "3",
+   "replay_quarantined": "0",
+   "previous_version": "42",
+   "replay_version": "43",
+   "version_step": "1",
+   "rows_classified_once": "true"
+  },
+  {
+   "aborted_batch": "b-0365",
+   "source_id": "src-orders",
+   "aborted_rows": "81",
+   "aborted_checkpoints": "0",
+   "replay_batch": "b-0366",
+   "replay_received": "81",
+   "replay_accepted": "75",
+   "replay_duplicate": "3",
+   "replay_quarantined": "3",
+   "previous_version": "93",
+   "replay_version": "94",
+   "version_step": "1",
+   "rows_classified_once": "true"
+  },
+  {
+   "aborted_batch": "b-0453",
+   "source_id": "src-shipments",
+   "aborted_rows": "10",
+   "aborted_checkpoints": "0",
+   "replay_batch": "b-0454",
+   "replay_received": "10",
+   "replay_accepted": "10",
+   "replay_duplicate": "0",
+   "replay_quarantined": "0",
+   "previous_version": "78",
+   "replay_version": "79",
+   "version_step": "1",
+   "rows_classified_once": "true"
+  },
+  {
+   "aborted_batch": "b-0596",
+   "source_id": "src-orders",
+   "aborted_rows": "71",
+   "aborted_checkpoints": "0",
+   "replay_batch": "b-0597",
+   "replay_received": "71",
+   "replay_accepted": "69",
+   "replay_duplicate": "1",
+   "replay_quarantined": "1",
+   "previous_version": "152",
+   "replay_version": "153",
+   "version_step": "1",
+   "rows_classified_once": "true"
+  },
+  {
+   "aborted_batch": "b-0675",
+   "source_id": "src-refunds",
+   "aborted_rows": "26",
+   "aborted_checkpoints": "0",
+   "replay_batch": "b-0676",
+   "replay_received": "26",
+   "replay_accepted": "24",
+   "replay_duplicate": "1",
+   "replay_quarantined": "1",
+   "previous_version": "117",
+   "replay_version": "118",
+   "version_step": "1",
+   "rows_classified_once": "true"
+  },
+  {
+   "aborted_batch": "b-0714",
+   "source_id": "src-payments",
+   "aborted_rows": "34",
+   "aborted_checkpoints": "0",
+   "replay_batch": "b-0715",
+   "replay_received": "34",
+   "replay_accepted": "32",
+   "replay_duplicate": "2",
+   "replay_quarantined": "0",
+   "previous_version": "182",
+   "replay_version": "183",
+   "version_step": "1",
+   "rows_classified_once": "true"
+  },
+  {
+   "aborted_batch": "b-0759",
+   "source_id": "src-refunds",
+   "aborted_rows": "6",
+   "aborted_checkpoints": "0",
+   "replay_batch": "b-0760",
+   "replay_received": "6",
+   "replay_accepted": "5",
+   "replay_duplicate": "0",
+   "replay_quarantined": "1",
+   "previous_version": "131",
+   "replay_version": "132",
+   "version_step": "1",
+   "rows_classified_once": "true"
+  },
+  {
+   "aborted_batch": "b-0975",
+   "source_id": "src-refunds",
+   "aborted_rows": "27",
+   "aborted_checkpoints": "0",
+   "replay_batch": "b-0976",
+   "replay_received": "27",
+   "replay_accepted": "25",
+   "replay_duplicate": "2",
+   "replay_quarantined": "0",
+   "previous_version": "168",
+   "replay_version": "169",
+   "version_step": "1",
+   "rows_classified_once": "true"
+  }
+ ],
+ "02_run_funnel_by_failure_kind__funnel": [
+  {
+   "runs": "1343",
+   "reached_gate": "1328",
+   "allowed": "1318",
+   "blocked_at_gate": "10",
+   "failed_before_gate": "15",
+   "succeeded": "1318",
+   "failed": "25",
+   "published": "1318",
+   "backfill_runs": "13"
+  }
+ ],
+ "02_run_funnel_by_failure_kind__by_failure_kind": [
+  {
+   "stage": "blocked_at_gate",
+   "failure_kind": "freshness",
+   "runs": "5",
+   "incidents": "5",
+   "mean_duration_minutes": "9.3033",
+   "first_run": "run-0225",
+   "last_run": "run-1146"
+  },
+  {
+   "stage": "blocked_at_gate",
+   "failure_kind": "relationships",
+   "runs": "4",
+   "incidents": "4",
+   "mean_duration_minutes": "9.6333",
+   "first_run": "run-0780",
+   "last_run": "run-1232"
+  },
+  {
+   "stage": "blocked_at_gate",
+   "failure_kind": "residual",
+   "runs": "1",
+   "incidents": "1",
+   "mean_duration_minutes": "9.1833",
+   "first_run": "run-0731",
+   "last_run": "run-0731"
+  },
+  {
+   "stage": "failed_before_gate",
+   "failure_kind": "gate_infra",
+   "runs": "3",
+   "incidents": "3",
+   "mean_duration_minutes": "16.5000",
+   "first_run": "run-0206",
+   "last_run": "run-0655"
+  },
+  {
+   "stage": "failed_before_gate",
+   "failure_kind": "ingest",
+   "runs": "3",
+   "incidents": "3",
+   "mean_duration_minutes": "8.6667",
+   "first_run": "run-0179",
+   "last_run": "run-0510"
+  },
+  {
+   "stage": "failed_before_gate",
+   "failure_kind": "transform",
+   "runs": "9",
+   "incidents": "9",
+   "mean_duration_minutes": "19.2593",
+   "first_run": "run-0185",
+   "last_run": "run-1244"
+  }
+ ],
+ "02_run_funnel_by_failure_kind__gate_checks": [
+  {
+   "rule_name": "freshness_within_target",
+   "severity": "critical",
+   "gates": "1328",
+   "failed": "5",
+   "failed_share": "0.003765",
+   "eligible_total": "7279",
+   "failure_total": "5"
+  },
+  {
+   "rule_name": "keys_unique",
+   "severity": "critical",
+   "gates": "1328",
+   "failed": "0",
+   "failed_share": "0.000000",
+   "eligible_total": "441635",
+   "failure_total": "0"
+  },
+  {
+   "rule_name": "late_events_included",
+   "severity": "critical",
+   "gates": "1328",
+   "failed": "0",
+   "failed_share": "0.000000",
+   "eligible_total": "757",
+   "failure_total": "0"
+  },
+  {
+   "rule_name": "reconciliation_residual_zero",
+   "severity": "critical",
+   "gates": "1328",
+   "failed": "1",
+   "failed_share": "0.000753",
+   "eligible_total": "1328",
+   "failure_total": "1"
+  },
+  {
+   "rule_name": "relationships_intact",
+   "severity": "critical",
+   "gates": "1328",
+   "failed": "4",
+   "failed_share": "0.003012",
+   "eligible_total": "441635",
+   "failure_total": "4"
+  },
+  {
+   "rule_name": "scope_complete",
+   "severity": "critical",
+   "gates": "1328",
+   "failed": "0",
+   "failed_share": "0.000000",
+   "eligible_total": "18159",
+   "failure_total": "0"
+  },
+  {
+   "rule_name": "completeness_vs_expectation",
+   "severity": "warning",
+   "gates": "1328",
+   "failed": "1304",
+   "failed_share": "0.981928",
+   "eligible_total": "23821330",
+   "failure_total": "275219"
+  }
+ ],
+ "02_run_funnel_by_failure_kind__durations": [
+  {
+   "status": "failed",
+   "runs": "25",
+   "min_seconds": "428",
+   "max_seconds": "1325",
+   "mean_minutes": "13.7227"
+  },
+  {
+   "status": "success",
+   "runs": "1318",
+   "min_seconds": "660",
+   "max_seconds": "1327",
+   "mean_minutes": "13.9114"
+  }
+ ],
+ "02_run_funnel_by_failure_kind__failures_by_week": [
+  {
+   "week_start": "2026-08-10",
+   "runs": "167",
+   "failed": "0",
+   "blocked_at_gate": "0",
+   "failed_before_gate": "0"
+  },
+  {
+   "week_start": "2026-08-17",
+   "runs": "168",
+   "failed": "6",
+   "blocked_at_gate": "2",
+   "failed_before_gate": "4"
+  },
+  {
+   "week_start": "2026-08-24",
+   "runs": "168",
+   "failed": "2",
+   "blocked_at_gate": "0",
+   "failed_before_gate": "2"
+  },
+  {
+   "week_start": "2026-08-31",
+   "runs": "168",
+   "failed": "5",
+   "blocked_at_gate": "1",
+   "failed_before_gate": "4"
+  },
+  {
+   "week_start": "2026-09-07",
+   "runs": "168",
+   "failed": "4",
+   "blocked_at_gate": "3",
+   "failed_before_gate": "1"
+  },
+  {
+   "week_start": "2026-09-14",
+   "runs": "168",
+   "failed": "1",
+   "blocked_at_gate": "0",
+   "failed_before_gate": "1"
+  },
+  {
+   "week_start": "2026-09-21",
+   "runs": "168",
+   "failed": "3",
+   "blocked_at_gate": "1",
+   "failed_before_gate": "2"
+  },
+  {
+   "week_start": "2026-09-28",
+   "runs": "168",
+   "failed": "4",
+   "blocked_at_gate": "3",
+   "failed_before_gate": "1"
+  }
+ ],
+ "03_task_vs_attempt_success__overall": [
+  {
+   "tasks_terminal": "5332",
+   "tasks_successful": "5307",
+   "task_success_rate": "0.995311",
+   "attempts": "5462",
+   "attempts_successful": "5307",
+   "attempt_success_rate": "0.971622",
+   "tasks_retried": "115",
+   "retried_then_succeeded": "100"
+  }
+ ],
+ "03_task_vs_attempt_success__by_task": [
+  {
+   "task_name": "ingest",
+   "tasks": "1343",
+   "tasks_successful": "1340",
+   "task_success_rate": "0.997766",
+   "attempts": "1383",
+   "attempts_successful": "1340",
+   "attempt_success_rate": "0.968908",
+   "tasks_retried": "37"
+  },
+  {
+   "task_name": "publish",
+   "tasks": "1318",
+   "tasks_successful": "1318",
+   "task_success_rate": "1.000000",
+   "attempts": "1349",
+   "attempts_successful": "1318",
+   "attempt_success_rate": "0.977020",
+   "tasks_retried": "31"
+  },
+  {
+   "task_name": "quality_gate",
+   "tasks": "1331",
+   "tasks_successful": "1318",
+   "task_success_rate": "0.990233",
+   "attempts": "1337",
+   "attempts_successful": "1318",
+   "attempt_success_rate": "0.985789",
+   "tasks_retried": "3"
+  },
+  {
+   "task_name": "transform",
+   "tasks": "1340",
+   "tasks_successful": "1331",
+   "task_success_rate": "0.993284",
+   "attempts": "1393",
+   "attempts_successful": "1331",
+   "attempt_success_rate": "0.955492",
+   "tasks_retried": "44"
+  }
+ ],
+ "03_task_vs_attempt_success__retry_depth": [
+  {
+   "attempts": "1",
+   "tasks": "5217",
+   "ended_success": "5207",
+   "ended_failed": "10"
+  },
+  {
+   "attempts": "2",
+   "tasks": "100",
+   "ended_success": "100",
+   "ended_failed": "0"
+  },
+  {
+   "attempts": "3",
+   "tasks": "15",
+   "ended_success": "0",
+   "ended_failed": "15"
+  }
+ ],
+ "03_task_vs_attempt_success__run_level": [
+  {
+   "status": "failed",
+   "runs": "25",
+   "attempts": "90",
+   "attempts_successful": "35",
+   "attempt_success_rate": "0.388889"
+  },
+  {
+   "status": "success",
+   "runs": "1318",
+   "attempts": "5372",
+   "attempts_successful": "5272",
+   "attempt_success_rate": "0.981385"
+  }
+ ],
+ "04_freshness_vs_ingestion_age__ingestion_age": [
+  {
+   "source_id": "src-inventory",
+   "last_successful_ingestion_at": "2026-10-04T05:12:06Z",
+   "ingestion_age_seconds": "67674",
+   "ingestion_age_minutes": "1127.9000",
+   "checkpoint_version": "61",
+   "committed_batches": "61"
+  },
+  {
+   "source_id": "src-orders",
+   "last_successful_ingestion_at": "2026-10-04T20:08:33Z",
+   "ingestion_age_seconds": "13887",
+   "ingestion_age_minutes": "231.4500",
+   "checkpoint_version": "335",
+   "committed_batches": "335"
+  },
+  {
+   "source_id": "src-payments",
+   "last_successful_ingestion_at": "2026-10-04T22:09:22Z",
+   "ingestion_age_seconds": "6638",
+   "ingestion_age_minutes": "110.6333",
+   "checkpoint_version": "336",
+   "committed_batches": "336"
+  },
+  {
+   "source_id": "src-refunds",
+   "last_successful_ingestion_at": "2026-10-04T19:10:37Z",
+   "ingestion_age_seconds": "17363",
+   "ingestion_age_minutes": "289.3833",
+   "checkpoint_version": "228",
+   "committed_batches": "228"
+  },
+  {
+   "source_id": "src-shipments",
+   "last_successful_ingestion_at": "2026-10-04T21:14:29Z",
+   "ingestion_age_seconds": "9931",
+   "ingestion_age_minutes": "165.5167",
+   "checkpoint_version": "226",
+   "committed_batches": "226"
+  },
+  {
+   "source_id": "src-web-events",
+   "last_successful_ingestion_at": "2026-10-04T18:14:36Z",
+   "ingestion_age_seconds": "20724",
+   "ingestion_age_minutes": "345.4000",
+   "checkpoint_version": "116",
+   "committed_batches": "116"
+  }
+ ],
+ "04_freshness_vs_ingestion_age__freshness_vs_age": [
+  {
+   "source_id": "src-inventory",
+   "latest_accepted_event_at": "2026-10-04T01:59:57Z",
+   "freshness_seconds": "79203",
+   "freshness_minutes": "1320.0500",
+   "recorded_freshness_seconds": "79203",
+   "ingestion_age_seconds": "67674",
+   "recorded_ingestion_age_seconds": "67674",
+   "gap_seconds": "11529",
+   "freshness_target_seconds": "259200",
+   "over_target": "false",
+   "cadence_seconds": "86400",
+   "silent": "false"
+  },
+  {
+   "source_id": "src-orders",
+   "latest_accepted_event_at": "2026-10-04T19:58:06Z",
+   "freshness_seconds": "14514",
+   "freshness_minutes": "241.9000",
+   "recorded_freshness_seconds": "14514",
+   "ingestion_age_seconds": "13887",
+   "recorded_ingestion_age_seconds": "13887",
+   "gap_seconds": "627",
+   "freshness_target_seconds": "19800",
+   "over_target": "false",
+   "cadence_seconds": "14400",
+   "silent": "false"
+  },
+  {
+   "source_id": "src-payments",
+   "latest_accepted_event_at": "2026-10-04T21:50:34Z",
+   "freshness_seconds": "7766",
+   "freshness_minutes": "129.4333",
+   "recorded_freshness_seconds": "7766",
+   "ingestion_age_seconds": "6638",
+   "recorded_ingestion_age_seconds": "6638",
+   "gap_seconds": "1128",
+   "freshness_target_seconds": "21600",
+   "over_target": "false",
+   "cadence_seconds": "14400",
+   "silent": "false"
+  },
+  {
+   "source_id": "src-refunds",
+   "latest_accepted_event_at": "2026-10-01T23:07:02Z",
+   "freshness_seconds": "262378",
+   "freshness_minutes": "4372.9667",
+   "recorded_freshness_seconds": "262378",
+   "ingestion_age_seconds": "17363",
+   "recorded_ingestion_age_seconds": "17363",
+   "gap_seconds": "245015",
+   "freshness_target_seconds": "604800",
+   "over_target": "false",
+   "cadence_seconds": "21600",
+   "silent": "true"
+  },
+  {
+   "source_id": "src-shipments",
+   "latest_accepted_event_at": "2026-10-04T20:43:31Z",
+   "freshness_seconds": "11789",
+   "freshness_minutes": "196.4833",
+   "recorded_freshness_seconds": "11789",
+   "ingestion_age_seconds": "9931",
+   "recorded_ingestion_age_seconds": "9931",
+   "gap_seconds": "1858",
+   "freshness_target_seconds": "259200",
+   "over_target": "false",
+   "cadence_seconds": "21600",
+   "silent": "false"
+  },
+  {
+   "source_id": "src-web-events",
+   "latest_accepted_event_at": "2026-10-04T18:03:22Z",
+   "freshness_seconds": "21398",
+   "freshness_minutes": "356.6333",
+   "recorded_freshness_seconds": "21398",
+   "ingestion_age_seconds": "20724",
+   "recorded_ingestion_age_seconds": "20724",
+   "gap_seconds": "674",
+   "freshness_target_seconds": "216000",
+   "over_target": "false",
+   "cadence_seconds": "43200",
+   "silent": "false"
+  }
+ ],
+ "04_freshness_vs_ingestion_age__silent_source": [
+  {
+   "source_id": "src-refunds",
+   "silent_since": "2026-10-02T00:00:00Z",
+   "runs_since": "72",
+   "runs_succeeded": "72",
+   "runs_allowed_by_the_gate": "72",
+   "freshness_checks_passed": "72",
+   "committed_batches_since": "12",
+   "batches_with_no_accepted_record": "11",
+   "accepted_since": "16",
+   "duplicates_since": "156"
+  }
+ ],
+ "04_freshness_vs_ingestion_age__silent_partitions": [
+  {
+   "source_id": "src-refunds",
+   "partition": "2026-10-02",
+   "expected_records": "76"
+  },
+  {
+   "source_id": "src-refunds",
+   "partition": "2026-10-03",
+   "expected_records": "63"
+  },
+  {
+   "source_id": "src-refunds",
+   "partition": "2026-10-04",
+   "expected_records": "53"
+  }
+ ],
+ "04_freshness_vs_ingestion_age__completeness": [
+  {
+   "source_id": "src-inventory",
+   "partitions": "56",
+   "expected_records": "1645",
+   "accepted_records": "1630",
+   "completeness": "0.990881"
+  },
+  {
+   "source_id": "src-orders",
+   "partitions": "56",
+   "expected_records": "16176",
+   "accepted_records": "16066",
+   "completeness": "0.993200"
+  },
+  {
+   "source_id": "src-payments",
+   "partitions": "56",
+   "expected_records": "10207",
+   "accepted_records": "10125",
+   "completeness": "0.991966"
+  },
+  {
+   "source_id": "src-refunds",
+   "partitions": "56",
+   "expected_records": "4003",
+   "accepted_records": "3785",
+   "completeness": "0.945541"
+  },
+  {
+   "source_id": "src-shipments",
+   "partitions": "56",
+   "expected_records": "4004",
+   "accepted_records": "3985",
+   "completeness": "0.995255"
+  },
+  {
+   "source_id": "src-web-events",
+   "partitions": "56",
+   "expected_records": "1678",
+   "accepted_records": "1657",
+   "completeness": "0.987485"
+  }
+ ],
+ "05_publication_pointer_and_blocked_runs__summary": [
+  {
+   "runs": "1343",
+   "publications": "1318",
+   "runs_that_moved_the_pointer": "1318",
+   "runs_that_left_it": "25",
+   "pointer": "pub-1343",
+   "pointer_run": "run-1343",
+   "latest_publication": "pub-1343",
+   "publications_of_failed_or_blocked_runs": "0",
+   "first_published_at": "2026-08-10T01:30:34Z",
+   "last_published_at": "2026-10-04T23:34:14Z"
+  }
+ ],
+ "05_publication_pointer_and_blocked_runs__unmoved_runs": [
+  {
+   "run_id": "run-0179",
+   "started_at": "2026-08-17T11:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "ingest",
+   "failed_critical_check": "",
+   "pointer_before": "pub-0178",
+   "pointer_after": "pub-0178",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-001"
+  },
+  {
+   "run_id": "run-0185",
+   "started_at": "2026-08-17T17:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "transform",
+   "failed_critical_check": "",
+   "pointer_before": "pub-0184",
+   "pointer_after": "pub-0184",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-002"
+  },
+  {
+   "run_id": "run-0206",
+   "started_at": "2026-08-18T14:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "gate_infra",
+   "failed_critical_check": "",
+   "pointer_before": "pub-0205",
+   "pointer_after": "pub-0205",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-003"
+  },
+  {
+   "run_id": "run-0225",
+   "started_at": "2026-08-19T09:15:00Z",
+   "stage": "blocked_at_gate",
+   "failure_kind": "freshness",
+   "failed_critical_check": "freshness_within_target",
+   "pointer_before": "pub-0224",
+   "pointer_after": "pub-0224",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-004"
+  },
+  {
+   "run_id": "run-0250",
+   "started_at": "2026-08-20T10:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "transform",
+   "failed_critical_check": "",
+   "pointer_before": "pub-0249",
+   "pointer_after": "pub-0249",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-005"
+  },
+  {
+   "run_id": "run-0302",
+   "started_at": "2026-08-22T14:15:00Z",
+   "stage": "blocked_at_gate",
+   "failure_kind": "freshness",
+   "failed_critical_check": "freshness_within_target",
+   "pointer_before": "pub-0301",
+   "pointer_after": "pub-0301",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-006"
+  },
+  {
+   "run_id": "run-0346",
+   "started_at": "2026-08-24T10:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "transform",
+   "failed_critical_check": "",
+   "pointer_before": "pub-0345",
+   "pointer_after": "pub-0345",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-007"
+  },
+  {
+   "run_id": "run-0438",
+   "started_at": "2026-08-28T06:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "ingest",
+   "failed_critical_check": "",
+   "pointer_before": "pub-0437",
+   "pointer_after": "pub-0437",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-008"
+  },
+  {
+   "run_id": "run-0510",
+   "started_at": "2026-08-31T06:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "ingest",
+   "failed_critical_check": "",
+   "pointer_before": "pub-0509",
+   "pointer_after": "pub-0509",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-009"
+  },
+  {
+   "run_id": "run-0520",
+   "started_at": "2026-08-31T16:15:00Z",
+   "stage": "blocked_at_gate",
+   "failure_kind": "freshness",
+   "failed_critical_check": "freshness_within_target",
+   "pointer_before": "pub-0519",
+   "pointer_after": "pub-0519",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-010"
+  },
+  {
+   "run_id": "run-0543",
+   "started_at": "2026-09-01T15:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "transform",
+   "failed_critical_check": "",
+   "pointer_before": "pub-0542",
+   "pointer_after": "pub-0542",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-011"
+  },
+  {
+   "run_id": "run-0573",
+   "started_at": "2026-09-02T21:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "gate_infra",
+   "failed_critical_check": "",
+   "pointer_before": "pub-0572",
+   "pointer_after": "pub-0572",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-012"
+  },
+  {
+   "run_id": "run-0655",
+   "started_at": "2026-09-06T07:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "gate_infra",
+   "failed_critical_check": "",
+   "pointer_before": "pub-0654",
+   "pointer_after": "pub-0654",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-013"
+  },
+  {
+   "run_id": "run-0687",
+   "started_at": "2026-09-07T15:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "transform",
+   "failed_critical_check": "",
+   "pointer_before": "pub-0686",
+   "pointer_after": "pub-0686",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-014"
+  },
+  {
+   "run_id": "run-0731",
+   "started_at": "2026-09-09T11:15:00Z",
+   "stage": "blocked_at_gate",
+   "failure_kind": "residual",
+   "failed_critical_check": "reconciliation_residual_zero",
+   "pointer_before": "pub-0730",
+   "pointer_after": "pub-0730",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-015"
+  },
+  {
+   "run_id": "run-0780",
+   "started_at": "2026-09-11T12:15:00Z",
+   "stage": "blocked_at_gate",
+   "failure_kind": "relationships",
+   "failed_critical_check": "relationships_intact",
+   "pointer_before": "pub-0779",
+   "pointer_after": "pub-0779",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-016"
+  },
+  {
+   "run_id": "run-0832",
+   "started_at": "2026-09-13T16:15:00Z",
+   "stage": "blocked_at_gate",
+   "failure_kind": "freshness",
+   "failed_critical_check": "freshness_within_target",
+   "pointer_before": "pub-0831",
+   "pointer_after": "pub-0831",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-017"
+  },
+  {
+   "run_id": "run-0997",
+   "started_at": "2026-09-20T13:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "transform",
+   "failed_critical_check": "",
+   "pointer_before": "pub-0996",
+   "pointer_after": "pub-0996",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-018"
+  },
+  {
+   "run_id": "run-1139",
+   "started_at": "2026-09-26T11:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "transform",
+   "failed_critical_check": "",
+   "pointer_before": "pub-1138",
+   "pointer_after": "pub-1138",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-019"
+  },
+  {
+   "run_id": "run-1146",
+   "started_at": "2026-09-26T18:15:00Z",
+   "stage": "blocked_at_gate",
+   "failure_kind": "freshness",
+   "failed_critical_check": "freshness_within_target",
+   "pointer_before": "pub-1145",
+   "pointer_after": "pub-1145",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-020"
+  },
+  {
+   "run_id": "run-1159",
+   "started_at": "2026-09-27T07:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "transform",
+   "failed_critical_check": "",
+   "pointer_before": "pub-1158",
+   "pointer_after": "pub-1158",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-021"
+  },
+  {
+   "run_id": "run-1187",
+   "started_at": "2026-09-28T11:15:00Z",
+   "stage": "blocked_at_gate",
+   "failure_kind": "relationships",
+   "failed_critical_check": "relationships_intact",
+   "pointer_before": "pub-1186",
+   "pointer_after": "pub-1186",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-022"
+  },
+  {
+   "run_id": "run-1206",
+   "started_at": "2026-09-29T06:15:00Z",
+   "stage": "blocked_at_gate",
+   "failure_kind": "relationships",
+   "failed_critical_check": "relationships_intact",
+   "pointer_before": "pub-1205",
+   "pointer_after": "pub-1205",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-023"
+  },
+  {
+   "run_id": "run-1232",
+   "started_at": "2026-09-30T08:15:00Z",
+   "stage": "blocked_at_gate",
+   "failure_kind": "relationships",
+   "failed_critical_check": "relationships_intact",
+   "pointer_before": "pub-1231",
+   "pointer_after": "pub-1231",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-024"
+  },
+  {
+   "run_id": "run-1244",
+   "started_at": "2026-09-30T20:15:00Z",
+   "stage": "failed_before_gate",
+   "failure_kind": "transform",
+   "failed_critical_check": "",
+   "pointer_before": "pub-1243",
+   "pointer_after": "pub-1243",
+   "pointer_unchanged": "true",
+   "publication_exists": "false",
+   "incident_id": "inc-025"
+  }
+ ],
+ "05_publication_pointer_and_blocked_runs__designed_blocked_run": [
+  {
+   "run_id": "run-1187",
+   "failure_kind": "relationships",
+   "relationships_eligible": "206",
+   "relationships_failed": "1",
+   "gate_decision": "blocked",
+   "pointer_before": "pub-1186",
+   "pointer_after": "pub-1186",
+   "publication_exists": "false",
+   "incident_id": "inc-022",
+   "recovery_run_id": "run-1188",
+   "detected_at": "2026-09-28T11:24:42Z"
+  }
+ ],
+ "05_publication_pointer_and_blocked_runs__pointer_staleness": [
+  {
+   "unmoved_runs": "25",
+   "min_seconds": "6798",
+   "max_seconds": "7595",
+   "mean_minutes": "120.1453"
+  }
+ ],
+ "06_incidents_and_verified_recovery__incidents": [
+  {
+   "incident_id": "inc-001",
+   "run_id": "run-0179",
+   "failure_kind": "ingest",
+   "severity": "medium",
+   "status": "closed",
+   "detected_at": "2026-08-17T11:22:08Z",
+   "recovery_run_id": "run-0180",
+   "first_verified_run": "run-0180",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-08-17T12:29:34Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "4046",
+   "recovery_minutes": "67.4333"
+  },
+  {
+   "incident_id": "inc-002",
+   "run_id": "run-0185",
+   "failure_kind": "transform",
+   "severity": "high",
+   "status": "closed",
+   "detected_at": "2026-08-17T17:30:41Z",
+   "recovery_run_id": "run-0186",
+   "first_verified_run": "run-0186",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-08-17T18:30:02Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3561",
+   "recovery_minutes": "59.3500"
+  },
+  {
+   "incident_id": "inc-003",
+   "run_id": "run-0206",
+   "failure_kind": "gate_infra",
+   "severity": "medium",
+   "status": "closed",
+   "detected_at": "2026-08-18T14:32:45Z",
+   "recovery_run_id": "run-0207",
+   "first_verified_run": "run-0207",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-08-18T15:29:12Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3387",
+   "recovery_minutes": "56.4500"
+  },
+  {
+   "incident_id": "inc-004",
+   "run_id": "run-0225",
+   "failure_kind": "freshness",
+   "severity": "medium",
+   "status": "closed",
+   "detected_at": "2026-08-19T09:24:26Z",
+   "recovery_run_id": "run-0226",
+   "first_verified_run": "run-0226",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-08-19T10:27:55Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3809",
+   "recovery_minutes": "63.4833"
+  },
+  {
+   "incident_id": "inc-005",
+   "run_id": "run-0250",
+   "failure_kind": "transform",
+   "severity": "high",
+   "status": "closed",
+   "detected_at": "2026-08-20T10:35:18Z",
+   "recovery_run_id": "run-0251",
+   "first_verified_run": "run-0251",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-08-20T11:31:00Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3342",
+   "recovery_minutes": "55.7000"
+  },
+  {
+   "incident_id": "inc-006",
+   "run_id": "run-0302",
+   "failure_kind": "freshness",
+   "severity": "medium",
+   "status": "closed",
+   "detected_at": "2026-08-22T14:24:07Z",
+   "recovery_run_id": "run-0303",
+   "first_verified_run": "run-0303",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-08-22T15:30:43Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3996",
+   "recovery_minutes": "66.6000"
+  },
+  {
+   "incident_id": "inc-007",
+   "run_id": "run-0346",
+   "failure_kind": "transform",
+   "severity": "high",
+   "status": "closed",
+   "detected_at": "2026-08-24T10:33:25Z",
+   "recovery_run_id": "run-0347",
+   "first_verified_run": "run-0347",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-08-24T11:34:38Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3673",
+   "recovery_minutes": "61.2167"
+  },
+  {
+   "incident_id": "inc-008",
+   "run_id": "run-0438",
+   "failure_kind": "ingest",
+   "severity": "medium",
+   "status": "closed",
+   "detected_at": "2026-08-28T06:24:11Z",
+   "recovery_run_id": "run-0439",
+   "first_verified_run": "run-0439",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-08-28T07:29:59Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3948",
+   "recovery_minutes": "65.8000"
+  },
+  {
+   "incident_id": "inc-009",
+   "run_id": "run-0510",
+   "failure_kind": "ingest",
+   "severity": "medium",
+   "status": "closed",
+   "detected_at": "2026-08-31T06:24:41Z",
+   "recovery_run_id": "run-0511",
+   "first_verified_run": "run-0511",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-08-31T07:27:17Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3756",
+   "recovery_minutes": "62.6000"
+  },
+  {
+   "incident_id": "inc-010",
+   "run_id": "run-0520",
+   "failure_kind": "freshness",
+   "severity": "medium",
+   "status": "closed",
+   "detected_at": "2026-08-31T16:24:45Z",
+   "recovery_run_id": "run-0521",
+   "first_verified_run": "run-0521",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-08-31T17:30:13Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3928",
+   "recovery_minutes": "65.4667"
+  },
+  {
+   "incident_id": "inc-011",
+   "run_id": "run-0543",
+   "failure_kind": "transform",
+   "severity": "high",
+   "status": "closed",
+   "detected_at": "2026-09-01T15:32:57Z",
+   "recovery_run_id": "run-0544",
+   "first_verified_run": "run-0544",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-01T16:30:19Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3442",
+   "recovery_minutes": "57.3667"
+  },
+  {
+   "incident_id": "inc-012",
+   "run_id": "run-0573",
+   "failure_kind": "gate_infra",
+   "severity": "medium",
+   "status": "closed",
+   "detected_at": "2026-09-02T21:30:24Z",
+   "recovery_run_id": "run-0574",
+   "first_verified_run": "run-0574",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-02T22:27:51Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3447",
+   "recovery_minutes": "57.4500"
+  },
+  {
+   "incident_id": "inc-013",
+   "run_id": "run-0655",
+   "failure_kind": "gate_infra",
+   "severity": "medium",
+   "status": "closed",
+   "detected_at": "2026-09-06T07:31:21Z",
+   "recovery_run_id": "run-0656",
+   "first_verified_run": "run-0656",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-06T08:27:02Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3341",
+   "recovery_minutes": "55.6833"
+  },
+  {
+   "incident_id": "inc-014",
+   "run_id": "run-0687",
+   "failure_kind": "transform",
+   "severity": "high",
+   "status": "closed",
+   "detected_at": "2026-09-07T15:31:13Z",
+   "recovery_run_id": "run-0688",
+   "first_verified_run": "run-0688",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-07T16:30:11Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3538",
+   "recovery_minutes": "58.9667"
+  },
+  {
+   "incident_id": "inc-015",
+   "run_id": "run-0731",
+   "failure_kind": "residual",
+   "severity": "critical",
+   "status": "closed",
+   "detected_at": "2026-09-09T11:24:11Z",
+   "recovery_run_id": "run-0732",
+   "first_verified_run": "run-0732",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-09T12:27:17Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3786",
+   "recovery_minutes": "63.1000"
+  },
+  {
+   "incident_id": "inc-016",
+   "run_id": "run-0780",
+   "failure_kind": "relationships",
+   "severity": "high",
+   "status": "closed",
+   "detected_at": "2026-09-11T12:23:52Z",
+   "recovery_run_id": "run-0781",
+   "first_verified_run": "run-0781",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-11T13:29:16Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3924",
+   "recovery_minutes": "65.4000"
+  },
+  {
+   "incident_id": "inc-017",
+   "run_id": "run-0832",
+   "failure_kind": "freshness",
+   "severity": "medium",
+   "status": "closed",
+   "detected_at": "2026-09-13T16:24:26Z",
+   "recovery_run_id": "run-0833",
+   "first_verified_run": "run-0833",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-13T17:30:23Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3957",
+   "recovery_minutes": "65.9500"
+  },
+  {
+   "incident_id": "inc-018",
+   "run_id": "run-0997",
+   "failure_kind": "transform",
+   "severity": "high",
+   "status": "closed",
+   "detected_at": "2026-09-20T13:36:05Z",
+   "recovery_run_id": "run-0998",
+   "first_verified_run": "run-0998",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-20T14:26:56Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3051",
+   "recovery_minutes": "50.8500"
+  },
+  {
+   "incident_id": "inc-019",
+   "run_id": "run-1139",
+   "failure_kind": "transform",
+   "severity": "high",
+   "status": "closed",
+   "detected_at": "2026-09-26T11:35:25Z",
+   "recovery_run_id": "run-1140",
+   "first_verified_run": "run-1140",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-26T12:28:31Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3186",
+   "recovery_minutes": "53.1000"
+  },
+  {
+   "incident_id": "inc-020",
+   "run_id": "run-1146",
+   "failure_kind": "freshness",
+   "severity": "medium",
+   "status": "closed",
+   "detected_at": "2026-09-26T18:23:47Z",
+   "recovery_run_id": "run-1147",
+   "first_verified_run": "run-1147",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-26T19:36:11Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "4344",
+   "recovery_minutes": "72.4000"
+  },
+  {
+   "incident_id": "inc-021",
+   "run_id": "run-1159",
+   "failure_kind": "transform",
+   "severity": "high",
+   "status": "closed",
+   "detected_at": "2026-09-27T07:37:05Z",
+   "recovery_run_id": "run-1160",
+   "first_verified_run": "run-1160",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-27T08:28:02Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3057",
+   "recovery_minutes": "50.9500"
+  },
+  {
+   "incident_id": "inc-022",
+   "run_id": "run-1187",
+   "failure_kind": "relationships",
+   "severity": "high",
+   "status": "closed",
+   "detected_at": "2026-09-28T11:24:42Z",
+   "recovery_run_id": "run-1188",
+   "first_verified_run": "run-1188",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-28T12:32:35Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "4073",
+   "recovery_minutes": "67.8833"
+  },
+  {
+   "incident_id": "inc-023",
+   "run_id": "run-1206",
+   "failure_kind": "relationships",
+   "severity": "high",
+   "status": "closed",
+   "detected_at": "2026-09-29T06:25:29Z",
+   "recovery_run_id": "run-1207",
+   "first_verified_run": "run-1207",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-29T07:26:26Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3657",
+   "recovery_minutes": "60.9500"
+  },
+  {
+   "incident_id": "inc-024",
+   "run_id": "run-1232",
+   "failure_kind": "relationships",
+   "severity": "high",
+   "status": "closed",
+   "detected_at": "2026-09-30T08:24:29Z",
+   "recovery_run_id": "run-1233",
+   "first_verified_run": "run-1233",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-30T09:26:39Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3730",
+   "recovery_minutes": "62.1667"
+  },
+  {
+   "incident_id": "inc-025",
+   "run_id": "run-1244",
+   "failure_kind": "transform",
+   "severity": "high",
+   "status": "closed",
+   "detected_at": "2026-09-30T20:36:11Z",
+   "recovery_run_id": "run-1245",
+   "first_verified_run": "run-1245",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-09-30T21:26:56Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "3045",
+   "recovery_minutes": "50.7500"
+  }
+ ],
+ "06_incidents_and_verified_recovery__summary": [
+  {
+   "incidents": "25",
+   "open": "0",
+   "closed": "25",
+   "verified": "25",
+   "closures_consistent": "25",
+   "mean_recovery_minutes": "60.6827",
+   "min_recovery_minutes": "50.7500",
+   "max_recovery_minutes": "72.4000"
+  }
+ ],
+ "06_incidents_and_verified_recovery__by_failure_kind": [
+  {
+   "failure_kind": "freshness",
+   "stage": "blocked_at_gate",
+   "incidents": "5",
+   "mean_recovery_minutes": "66.7800",
+   "min_recovery_minutes": "63.4833",
+   "max_recovery_minutes": "72.4000"
+  },
+  {
+   "failure_kind": "gate_infra",
+   "stage": "failed_before_gate",
+   "incidents": "3",
+   "mean_recovery_minutes": "56.5278",
+   "min_recovery_minutes": "55.6833",
+   "max_recovery_minutes": "57.4500"
+  },
+  {
+   "failure_kind": "ingest",
+   "stage": "failed_before_gate",
+   "incidents": "3",
+   "mean_recovery_minutes": "65.2778",
+   "min_recovery_minutes": "62.6000",
+   "max_recovery_minutes": "67.4333"
+  },
+  {
+   "failure_kind": "relationships",
+   "stage": "blocked_at_gate",
+   "incidents": "4",
+   "mean_recovery_minutes": "64.1000",
+   "min_recovery_minutes": "60.9500",
+   "max_recovery_minutes": "67.8833"
+  },
+  {
+   "failure_kind": "residual",
+   "stage": "blocked_at_gate",
+   "incidents": "1",
+   "mean_recovery_minutes": "63.1000",
+   "min_recovery_minutes": "63.1000",
+   "max_recovery_minutes": "63.1000"
+  },
+  {
+   "failure_kind": "transform",
+   "stage": "failed_before_gate",
+   "incidents": "9",
+   "mean_recovery_minutes": "55.3611",
+   "min_recovery_minutes": "50.7500",
+   "max_recovery_minutes": "61.2167"
+  }
+ ],
+ "06_incidents_and_verified_recovery__residual_candidate": [
+  {
+   "run_id": "run-0731",
+   "day": "2026-09-09",
+   "source_total": "23694.91",
+   "exclusions_total": "1137.66",
+   "stored_candidate_total": "22698.71",
+   "recorded_published_total": "22698.71",
+   "residual": "-141.46",
+   "recorded_residual": "-141.46",
+   "stage": "blocked_at_gate",
+   "failure_kind": "residual",
+   "incident_id": "inc-015",
+   "publications_of_the_run": "0"
+  }
+ ],
+ "07_backfill_coverage_and_refused_overlaps__requests": [
+  {
+   "backfill_id": "bf-001",
+   "source_id": "src-shipments",
+   "outcome": "accepted",
+   "start_day": "2026-08-15",
+   "end_day": "2026-08-16",
+   "requested_partitions": "1",
+   "verified_partitions": "1",
+   "coverage": "1.000000",
+   "status": "complete",
+   "requested_at": "2026-08-19T09:59:05Z",
+   "settled_at": "2026-08-19T11:29:53Z",
+   "run_id": "run-0227"
+  },
+  {
+   "backfill_id": "bf-002",
+   "source_id": "src-web-events",
+   "outcome": "accepted",
+   "start_day": "2026-08-13",
+   "end_day": "2026-08-14",
+   "requested_partitions": "1",
+   "verified_partitions": "0",
+   "coverage": "0.000000",
+   "status": "partial",
+   "requested_at": "2026-08-22T04:38:39Z",
+   "settled_at": "2026-08-22T06:30:00Z",
+   "run_id": "run-0294"
+  },
+  {
+   "backfill_id": "bf-003",
+   "source_id": "src-inventory",
+   "outcome": "accepted",
+   "start_day": "2026-08-20",
+   "end_day": "2026-08-21",
+   "requested_partitions": "1",
+   "verified_partitions": "1",
+   "coverage": "1.000000",
+   "status": "complete",
+   "requested_at": "2026-08-24T23:38:41Z",
+   "settled_at": "2026-08-25T01:26:32Z",
+   "run_id": "run-0361"
+  },
+  {
+   "backfill_id": "bf-004",
+   "source_id": "src-inventory",
+   "outcome": "accepted",
+   "start_day": "2026-08-22",
+   "end_day": "2026-08-23",
+   "requested_partitions": "1",
+   "verified_partitions": "0",
+   "coverage": "0.000000",
+   "status": "partial",
+   "requested_at": "2026-08-27T18:18:25Z",
+   "settled_at": "2026-08-27T20:26:17Z",
+   "run_id": "run-0428"
+  },
+  {
+   "backfill_id": "bf-005",
+   "source_id": "src-refunds",
+   "outcome": "accepted",
+   "start_day": "2026-08-24",
+   "end_day": "2026-08-26",
+   "requested_partitions": "2",
+   "verified_partitions": "2",
+   "coverage": "1.000000",
+   "status": "complete",
+   "requested_at": "2026-08-30T09:32:45Z",
+   "settled_at": "2026-08-30T11:27:13Z",
+   "run_id": "run-0491"
+  },
+  {
+   "backfill_id": "bf-006",
+   "source_id": "src-inventory",
+   "outcome": "refused",
+   "start_day": "2026-08-22",
+   "end_day": "2026-08-24",
+   "requested_partitions": "2",
+   "verified_partitions": "0",
+   "coverage": "",
+   "status": "requested",
+   "requested_at": "2026-08-27T19:25:34Z",
+   "settled_at": "",
+   "run_id": ""
+  },
+  {
+   "backfill_id": "bf-007",
+   "source_id": "src-inventory",
+   "outcome": "accepted",
+   "start_day": "2026-08-28",
+   "end_day": "2026-08-29",
+   "requested_partitions": "1",
+   "verified_partitions": "1",
+   "coverage": "1.000000",
+   "status": "complete",
+   "requested_at": "2026-09-04T21:35:34Z",
+   "settled_at": "2026-09-04T23:26:45Z",
+   "run_id": "run-0623"
+  },
+  {
+   "backfill_id": "bf-008",
+   "source_id": "src-inventory",
+   "outcome": "accepted",
+   "start_day": "2026-09-03",
+   "end_day": "2026-09-04",
+   "requested_partitions": "1",
+   "verified_partitions": "1",
+   "coverage": "1.000000",
+   "status": "complete",
+   "requested_at": "2026-09-07T16:11:26Z",
+   "settled_at": "2026-09-07T18:30:41Z",
+   "run_id": "run-0690"
+  },
+  {
+   "backfill_id": "bf-009",
+   "source_id": "src-web-events",
+   "outcome": "accepted",
+   "start_day": "2026-08-21",
+   "end_day": "2026-08-22",
+   "requested_partitions": "1",
+   "verified_partitions": "1",
+   "coverage": "1.000000",
+   "status": "complete",
+   "requested_at": "2026-09-10T10:10:23Z",
+   "settled_at": "2026-09-10T12:27:20Z",
+   "run_id": "run-0756"
+  },
+  {
+   "backfill_id": "bf-010",
+   "source_id": "src-web-events",
+   "outcome": "accepted",
+   "start_day": "2026-08-26",
+   "end_day": "2026-08-27",
+   "requested_partitions": "1",
+   "verified_partitions": "1",
+   "coverage": "1.000000",
+   "status": "complete",
+   "requested_at": "2026-09-13T05:33:23Z",
+   "settled_at": "2026-09-13T07:26:02Z",
+   "run_id": "run-0823"
+  },
+  {
+   "backfill_id": "bf-011",
+   "source_id": "src-web-events",
+   "outcome": "accepted",
+   "start_day": "2026-09-07",
+   "end_day": "2026-09-08",
+   "requested_partitions": "1",
+   "verified_partitions": "0",
+   "coverage": "0.000000",
+   "status": "partial",
+   "requested_at": "2026-09-16T00:37:17Z",
+   "settled_at": "2026-09-16T02:26:31Z",
+   "run_id": "run-0890"
+  },
+  {
+   "backfill_id": "bf-012",
+   "source_id": "src-web-events",
+   "outcome": "refused",
+   "start_day": "2026-08-26",
+   "end_day": "2026-08-28",
+   "requested_partitions": "2",
+   "verified_partitions": "0",
+   "coverage": "",
+   "status": "requested",
+   "requested_at": "2026-09-13T06:40:44Z",
+   "settled_at": "",
+   "run_id": ""
+  },
+  {
+   "backfill_id": "bf-013",
+   "source_id": "src-inventory",
+   "outcome": "accepted",
+   "start_day": "2026-09-17",
+   "end_day": "2026-09-18",
+   "requested_partitions": "1",
+   "verified_partitions": "0",
+   "coverage": "0.000000",
+   "status": "partial",
+   "requested_at": "2026-09-21T12:22:52Z",
+   "settled_at": "2026-09-21T14:26:43Z",
+   "run_id": "run-1022"
+  },
+  {
+   "backfill_id": "bf-014",
+   "source_id": "src-shipments",
+   "outcome": "accepted",
+   "start_day": "2026-09-10",
+   "end_day": "2026-09-11",
+   "requested_partitions": "1",
+   "verified_partitions": "1",
+   "coverage": "1.000000",
+   "status": "complete",
+   "requested_at": "2026-09-24T05:30:36Z",
+   "settled_at": "2026-09-24T07:30:10Z",
+   "run_id": "run-1087"
+  },
+  {
+   "backfill_id": "bf-015",
+   "source_id": "src-refunds",
+   "outcome": "accepted",
+   "start_day": "2026-09-22",
+   "end_day": "2026-09-24",
+   "requested_partitions": "2",
+   "verified_partitions": "2",
+   "coverage": "1.000000",
+   "status": "complete",
+   "requested_at": "2026-09-26T23:02:08Z",
+   "settled_at": "2026-09-27T01:30:22Z",
+   "run_id": "run-1153"
+  }
+ ],
+ "07_backfill_coverage_and_refused_overlaps__coverage_summary": [
+  {
+   "accepted_requests": "13",
+   "requested_partitions": "15",
+   "verified_partitions": "11",
+   "coverage": "0.733333",
+   "refused_requests": "2",
+   "refused_partitions": "4",
+   "requests_complete": "9",
+   "requests_partial": "4",
+   "backfill_runs": "13"
+  }
+ ],
+ "07_backfill_coverage_and_refused_overlaps__by_source": [
+  {
+   "source_id": "src-inventory",
+   "accepted_requests": "5",
+   "requested_partitions": "5",
+   "verified_partitions": "3",
+   "coverage": "0.600000",
+   "refused_requests": "1"
+  },
+  {
+   "source_id": "src-refunds",
+   "accepted_requests": "2",
+   "requested_partitions": "4",
+   "verified_partitions": "4",
+   "coverage": "1.000000",
+   "refused_requests": "0"
+  },
+  {
+   "source_id": "src-shipments",
+   "accepted_requests": "2",
+   "requested_partitions": "2",
+   "verified_partitions": "2",
+   "coverage": "1.000000",
+   "refused_requests": "0"
+  },
+  {
+   "source_id": "src-web-events",
+   "accepted_requests": "4",
+   "requested_partitions": "4",
+   "verified_partitions": "2",
+   "coverage": "0.500000",
+   "refused_requests": "1"
+  }
+ ],
+ "07_backfill_coverage_and_refused_overlaps__unverified_partitions": [
+  {
+   "backfill_id": "bf-002",
+   "source_id": "src-web-events",
+   "partition": "2026-08-13",
+   "status": "partial"
+  },
+  {
+   "backfill_id": "bf-004",
+   "source_id": "src-inventory",
+   "partition": "2026-08-22",
+   "status": "partial"
+  },
+  {
+   "backfill_id": "bf-011",
+   "source_id": "src-web-events",
+   "partition": "2026-09-07",
+   "status": "partial"
+  },
+  {
+   "backfill_id": "bf-013",
+   "source_id": "src-inventory",
+   "partition": "2026-09-17",
+   "status": "partial"
+  }
+ ],
+ "07_backfill_coverage_and_refused_overlaps__refused_overlaps": [
+  {
+   "refused_request": "bf-006",
+   "source_id": "src-inventory",
+   "start_day": "2026-08-22",
+   "end_day": "2026-08-24",
+   "overlapped_request": "bf-004",
+   "overlapped_start_day": "2026-08-22",
+   "overlapped_end_day": "2026-08-23",
+   "shared_partitions": "1",
+   "seconds_before_the_overlapped_request_settled": "3643",
+   "overlapped_final_status": "partial",
+   "reason_code": "BACKFILL_OVERLAP"
+  },
+  {
+   "refused_request": "bf-012",
+   "source_id": "src-web-events",
+   "start_day": "2026-08-26",
+   "end_day": "2026-08-28",
+   "overlapped_request": "bf-010",
+   "overlapped_start_day": "2026-08-26",
+   "overlapped_end_day": "2026-08-27",
+   "shared_partitions": "1",
+   "seconds_before_the_overlapped_request_settled": "2718",
+   "overlapped_final_status": "complete",
+   "reason_code": "BACKFILL_OVERLAP"
+  }
+ ],
+ "07_backfill_coverage_and_refused_overlaps__accepted_pairs": [
+  {
+   "overlapping_pairs": "0",
+   "touching_pairs": "0",
+   "pairs_of_one_source": "18"
+  }
+ ],
+ "08_fetch_log_retry_after__statuses": [
+  {
+   "status": "cursor_loop",
+   "fetches": "1",
+   "sessions": "1",
+   "sources": "1",
+   "with_a_batch": "0"
+  },
+  {
+   "status": "ok",
+   "fetches": "1263",
+   "sessions": "1263",
+   "sources": "6",
+   "with_a_batch": "1263"
+  },
+  {
+   "status": "rate_limited",
+   "fetches": "49",
+   "sessions": "33",
+   "sources": "1",
+   "with_a_batch": "0"
+  },
+  {
+   "status": "refetch",
+   "fetches": "48",
+   "sessions": "48",
+   "sources": "6",
+   "with_a_batch": "48"
+  }
+ ],
+ "08_fetch_log_retry_after__by_source": [
+  {
+   "source_id": "src-inventory",
+   "fetches": "61",
+   "ok": "51",
+   "rate_limited": "0",
+   "refetch": "10",
+   "cursor_loop": "0"
+  },
+  {
+   "source_id": "src-orders",
+   "fetches": "338",
+   "ok": "335",
+   "rate_limited": "0",
+   "refetch": "3",
+   "cursor_loop": "0"
+  },
+  {
+   "source_id": "src-payments",
+   "fetches": "338",
+   "ok": "336",
+   "rate_limited": "0",
+   "refetch": "2",
+   "cursor_loop": "0"
+  },
+  {
+   "source_id": "src-refunds",
+   "fetches": "231",
+   "ok": "211",
+   "rate_limited": "0",
+   "refetch": "20",
+   "cursor_loop": "0"
+  },
+  {
+   "source_id": "src-shipments",
+   "fetches": "276",
+   "ok": "222",
+   "rate_limited": "49",
+   "refetch": "5",
+   "cursor_loop": "0"
+  },
+  {
+   "source_id": "src-web-events",
+   "fetches": "117",
+   "ok": "108",
+   "rate_limited": "0",
+   "refetch": "8",
+   "cursor_loop": "1"
+  }
+ ],
+ "08_fetch_log_retry_after__retries": [
+  {
+   "fetch_id": "61",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:10",
+   "cursor_value": "off-000166",
+   "retry_after_seconds": "120",
+   "rate_limited_at": "2026-08-12T15:06:24Z",
+   "retried_at": "2026-08-12T15:08:41Z",
+   "waited_seconds": "137",
+   "slack_seconds": "17",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "62",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:10",
+   "cursor_value": "off-000166",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-08-12T15:08:41Z",
+   "retried_at": "2026-08-12T15:09:13Z",
+   "waited_seconds": "32",
+   "slack_seconds": "2",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "74",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:12",
+   "cursor_value": "off-000213",
+   "retry_after_seconds": "60",
+   "rate_limited_at": "2026-08-13T03:06:13Z",
+   "retried_at": "2026-08-13T03:07:20Z",
+   "waited_seconds": "67",
+   "slack_seconds": "7",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "121",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:20",
+   "cursor_value": "off-000367",
+   "retry_after_seconds": "90",
+   "rate_limited_at": "2026-08-15T03:06:04Z",
+   "retried_at": "2026-08-15T03:07:59Z",
+   "waited_seconds": "115",
+   "slack_seconds": "25",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "134",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:22",
+   "cursor_value": "off-000387",
+   "retry_after_seconds": "60",
+   "rate_limited_at": "2026-08-15T15:08:02Z",
+   "retried_at": "2026-08-15T15:09:10Z",
+   "waited_seconds": "68",
+   "slack_seconds": "8",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "135",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:22",
+   "cursor_value": "off-000387",
+   "retry_after_seconds": "120",
+   "rate_limited_at": "2026-08-15T15:09:10Z",
+   "retried_at": "2026-08-15T15:11:33Z",
+   "waited_seconds": "143",
+   "slack_seconds": "23",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "154",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:25",
+   "cursor_value": "off-000440",
+   "retry_after_seconds": "60",
+   "rate_limited_at": "2026-08-16T09:07:28Z",
+   "retried_at": "2026-08-16T09:08:36Z",
+   "waited_seconds": "68",
+   "slack_seconds": "8",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "155",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:25",
+   "cursor_value": "off-000440",
+   "retry_after_seconds": "120",
+   "rate_limited_at": "2026-08-16T09:08:36Z",
+   "retried_at": "2026-08-16T09:10:36Z",
+   "waited_seconds": "120",
+   "slack_seconds": "0",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "185",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:30",
+   "cursor_value": "off-000513",
+   "retry_after_seconds": "90",
+   "rate_limited_at": "2026-08-17T15:08:14Z",
+   "retried_at": "2026-08-17T15:10:09Z",
+   "waited_seconds": "115",
+   "slack_seconds": "25",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "204",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:33",
+   "cursor_value": "off-000578",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-08-18T09:07:54Z",
+   "retried_at": "2026-08-18T09:08:27Z",
+   "waited_seconds": "33",
+   "slack_seconds": "3",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "205",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:33",
+   "cursor_value": "off-000578",
+   "retry_after_seconds": "90",
+   "rate_limited_at": "2026-08-18T09:08:27Z",
+   "retried_at": "2026-08-18T09:10:09Z",
+   "waited_seconds": "102",
+   "slack_seconds": "12",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "217",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:35",
+   "cursor_value": "off-000618",
+   "retry_after_seconds": "90",
+   "rate_limited_at": "2026-08-18T21:07:00Z",
+   "retried_at": "2026-08-18T21:08:45Z",
+   "waited_seconds": "105",
+   "slack_seconds": "15",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "223",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:36",
+   "cursor_value": "off-000639",
+   "retry_after_seconds": "120",
+   "rate_limited_at": "2026-08-19T03:08:01Z",
+   "retried_at": "2026-08-19T03:10:11Z",
+   "waited_seconds": "130",
+   "slack_seconds": "10",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "224",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:36",
+   "cursor_value": "off-000639",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-08-19T03:10:11Z",
+   "retried_at": "2026-08-19T03:10:52Z",
+   "waited_seconds": "41",
+   "slack_seconds": "11",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "249",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:40",
+   "cursor_value": "off-000714",
+   "retry_after_seconds": "90",
+   "rate_limited_at": "2026-08-20T03:07:09Z",
+   "retried_at": "2026-08-20T03:08:51Z",
+   "waited_seconds": "102",
+   "slack_seconds": "12",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "250",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:40",
+   "cursor_value": "off-000714",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-08-20T03:08:51Z",
+   "retried_at": "2026-08-20T03:09:21Z",
+   "waited_seconds": "30",
+   "slack_seconds": "0",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "258",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:41",
+   "cursor_value": "off-000723",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-08-20T09:06:09Z",
+   "retried_at": "2026-08-20T09:07:00Z",
+   "waited_seconds": "51",
+   "slack_seconds": "21",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "259",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:41",
+   "cursor_value": "off-000723",
+   "retry_after_seconds": "120",
+   "rate_limited_at": "2026-08-20T09:07:00Z",
+   "retried_at": "2026-08-20T09:09:03Z",
+   "waited_seconds": "123",
+   "slack_seconds": "3",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "283",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:45",
+   "cursor_value": "off-000794",
+   "retry_after_seconds": "90",
+   "rate_limited_at": "2026-08-21T09:08:07Z",
+   "retried_at": "2026-08-21T09:09:38Z",
+   "waited_seconds": "91",
+   "slack_seconds": "1",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "336",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:54",
+   "cursor_value": "off-000948",
+   "retry_after_seconds": "60",
+   "rate_limited_at": "2026-08-23T15:06:50Z",
+   "retried_at": "2026-08-23T15:08:13Z",
+   "waited_seconds": "83",
+   "slack_seconds": "23",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "580",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:95",
+   "cursor_value": "off-001693",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-09-02T21:07:04Z",
+   "retried_at": "2026-09-02T21:07:43Z",
+   "waited_seconds": "39",
+   "slack_seconds": "9",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "609",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:100",
+   "cursor_value": "off-001788",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-09-04T03:06:36Z",
+   "retried_at": "2026-09-04T03:07:24Z",
+   "waited_seconds": "48",
+   "slack_seconds": "18",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "658",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:108",
+   "cursor_value": "off-001929",
+   "retry_after_seconds": "90",
+   "rate_limited_at": "2026-09-06T03:07:30Z",
+   "retried_at": "2026-09-06T03:09:17Z",
+   "waited_seconds": "107",
+   "slack_seconds": "17",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "677",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:111",
+   "cursor_value": "off-001972",
+   "retry_after_seconds": "60",
+   "rate_limited_at": "2026-09-06T21:07:39Z",
+   "retried_at": "2026-09-06T21:08:55Z",
+   "waited_seconds": "76",
+   "slack_seconds": "16",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "720",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:118",
+   "cursor_value": "off-002085",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-09-08T15:07:56Z",
+   "retried_at": "2026-09-08T15:08:34Z",
+   "waited_seconds": "38",
+   "slack_seconds": "8",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "721",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:118",
+   "cursor_value": "off-002085",
+   "retry_after_seconds": "90",
+   "rate_limited_at": "2026-09-08T15:08:34Z",
+   "retried_at": "2026-09-08T15:10:15Z",
+   "waited_seconds": "101",
+   "slack_seconds": "11",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "817",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:134",
+   "cursor_value": "off-002382",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-09-12T15:06:21Z",
+   "retried_at": "2026-09-12T15:06:51Z",
+   "waited_seconds": "30",
+   "slack_seconds": "0",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "818",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:134",
+   "cursor_value": "off-002382",
+   "retry_after_seconds": "120",
+   "rate_limited_at": "2026-09-12T15:06:51Z",
+   "retried_at": "2026-09-12T15:09:12Z",
+   "waited_seconds": "141",
+   "slack_seconds": "21",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "825",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:135",
+   "cursor_value": "off-002408",
+   "retry_after_seconds": "120",
+   "rate_limited_at": "2026-09-12T21:06:01Z",
+   "retried_at": "2026-09-12T21:08:07Z",
+   "waited_seconds": "126",
+   "slack_seconds": "6",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "826",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:135",
+   "cursor_value": "off-002408",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-09-12T21:08:07Z",
+   "retried_at": "2026-09-12T21:08:59Z",
+   "waited_seconds": "52",
+   "slack_seconds": "22",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "880",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:144",
+   "cursor_value": "off-002563",
+   "retry_after_seconds": "120",
+   "rate_limited_at": "2026-09-15T03:06:29Z",
+   "retried_at": "2026-09-15T03:08:30Z",
+   "waited_seconds": "121",
+   "slack_seconds": "1",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "881",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:144",
+   "cursor_value": "off-002563",
+   "retry_after_seconds": "120",
+   "rate_limited_at": "2026-09-15T03:08:30Z",
+   "retried_at": "2026-09-15T03:10:45Z",
+   "waited_seconds": "135",
+   "slack_seconds": "15",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "906",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:148",
+   "cursor_value": "off-002640",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-09-16T03:06:15Z",
+   "retried_at": "2026-09-16T03:06:57Z",
+   "waited_seconds": "42",
+   "slack_seconds": "12",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "971",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:159",
+   "cursor_value": "off-002842",
+   "retry_after_seconds": "60",
+   "rate_limited_at": "2026-09-18T21:08:29Z",
+   "retried_at": "2026-09-18T21:09:42Z",
+   "waited_seconds": "73",
+   "slack_seconds": "13",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "977",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:160",
+   "cursor_value": "off-002866",
+   "retry_after_seconds": "90",
+   "rate_limited_at": "2026-09-19T03:07:32Z",
+   "retried_at": "2026-09-19T03:09:09Z",
+   "waited_seconds": "97",
+   "slack_seconds": "7",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "978",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:160",
+   "cursor_value": "off-002866",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-09-19T03:09:09Z",
+   "retried_at": "2026-09-19T03:09:42Z",
+   "waited_seconds": "33",
+   "slack_seconds": "3",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "997",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:163",
+   "cursor_value": "off-002911",
+   "retry_after_seconds": "60",
+   "rate_limited_at": "2026-09-19T21:08:22Z",
+   "retried_at": "2026-09-19T21:09:26Z",
+   "waited_seconds": "64",
+   "slack_seconds": "4",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "1069",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:175",
+   "cursor_value": "off-003113",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-09-22T21:07:18Z",
+   "retried_at": "2026-09-22T21:07:54Z",
+   "waited_seconds": "36",
+   "slack_seconds": "6",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "1177",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:193",
+   "cursor_value": "off-003436",
+   "retry_after_seconds": "90",
+   "rate_limited_at": "2026-09-27T09:07:41Z",
+   "retried_at": "2026-09-27T09:09:15Z",
+   "waited_seconds": "94",
+   "slack_seconds": "4",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "1178",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:193",
+   "cursor_value": "off-003436",
+   "retry_after_seconds": "60",
+   "rate_limited_at": "2026-09-27T09:09:15Z",
+   "retried_at": "2026-09-27T09:10:16Z",
+   "waited_seconds": "61",
+   "slack_seconds": "1",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "1202",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:197",
+   "cursor_value": "off-003501",
+   "retry_after_seconds": "60",
+   "rate_limited_at": "2026-09-28T09:06:51Z",
+   "retried_at": "2026-09-28T09:07:58Z",
+   "waited_seconds": "67",
+   "slack_seconds": "7",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "1208",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:198",
+   "cursor_value": "off-003511",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-09-28T15:06:54Z",
+   "retried_at": "2026-09-28T15:07:29Z",
+   "waited_seconds": "35",
+   "slack_seconds": "5",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "1220",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:200",
+   "cursor_value": "off-003565",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-09-29T03:06:55Z",
+   "retried_at": "2026-09-29T03:07:33Z",
+   "waited_seconds": "38",
+   "slack_seconds": "8",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "1221",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:200",
+   "cursor_value": "off-003565",
+   "retry_after_seconds": "90",
+   "rate_limited_at": "2026-09-29T03:07:33Z",
+   "retried_at": "2026-09-29T03:09:12Z",
+   "waited_seconds": "99",
+   "slack_seconds": "9",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "1240",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:203",
+   "cursor_value": "off-003619",
+   "retry_after_seconds": "120",
+   "rate_limited_at": "2026-09-29T21:07:30Z",
+   "retried_at": "2026-09-29T21:09:33Z",
+   "waited_seconds": "123",
+   "slack_seconds": "3",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "1253",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:205",
+   "cursor_value": "off-003655",
+   "retry_after_seconds": "30",
+   "rate_limited_at": "2026-09-30T09:07:24Z",
+   "retried_at": "2026-09-30T09:08:14Z",
+   "waited_seconds": "50",
+   "slack_seconds": "20",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "1254",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:205",
+   "cursor_value": "off-003655",
+   "retry_after_seconds": "120",
+   "rate_limited_at": "2026-09-30T09:08:14Z",
+   "retried_at": "2026-09-30T09:10:29Z",
+   "waited_seconds": "135",
+   "slack_seconds": "15",
+   "honoured": "true",
+   "retry_status": "ok"
+  },
+  {
+   "fetch_id": "1324",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:217",
+   "cursor_value": "off-003878",
+   "retry_after_seconds": "90",
+   "rate_limited_at": "2026-10-03T09:08:08Z",
+   "retried_at": "2026-10-03T09:09:55Z",
+   "waited_seconds": "107",
+   "slack_seconds": "17",
+   "honoured": "true",
+   "retry_status": "rate_limited"
+  },
+  {
+   "fetch_id": "1325",
+   "source_id": "src-shipments",
+   "session_id": "src-shipments:217",
+   "cursor_value": "off-003878",
+   "retry_after_seconds": "90",
+   "rate_limited_at": "2026-10-03T09:09:55Z",
+   "retried_at": "2026-10-03T09:11:40Z",
+   "waited_seconds": "105",
+   "slack_seconds": "15",
+   "honoured": "true",
+   "retry_status": "ok"
+  }
+ ],
+ "08_fetch_log_retry_after__retry_summary": [
+  {
+   "rate_limited_responses": "49",
+   "retries": "49",
+   "retries_honouring_retry_after": "49",
+   "retries_too_soon": "0",
+   "min_slack_seconds": "0",
+   "max_slack_seconds": "25",
+   "sessions_rate_limited": "33",
+   "sources_rate_limited": "1",
+   "source_id": "src-shipments",
+   "retries_rate_limited_again": "16"
+  }
+ ],
+ "08_fetch_log_retry_after__retry_by_hint": [
+  {
+   "retry_after_seconds": "30",
+   "responses": "16",
+   "min_slack_seconds": "0",
+   "max_slack_seconds": "22",
+   "honoured": "16"
+  },
+  {
+   "retry_after_seconds": "60",
+   "responses": "9",
+   "min_slack_seconds": "1",
+   "max_slack_seconds": "23",
+   "honoured": "9"
+  },
+  {
+   "retry_after_seconds": "90",
+   "responses": "13",
+   "min_slack_seconds": "1",
+   "max_slack_seconds": "25",
+   "honoured": "13"
+  },
+  {
+   "retry_after_seconds": "120",
+   "responses": "11",
+   "min_slack_seconds": "0",
+   "max_slack_seconds": "23",
+   "honoured": "11"
+  }
+ ],
+ "08_fetch_log_retry_after__refetch_vs_loop": [
+  {
+   "status": "cursor_loop",
+   "batch_kind": "no batch",
+   "fetches": "1",
+   "pointing_at_themselves": "0"
+  },
+  {
+   "status": "refetch",
+   "batch_kind": "backfill",
+   "fetches": "15",
+   "pointing_at_themselves": "15"
+  },
+  {
+   "status": "refetch",
+   "batch_kind": "live",
+   "fetches": "24",
+   "pointing_at_themselves": "11"
+  },
+  {
+   "status": "refetch",
+   "batch_kind": "replay",
+   "fetches": "8",
+   "pointing_at_themselves": "0"
+  },
+  {
+   "status": "refetch",
+   "batch_kind": "schema_refetch",
+   "fetches": "1",
+   "pointing_at_themselves": "0"
+  }
+ ],
+ "08_fetch_log_retry_after__refetch_check": [
+  {
+   "status": "cursor_loop",
+   "fetches": "1",
+   "cursor_served_before_by_another_session": "0",
+   "pointing_at_themselves": "0",
+   "refetch_conditions_met": "0",
+   "repeats_inside_its_session": "1"
+  },
+  {
+   "status": "ok",
+   "fetches": "1263",
+   "cursor_served_before_by_another_session": "0",
+   "pointing_at_themselves": "0",
+   "refetch_conditions_met": "0",
+   "repeats_inside_its_session": "0"
+  },
+  {
+   "status": "rate_limited",
+   "fetches": "49",
+   "cursor_served_before_by_another_session": "0",
+   "pointing_at_themselves": "0",
+   "refetch_conditions_met": "0",
+   "repeats_inside_its_session": "0"
+  },
+  {
+   "status": "refetch",
+   "fetches": "48",
+   "cursor_served_before_by_another_session": "34",
+   "pointing_at_themselves": "26",
+   "refetch_conditions_met": "48",
+   "repeats_inside_its_session": "0"
+  }
+ ],
+ "08_fetch_log_retry_after__cursor_loop": [
+  {
+   "loop_fetch": "577",
+   "source_id": "src-web-events",
+   "session_id": "src-web-events:47",
+   "looping_cursor": "off-000713",
+   "points_back_to": "off-000693",
+   "first_page_fetch": "576",
+   "first_page_cursor": "off-000693",
+   "first_page_next": "off-000713",
+   "first_page_at": "2026-09-02T18:21:04Z",
+   "loop_detected_at": "2026-09-02T18:21:49Z",
+   "no_batch_created": "true",
+   "rows_in_the_session": "2"
+  }
+ ],
+ "10_sample_scope_reconciliation__scope_rows": [
+  {
+   "source_id": "src-inventory",
+   "batches": "61",
+   "sampled_batches": "4",
+   "sampled_batches_with_rows": "4",
+   "world_rows": "1723",
+   "sample_rows": "86",
+   "sample_share": "0.049913"
+  },
+  {
+   "source_id": "src-orders",
+   "batches": "338",
+   "sampled_batches": "16",
+   "sampled_batches_with_rows": "16",
+   "world_rows": "16985",
+   "sample_rows": "1054",
+   "sample_share": "0.062055"
+  },
+  {
+   "source_id": "src-payments",
+   "batches": "338",
+   "sampled_batches": "12",
+   "sampled_batches_with_rows": "12",
+   "world_rows": "10856",
+   "sample_rows": "418",
+   "sample_share": "0.038504"
+  },
+  {
+   "source_id": "src-refunds",
+   "batches": "231",
+   "sampled_batches": "14",
+   "sampled_batches_with_rows": "6",
+   "world_rows": "4354",
+   "sample_rows": "152",
+   "sample_share": "0.034910"
+  },
+  {
+   "source_id": "src-shipments",
+   "batches": "227",
+   "sampled_batches": "8",
+   "sampled_batches_with_rows": "7",
+   "world_rows": "4420",
+   "sample_rows": "193",
+   "sample_share": "0.043665"
+  },
+  {
+   "source_id": "src-web-events",
+   "batches": "116",
+   "sampled_batches": "8",
+   "sampled_batches_with_rows": "5",
+   "world_rows": "1853",
+   "sample_rows": "97",
+   "sample_share": "0.052348"
+  }
+ ],
+ "10_sample_scope_reconciliation__scope_total": [
+  {
+   "batches": "1311",
+   "sampled_batches": "62",
+   "sampled_batches_with_rows": "50",
+   "world_rows": "40191",
+   "sample_rows": "2000",
+   "sample_share": "0.049762",
+   "sample_rows_in_uncounted_batches": "122"
+  }
+ ],
+ "10_sample_scope_reconciliation__classes_by_source": [
+  {
+   "source_id": "src-inventory",
+   "received": "86",
+   "world_accepted": "81",
+   "world_duplicate": "2",
+   "world_quarantined": "3",
+   "world_deleted": "0",
+   "sample_accepted": "83",
+   "sample_duplicate": "0",
+   "sample_quarantined": "3",
+   "sample_deleted": "0"
+  },
+  {
+   "source_id": "src-orders",
+   "received": "983",
+   "world_accepted": "948",
+   "world_duplicate": "23",
+   "world_quarantined": "10",
+   "world_deleted": "2",
+   "sample_accepted": "967",
+   "sample_duplicate": "4",
+   "sample_quarantined": "11",
+   "sample_deleted": "1"
+  },
+  {
+   "source_id": "src-payments",
+   "received": "367",
+   "world_accepted": "346",
+   "world_duplicate": "10",
+   "world_quarantined": "10",
+   "world_deleted": "1",
+   "sample_accepted": "356",
+   "sample_duplicate": "0",
+   "sample_quarantined": "11",
+   "sample_deleted": "0"
+  },
+  {
+   "source_id": "src-refunds",
+   "received": "152",
+   "world_accepted": "124",
+   "world_duplicate": "26",
+   "world_quarantined": "2",
+   "world_deleted": "0",
+   "sample_accepted": "131",
+   "sample_duplicate": "19",
+   "sample_quarantined": "2",
+   "sample_deleted": "0"
+  },
+  {
+   "source_id": "src-shipments",
+   "received": "193",
+   "world_accepted": "182",
+   "world_duplicate": "9",
+   "world_quarantined": "2",
+   "world_deleted": "0",
+   "sample_accepted": "191",
+   "sample_duplicate": "0",
+   "sample_quarantined": "2",
+   "sample_deleted": "0"
+  },
+  {
+   "source_id": "src-web-events",
+   "received": "97",
+   "world_accepted": "88",
+   "world_duplicate": "6",
+   "world_quarantined": "3",
+   "world_deleted": "0",
+   "sample_accepted": "94",
+   "sample_duplicate": "0",
+   "sample_quarantined": "3",
+   "sample_deleted": "0"
+  }
+ ],
+ "10_sample_scope_reconciliation__rates_by_scope": [
+  {
+   "scope": "complete world, 1,302 committed batches",
+   "received": "39901",
+   "accepted_unique": "37248",
+   "duplicate": "2101",
+   "quarantined": "429",
+   "rejection_rate": "0.010752",
+   "duplicate_rate": "0.052655"
+  },
+  {
+   "scope": "the sampled committed batches, classified with the full key history",
+   "received": "1878",
+   "accepted_unique": "1769",
+   "duplicate": "76",
+   "quarantined": "30",
+   "rejection_rate": "0.015974",
+   "duplicate_rate": "0.040469"
+  },
+  {
+   "scope": "the 2,000-row sample, classified from the loaded rows only",
+   "received": "1878",
+   "accepted_unique": "1822",
+   "duplicate": "23",
+   "quarantined": "32",
+   "rejection_rate": "0.017039",
+   "duplicate_rate": "0.012247"
+  }
+ ],
+ "10_sample_scope_reconciliation__quarantine_rows": [
+  {
+   "quarantine_rows": "446",
+   "in_sampled_batches": "47",
+   "in_unsampled_batches": "399",
+   "unsampled_in_committed_batches": "399",
+   "in_the_schema_quarantined_batch": "17"
+  }
+ ],
+ "10_sample_scope_reconciliation__publications": [
+  {
+   "publications": "1318",
+   "verifiable_from_the_sample": "0",
+   "partly_in_the_sample": "435",
+   "none_in_the_sample": "883"
+  }
+ ],
+ "10_sample_scope_reconciliation__freshness_on_the_sample": [
+  {
+   "source_id": "src-inventory",
+   "sample_latest_accepted_event_at": "2026-09-16T23:59:46Z",
+   "sample_freshness_seconds": "1555214",
+   "recorded_freshness_seconds": "79203"
+  },
+  {
+   "source_id": "src-orders",
+   "sample_latest_accepted_event_at": "2026-09-27T19:51:31Z",
+   "sample_freshness_seconds": "619709",
+   "recorded_freshness_seconds": "14514"
+  },
+  {
+   "source_id": "src-payments",
+   "sample_latest_accepted_event_at": "2026-09-24T05:57:01Z",
+   "sample_freshness_seconds": "928979",
+   "recorded_freshness_seconds": "7766"
+  },
+  {
+   "source_id": "src-refunds",
+   "sample_latest_accepted_event_at": "2026-10-01T23:07:02Z",
+   "sample_freshness_seconds": "262378",
+   "recorded_freshness_seconds": "262378"
+  },
+  {
+   "source_id": "src-shipments",
+   "sample_latest_accepted_event_at": "2026-10-02T08:43:47Z",
+   "sample_freshness_seconds": "227773",
+   "recorded_freshness_seconds": "11789"
+  },
+  {
+   "source_id": "src-web-events",
+   "sample_latest_accepted_event_at": "2026-09-27T23:58:39Z",
+   "sample_freshness_seconds": "604881",
+   "recorded_freshness_seconds": "21398"
+  }
+ ],
+ "10_sample_scope_reconciliation__processing_batch": [
+  {
+   "batch_id": "b-1121",
+   "measured_seconds": "2.573",
+   "cache_state": "cold",
+   "received": "102",
+   "world_accepted": "101",
+   "sample_accepted": "102",
+   "world_records_per_second": "39.253789",
+   "sample_records_per_second": "39.642441"
+  }
+ ],
+ "09_golden_known_answer__batches": [
+  {
+   "batch_id": "b-001",
+   "source_id": "src-orders",
+   "status": "committed",
+   "written_rows": "10",
+   "received": "10",
+   "accepted_unique": "8",
+   "duplicate": "1",
+   "quarantined": "1",
+   "rejection_rate": "0.100000",
+   "duplicate_rate": "0.100000"
+  },
+  {
+   "batch_id": "b-002",
+   "source_id": "src-orders",
+   "status": "committed",
+   "written_rows": "10",
+   "received": "10",
+   "accepted_unique": "0",
+   "duplicate": "9",
+   "quarantined": "1",
+   "rejection_rate": "0.100000",
+   "duplicate_rate": "0.900000"
+  },
+  {
+   "batch_id": "b-003",
+   "source_id": "src-orders",
+   "status": "aborted",
+   "written_rows": "10",
+   "received": "0",
+   "accepted_unique": "0",
+   "duplicate": "0",
+   "quarantined": "0",
+   "rejection_rate": "",
+   "duplicate_rate": ""
+  },
+  {
+   "batch_id": "b-101",
+   "source_id": "src-refunds",
+   "status": "committed",
+   "written_rows": "2",
+   "received": "2",
+   "accepted_unique": "1",
+   "duplicate": "0",
+   "quarantined": "1",
+   "rejection_rate": "0.500000",
+   "duplicate_rate": "0.000000"
+  }
+ ],
+ "09_golden_known_answer__sources": [
+  {
+   "source_id": "src-orders",
+   "committed_batches": "2",
+   "received": "20",
+   "accepted_unique": "8",
+   "duplicate": "10",
+   "quarantined": "2",
+   "quarantined_distinct_keys": "1",
+   "rejection_rate": "0.100000",
+   "duplicate_rate": "0.500000",
+   "checkpoint_version": "2"
+  },
+  {
+   "source_id": "src-refunds",
+   "committed_batches": "1",
+   "received": "2",
+   "accepted_unique": "1",
+   "duplicate": "0",
+   "quarantined": "1",
+   "quarantined_distinct_keys": "1",
+   "rejection_rate": "0.500000",
+   "duplicate_rate": "0.000000",
+   "checkpoint_version": "1"
+  }
+ ],
+ "09_golden_known_answer__replay_and_crash": [
+  {
+   "source_id": "src-orders",
+   "accepted_keys": "8",
+   "distinct_accepted_keys": "8",
+   "accepted_by_the_replay": "0",
+   "rows_written_by_the_crashed_batch": "10",
+   "checkpoints_of_the_crashed_batch": "0",
+   "new_keys_in_the_crashed_batch": "0",
+   "checkpoint_version": "2"
+  }
+ ],
+ "09_golden_known_answer__freshness": [
+  {
+   "source_id": "src-orders",
+   "latest_accepted_event_at": "2026-10-04T09:30:00Z",
+   "freshness_seconds": "52200",
+   "last_successful_ingestion_at": "2026-10-04T12:05:00Z",
+   "ingestion_age_seconds": "42900"
+  },
+  {
+   "source_id": "src-refunds",
+   "latest_accepted_event_at": "2026-10-04T09:10:00Z",
+   "freshness_seconds": "53400",
+   "last_successful_ingestion_at": "2026-10-04T11:05:00Z",
+   "ingestion_age_seconds": "46500"
+  }
+ ],
+ "09_golden_known_answer__completeness": [
+  {
+   "source_id": "src-orders",
+   "partition": "2026-10-04",
+   "expected_records": "9",
+   "accepted_records": "8",
+   "completeness": "0.888889"
+  },
+  {
+   "source_id": "src-refunds",
+   "partition": "2026-10-04",
+   "expected_records": "1",
+   "accepted_records": "1",
+   "completeness": "1.000000"
+  }
+ ],
+ "09_golden_known_answer__runs": [
+  {
+   "run_id": "run-001",
+   "status": "success",
+   "duration_seconds": "1200",
+   "tasks_terminal": "4",
+   "tasks_successful": "4",
+   "task_success_rate": "1.000000",
+   "attempts": "5",
+   "attempts_successful": "4",
+   "attempt_success_rate": "0.800000"
+  },
+  {
+   "run_id": "run-002",
+   "status": "failed",
+   "duration_seconds": "600",
+   "tasks_terminal": "3",
+   "tasks_successful": "2",
+   "task_success_rate": "0.666667",
+   "attempts": "3",
+   "attempts_successful": "2",
+   "attempt_success_rate": "0.666667"
+  },
+  {
+   "run_id": "run-003",
+   "status": "success",
+   "duration_seconds": "900",
+   "tasks_terminal": "4",
+   "tasks_successful": "4",
+   "task_success_rate": "1.000000",
+   "attempts": "4",
+   "attempts_successful": "4",
+   "attempt_success_rate": "1.000000"
+  }
+ ],
+ "09_golden_known_answer__runs_overall": [
+  {
+   "tasks_terminal": "11",
+   "tasks_successful": "10",
+   "task_success_rate": "0.909091",
+   "attempts": "12",
+   "attempts_successful": "10",
+   "attempt_success_rate": "0.833333"
+  }
+ ],
+ "09_golden_known_answer__gate_pointer": [
+  {
+   "run_id": "run-001",
+   "gate_decision": "allowed",
+   "critical_failures": "0",
+   "noncritical_failures": "1",
+   "publication_exists": "true",
+   "pointer_after": "pub-001"
+  },
+  {
+   "run_id": "run-002",
+   "gate_decision": "blocked",
+   "critical_failures": "1",
+   "noncritical_failures": "1",
+   "publication_exists": "false",
+   "pointer_after": "pub-001"
+  },
+  {
+   "run_id": "run-003",
+   "gate_decision": "allowed",
+   "critical_failures": "0",
+   "noncritical_failures": "1",
+   "publication_exists": "true",
+   "pointer_after": "pub-003"
+  }
+ ],
+ "09_golden_known_answer__publications": [
+  {
+   "publication_id": "pub-001",
+   "published_at": "2026-10-04T10:30:00Z",
+   "watermark": "2026-10-04T10:00:00Z",
+   "included_batches": "b-001",
+   "published_records": "8",
+   "latest_included_event_at": "2026-10-04T09:30:00Z",
+   "lag_seconds": "3600"
+  },
+  {
+   "publication_id": "pub-003",
+   "published_at": "2026-10-04T20:15:00Z",
+   "watermark": "2026-10-04T11:00:00Z",
+   "included_batches": "b-001,b-002,b-101",
+   "published_records": "9",
+   "latest_included_event_at": "2026-10-04T09:30:00Z",
+   "lag_seconds": "38700"
+  }
+ ],
+ "09_golden_known_answer__late_event": [
+  {
+   "source_id": "src-refunds",
+   "source_key": "REF-2001",
+   "batch_id": "b-101",
+   "event_at": "2026-10-04T09:10:00Z",
+   "arrival_at": "2026-10-04T11:05:00Z",
+   "behind_publication_id": "pub-001",
+   "watermark": "2026-10-04T10:00:00Z",
+   "included_in_publication_id": "pub-003"
+  }
+ ],
+ "09_golden_known_answer__reconciliation": [
+  {
+   "publication_id": "pub-001",
+   "source_total": "289.94",
+   "published_total": "289.97",
+   "quarantined": "-30.00",
+   "duplicates": "29.97",
+   "residual": "0.00"
+  },
+  {
+   "publication_id": "pub-003",
+   "source_total": "599.88",
+   "published_total": "301.97",
+   "quarantined": "-52.00",
+   "duplicates": "349.91",
+   "residual": "0.00"
+  }
+ ],
+ "09_golden_known_answer__recovery": [
+  {
+   "incident_id": "inc-001",
+   "run_id": "run-002",
+   "detected_at": "2026-10-04T12:20:00Z",
+   "recovery_run_id": "run-003",
+   "first_verified_run": "run-003",
+   "recovery_is_first_verified": "true",
+   "verified_at": "2026-10-04T20:15:00Z",
+   "closed_at_is_verified_instant": "true",
+   "recovery_seconds": "28500",
+   "recovery_minutes": "475.0000"
+  }
+ ],
+ "09_golden_known_answer__backfill_processing": [
+  {
+   "backfill_id": "bf-001",
+   "source_id": "src-orders",
+   "requested_partitions": "3",
+   "verified_partitions": "2",
+   "coverage": "0.666667",
+   "measured_batch": "b-001",
+   "measured_seconds": "12",
+   "accepted_records": "8",
+   "records_per_second": "0.666667",
+   "cache_state": "cold"
+  }
+ ],
+ "bi_measures": [
+  {
+   "measure": "received",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "39901",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "committed batches only"
+  },
+  {
+   "measure": "accepted_unique",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "37248",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "duplicate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "2101",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "quarantined",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "429",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "deleted",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "123",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "rejection_rate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "0.010752",
+   "numerator": "429",
+   "denominator": "39901",
+   "status": "value",
+   "note": "quarantined / received; the schema-quarantined batch is not in it"
+  },
+  {
+   "measure": "duplicate_rate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "0.052655",
+   "numerator": "2101",
+   "denominator": "39901",
+   "status": "value",
+   "note": "duplicate / received"
+  },
+  {
+   "measure": "received",
+   "slice": "src-inventory",
+   "scope": "complete_world",
+   "value": "1723",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "accepted_unique",
+   "slice": "src-inventory",
+   "scope": "complete_world",
+   "value": "1630",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "duplicate",
+   "slice": "src-inventory",
+   "scope": "complete_world",
+   "value": "72",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "quarantined",
+   "slice": "src-inventory",
+   "scope": "complete_world",
+   "value": "21",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "deleted",
+   "slice": "src-inventory",
+   "scope": "complete_world",
+   "value": "0",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "rejection_rate",
+   "slice": "src-inventory",
+   "scope": "complete_world",
+   "value": "0.012188",
+   "numerator": "21",
+   "denominator": "1723",
+   "status": "value",
+   "note": "quarantined / received; the schema-quarantined batch is not in it"
+  },
+  {
+   "measure": "duplicate_rate",
+   "slice": "src-inventory",
+   "scope": "complete_world",
+   "value": "0.041788",
+   "numerator": "72",
+   "denominator": "1723",
+   "status": "value",
+   "note": "duplicate / received"
+  },
+  {
+   "measure": "received",
+   "slice": "src-orders",
+   "scope": "complete_world",
+   "value": "16815",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "accepted_unique",
+   "slice": "src-orders",
+   "scope": "complete_world",
+   "value": "16066",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "duplicate",
+   "slice": "src-orders",
+   "scope": "complete_world",
+   "value": "502",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "quarantined",
+   "slice": "src-orders",
+   "scope": "complete_world",
+   "value": "181",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "deleted",
+   "slice": "src-orders",
+   "scope": "complete_world",
+   "value": "66",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "rejection_rate",
+   "slice": "src-orders",
+   "scope": "complete_world",
+   "value": "0.010764",
+   "numerator": "181",
+   "denominator": "16815",
+   "status": "value",
+   "note": "quarantined / received; the schema-quarantined batch is not in it"
+  },
+  {
+   "measure": "duplicate_rate",
+   "slice": "src-orders",
+   "scope": "complete_world",
+   "value": "0.029854",
+   "numerator": "502",
+   "denominator": "16815",
+   "status": "value",
+   "note": "duplicate / received"
+  },
+  {
+   "measure": "received",
+   "slice": "src-payments",
+   "scope": "complete_world",
+   "value": "10805",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "accepted_unique",
+   "slice": "src-payments",
+   "scope": "complete_world",
+   "value": "10125",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "duplicate",
+   "slice": "src-payments",
+   "scope": "complete_world",
+   "value": "522",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "quarantined",
+   "slice": "src-payments",
+   "scope": "complete_world",
+   "value": "123",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "deleted",
+   "slice": "src-payments",
+   "scope": "complete_world",
+   "value": "35",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "rejection_rate",
+   "slice": "src-payments",
+   "scope": "complete_world",
+   "value": "0.011384",
+   "numerator": "123",
+   "denominator": "10805",
+   "status": "value",
+   "note": "quarantined / received; the schema-quarantined batch is not in it"
+  },
+  {
+   "measure": "duplicate_rate",
+   "slice": "src-payments",
+   "scope": "complete_world",
+   "value": "0.048311",
+   "numerator": "522",
+   "denominator": "10805",
+   "status": "value",
+   "note": "duplicate / received"
+  },
+  {
+   "measure": "received",
+   "slice": "src-refunds",
+   "scope": "complete_world",
+   "value": "4295",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "accepted_unique",
+   "slice": "src-refunds",
+   "scope": "complete_world",
+   "value": "3785",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "duplicate",
+   "slice": "src-refunds",
+   "scope": "complete_world",
+   "value": "468",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "quarantined",
+   "slice": "src-refunds",
+   "scope": "complete_world",
+   "value": "42",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "deleted",
+   "slice": "src-refunds",
+   "scope": "complete_world",
+   "value": "0",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "rejection_rate",
+   "slice": "src-refunds",
+   "scope": "complete_world",
+   "value": "0.009779",
+   "numerator": "42",
+   "denominator": "4295",
+   "status": "value",
+   "note": "quarantined / received; the schema-quarantined batch is not in it"
+  },
+  {
+   "measure": "duplicate_rate",
+   "slice": "src-refunds",
+   "scope": "complete_world",
+   "value": "0.108964",
+   "numerator": "468",
+   "denominator": "4295",
+   "status": "value",
+   "note": "duplicate / received"
+  },
+  {
+   "measure": "received",
+   "slice": "src-shipments",
+   "scope": "complete_world",
+   "value": "4410",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "accepted_unique",
+   "slice": "src-shipments",
+   "scope": "complete_world",
+   "value": "3985",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "duplicate",
+   "slice": "src-shipments",
+   "scope": "complete_world",
+   "value": "368",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "quarantined",
+   "slice": "src-shipments",
+   "scope": "complete_world",
+   "value": "35",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "deleted",
+   "slice": "src-shipments",
+   "scope": "complete_world",
+   "value": "22",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "rejection_rate",
+   "slice": "src-shipments",
+   "scope": "complete_world",
+   "value": "0.007937",
+   "numerator": "35",
+   "denominator": "4410",
+   "status": "value",
+   "note": "quarantined / received; the schema-quarantined batch is not in it"
+  },
+  {
+   "measure": "duplicate_rate",
+   "slice": "src-shipments",
+   "scope": "complete_world",
+   "value": "0.083447",
+   "numerator": "368",
+   "denominator": "4410",
+   "status": "value",
+   "note": "duplicate / received"
+  },
+  {
+   "measure": "received",
+   "slice": "src-web-events",
+   "scope": "complete_world",
+   "value": "1853",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "accepted_unique",
+   "slice": "src-web-events",
+   "scope": "complete_world",
+   "value": "1657",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "duplicate",
+   "slice": "src-web-events",
+   "scope": "complete_world",
+   "value": "169",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "quarantined",
+   "slice": "src-web-events",
+   "scope": "complete_world",
+   "value": "27",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "deleted",
+   "slice": "src-web-events",
+   "scope": "complete_world",
+   "value": "0",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "rejection_rate",
+   "slice": "src-web-events",
+   "scope": "complete_world",
+   "value": "0.014571",
+   "numerator": "27",
+   "denominator": "1853",
+   "status": "value",
+   "note": "quarantined / received; the schema-quarantined batch is not in it"
+  },
+  {
+   "measure": "duplicate_rate",
+   "slice": "src-web-events",
+   "scope": "complete_world",
+   "value": "0.091203",
+   "numerator": "169",
+   "denominator": "1853",
+   "status": "value",
+   "note": "duplicate / received"
+  },
+  {
+   "measure": "schema_quarantined_rows",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "17",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "rows of the batch refused whole for SCHEMA_CHANGED; listed apart from every rate"
+  },
+  {
+   "measure": "runs",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "1343",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "reached_gate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "1328",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "allowed",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "1318",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "blocked_at_gate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "10",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "failed_before_gate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "15",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "failed_runs",
+   "slice": "kind: freshness",
+   "scope": "complete_world",
+   "value": "5",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "failed_runs",
+   "slice": "kind: gate_infra",
+   "scope": "complete_world",
+   "value": "3",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "failed_runs",
+   "slice": "kind: ingest",
+   "scope": "complete_world",
+   "value": "3",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "failed_runs",
+   "slice": "kind: relationships",
+   "scope": "complete_world",
+   "value": "4",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "failed_runs",
+   "slice": "kind: residual",
+   "scope": "complete_world",
+   "value": "1",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "failed_runs",
+   "slice": "kind: transform",
+   "scope": "complete_world",
+   "value": "9",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "task_success_rate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "0.995311",
+   "numerator": "5307",
+   "denominator": "5332",
+   "status": "value",
+   "note": "successful terminal tasks / terminal tasks"
+  },
+  {
+   "measure": "attempt_success_rate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "0.971622",
+   "numerator": "5307",
+   "denominator": "5462",
+   "status": "value",
+   "note": "attempts are not tasks"
+  },
+  {
+   "measure": "ingestion_age_seconds",
+   "slice": "src-inventory",
+   "scope": "complete_world",
+   "value": "67674",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "freshness_seconds",
+   "slice": "src-inventory",
+   "scope": "recorded",
+   "value": "79203",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "seconds recomputed from the recorded latest accepted event"
+  },
+  {
+   "measure": "silent",
+   "slice": "src-inventory",
+   "scope": "recorded",
+   "value": "false",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "freshness above two declared cadences (display rule)"
+  },
+  {
+   "measure": "completeness",
+   "slice": "src-inventory",
+   "scope": "complete_world",
+   "value": "0.990881",
+   "numerator": "1630",
+   "denominator": "1645",
+   "status": "value",
+   "note": "accepted unique / expected over all partitions"
+  },
+  {
+   "measure": "ingestion_age_seconds",
+   "slice": "src-orders",
+   "scope": "complete_world",
+   "value": "13887",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "freshness_seconds",
+   "slice": "src-orders",
+   "scope": "recorded",
+   "value": "14514",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "seconds recomputed from the recorded latest accepted event"
+  },
+  {
+   "measure": "silent",
+   "slice": "src-orders",
+   "scope": "recorded",
+   "value": "false",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "freshness above two declared cadences (display rule)"
+  },
+  {
+   "measure": "completeness",
+   "slice": "src-orders",
+   "scope": "complete_world",
+   "value": "0.993200",
+   "numerator": "16066",
+   "denominator": "16176",
+   "status": "value",
+   "note": "accepted unique / expected over all partitions"
+  },
+  {
+   "measure": "ingestion_age_seconds",
+   "slice": "src-payments",
+   "scope": "complete_world",
+   "value": "6638",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "freshness_seconds",
+   "slice": "src-payments",
+   "scope": "recorded",
+   "value": "7766",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "seconds recomputed from the recorded latest accepted event"
+  },
+  {
+   "measure": "silent",
+   "slice": "src-payments",
+   "scope": "recorded",
+   "value": "false",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "freshness above two declared cadences (display rule)"
+  },
+  {
+   "measure": "completeness",
+   "slice": "src-payments",
+   "scope": "complete_world",
+   "value": "0.991966",
+   "numerator": "10125",
+   "denominator": "10207",
+   "status": "value",
+   "note": "accepted unique / expected over all partitions"
+  },
+  {
+   "measure": "ingestion_age_seconds",
+   "slice": "src-refunds",
+   "scope": "complete_world",
+   "value": "17363",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "freshness_seconds",
+   "slice": "src-refunds",
+   "scope": "recorded",
+   "value": "262378",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "seconds recomputed from the recorded latest accepted event"
+  },
+  {
+   "measure": "silent",
+   "slice": "src-refunds",
+   "scope": "recorded",
+   "value": "true",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "freshness above two declared cadences (display rule)"
+  },
+  {
+   "measure": "completeness",
+   "slice": "src-refunds",
+   "scope": "complete_world",
+   "value": "0.945541",
+   "numerator": "3785",
+   "denominator": "4003",
+   "status": "value",
+   "note": "accepted unique / expected over all partitions"
+  },
+  {
+   "measure": "ingestion_age_seconds",
+   "slice": "src-shipments",
+   "scope": "complete_world",
+   "value": "9931",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "freshness_seconds",
+   "slice": "src-shipments",
+   "scope": "recorded",
+   "value": "11789",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "seconds recomputed from the recorded latest accepted event"
+  },
+  {
+   "measure": "silent",
+   "slice": "src-shipments",
+   "scope": "recorded",
+   "value": "false",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "freshness above two declared cadences (display rule)"
+  },
+  {
+   "measure": "completeness",
+   "slice": "src-shipments",
+   "scope": "complete_world",
+   "value": "0.995255",
+   "numerator": "3985",
+   "denominator": "4004",
+   "status": "value",
+   "note": "accepted unique / expected over all partitions"
+  },
+  {
+   "measure": "ingestion_age_seconds",
+   "slice": "src-web-events",
+   "scope": "complete_world",
+   "value": "20724",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "freshness_seconds",
+   "slice": "src-web-events",
+   "scope": "recorded",
+   "value": "21398",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "seconds recomputed from the recorded latest accepted event"
+  },
+  {
+   "measure": "silent",
+   "slice": "src-web-events",
+   "scope": "recorded",
+   "value": "false",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "freshness above two declared cadences (display rule)"
+  },
+  {
+   "measure": "completeness",
+   "slice": "src-web-events",
+   "scope": "complete_world",
+   "value": "0.987485",
+   "numerator": "1657",
+   "denominator": "1678",
+   "status": "value",
+   "note": "accepted unique / expected over all partitions"
+  },
+  {
+   "measure": "silent_sources",
+   "slice": "all",
+   "scope": "recorded",
+   "value": "1",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "incidents",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "25",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_recovery_minutes",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "60.6827",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "verified recovery minus detection"
+  },
+  {
+   "measure": "mean_recovery_minutes",
+   "slice": "kind: freshness",
+   "scope": "complete_world",
+   "value": "66.7800",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_recovery_minutes",
+   "slice": "kind: gate_infra",
+   "scope": "complete_world",
+   "value": "56.5278",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_recovery_minutes",
+   "slice": "kind: ingest",
+   "scope": "complete_world",
+   "value": "65.2778",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_recovery_minutes",
+   "slice": "kind: relationships",
+   "scope": "complete_world",
+   "value": "64.1000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_recovery_minutes",
+   "slice": "kind: residual",
+   "scope": "complete_world",
+   "value": "63.1000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_recovery_minutes",
+   "slice": "kind: transform",
+   "scope": "complete_world",
+   "value": "55.3611",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "backfill_coverage",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "0.733333",
+   "numerator": "11",
+   "denominator": "15",
+   "status": "value",
+   "note": "verified / requested partitions of the accepted requests"
+  },
+  {
+   "measure": "refused_backfill_partitions",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "4",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "beside the coverage, never inside it"
+  },
+  {
+   "measure": "retries_honoured",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "1.000000",
+   "numerator": "49",
+   "denominator": "49",
+   "status": "value",
+   "note": "retries that waited at least the retry-after hint / retries"
+  },
+  {
+   "measure": "fetches",
+   "slice": "status: cursor_loop",
+   "scope": "complete_world",
+   "value": "1",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "fetches",
+   "slice": "status: ok",
+   "scope": "complete_world",
+   "value": "1263",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "fetches",
+   "slice": "status: rate_limited",
+   "scope": "complete_world",
+   "value": "49",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "fetches",
+   "slice": "status: refetch",
+   "scope": "complete_world",
+   "value": "48",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "late_events",
+   "slice": "complete world",
+   "scope": "recorded",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "recorded_only",
+   "note": "the generator records 757 (manifest stats.late_events: backfill 707, corrections 41, designed 9), all included in the next publication, none lost; the published files cannot recompute it"
+  },
+  {
+   "measure": "late_events",
+   "slice": "2,000-row sample",
+   "scope": "sample",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "sample_only",
+   "note": "the reference SQL and the domain both count 141 over the sample; it describes the sample, not the world"
+  },
+  {
+   "measure": "reconciliation_residual",
+   "slice": "all publications",
+   "scope": "recorded",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "recorded_only",
+   "note": "needs the amount of every raw row: the manifest records 0 of 1318 publications and 1 of 1331 candidates with a residual other than 0.00 (DR-05); only that one candidate is recomputed (investigation 06)"
+  },
+  {
+   "measure": "publication_content_hash_ok",
+   "slice": "complete world",
+   "scope": "recorded",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "recorded_only",
+   "note": "the manifest records 1318 of 1318 (stats.publications.content_hash_ok)"
+  },
+  {
+   "measure": "publication_content_hash_ok",
+   "slice": "2,000-row sample",
+   "scope": "sample",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_verifiable_from_the_sample",
+   "note": "0 of 1318 publications have every included batch in the sample, so the recomputed check is false for all of them (investigation 10)"
+  }
+ ],
+ "bi_measures_headline": [
+  {
+   "measure": "received",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "39901",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "committed batches only"
+  },
+  {
+   "measure": "accepted_unique",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "37248",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "duplicate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "2101",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "quarantined",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "429",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "deleted",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "123",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "rejection_rate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "0.010752",
+   "numerator": "429",
+   "denominator": "39901",
+   "status": "value",
+   "note": "quarantined / received; the schema-quarantined batch is not in it"
+  },
+  {
+   "measure": "duplicate_rate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "0.052655",
+   "numerator": "2101",
+   "denominator": "39901",
+   "status": "value",
+   "note": "duplicate / received"
+  },
+  {
+   "measure": "schema_quarantined_rows",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "17",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "rows of the batch refused whole for SCHEMA_CHANGED; listed apart from every rate"
+  },
+  {
+   "measure": "runs",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "1343",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "reached_gate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "1328",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "allowed",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "1318",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "blocked_at_gate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "10",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "failed_before_gate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "15",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "task_success_rate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "0.995311",
+   "numerator": "5307",
+   "denominator": "5332",
+   "status": "value",
+   "note": "successful terminal tasks / terminal tasks"
+  },
+  {
+   "measure": "attempt_success_rate",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "0.971622",
+   "numerator": "5307",
+   "denominator": "5462",
+   "status": "value",
+   "note": "attempts are not tasks"
+  },
+  {
+   "measure": "silent_sources",
+   "slice": "all",
+   "scope": "recorded",
+   "value": "1",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "incidents",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "25",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_recovery_minutes",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "60.6827",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "verified recovery minus detection"
+  },
+  {
+   "measure": "backfill_coverage",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "0.733333",
+   "numerator": "11",
+   "denominator": "15",
+   "status": "value",
+   "note": "verified / requested partitions of the accepted requests"
+  },
+  {
+   "measure": "refused_backfill_partitions",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "4",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": "beside the coverage, never inside it"
+  },
+  {
+   "measure": "retries_honoured",
+   "slice": "all",
+   "scope": "complete_world",
+   "value": "1.000000",
+   "numerator": "49",
+   "denominator": "49",
+   "status": "value",
+   "note": "retries that waited at least the retry-after hint / retries"
+  },
+  {
+   "measure": "late_events",
+   "slice": "complete world",
+   "scope": "recorded",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "recorded_only",
+   "note": "the generator records 757 (manifest stats.late_events: backfill 707, corrections 41, designed 9), all included in the next publication, none lost; the published files cannot recompute it"
+  },
+  {
+   "measure": "late_events",
+   "slice": "2,000-row sample",
+   "scope": "sample",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "sample_only",
+   "note": "the reference SQL and the domain both count 141 over the sample; it describes the sample, not the world"
+  },
+  {
+   "measure": "reconciliation_residual",
+   "slice": "all publications",
+   "scope": "recorded",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "recorded_only",
+   "note": "needs the amount of every raw row: the manifest records 0 of 1318 publications and 1 of 1331 candidates with a residual other than 0.00 (DR-05); only that one candidate is recomputed (investigation 06)"
+  },
+  {
+   "measure": "publication_content_hash_ok",
+   "slice": "complete world",
+   "scope": "recorded",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "recorded_only",
+   "note": "the manifest records 1318 of 1318 (stats.publications.content_hash_ok)"
+  },
+  {
+   "measure": "publication_content_hash_ok",
+   "slice": "2,000-row sample",
+   "scope": "sample",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_verifiable_from_the_sample",
+   "note": "0 of 1318 publications have every included batch in the sample, so the recomputed check is false for all of them (investigation 10)"
+  }
+ ],
+ "reconciliation": [
+  {
+   "check": "A golden metric ingestion: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "292d4cda9c454b96",
+   "second_source": "292d4cda9c454b96",
+   "third_source": "292d4cda9c454b96",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric freshness: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "caf0e9e9629421e4",
+   "second_source": "caf0e9e9629421e4",
+   "third_source": "caf0e9e9629421e4",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric completeness: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "4f54ce7d84a7a1af",
+   "second_source": "4f54ce7d84a7a1af",
+   "third_source": "4f54ce7d84a7a1af",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric runs: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "c526e8cb72277107",
+   "second_source": "c526e8cb72277107",
+   "third_source": "c526e8cb72277107",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric quality_gate: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "5208553f0ccb7533",
+   "second_source": "5208553f0ccb7533",
+   "third_source": "5208553f0ccb7533",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric publications: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "350c814aed23671b",
+   "second_source": "350c814aed23671b",
+   "third_source": "350c814aed23671b",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric late_events: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "0858c8d540f03d9d",
+   "second_source": "0858c8d540f03d9d",
+   "third_source": "0858c8d540f03d9d",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric reconciliation: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "1b3de21f556ab764",
+   "second_source": "1b3de21f556ab764",
+   "third_source": "1b3de21f556ab764",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric incidents: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "403e99f3197ffae9",
+   "second_source": "403e99f3197ffae9",
+   "third_source": "403e99f3197ffae9",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric backfills: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "b94a70f0b6afe7ee",
+   "second_source": "b94a70f0b6afe7ee",
+   "third_source": "b94a70f0b6afe7ee",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric processing_rate: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "afb846cac617ea13",
+   "second_source": "afb846cac617ea13",
+   "third_source": "afb846cac617ea13",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden empty_population (reference SQL vs expected.json vs domain)",
+   "analysis_sql": "false",
+   "second_source": "false",
+   "third_source": "false",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden whole shape of expected.json (domain result.golden vs the file, digest)",
+   "analysis_sql": "fe06e49e263cc94c",
+   "second_source": "fe06e49e263cc94c",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden batch b-001: status | written | received | accepted | duplicate | quarantined | rejection rate | duplicate rate (09 vs expected.json)",
+   "analysis_sql": "committed|10|10|8|1|1|0.100000|0.100000",
+   "second_source": "committed|10|10|8|1|1|0.100000|0.100000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden batch b-002: status | written | received | accepted | duplicate | quarantined | rejection rate | duplicate rate (09 vs expected.json)",
+   "analysis_sql": "committed|10|10|0|9|1|0.100000|0.900000",
+   "second_source": "committed|10|10|0|9|1|0.100000|0.900000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden batch b-003: status | written | received | accepted | duplicate | quarantined | rejection rate | duplicate rate (09 vs expected.json)",
+   "analysis_sql": "aborted|10|0|0|0|0||",
+   "second_source": "aborted|10|0|0|0|0||",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden batch b-101: status | written | received | accepted | duplicate | quarantined | rejection rate | duplicate rate (09 vs expected.json)",
+   "analysis_sql": "committed|2|2|1|0|1|0.500000|0.000000",
+   "second_source": "committed|2|2|1|0|1|0.500000|0.000000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden P08-GOLD-01 hand answer: 10 received | 8 accepted unique | 1 duplicate | 1 quarantined | 0.100000 | 0.100000 (09 b-001 vs the spec sentence)",
+   "analysis_sql": "10|8|1|1|0.100000|0.100000",
+   "second_source": "10|8|1|1|0.100000|0.100000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden source src-orders: received | accepted | duplicate | quarantined | distinct keys | rates | checkpoint version (09 vs expected.json)",
+   "analysis_sql": "20|8|10|2|1|0.100000|0.500000|2",
+   "second_source": "20|8|10|2|1|0.100000|0.500000|2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden source src-refunds: received | accepted | duplicate | quarantined | distinct keys | rates | checkpoint version (09 vs expected.json)",
+   "analysis_sql": "2|1|0|1|1|0.500000|0.000000|1",
+   "second_source": "2|1|0|1|1|0.500000|0.000000|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden replay and crash: accepted keys | accepted by the replay | rows the crashed batch wrote | its checkpoints | new keys | checkpoint version (09 vs expected.json vs the hand answer 8, 0, 10, 0, 0, 2)",
+   "analysis_sql": "8|0|10|0|0|2",
+   "second_source": "8|0|10|0|0|2",
+   "third_source": "8|0|10|0|0|2",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden freshness src-orders: latest event | freshness | last ingestion | ingestion age (09 vs expected.json; the hand answer 52,200 s and 42,900 s)",
+   "analysis_sql": "2026-10-04T09:30:00Z|52200|2026-10-04T12:05:00Z|42900",
+   "second_source": "2026-10-04T09:30:00Z|52200|2026-10-04T12:05:00Z|42900",
+   "third_source": "2026-10-04T09:30:00Z|52200|2026-10-04T12:05:00Z|42900",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden freshness src-refunds: latest event | freshness | last ingestion | ingestion age (09 vs expected.json)",
+   "analysis_sql": "2026-10-04T09:10:00Z|53400|2026-10-04T11:05:00Z|46500",
+   "second_source": "2026-10-04T09:10:00Z|53400|2026-10-04T11:05:00Z|46500",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden completeness src-orders 2026-10-04: expected | accepted | value (09 vs expected.json)",
+   "analysis_sql": "9|8|0.888889",
+   "second_source": "9|8|0.888889",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden completeness src-refunds 2026-10-04: expected | accepted | value (09 vs expected.json)",
+   "analysis_sql": "1|1|1.000000",
+   "second_source": "1|1|1.000000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden run-001: status | duration | tasks | tasks successful | task success | attempts | successful | attempt success (09 vs expected.json)",
+   "analysis_sql": "success|1200|4|4|1.000000|5|4|0.800000",
+   "second_source": "success|1200|4|4|1.000000|5|4|0.800000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden run-002: status | duration | tasks | tasks successful | task success | attempts | successful | attempt success (09 vs expected.json)",
+   "analysis_sql": "failed|600|3|2|0.666667|3|2|0.666667",
+   "second_source": "failed|600|3|2|0.666667|3|2|0.666667",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden run-003: status | duration | tasks | tasks successful | task success | attempts | successful | attempt success (09 vs expected.json)",
+   "analysis_sql": "success|900|4|4|1.000000|4|4|1.000000",
+   "second_source": "success|900|4|4|1.000000|4|4|1.000000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden tasks against attempts overall: 11 | 10 | 0.909091 | 12 | 10 | 0.833333 (09 vs expected.json)",
+   "analysis_sql": "11|10|0.909091|12|10|0.833333",
+   "second_source": "11|10|0.909091|12|10|0.833333",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden gate and pointer: allowed, blocked, allowed with the pointer on pub-001, pub-001, pub-003 (09 vs expected.json vs the hand answer)",
+   "analysis_sql": "allowed:pub-001|blocked:pub-001|allowed:pub-003",
+   "second_source": "allowed:pub-001|blocked:pub-001|allowed:pub-003",
+   "third_source": "allowed:pub-001|blocked:pub-001|allowed:pub-003",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden gate failures per run: critical | non-critical (09 vs expected.json)",
+   "analysis_sql": "0:1|1:1|0:1",
+   "second_source": "0:1|1:1|0:1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden pub-001: published at | watermark | batches | records | latest event | lag (09 vs expected.json)",
+   "analysis_sql": "2026-10-04T10:30:00Z|2026-10-04T10:00:00Z|b-001|8|2026-10-04T09:30:00Z|3600",
+   "second_source": "2026-10-04T10:30:00Z|2026-10-04T10:00:00Z|b-001|8|2026-10-04T09:30:00Z|3600",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden pub-003: published at | watermark | batches | records | latest event | lag (09 vs expected.json)",
+   "analysis_sql": "2026-10-04T20:15:00Z|2026-10-04T11:00:00Z|b-001,b-002,b-101|9|2026-10-04T09:30:00Z|38700",
+   "second_source": "2026-10-04T20:15:00Z|2026-10-04T11:00:00Z|b-001,b-002,b-101|9|2026-10-04T09:30:00Z|38700",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden late event REF-2001: arrival | behind | watermark | included in (09 vs expected.json); count 1, none lost",
+   "analysis_sql": "REF-2001|2026-10-04T09:10:00Z|2026-10-04T11:05:00Z|pub-001|2026-10-04T10:00:00Z|pub-003|1",
+   "second_source": "REF-2001|2026-10-04T09:10:00Z|2026-10-04T11:05:00Z|pub-001|2026-10-04T10:00:00Z|pub-003|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden pub-001 reconciliation: source | published | quarantined | duplicates | residual (09 vs expected.json; the hand answer 289.94, 289.97, -30.00, 29.97, 0.00)",
+   "analysis_sql": "289.94|289.97|-30.00|29.97|0.00",
+   "second_source": "289.94|289.97|-30.00|29.97|0.00",
+   "third_source": "289.94|289.97|-30.00|29.97|0.00",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden pub-003 reconciliation: source | published | quarantined | duplicates | residual (09 vs expected.json)",
+   "analysis_sql": "599.88|301.97|-52.00|349.91|0.00",
+   "second_source": "599.88|301.97|-52.00|349.91|0.00",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden recovery inc-001: detected | recovery run | verified | seconds | minutes (09 vs expected.json vs the hand answer 28,500 s = 475.0000 minutes)",
+   "analysis_sql": "2026-10-04T12:20:00Z|run-003|2026-10-04T20:15:00Z|28500|475.0000",
+   "second_source": "2026-10-04T12:20:00Z|run-003|2026-10-04T20:15:00Z|28500|475.0000",
+   "third_source": "2026-10-04T12:20:00Z|run-003|2026-10-04T20:15:00Z|28500|475.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden backfill and processing: requested | verified | coverage | accepted records | records per second (09 vs expected.json vs the hand answer 3, 2, 0.666667, 8, 0.666667)",
+   "analysis_sql": "3|2|0.666667|8|0.666667",
+   "second_source": "3|2|0.666667|8|0.666667",
+   "third_source": "3|2|0.666667|8|0.666667",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B loaded row counts equal the manifest row_counts (14 entities; backfill_requests = 13 loaded + 2 kept refused)",
+   "analysis_sql": "bb8ee54189f149c3",
+   "second_source": "bb8ee54189f149c3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B artifact tables: batch summaries | model output totals equal the manifest row_counts",
+   "analysis_sql": "1311|1331",
+   "second_source": "1311|1331",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B dataset hash: recomputed from the sixteen entity files | the manifest | dataset_versions | the hash this package cites",
+   "analysis_sql": "0a90687778634365c402c5431661b56625de20785e28d9b2388d36c0cad19aab",
+   "second_source": "0a90687778634365c402c5431661b56625de20785e28d9b2388d36c0cad19aab",
+   "third_source": "0a90687778634365c402c5431661b56625de20785e28d9b2388d36c0cad19aab",
+   "fourth_source": "0a90687778634365c402c5431661b56625de20785e28d9b2388d36c0cad19aab",
+   "equal": true
+  },
+  {
+   "check": "B dataset version | contract version (loaded vs the manifest)",
+   "analysis_sql": "po-20261026-20261026|1",
+   "second_source": "po-20261026-20261026|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B scope: the loaded raw_records are the 2,000-row sample of 62 batches (sample rows | sampled batches | sampled batches with rows vs manifest.sample)",
+   "analysis_sql": "2000|62|50",
+   "second_source": "2000|62|50",
+   "third_source": "2000|62|50",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on freshness at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "32be6bd1ba217b11",
+   "second_source": "32be6bd1ba217b11",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on completeness at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "ab779a7bcae8378d",
+   "second_source": "ab779a7bcae8378d",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on runs at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "a2a4c638d5545cff",
+   "second_source": "a2a4c638d5545cff",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on quality_gate at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "e557895b17d5a319",
+   "second_source": "e557895b17d5a319",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on late_events at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "926583ec29b0846f",
+   "second_source": "926583ec29b0846f",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on incidents at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "27f77961dc4e4bf0",
+   "second_source": "27f77961dc4e4bf0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on backfills at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "c025f25bf1d64e3c",
+   "second_source": "c025f25bf1d64e3c",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on processing_rate at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "f36b09adcd38ff3d",
+   "second_source": "f36b09adcd38ff3d",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on freshness at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "3f605b53cb014a3e",
+   "second_source": "3f605b53cb014a3e",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on completeness at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "0e8751a55992cab8",
+   "second_source": "0e8751a55992cab8",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on runs at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "a2a4c638d5545cff",
+   "second_source": "a2a4c638d5545cff",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on quality_gate at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "e557895b17d5a319",
+   "second_source": "e557895b17d5a319",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on publications at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "47a9c8bfda87d3cb",
+   "second_source": "47a9c8bfda87d3cb",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on late_events at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "7674a128307688ff",
+   "second_source": "7674a128307688ff",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on reconciliation at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "ccbd7e365762d65b",
+   "second_source": "ccbd7e365762d65b",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on incidents at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "27f77961dc4e4bf0",
+   "second_source": "27f77961dc4e4bf0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on backfills at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "c025f25bf1d64e3c",
+   "second_source": "c025f25bf1d64e3c",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain over the sample on processing_rate at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "cd7acb003c6c4221",
+   "second_source": "cd7acb003c6c4221",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B known gap at 2026-10-05T00:00:00Z: the reference SQL does not model delete events; its difference from the domain over the sample is exactly what the sample's op rows explain (op rows on a key already accepted are duplicates to it, the deleted ones leave the domain's deleted class: duplicate + those rows | quarantined - (those rows - deleted rows) | received and accepted equal)",
+   "analysis_sql": "2|-1|0|0",
+   "second_source": "2|-1|0|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B known gap at 2026-09-14T00:00:00Z: the reference SQL does not model delete events; its difference from the domain over the sample is exactly what the sample's op rows explain (op rows on a key already accepted are duplicates to it, the deleted ones leave the domain's deleted class: duplicate + those rows | quarantined - (those rows - deleted rows) | received and accepted equal)",
+   "analysis_sql": "1|-1|0|0",
+   "second_source": "1|-1|0|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B known gap: the publications and reconciliation entries that differ between the reference SQL and the domain are exactly those that include b-1022, the batch of the one delete the sample propagates (publications | reconciliation)",
+   "analysis_sql": "pub-1044,pub-1045,pub-1046,pub-1047,pub-1048,pub-1049,pub-1050,pub-1051,pub-1052,pub-1053,pub-1054,pub-1055,pub-1056|pub-1044,pub-1045,pub-1046,pub-1047,pub-1048,pub-1049,pub-1050,pub-1051,pub-1052,pub-1053,pub-1054,pub-1055,pub-1056",
+   "second_source": "pub-1044,pub-1045,pub-1046,pub-1047,pub-1048,pub-1049,pub-1050,pub-1051,pub-1052,pub-1053,pub-1054,pub-1055,pub-1056|pub-1044,pub-1045,pub-1046,pub-1047,pub-1048,pub-1049,pub-1050,pub-1051,pub-1052,pub-1053,pub-1054,pub-1055,pub-1056",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample scope: the domain over the sample | investigation 10 | the manifest: received | accepted | duplicate | quarantined | rejection rate | duplicate rate",
+   "analysis_sql": "1878|1822|23|32|0.017039|0.012247",
+   "second_source": "1878|1822|23|32|0.017039|0.012247",
+   "third_source": "1878|1822|23|32|0.017039|0.012247",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample classification src-inventory: accepted | duplicate | quarantined (investigation 10 vs the domain over the sample)",
+   "analysis_sql": "83|0|3",
+   "second_source": "83|0|3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample classification src-orders: accepted | duplicate | quarantined (investigation 10 vs the domain over the sample)",
+   "analysis_sql": "967|4|11",
+   "second_source": "967|4|11",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample classification src-payments: accepted | duplicate | quarantined (investigation 10 vs the domain over the sample)",
+   "analysis_sql": "356|0|11",
+   "second_source": "356|0|11",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample classification src-refunds: accepted | duplicate | quarantined (investigation 10 vs the domain over the sample)",
+   "analysis_sql": "131|19|2",
+   "second_source": "131|19|2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample classification src-shipments: accepted | duplicate | quarantined (investigation 10 vs the domain over the sample)",
+   "analysis_sql": "191|0|2",
+   "second_source": "191|0|2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample classification src-web-events: accepted | duplicate | quarantined (investigation 10 vs the domain over the sample)",
+   "analysis_sql": "94|0|3",
+   "second_source": "94|0|3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ingestion age src-inventory: last successful ingestion | seconds (04 from the checkpoints vs the domain vs the manifest's record; complete world)",
+   "analysis_sql": "2026-10-04T05:12:06Z|67674",
+   "second_source": "2026-10-04T05:12:06Z|67674",
+   "third_source": "2026-10-04T05:12:06Z|67674",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ingestion age src-orders: last successful ingestion | seconds (04 from the checkpoints vs the domain vs the manifest's record; complete world)",
+   "analysis_sql": "2026-10-04T20:08:33Z|13887",
+   "second_source": "2026-10-04T20:08:33Z|13887",
+   "third_source": "2026-10-04T20:08:33Z|13887",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ingestion age src-payments: last successful ingestion | seconds (04 from the checkpoints vs the domain vs the manifest's record; complete world)",
+   "analysis_sql": "2026-10-04T22:09:22Z|6638",
+   "second_source": "2026-10-04T22:09:22Z|6638",
+   "third_source": "2026-10-04T22:09:22Z|6638",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ingestion age src-refunds: last successful ingestion | seconds (04 from the checkpoints vs the domain vs the manifest's record; complete world)",
+   "analysis_sql": "2026-10-04T19:10:37Z|17363",
+   "second_source": "2026-10-04T19:10:37Z|17363",
+   "third_source": "2026-10-04T19:10:37Z|17363",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ingestion age src-shipments: last successful ingestion | seconds (04 from the checkpoints vs the domain vs the manifest's record; complete world)",
+   "analysis_sql": "2026-10-04T21:14:29Z|9931",
+   "second_source": "2026-10-04T21:14:29Z|9931",
+   "third_source": "2026-10-04T21:14:29Z|9931",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ingestion age src-web-events: last successful ingestion | seconds (04 from the checkpoints vs the domain vs the manifest's record; complete world)",
+   "analysis_sql": "2026-10-04T18:14:36Z|20724",
+   "second_source": "2026-10-04T18:14:36Z|20724",
+   "third_source": "2026-10-04T18:14:36Z|20724",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B freshness over the sample src-inventory: latest event | seconds (10 vs the domain over the sample; SAMPLE scope, not the pipeline's freshness)",
+   "analysis_sql": "2026-09-16T23:59:46Z|1555214",
+   "second_source": "2026-09-16T23:59:46Z|1555214",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B freshness over the sample src-orders: latest event | seconds (10 vs the domain over the sample; SAMPLE scope, not the pipeline's freshness)",
+   "analysis_sql": "2026-09-27T19:51:31Z|619709",
+   "second_source": "2026-09-27T19:51:31Z|619709",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B freshness over the sample src-payments: latest event | seconds (10 vs the domain over the sample; SAMPLE scope, not the pipeline's freshness)",
+   "analysis_sql": "2026-09-24T05:57:01Z|928979",
+   "second_source": "2026-09-24T05:57:01Z|928979",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B freshness over the sample src-refunds: latest event | seconds (10 vs the domain over the sample; SAMPLE scope, not the pipeline's freshness)",
+   "analysis_sql": "2026-10-01T23:07:02Z|262378",
+   "second_source": "2026-10-01T23:07:02Z|262378",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B freshness over the sample src-shipments: latest event | seconds (10 vs the domain over the sample; SAMPLE scope, not the pipeline's freshness)",
+   "analysis_sql": "2026-10-02T08:43:47Z|227773",
+   "second_source": "2026-10-02T08:43:47Z|227773",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B freshness over the sample src-web-events: latest event | seconds (10 vs the domain over the sample; SAMPLE scope, not the pipeline's freshness)",
+   "analysis_sql": "2026-09-27T23:58:39Z|604881",
+   "second_source": "2026-09-27T23:58:39Z|604881",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B processing rate: the world (101 accepted, recorded) | the sample (102, the domain over the sample): records per second (10 vs the manifest vs the domain)",
+   "analysis_sql": "101|39.253789|102|39.642441",
+   "second_source": "101|39.253789|102|39.642441",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B publications: content-hash checks that pass over the sample (the domain) | publications verifiable from the sample (10) | the manifest's recorded count over the complete world",
+   "analysis_sql": "0|1318",
+   "second_source": "0|1318",
+   "third_source": "0|1318",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B late events: reference SQL | domain over the sample (SAMPLE scope; the recorded complete-world count is 757 and is not recomputable)",
+   "analysis_sql": "141",
+   "second_source": "141",
+   "third_source": "141",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B run funnel: runs | reached the gate | allowed | blocked at the gate | failed before it (02 vs the domain's gate results vs the manifest's computed funnel)",
+   "analysis_sql": "1343|1328|1318|10|15",
+   "second_source": "1343|1328|1318|10|15",
+   "third_source": "1343|1328|1318|10|15",
+   "fourth_source": "1343|1328|1318|10|15",
+   "equal": true
+  },
+  {
+   "check": "B pointer history: the 25 runs that never moved it and the publication it stayed on (05 vs the domain's pointer_history, digest)",
+   "analysis_sql": "d78326153f3d5c05",
+   "second_source": "d78326153f3d5c05",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B pointer history: the domain calls 25 runs blocked (10 at the gate + 15 that never reached it: a run with no critical result is not allowed); the funnel separates them (domain 'blocked' | 05 stages)",
+   "analysis_sql": "25|1318",
+   "second_source": "25|1318",
+   "third_source": "25|1318",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B pointer: the loaded pointer | the latest publication | the domain's current publication | the manifest",
+   "analysis_sql": "pub-1343",
+   "second_source": "pub-1343",
+   "third_source": "pub-1343",
+   "fourth_source": "pub-1343",
+   "equal": true
+  },
+  {
+   "check": "B tasks against attempts: terminal | successful | task success | attempts | successful | attempt success (03 vs the domain vs the manifest)",
+   "analysis_sql": "5332|5307|0.995311|5462|5307|0.971622",
+   "second_source": "5332|5307|0.995311|5462|5307|0.971622",
+   "third_source": "5332|5307|0.995311|5462|5307|0.971622",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B run durations: failed runs | mean minutes | successful runs | mean minutes (02 vs the domain vs the manifest)",
+   "analysis_sql": "25|13.7227|1318|13.9114",
+   "second_source": "25|13.7227|1318|13.9114",
+   "third_source": "25|13.7227|1318|13.9114",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B incidents: recovery run | verified instant | seconds | minutes for all 25 (06 vs the domain, digest)",
+   "analysis_sql": "890230176d847bcb",
+   "second_source": "890230176d847bcb",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B incident summary: total | open | closed | verified | mean recovery minutes (06 vs the domain vs the manifest)",
+   "analysis_sql": "25|0|25|25|60.6827",
+   "second_source": "25|0|25|25|60.6827",
+   "third_source": "25|0|25|25|60.6827",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B incidents by failure kind (06 vs the manifest's by_type)",
+   "analysis_sql": "861d4b3a9849bcc2",
+   "second_source": "861d4b3a9849bcc2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B every closure consistent: closed at the verified instant by the first verified run (06 vs the domain vs the manifest)",
+   "analysis_sql": "25",
+   "second_source": "25",
+   "third_source": "25",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B backfill coverage: requested | verified | coverage | refused requests | refused partitions (07 vs the domain vs the manifest)",
+   "analysis_sql": "15|11|0.733333|2|4",
+   "second_source": "15|11|0.733333|2|4",
+   "third_source": "15|11|0.733333|2|4",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B backfill requests: source | requested | verified | coverage for all 13 accepted (07 vs the domain vs the manifest, digest)",
+   "analysis_sql": "4db39d2c3fe01d51",
+   "second_source": "4db39d2c3fe01d51",
+   "third_source": "4db39d2c3fe01d51",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B refused requests: ids (07 vs the domain vs the manifest)",
+   "analysis_sql": "bf-006,bf-012",
+   "second_source": "bf-006,bf-012",
+   "third_source": "bf-006,bf-012",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ingestion src-inventory (complete world): received | accepted | duplicate | quarantined | distinct keys | rejection rate | duplicate rate | checkpoint version (01 and 04 vs the manifest's record)",
+   "analysis_sql": "1723|1630|72|21|21|0.012188|0.041788|61",
+   "second_source": "1723|1630|72|21|21|0.012188|0.041788|61",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ingestion src-orders (complete world): received | accepted | duplicate | quarantined | distinct keys | rejection rate | duplicate rate | checkpoint version (01 and 04 vs the manifest's record)",
+   "analysis_sql": "16815|16066|502|181|166|0.010764|0.029854|335",
+   "second_source": "16815|16066|502|181|166|0.010764|0.029854|335",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ingestion src-payments (complete world): received | accepted | duplicate | quarantined | distinct keys | rejection rate | duplicate rate | checkpoint version (01 and 04 vs the manifest's record)",
+   "analysis_sql": "10805|10125|522|123|115|0.011384|0.048311|336",
+   "second_source": "10805|10125|522|123|115|0.011384|0.048311|336",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ingestion src-refunds (complete world): received | accepted | duplicate | quarantined | distinct keys | rejection rate | duplicate rate | checkpoint version (01 and 04 vs the manifest's record)",
+   "analysis_sql": "4295|3785|468|42|42|0.009779|0.108964|228",
+   "second_source": "4295|3785|468|42|42|0.009779|0.108964|228",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ingestion src-shipments (complete world): received | accepted | duplicate | quarantined | distinct keys | rejection rate | duplicate rate | checkpoint version (01 and 04 vs the manifest's record)",
+   "analysis_sql": "4410|3985|368|35|32|0.007937|0.083447|226",
+   "second_source": "4410|3985|368|35|32|0.007937|0.083447|226",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ingestion src-web-events (complete world): received | accepted | duplicate | quarantined | distinct keys | rejection rate | duplicate rate | checkpoint version (01 and 04 vs the manifest's record)",
+   "analysis_sql": "1853|1657|169|27|27|0.014571|0.091203|116",
+   "second_source": "1853|1657|169|27|27|0.014571|0.091203|116",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ingestion overall (complete world): received | accepted | duplicate | quarantined | rejection rate | duplicate rate (01 vs the manifest); 123 delete events beside them",
+   "analysis_sql": "39901|37248|2101|429|0.010752|0.052655|123",
+   "second_source": "39901|37248|2101|429|0.010752|0.052655|123",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B quarantine by reason inside the committed batches (01 vs the manifest)",
+   "analysis_sql": "fcc45e05e005e054",
+   "second_source": "fcc45e05e005e054",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B all quarantine rows by reason, the schema-quarantined batch included (01 vs the manifest)",
+   "analysis_sql": "966f896847a680aa",
+   "second_source": "966f896847a680aa",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B quarantine scope: rows listed separately | rows in all (01 vs the manifest)",
+   "analysis_sql": "17|446",
+   "second_source": "17|446",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B batches by kind (01 vs the manifest)",
+   "analysis_sql": "6012d396a144826f",
+   "second_source": "6012d396a144826f",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B completeness per source: partitions | expected | accepted | value (04 vs the manifest)",
+   "analysis_sql": "7831edfd8d15e1fa",
+   "second_source": "7831edfd8d15e1fa",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B freshness and ingestion age per source from the recorded instants (04 vs the manifest's recorded seconds)",
+   "analysis_sql": "c36053e0bdaead18",
+   "second_source": "c36053e0bdaead18",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B publications: count | first published | last published | the pointer (05 vs the manifest)",
+   "analysis_sql": "1318|2026-08-10T01:30:34Z|2026-10-04T23:34:14Z|pub-1343",
+   "second_source": "1318|2026-08-10T01:30:34Z|2026-10-04T23:34:14Z|pub-1343",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B fetch log: statuses | rows (08 vs the manifest)",
+   "analysis_sql": "{\"cursor_loop\":1,\"ok\":1263,\"rate_limited\":49,\"refetch\":48}|1361",
+   "second_source": "{\"cursor_loop\":1,\"ok\":1263,\"rate_limited\":49,\"refetch\":48}|1361",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B retry-after: responses | retries | honouring | too soon | min slack | max slack | sessions | source (08 vs the manifest)",
+   "analysis_sql": "49|49|49|0|0|25|33|src-shipments",
+   "second_source": "49|49|49|0|0|25|33|src-shipments",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_ingestion_by_source__by_batch_kind: SQL result set equals the plain-Python recomputation cell by cell (6 rows, digest)",
+   "analysis_sql": "124b26047e05b36b",
+   "second_source": "124b26047e05b36b",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_ingestion_by_source__by_source: SQL result set equals the plain-Python recomputation cell by cell (6 rows, digest)",
+   "analysis_sql": "7deb5ea83409ded5",
+   "second_source": "7deb5ea83409ded5",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_ingestion_by_source__crash_replay: SQL result set equals the plain-Python recomputation cell by cell (8 rows, digest)",
+   "analysis_sql": "a4edc9857ca4adbe",
+   "second_source": "a4edc9857ca4adbe",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_ingestion_by_source__overall: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "bf2cbc414ee1dcbc",
+   "second_source": "bf2cbc414ee1dcbc",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_ingestion_by_source__quarantine_by_reason: SQL result set equals the plain-Python recomputation cell by cell (6 rows, digest)",
+   "analysis_sql": "6c790027890b1e11",
+   "second_source": "6c790027890b1e11",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_ingestion_by_source__quarantine_distinct_keys: SQL result set equals the plain-Python recomputation cell by cell (6 rows, digest)",
+   "analysis_sql": "2da0d7820ae7bcc3",
+   "second_source": "2da0d7820ae7bcc3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_ingestion_by_source__schema_quarantined: SQL result set equals the plain-Python recomputation cell by cell (2 rows, digest)",
+   "analysis_sql": "bf591b3636e3b829",
+   "second_source": "bf591b3636e3b829",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_run_funnel_by_failure_kind__by_failure_kind: SQL result set equals the plain-Python recomputation cell by cell (6 rows, digest)",
+   "analysis_sql": "cb12f52cc7d886e4",
+   "second_source": "cb12f52cc7d886e4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_run_funnel_by_failure_kind__durations: SQL result set equals the plain-Python recomputation cell by cell (2 rows, digest)",
+   "analysis_sql": "33ef16cad91dd171",
+   "second_source": "33ef16cad91dd171",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_run_funnel_by_failure_kind__failures_by_week: SQL result set equals the plain-Python recomputation cell by cell (8 rows, digest)",
+   "analysis_sql": "05eb050d55b2c552",
+   "second_source": "05eb050d55b2c552",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_run_funnel_by_failure_kind__funnel: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "4db57e868787fc23",
+   "second_source": "4db57e868787fc23",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_run_funnel_by_failure_kind__gate_checks: SQL result set equals the plain-Python recomputation cell by cell (7 rows, digest)",
+   "analysis_sql": "d178e84c5253854e",
+   "second_source": "d178e84c5253854e",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_task_vs_attempt_success__by_task: SQL result set equals the plain-Python recomputation cell by cell (4 rows, digest)",
+   "analysis_sql": "00f4303b61320ede",
+   "second_source": "00f4303b61320ede",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_task_vs_attempt_success__overall: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "1dcd036205e56443",
+   "second_source": "1dcd036205e56443",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_task_vs_attempt_success__retry_depth: SQL result set equals the plain-Python recomputation cell by cell (3 rows, digest)",
+   "analysis_sql": "86ad80d8ac848bf5",
+   "second_source": "86ad80d8ac848bf5",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_task_vs_attempt_success__run_level: SQL result set equals the plain-Python recomputation cell by cell (2 rows, digest)",
+   "analysis_sql": "22d9fcd9692fd57a",
+   "second_source": "22d9fcd9692fd57a",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_freshness_vs_ingestion_age__completeness: SQL result set equals the plain-Python recomputation cell by cell (6 rows, digest)",
+   "analysis_sql": "296e3db28148a7f9",
+   "second_source": "296e3db28148a7f9",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_freshness_vs_ingestion_age__freshness_vs_age: SQL result set equals the plain-Python recomputation cell by cell (6 rows, digest)",
+   "analysis_sql": "f93a77e93af57994",
+   "second_source": "f93a77e93af57994",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_freshness_vs_ingestion_age__ingestion_age: SQL result set equals the plain-Python recomputation cell by cell (6 rows, digest)",
+   "analysis_sql": "1645a8444105f583",
+   "second_source": "1645a8444105f583",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_freshness_vs_ingestion_age__silent_partitions: SQL result set equals the plain-Python recomputation cell by cell (3 rows, digest)",
+   "analysis_sql": "ec1aff99130726f9",
+   "second_source": "ec1aff99130726f9",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_freshness_vs_ingestion_age__silent_source: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "96db1436e8b36d55",
+   "second_source": "96db1436e8b36d55",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_publication_pointer_and_blocked_runs__designed_blocked_run: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "73e0cd1daf66f09a",
+   "second_source": "73e0cd1daf66f09a",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_publication_pointer_and_blocked_runs__pointer_staleness: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "51c02e69f57eaa8f",
+   "second_source": "51c02e69f57eaa8f",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_publication_pointer_and_blocked_runs__summary: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "af6a2c28b63662b0",
+   "second_source": "af6a2c28b63662b0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_publication_pointer_and_blocked_runs__unmoved_runs: SQL result set equals the plain-Python recomputation cell by cell (25 rows, digest)",
+   "analysis_sql": "ea92b0deb5d94c72",
+   "second_source": "ea92b0deb5d94c72",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_incidents_and_verified_recovery__by_failure_kind: SQL result set equals the plain-Python recomputation cell by cell (6 rows, digest)",
+   "analysis_sql": "18202fa15fa91b8a",
+   "second_source": "18202fa15fa91b8a",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_incidents_and_verified_recovery__incidents: SQL result set equals the plain-Python recomputation cell by cell (25 rows, digest)",
+   "analysis_sql": "69c9d307264af92c",
+   "second_source": "69c9d307264af92c",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_incidents_and_verified_recovery__residual_candidate: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "5ad3ffe425deed31",
+   "second_source": "5ad3ffe425deed31",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_incidents_and_verified_recovery__summary: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "2f40dcc9ef47f42d",
+   "second_source": "2f40dcc9ef47f42d",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_backfill_coverage_and_refused_overlaps__accepted_pairs: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "034af8dbf3a48b32",
+   "second_source": "034af8dbf3a48b32",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_backfill_coverage_and_refused_overlaps__by_source: SQL result set equals the plain-Python recomputation cell by cell (4 rows, digest)",
+   "analysis_sql": "b3ff52da02eed702",
+   "second_source": "b3ff52da02eed702",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_backfill_coverage_and_refused_overlaps__coverage_summary: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "725ea4b22aed1b78",
+   "second_source": "725ea4b22aed1b78",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_backfill_coverage_and_refused_overlaps__refused_overlaps: SQL result set equals the plain-Python recomputation cell by cell (2 rows, digest)",
+   "analysis_sql": "b7f1ca9f67baf5c7",
+   "second_source": "b7f1ca9f67baf5c7",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_backfill_coverage_and_refused_overlaps__requests: SQL result set equals the plain-Python recomputation cell by cell (15 rows, digest)",
+   "analysis_sql": "f2496230a1a0eadc",
+   "second_source": "f2496230a1a0eadc",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_backfill_coverage_and_refused_overlaps__unverified_partitions: SQL result set equals the plain-Python recomputation cell by cell (4 rows, digest)",
+   "analysis_sql": "cd510f8561d38169",
+   "second_source": "cd510f8561d38169",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_fetch_log_retry_after__by_source: SQL result set equals the plain-Python recomputation cell by cell (6 rows, digest)",
+   "analysis_sql": "991b184c87f99097",
+   "second_source": "991b184c87f99097",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_fetch_log_retry_after__cursor_loop: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "330651a46a30cf7e",
+   "second_source": "330651a46a30cf7e",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_fetch_log_retry_after__refetch_check: SQL result set equals the plain-Python recomputation cell by cell (4 rows, digest)",
+   "analysis_sql": "52c3923ac49ebeed",
+   "second_source": "52c3923ac49ebeed",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_fetch_log_retry_after__refetch_vs_loop: SQL result set equals the plain-Python recomputation cell by cell (5 rows, digest)",
+   "analysis_sql": "bf95161c2e1ca212",
+   "second_source": "bf95161c2e1ca212",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_fetch_log_retry_after__retries: SQL result set equals the plain-Python recomputation cell by cell (49 rows, digest)",
+   "analysis_sql": "574f98bf7999c0fe",
+   "second_source": "574f98bf7999c0fe",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_fetch_log_retry_after__retry_by_hint: SQL result set equals the plain-Python recomputation cell by cell (4 rows, digest)",
+   "analysis_sql": "8c0d97da6d9989ec",
+   "second_source": "8c0d97da6d9989ec",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_fetch_log_retry_after__retry_summary: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "b72add792d75a95c",
+   "second_source": "b72add792d75a95c",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_fetch_log_retry_after__statuses: SQL result set equals the plain-Python recomputation cell by cell (4 rows, digest)",
+   "analysis_sql": "eeb047493734be65",
+   "second_source": "eeb047493734be65",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_sample_scope_reconciliation__classes_by_source: SQL result set equals the plain-Python recomputation cell by cell (6 rows, digest)",
+   "analysis_sql": "fb3e7a151b9b3635",
+   "second_source": "fb3e7a151b9b3635",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_sample_scope_reconciliation__freshness_on_the_sample: SQL result set equals the plain-Python recomputation cell by cell (6 rows, digest)",
+   "analysis_sql": "4d852e1368ac19de",
+   "second_source": "4d852e1368ac19de",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_sample_scope_reconciliation__processing_batch: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "93f0e6c4be51ec9d",
+   "second_source": "93f0e6c4be51ec9d",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_sample_scope_reconciliation__publications: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "51c0deff7b866461",
+   "second_source": "51c0deff7b866461",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_sample_scope_reconciliation__quarantine_rows: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "ce8882b5a7104a3b",
+   "second_source": "ce8882b5a7104a3b",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_sample_scope_reconciliation__rates_by_scope: SQL result set equals the plain-Python recomputation cell by cell (3 rows, digest)",
+   "analysis_sql": "128e3317349010af",
+   "second_source": "128e3317349010af",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_sample_scope_reconciliation__scope_rows: SQL result set equals the plain-Python recomputation cell by cell (6 rows, digest)",
+   "analysis_sql": "89f1af2500997e29",
+   "second_source": "89f1af2500997e29",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_sample_scope_reconciliation__scope_total: SQL result set equals the plain-Python recomputation cell by cell (1 rows, digest)",
+   "analysis_sql": "782bcd469371b397",
+   "second_source": "782bcd469371b397",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C the SQL result sets of investigations 01..08 and 10 are exactly the sets python_side.py returns",
+   "analysis_sql": "51",
+   "second_source": "51",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-01 a source stale for three days while its jobs stay green (complete world; freshness recorded): runs | succeeded | allowed by the gate | batches in the window | with no accepted record | accepted | duplicates | freshness | ingestion age (04 vs the manifest)",
+   "analysis_sql": "72|72|72|12|11|16|156|262378|17363",
+   "second_source": "72|72|72|12|11|16|156|262378|17363",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-01 the gate cannot see it: the 7-day target against the silence, freshness checks passed in every silent run, silent source | over target (04 vs the manifest parameters)",
+   "analysis_sql": "604800|72|src-refunds|false",
+   "second_source": "604800|72|src-refunds|false",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-01 the three empty days: the partitions the silent source was expected to fill (04) against the days the generator records at completeness 0.000000",
+   "analysis_sql": "2026-10-02,2026-10-03,2026-10-04",
+   "second_source": "2026-10-02,2026-10-03,2026-10-04",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-02 a failed run that never replaces the publication: run | decision | pointer before | after | publication exists | critical failures | incident | recovery run | recovery minutes | history index (05 and 06 vs the manifest)",
+   "analysis_sql": "run-1187|blocked|pub-1186|pub-1186|false|1|inc-022|run-1188|67.8833|1186",
+   "second_source": "run-1187|blocked|pub-1186|pub-1186|false|1|inc-022|run-1188|67.8833|1186",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-03 a rate-limited source whose retries honour retry-after (04.. 08 vs the manifest): rate limited | retries | honouring | too soon | min slack | max slack | sessions | loops | rows",
+   "analysis_sql": "49|49|49|0|0|25|33|1|1361",
+   "second_source": "49|49|49|0|0|25|33|1|1361",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-03 the retry-after hints used (30, 60, 90, 120 s) and every hint honoured (08 vs the manifest parameters)",
+   "analysis_sql": "30:16/16,60:9/9,90:13/13,120:11/11",
+   "second_source": "30:16/16,60:9/9,90:13/13,120:11/11",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-04 late events behind the watermark (RECORDED; not recomputable from the published files): the causes sum to the count, all included in the next publication, none lost",
+   "analysis_sql": "757|757|0|757",
+   "second_source": "757|757|0|757",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-05 every publication reconciles to 0.00 but one candidate: run | day | source total | exclusions | stored candidate total | residual | incident | recovery minutes (06 vs the manifest)",
+   "analysis_sql": "run-0731|2026-09-09|23694.91|1137.66|22698.71|-141.46|inc-015|63.1000",
+   "second_source": "run-0731|2026-09-09|23694.91|1137.66|22698.71|-141.46|inc-015|63.1000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-05 candidates | publications (the loaded candidate totals and publications vs the manifest's recorded reconciliation)",
+   "analysis_sql": "1331|1318",
+   "second_source": "1331|1318",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-01 crash after the data write, before the checkpoint (b-0596): rows written | checkpoints | replay batch | accepted by the replay | replay received | version step (01 vs the injection manifest)",
+   "analysis_sql": "71|0|b-0597|69|71|1",
+   "second_source": "71|0|b-0597|69|71|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-01 at scale: every one of the 8 aborted batches was replayed from the same cursor with the next checkpoint version and its rows classified exactly once (01)",
+   "analysis_sql": "8|8|8|0",
+   "second_source": "8|8|8|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-02 overlapping backfills: refused ids | accepted | rejected (07 vs the injection manifest)",
+   "analysis_sql": "bf-006,bf-012|13|2",
+   "second_source": "bf-006,bf-012|13|2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-02 each refusal overlapped a request still running: the overlapped ids and the partitions shared (07 vs the manifest's statement: bf-006 over bf-004, bf-012 over bf-010)",
+   "analysis_sql": "bf-006>bf-004:1,bf-012>bf-010:1",
+   "second_source": "bf-006>bf-004:1,bf-012>bf-010:1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-04 an unexpected required field: b-0847 status | rows written | refused rows | checkpoints; b-0848 accepted (01 vs the injection manifest)",
+   "analysis_sql": "quarantined|17|17|0|15",
+   "second_source": "quarantined|17|17|0|15",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-05 a malformed row that would vanish: the keyless row of b-0405 has a quarantine row (01 and the loaded rows vs the injection manifest)",
+   "analysis_sql": "q-b-0405-02|MISSING_FIELD|1",
+   "second_source": "q-b-0405-02|MISSING_FIELD|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-06 a green job on a stale source: freshness at least 259,200 s | ingestion age at most 21,600 s (04 vs the injection manifest bounds)",
+   "analysis_sql": "True|True",
+   "second_source": "True|True",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-07 a failed run that would replace a publication: decision | critical failures | pointer after | publication of the run exists (05 vs the injection manifest)",
+   "analysis_sql": "blocked|1|pub-1186|false",
+   "second_source": "blocked|1|pub-1186|false",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-10 a pagination token that repeats: fetch row | session | detected at | no batch created (08 vs the injection manifest)",
+   "analysis_sql": "577|src-web-events:47|2026-09-02T18:21:49Z|true",
+   "second_source": "577|src-web-events:47|2026-09-02T18:21:49Z|true",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-03 retries that ignore retry-after: the recorded retries (08 vs the injection manifest's recorded_retries)",
+   "analysis_sql": "567e89994d3c9892",
+   "second_source": "567e89994d3c9892",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D R8-06 a refetch is not a loop: refetch rows whose cursor another session served or that re-poll the last committed cursor | refetch rows repeating inside their session | loop rows repeating inside theirs (08)",
+   "analysis_sql": "48|0|1",
+   "second_source": "48|0|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D R8-07 the funnel is stated: 1,343 / 1,328 / 1,318 / 10 / 15 and the failure kinds sum to the failed runs (02)",
+   "analysis_sql": "1343/1328/1318/10/15|25",
+   "second_source": "1343/1328/1318/10/15|25",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D R8-10 the quarantined count and rate are 'in committed batches'; the 17 schema-quarantined rows are listed separately and sit in no rate (01: 429 + 17 = 446 quarantine rows)",
+   "analysis_sql": "429|17|446|0.010752",
+   "second_source": "429|17|446|0.010752",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D R8-11 backfill coverage is stated: 11 of 15 partitions of the 13 accepted requests (0.733333); 2 requests for 4 partitions refused (07 vs the manifest statement)",
+   "analysis_sql": "11 of 15 partitions of the 13 accepted requests (0.733333); 2 requests for 4 partitions refused for overlap",
+   "second_source": "11 of 15 partitions of the 13 accepted requests (0.733333); 2 requests for 4 partitions refused for overlap",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI row counts: dim_source | dim_date | dim_failure_kind | dim_check | dim_scope | fact_batch | fact_run | fact_gate_check | fact_incident | fact_backfill_partition | fact_fetch | fact_freshness",
+   "analysis_sql": "6|56|6|7|3|1311|1343|9296|25|19|1361|6",
+   "second_source": "6|56|6|7|3|1311|1343|9296|25|19|1361|6",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI ingestion (all sources, complete world): received | accepted | duplicate | quarantined | deleted | rejection rate | duplicate rate (CSV facts vs 01 vs the manifest)",
+   "analysis_sql": "39901|37248|2101|429|123|0.010752|0.052655",
+   "second_source": "39901|37248|2101|429|123|0.010752|0.052655",
+   "third_source": "39901|37248|2101|429|123|0.010752|0.052655",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI ingestion per source: rejection rate | duplicate rate for all six (CSV facts vs 01, digest)",
+   "analysis_sql": "2621beed92200926",
+   "second_source": "2621beed92200926",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI schema-quarantined rows listed apart (CSV facts vs 01 vs the manifest)",
+   "analysis_sql": "17",
+   "second_source": "17",
+   "third_source": "17",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI run funnel: runs | reached the gate | allowed | blocked at the gate | failed before it (CSV facts vs 02 vs the manifest)",
+   "analysis_sql": "1343|1328|1318|10|15",
+   "second_source": "1343|1328|1318|10|15",
+   "third_source": "1343|1328|1318|10|15",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI failed runs by kind (CSV facts vs 02 vs the manifest's by_type)",
+   "analysis_sql": "861d4b3a9849bcc2",
+   "second_source": "861d4b3a9849bcc2",
+   "third_source": "861d4b3a9849bcc2",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI task success | attempt success (CSV facts vs 03 vs the domain vs the manifest)",
+   "analysis_sql": "0.995311|0.971622",
+   "second_source": "0.995311|0.971622",
+   "third_source": "0.995311|0.971622",
+   "fourth_source": "0.995311|0.971622",
+   "equal": true
+  },
+  {
+   "check": "E BI ingestion age | freshness per source (CSV facts vs 04 vs the manifest's record, digest)",
+   "analysis_sql": "89d2bf90d3e0041d",
+   "second_source": "89d2bf90d3e0041d",
+   "third_source": "89d2bf90d3e0041d",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI silent sources | completeness per source (CSV facts vs 04 vs the manifest)",
+   "analysis_sql": "0e4e5d39dbd23a4a",
+   "second_source": "0e4e5d39dbd23a4a",
+   "third_source": "0e4e5d39dbd23a4a",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI incidents | mean recovery minutes | by kind (CSV facts vs 06 vs the domain vs the manifest)",
+   "analysis_sql": "25|60.6827|4ca7eca10dd06b21",
+   "second_source": "25|60.6827|4ca7eca10dd06b21",
+   "third_source": "25|60.6827|4ca7eca10dd06b21",
+   "fourth_source": "25|60.6827|4ca7eca10dd06b21",
+   "equal": true
+  },
+  {
+   "check": "E BI backfill coverage | refused partitions (CSV facts vs 07 vs the domain vs the manifest)",
+   "analysis_sql": "0.733333|4",
+   "second_source": "0.733333|4",
+   "third_source": "0.733333|4",
+   "fourth_source": "0.733333|4",
+   "equal": true
+  },
+  {
+   "check": "E BI retries honoured | fetches by status (CSV facts vs 08 vs the manifest)",
+   "analysis_sql": "49/49|e8985b714501b21f",
+   "second_source": "49/49|e8985b714501b21f",
+   "third_source": "49/49|e8985b714501b21f",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI nothing withheld silently: every measure row with an empty value carries a status other than 'value' (rows | empty values | empty values with a status)",
+   "analysis_sql": "108|5|5",
+   "second_source": "108|5|5",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI every measure carries a scope that dim_scope defines, and every measure is defined in dim_measure (rows with an unknown scope | with an unknown measure)",
+   "analysis_sql": "0|0",
+   "second_source": "0|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  }
+ ]
+}

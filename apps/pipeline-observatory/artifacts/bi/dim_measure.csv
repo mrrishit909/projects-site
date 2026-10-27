@@ -1,0 +1,31 @@
+measure,definition,default_scope,contract
+accepted_unique,rows whose source key was not yet accepted and that satisfy the contract,complete_world,"D-01, D-P8-01"
+allowed,runs the gate allowed (a critical result exists and none failed),complete_world,D-P8-08
+attempt_success_rate,successful attempts / attempts,complete_world,P08-MET-06
+backfill_coverage,verified partitions / requested partitions of the accepted requests,complete_world,"P08-MET-11, D-09 R8-11"
+blocked_at_gate,runs the gate blocked,complete_world,D-P8-08
+completeness,accepted unique / expected records over all partitions of a source,complete_world,P08-MET-03
+deleted,"removal markers that took an accepted key out of the snapshot (an exclusion with its reason, never silently lost)",complete_world,D-06
+duplicate,"rows whose source key was already accepted, whatever the payload",complete_world,"D-01, D-P8-01"
+duplicate_rate,duplicate / received; null for a zero denominator,complete_world,P08-MET-05
+failed_before_gate,runs that failed in a task before the gate ran,complete_world,D-09 R8-07
+failed_runs,failed runs of one failure kind,complete_world,D-09 R8-07
+fetches,rows of the fetch log of one status,complete_world,D-09 R8-06
+freshness_seconds,"as-of minus the latest accepted event, whole seconds (the generator records the event)",recorded,P08-MET-01
+incidents,incidents opened by a failed or blocked run,complete_world,D-03
+ingestion_age_seconds,"as-of minus the last committed batch, whole seconds",complete_world,P08-MET-02
+late_events,accepted events that arrived behind the watermark of an earlier publication,recorded,P08-MET-08
+mean_recovery_minutes,"mean of (verified recovery - detection), minutes to 4 places",complete_world,P08-MET-10
+publication_content_hash_ok,a publication whose recomputed content hash equals the stored one,recorded,D-P8-10
+quarantined,"rows that fail the contract, one quarantine row per occurrence; the schema-quarantined batch is not in this count",complete_world,"D-01, D-09 R8-10"
+reached_gate,runs that have quality results,complete_world,D-09 R8-07
+received,rows of committed batches (accepted + duplicate + quarantined + deleted),complete_world,D-01
+reconciliation_residual,source total - published total - explained exclusions of a publication,recorded,P08-MET-09
+refused_backfill_partitions,"partitions of requests refused for overlap, beside the coverage and never inside it",complete_world,D-09 R8-11
+rejection_rate,quarantined / received; null for a zero denominator,complete_world,P08-MET-04
+retries_honoured,retries after a 429 that waited at least the retry-after hint / retries,complete_world,P08-TEST-03
+runs,hourly pipeline runs,complete_world,D-09 R8-07
+schema_quarantined_rows,"rows of the batch refused whole for a schema change, listed apart from every rate",complete_world,D-01 P08-TEST-04
+silent,"freshness above two declared cadences (a display rule, not a contract rule)",recorded,D-08
+silent_sources,sources whose freshness is above two declared cadences,recorded,D-08
+task_success_rate,successful terminal tasks / terminal tasks (attempts are not tasks),complete_world,P08-MET-06

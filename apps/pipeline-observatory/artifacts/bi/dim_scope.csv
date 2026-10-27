@@ -1,0 +1,4 @@
+scope,meaning
+complete_world,"computed here from tables the published files carry in full (batches, checkpoints, runs, tasks, quality results, publications, incidents, backfills, quarantine rows, fetch log, batch summaries)"
+recorded,"a statement of the generator about the complete world that the published files cannot recompute (manifest stats and designed relationships); read, not found"
+sample,"computed here from the 2,000-row raw_records sample (62 whole batches, 50 carrying rows): it describes the sample and not the world"

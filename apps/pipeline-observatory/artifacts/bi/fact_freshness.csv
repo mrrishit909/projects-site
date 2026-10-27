@@ -1,0 +1,7 @@
+source_id,as_of,latest_accepted_event_at,freshness_seconds,freshness_scope,ingestion_age_seconds,ingestion_age_scope,freshness_target_seconds,cadence_seconds,over_target,silent,expected_records,accepted_records,completeness_scope
+src-inventory,2026-10-05T00:00:00Z,2026-10-04T01:59:57Z,79203,recorded,67674,complete_world,259200,86400,false,false,1645,1630,complete_world
+src-orders,2026-10-05T00:00:00Z,2026-10-04T19:58:06Z,14514,recorded,13887,complete_world,19800,14400,false,false,16176,16066,complete_world
+src-payments,2026-10-05T00:00:00Z,2026-10-04T21:50:34Z,7766,recorded,6638,complete_world,21600,14400,false,false,10207,10125,complete_world
+src-refunds,2026-10-05T00:00:00Z,2026-10-01T23:07:02Z,262378,recorded,17363,complete_world,604800,21600,false,true,4003,3785,complete_world
+src-shipments,2026-10-05T00:00:00Z,2026-10-04T20:43:31Z,11789,recorded,9931,complete_world,259200,21600,false,false,4004,3985,complete_world
+src-web-events,2026-10-05T00:00:00Z,2026-10-04T18:03:22Z,21398,recorded,20724,complete_world,216000,43200,false,false,1678,1657,complete_world

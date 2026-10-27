@@ -1447,6 +1447,13 @@
       "check": "CI on the hosted runner with the artifact package (Mode A: reference check, 383 tests with the artifacts10_* scratch databases and LibreOffice, junit no-skip gate; Mode B: build, golden, browser evidence)",
       "run": "https://github.com/mrrishit909/projects-site/actions/runs/40476210083",
       "result": "success both modes on ebb8496; project 10 complete"
+    },
+    {
+      "ts": "2026-10-27T09:27:28Z",
+      "project": "08-pipeline-observatory",
+      "check": "coordinator verification of the artifact package (A-080) before commit",
+      "run": "local, cloud container",
+      "result": "run_all.py on fresh scratch databases: RESULT OK (204/204 reconciliation rows, 64 result sets, 303 rows), results JSON and BI CSVs identical to the committed ones; sha256sum -c 59 OK; full suite 568 passed (529 + 39), junit skipped=0; tracked files unchanged against ed7eb5a"
     }
   ]
 }

@@ -1,0 +1,7 @@
+source_id,source_name,expected_frequency,cadence_seconds,schema_version,freshness_target_seconds,owner_id,partitions,expected_records
+src-inventory,Synthetic inventory feed,daily,86400,1,259200,own-02,56,1645
+src-orders,Synthetic orders feed,every 4 hours,14400,1,19800,own-01,56,16176
+src-payments,Synthetic payments feed,every 4 hours,14400,2,21600,own-01,56,10207
+src-refunds,Synthetic refunds feed,every 6 hours,21600,1,604800,own-01,56,4003
+src-shipments,Synthetic shipments feed,every 6 hours,21600,1,259200,own-02,56,4004
+src-web-events,Synthetic web events feed,every 12 hours,43200,1,216000,own-03,56,1678
