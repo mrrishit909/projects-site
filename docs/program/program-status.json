@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T02:49:00Z",
+  "updated_at": "2026-10-27T02:56:27Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -145,7 +145,13 @@
       "blockers": [],
       "next_task": "A-056 artifacts -> then nothing open",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/productsignal/",
-      "verified_note": "Entry journey + reviewer disproof pass; all 14 findings fixed in T-06-07 with tests in Python, SQL, TypeScript and the API; the INJ-10 gap inside the published lift disclosed"
+      "verified_note": "Entry journey + reviewer disproof pass; all 14 findings fixed in T-06-07 with tests in Python, SQL, TypeScript and the API; the INJ-10 gap inside the published lift disclosed",
+      "artifacts": {
+        "commit": "ac32f8f",
+        "status": "done"
+      },
+      "status": "complete",
+      "completed_at": "2026-10-27T02:56:27Z"
     },
     "07-trustledger": {
       "slug": "trustledger",
@@ -232,7 +238,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 06: A-056 artifacts hand-back -> verify -> commit. Project 07: live-verified; A-060 reviewer hand-back -> fix worker -> republish -> live check -> artifacts. Project 08: A-059 backend hand-back -> verify -> D-06 -> commit -> CI Mode A -> generator -> web -> publish -> integrate -> review -> artifacts. Projects 09 and 10: contracts done (f93e8cb, this commit); dispatch their fixture workers (T-09-02, T-10-02) as worker slots free, then backend -> generator -> web -> publish -> integrate -> review -> artifacts.",
+    "next_concrete_task": "Project 06 complete. Project 07: live-verified; A-060 reviewer hand-back -> fix worker -> republish -> live check -> artifacts. Project 08: A-059 backend hand-back -> verify -> D-06 -> commit -> CI Mode A -> generator -> web -> publish -> integrate -> review -> artifacts. Project 09: A-061 fixture hand-back -> D-05 -> backend -> generator -> web -> publish -> integrate -> review -> artifacts. Project 10: contracts done; fixture worker next when a slot frees.",
     "acceptance": "see task-queue.json"
   }
 }

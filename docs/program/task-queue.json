@@ -526,12 +526,13 @@
       "id": "T-06-05",
       "project": "06-productsignal",
       "title": "Artifacts P06-ART-*",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-06-07"
       ],
       "retries": 0,
-      "acceptance": "tests/test_artifacts.py passes; checksums OK"
+      "acceptance": "tests/test_artifacts.py passes; checksums OK",
+      "result": "ac32f8f: artifacts P06-ART-01..10, 296-row reconciliation, 38 tests"
     },
     {
       "id": "T-08-01",
