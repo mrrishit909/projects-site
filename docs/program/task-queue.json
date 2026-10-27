@@ -607,14 +607,16 @@
       "id": "T-09-03",
       "project": "09-changeworks",
       "title": "Mode A slice: domain, migrations, SQL reference, FastAPI C01..C10, tests incl. P09-TEST-01..12",
-      "status": "in_progress",
-      "assignment": "A-064"
+      "status": "done",
+      "assignment": "A-064",
+      "result": "83158f5: Mode A slice, 346 tests; D-06"
     },
     {
       "id": "T-09-04",
       "project": "09-changeworks",
       "title": "Generator, Mode B site, Playwright evidence, publish, integrate",
-      "status": "pending"
+      "status": "in_progress",
+      "assignment": "A-067 (generator); web next"
     },
     {
       "id": "T-09-05",
@@ -647,14 +649,16 @@
       "id": "T-10-03",
       "project": "10-retentionlab",
       "title": "Mode A slice: domain (features, labels, splits, fitting, calibration, scoring), migrations, SQL reference, FastAPI C01..C10, tests incl. P10-TEST-01..12",
-      "status": "in_progress",
-      "assignment": "A-066"
+      "status": "done",
+      "assignment": "A-066",
+      "result": "4b957ca: Mode A slice, 299 tests; D-06"
     },
     {
       "id": "T-10-04",
       "project": "10-retentionlab",
       "title": "Generator, Mode B site, Playwright evidence, publish, integrate",
-      "status": "pending"
+      "status": "in_progress",
+      "assignment": "A-068 (generator); web next"
     },
     {
       "id": "T-10-05",
