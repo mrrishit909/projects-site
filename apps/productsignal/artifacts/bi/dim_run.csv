@@ -1,0 +1,8 @@
+run_key,experiment_version_id,run_kind,cutoff_at,is_interim,prior_runs
+an-001,xv-001,logged run,2026-05-18T00:00:00Z,1,0
+an-002,xv-001,logged run,2026-06-15T00:00:00Z,1,1
+an-003,xv-001,logged run,2026-07-13T00:00:00Z,1,2
+an-004,xv-001,logged run,2026-08-02T00:00:00Z,0,3
+asof-xv-001,xv-001,as-of read,2026-10-05T00:00:00Z,0,
+an-005,xv-002,logged run,2026-10-04T00:00:00Z,0,0
+asof-xv-002,xv-002,as-of read,2026-10-05T00:00:00Z,0,

@@ -1,0 +1,3 @@
+experiment_version_id,name,unit_type,primary_metric,planned_end,allocation_control,allocation_treatment,z,confidence,srm_p_threshold,srm_min_expected_cell,guardrail_metric,guardrail_window_days,plan_frozen_at,config_hash
+xv-001,Onboarding checklist,account,activation_7d,2026-08-02T00:00:00Z,0.500000,0.500000,1.959964,0.95,0.001,5,product_error_rate,7,2026-04-05T12:00:00Z,5f76c305b85b7c53df19375d393c7ac4972b745bd47dc57fc772edd11dc3f707
+xv-002,Onboarding checklist (re-plan),account,activation_7d,2026-10-04T00:00:00Z,0.600000,0.400000,1.959964,0.95,0.001,5,product_error_rate,7,2026-08-02T12:00:00Z,9ba9590cfd4ebaf0dcfd8f0a4ca39f3d60e66e726d8f20efd13f8b92a1d6638d

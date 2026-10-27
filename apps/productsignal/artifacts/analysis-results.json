@@ -1,0 +1,5472 @@
+{
+ "meta": [
+  {
+   "dataset_hash": "12672f9c39402517083bbbbe9164cbefe3435361dff086eb0d9e16e60f9b66f8",
+   "dataset_version": "ps-20261026-20261026",
+   "code_revision": "fdf911a",
+   "contract_version": 1,
+   "seed": 20261026,
+   "as_of": "2026-10-05T00:00:00Z",
+   "analysis_cutoffs": "an-001=2026-05-18T00:00:00Z|an-002=2026-06-15T00:00:00Z|an-003=2026-07-13T00:00:00Z|an-004=2026-08-02T00:00:00Z|inj-06 earlier read=2026-10-02T12:00:00Z|an-005=2026-10-04T00:00:00Z|as-of=2026-10-05T00:00:00Z",
+   "accounts": 600,
+   "events": 12552,
+   "reconciliation_rows": 296,
+   "reconciliation_equal": 296,
+   "result_sets": 33,
+   "result_rows": 197
+  }
+ ],
+ "01_activation_by_plan_and_segment__plan_segment": [
+  {
+   "plan": "business",
+   "segment": "enterprise",
+   "accounts": "51",
+   "signed_up": "51",
+   "immature": "1",
+   "mature": "50",
+   "activated": "31",
+   "activation_rate": "0.620000"
+  },
+  {
+   "plan": "business",
+   "segment": "mid",
+   "accounts": "27",
+   "signed_up": "27",
+   "immature": "1",
+   "mature": "26",
+   "activated": "16",
+   "activation_rate": "0.615385"
+  },
+  {
+   "plan": "business",
+   "segment": "smb",
+   "accounts": "9",
+   "signed_up": "9",
+   "immature": "0",
+   "mature": "9",
+   "activated": "4",
+   "activation_rate": "0.444444"
+  },
+  {
+   "plan": "business",
+   "segment": "ALL",
+   "accounts": "87",
+   "signed_up": "87",
+   "immature": "2",
+   "mature": "85",
+   "activated": "51",
+   "activation_rate": "0.600000"
+  },
+  {
+   "plan": "free",
+   "segment": "enterprise",
+   "accounts": "13",
+   "signed_up": "13",
+   "immature": "0",
+   "mature": "13",
+   "activated": "7",
+   "activation_rate": "0.538462"
+  },
+  {
+   "plan": "free",
+   "segment": "mid",
+   "accounts": "52",
+   "signed_up": "52",
+   "immature": "1",
+   "mature": "51",
+   "activated": "19",
+   "activation_rate": "0.372549"
+  },
+  {
+   "plan": "free",
+   "segment": "smb",
+   "accounts": "191",
+   "signed_up": "191",
+   "immature": "6",
+   "mature": "185",
+   "activated": "53",
+   "activation_rate": "0.286486"
+  },
+  {
+   "plan": "free",
+   "segment": "ALL",
+   "accounts": "256",
+   "signed_up": "256",
+   "immature": "7",
+   "mature": "249",
+   "activated": "79",
+   "activation_rate": "0.317269"
+  },
+  {
+   "plan": "team",
+   "segment": "enterprise",
+   "accounts": "24",
+   "signed_up": "24",
+   "immature": "2",
+   "mature": "22",
+   "activated": "7",
+   "activation_rate": "0.318182"
+  },
+  {
+   "plan": "team",
+   "segment": "mid",
+   "accounts": "76",
+   "signed_up": "76",
+   "immature": "1",
+   "mature": "75",
+   "activated": "28",
+   "activation_rate": "0.373333"
+  },
+  {
+   "plan": "team",
+   "segment": "smb",
+   "accounts": "145",
+   "signed_up": "145",
+   "immature": "5",
+   "mature": "140",
+   "activated": "49",
+   "activation_rate": "0.350000"
+  },
+  {
+   "plan": "team",
+   "segment": "ALL",
+   "accounts": "245",
+   "signed_up": "245",
+   "immature": "8",
+   "mature": "237",
+   "activated": "84",
+   "activation_rate": "0.354430"
+  },
+  {
+   "plan": "ALL",
+   "segment": "enterprise",
+   "accounts": "88",
+   "signed_up": "88",
+   "immature": "3",
+   "mature": "85",
+   "activated": "45",
+   "activation_rate": "0.529412"
+  },
+  {
+   "plan": "ALL",
+   "segment": "mid",
+   "accounts": "155",
+   "signed_up": "155",
+   "immature": "3",
+   "mature": "152",
+   "activated": "63",
+   "activation_rate": "0.414474"
+  },
+  {
+   "plan": "ALL",
+   "segment": "smb",
+   "accounts": "345",
+   "signed_up": "345",
+   "immature": "11",
+   "mature": "334",
+   "activated": "106",
+   "activation_rate": "0.317365"
+  },
+  {
+   "plan": "ALL",
+   "segment": "ALL",
+   "accounts": "588",
+   "signed_up": "588",
+   "immature": "17",
+   "mature": "571",
+   "activated": "214",
+   "activation_rate": "0.374781"
+  }
+ ],
+ "01_activation_by_plan_and_segment__by_signup_month": [
+  {
+   "signup_month": "2026-04",
+   "signups": "96",
+   "immature": "0",
+   "mature": "96",
+   "activated": "30",
+   "activation_rate": "0.312500"
+  },
+  {
+   "signup_month": "2026-05",
+   "signups": "108",
+   "immature": "0",
+   "mature": "108",
+   "activated": "45",
+   "activation_rate": "0.416667"
+  },
+  {
+   "signup_month": "2026-06",
+   "signups": "108",
+   "immature": "0",
+   "mature": "108",
+   "activated": "42",
+   "activation_rate": "0.388889"
+  },
+  {
+   "signup_month": "2026-07",
+   "signups": "106",
+   "immature": "0",
+   "mature": "106",
+   "activated": "35",
+   "activation_rate": "0.330189"
+  },
+  {
+   "signup_month": "2026-08",
+   "signups": "79",
+   "immature": "0",
+   "mature": "79",
+   "activated": "33",
+   "activation_rate": "0.417722"
+  },
+  {
+   "signup_month": "2026-09",
+   "signups": "84",
+   "immature": "10",
+   "mature": "74",
+   "activated": "29",
+   "activation_rate": "0.391892"
+  },
+  {
+   "signup_month": "2026-10",
+   "signups": "7",
+   "immature": "7",
+   "mature": "0",
+   "activated": "0",
+   "activation_rate": ""
+  }
+ ],
+ "01_activation_by_plan_and_segment__window_check": [
+  {
+   "signups": "76",
+   "immature": "17",
+   "mature": "59",
+   "activated": "21",
+   "activation_rate": "0.355932"
+  }
+ ],
+ "01_activation_by_plan_and_segment__time_to_activation_by_plan": [
+  {
+   "plan": "business",
+   "accounts": "36",
+   "activated": "19",
+   "activation_rate": "0.527778",
+   "median_hours_to_activate": "9.62"
+  },
+  {
+   "plan": "free",
+   "accounts": "117",
+   "activated": "26",
+   "activation_rate": "0.222222",
+   "median_hours_to_activate": "19.27"
+  },
+  {
+   "plan": "team",
+   "accounts": "131",
+   "activated": "47",
+   "activation_rate": "0.358779",
+   "median_hours_to_activate": "22.12"
+  }
+ ],
+ "02_weekly_cohort_grid__cohort_grid": [
+  {
+   "week_start": "2026-04-06",
+   "accounts": "27",
+   "day1_mature": "27",
+   "day1_retained": "7",
+   "day7_mature": "27",
+   "day7_retained": "4",
+   "day14_mature": "27",
+   "day14_retained": "5",
+   "day28_mature": "27",
+   "day28_retained": "2",
+   "on_or_after_day7_mature": "27",
+   "on_or_after_day7_retained": "14",
+   "week4_mature": "27",
+   "week4_retained": "7",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-04-13",
+   "accounts": "25",
+   "day1_mature": "25",
+   "day1_retained": "4",
+   "day7_mature": "25",
+   "day7_retained": "7",
+   "day14_mature": "25",
+   "day14_retained": "8",
+   "day28_mature": "25",
+   "day28_retained": "4",
+   "on_or_after_day7_mature": "25",
+   "on_or_after_day7_retained": "16",
+   "week4_mature": "25",
+   "week4_retained": "13",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-04-20",
+   "accounts": "25",
+   "day1_mature": "25",
+   "day1_retained": "4",
+   "day7_mature": "25",
+   "day7_retained": "3",
+   "day14_mature": "25",
+   "day14_retained": "4",
+   "day28_mature": "25",
+   "day28_retained": "1",
+   "on_or_after_day7_mature": "25",
+   "on_or_after_day7_retained": "11",
+   "week4_mature": "25",
+   "week4_retained": "7",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-04-27",
+   "accounts": "28",
+   "day1_mature": "28",
+   "day1_retained": "6",
+   "day7_mature": "28",
+   "day7_retained": "6",
+   "day14_mature": "28",
+   "day14_retained": "6",
+   "day28_mature": "28",
+   "day28_retained": "7",
+   "on_or_after_day7_mature": "28",
+   "on_or_after_day7_retained": "19",
+   "week4_mature": "28",
+   "week4_retained": "14",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-05-04",
+   "accounts": "24",
+   "day1_mature": "24",
+   "day1_retained": "5",
+   "day7_mature": "24",
+   "day7_retained": "3",
+   "day14_mature": "24",
+   "day14_retained": "5",
+   "day28_mature": "24",
+   "day28_retained": "0",
+   "on_or_after_day7_mature": "24",
+   "on_or_after_day7_retained": "19",
+   "week4_mature": "24",
+   "week4_retained": "8",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-05-11",
+   "accounts": "26",
+   "day1_mature": "26",
+   "day1_retained": "3",
+   "day7_mature": "26",
+   "day7_retained": "7",
+   "day14_mature": "26",
+   "day14_retained": "4",
+   "day28_mature": "26",
+   "day28_retained": "3",
+   "on_or_after_day7_mature": "26",
+   "on_or_after_day7_retained": "12",
+   "week4_mature": "26",
+   "week4_retained": "6",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-05-18",
+   "accounts": "24",
+   "day1_mature": "24",
+   "day1_retained": "6",
+   "day7_mature": "24",
+   "day7_retained": "2",
+   "day14_mature": "24",
+   "day14_retained": "6",
+   "day28_mature": "24",
+   "day28_retained": "1",
+   "on_or_after_day7_mature": "24",
+   "on_or_after_day7_retained": "18",
+   "week4_mature": "24",
+   "week4_retained": "13",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-05-25",
+   "accounts": "25",
+   "day1_mature": "25",
+   "day1_retained": "6",
+   "day7_mature": "25",
+   "day7_retained": "6",
+   "day14_mature": "25",
+   "day14_retained": "5",
+   "day28_mature": "25",
+   "day28_retained": "4",
+   "on_or_after_day7_mature": "25",
+   "on_or_after_day7_retained": "16",
+   "week4_mature": "25",
+   "week4_retained": "10",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-06-01",
+   "accounts": "25",
+   "day1_mature": "25",
+   "day1_retained": "4",
+   "day7_mature": "25",
+   "day7_retained": "7",
+   "day14_mature": "25",
+   "day14_retained": "3",
+   "day28_mature": "25",
+   "day28_retained": "1",
+   "on_or_after_day7_mature": "25",
+   "on_or_after_day7_retained": "15",
+   "week4_mature": "25",
+   "week4_retained": "6",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-06-08",
+   "accounts": "24",
+   "day1_mature": "24",
+   "day1_retained": "5",
+   "day7_mature": "24",
+   "day7_retained": "3",
+   "day14_mature": "24",
+   "day14_retained": "4",
+   "day28_mature": "24",
+   "day28_retained": "0",
+   "on_or_after_day7_mature": "24",
+   "on_or_after_day7_retained": "14",
+   "week4_mature": "24",
+   "week4_retained": "4",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-06-15",
+   "accounts": "25",
+   "day1_mature": "25",
+   "day1_retained": "2",
+   "day7_mature": "25",
+   "day7_retained": "0",
+   "day14_mature": "25",
+   "day14_retained": "2",
+   "day28_mature": "25",
+   "day28_retained": "2",
+   "on_or_after_day7_mature": "25",
+   "on_or_after_day7_retained": "13",
+   "week4_mature": "25",
+   "week4_retained": "8",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-06-22",
+   "accounts": "26",
+   "day1_mature": "26",
+   "day1_retained": "5",
+   "day7_mature": "26",
+   "day7_retained": "1",
+   "day14_mature": "26",
+   "day14_retained": "4",
+   "day28_mature": "26",
+   "day28_retained": "2",
+   "on_or_after_day7_mature": "26",
+   "on_or_after_day7_retained": "13",
+   "week4_mature": "26",
+   "week4_retained": "5",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-06-29",
+   "accounts": "24",
+   "day1_mature": "24",
+   "day1_retained": "4",
+   "day7_mature": "24",
+   "day7_retained": "7",
+   "day14_mature": "24",
+   "day14_retained": "2",
+   "day28_mature": "24",
+   "day28_retained": "5",
+   "on_or_after_day7_mature": "24",
+   "on_or_after_day7_retained": "17",
+   "week4_mature": "24",
+   "week4_retained": "9",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-07-06",
+   "accounts": "25",
+   "day1_mature": "25",
+   "day1_retained": "4",
+   "day7_mature": "25",
+   "day7_retained": "4",
+   "day14_mature": "25",
+   "day14_retained": "5",
+   "day28_mature": "25",
+   "day28_retained": "3",
+   "on_or_after_day7_mature": "25",
+   "on_or_after_day7_retained": "17",
+   "week4_mature": "25",
+   "week4_retained": "8",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-07-13",
+   "accounts": "25",
+   "day1_mature": "25",
+   "day1_retained": "3",
+   "day7_mature": "25",
+   "day7_retained": "3",
+   "day14_mature": "25",
+   "day14_retained": "2",
+   "day28_mature": "25",
+   "day28_retained": "1",
+   "on_or_after_day7_mature": "25",
+   "on_or_after_day7_retained": "12",
+   "week4_mature": "25",
+   "week4_retained": "7",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-07-20",
+   "accounts": "22",
+   "day1_mature": "22",
+   "day1_retained": "7",
+   "day7_mature": "22",
+   "day7_retained": "4",
+   "day14_mature": "22",
+   "day14_retained": "3",
+   "day28_mature": "22",
+   "day28_retained": "2",
+   "on_or_after_day7_mature": "22",
+   "on_or_after_day7_retained": "14",
+   "week4_mature": "22",
+   "week4_retained": "8",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-07-27",
+   "accounts": "20",
+   "day1_mature": "20",
+   "day1_retained": "3",
+   "day7_mature": "20",
+   "day7_retained": "3",
+   "day14_mature": "20",
+   "day14_retained": "2",
+   "day28_mature": "20",
+   "day28_retained": "2",
+   "on_or_after_day7_mature": "20",
+   "on_or_after_day7_retained": "11",
+   "week4_mature": "20",
+   "week4_retained": "4",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-08-03",
+   "accounts": "18",
+   "day1_mature": "18",
+   "day1_retained": "3",
+   "day7_mature": "18",
+   "day7_retained": "1",
+   "day14_mature": "18",
+   "day14_retained": "4",
+   "day28_mature": "18",
+   "day28_retained": "2",
+   "on_or_after_day7_mature": "18",
+   "on_or_after_day7_retained": "10",
+   "week4_mature": "18",
+   "week4_retained": "5",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-08-10",
+   "accounts": "19",
+   "day1_mature": "19",
+   "day1_retained": "4",
+   "day7_mature": "19",
+   "day7_retained": "7",
+   "day14_mature": "19",
+   "day14_retained": "3",
+   "day28_mature": "19",
+   "day28_retained": "0",
+   "on_or_after_day7_mature": "19",
+   "on_or_after_day7_retained": "15",
+   "week4_mature": "19",
+   "week4_retained": "9",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-08-17",
+   "accounts": "20",
+   "day1_mature": "20",
+   "day1_retained": "5",
+   "day7_mature": "20",
+   "day7_retained": "4",
+   "day14_mature": "20",
+   "day14_retained": "6",
+   "day28_mature": "20",
+   "day28_retained": "2",
+   "on_or_after_day7_mature": "20",
+   "on_or_after_day7_retained": "12",
+   "week4_mature": "20",
+   "week4_retained": "6",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-08-24",
+   "accounts": "16",
+   "day1_mature": "16",
+   "day1_retained": "2",
+   "day7_mature": "16",
+   "day7_retained": "5",
+   "day14_mature": "16",
+   "day14_retained": "2",
+   "day28_mature": "16",
+   "day28_retained": "1",
+   "on_or_after_day7_mature": "16",
+   "on_or_after_day7_retained": "11",
+   "week4_mature": "16",
+   "week4_retained": "7",
+   "day7_status": "complete",
+   "week4_status": "complete"
+  },
+  {
+   "week_start": "2026-08-31",
+   "accounts": "19",
+   "day1_mature": "19",
+   "day1_retained": "1",
+   "day7_mature": "19",
+   "day7_retained": "3",
+   "day14_mature": "19",
+   "day14_retained": "1",
+   "day28_mature": "19",
+   "day28_retained": "1",
+   "on_or_after_day7_mature": "19",
+   "on_or_after_day7_retained": "12",
+   "week4_mature": "0",
+   "week4_retained": "0",
+   "day7_status": "complete",
+   "week4_status": "blank"
+  },
+  {
+   "week_start": "2026-09-07",
+   "accounts": "20",
+   "day1_mature": "20",
+   "day1_retained": "6",
+   "day7_mature": "20",
+   "day7_retained": "9",
+   "day14_mature": "20",
+   "day14_retained": "6",
+   "day28_mature": "0",
+   "day28_retained": "0",
+   "on_or_after_day7_mature": "20",
+   "on_or_after_day7_retained": "17",
+   "week4_mature": "0",
+   "week4_retained": "0",
+   "day7_status": "complete",
+   "week4_status": "blank"
+  },
+  {
+   "week_start": "2026-09-14",
+   "accounts": "17",
+   "day1_mature": "17",
+   "day1_retained": "4",
+   "day7_mature": "17",
+   "day7_retained": "3",
+   "day14_mature": "16",
+   "day14_retained": "1",
+   "day28_mature": "0",
+   "day28_retained": "0",
+   "on_or_after_day7_mature": "17",
+   "on_or_after_day7_retained": "8",
+   "week4_mature": "0",
+   "week4_retained": "0",
+   "day7_status": "complete",
+   "week4_status": "blank"
+  },
+  {
+   "week_start": "2026-09-21",
+   "accounts": "22",
+   "day1_mature": "22",
+   "day1_retained": "6",
+   "day7_mature": "22",
+   "day7_retained": "5",
+   "day14_mature": "0",
+   "day14_retained": "0",
+   "day28_mature": "0",
+   "day28_retained": "0",
+   "on_or_after_day7_mature": "22",
+   "on_or_after_day7_retained": "6",
+   "week4_mature": "0",
+   "week4_retained": "0",
+   "day7_status": "complete",
+   "week4_status": "blank"
+  },
+  {
+   "week_start": "2026-09-28",
+   "accounts": "17",
+   "day1_mature": "15",
+   "day1_retained": "3",
+   "day7_mature": "0",
+   "day7_retained": "0",
+   "day14_mature": "0",
+   "day14_retained": "0",
+   "day28_mature": "0",
+   "day28_retained": "0",
+   "on_or_after_day7_mature": "0",
+   "on_or_after_day7_retained": "0",
+   "week4_mature": "0",
+   "week4_retained": "0",
+   "day7_status": "blank",
+   "week4_status": "blank"
+  },
+  {
+   "week_start": "ALL",
+   "accounts": "588",
+   "day1_mature": "586",
+   "day1_retained": "112",
+   "day7_mature": "571",
+   "day7_retained": "107",
+   "day14_mature": "548",
+   "day14_retained": "93",
+   "day28_mature": "512",
+   "day28_retained": "46",
+   "on_or_after_day7_mature": "571",
+   "on_or_after_day7_retained": "342",
+   "week4_mature": "493",
+   "week4_retained": "164",
+   "day7_status": "partial",
+   "week4_status": "partial"
+  }
+ ],
+ "02_weekly_cohort_grid__window_check": [
+  {
+   "cohort_accounts": "16",
+   "day7_mature": "16",
+   "day7_retained": "5",
+   "day7_rate": "0.312500",
+   "on_or_after_day7_retained": "11",
+   "on_or_after_day7_rate": "0.687500",
+   "week4_mature": "16",
+   "week4_retained": "7",
+   "week4_rate": "0.437500",
+   "excluded_internal_accounts": "1"
+  }
+ ],
+ "02_weekly_cohort_grid__timezone_effect": [
+  {
+   "timezone": "America/Los_Angeles",
+   "mature_accounts": "147",
+   "exact_day7_local": "27",
+   "exact_day7_utc": "25",
+   "local_only": "7",
+   "utc_only": "5"
+  },
+  {
+   "timezone": "America/New_York",
+   "mature_accounts": "263",
+   "exact_day7_local": "42",
+   "exact_day7_utc": "41",
+   "local_only": "1",
+   "utc_only": "0"
+  },
+  {
+   "timezone": "Europe/London",
+   "mature_accounts": "161",
+   "exact_day7_local": "38",
+   "exact_day7_utc": "38",
+   "local_only": "0",
+   "utc_only": "0"
+  },
+  {
+   "timezone": "ALL",
+   "mature_accounts": "571",
+   "exact_day7_local": "107",
+   "exact_day7_utc": "104",
+   "local_only": "8",
+   "utc_only": "5"
+  }
+ ],
+ "03_funnel_steps_and_exclusions__funnel_steps": [
+  {
+   "step_number": "1",
+   "step": "visit",
+   "units": "154",
+   "conversion_from_previous": "",
+   "conversion_from_first": "1.000000",
+   "lost_at_this_step": ""
+  },
+  {
+   "step_number": "2",
+   "step": "signup",
+   "units": "51",
+   "conversion_from_previous": "0.331169",
+   "conversion_from_first": "0.331169",
+   "lost_at_this_step": "103"
+  },
+  {
+   "step_number": "3",
+   "step": "onboarding_step_1",
+   "units": "41",
+   "conversion_from_previous": "0.803922",
+   "conversion_from_first": "0.266234",
+   "lost_at_this_step": "10"
+  },
+  {
+   "step_number": "4",
+   "step": "activated",
+   "units": "4",
+   "conversion_from_previous": "0.097561",
+   "conversion_from_first": "0.025974",
+   "lost_at_this_step": "37"
+  }
+ ],
+ "03_funnel_steps_and_exclusions__funnel_gap_sensitivity": [
+  {
+   "max_gap_hours": "24",
+   "visit": "154",
+   "signup": "50",
+   "onboarding_step_1": "38",
+   "activated": "4",
+   "overall_conversion": "0.025974"
+  },
+  {
+   "max_gap_hours": "48",
+   "visit": "154",
+   "signup": "51",
+   "onboarding_step_1": "41",
+   "activated": "4",
+   "overall_conversion": "0.025974"
+  },
+  {
+   "max_gap_hours": "72",
+   "visit": "154",
+   "signup": "51",
+   "onboarding_step_1": "41",
+   "activated": "4",
+   "overall_conversion": "0.025974"
+  }
+ ],
+ "03_funnel_steps_and_exclusions__signup_conversion": [
+  {
+   "visitors": "154",
+   "signed_up": "51",
+   "signup_conversion": "0.331169"
+  }
+ ],
+ "03_funnel_steps_and_exclusions__exclusions_by_event": [
+  {
+   "event_name": "activated",
+   "rows_received": "263",
+   "duplicates_dropped": "15",
+   "unknown_identity": "0",
+   "bot_excluded": "7",
+   "internal_excluded": "2",
+   "analysed": "239"
+  },
+  {
+   "event_name": "feature_used",
+   "rows_received": "2197",
+   "duplicates_dropped": "18",
+   "unknown_identity": "5",
+   "bot_excluded": "89",
+   "internal_excluded": "31",
+   "analysed": "2054"
+  },
+  {
+   "event_name": "onboarding_step_1",
+   "rows_received": "1334",
+   "duplicates_dropped": "9",
+   "unknown_identity": "0",
+   "bot_excluded": "18",
+   "internal_excluded": "22",
+   "analysed": "1285"
+  },
+  {
+   "event_name": "onboarding_step_2",
+   "rows_received": "729",
+   "duplicates_dropped": "7",
+   "unknown_identity": "0",
+   "bot_excluded": "18",
+   "internal_excluded": "13",
+   "analysed": "691"
+  },
+  {
+   "event_name": "onboarding_step_3",
+   "rows_received": "317",
+   "duplicates_dropped": "3",
+   "unknown_identity": "0",
+   "bot_excluded": "18",
+   "internal_excluded": "8",
+   "analysed": "288"
+  },
+  {
+   "event_name": "product_error",
+   "rows_received": "364",
+   "duplicates_dropped": "3",
+   "unknown_identity": "13",
+   "bot_excluded": "83",
+   "internal_excluded": "8",
+   "analysed": "257"
+  },
+  {
+   "event_name": "signup",
+   "rows_received": "1845",
+   "duplicates_dropped": "21",
+   "unknown_identity": "0",
+   "bot_excluded": "18",
+   "internal_excluded": "29",
+   "analysed": "1777"
+  },
+  {
+   "event_name": "visit",
+   "rows_received": "5503",
+   "duplicates_dropped": "48",
+   "unknown_identity": "12",
+   "bot_excluded": "54",
+   "internal_excluded": "1",
+   "analysed": "5388"
+  },
+  {
+   "event_name": "ALL",
+   "rows_received": "12552",
+   "duplicates_dropped": "124",
+   "unknown_identity": "30",
+   "bot_excluded": "305",
+   "internal_excluded": "114",
+   "analysed": "11979"
+  }
+ ],
+ "03_funnel_steps_and_exclusions__late_batch_effect": [
+  {
+   "reading": "late batch (hindsight - known)",
+   "visit": "1",
+   "signup": "1",
+   "onboarding_step_1": "9",
+   "activated": "4"
+  },
+  {
+   "reading": "known_at_the_read",
+   "visit": "112",
+   "signup": "29",
+   "onboarding_step_1": "16",
+   "activated": "0"
+  },
+  {
+   "reading": "in_hindsight",
+   "visit": "113",
+   "signup": "30",
+   "onboarding_step_1": "25",
+   "activated": "4"
+  }
+ ],
+ "04_tracking_quality_by_week__by_week": [
+  {
+   "week_start": "2026-04-06",
+   "rows_total": "373",
+   "duplicates_dropped": "2",
+   "canonical": "371",
+   "delayed_over_24h": "2",
+   "unknown_identity": "0",
+   "bot_excluded": "0",
+   "internal_excluded": "0",
+   "analysed": "371",
+   "anonymous_events": "215",
+   "attributed_by_link": "4",
+   "delayed_share": "0.005391"
+  },
+  {
+   "week_start": "2026-04-13",
+   "rows_total": "451",
+   "duplicates_dropped": "7",
+   "canonical": "444",
+   "delayed_over_24h": "4",
+   "unknown_identity": "1",
+   "bot_excluded": "7",
+   "internal_excluded": "0",
+   "analysed": "436",
+   "anonymous_events": "219",
+   "attributed_by_link": "6",
+   "delayed_share": "0.009009"
+  },
+  {
+   "week_start": "2026-04-20",
+   "rows_total": "535",
+   "duplicates_dropped": "7",
+   "canonical": "528",
+   "delayed_over_24h": "7",
+   "unknown_identity": "2",
+   "bot_excluded": "36",
+   "internal_excluded": "4",
+   "analysed": "486",
+   "anonymous_events": "233",
+   "attributed_by_link": "3",
+   "delayed_share": "0.013258"
+  },
+  {
+   "week_start": "2026-04-27",
+   "rows_total": "552",
+   "duplicates_dropped": "10",
+   "canonical": "542",
+   "delayed_over_24h": "17",
+   "unknown_identity": "1",
+   "bot_excluded": "15",
+   "internal_excluded": "2",
+   "analysed": "524",
+   "anonymous_events": "257",
+   "attributed_by_link": "7",
+   "delayed_share": "0.031365"
+  },
+  {
+   "week_start": "2026-05-04",
+   "rows_total": "502",
+   "duplicates_dropped": "6",
+   "canonical": "496",
+   "delayed_over_24h": "6",
+   "unknown_identity": "0",
+   "bot_excluded": "7",
+   "internal_excluded": "1",
+   "analysed": "488",
+   "anonymous_events": "202",
+   "attributed_by_link": "5",
+   "delayed_share": "0.012097"
+  },
+  {
+   "week_start": "2026-05-11",
+   "rows_total": "603",
+   "duplicates_dropped": "4",
+   "canonical": "599",
+   "delayed_over_24h": "12",
+   "unknown_identity": "2",
+   "bot_excluded": "22",
+   "internal_excluded": "0",
+   "analysed": "575",
+   "anonymous_events": "259",
+   "attributed_by_link": "8",
+   "delayed_share": "0.020033"
+  },
+  {
+   "week_start": "2026-05-18",
+   "rows_total": "586",
+   "duplicates_dropped": "5",
+   "canonical": "581",
+   "delayed_over_24h": "6",
+   "unknown_identity": "0",
+   "bot_excluded": "24",
+   "internal_excluded": "29",
+   "analysed": "528",
+   "anonymous_events": "235",
+   "attributed_by_link": "7",
+   "delayed_share": "0.010327"
+  },
+  {
+   "week_start": "2026-05-25",
+   "rows_total": "551",
+   "duplicates_dropped": "2",
+   "canonical": "549",
+   "delayed_over_24h": "13",
+   "unknown_identity": "0",
+   "bot_excluded": "2",
+   "internal_excluded": "5",
+   "analysed": "542",
+   "anonymous_events": "239",
+   "attributed_by_link": "4",
+   "delayed_share": "0.023679"
+  },
+  {
+   "week_start": "2026-06-01",
+   "rows_total": "516",
+   "duplicates_dropped": "7",
+   "canonical": "509",
+   "delayed_over_24h": "13",
+   "unknown_identity": "1",
+   "bot_excluded": "0",
+   "internal_excluded": "10",
+   "analysed": "498",
+   "anonymous_events": "229",
+   "attributed_by_link": "9",
+   "delayed_share": "0.025540"
+  },
+  {
+   "week_start": "2026-06-08",
+   "rows_total": "503",
+   "duplicates_dropped": "4",
+   "canonical": "499",
+   "delayed_over_24h": "13",
+   "unknown_identity": "4",
+   "bot_excluded": "8",
+   "internal_excluded": "5",
+   "analysed": "482",
+   "anonymous_events": "208",
+   "attributed_by_link": "4",
+   "delayed_share": "0.026052"
+  },
+  {
+   "week_start": "2026-06-15",
+   "rows_total": "584",
+   "duplicates_dropped": "4",
+   "canonical": "580",
+   "delayed_over_24h": "9",
+   "unknown_identity": "1",
+   "bot_excluded": "8",
+   "internal_excluded": "3",
+   "analysed": "568",
+   "anonymous_events": "258",
+   "attributed_by_link": "6",
+   "delayed_share": "0.015517"
+  },
+  {
+   "week_start": "2026-06-22",
+   "rows_total": "563",
+   "duplicates_dropped": "3",
+   "canonical": "560",
+   "delayed_over_24h": "8",
+   "unknown_identity": "0",
+   "bot_excluded": "13",
+   "internal_excluded": "6",
+   "analysed": "541",
+   "anonymous_events": "232",
+   "attributed_by_link": "4",
+   "delayed_share": "0.014286"
+  },
+  {
+   "week_start": "2026-06-29",
+   "rows_total": "493",
+   "duplicates_dropped": "5",
+   "canonical": "488",
+   "delayed_over_24h": "11",
+   "unknown_identity": "2",
+   "bot_excluded": "10",
+   "internal_excluded": "3",
+   "analysed": "473",
+   "anonymous_events": "207",
+   "attributed_by_link": "2",
+   "delayed_share": "0.022541"
+  },
+  {
+   "week_start": "2026-07-06",
+   "rows_total": "506",
+   "duplicates_dropped": "4",
+   "canonical": "502",
+   "delayed_over_24h": "9",
+   "unknown_identity": "1",
+   "bot_excluded": "2",
+   "internal_excluded": "5",
+   "analysed": "494",
+   "anonymous_events": "239",
+   "attributed_by_link": "4",
+   "delayed_share": "0.017928"
+  },
+  {
+   "week_start": "2026-07-13",
+   "rows_total": "441",
+   "duplicates_dropped": "2",
+   "canonical": "439",
+   "delayed_over_24h": "7",
+   "unknown_identity": "2",
+   "bot_excluded": "0",
+   "internal_excluded": "5",
+   "analysed": "432",
+   "anonymous_events": "191",
+   "attributed_by_link": "5",
+   "delayed_share": "0.015945"
+  },
+  {
+   "week_start": "2026-07-20",
+   "rows_total": "472",
+   "duplicates_dropped": "7",
+   "canonical": "465",
+   "delayed_over_24h": "12",
+   "unknown_identity": "3",
+   "bot_excluded": "0",
+   "internal_excluded": "4",
+   "analysed": "458",
+   "anonymous_events": "214",
+   "attributed_by_link": "7",
+   "delayed_share": "0.025806"
+  },
+  {
+   "week_start": "2026-07-27",
+   "rows_total": "395",
+   "duplicates_dropped": "5",
+   "canonical": "390",
+   "delayed_over_24h": "9",
+   "unknown_identity": "1",
+   "bot_excluded": "0",
+   "internal_excluded": "2",
+   "analysed": "387",
+   "anonymous_events": "158",
+   "attributed_by_link": "2",
+   "delayed_share": "0.023077"
+  },
+  {
+   "week_start": "2026-08-03",
+   "rows_total": "375",
+   "duplicates_dropped": "3",
+   "canonical": "372",
+   "delayed_over_24h": "9",
+   "unknown_identity": "3",
+   "bot_excluded": "8",
+   "internal_excluded": "0",
+   "analysed": "361",
+   "anonymous_events": "167",
+   "attributed_by_link": "5",
+   "delayed_share": "0.024194"
+  },
+  {
+   "week_start": "2026-08-10",
+   "rows_total": "432",
+   "duplicates_dropped": "6",
+   "canonical": "426",
+   "delayed_over_24h": "10",
+   "unknown_identity": "0",
+   "bot_excluded": "17",
+   "internal_excluded": "0",
+   "analysed": "409",
+   "anonymous_events": "184",
+   "attributed_by_link": "4",
+   "delayed_share": "0.023474"
+  },
+  {
+   "week_start": "2026-08-17",
+   "rows_total": "449",
+   "duplicates_dropped": "5",
+   "canonical": "444",
+   "delayed_over_24h": "9",
+   "unknown_identity": "1",
+   "bot_excluded": "33",
+   "internal_excluded": "7",
+   "analysed": "403",
+   "anonymous_events": "165",
+   "attributed_by_link": "3",
+   "delayed_share": "0.020270"
+  },
+  {
+   "week_start": "2026-08-24",
+   "rows_total": "421",
+   "duplicates_dropped": "5",
+   "canonical": "416",
+   "delayed_over_24h": "4",
+   "unknown_identity": "0",
+   "bot_excluded": "25",
+   "internal_excluded": "6",
+   "analysed": "385",
+   "anonymous_events": "159",
+   "attributed_by_link": "4",
+   "delayed_share": "0.009615"
+  },
+  {
+   "week_start": "2026-08-31",
+   "rows_total": "458",
+   "duplicates_dropped": "7",
+   "canonical": "451",
+   "delayed_over_24h": "9",
+   "unknown_identity": "3",
+   "bot_excluded": "22",
+   "internal_excluded": "1",
+   "analysed": "425",
+   "anonymous_events": "187",
+   "attributed_by_link": "8",
+   "delayed_share": "0.019956"
+  },
+  {
+   "week_start": "2026-09-07",
+   "rows_total": "450",
+   "duplicates_dropped": "4",
+   "canonical": "446",
+   "delayed_over_24h": "9",
+   "unknown_identity": "2",
+   "bot_excluded": "26",
+   "internal_excluded": "1",
+   "analysed": "417",
+   "anonymous_events": "174",
+   "attributed_by_link": "2",
+   "delayed_share": "0.020179"
+  },
+  {
+   "week_start": "2026-09-14",
+   "rows_total": "376",
+   "duplicates_dropped": "3",
+   "canonical": "373",
+   "delayed_over_24h": "6",
+   "unknown_identity": "0",
+   "bot_excluded": "0",
+   "internal_excluded": "8",
+   "analysed": "365",
+   "anonymous_events": "178",
+   "attributed_by_link": "5",
+   "delayed_share": "0.016086"
+  },
+  {
+   "week_start": "2026-09-21",
+   "rows_total": "477",
+   "duplicates_dropped": "3",
+   "canonical": "474",
+   "delayed_over_24h": "12",
+   "unknown_identity": "0",
+   "bot_excluded": "4",
+   "internal_excluded": "0",
+   "analysed": "470",
+   "anonymous_events": "203",
+   "attributed_by_link": "3",
+   "delayed_share": "0.025316"
+  },
+  {
+   "week_start": "2026-09-28",
+   "rows_total": "488",
+   "duplicates_dropped": "4",
+   "canonical": "484",
+   "delayed_over_24h": "11",
+   "unknown_identity": "0",
+   "bot_excluded": "16",
+   "internal_excluded": "7",
+   "analysed": "461",
+   "anonymous_events": "176",
+   "attributed_by_link": "3",
+   "delayed_share": "0.022727"
+  },
+  {
+   "week_start": "ALL",
+   "rows_total": "12552",
+   "duplicates_dropped": "124",
+   "canonical": "12428",
+   "delayed_over_24h": "237",
+   "unknown_identity": "30",
+   "bot_excluded": "305",
+   "internal_excluded": "114",
+   "analysed": "11979",
+   "anonymous_events": "5388",
+   "attributed_by_link": "124",
+   "delayed_share": "0.019070"
+  }
+ ],
+ "04_tracking_quality_by_week__delay_distribution": [
+  {
+   "event_name": "activated",
+   "delayed_rows": "5",
+   "hours_24_to_48": "2",
+   "days_2_to_7": "3",
+   "over_7_days": "0",
+   "longest_delay_hours": "158.22"
+  },
+  {
+   "event_name": "feature_used",
+   "delayed_rows": "55",
+   "hours_24_to_48": "10",
+   "days_2_to_7": "31",
+   "over_7_days": "14",
+   "longest_delay_hours": "207.72"
+  },
+  {
+   "event_name": "onboarding_step_1",
+   "delayed_rows": "30",
+   "hours_24_to_48": "5",
+   "days_2_to_7": "19",
+   "over_7_days": "6",
+   "longest_delay_hours": "194.29"
+  },
+  {
+   "event_name": "onboarding_step_2",
+   "delayed_rows": "15",
+   "hours_24_to_48": "1",
+   "days_2_to_7": "12",
+   "over_7_days": "2",
+   "longest_delay_hours": "212.21"
+  },
+  {
+   "event_name": "onboarding_step_3",
+   "delayed_rows": "6",
+   "hours_24_to_48": "0",
+   "days_2_to_7": "4",
+   "over_7_days": "2",
+   "longest_delay_hours": "206.23"
+  },
+  {
+   "event_name": "product_error",
+   "delayed_rows": "3",
+   "hours_24_to_48": "1",
+   "days_2_to_7": "0",
+   "over_7_days": "2",
+   "longest_delay_hours": "216.46"
+  },
+  {
+   "event_name": "signup",
+   "delayed_rows": "29",
+   "hours_24_to_48": "1",
+   "days_2_to_7": "18",
+   "over_7_days": "10",
+   "longest_delay_hours": "215.20"
+  },
+  {
+   "event_name": "visit",
+   "delayed_rows": "94",
+   "hours_24_to_48": "9",
+   "days_2_to_7": "59",
+   "over_7_days": "26",
+   "longest_delay_hours": "216.67"
+  },
+  {
+   "event_name": "ALL",
+   "delayed_rows": "237",
+   "hours_24_to_48": "29",
+   "days_2_to_7": "146",
+   "over_7_days": "62",
+   "longest_delay_hours": "216.67"
+  }
+ ],
+ "04_tracking_quality_by_week__identity_links": [
+  {
+   "links": "1264",
+   "real_users": "1806",
+   "real_users_linked": "1259",
+   "linked_share": "0.697121",
+   "anonymous_events": "5388",
+   "attributed_by_link": "124",
+   "remain_anonymous": "5264"
+  }
+ ],
+ "05_experiment_v1_at_each_run_cutoff__arms_by_cutoff": [
+  {
+   "run": "an-001",
+   "cutoff_at": "2026-05-18T00:00:00Z",
+   "arm": "control",
+   "assigned": "77",
+   "immature_or_unobserved": "12",
+   "mature": "65",
+   "activated": "18",
+   "conversion": "0.276923",
+   "wilson_low": "0.182936",
+   "wilson_high": "0.395806",
+   "exposed": "58",
+   "exposure_rate": "0.892308"
+  },
+  {
+   "run": "an-001",
+   "cutoff_at": "2026-05-18T00:00:00Z",
+   "arm": "treatment",
+   "assigned": "78",
+   "immature_or_unobserved": "14",
+   "mature": "64",
+   "activated": "25",
+   "conversion": "0.390625",
+   "wilson_low": "0.280556",
+   "wilson_high": "0.513081",
+   "exposed": "52",
+   "exposure_rate": "0.812500"
+  },
+  {
+   "run": "an-002",
+   "cutoff_at": "2026-06-15T00:00:00Z",
+   "arm": "control",
+   "assigned": "127",
+   "immature_or_unobserved": "13",
+   "mature": "114",
+   "activated": "34",
+   "conversion": "0.298246",
+   "wilson_low": "0.221961",
+   "wilson_high": "0.387684",
+   "exposed": "100",
+   "exposure_rate": "0.877193"
+  },
+  {
+   "run": "an-002",
+   "cutoff_at": "2026-06-15T00:00:00Z",
+   "arm": "treatment",
+   "assigned": "126",
+   "immature_or_unobserved": "11",
+   "mature": "115",
+   "activated": "48",
+   "conversion": "0.417391",
+   "wilson_low": "0.331362",
+   "wilson_high": "0.508761",
+   "exposed": "99",
+   "exposure_rate": "0.860870"
+  },
+  {
+   "run": "an-003",
+   "cutoff_at": "2026-07-13T00:00:00Z",
+   "arm": "control",
+   "assigned": "177",
+   "immature_or_unobserved": "13",
+   "mature": "164",
+   "activated": "53",
+   "conversion": "0.323171",
+   "wilson_low": "0.256348",
+   "wilson_high": "0.398088",
+   "exposed": "146",
+   "exposure_rate": "0.890244"
+  },
+  {
+   "run": "an-003",
+   "cutoff_at": "2026-07-13T00:00:00Z",
+   "arm": "treatment",
+   "assigned": "176",
+   "immature_or_unobserved": "12",
+   "mature": "164",
+   "activated": "68",
+   "conversion": "0.414634",
+   "wilson_low": "0.342030",
+   "wilson_high": "0.491146",
+   "exposed": "143",
+   "exposure_rate": "0.871951"
+  },
+  {
+   "run": "an-004",
+   "cutoff_at": "2026-08-02T00:00:00Z",
+   "arm": "control",
+   "assigned": "200",
+   "immature_or_unobserved": "0",
+   "mature": "200",
+   "activated": "63",
+   "conversion": "0.315000",
+   "wilson_low": "0.254623",
+   "wilson_high": "0.382350",
+   "exposed": "175",
+   "exposure_rate": "0.875000"
+  },
+  {
+   "run": "an-004",
+   "cutoff_at": "2026-08-02T00:00:00Z",
+   "arm": "treatment",
+   "assigned": "200",
+   "immature_or_unobserved": "0",
+   "mature": "200",
+   "activated": "82",
+   "conversion": "0.410000",
+   "wilson_low": "0.344157",
+   "wilson_high": "0.479235",
+   "exposed": "174",
+   "exposure_rate": "0.870000"
+  },
+  {
+   "run": "as-of",
+   "cutoff_at": "2026-10-05T00:00:00Z",
+   "arm": "control",
+   "assigned": "200",
+   "immature_or_unobserved": "0",
+   "mature": "200",
+   "activated": "63",
+   "conversion": "0.315000",
+   "wilson_low": "0.254623",
+   "wilson_high": "0.382350",
+   "exposed": "175",
+   "exposure_rate": "0.875000"
+  },
+  {
+   "run": "as-of",
+   "cutoff_at": "2026-10-05T00:00:00Z",
+   "arm": "treatment",
+   "assigned": "200",
+   "immature_or_unobserved": "0",
+   "mature": "200",
+   "activated": "82",
+   "conversion": "0.410000",
+   "wilson_low": "0.344157",
+   "wilson_high": "0.479235",
+   "exposed": "174",
+   "exposure_rate": "0.870000"
+  }
+ ],
+ "05_experiment_v1_at_each_run_cutoff__lift_by_cutoff": [
+  {
+   "run": "an-001",
+   "cutoff_at": "2026-05-18T00:00:00Z",
+   "interim": "true",
+   "prior_runs": "0",
+   "assigned_control": "77",
+   "assigned_treatment": "78",
+   "mature_control": "65",
+   "mature_treatment": "64",
+   "activated_control": "18",
+   "activated_treatment": "25",
+   "conversion_control": "0.276923",
+   "conversion_treatment": "0.390625",
+   "absolute_lift_pp": "11.37",
+   "relative_lift": "0.410590",
+   "newcombe_low": "-0.048312",
+   "newcombe_high": "0.268068",
+   "interval_includes_zero": "true",
+   "srm_statistic": "0.006452",
+   "srm_p_value": "0.935981",
+   "srm_verdict": "OK",
+   "plan_hash_valid": "true",
+   "plan_frozen": "true",
+   "conclusive": "false"
+  },
+  {
+   "run": "an-002",
+   "cutoff_at": "2026-06-15T00:00:00Z",
+   "interim": "true",
+   "prior_runs": "1",
+   "assigned_control": "127",
+   "assigned_treatment": "126",
+   "mature_control": "114",
+   "mature_treatment": "115",
+   "activated_control": "34",
+   "activated_treatment": "48",
+   "conversion_control": "0.298246",
+   "conversion_treatment": "0.417391",
+   "absolute_lift_pp": "11.91",
+   "relative_lift": "0.399488",
+   "newcombe_low": "-0.004952",
+   "newcombe_high": "0.238174",
+   "interval_includes_zero": "true",
+   "srm_statistic": "0.003953",
+   "srm_p_value": "0.949870",
+   "srm_verdict": "OK",
+   "plan_hash_valid": "true",
+   "plan_frozen": "true",
+   "conclusive": "false"
+  },
+  {
+   "run": "an-003",
+   "cutoff_at": "2026-07-13T00:00:00Z",
+   "interim": "true",
+   "prior_runs": "2",
+   "assigned_control": "177",
+   "assigned_treatment": "176",
+   "mature_control": "164",
+   "mature_treatment": "164",
+   "activated_control": "53",
+   "activated_treatment": "68",
+   "conversion_control": "0.323171",
+   "conversion_treatment": "0.414634",
+   "absolute_lift_pp": "9.15",
+   "relative_lift": "0.283019",
+   "newcombe_low": "-0.012863",
+   "newcombe_high": "0.193048",
+   "interval_includes_zero": "true",
+   "srm_statistic": "0.002833",
+   "srm_p_value": "0.957553",
+   "srm_verdict": "OK",
+   "plan_hash_valid": "true",
+   "plan_frozen": "true",
+   "conclusive": "false"
+  },
+  {
+   "run": "an-004",
+   "cutoff_at": "2026-08-02T00:00:00Z",
+   "interim": "false",
+   "prior_runs": "3",
+   "assigned_control": "200",
+   "assigned_treatment": "200",
+   "mature_control": "200",
+   "mature_treatment": "200",
+   "activated_control": "63",
+   "activated_treatment": "82",
+   "conversion_control": "0.315000",
+   "conversion_treatment": "0.410000",
+   "absolute_lift_pp": "9.50",
+   "relative_lift": "0.301587",
+   "newcombe_low": "0.000812",
+   "newcombe_high": "0.186863",
+   "interval_includes_zero": "false",
+   "srm_statistic": "0.000000",
+   "srm_p_value": "1.000000",
+   "srm_verdict": "OK",
+   "plan_hash_valid": "true",
+   "plan_frozen": "true",
+   "conclusive": "true"
+  },
+  {
+   "run": "as-of",
+   "cutoff_at": "2026-10-05T00:00:00Z",
+   "interim": "false",
+   "prior_runs": "",
+   "assigned_control": "200",
+   "assigned_treatment": "200",
+   "mature_control": "200",
+   "mature_treatment": "200",
+   "activated_control": "63",
+   "activated_treatment": "82",
+   "conversion_control": "0.315000",
+   "conversion_treatment": "0.410000",
+   "absolute_lift_pp": "9.50",
+   "relative_lift": "0.301587",
+   "newcombe_low": "0.000812",
+   "newcombe_high": "0.186863",
+   "interval_includes_zero": "false",
+   "srm_statistic": "0.000000",
+   "srm_p_value": "1.000000",
+   "srm_verdict": "OK",
+   "plan_hash_valid": "true",
+   "plan_frozen": "true",
+   "conclusive": "true"
+  }
+ ],
+ "05_experiment_v1_at_each_run_cutoff__gap_accounts": [
+  {
+   "arm": "control",
+   "mature": "200",
+   "activated": "63",
+   "published_conversion": "0.315000",
+   "gap_accounts": "5",
+   "gap_published_activations": "0",
+   "mature_excluding_gap": "195",
+   "activated_excluding_gap": "63",
+   "conversion_excluding_gap": "0.323077"
+  },
+  {
+   "arm": "treatment",
+   "mature": "200",
+   "activated": "82",
+   "published_conversion": "0.410000",
+   "gap_accounts": "6",
+   "gap_published_activations": "0",
+   "mature_excluding_gap": "194",
+   "activated_excluding_gap": "82",
+   "conversion_excluding_gap": "0.422680"
+  }
+ ],
+ "05_experiment_v1_at_each_run_cutoff__gap_lift": [
+  {
+   "reading": "published (all mature accounts)",
+   "mature_control": "200",
+   "activated_control": "63",
+   "mature_treatment": "200",
+   "activated_treatment": "82",
+   "conversion_control": "0.315000",
+   "conversion_treatment": "0.410000",
+   "absolute_lift_pp": "9.50"
+  },
+  {
+   "reading": "excluding the gap accounts from both arms",
+   "mature_control": "195",
+   "activated_control": "63",
+   "mature_treatment": "194",
+   "activated_treatment": "82",
+   "conversion_control": "0.323077",
+   "conversion_treatment": "0.422680",
+   "absolute_lift_pp": "9.96"
+  }
+ ],
+ "06_experiment_v2_sample_ratio__srm_by_read": [
+  {
+   "experiment_version": "xv-001",
+   "run": "an-001",
+   "cutoff_at": "2026-05-18T00:00:00Z",
+   "planned_control": "0.500000",
+   "planned_treatment": "0.500000",
+   "observed_control": "77",
+   "observed_treatment": "78",
+   "expected_control": "77.50",
+   "expected_treatment": "77.50",
+   "treatment_share": "0.503226",
+   "statistic": "0.006452",
+   "p_value": "0.935981",
+   "df": "1",
+   "verdict": "OK"
+  },
+  {
+   "experiment_version": "xv-001",
+   "run": "an-002",
+   "cutoff_at": "2026-06-15T00:00:00Z",
+   "planned_control": "0.500000",
+   "planned_treatment": "0.500000",
+   "observed_control": "127",
+   "observed_treatment": "126",
+   "expected_control": "126.50",
+   "expected_treatment": "126.50",
+   "treatment_share": "0.498024",
+   "statistic": "0.003953",
+   "p_value": "0.949870",
+   "df": "1",
+   "verdict": "OK"
+  },
+  {
+   "experiment_version": "xv-001",
+   "run": "an-003",
+   "cutoff_at": "2026-07-13T00:00:00Z",
+   "planned_control": "0.500000",
+   "planned_treatment": "0.500000",
+   "observed_control": "177",
+   "observed_treatment": "176",
+   "expected_control": "176.50",
+   "expected_treatment": "176.50",
+   "treatment_share": "0.498584",
+   "statistic": "0.002833",
+   "p_value": "0.957553",
+   "df": "1",
+   "verdict": "OK"
+  },
+  {
+   "experiment_version": "xv-001",
+   "run": "an-004",
+   "cutoff_at": "2026-08-02T00:00:00Z",
+   "planned_control": "0.500000",
+   "planned_treatment": "0.500000",
+   "observed_control": "200",
+   "observed_treatment": "200",
+   "expected_control": "200.00",
+   "expected_treatment": "200.00",
+   "treatment_share": "0.500000",
+   "statistic": "0.000000",
+   "p_value": "1.000000",
+   "df": "1",
+   "verdict": "OK"
+  },
+  {
+   "experiment_version": "xv-001",
+   "run": "as-of",
+   "cutoff_at": "2026-10-05T00:00:00Z",
+   "planned_control": "0.500000",
+   "planned_treatment": "0.500000",
+   "observed_control": "200",
+   "observed_treatment": "200",
+   "expected_control": "200.00",
+   "expected_treatment": "200.00",
+   "treatment_share": "0.500000",
+   "statistic": "0.000000",
+   "p_value": "1.000000",
+   "df": "1",
+   "verdict": "OK"
+  },
+  {
+   "experiment_version": "xv-002",
+   "run": "an-005",
+   "cutoff_at": "2026-10-04T00:00:00Z",
+   "planned_control": "0.600000",
+   "planned_treatment": "0.400000",
+   "observed_control": "62",
+   "observed_treatment": "92",
+   "expected_control": "92.40",
+   "expected_treatment": "61.60",
+   "treatment_share": "0.597403",
+   "statistic": "25.004329",
+   "p_value": "0.000001",
+   "df": "1",
+   "verdict": "MISMATCH"
+  },
+  {
+   "experiment_version": "xv-002",
+   "run": "as-of",
+   "cutoff_at": "2026-10-05T00:00:00Z",
+   "planned_control": "0.600000",
+   "planned_treatment": "0.400000",
+   "observed_control": "62",
+   "observed_treatment": "92",
+   "expected_control": "92.40",
+   "expected_treatment": "61.60",
+   "treatment_share": "0.597403",
+   "statistic": "25.004329",
+   "p_value": "0.000001",
+   "df": "1",
+   "verdict": "MISMATCH"
+  }
+ ],
+ "06_experiment_v2_sample_ratio__v2_assignment_by_week": [
+  {
+   "week_start": "2026-08-03",
+   "control": "4",
+   "treatment": "7",
+   "assigned": "11",
+   "treatment_share": "0.636364"
+  },
+  {
+   "week_start": "2026-08-10",
+   "control": "8",
+   "treatment": "11",
+   "assigned": "19",
+   "treatment_share": "0.578947"
+  },
+  {
+   "week_start": "2026-08-17",
+   "control": "8",
+   "treatment": "12",
+   "assigned": "20",
+   "treatment_share": "0.600000"
+  },
+  {
+   "week_start": "2026-08-24",
+   "control": "6",
+   "treatment": "10",
+   "assigned": "16",
+   "treatment_share": "0.625000"
+  },
+  {
+   "week_start": "2026-08-31",
+   "control": "8",
+   "treatment": "11",
+   "assigned": "19",
+   "treatment_share": "0.578947"
+  },
+  {
+   "week_start": "2026-09-07",
+   "control": "8",
+   "treatment": "12",
+   "assigned": "20",
+   "treatment_share": "0.600000"
+  },
+  {
+   "week_start": "2026-09-14",
+   "control": "6",
+   "treatment": "11",
+   "assigned": "17",
+   "treatment_share": "0.647059"
+  },
+  {
+   "week_start": "2026-09-21",
+   "control": "9",
+   "treatment": "13",
+   "assigned": "22",
+   "treatment_share": "0.590909"
+  },
+  {
+   "week_start": "2026-09-28",
+   "control": "5",
+   "treatment": "5",
+   "assigned": "10",
+   "treatment_share": "0.500000"
+  }
+ ],
+ "06_experiment_v2_sample_ratio__v2_population": [
+  {
+   "arm": "control",
+   "assigned": "62",
+   "mature": "57",
+   "immature_or_unobserved": "5",
+   "exposed": "57"
+  },
+  {
+   "arm": "treatment",
+   "assigned": "92",
+   "mature": "87",
+   "immature_or_unobserved": "5",
+   "exposed": "78"
+  }
+ ],
+ "07_guardrail_and_revenue_per_arm__guardrail_by_cutoff": [
+  {
+   "run": "an-001",
+   "cutoff_at": "2026-05-18T00:00:00Z",
+   "eligible_control": "65",
+   "eligible_treatment": "64",
+   "errors_control": "12",
+   "errors_treatment": "12",
+   "error_rate_control": "0.184615",
+   "error_rate_treatment": "0.187500",
+   "difference_pp": "0.29",
+   "newcombe_low": "-0.132063",
+   "newcombe_high": "0.138285",
+   "interval_includes_zero": "true",
+   "verdict": "OK"
+  },
+  {
+   "run": "an-002",
+   "cutoff_at": "2026-06-15T00:00:00Z",
+   "eligible_control": "114",
+   "eligible_treatment": "115",
+   "errors_control": "19",
+   "errors_treatment": "19",
+   "error_rate_control": "0.166667",
+   "error_rate_treatment": "0.165217",
+   "difference_pp": "-0.14",
+   "newcombe_low": "-0.098781",
+   "newcombe_high": "0.095704",
+   "interval_includes_zero": "true",
+   "verdict": "OK"
+  },
+  {
+   "run": "an-003",
+   "cutoff_at": "2026-07-13T00:00:00Z",
+   "eligible_control": "164",
+   "eligible_treatment": "164",
+   "errors_control": "27",
+   "errors_treatment": "26",
+   "error_rate_control": "0.164634",
+   "error_rate_treatment": "0.158537",
+   "difference_pp": "-0.61",
+   "newcombe_low": "-0.086334",
+   "newcombe_high": "0.074176",
+   "interval_includes_zero": "true",
+   "verdict": "OK"
+  },
+  {
+   "run": "an-004",
+   "cutoff_at": "2026-08-02T00:00:00Z",
+   "eligible_control": "200",
+   "eligible_treatment": "200",
+   "errors_control": "31",
+   "errors_treatment": "30",
+   "error_rate_control": "0.155000",
+   "error_rate_treatment": "0.150000",
+   "difference_pp": "-0.50",
+   "newcombe_low": "-0.076005",
+   "newcombe_high": "0.066018",
+   "interval_includes_zero": "true",
+   "verdict": "OK"
+  },
+  {
+   "run": "as-of",
+   "cutoff_at": "2026-10-05T00:00:00Z",
+   "eligible_control": "200",
+   "eligible_treatment": "200",
+   "errors_control": "31",
+   "errors_treatment": "30",
+   "error_rate_control": "0.155000",
+   "error_rate_treatment": "0.150000",
+   "difference_pp": "-0.50",
+   "newcombe_low": "-0.076005",
+   "newcombe_high": "0.066018",
+   "interval_includes_zero": "true",
+   "verdict": "OK"
+  }
+ ],
+ "07_guardrail_and_revenue_per_arm__revenue_by_arm": [
+  {
+   "run": "an-001",
+   "cutoff_at": "2026-05-18T00:00:00Z",
+   "arm": "control",
+   "units": "65",
+   "total_usd": "5322.00",
+   "mean_usd": "81.88",
+   "df": "64",
+   "t_quantile": "1.997730",
+   "interval_low": "21.83",
+   "interval_high": "141.92"
+  },
+  {
+   "run": "an-001",
+   "cutoff_at": "2026-05-18T00:00:00Z",
+   "arm": "treatment",
+   "units": "64",
+   "total_usd": "5481.00",
+   "mean_usd": "85.64",
+   "df": "63",
+   "t_quantile": "1.998341",
+   "interval_low": "26.30",
+   "interval_high": "144.98"
+  },
+  {
+   "run": "an-002",
+   "cutoff_at": "2026-06-15T00:00:00Z",
+   "arm": "control",
+   "units": "114",
+   "total_usd": "11271.00",
+   "mean_usd": "98.87",
+   "df": "113",
+   "t_quantile": "1.981180",
+   "interval_low": "46.61",
+   "interval_high": "151.12"
+  },
+  {
+   "run": "an-002",
+   "cutoff_at": "2026-06-15T00:00:00Z",
+   "arm": "treatment",
+   "units": "115",
+   "total_usd": "11364.00",
+   "mean_usd": "98.82",
+   "df": "114",
+   "t_quantile": "1.980992",
+   "interval_low": "48.76",
+   "interval_high": "148.87"
+  },
+  {
+   "run": "an-003",
+   "cutoff_at": "2026-07-13T00:00:00Z",
+   "arm": "control",
+   "units": "164",
+   "total_usd": "17559.00",
+   "mean_usd": "107.07",
+   "df": "163",
+   "t_quantile": "1.974625",
+   "interval_low": "61.34",
+   "interval_high": "152.79"
+  },
+  {
+   "run": "an-003",
+   "cutoff_at": "2026-07-13T00:00:00Z",
+   "arm": "treatment",
+   "units": "164",
+   "total_usd": "20262.00",
+   "mean_usd": "123.55",
+   "df": "163",
+   "t_quantile": "1.974625",
+   "interval_low": "76.32",
+   "interval_high": "170.78"
+  },
+  {
+   "run": "an-004",
+   "cutoff_at": "2026-08-02T00:00:00Z",
+   "arm": "control",
+   "units": "200",
+   "total_usd": "19566.00",
+   "mean_usd": "97.83",
+   "df": "199",
+   "t_quantile": "1.971957",
+   "interval_low": "58.98",
+   "interval_high": "136.68"
+  },
+  {
+   "run": "an-004",
+   "cutoff_at": "2026-08-02T00:00:00Z",
+   "arm": "treatment",
+   "units": "200",
+   "total_usd": "26190.00",
+   "mean_usd": "130.95",
+   "df": "199",
+   "t_quantile": "1.971957",
+   "interval_low": "86.70",
+   "interval_high": "175.20"
+  },
+  {
+   "run": "as-of",
+   "cutoff_at": "2026-10-05T00:00:00Z",
+   "arm": "control",
+   "units": "200",
+   "total_usd": "19566.00",
+   "mean_usd": "97.83",
+   "df": "199",
+   "t_quantile": "1.971957",
+   "interval_low": "58.98",
+   "interval_high": "136.68"
+  },
+  {
+   "run": "as-of",
+   "cutoff_at": "2026-10-05T00:00:00Z",
+   "arm": "treatment",
+   "units": "200",
+   "total_usd": "26190.00",
+   "mean_usd": "130.95",
+   "df": "199",
+   "t_quantile": "1.971957",
+   "interval_low": "86.70",
+   "interval_high": "175.20"
+  }
+ ],
+ "07_guardrail_and_revenue_per_arm__revenue_difference": [
+  {
+   "run": "an-001",
+   "cutoff_at": "2026-05-18T00:00:00Z",
+   "difference_usd": "3.76",
+   "welch_df": "126",
+   "t_quantile": "1.978971",
+   "interval_low": "-79.85",
+   "interval_high": "87.38",
+   "interval_includes_zero": "true"
+  },
+  {
+   "run": "an-002",
+   "cutoff_at": "2026-06-15T00:00:00Z",
+   "difference_usd": "-0.05",
+   "welch_df": "226",
+   "t_quantile": "1.970516",
+   "interval_low": "-72.03",
+   "interval_high": "71.92",
+   "interval_includes_zero": "true"
+  },
+  {
+   "run": "an-003",
+   "cutoff_at": "2026-07-13T00:00:00Z",
+   "difference_usd": "16.48",
+   "welch_df": "325",
+   "t_quantile": "1.967290",
+   "interval_low": "-49.01",
+   "interval_high": "81.98",
+   "interval_includes_zero": "true"
+  },
+  {
+   "run": "an-004",
+   "cutoff_at": "2026-08-02T00:00:00Z",
+   "difference_usd": "33.12",
+   "welch_df": "391",
+   "t_quantile": "1.966050",
+   "interval_low": "-25.59",
+   "interval_high": "91.83",
+   "interval_includes_zero": "true"
+  },
+  {
+   "run": "as-of",
+   "cutoff_at": "2026-10-05T00:00:00Z",
+   "difference_usd": "33.12",
+   "welch_df": "391",
+   "t_quantile": "1.966050",
+   "interval_low": "-25.59",
+   "interval_high": "91.83",
+   "interval_includes_zero": "true"
+  }
+ ],
+ "07_guardrail_and_revenue_per_arm__week4_by_arm": [
+  {
+   "mature_control": "200",
+   "mature_treatment": "200",
+   "retained_control": "71",
+   "retained_treatment": "62",
+   "rate_control": "0.355000",
+   "rate_treatment": "0.310000",
+   "difference_pp": "-4.50",
+   "newcombe_low": "-0.136053",
+   "newcombe_high": "0.047102",
+   "interval_includes_zero": "true"
+  }
+ ],
+ "08_identity_attribution_and_late_events__attribution_by_event": [
+  {
+   "event_name": "visit",
+   "anonymous_events": "5388",
+   "attributed_by_link": "124",
+   "before_the_link_stays_anonymous": "1507",
+   "no_link_stays_anonymous": "3757",
+   "remain_anonymous": "5264"
+  },
+  {
+   "event_name": "ALL",
+   "anonymous_events": "5388",
+   "attributed_by_link": "124",
+   "before_the_link_stays_anonymous": "1507",
+   "no_link_stays_anonymous": "3757",
+   "remain_anonymous": "5264"
+  }
+ ],
+ "08_identity_attribution_and_late_events__links_by_timing": [
+  {
+   "pattern": "both: earlier events stay anonymous, later ones are attributed",
+   "anonymous_ids": "124",
+   "events_before_link": "159",
+   "events_after_link": "124"
+  },
+  {
+   "pattern": "only before the link: all stay anonymous",
+   "anonymous_ids": "1140",
+   "events_before_link": "1348",
+   "events_after_link": "0"
+  }
+ ],
+ "08_identity_attribution_and_late_events__late_events_by_cutoff": [
+  {
+   "read": "an-001",
+   "cutoff_at": "2026-05-18T00:00:00Z",
+   "late_events": "9",
+   "signup": "1",
+   "activated": "0",
+   "product_error": "0",
+   "other": "8"
+  },
+  {
+   "read": "an-002",
+   "cutoff_at": "2026-06-15T00:00:00Z",
+   "late_events": "7",
+   "signup": "0",
+   "activated": "0",
+   "product_error": "0",
+   "other": "7"
+  },
+  {
+   "read": "an-003",
+   "cutoff_at": "2026-07-13T00:00:00Z",
+   "late_events": "7",
+   "signup": "2",
+   "activated": "0",
+   "product_error": "0",
+   "other": "5"
+  },
+  {
+   "read": "an-004",
+   "cutoff_at": "2026-08-02T00:00:00Z",
+   "late_events": "10",
+   "signup": "1",
+   "activated": "0",
+   "product_error": "0",
+   "other": "9"
+  },
+  {
+   "read": "inj-06 earlier read",
+   "cutoff_at": "2026-10-02T12:00:00Z",
+   "late_events": "16",
+   "signup": "1",
+   "activated": "0",
+   "product_error": "0",
+   "other": "15"
+  },
+  {
+   "read": "an-005",
+   "cutoff_at": "2026-10-04T00:00:00Z",
+   "late_events": "7",
+   "signup": "0",
+   "activated": "0",
+   "product_error": "0",
+   "other": "7"
+  },
+  {
+   "read": "as-of",
+   "cutoff_at": "2026-10-05T00:00:00Z",
+   "late_events": "0",
+   "signup": "0",
+   "activated": "0",
+   "product_error": "0",
+   "other": "0"
+  }
+ ],
+ "08_identity_attribution_and_late_events__late_activations_by_run": [
+  {
+   "run": "an-001",
+   "arm": "control",
+   "mature_known": "65",
+   "activated_known": "18",
+   "mature_hindsight": "65",
+   "activated_hindsight": "18",
+   "activations_changed_by_late_events": "0"
+  },
+  {
+   "run": "an-001",
+   "arm": "treatment",
+   "mature_known": "64",
+   "activated_known": "25",
+   "mature_hindsight": "64",
+   "activated_hindsight": "25",
+   "activations_changed_by_late_events": "0"
+  },
+  {
+   "run": "an-002",
+   "arm": "control",
+   "mature_known": "114",
+   "activated_known": "34",
+   "mature_hindsight": "114",
+   "activated_hindsight": "34",
+   "activations_changed_by_late_events": "0"
+  },
+  {
+   "run": "an-002",
+   "arm": "treatment",
+   "mature_known": "115",
+   "activated_known": "48",
+   "mature_hindsight": "115",
+   "activated_hindsight": "48",
+   "activations_changed_by_late_events": "0"
+  },
+  {
+   "run": "an-003",
+   "arm": "control",
+   "mature_known": "164",
+   "activated_known": "53",
+   "mature_hindsight": "164",
+   "activated_hindsight": "53",
+   "activations_changed_by_late_events": "0"
+  },
+  {
+   "run": "an-003",
+   "arm": "treatment",
+   "mature_known": "164",
+   "activated_known": "68",
+   "mature_hindsight": "164",
+   "activated_hindsight": "68",
+   "activations_changed_by_late_events": "0"
+  },
+  {
+   "run": "an-004",
+   "arm": "control",
+   "mature_known": "200",
+   "activated_known": "63",
+   "mature_hindsight": "200",
+   "activated_hindsight": "63",
+   "activations_changed_by_late_events": "0"
+  },
+  {
+   "run": "an-004",
+   "arm": "treatment",
+   "mature_known": "200",
+   "activated_known": "82",
+   "mature_hindsight": "200",
+   "activated_hindsight": "82",
+   "activations_changed_by_late_events": "0"
+  }
+ ],
+ "09_golden_known_answer__golden_arms": [
+  {
+   "arm": "control",
+   "assigned": "100",
+   "mature": "100",
+   "activated": "20",
+   "conversion": "0.200000"
+  },
+  {
+   "arm": "treatment",
+   "assigned": "100",
+   "mature": "100",
+   "activated": "30",
+   "conversion": "0.300000"
+  }
+ ],
+ "09_golden_known_answer__golden_lift": [
+  {
+   "control_conversion": "0.200000",
+   "treatment_conversion": "0.300000",
+   "absolute_lift_pp": "10.00",
+   "relative_lift": "0.500000"
+  }
+ ],
+ "09_golden_known_answer__golden_retention": [
+  {
+   "cohort_accounts": "20",
+   "day7_mature": "20",
+   "day7_retained": "5",
+   "day7_rate": "0.250000",
+   "on_or_after_day7_retained": "12",
+   "week4_retained": "4"
+  }
+ ],
+ "bi_measures": [
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-001|control",
+   "value": "77"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "an-001|control",
+   "value": "65"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "an-001|control",
+   "value": "0.892308"
+  },
+  {
+   "measure": "activated_accounts",
+   "slice": "an-001|control",
+   "value": "18"
+  },
+  {
+   "measure": "conversion_rate",
+   "slice": "an-001|control",
+   "value": "0.276923"
+  },
+  {
+   "measure": "guardrail_error_rate",
+   "slice": "an-001|control",
+   "value": "0.184615"
+  },
+  {
+   "measure": "revenue_per_assigned_account",
+   "slice": "an-001|control",
+   "value": "81.88"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-001|treatment",
+   "value": "78"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "an-001|treatment",
+   "value": "64"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "an-001|treatment",
+   "value": "0.812500"
+  },
+  {
+   "measure": "activated_accounts",
+   "slice": "an-001|treatment",
+   "value": "25"
+  },
+  {
+   "measure": "conversion_rate",
+   "slice": "an-001|treatment",
+   "value": "0.390625"
+  },
+  {
+   "measure": "guardrail_error_rate",
+   "slice": "an-001|treatment",
+   "value": "0.187500"
+  },
+  {
+   "measure": "revenue_per_assigned_account",
+   "slice": "an-001|treatment",
+   "value": "85.64"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-001",
+   "value": "155"
+  },
+  {
+   "measure": "srm_statistic",
+   "slice": "an-001",
+   "value": "0.006452"
+  },
+  {
+   "measure": "srm_verdict",
+   "slice": "an-001",
+   "value": "OK"
+  },
+  {
+   "measure": "absolute_lift_pp",
+   "slice": "an-001",
+   "value": "11.37"
+  },
+  {
+   "measure": "relative_lift",
+   "slice": "an-001",
+   "value": "0.410590"
+  },
+  {
+   "measure": "newcombe_low",
+   "slice": "an-001",
+   "value": "-0.048312"
+  },
+  {
+   "measure": "newcombe_high",
+   "slice": "an-001",
+   "value": "0.268068"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-002|control",
+   "value": "127"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "an-002|control",
+   "value": "114"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "an-002|control",
+   "value": "0.877193"
+  },
+  {
+   "measure": "activated_accounts",
+   "slice": "an-002|control",
+   "value": "34"
+  },
+  {
+   "measure": "conversion_rate",
+   "slice": "an-002|control",
+   "value": "0.298246"
+  },
+  {
+   "measure": "guardrail_error_rate",
+   "slice": "an-002|control",
+   "value": "0.166667"
+  },
+  {
+   "measure": "revenue_per_assigned_account",
+   "slice": "an-002|control",
+   "value": "98.87"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-002|treatment",
+   "value": "126"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "an-002|treatment",
+   "value": "115"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "an-002|treatment",
+   "value": "0.860870"
+  },
+  {
+   "measure": "activated_accounts",
+   "slice": "an-002|treatment",
+   "value": "48"
+  },
+  {
+   "measure": "conversion_rate",
+   "slice": "an-002|treatment",
+   "value": "0.417391"
+  },
+  {
+   "measure": "guardrail_error_rate",
+   "slice": "an-002|treatment",
+   "value": "0.165217"
+  },
+  {
+   "measure": "revenue_per_assigned_account",
+   "slice": "an-002|treatment",
+   "value": "98.82"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-002",
+   "value": "253"
+  },
+  {
+   "measure": "srm_statistic",
+   "slice": "an-002",
+   "value": "0.003953"
+  },
+  {
+   "measure": "srm_verdict",
+   "slice": "an-002",
+   "value": "OK"
+  },
+  {
+   "measure": "absolute_lift_pp",
+   "slice": "an-002",
+   "value": "11.91"
+  },
+  {
+   "measure": "relative_lift",
+   "slice": "an-002",
+   "value": "0.399488"
+  },
+  {
+   "measure": "newcombe_low",
+   "slice": "an-002",
+   "value": "-0.004952"
+  },
+  {
+   "measure": "newcombe_high",
+   "slice": "an-002",
+   "value": "0.238174"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-003|control",
+   "value": "177"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "an-003|control",
+   "value": "164"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "an-003|control",
+   "value": "0.890244"
+  },
+  {
+   "measure": "activated_accounts",
+   "slice": "an-003|control",
+   "value": "53"
+  },
+  {
+   "measure": "conversion_rate",
+   "slice": "an-003|control",
+   "value": "0.323171"
+  },
+  {
+   "measure": "guardrail_error_rate",
+   "slice": "an-003|control",
+   "value": "0.164634"
+  },
+  {
+   "measure": "revenue_per_assigned_account",
+   "slice": "an-003|control",
+   "value": "107.07"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-003|treatment",
+   "value": "176"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "an-003|treatment",
+   "value": "164"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "an-003|treatment",
+   "value": "0.871951"
+  },
+  {
+   "measure": "activated_accounts",
+   "slice": "an-003|treatment",
+   "value": "68"
+  },
+  {
+   "measure": "conversion_rate",
+   "slice": "an-003|treatment",
+   "value": "0.414634"
+  },
+  {
+   "measure": "guardrail_error_rate",
+   "slice": "an-003|treatment",
+   "value": "0.158537"
+  },
+  {
+   "measure": "revenue_per_assigned_account",
+   "slice": "an-003|treatment",
+   "value": "123.55"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-003",
+   "value": "353"
+  },
+  {
+   "measure": "srm_statistic",
+   "slice": "an-003",
+   "value": "0.002833"
+  },
+  {
+   "measure": "srm_verdict",
+   "slice": "an-003",
+   "value": "OK"
+  },
+  {
+   "measure": "absolute_lift_pp",
+   "slice": "an-003",
+   "value": "9.15"
+  },
+  {
+   "measure": "relative_lift",
+   "slice": "an-003",
+   "value": "0.283019"
+  },
+  {
+   "measure": "newcombe_low",
+   "slice": "an-003",
+   "value": "-0.012863"
+  },
+  {
+   "measure": "newcombe_high",
+   "slice": "an-003",
+   "value": "0.193048"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-004|control",
+   "value": "200"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "an-004|control",
+   "value": "200"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "an-004|control",
+   "value": "0.875000"
+  },
+  {
+   "measure": "activated_accounts",
+   "slice": "an-004|control",
+   "value": "63"
+  },
+  {
+   "measure": "conversion_rate",
+   "slice": "an-004|control",
+   "value": "0.315000"
+  },
+  {
+   "measure": "guardrail_error_rate",
+   "slice": "an-004|control",
+   "value": "0.155000"
+  },
+  {
+   "measure": "revenue_per_assigned_account",
+   "slice": "an-004|control",
+   "value": "97.83"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-004|treatment",
+   "value": "200"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "an-004|treatment",
+   "value": "200"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "an-004|treatment",
+   "value": "0.870000"
+  },
+  {
+   "measure": "activated_accounts",
+   "slice": "an-004|treatment",
+   "value": "82"
+  },
+  {
+   "measure": "conversion_rate",
+   "slice": "an-004|treatment",
+   "value": "0.410000"
+  },
+  {
+   "measure": "guardrail_error_rate",
+   "slice": "an-004|treatment",
+   "value": "0.150000"
+  },
+  {
+   "measure": "revenue_per_assigned_account",
+   "slice": "an-004|treatment",
+   "value": "130.95"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-004",
+   "value": "400"
+  },
+  {
+   "measure": "srm_statistic",
+   "slice": "an-004",
+   "value": "0.000000"
+  },
+  {
+   "measure": "srm_verdict",
+   "slice": "an-004",
+   "value": "OK"
+  },
+  {
+   "measure": "absolute_lift_pp",
+   "slice": "an-004",
+   "value": "9.50"
+  },
+  {
+   "measure": "relative_lift",
+   "slice": "an-004",
+   "value": "0.301587"
+  },
+  {
+   "measure": "newcombe_low",
+   "slice": "an-004",
+   "value": "0.000812"
+  },
+  {
+   "measure": "newcombe_high",
+   "slice": "an-004",
+   "value": "0.186863"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "asof-xv-001|control",
+   "value": "200"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "asof-xv-001|control",
+   "value": "200"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "asof-xv-001|control",
+   "value": "0.875000"
+  },
+  {
+   "measure": "activated_accounts",
+   "slice": "asof-xv-001|control",
+   "value": "63"
+  },
+  {
+   "measure": "conversion_rate",
+   "slice": "asof-xv-001|control",
+   "value": "0.315000"
+  },
+  {
+   "measure": "guardrail_error_rate",
+   "slice": "asof-xv-001|control",
+   "value": "0.155000"
+  },
+  {
+   "measure": "revenue_per_assigned_account",
+   "slice": "asof-xv-001|control",
+   "value": "97.83"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "asof-xv-001|treatment",
+   "value": "200"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "asof-xv-001|treatment",
+   "value": "200"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "asof-xv-001|treatment",
+   "value": "0.870000"
+  },
+  {
+   "measure": "activated_accounts",
+   "slice": "asof-xv-001|treatment",
+   "value": "82"
+  },
+  {
+   "measure": "conversion_rate",
+   "slice": "asof-xv-001|treatment",
+   "value": "0.410000"
+  },
+  {
+   "measure": "guardrail_error_rate",
+   "slice": "asof-xv-001|treatment",
+   "value": "0.150000"
+  },
+  {
+   "measure": "revenue_per_assigned_account",
+   "slice": "asof-xv-001|treatment",
+   "value": "130.95"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "asof-xv-001",
+   "value": "400"
+  },
+  {
+   "measure": "srm_statistic",
+   "slice": "asof-xv-001",
+   "value": "0.000000"
+  },
+  {
+   "measure": "srm_verdict",
+   "slice": "asof-xv-001",
+   "value": "OK"
+  },
+  {
+   "measure": "absolute_lift_pp",
+   "slice": "asof-xv-001",
+   "value": "9.50"
+  },
+  {
+   "measure": "relative_lift",
+   "slice": "asof-xv-001",
+   "value": "0.301587"
+  },
+  {
+   "measure": "newcombe_low",
+   "slice": "asof-xv-001",
+   "value": "0.000812"
+  },
+  {
+   "measure": "newcombe_high",
+   "slice": "asof-xv-001",
+   "value": "0.186863"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-005|control",
+   "value": "62"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "an-005|control",
+   "value": "56"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "an-005|control",
+   "value": "0.928571"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-005|treatment",
+   "value": "92"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "an-005|treatment",
+   "value": "87"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "an-005|treatment",
+   "value": "0.873563"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "an-005",
+   "value": "154"
+  },
+  {
+   "measure": "srm_statistic",
+   "slice": "an-005",
+   "value": "25.004329"
+  },
+  {
+   "measure": "srm_verdict",
+   "slice": "an-005",
+   "value": "MISMATCH"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "asof-xv-002|control",
+   "value": "62"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "asof-xv-002|control",
+   "value": "57"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "asof-xv-002|control",
+   "value": "0.929825"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "asof-xv-002|treatment",
+   "value": "92"
+  },
+  {
+   "measure": "mature_accounts",
+   "slice": "asof-xv-002|treatment",
+   "value": "87"
+  },
+  {
+   "measure": "exposure_rate",
+   "slice": "asof-xv-002|treatment",
+   "value": "0.873563"
+  },
+  {
+   "measure": "assigned_accounts",
+   "slice": "asof-xv-002",
+   "value": "154"
+  },
+  {
+   "measure": "srm_statistic",
+   "slice": "asof-xv-002",
+   "value": "25.004329"
+  },
+  {
+   "measure": "srm_verdict",
+   "slice": "asof-xv-002",
+   "value": "MISMATCH"
+  },
+  {
+   "measure": "activation_rate_all_signups",
+   "slice": "asof",
+   "value": "0.374781"
+  },
+  {
+   "measure": "day7_retention",
+   "slice": "asof",
+   "value": "0.187391"
+  },
+  {
+   "measure": "on_or_after_day7_retention",
+   "slice": "asof",
+   "value": "0.598949"
+  },
+  {
+   "measure": "week4_retention",
+   "slice": "asof",
+   "value": "0.332657"
+  },
+  {
+   "measure": "rows_total",
+   "slice": "asof",
+   "value": "12552"
+  },
+  {
+   "measure": "duplicates_dropped",
+   "slice": "asof",
+   "value": "124"
+  },
+  {
+   "measure": "canonical",
+   "slice": "asof",
+   "value": "12428"
+  },
+  {
+   "measure": "delayed_over_24h",
+   "slice": "asof",
+   "value": "237"
+  },
+  {
+   "measure": "unknown_identity",
+   "slice": "asof",
+   "value": "30"
+  },
+  {
+   "measure": "bot_excluded",
+   "slice": "asof",
+   "value": "305"
+  },
+  {
+   "measure": "internal_excluded",
+   "slice": "asof",
+   "value": "114"
+  },
+  {
+   "measure": "analysed",
+   "slice": "asof",
+   "value": "11979"
+  }
+ ],
+ "reconciliation": [
+  {
+   "check": "A golden metric signup_conversion: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "7c1386513799194f",
+   "second_source": "7c1386513799194f",
+   "third_source": "7c1386513799194f",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric funnel: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "86c364c7e2384874",
+   "second_source": "86c364c7e2384874",
+   "third_source": "86c364c7e2384874",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric activation: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "a009ec4ee0fac90c",
+   "second_source": "a009ec4ee0fac90c",
+   "third_source": "a009ec4ee0fac90c",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric retention: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "91473f249f9548d3",
+   "second_source": "91473f249f9548d3",
+   "third_source": "91473f249f9548d3",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric feature_adoption: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "ffb50348ebd598ad",
+   "second_source": "ffb50348ebd598ad",
+   "third_source": "ffb50348ebd598ad",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric experiment: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "9da31159f2a5c5de",
+   "second_source": "9da31159f2a5c5de",
+   "third_source": "9da31159f2a5c5de",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden tracking_quality: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "0d43945659087248",
+   "second_source": "0d43945659087248",
+   "third_source": "0d43945659087248",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden identity: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "6d1618ae8dc1bbf5",
+   "second_source": "6d1618ae8dc1bbf5",
+   "third_source": "6d1618ae8dc1bbf5",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden empty_population (reference SQL vs expected.json vs domain)",
+   "analysis_sql": "false",
+   "second_source": "false",
+   "third_source": "false",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden control: assigned | mature | activated | conversion (09 vs expected.json vs domain)",
+   "analysis_sql": "100|100|20|0.200000",
+   "second_source": "100|100|20|0.200000",
+   "third_source": "100|100|20|0.200000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden treatment: assigned | mature | activated | conversion (09 vs expected.json vs domain)",
+   "analysis_sql": "100|100|30|0.300000",
+   "second_source": "100|100|30|0.300000",
+   "third_source": "100|100|30|0.300000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden absolute lift (pp) | relative lift (09 vs expected.json vs domain)",
+   "analysis_sql": "10.00|0.500000",
+   "second_source": "10.00|0.500000",
+   "third_source": "10.00|0.500000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden retention cohort | day 7 retained | rate | on or after day 7 | week 4 (09 vs expected.json vs domain)",
+   "analysis_sql": "20|5|0.250000|12|4",
+   "second_source": "20|5|0.250000|12|4",
+   "third_source": "20|5|0.250000|12|4",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on the six metric keys at xv-001 an-001 (digest)",
+   "analysis_sql": "4dad9be391192ff2",
+   "second_source": "4dad9be391192ff2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on tracking_quality and identity at xv-001 an-001 (digest)",
+   "analysis_sql": "e0599ab3d43e161d",
+   "second_source": "e0599ab3d43e161d",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on the six metric keys at xv-001 an-002 (digest)",
+   "analysis_sql": "506b90f63b9a778e",
+   "second_source": "506b90f63b9a778e",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on tracking_quality and identity at xv-001 an-002 (digest)",
+   "analysis_sql": "86e8d655be0d2fa7",
+   "second_source": "86e8d655be0d2fa7",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on the six metric keys at xv-001 an-003 (digest)",
+   "analysis_sql": "dcddaefe25a55993",
+   "second_source": "dcddaefe25a55993",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on tracking_quality and identity at xv-001 an-003 (digest)",
+   "analysis_sql": "4d703d9463004376",
+   "second_source": "4d703d9463004376",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on the six metric keys at xv-001 an-004 (digest)",
+   "analysis_sql": "eb4c6f1457a68c67",
+   "second_source": "eb4c6f1457a68c67",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on tracking_quality and identity at xv-001 an-004 (digest)",
+   "analysis_sql": "ed891bcf447d8347",
+   "second_source": "ed891bcf447d8347",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on the six metric keys at xv-001 as-of (digest)",
+   "analysis_sql": "13166e8bbb8352ed",
+   "second_source": "13166e8bbb8352ed",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on tracking_quality and identity at xv-001 as-of (digest)",
+   "analysis_sql": "a7b5311507857e17",
+   "second_source": "a7b5311507857e17",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on the six metric keys at xv-002 an-005 (digest)",
+   "analysis_sql": "58fc5c1decb9a398",
+   "second_source": "58fc5c1decb9a398",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on tracking_quality and identity at xv-002 an-005 (digest)",
+   "analysis_sql": "bacfa11d9111af3c",
+   "second_source": "bacfa11d9111af3c",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on the six metric keys at xv-002 as-of (digest)",
+   "analysis_sql": "53a82b818b59940e",
+   "second_source": "53a82b818b59940e",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on tracking_quality and identity at xv-002 as-of (digest)",
+   "analysis_sql": "a7b5311507857e17",
+   "second_source": "a7b5311507857e17",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B activation.signups (01 window_check vs reference SQL vs domain)",
+   "analysis_sql": "76",
+   "second_source": "76",
+   "third_source": "76",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B activation.immature_excluded (01 window_check vs reference SQL vs domain)",
+   "analysis_sql": "17",
+   "second_source": "17",
+   "third_source": "17",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B activation.mature_accounts (01 window_check vs reference SQL vs domain)",
+   "analysis_sql": "59",
+   "second_source": "59",
+   "third_source": "59",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B activation.activated (01 window_check vs reference SQL vs domain)",
+   "analysis_sql": "21",
+   "second_source": "21",
+   "third_source": "21",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B activation.rate (01 window_check vs reference SQL vs domain)",
+   "analysis_sql": "0.355932",
+   "second_source": "0.355932",
+   "third_source": "0.355932",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B retention.cohort_accounts (02 window_check vs reference SQL vs domain)",
+   "analysis_sql": "16",
+   "second_source": "16",
+   "third_source": "16",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B retention.excluded_internal_accounts (02 window_check vs reference SQL vs domain)",
+   "analysis_sql": "1",
+   "second_source": "1",
+   "third_source": "1",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B retention.day7.mature_accounts (02 window_check vs reference SQL vs domain)",
+   "analysis_sql": "16",
+   "second_source": "16",
+   "third_source": "16",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B retention.day7.retained (02 window_check vs reference SQL vs domain)",
+   "analysis_sql": "5",
+   "second_source": "5",
+   "third_source": "5",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B retention.day7.rate (02 window_check vs reference SQL vs domain)",
+   "analysis_sql": "0.312500",
+   "second_source": "0.312500",
+   "third_source": "0.312500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B retention.on_or_after_day7.retained (02 window_check vs reference SQL vs domain)",
+   "analysis_sql": "11",
+   "second_source": "11",
+   "third_source": "11",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B retention.on_or_after_day7.rate (02 window_check vs reference SQL vs domain)",
+   "analysis_sql": "0.687500",
+   "second_source": "0.687500",
+   "third_source": "0.687500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B retention.week4.mature_accounts (02 window_check vs reference SQL vs domain)",
+   "analysis_sql": "16",
+   "second_source": "16",
+   "third_source": "16",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B retention.week4.retained (02 window_check vs reference SQL vs domain)",
+   "analysis_sql": "7",
+   "second_source": "7",
+   "third_source": "7",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B retention.week4.rate (02 window_check vs reference SQL vs domain)",
+   "analysis_sql": "0.437500",
+   "second_source": "0.437500",
+   "third_source": "0.437500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B funnel step visit: units | from previous | from first (03 vs reference SQL vs domain)",
+   "analysis_sql": "154||1.000000",
+   "second_source": "154||1.000000",
+   "third_source": "154||1.000000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B funnel step signup: units | from previous | from first (03 vs reference SQL vs domain)",
+   "analysis_sql": "51|0.331169|0.331169",
+   "second_source": "51|0.331169|0.331169",
+   "third_source": "51|0.331169|0.331169",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B funnel step onboarding_step_1: units | from previous | from first (03 vs reference SQL vs domain)",
+   "analysis_sql": "41|0.803922|0.266234",
+   "second_source": "41|0.803922|0.266234",
+   "third_source": "41|0.803922|0.266234",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B funnel step activated: units | from previous | from first (03 vs reference SQL vs domain)",
+   "analysis_sql": "4|0.097561|0.025974",
+   "second_source": "4|0.097561|0.025974",
+   "third_source": "4|0.097561|0.025974",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B signup_conversion visitors | signed up | rate (03 vs reference SQL vs domain)",
+   "analysis_sql": "154|51|0.331169",
+   "second_source": "154|51|0.331169",
+   "third_source": "154|51|0.331169",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B tracking_quality.rows_total (04 by_week ALL vs reference SQL vs domain)",
+   "analysis_sql": "12552",
+   "second_source": "12552",
+   "third_source": "12552",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B tracking_quality.duplicates_dropped (04 by_week ALL vs reference SQL vs domain)",
+   "analysis_sql": "124",
+   "second_source": "124",
+   "third_source": "124",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B tracking_quality.canonical (04 by_week ALL vs reference SQL vs domain)",
+   "analysis_sql": "12428",
+   "second_source": "12428",
+   "third_source": "12428",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B tracking_quality.delayed_over_24h (04 by_week ALL vs reference SQL vs domain)",
+   "analysis_sql": "237",
+   "second_source": "237",
+   "third_source": "237",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B tracking_quality.unknown_identity (04 by_week ALL vs reference SQL vs domain)",
+   "analysis_sql": "30",
+   "second_source": "30",
+   "third_source": "30",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B tracking_quality.bot_events_excluded (04 by_week ALL vs reference SQL vs domain)",
+   "analysis_sql": "305",
+   "second_source": "305",
+   "third_source": "305",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B tracking_quality.internal_events_excluded (04 by_week ALL vs reference SQL vs domain)",
+   "analysis_sql": "114",
+   "second_source": "114",
+   "third_source": "114",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B tracking_quality.analysed (04 by_week ALL vs reference SQL vs domain)",
+   "analysis_sql": "11979",
+   "second_source": "11979",
+   "third_source": "11979",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B identity.anonymous_events (04 identity_links vs reference SQL vs domain)",
+   "analysis_sql": "5388",
+   "second_source": "5388",
+   "third_source": "5388",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B identity.attributed_by_link (04 identity_links vs reference SQL vs domain)",
+   "analysis_sql": "124",
+   "second_source": "124",
+   "third_source": "124",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B identity.remain_anonymous (04 identity_links vs reference SQL vs domain)",
+   "analysis_sql": "5264",
+   "second_source": "5264",
+   "third_source": "5264",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B event exclusions: rows | duplicates | unknown | bot | internal | analysed (03 ALL vs reference SQL vs domain)",
+   "analysis_sql": "12552|124|30|305|114|11979",
+   "second_source": "12552|124|30|305|114|11979",
+   "third_source": "12552|124|30|305|114|11979",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 at an-001: interim | prior | assigned | mature | activated | conversion | lift | interval | SRM | plan frozen | conclusive (05 vs reference SQL vs domain)",
+   "analysis_sql": "true|0|77|78|65|64|18|25|0.276923|0.390625|11.37|0.410590|-0.048312|0.268068|true|0.006452|0.935981|OK|true|false",
+   "second_source": "true|0|77|78|65|64|18|25|0.276923|0.390625|11.37|0.410590|-0.048312|0.268068|true|0.006452|0.935981|OK|true|false",
+   "third_source": "true|0|77|78|65|64|18|25|0.276923|0.390625|11.37|0.410590|-0.048312|0.268068|true|0.006452|0.935981|OK|true|false",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 at an-002: interim | prior | assigned | mature | activated | conversion | lift | interval | SRM | plan frozen | conclusive (05 vs reference SQL vs domain)",
+   "analysis_sql": "true|1|127|126|114|115|34|48|0.298246|0.417391|11.91|0.399488|-0.004952|0.238174|true|0.003953|0.949870|OK|true|false",
+   "second_source": "true|1|127|126|114|115|34|48|0.298246|0.417391|11.91|0.399488|-0.004952|0.238174|true|0.003953|0.949870|OK|true|false",
+   "third_source": "true|1|127|126|114|115|34|48|0.298246|0.417391|11.91|0.399488|-0.004952|0.238174|true|0.003953|0.949870|OK|true|false",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 at an-003: interim | prior | assigned | mature | activated | conversion | lift | interval | SRM | plan frozen | conclusive (05 vs reference SQL vs domain)",
+   "analysis_sql": "true|2|177|176|164|164|53|68|0.323171|0.414634|9.15|0.283019|-0.012863|0.193048|true|0.002833|0.957553|OK|true|false",
+   "second_source": "true|2|177|176|164|164|53|68|0.323171|0.414634|9.15|0.283019|-0.012863|0.193048|true|0.002833|0.957553|OK|true|false",
+   "third_source": "true|2|177|176|164|164|53|68|0.323171|0.414634|9.15|0.283019|-0.012863|0.193048|true|0.002833|0.957553|OK|true|false",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 at an-004: interim | prior | assigned | mature | activated | conversion | lift | interval | SRM | plan frozen | conclusive (05 vs reference SQL vs domain)",
+   "analysis_sql": "false|3|200|200|200|200|63|82|0.315000|0.410000|9.50|0.301587|0.000812|0.186863|false|0.000000|1.000000|OK|true|true",
+   "second_source": "false|3|200|200|200|200|63|82|0.315000|0.410000|9.50|0.301587|0.000812|0.186863|false|0.000000|1.000000|OK|true|true",
+   "third_source": "false|3|200|200|200|200|63|82|0.315000|0.410000|9.50|0.301587|0.000812|0.186863|false|0.000000|1.000000|OK|true|true",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 at as-of: interim | prior | assigned | mature | activated | conversion | lift | interval | SRM | plan frozen | conclusive (05 vs reference SQL vs domain)",
+   "analysis_sql": "false||200|200|200|200|63|82|0.315000|0.410000|9.50|0.301587|0.000812|0.186863|false|0.000000|1.000000|OK|true|true",
+   "second_source": "false||200|200|200|200|63|82|0.315000|0.410000|9.50|0.301587|0.000812|0.186863|false|0.000000|1.000000|OK|true|true",
+   "third_source": "false||200|200|200|200|63|82|0.315000|0.410000|9.50|0.301587|0.000812|0.186863|false|0.000000|1.000000|OK|true|true",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-001 control: assigned | mature | activated | conversion | Wilson (05 vs reference SQL vs domain)",
+   "analysis_sql": "77|65|18|0.276923|0.182936|0.395806",
+   "second_source": "77|65|18|0.276923|0.182936|0.395806",
+   "third_source": "77|65|18|0.276923|0.182936|0.395806",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-001 control: exposed | exposure rate (05 vs reference SQL vs domain)",
+   "analysis_sql": "58|0.892308",
+   "second_source": "58|0.892308",
+   "third_source": "58|0.892308",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-001 treatment: assigned | mature | activated | conversion | Wilson (05 vs reference SQL vs domain)",
+   "analysis_sql": "78|64|25|0.390625|0.280556|0.513081",
+   "second_source": "78|64|25|0.390625|0.280556|0.513081",
+   "third_source": "78|64|25|0.390625|0.280556|0.513081",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-001 treatment: exposed | exposure rate (05 vs reference SQL vs domain)",
+   "analysis_sql": "52|0.812500",
+   "second_source": "52|0.812500",
+   "third_source": "52|0.812500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-002 control: assigned | mature | activated | conversion | Wilson (05 vs reference SQL vs domain)",
+   "analysis_sql": "127|114|34|0.298246|0.221961|0.387684",
+   "second_source": "127|114|34|0.298246|0.221961|0.387684",
+   "third_source": "127|114|34|0.298246|0.221961|0.387684",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-002 control: exposed | exposure rate (05 vs reference SQL vs domain)",
+   "analysis_sql": "100|0.877193",
+   "second_source": "100|0.877193",
+   "third_source": "100|0.877193",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-002 treatment: assigned | mature | activated | conversion | Wilson (05 vs reference SQL vs domain)",
+   "analysis_sql": "126|115|48|0.417391|0.331362|0.508761",
+   "second_source": "126|115|48|0.417391|0.331362|0.508761",
+   "third_source": "126|115|48|0.417391|0.331362|0.508761",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-002 treatment: exposed | exposure rate (05 vs reference SQL vs domain)",
+   "analysis_sql": "99|0.860870",
+   "second_source": "99|0.860870",
+   "third_source": "99|0.860870",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-003 control: assigned | mature | activated | conversion | Wilson (05 vs reference SQL vs domain)",
+   "analysis_sql": "177|164|53|0.323171|0.256348|0.398088",
+   "second_source": "177|164|53|0.323171|0.256348|0.398088",
+   "third_source": "177|164|53|0.323171|0.256348|0.398088",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-003 control: exposed | exposure rate (05 vs reference SQL vs domain)",
+   "analysis_sql": "146|0.890244",
+   "second_source": "146|0.890244",
+   "third_source": "146|0.890244",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-003 treatment: assigned | mature | activated | conversion | Wilson (05 vs reference SQL vs domain)",
+   "analysis_sql": "176|164|68|0.414634|0.342030|0.491146",
+   "second_source": "176|164|68|0.414634|0.342030|0.491146",
+   "third_source": "176|164|68|0.414634|0.342030|0.491146",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-003 treatment: exposed | exposure rate (05 vs reference SQL vs domain)",
+   "analysis_sql": "143|0.871951",
+   "second_source": "143|0.871951",
+   "third_source": "143|0.871951",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-004 control: assigned | mature | activated | conversion | Wilson (05 vs reference SQL vs domain)",
+   "analysis_sql": "200|200|63|0.315000|0.254623|0.382350",
+   "second_source": "200|200|63|0.315000|0.254623|0.382350",
+   "third_source": "200|200|63|0.315000|0.254623|0.382350",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-004 control: exposed | exposure rate (05 vs reference SQL vs domain)",
+   "analysis_sql": "175|0.875000",
+   "second_source": "175|0.875000",
+   "third_source": "175|0.875000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-004 treatment: assigned | mature | activated | conversion | Wilson (05 vs reference SQL vs domain)",
+   "analysis_sql": "200|200|82|0.410000|0.344157|0.479235",
+   "second_source": "200|200|82|0.410000|0.344157|0.479235",
+   "third_source": "200|200|82|0.410000|0.344157|0.479235",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 an-004 treatment: exposed | exposure rate (05 vs reference SQL vs domain)",
+   "analysis_sql": "174|0.870000",
+   "second_source": "174|0.870000",
+   "third_source": "174|0.870000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 as-of control: assigned | mature | activated | conversion | Wilson (05 vs reference SQL vs domain)",
+   "analysis_sql": "200|200|63|0.315000|0.254623|0.382350",
+   "second_source": "200|200|63|0.315000|0.254623|0.382350",
+   "third_source": "200|200|63|0.315000|0.254623|0.382350",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 as-of control: exposed | exposure rate (05 vs reference SQL vs domain)",
+   "analysis_sql": "175|0.875000",
+   "second_source": "175|0.875000",
+   "third_source": "175|0.875000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 as-of treatment: assigned | mature | activated | conversion | Wilson (05 vs reference SQL vs domain)",
+   "analysis_sql": "200|200|82|0.410000|0.344157|0.479235",
+   "second_source": "200|200|82|0.410000|0.344157|0.479235",
+   "third_source": "200|200|82|0.410000|0.344157|0.479235",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B experiment v1 as-of treatment: exposed | exposure rate (05 vs reference SQL vs domain)",
+   "analysis_sql": "174|0.870000",
+   "second_source": "174|0.870000",
+   "third_source": "174|0.870000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample ratio xv-001 an-001: observed | expected | statistic | p | df | verdict (06 vs reference SQL vs domain)",
+   "analysis_sql": "77|78|77.50|77.50|0.006452|0.935981|1|OK",
+   "second_source": "77|78|77.50|77.50|0.006452|0.935981|1|OK",
+   "third_source": "77|78|77.50|77.50|0.006452|0.935981|1|OK",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample ratio xv-001 an-002: observed | expected | statistic | p | df | verdict (06 vs reference SQL vs domain)",
+   "analysis_sql": "127|126|126.50|126.50|0.003953|0.949870|1|OK",
+   "second_source": "127|126|126.50|126.50|0.003953|0.949870|1|OK",
+   "third_source": "127|126|126.50|126.50|0.003953|0.949870|1|OK",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample ratio xv-001 an-003: observed | expected | statistic | p | df | verdict (06 vs reference SQL vs domain)",
+   "analysis_sql": "177|176|176.50|176.50|0.002833|0.957553|1|OK",
+   "second_source": "177|176|176.50|176.50|0.002833|0.957553|1|OK",
+   "third_source": "177|176|176.50|176.50|0.002833|0.957553|1|OK",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample ratio xv-001 an-004: observed | expected | statistic | p | df | verdict (06 vs reference SQL vs domain)",
+   "analysis_sql": "200|200|200.00|200.00|0.000000|1.000000|1|OK",
+   "second_source": "200|200|200.00|200.00|0.000000|1.000000|1|OK",
+   "third_source": "200|200|200.00|200.00|0.000000|1.000000|1|OK",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample ratio xv-001 as-of: observed | expected | statistic | p | df | verdict (06 vs reference SQL vs domain)",
+   "analysis_sql": "200|200|200.00|200.00|0.000000|1.000000|1|OK",
+   "second_source": "200|200|200.00|200.00|0.000000|1.000000|1|OK",
+   "third_source": "200|200|200.00|200.00|0.000000|1.000000|1|OK",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample ratio xv-002 an-005: observed | expected | statistic | p | df | verdict (06 vs reference SQL vs domain)",
+   "analysis_sql": "62|92|92.40|61.60|25.004329|0.000001|1|MISMATCH",
+   "second_source": "62|92|92.40|61.60|25.004329|0.000001|1|MISMATCH",
+   "third_source": "62|92|92.40|61.60|25.004329|0.000001|1|MISMATCH",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B sample ratio xv-002 as-of: observed | expected | statistic | p | df | verdict (06 vs reference SQL vs domain)",
+   "analysis_sql": "62|92|92.40|61.60|25.004329|0.000001|1|MISMATCH",
+   "second_source": "62|92|92.40|61.60|25.004329|0.000001|1|MISMATCH",
+   "third_source": "62|92|92.40|61.60|25.004329|0.000001|1|MISMATCH",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B v2 at the as-of: assigned | mature (06 v2_population vs reference SQL vs domain)",
+   "analysis_sql": "154|144",
+   "second_source": "154|144",
+   "third_source": "154|144",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B v2 at the as-of: treatment mature accounts (D-10: 87; 06 vs domain primary variants)",
+   "analysis_sql": "87",
+   "second_source": "87",
+   "third_source": "87",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B v2 at the as-of: exposures recorded on v2 assignments (06 v2_population vs the published exposures.json rows)",
+   "analysis_sql": "135",
+   "second_source": "135",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B guardrail v1 an-001: eligible | errors | rates (07 vs reference SQL vs domain)",
+   "analysis_sql": "65|64|12|12|0.184615|0.187500",
+   "second_source": "65|64|12|12|0.184615|0.187500",
+   "third_source": "65|64|12|12|0.184615|0.187500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B guardrail v1 an-001: difference pp | Newcombe | verdict (07 vs the domain's C09 review)",
+   "analysis_sql": "0.29|-0.132063|0.138285|OK",
+   "second_source": "0.29|-0.132063|0.138285|OK",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B guardrail v1 an-002: eligible | errors | rates (07 vs reference SQL vs domain)",
+   "analysis_sql": "114|115|19|19|0.166667|0.165217",
+   "second_source": "114|115|19|19|0.166667|0.165217",
+   "third_source": "114|115|19|19|0.166667|0.165217",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B guardrail v1 an-002: difference pp | Newcombe | verdict (07 vs the domain's C09 review)",
+   "analysis_sql": "-0.14|-0.098781|0.095704|OK",
+   "second_source": "-0.14|-0.098781|0.095704|OK",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B guardrail v1 an-003: eligible | errors | rates (07 vs reference SQL vs domain)",
+   "analysis_sql": "164|164|27|26|0.164634|0.158537",
+   "second_source": "164|164|27|26|0.164634|0.158537",
+   "third_source": "164|164|27|26|0.164634|0.158537",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B guardrail v1 an-003: difference pp | Newcombe | verdict (07 vs the domain's C09 review)",
+   "analysis_sql": "-0.61|-0.086334|0.074176|OK",
+   "second_source": "-0.61|-0.086334|0.074176|OK",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B guardrail v1 an-004: eligible | errors | rates (07 vs reference SQL vs domain)",
+   "analysis_sql": "200|200|31|30|0.155000|0.150000",
+   "second_source": "200|200|31|30|0.155000|0.150000",
+   "third_source": "200|200|31|30|0.155000|0.150000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B guardrail v1 an-004: difference pp | Newcombe | verdict (07 vs the domain's C09 review)",
+   "analysis_sql": "-0.50|-0.076005|0.066018|OK",
+   "second_source": "-0.50|-0.076005|0.066018|OK",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B guardrail v1 as-of: eligible | errors | rates (07 vs reference SQL vs domain)",
+   "analysis_sql": "200|200|31|30|0.155000|0.150000",
+   "second_source": "200|200|31|30|0.155000|0.150000",
+   "third_source": "200|200|31|30|0.155000|0.150000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B guardrail v1 as-of: difference pp | Newcombe | verdict (07 vs the domain's C09 review)",
+   "analysis_sql": "-0.50|-0.076005|0.066018|OK",
+   "second_source": "-0.50|-0.076005|0.066018|OK",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue per account v1 an-001 control: units | total | mean | df | t | interval (07 vs reference SQL vs domain)",
+   "analysis_sql": "65|5322.00|81.88|64|1.997730|21.83|141.92",
+   "second_source": "65|5322.00|81.88|64|1.997730|21.83|141.92",
+   "third_source": "65|5322.00|81.88|64|1.997730|21.83|141.92",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue per account v1 an-001 treatment: units | total | mean | df | t | interval (07 vs reference SQL vs domain)",
+   "analysis_sql": "64|5481.00|85.64|63|1.998341|26.30|144.98",
+   "second_source": "64|5481.00|85.64|63|1.998341|26.30|144.98",
+   "third_source": "64|5481.00|85.64|63|1.998341|26.30|144.98",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue per account v1 an-002 control: units | total | mean | df | t | interval (07 vs reference SQL vs domain)",
+   "analysis_sql": "114|11271.00|98.87|113|1.981180|46.61|151.12",
+   "second_source": "114|11271.00|98.87|113|1.981180|46.61|151.12",
+   "third_source": "114|11271.00|98.87|113|1.981180|46.61|151.12",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue per account v1 an-002 treatment: units | total | mean | df | t | interval (07 vs reference SQL vs domain)",
+   "analysis_sql": "115|11364.00|98.82|114|1.980992|48.76|148.87",
+   "second_source": "115|11364.00|98.82|114|1.980992|48.76|148.87",
+   "third_source": "115|11364.00|98.82|114|1.980992|48.76|148.87",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue per account v1 an-003 control: units | total | mean | df | t | interval (07 vs reference SQL vs domain)",
+   "analysis_sql": "164|17559.00|107.07|163|1.974625|61.34|152.79",
+   "second_source": "164|17559.00|107.07|163|1.974625|61.34|152.79",
+   "third_source": "164|17559.00|107.07|163|1.974625|61.34|152.79",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue per account v1 an-003 treatment: units | total | mean | df | t | interval (07 vs reference SQL vs domain)",
+   "analysis_sql": "164|20262.00|123.55|163|1.974625|76.32|170.78",
+   "second_source": "164|20262.00|123.55|163|1.974625|76.32|170.78",
+   "third_source": "164|20262.00|123.55|163|1.974625|76.32|170.78",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue per account v1 an-004 control: units | total | mean | df | t | interval (07 vs reference SQL vs domain)",
+   "analysis_sql": "200|19566.00|97.83|199|1.971957|58.98|136.68",
+   "second_source": "200|19566.00|97.83|199|1.971957|58.98|136.68",
+   "third_source": "200|19566.00|97.83|199|1.971957|58.98|136.68",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue per account v1 an-004 treatment: units | total | mean | df | t | interval (07 vs reference SQL vs domain)",
+   "analysis_sql": "200|26190.00|130.95|199|1.971957|86.70|175.20",
+   "second_source": "200|26190.00|130.95|199|1.971957|86.70|175.20",
+   "third_source": "200|26190.00|130.95|199|1.971957|86.70|175.20",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue per account v1 as-of control: units | total | mean | df | t | interval (07 vs reference SQL vs domain)",
+   "analysis_sql": "200|19566.00|97.83|199|1.971957|58.98|136.68",
+   "second_source": "200|19566.00|97.83|199|1.971957|58.98|136.68",
+   "third_source": "200|19566.00|97.83|199|1.971957|58.98|136.68",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue per account v1 as-of treatment: units | total | mean | df | t | interval (07 vs reference SQL vs domain)",
+   "analysis_sql": "200|26190.00|130.95|199|1.971957|86.70|175.20",
+   "second_source": "200|26190.00|130.95|199|1.971957|86.70|175.20",
+   "third_source": "200|26190.00|130.95|199|1.971957|86.70|175.20",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue difference v1 an-001: difference | Welch df | t | interval (07 vs the domain's revenue_difference)",
+   "analysis_sql": "3.76|126|1.978971|-79.85|87.38",
+   "second_source": "3.76|126|1.978971|-79.85|87.38",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue difference v1 an-002: difference | Welch df | t | interval (07 vs the domain's revenue_difference)",
+   "analysis_sql": "-0.05|226|1.970516|-72.03|71.92",
+   "second_source": "-0.05|226|1.970516|-72.03|71.92",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue difference v1 an-003: difference | Welch df | t | interval (07 vs the domain's revenue_difference)",
+   "analysis_sql": "16.48|325|1.967290|-49.01|81.98",
+   "second_source": "16.48|325|1.967290|-49.01|81.98",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue difference v1 an-004: difference | Welch df | t | interval (07 vs the domain's revenue_difference)",
+   "analysis_sql": "33.12|391|1.966050|-25.59|91.83",
+   "second_source": "33.12|391|1.966050|-25.59|91.83",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B revenue difference v1 as-of: difference | Welch df | t | interval (07 vs the domain's revenue_difference)",
+   "analysis_sql": "33.12|391|1.966050|-25.59|91.83",
+   "second_source": "33.12|391|1.966050|-25.59|91.83",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B week-4 retention v1: mature | retained | rates | difference | Newcombe (07 vs the domain's week4_difference)",
+   "analysis_sql": "200|200|71|62|0.355000|0.310000|-4.50|-0.136053|0.047102",
+   "second_source": "200|200|71|62|0.355000|0.310000|-4.50|-0.136053|0.047102",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_activation_by_plan_and_segment__plan_segment: 16 rows, 128 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_activation_by_plan_and_segment__by_signup_month: 7 rows, 42 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_activation_by_plan_and_segment__window_check: 1 rows, 5 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_activation_by_plan_and_segment__time_to_activation_by_plan: 3 rows, 15 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_weekly_cohort_grid__cohort_grid: 27 rows, 432 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_weekly_cohort_grid__window_check: 1 rows, 10 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_weekly_cohort_grid__timezone_effect: 4 rows, 24 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_funnel_steps_and_exclusions__funnel_steps: 4 rows, 24 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_funnel_steps_and_exclusions__funnel_gap_sensitivity: 3 rows, 18 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_funnel_steps_and_exclusions__signup_conversion: 1 rows, 3 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_funnel_steps_and_exclusions__exclusions_by_event: 9 rows, 63 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_funnel_steps_and_exclusions__late_batch_effect: 3 rows, 15 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_tracking_quality_by_week__by_week: 27 rows, 324 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_tracking_quality_by_week__delay_distribution: 9 rows, 54 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_tracking_quality_by_week__identity_links: 1 rows, 7 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_experiment_v1_at_each_run_cutoff__arms_by_cutoff: 10 rows, 120 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_experiment_v1_at_each_run_cutoff__lift_by_cutoff: 5 rows, 115 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_experiment_v1_at_each_run_cutoff__gap_accounts: 2 rows, 18 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_experiment_v1_at_each_run_cutoff__gap_lift: 2 rows, 16 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_experiment_v2_sample_ratio__srm_by_read: 7 rows, 98 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_experiment_v2_sample_ratio__v2_assignment_by_week: 9 rows, 45 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_experiment_v2_sample_ratio__v2_population: 2 rows, 10 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_guardrail_and_revenue_per_arm__guardrail_by_cutoff: 5 rows, 65 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_guardrail_and_revenue_per_arm__revenue_by_arm: 10 rows, 100 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_guardrail_and_revenue_per_arm__revenue_difference: 5 rows, 40 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_guardrail_and_revenue_per_arm__week4_by_arm: 1 rows, 10 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_identity_attribution_and_late_events__attribution_by_event: 2 rows, 12 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_identity_attribution_and_late_events__links_by_timing: 2 rows, 8 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_identity_attribution_and_late_events__late_events_by_cutoff: 7 rows, 49 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_identity_attribution_and_late_events__late_activations_by_run: 8 rows, 56 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan business x segment enterprise: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "51|51|1|50|31|0.620000",
+   "second_source": "51|51|1|50|31|0.620000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan business x segment mid: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "27|27|1|26|16|0.615385",
+   "second_source": "27|27|1|26|16|0.615385",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan business x segment smb: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "9|9|0|9|4|0.444444",
+   "second_source": "9|9|0|9|4|0.444444",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan business x segment ALL: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "87|87|2|85|51|0.600000",
+   "second_source": "87|87|2|85|51|0.600000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan free x segment enterprise: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "13|13|0|13|7|0.538462",
+   "second_source": "13|13|0|13|7|0.538462",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan free x segment mid: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "52|52|1|51|19|0.372549",
+   "second_source": "52|52|1|51|19|0.372549",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan free x segment smb: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "191|191|6|185|53|0.286486",
+   "second_source": "191|191|6|185|53|0.286486",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan free x segment ALL: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "256|256|7|249|79|0.317269",
+   "second_source": "256|256|7|249|79|0.317269",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan team x segment enterprise: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "24|24|2|22|7|0.318182",
+   "second_source": "24|24|2|22|7|0.318182",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan team x segment mid: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "76|76|1|75|28|0.373333",
+   "second_source": "76|76|1|75|28|0.373333",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan team x segment smb: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "145|145|5|140|49|0.350000",
+   "second_source": "145|145|5|140|49|0.350000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan team x segment ALL: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "245|245|8|237|84|0.354430",
+   "second_source": "245|245|8|237|84|0.354430",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan ALL x segment enterprise: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "88|88|3|85|45|0.529412",
+   "second_source": "88|88|3|85|45|0.529412",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan ALL x segment mid: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "155|155|3|152|63|0.414474",
+   "second_source": "155|155|3|152|63|0.414474",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan ALL x segment smb: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "345|345|11|334|106|0.317365",
+   "second_source": "345|345|11|334|106|0.317365",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D plan ALL x segment ALL: accounts | signed up | immature | mature | activated | rate (01 vs domain activation over the widened window)",
+   "analysis_sql": "588|588|17|571|214|0.374781",
+   "second_source": "588|588|17|571|214|0.374781",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-04-06: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "27|27/7|27/4|27/5|27/2|27/14|27/7",
+   "second_source": "27|27/7|27/4|27/5|27/2|27/14|27/7",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-04-13: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "25|25/4|25/7|25/8|25/4|25/16|25/13",
+   "second_source": "25|25/4|25/7|25/8|25/4|25/16|25/13",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-04-20: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "25|25/4|25/3|25/4|25/1|25/11|25/7",
+   "second_source": "25|25/4|25/3|25/4|25/1|25/11|25/7",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-04-27: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "28|28/6|28/6|28/6|28/7|28/19|28/14",
+   "second_source": "28|28/6|28/6|28/6|28/7|28/19|28/14",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-05-04: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "24|24/5|24/3|24/5|24/0|24/19|24/8",
+   "second_source": "24|24/5|24/3|24/5|24/0|24/19|24/8",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-05-11: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "26|26/3|26/7|26/4|26/3|26/12|26/6",
+   "second_source": "26|26/3|26/7|26/4|26/3|26/12|26/6",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-05-18: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "24|24/6|24/2|24/6|24/1|24/18|24/13",
+   "second_source": "24|24/6|24/2|24/6|24/1|24/18|24/13",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-05-25: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "25|25/6|25/6|25/5|25/4|25/16|25/10",
+   "second_source": "25|25/6|25/6|25/5|25/4|25/16|25/10",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-06-01: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "25|25/4|25/7|25/3|25/1|25/15|25/6",
+   "second_source": "25|25/4|25/7|25/3|25/1|25/15|25/6",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-06-08: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "24|24/5|24/3|24/4|24/0|24/14|24/4",
+   "second_source": "24|24/5|24/3|24/4|24/0|24/14|24/4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-06-15: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "25|25/2|25/0|25/2|25/2|25/13|25/8",
+   "second_source": "25|25/2|25/0|25/2|25/2|25/13|25/8",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-06-22: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "26|26/5|26/1|26/4|26/2|26/13|26/5",
+   "second_source": "26|26/5|26/1|26/4|26/2|26/13|26/5",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-06-29: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "24|24/4|24/7|24/2|24/5|24/17|24/9",
+   "second_source": "24|24/4|24/7|24/2|24/5|24/17|24/9",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-07-06: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "25|25/4|25/4|25/5|25/3|25/17|25/8",
+   "second_source": "25|25/4|25/4|25/5|25/3|25/17|25/8",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-07-13: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "25|25/3|25/3|25/2|25/1|25/12|25/7",
+   "second_source": "25|25/3|25/3|25/2|25/1|25/12|25/7",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-07-20: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "22|22/7|22/4|22/3|22/2|22/14|22/8",
+   "second_source": "22|22/7|22/4|22/3|22/2|22/14|22/8",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-07-27: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "20|20/3|20/3|20/2|20/2|20/11|20/4",
+   "second_source": "20|20/3|20/3|20/2|20/2|20/11|20/4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-08-03: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "18|18/3|18/1|18/4|18/2|18/10|18/5",
+   "second_source": "18|18/3|18/1|18/4|18/2|18/10|18/5",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-08-10: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "19|19/4|19/7|19/3|19/0|19/15|19/9",
+   "second_source": "19|19/4|19/7|19/3|19/0|19/15|19/9",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-08-17: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "20|20/5|20/4|20/6|20/2|20/12|20/6",
+   "second_source": "20|20/5|20/4|20/6|20/2|20/12|20/6",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-08-24: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "16|16/2|16/5|16/2|16/1|16/11|16/7",
+   "second_source": "16|16/2|16/5|16/2|16/1|16/11|16/7",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-08-31: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "19|19/1|19/3|19/1|19/1|19/12|0/0",
+   "second_source": "19|19/1|19/3|19/1|19/1|19/12|0/0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-09-07: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "20|20/6|20/9|20/6|0/0|20/17|0/0",
+   "second_source": "20|20/6|20/9|20/6|0/0|20/17|0/0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-09-14: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "17|17/4|17/3|16/1|0/0|17/8|0/0",
+   "second_source": "17|17/4|17/3|16/1|0/0|17/8|0/0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-09-21: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "22|22/6|22/5|0/0|0/0|22/6|0/0",
+   "second_source": "22|22/6|22/5|0/0|0/0|22/6|0/0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D cohort week 2026-09-28: accounts | day 1, 7, 14, 28, on or after day 7 and week 4, each mature/retained (02 vs domain retention_grid)",
+   "analysis_sql": "17|15/3|0/0|0/0|0/0|0/0|0/0",
+   "second_source": "17|15/3|0/0|0/0|0/0|0/0|0/0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D funnel at a maximum gap of 24 h: visit | signup | step 1 | activated | overall (03 vs the domain's funnel)",
+   "analysis_sql": "154|50|38|4|0.025974",
+   "second_source": "154|50|38|4|0.025974",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D funnel at a maximum gap of 48 h: visit | signup | step 1 | activated | overall (03 vs the domain's funnel)",
+   "analysis_sql": "154|51|41|4|0.025974",
+   "second_source": "154|51|41|4|0.025974",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D funnel at a maximum gap of 72 h: visit | signup | step 1 | activated | overall (03 vs the domain's funnel)",
+   "analysis_sql": "154|51|41|4|0.025974",
+   "second_source": "154|51|41|4|0.025974",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-01 at_planned_end: control and treatment activated | assigned | lift pp | relative lift | Newcombe (SQL vs manifest)",
+   "analysis_sql": "63/200|82/200|9.50|0.301587|0.000812|0.186863|false",
+   "second_source": "63/200|82/200|9.50|0.301587|0.000812|0.186863|false",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-01 at_as_of: control and treatment activated | assigned | lift pp | relative lift | Newcombe (SQL vs manifest)",
+   "analysis_sql": "63/200|82/200|9.50|0.301587|0.000812|0.186863|false",
+   "second_source": "63/200|82/200|9.50|0.301587|0.000812|0.186863|false",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-10 / R6-08 gap accounts in control: gap accounts | mature excluding gap | published activated | activated excluding gap (SQL vs manifest)",
+   "analysis_sql": "5|195|63|63",
+   "second_source": "5|195|63|63",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-10 / R6-08 gap accounts in treatment: gap accounts | mature excluding gap | published activated | activated excluding gap (SQL vs manifest)",
+   "analysis_sql": "6|194|82|82",
+   "second_source": "6|194|82|82",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-10 gap accounts, both arms (SQL vs manifest v1_gap_accounts)",
+   "analysis_sql": "11",
+   "second_source": "11",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E R6-08 published lift | lift excluding the gap accounts (SQL) vs the manifest; drawn lift recomputed from the manifest's drawn counts (constructed) vs its drawn_lift_pp",
+   "analysis_sql": "9.50|9.96|11.50",
+   "second_source": "9.50|9.96|11.50",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E R6-08 the drawn (constructed) Newcombe interval in percentage points, 86 of 200 against 63 of 200 (recomputed here) vs the interval the public case study states (+2.02 to +20.69)",
+   "analysis_sql": "2.02|20.69",
+   "second_source": "2.02|20.69",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E R6-08 Newcombe interval of the lift excluding the gap accounts, in percentage points (SQL counts through python_side vs the domain's statistics code vs the literal +0.35 to +19.32 quoted in the documents)",
+   "analysis_sql": "0.35|19.32",
+   "second_source": "0.35|19.32",
+   "third_source": "0.35|19.32",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E R6-08 drawn treatment activations = published activations + the drawn activations the gap suppressed (82 + 4; manifest arithmetic)",
+   "analysis_sql": "86",
+   "second_source": "86",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-10 early read at 2026-04-15: mature control | mature treatment | control conversion | relative lift is null (reference SQL vs manifest)",
+   "analysis_sql": "5|6|0.000000|",
+   "second_source": "5|6|0.000000|",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-04 immature signups in the activation window (01 vs manifest) and v2 assigned immature at the as-of (06 vs manifest)",
+   "analysis_sql": "17|10",
+   "second_source": "17|10",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-05 re-sent `activated` events dropped as duplicates (SQL rows among the manifest's ids | manifest ids) and duplicates dropped at the as-of (04 | manifest)",
+   "analysis_sql": "14|124",
+   "second_source": "14|124",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-06 the 8 designed late events add this many units to the as-of funnel: step 1 | activated (python without them vs manifest)",
+   "analysis_sql": "8|4",
+   "second_source": "8|4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-06 the late batch of 03 (hindsight - known): visit | signup | step 1 | activated = the ordinary late events (python, the 8 removed) + the 8 designed ones",
+   "analysis_sql": "1|1|9|4",
+   "second_source": "1|1|9|4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-07 events the link attributes (SQL rows with a user among the manifest's) | events that stay anonymous (SQL rows without a user among the manifest's)",
+   "analysis_sql": "15|34",
+   "second_source": "15|34",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-08 / DR-06 v2 sample ratio: observed | expected | statistic | p | verdict (06 vs manifest)",
+   "analysis_sql": "62|92|92.40|61.60|25.004329|0.000001|MISMATCH",
+   "second_source": "62|92|92.40|61.60|25.004329|0.000001|MISMATCH",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-06 v1 sample ratio: observed | statistic | p | verdict (06 vs manifest)",
+   "analysis_sql": "200|200|0.000000|1.000000|OK",
+   "second_source": "200|200|0.000000|1.000000|OK",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-12 local day indices of the 15 accounts the manifest names (SQL, the account's calendar) | accounts equal",
+   "analysis_sql": "15|15",
+   "second_source": "15|15",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-12 exact day 7 and on-or-after day 7 are separate figures: the difference over the window of the manifest is at least its stated minimum (02 grid ALL vs manifest)",
+   "analysis_sql": "true",
+   "second_source": "true",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-02 week-4 retention v1: retained | mature | difference pp | Newcombe (07 vs manifest)",
+   "analysis_sql": "71/200|62/200|-4.50|-0.136053|0.047102",
+   "second_source": "71/200|62/200|-4.50|-0.136053|0.047102",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-03 plan business (accounts never assigned to the treatment): accounts | activated | rate | median hours (01 vs manifest)",
+   "analysis_sql": "36|19|0.527778|9.62",
+   "second_source": "36|19|0.527778|9.62",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-03 plan free (accounts never assigned to the treatment): accounts | activated | rate | median hours (01 vs manifest)",
+   "analysis_sql": "117|26|0.222222|19.27",
+   "second_source": "117|26|0.222222|19.27",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-03 plan team (accounts never assigned to the treatment): accounts | activated | rate | median hours (01 vs manifest)",
+   "analysis_sql": "131|47|0.358779|22.12",
+   "second_source": "131|47|0.358779|22.12",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-04 guardrail v1: errors | eligible | rates | difference pp | Newcombe (07 vs manifest)",
+   "analysis_sql": "31/200|30/200|0.155000|0.150000|-0.50|-0.076005|0.066018",
+   "second_source": "31/200|30/200|0.155000|0.150000|-0.50|-0.076005|0.066018",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-05 revenue per assigned account v1: totals | means | difference of means (07 vs manifest)",
+   "analysis_sql": "19566.00|26190.00|97.83|130.95|33.12",
+   "second_source": "19566.00|26190.00|97.83|130.95|33.12",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-07 exposure v1: exposed | rate per arm (05 vs manifest)",
+   "analysis_sql": "175|0.875000|174|0.870000",
+   "second_source": "175|0.875000|174|0.870000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E manifest stats: duplicates re-sent | delayed over 24 h | ghost (unknown identity) events | linked share | v1 assigned | v2 assigned (04, 06 vs manifest)",
+   "analysis_sql": "124|237|30|0.697121|400|154",
+   "second_source": "124|237|30|0.697121|400|154",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E D-08 the first interim run (2026-05-18): assigned control | treatment | SRM statistic | revenue totals | means (05, 07 vs the D-08 text of docs/contracts.md)",
+   "analysis_sql": "77|78|0.006452|5322.00|5481.00|81.88|85.64",
+   "second_source": "77|78|0.006452|5322.00|5481.00|81.88|85.64",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-001: sample-ratio statistic | verdict (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.006452|OK",
+   "second_source": "0.006452|OK",
+   "third_source": "0.006452|OK",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-001 control: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "77|65",
+   "second_source": "77|65",
+   "third_source": "77|65",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-001 control: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.892308",
+   "second_source": "0.892308",
+   "third_source": "0.892308",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-001 control: activated | conversion (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "18|0.276923",
+   "second_source": "18|0.276923",
+   "third_source": "18|0.276923",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-001 control: guardrail error rate | revenue per assigned account (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.184615|81.88",
+   "second_source": "0.184615|81.88",
+   "third_source": "0.184615|81.88",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-001 treatment: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "78|64",
+   "second_source": "78|64",
+   "third_source": "78|64",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-001 treatment: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.812500",
+   "second_source": "0.812500",
+   "third_source": "0.812500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-001 treatment: activated | conversion (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "25|0.390625",
+   "second_source": "25|0.390625",
+   "third_source": "25|0.390625",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-001 treatment: guardrail error rate | revenue per assigned account (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.187500|85.64",
+   "second_source": "0.187500|85.64",
+   "third_source": "0.187500|85.64",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-001: absolute lift pp | relative lift | Newcombe low | high (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "11.37|0.410590|-0.048312|0.268068",
+   "second_source": "11.37|0.410590|-0.048312|0.268068",
+   "third_source": "11.37|0.410590|-0.048312|0.268068",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-002: sample-ratio statistic | verdict (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.003953|OK",
+   "second_source": "0.003953|OK",
+   "third_source": "0.003953|OK",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-002 control: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "127|114",
+   "second_source": "127|114",
+   "third_source": "127|114",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-002 control: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.877193",
+   "second_source": "0.877193",
+   "third_source": "0.877193",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-002 control: activated | conversion (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "34|0.298246",
+   "second_source": "34|0.298246",
+   "third_source": "34|0.298246",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-002 control: guardrail error rate | revenue per assigned account (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.166667|98.87",
+   "second_source": "0.166667|98.87",
+   "third_source": "0.166667|98.87",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-002 treatment: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "126|115",
+   "second_source": "126|115",
+   "third_source": "126|115",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-002 treatment: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.860870",
+   "second_source": "0.860870",
+   "third_source": "0.860870",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-002 treatment: activated | conversion (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "48|0.417391",
+   "second_source": "48|0.417391",
+   "third_source": "48|0.417391",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-002 treatment: guardrail error rate | revenue per assigned account (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.165217|98.82",
+   "second_source": "0.165217|98.82",
+   "third_source": "0.165217|98.82",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-002: absolute lift pp | relative lift | Newcombe low | high (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "11.91|0.399488|-0.004952|0.238174",
+   "second_source": "11.91|0.399488|-0.004952|0.238174",
+   "third_source": "11.91|0.399488|-0.004952|0.238174",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-003: sample-ratio statistic | verdict (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.002833|OK",
+   "second_source": "0.002833|OK",
+   "third_source": "0.002833|OK",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-003 control: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "177|164",
+   "second_source": "177|164",
+   "third_source": "177|164",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-003 control: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.890244",
+   "second_source": "0.890244",
+   "third_source": "0.890244",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-003 control: activated | conversion (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "53|0.323171",
+   "second_source": "53|0.323171",
+   "third_source": "53|0.323171",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-003 control: guardrail error rate | revenue per assigned account (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.164634|107.07",
+   "second_source": "0.164634|107.07",
+   "third_source": "0.164634|107.07",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-003 treatment: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "176|164",
+   "second_source": "176|164",
+   "third_source": "176|164",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-003 treatment: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.871951",
+   "second_source": "0.871951",
+   "third_source": "0.871951",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-003 treatment: activated | conversion (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "68|0.414634",
+   "second_source": "68|0.414634",
+   "third_source": "68|0.414634",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-003 treatment: guardrail error rate | revenue per assigned account (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.158537|123.55",
+   "second_source": "0.158537|123.55",
+   "third_source": "0.158537|123.55",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-003: absolute lift pp | relative lift | Newcombe low | high (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "9.15|0.283019|-0.012863|0.193048",
+   "second_source": "9.15|0.283019|-0.012863|0.193048",
+   "third_source": "9.15|0.283019|-0.012863|0.193048",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-004: sample-ratio statistic | verdict (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.000000|OK",
+   "second_source": "0.000000|OK",
+   "third_source": "0.000000|OK",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-004 control: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "200|200",
+   "second_source": "200|200",
+   "third_source": "200|200",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-004 control: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.875000",
+   "second_source": "0.875000",
+   "third_source": "0.875000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-004 control: activated | conversion (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "63|0.315000",
+   "second_source": "63|0.315000",
+   "third_source": "63|0.315000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-004 control: guardrail error rate | revenue per assigned account (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.155000|97.83",
+   "second_source": "0.155000|97.83",
+   "third_source": "0.155000|97.83",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-004 treatment: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "200|200",
+   "second_source": "200|200",
+   "third_source": "200|200",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-004 treatment: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.870000",
+   "second_source": "0.870000",
+   "third_source": "0.870000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-004 treatment: activated | conversion (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "82|0.410000",
+   "second_source": "82|0.410000",
+   "third_source": "82|0.410000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-004 treatment: guardrail error rate | revenue per assigned account (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.150000|130.95",
+   "second_source": "0.150000|130.95",
+   "third_source": "0.150000|130.95",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-004: absolute lift pp | relative lift | Newcombe low | high (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "9.50|0.301587|0.000812|0.186863",
+   "second_source": "9.50|0.301587|0.000812|0.186863",
+   "third_source": "9.50|0.301587|0.000812|0.186863",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-001: sample-ratio statistic | verdict (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.000000|OK",
+   "second_source": "0.000000|OK",
+   "third_source": "0.000000|OK",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-001 control: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "200|200",
+   "second_source": "200|200",
+   "third_source": "200|200",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-001 control: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.875000",
+   "second_source": "0.875000",
+   "third_source": "0.875000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-001 control: activated | conversion (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "63|0.315000",
+   "second_source": "63|0.315000",
+   "third_source": "63|0.315000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-001 control: guardrail error rate | revenue per assigned account (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.155000|97.83",
+   "second_source": "0.155000|97.83",
+   "third_source": "0.155000|97.83",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-001 treatment: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "200|200",
+   "second_source": "200|200",
+   "third_source": "200|200",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-001 treatment: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.870000",
+   "second_source": "0.870000",
+   "third_source": "0.870000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-001 treatment: activated | conversion (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "82|0.410000",
+   "second_source": "82|0.410000",
+   "third_source": "82|0.410000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-001 treatment: guardrail error rate | revenue per assigned account (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.150000|130.95",
+   "second_source": "0.150000|130.95",
+   "third_source": "0.150000|130.95",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-001: absolute lift pp | relative lift | Newcombe low | high (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "9.50|0.301587|0.000812|0.186863",
+   "second_source": "9.50|0.301587|0.000812|0.186863",
+   "third_source": "9.50|0.301587|0.000812|0.186863",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-005: sample-ratio statistic | verdict (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "25.004329|MISMATCH",
+   "second_source": "25.004329|MISMATCH",
+   "third_source": "25.004329|MISMATCH",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-005: the sample ratio is a MISMATCH, so no outcome measure and no lift is emitted (number of outcome measures present)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-005 control: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "62|56",
+   "second_source": "62|56",
+   "third_source": "62|56",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-005 control: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.928571",
+   "second_source": "0.928571",
+   "third_source": "0.928571",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-005 treatment: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "92|87",
+   "second_source": "92|87",
+   "third_source": "92|87",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI an-005 treatment: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.873563",
+   "second_source": "0.873563",
+   "third_source": "0.873563",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-002: sample-ratio statistic | verdict (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "25.004329|MISMATCH",
+   "second_source": "25.004329|MISMATCH",
+   "third_source": "25.004329|MISMATCH",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-002: the sample ratio is a MISMATCH, so no outcome measure and no lift is emitted (number of outcome measures present)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-002 control: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "62|57",
+   "second_source": "62|57",
+   "third_source": "62|57",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-002 control: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.929825",
+   "second_source": "0.929825",
+   "third_source": "0.929825",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-002 treatment: assigned | mature (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "92|87",
+   "second_source": "92|87",
+   "third_source": "92|87",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI asof-xv-002 treatment: exposure rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.873563",
+   "second_source": "0.873563",
+   "third_source": "0.873563",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI account fact: activation rate over all mature signups | day 7 | on or after day 7 | week 4 (CSV vs 01 and 02 ALL rows vs the domain over the widened windows)",
+   "analysis_sql": "0.374781|0.187391|0.598949|0.332657",
+   "second_source": "0.374781|0.187391|0.598949|0.332657",
+   "third_source": "0.374781|0.187391|0.598949|0.332657",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI tracking fact total rows_total (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "12552",
+   "second_source": "12552",
+   "third_source": "12552",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI tracking fact total duplicates_dropped (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "124",
+   "second_source": "124",
+   "third_source": "124",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI tracking fact total canonical (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "12428",
+   "second_source": "12428",
+   "third_source": "12428",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI tracking fact total delayed_over_24h (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "237",
+   "second_source": "237",
+   "third_source": "237",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI tracking fact total unknown_identity (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "30",
+   "second_source": "30",
+   "third_source": "30",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI tracking fact total bot_excluded (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "305",
+   "second_source": "305",
+   "third_source": "305",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI tracking fact total internal_excluded (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "114",
+   "second_source": "114",
+   "third_source": "114",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI tracking fact total analysed (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "11979",
+   "second_source": "11979",
+   "third_source": "11979",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI dim_run keys: the five logged runs and the as-of read of each version (CSV vs dataset)",
+   "analysis_sql": "an-001|an-002|an-003|an-004|asof-xv-001|an-005|asof-xv-002",
+   "second_source": "an-001|an-002|an-003|an-004|asof-xv-001|an-005|asof-xv-002",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI row counts: dim_account | fact_account | fact_run_assignment | fact_tracking_week",
+   "analysis_sql": "600|600|1869|26",
+   "second_source": "600|600|1869|26",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  }
+ ]
+}
