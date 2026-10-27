@@ -29,7 +29,7 @@ jobs:
           POSTGRES_DB: pipeline_observatory
         ports: ["5432:5432"]
         options: >-
-          --health-cmd "pg_isready -U lab -d pipeline-observatory"
+          --health-cmd "pg_isready -U lab -d pipeline_observatory"
           --health-interval 5s --health-timeout 5s --health-retries 10
     env:
       DATABASE_URL: postgresql://lab:lab@127.0.0.1:5432/pipeline_observatory

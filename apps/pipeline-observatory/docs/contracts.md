@@ -65,6 +65,42 @@ counts nonnegative integers; money (business totals) Decimal strings with 2 plac
 denominator, never 0. Instants are UTC with `Z`. Ranges are half-open. Empty population: every count 0, every ratio
 null, `empty_population` true.
 
+## D-05 Fixture decisions (adopted from the golden fixture, P08-GOLD-11)
+Adopted verbatim from `tests/fixtures/golden/CALCULATION.md` DECISIONS D-P8-01..13; the fixture and `reference_check.py`
+are the binding form. In short:
+* **Duplicates (D-P8-01).** A record is a duplicate when its `source_key` is already accepted in a committed batch of the same
+  source (earlier batch, or earlier in the same batch), whatever its `payload_hash`; the key check runs before the contract
+  check. A replayed invalid row is quarantined again, one quarantine row per occurrence (`quarantined` counts occurrences,
+  `quarantined_distinct_keys` distinct keys). A changed payload under a known key is still a duplicate; there is no "changed" class.
+* **Expected records and completeness (D-P8-02).** `source_expectations` declares the count per source and UTC-date partition,
+  including rows that later fail. Completeness = accepted unique records of the partition / expected, not capped, null when
+  expected is 0. The partition is the UTC date of the freshness timestamp field.
+* **Freshness vs ingestion age (D-P8-03).** Freshness = cutoff - max `payload_json.event_ts` over accepted records; ingestion age =
+  cutoff - max `checkpoints.committed_at` over committed batches.
+* **Batch statuses (D-P8-04).** `committed` or `aborted`; only committed batches count; an aborted batch's staged rows are evidence only.
+* **Business total and reconciliation scope (D-P8-05).** `payload_json.amount` (signed, 2 places). Source total = every received row of
+  the batches in `publications.included_batch_ids`; published = accepted rows; exclusions signed (quarantined, duplicates, deletes).
+* **Verified recovery (D-P8-06).** The first run at or after `opened_at` that succeeded, passed its gate, published, and reconciled to
+  0.00; verified instant = its publication's `published_at`; detection = `opened_at`; a closed incident must agree or `closure_consistent` is false.
+* **Metric keys (D-P8-07).** `metrics.{ingestion, freshness, completeness, runs, quality_gate, publications, late_events,
+  reconciliation, incidents, backfills, processing_rate}` with the nesting in the fixture; `ingest.counts` are structural import counts.
+* **Gate (D-P8-08).** A quality result passes iff `failure_count` = 0; `allowed` iff at least one critical result exists and none
+  failed, else `blocked`; the pointer moves only on success + allowed + publication; a blocked run has no publication row.
+* **Late event (D-P8-09).** An accepted record whose batch committed after the `published_at` of the latest earlier publication
+  covering its source and whose `event_ts` <= that publication's `watermark` (a disclosed field distinct from the latest included event).
+* **Hashes (D-P8-10).** `payload_hash` = sha256 of canonical JSON (sorted keys, `,`/`:` separators, ASCII); `content_hash` = sha256 of
+  the sorted included payload hashes joined with "\n"; `definition_hash` = sha256 of the definition text.
+* **Rejection codes (D-P8-11).** NEGATIVE_QUANTITY, MISSING_FIELD, BACKFILL_OVERLAP, CHECKPOINT_REGRESSION (version <= previous),
+  CHECKPOINT_GAP (version > previous + 1), DUPLICATE_ID (repeated primary key, or repeated run/task/attempt), DEPENDENT_REJECTED,
+  UNKNOWN_SOURCE / UNKNOWN_BATCH / UNKNOWN_RUN / UNKNOWN_TASK_RUN / UNKNOWN_BACKFILL. A rejected checkpoint rejects its batch and
+  the batch's rows. Overlap is judged against earlier accepted requests of the source in `backfill_id` order; half-open daily partitions.
+* **Entity fields and names (D-P8-12).** The section-03 names (`source_contracts`, `ingestion_batches`, `model_definitions`,
+  `backfill_requests`) and the added fields listed in CALCULATION.md are the schema; the backend migrations mirror them.
+* **Durations and rates (D-P8-13).** Run duration = integer seconds; group means in minutes (4 places); headline ingestion rates per
+  batch with the source aggregate beside them; processing rate = accepted records of the measured batch / measured seconds, 6 places.
+* **Not proven by the fixture.** Cursor pagination with retry-after and CURSOR_LOOP, SCHEMA_CHANGED, delete events, redaction and
+  the self-trigger check have no golden inputs; the backend tests must carry their own fixtures for them (P08-TEST-03/04/08/10/11/12).
+
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners, including the crash-before-checkpoint and
 overlap experiments. Mode B: TypeScript mirror over the published snapshot; the quarantine desk, backfill console and
