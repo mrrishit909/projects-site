@@ -1,0 +1,16 @@
+{"entity":"lineage_edges","dataset_version":"golden-v1","rows":[
+{"edge_id":"ed-1","evidence_type":"declared","observed_at":null,"source_dataset_id":"ds-customers","target_dataset_id":"ds-orders"},
+{"edge_id":"ed-2","evidence_type":"declared","observed_at":null,"source_dataset_id":"ds-products","target_dataset_id":"ds-orders"},
+{"edge_id":"ed-3","evidence_type":"declared","observed_at":null,"source_dataset_id":"ds-orders","target_dataset_id":"ds-payments"},
+{"edge_id":"ed-4","evidence_type":"declared","observed_at":null,"source_dataset_id":"ds-orders","target_dataset_id":"ds-shipments"},
+{"edge_id":"ed-5","evidence_type":"declared","observed_at":null,"source_dataset_id":"ds-customers","target_dataset_id":"ds-payments"},
+{"edge_id":"ed-6","evidence_type":"declared","observed_at":null,"source_dataset_id":"ds-products","target_dataset_id":"ds-shipments"},
+{"edge_id":"eo-1","evidence_type":"observed","observed_at":"2026-10-03T00:00:00Z","source_dataset_id":"ds-customers","target_dataset_id":"ds-orders"},
+{"edge_id":"eo-2","evidence_type":"observed","observed_at":"2026-10-03T00:00:00Z","source_dataset_id":"ds-products","target_dataset_id":"ds-orders"},
+{"edge_id":"eo-3","evidence_type":"observed","observed_at":"2026-10-03T00:00:00Z","source_dataset_id":"ds-orders","target_dataset_id":"ds-payments"},
+{"edge_id":"eo-4","evidence_type":"observed","observed_at":"2026-10-03T00:00:00Z","source_dataset_id":"ds-orders","target_dataset_id":"ds-shipments"},
+{"edge_id":"eo-5","evidence_type":"observed","observed_at":"2026-10-03T00:00:00Z","source_dataset_id":"ds-customers","target_dataset_id":"ds-payments"},
+{"edge_id":"eo-6","evidence_type":"observed","observed_at":"2026-10-04T00:00:00Z","source_dataset_id":"ds-customers","target_dataset_id":"ds-orders"},
+{"edge_id":"eo-7","evidence_type":"observed","observed_at":"2026-10-03T00:00:00Z","source_dataset_id":"ds-payments","target_dataset_id":"ds-shipments"},
+{"edge_id":"ei-1","evidence_type":"inferred","observed_at":null,"source_dataset_id":"ds-products","target_dataset_id":"ds-shipments"}
+]}

@@ -1,0 +1,71 @@
+{
+  "as_of": "2026-10-05T00:00:00Z",
+  "config": {
+    "as_of": "2026-10-05T00:00:00Z",
+    "checklist_version": "cl-1",
+    "checklist_versions": [
+      {
+        "checklist_version": "cl-1",
+        "items": [
+          "definition",
+          "grain",
+          "source_fields",
+          "owner",
+          "refresh"
+        ]
+      }
+    ],
+    "contract_version": 1,
+    "probes": {
+      "definition_at": "2026-08-01T00:00:00Z"
+    },
+    "weight_version": "w2",
+    "whitespace_policy": {
+      "name": "trim_empty_is_missing",
+      "trim_characters": " \t\r\n"
+    }
+  },
+  "contract_version": "v1",
+  "dataset_hash": "bcf3383ccd42c3a91ae377f80f406d7bb5532c4b81e83675000be5882543dbcd",
+  "dataset_version": "golden-v1",
+  "designed_relationships": [],
+  "expected": "expected.json",
+  "fixture_id": "trustledger-golden-v1",
+  "generated_at": "2026-10-26T00:00:00Z",
+  "generator": {
+    "name": "tests/fixtures/golden (hand-derived, no generator)",
+    "parameters": {},
+    "seed": 0
+  },
+  "row_counts": {
+    "customer_records": 10,
+    "dataset_rows": 140,
+    "datasets": 5,
+    "definition_changes": 1,
+    "fields": 7,
+    "issues": 6,
+    "lineage_edges": 14,
+    "match_candidates": 5,
+    "merge_decisions": 5,
+    "metric_versions": 6,
+    "owners": 5,
+    "quality_rules": 9,
+    "rule_runs": 13,
+    "weight_versions": 2
+  },
+  "synthetic_truth": {
+    "note": "Verification only; the matcher never reads this block.",
+    "true_entity": {
+      "rec-001": "E1",
+      "rec-002": "E1",
+      "rec-003": "E2",
+      "rec-004": "E2",
+      "rec-005": "E3",
+      "rec-006": "E4",
+      "rec-007": "E5",
+      "rec-008": "E6",
+      "rec-009": "E7",
+      "rec-010": "E7"
+    }
+  }
+}

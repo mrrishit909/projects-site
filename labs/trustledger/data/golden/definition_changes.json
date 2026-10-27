@@ -1,0 +1,3 @@
+{"entity":"definition_changes","dataset_version":"golden-v1","rows":[
+{"approved_by":"own-02","change_id":"dc-001","changed_at":"2026-08-15T09:00:00Z","metric_version_id":"mv-rev-2","previous_metric_version_id":"mv-rev-1","reason":"Refunds are netted from revenue"}
+]}

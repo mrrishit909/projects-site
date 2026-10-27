@@ -1,0 +1,12 @@
+{"entity":"customer_records","dataset_version":"golden-v1","rows":[
+{"address_key":"addr-0101","normalized_name":"maria lopez","record_id":"rec-001","source_customer_id":"C-1001","source_system":"crm"},
+{"address_key":"addr-0101","normalized_name":"maria lopez","record_id":"rec-002","source_customer_id":"B-2001","source_system":"billing"},
+{"address_key":"addr-0202","normalized_name":"john a smith","record_id":"rec-003","source_customer_id":"C-1002","source_system":"crm"},
+{"address_key":"addr-0202","normalized_name":"jon smith","record_id":"rec-004","source_customer_id":"B-2002","source_system":"billing"},
+{"address_key":"addr-0303","normalized_name":"chen wei","record_id":"rec-005","source_customer_id":"C-1003","source_system":"crm"},
+{"address_key":"addr-0303","normalized_name":"chen wei","record_id":"rec-006","source_customer_id":"W-3001","source_system":"web"},
+{"address_key":"addr-0404","normalized_name":"priya nair","record_id":"rec-007","source_customer_id":"B-2003","source_system":"billing"},
+{"address_key":"addr-0405","normalized_name":"p nair","record_id":"rec-008","source_customer_id":"W-3002","source_system":"web"},
+{"address_key":"addr-0505","normalized_name":"omar haddad","record_id":"rec-009","source_customer_id":"C-1004","source_system":"crm"},
+{"address_key":"addr-0505","normalized_name":"omar haddad","record_id":"rec-010","source_customer_id":"W-3003","source_system":"web"}
+]}

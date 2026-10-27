@@ -1,0 +1,17 @@
+{
+  "routes": [
+    "",
+    "catalog/",
+    "glossary/",
+    "scorecard/",
+    "rules/",
+    "issues/",
+    "lineage/",
+    "duplicates/",
+    "merges/",
+    "impact/",
+    "evidence/",
+    "case-study/"
+  ],
+  "generated_at": "2026-10-27T02:30:16.664Z"
+}

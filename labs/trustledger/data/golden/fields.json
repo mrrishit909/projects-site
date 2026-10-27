@@ -1,0 +1,9 @@
+{"entity":"fields","dataset_version":"golden-v1","rows":[
+{"data_type":"text","dataset_id":"ds-customers","field_id":"fld-001","field_name":"customer_key","nullable":false},
+{"data_type":"text","dataset_id":"ds-customers","field_id":"fld-002","field_name":"email","nullable":false},
+{"data_type":"text","dataset_id":"ds-orders","field_id":"fld-003","field_name":"order_id","nullable":false},
+{"data_type":"text","dataset_id":"ds-orders","field_id":"fld-004","field_name":"customer_key","nullable":true},
+{"data_type":"text","dataset_id":"ds-products","field_id":"fld-005","field_name":"product_id","nullable":false},
+{"data_type":"text","dataset_id":"ds-payments","field_id":"fld-006","field_name":"payment_id","nullable":false},
+{"data_type":"text","dataset_id":"ds-shipments","field_id":"fld-007","field_name":"shipment_id","nullable":false}
+]}
