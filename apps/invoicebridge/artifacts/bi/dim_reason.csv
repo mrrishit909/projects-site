@@ -1,0 +1,6 @@
+reason_code,description
+QUANTITY_BLOCKED,the invoiced quantity exceeds what was received and not yet invoiced
+PRICE_VARIANCE,the invoiced unit price differs from the purchase-order price beyond the tolerance
+NO_PO_LINE,the invoice line names no purchase-order line of this vendor
+ROUNDING_EXCEPTION,the declared total or a line amount differs from the computed one beyond the tolerance
+CURRENCY_MISMATCH,the invoice currency differs from the purchase-order currency and no dated rate exists

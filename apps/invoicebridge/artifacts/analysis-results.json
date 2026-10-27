@@ -1,0 +1,4645 @@
+{
+ "meta": [
+  {
+   "dataset_hash": "1f001a43a7031d4260f5abb3b9f7a83f6e1b48397e85cf8b04e0b4d9e052162e",
+   "dataset_version": "ib-20261026-20261026",
+   "code_revision": "2dcc460",
+   "contract_version": 1,
+   "seed": 20261026,
+   "as_of": "2026-10-01T02:00:00Z",
+   "snapshot_cutoffs": "2026-03-31T23:59:59Z|2026-06-30T23:59:59Z|2026-10-01T02:00:00Z",
+   "seed_input_hash": "cc36983ef2192870048da7199b13cd89688c8175adf18876373ee32c14edee51",
+   "invoices": 2800,
+   "reconciliation_rows": 286,
+   "reconciliation_equal": 286,
+   "result_sets": 45,
+   "result_rows": 303
+  }
+ ],
+ "01_match_outcomes_by_vendor_and_reason__reason_open_vs_ever": [
+  {
+   "reason": "QUANTITY_BLOCKED",
+   "open_at_cutoff": "193",
+   "ever_raised": "596",
+   "ever_resolved": "403",
+   "ever_invoices": "595",
+   "open_share_of_ever": "0.323826"
+  },
+  {
+   "reason": "PRICE_VARIANCE",
+   "open_at_cutoff": "32",
+   "ever_raised": "57",
+   "ever_resolved": "25",
+   "ever_invoices": "57",
+   "open_share_of_ever": "0.561404"
+  },
+  {
+   "reason": "NO_PO_LINE",
+   "open_at_cutoff": "0",
+   "ever_raised": "0",
+   "ever_resolved": "0",
+   "ever_invoices": "0",
+   "open_share_of_ever": ""
+  },
+  {
+   "reason": "ROUNDING_EXCEPTION",
+   "open_at_cutoff": "4",
+   "ever_raised": "4",
+   "ever_resolved": "0",
+   "ever_invoices": "4",
+   "open_share_of_ever": "1.000000"
+  },
+  {
+   "reason": "CURRENCY_MISMATCH",
+   "open_at_cutoff": "3",
+   "ever_raised": "3",
+   "ever_resolved": "0",
+   "ever_invoices": "3",
+   "open_share_of_ever": "1.000000"
+  },
+  {
+   "reason": "ALL",
+   "open_at_cutoff": "232",
+   "ever_raised": "660",
+   "ever_resolved": "428",
+   "ever_invoices": "659",
+   "open_share_of_ever": "0.351515"
+  }
+ ],
+ "01_match_outcomes_by_vendor_and_reason__vendor_group_open_vs_ever": [
+  {
+   "vendor_group": "other vendors",
+   "invoices_in_book": "1923",
+   "quantity_blocked_open": "28",
+   "quantity_blocked_open_rate": "0.014561",
+   "quantity_blocked_ever": "37",
+   "quantity_blocked_ever_rate": "0.019241",
+   "price_variance_open": "2",
+   "price_variance_ever": "2"
+  },
+  {
+   "vendor_group": "ven-007",
+   "invoices_in_book": "184",
+   "quantity_blocked_open": "2",
+   "quantity_blocked_open_rate": "0.010870",
+   "quantity_blocked_ever": "2",
+   "quantity_blocked_ever_rate": "0.010870",
+   "price_variance_open": "30",
+   "price_variance_ever": "30"
+  },
+  {
+   "vendor_group": "ven-02x",
+   "invoices_in_book": "538",
+   "quantity_blocked_open": "163",
+   "quantity_blocked_open_rate": "0.302974",
+   "quantity_blocked_ever": "524",
+   "quantity_blocked_ever_rate": "0.973978",
+   "price_variance_open": "0",
+   "price_variance_ever": "0"
+  }
+ ],
+ "01_match_outcomes_by_vendor_and_reason__by_vendor": [
+  {
+   "vendor_id": "ven-001",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "93",
+   "matched_at_cutoff": "91",
+   "with_open_exception": "2",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-002",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "86",
+   "matched_at_cutoff": "83",
+   "with_open_exception": "3",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-003",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "43",
+   "matched_at_cutoff": "43",
+   "with_open_exception": "0",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-004",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "105",
+   "matched_at_cutoff": "103",
+   "with_open_exception": "2",
+   "matched_after_an_exception": "1"
+  },
+  {
+   "vendor_id": "ven-005",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "73",
+   "matched_at_cutoff": "73",
+   "with_open_exception": "0",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-006",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "127",
+   "matched_at_cutoff": "125",
+   "with_open_exception": "2",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-007",
+   "currency": "USD",
+   "vendor_group": "ven-007",
+   "invoices_in_book": "184",
+   "matched_at_cutoff": "152",
+   "with_open_exception": "32",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-008",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "47",
+   "matched_at_cutoff": "46",
+   "with_open_exception": "1",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-009",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "13",
+   "matched_at_cutoff": "12",
+   "with_open_exception": "1",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-010",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "90",
+   "matched_at_cutoff": "89",
+   "with_open_exception": "1",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-011",
+   "currency": "GBP",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "91",
+   "matched_at_cutoff": "89",
+   "with_open_exception": "2",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-012",
+   "currency": "EUR",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "32",
+   "matched_at_cutoff": "32",
+   "with_open_exception": "0",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-013",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "59",
+   "matched_at_cutoff": "58",
+   "with_open_exception": "1",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-014",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "72",
+   "matched_at_cutoff": "70",
+   "with_open_exception": "2",
+   "matched_after_an_exception": "2"
+  },
+  {
+   "vendor_id": "ven-015",
+   "currency": "EUR",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "26",
+   "matched_at_cutoff": "25",
+   "with_open_exception": "1",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-016",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "122",
+   "matched_at_cutoff": "119",
+   "with_open_exception": "3",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-017",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "80",
+   "matched_at_cutoff": "79",
+   "with_open_exception": "1",
+   "matched_after_an_exception": "1"
+  },
+  {
+   "vendor_id": "ven-018",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "25",
+   "matched_at_cutoff": "24",
+   "with_open_exception": "1",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-019",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "76",
+   "matched_at_cutoff": "76",
+   "with_open_exception": "0",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-020",
+   "currency": "USD",
+   "vendor_group": "ven-02x",
+   "invoices_in_book": "37",
+   "matched_at_cutoff": "25",
+   "with_open_exception": "12",
+   "matched_after_an_exception": "23"
+  },
+  {
+   "vendor_id": "ven-021",
+   "currency": "EUR",
+   "vendor_group": "ven-02x",
+   "invoices_in_book": "37",
+   "matched_at_cutoff": "22",
+   "with_open_exception": "15",
+   "matched_after_an_exception": "21"
+  },
+  {
+   "vendor_id": "ven-022",
+   "currency": "USD",
+   "vendor_group": "ven-02x",
+   "invoices_in_book": "53",
+   "matched_at_cutoff": "39",
+   "with_open_exception": "14",
+   "matched_after_an_exception": "36"
+  },
+  {
+   "vendor_id": "ven-023",
+   "currency": "USD",
+   "vendor_group": "ven-02x",
+   "invoices_in_book": "61",
+   "matched_at_cutoff": "44",
+   "with_open_exception": "17",
+   "matched_after_an_exception": "41"
+  },
+  {
+   "vendor_id": "ven-024",
+   "currency": "EUR",
+   "vendor_group": "ven-02x",
+   "invoices_in_book": "8",
+   "matched_at_cutoff": "5",
+   "with_open_exception": "3",
+   "matched_after_an_exception": "5"
+  },
+  {
+   "vendor_id": "ven-025",
+   "currency": "GBP",
+   "vendor_group": "ven-02x",
+   "invoices_in_book": "82",
+   "matched_at_cutoff": "55",
+   "with_open_exception": "27",
+   "matched_after_an_exception": "53"
+  },
+  {
+   "vendor_id": "ven-026",
+   "currency": "USD",
+   "vendor_group": "ven-02x",
+   "invoices_in_book": "85",
+   "matched_at_cutoff": "57",
+   "with_open_exception": "28",
+   "matched_after_an_exception": "56"
+  },
+  {
+   "vendor_id": "ven-027",
+   "currency": "EUR",
+   "vendor_group": "ven-02x",
+   "invoices_in_book": "43",
+   "matched_at_cutoff": "31",
+   "with_open_exception": "12",
+   "matched_after_an_exception": "31"
+  },
+  {
+   "vendor_id": "ven-028",
+   "currency": "GBP",
+   "vendor_group": "ven-02x",
+   "invoices_in_book": "74",
+   "matched_at_cutoff": "55",
+   "with_open_exception": "19",
+   "matched_after_an_exception": "54"
+  },
+  {
+   "vendor_id": "ven-029",
+   "currency": "EUR",
+   "vendor_group": "ven-02x",
+   "invoices_in_book": "58",
+   "matched_at_cutoff": "42",
+   "with_open_exception": "16",
+   "matched_after_an_exception": "41"
+  },
+  {
+   "vendor_id": "ven-030",
+   "currency": "GBP",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "37",
+   "matched_at_cutoff": "36",
+   "with_open_exception": "1",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-031",
+   "currency": "EUR",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "126",
+   "matched_at_cutoff": "121",
+   "with_open_exception": "5",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-032",
+   "currency": "EUR",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "45",
+   "matched_at_cutoff": "45",
+   "with_open_exception": "0",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-033",
+   "currency": "EUR",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "121",
+   "matched_at_cutoff": "119",
+   "with_open_exception": "2",
+   "matched_after_an_exception": "2"
+  },
+  {
+   "vendor_id": "ven-034",
+   "currency": "GBP",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "89",
+   "matched_at_cutoff": "89",
+   "with_open_exception": "0",
+   "matched_after_an_exception": "1"
+  },
+  {
+   "vendor_id": "ven-035",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "56",
+   "matched_at_cutoff": "55",
+   "with_open_exception": "1",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-036",
+   "currency": "EUR",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "32",
+   "matched_at_cutoff": "32",
+   "with_open_exception": "0",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-037",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "35",
+   "matched_at_cutoff": "34",
+   "with_open_exception": "1",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-038",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "50",
+   "matched_at_cutoff": "49",
+   "with_open_exception": "1",
+   "matched_after_an_exception": "2"
+  },
+  {
+   "vendor_id": "ven-039",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "72",
+   "matched_at_cutoff": "69",
+   "with_open_exception": "3",
+   "matched_after_an_exception": "0"
+  },
+  {
+   "vendor_id": "ven-040",
+   "currency": "USD",
+   "vendor_group": "other vendors",
+   "invoices_in_book": "0",
+   "matched_at_cutoff": "0",
+   "with_open_exception": "0",
+   "matched_after_an_exception": "0"
+  }
+ ],
+ "01_match_outcomes_by_vendor_and_reason__by_currency": [
+  {
+   "currency": "EUR",
+   "invoices_in_book": "530",
+   "matched_at_cutoff": "474",
+   "matched_total": "531691.91",
+   "with_open_exception": "56"
+  },
+  {
+   "currency": "GBP",
+   "invoices_in_book": "374",
+   "matched_at_cutoff": "324",
+   "matched_total": "347369.86",
+   "with_open_exception": "50"
+  },
+  {
+   "currency": "USD",
+   "invoices_in_book": "1741",
+   "matched_at_cutoff": "1615",
+   "matched_total": "1608460.47",
+   "with_open_exception": "126"
+  }
+ ],
+ "01_match_outcomes_by_vendor_and_reason__history_by_vendor_group": [
+  {
+   "vendor_group": "other vendors",
+   "reason": "PRICE_VARIANCE",
+   "ever_raised_rows": "4",
+   "ever_raised_invoices": "4",
+   "open_at_cutoff": "2"
+  },
+  {
+   "vendor_group": "ven-007",
+   "reason": "PRICE_VARIANCE",
+   "ever_raised_rows": "53",
+   "ever_raised_invoices": "53",
+   "open_at_cutoff": "30"
+  },
+  {
+   "vendor_group": "other vendors",
+   "reason": "QUANTITY_BLOCKED",
+   "ever_raised_rows": "41",
+   "ever_raised_invoices": "41",
+   "open_at_cutoff": "28"
+  },
+  {
+   "vendor_group": "ven-007",
+   "reason": "QUANTITY_BLOCKED",
+   "ever_raised_rows": "2",
+   "ever_raised_invoices": "2",
+   "open_at_cutoff": "2"
+  },
+  {
+   "vendor_group": "ven-02x",
+   "reason": "QUANTITY_BLOCKED",
+   "ever_raised_rows": "553",
+   "ever_raised_invoices": "552",
+   "open_at_cutoff": "163"
+  }
+ ],
+ "01_match_outcomes_by_vendor_and_reason__rates_by_currency": [
+  {
+   "currency": "EUR",
+   "invoices_in_book": "530",
+   "blocked_at_cutoff": "56",
+   "ever_excepted": "156",
+   "straight_through_rate": "0.894340",
+   "never_excepted_rate": "0.705660"
+  },
+  {
+   "currency": "GBP",
+   "invoices_in_book": "374",
+   "blocked_at_cutoff": "50",
+   "ever_excepted": "158",
+   "straight_through_rate": "0.866310",
+   "never_excepted_rate": "0.577540"
+  },
+  {
+   "currency": "USD",
+   "invoices_in_book": "1741",
+   "blocked_at_cutoff": "126",
+   "ever_excepted": "288",
+   "straight_through_rate": "0.927628",
+   "never_excepted_rate": "0.834578"
+  }
+ ],
+ "02_cumulative_consumption_by_po_line__totals_by_cutoff": [
+  {
+   "cutoff": "2026-03-31T23:59:59Z",
+   "currency": "ALL",
+   "po_lines": "1585",
+   "ordered_quantity": "105243.2500",
+   "net_received_quantity": "89156.2500",
+   "accepted_invoiced_quantity": "78554.5000",
+   "open_to_receive_quantity": "16087.0000",
+   "open_to_invoice_quantity": "26688.7500",
+   "received_not_invoiced_quantity": "10601.7500",
+   "received_not_invoiced_value": ""
+  },
+  {
+   "cutoff": "2026-03-31T23:59:59Z",
+   "currency": "EUR",
+   "po_lines": "345",
+   "ordered_quantity": "32308.5000",
+   "net_received_quantity": "28118.0000",
+   "accepted_invoiced_quantity": "24058.0000",
+   "open_to_receive_quantity": "4190.5000",
+   "open_to_invoice_quantity": "8250.5000",
+   "received_not_invoiced_quantity": "4060.0000",
+   "received_not_invoiced_value": "42551.45"
+  },
+  {
+   "cutoff": "2026-03-31T23:59:59Z",
+   "currency": "GBP",
+   "po_lines": "228",
+   "ordered_quantity": "16955.0000",
+   "net_received_quantity": "13947.5000",
+   "accepted_invoiced_quantity": "12168.5000",
+   "open_to_receive_quantity": "3007.5000",
+   "open_to_invoice_quantity": "4786.5000",
+   "received_not_invoiced_quantity": "1779.0000",
+   "received_not_invoiced_value": "14216.52"
+  },
+  {
+   "cutoff": "2026-03-31T23:59:59Z",
+   "currency": "USD",
+   "po_lines": "1012",
+   "ordered_quantity": "55979.7500",
+   "net_received_quantity": "47090.7500",
+   "accepted_invoiced_quantity": "42328.0000",
+   "open_to_receive_quantity": "8889.0000",
+   "open_to_invoice_quantity": "13651.7500",
+   "received_not_invoiced_quantity": "4762.7500",
+   "received_not_invoiced_value": "94597.54"
+  },
+  {
+   "cutoff": "2026-06-30T23:59:59Z",
+   "currency": "ALL",
+   "po_lines": "2454",
+   "ordered_quantity": "170228.0000",
+   "net_received_quantity": "147243.5000",
+   "accepted_invoiced_quantity": "129745.5000",
+   "open_to_receive_quantity": "22984.5000",
+   "open_to_invoice_quantity": "40482.5000",
+   "received_not_invoiced_quantity": "17498.0000",
+   "received_not_invoiced_value": ""
+  },
+  {
+   "cutoff": "2026-06-30T23:59:59Z",
+   "currency": "EUR",
+   "po_lines": "505",
+   "ordered_quantity": "49302.0000",
+   "net_received_quantity": "39309.7500",
+   "accepted_invoiced_quantity": "35525.5000",
+   "open_to_receive_quantity": "9992.2500",
+   "open_to_invoice_quantity": "13776.5000",
+   "received_not_invoiced_quantity": "3784.2500",
+   "received_not_invoiced_value": "43496.96"
+  },
+  {
+   "cutoff": "2026-06-30T23:59:59Z",
+   "currency": "GBP",
+   "po_lines": "344",
+   "ordered_quantity": "25069.0000",
+   "net_received_quantity": "21305.7500",
+   "accepted_invoiced_quantity": "18527.7500",
+   "open_to_receive_quantity": "3763.2500",
+   "open_to_invoice_quantity": "6541.2500",
+   "received_not_invoiced_quantity": "2778.0000",
+   "received_not_invoiced_value": "28439.13"
+  },
+  {
+   "cutoff": "2026-06-30T23:59:59Z",
+   "currency": "USD",
+   "po_lines": "1605",
+   "ordered_quantity": "95857.0000",
+   "net_received_quantity": "86628.0000",
+   "accepted_invoiced_quantity": "75692.2500",
+   "open_to_receive_quantity": "9229.0000",
+   "open_to_invoice_quantity": "20164.7500",
+   "received_not_invoiced_quantity": "10935.7500",
+   "received_not_invoiced_value": "146635.00"
+  },
+  {
+   "cutoff": "2026-10-01T02:00:00Z",
+   "currency": "ALL",
+   "po_lines": "3000",
+   "ordered_quantity": "202310.2500",
+   "net_received_quantity": "191431.0000",
+   "accepted_invoiced_quantity": "176112.2500",
+   "open_to_receive_quantity": "10879.2500",
+   "open_to_invoice_quantity": "26198.0000",
+   "received_not_invoiced_quantity": "15318.7500",
+   "received_not_invoiced_value": ""
+  },
+  {
+   "cutoff": "2026-10-01T02:00:00Z",
+   "currency": "EUR",
+   "po_lines": "627",
+   "ordered_quantity": "56695.5000",
+   "net_received_quantity": "52272.2500",
+   "accepted_invoiced_quantity": "47989.2500",
+   "open_to_receive_quantity": "4423.2500",
+   "open_to_invoice_quantity": "8706.2500",
+   "received_not_invoiced_quantity": "4283.0000",
+   "received_not_invoiced_value": "49602.39"
+  },
+  {
+   "cutoff": "2026-10-01T02:00:00Z",
+   "currency": "GBP",
+   "po_lines": "417",
+   "ordered_quantity": "29161.2500",
+   "net_received_quantity": "25829.2500",
+   "accepted_invoiced_quantity": "22291.7500",
+   "open_to_receive_quantity": "3332.0000",
+   "open_to_invoice_quantity": "6869.5000",
+   "received_not_invoiced_quantity": "3537.5000",
+   "received_not_invoiced_value": "38609.28"
+  },
+  {
+   "cutoff": "2026-10-01T02:00:00Z",
+   "currency": "USD",
+   "po_lines": "1956",
+   "ordered_quantity": "116453.5000",
+   "net_received_quantity": "113329.5000",
+   "accepted_invoiced_quantity": "105831.2500",
+   "open_to_receive_quantity": "3124.0000",
+   "open_to_invoice_quantity": "10622.2500",
+   "received_not_invoiced_quantity": "7498.2500",
+   "received_not_invoiced_value": "135134.34"
+  }
+ ],
+ "02_cumulative_consumption_by_po_line__line_state_by_cutoff": [
+  {
+   "cutoff": "2026-03-31T23:59:59Z",
+   "state": "nothing_received",
+   "po_lines": "155"
+  },
+  {
+   "cutoff": "2026-03-31T23:59:59Z",
+   "state": "received_none_invoiced",
+   "po_lines": "140"
+  },
+  {
+   "cutoff": "2026-03-31T23:59:59Z",
+   "state": "partly_invoiced",
+   "po_lines": "121"
+  },
+  {
+   "cutoff": "2026-03-31T23:59:59Z",
+   "state": "fully_invoiced",
+   "po_lines": "1169"
+  },
+  {
+   "cutoff": "2026-03-31T23:59:59Z",
+   "state": "over_consumed",
+   "po_lines": "0"
+  },
+  {
+   "cutoff": "2026-06-30T23:59:59Z",
+   "state": "nothing_received",
+   "po_lines": "191"
+  },
+  {
+   "cutoff": "2026-06-30T23:59:59Z",
+   "state": "received_none_invoiced",
+   "po_lines": "202"
+  },
+  {
+   "cutoff": "2026-06-30T23:59:59Z",
+   "state": "partly_invoiced",
+   "po_lines": "213"
+  },
+  {
+   "cutoff": "2026-06-30T23:59:59Z",
+   "state": "fully_invoiced",
+   "po_lines": "1848"
+  },
+  {
+   "cutoff": "2026-06-30T23:59:59Z",
+   "state": "over_consumed",
+   "po_lines": "0"
+  },
+  {
+   "cutoff": "2026-10-01T02:00:00Z",
+   "state": "nothing_received",
+   "po_lines": "95"
+  },
+  {
+   "cutoff": "2026-10-01T02:00:00Z",
+   "state": "received_none_invoiced",
+   "po_lines": "194"
+  },
+  {
+   "cutoff": "2026-10-01T02:00:00Z",
+   "state": "partly_invoiced",
+   "po_lines": "229"
+  },
+  {
+   "cutoff": "2026-10-01T02:00:00Z",
+   "state": "fully_invoiced",
+   "po_lines": "2482"
+  },
+  {
+   "cutoff": "2026-10-01T02:00:00Z",
+   "state": "over_consumed",
+   "po_lines": "0"
+  }
+ ],
+ "02_cumulative_consumption_by_po_line__ladder_top_lines": [
+  {
+   "po_line_id": "pol-0124",
+   "vendor_id": "ven-021",
+   "currency": "EUR",
+   "ordered_quantity": "3000.0000",
+   "net_at_march": "3000.0000",
+   "invoiced_at_march": "3000.0000",
+   "net_at_june": "3000.0000",
+   "invoiced_at_june": "3000.0000",
+   "net_at_asof": "3000.0000",
+   "invoiced_at_asof": "3000.0000"
+  },
+  {
+   "po_line_id": "pol-0465",
+   "vendor_id": "ven-032",
+   "currency": "EUR",
+   "ordered_quantity": "3000.0000",
+   "net_at_march": "3000.0000",
+   "invoiced_at_march": "3000.0000",
+   "net_at_june": "3000.0000",
+   "invoiced_at_june": "3000.0000",
+   "net_at_asof": "3000.0000",
+   "invoiced_at_asof": "3000.0000"
+  },
+  {
+   "po_line_id": "pol-2188",
+   "vendor_id": "ven-013",
+   "currency": "USD",
+   "ordered_quantity": "3000.0000",
+   "net_at_march": "0.0000",
+   "invoiced_at_march": "0.0000",
+   "net_at_june": "3000.0000",
+   "invoiced_at_june": "586.0000",
+   "net_at_asof": "3000.0000",
+   "invoiced_at_asof": "3000.0000"
+  },
+  {
+   "po_line_id": "pol-0274",
+   "vendor_id": "ven-017",
+   "currency": "USD",
+   "ordered_quantity": "2006.0000",
+   "net_at_march": "2006.0000",
+   "invoiced_at_march": "2006.0000",
+   "net_at_june": "2006.0000",
+   "invoiced_at_june": "2006.0000",
+   "net_at_asof": "2006.0000",
+   "invoiced_at_asof": "2006.0000"
+  },
+  {
+   "po_line_id": "pol-2740",
+   "vendor_id": "ven-016",
+   "currency": "USD",
+   "ordered_quantity": "1820.0000",
+   "net_at_march": "0.0000",
+   "invoiced_at_march": "0.0000",
+   "net_at_june": "0.0000",
+   "invoiced_at_june": "0.0000",
+   "net_at_asof": "1820.0000",
+   "invoiced_at_asof": "1820.0000"
+  },
+  {
+   "po_line_id": "pol-1934",
+   "vendor_id": "ven-001",
+   "currency": "USD",
+   "ordered_quantity": "1696.0000",
+   "net_at_march": "0.0000",
+   "invoiced_at_march": "0.0000",
+   "net_at_june": "1696.0000",
+   "invoiced_at_june": "1696.0000",
+   "net_at_asof": "1696.0000",
+   "invoiced_at_asof": "1696.0000"
+  },
+  {
+   "po_line_id": "pol-2304",
+   "vendor_id": "ven-032",
+   "currency": "EUR",
+   "ordered_quantity": "1622.0000",
+   "net_at_march": "0.0000",
+   "invoiced_at_march": "0.0000",
+   "net_at_june": "0.0000",
+   "invoiced_at_june": "0.0000",
+   "net_at_asof": "1622.0000",
+   "invoiced_at_asof": "1622.0000"
+  },
+  {
+   "po_line_id": "pol-1802",
+   "vendor_id": "ven-007",
+   "currency": "USD",
+   "ordered_quantity": "1585.0000",
+   "net_at_march": "0.0000",
+   "invoiced_at_march": "0.0000",
+   "net_at_june": "1585.0000",
+   "invoiced_at_june": "1585.0000",
+   "net_at_asof": "1585.0000",
+   "invoiced_at_asof": "1585.0000"
+  },
+  {
+   "po_line_id": "pol-2119",
+   "vendor_id": "ven-033",
+   "currency": "EUR",
+   "ordered_quantity": "1393.0000",
+   "net_at_march": "0.0000",
+   "invoiced_at_march": "0.0000",
+   "net_at_june": "1393.0000",
+   "invoiced_at_june": "1393.0000",
+   "net_at_asof": "1393.0000",
+   "invoiced_at_asof": "1393.0000"
+  },
+  {
+   "po_line_id": "pol-2632",
+   "vendor_id": "ven-018",
+   "currency": "USD",
+   "ordered_quantity": "1283.0000",
+   "net_at_march": "0.0000",
+   "invoiced_at_march": "0.0000",
+   "net_at_june": "0.0000",
+   "invoiced_at_june": "0.0000",
+   "net_at_asof": "1283.0000",
+   "invoiced_at_asof": "1283.0000"
+  }
+ ],
+ "03_duplicates_identity_vs_bytes_and_month_end__merges_by_reason_and_cutoff": [
+  {
+   "cutoff": "2026-03-31T23:59:59Z",
+   "reason_code": "DUPLICATE_IDENTITY",
+   "rows_merged": "50",
+   "canonical_invoices": "50"
+  },
+  {
+   "cutoff": "2026-03-31T23:59:59Z",
+   "reason_code": "DUPLICATE_SOURCE_BYTES",
+   "rows_merged": "2",
+   "canonical_invoices": "2"
+  },
+  {
+   "cutoff": "2026-06-30T23:59:59Z",
+   "reason_code": "DUPLICATE_IDENTITY",
+   "rows_merged": "68",
+   "canonical_invoices": "68"
+  },
+  {
+   "cutoff": "2026-06-30T23:59:59Z",
+   "reason_code": "DUPLICATE_SOURCE_BYTES",
+   "rows_merged": "2",
+   "canonical_invoices": "2"
+  },
+  {
+   "cutoff": "2026-10-01T02:00:00Z",
+   "reason_code": "DUPLICATE_IDENTITY",
+   "rows_merged": "95",
+   "canonical_invoices": "95"
+  },
+  {
+   "cutoff": "2026-10-01T02:00:00Z",
+   "reason_code": "DUPLICATE_SOURCE_BYTES",
+   "rows_merged": "3",
+   "canonical_invoices": "3"
+  }
+ ],
+ "03_duplicates_identity_vs_bytes_and_month_end__identity_vs_bytes": [
+  {
+   "reason_code": "DUPLICATE_IDENTITY",
+   "rows_merged": "95",
+   "same_source_bytes": "0",
+   "same_file_name": "0",
+   "same_vendor": "95",
+   "mean_days_after_canonical": "17.1271"
+  },
+  {
+   "reason_code": "DUPLICATE_SOURCE_BYTES",
+   "rows_merged": "3",
+   "same_source_bytes": "3",
+   "same_file_name": "0",
+   "same_vendor": "3",
+   "mean_days_after_canonical": "4.4861"
+  }
+ ],
+ "03_duplicates_identity_vs_bytes_and_month_end__month_end_clustering": [
+  {
+   "population": "merged by identity (re-sent PDFs)",
+   "invoices": "95",
+   "imported_in_last_three_days": "71",
+   "share": "0.7474"
+  },
+  {
+   "population": "all invoices",
+   "invoices": "2800",
+   "imported_in_last_three_days": "533",
+   "share": "0.1904"
+  },
+  {
+   "population": "invoices that are not re-sent copies",
+   "invoices": "2705",
+   "imported_in_last_three_days": "462",
+   "share": "0.1708"
+  }
+ ],
+ "03_duplicates_identity_vs_bytes_and_month_end__merged_by_import_month": [
+  {
+   "import_month": "2025-10",
+   "rows_merged_by_identity": "1",
+   "in_last_three_days": "1"
+  },
+  {
+   "import_month": "2025-11",
+   "rows_merged_by_identity": "13",
+   "in_last_three_days": "8"
+  },
+  {
+   "import_month": "2025-12",
+   "rows_merged_by_identity": "5",
+   "in_last_three_days": "5"
+  },
+  {
+   "import_month": "2026-01",
+   "rows_merged_by_identity": "12",
+   "in_last_three_days": "8"
+  },
+  {
+   "import_month": "2026-02",
+   "rows_merged_by_identity": "9",
+   "in_last_three_days": "6"
+  },
+  {
+   "import_month": "2026-03",
+   "rows_merged_by_identity": "10",
+   "in_last_three_days": "8"
+  },
+  {
+   "import_month": "2026-04",
+   "rows_merged_by_identity": "5",
+   "in_last_three_days": "4"
+  },
+  {
+   "import_month": "2026-05",
+   "rows_merged_by_identity": "7",
+   "in_last_three_days": "6"
+  },
+  {
+   "import_month": "2026-06",
+   "rows_merged_by_identity": "6",
+   "in_last_three_days": "5"
+  },
+  {
+   "import_month": "2026-07",
+   "rows_merged_by_identity": "11",
+   "in_last_three_days": "11"
+  },
+  {
+   "import_month": "2026-08",
+   "rows_merged_by_identity": "12",
+   "in_last_three_days": "7"
+  },
+  {
+   "import_month": "2026-09",
+   "rows_merged_by_identity": "4",
+   "in_last_three_days": "2"
+  }
+ ],
+ "03_duplicates_identity_vs_bytes_and_month_end__same_number_other_vendor": [
+  {
+   "number_norm": "BLU4775",
+   "invoices": "2",
+   "vendors": "2",
+   "merged_rows": "0"
+  },
+  {
+   "number_norm": "FAL8545",
+   "invoices": "2",
+   "vendors": "2",
+   "merged_rows": "0"
+  },
+  {
+   "number_norm": "HAR6441",
+   "invoices": "2",
+   "vendors": "2",
+   "merged_rows": "0"
+  },
+  {
+   "number_norm": "WES8970",
+   "invoices": "2",
+   "vendors": "2",
+   "merged_rows": "0"
+  }
+ ],
+ "03_duplicates_identity_vs_bytes_and_month_end__lineage_append_only": [
+  {
+   "import_status": "accepted",
+   "reason_code": "",
+   "lineage_rows": "2702",
+   "invoices": "2702"
+  },
+  {
+   "import_status": "merged",
+   "reason_code": "DUPLICATE_IDENTITY",
+   "lineage_rows": "95",
+   "invoices": "95"
+  },
+  {
+   "import_status": "merged",
+   "reason_code": "DUPLICATE_SOURCE_BYTES",
+   "lineage_rows": "3",
+   "invoices": "3"
+  }
+ ],
+ "04_approvals_under_policy_versions__decisions_by_policy_version": [
+  {
+   "policy_id": "pol-v1",
+   "version_number": "1",
+   "amount_limit": "5000.00",
+   "approve_decisions": "1055",
+   "valid_approvals": "1055",
+   "reject_decisions": "18",
+   "valid_rejections": "18"
+  },
+  {
+   "policy_id": "pol-v2",
+   "version_number": "2",
+   "amount_limit": "8000.00",
+   "approve_decisions": "1244",
+   "valid_approvals": "1244",
+   "reject_decisions": "39",
+   "valid_rejections": "39"
+  }
+ ],
+ "04_approvals_under_policy_versions__approvals_by_policy_and_currency": [
+  {
+   "policy_id": "pol-v1",
+   "currency": "EUR",
+   "valid_approvals": "222",
+   "approved_total": "215322.00",
+   "largest_invoice": "4764.63",
+   "mean_minutes_to_approval": "6594.0014"
+  },
+  {
+   "policy_id": "pol-v1",
+   "currency": "GBP",
+   "valid_approvals": "150",
+   "approved_total": "130627.12",
+   "largest_invoice": "4982.04",
+   "mean_minutes_to_approval": "7988.1517"
+  },
+  {
+   "policy_id": "pol-v1",
+   "currency": "USD",
+   "valid_approvals": "683",
+   "approved_total": "616417.56",
+   "largest_invoice": "4972.06",
+   "mean_minutes_to_approval": "4991.3469"
+  },
+  {
+   "policy_id": "pol-v2",
+   "currency": "EUR",
+   "valid_approvals": "225",
+   "approved_total": "241998.65",
+   "largest_invoice": "6960.77",
+   "mean_minutes_to_approval": "6789.5824"
+  },
+  {
+   "policy_id": "pol-v2",
+   "currency": "GBP",
+   "valid_approvals": "155",
+   "approved_total": "155916.00",
+   "largest_invoice": "6570.89",
+   "mean_minutes_to_approval": "6098.3983"
+  },
+  {
+   "policy_id": "pol-v2",
+   "currency": "USD",
+   "valid_approvals": "864",
+   "approved_total": "831588.69",
+   "largest_invoice": "6774.44",
+   "mean_minutes_to_approval": "4657.2566"
+  }
+ ],
+ "04_approvals_under_policy_versions__approval_time_by_currency": [
+  {
+   "currency": "EUR",
+   "valid_approvals": "447",
+   "mean_minutes_to_approval": "6692.4482",
+   "longest_minutes": "41239.1000"
+  },
+  {
+   "currency": "GBP",
+   "valid_approvals": "305",
+   "mean_minutes_to_approval": "7027.7852",
+   "longest_minutes": "38569.6500"
+  },
+  {
+   "currency": "USD",
+   "valid_approvals": "1547",
+   "mean_minutes_to_approval": "4804.7573",
+   "longest_minutes": "38456.8000"
+  }
+ ],
+ "04_approvals_under_policy_versions__limit_bands": [
+  {
+   "policy_id": "pol-v1",
+   "band": "total up to 5000.00",
+   "currency": "EUR",
+   "valid_approvals": "222"
+  },
+  {
+   "policy_id": "pol-v1",
+   "band": "total up to 5000.00",
+   "currency": "GBP",
+   "valid_approvals": "150"
+  },
+  {
+   "policy_id": "pol-v1",
+   "band": "total up to 5000.00",
+   "currency": "USD",
+   "valid_approvals": "683"
+  },
+  {
+   "policy_id": "pol-v2",
+   "band": "total above 5000.00 up to 8000.00",
+   "currency": "EUR",
+   "valid_approvals": "5"
+  },
+  {
+   "policy_id": "pol-v2",
+   "band": "total above 5000.00 up to 8000.00",
+   "currency": "GBP",
+   "valid_approvals": "2"
+  },
+  {
+   "policy_id": "pol-v2",
+   "band": "total above 5000.00 up to 8000.00",
+   "currency": "USD",
+   "valid_approvals": "13"
+  },
+  {
+   "policy_id": "pol-v2",
+   "band": "total up to 5000.00",
+   "currency": "EUR",
+   "valid_approvals": "220"
+  },
+  {
+   "policy_id": "pol-v2",
+   "band": "total up to 5000.00",
+   "currency": "GBP",
+   "valid_approvals": "153"
+  },
+  {
+   "policy_id": "pol-v2",
+   "band": "total up to 5000.00",
+   "currency": "USD",
+   "valid_approvals": "851"
+  }
+ ],
+ "04_approvals_under_policy_versions__matched_not_approved_over_limit": [
+  {
+   "currency": "EUR",
+   "matched_not_approved": "27",
+   "above_the_limit": "4",
+   "above_the_limit_total": "42165.56"
+  },
+  {
+   "currency": "GBP",
+   "matched_not_approved": "19",
+   "above_the_limit": "2",
+   "above_the_limit_total": "16277.09"
+  },
+  {
+   "currency": "USD",
+   "matched_not_approved": "68",
+   "above_the_limit": "6",
+   "above_the_limit_total": "57379.12"
+  }
+ ],
+ "04_approvals_under_policy_versions__v1_counterfactual": [
+  {
+   "statement": "HYPOTHETICAL: approvals under pol-v2 above the pol-v1 limit",
+   "currency": "EUR",
+   "approvals": "5"
+  },
+  {
+   "statement": "HYPOTHETICAL: approvals under pol-v2 above the pol-v1 limit",
+   "currency": "GBP",
+   "approvals": "2"
+  },
+  {
+   "statement": "HYPOTHETICAL: approvals under pol-v2 above the pol-v1 limit",
+   "currency": "USD",
+   "approvals": "13"
+  }
+ ],
+ "04_approvals_under_policy_versions__separation_of_duties": [
+  {
+   "check_name": "approve decisions recorded",
+   "n": "2299"
+  },
+  {
+   "check_name": "approve decisions that are policy-valid (the committed invoices)",
+   "n": "2299"
+  },
+  {
+   "check_name": "SELF_APPROVAL: approver is the invoice creator",
+   "n": "0"
+  },
+  {
+   "check_name": "ROLE_OR_LIMIT: role not allowed, or total above the limit in force",
+   "n": "0"
+  },
+  {
+   "check_name": "BEFORE_IMPORT: decided before the invoice was imported",
+   "n": "0"
+  },
+  {
+   "check_name": "reject decisions recorded",
+   "n": "57"
+  },
+  {
+   "check_name": "reject decisions that are valid",
+   "n": "57"
+  },
+  {
+   "check_name": "SELF_DECISION: rejecter is the invoice creator",
+   "n": "0"
+  },
+  {
+   "check_name": "deciding actors who also created other invoices (allowed: the rule is per invoice)",
+   "n": "5"
+  },
+  {
+   "check_name": "distinct deciding actors",
+   "n": "5"
+  },
+  {
+   "check_name": "distinct invoice creators",
+   "n": "11"
+  }
+ ],
+ "05_exception_backlog_and_assignment_history__backlog_at_cutoffs": [
+  {
+   "cutoff": "2026-03-31T23:59:59Z",
+   "open_from_history": "128",
+   "open_from_facts": "129",
+   "difference": "1",
+   "owned_from_history": "111",
+   "unowned_from_history": "17"
+  },
+  {
+   "cutoff": "2026-06-30T23:59:59Z",
+   "open_from_history": "201",
+   "open_from_facts": "201",
+   "difference": "0",
+   "owned_from_history": "172",
+   "unowned_from_history": "29"
+  },
+  {
+   "cutoff": "2026-10-01T02:00:00Z",
+   "open_from_history": "232",
+   "open_from_facts": "232",
+   "difference": "0",
+   "owned_from_history": "203",
+   "unowned_from_history": "29"
+  }
+ ],
+ "05_exception_backlog_and_assignment_history__open_by_reason_and_age": [
+  {
+   "reason": "CURRENCY_MISMATCH",
+   "open_exceptions": "3",
+   "age_0_to_6_days": "0",
+   "age_7_to_13_days": "0",
+   "age_14_to_29_days": "0",
+   "age_30_days_or_more": "3",
+   "oldest_days": "198"
+  },
+  {
+   "reason": "PRICE_VARIANCE",
+   "open_exceptions": "32",
+   "age_0_to_6_days": "0",
+   "age_7_to_13_days": "0",
+   "age_14_to_29_days": "0",
+   "age_30_days_or_more": "32",
+   "oldest_days": "303"
+  },
+  {
+   "reason": "QUANTITY_BLOCKED",
+   "open_exceptions": "193",
+   "age_0_to_6_days": "2",
+   "age_7_to_13_days": "1",
+   "age_14_to_29_days": "4",
+   "age_30_days_or_more": "186",
+   "oldest_days": "358"
+  },
+  {
+   "reason": "ROUNDING_EXCEPTION",
+   "open_exceptions": "4",
+   "age_0_to_6_days": "0",
+   "age_7_to_13_days": "0",
+   "age_14_to_29_days": "0",
+   "age_30_days_or_more": "4",
+   "oldest_days": "254"
+  }
+ ],
+ "05_exception_backlog_and_assignment_history__assignments_per_exception": [
+  {
+   "assignments": "0",
+   "exceptions": "78",
+   "open_at_cutoff": "29",
+   "resolved": "49"
+  },
+  {
+   "assignments": "1",
+   "exceptions": "479",
+   "open_at_cutoff": "167",
+   "resolved": "312"
+  },
+  {
+   "assignments": "2",
+   "exceptions": "90",
+   "open_at_cutoff": "29",
+   "resolved": "61"
+  },
+  {
+   "assignments": "3",
+   "exceptions": "13",
+   "open_at_cutoff": "7",
+   "resolved": "6"
+  }
+ ],
+ "05_exception_backlog_and_assignment_history__first_assignment_and_resolution": [
+  {
+   "reason": "CURRENCY_MISMATCH",
+   "exceptions": "3",
+   "with_an_assignment": "2",
+   "mean_hours_to_first_assignment": "29.2551",
+   "resolved": "0",
+   "mean_days_to_resolution": ""
+  },
+  {
+   "reason": "PRICE_VARIANCE",
+   "exceptions": "57",
+   "with_an_assignment": "49",
+   "mean_hours_to_first_assignment": "27.7846",
+   "resolved": "25",
+   "mean_days_to_resolution": "9.0417"
+  },
+  {
+   "reason": "QUANTITY_BLOCKED",
+   "exceptions": "596",
+   "with_an_assignment": "527",
+   "mean_hours_to_first_assignment": "30.9132",
+   "resolved": "403",
+   "mean_days_to_resolution": "8.9814"
+  },
+  {
+   "reason": "ROUNDING_EXCEPTION",
+   "exceptions": "4",
+   "with_an_assignment": "4",
+   "mean_hours_to_first_assignment": "37.5711",
+   "resolved": "0",
+   "mean_days_to_resolution": ""
+  }
+ ],
+ "05_exception_backlog_and_assignment_history__owner_workload_at_cutoff": [
+  {
+   "owner": "usr-ap02",
+   "open_exceptions": "40"
+  },
+  {
+   "owner": "usr-ap04",
+   "open_exceptions": "40"
+  },
+  {
+   "owner": "usr-ap05",
+   "open_exceptions": "35"
+  },
+  {
+   "owner": "usr-ap03",
+   "open_exceptions": "32"
+  },
+  {
+   "owner": "usr-ap01",
+   "open_exceptions": "31"
+  },
+  {
+   "owner": "unowned",
+   "open_exceptions": "29"
+  },
+  {
+   "owner": "usr-ap06",
+   "open_exceptions": "25"
+  }
+ ],
+ "06_export_batches_and_reconciliation__batch_summary": [
+  {
+   "measure": "requests received",
+   "n": "59"
+  },
+  {
+   "measure": "batches created (non-repeat requests)",
+   "n": "52"
+  },
+  {
+   "measure": "repeat requests answered with the prior batch",
+   "n": "7"
+  },
+  {
+   "measure": "export rows (invoices exported)",
+   "n": "2299"
+  },
+  {
+   "measure": "distinct invoices named by any request",
+   "n": "2299"
+  },
+  {
+   "measure": "stored export_batches rows (cross-check)",
+   "n": "52"
+  },
+  {
+   "measure": "stored export_rows rows (cross-check)",
+   "n": "2299"
+  }
+ ],
+ "06_export_batches_and_reconciliation__reconciliation_by_currency": [
+  {
+   "currency": "EUR",
+   "exported_invoices": "447",
+   "accepted_export_total": "457320.65",
+   "approved_invoices": "447",
+   "eligible_approved_total": "457320.65",
+   "difference": "0.00"
+  },
+  {
+   "currency": "GBP",
+   "exported_invoices": "305",
+   "accepted_export_total": "286543.12",
+   "approved_invoices": "305",
+   "eligible_approved_total": "286543.12",
+   "difference": "0.00"
+  },
+  {
+   "currency": "USD",
+   "exported_invoices": "1547",
+   "accepted_export_total": "1448006.25",
+   "approved_invoices": "1547",
+   "eligible_approved_total": "1448006.25",
+   "difference": "0.00"
+  }
+ ],
+ "06_export_batches_and_reconciliation__exclusions_by_reason_and_currency": [
+  {
+   "reason_code": "EXCEPTION_OPEN",
+   "currency": "EUR",
+   "invoices": "56",
+   "invoice_total": "82980.52"
+  },
+  {
+   "reason_code": "EXCEPTION_OPEN",
+   "currency": "GBP",
+   "invoices": "50",
+   "invoice_total": "77677.89"
+  },
+  {
+   "reason_code": "EXCEPTION_OPEN",
+   "currency": "USD",
+   "invoices": "126",
+   "invoice_total": "163162.81"
+  },
+  {
+   "reason_code": "NOT_APPROVED",
+   "currency": "EUR",
+   "invoices": "27",
+   "invoice_total": "74371.26"
+  },
+  {
+   "reason_code": "NOT_APPROVED",
+   "currency": "GBP",
+   "invoices": "19",
+   "invoice_total": "60826.74"
+  },
+  {
+   "reason_code": "NOT_APPROVED",
+   "currency": "USD",
+   "invoices": "68",
+   "invoice_total": "160454.22"
+  }
+ ],
+ "06_export_batches_and_reconciliation__batch_cadence": [
+  {
+   "weekday_and_time": "Fri 16:00",
+   "batches": "51",
+   "fewest_invoices": "1",
+   "most_invoices": "95",
+   "mean_invoices": "44.6667"
+  },
+  {
+   "weekday_and_time": "Wed 22:00",
+   "batches": "1",
+   "fewest_invoices": "21",
+   "most_invoices": "21",
+   "mean_invoices": "21.0000"
+  }
+ ],
+ "06_export_batches_and_reconciliation__repeat_requests": [
+  {
+   "batch_id": "bat-003",
+   "idempotency_key": "exp-key-003",
+   "invoices_named": "15",
+   "seconds_after_first_request": "57"
+  },
+  {
+   "batch_id": "bat-008",
+   "idempotency_key": "exp-key-008",
+   "invoices_named": "50",
+   "seconds_after_first_request": "44"
+  },
+  {
+   "batch_id": "bat-022",
+   "idempotency_key": "exp-key-022",
+   "invoices_named": "42",
+   "seconds_after_first_request": "35"
+  },
+  {
+   "batch_id": "bat-032",
+   "idempotency_key": "exp-key-032",
+   "invoices_named": "52",
+   "seconds_after_first_request": "52"
+  },
+  {
+   "batch_id": "bat-034",
+   "idempotency_key": "exp-key-034",
+   "invoices_named": "38",
+   "seconds_after_first_request": "23"
+  },
+  {
+   "batch_id": "bat-046",
+   "idempotency_key": "exp-key-046",
+   "invoices_named": "47",
+   "seconds_after_first_request": "31"
+  },
+  {
+   "batch_id": "bat-049",
+   "idempotency_key": "exp-key-049",
+   "invoices_named": "39",
+   "seconds_after_first_request": "61"
+  }
+ ],
+ "06_export_batches_and_reconciliation__approval_to_export_lag": [
+  {
+   "currency": "EUR",
+   "exported_invoices": "447",
+   "mean_days_approval_to_export": "3.0633",
+   "longest_days": "15.3340"
+  },
+  {
+   "currency": "GBP",
+   "exported_invoices": "305",
+   "mean_days_approval_to_export": "3.3183",
+   "longest_days": "18.3280"
+  },
+  {
+   "currency": "USD",
+   "exported_invoices": "1547",
+   "mean_days_approval_to_export": "3.1176",
+   "longest_days": "18.3080"
+  }
+ ],
+ "07_credits_and_payable_by_currency__payable_by_currency": [
+  {
+   "currency": "EUR",
+   "obligations": "447",
+   "approved_total": "457320.65",
+   "credit_notes": "19",
+   "invoices_credited": "17",
+   "credit_total": "6734.62",
+   "approved_payable": "450586.03",
+   "credit_share_of_approved_total": "0.014726"
+  },
+  {
+   "currency": "GBP",
+   "obligations": "305",
+   "approved_total": "286543.12",
+   "credit_notes": "23",
+   "invoices_credited": "22",
+   "credit_total": "5434.95",
+   "approved_payable": "281108.17",
+   "credit_share_of_approved_total": "0.018967"
+  },
+  {
+   "currency": "USD",
+   "obligations": "1547",
+   "approved_total": "1448006.25",
+   "credit_notes": "75",
+   "invoices_credited": "73",
+   "credit_total": "31969.26",
+   "approved_payable": "1416036.99",
+   "credit_share_of_approved_total": "0.022078"
+  }
+ ],
+ "07_credits_and_payable_by_currency__credit_share_of_invoices": [
+  {
+   "measure": "invoices carrying at least one credit note",
+   "n": "112"
+  },
+  {
+   "measure": "credit notes",
+   "n": "117"
+  },
+  {
+   "measure": "invoices imported (denominator of the 4.0 % claim)",
+   "n": "2800"
+  },
+  {
+   "measure": "obligations at the as-of (denominator of the 4.9 % reading)",
+   "n": "2299"
+  },
+  {
+   "measure": "credit notes against an invoice that is not an obligation",
+   "n": "0"
+  }
+ ],
+ "07_credits_and_payable_by_currency__credits_per_invoice": [
+  {
+   "credit_notes_on_the_invoice": "1",
+   "invoices": "107"
+  },
+  {
+   "credit_notes_on_the_invoice": "2",
+   "invoices": "5"
+  }
+ ],
+ "07_credits_and_payable_by_currency__credit_size_by_currency": [
+  {
+   "currency": "EUR",
+   "invoices_credited": "17",
+   "smallest_share": "0.039997",
+   "mean_share": "0.577458",
+   "largest_share": "1.000000",
+   "credited_above_the_invoice_total": "0"
+  },
+  {
+   "currency": "GBP",
+   "invoices_credited": "22",
+   "smallest_share": "0.039999",
+   "mean_share": "0.511591",
+   "largest_share": "1.000000",
+   "credited_above_the_invoice_total": "0"
+  },
+  {
+   "currency": "USD",
+   "invoices_credited": "73",
+   "smallest_share": "0.030178",
+   "mean_share": "0.471633",
+   "largest_share": "1.000000",
+   "credited_above_the_invoice_total": "0"
+  }
+ ],
+ "08_rejections_and_injected_defects_by_reason__ingest_outcomes": [
+  {
+   "outcome": "import lineage: accepted",
+   "n": "2702"
+  },
+  {
+   "outcome": "import lineage: merged (DUPLICATE_IDENTITY)",
+   "n": "95"
+  },
+  {
+   "outcome": "import lineage: merged (DUPLICATE_SOURCE_BYTES)",
+   "n": "3"
+  },
+  {
+   "outcome": "rejected_records kept (ingest rejections)",
+   "n": "0"
+  },
+  {
+   "outcome": "reject decisions (C08) recorded",
+   "n": "57"
+  },
+  {
+   "outcome": "reject decisions that are valid",
+   "n": "57"
+  },
+  {
+   "outcome": "reject decisions refused (invalid)",
+   "n": "0"
+  }
+ ],
+ "08_rejections_and_injected_defects_by_reason__reject_decisions_by_reason": [
+  {
+   "reviewer_reason": "Billed ahead of receipt; vendor to re-send once the delivery is booked.",
+   "exception_type_in_history": "QUANTITY_BLOCKED",
+   "reject_decisions": "32",
+   "valid": "32",
+   "still_in_the_book": "0",
+   "with_a_resolved_exception": "32"
+  },
+  {
+   "reviewer_reason": "Unit price differs from the purchase order; vendor to credit and re-bill at the PO price.",
+   "exception_type_in_history": "PRICE_VARIANCE",
+   "reject_decisions": "25",
+   "valid": "25",
+   "still_in_the_book": "0",
+   "with_a_resolved_exception": "25"
+  }
+ ],
+ "08_rejections_and_injected_defects_by_reason__injected_defect_signatures": [
+  {
+   "inj": "INJ-01",
+   "signature": "groups of invoices that share source bytes under different ids",
+   "found": "3",
+   "replay_only": "false"
+  },
+  {
+   "inj": "INJ-02",
+   "signature": "normalised invoice numbers shared by invoices of different vendors",
+   "found": "4",
+   "replay_only": "false"
+  },
+  {
+   "inj": "INJ-03",
+   "signature": "invoices with an open QUANTITY_BLOCKED outside vendors ven-020 .. ven-029 (a superset: the receipt is short, nothing follows)",
+   "found": "30",
+   "replay_only": "false"
+  },
+  {
+   "inj": "INJ-04",
+   "signature": "invoices outside ven-020 .. ven-029 with an open QUANTITY_BLOCKED line whose own quantity is within what was received (blocked by earlier consumption; a superset)",
+   "found": "19",
+   "replay_only": "false"
+  },
+  {
+   "inj": "INJ-05",
+   "signature": "invoices whose declared total differs from the computed total by more than 0.02",
+   "found": "4",
+   "replay_only": "false"
+  },
+  {
+   "inj": "INJ-06",
+   "signature": "approvals by the invoice creator (self-approval attempt)",
+   "found": "0",
+   "replay_only": "true"
+  },
+  {
+   "inj": "INJ-07",
+   "signature": "invoices with more than one approve decision (racing approvals)",
+   "found": "0",
+   "replay_only": "true"
+  },
+  {
+   "inj": "INJ-08",
+   "signature": "credit notes beyond the first for one credit id (a credit applied twice)",
+   "found": "0",
+   "replay_only": "true"
+  },
+  {
+   "inj": "INJ-09",
+   "signature": "invoices with a line in a currency other than its purchase order's",
+   "found": "3",
+   "replay_only": "false"
+  },
+  {
+   "inj": "INJ-10",
+   "signature": "invoice ids with more than one stored version (a correction overwriting the original)",
+   "found": "0",
+   "replay_only": "true"
+  },
+  {
+   "inj": "INJ-11",
+   "signature": "export requests repeated after a timeout (same batch id and key, later exported_at)",
+   "found": "7",
+   "replay_only": "false"
+  },
+  {
+   "inj": "INJ-12",
+   "signature": "export batches carrying a paid flag (the schema has no such column)",
+   "found": "0",
+   "replay_only": "true"
+  }
+ ],
+ "08_rejections_and_injected_defects_by_reason__open_quantity_blocked_outside_02x": [
+  {
+   "invoice_id": "inv-0150",
+   "vendor_id": "ven-031"
+  },
+  {
+   "invoice_id": "inv-0169",
+   "vendor_id": "ven-016"
+  },
+  {
+   "invoice_id": "inv-0278",
+   "vendor_id": "ven-031"
+  },
+  {
+   "invoice_id": "inv-0326",
+   "vendor_id": "ven-016"
+  },
+  {
+   "invoice_id": "inv-0384",
+   "vendor_id": "ven-007"
+  },
+  {
+   "invoice_id": "inv-0535",
+   "vendor_id": "ven-031"
+  },
+  {
+   "invoice_id": "inv-0598",
+   "vendor_id": "ven-006"
+  },
+  {
+   "invoice_id": "inv-0622",
+   "vendor_id": "ven-038"
+  },
+  {
+   "invoice_id": "inv-0882",
+   "vendor_id": "ven-033"
+  },
+  {
+   "invoice_id": "inv-0897",
+   "vendor_id": "ven-037"
+  },
+  {
+   "invoice_id": "inv-1042",
+   "vendor_id": "ven-004"
+  },
+  {
+   "invoice_id": "inv-1078",
+   "vendor_id": "ven-031"
+  },
+  {
+   "invoice_id": "inv-1158",
+   "vendor_id": "ven-011"
+  },
+  {
+   "invoice_id": "inv-1329",
+   "vendor_id": "ven-017"
+  },
+  {
+   "invoice_id": "inv-1522",
+   "vendor_id": "ven-013"
+  },
+  {
+   "invoice_id": "inv-1728",
+   "vendor_id": "ven-002"
+  },
+  {
+   "invoice_id": "inv-1876",
+   "vendor_id": "ven-039"
+  },
+  {
+   "invoice_id": "inv-1880",
+   "vendor_id": "ven-015"
+  },
+  {
+   "invoice_id": "inv-1994",
+   "vendor_id": "ven-039"
+  },
+  {
+   "invoice_id": "inv-2078",
+   "vendor_id": "ven-011"
+  },
+  {
+   "invoice_id": "inv-2122",
+   "vendor_id": "ven-001"
+  },
+  {
+   "invoice_id": "inv-2150",
+   "vendor_id": "ven-014"
+  },
+  {
+   "invoice_id": "inv-2272",
+   "vendor_id": "ven-033"
+  },
+  {
+   "invoice_id": "inv-2351",
+   "vendor_id": "ven-035"
+  },
+  {
+   "invoice_id": "inv-2397",
+   "vendor_id": "ven-002"
+  },
+  {
+   "invoice_id": "inv-2425",
+   "vendor_id": "ven-004"
+  },
+  {
+   "invoice_id": "inv-2590",
+   "vendor_id": "ven-002"
+  },
+  {
+   "invoice_id": "inv-2662",
+   "vendor_id": "ven-007"
+  },
+  {
+   "invoice_id": "inv-2724",
+   "vendor_id": "ven-016"
+  },
+  {
+   "invoice_id": "inv-2784",
+   "vendor_id": "ven-014"
+  }
+ ],
+ "08_rejections_and_injected_defects_by_reason__cumulative_blocked_candidates": [
+  {
+   "invoice_id": "inv-0150",
+   "vendor_id": "ven-031"
+  },
+  {
+   "invoice_id": "inv-0169",
+   "vendor_id": "ven-016"
+  },
+  {
+   "invoice_id": "inv-0326",
+   "vendor_id": "ven-016"
+  },
+  {
+   "invoice_id": "inv-0535",
+   "vendor_id": "ven-031"
+  },
+  {
+   "invoice_id": "inv-0598",
+   "vendor_id": "ven-006"
+  },
+  {
+   "invoice_id": "inv-0882",
+   "vendor_id": "ven-033"
+  },
+  {
+   "invoice_id": "inv-0897",
+   "vendor_id": "ven-037"
+  },
+  {
+   "invoice_id": "inv-1042",
+   "vendor_id": "ven-004"
+  },
+  {
+   "invoice_id": "inv-1329",
+   "vendor_id": "ven-017"
+  },
+  {
+   "invoice_id": "inv-1522",
+   "vendor_id": "ven-013"
+  },
+  {
+   "invoice_id": "inv-1728",
+   "vendor_id": "ven-002"
+  },
+  {
+   "invoice_id": "inv-1876",
+   "vendor_id": "ven-039"
+  },
+  {
+   "invoice_id": "inv-1994",
+   "vendor_id": "ven-039"
+  },
+  {
+   "invoice_id": "inv-2078",
+   "vendor_id": "ven-011"
+  },
+  {
+   "invoice_id": "inv-2150",
+   "vendor_id": "ven-014"
+  },
+  {
+   "invoice_id": "inv-2272",
+   "vendor_id": "ven-033"
+  },
+  {
+   "invoice_id": "inv-2351",
+   "vendor_id": "ven-035"
+  },
+  {
+   "invoice_id": "inv-2590",
+   "vendor_id": "ven-002"
+  },
+  {
+   "invoice_id": "inv-2724",
+   "vendor_id": "ven-016"
+  }
+ ],
+ "09_golden_known_answer__golden_per_invoice": [
+  {
+   "invoice_id": "inv-001",
+   "subtotal": "120.00",
+   "tax": "12.00",
+   "total": "132.00",
+   "declared_total": "132.00",
+   "rounding_difference": "0.00"
+  },
+  {
+   "invoice_id": "inv-002",
+   "subtotal": "80.00",
+   "tax": "8.00",
+   "total": "88.00",
+   "declared_total": "88.00",
+   "rounding_difference": "0.00"
+  },
+  {
+   "invoice_id": "inv-003",
+   "subtotal": "120.00",
+   "tax": "12.00",
+   "total": "132.00",
+   "declared_total": "132.00",
+   "rounding_difference": "0.00"
+  }
+ ],
+ "09_golden_known_answer__golden_identity_groups": [
+  {
+   "identity_key": "ven-001|INV1001|2026-10-06|132.00",
+   "invoices": "2",
+   "distinct_source_bytes": "2",
+   "earliest_invoice_id": "inv-001"
+  },
+  {
+   "identity_key": "ven-001|INV1002|2026-10-06|88.00",
+   "invoices": "1",
+   "distinct_source_bytes": "1",
+   "earliest_invoice_id": "inv-002"
+  }
+ ],
+ "09_golden_known_answer__golden_quantities": [
+  {
+   "po_line_id": "pol-001",
+   "ordered_quantity": "10.0000",
+   "net_received_quantity": "6.0000",
+   "first_invoice_quantity": "6.0000",
+   "available_for_the_second_invoice": "0.0000",
+   "second_invoice_quantity": "4.0000",
+   "quantity_variance_of_the_second_invoice": "4.0000"
+  }
+ ],
+ "bi_measures": [
+  {
+   "measure": "matched_invoices",
+   "currency": "",
+   "value": "2413"
+  },
+  {
+   "measure": "obligations",
+   "currency": "",
+   "value": "2299"
+  },
+  {
+   "measure": "matched_invoices",
+   "currency": "EUR",
+   "value": "474"
+  },
+  {
+   "measure": "matched_total",
+   "currency": "EUR",
+   "value": "531691.91"
+  },
+  {
+   "measure": "obligations",
+   "currency": "EUR",
+   "value": "447"
+  },
+  {
+   "measure": "approved_total",
+   "currency": "EUR",
+   "value": "457320.65"
+  },
+  {
+   "measure": "credit_total",
+   "currency": "EUR",
+   "value": "6734.62"
+  },
+  {
+   "measure": "approved_payable",
+   "currency": "EUR",
+   "value": "450586.03"
+  },
+  {
+   "measure": "accepted_export_total",
+   "currency": "EUR",
+   "value": "457320.65"
+  },
+  {
+   "measure": "export_difference",
+   "currency": "EUR",
+   "value": "0.00"
+  },
+  {
+   "measure": "received_not_invoiced_value",
+   "currency": "EUR",
+   "value": "49602.39"
+  },
+  {
+   "measure": "matched_invoices",
+   "currency": "GBP",
+   "value": "324"
+  },
+  {
+   "measure": "matched_total",
+   "currency": "GBP",
+   "value": "347369.86"
+  },
+  {
+   "measure": "obligations",
+   "currency": "GBP",
+   "value": "305"
+  },
+  {
+   "measure": "approved_total",
+   "currency": "GBP",
+   "value": "286543.12"
+  },
+  {
+   "measure": "credit_total",
+   "currency": "GBP",
+   "value": "5434.95"
+  },
+  {
+   "measure": "approved_payable",
+   "currency": "GBP",
+   "value": "281108.17"
+  },
+  {
+   "measure": "accepted_export_total",
+   "currency": "GBP",
+   "value": "286543.12"
+  },
+  {
+   "measure": "export_difference",
+   "currency": "GBP",
+   "value": "0.00"
+  },
+  {
+   "measure": "received_not_invoiced_value",
+   "currency": "GBP",
+   "value": "38609.28"
+  },
+  {
+   "measure": "matched_invoices",
+   "currency": "USD",
+   "value": "1615"
+  },
+  {
+   "measure": "matched_total",
+   "currency": "USD",
+   "value": "1608460.47"
+  },
+  {
+   "measure": "obligations",
+   "currency": "USD",
+   "value": "1547"
+  },
+  {
+   "measure": "approved_total",
+   "currency": "USD",
+   "value": "1448006.25"
+  },
+  {
+   "measure": "credit_total",
+   "currency": "USD",
+   "value": "31969.26"
+  },
+  {
+   "measure": "approved_payable",
+   "currency": "USD",
+   "value": "1416036.99"
+  },
+  {
+   "measure": "accepted_export_total",
+   "currency": "USD",
+   "value": "1448006.25"
+  },
+  {
+   "measure": "export_difference",
+   "currency": "USD",
+   "value": "0.00"
+  },
+  {
+   "measure": "received_not_invoiced_value",
+   "currency": "USD",
+   "value": "135134.34"
+  },
+  {
+   "measure": "open_exceptions",
+   "currency": "QUANTITY_BLOCKED",
+   "value": "193"
+  },
+  {
+   "measure": "open_exceptions",
+   "currency": "PRICE_VARIANCE",
+   "value": "32"
+  },
+  {
+   "measure": "open_exceptions",
+   "currency": "NO_PO_LINE",
+   "value": "0"
+  },
+  {
+   "measure": "open_exceptions",
+   "currency": "ROUNDING_EXCEPTION",
+   "value": "4"
+  },
+  {
+   "measure": "open_exceptions",
+   "currency": "CURRENCY_MISMATCH",
+   "value": "3"
+  },
+  {
+   "measure": "open_exceptions",
+   "currency": "",
+   "value": "232"
+  },
+  {
+   "measure": "unowned_exceptions",
+   "currency": "",
+   "value": "29"
+  },
+  {
+   "measure": "eligible_invoices",
+   "currency": "",
+   "value": "2645"
+  },
+  {
+   "measure": "exception_rate",
+   "currency": "",
+   "value": "0.087713"
+  },
+  {
+   "measure": "straight_through_rate",
+   "currency": "",
+   "value": "0.912287"
+  },
+  {
+   "measure": "ever_excepted_rate",
+   "currency": "",
+   "value": "0.227599"
+  },
+  {
+   "measure": "never_excepted_rate",
+   "currency": "",
+   "value": "0.772401"
+  },
+  {
+   "measure": "approved_invoices",
+   "currency": "",
+   "value": "2299"
+  },
+  {
+   "measure": "mean_minutes_to_approval",
+   "currency": "",
+   "value": "5466.7066"
+  },
+  {
+   "measure": "pending_invoices",
+   "currency": "",
+   "value": "346"
+  },
+  {
+   "measure": "duplicates_merged",
+   "currency": "",
+   "value": "98"
+  },
+  {
+   "measure": "ordered_quantity",
+   "currency": "",
+   "value": "202310.2500"
+  },
+  {
+   "measure": "net_received_quantity",
+   "currency": "",
+   "value": "191431.0000"
+  },
+  {
+   "measure": "accepted_invoiced_quantity",
+   "currency": "",
+   "value": "176112.2500"
+  },
+  {
+   "measure": "open_to_receive_quantity",
+   "currency": "",
+   "value": "10879.2500"
+  },
+  {
+   "measure": "open_to_invoice_quantity",
+   "currency": "",
+   "value": "26198.0000"
+  },
+  {
+   "measure": "received_not_invoiced_quantity",
+   "currency": "",
+   "value": "15318.7500"
+  }
+ ],
+ "reconciliation": [
+  {
+   "check": "A golden metric matched: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "898f235f83a84ba1",
+   "second_source": "898f235f83a84ba1",
+   "third_source": "898f235f83a84ba1",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric obligations: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "e0c8e7b23e500747",
+   "second_source": "e0c8e7b23e500747",
+   "third_source": "e0c8e7b23e500747",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric exceptions: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "699b4735882a8b2d",
+   "second_source": "699b4735882a8b2d",
+   "third_source": "699b4735882a8b2d",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric duplicates: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "d90fa60126350562",
+   "second_source": "d90fa60126350562",
+   "third_source": "d90fa60126350562",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric quantities: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "e15e6f97ce67b460",
+   "second_source": "e15e6f97ce67b460",
+   "third_source": "e15e6f97ce67b460",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric snapshots: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "b3dd5236f51db1ee",
+   "second_source": "b3dd5236f51db1ee",
+   "third_source": "b3dd5236f51db1ee",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric rates: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "e8f2248d5d2616dd",
+   "second_source": "e8f2248d5d2616dd",
+   "third_source": "e8f2248d5d2616dd",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric processing: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "22913235bfa5949b",
+   "second_source": "22913235bfa5949b",
+   "third_source": "22913235bfa5949b",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric approvals: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "3a117ba094d99650",
+   "second_source": "3a117ba094d99650",
+   "third_source": "3a117ba094d99650",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric payable: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "2cfb9a9e8cfe7c79",
+   "second_source": "2cfb9a9e8cfe7c79",
+   "third_source": "2cfb9a9e8cfe7c79",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric export: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "a235342489774801",
+   "second_source": "a235342489774801",
+   "third_source": "a235342489774801",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden inv-001: subtotal|tax|total|declared|rounding difference (09 vs expected.json vs domain)",
+   "analysis_sql": "120.00|12.00|132.00|132.00|0.00",
+   "second_source": "120.00|12.00|132.00|132.00|0.00",
+   "third_source": "120.00|12.00|132.00|132.00|0.00",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden inv-002: subtotal|tax|total|declared|rounding difference (09 vs expected.json vs domain)",
+   "analysis_sql": "80.00|8.00|88.00|88.00|0.00",
+   "second_source": "80.00|8.00|88.00|88.00|0.00",
+   "third_source": "80.00|8.00|88.00|88.00|0.00",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden inv-003: subtotal|tax|total|declared|rounding difference (09 vs expected.json vs domain)",
+   "analysis_sql": "120.00|12.00|132.00|132.00|0.00",
+   "second_source": "120.00|12.00|132.00|132.00|0.00",
+   "third_source": "120.00|12.00|132.00|132.00|0.00",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden duplicate identity group (09 vs expected.json merged record)",
+   "analysis_sql": "ven-001|INV1001|2026-10-06|132.00",
+   "second_source": "ven-001|INV1001|2026-10-06|132.00",
+   "third_source": "ven-001|INV1001|2026-10-06|132.00",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden ordered | net received | available to the second invoice | quantity variance (09 vs expected.json vs domain)",
+   "analysis_sql": "10.0000|6.0000|0.0000|4.0000",
+   "second_source": "10.0000|6.0000|0.0000|4.0000",
+   "third_source": "10.0000|6.0000|0.0000|4.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on metric key matched (snapshot, as-of, digest)",
+   "analysis_sql": "b1475bd72b2158ed",
+   "second_source": "b1475bd72b2158ed",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on metric key obligations (snapshot, as-of, digest)",
+   "analysis_sql": "d2540c2e98991051",
+   "second_source": "d2540c2e98991051",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on metric key exceptions (snapshot, as-of, digest)",
+   "analysis_sql": "eebaa25ac98a34cc",
+   "second_source": "eebaa25ac98a34cc",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on metric key duplicates (snapshot, as-of, digest)",
+   "analysis_sql": "e8fd4900c6185ffe",
+   "second_source": "e8fd4900c6185ffe",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on metric key quantities (snapshot, as-of, digest)",
+   "analysis_sql": "f70ca91b32cd0124",
+   "second_source": "f70ca91b32cd0124",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on metric key snapshots (snapshot, as-of, digest)",
+   "analysis_sql": "4ddb58bfbe99c50b",
+   "second_source": "4ddb58bfbe99c50b",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on metric key rates (snapshot, as-of, digest)",
+   "analysis_sql": "e94424aa852b1d90",
+   "second_source": "e94424aa852b1d90",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on metric key processing (snapshot, as-of, digest)",
+   "analysis_sql": "c3197cce74d5a7b7",
+   "second_source": "c3197cce74d5a7b7",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on metric key approvals (snapshot, as-of, digest)",
+   "analysis_sql": "3b5bca1e6b087a63",
+   "second_source": "3b5bca1e6b087a63",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on metric key payable (snapshot, as-of, digest)",
+   "analysis_sql": "03577ef402b2bcdb",
+   "second_source": "03577ef402b2bcdb",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on metric key export (snapshot, as-of, digest)",
+   "analysis_sql": "c673d02f54ca5176",
+   "second_source": "c673d02f54ca5176",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B matched.invoice_count",
+   "analysis_sql": "2413",
+   "second_source": "2413",
+   "third_source": "2413",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B matched.by_currency.EUR.invoice_count",
+   "analysis_sql": "474",
+   "second_source": "474",
+   "third_source": "474",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B matched.by_currency.EUR.total",
+   "analysis_sql": "531691.91",
+   "second_source": "531691.91",
+   "third_source": "531691.91",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B obligations.by_currency.EUR.count",
+   "analysis_sql": "447",
+   "second_source": "447",
+   "third_source": "447",
+   "fourth_source": "447",
+   "equal": true
+  },
+  {
+   "check": "B obligations.by_currency.EUR.total",
+   "analysis_sql": "457320.65",
+   "second_source": "457320.65",
+   "third_source": "457320.65",
+   "fourth_source": "457320.65",
+   "equal": true
+  },
+  {
+   "check": "B payable.by_currency.EUR.approved_total",
+   "analysis_sql": "457320.65",
+   "second_source": "457320.65",
+   "third_source": "457320.65",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B payable.by_currency.EUR.credit_total",
+   "analysis_sql": "6734.62",
+   "second_source": "6734.62",
+   "third_source": "6734.62",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B payable.by_currency.EUR.approved_payable",
+   "analysis_sql": "450586.03",
+   "second_source": "450586.03",
+   "third_source": "450586.03",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.by_currency.EUR.accepted_export_total",
+   "analysis_sql": "457320.65",
+   "second_source": "457320.65",
+   "third_source": "457320.65",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.by_currency.EUR.eligible_approved_total",
+   "analysis_sql": "457320.65",
+   "second_source": "457320.65",
+   "third_source": "457320.65",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.by_currency.EUR.difference",
+   "analysis_sql": "0.00",
+   "second_source": "0.00",
+   "third_source": "0.00",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B matched.by_currency.GBP.invoice_count",
+   "analysis_sql": "324",
+   "second_source": "324",
+   "third_source": "324",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B matched.by_currency.GBP.total",
+   "analysis_sql": "347369.86",
+   "second_source": "347369.86",
+   "third_source": "347369.86",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B obligations.by_currency.GBP.count",
+   "analysis_sql": "305",
+   "second_source": "305",
+   "third_source": "305",
+   "fourth_source": "305",
+   "equal": true
+  },
+  {
+   "check": "B obligations.by_currency.GBP.total",
+   "analysis_sql": "286543.12",
+   "second_source": "286543.12",
+   "third_source": "286543.12",
+   "fourth_source": "286543.12",
+   "equal": true
+  },
+  {
+   "check": "B payable.by_currency.GBP.approved_total",
+   "analysis_sql": "286543.12",
+   "second_source": "286543.12",
+   "third_source": "286543.12",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B payable.by_currency.GBP.credit_total",
+   "analysis_sql": "5434.95",
+   "second_source": "5434.95",
+   "third_source": "5434.95",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B payable.by_currency.GBP.approved_payable",
+   "analysis_sql": "281108.17",
+   "second_source": "281108.17",
+   "third_source": "281108.17",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.by_currency.GBP.accepted_export_total",
+   "analysis_sql": "286543.12",
+   "second_source": "286543.12",
+   "third_source": "286543.12",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.by_currency.GBP.eligible_approved_total",
+   "analysis_sql": "286543.12",
+   "second_source": "286543.12",
+   "third_source": "286543.12",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.by_currency.GBP.difference",
+   "analysis_sql": "0.00",
+   "second_source": "0.00",
+   "third_source": "0.00",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B matched.by_currency.USD.invoice_count",
+   "analysis_sql": "1615",
+   "second_source": "1615",
+   "third_source": "1615",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B matched.by_currency.USD.total",
+   "analysis_sql": "1608460.47",
+   "second_source": "1608460.47",
+   "third_source": "1608460.47",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B obligations.by_currency.USD.count",
+   "analysis_sql": "1547",
+   "second_source": "1547",
+   "third_source": "1547",
+   "fourth_source": "1547",
+   "equal": true
+  },
+  {
+   "check": "B obligations.by_currency.USD.total",
+   "analysis_sql": "1448006.25",
+   "second_source": "1448006.25",
+   "third_source": "1448006.25",
+   "fourth_source": "1448006.25",
+   "equal": true
+  },
+  {
+   "check": "B payable.by_currency.USD.approved_total",
+   "analysis_sql": "1448006.25",
+   "second_source": "1448006.25",
+   "third_source": "1448006.25",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B payable.by_currency.USD.credit_total",
+   "analysis_sql": "31969.26",
+   "second_source": "31969.26",
+   "third_source": "31969.26",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B payable.by_currency.USD.approved_payable",
+   "analysis_sql": "1416036.99",
+   "second_source": "1416036.99",
+   "third_source": "1416036.99",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.by_currency.USD.accepted_export_total",
+   "analysis_sql": "1448006.25",
+   "second_source": "1448006.25",
+   "third_source": "1448006.25",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.by_currency.USD.eligible_approved_total",
+   "analysis_sql": "1448006.25",
+   "second_source": "1448006.25",
+   "third_source": "1448006.25",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.by_currency.USD.difference",
+   "analysis_sql": "0.00",
+   "second_source": "0.00",
+   "third_source": "0.00",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.requests_received",
+   "analysis_sql": "59",
+   "second_source": "59",
+   "third_source": "59",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.batches_created",
+   "analysis_sql": "52",
+   "second_source": "52",
+   "third_source": "52",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.repeat_requests_returned_prior",
+   "analysis_sql": "7",
+   "second_source": "7",
+   "third_source": "7",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export rows",
+   "analysis_sql": "2299",
+   "second_source": "2299",
+   "third_source": "2299",
+   "fourth_source": "2299",
+   "equal": true
+  },
+  {
+   "check": "B export.exclusions EXCEPTION_OPEN (invoices)",
+   "analysis_sql": "232",
+   "second_source": "232",
+   "third_source": "232",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.exclusions NOT_APPROVED (invoices)",
+   "analysis_sql": "114",
+   "second_source": "114",
+   "third_source": "114",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.exclusions EXPORT_BEFORE_APPROVAL (invoices)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B export.exclusions APPROVED_NOT_EXPORTED (invoices)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B exceptions.open_count",
+   "analysis_sql": "232",
+   "second_source": "232",
+   "third_source": "232",
+   "fourth_source": "232",
+   "equal": true
+  },
+  {
+   "check": "B exceptions.unowned_count",
+   "analysis_sql": "29",
+   "second_source": "29",
+   "third_source": "29",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B exceptions.by_reason.QUANTITY_BLOCKED",
+   "analysis_sql": "193",
+   "second_source": "193",
+   "third_source": "193",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B exceptions.by_reason.PRICE_VARIANCE",
+   "analysis_sql": "32",
+   "second_source": "32",
+   "third_source": "32",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B exceptions.by_reason.NO_PO_LINE",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B exceptions.by_reason.ROUNDING_EXCEPTION",
+   "analysis_sql": "4",
+   "second_source": "4",
+   "third_source": "4",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B exceptions.by_reason.CURRENCY_MISMATCH",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "3",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B duplicates.rows_merged",
+   "analysis_sql": "98",
+   "second_source": "98",
+   "third_source": "98",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B duplicates.groups_detected",
+   "analysis_sql": "98",
+   "second_source": "98",
+   "third_source": "98",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B quantities.ordered_quantity (units, all currencies)",
+   "analysis_sql": "202310.2500",
+   "second_source": "202310.2500",
+   "third_source": "202310.2500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B quantities.net_received_quantity (units, all currencies)",
+   "analysis_sql": "191431.0000",
+   "second_source": "191431.0000",
+   "third_source": "191431.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B quantities.accepted_invoiced_quantity (units, all currencies)",
+   "analysis_sql": "176112.2500",
+   "second_source": "176112.2500",
+   "third_source": "176112.2500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B quantities.open_to_receive_quantity (units, all currencies)",
+   "analysis_sql": "10879.2500",
+   "second_source": "10879.2500",
+   "third_source": "10879.2500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B quantities.open_to_invoice_quantity (units, all currencies)",
+   "analysis_sql": "26198.0000",
+   "second_source": "26198.0000",
+   "third_source": "26198.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B quantities.received_not_invoiced_quantity (units, all currencies)",
+   "analysis_sql": "15318.7500",
+   "second_source": "15318.7500",
+   "third_source": "15318.7500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-03-31T23:59:59Z.ordered_quantity (units, all currencies)",
+   "analysis_sql": "105243.2500",
+   "second_source": "105243.2500",
+   "third_source": "105243.2500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-03-31T23:59:59Z.net_received_quantity (units, all currencies)",
+   "analysis_sql": "89156.2500",
+   "second_source": "89156.2500",
+   "third_source": "89156.2500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-03-31T23:59:59Z.accepted_invoiced_quantity (units, all currencies)",
+   "analysis_sql": "78554.5000",
+   "second_source": "78554.5000",
+   "third_source": "78554.5000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-03-31T23:59:59Z.open_to_receive_quantity (units, all currencies)",
+   "analysis_sql": "16087.0000",
+   "second_source": "16087.0000",
+   "third_source": "16087.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-03-31T23:59:59Z.open_to_invoice_quantity (units, all currencies)",
+   "analysis_sql": "26688.7500",
+   "second_source": "26688.7500",
+   "third_source": "26688.7500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-03-31T23:59:59Z.received_not_invoiced_quantity (units, all currencies)",
+   "analysis_sql": "10601.7500",
+   "second_source": "10601.7500",
+   "third_source": "10601.7500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-06-30T23:59:59Z.ordered_quantity (units, all currencies)",
+   "analysis_sql": "170228.0000",
+   "second_source": "170228.0000",
+   "third_source": "170228.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-06-30T23:59:59Z.net_received_quantity (units, all currencies)",
+   "analysis_sql": "147243.5000",
+   "second_source": "147243.5000",
+   "third_source": "147243.5000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-06-30T23:59:59Z.accepted_invoiced_quantity (units, all currencies)",
+   "analysis_sql": "129745.5000",
+   "second_source": "129745.5000",
+   "third_source": "129745.5000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-06-30T23:59:59Z.open_to_receive_quantity (units, all currencies)",
+   "analysis_sql": "22984.5000",
+   "second_source": "22984.5000",
+   "third_source": "22984.5000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-06-30T23:59:59Z.open_to_invoice_quantity (units, all currencies)",
+   "analysis_sql": "40482.5000",
+   "second_source": "40482.5000",
+   "third_source": "40482.5000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-06-30T23:59:59Z.received_not_invoiced_quantity (units, all currencies)",
+   "analysis_sql": "17498.0000",
+   "second_source": "17498.0000",
+   "third_source": "17498.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-10-01T02:00:00Z.ordered_quantity (units, all currencies)",
+   "analysis_sql": "202310.2500",
+   "second_source": "202310.2500",
+   "third_source": "202310.2500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-10-01T02:00:00Z.net_received_quantity (units, all currencies)",
+   "analysis_sql": "191431.0000",
+   "second_source": "191431.0000",
+   "third_source": "191431.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-10-01T02:00:00Z.accepted_invoiced_quantity (units, all currencies)",
+   "analysis_sql": "176112.2500",
+   "second_source": "176112.2500",
+   "third_source": "176112.2500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-10-01T02:00:00Z.open_to_receive_quantity (units, all currencies)",
+   "analysis_sql": "10879.2500",
+   "second_source": "10879.2500",
+   "third_source": "10879.2500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-10-01T02:00:00Z.open_to_invoice_quantity (units, all currencies)",
+   "analysis_sql": "26198.0000",
+   "second_source": "26198.0000",
+   "third_source": "26198.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B snapshots.2026-10-01T02:00:00Z.received_not_invoiced_quantity (units, all currencies)",
+   "analysis_sql": "15318.7500",
+   "second_source": "15318.7500",
+   "third_source": "15318.7500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B received_not_invoiced_value EUR at 2026-03-31T23:59:59Z (own currency; SQL analysis vs domain)",
+   "analysis_sql": "42551.45",
+   "second_source": "42551.45",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B received_not_invoiced_value GBP at 2026-03-31T23:59:59Z (own currency; SQL analysis vs domain)",
+   "analysis_sql": "14216.52",
+   "second_source": "14216.52",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B received_not_invoiced_value USD at 2026-03-31T23:59:59Z (own currency; SQL analysis vs domain)",
+   "analysis_sql": "94597.54",
+   "second_source": "94597.54",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B received_not_invoiced_value EUR at 2026-06-30T23:59:59Z (own currency; SQL analysis vs domain)",
+   "analysis_sql": "43496.96",
+   "second_source": "43496.96",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B received_not_invoiced_value GBP at 2026-06-30T23:59:59Z (own currency; SQL analysis vs domain)",
+   "analysis_sql": "28439.13",
+   "second_source": "28439.13",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B received_not_invoiced_value USD at 2026-06-30T23:59:59Z (own currency; SQL analysis vs domain)",
+   "analysis_sql": "146635.00",
+   "second_source": "146635.00",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B received_not_invoiced_value EUR at 2026-10-01T02:00:00Z (own currency; SQL analysis vs domain)",
+   "analysis_sql": "49602.39",
+   "second_source": "49602.39",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B received_not_invoiced_value GBP at 2026-10-01T02:00:00Z (own currency; SQL analysis vs domain)",
+   "analysis_sql": "38609.28",
+   "second_source": "38609.28",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B received_not_invoiced_value USD at 2026-10-01T02:00:00Z (own currency; SQL analysis vs domain)",
+   "analysis_sql": "135134.34",
+   "second_source": "135134.34",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B rates.eligible_invoices",
+   "analysis_sql": "2645",
+   "second_source": "2645",
+   "third_source": "2645",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B rates.straight_through_rate (not blocked at the cutoff)",
+   "analysis_sql": "0.912287",
+   "second_source": "0.912287",
+   "third_source": "0.912287",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B rates.exception_rate",
+   "analysis_sql": "0.087713",
+   "second_source": "0.087713",
+   "third_source": "0.087713",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B processing.approved_count",
+   "analysis_sql": "2299",
+   "second_source": "2299",
+   "third_source": "2299",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B approvals.valid_count",
+   "analysis_sql": "2299",
+   "second_source": "2299",
+   "third_source": "2299",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B processing.pending_count",
+   "analysis_sql": "346",
+   "second_source": "346",
+   "third_source": "346",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B approvals.invalid_records (count)",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B credit notes applied (count across currencies)",
+   "analysis_sql": "117",
+   "second_source": "117",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_match_outcomes_by_vendor_and_reason__reason_open_vs_ever: 6 rows, 36 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_match_outcomes_by_vendor_and_reason__vendor_group_open_vs_ever: 3 rows, 24 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_match_outcomes_by_vendor_and_reason__by_vendor: 40 rows, 280 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_match_outcomes_by_vendor_and_reason__by_currency: 3 rows, 15 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_match_outcomes_by_vendor_and_reason__history_by_vendor_group: 5 rows, 25 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_match_outcomes_by_vendor_and_reason__rates_by_currency: 3 rows, 18 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_cumulative_consumption_by_po_line__totals_by_cutoff: 12 rows, 120 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_cumulative_consumption_by_po_line__line_state_by_cutoff: 15 rows, 45 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_cumulative_consumption_by_po_line__ladder_top_lines: 10 rows, 100 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_duplicates_identity_vs_bytes_and_month_end__merges_by_reason_and_cutoff: 6 rows, 24 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_duplicates_identity_vs_bytes_and_month_end__identity_vs_bytes: 2 rows, 12 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_duplicates_identity_vs_bytes_and_month_end__month_end_clustering: 3 rows, 12 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_duplicates_identity_vs_bytes_and_month_end__merged_by_import_month: 12 rows, 36 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_duplicates_identity_vs_bytes_and_month_end__same_number_other_vendor: 4 rows, 16 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_duplicates_identity_vs_bytes_and_month_end__lineage_append_only: 3 rows, 12 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_approvals_under_policy_versions__decisions_by_policy_version: 2 rows, 14 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_approvals_under_policy_versions__approvals_by_policy_and_currency: 6 rows, 36 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_approvals_under_policy_versions__approval_time_by_currency: 3 rows, 12 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_approvals_under_policy_versions__limit_bands: 9 rows, 36 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_approvals_under_policy_versions__matched_not_approved_over_limit: 3 rows, 12 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_approvals_under_policy_versions__v1_counterfactual: 3 rows, 9 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_approvals_under_policy_versions__separation_of_duties: 11 rows, 22 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_exception_backlog_and_assignment_history__backlog_at_cutoffs: 3 rows, 18 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_exception_backlog_and_assignment_history__open_by_reason_and_age: 4 rows, 28 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_exception_backlog_and_assignment_history__assignments_per_exception: 4 rows, 16 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_exception_backlog_and_assignment_history__first_assignment_and_resolution: 4 rows, 24 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_exception_backlog_and_assignment_history__owner_workload_at_cutoff: 7 rows, 14 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_export_batches_and_reconciliation__batch_summary: 7 rows, 14 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_export_batches_and_reconciliation__reconciliation_by_currency: 3 rows, 18 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_export_batches_and_reconciliation__exclusions_by_reason_and_currency: 6 rows, 24 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_export_batches_and_reconciliation__batch_cadence: 2 rows, 10 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_export_batches_and_reconciliation__repeat_requests: 7 rows, 28 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_export_batches_and_reconciliation__approval_to_export_lag: 3 rows, 12 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_credits_and_payable_by_currency__payable_by_currency: 3 rows, 24 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_credits_and_payable_by_currency__credit_share_of_invoices: 5 rows, 10 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_credits_and_payable_by_currency__credits_per_invoice: 2 rows, 4 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_credits_and_payable_by_currency__credit_size_by_currency: 3 rows, 18 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_rejections_and_injected_defects_by_reason__ingest_outcomes: 7 rows, 14 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_rejections_and_injected_defects_by_reason__reject_decisions_by_reason: 2 rows, 12 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_rejections_and_injected_defects_by_reason__injected_defect_signatures: 12 rows, 48 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_rejections_and_injected_defects_by_reason__open_quantity_blocked_outside_02x: 30 rows, 60 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_rejections_and_injected_defects_by_reason__cumulative_blocked_candidates: 19 rows, 38 cells, cells differing from the Python side",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-001: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "93|91|2",
+   "second_source": "93|91|2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-002: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "86|83|3",
+   "second_source": "86|83|3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-003: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "43|43|0",
+   "second_source": "43|43|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-004: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "105|103|2",
+   "second_source": "105|103|2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-005: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "73|73|0",
+   "second_source": "73|73|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-006: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "127|125|2",
+   "second_source": "127|125|2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-007: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "184|152|32",
+   "second_source": "184|152|32",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-008: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "47|46|1",
+   "second_source": "47|46|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-009: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "13|12|1",
+   "second_source": "13|12|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-010: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "90|89|1",
+   "second_source": "90|89|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-011: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "91|89|2",
+   "second_source": "91|89|2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-012: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "32|32|0",
+   "second_source": "32|32|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-013: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "59|58|1",
+   "second_source": "59|58|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-014: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "72|70|2",
+   "second_source": "72|70|2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-015: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "26|25|1",
+   "second_source": "26|25|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-016: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "122|119|3",
+   "second_source": "122|119|3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-017: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "80|79|1",
+   "second_source": "80|79|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-018: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "25|24|1",
+   "second_source": "25|24|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-019: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "76|76|0",
+   "second_source": "76|76|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-020: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "37|25|12",
+   "second_source": "37|25|12",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-021: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "37|22|15",
+   "second_source": "37|22|15",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-022: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "53|39|14",
+   "second_source": "53|39|14",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-023: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "61|44|17",
+   "second_source": "61|44|17",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-024: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "8|5|3",
+   "second_source": "8|5|3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-025: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "82|55|27",
+   "second_source": "82|55|27",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-026: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "85|57|28",
+   "second_source": "85|57|28",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-027: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "43|31|12",
+   "second_source": "43|31|12",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-028: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "74|55|19",
+   "second_source": "74|55|19",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-029: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "58|42|16",
+   "second_source": "58|42|16",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-030: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "37|36|1",
+   "second_source": "37|36|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-031: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "126|121|5",
+   "second_source": "126|121|5",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-032: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "45|45|0",
+   "second_source": "45|45|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-033: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "121|119|2",
+   "second_source": "121|119|2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-034: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "89|89|0",
+   "second_source": "89|89|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-035: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "56|55|1",
+   "second_source": "56|55|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-036: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "32|32|0",
+   "second_source": "32|32|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-037: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "35|34|1",
+   "second_source": "35|34|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-038: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "50|49|1",
+   "second_source": "50|49|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-039: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "72|69|3",
+   "second_source": "72|69|3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D vendor ven-040: invoices in the book | matched | open exceptions (SQL vs domain group_metrics)",
+   "analysis_sql": "0|0|0",
+   "second_source": "0|0|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D currency EUR: in the book | matched | matched total | obligations | approved total (SQL vs domain group_metrics)",
+   "analysis_sql": "530|474|531691.91|447|457320.65",
+   "second_source": "530|474|531691.91|447|457320.65",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D currency GBP: in the book | matched | matched total | obligations | approved total (SQL vs domain group_metrics)",
+   "analysis_sql": "374|324|347369.86|305|286543.12",
+   "second_source": "374|324|347369.86|305|286543.12",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D currency USD: in the book | matched | matched total | obligations | approved total (SQL vs domain group_metrics)",
+   "analysis_sql": "1741|1615|1608460.47|1547|1448006.25",
+   "second_source": "1741|1615|1608460.47|1547|1448006.25",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D 2026-03-31T23:59:59Z: duplicates.rows_merged (03 vs reference SQL vs domain)",
+   "analysis_sql": "52",
+   "second_source": "52",
+   "third_source": "52",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D 2026-03-31T23:59:59Z: exceptions.open_count (05 facts vs reference SQL vs domain)",
+   "analysis_sql": "129",
+   "second_source": "129",
+   "third_source": "129",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D 2026-03-31T23:59:59Z: quantities.net_received_quantity (02 vs reference SQL vs domain)",
+   "analysis_sql": "89156.2500",
+   "second_source": "89156.2500",
+   "third_source": "89156.2500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D 2026-03-31T23:59:59Z: quantities.accepted_invoiced_quantity (02 vs reference SQL vs domain)",
+   "analysis_sql": "78554.5000",
+   "second_source": "78554.5000",
+   "third_source": "78554.5000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D 2026-03-31T23:59:59Z: quantities.received_not_invoiced_quantity (02 vs reference SQL vs domain)",
+   "analysis_sql": "10601.7500",
+   "second_source": "10601.7500",
+   "third_source": "10601.7500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D 2026-03-31T23:59:59Z: matched.invoice_count (the domain book's matched invoices vs reference SQL vs domain metric)",
+   "analysis_sql": "1131",
+   "second_source": "1131",
+   "third_source": "1131",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D 2026-06-30T23:59:59Z: duplicates.rows_merged (03 vs reference SQL vs domain)",
+   "analysis_sql": "70",
+   "second_source": "70",
+   "third_source": "70",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D 2026-06-30T23:59:59Z: exceptions.open_count (05 facts vs reference SQL vs domain)",
+   "analysis_sql": "201",
+   "second_source": "201",
+   "third_source": "201",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D 2026-06-30T23:59:59Z: quantities.net_received_quantity (02 vs reference SQL vs domain)",
+   "analysis_sql": "147243.5000",
+   "second_source": "147243.5000",
+   "third_source": "147243.5000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D 2026-06-30T23:59:59Z: quantities.accepted_invoiced_quantity (02 vs reference SQL vs domain)",
+   "analysis_sql": "129745.5000",
+   "second_source": "129745.5000",
+   "third_source": "129745.5000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D 2026-06-30T23:59:59Z: quantities.received_not_invoiced_quantity (02 vs reference SQL vs domain)",
+   "analysis_sql": "17498.0000",
+   "second_source": "17498.0000",
+   "third_source": "17498.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D 2026-06-30T23:59:59Z: matched.invoice_count (the domain book's matched invoices vs reference SQL vs domain metric)",
+   "analysis_sql": "1787",
+   "second_source": "1787",
+   "third_source": "1787",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D the stored exception history differs from the facts-derived backlog only at the March month-end (open_from_facts - open_from_history)",
+   "analysis_sql": "1|0|0",
+   "second_source": "1|0|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-01 same bytes under two ids: groups found | manifest",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-02 invoice number reused across vendors: groups found | manifest",
+   "analysis_sql": "4",
+   "second_source": "4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-03 partial receipts: injected invoices inside the SQL candidate set (of the manifest's)",
+   "analysis_sql": "5",
+   "second_source": "5",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-04 cumulative consumption: injected invoices inside the SQL candidate set (of the manifest's)",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-05 rounding gap over tolerance: invoices found | manifest",
+   "analysis_sql": "4",
+   "second_source": "4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-09 foreign-currency lines: invoices found | manifest",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-11 repeated export requests: found | manifest",
+   "analysis_sql": "7",
+   "second_source": "7",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-06 replay-only: rows in the snapshot | manifest record_count (handling_kind replay_only)",
+   "analysis_sql": "0|true",
+   "second_source": "0|true",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-07 replay-only: rows in the snapshot | manifest record_count (handling_kind replay_only)",
+   "analysis_sql": "0|true",
+   "second_source": "0|true",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-08 replay-only: rows in the snapshot | manifest record_count (handling_kind replay_only)",
+   "analysis_sql": "0|true",
+   "second_source": "0|true",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-10 replay-only: rows in the snapshot | manifest record_count (handling_kind replay_only)",
+   "analysis_sql": "0|true",
+   "second_source": "0|true",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-12 replay-only: rows in the snapshot | manifest record_count (handling_kind replay_only)",
+   "analysis_sql": "0|true",
+   "second_source": "0|true",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E ingest rejections kept | manifest expected rejections",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E INJ-01 merges by bytes at the as-of | manifest",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-01 ven-02x invoices | quantity-blocked open | rate (4 dp)",
+   "analysis_sql": "538|163|0.3030",
+   "second_source": "538|163|0.3030",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-01 other invoices | quantity-blocked open | rate (4 dp)",
+   "analysis_sql": "2107|30|0.0142",
+   "second_source": "2107|30|0.0142",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-01 ven-02x share of open quantity blocks (4 dp)",
+   "analysis_sql": "0.8446",
+   "second_source": "0.8446",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-02 ven-007 open price variances | all open price variances | ven-007 invoices | share (4 dp)",
+   "analysis_sql": "30|32|184|0.9375",
+   "second_source": "30|32|184|0.9375",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-03 re-sent PDFs | imported in the last three days | share | all-invoice share (4 dp)",
+   "analysis_sql": "95|71|0.7474|0.1904",
+   "second_source": "95|71|0.7474|0.1904",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E DR-04 approvals between the two limits after the change (HYPOTHETICAL v1 counterfactual rows summed)",
+   "analysis_sql": "20",
+   "second_source": "20",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI fact_invoice: 2,800 rows, status_at_asof equals the domain's derived status for every invoice (mismatches)",
+   "analysis_sql": "2800|0",
+   "second_source": "2800|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure matched_invoices (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "2413",
+   "second_source": "2413",
+   "third_source": "2413",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure obligations (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "2299",
+   "second_source": "2299",
+   "third_source": "2299",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure open_exceptions (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "232",
+   "second_source": "232",
+   "third_source": "232",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure unowned_exceptions (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "29",
+   "second_source": "29",
+   "third_source": "29",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure eligible_invoices (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "2645",
+   "second_source": "2645",
+   "third_source": "2645",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure exception_rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.087713",
+   "second_source": "0.087713",
+   "third_source": "0.087713",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure straight_through_rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.912287",
+   "second_source": "0.912287",
+   "third_source": "0.912287",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure ever_excepted_rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.227599",
+   "second_source": "0.227599",
+   "third_source": "0.227599",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure never_excepted_rate (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.772401",
+   "second_source": "0.772401",
+   "third_source": "0.772401",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure approved_invoices (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "2299",
+   "second_source": "2299",
+   "third_source": "2299",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure mean_minutes_to_approval (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "5466.7066",
+   "second_source": "5466.7066",
+   "third_source": "5466.7066",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure pending_invoices (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "346",
+   "second_source": "346",
+   "third_source": "346",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure duplicates_merged (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "98",
+   "second_source": "98",
+   "third_source": "98",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure open_exceptions QUANTITY_BLOCKED",
+   "analysis_sql": "193",
+   "second_source": "193",
+   "third_source": "193",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure open_exceptions PRICE_VARIANCE",
+   "analysis_sql": "32",
+   "second_source": "32",
+   "third_source": "32",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure open_exceptions NO_PO_LINE",
+   "analysis_sql": "0",
+   "second_source": "0",
+   "third_source": "0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure open_exceptions ROUNDING_EXCEPTION",
+   "analysis_sql": "4",
+   "second_source": "4",
+   "third_source": "4",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure open_exceptions CURRENCY_MISMATCH",
+   "analysis_sql": "3",
+   "second_source": "3",
+   "third_source": "3",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure ordered_quantity (units)",
+   "analysis_sql": "202310.2500",
+   "second_source": "202310.2500",
+   "third_source": "202310.2500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure net_received_quantity (units)",
+   "analysis_sql": "191431.0000",
+   "second_source": "191431.0000",
+   "third_source": "191431.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure accepted_invoiced_quantity (units)",
+   "analysis_sql": "176112.2500",
+   "second_source": "176112.2500",
+   "third_source": "176112.2500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure open_to_receive_quantity (units)",
+   "analysis_sql": "10879.2500",
+   "second_source": "10879.2500",
+   "third_source": "10879.2500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure open_to_invoice_quantity (units)",
+   "analysis_sql": "26198.0000",
+   "second_source": "26198.0000",
+   "third_source": "26198.0000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure received_not_invoiced_quantity (units)",
+   "analysis_sql": "15318.7500",
+   "second_source": "15318.7500",
+   "third_source": "15318.7500",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure matched_invoices EUR",
+   "analysis_sql": "474",
+   "second_source": "474",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure matched_total EUR",
+   "analysis_sql": "531691.91",
+   "second_source": "531691.91",
+   "third_source": "531691.91",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure obligations EUR",
+   "analysis_sql": "447",
+   "second_source": "447",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure approved_total EUR",
+   "analysis_sql": "457320.65",
+   "second_source": "457320.65",
+   "third_source": "457320.65",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure credit_total EUR",
+   "analysis_sql": "6734.62",
+   "second_source": "6734.62",
+   "third_source": "6734.62",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure approved_payable EUR",
+   "analysis_sql": "450586.03",
+   "second_source": "450586.03",
+   "third_source": "450586.03",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure accepted_export_total EUR",
+   "analysis_sql": "457320.65",
+   "second_source": "457320.65",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure export_difference EUR",
+   "analysis_sql": "0.00",
+   "second_source": "0.00",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure received_not_invoiced_value EUR (own currency; vs domain)",
+   "analysis_sql": "49602.39",
+   "second_source": "49602.39",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure matched_invoices GBP",
+   "analysis_sql": "324",
+   "second_source": "324",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure matched_total GBP",
+   "analysis_sql": "347369.86",
+   "second_source": "347369.86",
+   "third_source": "347369.86",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure obligations GBP",
+   "analysis_sql": "305",
+   "second_source": "305",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure approved_total GBP",
+   "analysis_sql": "286543.12",
+   "second_source": "286543.12",
+   "third_source": "286543.12",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure credit_total GBP",
+   "analysis_sql": "5434.95",
+   "second_source": "5434.95",
+   "third_source": "5434.95",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure approved_payable GBP",
+   "analysis_sql": "281108.17",
+   "second_source": "281108.17",
+   "third_source": "281108.17",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure accepted_export_total GBP",
+   "analysis_sql": "286543.12",
+   "second_source": "286543.12",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure export_difference GBP",
+   "analysis_sql": "0.00",
+   "second_source": "0.00",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure received_not_invoiced_value GBP (own currency; vs domain)",
+   "analysis_sql": "38609.28",
+   "second_source": "38609.28",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure matched_invoices USD",
+   "analysis_sql": "1615",
+   "second_source": "1615",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure matched_total USD",
+   "analysis_sql": "1608460.47",
+   "second_source": "1608460.47",
+   "third_source": "1608460.47",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure obligations USD",
+   "analysis_sql": "1547",
+   "second_source": "1547",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure approved_total USD",
+   "analysis_sql": "1448006.25",
+   "second_source": "1448006.25",
+   "third_source": "1448006.25",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure credit_total USD",
+   "analysis_sql": "31969.26",
+   "second_source": "31969.26",
+   "third_source": "31969.26",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure approved_payable USD",
+   "analysis_sql": "1416036.99",
+   "second_source": "1416036.99",
+   "third_source": "1416036.99",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure accepted_export_total USD",
+   "analysis_sql": "1448006.25",
+   "second_source": "1448006.25",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure export_difference USD",
+   "analysis_sql": "0.00",
+   "second_source": "0.00",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI measure received_not_invoiced_value USD (own currency; vs domain)",
+   "analysis_sql": "135134.34",
+   "second_source": "135134.34",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  }
+ ]
+}

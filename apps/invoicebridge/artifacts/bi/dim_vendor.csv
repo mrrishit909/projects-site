@@ -1,0 +1,41 @@
+vendor_id,vendor_name,currency,active,vendor_group
+ven-001,Northwind Supply Co,USD,1,other vendors
+ven-002,Harbor Fasteners LLC,USD,1,other vendors
+ven-003,Summit Logistics Co,USD,1,other vendors
+ven-004,Granite Plastics Co,USD,1,other vendors
+ven-005,Cobalt Supply Co,USD,1,other vendors
+ven-006,Meridian Pumps Inc,USD,1,other vendors
+ven-007,Alder Pumps LLC,USD,1,ven-007
+ven-008,Keystone Supply LLC,USD,1,other vendors
+ven-009,Lakeshore Metals LLC,USD,1,other vendors
+ven-010,Ironwood Foods Inc,USD,1,other vendors
+ven-011,Redwood Logistics PLC,GBP,1,other vendors
+ven-012,Bluebird Tooling SARL,EUR,1,other vendors
+ven-013,Falcon Pumps Co,USD,1,other vendors
+ven-014,Orchard Plastics LLC,USD,1,other vendors
+ven-015,Pinnacle Paper SARL,EUR,1,other vendors
+ven-016,Silverline Packaging Co,USD,1,other vendors
+ven-017,Beacon Lubricants Co,USD,1,other vendors
+ven-018,Crestview Safety LLC,USD,1,other vendors
+ven-019,Evergreen Logistics LLC,USD,1,other vendors
+ven-020,Tidewater Labels Co,USD,1,ven-02x
+ven-021,Brightwater Supply BV,EUR,1,ven-02x
+ven-022,Copperfield Chemicals Inc,USD,1,ven-02x
+ven-023,Highland Logistics LLC,USD,1,ven-02x
+ven-024,Juniper Plastics GmbH,EUR,1,ven-02x
+ven-025,Oakridge Packaging Ltd,GBP,1,ven-02x
+ven-026,Prairie Plastics Inc,USD,1,ven-02x
+ven-027,Quarry Fasteners SARL,EUR,1,ven-02x
+ven-028,Riverbend Pumps Ltd,GBP,1,ven-02x
+ven-029,Stonegate Electronics BV,EUR,1,ven-02x
+ven-030,Westfield Safety Ltd,GBP,1,other vendors
+ven-031,Zenith Plastics BV,EUR,1,other vendors
+ven-032,Atlas Logistics SpA,EUR,1,other vendors
+ven-033,Birch Industrial SpA,EUR,1,other vendors
+ven-034,Cedar Safety PLC,GBP,1,other vendors
+ven-035,Delta Hardware LLC,USD,1,other vendors
+ven-036,Ember Fasteners BV,EUR,1,other vendors
+ven-037,Fjord Tooling Inc,USD,1,other vendors
+ven-038,Glacier Tooling LLC,USD,1,other vendors
+ven-039,Horizon Lubricants LLC,USD,1,other vendors
+ven-040,Ivory Chemicals Co,USD,0,other vendors

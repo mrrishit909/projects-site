@@ -111,3 +111,67 @@ which the three implementations also meet in their own suites):
 | `cd web && npm run check` | exit 0: typecheck, golden ALL OK (227 checks), review ALL OK (41 checks) |
 | `cd web && npm run build:pages` | exit 0 (11 route copies) |
 | `cd web && npm run e2e` | 71 passed, exit 0 |
+
+# Entry-journey evidence (P05-ART-08; artifact worker A-045, task T-05-05)
+
+Appended to this file; nothing above was changed. It adds what P05-ART-08 asks for beyond the review evidence: business scenarios with expected answers, actual observations and defect disposition for the **entry journey** (P05-GOAL-09: one source-to-decision journey on the reference fixture with a working export), with the routes, the screenshot names that `npm run e2e` writes and the hosted run links.
+**Synthetic data only** (dataset `ib-20261026-20261026`, generator hash `1f001a43a7031d4260f5abb3b9f7a83f6e1b48397e85cf8b04e0b4d9e052162e`, contract v1). Observed results, simulated outcomes and hypothetical benefits are kept apart: everything below is OBSERVED in a synthetic history or on the fixture; nothing is a measured effect on a real desk; the only simulation is the seeded generator, and its outcome-selected choices (it approves only uninterrupted matches, rejects only never-matched invoices and closes each period with a batch of everything approved) are not findings.
+Code revisions: the entry-journey runs below are for **`be20031`** (the site commit); the reviewer fixes above are **`2dcc460`**, republished to the portfolio as **`188e409`**.
+
+## Provenance of each observation (what was run, and by whom)
+| Source | What it is | Run by |
+|---|---|---|
+| Hosted CI run **40405870287** (`invoicebridge-ci.yml`, code `be20031`): https://github.com/mrrishit909/projects-site/actions/runs/40405870287 | Mode A and Mode B both success; evidence artifact uploaded (227 TypeScript golden checks, 71 Playwright tests at four widths and 200 % zoom) | GitHub-hosted runner, recorded in `docs/program/verification-ledger.json` |
+| Hosted live-check run **40406631388** (`live-check.yml`, matrix, code `be20031`, portfolio `3cff603`): https://github.com/mrrishit909/projects-site/actions/runs/40406631388 | deploy-wait matched `be20031`, 11 routes 200, the manifest served, the case study links to the site and the site links back, a 360 / 1280 browser journey with no console errors; all jobs success | GitHub-hosted runner, recorded in the ledger |
+| The local `npm run e2e` of the fixed code (`2dcc460`), `web/evidence/playwright-report.json` | 71 expected, 0 unexpected, 0 flaky, 0 skipped; started 2026-10-26T23:09:19Z, 96.9 s | recorded by A-042; this artifact pass **read** the report and the 60 screenshot index and did **not** run `npm run e2e` |
+| `tests/reference_check.py`, `data/sql/analysis/run_all.py` (golden and snapshot reconciliation), `build_workbook.py --recalc`, `tests/test_artifacts.py` | the golden figures and the snapshot figures re-observed independently of the browser | this artifact pass, results in `release-package.md` |
+
+**The republish `2dcc460` / `188e409` has its own CI and live-check runs, pending at the time of writing** (`docs/program/release-manifest.json`: `publication_status` "republished after T-05-07 reviewer fixes (188e409); CI and live check pending", `live_verification.run_url` null, `previous_run_url` the run above). Until they are recorded, the verification of the current release is local only, and the hosted links above are for `be20031`.
+
+## Routes (base `/projects-site/labs/invoicebridge/`; live site https://mrrishit909.github.io/projects-site/labs/invoicebridge/, not fetched by this pass)
+| Route | Screen | Entry route (`web/src/routes.ts`) | What it shows (read from the view, the spec and the recorded run) |
+|---|---|---|---|
+| `/` | landing | no | the decision, the honesty labels ("Synthetic data, demo mode", "Nothing is approved, exported or paid from this site"), the manifest strip (dataset version, hash, generated time, code sha), the eleven metric keys in contract order with their definitions and the three cutoffs |
+| `/intake/` | intake desk (P05-UI-01) | **yes** | the import replays in order; duplicates merged by identity or bytes; re-sends leave one obligation (a position slider and a re-send button in browser memory) |
+| `/invoices/` | invoice desk (P05-UI-02) | **yes** | evidence beside decision: the document fields, lineage and source hash on the left; the three-way match per line, exceptions, approval trail and export row on the right; `?dataset=golden` shows the golden pair |
+| `/matching/` | matching panel (P05-UI-03) | **yes** | filters by vendor, reason and month; the ven-02x and ven-007 relationships; totals that reconcile to the overview |
+| `/duplicates/` | duplicate review (P05-UI-04) | no | duplicate groups, by identity or bytes |
+| `/exceptions/` | exception queue (P05-UI-05) | **yes** | the open queue by reason and owner with assignment history |
+| `/approvals/` | approval desk (P05-UI-06) | no | decisions under the policy in force; read-only |
+| `/vendors/` | vendor view (P05-UI-07) | no | per-vendor figures, each in the vendor's own currency, never converted |
+| `/exports/` | export review (P05-UI-08) | no | batches, rows, exclusions and the reconciliation, stated as zero by construction |
+| `/audit/` | audit timeline (P05-UI-09) | no | derived from recorded facts (no stored event log) |
+| `/case-study/` | case study (P05-UI-10) | **yes** | what is built, what is not (C06 answers 501), provenance |
+
+## Screenshot names (`npm run e2e`, `web/e2e/screens.spec.ts`, written to `web/evidence/`, git-ignored; CI uploads them as the evidence artifact)
+`<view>-<width>.png` at 360, 768, 1280 and 1920 CSS pixels and `<view>-zoom200.png` at 640 CSS pixels with device scale 2 (200 % zoom), for twelve views: `home`, `intake`, `invoices`, `invoices-golden`, `matching`, `duplicates`, `exceptions`, `approvals`, `vendors`, `exports`, `audit`, `case-study`: **60 files**, plus `index.json` (route, width, scroll width, inner width, device scale per shot) and `playwright-report.json`.
+In the recorded local run every shot has `scrollWidth` equal to `innerWidth` (no horizontal overflow at any of the five widths) and every test watches the browser console for errors.
+The two screenshots the public case study embeds are `shots/invoice-desk.png` (inv-0010, ven-025, GBP: two lines of 52.36 and 364.44, 416.80 before tax, 83.36 tax, 512.66 total, exported, one merged copy) and `shots/matching-mobile.png`.
+
+## Business scenarios: expected answer, actual observation, disposition
+Expected answers come from the hand calculation (`tests/fixtures/golden/CALCULATION.md`) or from the independent reference (`data/sql/reference_metrics.sql` and the Python domain over the snapshot); "actual" is what was observed in the named run.
+
+| # | Scenario (the decision it supports) | Expected answer | Actual observation | Disposition |
+|---|---|---|---|---|
+| S1 | **Known answer.** Order 10 at 20.00, receipt 6, an invoice for 6 with 10 % tax (can the first invoice advance?) | 120.00 before tax, 12.00 tax, **132.00**, matched, one obligation | Browser (e2e `the golden pair on the invoice desk`): 120.00 / 12.00 / 132.00 / rounding difference 0.00, "Matched: 120.00 before tax, 12.00 tax, total 132.00", exported with row `exp-bat-001-inv-001` and hash `7776efc6...6779`; `reference_check.py` ALL OK (412 checks); `run_all.py` rows A: the eleven golden metric keys equal in the SQL reference, the domain and `expected.json`; the workbook's `Golden case` sheet (formulas) TRUE | passed, no defect |
+| S2 | **Second invoice for the same line** (must it wait for an exception review?) | 4 units against 0.0000 available: `QUANTITY_BLOCKED`, variance 4.0000, not an obligation, open and unowned exception `exc-001` | e2e: "4.0000 invoiced against 0.0000 available (4.0000 over)", chip `exception`, `exc-001` "open, unowned", no approvals, "only an approved invoice can be exported"; SQL 09: available for the second invoice 0.0000, variance 4.0000 | passed, no defect |
+| S3 | **Importing the first invoice again** (duplicate, not a second payable) | one obligation: `inv-003` merged into `inv-001` by identity (`ven-001\|INV1001\|2026-10-06\|132.00`) although its bytes differ | e2e: "merged-in" `inv-003`, "different bytes"; intake test: re-sends leave one obligation; SQL 09: one identity group of two invoices with two source hashes; obligations 1 = 132.00 | passed, no defect |
+| S4 | **A real-looking invoice on the snapshot** (inv-0010, ven-025, GBP) | 416.80 + 83.36 = 512.66, matched, approved by a different person, exported, its re-sent copy merged | e2e `invoice desk on the snapshot` (finder, lineage, merge, trail, independent recomputation) passed; the SQL book (`bi_fact_invoice`) gives status `exported`, total 512.66 GBP | passed, no defect |
+| S5 | **What may advance on the whole book** (landing, as-of 2026-10-01T02:00:00Z) | the eleven metric keys equal the Python domain's: 2,413 matched or further, 2,299 obligations, 232 open exceptions (29 unowned), 98 merged, straight-through 0.912287, 346 pending, payable per currency, export difference 0.00 | e2e `the eleven metric keys in contract order, equal to the Python domain's figures` passed against `scripts/snapshot-reference.json`; this pass recomputed the same keys in SQL and the domain (`run_all.py`: 286 reconciliation rows, all equal); money shown per currency | passed |
+| S6 | **Which vendors cause the exceptions** (matching panel) | ven-02x: 163 of 538 invoices open-blocked (0.302974), 524 ever; ven-007: 30 of the 32 open price variances (53 of 57 ever) | e2e `matching: filters, ven-02x and ven-007 relationships, totals reconcile to the overview` passed; SQL 01 gives the same counts | passed |
+| S7 | **Who owns the review queue** (exceptions screen) | 232 open, by reason 193 / 32 / 4 / 3 / 0, 29 unowned, the assignment history readable | e2e `exceptions: the open queue by reason and owner, with assignment history` passed; SQL 05 gives 232 open, 29 unowned at the as-of | passed |
+| S8 | **Working export** (P05-GOAL-09) | an approved invoice exports once as an idempotent batch; a retry returns the prior batch | API (Mode A): `tests/test_api_commands.py::test_the_repeated_export_returns_the_prior_batch_and_is_counted` and `tests/test_adversarial.py::test_the_spec_sentence_through_the_api` (402 passed locally at `2dcc460`; Mode A success on the hosted run for `be20031`); snapshot: 59 requests, 52 batches, 7 retries (SQL 06). **The public site's export page is read-only and says so** | passed on the API; the site demonstrates, it does not export |
+| S9 | **Honesty** (is it clear nothing is live?) | synthetic label, "Nothing is approved, exported or paid from this site", the back-link, C06 stated as 501 | e2e landing and case-study tests passed, and the screens tests passed at four widths and at 200 % zoom with no overflow and no console errors | passed |
+| S10 | **Money per currency** (is any total a sum across currencies?) | none: USD, EUR and GBP figures separate; per-vendor totals in the vendor's own currency | finding R5-11 above (the landing page shows per-currency figures and labels any sum "sum across currencies, not converted"); the workbook, the SQL analysis and the BI package all carry one column per currency | passed; the earlier version that summed across currencies is finding R5-11 above, fixed |
+
+## Defect disposition
+| Defect or gap | Where found | Disposition |
+|---|---|---|
+| R5-01 .. R5-22 (committed invoices displaced, duplicates ignoring the cutoff, sums across currencies, wrong straight-through definition, and the rest) | the independent review A-038 | **fixed** at `2dcc460`, held by regression tests in Python, SQL, TypeScript and the API (table above); hosted run of the fix **pending** |
+| C06 `correct-extraction` returns 501; no versioned correction exists | by design of this milestone | **open (deferred)**, stated on the case-study route, in `requirements.md` and in the memo |
+| A `needs_review` invoice (a byte-twin with other extracted fields) has no resolving command | D-09.4 | **open (accepted limitation)**; the snapshot holds none |
+| The intake, exceptions, approvals and exports screens of the public site act on nothing | Mode B design | **accepted**: a static demo; the transactional behaviour is verified on hosted runners against PostgreSQL |
+| The SQL reference takes about 110 seconds for the as-of with its cutoffs | performance | **open (not attempted)** |
+| The stored exception history differs from the facts-derived book by one exception at the March month-end | found by this pass's reconciliation (`sql-analysis.md` query 05) | **explained, not a defect**: the stored history is the nightly 02:00 run's and inv-1329 arrived after the last run before the cutoff |
+| The manifest's DR-04 "28 matched invoices over the limit" is not the cutoff figure (12 at the as-of) | found by this pass's reconciliation (`sql-analysis.md` query 04) | **documented**: the 28 is the generator's planning counter; the memo and the business case use 12 and say why |
+| No hosted evidence yet for the republish `188e409` | release manifest | **pending**: CI and live-check runs to be recorded |

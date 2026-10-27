@@ -1,0 +1,3 @@
+policy_id,version_number,amount_limit,reviewer_role,escalation_role,effective_from
+pol-v1,1,5000.00,reviewer,,2025-10-01
+pol-v2,2,8000.00,reviewer,,2026-04-01
