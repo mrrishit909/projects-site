@@ -134,7 +134,7 @@
 {"customer_key":null,"dataset_id":"ds-orders","order_id":"O-0033","row_id":"ord-033"},
 {"customer_key":"CK-0034","dataset_id":"ds-orders","order_id":"O-0034","row_id":"ord-034"},
 {"customer_key":"CK-0035","dataset_id":"ds-orders","order_id":"O-0035","row_id":"ord-035"},
-{"customer_key":"CK-0036","dataset_id":"ds-orders","order_id":"O-0036","row_id":"ord-036"},
+{"customer_key":"","dataset_id":"ds-orders","order_id":"O-0036","row_id":"ord-036"},
 {"customer_key":"CK-0037","dataset_id":"ds-orders","order_id":"O-0037","row_id":"ord-037"},
 {"customer_key":"CK-0038","dataset_id":"ds-orders","order_id":"O-0038","row_id":"ord-038"},
 {"customer_key":"CK-0039","dataset_id":"ds-orders","order_id":"O-0039","row_id":"ord-039"},
