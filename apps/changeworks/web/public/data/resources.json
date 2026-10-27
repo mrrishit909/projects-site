@@ -1,0 +1,10 @@
+{"entity":"resources","dataset_version":"cw-20261026-20261026","rows":[
+{"capacity_per_period":"6.00","name":"Process analyst pool","resource_id":"res-01","unit":"FTE"},
+{"capacity_per_period":"3.00","name":"Change manager pool","resource_id":"res-02","unit":"FTE"},
+{"capacity_per_period":"2.00","name":"Data migration specialist","resource_id":"res-03","unit":"FTE"},
+{"capacity_per_period":"4.00","name":"Integration engineer pool","resource_id":"res-04","unit":"FTE"},
+{"capacity_per_period":"2.50","name":"Training developer pool","resource_id":"res-05","unit":"FTE"},
+{"capacity_per_period":"2.00","name":"Finance subject-matter expert","resource_id":"res-06","unit":"FTE"},
+{"capacity_per_period":"3.00","name":"Operations subject-matter expert","resource_id":"res-07","unit":"FTE"},
+{"capacity_per_period":"2.00","name":"Test lead","resource_id":"res-08","unit":"FTE"}
+]}

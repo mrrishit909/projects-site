@@ -179,6 +179,43 @@ are the binding form. The points that sharpen D-01..D-04:
   `funded`); initiative status moves only candidate → assessed; no command edits or removes plan rows; the workbook and
   export belong to the artifacts; `/metrics` is unpaged and recomputed per call.
 
+## D-07 Synthetic world (adopted from the generator hand-back; the 9 numbered assumptions are in the manifest and generate.py)
+Seed 20261026; 36 monthly periods 2026-01 .. 2028-12, `as_of` 2026-10-05T00:00:00Z (9 matured periods); the brief's
+counts exactly (24 initiatives in 4 programmes, 30 baselines, 160 assumption versions, 900 cost and 700 benefit items,
+40 dependencies, 8 resources, 60 groups, 300 readiness assessments, 500 adoption observations, 200 training
+completions, 400 benefit observations, 120 risks, 30 scenarios, 12 forecast version sets = 144 rows) plus 106 impact
+mappings and 557 allocations; 2,747 primary objects and 1,544 linked events reported separately; `dataset_version`
+cw-20261026-20261026, `dataset_hash` 6bf7ebaa…, `generated_at` = `as_of`; 978,954 bytes published.
+* Benefits are recognised for 12 periods per stream and recurring costs over the same window (700 rows cannot cover
+  36 periods for 24 initiatives), so NPV and payback describe a first-year case and the site says so. Every initiative
+  carries a planned discovery cost in period 0 (2 % of its one-time cost); see the payback note below. All 30 world
+  scenarios are `draft` (the seeder cannot load `proposed_at`; proposing is shown by the C07 replay). Annual rates carry
+  `monthly_rate_conversion` versions; two rates are declared monthly. Baseline trends are recorded on every benefit
+  row (partial coverage never fires). Programme membership lives in `manifest.programmes`. Eligibility rules
+  `elig-v1`, and `elig-v2` for two initiatives. Seven sizes were padded or trimmed to the brief's counts and are
+  disclosed; replay row ids never appear in the world.
+* Designed relationships, realised by the domain: DR-01 `init-009` has capacity as its only benefit (2,920.49 h not
+  converted, cash 0.00, NPV −761,535.73, payback null); DR-02 `init-001` and `init-002` share `src-fin-ap-shared-team`
+  (planned 32,677,894.70, attributable 32,470,748.38, residual 207,146.32 over periods 3..12 in `scn-025`); DR-03
+  `init-015` never pays back (benefit-to-cost 0.620043; both paybacks null in all 8 scenarios); DR-04 `init-003`
+  forecast versions 1, 2, 3 (745,800.06 → 598,900.05 → 534,207.54, original kept, each revision after observed periods
+  more than 10 % below); DR-05 `res-03` at 2.00 of 2.00 FTE in periods 14..16 with three 0.50 requests refused
+  `RESOURCE_OVERALLOCATED`; DR-06 `init-008` realisation 0.975795 with the baseline trend 0.848744 of the observed
+  improvement (true attributable share 0.150000, in `synthetic_truth` only); DR-07 adoption reaches 50 % four to six
+  periods after 90 % training, six initiatives still below (training 0.888443 vs adoption 0.532881).
+* Injections INJ-01..12 map to P09-TEST-01..12 with dataset checks and replay events (`DOUBLE_COUNT_UNEXPLAINED`,
+  `ATTRIBUTION_NOT_ESTABLISHED`, `STALE_FORECAST_VERSION` among the refusals); INJ-08 and INJ-12 are dataset-only.
+* Outcome-informed choices, disclosed in the manifest: the period-0 discovery cost, normalised benefit shares, the
+  `init-002` volume floor, extra observation readings, the adoption-ramp range 270–340 days, the D4 second performance
+  70 → 66 %, the second revision date 10 → 12 June.
+* **Payback rule note (coordinator, for the fix round T-09-05 with the review):** D-P9-07 lets a cumulative of 0 at
+  t = 0 count as paid back, so an initiative whose first flow comes later would report payback 0.0000. The rule becomes:
+  payback is the first t with cumulative ≥ 0 after the cumulative has been negative; a flow series that never goes
+  negative has payback null with reason `NO_INVESTMENT`. The world's period-0 discovery cost keeps every published
+  payback honest until then; the golden case (−1,000 at t = 0) is unaffected.
+* Gaps: `data/seed.py` cannot load a `proposed` scenario; no generator README beyond the module docstring and the
+  manifest disclosures.
+
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners. Mode B: TypeScript mirror over the published
 snapshot; the sensitivity lab, roadmap edits and scenario selection are browser-memory simulations and say so.
