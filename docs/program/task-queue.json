@@ -582,8 +582,9 @@
       "id": "T-07-06",
       "project": "07-trustledger",
       "title": "Independent disproof review of the published TrustLedger site and case study",
-      "status": "in_progress",
-      "assignment": "A-060"
+      "status": "done",
+      "assignment": "A-060",
+      "result": "A-060: 8 defects + 12 documentation findings; wording fixed on the portfolio (031705d)"
     },
     {
       "id": "T-09-01",
@@ -596,14 +597,16 @@
       "id": "T-09-02",
       "project": "09-changeworks",
       "title": "Golden fixture (NPV 5000/121, both paybacks, capacity excluded) + variants + stdlib reference check",
-      "status": "in_progress",
-      "assignment": "A-061"
+      "status": "done",
+      "assignment": "A-061",
+      "result": "fd2ca25: fixture + variants + reference_check (1810 checks); D-05 adopted"
     },
     {
       "id": "T-09-03",
       "project": "09-changeworks",
       "title": "Mode A slice: domain, migrations, SQL reference, FastAPI C01..C10, tests incl. P09-TEST-01..12",
-      "status": "pending"
+      "status": "in_progress",
+      "assignment": "A-064"
     },
     {
       "id": "T-09-04",
@@ -660,6 +663,13 @@
       "project": "10-retentionlab",
       "title": "Artifacts P10-ART-01..10",
       "status": "pending"
+    },
+    {
+      "id": "T-07-07",
+      "project": "07-trustledger",
+      "title": "Fix R7-01..R7-19, republish, live check, update case study",
+      "status": "in_progress",
+      "assignment": "A-063"
     }
   ]
 }
