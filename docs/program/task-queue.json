@@ -531,6 +531,48 @@
       ],
       "retries": 0,
       "acceptance": "tests/test_artifacts.py passes; checksums OK"
+    },
+    {
+      "id": "T-08-01",
+      "project": "08-pipeline-observatory",
+      "title": "Contract decisions v1",
+      "status": "done",
+      "prereqs": [],
+      "retries": 0,
+      "acceptance": "see T-07 equivalents"
+    },
+    {
+      "id": "T-08-02",
+      "project": "08-pipeline-observatory",
+      "title": "Golden fixture + reference check",
+      "status": "in_progress",
+      "prereqs": [
+        "T-08-01"
+      ],
+      "retries": 0,
+      "acceptance": "see T-07 equivalents"
+    },
+    {
+      "id": "T-08-03",
+      "project": "08-pipeline-observatory",
+      "title": "Domain + Postgres + FastAPI slice + CI",
+      "status": "pending",
+      "prereqs": [
+        "T-08-02"
+      ],
+      "retries": 0,
+      "acceptance": "see T-07 equivalents"
+    },
+    {
+      "id": "T-08-04",
+      "project": "08-pipeline-observatory",
+      "title": "Generator + web + e2e + publish + integrate",
+      "status": "pending",
+      "prereqs": [
+        "T-08-03"
+      ],
+      "retries": 0,
+      "acceptance": "see T-07 equivalents"
     }
   ]
 }

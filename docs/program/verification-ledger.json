@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T02:02:28Z",
+  "updated_at": "2026-10-27T02:05:29Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1254,6 +1254,17 @@
       "code_sha": "0d1b3e4",
       "evidence": "apps/trustledger/data/README-generator.md; tests/test_generator.py",
       "ts": "2026-10-27T02:02:28Z"
+    },
+    {
+      "requirement": "P07 Mode A on the generator commit (301 tests incl. 26 generator tests and the observed-edge rule, postgres:16 service, github-hosted)",
+      "project": "07-trustledger",
+      "status": "verified",
+      "command": "trustledger-ci.yml run 40436104537 job 'Mode A'",
+      "exit_code": 0,
+      "actual": "Mode A success; Mode B failing until the site source exists (A-057 running)",
+      "code_sha": "c295e27",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40436104537",
+      "ts": "2026-10-27T02:05:29Z"
     }
   ]
 }

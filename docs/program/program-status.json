@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T02:02:28Z",
+  "updated_at": "2026-10-27T02:05:29Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -154,15 +154,15 @@
       "verified": false,
       "published": false,
       "integrated": false,
-      "last_verified_sha": "9e0adb0 (Mode A)",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40433219610",
+      "last_verified_sha": "c295e27 (Mode A)",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40436104537",
       "site_url": null,
       "blockers": [],
       "next_task": "T-07-04 (A-057 web -> CI Mode B -> publish -> integrate)"
     },
     "08-pipeline-observatory": {
       "slug": "pipeline-observatory",
-      "stage": "queued",
+      "stage": "contracts v1 and tooling committed (3a0fae2; spec hash 1ffbfbe7 verified against the source pack); golden fixture A-058 running",
       "built": false,
       "verified": false,
       "published": false,
@@ -171,7 +171,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": null
+      "next_task": "T-08-02 (A-058)"
     },
     "09-changeworks": {
       "slug": "changeworks",
@@ -202,7 +202,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 06: confirm productsignal-ci.yml on fdf911a and live-check; A-056 artifacts hand-back -> verify -> commit. Project 07: confirm trustledger-ci.yml Mode A on 9e0adb0; A-055 generator hand-back -> verify -> commit -> web worker -> publish -> integrate -> review -> artifacts. Then project 08 pipeline-observatory (contracts first).",
+    "next_concrete_task": "Project 06: A-056 artifacts hand-back -> verify -> commit. Project 07: A-057 web hand-back -> verify -> commit -> CI Mode B -> publish labs/trustledger -> manifest -> live check -> portfolio case study (draft in scratchpad/p07/project.json; tile exists) -> review -> fixes -> artifacts. Project 08: A-058 fixture hand-back -> D-05 -> backend -> generator -> web -> publish -> integrate -> review -> artifacts. Then projects 09 changeworks and 10 retentionlab (contracts first).",
     "acceptance": "see task-queue.json"
   }
 }
