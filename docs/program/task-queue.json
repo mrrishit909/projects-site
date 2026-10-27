@@ -595,7 +595,8 @@
       "id": "T-09-02",
       "project": "09-changeworks",
       "title": "Golden fixture (NPV 5000/121, both paybacks, capacity excluded) + variants + stdlib reference check",
-      "status": "pending"
+      "status": "in_progress",
+      "assignment": "A-061"
     },
     {
       "id": "T-09-03",
