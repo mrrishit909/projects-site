@@ -1377,6 +1377,13 @@
       "check": "CI on the artifact fix commit eb83f43, re-run (reference check, hash count, 443 pytest incl. the 38 artifact tests with LibreOffice Calc and the scratch databases, junit skipped=0 gate; Mode B check/build/e2e)",
       "run": "https://github.com/mrrishit909/projects-site/actions/runs/40454781567",
       "result": "success on both modes"
+    },
+    {
+      "ts": "2026-10-27T07:04:14Z",
+      "project": "10-retentionlab",
+      "check": "live URL verification from GitHub Actions after the review republish (deploy-wait on code_sha, route 200s, case-study links both ways, browser journey) for all ten sites",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40464668157",
+      "result": "success; retentionlab live code_sha c17fa321f28605ac56e24b59837441c29cc16d41"
     }
   ]
 }
