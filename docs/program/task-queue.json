@@ -583,6 +583,43 @@
       "title": "Independent disproof review of the published TrustLedger site and case study",
       "status": "in_progress",
       "assignment": "A-060"
+    },
+    {
+      "id": "T-09-01",
+      "project": "09-changeworks",
+      "title": "Contracts D-01..D-04, API inventory, site brief, generator spec, scaffold, CI workflow",
+      "status": "done",
+      "result": "coordinator-written; spec hash 7ae9dea5\u2026 verified at fe5f7981"
+    },
+    {
+      "id": "T-09-02",
+      "project": "09-changeworks",
+      "title": "Golden fixture (NPV 5000/121, both paybacks, capacity excluded) + variants + stdlib reference check",
+      "status": "pending"
+    },
+    {
+      "id": "T-09-03",
+      "project": "09-changeworks",
+      "title": "Mode A slice: domain, migrations, SQL reference, FastAPI C01..C10, tests incl. P09-TEST-01..12",
+      "status": "pending"
+    },
+    {
+      "id": "T-09-04",
+      "project": "09-changeworks",
+      "title": "Generator, Mode B site, Playwright evidence, publish, integrate",
+      "status": "pending"
+    },
+    {
+      "id": "T-09-05",
+      "project": "09-changeworks",
+      "title": "Independent disproof review, fixes, republish",
+      "status": "pending"
+    },
+    {
+      "id": "T-09-06",
+      "project": "09-changeworks",
+      "title": "Artifacts P09-ART-01..10",
+      "status": "pending"
     }
   ]
 }
