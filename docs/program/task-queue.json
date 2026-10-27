@@ -576,6 +576,13 @@
       ],
       "retries": 0,
       "acceptance": "see T-07 equivalents"
+    },
+    {
+      "id": "T-07-06",
+      "project": "07-trustledger",
+      "title": "Independent disproof review of the published TrustLedger site and case study",
+      "status": "in_progress",
+      "assignment": "A-060"
     }
   ]
 }
