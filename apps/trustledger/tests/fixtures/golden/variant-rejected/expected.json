@@ -252,6 +252,8 @@
     "relationship_integrity": {},
     "timeliness": {
       "monitored_datasets": 0,
+      "evaluated_datasets": 0,
+      "pending_count": 0,
       "on_time_count": 0,
       "value": null,
       "datasets": {}
@@ -259,7 +261,8 @@
     "critical_failures": {
       "failures": 0,
       "open_issues": 0,
-      "datasets_overridden": 0
+      "datasets_overridden": 0,
+      "carried": []
     },
     "resolution_time": {
       "resolved_count": 0,

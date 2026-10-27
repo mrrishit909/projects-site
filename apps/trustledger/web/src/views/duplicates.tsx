@@ -26,8 +26,11 @@ function Detail({ ds, cand }: { ds: Dataset; cand: Row }) {
     const rev = ds.byId.owners.get(rid)!;
     const base = { candidate_id: cand["candidate_id"] as string, reviewer_id: rid, decision };
     const reviewedBefore = st.state !== "unreviewed" || mine.some((e) => e.status === "recorded");
-    if (rid === cand["proposed_by"]) addSimReview({ ...base, status: "refused", code: "REVIEWER_IS_PROPOSER", note: "A merge needs an independent human decision: the reviewer cannot be the proposer of the pair." });
-    else if (!(rev["role"] === "steward" || rev["role"] === "admin") || !rev["active"]) addSimReview({ ...base, status: "refused", code: "ROLE_NOT_PERMITTED", note: `${rev["owner_name"]} is ${rev["active"] ? "" : "inactive and "}a${/^[aeiou]/.test(rev["role"]) ? "n" : ""} ${rev["role"]}; only an active steward or admin can review a pair.` });
+    // the same rule as the API (D-10 R7-03): the reviewer is a registered owner, active, with a steward or admin role from the register; a proposer cannot review
+    // their own candidate; one decision per candidate
+    if (!rev["active"]) addSimReview({ ...base, status: "refused", code: "ACTOR_INACTIVE", note: `${rev["owner_name"]} is inactive and cannot act.` });
+    else if (!(rev["role"] === "steward" || rev["role"] === "admin")) addSimReview({ ...base, status: "refused", code: "ROLE_FORBIDDEN", note: `${rev["owner_name"]} is a${/^[aeiou]/.test(rev["role"]) ? "n" : ""} ${rev["role"]}; only a steward or admin can review a pair.` });
+    else if (rid === cand["proposed_by"]) addSimReview({ ...base, status: "refused", code: "SELF_REVIEW", note: "A merge needs an independent human decision: the reviewer cannot be the proposer of the pair." });
     else if (reviewedBefore) addSimReview({ ...base, status: "refused", code: "ALREADY_REVIEWED", note: "This pair already has a decision; one decision per candidate (a reversal is a separate step on the merge history)." });
     else addSimReview({ ...base, status: "recorded", code: null, note: decision === "approve" ? `Recorded as a simulated approval. Nothing was merged: if it were real, ${cand["right_record_id"]} would map to ${cand["left_record_id"]}, reversibly, and the identity map shown on the merge history is unchanged.` : "Recorded as a simulated rejection. Nothing changed." });
   };
@@ -66,7 +69,9 @@ function Detail({ ds, cand }: { ds: Dataset; cand: Row }) {
         <Choice name="decision" legend="Decision" value={decision} onChange={(v) => setDecision(v === "reject" ? "reject" : "approve")} testid="decision-choice" options={[{ value: "approve", label: "Approve as the same person" }, { value: "reject", label: "Reject" }]} />
       </div>
       <div className="btn-row"><button type="button" onClick={submit} data-testid="record-review">Record simulated review</button></div>
-      {mine.length > 0 && <ul className="sim-log" data-testid="review-log">{mine.map((e) => <li key={e.n} data-status={e.status}><Chip kind={e.status === "recorded" ? "ok" : "note"}>{e.status}</Chip> {name(e.reviewer_id)} · {e.decision}{e.code ? <> · <span className="mono">{e.code}</span></> : ""}: {e.note}</li>)}</ul>}
+      <div role="status" aria-live="polite" data-testid="review-status">
+        {mine.length > 0 && <ul className="sim-log" data-testid="review-log">{mine.map((e) => <li key={e.n} data-status={e.status}><Chip kind={e.status === "recorded" ? "ok" : "note"}>{e.status}</Chip> {name(e.reviewer_id)} · {e.decision}{e.code ? <> · <span className="mono">{e.code}</span></> : ""}: {e.note}</li>)}</ul>}
+      </div>
     </section>
   );
 }

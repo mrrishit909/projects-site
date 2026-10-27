@@ -44,7 +44,65 @@
     }
   ],
   "probes": {
-    "definition_at": "2026-08-01T00:00:00Z"
+    "definition_at": "2026-08-01T00:00:00Z",
+    "timeliness": [
+      {
+        "probe_id": "open-window-refreshed",
+        "timezone": "America/New_York",
+        "local_time": "06:00",
+        "grace_minutes": 60,
+        "last_refreshed_at": "2026-10-05T10:10:00Z",
+        "as_of": "2026-10-05T10:30:00Z"
+      },
+      {
+        "probe_id": "open-window-not-yet-refreshed",
+        "timezone": "America/New_York",
+        "local_time": "06:00",
+        "grace_minutes": 60,
+        "last_refreshed_at": "2026-10-04T10:20:00Z",
+        "as_of": "2026-10-05T10:30:00Z"
+      },
+      {
+        "probe_id": "deadline-equals-as-of-no-refresh",
+        "timezone": "America/New_York",
+        "local_time": "06:00",
+        "grace_minutes": 60,
+        "last_refreshed_at": "2026-10-04T10:20:00Z",
+        "as_of": "2026-10-05T11:00:00Z"
+      },
+      {
+        "probe_id": "refresh-at-the-deadline",
+        "timezone": "America/New_York",
+        "local_time": "06:00",
+        "grace_minutes": 60,
+        "last_refreshed_at": "2026-10-05T11:00:00Z",
+        "as_of": "2026-10-05T12:00:00Z"
+      },
+      {
+        "probe_id": "refresh-after-as-of",
+        "timezone": "America/New_York",
+        "local_time": "06:00",
+        "grace_minutes": 60,
+        "last_refreshed_at": "2026-10-05T10:45:00Z",
+        "as_of": "2026-10-05T10:30:00Z"
+      },
+      {
+        "probe_id": "clocks-back-refresh-in-the-first-0130",
+        "timezone": "America/New_York",
+        "local_time": "01:30",
+        "grace_minutes": 60,
+        "last_refreshed_at": "2026-11-01T05:45:00Z",
+        "as_of": "2026-11-01T12:00:00Z"
+      },
+      {
+        "probe_id": "clocks-back-refresh-in-the-second-0130",
+        "timezone": "America/New_York",
+        "local_time": "01:30",
+        "grace_minutes": 60,
+        "last_refreshed_at": "2026-11-01T06:45:00Z",
+        "as_of": "2026-11-01T12:00:00Z"
+      }
+    ]
   },
   "owners": [
     {
@@ -233,7 +291,7 @@
       "disabled_reason": null,
       "definition": {
         "field": "email",
-        "pattern": "^[^@\\s]+@[^@\\s]+\\.[A-Za-z]{2,}$",
+        "pattern": "^[^@ \\t\\r\\n\\f\\v]+@[^@ \\t\\r\\n\\f\\v]+\\.[A-Za-z]{2,}$",
         "eligibility": "all_rows"
       }
     },
@@ -1632,7 +1690,7 @@
       {
         "row_id": "ord-036",
         "order_id": "O-0036",
-        "customer_key": "CK-0036"
+        "customer_key": ""
       },
       {
         "row_id": "ord-037",

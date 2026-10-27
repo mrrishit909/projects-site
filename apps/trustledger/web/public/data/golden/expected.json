@@ -112,9 +112,9 @@
         "rule_version": 1,
         "weight_version": "w2",
         "run_at": "2026-10-05T00:00:00Z",
-        "eligible_count": 38,
+        "eligible_count": 37,
         "failure_count": 2,
-        "null_fk_count": 2
+        "null_fk_count": 3
       },
       "r-ord-fresh": {
         "dataset_id": "ds-orders",
@@ -188,9 +188,9 @@
         "comparable": true,
         "reason": null,
         "previous_eligible_count": 36,
-        "current_eligible_count": 38,
+        "current_eligible_count": 37,
         "failure_rate_previous": "0.083333",
-        "failure_rate_current": "0.052632"
+        "failure_rate_current": "0.054054"
       }
     },
     "disabled": {
@@ -234,6 +234,7 @@
         "dataset_id": "ds-customers",
         "eligible_count": 100,
         "null_key_count": 0,
+        "null_key_row_ids": [],
         "distinct_keys": 98,
         "duplicate_groups": 1,
         "duplicate_rows": 2,
@@ -251,15 +252,18 @@
       "r-ord-cust-fk": {
         "dataset_id": "ds-orders",
         "total_fk_count": 40,
-        "null_fk_count": 2,
-        "eligible_count": 38,
-        "matched_count": 36,
+        "null_fk_count": 3,
+        "empty_fk_count": 1,
+        "eligible_count": 37,
+        "matched_count": 35,
         "unmatched_count": 2,
-        "value": "0.947368"
+        "value": "0.945946"
       }
     },
     "timeliness": {
       "monitored_datasets": 4,
+      "evaluated_datasets": 4,
+      "pending_count": 0,
       "on_time_count": 3,
       "value": "0.750000",
       "datasets": {
@@ -270,6 +274,7 @@
           "evaluated_occurrence_utc": "2026-10-04T10:00:00Z",
           "deadline_utc": "2026-10-04T11:00:00Z",
           "last_refreshed_at": "2026-10-04T10:20:00Z",
+          "state": "on_time",
           "on_time": true
         },
         "ds-orders": {
@@ -279,6 +284,7 @@
           "evaluated_occurrence_utc": "2026-10-04T06:00:00Z",
           "deadline_utc": "2026-10-04T06:30:00Z",
           "last_refreshed_at": "2026-10-04T06:10:00Z",
+          "state": "on_time",
           "on_time": true
         },
         "ds-payments": {
@@ -288,6 +294,7 @@
           "evaluated_occurrence_utc": "2026-10-04T06:00:00Z",
           "deadline_utc": "2026-10-04T08:00:00Z",
           "last_refreshed_at": "2026-10-04T07:59:00Z",
+          "state": "on_time",
           "on_time": true
         },
         "ds-shipments": {
@@ -297,6 +304,7 @@
           "evaluated_occurrence_utc": "2026-10-04T04:00:00Z",
           "deadline_utc": "2026-10-04T05:00:00Z",
           "last_refreshed_at": "2026-10-04T05:00:00Z",
+          "state": "late",
           "on_time": false
         }
       }
@@ -326,7 +334,7 @@
         "ds-orders": {
           "weight_version": "w2",
           "dimension_scores": {
-            "relationship": "0.947368",
+            "relationship": "0.945946",
             "timeliness": "1.000000"
           },
           "measured_dimensions": [
@@ -334,7 +342,7 @@
             "timeliness"
           ],
           "weight_sum": "0.250000",
-          "value": "0.968421",
+          "value": "0.967568",
           "critical_failures": 0,
           "critical_open_issues": 0,
           "critical_override": false
@@ -381,14 +389,14 @@
       "by_weight_version": {
         "w1": {
           "ds-customers": "0.958116",
-          "ds-orders": "0.973684",
+          "ds-orders": "0.972973",
           "ds-payments": "1.000000",
           "ds-products": null,
           "ds-shipments": "0.000000"
         },
         "w2": {
           "ds-customers": "0.963932",
-          "ds-orders": "0.968421",
+          "ds-orders": "0.967568",
           "ds-payments": "1.000000",
           "ds-products": null,
           "ds-shipments": "0.000000"
@@ -398,7 +406,8 @@
     "critical_failures": {
       "failures": 2,
       "open_issues": 1,
-      "datasets_overridden": 1
+      "datasets_overridden": 1,
+      "carried": []
     },
     "resolution_time": {
       "resolved_count": 3,
@@ -591,5 +600,56 @@
         "reversed_by": "md-5"
       }
     ]
+  },
+  "timeliness_probes": {
+    "open-window-refreshed": {
+      "as_of": "2026-10-05T10:30:00Z",
+      "last_refreshed_at": "2026-10-05T10:10:00Z",
+      "evaluated_occurrence_utc": "2026-10-05T10:00:00Z",
+      "deadline_utc": "2026-10-05T11:00:00Z",
+      "state": "on_time"
+    },
+    "open-window-not-yet-refreshed": {
+      "as_of": "2026-10-05T10:30:00Z",
+      "last_refreshed_at": "2026-10-04T10:20:00Z",
+      "evaluated_occurrence_utc": "2026-10-05T10:00:00Z",
+      "deadline_utc": "2026-10-05T11:00:00Z",
+      "state": "pending"
+    },
+    "deadline-equals-as-of-no-refresh": {
+      "as_of": "2026-10-05T11:00:00Z",
+      "last_refreshed_at": "2026-10-04T10:20:00Z",
+      "evaluated_occurrence_utc": "2026-10-05T10:00:00Z",
+      "deadline_utc": "2026-10-05T11:00:00Z",
+      "state": "late"
+    },
+    "refresh-at-the-deadline": {
+      "as_of": "2026-10-05T12:00:00Z",
+      "last_refreshed_at": "2026-10-05T11:00:00Z",
+      "evaluated_occurrence_utc": "2026-10-05T10:00:00Z",
+      "deadline_utc": "2026-10-05T11:00:00Z",
+      "state": "late"
+    },
+    "refresh-after-as-of": {
+      "as_of": "2026-10-05T10:30:00Z",
+      "last_refreshed_at": "2026-10-05T10:45:00Z",
+      "evaluated_occurrence_utc": "2026-10-05T10:00:00Z",
+      "deadline_utc": "2026-10-05T11:00:00Z",
+      "state": "pending"
+    },
+    "clocks-back-refresh-in-the-first-0130": {
+      "as_of": "2026-11-01T12:00:00Z",
+      "last_refreshed_at": "2026-11-01T05:45:00Z",
+      "evaluated_occurrence_utc": "2026-11-01T06:30:00Z",
+      "deadline_utc": "2026-11-01T07:30:00Z",
+      "state": "late"
+    },
+    "clocks-back-refresh-in-the-second-0130": {
+      "as_of": "2026-11-01T12:00:00Z",
+      "last_refreshed_at": "2026-11-01T06:45:00Z",
+      "evaluated_occurrence_utc": "2026-11-01T06:30:00Z",
+      "deadline_utc": "2026-11-01T07:30:00Z",
+      "state": "on_time"
+    }
   }
 }

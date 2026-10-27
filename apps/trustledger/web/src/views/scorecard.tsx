@@ -44,7 +44,7 @@ function Dimensions({ ds, only, wv }: { ds: Dataset; only: string; wv: string })
       </div>
 
       <div className="block" data-testid="dim-uniqueness">
-        <h3>Uniqueness <Def term="groups and rows">Duplicate-group share = keys with more than one row ÷ distinct keys. Duplicate-row share = rows beyond the first per key ÷ eligible rows. Null keys are failures counted separately. The first row in row order is kept; the dimension score is 1 − duplicate-row share.</Def></h3>
+        <h3>Uniqueness <Def term="groups and rows">Duplicate-group share = keys with more than one row ÷ distinct keys. Duplicate-row share = rows beyond the first per key ÷ eligible rows. Null (and empty or whitespace-only) keys are failures counted and listed separately. The first row in row order is kept; the dimension score is (eligible − null-key rows − duplicate rows) ÷ eligible, so a null key lowers the score exactly as a duplicate does.</Def></h3>
         <Scroll label="Uniqueness by rule"><table>
           <thead><tr><th scope="col">Rule</th><th scope="col">Dataset</th><th scope="col" className="num">Eligible</th><th scope="col" className="num">Null keys</th><th scope="col" className="num">Distinct keys</th><th scope="col" className="num">Groups</th><th scope="col" className="num">Rows beyond first</th><th scope="col" className="num">Group share<br /><span className="mono muted">duplicate_group_share</span></th><th scope="col" className="num">Row share<br /><span className="mono muted">duplicate_row_share</span></th></tr></thead>
           <tbody>{uni.map(([id, b]) => <tr key={id} data-rule={id}><RuleCell ds={ds} id={id} /><td className="num mono">{b["eligible_count"]}</td><td className="num mono">{b["null_key_count"]}</td><td className="num mono">{b["distinct_keys"]}</td><td className="num mono">{b["duplicate_groups"]}</td><td className="num mono">{b["duplicate_rows"]}</td>
@@ -53,19 +53,19 @@ function Dimensions({ ds, only, wv }: { ds: Dataset; only: string; wv: string })
       </div>
 
       <div className="block" data-testid="dim-relationship">
-        <h3>Relationship integrity <Def term="null foreign keys">Matched eligible foreign keys ÷ eligible foreign keys. A null foreign key is excluded from the denominator and counted separately, so it neither passes nor fails silently.</Def></h3>
+        <h3>Relationship integrity <Def term="null foreign keys">Matched eligible foreign keys ÷ eligible foreign keys. A missing foreign key is excluded from the denominator and counted separately, so it neither passes nor fails silently. Missing means null, or text that is empty after trimming under the whitespace policy: an empty string and a string of spaces are counted with the nulls.</Def></h3>
         <Scroll label="Relationship integrity by rule"><table>
-          <thead><tr><th scope="col">Rule</th><th scope="col">Dataset</th><th scope="col" className="num">Foreign keys</th><th scope="col" className="num">Null, counted separately</th><th scope="col" className="num">Eligible</th><th scope="col" className="num">Matched</th><th scope="col" className="num">Unmatched</th><th scope="col" className="num">Integrity</th></tr></thead>
+          <thead><tr><th scope="col">Rule</th><th scope="col">Dataset</th><th scope="col" className="num">Foreign keys</th><th scope="col" className="num">Null or empty (whitespace policy), counted separately</th><th scope="col" className="num">Eligible</th><th scope="col" className="num">Matched</th><th scope="col" className="num">Unmatched</th><th scope="col" className="num">Integrity</th></tr></thead>
           <tbody>{rel.map(([id, b]) => <tr key={id} data-rule={id}><RuleCell ds={ds} id={id} /><td className="num mono">{b["total_fk_count"]}</td><td className="num mono" data-k="null_fk">{b["null_fk_count"]}</td><td className="num mono">{b["eligible_count"]}</td><td className="num mono">{b["matched_count"]}</td><td className="num mono">{b["unmatched_count"]}</td><td className="num mono" data-k="value">{b["value"] ?? "n/a"}</td></tr>)}{rel.length === 0 && <tr><td colSpan={8}>No active relationship rule{only === "all" ? "" : " on this dataset"}.</td></tr>}</tbody>
         </table></Scroll>
       </div>
 
       <div className="block" data-testid="dim-timeliness">
-        <h3>Timeliness <Def term="the local schedule">A monitored dataset is timely when its last refresh falls in [occurrence, occurrence + grace) of its daily local time in its own IANA zone. The window is half-open, so a refresh exactly at the deadline is late. Only monitored datasets count.</Def></h3>
-        <p className="pair-fig"><span><span className="big"><Fig k="timeliness">{tl["value"] ?? "n/a"}</Fig></span><span className="cap">{tl["on_time_count"]} of {tl["monitored_datasets"]} monitored datasets refreshed within their target{only === "all" ? "" : " (portfolio figure; the table below is this dataset)"}</span></span></p>
+        <h3>Timeliness <Def term="the local schedule">A monitored dataset is on time at the as-of when a refresh (not after the as-of) falls in [occurrence, occurrence + grace) of the latest daily occurrence, in its own IANA zone, that has started by the as-of. The window is half-open, so a refresh exactly at the deadline is late. If that occurrence is still open and nothing has been refreshed yet, the dataset is pending: neither on time nor late, and outside the denominator. Only monitored datasets count.</Def></h3>
+        <p className="pair-fig"><span><span className="big"><Fig k="timeliness">{tl["value"] ?? "n/a"}</Fig></span><span className="cap">{tl["on_time_count"]} of {tl["evaluated_datasets"]} evaluated datasets refreshed within their target ({tl["monitored_datasets"]} monitored; <span data-k="pending-count">{tl["pending_count"]}</span> pending: an open window with no refresh yet is neither on time nor late){only === "all" ? "" : " (portfolio figure; the table below is this dataset)"}</span></span></p>
         <Scroll label="Timeliness by monitored dataset"><table>
-          <thead><tr><th scope="col">Dataset</th><th scope="col">Schedule</th><th scope="col">Occurrence (UTC)</th><th scope="col">Deadline (UTC)</th><th scope="col">Last refresh (UTC)</th><th scope="col">On time</th></tr></thead>
-          <tbody>{tlRows.map(([id, t]) => <tr key={id} data-dataset={id}><th scope="row" className="mono">{id}</th><td>{t["scheduled_local"]} {t["timezone"]}, grace {t["grace_minutes"]} min</td><td className="mono">{dayTime(t["evaluated_occurrence_utc"])}</td><td className="mono">{dayTime(t["deadline_utc"])}</td><td className="mono">{t["last_refreshed_at"] ? dayTime(t["last_refreshed_at"]) : "never"}</td><td data-k="on_time">{t["on_time"] ? <Chip kind="ok">on time</Chip> : <Chip kind="hatch">late</Chip>}</td></tr>)}{tlRows.length === 0 && <tr><td colSpan={6}>Not monitored.</td></tr>}</tbody>
+          <thead><tr><th scope="col">Dataset</th><th scope="col">Schedule</th><th scope="col">Occurrence (UTC)</th><th scope="col">Deadline (UTC)</th><th scope="col">Last refresh (UTC)</th><th scope="col">State</th></tr></thead>
+          <tbody>{tlRows.map(([id, t]) => <tr key={id} data-dataset={id}><th scope="row" className="mono">{id}</th><td>{t["scheduled_local"]} {t["timezone"]}, grace {t["grace_minutes"]} min</td><td className="mono">{dayTime(t["evaluated_occurrence_utc"])}</td><td className="mono">{dayTime(t["deadline_utc"])}</td><td className="mono">{t["last_refreshed_at"] ? dayTime(t["last_refreshed_at"]) : "never"}</td><td data-k="on_time" data-state={t["state"]}>{t["state"] === "on_time" ? <Chip kind="ok">on time</Chip> : t["state"] === "pending" ? <Chip kind="note">pending</Chip> : <Chip kind="hatch">late</Chip>}</td></tr>)}{tlRows.length === 0 && <tr><td colSpan={6}>Not monitored.</td></tr>}</tbody>
         </table></Scroll>
       </div>
       <p className="muted">Dimension figures do not depend on the weight version; the selected version ({wv}) only changes the weighted score below.</p>
@@ -90,7 +90,7 @@ function Weighted({ ds, only, wv }: { ds: Dataset; only: string; wv: string }) {
       <div className="block block--crit" data-testid="critical-summary">
         <h3>Critical failures, shown independently</h3>
         <div className="pair-fig">
-          <div><span className="big crit-text"><Fig k="critical-failures">{crit["failures"]}</Fig></span><span className="cap">failing rows of active critical rules on the current run</span></div>
+          <div><span className="big crit-text"><Fig k="critical-failures">{crit["failures"]}</Fig></span><span className="cap">failing rows of active critical rules on the current run, plus the live failure of a critical rule disabled while its latest run fails ({(crit["carried"] as Row[]).length} carried)</span></div>
           <div><span className="big crit-text"><Fig k="critical-open">{crit["open_issues"]}</Fig></span><span className="cap">critical issues not resolved (open, reopened or claimed)</span></div>
           <div><span className="big crit-text"><Fig k="overridden">{crit["datasets_overridden"]}</Fig></span><span className="cap">datasets carrying <Def term="the critical override">A dataset with any open critical failure carries critical_override = true beside its score, however high the score. The override is never recomputed from the score.</Def></span></div>
         </div>
@@ -116,6 +116,8 @@ function Weighted({ ds, only, wv }: { ds: Dataset; only: string; wv: string }) {
         })}</tbody>
       </table></Scroll>
       <p className="muted">The same rows and rules score differently under different weight versions: the shift column is the last version minus the first, computed from exact fractions. The weight change moves a score without any rule changing, which is why the version is named in every result.</p>
+      <p className="muted" data-testid="shift-footnote">Note: the shift uses the exact fractions, not the rounded scores shown, so it can differ from the difference of the two rounded scores by 0.000001.</p>
+      {(crit["carried"] as Row[]).length > 0 && <p className="notice" data-testid="carried">Carried: {(crit["carried"] as Row[]).map((c) => `${c["rule_id"]} (${c["failure_count"]} from run ${c["rule_run_id"]})`).join(", ")}. A critical rule that was disabled while its latest run fails keeps counting that failure until a verified rerun passes; disabling is not repair.</p>}
     </section>
   );
 }

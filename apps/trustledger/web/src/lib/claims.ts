@@ -27,7 +27,7 @@ export function designedClaims(ds: Dataset): Claim[] {
   if (r) {
     out.push(mk("DR-02", "covered and coverage", [r["covered"], r["value"]], [m["ownership_coverage"]["covered"], m["ownership_coverage"]["value"]]));
     out.push(mk("DR-02", "uncovered datasets", r["uncovered"], m["ownership_coverage"]["uncovered"]));
-    out.push(mk("DR-02", "inactive owners", r["inactive_owners"], ds.raw.owners.filter((o) => o["active"] === false).map((o) => o["owner_id"]).sort()));
+    out.push(mk("DR-02", "inactive owners", r["inactive_owners"], ds.raw.owners.filter((o) => o["active"] === false).map((o) => o["owner_id"]).sort(cmp)));
   }
   r = get("DR-03");
   if (r) {

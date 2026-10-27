@@ -2,7 +2,7 @@
 // instants and weight versions. Nothing here is fetched from a server and nothing is invented: every figure comes from the pipeline.
 import type { Computation } from "../domain/metrics";
 import { compute } from "../domain/metrics";
-import type { Row } from "../domain/models";
+import { cmp, type Row } from "../domain/models";
 import { goldenOf, runPipeline, type PipelineInputs, type PipelineResult } from "../domain/pipeline";
 import type { Instant } from "../domain/time";
 import { isoZ } from "../domain/time";
@@ -38,7 +38,7 @@ export function makeDataset(id: DatasetId, manifest: Manifest, raw: RawRows, exp
   memo.set(`${result.asOf}|`, result.computation);
   return {
     id, manifest, raw, inputs, expected, injections, asOf: result.asOf, result, truth, at, now: result.computation,
-    weightVersions: result.population.weight_versions.map((w) => w.weight_version).sort(),
+    weightVersions: result.population.weight_versions.map((w) => w.weight_version).sort(cmp),
     byId: { owners: index(raw.owners, "owner_id"), datasets: index(raw.datasets, "dataset_id"), rules: index(raw.quality_rules, "rule_id"), runs: index(raw.rule_runs, "rule_run_id"),
       records: index(raw.customer_records, "record_id"), candidates: index(raw.match_candidates, "candidate_id") },
     goldenShape: () => goldenOf(result),

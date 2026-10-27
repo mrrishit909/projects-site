@@ -96,6 +96,8 @@ def seed(conn: psycopg.Connection, inputs: dict[str, Any], dataset_version: str 
                             "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'seed') ON CONFLICT DO NOTHING",
                             (d.dataset_id, d.dataset_name, d.source_system, d.owner_id, d.classification, d.registered_at, d.monitored,
                              d.refresh_timezone, d.refresh_local_time, d.refresh_grace_minutes, d.last_refreshed_at)).rowcount
+    rules = {r.rule_id: r for r in pop.quality_rules}
+    runs = {r.rule_run_id: r for r in pop.rule_runs}
     for f in pop.fields:
         n["fields"] += ex("INSERT INTO fields VALUES (%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
                           (f.field_id, f.dataset_id, f.field_name, f.data_type, f.nullable)).rowcount
@@ -108,13 +110,24 @@ def seed(conn: psycopg.Connection, inputs: dict[str, Any], dataset_version: str 
         n["quality_rules"] += ex("INSERT INTO quality_rules VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
                                  (r.rule_id, r.dataset_id, r.field_id, r.rule_type, r.severity, r.version_number, r.status, r.disabled_at,
                                   r.disabled_reason, Jsonb(r.definition))).rowcount
+    # the definition of each rule version (D-10 R7-12): the versions the inputs state, and the current one from the rule itself when it is not stated
+    stated = {(v["rule_id"], v["version_number"]): v for v in (inputs.get("quality_rule_versions") or []) if v.get("rule_id") in rules}
+    for r in pop.quality_rules:
+        for v in range(1, r.version_number + 1):
+            s = stated.get((r.rule_id, v))
+            if v == r.version_number:                                           # the current version is the rule's own row
+                s = {"rule_type": r.rule_type, "severity": r.severity, "definition": r.definition, "valid_from": s.get("valid_from") if s else None}
+            if s is None:
+                continue
+            n["quality_rule_versions"] = n.get("quality_rule_versions", 0) + ex(
+                "INSERT INTO quality_rule_versions VALUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
+                (r.rule_id, v, s.get("rule_type", r.rule_type), s.get("severity", r.severity), Jsonb(s["definition"]),
+                 parse_ts(s["valid_from"]) if s.get("valid_from") else None)).rowcount
     for r in pop.rule_runs:
         n["rule_runs"] += ex("INSERT INTO rule_runs (rule_run_id, rule_id, rule_version, weight_version, kind, run_at, eligible_count, "
                              "failure_count, rerun_for_issue, run_by) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,'seed') ON CONFLICT DO NOTHING",
                              (r.rule_run_id, r.rule_id, r.rule_version, r.weight_version, r.kind, r.run_at, r.eligible_count,
                               r.failure_count, r.rerun_for_issue)).rowcount
-    rules = {r.rule_id: r for r in pop.quality_rules}
-    runs = {r.rule_run_id: r for r in pop.rule_runs}
     for i in pop.issues:
         got = ex("INSERT INTO issues (issue_id, rule_run_id, severity, owner_id, status, detected_at, due_at, closed_at, verification_run_id, "
                  "reopened_at) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",

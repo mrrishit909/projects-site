@@ -56,7 +56,7 @@ def random_world(seed: int) -> tuple[dict[str, Any], str | None]:
         for t in rnd.sample(["completeness", "validity", "uniqueness", "relationship", "timeliness"], rnd.randint(1, 5)):
             d: dict[str, Any] = {"field": {"completeness": "email", "validity": "email", "uniqueness": "k", "relationship": "fk"}.get(t, "k")}
             if t == "validity":
-                d["pattern"] = rnd.choice([r"^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$", r"^[a-z]+$", r"@", r"^a"])
+                d["pattern"] = rnd.choice([r"^[^@ \t\r\n\f\v]+@[^@ \t\r\n\f\v]+\.[A-Za-z]{2,}$", r"^[a-z]+$", r"@", r"^a"])
             if t == "relationship":
                 d.update(parent_dataset_id=rnd.choice(dsids), parent_field=rnd.choice(["k", "email"]))
             if rnd.random() < 0.25 and t != "timeliness":
@@ -104,7 +104,7 @@ def random_world(seed: int) -> tuple[dict[str, Any], str | None]:
             w.d["metric_versions"].append({
                 "metric_version_id": f"mv-{m}-{v}", "metric_id": f"m-{m}", "metric_name": f"M{m}", "version_number": v, "definition": blank("d"), "grain": blank("g"),
                 "source_fields": rnd.choice([["a"], [], ["a", " "], None]), "owner_id": rnd.choice(owners + ["own-nope"]) if owners else "own-nope",
-                "refresh": blank("daily"), "valid_from": iso(t0 + timedelta(days=rnd.randint(-60, 5))), "status": rnd.choice(["published", "published", "draft", "superseded"])})
+                "refresh": blank("daily"), "valid_from": iso(t0 + timedelta(days=rnd.randint(-60, 5))), "status": rnd.choice(["published", "published", "draft", "reviewed", "superseded"])})
     recs = []
     for r in range(rnd.randint(0, 8)):
         recs.append({"record_id": f"rec-{r}", "source_system": "s", "source_customer_id": f"S{r}", "normalized_name": rnd.choice(["a b", "c d"]), "address_key": rnd.choice(["x", "y"])})

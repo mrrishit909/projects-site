@@ -11,7 +11,7 @@ from trustledger.numbers import h4, p6, ratio, rnd
 
 from support_db import World, rows_of
 
-PAT = r"^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$"
+PAT = r"^[^@ \t\r\n\f\v]+@[^@ \t\r\n\f\v]+\.[A-Za-z]{2,}$"     # explicit classes only (D-10 R7-04)
 
 
 def world_with_customers(values, **kw):
@@ -87,7 +87,7 @@ def test_validity_with_nothing_populated_is_unknown_for_populated_only():
 
 
 def test_the_closing_dollar_does_not_match_before_a_final_newline():
-    assert pattern_matches(PAT, "a@b.co") and not pattern_matches(PAT, "a@b.co\n") and pattern_matches(r"^a\s*$", "a\n") and pattern_matches("@", "a@b\n")
+    assert pattern_matches(PAT, "a@b.co") and not pattern_matches(PAT, "a@b.co\n") and pattern_matches(r"^a[ \t\r\n\f\v]*$", "a\n") and pattern_matches("@", "a@b\n")
 
 
 def test_non_text_populated_values_fail_a_text_pattern():
@@ -106,7 +106,9 @@ def test_uniqueness_group_share_and_row_share_differ_and_null_keys_are_failures(
     assert (u["null_key_count"], u["distinct_keys"], u["duplicate_groups"], u["duplicate_rows"]) == (2, 3, 2, 3)
     assert (u["group_share"]["value"], u["row_share"]["value"]) == ("0.666667", "0.375000")
     ws = run_pipeline(w.data()).metrics["weighted_score"]["datasets"]["d1"]
-    assert ws["dimension_scores"]["uniqueness"] == "0.625000" and ws["critical_failures"] == 5 == 2 + 3        # null keys + rows beyond the first
+    assert ws["dimension_scores"]["uniqueness"] == "0.375000" and ws["critical_failures"] == 5 == 2 + 3        # null keys + rows beyond the first
+    # D-10 R7-05: the score is (eligible - null-key rows - duplicate rows) / eligible = (8 - 2 - 3) / 8, and the null-key rows are listed apart
+    assert u["null_key_row_ids"] == ["r-0007", "r-0008"]
 
 
 def test_keys_are_compared_as_exact_text():
@@ -164,11 +166,27 @@ def test_the_window_is_half_open_a_refresh_at_the_deadline_is_late(refreshed, on
     assert t["datasets"]["d1"]["evaluated_occurrence_utc"] == "2026-10-04T06:00:00Z" and t["datasets"]["d1"]["deadline_utc"] == "2026-10-04T07:00:00Z"
 
 
-def test_an_occurrence_whose_grace_has_not_closed_is_not_yet_evaluated():
-    open_ = run_pipeline(tl_world("2026-10-05T06:30:00Z", "2026-10-04T06:10:00Z").data()).metrics["timeliness"]["datasets"]["d1"]
-    assert open_["evaluated_occurrence_utc"] == "2026-10-04T06:00:00Z"            # 06:30 is inside today's window: yesterday's is still the one judged
-    closed = run_pipeline(tl_world("2026-10-05T07:00:00Z", "2026-10-04T06:10:00Z").data()).metrics["timeliness"]["datasets"]["d1"]
-    assert closed["evaluated_occurrence_utc"] == "2026-10-05T06:00:00Z" and closed["on_time"] is False
+def test_an_open_occurrence_is_judged_on_its_own_window_not_on_yesterdays():
+    """D-10 R7-01. At 06:30Z the 06:00 occurrence (deadline 07:00Z) is open: a refresh in it is on time, no refresh yet is pending
+    (neither on time nor late, outside the denominator), and once its deadline has passed with no refresh it is late."""
+    def at(as_of, refreshed):
+        return run_pipeline(tl_world(as_of, refreshed).data()).metrics["timeliness"]
+    refreshed = at("2026-10-05T06:30:00Z", "2026-10-05T06:10:00Z")
+    assert refreshed["datasets"]["d1"]["state"] == "on_time" and refreshed["datasets"]["d1"]["evaluated_occurrence_utc"] == "2026-10-05T06:00:00Z"
+    assert (refreshed["monitored_datasets"], refreshed["evaluated_datasets"], refreshed["pending_count"], refreshed["value"]) == (1, 1, 0, "1.000000")
+    waiting = at("2026-10-05T06:30:00Z", "2026-10-04T06:10:00Z")          # yesterday's refresh does not make today's occurrence on time
+    assert waiting["datasets"]["d1"]["state"] == "pending" and waiting["datasets"]["d1"]["on_time"] is None
+    assert (waiting["monitored_datasets"], waiting["evaluated_datasets"], waiting["pending_count"], waiting["on_time_count"], waiting["value"]) == (1, 0, 1, 0, None)
+    late = at("2026-10-05T07:00:00Z", "2026-10-04T06:10:00Z")             # the deadline equal to the as-of has passed
+    assert late["datasets"]["d1"]["state"] == "late" and late["datasets"]["d1"]["evaluated_occurrence_utc"] == "2026-10-05T06:00:00Z" and late["value"] == "0.000000"
+    future = at("2026-10-05T06:30:00Z", "2026-10-05T06:45:00Z")           # a refresh after the as-of has not happened yet
+    assert future["datasets"]["d1"]["state"] == "pending"
+
+
+def test_a_pending_dataset_is_not_measured_by_its_rule_and_does_not_enter_the_score():
+    r = run_pipeline(tl_world("2026-10-05T06:30:00Z", "2026-10-04T06:10:00Z").data())
+    assert r.computation.rules["runs"]["r-t"]["eligible_count"] == 0 and r.computation.rules["runs"]["r-t"]["failure_count"] == 0
+    assert r.metrics["weighted_score"]["datasets"]["d1"]["value"] is None and r.metrics["weighted_score"]["datasets"]["d1"]["measured_dimensions"] == []
 
 
 @pytest.mark.parametrize("tz,local,occurrence", [("America/New_York", "06:00", "2026-10-04T10:00:00Z"), ("Europe/London", "07:00", "2026-10-04T06:00:00Z"),
@@ -189,7 +207,7 @@ def test_a_local_time_that_occurs_twice_is_the_later_instant_and_a_missing_one_u
 def test_only_monitored_datasets_count_and_an_unmonitored_timeliness_rule_is_not_measured():
     w = tl_world("2026-10-05T00:00:00Z", "2026-10-04T06:10:00Z", monitored=False)
     r = run_pipeline(w.data())
-    assert r.metrics["timeliness"] == {"monitored_datasets": 0, "on_time_count": 0, "value": None, "datasets": {}}
+    assert r.metrics["timeliness"] == {"monitored_datasets": 0, "evaluated_datasets": 0, "pending_count": 0, "on_time_count": 0, "value": None, "datasets": {}}
     assert r.computation.rules["runs"]["r-t"]["eligible_count"] == 0 and r.metrics["weighted_score"]["datasets"]["d1"]["measured_dimensions"] == []
 
 

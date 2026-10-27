@@ -8,17 +8,17 @@ import { DomainError, INVALID_WINDOW } from "./errors";
 import { classify, resolutionBlock, type IssueView } from "./issues";
 import { matchingBlock } from "./matching";
 import { measureRule, runOf, timelinessOf, type Measure } from "./measure";
-import { populationTotal, ruleActiveAt, weightInForce, type Population, type Row, type RuleRun } from "./models";
+import { cmp, populationTotal, ruleActiveAt, weightInForce, type Population, type Row, type RuleRun } from "./models";
 import { p6, ratio } from "./num";
-import { dimensionScores, weightedBlock } from "./scoring";
+import { carriedFailures, dimensionScores, weightedBlock } from "./scoring";
 import { definitionsBlocks, lineageBlock, ownershipBlock } from "./structure";
-import { isoZ, type Instant } from "./time";
+import { isoZ, timelinessState, type Instant } from "./time";
 import { precisionBlock, type Truth } from "./verification";
 
 export type Window = readonly [Instant | null, Instant | null];
 export interface Computation {
   metrics: Row; rules: Row; definitions: Row; matching: Row; weight_version: string | null; empty_population: boolean;
-  warnings: { code: string; path: string; message: string }[]; measures: Measure[]; views: IssueView[];
+  warnings: { code: string; path: string; message: string }[]; measures: Measure[]; views: IssueView[]; timeliness_probes: Row;
 }
 
 const inWindow = (t: Instant, w: Window | null | undefined): boolean => !w || ((w[0] === null || t >= w[0]) && (w[1] === null || t < w[1]));
@@ -63,7 +63,7 @@ export function compute(pop: Population, asOf: Instant, weightVersion?: string |
   const p = at(pop, asOf, window);
   const warnings: Computation["warnings"] = [];
 
-  const live = [...p.quality_rules].sort((a, b) => (a.rule_id < b.rule_id ? -1 : 1)).filter((r) => ruleActiveAt(r, asOf));
+  const live = [...p.quality_rules].sort((a, b) => cmp(a.rule_id, b.rule_id)).filter((r) => ruleActiveAt(r, asOf));
   const noPattern = (r: (typeof live)[number]): boolean => r.rule_type === "validity" && !r.definition["pattern"];
   for (const r of live) if (noPattern(r)) warnings.push({ code: "RULE_NOT_MEASURABLE", path: `rules.runs.${r.rule_id}`, message: `validity rule ${r.rule_id} has no pattern` });
   const measures = live.filter((r) => !noPattern(r)).map((r) => measureRule(r, p, asOf));
@@ -74,7 +74,7 @@ export function compute(pop: Population, asOf: Instant, weightVersion?: string |
   for (const r of p.rule_runs) {
     if (r.kind !== "scheduled" || r.run_at >= asOf) continue;
     const cur = lastScheduled.get(r.rule_id);
-    if (!cur || r.run_at > cur.run_at || (r.run_at === cur.run_at && r.rule_run_id > cur.rule_run_id)) lastScheduled.set(r.rule_id, r);
+    if (!cur || r.run_at > cur.run_at || (r.run_at === cur.run_at && cmp(r.rule_run_id, cur.rule_run_id) > 0)) lastScheduled.set(r.rule_id, r);
   }
   const comparisons: Row = {};
   for (const m of measures) {
@@ -91,12 +91,15 @@ export function compute(pop: Population, asOf: Instant, weightVersion?: string |
   }
 
   const tl: Row = {};
-  for (const d of [...p.datasets].sort((a, b) => (a.dataset_id < b.dataset_id ? -1 : 1))) { const t = timelinessOf(d, asOf); if (t) tl[d.dataset_id] = t; }
-  const on = Object.values(tl).filter((v) => v["on_time"]).length;
-  const timeliness = { monitored_datasets: Object.keys(tl).length, on_time_count: on, value: p6(ratio(on, Object.keys(tl).length)), datasets: tl };
+  for (const d of [...p.datasets].sort((a, b) => cmp(a.dataset_id, b.dataset_id))) { const t = timelinessOf(d, asOf); if (t) tl[d.dataset_id] = t; }
+  const states = Object.values(tl).map((v) => v["state"]);
+  const on = states.filter((s) => s === "on_time").length, pending = states.filter((s) => s === "pending").length;
+  const evaluated = states.length - pending; // a pending occurrence is neither on time nor late (D-10 R7-01)
+  const timeliness = { monitored_datasets: states.length, evaluated_datasets: evaluated, pending_count: pending, on_time_count: on, value: p6(ratio(on, evaluated)), datasets: tl };
 
   const views = classify(p, asOf);
-  const { weighted, critical } = weightedBlock(p, dimensionScores(measures), measures, views, wv);
+  const carried = carriedFailures(p, asOf);
+  const { weighted, critical } = weightedBlock(p, dimensionScores(measures), measures, views, wv, carried);
   const { coverage, definitions } = definitionsBlocks(p, asOf);
   const { block: matching, approved, reviewed } = matchingBlock(p);
   const metrics: Row = {
@@ -108,5 +111,10 @@ export function compute(pop: Population, asOf: Instant, weightVersion?: string |
   if (metrics["match_precision"]["precision"] === null && approved.length) warnings.push({ code: "MATCH_TRUTH_UNAVAILABLE", path: "metrics.match_precision", message: "no synthetic truth names every decided record: precision is unknown (null), not 0" });
   if (Object.values(weighted["datasets"] as Row).some((v) => v["critical_override"])) warnings.push({ code: "CRITICAL_OVERRIDE", path: "metrics.weighted_score", message: "a score hides an open critical failure or issue: read critical_failures beside it" });
   if (!pop.weight_versions.length) warnings.push({ code: "NO_WEIGHT_VERSION", path: "weight_version", message: "no rule weight version is defined: scores are null" });
-  return { metrics, rules: { active_count: Object.keys(runs).length, runs, comparisons, disabled }, definitions, matching, weight_version: wv ?? null, empty_population: isEmpty, warnings, measures, views };
+  const probes: Row = {};
+  for (const c of pop.probe_timeliness) { // stated cases: the rule alone, no dataset, no population
+    const { state, start, deadline } = timelinessState(c.timezone, c.local_time, c.grace_minutes, c.last_refreshed_at, c.as_of);
+    probes[c.probe_id] = { as_of: isoZ(c.as_of), last_refreshed_at: isoZ(c.last_refreshed_at), evaluated_occurrence_utc: isoZ(start), deadline_utc: isoZ(deadline), state };
+  }
+  return { metrics, rules: { active_count: Object.keys(runs).length, runs, comparisons, disabled }, definitions, matching, weight_version: wv ?? null, empty_population: isEmpty, warnings, measures, views, timeliness_probes: probes };
 }

@@ -52,6 +52,9 @@ export function parseConfig(raw: Row, pop: Population): void {
   pop.checklist_version = (raw["checklist_version"] as string | undefined) || (pop.checklist_versions[pop.checklist_versions.length - 1]!["checklist_version"] as string);
   const probe = (raw["probes"] as Row | undefined)?.["definition_at"];
   pop.probe_definition_at = probe ? parseTs(probe) : null;
+  pop.probe_timeliness = (((raw["probes"] as Row | undefined)?.["timeliness"] as Row[] | undefined) ?? []).map((c) => ({
+    probe_id: String(c["probe_id"]), timezone: c["timezone"] as string, local_time: c["local_time"] as string, grace_minutes: Number(c["grace_minutes"]),
+    last_refreshed_at: c["last_refreshed_at"] ? parseTs(c["last_refreshed_at"]) : null, as_of: parseTs(c["as_of"]) }));
   pop.weight_version = (raw["weight_version"] as string | undefined) ?? null;
 }
 
@@ -132,6 +135,7 @@ export function validateBatch(raw: Row): IngestResult {
     if (!e) continue;
     const ends = [e.source_dataset_id, e.target_dataset_id];
     if ((e.evidence_type === "observed") !== (e.observed_at !== null)) reject("lineage_edges", r, E.MALFORMED_RECORD); // D-08: observed edges carry an instant, others none
+    else if (e.source_dataset_id === e.target_dataset_id) reject("lineage_edges", r, E.MALFORMED_RECORD, "an edge needs two different datasets"); // D-10 R7-06
     else if (ends.every((x) => dsOk.has(x))) pop.lineage_edges.push(e);
     else if (ends.some((x) => dsBad.has(x))) reject("lineage_edges", r, E.DEPENDENT_REJECTED);
     else reject("lineage_edges", r, E.UNKNOWN_DATASET);
@@ -154,12 +158,12 @@ export function validateBatch(raw: Row): IngestResult {
     const c = parsed("match_candidates", r);
     if (!c) continue;
     const lo = c.left_record_id, hi = c.right_record_id;
-    const key = lo < hi ? `${lo}\u0000${hi}` : `${hi}\u0000${lo}`;
+    const key = cmp(lo, hi) < 0 ? `${lo}\u0000${hi}` : `${hi}\u0000${lo}`;
     if (!recOk.has(lo) || !recOk.has(hi)) reject("match_candidates", r, E.UNKNOWN_RECORD);
     else if (lo === hi) reject("match_candidates", r, E.SAME_RECORD);
     else if (!(c.score.n >= 0n && c.score.n <= c.score.d) || blank(c.explanation, trim)) reject("match_candidates", r, E.INVALID_CANDIDATE);
     else if (seenPairs.has(key)) reject("match_candidates", r, E.DUPLICATE_PAIR);
-    else if (lo > hi) reject("match_candidates", r, E.NON_CANONICAL_ORDER);
+    else if (cmp(lo, hi) > 0) reject("match_candidates", r, E.NON_CANONICAL_ORDER); // code-point order, not UTF-16 (D-10 R7-16)
     else { seenPairs.add(key); pop.match_candidates.push(c); }
   }
   const cand = new Map<string, Candidate>(pop.match_candidates.map((c) => [c.candidate_id, c]));

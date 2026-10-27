@@ -23,6 +23,12 @@ def now() -> datetime:
         return t
 
 
+def peek() -> datetime:
+    """The time ``now()`` would return next, without advancing a frozen clock (used by checks that must not move it)."""
+    with _lock:
+        return datetime.now(timezone.utc) if _next is None else _next
+
+
 def freeze(at: datetime | None, step: timedelta = timedelta(milliseconds=1)) -> None:
     global _next, _step
     with _lock:

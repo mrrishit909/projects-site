@@ -22,11 +22,13 @@ MIGRATIONS_DIR = Path(__file__).parent / "migrations"
 OWNED_TABLES = (
     "verification_truth", "command_results", "audit_events", "rejected_records", "dataset_versions", "merge_decisions",
     "match_candidates", "customer_records", "definition_changes", "metric_versions", "lineage_edges", "issue_events", "issues",
-    "rule_runs", "ledger_config", "checklist_versions", "rule_weight_versions", "quality_rules", "dataset_rows", "fields",
+    "rule_runs", "ledger_config", "checklist_versions", "rule_weight_versions", "quality_rule_versions", "quality_rules", "dataset_rows",
+    "dataset_refreshes", "fields",
     "datasets", "owners", "tl_timezones", "schema_migrations",
 )
 OWNED_FUNCTION_SIGNATURES = ("tl_forbid_mutation()", "tl_rule_guard()", "tl_rule_no_delete()", "tl_issue_guard()", "tl_decision_guard()",
-                             "tl_valid_tz(text)", "tl_cell(jsonb)", "tl_iso(timestamptz)", "tl_valid_weights(jsonb)")
+                             "tl_valid_tz(text)", "tl_cell(jsonb)", "tl_iso(timestamptz)", "tl_valid_weights(jsonb)",
+                             "tl_pattern_not_portable(text)")
 
 
 def reset(conn: psycopg.Connection) -> None:

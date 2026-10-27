@@ -12,9 +12,9 @@ from datetime import datetime
 from fractions import Fraction
 from typing import Any
 
-from .contract import (DECISIONS, EVIDENCE_TYPES, ID_KEYS, ISSUE_STATUSES, METRIC_STATUSES, ROLES, RULE_STATUSES, RULE_TYPES,
-                       RUN_KINDS, SEVERITIES)
-from .errors import MALFORMED_RECORD, SCHEDULE_REQUIRED, DomainError
+from .contract import (DECISIONS, EVIDENCE_TYPES, ID_KEYS, ISSUE_STATUSES, METRIC_STATUSES, NON_PORTABLE_ESCAPES, ROLES, RULE_STATUSES,
+                       RULE_TYPES, RUN_KINDS, SEVERITIES)
+from .errors import MALFORMED_RECORD, PATTERN_NOT_PORTABLE, SCHEDULE_REQUIRED, DomainError
 from .timeutil import parse_hhmm, parse_ts, zone
 
 Row = dict[str, Any]
@@ -314,12 +314,30 @@ def _check_schedule(d: Dataset) -> None:
                 raise _malformed("datasets", "refresh_grace_minutes", "must be 0..1439")
 
 
+def pattern_portable(pattern: str) -> bool:
+    """A pattern is portable only if it avoids ``\\s \\d \\w \\b`` (and their negations): Python ``re``, JavaScript and PostgreSQL disagree on
+    what they match (Unicode or ASCII classes, a boundary or a backspace). Use explicit classes: ``[ \\t\\r\\n\\f\\v]``, ``[0-9]``. An escaped
+    backslash followed by a letter (``\\\\s``) is a literal backslash and a letter, and passes (D-10, R7-04)."""
+    i = 0
+    while i < len(pattern):
+        if pattern[i] == "\\":
+            if i + 1 < len(pattern) and pattern[i + 1] in NON_PORTABLE_ESCAPES:
+                return False
+            i += 2
+        else:
+            i += 1
+    return True
+
+
 def _check_rule(r: Rule) -> None:
     d = r.definition
     t = r.rule_type
     if t != "timeliness" and not (isinstance(d.get("field"), str) and d["field"]):
         raise _malformed("quality_rules", "definition.field", "is required")
     if t == "validity" and (r.status == "active" or "pattern" in d):      # a disabled rule keeps its history even without a pattern
+        if isinstance(d.get("pattern"), str) and not pattern_portable(d["pattern"]):
+            raise DomainError(PATTERN_NOT_PORTABLE, "a pattern may not use \\s, \\d, \\w or \\b (they differ between Python, JavaScript and PostgreSQL): "
+                              "use explicit classes such as [ \\t\\r\\n\\f\\v] and [0-9]", path="definition.pattern")
         try:
             re.compile(d.get("pattern", ""))
         except (re.error, TypeError):
@@ -361,6 +379,7 @@ class Population:
     checklist_version: str = "cl-1"
     trim: str = " \t\r\n"
     probe_definition_at: datetime | None = None
+    probe_timeliness: list[dict[str, Any]] = field(default_factory=list)   # D-10 R7-01: stated cases, judged by the timeliness rule alone
     weight_version: str | None = None
 
     def total(self) -> int:

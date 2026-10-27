@@ -13,7 +13,8 @@ Lock order (every command, so two commands cannot deadlock on each other):
 A deadlock or serialization failure that still happens is rolled back and retried, three attempts in all, then answered
 409 CONCURRENT_UPDATE.
 
-Roles (X-Actor-Role): analyst | steward | admin.  C01, C03-C06: analyst, steward, admin.  C02, C07-C10: steward, admin.
+Roles (X-Actor-Role): analyst | steward | admin.  C01, C03-C06, C11, C12: analyst, steward, admin.  C02, C07-C10: steward, admin.
+The actor is the registered owner named by X-Actor-Id; the role is the register's (D-10 R7-03).
 """
 from __future__ import annotations
 
@@ -29,7 +30,7 @@ import psycopg
 from psycopg.types.json import Jsonb
 from trustledger.contract import ROLES as ROLE_LIST
 from trustledger.errors import (ALREADY_REVERSED, ALREADY_REVIEWED, CLASSIFICATION_REQUIRED, DUPLICATE_PAIR, NON_CANONICAL_ORDER,
-                                OWNER_INACTIVE, OWNER_REQUIRED, REVIEWER_IS_PROPOSER, SAME_RECORD, UNKNOWN_OWNER, UNKNOWN_RECORD,
+                                OWNER_INACTIVE, OWNER_REQUIRED, SAME_RECORD, UNKNOWN_OWNER, UNKNOWN_RECORD,
                                 UNKNOWN_WEIGHT_VERSION, WEIGHT_CHANGE_REQUIRES_VERSION, DomainError)
 from trustledger.ingest import blank, row_problem
 from trustledger.issues import verification_problem
@@ -57,6 +58,22 @@ SHARED_UNCERTAINTY = "Shared name and address; possible household"
 class Actor:
     actor_id: str
     role: str
+
+
+def resolve_actor(actor_id: str, claimed_role: str) -> Actor:
+    """The actor is a registered, active owner (exact id); the role is the register's, and a different ``X-Actor-Role`` is refused (D-10 R7-03)."""
+    with db.transaction() as conn:
+        row = conn.execute("SELECT * FROM owners WHERE owner_id = %s", (actor_id,)).fetchone()
+    if row is None:
+        raise ApiError(401, "UNAUTHENTICATED", f"actor {actor_id!r} is not in the owners register",
+                       [detail("header.X-Actor-Id", "UNKNOWN_ACTOR", "X-Actor-Id must be the exact id of a registered owner")])
+    owner = parse("owners", row)
+    if not owner_covers(owner, clock.peek()):
+        raise _forbidden("ACTOR_INACTIVE", f"owner {actor_id!r} is inactive and cannot act", "header.X-Actor-Id")
+    if owner.role != claimed_role:
+        raise _forbidden("ROLE_MISMATCH", f"{actor_id!r} is registered as {owner.role}, not {claimed_role}", "header.X-Actor-Role",
+                         {"registered_role": owner.role})
+    return Actor(owner.owner_id, owner.role)
 
 
 @dataclass
@@ -190,6 +207,9 @@ _UNIQUE_CODES = {
     "decisions_reversal_uq": (ALREADY_REVERSED, "this merge is already reversed"),
     "metric_versions_pkey": ("DEFINITION_IMMUTABLE", "a published definition is never rewritten: publish a new version"),
     "metric_versions_uq": ("CONCURRENT_UPDATE", "another request published this metric version first; retry"),
+    "dataset_refreshes_pkey": ("REFRESH_EXISTS", "this refresh is already recorded"),
+    "dataset_rows_version_uq": ("CONCURRENT_UPDATE", "another request corrected this record first; retry"),
+    "dataset_rows_pkey": ("CONCURRENT_UPDATE", "another request wrote this dataset's rows first; retry"),
 }
 
 
@@ -272,17 +292,17 @@ def _rule_dataset(conn: Conn, rule_id: str, path: str = "input.rule_id") -> db.R
     return row
 
 
-def _mini_population(conn: Conn, rule_row: db.Row) -> Population:
+def _mini_population(conn: Conn, rule_row: db.Row, now: datetime) -> Population:
     """Just what one rule's measurement reads: its dataset, the rule, the dataset's rows and the parent rows of a relationship rule."""
     pop = Population()
     ds = conn.execute("SELECT * FROM datasets WHERE dataset_id = %s", (rule_row["dataset_id"],)).fetchone()
+    ds = {**ds, "last_refreshed_at": db.last_refreshes(conn, now).get(ds["dataset_id"])}       # the latest recorded refresh (C12), not after now
     pop.datasets = [parse("datasets", ds)]
     pop.quality_rules = [parse("quality_rules", rule_row)]
     ids = {rule_row["dataset_id"]}
     if rule_row["rule_type"] == "relationship":
         ids.add(rule_row["definition"]["parent_dataset_id"])
-    for r in conn.execute("SELECT dataset_id, data FROM dataset_rows WHERE dataset_id = ANY(%s) ORDER BY dataset_id, ordinal", (sorted(ids),)).fetchall():
-        pop.dataset_rows.setdefault(r["dataset_id"], []).append(r["data"])
+    pop.dataset_rows = db.current_rows(conn, now, sorted(ids))                                   # the latest version of each record
     cfg = conn.execute("SELECT whitespace_policy FROM ledger_config WHERE id = 1").fetchone()
     if cfg:
         pop.trim = (cfg["whitespace_policy"] or {}).get("trim_characters", pop.trim)
@@ -353,13 +373,16 @@ def register_dataset(conn: Conn, req: Any, actor: Actor) -> Outcome:
 # --- C02 publish-definition -----------------------------------------------------------------------------------------
 
 def publish_definition(conn: Conn, req: Any, actor: Actor) -> Outcome:
-    """draft -> published as a NEW version row with valid_from = now; the older version stays readable and unchanged (D-02, P07-TEST-11)."""
+    """draft -> reviewed -> published, each step a NEW version row with valid_from = now; the older versions stay readable and unchanged (D-02,
+    P07-TEST-11, FLOW-02). A step changes the status only: ``reviewed`` needs the metric's latest version to be a draft and a reviewer other
+    than its author (409 SELF_REVIEW), ``published`` needs the latest version to be reviewed, and the content must be the content that was
+    reviewed (409 CONTENT_CHANGED); changing the content starts a new draft (D-10 R7-12)."""
     i = req.input
     now = _now()
     conn.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))", ("metric:" + i.metric_id,))
-    if i.status not in ("draft", "published"):
-        raise _invalid("INVALID_STATUS", "status must be draft or published", "input.status")
-    versions = conn.execute("SELECT metric_version_id, version_number FROM metric_versions WHERE metric_id = %s ORDER BY version_number", (i.metric_id,)).fetchall()
+    if i.status not in ("draft", "reviewed", "published"):
+        raise _invalid("INVALID_STATUS", "status must be draft, reviewed or published", "input.status")
+    versions = conn.execute("SELECT * FROM metric_versions WHERE metric_id = %s ORDER BY version_number", (i.metric_id,)).fetchall()
     latest = versions[-1] if versions else None
     if i.metric_version_id and conn.execute("SELECT 1 FROM metric_versions WHERE metric_version_id = %s", (i.metric_version_id,)).fetchone():
         msg = f"metric version {i.metric_version_id!r} exists and is never rewritten; publish a new version instead"
@@ -370,6 +393,21 @@ def publish_definition(conn: Conn, req: Any, actor: Actor) -> Outcome:
                         {"latest_version": latest["version_number"] if latest else 0})
     if latest is not None and blank(i.reason):
         raise _invalid("REASON_REQUIRED", "a change to an existing metric needs a reason", "input.reason")
+    if i.status in ("reviewed", "published"):
+        need, code = ("draft", "REVIEW_REQUIRES_DRAFT") if i.status == "reviewed" else ("reviewed", "PUBLICATION_REQUIRES_REVIEW")
+        if latest is None or latest["status"] != need:
+            raise _conflict("INVALID_TRANSITION", f"a metric version is {i.status} only after its latest version is {need} "
+                            f"(draft -> reviewed -> published); the latest is {latest['status'] if latest else 'none'}", "input.status",
+                            {"latest_status": latest["status"] if latest else None, "required_status": need}, rule_id=code)
+        same = (latest["metric_name"], latest["definition"], latest["grain"], list(latest["source_fields"] or []), latest["owner_id"], latest["refresh"]) == \
+               (i.metric_name, i.definition, i.grain, list(i.source_fields), i.owner_id, i.refresh)
+        if not same:
+            raise _conflict("CONTENT_CHANGED", f"the content differs from the {need} version: only its status changes at this step; start a new draft to change the content",
+                            "input.definition", {"latest_metric_version_id": latest["metric_version_id"]})
+        if i.status == "reviewed" and latest["published_by"] == actor.actor_id:
+            msg = f"{actor.actor_id} drafted this version and cannot review it: a definition needs an independent reviewer"
+            _refusal(actor, req, "publish-definition", "metric", i.metric_id, "SELF_REVIEW", msg)
+            raise _conflict("SELF_REVIEW", msg, "header.X-Actor-Id", {"metric_version_id": latest["metric_version_id"]})
     owner = conn.execute("SELECT 1 FROM owners WHERE owner_id = %s", (i.owner_id,)).fetchone()
     if owner is None:
         raise _invalid(UNKNOWN_OWNER, f"owner {i.owner_id!r} is not registered", "input.owner_id")
@@ -394,7 +432,7 @@ def publish_definition(conn: Conn, req: Any, actor: Actor) -> Outcome:
         if gaps:
             warnings.append(_warning("DEFINITION_INCOMPLETE", f"the contract checklist is incomplete: {', '.join(gaps)}; it counts as incomplete in definition coverage",
                                      "input"))
-    return Outcome("published" if i.status == "published" else "drafted",
+    return Outcome({"published": "published", "reviewed": "reviewed", "draft": "drafted"}[i.status],
                    {"metric_version_id": vid, "metric_id": i.metric_id, "version_number": number, "valid_from": iso_z(now), "status": i.status,
                     "previous_metric_version_id": latest["metric_version_id"] if latest else None, "change_id": change_id},
                    number, warnings, Audit("metric", i.metric_id, "publish-definition", number - 1 if latest else None, number, i.reason,
@@ -426,7 +464,7 @@ def run_rule(conn: Conn, req: Any, actor: Actor) -> Outcome:
             msg = f"the weights differ from weight version {wv!r}: a change of weights is a new, versioned weight set"
             _refusal(actor, req, "run-rule", "rule", i.rule_id, WEIGHT_CHANGE_REQUIRES_VERSION, msg)
             raise _invalid(WEIGHT_CHANGE_REQUIRES_VERSION, msg, "input.weights", {"weight_version": wv})
-    pop = _mini_population(conn, rule)
+    pop = _mini_population(conn, rule, now)
     m = measure_rule(pop.quality_rules[0], pop, now)
     run_id = _new_id("rr")
     prev = conn.execute("SELECT * FROM rule_runs WHERE rule_id = %s AND kind = 'scheduled' AND run_at < %s ORDER BY run_at DESC, rule_run_id DESC LIMIT 1",
@@ -548,7 +586,8 @@ def triage_issue(conn: Conn, req: Any, actor: Actor) -> Outcome:
 
 def verify_remediation(conn: Conn, req: Any, actor: Actor) -> Outcome:
     """claimed -> resolved only by a successful rerun of the SAME rule version over the issue's records; otherwise the issue stays
-    claimed. Disabling the rule is not repair: a disabled rule is not rerun and the issue stays claimed (D-03, P07-TEST-09)."""
+    claimed. Disabling the rule is not repair (a disabled rule's issue is still unresolved), yet a passing rerun resolves it, which is also what
+    clears the critical failure a disabled rule carries (D-03, P07-TEST-09, D-10 R7-02)."""
     i = req.input
     now = _now()
     issue, base = _lock_issue(conn, i.issue_id)
@@ -563,12 +602,13 @@ def verify_remediation(conn: Conn, req: Any, actor: Actor) -> Outcome:
     rule = conn.execute("SELECT * FROM quality_rules WHERE rule_id = %s FOR SHARE", (base["rule_id"],)).fetchone()
     run_id = None
     failures = eligible = None
-    if rule["status"] != "active":
-        reasons.append("RULE_DISABLED")                   # disabling is not repair
-    elif rule["version_number"] != base["rule_version"]:
+    disabled = rule["status"] != "active"                 # disabling is not repair, and it does not forbid proof: only a passing rerun resolves (D-10 R7-02)
+    if rule["version_number"] != base["rule_version"]:
         reasons.append("RULE_VERSION_DIFFERS")            # a rerun of another rule version verifies nothing
+    elif rule["rule_type"] == "validity" and not (rule["definition"] or {}).get("pattern"):
+        reasons.append("RULE_NOT_MEASURABLE")             # a disabled validity rule may have no pattern: there is nothing to rerun
     else:
-        pop = _mini_population(conn, rule)
+        pop = _mini_population(conn, rule, now)
         m = measure_rule(pop.quality_rules[0], pop, now)
         records = issue["record_ids"]
         if records is None:
@@ -586,12 +626,13 @@ def verify_remediation(conn: Conn, req: Any, actor: Actor) -> Outcome:
             reasons.append("NO_RECORDS_TO_CHECK")
         elif failures > 0:
             reasons.append("RERUN_STILL_FAILING")
+    extra = [_warning("RULE_DISABLED", "the rule is disabled: disabling is not repair, a critical failure of its latest run keeps counting until a rerun passes", "result.class")] if disabled else []
     if reasons:
         _event(conn, i.issue_id, "verification_failed", now, actor, {"reasons": reasons, "rerun_run_id": run_id})
         conn.execute("UPDATE issues SET version = version + 1 WHERE issue_id = %s", (i.issue_id,))
         return Outcome("claimed", {"issue_id": i.issue_id, "class": "claimed", "verified": False, "reasons": reasons, "rerun_run_id": run_id,
-                                   "eligible_count": eligible, "failure_count": failures}, before + 1,
-                       [_warning(reasons[0], "the issue stays claimed: it is not resolved without a successful rerun of the same rule version", "result.class")],
+                                   "eligible_count": eligible, "failure_count": failures, "rule_disabled": disabled}, before + 1,
+                       [_warning(reasons[0], "the issue stays claimed: it is not resolved without a successful rerun of the same rule version", "result.class"), *extra],
                        Audit("issue", i.issue_id, "verify-remediation:not-verified", before, before + 1, ",".join(reasons), {"rerun_run_id": run_id}))
     problem = verification_problem(parse("issues", {**issue, "reopened_at": list(issue["reopened_at"])}), parse("rule_runs", base),
                                    parse("rule_runs", conn.execute("SELECT * FROM rule_runs WHERE rule_run_id = %s", (run_id,)).fetchone()))
@@ -599,8 +640,74 @@ def verify_remediation(conn: Conn, req: Any, actor: Actor) -> Outcome:
     conn.execute("UPDATE issues SET verification_run_id = %s, version = version + 1 WHERE issue_id = %s", (run_id, i.issue_id))
     _event(conn, i.issue_id, "verified", now, actor, {"rerun_run_id": run_id})
     return Outcome("resolved", {"issue_id": i.issue_id, "class": "resolved", "verified": True, "rerun_run_id": run_id, "resolved_at": iso_z(now),
-                                "resolution_hours": h4(hours_between(issue["detected_at"], now)), "eligible_count": eligible, "failure_count": failures},
-                   before + 1, [], Audit("issue", i.issue_id, "verify-remediation", before, before + 1, None, {"rerun_run_id": run_id}))
+                                "resolution_hours": h4(hours_between(issue["detected_at"], now)), "eligible_count": eligible, "failure_count": failures,
+                                "rule_disabled": disabled},
+                   before + 1, extra, Audit("issue", i.issue_id, "verify-remediation", before, before + 1, None, {"rerun_run_id": run_id}))
+
+
+# --- C11 correct-dataset-rows / C12 record-refresh ---------------------------------------------------------------------
+
+def correct_dataset_rows(conn: Conn, req: Any, actor: Actor) -> Outcome:
+    """records -> new record VERSIONS. Append-only: a correction writes a new row (row_version + 1, supersedes_row_id, the reason, the actor and the
+    server's instant); the measurement reads the latest version of each record, a dataset's earlier versions and every earlier run stay as they were.
+    A correction does not resolve an issue: C10 reruns the rule over the issue's records (D-10 R7-07)."""
+    i = req.input
+    now = _now()
+    _lock_dataset(conn, i.dataset_id, False, "input.dataset_id")
+    conn.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s, 0))", ("rows:" + i.dataset_id,))
+    if blank(i.reason):
+        raise _invalid("REASON_REQUIRED", "a correction needs a reason", "input.reason")
+    ids = [c.row_id for c in i.corrections]
+    if len(set(ids)) != len(ids):
+        raise _invalid("DUPLICATE_ROW", "a record is corrected once per request", "input.corrections")
+    latest = {r["row_id"]: r for r in conn.execute(
+        "SELECT DISTINCT ON (row_id) row_id, row_version, data FROM dataset_rows WHERE dataset_id = %s AND row_id = ANY(%s) "
+        "ORDER BY row_id, row_version DESC", (i.dataset_id, ids)).fetchall()}
+    top = conn.execute("SELECT coalesce(max(ordinal), -1) AS n FROM dataset_rows WHERE dataset_id = %s", (i.dataset_id,)).fetchone()["n"]
+    done = []
+    for k, c in enumerate(i.corrections):
+        cur = latest.get(c.row_id)
+        if cur is None:
+            raise _invalid("UNKNOWN_ROW", f"record {c.row_id!r} is not a row of dataset {i.dataset_id!r}", f"input.corrections[{k}].row_id")
+        if "row_id" in c.changes:
+            raise _invalid("ROW_ID_IMMUTABLE", "the id of a record does not change; a correction changes its cells", f"input.corrections[{k}].changes.row_id")
+        new = {**cur["data"], **c.changes}
+        if new == cur["data"]:
+            raise _invalid("NO_CHANGE", f"the correction of {c.row_id!r} changes nothing", f"input.corrections[{k}].changes")
+        if row_problem(new, set()):
+            raise _invalid(row_problem(new, set()) or "MALFORMED_RECORD", "a cell is text, an integer, a boolean or null", f"input.corrections[{k}].changes")
+        version = cur["row_version"] + 1
+        top += 1
+        conn.execute("INSERT INTO dataset_rows (dataset_id, ordinal, row_id, data, row_version, supersedes_row_id, reason, corrected_by, recorded_at) "
+                     "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                     (i.dataset_id, top, c.row_id, Jsonb(new), version, f"{c.row_id}@{cur['row_version']}", i.reason, actor.actor_id, now))
+        done.append({"row_id": c.row_id, "row_version": version, "supersedes_row_id": f"{c.row_id}@{cur['row_version']}"})
+    unresolved = conn.execute(
+        "SELECT count(*) AS n FROM issues i JOIN rule_runs r ON r.rule_run_id = i.rule_run_id JOIN quality_rules q ON q.rule_id = r.rule_id "
+        "WHERE q.dataset_id = %s AND (i.status <> 'closed' OR i.verification_run_id IS NULL)", (i.dataset_id,)).fetchone()["n"]
+    warnings = [_warning("CORRECTION_IS_NOT_VERIFICATION", f"{unresolved} issue(s) of this dataset are not resolved: a correction resolves nothing; "
+                         "verify-remediation (C10) reruns the rule over the issue's records", "result.corrected")] if unresolved else []
+    return Outcome("corrected", {"dataset_id": i.dataset_id, "corrected": done, "recorded_at": iso_z(now), "corrected_by": actor.actor_id},
+                   1, warnings, Audit("dataset", i.dataset_id, "correct-dataset-rows", None, None, i.reason,
+                                      {"rows": [d["row_id"] for d in done], "corrected_by": actor.actor_id}))
+
+
+def record_refresh(conn: Conn, req: Any, actor: Actor) -> Outcome:
+    """A refresh of a dataset that happened at ``refreshed_at``: appended to the dataset's refresh history (never edited); timeliness reads the
+    latest refresh not after its as-of. The instant cannot be in the future or before the dataset was registered (D-10 R7-07)."""
+    i = req.input
+    now = _now()
+    ds = _lock_dataset(conn, i.dataset_id, False, "input.dataset_id")
+    at = parse_ts(i.refreshed_at)
+    if at > now:
+        raise _invalid("REFRESH_IN_FUTURE", "a refresh cannot be after the server's time", "input.refreshed_at")
+    if at < ds["registered_at"]:
+        raise _invalid("REFRESH_BEFORE_REGISTRATION", "a refresh cannot be before the dataset was registered", "input.refreshed_at")
+    conn.execute("INSERT INTO dataset_refreshes (dataset_id, refreshed_at, recorded_at, recorded_by) VALUES (%s,%s,%s,%s)", (i.dataset_id, at, now, actor.actor_id))
+    latest = db.last_refreshes(conn, now).get(i.dataset_id)
+    warnings = [] if ds["monitored"] else [_warning("NOT_MONITORED", "the dataset is not monitored: the refresh is recorded but no timeliness is measured", "input.dataset_id")]
+    return Outcome("recorded", {"dataset_id": i.dataset_id, "refreshed_at": iso_z(at), "recorded_at": iso_z(now), "last_refreshed_at": iso_z(latest)}, 1, warnings,
+                   Audit("dataset", i.dataset_id, "record-refresh", None, None, None, {"refreshed_at": iso_z(at), "recorded_by": actor.actor_id}))
 
 
 # --- C06 suggest-match / C07 approve-merge / C08 reverse-merge ----------------------------------------------------
@@ -650,10 +757,12 @@ def _lock_candidate(conn: Conn, candidate_id: str, path: str) -> tuple[db.Row, d
 
 
 def _same_person_check(actor: Actor, req: Any, cand: db.Row, action: str) -> None:
+    """A proposer cannot decide (or reverse) their own candidate: 409 SELF_REVIEW, kept in the audit trail (D-10 R7-03). The domain and the
+    database keep REVIEWER_IS_PROPOSER for the same rule on stored data."""
     if cand["proposed_by"] == actor.actor_id:
         msg = f"{actor.actor_id} proposed candidate {cand['candidate_id']} and cannot decide it: a merge needs an independent reviewer"
-        _refusal(actor, req, action, "candidate", cand["candidate_id"], REVIEWER_IS_PROPOSER, msg)
-        raise _forbidden(REVIEWER_IS_PROPOSER, msg, "header.X-Actor-Id", {"candidate_id": cand["candidate_id"]})
+        _refusal(actor, req, action, "candidate", cand["candidate_id"], "SELF_REVIEW", msg)
+        raise _conflict("SELF_REVIEW", msg, "header.X-Actor-Id", {"candidate_id": cand["candidate_id"]})
 
 
 def approve_merge(conn: Conn, req: Any, actor: Actor) -> Outcome:
@@ -728,6 +837,12 @@ def disable_rule(conn: Conn, req: Any, actor: Actor) -> Outcome:
     open_n = conn.execute("SELECT count(*) AS n FROM issues i JOIN rule_runs r ON r.rule_run_id = i.rule_run_id WHERE r.rule_id = %s "
                           "AND (i.status <> 'closed' OR i.verification_run_id IS NULL)", (i.rule_id,)).fetchone()["n"]
     warnings = [_warning("DISABLING_IS_NOT_REPAIR", f"{open_n} issue(s) of this rule are not resolved and stay open or claimed", "result.unresolved_issues")] if open_n else []
+    last = conn.execute("SELECT rule_run_id, failure_count FROM rule_runs WHERE rule_id = %s AND run_at <= %s ORDER BY run_at DESC, rule_run_id COLLATE \"C\" DESC LIMIT 1",
+                        (i.rule_id, now)).fetchone()
+    carried = last["failure_count"] if rule["severity"] == "critical" and last is not None else 0
+    if carried:
+        warnings.append(_warning("CRITICAL_FAILURE_CARRIED", f"the latest run of this critical rule has {carried} failure(s): they keep counting, with the override, "
+                                 "until a verified rerun passes (disabling never clears a live failure)", "result.carried_critical_failures"))
     return Outcome("disabled", {"rule_id": i.rule_id, "status": "disabled", "disabled_at": iso_z(now), "disabled_reason": i.reason, "runs_retained": runs,
-                                "unresolved_issues": open_n}, 1, warnings,
+                                "unresolved_issues": open_n, "carried_critical_failures": carried}, 1, warnings,
                    Audit("rule", i.rule_id, "disable-rule", rule["version_number"], rule["version_number"], i.reason, {"runs_retained": runs, "unresolved_issues": open_n}))

@@ -82,9 +82,38 @@ _ROWS = {
 }
 
 
-def load_population(conn: psycopg.Connection[Row]) -> Population:
-    """The domain's population from the tables (rows are trusted; the same parsers as ingest run over them)."""
+#: The rows of a dataset as the measurement reads them: the latest version of each record recorded by ``as_of`` (NULL = the latest of all),
+#: in the position of its first version. Corrections append versions (C11); nothing is edited (D-10 R7-07).
+CURRENT_ROWS_SQL = (
+    "SELECT dataset_id, data FROM ("
+    " SELECT DISTINCT ON (dataset_id, row_id) dataset_id, row_id, data, min(ordinal) OVER (PARTITION BY dataset_id, row_id) AS pos"
+    " FROM dataset_rows WHERE (%(as_of)s::timestamptz IS NULL OR recorded_at IS NULL OR recorded_at <= %(as_of)s::timestamptz)"
+    " AND (%(ids)s::text[] IS NULL OR dataset_id = ANY(%(ids)s::text[]))"
+    " ORDER BY dataset_id, row_id, row_version DESC) x ORDER BY dataset_id COLLATE \"C\", pos")
+
+#: The latest recorded refresh of each dataset not after ``as_of``: the value loaded with the dataset or a later C12 record-refresh.
+LAST_REFRESH_SQL = (
+    "SELECT dataset_id, max(t) AS last_refreshed_at FROM ("
+    " SELECT dataset_id, last_refreshed_at AS t FROM datasets UNION ALL SELECT dataset_id, refreshed_at FROM dataset_refreshes) x"
+    " WHERE t IS NOT NULL AND (%(as_of)s::timestamptz IS NULL OR t <= %(as_of)s::timestamptz) GROUP BY dataset_id")
+
+
+def current_rows(conn: psycopg.Connection[Row], as_of: datetime | None, dataset_ids: list[str] | None = None) -> dict[str, list[Row]]:
+    out: dict[str, list[Row]] = {}
+    for r in conn.execute(CURRENT_ROWS_SQL, {"as_of": as_of, "ids": dataset_ids}).fetchall():
+        out.setdefault(r["dataset_id"], []).append(r["data"])
+    return out
+
+
+def last_refreshes(conn: psycopg.Connection[Row], as_of: datetime | None) -> dict[str, datetime]:
+    return {r["dataset_id"]: r["last_refreshed_at"] for r in conn.execute(LAST_REFRESH_SQL, {"as_of": as_of}).fetchall()}
+
+
+def load_population(conn: psycopg.Connection[Row], as_of: datetime | None = None) -> Population:
+    """The domain's population from the tables (rows are trusted; the same parsers as ingest run over them). With ``as_of`` the dataset rows
+    are the latest versions recorded by then and each dataset's last refresh is the latest not after it."""
     pop = Population()
+    refreshed = last_refreshes(conn, as_of)
     for ent in ENTITIES:
         rows = conn.execute(_ROWS[ent]).fetchall()
         for r in rows:
@@ -92,9 +121,10 @@ def load_population(conn: psycopg.Connection[Row]) -> Population:
                 r = {**r, "score": format(r["score"], "f")}
             if ent == "issues":
                 r = {**r, "reopened_at": list(r["reopened_at"])}
+            if ent == "datasets":
+                r = {**r, "last_refreshed_at": refreshed.get(r["dataset_id"])}
             getattr(pop, ent).append(parse(ent, r))
-    for r in conn.execute("SELECT dataset_id, data FROM dataset_rows ORDER BY dataset_id, ordinal").fetchall():
-        pop.dataset_rows.setdefault(r["dataset_id"], []).append(r["data"])
+    pop.dataset_rows = current_rows(conn, as_of)
     pop.weight_versions = [WeightVersion(r["weight_version"], r["valid_from"], {k: Fraction(v) for k, v in r["weights"].items()})
                            for r in conn.execute("SELECT * FROM rule_weight_versions ORDER BY weight_version").fetchall()]
     pop.checklist_versions = [{"checklist_version": r["checklist_version"], "items": list(r["items"])}

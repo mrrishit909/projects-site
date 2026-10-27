@@ -37,7 +37,7 @@ def test_variant_empty_is_all_zero_counts_and_null_ratios_never_zero_ratios():
     assert m["completeness"] == m["validity"] == m["uniqueness"] == m["relationship_integrity"] == {}
     assert m["timeliness"]["value"] is None and m["ownership_coverage"]["value"] is None and m["definition_coverage"]["value"] is None
     assert m["lineage_coverage"]["value"] is None and m["match_precision"]["precision"] is None and m["resolution_time"]["mean_hours"] is None
-    assert m["weighted_score"]["datasets"] == {} and m["critical_failures"] == {"failures": 0, "open_issues": 0, "datasets_overridden": 0}
+    assert m["weighted_score"]["datasets"] == {} and m["critical_failures"] == {"failures": 0, "open_issues": 0, "datasets_overridden": 0, "carried": []}
     assert all(c == {"accepted": 0, "rejected": 0} for c in res.counts.values())
     assert "0.000000" not in str(m)
 

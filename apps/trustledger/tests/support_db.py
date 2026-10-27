@@ -27,10 +27,13 @@ from data import migrate, seed  # noqa: E402
 
 GOLDEN = ROOT / "tests" / "fixtures" / "golden"
 TRUTH_SQL = (ROOT / "data" / "sql" / "verification_truth.sql").read_text()
-ANALYST = {"X-Actor-Id": "usr-analyst01", "X-Actor-Role": "analyst"}
-STEWARD = {"X-Actor-Id": "usr-steward01", "X-Actor-Role": "steward"}
-STEWARD2 = {"X-Actor-Id": "usr-steward02", "X-Actor-Role": "steward"}
-ADMIN = {"X-Actor-Id": "usr-adm01", "X-Actor-Role": "admin"}
+# The actors are registered owners of the golden register and their role is the register's (D-10 R7-03): own-01 analyst (the proposer of every
+# golden candidate), own-02 and own-03 stewards, own-04 admin, own-05 a steward who is inactive.
+ANALYST = {"X-Actor-Id": "own-01", "X-Actor-Role": "analyst"}
+STEWARD = {"X-Actor-Id": "own-02", "X-Actor-Role": "steward"}
+STEWARD2 = {"X-Actor-Id": "own-03", "X-Actor-Role": "steward"}
+ADMIN = {"X-Actor-Id": "own-04", "X-Actor-Role": "admin"}
+INACTIVE = {"X-Actor-Id": "own-05", "X-Actor-Role": "steward"}
 VARIANTS = ["", "variant-rejected", "variant-empty"]
 
 
@@ -192,6 +195,19 @@ def command(client, name: str, input_: dict[str, Any], key: str | None = None, h
         key = f"key-{os.getpid()}-{_seq['n']}"
     body = {"request_id": request_id, "dataset_version": dataset_version or current_dataset_version(), "idempotency_key": key, "input": input_}
     return client.post(f"{PREFIX}/commands/{name}", json=body, headers=STEWARD if headers is None else headers)
+
+
+def publish_through_review(client, pub: dict[str, Any], reason: str = "reviewed and published", author=None, reviewer=None):
+    """C02 in its three steps (draft, reviewed by someone else, published): returns the response of the last step. Defaults: own-02 drafts and
+    publishes, own-03 reviews (D-10 R7-12)."""
+    author, reviewer = author or STEWARD, reviewer or STEWARD2
+    steps = [("draft", author), ("reviewed", reviewer), ("published", author)]
+    out = None
+    for status, who in steps:
+        out = command(client, "publish-definition", {**pub, "status": status, "reason": reason}, headers=who)
+        if out.status_code != 200:
+            return out
+    return out
 
 
 def rule_ids(response) -> list[str]:

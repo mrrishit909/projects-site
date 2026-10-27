@@ -20,7 +20,7 @@ def test_whole_shape_equals_expected_json_key_by_key(variant):
     exp, got = flat(golden_expected(variant)), flat(run_pipeline(golden_inputs(variant)).golden())
     assert set(exp) == set(got)
     assert [k for k in exp if exp[k] != got[k]] == []
-    assert len(exp) == {"": 391, "variant-rejected": 231, "variant-empty": 96}[variant]       # the number of leaves of each expected.json
+    assert len(exp) == {"": 435, "variant-rejected": 234, "variant-empty": 99}[variant]       # the number of leaves of each expected.json (D-10 added 44, 3 and 3)
 
 
 @pytest.mark.parametrize("variant", VARIANTS)
@@ -55,9 +55,10 @@ def test_uniqueness_both_shares_relationship_nulls_timeliness_and_the_rest(resul
     u = result.metrics["uniqueness"]["r-cust-key-unique"]
     assert (u["group_share"]["value"], u["row_share"]["value"], u["distinct_keys"]) == ("0.010204", "0.020000", 98)
     r = result.metrics["relationship_integrity"]["r-ord-cust-fk"]
-    assert (r["total_fk_count"], r["null_fk_count"], r["eligible_count"], r["matched_count"], r["value"]) == (40, 2, 38, 36, "0.947368")
+    assert (r["total_fk_count"], r["null_fk_count"], r["eligible_count"], r["matched_count"], r["value"]) == (40, 3, 37, 35, "0.945946")     # one empty-string key is missing like the 2 nulls (D-10 R7-11)
+    assert r["empty_fk_count"] == 1
     t = result.metrics["timeliness"]
-    assert (t["on_time_count"], t["monitored_datasets"], t["value"]) == (3, 4, "0.750000")
+    assert (t["on_time_count"], t["monitored_datasets"], t["evaluated_datasets"], t["pending_count"], t["value"]) == (3, 4, 4, 0, "0.750000")
     assert t["datasets"]["ds-shipments"]["on_time"] is False and t["datasets"]["ds-payments"]["on_time"] is True      # 05:00 is not < 05:00
     m = result.metrics
     assert m["ownership_coverage"]["value"] == "0.800000" and m["ownership_coverage"]["uncovered"] == ["ds-shipments"]
@@ -65,7 +66,7 @@ def test_uniqueness_both_shares_relationship_nulls_timeliness_and_the_rest(resul
     assert m["lineage_coverage"]["value"] == "0.833333" and m["lineage_coverage"]["undeclared_observed"] == [
         {"source_dataset_id": "ds-payments", "target_dataset_id": "ds-shipments"}]
     assert m["match_precision"]["precision"] == "0.666667" and m["match_precision"]["reviewed_correct_share"] == "0.500000"
-    assert m["resolution_time"]["mean_hours"] == "38.4444" and m["critical_failures"] == {"failures": 2, "open_issues": 1, "datasets_overridden": 1}
+    assert m["resolution_time"]["mean_hours"] == "38.4444" and m["critical_failures"] == {"failures": 2, "open_issues": 1, "datasets_overridden": 1, "carried": []}
 
 
 def test_the_synthetic_truth_is_a_separate_block_and_only_the_verification_layer_reads_it():

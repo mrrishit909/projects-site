@@ -26,7 +26,7 @@
     }
   },
   "contract_version": "v1",
-  "dataset_hash": "c0dca32f7982f7cc6480feec90795edc76259801307fe59fb4012795c5f0697b",
+  "dataset_hash": "a9f7a3321b102752dd7aa95b76df14c1d9372103e685e10222959fd6438f27ff",
   "dataset_version": "tl-20261026-20261026",
   "designed_relationships": [
     {
@@ -160,7 +160,7 @@
       "statement": "Precision is approved decisions confirmed by the truth over approved decisions (the truth is in the manifest only)."
     }
   ],
-  "generated_at": "2026-10-27T01:58:34Z",
+  "generated_at": "2026-10-27T04:05:57Z",
   "generator": {
     "name": "generate.py",
     "parameters": {
@@ -215,6 +215,7 @@
     "merge_decisions": 235,
     "metric_versions": 45,
     "owners": 18,
+    "quality_rule_versions": 75,
     "quality_rules": 60,
     "rule_runs": 4609,
     "weight_versions": 2
@@ -244,7 +245,7 @@
       "m-session-conversion-rate": "owner_id",
       "m-ticket-resolution-time": "refresh"
     },
-    "entity_file_bytes": 2149440,
+    "entity_file_bytes": 2166748,
     "issues": {
       "by_class": {
         "claimed": 99,

@@ -20,11 +20,11 @@ sys.path.insert(0, str(ROOT / "domain"))
 from trustledger.contract import ENTITIES, METRIC_KEYS  # noqa: E402
 from trustledger.metrics import compute  # noqa: E402
 from trustledger.pipeline import run_pipeline  # noqa: E402
-from trustledger.timeutil import iso_z, local_to_utc, parse_hhmm, parse_ts, scheduled_occurrence  # noqa: E402
+from trustledger.timeutil import iso_z, latest_occurrence, local_to_utc, parse_hhmm, parse_ts, scheduled_occurrence, timeliness_state  # noqa: E402
 
 DATA = ROOT / "web" / "public" / "data"
 manifest = json.loads((DATA / "manifest.json").read_text())
-files = {n: json.loads((DATA / f"{n}.json").read_text())["rows"] for n in [*ENTITIES, "dataset_rows", "weight_versions"]}
+files = {n: json.loads((DATA / f"{n}.json").read_text())["rows"] for n in [*ENTITIES, "dataset_rows", "quality_rule_versions", "weight_versions"]}
 
 inputs = json.loads(json.dumps(manifest["config"]))
 for k in ENTITIES:
@@ -108,6 +108,18 @@ for z in zones:
                 out.append([iso_z(s), iso_z(dl)])
             t += timedelta(minutes=30)
     occ[z] = {"count": len(out), "digest": digest(out)}
+# D-10 R7-01: the latest occurrence STARTED by the instant, and the state of a dataset refreshed at five offsets from it, every 30 minutes around the same days
+lat = {}
+for z in zones:
+    out = []
+    for a, b in WINDOWS:
+        t, end = parse_ts(a), parse_ts(b)
+        while t < end:
+            for lt, g in (("02:30", 60), ("01:30", 30), ("06:00", 120), ("00:00", 0)):
+                s, dl = latest_occurrence(z, lt, g, t)
+                out.append([iso_z(s), iso_z(dl)] + [timeliness_state(z, lt, g, t + timedelta(minutes=k), t)[0] for k in (-1440, -90, -30, 0, 45)])
+            t += timedelta(minutes=30)
+    lat[z] = {"count": len(out), "digest": digest(out)}
 
 ref = {
     "generated_by": "scripts/make-snapshot-reference.py (the Python domain, domain/trustledger)",
@@ -117,10 +129,10 @@ ref = {
     "full_at_as_of": full, "resolution_summary": resolution, "issues_at_as_of": issues_view, "matching_summary": matching_head,
     "identity_map_digest": digest(c0.matching["identity_map"]), "mapping_history_digest": digest(c0.matching["mapping_history"]),
     "rule_runs_at_as_of_digest": digest(c0.rules),
-    "zone_probe": {"zones": zones, "local_times": locals_, "local_to_utc": l2u, "occurrence_windows": WINDOWS, "occurrences": occ},
-    "dataset_hash_check": {"sha256_of_14_entity_files": hashlib.sha256("".join(
+    "zone_probe": {"zones": zones, "local_times": locals_, "local_to_utc": l2u, "occurrence_windows": WINDOWS, "occurrences": occ, "latest_occurrences": lat},
+    "dataset_hash_check": {"sha256_of_15_entity_files": hashlib.sha256("".join(
         json.dumps(files[n], sort_keys=True, separators=(",", ":")) for n in sorted(files)).encode()).hexdigest()},
 }
 (Path(__file__).resolve().parent / "snapshot-reference.json").write_text(json.dumps(ref, sort_keys=True, indent=1) + "\n")
 print("wrote snapshot-reference.json:", len(canon(ref)), "bytes of canonical JSON;", len(asofs), "as-of instants")
-print("dataset_hash check:", ref["dataset_hash_check"]["sha256_of_14_entity_files"] == manifest["dataset_hash"])
+print("dataset_hash check:", ref["dataset_hash_check"]["sha256_of_15_entity_files"] == manifest["dataset_hash"])

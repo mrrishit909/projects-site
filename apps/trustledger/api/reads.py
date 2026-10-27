@@ -31,7 +31,7 @@ from trustledger.matching import matching_block
 from trustledger.metrics import at, compare_runs, compute, restrict
 from trustledger.models import parse
 from trustledger.numbers import p6, ratio
-from trustledger.timeutil import iso_z
+from trustledger.timeutil import iso_z, parse_ts
 
 from . import clock, db
 from .errors import ApiError, detail, from_domain
@@ -55,7 +55,9 @@ ENTITIES: dict[str, EntitySpec] = {s.table: s for s in (
     EntitySpec("owners", ("owner_id",), "deactivated_at", ("role", "active", "team")),
     EntitySpec("datasets", ("dataset_id",), "registered_at", ("owner_id", "source_system", "classification", "monitored")),
     EntitySpec("fields", ("field_id",), None, ("dataset_id",)),
-    EntitySpec("dataset_rows", ("dataset_id", "ordinal"), None, ("dataset_id", "row_id")),
+    EntitySpec("dataset_rows", ("dataset_id", "ordinal"), "recorded_at", ("dataset_id", "row_id", "row_version", "corrected_by")),
+    EntitySpec("dataset_refreshes", ("dataset_id", "refreshed_at"), "refreshed_at", ("dataset_id", "recorded_by")),
+    EntitySpec("quality_rule_versions", ("rule_id", "version_number"), "valid_from", ("rule_id", "rule_type", "severity", "version_number")),
     EntitySpec("quality_rules", ("rule_id",), "disabled_at", ("dataset_id", "rule_type", "severity", "status")),
     EntitySpec("rule_weight_versions", ("weight_version",), "valid_from"),
     EntitySpec("checklist_versions", ("checklist_version",), None),
@@ -74,17 +76,17 @@ ENTITIES: dict[str, EntitySpec] = {s.table: s for s in (
 )}
 
 _BOOL_COLUMNS = frozenset({"active", "monitored"})
-_INT_COLUMNS = frozenset({"rule_version", "ordinal"})
+_INT_COLUMNS = frozenset({"rule_version", "ordinal", "version_number", "row_version", "refreshed_at"})      # ordered as they are (no text collation)
 
 
 def parse_instant(value: str, name: str) -> datetime:
-    """ISO date or datetime; a missing zone means UTC."""
+    """``YYYY-MM-DDTHH:MM:SS[.f]`` with ``Z`` or an offset, as the commands require. A value with no zone (a date, or a time without ``Z`` or an
+    offset) is refused, not read as UTC (D-10 R7-14)."""
     try:
-        d = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        return parse_ts(value)
     except ValueError:
-        raise ApiError(422, "VALIDATION_FAILED", f"{name} is not an ISO-8601 date or datetime",
-                       [detail(name, "INVALID_FILTER", f"{name} must be ISO-8601")]) from None
-    return d.replace(tzinfo=timezone.utc) if d.tzinfo is None else d.astimezone(timezone.utc)
+        raise ApiError(422, "VALIDATION_FAILED", f"{name} must be an ISO-8601 timestamp with seconds and a zone (Z or +hh:mm)",
+                       [detail(name, "TIMESTAMP_INVALID", f"{name} must be YYYY-MM-DDTHH:MM:SSZ or carry an offset; a value with no zone is refused")]) from None
 
 
 def parse_window(lo: str | None, hi: str | None) -> tuple[datetime | None, datetime | None]:
@@ -205,7 +207,7 @@ def read_identity_map(as_of: str | None) -> dict[str, Any]:
     """Which record each source record maps to now, with the mapping history (a reversal restores both identities, the history stays)."""
     when = parse_instant(as_of, "as_of") if as_of else clock.now()
     with db.transaction() as conn:
-        block, _, _ = matching_block(at(db.load_population(conn), when))
+        block, _, _ = matching_block(at(db.load_population(conn, when), when))
         return {"data": block, "meta": meta(conn, {"as_of": iso_z(when)}, block["candidates"], None, _counts(conn)), "warnings": []}
 
 
@@ -215,7 +217,7 @@ def read_metrics(lo: str | None, hi: str | None, as_of: str | None, dataset_id: 
     window = parse_window(lo, hi)
     when = parse_instant(as_of, "as_of") if as_of else clock.now()
     with db.transaction() as conn:
-        pop = db.load_population(conn)
+        pop = db.load_population(conn, when)
         truth = db.load_truth(conn)
         if dataset_id is not None and dataset_id not in {d.dataset_id for d in pop.datasets}:
             raise ApiError(404, "NOT_FOUND", "dataset not found", [detail("dataset_id", "DATASET_UNKNOWN", "dataset not found")])

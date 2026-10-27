@@ -76,6 +76,33 @@ def scheduled_occurrence(tz: str, local_time: str, grace_minutes: int, as_of: da
     raise ValueError("no occurrence found")
 
 
+def latest_occurrence(tz: str, local_time: str, grace_minutes: int, as_of: datetime) -> tuple[datetime, datetime]:
+    """The latest daily occurrence (local ``local_time`` in ``tz``) that has STARTED by ``as_of`` (s <= as_of), and its deadline
+    s + grace. Its window [s, s + grace) may still be open (D-10, R7-01)."""
+    at = parse_hhmm(local_time)
+    d0 = as_of.astimezone(zone(tz)).date()
+    for back in range(-1, 5):
+        s = local_to_utc(d0 - timedelta(days=back), at, tz)
+        if s <= as_of:
+            return s, s + timedelta(minutes=grace_minutes)
+    raise ValueError("no occurrence found")
+
+
+ON_TIME, LATE, PENDING = "on_time", "late", "pending"
+
+
+def timeliness_state(tz: str, local_time: str, grace_minutes: int, last_refresh: datetime | None, as_of: datetime) -> tuple[str, datetime, datetime]:
+    """(state, occurrence, deadline) of a monitored dataset at ``as_of`` (D-10, R7-01).
+
+    on_time  a refresh (not after ``as_of``) exists in [latest occurrence <= as_of, its deadline);
+    pending  otherwise, when that occurrence's deadline has not passed: neither on time nor late, outside the denominator;
+    late     otherwise (the deadline has passed with no refresh in the window; a refresh at the deadline is late)."""
+    s, dl = latest_occurrence(tz, local_time, grace_minutes, as_of)
+    if last_refresh is not None and last_refresh <= as_of and s <= last_refresh < dl:
+        return ON_TIME, s, dl
+    return (PENDING if dl > as_of else LATE), s, dl
+
+
 def hours_between(a: datetime, b: datetime) -> Fraction:
     """Exact hours from ``a`` to ``b`` (integer microseconds, no float)."""
     td = b - a

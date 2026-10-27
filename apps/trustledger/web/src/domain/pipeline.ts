@@ -24,8 +24,10 @@ export function runPipeline(inputs: PipelineInputs, asOf?: string | Instant | nu
 /** The shape of expected.json. */
 export function goldenOf(r: PipelineResult): Row {
   const c = r.computation;
-  return {
+  const out: Row = {
     contract_version: CONTRACT_VERSION, as_of: isoZ(r.asOf), weight_version: c.weight_version, checklist_version: r.population.checklist_version, empty_population: c.empty_population,
     ingest: { counts: r.ingest.counts, rejected_records: rejectedDicts(r.ingest) }, rules: c.rules, metrics: r.metrics, definitions: c.definitions, matching: c.matching,
   };
+  if (Object.keys(c.timeliness_probes).length) out["timeliness_probes"] = c.timeliness_probes; // present only where the inputs state timeliness probes (the golden fixture)
+  return out;
 }

@@ -8,22 +8,25 @@ from fastapi import APIRouter, Depends, FastAPI, Header, Query, Request, Respons
 
 from . import commands, reads
 from .errors import ApiError, detail, install_handlers
-from .schemas import (ApproveMergeRequest, CommandResponse, DisableRuleRequest, Limit, OpenIssueRequest, PublishDefinitionRequest,
-                      ReadResponse, RegisterDatasetRequest, ReverseMergeRequest, RunRuleRequest, SuggestMatchRequest,
-                      TriageIssueRequest, VerifyRemediationRequest)
+from .schemas import (ApproveMergeRequest, CommandResponse, CorrectDatasetRowsRequest, DisableRuleRequest, Limit, OpenIssueRequest,
+                      PublishDefinitionRequest, ReadResponse, RecordRefreshRequest, RegisterDatasetRequest, ReverseMergeRequest,
+                      RunRuleRequest, SuggestMatchRequest, TriageIssueRequest, VerifyRemediationRequest)
 
 PREFIX = "/api/v1/trustledger"
 ROLES = commands.ROLES
 
 
 def require_actor(request: Request, x_actor_id: str | None = Header(default=None), x_actor_role: str | None = Header(default=None)) -> commands.Actor:
-    """Commands need identity: no actor id is 401, a role other than analyst/steward/admin is 403."""
+    """Commands need a registered, active actor (D-10 R7-03). ``X-Actor-Id`` is resolved EXACTLY against the owners register: no id is 401
+    ACTOR_REQUIRED, an id that is not registered is 401 UNKNOWN_ACTOR, an inactive owner is 403 ACTOR_INACTIVE. The role comes from the
+    register; ``X-Actor-Role`` must be one of analyst/steward/admin (else 403 ROLE_FORBIDDEN) and must equal the register's role (else
+    403 ROLE_MISMATCH). Nobody can claim a role they do not hold, and nobody unregistered can decide anything."""
     request.state.request_id = request.headers.get("x-request-id") or f"req-{uuid.uuid4().hex[:16]}"
     if not x_actor_id or not x_actor_id.strip() or len(x_actor_id) > 128:
         raise ApiError(401, "UNAUTHENTICATED", "X-Actor-Id header is required", [detail("header.X-Actor-Id", "ACTOR_REQUIRED", "missing or blank")])
     if x_actor_role not in ROLES:
         raise ApiError(403, "FORBIDDEN", "role must be analyst, steward or admin", [detail("header.X-Actor-Role", "ROLE_FORBIDDEN", "role not permitted for commands")])
-    return commands.Actor(x_actor_id.strip(), x_actor_role)
+    return commands.resolve_actor(x_actor_id, x_actor_role)
 
 
 def actor_for(roles: frozenset[str], name: str):
@@ -67,6 +70,8 @@ def create_app() -> FastAPI:
     command("/commands/reverse-merge", ReverseMergeRequest, commands.reverse_merge, stewards)                 # C08
     command("/commands/disable-rule", DisableRuleRequest, commands.disable_rule, stewards)                    # C09
     command("/commands/verify-remediation", VerifyRemediationRequest, commands.verify_remediation, stewards)  # C10
+    command("/commands/correct-dataset-rows", CorrectDatasetRowsRequest, commands.correct_dataset_rows, everyone)  # C11
+    command("/commands/record-refresh", RecordRefreshRequest, commands.record_refresh, everyone)               # C12
 
     @router.post("/commands/{action}", tags=["commands"], include_in_schema=False)
     def unsupported(action: str, request: Request, actor: commands.Actor = Depends(require_actor)) -> None:

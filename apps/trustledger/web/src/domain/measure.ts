@@ -2,14 +2,17 @@
 // Dimensions are measured on their own denominators and reported separately:
 //   completeness  non-missing / eligible (missing = null or, after trimming, empty)
 //   validity      all-eligible (passing / eligible) and populated-only (passing / populated), both labelled; the score uses populated-only
-//   uniqueness    duplicate-group share (groups / distinct keys) and duplicate-row share (rows beyond the first / eligible); score 1 - row share
-//   relationship  matched / non-null foreign keys; null foreign keys are counted separately, never in the denominator
-//   timeliness    the dataset refreshed inside [occurrence, occurrence + grace) of its local daily schedule
+//   uniqueness    duplicate-group share (groups / distinct keys) and duplicate-row share (rows beyond the first / eligible); null keys are listed apart;
+//                 score (eligible - null-key rows - duplicate rows) / eligible (D-10 R7-05)
+//   relationship  matched / non-missing foreign keys; null, empty and whitespace-only keys (the whitespace policy) are counted separately, never in the
+//                 denominator (D-10 R7-11)
+//   timeliness    a refresh inside [latest occurrence <= as_of, its deadline) of the dataset's local daily schedule; an open occurrence with no refresh
+//                 yet is pending, outside the denominator (D-10 R7-01)
 // A cell is compared as exact text: text as is, true/false, integers in decimal. Nothing here reads a stored result.
 import { stripChars } from "./ingest";
 import { compilePattern, type Dataset, type Population, type Row, type Rule } from "./models";
-import { fr, p6, ratio, sub, type Fr } from "./num";
-import { isoZ, scheduledOccurrence, type Instant } from "./time";
+import { fr, p6, ratio, type Fr } from "./num";
+import { isoZ, timelinessState, type Instant } from "./time";
 
 /** The exact text of a cell value (null stays null). */
 export function cellText(v: unknown): string | null {
@@ -52,13 +55,13 @@ export function eligibleRows(rule: Rule, rows: Row[]): Row[] {
   return rows.filter((r) => cellText(r[f["field"]]) === f["equals"]);
 }
 
-/** The evaluated occurrence of a monitored dataset and whether its last refresh fell inside [occurrence, deadline). */
+/** The state of a monitored dataset at asOf: on_time, late or pending (D-10 R7-01), with the occurrence it was judged on. `on_time` is null while pending. */
 export function timelinessOf(ds: Dataset, asOf: Instant): Row | null {
   if (!ds.monitored) return null;
-  const [s, dl] = scheduledOccurrence(ds.refresh_timezone!, ds.refresh_local_time!, ds.refresh_grace_minutes!, asOf);
-  const last = ds.last_refreshed_at;
-  return { timezone: ds.refresh_timezone, scheduled_local: ds.refresh_local_time, grace_minutes: ds.refresh_grace_minutes, evaluated_occurrence_utc: isoZ(s), deadline_utc: isoZ(dl),
-    last_refreshed_at: isoZ(last), on_time: last !== null && s <= last && last < dl };
+  const last = ds.last_refreshed_at !== null && ds.last_refreshed_at <= asOf ? ds.last_refreshed_at : null; // a later refresh has not happened yet
+  const { state, start, deadline } = timelinessState(ds.refresh_timezone!, ds.refresh_local_time!, ds.refresh_grace_minutes!, last, asOf);
+  return { timezone: ds.refresh_timezone, scheduled_local: ds.refresh_local_time, grace_minutes: ds.refresh_grace_minutes, evaluated_occurrence_utc: isoZ(start), deadline_utc: isoZ(deadline),
+    last_refreshed_at: isoZ(last), state, on_time: state === "pending" ? null : state === "on_time" };
 }
 
 export function measureRule(rule: Rule, pop: Population, asOf: Instant): Measure {
@@ -69,6 +72,7 @@ export function measureRule(rule: Rule, pop: Population, asOf: Instant): Measure
   if (t === "timeliness") {
     const tl = timelinessOf(ds, asOf);
     if (!tl) return { rule, eligible: 0, failures: 0, value: null, block: {}, run_extra: {}, failing: [] };
+    if (tl["state"] === "pending") return { rule, eligible: 0, failures: 0, value: null, block: tl, run_extra: {}, failing: [] }; // an open occurrence with no refresh yet is not measured
     const late = !tl["on_time"];
     return { rule, eligible: 1, failures: late ? 1 : 0, value: fr(late ? 0 : 1), block: tl, run_extra: {}, failing: late ? [rule.dataset_id] : [] };
   }
@@ -106,9 +110,10 @@ export function measureRule(rule: Rule, pop: Population, asOf: Instant): Measure
     });
     const groups = [...freq.values()].filter((c) => c > 1).length;
     const rowshare = ratio(dup.length, el);
-    const block = { dataset_id: rule.dataset_id, eligible_count: el, null_key_count: nulls.length, distinct_keys: freq.size, duplicate_groups: groups, duplicate_rows: dup.length,
+    const score = ratio(el - nulls.length - dup.length, el); // null-key rows fail too (D-10 R7-05)
+    const block = { dataset_id: rule.dataset_id, eligible_count: el, null_key_count: nulls.length, null_key_row_ids: nulls.map((i) => ids[i]!), distinct_keys: freq.size, duplicate_groups: groups, duplicate_rows: dup.length,
       group_share: { label: "duplicate_group_share", value: p6(ratio(groups, freq.size)) }, row_share: { label: "duplicate_row_share", value: p6(rowshare) } };
-    return { rule, eligible: el, failures: nulls.length + dup.length, value: rowshare === null ? null : sub(fr(1), rowshare), block, run_extra: {},
+    return { rule, eligible: el, failures: nulls.length + dup.length, value: score, block, run_extra: {},
       failing: [...nulls, ...dup].sort((a, b) => a - b).map((i) => ids[i]!) };
   }
   // relationship: null foreign keys are excluded from the denominator and counted separately
@@ -122,6 +127,7 @@ export function measureRule(rule: Rule, pop: Population, asOf: Instant): Measure
   const mset = new Set(matched);
   const elig = present.length;
   const val = ratio(matched.length, elig);
-  const block = { dataset_id: rule.dataset_id, total_fk_count: el, null_fk_count: nullSet.size, eligible_count: elig, matched_count: matched.length, unmatched_count: elig - matched.length, value: p6(val) };
+  const emptyText = [...nullSet].filter((i) => typeof vals[i] === "string").length; // text that is empty after trimming: missing like a null (D-10 R7-11)
+  const block = { dataset_id: rule.dataset_id, total_fk_count: el, null_fk_count: nullSet.size, empty_fk_count: emptyText, eligible_count: elig, matched_count: matched.length, unmatched_count: elig - matched.length, value: p6(val) };
   return { rule, eligible: elig, failures: elig - matched.length, value: val, block, run_extra: { null_fk_count: nullSet.size }, failing: present.filter((i) => !mset.has(i)).map((i) => ids[i]!) };
 }

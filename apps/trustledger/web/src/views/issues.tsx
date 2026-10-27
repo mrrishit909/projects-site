@@ -2,6 +2,7 @@ import { Chip, Choice, Def, Fig, Pager, Scroll, SimNote, usePage, ViewHead, With
 import type { Dataset } from "../data/dataset";
 import type { IssueView } from "../domain/issues";
 import { verificationProblem } from "../domain/issues";
+import { measureRule } from "../domain/measure";
 import { cmp } from "../domain/models";
 import { h4 } from "../domain/num";
 import { isoZ } from "../domain/time";
@@ -14,17 +15,19 @@ const sevChip = (s: string) => (s === "critical" ? <Chip kind="crit">critical</C
 const clsChip = (c: string) => (c === "resolved" ? <Chip kind="ok">resolved</Chip> : c === "claimed" ? <Chip kind="hatch">claimed</Chip> : <Chip kind="note">open</Chip>);
 const days = (h: IssueView["hours"]): string => String(Number(h.n / (h.d * 24n)));
 
-/** A rerun here re-measures the rule over the published rows at the as-of; it is not stored. Seeded issues carry no record ids, so the whole rule is rerun (D-08). */
+/** A rerun here re-measures the rule over the published rows at the as-of; it is not stored. Seeded issues carry no record ids, so the whole rule is rerun (D-08).
+ * Like C10 it also reruns a DISABLED rule (disabling is not repair, and only a passing rerun resolves; D-10 R7-02): the rule is measured from its own definition. */
 function simulateRerun(ds: Dataset, v: IssueView): Omit<SimIssue, "n" | "issue_id" | "action"> {
-  const m = ds.now.measures.find((x) => x.rule.rule_id === v.rule.rule_id);
   const disabled = v.rule.rule_id in (ds.now.rules["disabled"] as Record<string, unknown>);
+  const why = disabled ? " The rule is disabled; disabling is not repair, so only a passing rerun would resolve it." : "";
   if (v.cls === "resolved") return { outcome: "resolved", code: null, note: "Already resolved: a verifying rerun is on record. Nothing changes." };
-  if (disabled) return { outcome: "claimed", code: "RULE_DISABLED", note: "The rule is disabled. Disabling a rule is not repair, so the issue is not verified and stays claimed or open." };
+  if (v.rule.version_number !== v.base.rule_version) return { outcome: "claimed", code: "RULE_VERSION_DIFFERS", note: `The issue was opened by rule v${v.base.rule_version}; the rule is now v${v.rule.version_number}. A rerun must be the same rule version to verify, so it is not verified.${why}` };
+  if (v.rule.rule_type === "validity" && !v.rule.definition["pattern"]) return { outcome: "claimed", code: "RULE_NOT_MEASURABLE", note: `The rule has no pattern, so there is nothing to rerun and the issue is not verified.${why}` };
+  const m = disabled ? measureRule(v.rule, ds.result.population, ds.asOf) : ds.now.measures.find((x) => x.rule.rule_id === v.rule.rule_id);
   if (!m) return { outcome: "claimed", code: "NO_RECORDS_TO_CHECK", note: "The rule is not measured at the as-of, so there is nothing to verify." };
-  if (v.rule.version_number !== v.base.rule_version) return { outcome: "claimed", code: "RULE_VERSION_DIFFERS", note: `The issue was opened by rule v${v.base.rule_version}; the rule is now v${v.rule.version_number}. A rerun must be the same rule version to verify, so it is not verified.` };
-  if (m.eligible === 0) return { outcome: "claimed", code: "NO_RECORDS_TO_CHECK", note: "The rule has no eligible records." };
-  if (m.failures > 0) return { outcome: "claimed", code: "RERUN_STILL_FAILING", note: `The rerun still fails on ${m.failures} of ${m.eligible} eligible records, so the issue is not verified and stays claimed.` };
-  return { outcome: "resolved", code: null, note: `The rerun of v${v.rule.version_number} fails on 0 of ${m.eligible} records: a successful rerun of the same rule version would verify the issue and it would count as resolved.` };
+  if (m.eligible === 0) return { outcome: "claimed", code: "NO_RECORDS_TO_CHECK", note: `The rule has no eligible records.${why}` };
+  if (m.failures > 0) return { outcome: "claimed", code: "RERUN_STILL_FAILING", note: `The rerun still fails on ${m.failures} of ${m.eligible} eligible records, so the issue is not verified and stays claimed.${why}` };
+  return { outcome: "resolved", code: null, note: `The rerun of v${v.rule.version_number} fails on 0 of ${m.eligible} records: a successful rerun of the same rule version would verify the issue and it would count as resolved.${why}` };
 }
 
 function Summary({ ds, views, log }: { ds: Dataset; views: IssueView[]; log: readonly SimIssue[] }) {
@@ -157,7 +160,9 @@ function Workbench({ ds, views, log }: { ds: Dataset; views: IssueView[]; log: r
             <button type="button" className="button--quiet" onClick={() => run("rerun")}>Simulate: rerun the same rule version</button>
             <button type="button" className="button--quiet" onClick={() => run("reopen")}>Simulate: reopen</button>
           </div>
-          {mine.length > 0 && <ul className="sim-log" data-testid="sim-log">{mine.map((e) => <li key={e.n} data-outcome={e.outcome}><strong>{e.action}</strong> → {e.outcome}{e.code ? <> <span className="mono">{e.code}</span></> : ""}: {e.note}</li>)}</ul>}
+          <div role="status" aria-live="polite" data-testid="sim-status">
+            {mine.length > 0 && <ul className="sim-log" data-testid="sim-log">{mine.map((e) => <li key={e.n} data-outcome={e.outcome}><strong>{e.action}</strong> → {e.outcome}{e.code ? <> <span className="mono">{e.code}</span></> : ""}: {e.note}</li>)}</ul>}
+          </div>
         </div>
       )}
     </section>

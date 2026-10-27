@@ -1,4 +1,4 @@
-# TrustLedger — business contracts, version 1 (2026-10-27)
+# TrustLedger — business contracts, version 1 (2026-10-27; D-10 review fixes 2026-10-27)
 
 Decision owner: coordinator (Fable 5.1). Spec: `projects/07-trustledger.md`, SHA-256 `3a4ec15b…` at pack commit
 `fe5f7981` (verified against `docs/program/source-pack.json`). Rules cite the requirement they satisfy; changing one
@@ -67,7 +67,9 @@ truth lives only in verification fixtures, never in the matcher (P07-DOMAIN-03);
   from the synthetic truth held in the verification fixture, outside the matcher (P07-MET-11, P07-DOMAIN-03).
 
 ## D-05 Numbers, time and absence
-Proportions are decimal strings with 6 places in [0,1]; counts nonnegative integers; hours 4 dp; null means unknown or
+Proportions are decimal strings with 6 places in [0,1] (the spec's "Output unit: percent", P07-MET-01..05-R03 and P07-MET-09..12-R03, is the same figure
+times 100, shown as a percent where a page says percent; P07-MET-06-R03 "score/100" is the weighted score on the same [0,1] scale, P07-MET-07-R03 "failures" a
+count and P07-MET-08-R03 "hours" a 4 dp figure; D-10 R7-12); counts nonnegative integers; hours 4 dp; null means unknown or
 zero denominator, never 0. Instants are UTC with `Z`; schedules use the dataset's IANA timezone. Windows are half-open
 [from, to) on the stated timestamp. Empty population: every count 0, every ratio null, `empty_population` true.
 
@@ -127,8 +129,7 @@ MATCH_TRUTH_UNAVAILABLE); any decided record without a truth row gives null, nev
 MALFORMED_RECORD, DUPLICATE_ID, SCHEDULE_REQUIRED, INVALID_COUNTS, ALREADY_REVIEWED, INVALID_REVERSAL, ALREADY_REVERSED,
 VERIFICATION_RUN_INVALID, UNKNOWN_OWNER. group_by returns the 10 scoped metrics per group; definition coverage and
 precision are portfolio-wide. `quality_rules` holds one current row per rule; no command creates or versions rules.
-Known: SQL uses PostgreSQL regexes and tz data while the domain uses Python `re` and system tzdata (patterns stay in the
-common subset); reads load the whole population per request.
+Known: SQL uses PostgreSQL regexes and tz data while the domain uses Python `re` and system tzdata (patterns avoid `\s \d \w \b`, which the ingest refuses: D-10 R7-04); reads load the whole population per request.
 
 ## D-08 Synthetic world and the observed-edge rule (2026-10-27, adopted from A-055)
 Seed 20261026, daily runs 2026-07-13..2026-10-04, `as_of` 2026-10-05T00:00:00Z; 40 datasets across 6 source
@@ -154,7 +155,7 @@ reference script and the database check `edges_evidence_ck`.
 1. Small muted text uses `#5a5e57` (AA on `#f4efe4`); the brief's `#6b6f68` stays a token only. Vermilion marks only critical
    severity and the critical override; claimed, inactive and late use hatched or outlined chips. System font stacks, nothing fetched.
 2. Rule patterns are JavaScript RegExp in the browser and Python `re` in the reference; both refuse a trailing newline under `$`.
-   A pattern outside the common subset could differ and the evidence page says so.
+   A pattern using `\s \d \w \b` is refused at ingest and the evidence page says what is and is not assured (D-10 R7-04, R7-13).
 3. Time zones use the browser's Intl database (`hourCycle` h23): a local time that occurs twice resolves to the later instant, a
    time that does not exist uses the offset before the change. The golden check probes UTC instants in the seven zones over all of
    2026 and every 30 minutes around both DST transitions against Python digests.
@@ -163,8 +164,67 @@ reference script and the database check `edges_evidence_ck`.
 6. The manifest's `synthetic_truth` enters only the precision step (verification layer), never the inputs; precision appears on
    `/merges/` and `/evidence/` labelled as such.
 7. The simulated rerun on the issue workbench re-measures the whole rule over the published rows (seeded issues carry no record ids);
-   not-verified outcomes carry RULE_DISABLED, RULE_VERSION_DIFFERS, NO_RECORDS_TO_CHECK or RERUN_STILL_FAILING.
+   not-verified outcomes carry RULE_VERSION_DIFFERS, RULE_NOT_MEASURABLE, NO_RECORDS_TO_CHECK or RERUN_STILL_FAILING; a disabled rule is rerun like an active one
+   (D-10 R7-02), and the note says it is disabled.
 8. Impact: a metric's source field `orders.amount` reads dataset `ds-orders`; downstream follows declared edges only; the page lists
    what a change reaches and says it does not predict movement. The glossary holds successive versions, not rival concurrent definitions.
 9. The weight-shift column and the DR-03 figures use exact fractions (last version minus first). Paging and filters live in the URL.
-10. `scripts/review-check.ts` holds 25 hand-worked adversarial worlds and runs inside `npm run check`.
+10. `scripts/review-check.ts` holds hand-worked adversarial worlds (25 checks, 58 after D-10) and runs inside `npm run check`.
+
+## D-10 Review fixes (adopted from review R7)
+Adopted 2026-10-27 from the reviewer's reproductions (R7). The domain (`domain/trustledger/`), the SQL reference (`data/sql/reference_metrics.sql`, migration
+`0003_review_r7.sql`), the TypeScript mirror (`web/src/domain/`) and the independent `tests/reference_check.py` carry each rule; the golden fixture changed only where
+stated. One bullet per item, with the alternative that was rejected where there is one.
+* **R7-01 Timeliness at `as_of`.** A dataset is on time at `as_of` when a refresh (not after `as_of`) exists in [latest occurrence <= `as_of`, its deadline). Otherwise,
+  if that occurrence's deadline has not passed, it is **pending**: neither on time nor late, outside the timeliness denominator, counted in `pending_count`
+  (`evaluated_datasets` is the denominator); once the deadline has passed with no refresh in the window it is late (a refresh at the deadline is late). A pending
+  dataset's timeliness rule has eligible 0 and is not scored. Pinned in the golden fixture by `probes.timeliness` / `timeliness_probes` (the reviewer's case: ds-customers
+  refreshed 10:10Z, `as_of` 10:30Z, on time; the clocks-back case: a refresh at 05:45Z when the repeated 01:30 in New York resolves to 06:30Z is **late**, a refresh at
+  06:45Z on time). *Rejected:* judging only the latest occurrence whose grace has closed (a dataset refreshed 20 minutes into its open window was reported late);
+  treating a pending occurrence as late (punishes a window still open) or as on time (credits a refresh that has not happened).
+* **R7-02 Disabled critical rules.** A critical rule disabled while its latest run (a rerun counts) fails keeps counting that run's failures in `critical_failures`, and the
+  override, until a verified rerun passes; the list is `critical_failures.carried`. Disabling never clears a live failure. C10 therefore reruns a disabled rule's issue
+  (it no longer answers RULE_DISABLED without a rerun; a validity rule with no pattern answers RULE_NOT_MEASURABLE) and a passing rerun resolves the issue and clears
+  the carried failure. *Rejected:* letting the failure vanish with the rule (the defect), and carrying it for ever (a verified rerun must be able to clear it).
+* **R7-03 Identity.** The backend resolves `X-Actor-Id` against `owners` (exact id: 401 UNKNOWN_ACTOR when it is not registered, no case folding or trimming; 403
+  ACTOR_INACTIVE when the owner is inactive). The role is the register's: `X-Actor-Role` must be one of analyst/steward/admin (403 ROLE_FORBIDDEN) and equal the
+  register's role (403 ROLE_MISMATCH). A proposer cannot approve or reverse their own candidate (409 SELF_REVIEW, audited); the same holds for a definition drafted and
+  reviewed by one person (C02). Mode B applies the same rule in its browser simulation (inactive, role, self-review, one decision), with the same codes. The
+  domain and database keep REVIEWER_IS_PROPOSER for stored data. *Rejected:* trusting the role header (any caller could claim steward) and a 403 for self-review
+  (it is a state conflict with the candidate, so 409).
+* **R7-04 Portable patterns.** A pattern is portable only if it avoids `\s \d \w \b` and their negations (an escaped backslash is fine). A rule whose pattern uses them is
+  rejected at ingest `PATTERN_NOT_PORTABLE` in Python, TypeScript and the reference, and by a database check; the fixture and generator patterns use explicit classes
+  (`[ \t\r\n\f\v]`, `[0-9]`). Five characters the engines disagreed about (U+00A0, U+FEFF, U+0085, U+2028, U+001C) are ordinary characters for the explicit class, and all
+  three implementations are shown to agree. *Rejected:* keeping "the common subset" as a promise in documentation and translating the classes per engine.
+* **R7-05 Uniqueness.** score = (eligible - null-key rows - duplicate rows) / eligible; null-key rows are counted (`null_key_count`) and listed (`null_key_row_ids`)
+  apart. The golden has no null key, so its figure stays 0.980000 by rows; a null-key probe (cust-001's key null: 0.970000) is in the review checks and CALCULATION.md.
+  *Rejected:* the old 1 - duplicate-row share (a null key lowered nothing).
+* **R7-06 Self-edges.** A lineage edge with source = target is MALFORMED_RECORD in the domain, the TypeScript ingest and the reference (the database check already
+  refused it); the seeder never aborts on one.
+* **R7-07 Correcting data without SQL.** C11 `correct-dataset-rows` (analyst, steward, admin) is append-only: each correction is a new row version (`row_version`,
+  `supersedes_row_id` = `<row_id>@<previous version>`, `reason`, the actor, the server's instant); nothing is edited and every earlier run and earlier `as_of` read stays as
+  it was; measurement and C03/C10 use the latest version of each record recorded by their instant. C12 `record-refresh` (all roles) appends a refresh to
+  `dataset_refreshes`; a dataset's last refresh at an instant is the latest of the loaded value and the recorded ones not after it. The tests no longer UPDATE `datasets`
+  (C12) and resolve a completeness issue through C11 then C10 with no SQL outside the application. *Rejected:* putting the refresh inside C11 (a refresh is not a
+  correction of rows) and an UPDATE-in-place of rows (it would rewrite history).
+* **R7-11 Empty foreign keys.** An empty-string or whitespace-only foreign key is missing under the `trim_empty_is_missing` policy and is counted with the nulls
+  (`null_fk_count`, with `empty_fk_count` for the text ones); the site labels the column "null or empty (whitespace policy)". Pinned in the golden: ord-036's key is
+  `""` (relationship 35/37 = 0.945946, ds-orders 0.967568 under w2 and 0.972973 under w1; hand arithmetic in CALCULATION.md).
+* **R7-12 Citations, review state, rule versions.** D-05's choice of 6-place proportions cites P07-MET-xx-R03 (the spec's output units; see D-05). Definition versions
+  gain the state `reviewed` between `draft` and `published` (P07-FLOW-02-R02): C02 steps draft -> reviewed -> published, each a new version row with the content
+  unchanged, the reviewer not the author (409 INVALID_TRANSITION, CONTENT_CHANGED, SELF_REVIEW); only published versions count; the glossary shows the state and the order.
+  An append-only `quality_rule_versions` table carries the definition of every rule version (the generator states the earlier ones), so an earlier version's denominator
+  is readable (`GET /data/quality_rule_versions?rule_id=`); the rule's own row is its current version. *Rejected:* calling the steward's publication "the review" (the
+  contract names three states) and rewriting a rule's definition in place.
+* **R7-13 Evidence page.** The limits no longer promise "the common subset": they say patterns are three engines' regular expressions, that non-portable escapes are
+  refused, that no assurance is given beyond the patterns in the data, and name the four zones with daylight-saving time (America/New_York, America/Chicago,
+  Europe/London, Europe/Berlin) and the three without (UTC, Asia/Kolkata, Asia/Singapore).
+* **R7-14 Naive instants on reads.** Reads (`from`, `to`, `as_of`) refuse an instant with no zone, a date included, with 422 TIMESTAMP_INVALID, like commands.
+  *Rejected:* reading a naive value as UTC (a silent choice of zone).
+* **R7-15 CI skips.** The pytest step runs with `-ra` and a following step fails unless the junit file says `skipped="0"` (and has tests), so a silent skip cannot pass CI.
+* **R7-16 Canonical order.** The TypeScript mirror compares strings by code point (`cmp`, with a test on the reviewer's pair rec-U+FF21 / rec-U+1F600), as Python and
+  PostgreSQL (`COLLATE "C"`) do; UTF-16 order would reverse that pair and disagree on which orientation is canonical.
+* **R7-17 Accessibility.** `/issues/` and `/duplicates/` have `role="status"` live regions that exist before the first action; Escape clears the lineage isolation
+  and `aria-pressed`.
+* **R7-18 Shift footnote.** The scorecard says the shift column uses the exact fractions, so it can differ from the difference of the rounded scores by 0.000001.
+* **R7-20, R7-09, R7-10** are case-study wording the coordinator fixed in `project.json`; nothing here changes it.

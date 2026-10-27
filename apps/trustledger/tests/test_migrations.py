@@ -6,7 +6,7 @@ from data import migrate, seed
 
 from support_db import conn, count, db_url, golden_inputs, load  # noqa: F401
 
-FILES = ["0001_schema.sql", "0002_constraints.sql"]
+FILES = ["0001_schema.sql", "0002_constraints.sql", "0003_review_r7.sql"]
 TABLES = ["owners", "datasets", "fields", "dataset_rows", "quality_rules", "rule_weight_versions", "checklist_versions", "ledger_config", "rule_runs", "issues",
           "issue_events", "lineage_edges", "metric_versions", "definition_changes", "customer_records", "match_candidates", "merge_decisions", "rejected_records",
           "audit_events", "command_results", "dataset_versions", "tl_timezones"]

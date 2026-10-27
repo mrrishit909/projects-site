@@ -8,11 +8,10 @@ import pytest
 
 from api import clock
 from api import commands as cmds
-from support_db import (ADMIN, ANALYST, STEWARD, STEWARD2, client, command, conn, count, current_dataset_version, db_url, get, golden_inputs,  # noqa: F401
+from support_db import (ADMIN, ANALYST, STEWARD, STEWARD2, client, command, conn, count, current_dataset_version, db_url, get, golden_inputs, publish_through_review,  # noqa: F401
                         load, metrics, rule_ids, table_digest)
 
 AS_OF = datetime(2026, 10, 5, 0, 0, 0, tzinfo=timezone.utc)
-OWN01 = {"X-Actor-Id": "own-01", "X-Actor-Role": "steward"}
 
 
 @pytest.fixture
@@ -31,7 +30,7 @@ def test_01_a_score_above_95_never_hides_a_critical_key_failure(lab):
     ws = m["weighted_score"]["datasets"]["ds-customers"]
     assert float(ws["value"]) > 0.95                                                       # (test arithmetic only: the API never returns a float)
     assert ws["critical_override"] is True and ws["critical_failures"] == 2 and ws["critical_open_issues"] == 1
-    assert m["critical_failures"] == {"failures": 2, "open_issues": 1, "datasets_overridden": 1}
+    assert m["critical_failures"] == {"failures": 2, "open_issues": 1, "datasets_overridden": 1, "carried": []}
     for wv in ("w1", "w2"):                                                                # whatever the weights, the override stays
         again = metrics(lab, as_of="2026-10-05T00:00:00Z", weight_version=wv)["data"]["metrics"]["weighted_score"]["datasets"]["ds-customers"]
         assert again["critical_override"] is True and float(again["value"]) > 0.95
@@ -46,8 +45,10 @@ def test_02_disabling_a_rule_retains_its_runs_and_issues_and_it_is_not_repair(la
     assert command(lab, "disable-rule", {"rule_id": "r-cust-key-unique", "reason": "noise"}).status_code == 200
     assert table_digest(conn, ["rule_runs", "issues"]) == before                            # not a row of history changed
     m = snapshot(lab)
-    assert m["critical_failures"] == {"failures": 0, "open_issues": 1, "datasets_overridden": 1}      # the failure is gone with the rule, the open issue is not
-    assert m["weighted_score"]["datasets"]["ds-customers"]["critical_override"] is True
+    # D-10 R7-02: disabling is not repair. The failure of the rule's latest run (rr-003, 2 rows) is carried with the override, beside the open issue
+    assert m["critical_failures"] == {"failures": 2, "open_issues": 1, "datasets_overridden": 1,
+                                      "carried": [{"dataset_id": "ds-customers", "rule_id": "r-cust-key-unique", "rule_run_id": "rr-003", "failure_count": 2}]}
+    assert m["weighted_score"]["datasets"]["ds-customers"]["critical_override"] is True and m["weighted_score"]["datasets"]["ds-customers"]["critical_failures"] == 2
     assert {i["issue_id"]: i["class"] for i in get(lab, "/data/issues").json()["data"]}["iss-006"] == "open"
     assert [r["rule_run_id"] for r in get(lab, "/data/rule_runs", rule_id="r-ord-amount-range").json()["data"]] == ["rr-004", "rr-005"]    # an older disabled rule
     with pytest.raises(psycopg.errors.IntegrityError):
@@ -67,16 +68,16 @@ def test_03_a_pair_sharing_name_and_address_is_never_merged_automatically(lab, c
     assert m["rec-011"] == "rec-011"
     cid = r.json()["result"]["candidate_id"]
     assert command(lab, "approve-merge", {"candidate_id": cid}, headers=ANALYST).status_code == 403    # only a human steward decides, never the proposer
-    assert command(lab, "approve-merge", {"candidate_id": cid}, headers={"X-Actor-Id": "usr-analyst01", "X-Actor-Role": "steward"}).status_code == 403
+    assert command(lab, "approve-merge", {"candidate_id": cid}, headers={"X-Actor-Id": "own-01", "X-Actor-Role": "steward"}).status_code == 403
     assert command(lab, "approve-merge", {"candidate_id": cid}, headers=STEWARD).status_code == 200
 
 
 def test_04_null_foreign_keys_are_counted_separately_never_dropped(lab):
     r = snapshot(lab)["relationship_integrity"]["r-ord-cust-fk"]
-    assert (r["total_fk_count"], r["null_fk_count"], r["eligible_count"], r["matched_count"], r["value"]) == (40, 2, 38, 36, "0.947368")
+    assert (r["total_fk_count"], r["null_fk_count"], r["eligible_count"], r["matched_count"], r["value"]) == (40, 3, 37, 35, "0.945946")     # 2 nulls and 1 empty string are missing: counted apart
     run = command(lab, "run-rule", {"rule_id": "r-ord-cust-fk"}).json()["result"]
-    assert (run["eligible_count"], run["null_fk_count"], run["failure_count"]) == (38, 2, 2)            # the run says it too, and 36/40 or 38/40 would be wrong
-    assert r["value"] not in ("0.900000", "0.950000")
+    assert (run["eligible_count"], run["null_fk_count"], run["failure_count"]) == (37, 3, 2)            # the run says it too, and 35/40 or 37/40 would be wrong
+    assert r["value"] not in ("0.875000", "0.925000")
 
 
 def test_05_a_weight_change_without_a_new_version_is_refused(lab, conn):
@@ -147,7 +148,8 @@ def test_09_an_issue_closed_without_a_rerun_stays_claimed(lab, conn):
         conn.execute("UPDATE issues SET verification_run_id = 'rr-007' WHERE issue_id = 'iss-004'")   # a rerun of another issue and rule
     # disabling the rule (iss-004's rule is already disabled) is not repair: verification is refused as not verified
     claimed = command(lab, "verify-remediation", {"issue_id": "iss-004"})
-    assert claimed.status_code == 200 and claimed.json()["result"]["reasons"] == ["RULE_DISABLED"] and claimed.json()["status"] == "claimed"
+    assert claimed.status_code == 200 and claimed.json()["result"]["reasons"] == ["RULE_NOT_MEASURABLE"] and claimed.json()["status"] == "claimed"
+    assert claimed.json()["result"]["rule_disabled"] is True and claimed.json()["result"]["rerun_run_id"] is None      # a pattern-less rule has nothing to rerun
     assert snapshot(lab)["resolution_time"]["issues"]["iss-004"]["class"] == "claimed"
 
 
@@ -167,18 +169,18 @@ def test_10_the_duplicate_pair_is_refused_both_ways(lab, conn):
 def test_11_a_published_definition_is_never_rewritten_in_place(lab, conn):
     before = table_digest(conn, ["metric_versions", "definition_changes"])
     r = command(lab, "publish-definition", {"metric_id": "m-revenue", "metric_name": "Net revenue", "definition": "rewritten", "grain": "order", "source_fields": ["x"],
-                                            "owner_id": "own-04", "refresh": "daily", "reason": "edit", "metric_version_id": "mv-rev-1"})
+                                            "owner_id": "own-04", "refresh": "daily", "reason": "edit", "metric_version_id": "mv-rev-1", "status": "draft"})
     assert r.status_code == 409 and rule_ids(r) == ["DEFINITION_IMMUTABLE"]
     assert table_digest(conn, ["metric_versions", "definition_changes"]) == before
     for sql in ("UPDATE metric_versions SET definition = 'x' WHERE metric_version_id = 'mv-rev-2'", "DELETE FROM metric_versions WHERE metric_version_id = 'mv-rev-1'",
                 "UPDATE definition_changes SET reason = 'x'"):
         with pytest.raises(psycopg.errors.IntegrityError):
             conn.execute(sql)
-    ok = command(lab, "publish-definition", {"metric_id": "m-revenue", "metric_name": "Net revenue", "definition": "net of refunds and chargebacks", "grain": "order",
-                                             "source_fields": ["orders.amount"], "owner_id": "own-04", "refresh": "daily", "reason": "chargebacks are netted"})
-    assert ok.status_code == 200 and ok.json()["result"]["version_number"] == 3
+    ok = publish_through_review(lab, {"metric_id": "m-revenue", "metric_name": "Net revenue", "definition": "net of refunds and chargebacks", "grain": "order",
+                                      "source_fields": ["orders.amount"], "owner_id": "own-04", "refresh": "daily"}, reason="chargebacks are netted")
+    assert ok.status_code == 200 and ok.json()["result"]["version_number"] == 5          # v3 draft, v4 reviewed, v5 published (the golden m-revenue has 2 versions)
     d = metrics(lab, as_of="2026-10-06T00:00:00Z")["data"]["definitions"]
-    assert d["version_counts"]["m-revenue"] == 3 and d["effective_at_as_of"]["m-revenue"] == "mv-m-revenue-3" and d["effective_at_probe"]["m-revenue"] == "mv-rev-1"
+    assert d["version_counts"]["m-revenue"] == 5 and d["effective_at_as_of"]["m-revenue"] == "mv-m-revenue-5" and d["effective_at_probe"]["m-revenue"] == "mv-rev-1"
     assert d["versions_without_change_record"] == [] and d["changes_with_mismatched_valid_from"] == []
 
 
@@ -191,7 +193,7 @@ def test_12_a_denominator_change_is_flagged_as_not_comparable(lab):
     assert runs["r-cust-valid-email"]["current_rule_version"] == 2
     # the same rule at the same version stays comparable even though its null foreign keys shrank the denominator (documented: null FKs are excluded in both)
     fk = command(lab, "run-rule", {"rule_id": "r-ord-cust-fk"}).json()["result"]["comparison"]
-    assert fk["comparable"] is True and (fk["previous_eligible_count"], fk["current_eligible_count"]) == (36, 38)
+    assert fk["comparable"] is True and (fk["previous_eligible_count"], fk["current_eligible_count"]) == (36, 37)
     assert metrics(lab, as_of="2026-10-05T00:00:00Z")["data"]["rules"]["comparisons"]["r-cust-valid-email"]["comparable"] is False
 
 
@@ -256,7 +258,7 @@ def test_two_verifications_and_two_suggestions_race_to_one_result(lab, conn):
     iid = command(lab, "open-issue", {"rule_run_id": run, "owner_id": "own-02"}).json()["result"]["issue_id"]
     command(lab, "triage-issue", {"issue_id": iid, "action": "claim"})
     clock.freeze(AS_OF + timedelta(hours=12))
-    conn.execute("UPDATE datasets SET last_refreshed_at = '2026-10-05T04:30:00Z' WHERE dataset_id = 'ds-shipments'")
+    assert command(lab, "record-refresh", {"dataset_id": "ds-shipments", "refreshed_at": "2026-10-05T04:30:00Z"}, headers=ANALYST).status_code == 200
     out = _race(lambda i: command(_client(), "verify-remediation", {"issue_id": iid}, key=f"v-{i}", headers=(STEWARD, STEWARD2)[i]))
     assert sorted(r.status_code for r in out) == [200, 409], [r.text for r in out]
     assert count(conn, "rule_runs", f"kind = 'rerun' AND rerun_for_issue = '{iid}'") == 1
@@ -268,7 +270,7 @@ def test_two_verifications_and_two_suggestions_race_to_one_result(lab, conn):
 
 def test_the_same_idempotency_key_raced_executes_once(lab, conn):
     out = _race(lambda i: command(_client(), "run-rule", {"rule_id": "r-cust-fresh"}, key="same-key", headers=ANALYST), 3)
-    assert {r.status_code for r in out} == {200} and count(conn, "rule_runs", "run_by = 'usr-analyst01'") == 1
+    assert {r.status_code for r in out} == {200} and count(conn, "rule_runs", "run_by = 'own-01'") == 1
     assert count(conn, "command_results", "idempotency_key = 'same-key'") == 1 and len({r.json()["command_id"] for r in out}) == 1
 
 

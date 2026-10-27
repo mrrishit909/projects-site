@@ -23,7 +23,7 @@
             "CRITICAL_FAILURE"
           ],
           "headers": {
-            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Id": "own-03",
             "X-Actor-Role": "analyst"
           },
           "input": {
@@ -75,7 +75,7 @@
           },
           "expected_status": 200,
           "headers": {
-            "X-Actor-Id": "usr-steward01",
+            "X-Actor-Id": "own-02",
             "X-Actor-Role": "steward"
           },
           "input": {
@@ -94,7 +94,7 @@
           "expected_reason": "RULE_DISABLED",
           "expected_status": 409,
           "headers": {
-            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Id": "own-03",
             "X-Actor-Role": "analyst"
           },
           "input": {
@@ -149,7 +149,7 @@
             "SHARED_NAME_AND_ADDRESS"
           ],
           "headers": {
-            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Id": "own-03",
             "X-Actor-Role": "analyst"
           },
           "input": {
@@ -190,7 +190,7 @@
           },
           "expected_status": 200,
           "headers": {
-            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Id": "own-03",
             "X-Actor-Role": "analyst"
           },
           "input": {
@@ -217,7 +217,7 @@
           "expected_reason": "WEIGHT_CHANGE_REQUIRES_VERSION",
           "expected_status": 422,
           "headers": {
-            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Id": "own-03",
             "X-Actor-Role": "analyst"
           },
           "input": {
@@ -248,7 +248,7 @@
           },
           "expected_status": 200,
           "headers": {
-            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Id": "own-03",
             "X-Actor-Role": "analyst"
           },
           "input": {
@@ -280,8 +280,8 @@
       "steps": [
         {
           "command": "approve-merge",
-          "expected_reason": "REVIEWER_IS_PROPOSER",
-          "expected_status": 403,
+          "expected_reason": "SELF_REVIEW",
+          "expected_status": 409,
           "headers": {
             "X-Actor-Id": "own-02",
             "X-Actor-Role": "steward"
@@ -312,7 +312,7 @@
           "expected_status": 200,
           "headers": {
             "X-Actor-Id": "own-01",
-            "X-Actor-Role": "steward"
+            "X-Actor-Role": "admin"
           },
           "input": {
             "dataset_version": "tl-20261026-20261026",
@@ -338,7 +338,7 @@
           "expected_status": 422,
           "headers": {
             "X-Actor-Id": "own-01",
-            "X-Actor-Role": "steward"
+            "X-Actor-Role": "admin"
           },
           "input": {
             "dataset_version": "tl-20261026-20261026",
@@ -372,7 +372,7 @@
           "expected_status": 200,
           "headers": {
             "X-Actor-Id": "own-01",
-            "X-Actor-Role": "steward"
+            "X-Actor-Role": "admin"
           },
           "input": {
             "dataset_version": "tl-20261026-20261026",
@@ -398,7 +398,7 @@
           "expected_status": 409,
           "headers": {
             "X-Actor-Id": "own-01",
-            "X-Actor-Role": "steward"
+            "X-Actor-Role": "admin"
           },
           "input": {
             "dataset_version": "tl-20261026-20261026",
@@ -425,7 +425,7 @@
           "expected_reason": "OWNER_INACTIVE",
           "expected_status": 422,
           "headers": {
-            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Id": "own-03",
             "X-Actor-Role": "analyst"
           },
           "input": {
@@ -449,7 +449,7 @@
           },
           "expected_status": 200,
           "headers": {
-            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Id": "own-03",
             "X-Actor-Role": "analyst"
           },
           "input": {
@@ -567,7 +567,7 @@
             "CLAIMED_NOT_RESOLVED"
           ],
           "headers": {
-            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Id": "own-03",
             "X-Actor-Role": "analyst"
           },
           "input": {
@@ -595,7 +595,7 @@
           },
           "expected_status": 200,
           "headers": {
-            "X-Actor-Id": "usr-steward01",
+            "X-Actor-Id": "own-02",
             "X-Actor-Role": "steward"
           },
           "input": {
@@ -622,7 +622,7 @@
           "expected_reason": "DUPLICATE_PAIR",
           "expected_status": 409,
           "headers": {
-            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Id": "own-03",
             "X-Actor-Role": "analyst"
           },
           "input": {
@@ -647,7 +647,7 @@
           "expected_reason": "NON_CANONICAL_ORDER",
           "expected_status": 422,
           "headers": {
-            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Id": "own-03",
             "X-Actor-Role": "analyst"
           },
           "input": {
@@ -677,7 +677,7 @@
           },
           "expected_status": 200,
           "headers": {
-            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Id": "own-03",
             "X-Actor-Role": "analyst"
           },
           "input": {
@@ -711,7 +711,7 @@
           "expected_reason": "DEFINITION_IMMUTABLE",
           "expected_status": 409,
           "headers": {
-            "X-Actor-Id": "usr-steward01",
+            "X-Actor-Id": "own-02",
             "X-Actor-Role": "steward"
           },
           "input": {
@@ -743,11 +743,11 @@
               "previous_metric_version_id": "mv-active-customers-1",
               "version_number": 2
             },
-            "status": "published"
+            "status": "drafted"
           },
           "expected_status": 200,
           "headers": {
-            "X-Actor-Id": "usr-steward01",
+            "X-Actor-Id": "own-02",
             "X-Actor-Role": "steward"
           },
           "input": {
@@ -765,9 +765,80 @@
                 "delivery-events.shipment_key",
                 "accounts.status",
                 "customers.email"
-              ]
+              ],
+              "status": "draft"
             },
             "request_id": "req-ev-11-b"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "publish-definition",
+          "expected_result": {
+            "result": {
+              "version_number": 3
+            },
+            "status": "reviewed"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "own-04",
+            "X-Actor-Role": "steward"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-11-c",
+            "input": {
+              "definition": "Revised definition as a new version",
+              "grain": "shipment",
+              "metric_id": "m-active-customers",
+              "metric_name": "Active customers",
+              "owner_id": "own-14",
+              "reason": "Replay: reviewed by a second steward",
+              "refresh": "daily",
+              "source_fields": [
+                "delivery-events.shipment_key",
+                "accounts.status",
+                "customers.email"
+              ],
+              "status": "reviewed"
+            },
+            "request_id": "req-ev-11-c"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "publish-definition",
+          "expected_result": {
+            "result": {
+              "version_number": 4
+            },
+            "status": "published"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "own-02",
+            "X-Actor-Role": "steward"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-11-d",
+            "input": {
+              "definition": "Revised definition as a new version",
+              "grain": "shipment",
+              "metric_id": "m-active-customers",
+              "metric_name": "Active customers",
+              "owner_id": "own-14",
+              "reason": "Replay: published after review",
+              "refresh": "daily",
+              "source_fields": [
+                "delivery-events.shipment_key",
+                "accounts.status",
+                "customers.email"
+              ],
+              "status": "published"
+            },
+            "request_id": "req-ev-11-d"
           },
           "kind": "command"
         }
@@ -798,7 +869,7 @@
             "RULE_VERSION_DIFFERS"
           ],
           "headers": {
-            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Id": "own-03",
             "X-Actor-Role": "analyst"
           },
           "input": {

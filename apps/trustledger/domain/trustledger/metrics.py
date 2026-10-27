@@ -19,9 +19,9 @@ from .matching import matching_block
 from .measure import Measure, measure_rule, timeliness_of
 from .models import Population, weight_in_force
 from .numbers import p6, ratio
-from .scoring import dimension_scores, weighted_block
+from .scoring import carried_failures, dimension_scores, weighted_block
 from .structure import definitions_blocks, lineage_block, ownership_block
-from .timeutil import iso_z
+from .timeutil import ON_TIME, PENDING, iso_z, timeliness_state
 from .verification import precision_block
 
 Row = dict[str, Any]
@@ -39,6 +39,7 @@ class Computation:
     warnings: list[Row] = field(default_factory=list)
     measures: list[Measure] = field(default_factory=list)
     views: list[IssueView] = field(default_factory=list)
+    timeliness_probes: Row = field(default_factory=dict)
 
 
 def in_window(t: datetime, window: Window | None) -> bool:
@@ -141,11 +142,15 @@ def compute(pop: Population, as_of: datetime, weight_version: str | None = None,
         t = timeliness_of(d, as_of)
         if t is not None:
             tl[d.dataset_id] = t
-    on = sum(1 for v in tl.values() if v["on_time"])
-    timeliness = {"monitored_datasets": len(tl), "on_time_count": on, "value": p6(ratio(on, len(tl))), "datasets": tl}
+    on = sum(1 for v in tl.values() if v["state"] == ON_TIME)
+    pending = sum(1 for v in tl.values() if v["state"] == PENDING)
+    evaluated = len(tl) - pending                                              # a pending occurrence is neither on time nor late (D-10 R7-01)
+    timeliness = {"monitored_datasets": len(tl), "evaluated_datasets": evaluated, "pending_count": pending, "on_time_count": on,
+                  "value": p6(ratio(on, evaluated)), "datasets": tl}
 
     views = classify(p, as_of)
-    weighted, critical = weighted_block(p, dimension_scores(measures), measures, views, wv)
+    carried = carried_failures(p, as_of)
+    weighted, critical = weighted_block(p, dimension_scores(measures), measures, views, wv, carried)
     cov, defs = definitions_blocks(p, as_of)
     matching, approved, reviewed = matching_block(p)
     metrics = {
@@ -163,5 +168,10 @@ def compute(pop: Population, as_of: datetime, weight_version: str | None = None,
                          "message": "a score hides an open critical failure or issue: read critical_failures beside it"})
     if not pop.weight_versions:
         warnings.append({"code": "NO_WEIGHT_VERSION", "path": "weight_version", "message": "no rule weight version is defined: scores are null"})
+    probes: Row = {}
+    for c in pop.probe_timeliness:                  # stated cases: the rule alone, no dataset, no population
+        state, s, dl = timeliness_state(c["timezone"], c["local_time"], c["grace_minutes"], c["last_refreshed_at"], c["as_of"])
+        probes[c["probe_id"]] = {"as_of": iso_z(c["as_of"]), "last_refreshed_at": iso_z(c["last_refreshed_at"]), "evaluated_occurrence_utc": iso_z(s),
+                                 "deadline_utc": iso_z(dl), "state": state}
     return Computation(metrics, {"active_count": len(runs), "runs": runs, "comparisons": comparisons, "disabled": disabled},
-                       defs, matching, wv, empty, warnings, measures, views)
+                       defs, matching, wv, empty, warnings, measures, views, probes)

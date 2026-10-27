@@ -37,6 +37,8 @@ ID = {"owners": "owner_id", "datasets": "dataset_id", "fields": "field_id", "qua
       "metric_versions": "metric_version_id", "definition_changes": "change_id",
       "customer_records": "record_id", "match_candidates": "candidate_id", "merge_decisions": "merge_id"}
 DIMS = ["completeness", "validity", "uniqueness", "relationship", "timeliness"]
+# an odd run of backslashes before s, d, w, b (either case) is an escape of a class the three engines read differently
+NON_PORTABLE = re.compile(r"(?<!\\)(?:\\\\)*\\[sSdDwWbB]")
 failures = 0
 checks = 0
 
@@ -137,7 +139,14 @@ def validate(data):
                 rej(entity, r_, unknown_code)
 
     child("fields", data["fields"], ds_ok, ds_bad, "dataset_id", "UNKNOWN_DATASET")
-    child("quality_rules", data["quality_rules"], ds_ok, ds_bad, "dataset_id", "UNKNOWN_DATASET")
+    # D-10 R7-04: a pattern that uses \s \d \w \b (or a negation) is not portable between Python, JavaScript and PostgreSQL
+    portable_rules = []
+    for r_ in data["quality_rules"]:
+        if isinstance(r_.get("definition", {}).get("pattern"), str) and NON_PORTABLE.search(r_["definition"]["pattern"]):
+            rej("quality_rules", r_, "PATTERN_NOT_PORTABLE")
+        else:
+            portable_rules.append(r_)
+    child("quality_rules", portable_rules, ds_ok, ds_bad, "dataset_id", "UNKNOWN_DATASET")
     rule_ok = {r_["rule_id"] for r_ in acc["quality_rules"]}
     rule_bad = rej_ids.get("quality_rules", set())
     child("rule_runs", data["rule_runs"], rule_ok, rule_bad, "rule_id", "UNKNOWN_RULE")
@@ -149,6 +158,8 @@ def validate(data):
     for e in data["lineage_edges"]:
         ends = (e["source_dataset_id"], e["target_dataset_id"])
         if (e["evidence_type"] == "observed") != (e.get("observed_at") is not None):   # D-08
+            rej("lineage_edges", e, "MALFORMED_RECORD")
+        elif ends[0] == ends[1]:                                                          # D-10 R7-06: no edge from a dataset to itself
             rej("lineage_edges", e, "MALFORMED_RECORD")
         elif all(x in ds_ok for x in ends):
             acc["lineage_edges"].append(e)
@@ -241,6 +252,31 @@ def scheduled_occurrence(ds, as_of):
     raise ValueError("no occurrence")
 
 
+def latest_started(tzname, local_time, grace_min, at):
+    """Latest daily occurrence S of local_time in the zone with S <= at, and S + grace. A time that occurs twice is the LATER instant, a time that
+    does not exist uses the offset before the change (what PostgreSQL's AT TIME ZONE does)."""
+    tz = ZoneInfo(tzname)
+    hh, mm = (int(x) for x in local_time.split(":"))
+    d0 = at.astimezone(tz).date()
+    for back in range(-1, 5):
+        wall = datetime.combine(d0 - timedelta(days=back), time(hh, mm))
+        a = wall.replace(tzinfo=tz, fold=0)
+        b = wall.replace(tzinfo=tz, fold=1)
+        s = (b if a.utcoffset() > b.utcoffset() else a).astimezone(timezone.utc)
+        if s <= at:
+            return s, s + timedelta(minutes=grace_min)
+    raise ValueError("no occurrence")
+
+
+def timeliness_state(tzname, local_time, grace_min, last_refresh, at):
+    """D-10 R7-01: on_time when a refresh (not after `at`) lies in [S, S + grace) of the latest occurrence S <= at; otherwise pending while
+    S + grace is still in the future, otherwise late."""
+    s, dl = latest_started(tzname, local_time, grace_min, at)
+    if last_refresh is not None and last_refresh <= at and s <= last_refresh < dl:
+        return "on_time", s, dl
+    return ("pending" if dl > at else "late"), s, dl
+
+
 def compute(data):
     as_of = ts(data["as_of"])
     trim = data["whitespace_policy"]["trim_characters"]
@@ -307,12 +343,14 @@ def compute(data):
             dup_rows = sum(c - 1 for c in freq.values() if c > 1)
             el = len(vals)
             rowshare = ratio(dup_rows, el)
-            m_uniq[rid] = {"dataset_id": dsid, "eligible_count": el, "null_key_count": nulls,
+            null_ids = [r_["row_id"] for r_ in rws if missing(r_.get(d["field"]))]
+            m_uniq[rid] = {"dataset_id": dsid, "eligible_count": el, "null_key_count": nulls, "null_key_row_ids": null_ids,
                            "distinct_keys": distinct, "duplicate_groups": groups, "duplicate_rows": dup_rows,
                            "group_share": {"label": "duplicate_group_share", "value": p6(ratio(groups, distinct))},
                            "row_share": {"label": "duplicate_row_share", "value": p6(rowshare)}}
             run.update(eligible_count=el, failure_count=nulls + dup_rows)
-            dim_val[(dsid, "uniqueness")] = None if rowshare is None else 1 - rowshare
+            # D-10 R7-05: the score is (eligible - null-key rows - duplicate rows) / eligible
+            dim_val[(dsid, "uniqueness")] = ratio(el - nulls - dup_rows, el)
         elif t == "relationship":
             parent = {r_.get(d["parent_field"]) for r_ in rows.get(d["parent_dataset_id"], []) if not missing(r_.get(d["parent_field"]))}
             fks = [r_.get(d["field"]) for r_ in rws]
@@ -320,19 +358,24 @@ def compute(data):
             el = len(fks) - nulls
             matched = sum(1 for v in fks if not missing(v) and v in parent)
             val = ratio(matched, el)
-            m_rel[rid] = {"dataset_id": dsid, "total_fk_count": len(fks), "null_fk_count": nulls,
+            empty_n = sum(1 for v in fks if missing(v) and isinstance(v, str))
+            m_rel[rid] = {"dataset_id": dsid, "total_fk_count": len(fks), "null_fk_count": nulls, "empty_fk_count": empty_n,
                           "eligible_count": el, "matched_count": matched, "unmatched_count": el - matched,
                           "value": p6(val)}
             run.update(eligible_count=el, failure_count=el - matched, null_fk_count=nulls)
             dim_val[(dsid, "relationship")] = val
         elif t == "timeliness":
-            on = False
             if ds["monitored"]:
-                s, dl = scheduled_occurrence(ds, as_of)
                 last = ds["last_refreshed_at"]
-                on = last is not None and s <= ts(last) < dl
-            run.update(eligible_count=1, failure_count=0 if on else 1)
-            dim_val[(dsid, "timeliness")] = F(1) if on else F(0)
+                st, _, _ = timeliness_state(ds["refresh_timezone"], ds["refresh_local_time"], ds["refresh_grace_minutes"],
+                                            ts(last) if last else None, as_of)
+            else:
+                st = "pending"                                          # not monitored: nothing to measure (eligible 0)
+            if st == "pending":
+                run.update(eligible_count=0, failure_count=0)
+            else:
+                run.update(eligible_count=1, failure_count=0 if st == "on_time" else 1)
+                dim_val[(dsid, "timeliness")] = F(1) if st == "on_time" else F(0)
         rr[rid] = run
     # comparisons: latest earlier scheduled run of the same rule
     for rid, run in rr.items():
@@ -355,21 +398,24 @@ def compute(data):
                              "runs_retained": sum(1 for r_ in acc["rule_runs"] if r_["rule_id"] == rid),
                              "issues_retained": sum(1 for i in acc["issues"] if runs[i["rule_run_id"]]["rule_id"] == rid)}
 
-    # ---- timeliness metric over monitored datasets
+    # ---- timeliness metric over monitored datasets (D-10 R7-01: a pending occurrence is outside the denominator)
     tl = {}
     for dsid in sorted(datasets):
         ds = datasets[dsid]
         if not ds["monitored"]:
             continue
-        s, dl = scheduled_occurrence(ds, as_of)
         last = ds["last_refreshed_at"]
+        st, s, dl = timeliness_state(ds["refresh_timezone"], ds["refresh_local_time"], ds["refresh_grace_minutes"],
+                                     ts(last) if last else None, as_of)
         tl[dsid] = {"timezone": ds["refresh_timezone"], "scheduled_local": ds["refresh_local_time"],
                     "grace_minutes": ds["refresh_grace_minutes"], "evaluated_occurrence_utc": zstr(s),
-                    "deadline_utc": zstr(dl), "last_refreshed_at": last,
-                    "on_time": last is not None and s <= ts(last) < dl}
-    on_n = sum(1 for v in tl.values() if v["on_time"])
-    timeliness = {"monitored_datasets": len(tl), "on_time_count": on_n, "value": p6(ratio(on_n, len(tl))),
-                  "datasets": tl}
+                    "deadline_utc": zstr(dl), "last_refreshed_at": last if last and ts(last) <= as_of else None, "state": st,
+                    "on_time": None if st == "pending" else st == "on_time"}
+    on_n = sum(1 for v in tl.values() if v["state"] == "on_time")
+    pend = sum(1 for v in tl.values() if v["state"] == "pending")
+    evaluated = len(tl) - pend
+    timeliness = {"monitored_datasets": len(tl), "evaluated_datasets": evaluated, "pending_count": pend, "on_time_count": on_n,
+                  "value": p6(ratio(on_n, evaluated)), "datasets": tl}
 
     # ---- issues
     issue_out = {}
@@ -414,11 +460,24 @@ def compute(data):
             return meas, wsum, None
         return meas, wsum, sum((w[dm] * dim_val[(dsid, dm)] for dm in meas), F(0)) / wsum
 
+    # D-10 R7-02: a critical rule that is disabled while its latest run (a rerun counts) fails keeps counting that failure
+    carried = []
+    for rid in sorted(rules):
+        rule = rules[rid]
+        if rule["severity"] != "critical" or rid in rr or rule["dataset_id"] not in datasets:
+            continue
+        own_runs = [r_ for r_ in acc["rule_runs"] if r_["rule_id"] == rid and ts(r_["run_at"]) <= as_of]
+        if own_runs:
+            last_run = max(own_runs, key=lambda r_: (r_["run_at"], r_["rule_run_id"]))
+            if last_run["failure_count"] > 0:
+                carried.append({"dataset_id": rule["dataset_id"], "rule_id": rid, "rule_run_id": last_run["rule_run_id"],
+                                "failure_count": last_run["failure_count"]})
     ws_out, by_wv = {}, {k: {} for k in sorted(weights)}
     crit_f = crit_i = over = 0
     for dsid in sorted(datasets):
         meas, wsum, val = wscore(dsid, wv_in_force)
-        cf = sum(rr[rid]["failure_count"] for rid in rr if rr[rid]["dataset_id"] == dsid and rr[rid]["severity"] == "critical")
+        cf = (sum(rr[rid]["failure_count"] for rid in rr if rr[rid]["dataset_id"] == dsid and rr[rid]["severity"] == "critical")
+              + sum(c["failure_count"] for c in carried if c["dataset_id"] == dsid))
         ci = sum(1 for v in issue_out.values() if v["severity"] == "critical" and v["class"] != "resolved"
                  and rules[v["rule_id"]]["dataset_id"] == dsid)
         ov = cf > 0 or ci > 0
@@ -525,6 +584,14 @@ def compute(data):
              "reviewed": len(reviewed), "reviewed_correct": r_ok,
              "reviewed_correct_share": p6(ratio(r_ok, len(reviewed)))}
 
+    # ---- D-10 R7-01 stated timeliness cases (the rule alone, no dataset)
+    probe_out = {}
+    for c in (data.get("probes") or {}).get("timeliness") or []:
+        last = ts(c["last_refreshed_at"]) if c.get("last_refreshed_at") else None
+        st, s, dl = timeliness_state(c["timezone"], c["local_time"], c["grace_minutes"], last, ts(c["as_of"]))
+        probe_out.setdefault("timeliness_probes", {})[c["probe_id"]] = {
+            "as_of": c["as_of"], "last_refreshed_at": c.get("last_refreshed_at"), "evaluated_occurrence_utc": zstr(s), "deadline_utc": zstr(dl), "state": st}
+
     return {
         "contract_version": data["contract_version"], "as_of": data["as_of"], "weight_version": wv_in_force,
         "checklist_version": data["checklist_version"], "empty_population": empty,
@@ -534,10 +601,10 @@ def compute(data):
             "completeness": m_comp, "validity": m_valid, "uniqueness": m_uniq, "relationship_integrity": m_rel,
             "timeliness": timeliness,
             "weighted_score": {"datasets": ws_out, "by_weight_version": by_wv},
-            "critical_failures": {"failures": crit_f, "open_issues": crit_i, "datasets_overridden": over},
+            "critical_failures": {"failures": crit_f, "open_issues": crit_i, "datasets_overridden": over, "carried": carried},
             "resolution_time": resolution, "ownership_coverage": ownership, "definition_coverage": defcov,
             "match_precision": mprec, "lineage_coverage": lineage},
-        "definitions": definitions, "matching": matching}
+        "definitions": definitions, "matching": matching, **probe_out}
 
 
 # ---------------------------------------------------------------- comparison harness
@@ -609,6 +676,84 @@ def check_fixture(label, prefix):
             report(False, f"{label}.{k}", "<absent>", fg[k])
 
 
+def review_probes():
+    """D-10 (review R7): small worlds made from the golden inputs with the answer stated by hand, run through this independent
+    calculation. The domain, the SQL and the TypeScript mirror are held to the same answers in their own suites."""
+    import copy
+    base = json.loads((GOLDEN / "inputs.json").read_text())
+
+    def world(edit):
+        d = copy.deepcopy(base)
+        edit(d)
+        return compute(d)
+
+    def rule(d, rid):
+        return next(r_ for r_ in d["quality_rules"] if r_["rule_id"] == rid)
+
+    # R7-04: \s \d \w \b (and their negations) are refused; explicit classes and an escaped backslash pass
+    for pat, ok in ((r"^[^@\s]+@x$", False), (r"^\d+$", False), (r"^\w+$", False), (r"\bx", False), (r"^\S+$", False), (r"a\\\s", False),
+                    (r"^[^@ \t\r\n\f\v]+@[^@ \t\r\n\f\v]+$", True), (r"^[0-9]+$", True), (r"^a\\s$", True)):
+        out = world(lambda d: rule(d, "r-cust-valid-email")["definition"].__setitem__("pattern", pat))
+        rej = [r_["reason_code"] for r_ in out["ingest"]["rejected_records"] if r_["entity"] == "quality_rules"]
+        report((rej == []) == ok and (ok or rej == ["PATTERN_NOT_PORTABLE"]), f"review.R7-04.pattern {pat!r} {'accepted' if ok else 'refused'}", ok, rej)
+    # R7-04: the four whitespace characters the engines disagreed about are ordinary characters for the explicit class: cust-005 (no @, failing)
+    # becomes a@b-style text with the character inside and passes, so 91 of 95 populated pass instead of 90
+    for name, ch in (("U+00A0", "\u00a0"), ("U+FEFF", "\ufeff"), ("U+0085", "\u0085"), ("U+2028", "\u2028")):
+        out = world(lambda d: d["dataset_rows"]["ds-customers"][4].__setitem__("email", f"a{ch}b@x.io"))
+        v = out["metrics"]["validity"]["r-cust-valid-email"]
+        report((v["passing_count"], v["populated_only"]["value"]) == (91, "0.957895"), f"review.R7-04.{name} inside an e-mail passes the explicit class",
+               (91, "0.957895"), (v["passing_count"], v["populated_only"]["value"]))
+    # R7-05: a null key fails and is listed; score = (100 - 1 - 2) / 100 = 0.970000; groups 1 of 97 keys
+    out = world(lambda d: d["dataset_rows"]["ds-customers"][0].__setitem__("customer_key", None))
+    u = out["metrics"]["uniqueness"]["r-cust-key-unique"]
+    got = (u["null_key_count"], u["null_key_row_ids"], u["distinct_keys"], u["group_share"]["value"], u["row_share"]["value"],
+           out["rules"]["runs"]["r-cust-key-unique"]["failure_count"], out["metrics"]["weighted_score"]["datasets"]["ds-customers"]["dimension_scores"]["uniqueness"])
+    want = (1, ["cust-001"], 97, "0.010309", "0.020000", 3, "0.970000")
+    report(got == want, "review.R7-05.null key counted, listed and scored", want, got)
+    # R7-06: an edge from a dataset to itself is MALFORMED_RECORD
+    def self_edge(d):
+        d["lineage_edges"].append({"edge_id": "e-self", "source_dataset_id": "ds-orders", "target_dataset_id": "ds-orders", "evidence_type": "declared", "observed_at": None})
+    out = world(self_edge)
+    rej = [(r_["entity"], r_["id"], r_["reason_code"]) for r_ in out["ingest"]["rejected_records"]]
+    report(rej == [("lineage_edges", "e-self", "MALFORMED_RECORD")], "review.R7-06.self edge refused", [("lineage_edges", "e-self", "MALFORMED_RECORD")], rej)
+    # R7-02: disabling the critical key rule while its latest run (rr-003, 2 failures) fails keeps the 2 failures and the override
+    def disable(d):
+        r_ = rule(d, "r-cust-key-unique")
+        r_.update(status="disabled", disabled_at="2026-10-04T00:00:00Z", disabled_reason="r7")
+    out = world(disable)
+    w = out["metrics"]["weighted_score"]["datasets"]["ds-customers"]
+    want = (2, True, [{"dataset_id": "ds-customers", "rule_id": "r-cust-key-unique", "rule_run_id": "rr-003", "failure_count": 2}], {})
+    got = (w["critical_failures"], w["critical_override"], out["metrics"]["critical_failures"]["carried"], out["metrics"]["uniqueness"])
+    report(got == want, "review.R7-02.disabled critical rule keeps its live failure", want, got)
+    # ... until a verified rerun passes (the latest run of the rule has 0 failures)
+    def disable_and_rerun(d):
+        disable(d)
+        d["rule_runs"].append({"rule_run_id": "rr-900", "rule_id": "r-cust-key-unique", "rule_version": 1, "weight_version": "w2", "kind": "rerun",
+                               "run_at": "2026-10-04T12:00:00Z", "eligible_count": 2, "failure_count": 0, "rerun_for_issue": "iss-006"})
+    out = world(disable_and_rerun)
+    w = out["metrics"]["weighted_score"]["datasets"]["ds-customers"]
+    report((w["critical_failures"], out["metrics"]["critical_failures"]["carried"]) == (0, []), "review.R7-02.a passing rerun clears it", (0, []),
+           (w["critical_failures"], out["metrics"]["critical_failures"]["carried"]))
+    # R7-11: whitespace-only and empty foreign keys are missing under the policy, counted with the nulls
+    def blank_fks(d):
+        d["dataset_rows"]["ds-orders"][34]["customer_key"] = "  \t"
+    out = world(blank_fks)
+    r_ = out["metrics"]["relationship_integrity"]["r-ord-cust-fk"]
+    want = (4, 2, 36, 34, "0.944444")
+    got = (r_["null_fk_count"], r_["empty_fk_count"], r_["eligible_count"], r_["matched_count"], r_["value"])
+    report(got == want, "review.R7-11.empty and whitespace-only foreign keys counted with the nulls", want, got)
+    # R7-01: the same dataset at 10:30Z with a refresh at 10:10Z is on time (golden probe), and a never-refreshed dataset is pending, then late
+    def never(d):
+        for x in d["datasets"]:
+            if x["dataset_id"] == "ds-customers":
+                x["last_refreshed_at"] = None
+        d["as_of"] = "2026-10-05T10:30:00Z"
+    out = world(never)
+    tl = out["metrics"]["timeliness"]
+    report((tl["datasets"]["ds-customers"]["state"], tl["pending_count"]) == ("pending", 1), "review.R7-01.never refreshed, open window: pending",
+           ("pending", 1), (tl["datasets"]["ds-customers"]["state"], tl["pending_count"]))
+
+
 def sha(rel):
     return hashlib.sha256((GOLDEN / rel).read_bytes()).hexdigest()
 
@@ -620,6 +765,7 @@ def main():
     spec_sentence()
     for label, prefix in FIXTURES:
         check_fixture(label, prefix)
+    review_probes()
     hp = GOLDEN / "HASHES.json"
     if args.write_hashes:
         if failures:

@@ -33,7 +33,7 @@ function Versions({ ds, metricId }: { ds: Dataset; metricId: string }) {
           };
           return (
             <article className="version" key={v["metric_version_id"]} data-version={v["metric_version_id"]}>
-              <h3><span>Version {v["version_number"]}</span><Chip kind={v["status"] === "published" ? "ok" : v["status"] === "draft" ? "note" : "hatch"}>{v["status"]}</Chip></h3>
+              <h3><span>Version {v["version_number"]}</span><Chip kind={v["status"] === "published" ? "ok" : v["status"] === "draft" || v["status"] === "reviewed" ? "note" : "hatch"}>{v["status"]}</Chip></h3>
               <p className="mono muted">{v["metric_version_id"]}</p>
               <dl>
                 <dt>{WORDS["definition"]}</dt>{cell("definition", v["definition"], v["definition"])}
@@ -97,6 +97,7 @@ export function GlossaryView() {
       <ViewHead mark="Shelfmark 02 · glossary" title="Glossary">
         <p className="lede">A metric means what its definition says on the date you read it. Each version is shown beside the one before it, with what changed, who approved the change and when it took effect.</p>
         <p className="muted">The published data holds successive versions of each definition, not rival definitions in force at the same time; the side-by-side layout is for comparing what changed. A change never rewrites a published version.</p>
+        <p className="muted" data-testid="lifecycle">A definition version moves <strong>draft</strong>, then <strong>reviewed</strong> (by someone other than its author), then <strong>published</strong>; each step is a new version row and the content that was reviewed is the content that is published. Only published versions count in definition coverage; a draft or reviewed version never replaces the one in force. The published data holds drafts, published and superseded versions; the review step is enforced by the API (Mode A), and this site shows the state, not a form.</p>
       </ViewHead>
       <WithData>{(ds) => <Glossary ds={ds} />}</WithData>
     </>

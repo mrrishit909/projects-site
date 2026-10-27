@@ -17,7 +17,65 @@
     ],
     "contract_version": 1,
     "probes": {
-      "definition_at": "2026-08-01T00:00:00Z"
+      "definition_at": "2026-08-01T00:00:00Z",
+      "timeliness": [
+        {
+          "as_of": "2026-10-05T10:30:00Z",
+          "grace_minutes": 60,
+          "last_refreshed_at": "2026-10-05T10:10:00Z",
+          "local_time": "06:00",
+          "probe_id": "open-window-refreshed",
+          "timezone": "America/New_York"
+        },
+        {
+          "as_of": "2026-10-05T10:30:00Z",
+          "grace_minutes": 60,
+          "last_refreshed_at": "2026-10-04T10:20:00Z",
+          "local_time": "06:00",
+          "probe_id": "open-window-not-yet-refreshed",
+          "timezone": "America/New_York"
+        },
+        {
+          "as_of": "2026-10-05T11:00:00Z",
+          "grace_minutes": 60,
+          "last_refreshed_at": "2026-10-04T10:20:00Z",
+          "local_time": "06:00",
+          "probe_id": "deadline-equals-as-of-no-refresh",
+          "timezone": "America/New_York"
+        },
+        {
+          "as_of": "2026-10-05T12:00:00Z",
+          "grace_minutes": 60,
+          "last_refreshed_at": "2026-10-05T11:00:00Z",
+          "local_time": "06:00",
+          "probe_id": "refresh-at-the-deadline",
+          "timezone": "America/New_York"
+        },
+        {
+          "as_of": "2026-10-05T10:30:00Z",
+          "grace_minutes": 60,
+          "last_refreshed_at": "2026-10-05T10:45:00Z",
+          "local_time": "06:00",
+          "probe_id": "refresh-after-as-of",
+          "timezone": "America/New_York"
+        },
+        {
+          "as_of": "2026-11-01T12:00:00Z",
+          "grace_minutes": 60,
+          "last_refreshed_at": "2026-11-01T05:45:00Z",
+          "local_time": "01:30",
+          "probe_id": "clocks-back-refresh-in-the-first-0130",
+          "timezone": "America/New_York"
+        },
+        {
+          "as_of": "2026-11-01T12:00:00Z",
+          "grace_minutes": 60,
+          "last_refreshed_at": "2026-11-01T06:45:00Z",
+          "local_time": "01:30",
+          "probe_id": "clocks-back-refresh-in-the-second-0130",
+          "timezone": "America/New_York"
+        }
+      ]
     },
     "weight_version": "w2",
     "whitespace_policy": {
@@ -26,7 +84,7 @@
     }
   },
   "contract_version": "v1",
-  "dataset_hash": "bcf3383ccd42c3a91ae377f80f406d7bb5532c4b81e83675000be5882543dbcd",
+  "dataset_hash": "6377000161439ca686c019e7833b18d596a97cb25d45a795e06c0b21008e2884",
   "dataset_version": "golden-v1",
   "designed_relationships": [],
   "expected": "expected.json",
@@ -49,6 +107,7 @@
     "merge_decisions": 5,
     "metric_versions": 6,
     "owners": 5,
+    "quality_rule_versions": 9,
     "quality_rules": 9,
     "rule_runs": 13,
     "weight_versions": 2

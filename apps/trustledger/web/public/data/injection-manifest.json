@@ -1,6 +1,6 @@
 {
   "contract_version": "v1",
-  "dataset_hash": "c0dca32f7982f7cc6480feec90795edc76259801307fe59fb4012795c5f0697b",
+  "dataset_hash": "a9f7a3321b102752dd7aa95b76df14c1d9372103e685e10222959fd6438f27ff",
   "dataset_version": "tl-20261026-20261026",
   "designed_relationships": [
     {
@@ -495,7 +495,7 @@
       "events": [
         "EV-06"
       ],
-      "expected_handling": "A reversal restores both identities and keeps the mapping history; reviewer = proposer is refused (403 REVIEWER_IS_PROPOSER).",
+      "expected_handling": "A reversal restores both identities and keeps the mapping history; the proposer deciding their own candidate is refused through the API (409 SELF_REVIEW; REVIEWER_IS_PROPOSER on stored decisions).",
       "expected_rejections": [],
       "id": "INJ-06",
       "location": "both",

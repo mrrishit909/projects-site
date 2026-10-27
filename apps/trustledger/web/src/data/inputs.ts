@@ -14,7 +14,7 @@ export interface Manifest {
   stats?: Row; code_sha?: string; seed?: number; window_start?: string; window_end?: string; injection_manifest?: string; fixture_id?: string;
   synthetic_truth?: { note?: string; entities?: number; precision?: Row; true_entity?: Record<string, string> };
 }
-export const FILES = [...ENTITIES, "dataset_rows", "weight_versions"] as const;
+export const FILES = [...ENTITIES, "dataset_rows", "quality_rule_versions", "weight_versions"] as const;
 export type FileName = (typeof FILES)[number];
 
 export const isManifest = (m: unknown): m is Manifest => {

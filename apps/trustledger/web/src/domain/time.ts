@@ -108,3 +108,22 @@ export function scheduledOccurrence(tz: string, localTime: string, graceMinutes:
   }
   throw new ValueError("no occurrence found");
 }
+
+/** The latest daily occurrence (local time in tz) that has STARTED by `asOf` (s <= asOf) and its deadline s + grace; its window [s, s + grace) may still be open (D-10 R7-01). */
+export function latestOccurrence(tz: string, localTime: string, graceMinutes: number, asOf: Instant): [Instant, Instant] {
+  const [hh, mm] = parseHhmm(localTime);
+  const d0 = localDayNumber(asOf, tz);
+  for (let back = -1; back < 5; back++) {
+    const s = localToUtc(d0 - back, hh, mm, tz);
+    if (s <= asOf) return [s, s + minutes(graceMinutes)];
+  }
+  throw new ValueError("no occurrence found");
+}
+export type TimelinessState = "on_time" | "late" | "pending";
+/** on_time: a refresh (not after asOf) lies in [latest occurrence <= asOf, its deadline); pending: otherwise while that deadline is in the future (neither
+ * on time nor late, outside the denominator); late: otherwise (a refresh at the deadline is late). Mirror of timeutil.timeliness_state. */
+export function timelinessState(tz: string, localTime: string, graceMinutes: number, lastRefresh: Instant | null, asOf: Instant): { state: TimelinessState; start: Instant; deadline: Instant } {
+  const [start, deadline] = latestOccurrence(tz, localTime, graceMinutes, asOf);
+  if (lastRefresh !== null && lastRefresh <= asOf && start <= lastRefresh && lastRefresh < deadline) return { state: "on_time", start, deadline };
+  return { state: deadline > asOf ? "pending" : "late", start, deadline };
+}

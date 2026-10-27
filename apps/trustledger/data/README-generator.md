@@ -9,7 +9,7 @@ score, the timeliness occurrence and the issue classes are restated from `docs/c
 domain over the output and compares.
 
 ```sh
-python data/generate.py --seed 20261026 --out web/public/data     # about 0.3 s, 2.34 MB in all (entity files 2.15 MB)
+python data/generate.py --seed 20261026 --out web/public/data     # about 0.3 s, 2.31 MB in all (entity files 2.17 MB)
 python data/generate.py --profile golden-shape-check              # field names against tests/fixtures/golden
 python data/generate.py --inputs /tmp/inputs.json                 # one inputs object for data/seed.py (not committed)
 DATABASE_URL=postgresql://lab:lab@127.0.0.1:5432/trustledger python -m pytest -q -p no:cacheprovider tests/test_generator.py
@@ -19,14 +19,14 @@ DATABASE_URL=postgresql://lab:lab@127.0.0.1:5432/trustledger python -m pytest -q
 
 | File | Content |
 |---|---|
-| `web/public/data/<entity>.json` | `{"entity","dataset_version","rows"}` for the 12 contract entities (`owners`, `datasets`, `fields`, `quality_rules`, `rule_runs`, `issues`, `lineage_edges`, `metric_versions`, `definition_changes`, `customer_records`, `match_candidates`, `merge_decisions`) and two more: `dataset_rows` (a flat list; each row carries its `dataset_id` beside `row_id` and its cells) and `weight_versions` (w1, w2). `dataset_version` is `tl-20261026-20261026`. |
+| `web/public/data/<entity>.json` | `{"entity","dataset_version","rows"}` for the 12 contract entities (`owners`, `datasets`, `fields`, `quality_rules`, `rule_runs`, `issues`, `lineage_edges`, `metric_versions`, `definition_changes`, `customer_records`, `match_candidates`, `merge_decisions`) and three more: `dataset_rows` (a flat list; each row carries its `dataset_id` beside `row_id` and its cells), `quality_rule_versions` (75 rows: the definition of every version of each of the 60 rules, the eligibility filter from version 2; D-10 R7-12) and `weight_versions` (w1, w2). `dataset_version` is `tl-20261026-20261026`. |
 | `web/public/data/manifest.json` | `dataset_version`, `dataset_hash`, `generated_at` (real UTC, not hashed), `contract_version` "v1", `as_of`, `config` (whitespace policy, weight and checklist versions, probe), `generator` {name, seed, parameters as strings, including the disclosures}, `row_counts`, `designed_relationships` with realised numbers, `stats`, and the `synthetic_truth` block (record id to synthetic entity for the 2,000 records, with the precision it gives). |
 | `data/injection-manifest.json` (+ copy in `web/public/data/`) | `INJ-01..12` (`test` P07-TEST-01..12) with `records` (in-file evidence), `expected_handling`, `expected_rejections` (empty everywhere), `events` and machine-checkable `checks` (path into the domain's `golden()` shape and the value or length expected), and `designed_relationships` DR-01..06. |
-| `data/injection-events.json` | EV-01..EV-12, one per defect: replay-only command sequences (28 steps). A step is a `command` (headers, the full request envelope, `expected_status`, `expected_reason` = `error.details[0].rule_id`, optional `expected_result` subset of the response and `expected_warning_codes`, `bind` to take a value such as `merge_id` from an earlier step), a `database` insert (`expected_error` names the violated constraint) or a `read` (`path`, `params`, `expect` paths into `data`). |
+| `data/injection-events.json` | EV-01..EV-12, one per defect: replay-only command sequences (30 steps). A step is a `command` (headers, the full request envelope, `expected_status`, `expected_reason` = `error.details[0].rule_id`, optional `expected_result` subset of the response and `expected_warning_codes`, `bind` to take a value such as `merge_id` from an earlier step), a `database` insert (`expected_error` names the violated constraint) or a `read` (`path`, `params`, `expect` paths into `data`). |
 | `web/public/data/golden/` | the fixture in the same per-entity shape (`golden-v1`), `expected.json`, and `manifest.json` (with the fixture's synthetic truth, as it is the only place the truth may sit). |
 
 `dataset_hash` = sha256 over the concatenation, in entity-name order, of `json.dumps(rows, sort_keys=True, separators=(",", ":"))` for each of
-the 14 entity files. The files are not in the shape `data/seed.py` reads from a directory (it expects bare lists and a `dataset_rows` dictionary):
+the 15 entity files. The files are not in the shape `data/seed.py` reads from a directory (it expects bare lists and a `dataset_rows` dictionary):
 `tests/test_generator.py::make_inputs` builds the inputs object (config from the manifest, `dataset_rows` regrouped by `dataset_id`) and
 `seed.seed(conn, inputs, dataset_version="tl-20261026-20261026")` loads it, so that commands carrying the published version are not stale. The
 truth is loaded into `verification_truth` by the test only.

@@ -1,4 +1,4 @@
-# TrustLedger golden calculation (contract v1, decisions D-01..D-05)
+# TrustLedger golden calculation (contract v1, decisions D-01..D-05; revised for review R7, D-10)
 
 Independent of application code. `../../reference_check.py` recomputes every figure below from `inputs.json` and compares it
 with `expected.json` leaf by leaf (standard library only, no app imports, `fractions.Fraction` for every ratio, no float).
@@ -32,7 +32,13 @@ Two are whitespace-only (cust-063, cust-088): under the policy they are missing,
 populated = 100 - 5 = 95. **Completeness = 95/100 = 0.950000.** (Without the policy it would be 97/100: pinned by the two
 whitespace-only rows.) Run: eligible 100, failures 5.
 
-### Validity [P07-MET-02, D-01] rule r-cust-valid-email (v2), pattern `^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$`
+### Validity [P07-MET-02, D-01] rule r-cust-valid-email (v2), pattern `^[^@ \t\r\n\f\v]+@[^@ \t\r\n\f\v]+\.[A-Za-z]{2,}$`
+
+The pattern uses explicit classes only. `\s`, `\d`, `\w` and `\b` (and their negations) are refused at ingest as PATTERN_NOT_PORTABLE (D-10 R7-04): Python
+`re`, JavaScript and PostgreSQL disagree on which characters they match (Unicode or ASCII classes) and on what `\b` means. With the class
+`[ \t\r\n\f\v]` the five failures below are the same in all three engines, and a no-break space, a byte-order mark, U+0085, U+2028 or U+001C inside
+an address is an ordinary character (it passes), so replacing the no-`@` value of cust-005 by `a<that character>b@x.io` gives 91 passing of 95 populated =
+0.957895 everywhere (`reference_check.py`, `review-check.ts`, `tests/test_review_r7.py` and the SQL reference all state this).
 
 Populated = 95. Populated rows failing the format: cust-005 (no @), cust-019 (no dot after @), cust-033 (two @),
 cust-052 (space in local part), cust-077 (one-letter top-level label) = 5. Passing = 95 - 5 = 90.
@@ -48,31 +54,57 @@ Distinct keys = 100 - 2 = 98. Keys with more than one row = 1. Rows beyond the f
 * **Duplicate-group share = 1/98 = 0.010204** (label `duplicate_group_share`).
 * **Duplicate-row share = 2/100 = 0.020000** (label `duplicate_row_share`).
 They differ (group share is per key, row share per eligible row). Run: eligible 100, failures = 0 null + 2 = 2.
-Dimension score used in the weighted score = 1 - duplicate-row share = 0.980000 (DECISIONS, D-T7-3).
+Dimension score used in the weighted score = (eligible - null-key rows - duplicate rows) / eligible = (100 - 0 - 2) / 100 = 0.980000 (DECISIONS, D-T7-3,
+D-10 R7-05). The golden has no null key, so the figure by rows is unchanged and `null_key_row_ids` is empty.
+
+Null-key probe (not in the fixture; `reference_check.py`, `review-check.ts`, `tests/test_review_r7.py`): customer_key of cust-001 set to null. Eligible 100;
+null-key rows 1 (cust-001, listed apart); the 99 other keys hold CK-0060 three times, so distinct keys = 96 + 1 = 97, groups 1, rows beyond the first 2. Group share
+1/97 = 0.010309; row share 2/100 = 0.020000; run failures 1 + 2 = 3; score (100 - 1 - 2) / 100 = **0.970000** (the null key lowers the score exactly as a duplicate
+does). ds-customers under w2: numerator 0.25 x 0.95 + 0.25 x 90/95 + 0.25 x 0.97 + 0.10 x 1 = 0.2375 + 0.236842 + 0.2425 + 0.1 = 0.816842; / 0.85 = **0.960991**.
 
 ### Relationship integrity [P07-MET-04, D-01, P07-TEST-04] rule r-ord-cust-fk (v1)
 
-ds-orders has 40 foreign keys (customer_key). Null: ord-017, ord-033 = 2, **excluded from the denominator and counted
-separately**. Eligible = 40 - 2 = 38. Unmatched against ds-customers.customer_key: ord-008 (CK-0999), ord-025 (CK-0777) = 2.
-Matched = 38 - 2 = 36. **Relationship integrity = 36/38 = 0.947368**; null FK count 2. (Silently counting the nulls
-would give 36/40 = 0.900000, or 38/40 = 0.950000 if they were counted as matched: both wrong.) Run: eligible 38, failures 2.
+ds-orders has 40 foreign keys (customer_key). Missing under the whitespace policy: ord-017 and ord-033 are null and ord-036 is the **empty string**
+(an empty or whitespace-only key is missing, like a null, D-10 R7-11) = 3, **excluded from the denominator and counted separately** (`null_fk_count` 3, of
+which `empty_fk_count` 1 is text; the site labels the column "null or empty (whitespace policy)"). Eligible = 40 - 3 = 37. Unmatched against
+ds-customers.customer_key: ord-008 (CK-0999), ord-025 (CK-0777) = 2. Matched = 37 - 2 = 35. **Relationship integrity = 35/37 = 0.945946**.
+(Silently counting the missing keys would give 35/40 = 0.875000, or 37/40 = 0.925000 if they were counted as matched: both wrong. Before the empty string was
+pinned the figures were 36/38 = 0.947368 with 2 nulls; ord-036 was CK-0036 and matched.) Run: eligible 37, failures 2.
 
-### Timeliness [P07-MET-05, D-01] over the 4 monitored datasets (ds-products is not monitored and not counted)
+### Timeliness [P07-MET-05, D-01, D-10 R7-01] over the 4 monitored datasets (ds-products is not monitored and not counted)
 
-Target = the dataset's declared daily local time in its IANA zone plus its grace; the evaluated occurrence is the latest
-one whose grace window has closed by `as_of`. A refresh is on time when it falls in [occurrence, occurrence + grace)
-(half-open, D-05). On 2026-10-04/05 New York is EDT (UTC-4) and London is BST (UTC+1); DST in both zones ends later in October
-and November, so the offsets are the summer ones.
+Target = the dataset's declared daily local time in its IANA zone plus its grace. A dataset is **on time at `as_of`** when a refresh (not after `as_of`) exists in
+[latest occurrence <= as_of, its deadline) (half-open, D-05). If there is no such refresh the dataset is **pending** while that occurrence's deadline is still in the
+future (neither on time nor late, **excluded from the denominator** and counted in `pending_count`), and **late** once the deadline has passed. A repeated local time is the
+LATER instant; a local time that does not exist uses the offset before the change (D-07). On 2026-10-04/05 New York is EDT (UTC-4) and London is BST (UTC+1); DST in both
+zones ends later in October and November, so the offsets are the summer ones. At 2026-10-05T00:00Z no occurrence is open (the next local occurrences are after `as_of`), so
+the latest started occurrence is the one of 2026-10-04 and its window has closed:
 
-| Dataset | Zone, local time, grace | Occurrence (UTC) | Deadline (UTC) | Last refresh (UTC) | On time |
+| Dataset | Zone, local time, grace | Occurrence (UTC) | Deadline (UTC) | Last refresh (UTC) | State |
 |---|---|---|---|---|---|
-| ds-customers | America/New_York 06:00, 60 min | 2026-10-04 06:00 EDT = 10:00Z | 11:00Z | 10:20Z | yes (10:00 <= 10:20 < 11:00) |
-| ds-orders | Europe/London 07:00, 30 min | 2026-10-04 07:00 BST = 06:00Z (Oct 5 07:00 BST = 06:00Z Oct 5 is after as_of) | 06:30Z | 06:10Z | yes |
-| ds-payments | America/New_York 02:00, 120 min | 2026-10-04 02:00 EDT = 06:00Z | 08:00Z | 07:59Z | yes (one minute inside) |
-| ds-shipments | Europe/London 05:00, 60 min | 2026-10-04 05:00 BST = 04:00Z | 05:00Z | 05:00Z | **no** (05:00 is not < 05:00) |
+| ds-customers | America/New_York 06:00, 60 min | 2026-10-04 06:00 EDT = 10:00Z | 11:00Z | 10:20Z | on time (10:00 <= 10:20 < 11:00) |
+| ds-orders | Europe/London 07:00, 30 min | 2026-10-04 07:00 BST = 06:00Z (Oct 5 07:00 BST = 06:00Z Oct 5 is after as_of) | 06:30Z | 06:10Z | on time |
+| ds-payments | America/New_York 02:00, 120 min | 2026-10-04 02:00 EDT = 06:00Z | 08:00Z | 07:59Z | on time (one minute inside) |
+| ds-shipments | Europe/London 05:00, 60 min | 2026-10-04 05:00 BST = 04:00Z | 05:00Z | 05:00Z | **late** (05:00 is not < 05:00) |
 
-3 on time of 4 monitored: **timeliness = 3/4 = 0.750000.** Read as UTC clock times without the zone, ds-customers (06:00Z)
+3 on time of 4 evaluated (monitored 4, pending 0): **timeliness = 3/4 = 0.750000.** Read as UTC clock times without the zone, ds-customers (06:00Z)
 and ds-payments (02:00Z) would be judged against the wrong instants: the zones matter.
+
+**Stated cases (`probes.timeliness` in `inputs.json`, `timeliness_probes` in `expected.json`).** One schedule, ds-customers' (New York 06:00, grace 60), and the
+New York clock change; each probe states its own refresh and `as_of`:
+
+| Probe | as_of | Last refresh | Occurrence judged | Window | State | Why |
+|---|---|---|---|---|---|---|
+| open-window-refreshed | 2026-10-05T10:30Z | 10-05T10:10Z | 06:00 EDT = 10:00Z | [10:00Z, 11:00Z) | **on_time** | the reviewer's case: the occurrence started at 10:00Z, the window is open at 10:30Z and 10:10Z is inside it (the old rule judged only closed windows and called this late) |
+| open-window-not-yet-refreshed | 2026-10-05T10:30Z | 10-04T10:20Z | 10:00Z | [10:00Z, 11:00Z) | **pending** | yesterday's refresh is not in today's window and the deadline (11:00Z) is after `as_of`: neither on time nor late, outside the denominator |
+| deadline-equals-as-of-no-refresh | 2026-10-05T11:00Z | 10-04T10:20Z | 10:00Z | [10:00Z, 11:00Z) | **late** | the deadline 11:00Z is not after `as_of`: the window has closed with no refresh in it |
+| refresh-at-the-deadline | 2026-10-05T12:00Z | 10-05T11:00Z | 10:00Z | [10:00Z, 11:00Z) | **late** | 11:00Z is not < 11:00Z |
+| refresh-after-as-of | 2026-10-05T10:30Z | 10-05T10:45Z | 10:00Z | [10:00Z, 11:00Z) | **pending** | a refresh after `as_of` has not happened yet: no refresh is known and the window is open |
+| clocks-back-refresh-in-the-first-0130 | 2026-11-01T12:00Z | 11-01T05:45Z | 01:30 = 06:30Z | [06:30Z, 07:30Z) | **late** | on 2026-11-01 New York goes from EDT to EST at 02:00 EDT, so 01:30 happens at 01:30 EDT = 05:30Z and again at 01:30 EST = 06:30Z; the contract takes the later instant (D-07), so the refresh at 05:45Z (01:45 EDT, in the first 01:30 hour) is 45 minutes BEFORE the occurrence and is not in its window; the deadline 07:30Z has passed |
+| clocks-back-refresh-in-the-second-0130 | 2026-11-01T12:00Z | 11-01T06:45Z | 06:30Z | [06:30Z, 07:30Z) | **on_time** | 06:30Z <= 06:45Z < 07:30Z |
+
+The clocks-back result is what the rule gives, not a judgement that the first refresh was bad: a dataset whose source clock repeats an hour is judged against the later
+01:30. Both results are the same in the Python domain, the SQL reference, the TypeScript mirror and `reference_check.py`.
 
 ### Weighted quality score and the critical override [P07-MET-06/07, D-01]
 
@@ -91,10 +123,16 @@ the version.
 Both exceed 0.95. **Critical failures:** r-cust-key-unique has severity critical and 2 failures on the current run, and
 issue iss-006 (critical, status investigating) is open. So ds-customers: critical_failures = 2, critical_open_issues = 1,
 **critical_override = true**, shown beside 0.963932. Across the portfolio: failures 2, open critical issues 1,
-datasets overridden 1.
+datasets overridden 1, carried 0 (`carried` is the list of live failures of disabled critical rules, empty here: the only disabled rule, r-ord-amount-range, is not critical).
 
-Other datasets (w2 / w1): ds-orders measures relationship 0.947368 and timeliness 1: w2 = (0.15 x 0.947368 + 0.10) / 0.25 =
-0.242105 / 0.25 = 0.968421; w1 = (0.05 x 0.947368 + 0.05) / 0.10 = 0.097368 / 0.10 = 0.973684. ds-payments timeliness 1 only:
+Disabled-critical probe (not in the fixture; `reference_check.py`, `review-check.ts`, `tests/test_review_r7.py`, the API sequence run-rule then disable-rule): disable
+r-cust-key-unique at 2026-10-04T00:00Z with its latest run rr-003 failing (2 rows). It is no longer measured, but disabling is not repair: its latest run's 2 failures are
+**carried**, so critical_failures stays 2 (`carried` = [rr-003: 2]) and the override stays true even with no issue open; ds-customers' score then has no uniqueness
+dimension. A later successful rerun of the same rule (failure_count 0, run_at after rr-003) is the latest run and clears it: critical_failures 0, `carried` empty (the
+open critical issue iss-006 still holds the override). A rule disabled after `as_of` was still active at it and is measured, not carried (D-10 R7-02).
+
+Other datasets (w2 / w1): ds-orders measures relationship 0.945946 (35/37) and timeliness 1: w2 = (0.15 x 35/37 + 0.10) / 0.25 =
+0.241892 / 0.25 = 0.967568; w1 = (0.05 x 35/37 + 0.05) / 0.10 = 0.097297 / 0.10 = 0.972973. ds-payments timeliness 1 only:
 1.000000 both. ds-shipments timeliness 0 only: 0.000000 both. ds-products measures nothing: score null (weight sum 0).
 
 ### Rule runs and comparability [P07-FLOW-03, P07-TEST-12]
@@ -104,7 +142,7 @@ the 3 customer rules + r-ord-cust-fk + 4 timeliness rules; timeliness eligible 1
 earlier scheduled run of the same rule:
 * r-cust-complete-email: previous rr-001 (v1, 8/100 = 0.080000) vs now v1 5/100 = 0.050000: comparable.
 * r-cust-key-unique: rr-003 (v1) 2/100 = 0.020000 vs now 0.020000: comparable.
-* r-ord-cust-fk: rr-006 (v1) 3/36 = 0.083333 vs now 2/38 = 0.052632: comparable (same rule version, and the null FKs are
+* r-ord-cust-fk: rr-006 (v1) 3/36 = 0.083333 vs now 2/37 = 0.054054: comparable (same rule version, and the missing FKs are
   excluded in both, so the eligibility definition is the same).
 * r-cust-valid-email: previous rr-002 was **rule v1** (eligible 92) and now is **v2** (eligible 100): **not comparable**,
   reason RULE_VERSION_DIFFERS, no rates are compared.
@@ -175,7 +213,7 @@ by md-5 (rec-006 -> rec-005 restored: rec-005 and rec-006 map to themselves). Me
 
 ### Counts at ingest
 
-Every record is accepted: owners 5, datasets 5, fields 7, quality_rules 9, rule_runs 13, issues 6, lineage_edges 14, metric_versions 6,
+Every record is accepted (the explicit-class pattern, the empty-string key and the timeliness probes change no count): owners 5, datasets 5, fields 7, quality_rules 9, rule_runs 13, issues 6, lineage_edges 14, metric_versions 6,
 definition_changes 1, customer_records 10, match_candidates 5, merge_decisions 5, dataset rows 140 (100 + 40). Rejected 0.
 
 ## Part (b): variant-rejected
@@ -205,6 +243,9 @@ is null (completeness/validity/uniqueness/relationship keyed objects are empty b
 ownership 0/0 null, definition coverage 0/0 null, lineage 0/0 null, match precision 0/0 null, mean resolution hours null;
 the weighted score has no dataset), and `empty_population` is **true**. Nothing reads 0.000000 where it means unknown.
 
+Note (D-10): `variant-rejected/expected.json` and `variant-empty/expected.json` gained three keys and no figure moved: `metrics.timeliness.evaluated_datasets` (0),
+`metrics.timeliness.pending_count` (0) and `metrics.critical_failures.carried` ([]).
+
 ## DECISIONS (proposed; the contract is not edited, see "Contract gaps" for what needs the owner)
 
 * **D-T7-1 Eligibility and the whitespace policy.** Eligible rows = all rows of the dataset in the golden case (documented here;
@@ -212,17 +253,20 @@ the weighted score has no dataset), and `empty_population` is **true**. Nothing 
   `whitespace_policy`. The empty string counts as missing, and `whitespace_only_count` (non-empty strings that trim to empty) is
   reported beside it.
 * **D-T7-2 Critical-failure count.** `critical_failures` = sum of `failure_count` over the dataset's active rules with
-  severity `critical` on the current run at `as_of` (here the 2 duplicate rows). `critical_open_issues` = issues of critical
+  severity `critical` on the current run at `as_of` (here the 2 duplicate rows), plus the `failure_count` of the latest run of every critical rule that is
+  disabled at `as_of` while that run fails (`carried`, D-10 R7-02; a passing rerun is the latest run and clears it). `critical_open_issues` = issues of critical
   rules whose class is not resolved (open, reopened or claimed). `critical_override` = either is above 0. Both numbers are always
   shown and the override is never recomputed from the score.
 * **D-T7-3 Uniqueness key and score.** Key = the rule's named field, compared as exact text after the missing-value policy;
   null keys are failures and are counted separately (`null_key_count`) and not grouped. The first row in row order is kept, the
   rows after it fail. Group share = groups with more than one row / distinct non-null keys; row share = rows beyond the first /
-  eligible rows. The dimension score fed to the weighted score is 1 - row share.
+  eligible rows. The dimension score fed to the weighted score is (eligible - null-key rows - duplicate rows) / eligible (D-10 R7-05); the null-key rows are listed
+  apart in `null_key_row_ids`. With no null key it equals 1 - row share, as in the golden.
 * **D-T7-4 Timeliness target.** Target = the dataset's declared daily local time in its IANA zone plus `refresh_grace_minutes`.
-  The occurrence evaluated at `as_of` is the latest whose grace has closed; a refresh is on time in [occurrence, deadline),
-  half-open (D-05), so a refresh exactly at the deadline is late. Only datasets with `monitored: true` count; a dataset
-  never refreshed is late. The timeliness rule's run is one eligible dataset (1) with 0 or 1 failure.
+  The occurrence evaluated at `as_of` is the latest that has STARTED (D-10 R7-01); a refresh not after `as_of` is on time in [occurrence, deadline),
+  half-open (D-05), so a refresh exactly at the deadline is late. With no such refresh the dataset is pending while the deadline is in the future (outside
+  the denominator, counted in `pending_count`) and late once it has passed. Only datasets with `monitored: true` count; a never-refreshed dataset is pending
+  until its deadline and late after. The timeliness rule's run is one eligible dataset (1) with 0 or 1 failure, or eligible 0 while pending.
 * **D-T7-5 Weighted score and unmeasured dimensions.** Dimensions with no measured score (no active rule, or zero
   denominator) are omitted from both numerator and denominator (contract: "over the dimensions that have a measured score");
   the measured dimensions and the weight sum are returned with the score; a dataset with none has a null score. Validity enters
@@ -249,7 +293,10 @@ the weighted score has no dataset), and `empty_population` is **true**. Nothing 
   A reverse-order pair whose twin already exists is DUPLICATE_PAIR; a first-seen pair with left > right is
   NON_CANONICAL_ORDER.
 * **D-T7-11 Observed lineage.** Distinct (source, target) pairs; repeat observations do not raise coverage. Inferred edges
-  are never part of the observed numerator.
+  are never part of the observed numerator. An edge whose source and target are the same dataset is MALFORMED_RECORD (D-10 R7-06).
+* **D-T7-12 Portable patterns, empty keys, stated timeliness cases (D-10).** A validity pattern that uses `\s`, `\d`, `\w` or `\b` is PATTERN_NOT_PORTABLE; the fixture
+  pattern uses `[ \t\r\n\f\v]`. An empty or whitespace-only foreign key is missing under the whitespace policy and counted with the nulls (`empty_fk_count` reports the
+  text ones). `probes.timeliness` states cases for the timeliness rule alone and `timeliness_probes` is their expected state.
 
 ## Contract gaps found (propose; nothing was edited)
 

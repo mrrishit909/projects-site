@@ -79,6 +79,9 @@ def parse_config(raw: Row, pop: Population) -> None:
     pop.checklist_version = raw.get("checklist_version") or pop.checklist_versions[-1]["checklist_version"]
     probe = (raw.get("probes") or {}).get("definition_at")
     pop.probe_definition_at = parse_ts(probe) if probe else None
+    pop.probe_timeliness = [{"probe_id": str(c["probe_id"]), "timezone": c["timezone"], "local_time": c["local_time"],
+                             "grace_minutes": int(c["grace_minutes"]), "last_refreshed_at": parse_ts(c["last_refreshed_at"]) if c.get("last_refreshed_at") else None,
+                             "as_of": parse_ts(c["as_of"])} for c in (raw.get("probes") or {}).get("timeliness") or []]
     pop.weight_version = raw.get("weight_version")
 
 
@@ -181,6 +184,8 @@ def validate_batch(raw: Row) -> IngestResult:
         ends = (e.source_dataset_id, e.target_dataset_id)
         if (e.evidence_type == "observed") != (e.observed_at is not None):   # D-08: observed edges carry an instant, others none
             reject("lineage_edges", r, MALFORMED_RECORD)
+        elif e.source_dataset_id == e.target_dataset_id:                      # D-10 R7-06: a dataset does not feed itself
+            reject("lineage_edges", r, MALFORMED_RECORD, "an edge needs two different datasets")
         elif all(x in ds_ok for x in ends):
             pop.lineage_edges.append(e)
         elif any(x in ds_bad for x in ends):

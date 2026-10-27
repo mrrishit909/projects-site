@@ -19,10 +19,12 @@ export const RULE_STATUSES = ["active", "disabled"];
 export const RUN_KINDS = ["scheduled", "rerun"];
 export const ISSUE_STATUSES = ["open", "investigating", "closed"];
 export const EVIDENCE_TYPES = ["declared", "observed", "inferred"];
-export const METRIC_STATUSES = ["draft", "published", "superseded"];
+export const METRIC_STATUSES = ["draft", "reviewed", "published", "superseded"]; // FLOW-02: draft -> reviewed -> published (D-10)
 export const DECISIONS = ["approve", "reject", "reverse"];
 
 export const DEFAULT_TRIM = " \t\r\n";
+/** Pattern escapes that Python re, JavaScript and PostgreSQL read differently; a rule that uses one is refused at ingest (D-10, R7-04). */
+export const NON_PORTABLE_ESCAPES = "sSdDwWbB";
 export const DEFAULT_CHECKLIST = { checklist_version: "cl-1", items: ["definition", "grain", "source_fields", "owner", "refresh"] };
 export const ID_KEYS: Record<Entity, string> = {
   owners: "owner_id", datasets: "dataset_id", fields: "field_id", quality_rules: "rule_id", rule_runs: "rule_run_id", issues: "issue_id",

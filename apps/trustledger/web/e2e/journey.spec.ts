@@ -71,8 +71,9 @@ test("scorecard, golden: each dimension apart, both validity figures labelled, t
   await expect(page.locator(`${u} [data-k=group_share]`)).toHaveText("0.010204");
   await expect(page.locator(`${u} [data-k=row_share]`)).toHaveText("0.020000");
   const r = "[data-testid=dim-relationship] tr[data-rule=r-ord-cust-fk]";
-  await expect(page.locator(`${r} [data-k=value]`)).toHaveText("0.947368");
-  await expect(page.locator(`${r} [data-k=null_fk]`)).toHaveText("2");
+  await expect(page.locator(`${r} [data-k=value]`)).toHaveText("0.945946");        // 35 of 37: 2 null and 1 empty-string key are missing, counted apart (D-10 R7-11)
+  await expect(page.locator(`${r} [data-k=null_fk]`)).toHaveText("3");
+  await expect(page.locator("[data-testid=dim-relationship] thead")).toContainText("Null or empty (whitespace policy)");
   await expect(page.locator("[data-testid=dim-timeliness] [data-figure=timeliness]")).toHaveText("0.750000");
   await expect(page.locator("[data-testid=dim-timeliness] tr[data-dataset=ds-shipments] [data-k=on_time]")).toContainText("late");
   const row = "[data-testid=score-table] tr[data-dataset=ds-customers]";
@@ -112,6 +113,8 @@ test("scorecard, snapshot: ds-customers keeps its override beside a high score; 
   await expect(page.locator("[data-testid=portfolio] [data-figure=largest]")).toHaveText("−0.167477");
   await expect(page.getByTestId("ownership-strip").locator("[data-figure=ownership]")).toHaveText("0.875000");
   await expect(page.getByTestId("ownership-strip")).toContainText("ds-contacts, ds-invoices, ds-ledger-entries, ds-returns, ds-suppliers");
+  await expect(page.getByTestId("shift-footnote")).toContainText("exact fractions");     // D-10 R7-18
+  await expect(page.getByTestId("shift-footnote")).toContainText("0.000001");
   await page.getByTestId("wv-switch").getByText("w1", { exact: true }).click();
   await expect(page.locator(`${row} [data-k=score]`)).toContainText("0.990329");
   await page.getByTestId("dataset-filter").selectOption("ds-orders");
@@ -209,8 +212,12 @@ test("issues: claimed against resolved, aging, ownership; simulated actions chan
   const detail = page.getByTestId("issue-detail");
   await expect(detail).toHaveAttribute("data-issue", "iss-0461"); // the open critical issue is selected first
   await expect(page.getByTestId("sim-note").first()).toContainText("Simulation, browser memory only");
+  const live = page.getByTestId("sim-status");
+  await expect(live).toHaveAttribute("role", "status");        // a live region that exists before the first action, so a screen reader announces the result (D-10 R7-17)
+  await expect(live).toHaveAttribute("aria-live", "polite");
   await detail.getByRole("button", { name: /close without a rerun/ }).click();
   await expect(page.getByTestId("sim-log")).toContainText("claimed");
+  await expect(live).toContainText("claimed");
   await expect(page.getByTestId("sim-counts")).toContainText("claimed 100");
   await expect(s.locator("[data-figure=claimed]")).toHaveText("99"); // the published count is unchanged
   await detail.getByRole("button", { name: /rerun the same rule version/ }).click();
@@ -249,6 +256,12 @@ test("lineage: three edge styles, coverage 0.725000, inferred edges labelled and
   await expect(g.locator("g[data-edge=inferred]")).toHaveCount(0);
   await g.locator("g[data-node=ds-orders]").click();
   await expect(page.getByTestId("focus-panel")).toContainText("ds-orders");
+  await expect(g.locator("g[data-node=ds-orders]")).toHaveAttribute("aria-pressed", "true");
+  await page.keyboard.press("Escape");                 // D-10 R7-17: Escape clears the isolation and aria-pressed
+  await expect(page.getByTestId("focus-panel")).toHaveCount(0);
+  await expect(g.locator("g[data-node=ds-orders]")).toHaveAttribute("aria-pressed", "false");
+  await expect(g.locator(".e-dim")).toHaveCount(0);
+  expect(page.url()).not.toContain("focus=");
   await expectNoOverflow(page);
   await page.goto("lineage/?dataset=golden");
   await ready(page);
@@ -270,8 +283,11 @@ test("duplicates: side by side, the uncertainty note, and no control that merges
   await expect(page.getByTestId("sim-note").first()).toContainText("no button on this site that merges anything");
   const proposer = await page.getByTestId("reviewer").locator("option", { hasText: "proposer" }).getAttribute("value");
   await page.getByTestId("reviewer").selectOption(proposer!);
+  await expect(page.getByTestId("review-status")).toHaveAttribute("role", "status");
+  await expect(page.getByTestId("review-status")).toHaveAttribute("aria-live", "polite");
   await page.getByTestId("record-review").click();
-  await expect(page.getByTestId("review-log")).toContainText("REVIEWER_IS_PROPOSER");
+  await expect(page.getByTestId("review-status")).toContainText("SELF_REVIEW");
+  await expect(page.getByTestId("review-log")).toContainText("SELF_REVIEW");
   await page.getByTestId("reviewer").selectOption({ index: 0 });
   await page.getByTestId("record-review").click();
   await expect(page.getByTestId("review-log").locator("li").last()).toContainText(/recorded|ALREADY_REVIEWED/);
@@ -335,7 +351,7 @@ test("evidence: the golden case equals expected.json live; the generator's check
   await ready(page);
   const g = page.getByTestId("evidence-golden");
   await expect(g.locator(".callout")).toHaveAttribute("data-ok", "true");
-  await expect(g.locator("[data-k=leaves]")).toHaveText("391 of 391");
+  await expect(g.locator("[data-k=leaves]")).toHaveText("435 of 435");
   await page.getByTestId("injections").waitFor();
   await expect(page.getByTestId("injections").locator("tbody tr")).toHaveCount(12);
   await expect(page.getByTestId("injections").locator("[data-k=holds]")).toHaveText(Array(12).fill(/ hold$/));
@@ -343,6 +359,10 @@ test("evidence: the golden case equals expected.json live; the generator's check
   await expect(page.getByTestId("disclosures")).toContainText("No realised outcome was re-drawn");
   await expect(page.getByTestId("row-counts").locator("tr[data-entity=rule_runs] td").nth(1)).toHaveText("4,609");
   await expect(page.getByTestId("limits")).toContainText("Nothing here is live");
+  await expect(page.getByTestId("limits")).toContainText("PATTERN_NOT_PORTABLE");          // D-10 R7-13: no assurance of a common subset; the zones are named
+  await expect(page.getByTestId("limits")).toContainText("no assurance is given");
+  await expect(page.getByTestId("limits")).toContainText("Four of those zones have daylight-saving time (America/New_York, America/Chicago, Europe/London, Europe/Berlin) and three do not (UTC, Asia/Kolkata, Asia/Singapore)");
+  await expect(page.getByTestId("limits")).not.toContainText("common subset");
   await expectNoOverflow(page);
   expect(errors).toEqual([]);
 });

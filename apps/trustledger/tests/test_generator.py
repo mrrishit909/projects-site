@@ -87,6 +87,7 @@ def make_inputs(built) -> dict:
         grouped.setdefault(r.pop("dataset_id"), []).append(r)
     inp["dataset_rows"] = grouped
     inp["weight_versions"] = copy.deepcopy(built["rows"]["weight_versions"])
+    inp["quality_rule_versions"] = copy.deepcopy(built["rows"]["quality_rule_versions"])
     return inp
 
 
@@ -295,7 +296,7 @@ def test_designed_near_perfect_dataset_with_an_open_critical_key_failure(built, 
     assert Fraction(ws["value"]) > Fraction("0.95") and ws["critical_override"] is True
     assert Fraction(result.metrics["weighted_score"]["by_weight_version"]["w1"]["ds-customers"]) > Fraction("0.95")
     assert ws["critical_failures"] == 2 and ws["critical_open_issues"] == 1
-    assert result.metrics["critical_failures"] == {"failures": 2, "open_issues": 1, "datasets_overridden": 1}
+    assert result.metrics["critical_failures"] == {"failures": 2, "open_issues": 1, "datasets_overridden": 1, "carried": []}
     rule = next(q for q in built["rows"]["quality_rules"] if q["rule_id"] == "r-customers-unique-customer_key")
     assert rule["severity"] == "critical" and rule["rule_type"] == "uniqueness"
     assert built["dr"]["DR-01"]["realised"]["weighted_score_w2"] == ws["value"]
@@ -592,7 +593,7 @@ def test_every_replay_event_behaves_as_recorded(client, conn, inputs, truth, bui
                 for c in s["expect"]:
                     check(data, c)
             log.append(tag)
-    assert len(log) == sum(len(e["steps"]) for e in built["events"].values()) == 28
+    assert len(log) == sum(len(e["steps"]) for e in built["events"].values()) == 30
     # the audit trail kept the refused decisions
     refused = conn.execute("SELECT count(*) AS n FROM audit_events WHERE action LIKE '%%-refused'").fetchone()["n"]
     assert refused >= 2

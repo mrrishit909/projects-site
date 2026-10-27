@@ -13,7 +13,7 @@ import { METRIC_KEYS } from "../src/domain/contract";
 import { compute } from "../src/domain/metrics";
 import { fracOfDec, fr, h4, p6, rnd } from "../src/domain/num";
 import { goldenOf, runPipeline } from "../src/domain/pipeline";
-import { isoZ, localToUtc, parseHhmm, parseTs, scheduledOccurrence, daysFromCivil } from "../src/domain/time";
+import { isoZ, latestOccurrence, localToUtc, parseHhmm, parseTs, scheduledOccurrence, daysFromCivil, timelinessState } from "../src/domain/time";
 import { designedClaims, injectionChecks } from "../src/lib/claims";
 
 const ROOT = new URL("../../", import.meta.url);
@@ -89,8 +89,10 @@ console.log("OK       golden copy row counts match its manifest");
   eq("spec: 100 eligible rows, 5 missing e-mails, completeness 0.950000 (2 of the 5 are whitespace-only)", [c.eligible_count, c.missing_count, c.whitespace_only_count, c.populated_count, c.value], [100, 5, 2, 95, "0.950000"]);
   eq("spec: populated-only validity 90/95 = 0.947368 and all-eligible 90/100 = 0.900000, both labelled", [v.populated_only, v.all_eligible, v.populated_count, v.passing_count], [{ label: "validity_populated_only", value: "0.947368" }, { label: "validity_all_eligible", value: "0.900000" }, 95, 90]);
   eq("spec: uniqueness 1/98 groups = 0.010204 and 2/100 rows = 0.020000", [u.group_share, u.row_share, u.distinct_keys], [{ label: "duplicate_group_share", value: "0.010204" }, { label: "duplicate_row_share", value: "0.020000" }, 98]);
-  eq("spec: relationship 36/38 = 0.947368 with 2 null foreign keys counted separately", [r.total_fk_count, r.null_fk_count, r.eligible_count, r.matched_count, r.value], [40, 2, 38, 36, "0.947368"]);
-  eq("spec: timeliness 3/4 = 0.750000; the refresh at the deadline is late (05:00 is not < 05:00)", [m["timeliness"].value, m["timeliness"].datasets["ds-shipments"].on_time, m["timeliness"].datasets["ds-payments"].on_time], ["0.750000", false, true]);
+  eq("spec: relationship 35/37 = 0.945946 with 3 missing foreign keys (2 null, 1 empty string) counted separately", [r.total_fk_count, r.null_fk_count, r.empty_fk_count, r.eligible_count, r.matched_count, r.value], [40, 3, 1, 37, 35, "0.945946"]);
+  eq("spec: uniqueness keeps its figure by rows (no null keys) and lists none", [u.null_key_count, u.null_key_row_ids, w.dimension_scores.uniqueness], [0, [], "0.980000"]);
+  eq("spec: timeliness 3/4 = 0.750000, none pending; the refresh at the deadline is late (05:00 is not < 05:00)", [m["timeliness"].value, m["timeliness"].evaluated_datasets, m["timeliness"].pending_count, m["timeliness"].datasets["ds-shipments"].state, m["timeliness"].datasets["ds-payments"].state], ["0.750000", 4, 0, "late", "on_time"]);
+  eq("spec: the timeliness probes are on time, pending, late, late, pending, late (clocks back, first 01:30), on time (second)", Object.values<any>(gold.ds.goldenShape()["timeliness_probes"]).map((p) => p.state), ["on_time", "pending", "late", "late", "pending", "late", "on_time"]);
   eq("spec: weighted 0.963932 (w2) and 0.958116 (w1) with the critical override true beside both", [w.value, m["weighted_score"].by_weight_version.w1["ds-customers"], w.critical_override, w.critical_failures, w.critical_open_issues], ["0.963932", "0.958116", true, 2, 1]);
   eq("spec: ownership 4/5, definitions 3/4, lineage 5/6, precision 2/3, resolution mean 38.4444 h", [m["ownership_coverage"].value, m["definition_coverage"].value, m["lineage_coverage"].value, m["match_precision"].precision, m["resolution_time"].mean_hours], ["0.800000", "0.750000", "0.833333", "0.666667", "38.4444"]);
   eq("spec: reviewed_correct_share 2/4 = 0.500000 is reported beside precision, labelled apart", m["match_precision"].reviewed_correct_share, "0.500000");
@@ -121,8 +123,8 @@ const ref = readJson(new URL("scripts/snapshot-reference.json", WEB));
 const snap = loadFrom("");
 const ds = snap.ds;
 eq("snapshot: dataset_hash, version and as-of equal the Python reference's", [snap.manifest.dataset_hash, snap.manifest.dataset_version, snap.manifest.as_of], [ref.dataset_hash, ref.dataset_version, ref.as_of]);
-eq("snapshot: dataset_hash = sha-256 of the 14 entity files (json.dumps sort_keys, compact, entity-name order)", createHash("sha256").update([...FILES].sort().map((e) => pyDumps(ds.raw[e])).join("")).digest("hex"), snap.manifest.dataset_hash);
-eq("snapshot: the hash check agrees with Python", ref.dataset_hash_check.sha256_of_14_entity_files, snap.manifest.dataset_hash);
+eq("snapshot: dataset_hash = sha-256 of the 15 entity files (json.dumps sort_keys, compact, entity-name order)", createHash("sha256").update([...FILES].sort().map((e) => pyDumps(ds.raw[e])).join("")).digest("hex"), snap.manifest.dataset_hash);
+eq("snapshot: the hash check agrees with Python", ref.dataset_hash_check.sha256_of_15_entity_files, snap.manifest.dataset_hash);
 for (const f of FILES) if (f !== "weight_versions") eq(`snapshot ${f}: row count = manifest`, ds.raw[f].length, snap.manifest.row_counts[f], true);
 console.log("OK       snapshot row counts match its manifest");
 eq("snapshot: ingest counts and rejected count equal Python's", [ds.result.ingest.counts, ds.result.ingest.rejected.length], [ref.ingest_counts, ref.rejected_count]);
@@ -170,6 +172,14 @@ for (const [t, byWv] of Object.entries<any>(ref.as_ofs)) {
       for (let t = parseTs(a); t < parseTs(b); t += 30n * 60n * 1_000_000n) for (const [lt, g] of [["02:30", 60], ["01:30", 30], ["06:00", 120], ["00:00", 0]] as [string, number][]) occ.push(scheduledOccurrence(z, lt, g, t).map((x) => isoZ(x)!));
     }
     eq(`zone ${z}: evaluated occurrence every 30 minutes around both DST transitions (${occ.length}) = Python`, [occ.length, digest(occ)], [zp.occurrences[z].count, zp.occurrences[z].digest]);
+    const lat: string[][] = [];
+    for (const [a, b] of zp.occurrence_windows as [string, string][]) {
+      for (let t = parseTs(a); t < parseTs(b); t += 30n * 60n * 1_000_000n) for (const [lt, g] of [["02:30", 60], ["01:30", 30], ["06:00", 120], ["00:00", 0]] as [string, number][]) {
+        const [s, dl] = latestOccurrence(z, lt, g, t);
+        lat.push([isoZ(s)!, isoZ(dl)!, ...[-1440, -90, -30, 0, 45].map((k) => timelinessState(z, lt, g, t + BigInt(k) * 60n * 1_000_000n, t).state)]);
+      }
+    }
+    eq(`zone ${z}: latest started occurrence and the timeliness state at five refresh offsets, every 30 minutes around both DST transitions (${lat.length}) = Python`, [lat.length, digest(lat)], [zp.latest_occurrences[z].count, zp.latest_occurrences[z].digest]);
   }
 }
 console.log("OK       the Python domain's results over the snapshot equal the TypeScript mirror's (3 as-of instants x 3 weight choices, a window, every issue, the identity map, the zones)");

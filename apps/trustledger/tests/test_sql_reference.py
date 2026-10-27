@@ -147,3 +147,15 @@ def test_clock_change_days_sql_and_domain_agree_on_the_occurrence(conn, zone, da
                 row = reference(conn, w.d["as_of"])
                 assert row["timeliness"] == res.metrics["timeliness"], (zone, w.d["as_of"])
                 raise psycopg.Rollback()
+
+
+# D-10 R7-04: the characters Python's \s, JavaScript's \s and PostgreSQL's \s used to disagree about are ordinary characters for the explicit class, in the
+# domain and in the SQL alike (tests/test_review_r7.py adds the TypeScript and the reference; web/scripts/review-check.ts holds the same five)
+@pytest.mark.parametrize("name,ch", [("U+00A0", " "), ("U+FEFF", "﻿"), ("U+0085", "\u0085"), ("U+2028", " "), ("U+001C", "\x1c")])
+def test_sql_whitespace_probes_equal_the_domain(conn, name, ch):
+    inputs = golden_inputs()
+    inputs["dataset_rows"]["ds-customers"][4]["email"] = f"a{ch}b@x.io"                      # cust-005 (no @) becomes a valid address by the explicit class
+    load(conn, inputs)
+    row = reference(conn, inputs["as_of"])
+    domain = run_pipeline(inputs).metrics
+    assert row["validity"] == domain["validity"] and row["validity"]["r-cust-valid-email"]["passing_count"] == 91, name

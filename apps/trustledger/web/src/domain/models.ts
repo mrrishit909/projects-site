@@ -1,8 +1,8 @@
 // Typed records of the twelve entities and the population the metrics are computed over. Mirror of domain/trustledger/models.py.
 // `parse` turns a raw row into a record or throws DomainError(MALFORMED_RECORD). Field kinds: `id` non-blank text; `text` any text;
 // `ts` an instant with a zone; a trailing `?` allows null; `enum:a|b` one of the listed values. Unknown keys are ignored.
-import { DECISIONS, EVIDENCE_TYPES, ISSUE_STATUSES, METRIC_STATUSES, ROLES, RULE_STATUSES, RULE_TYPES, RUN_KINDS, SEVERITIES, DEFAULT_TRIM, type Entity } from "./contract";
-import { DomainError, MALFORMED_RECORD, SCHEDULE_REQUIRED, ValueError } from "./errors";
+import { DECISIONS, EVIDENCE_TYPES, ISSUE_STATUSES, METRIC_STATUSES, NON_PORTABLE_ESCAPES, ROLES, RULE_STATUSES, RULE_TYPES, RUN_KINDS, SEVERITIES, DEFAULT_TRIM, type Entity } from "./contract";
+import { DomainError, MALFORMED_RECORD, PATTERN_NOT_PORTABLE, SCHEDULE_REQUIRED, ValueError } from "./errors";
 import { fracOfDec, type Fr } from "./num";
 import { parseHhmm, parseTs, zone, type Instant } from "./time";
 
@@ -150,11 +150,25 @@ function checkSchedule(d: Dataset): void {
 export function compilePattern(pattern: string): RegExp {
   return new RegExp(pattern);
 }
+/** A pattern is portable only if it avoids \s \d \w \b and their negations: the three engines read them differently. Explicit classes
+ * ([ \t\r\n\f\v], [0-9]) are portable, and so is an escaped backslash followed by a letter (D-10 R7-04). */
+export function patternPortable(pattern: string): boolean {
+  for (let i = 0; i < pattern.length; ) {
+    if (pattern[i] === "\\") {
+      if (i + 1 < pattern.length && NON_PORTABLE_ESCAPES.includes(pattern[i + 1]!)) return false;
+      i += 2;
+    } else i += 1;
+  }
+  return true;
+}
 function checkRule(r: Rule): void {
   const d = r.definition, t = r.rule_type;
   const field = d["field"];
   if (t !== "timeliness" && !(isStr(field) && field)) throw malformed("quality_rules", "definition.field", "is required");
   if (t === "validity" && (r.status === "active" || "pattern" in d)) {
+    if (isStr(d["pattern"]) && !patternPortable(d["pattern"])) {
+      throw new DomainError(PATTERN_NOT_PORTABLE, "a pattern may not use \\s, \\d, \\w or \\b (they differ between Python, JavaScript and PostgreSQL): use explicit classes such as [ \\t\\r\\n\\f\\v] and [0-9]", "definition.pattern");
+    }
     if (!isStr(d["pattern"])) throw malformed("quality_rules", "definition.pattern", "must be a valid regular expression");
     try { compilePattern(d["pattern"]); } catch { throw malformed("quality_rules", "definition.pattern", "must be a valid regular expression"); }
     if (!d["pattern"]) throw malformed("quality_rules", "definition.pattern", "is required");
@@ -173,12 +187,14 @@ export interface Population {
   owners: Owner[]; datasets: Dataset[]; fields: Field[]; quality_rules: Rule[]; rule_runs: RuleRun[]; issues: Issue[]; lineage_edges: Edge[];
   metric_versions: MetricVersion[]; definition_changes: DefinitionChange[]; customer_records: CustomerRecord[]; match_candidates: Candidate[];
   merge_decisions: Decision[]; dataset_rows: Record<string, Row[]>; weight_versions: WeightVersion[]; checklist_versions: Row[]; checklist_version: string;
-  trim: string; probe_definition_at: Instant | null; weight_version: string | null;
+  trim: string; probe_definition_at: Instant | null; probe_timeliness: TimelinessProbe[]; weight_version: string | null;
 }
+/** A stated timeliness case (D-10 R7-01): judged by the rule alone. */
+export interface TimelinessProbe { probe_id: string; timezone: string; local_time: string; grace_minutes: number; last_refreshed_at: Instant | null; as_of: Instant }
 export function emptyPopulation(): Population {
   return { owners: [], datasets: [], fields: [], quality_rules: [], rule_runs: [], issues: [], lineage_edges: [], metric_versions: [], definition_changes: [],
     customer_records: [], match_candidates: [], merge_decisions: [], dataset_rows: {}, weight_versions: [], checklist_versions: [], checklist_version: "cl-1",
-    trim: DEFAULT_TRIM, probe_definition_at: null, weight_version: null };
+    trim: DEFAULT_TRIM, probe_definition_at: null, probe_timeliness: [], weight_version: null };
 }
 export function populationTotal(p: Population): number {
   const n = p.owners.length + p.datasets.length + p.fields.length + p.quality_rules.length + p.rule_runs.length + p.issues.length + p.lineage_edges.length +
@@ -189,7 +205,19 @@ export function populationTotal(p: Population): number {
 export function weightInForce(p: Population, asOf: Instant): string | null {
   const live = p.weight_versions.filter((w) => w.valid_from <= asOf);
   if (!live.length) return null;
-  return live.reduce((a, b) => (b.valid_from > a.valid_from || (b.valid_from === a.valid_from && b.weight_version > a.weight_version) ? b : a)).weight_version;
+  return live.reduce((a, b) => (b.valid_from > a.valid_from || (b.valid_from === a.valid_from && cmp(b.weight_version, a.weight_version) > 0) ? b : a)).weight_version;
 }
-/** Code-point order of two strings (what Python's sort does for these ids). */
-export const cmp = (a: string, b: string): number => (a < b ? -1 : a > b ? 1 : 0);
+/** Code-point order of two strings, which is what Python's sort and PostgreSQL's COLLATE "C" do. JavaScript's `<` compares UTF-16 units, which
+ * puts an astral character (a surrogate pair) before U+E000..U+FFFF; this puts it after (D-10 R7-16). */
+export function cmp(a: string, b: string): number {
+  if (a === b) return 0;
+  const n = Math.min(a.length, b.length);
+  for (let i = 0; i < n; i++) {
+    const x = a.charCodeAt(i), y = b.charCodeAt(i);
+    if (x === y) continue;
+    const sx = x >= 0xd800 && x <= 0xdfff, sy = y >= 0xd800 && y <= 0xdfff;
+    if (sx !== sy) return sx ? 1 : -1; // a surrogate stands for an astral code point, above every BMP unit
+    return x < y ? -1 : 1;
+  }
+  return a.length < b.length ? -1 : 1;
+}

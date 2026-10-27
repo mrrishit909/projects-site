@@ -94,7 +94,7 @@ class PublishDefinitionInput(Strict):
     source_fields: list[Annotated[StrictStr, Field(max_length=200)]] = Field(default_factory=list, max_length=100)
     owner_id: Id
     refresh: Text
-    status: StrictStr = "published"
+    status: StrictStr = "published"       # draft | reviewed | published (D-10 R7-12)
     reason: Text | None = None
     metric_version_id: Id | None = None
     expected_version: StrictInt | None = Field(default=None, ge=0)
@@ -157,6 +157,29 @@ class VerifyRemediationInput(Strict):
     issue_id: Id
 
 
+Cell = StrictBool | StrictInt | StrictStr | None
+
+
+class RowCorrection(Strict):
+    """One record's correction: the cells to change (a flat map of text, integer, boolean or null); ``row_id`` itself never changes."""
+    row_id: Id
+    changes: dict[Id, Cell] = Field(min_length=1, max_length=200)
+
+
+class CorrectDatasetRowsInput(Strict):
+    """C11. Append-only: every correction becomes a NEW version of the record (row_version, supersedes_row_id, reason, the actor and the server's
+    instant); the measurement reads the latest version of each record."""
+    dataset_id: Id
+    reason: Annotated[StrictStr, Field(min_length=1, max_length=2000)]
+    corrections: list[RowCorrection] = Field(min_length=1, max_length=1000)
+
+
+class RecordRefreshInput(At):
+    """C12. A refresh of a dataset that happened at ``refreshed_at`` (not in the future); the server stamps when it was recorded."""
+    dataset_id: Id
+    refreshed_at: StrictStr
+
+
 def _request(input_model: type[BaseModel], name: str) -> type[Envelope]:
     return type(name, (Envelope,), {"__annotations__": {"input": input_model}})  # type: ignore[return-value]
 
@@ -171,6 +194,8 @@ ApproveMergeRequest = _request(ApproveMergeInput, "ApproveMergeRequest")
 ReverseMergeRequest = _request(ReverseMergeInput, "ReverseMergeRequest")
 DisableRuleRequest = _request(DisableRuleInput, "DisableRuleRequest")
 VerifyRemediationRequest = _request(VerifyRemediationInput, "VerifyRemediationRequest")
+CorrectDatasetRowsRequest = _request(CorrectDatasetRowsInput, "CorrectDatasetRowsRequest")
+RecordRefreshRequest = _request(RecordRefreshInput, "RecordRefreshRequest")
 
 
 class CommandResponse(BaseModel):

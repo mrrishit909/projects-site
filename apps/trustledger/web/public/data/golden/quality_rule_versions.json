@@ -1,0 +1,11 @@
+{"entity":"quality_rule_versions","dataset_version":"golden-v1","rows":[
+{"definition":{"field":"email"},"rule_id":"r-cust-complete-email","rule_type":"completeness","severity":"high","valid_from":null,"version_number":1},
+{"definition":{"eligibility":"all_rows","field":"email","pattern":"^[^@ \\t\\r\\n\\f\\v]+@[^@ \\t\\r\\n\\f\\v]+\\.[A-Za-z]{2,}$"},"rule_id":"r-cust-valid-email","rule_type":"validity","severity":"medium","valid_from":null,"version_number":2},
+{"definition":{"field":"customer_key","keep":"first_in_row_order","not_null":true,"unique":true},"rule_id":"r-cust-key-unique","rule_type":"uniqueness","severity":"critical","valid_from":null,"version_number":1},
+{"definition":{"field":"customer_key","parent_dataset_id":"ds-customers","parent_field":"customer_key"},"rule_id":"r-ord-cust-fk","rule_type":"relationship","severity":"high","valid_from":null,"version_number":1},
+{"definition":{"field":"order_id","note":"disabled: no measurable pattern in this fixture"},"rule_id":"r-ord-amount-range","rule_type":"validity","severity":"medium","valid_from":null,"version_number":1},
+{"definition":{"target":"dataset_schedule"},"rule_id":"r-cust-fresh","rule_type":"timeliness","severity":"medium","valid_from":null,"version_number":1},
+{"definition":{"target":"dataset_schedule"},"rule_id":"r-ord-fresh","rule_type":"timeliness","severity":"medium","valid_from":null,"version_number":1},
+{"definition":{"target":"dataset_schedule"},"rule_id":"r-pay-fresh","rule_type":"timeliness","severity":"medium","valid_from":null,"version_number":1},
+{"definition":{"target":"dataset_schedule"},"rule_id":"r-ship-fresh","rule_type":"timeliness","severity":"medium","valid_from":null,"version_number":1}
+]}

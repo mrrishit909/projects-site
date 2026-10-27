@@ -39,8 +39,8 @@ VERSION_TAG = "tl"
 
 PURPOSES = ("owners", "datasets", "rules", "rows", "runs", "issues", "lineage", "metrics", "customers", "matching", "injections")
 
-ENTITIES = tuple(sorted(("owners", "datasets", "fields", "quality_rules", "rule_runs", "issues", "lineage_edges", "metric_versions",
-                         "definition_changes", "customer_records", "match_candidates", "merge_decisions", "dataset_rows",
+ENTITIES = tuple(sorted(("owners", "datasets", "fields", "quality_rules", "quality_rule_versions", "rule_runs", "issues", "lineage_edges",
+                         "metric_versions", "definition_changes", "customer_records", "match_candidates", "merge_decisions", "dataset_rows",
                          "weight_versions")))
 DOMAIN12 = ("owners", "datasets", "fields", "quality_rules", "rule_runs", "issues", "lineage_edges", "metric_versions",
             "definition_changes", "customer_records", "match_candidates", "merge_decisions")
@@ -124,7 +124,8 @@ GENERIC = ["status", "created_date", "updated_at", "region_code", "source_ref", 
 FIELD_TOTAL = 420
 
 # type, dataset, field, severity, extra.  60 rules: completeness 14, validity 12, uniqueness 11, relationship 13, timeliness 10.
-PATTERNS = {"email": r"^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$", "ccy": r"^[A-Z]{3}$", "tracking": r"^[A-Z]{2}[0-9]{9}$", "zip": r"^[0-9]{5}$",
+# explicit classes only: \s \d \w \b are not portable between Python, JavaScript and PostgreSQL and the ingest refuses them (D-10 R7-04)
+PATTERNS = {"email": r"^[^@ \t\r\n\f\v]+@[^@ \t\r\n\f\v]+\.[A-Za-z]{2,}$", "ccy": r"^[A-Z]{3}$", "tracking": r"^[A-Z]{2}[0-9]{9}$", "zip": r"^[0-9]{5}$",
             "ticket": r"^TK-[0-9]{6}$", "evref": r"^EV-[0-9]{8}$", "carrier": r"^[A-Z]{3,5}$"}
 INVALID = {"email": ["no-at-sign.example.com", "two@@example.com", "name@nodot", "sp ace@example.com", "name@example.c"],
            "ccy": ["usd", "US", "EURO", "U$D"], "tracking": ["12AB34567", "ZZ12345", "zz123456789"], "zip": ["1234", "ABCDE", "123456"],
@@ -265,6 +266,19 @@ def evaluated_occurrence(zone: str, hhmm: str, grace: int) -> tuple[datetime, da
     raise AssertionError("no occurrence")
 
 
+def started_occurrence(zone: str, hhmm: str, grace: int) -> tuple[datetime, datetime]:
+    """The latest daily local occurrence that has STARTED by AS_OF and its deadline (D-10 R7-01): the one timeliness judges."""
+    off = timedelta(minutes=OFFSET_MIN[zone])
+    h, m = int(hhmm[:2]), int(hhmm[3:])
+    d0 = (AS_OF + off).date()
+    for back in range(-1, 5):
+        d = d0 - timedelta(days=back)
+        s = datetime(d.year, d.month, d.day, h, m, tzinfo=UTC) - off
+        if s <= AS_OF:
+            return s, s + timedelta(minutes=grace)
+    raise AssertionError("no occurrence")
+
+
 # ---------------------------------------------------------------------------------------------------------------------
 # the world
 # ---------------------------------------------------------------------------------------------------------------------
@@ -362,6 +376,7 @@ class World:
                         zone, hhmm, grace = "America/New_York", "06:00", 60
                     s, dl = evaluated_occurrence(zone, hhmm, grace)
                     if dl <= AS_OF - timedelta(minutes=10):
+                        assert started_occurrence(zone, hhmm, grace)[0] == s     # no open occurrence at AS_OF: nothing is pending
                         break
                 d.update(refresh_timezone=zone, refresh_local_time=hhmm, refresh_grace_minutes=grace)
                 self.p_late[d["dataset_id"]] = (0 if d["dataset_id"] == "ds-customers" else (50000, 150000, 300000, 450000)[r.randrange(4)])
@@ -660,7 +675,7 @@ class World:
                 if k in seen:
                     dup += 1
                 seen.add(k)
-            return {"E": el, "F": nulls + dup, "score": 1 - Fraction(dup, el) if el else None, "dup": dup, "nulls": nulls}
+            return {"E": el, "F": nulls + dup, "score": Fraction(el - nulls - dup, el) if el else None, "dup": dup, "nulls": nulls}
         parent = {cell_text(w.get(x.extra[1])) for w in self.rows.get(x.extra[0], []) if not is_missing(w.get(x.extra[1]))}
         present = [v for v in vals if not is_missing(v)]
         matched = sum(1 for v in present if cell_text(v) in parent)
@@ -1173,7 +1188,14 @@ class World:
         for dsid in sorted(self.rows):
             for row in self.rows[dsid]:
                 flat_rows.append({"dataset_id": dsid, **row})
-        return {"owners": self.owners, "datasets": self.ds_list, "fields": self.fields, "quality_rules": quality_rules, "rule_runs": rule_runs,
+        # the definition of every rule version (D-10 R7-12): the filter appears from version 2; a version takes effect on the day of its first run
+        versions = []
+        for x in self.rules:
+            for v in range(1, x.version + 1):
+                versions.append({"rule_id": x.rule_id, "version_number": v, "rule_type": x.rtype, "severity": x.severity,
+                                 "definition": x.definition(v >= 2), "valid_from": ts(day_at(x.start if v == 1 else x.changes[v - 2]))})
+        return {"owners": self.owners, "datasets": self.ds_list, "fields": self.fields, "quality_rules": quality_rules, "quality_rule_versions": versions,
+                "rule_runs": rule_runs,
                 "issues": issues, "lineage_edges": self.edges, "metric_versions": self.metric_versions, "definition_changes": self.definition_changes,
                 "customer_records": self.customer_records, "match_candidates": cands, "merge_decisions": decs, "dataset_rows": flat_rows,
                 "weight_versions": WEIGHTS}
@@ -1261,11 +1283,13 @@ class World:
         inj12 = self.inj12_rule
         inj12_cur, inj12_old = self.cur[inj12.rule_id], self.old[inj12.rule_id]
         # replay actors
-        H = {"analyst": {"X-Actor-Id": "usr-analyst01", "X-Actor-Role": "analyst"}, "steward": {"X-Actor-Id": "usr-steward01", "X-Actor-Role": "steward"},
-             "steward2": {"X-Actor-Id": "usr-steward02", "X-Actor-Role": "steward"}}
+        # the actors are registered owners and their role is the register's (D-10 R7-03): own-03 an analyst, own-02 and own-04 stewards
+        role_of = {o["owner_id"]: o["role"] for o in self.owners}
 
-        def actor(i: str, role: str = "steward") -> dict:
-            return {"X-Actor-Id": i, "X-Actor-Role": role}
+        def actor(i: str) -> dict:
+            return {"X-Actor-Id": i, "X-Actor-Role": role_of[i]}
+
+        H = {"analyst": actor("own-03"), "steward": actor("own-02"), "steward2": actor("own-04")}
 
         def step(ev: str, n: str, command: str, hdr: dict, inp: dict, status: int, reason: str | None = None, result: dict | None = None,
                  warnings: list[str] | None = None, bind: list | None = None) -> dict:
@@ -1328,12 +1352,13 @@ class World:
             step("ev-05", "b", "run-rule", H["analyst"], {"rule_id": self.rules[0].rule_id, "weight_version": "w2", "weights": dict(w2)}, 200,
                  result={"status": "measured", "result": {"weight_version": "w2"}})]})
         # EV-06: a merge by the proposer, then an independent one, a reversal without a reason, the reversal, a second reversal
-        unrev = sorted(c["candidate_id"] for c in self.cands if c["candidate_id"] not in {d["cand"]["candidate_id"] for d in self.decisions} and c["kind"] == "true")
+        unrev = sorted(c["candidate_id"] for c in self.cands if c["candidate_id"] not in {d["cand"]["candidate_id"] for d in self.decisions} and c["kind"] == "true"
+                       and role_of[c["proposed_by"]] in ("steward", "admin"))      # a steward or admin proposer: only then does the proposer's own approval reach SELF_REVIEW
         c6 = next(c for c in self.cands if c["candidate_id"] == unrev[0])
         other = next(o for o in self.reviewers if o != c6["proposed_by"])
         bind = [{"into": "merge_id", "from_step": 1, "path": "result.merge_id"}]
         events.append({"event_id": "EV-06", "injection": "INJ-06", "requires": [c6["candidate_id"]], "steps": [
-            step("ev-06", "a", "approve-merge", actor(c6["proposed_by"]), {"candidate_id": c6["candidate_id"], "decision": "approve"}, 403, "REVIEWER_IS_PROPOSER"),
+            step("ev-06", "a", "approve-merge", actor(c6["proposed_by"]), {"candidate_id": c6["candidate_id"], "decision": "approve"}, 409, "SELF_REVIEW"),
             step("ev-06", "b", "approve-merge", actor(other), {"candidate_id": c6["candidate_id"], "decision": "approve"}, 200,
                  result={"status": "linked", "result": {"state": "linked", "maps": {"from_record_id": c6["right_record_id"], "to_record_id": c6["left_record_id"]}}}),
             step("ev-06", "c", "reverse-merge", actor(other), {"merge_id": "$merge_id", "reason": "  "}, 422, "REASON_REQUIRED", bind=bind),
@@ -1386,8 +1411,13 @@ class World:
                   "source_fields": single["source_fields"], "owner_id": single["owner_id"], "refresh": single["refresh"]}
         events.append({"event_id": "EV-11", "injection": "INJ-11", "requires": [single["metric_version_id"]], "steps": [
             step("ev-11", "a", "publish-definition", H["steward"], dict(base11, metric_version_id=single["metric_version_id"], reason="Rewrite"), 409, "DEFINITION_IMMUTABLE"),
-            step("ev-11", "b", "publish-definition", H["steward"], dict(base11, definition="Revised definition as a new version", reason="Replay: revised in a new version"), 200,
-                 result={"status": "published", "result": {"version_number": 2, "previous_metric_version_id": single["metric_version_id"]}})]})
+            # a revision goes draft -> reviewed (by someone else) -> published, each step a new version row (D-10 R7-12)
+            step("ev-11", "b", "publish-definition", H["steward"], dict(base11, definition="Revised definition as a new version", reason="Replay: revised in a new version",
+                 status="draft"), 200, result={"status": "drafted", "result": {"version_number": 2, "previous_metric_version_id": single["metric_version_id"]}}),
+            step("ev-11", "c", "publish-definition", H["steward2"], dict(base11, definition="Revised definition as a new version", reason="Replay: reviewed by a second steward",
+                 status="reviewed"), 200, result={"status": "reviewed", "result": {"version_number": 3}}),
+            step("ev-11", "d", "publish-definition", H["steward"], dict(base11, definition="Revised definition as a new version", reason="Replay: published after review",
+                 status="published"), 200, result={"status": "published", "result": {"version_number": 4}})]})
         # EV-12
         events.append({"event_id": "EV-12", "injection": "INJ-12", "requires": [inj12.rule_id], "steps": [
             step("ev-12", "a", "run-rule", H["analyst"], {"rule_id": inj12.rule_id}, 200,
@@ -1446,7 +1476,7 @@ class World:
             {"id": "INJ-06", "test": "P07-TEST-06", "name": "an irreversible merge", "location": "both",
              "defect": "15 approved merges are reversed; a merge by its own proposer must be refused and every merge must stay reversible.",
              "records": [{"entity": "merge_decisions", "id": rev0["merge_id"]}, {"entity": "merge_decisions", "id": rev0["reverses"]["merge_id"]}],
-             "expected_handling": "A reversal restores both identities and keeps the mapping history; reviewer = proposer is refused (403 REVIEWER_IS_PROPOSER).",
+             "expected_handling": "A reversal restores both identities and keeps the mapping history; the proposer deciding their own candidate is refused through the API (409 SELF_REVIEW; REVIEWER_IS_PROPOSER on stored decisions).",
              "expected_rejections": [], "events": ["EV-06"],
              "checks": [{"path": "matching.merges_reversed", "equals": 15}, {"path": f"matching.identity_map.{rc['right_record_id']}", "equals": rc["right_record_id"]},
                         {"path": f"matching.identity_map.{rc['left_record_id']}", "equals": rc["left_record_id"]}]},
@@ -1557,6 +1587,7 @@ def to_inputs(ents: dict[str, list[dict]]) -> dict[str, Any]:
         rows.setdefault(r.pop("dataset_id"), []).append(r)
     inp["dataset_rows"] = rows
     inp["weight_versions"] = ents["weight_versions"]
+    inp["quality_rule_versions"] = ents["quality_rule_versions"]
     return inp
 
 
@@ -1574,6 +1605,11 @@ def write_golden(out: Path) -> None:
     flat = [{"dataset_id": d, **row} for d in sorted(inputs["dataset_rows"]) for row in inputs["dataset_rows"][d]]
     counts["dataset_rows"] = len(flat)
     (gdir / "dataset_rows.json").write_text(entity_text("dataset_rows", "golden-v1", flat))
+    # the golden fixture states no earlier versions: one row per rule, its current version, taken from the rule itself
+    qrv = [{"rule_id": r["rule_id"], "version_number": r["version_number"], "rule_type": r["rule_type"], "severity": r["severity"],
+            "definition": r["definition"], "valid_from": None} for r in inputs["quality_rules"]]
+    counts["quality_rule_versions"] = len(qrv)
+    (gdir / "quality_rule_versions.json").write_text(entity_text("quality_rule_versions", "golden-v1", qrv))
     counts["weight_versions"] = len(inputs["weight_versions"])
     (gdir / "weight_versions.json").write_text(entity_text("weight_versions", "golden-v1", inputs["weight_versions"]))
     (gdir / "expected.json").write_text((fx / "expected.json").read_text())

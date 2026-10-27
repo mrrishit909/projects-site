@@ -20,11 +20,14 @@ RULE_STATUSES = ("active", "disabled")
 RUN_KINDS = ("scheduled", "rerun")
 ISSUE_STATUSES = ("open", "investigating", "closed")
 EVIDENCE_TYPES = ("declared", "observed", "inferred")
-METRIC_STATUSES = ("draft", "published", "superseded")
+METRIC_STATUSES = ("draft", "reviewed", "published", "superseded")   # FLOW-02: draft -> reviewed -> published (D-10)
 DECISIONS = ("approve", "reject", "reverse")
 GROUPS = ("none", "dataset", "owner", "source_system", "severity")
 
 DEFAULT_TRIM = " \t\r\n"
+#: Pattern escapes that Python ``re``, JavaScript RegExp and PostgreSQL regular expressions do not agree on (Unicode versus ASCII
+#: classes, ``\b`` as a boundary or a backspace). A rule that uses one is refused at ingest (D-10, R7-04).
+NON_PORTABLE_ESCAPES = "sSdDwWbB"
 DEFAULT_WHITESPACE = {"name": "trim_empty_is_missing", "trim_characters": DEFAULT_TRIM}
 DEFAULT_CHECKLIST = {"checklist_version": "cl-1", "items": ["definition", "grain", "source_fields", "owner", "refresh"]}
 ID_KEYS = {"owners": "owner_id", "datasets": "dataset_id", "fields": "field_id", "quality_rules": "rule_id",

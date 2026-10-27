@@ -13,6 +13,11 @@
 -- Exactness: counts are integers; ratios are NUMERIC rounded once by round() (half away from zero = ROUND_HALF_UP on these
 -- non-negative values); hours are epoch seconds / 3600 rounded to 4 places. The local daily schedule uses ``timestamp AT TIME ZONE``:
 -- a local time that occurs twice is the later instant, one that does not exist uses the earlier offset (the same as the domain).
+--
+-- D-10 (review R7): timeliness judges the latest occurrence STARTED by as_of (on time / pending / late, pending outside the denominator);
+-- a disabled critical rule whose latest run fails keeps counting that failure; the uniqueness score subtracts null-key rows too; empty
+-- and whitespace-only foreign keys are missing; dataset rows are the latest version per record id recorded by as_of; the last refresh
+-- is the latest of datasets.last_refreshed_at and dataset_refreshes not after as_of.
 WITH
 p AS (SELECT %(as_of)s::timestamptz AS as_of),
 cfg AS (
@@ -26,6 +31,14 @@ wv AS (
                      ORDER BY w.valid_from DESC, w.weight_version DESC LIMIT 1)) AS v
 ),
 ds AS (SELECT d.* FROM datasets d, p WHERE d.registered_at <= p.as_of),
+-- the latest version of each record recorded by as_of, in the position of its first version (C11 appends versions; nothing is edited)
+rows_cur AS (
+    SELECT DISTINCT ON (x.dataset_id, x.row_id) x.dataset_id, x.row_id, x.data,
+           min(x.ordinal) OVER (PARTITION BY x.dataset_id, x.row_id) AS ordinal
+    FROM dataset_rows x, p
+    WHERE x.recorded_at IS NULL OR x.recorded_at <= p.as_of
+    ORDER BY x.dataset_id, x.row_id, x.row_version DESC
+),
 rules_a AS (
     SELECT r.* FROM quality_rules r JOIN ds ON ds.dataset_id = r.dataset_id, p
     WHERE (r.status = 'active' OR r.disabled_at > p.as_of)
@@ -34,11 +47,11 @@ rules_a AS (
 
 -- ---- cells of the row-based rules; eligible rows are all rows unless the rule declares a filter {field, equals} ---------------
 cells AS (
-    SELECT r.rule_id, r.dataset_id, r.severity, r.rule_type AS rt, r.definition AS def, x.ordinal,
+    SELECT r.rule_id, r.dataset_id, r.severity, r.rule_type AS rt, r.definition AS def, x.ordinal, x.row_id,
            jsonb_typeof(x.data -> (r.definition ->> 'field')) AS typ,
            tl_cell(x.data -> (r.definition ->> 'field')) AS v
     FROM rules_a r
-    LEFT JOIN dataset_rows x ON x.dataset_id = r.dataset_id
+    LEFT JOIN rows_cur x ON x.dataset_id = r.dataset_id
          AND (r.definition -> 'filter' IS NULL
               OR tl_cell(x.data -> (r.definition -> 'filter' ->> 'field')) IS NOT DISTINCT FROM (r.definition -> 'filter' ->> 'equals'))
     WHERE r.rule_type <> 'timeliness'
@@ -63,6 +76,7 @@ freq AS (
 ),
 uni AS (
     SELECT f.rule_id, f.dataset_id, f.severity, count(*) FILTER (WHERE f.present) AS el, count(*) FILTER (WHERE f.miss) AS nulls,
+           coalesce(jsonb_agg(f.row_id ORDER BY f.ordinal) FILTER (WHERE f.miss), '[]'::jsonb) AS null_ids,
            coalesce((SELECT count(*) FROM freq q WHERE q.rule_id = f.rule_id), 0) AS distinct_keys,
            coalesce((SELECT count(*) FROM freq q WHERE q.rule_id = f.rule_id AND q.n > 1), 0) AS groups,
            coalesce((SELECT sum(q.n - 1) FROM freq q WHERE q.rule_id = f.rule_id AND q.n > 1), 0) AS dup_rows
@@ -71,30 +85,40 @@ uni AS (
 parent AS (
     SELECT DISTINCT r.rule_id, tl_cell(px.data -> (r.definition ->> 'parent_field')) AS v
     FROM rules_a r
-    JOIN dataset_rows px ON px.dataset_id = r.definition ->> 'parent_dataset_id', cfg
+    JOIN rows_cur px ON px.dataset_id = r.definition ->> 'parent_dataset_id', cfg
     WHERE r.rule_type = 'relationship' AND tl_cell(px.data -> (r.definition ->> 'parent_field')) IS NOT NULL
       AND btrim(tl_cell(px.data -> (r.definition ->> 'parent_field')), cfg.chars) <> ''
 ),
 rel AS (
     SELECT f.rule_id, f.dataset_id, f.severity, count(*) FILTER (WHERE f.present) AS total, count(*) FILTER (WHERE f.miss) AS nulls,
+           count(*) FILTER (WHERE f.miss AND f.typ = 'string') AS empties,
            count(*) FILTER (WHERE f.present AND NOT f.miss AND pr.v IS NOT NULL) AS matched
     FROM fl f LEFT JOIN parent pr ON pr.rule_id = f.rule_id AND pr.v = f.v
     WHERE f.rt = 'relationship' GROUP BY f.rule_id, f.dataset_id, f.severity
 ),
 
--- ---- timeliness: the latest daily occurrence (local time in the dataset's IANA zone) whose grace has closed by as_of ---------
+-- ---- timeliness: the latest daily occurrence (local time in the dataset's IANA zone) STARTED by as_of; on time when a refresh not after as_of
+-- ---- lies in [s, s + grace), otherwise pending while the deadline is in the future, otherwise late (D-10 R7-01) -----------------------------
 tl AS (
     SELECT DISTINCT ON (d.dataset_id) d.dataset_id, d.refresh_timezone AS tz, d.refresh_local_time AS lt, d.refresh_grace_minutes AS gr,
-           d.last_refreshed_at AS lr, c.s, c.s + make_interval(mins => d.refresh_grace_minutes) AS dl
+           lastref.t AS lr, c.s, c.s + make_interval(mins => d.refresh_grace_minutes) AS dl
     FROM ds d CROSS JOIN p
     CROSS JOIN LATERAL generate_series(-1, 4) AS back
     CROSS JOIN LATERAL (
         SELECT (((p.as_of AT TIME ZONE d.refresh_timezone)::date - back) + d.refresh_local_time::time) AT TIME ZONE d.refresh_timezone AS s
     ) c
-    WHERE d.monitored AND c.s + make_interval(mins => d.refresh_grace_minutes) <= p.as_of
+    CROSS JOIN LATERAL (
+        SELECT max(x.t) AS t FROM (SELECT d.last_refreshed_at AS t UNION ALL
+                                   SELECT f.refreshed_at FROM dataset_refreshes f WHERE f.dataset_id = d.dataset_id) x
+        WHERE x.t <= p.as_of
+    ) lastref
+    WHERE d.monitored AND c.s <= p.as_of
     ORDER BY d.dataset_id, back
 ),
-tl2 AS (SELECT tl.*, (lr IS NOT NULL AND s <= lr AND lr < dl) AS on_time FROM tl),
+tl2 AS (
+    SELECT tl.*, CASE WHEN lr IS NOT NULL AND s <= lr AND lr < dl THEN 'on_time' WHEN dl > (SELECT as_of FROM p) THEN 'pending' ELSE 'late' END AS state
+    FROM tl
+),
 
 -- ---- one row per active rule: eligible, failing, and the dimension score it contributes ------------------------------------
 rm AS (
@@ -103,20 +127,29 @@ rm AS (
     UNION ALL
     SELECT rule_id, dataset_id, severity, 'validity', el, el - pass, CASE WHEN pop = 0 THEN NULL ELSE pass::numeric / pop END FROM val
     UNION ALL
-    SELECT rule_id, dataset_id, severity, 'uniqueness', el, nulls + dup_rows, CASE WHEN el = 0 THEN NULL ELSE 1 - dup_rows::numeric / el END FROM uni
+    SELECT rule_id, dataset_id, severity, 'uniqueness', el, nulls + dup_rows, CASE WHEN el = 0 THEN NULL ELSE (el - nulls - dup_rows)::numeric / el END FROM uni
     UNION ALL
     SELECT rule_id, dataset_id, severity, 'relationship', total - nulls, (total - nulls) - matched,
            CASE WHEN total - nulls = 0 THEN NULL ELSE matched::numeric / (total - nulls) END FROM rel
     UNION ALL
-    SELECT r.rule_id, r.dataset_id, r.severity, 'timeliness', CASE WHEN t.dataset_id IS NULL THEN 0 ELSE 1 END,
-           CASE WHEN t.dataset_id IS NOT NULL AND NOT t.on_time THEN 1 ELSE 0 END,
-           CASE WHEN t.dataset_id IS NULL THEN NULL WHEN t.on_time THEN 1::numeric ELSE 0::numeric END
+    SELECT r.rule_id, r.dataset_id, r.severity, 'timeliness', CASE WHEN t.dataset_id IS NULL OR t.state = 'pending' THEN 0 ELSE 1 END,
+           CASE WHEN t.state = 'late' THEN 1 ELSE 0 END,
+           CASE WHEN t.dataset_id IS NULL OR t.state = 'pending' THEN NULL WHEN t.state = 'on_time' THEN 1::numeric ELSE 0::numeric END
     FROM rules_a r LEFT JOIN tl2 t ON t.dataset_id = r.dataset_id WHERE r.rule_type = 'timeliness'
 ),
 dim AS (
     SELECT dataset_id, dim, avg(score) AS score,
            CASE dim WHEN 'completeness' THEN 1 WHEN 'validity' THEN 2 WHEN 'uniqueness' THEN 3 WHEN 'relationship' THEN 4 ELSE 5 END AS idx
     FROM rm WHERE score IS NOT NULL GROUP BY dataset_id, dim
+),
+
+-- ---- critical failures that outlive a disabled rule: its latest run (a rerun counts) fails (D-10 R7-02) -------------------------------------------
+carried AS (
+    SELECT r.rule_id, r.dataset_id, lr.rule_run_id, lr.failure_count
+    FROM quality_rules r JOIN ds ON ds.dataset_id = r.dataset_id, p
+    CROSS JOIN LATERAL (SELECT rr.rule_run_id, rr.failure_count FROM rule_runs rr WHERE rr.rule_id = r.rule_id AND rr.run_at <= p.as_of
+                        ORDER BY rr.run_at DESC, rr.rule_run_id COLLATE "C" DESC LIMIT 1) lr
+    WHERE r.severity = 'critical' AND NOT (r.status = 'active' OR r.disabled_at > p.as_of) AND lr.failure_count > 0
 ),
 
 -- ---- issues: resolved only by a successful rerun of the same rule version ---------------------------------------------------
@@ -203,23 +236,24 @@ SELECT
         '{}'::jsonb) FROM val) AS validity,
     -- uniqueness (group share and row share)
     (SELECT coalesce(jsonb_object_agg(rule_id, jsonb_build_object(
-        'dataset_id', dataset_id, 'eligible_count', el, 'null_key_count', nulls, 'distinct_keys', distinct_keys,
+        'dataset_id', dataset_id, 'eligible_count', el, 'null_key_count', nulls, 'null_key_row_ids', null_ids, 'distinct_keys', distinct_keys,
         'duplicate_groups', groups, 'duplicate_rows', dup_rows,
         'group_share', jsonb_build_object('label', 'duplicate_group_share', 'value', round(groups::numeric / NULLIF(distinct_keys, 0), 6)::text),
         'row_share', jsonb_build_object('label', 'duplicate_row_share', 'value', round(dup_rows::numeric / NULLIF(el, 0), 6)::text))),
         '{}'::jsonb) FROM uni) AS uniqueness,
     -- relationship integrity (null foreign keys counted separately)
     (SELECT coalesce(jsonb_object_agg(rule_id, jsonb_build_object(
-        'dataset_id', dataset_id, 'total_fk_count', total, 'null_fk_count', nulls, 'eligible_count', total - nulls,
+        'dataset_id', dataset_id, 'total_fk_count', total, 'null_fk_count', nulls, 'empty_fk_count', empties, 'eligible_count', total - nulls,
         'matched_count', matched, 'unmatched_count', (total - nulls) - matched,
         'value', round(matched::numeric / NULLIF(total - nulls, 0), 6)::text)), '{}'::jsonb) FROM rel) AS relationship_integrity,
-    -- timeliness
+    -- timeliness (a pending occurrence is neither on time nor late and is outside the denominator)
     jsonb_build_object(
-        'monitored_datasets', (SELECT count(*) FROM tl2), 'on_time_count', (SELECT count(*) FROM tl2 WHERE on_time),
-        'value', (SELECT round(count(*) FILTER (WHERE on_time)::numeric / NULLIF(count(*), 0), 6)::text FROM tl2),
+        'monitored_datasets', (SELECT count(*) FROM tl2), 'evaluated_datasets', (SELECT count(*) FROM tl2 WHERE state <> 'pending'),
+        'pending_count', (SELECT count(*) FROM tl2 WHERE state = 'pending'), 'on_time_count', (SELECT count(*) FROM tl2 WHERE state = 'on_time'),
+        'value', (SELECT round(count(*) FILTER (WHERE state = 'on_time')::numeric / NULLIF(count(*) FILTER (WHERE state <> 'pending'), 0), 6)::text FROM tl2),
         'datasets', (SELECT coalesce(jsonb_object_agg(dataset_id, jsonb_build_object(
             'timezone', tz, 'scheduled_local', lt, 'grace_minutes', gr, 'evaluated_occurrence_utc', tl_iso(s), 'deadline_utc', tl_iso(dl),
-            'last_refreshed_at', tl_iso(lr), 'on_time', on_time)), '{}'::jsonb) FROM tl2)) AS timeliness,
+            'last_refreshed_at', tl_iso(lr), 'state', state, 'on_time', CASE state WHEN 'pending' THEN NULL ELSE state = 'on_time' END)), '{}'::jsonb) FROM tl2)) AS timeliness,
     -- weighted score under the named weight version, per dataset, and under every version
     (SELECT jsonb_build_object(
         'datasets', (SELECT coalesce(jsonb_object_agg(d.dataset_id, jsonb_build_object(
@@ -230,9 +264,9 @@ SELECT
                                           WHERE x.dataset_id = d.dataset_id), 0), 6)::text,
             'value', (SELECT round(sum((w.weights ->> x.dim)::numeric * x.score) / NULLIF(sum((w.weights ->> x.dim)::numeric), 0), 6)::text
                       FROM dim x JOIN rule_weight_versions w ON w.weight_version = wv.v WHERE x.dataset_id = d.dataset_id),
-            'critical_failures', coalesce((SELECT sum(m.fail) FROM rm m WHERE m.dataset_id = d.dataset_id AND m.severity = 'critical'), 0),
+            'critical_failures', (coalesce((SELECT sum(m.fail) FROM rm m WHERE m.dataset_id = d.dataset_id AND m.severity = 'critical'), 0) + coalesce((SELECT sum(c.failure_count) FROM carried c WHERE c.dataset_id = d.dataset_id), 0)),
             'critical_open_issues', (SELECT count(*) FROM iss2 i WHERE i.dataset_id = d.dataset_id AND i.severity = 'critical' AND i.cls <> 'resolved'),
-            'critical_override', coalesce((SELECT sum(m.fail) FROM rm m WHERE m.dataset_id = d.dataset_id AND m.severity = 'critical'), 0) > 0
+            'critical_override', (coalesce((SELECT sum(m.fail) FROM rm m WHERE m.dataset_id = d.dataset_id AND m.severity = 'critical'), 0) + coalesce((SELECT sum(c.failure_count) FROM carried c WHERE c.dataset_id = d.dataset_id), 0)) > 0
                 OR EXISTS (SELECT 1 FROM iss2 i WHERE i.dataset_id = d.dataset_id AND i.severity = 'critical' AND i.cls <> 'resolved'))),
             '{}'::jsonb) FROM ds d, wv),
         'by_weight_version', (SELECT coalesce(jsonb_object_agg(w.weight_version, (
@@ -241,10 +275,12 @@ SELECT
                 FROM dim x WHERE x.dataset_id = d.dataset_id)), '{}'::jsonb) FROM ds d)), '{}'::jsonb) FROM rule_weight_versions w))) AS weighted_score,
     -- critical failures and open critical issues, counted apart from any score
     jsonb_build_object(
-        'failures', coalesce((SELECT sum(fail) FROM rm WHERE severity = 'critical'), 0),
+        'failures', coalesce((SELECT sum(fail) FROM rm WHERE severity = 'critical'), 0) + coalesce((SELECT sum(failure_count) FROM carried), 0),
         'open_issues', (SELECT count(*) FROM iss2 WHERE severity = 'critical' AND cls <> 'resolved'),
-        'datasets_overridden', (SELECT count(*) FROM ds d WHERE coalesce((SELECT sum(m.fail) FROM rm m WHERE m.dataset_id = d.dataset_id AND m.severity = 'critical'), 0) > 0
-            OR EXISTS (SELECT 1 FROM iss2 i WHERE i.dataset_id = d.dataset_id AND i.severity = 'critical' AND i.cls <> 'resolved'))) AS critical_failures,
+        'datasets_overridden', (SELECT count(*) FROM ds d WHERE (coalesce((SELECT sum(m.fail) FROM rm m WHERE m.dataset_id = d.dataset_id AND m.severity = 'critical'), 0) + coalesce((SELECT sum(c.failure_count) FROM carried c WHERE c.dataset_id = d.dataset_id), 0)) > 0
+            OR EXISTS (SELECT 1 FROM iss2 i WHERE i.dataset_id = d.dataset_id AND i.severity = 'critical' AND i.cls <> 'resolved')),
+        'carried', (SELECT coalesce(jsonb_agg(jsonb_build_object('dataset_id', dataset_id, 'rule_id', rule_id, 'rule_run_id', rule_run_id,
+                                                                 'failure_count', failure_count) ORDER BY rule_id COLLATE "C"), '[]'::jsonb) FROM carried)) AS critical_failures,
     -- resolution time
     jsonb_build_object(
         'resolved_count', (SELECT count(*) FROM iss3 WHERE cls = 'resolved'), 'claimed_count', (SELECT count(*) FROM iss3 WHERE cls = 'claimed'),

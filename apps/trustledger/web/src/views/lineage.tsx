@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Chip, Def, Fig, Scroll, ViewHead, WithData } from "../components/ui";
 import type { Dataset } from "../data/dataset";
 import { cmp, type Row } from "../domain/models";
@@ -77,6 +78,13 @@ function Lineage({ ds }: { ds: Dataset }) {
   const [k, setK] = useParam("kinds", KINDS.join(","));
   const kinds = new Set(k.split(",").filter((x): x is Kind => (KINDS as string[]).includes(x)));
   const [focus, setFocus] = useParam("focus", "");
+  // Escape clears the isolation: the dataset is no longer focused, aria-pressed goes back to false and every edge is drawn again (D-10 R7-17)
+  useEffect(() => {
+    if (!focus) return undefined;
+    const onKey = (e: KeyboardEvent): void => { if (e.key === "Escape") setFocus(""); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [focus, setFocus]);
   const l = ds.now.metrics["lineage_coverage"] as Row;
   const toggle = (x: Kind): void => { const n = new Set(kinds); if (n.has(x)) n.delete(x); else n.add(x); setK(KINDS.filter((y) => n.has(y)).join(",") || "none"); };
   const fp = focus ? pairs.filter((p) => p.source === focus || p.target === focus) : [];
@@ -108,7 +116,7 @@ function Lineage({ ds }: { ds: Dataset }) {
         <fieldset className="picker" data-testid="kind-toggles"><legend>Show edges</legend>
           <div className="picker__row">{KINDS.map((x) => <label key={x} className={`picker__opt${kinds.has(x) ? " is-on" : ""}`}><input type="checkbox" checked={kinds.has(x)} onChange={() => toggle(x)} /><span>{x}</span></label>)}</div>
         </fieldset>
-        <p className="muted">Datasets are placed left to right from sources to consumers. Select a dataset (click or Enter) to isolate its edges.</p>
+        <p className="muted">Datasets are placed left to right from sources to consumers. Select a dataset (click or Enter) to isolate its edges; press Escape to clear the isolation.</p>
         <Graph ds={ds} pairs={pairs} kinds={kinds} focus={focus} setFocus={setFocus} />
         {focus && <div className="callout" data-testid="focus-panel"><strong className="mono">{focus}</strong> ({nm(focus)}): {fp.filter((p) => p.target === focus).length} upstream and {fp.filter((p) => p.source === focus).length} downstream pairs.
           <ul>{fp.map((p) => <li key={`${p.source}${p.target}`}><span className="mono">{p.source} → {p.target}</span> {p.declared && <Chip kind="ok">declared</Chip>} {p.observed && <Chip kind="note">observed</Chip>} {p.inferred && <Chip kind="hatch">inferred</Chip>}</li>)}</ul></div>}

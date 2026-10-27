@@ -38,10 +38,13 @@ class PipelineResult:
         """The shape of expected.json."""
         c = self.computation
         assert c is not None
-        return {"contract_version": CONTRACT_VERSION, "as_of": iso_z(self.as_of), "weight_version": c.weight_version,
-                "checklist_version": self.population.checklist_version, "empty_population": c.empty_population,
-                "ingest": {"counts": self.counts, "rejected_records": self.rejected},
-                "rules": c.rules, "metrics": self.metrics, "definitions": c.definitions, "matching": c.matching}
+        out = {"contract_version": CONTRACT_VERSION, "as_of": iso_z(self.as_of), "weight_version": c.weight_version,
+               "checklist_version": self.population.checklist_version, "empty_population": c.empty_population,
+               "ingest": {"counts": self.counts, "rejected_records": self.rejected},
+               "rules": c.rules, "metrics": self.metrics, "definitions": c.definitions, "matching": c.matching}
+        if c.timeliness_probes:                      # present only where the inputs state timeliness probes (the golden fixture)
+            out["timeliness_probes"] = c.timeliness_probes
+        return out
 
 
 def run_pipeline(inputs: dict[str, Any], as_of: str | datetime | None = None, weight_version: str | None = None,

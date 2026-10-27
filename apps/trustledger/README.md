@@ -8,7 +8,7 @@ The Mode B web mirror (`web/`) is separate.
 
 ```
 domain/trustledger/  contract, errors, numbers, timeutil, models, ingest, measure, issues, matching, verification, scoring, structure, metrics, pipeline
-data/                migrate.py, seed.py, migrations/0001_schema.sql, 0002_constraints.sql, sql/reference_metrics.sql, sql/verification_truth.sql   (see data/README.md)
+data/                migrate.py, seed.py, migrations/0001_schema.sql, 0002_constraints.sql, 0003_review_r7.sql, sql/reference_metrics.sql, sql/verification_truth.sql   (see data/README.md)
 api/                 app, clock, db, schemas, commands, reads, errors     (prefix /api/v1/trustledger)
 tests/               golden (domain), variants, rules, migrations, SQL reference, API commands, API reads, adversarial; reference_check.py (stdlib only)
 ```
@@ -17,15 +17,15 @@ tests/               golden (domain), variants, rules, migrations, SQL reference
 
 ```
 pip install -r requirements.txt
-python -I tests/reference_check.py                                   # independent recomputation, ALL OK (736 checks)
-DATABASE_URL=postgresql://lab:lab@127.0.0.1:5432/trustledger python -m pytest -q
+python -I tests/reference_check.py                                   # independent recomputation, ALL OK (805 checks)
+DATABASE_URL=postgresql://lab:lab@127.0.0.1:5432/trustledger python -m pytest -q -ra   # no skips with the database
 python -m pytest -q                                                  # without DATABASE_URL the database tests skip, the pure-domain tests run
 DATABASE_URL=... python data/migrate.py [--reset]                    # apply the migrations
 DATABASE_URL=... python data/seed.py tests/fixtures/golden/inputs.json [--dataset-version NAME]
 DATABASE_URL=... CODE_SHA=$(git rev-parse HEAD) uvicorn --factory api.app:create_app   # docs at /api/v1/trustledger/docs
 ```
 
-The CI job (`.github/workflows/trustledger-ci.yml`, Mode A) runs the reference check, the hash-count check and `pytest -q` against a `postgres:16`
+The CI job (`.github/workflows/trustledger-ci.yml`, Mode A) runs the reference check, the hash-count check and `pytest -q -ra` (then fails on any skipped test: the junit file must say `skipped="0"`) against a `postgres:16`
 service on a runner with system tzdata (the domain uses `zoneinfo`). `pytest.ini` puts `domain` and the app root on the path. Tests use a fixed API
 clock (`tests/conftest.py`, 2026-10-26T22:00Z; individual tests re-freeze it, e.g. at the fixture's `as_of`).
 
@@ -35,14 +35,15 @@ clock (`tests/conftest.py`, 2026-10-26T22:00Z; individual tests re-freeze it, e.
   `metrics` has exactly the keys of `expected.json` (`METRIC_KEYS`, D-06): `completeness`, `validity`, `uniqueness`, `relationship_integrity` (each keyed by
   rule id), `timeliness`, `weighted_score`, `critical_failures`, `resolution_time`, `ownership_coverage`, `definition_coverage`, `match_precision`,
   `lineage_coverage`. `result.golden()` is the whole shape of `expected.json` (the ingest counts and rejected records, `rules`, `metrics`, `definitions`,
-  `matching`); all three fixtures reproduce it leaf by leaf (391, 231 and 96 leaves).
+  `matching`); all three fixtures reproduce it leaf by leaf (435, 234 and 99 leaves).
 * **Five dimensions on their own denominators**, never blended: completeness (missing = null or trimmed-empty under the whitespace policy), validity
-  (all-eligible and populated-only, both labelled; format validity, never correctness), uniqueness (duplicate-group share and duplicate-row share, null keys counted
-  as failures), relationship integrity (null foreign keys excluded from the denominator and counted apart), timeliness (the dataset's local daily
-  schedule in its IANA zone plus a grace, half-open `[occurrence, deadline)`).
+  (all-eligible and populated-only, both labelled; format validity, never correctness), uniqueness (duplicate-group share and duplicate-row share; null keys fail,
+  are listed apart and lower the score: (eligible - null-key rows - duplicate rows) / eligible), relationship integrity (null, empty and whitespace-only foreign keys
+  excluded from the denominator and counted apart), timeliness (the dataset's local daily schedule in its IANA zone plus a grace, half-open `[occurrence, deadline)`;
+  on time / late / pending, a pending open window is outside the denominator).
 * **Score and override.** Weighted score = sum(score x weight) / sum(weights of the measured dimensions) under the named weight version; unmeasured
-  dimensions leave both sums; null if none is measured. `critical_failures` (failures of active critical rules) and open critical issues (open, reopened or
-  claimed) are counted apart and set `critical_override` whatever the score is.
+  dimensions leave both sums; null if none is measured. `critical_failures` (failures of active critical rules, plus the live failure of a critical rule disabled while its latest run fails, `carried`) and open
+  critical issues (open, reopened or claimed) are counted apart and set `critical_override` whatever the score is.
 * **Issues.** `resolved` only after a successful rerun of the same rule version over the issue's records (`resolved_at` = that rerun's `run_at`); a close
   without it is `claimed` and listed apart; reopen cycles are counted and the first `detected_at` is kept; open issues age to `as_of`.
 * **Matching.** Candidates are stored once in canonical order (`DUPLICATE_PAIR`, `NON_CANONICAL_ORDER`); a merge maps the right record to the left and needs a
@@ -54,7 +55,8 @@ clock (`tests/conftest.py`, 2026-10-26T22:00Z; individual tests re-freeze it, e.
 
 ## API (prefix `/api/v1/trustledger`)
 
-Headers `X-Actor-Id`, `X-Actor-Role` (analyst, steward, admin). Commands are `POST /commands/<name>` with `{request_id, dataset_version,
+Headers `X-Actor-Id`, `X-Actor-Role` (analyst, steward, admin). The actor is a registered, active owner named by the exact id; the role is the register's, and a different header is
+403 `ROLE_MISMATCH` (401 `UNKNOWN_ACTOR`, 403 `ACTOR_INACTIVE`; D-10 R7-03). Commands are `POST /commands/<name>` with `{request_id, dataset_version,
 idempotency_key, input}` and answer `{command_id, status, result, warnings, version}`; errors are `{error: {code, message, details}, request_id}` (401 no
 actor, 403 role or separation of duties, 404, 409, 422). Each command runs in one transaction with its audit row and stored result. Instants that are
 decisions are stamped by the server's clock, never chosen by the client.
@@ -62,18 +64,20 @@ decisions are stamped by the server's clock, never chosen by the client.
 | ID | Command | Roles | Effect |
 |---|---|---|---|
 | C01 | register-dataset | all | a dataset with an ACTIVE owner and a classification (and optional schedule, fields, rows); 422 OWNER_REQUIRED / OWNER_INACTIVE / CLASSIFICATION_REQUIRED |
-| C02 | publish-definition | steward, admin | a NEW metric version row (valid_from = now) plus a change record for v2+; an existing `metric_version_id` is refused (409 DEFINITION_IMMUTABLE) |
+| C02 | publish-definition | steward, admin | draft -> reviewed -> published, each step a NEW metric version row (valid_from = now) plus a change record for v2+; the reviewer is not the drafter (409 SELF_REVIEW), no step is skipped (409 INVALID_TRANSITION), the content is the reviewed content (409 CONTENT_CHANGED); an existing `metric_version_id` is refused (409 DEFINITION_IMMUTABLE) |
 | C03 | run-rule | all | measures an active rule: eligible and failing counts, rule version, weight version; stored; compared with the previous run (RULE_VERSION_DIFFERS) |
 | C04 | open-issue | all | an owned issue on a failing scheduled run, with the rule's severity; `detected_at` = the run's time |
 | C05 | triage-issue | all | `investigate` (owner and due date), `claim` (closed without a rerun = claimed) or `reopen` (a reopen cycle) |
 | C06 | suggest-match | all | a candidate in canonical order with score, features, explanation; a reverse or repeated pair is 409 DUPLICATE_PAIR; never a merge |
-| C07 | approve-merge | steward, admin | approve or reject by a reviewer other than the proposer (403 REVIEWER_IS_PROPOSER); the right record maps to the left; audited |
+| C07 | approve-merge | steward, admin | approve or reject by a reviewer other than the proposer (409 SELF_REVIEW; the database and the domain keep REVIEWER_IS_PROPOSER); the right record maps to the left; audited |
 | C08 | reverse-merge | steward, admin | a reversal decision (reason required): both identities restored, history kept |
 | C09 | disable-rule | steward, admin | active -> disabled with a reason and date; runs and issues stay, open issues stay open |
-| C10 | verify-remediation | steward, admin | reruns the rule over the issue's records: a successful rerun of the same rule version resolves it, anything else leaves it claimed |
+| C10 | verify-remediation | steward, admin | reruns the rule over the issue's records: a successful rerun of the same rule version resolves it, anything else leaves it claimed; a disabled rule is still rerun (disabling is not repair) |
+| C11 | correct-dataset-rows | all | append-only: new row versions (`row_version`, `supersedes_row_id`, `reason`, actor, server instant) for named records; measurement and C03/C10 use the latest version of each record; nothing is edited and earlier reads keep their answers |
+| C12 | record-refresh | all | appends a refresh of a dataset (`refreshed_at`, not in the future, not before registration; 409 REFRESH_EXISTS) to its history; timeliness reads the latest refresh not after its as-of |
 
 Reads (no actor): `GET /data/{entity}` (stable order, opaque cursor, whitelisted equality filters, `from`/`to` half-open; issues carry `class` and
-`resolved_at`, lineage edges carry `evidence_type`), `GET /data/comparable_runs[?rule_id=]`, `GET /data/identity_map[?as_of=]`, and
+`resolved_at`, lineage edges carry `evidence_type`), `GET /data/comparable_runs[?rule_id=]`, `GET /data/identity_map[?as_of=]`, `GET /data/quality_rule_versions[?rule_id=]` (the definition of every rule version, so an earlier version's eligibility is readable), `GET /data/dataset_refreshes`, and
 `GET /metrics?from=&to=&as_of=&dataset_id=&weight_version=&group_by=none|dataset|owner|source_system|severity` (the twelve metrics, plus `rules`,
 `definitions` and `matching`; each group carries the metrics over its own part of the portfolio).
 
@@ -98,11 +102,13 @@ idempotency (the payload hash includes `dataset_version`, the binding includes a
    has no rows matches nothing.
 6. **Cells.** A cell is compared as exact text: text as is, `true`/`false`, integers in decimal. Dataset rows are flat objects with a unique `row_id` and text,
    integer, boolean or null values; floats and nested values are rejected (MALFORMED_RECORD). A populated non-text value fails a text pattern. The closing
-   `$` of a pattern does not match before a final newline (PostgreSQL's behaviour; the domain emulates it). Patterns are the subset common to Python `re` and
-   PostgreSQL regular expressions. The trim set of the whitespace policy comes from the configuration (default space, tab, CR, LF).
+   `$` of a pattern does not match before a final newline (PostgreSQL's behaviour; the domain emulates it). A validity pattern may not use `\s \d \w \b` (or their negations): the ingest
+   refuses it as PATTERN_NOT_PORTABLE and the database checks it; use explicit classes (`[ \t\r\n\f\v]`, `[0-9]`). The trim set of the whitespace policy comes from the configuration (default space, tab, CR, LF).
 7. **Filters.** A rule may declare `definition.filter = {field, equals}`; the eligible rows are those whose cell equals the text. Without one, all rows.
-8. **Timeliness.** The evaluated occurrence is the latest daily local time whose grace has closed (searched up to 5 days back); grace is 0..1439 minutes; a
-   monitored dataset must declare zone, local time and grace (SCHEDULE_REQUIRED); a never-refreshed monitored dataset is late. A local time that occurs twice
+8. **Timeliness.** The judged occurrence is the latest daily local time that has started by `as_of` (searched up to 5 days back); a refresh not after `as_of` in
+   [occurrence, occurrence + grace) is on time, with none the dataset is pending while the deadline is in the future (outside the denominator, `pending_count`) and late
+   after it; grace is 0..1439 minutes; a
+   monitored dataset must declare zone, local time and grace (SCHEDULE_REQUIRED); a never-refreshed monitored dataset is pending until its deadline, then late. A local time that occurs twice
    is the LATER instant and one that does not exist uses the earlier offset (both are PostgreSQL's `AT TIME ZONE`, so SQL and domain agree on clock-change days).
 9. **Issues.** Statuses are open, investigating and closed; `resolved` and `claimed` are derived. detected_at = the failing run's `run_at`. C05 carries `claim`
    and `reopen` (the contract names no close or reopen command); a reopen keeps `closed_at` and the old verification, and a verification only counts if it is
@@ -113,18 +119,19 @@ idempotency (the payload hash includes `dataset_version`, the binding includes a
 11. **C05.** `investigate` needs an active owner and a due date after detection; only open or investigating issues; `claim` is open to analysts (it is a claim,
     not a resolution); `reopen` only from closed.
 12. **C10.** The command performs the rerun itself over the issue's recorded records (the whole rule when none are recorded) and stores it (kind `rerun`). Not
-    verified is HTTP 200 with status `claimed` and the reasons RERUN_STILL_FAILING, RULE_DISABLED (disabling is not repair; no rerun is made), RULE_VERSION_DIFFERS
-    (the rule changed version; no rerun is made) or NO_RECORDS_TO_CHECK. An issue that is not closed is 409 INVALID_STATE; an already verified one 409 ALREADY_RESOLVED.
+    verified is HTTP 200 with status `claimed` and the reasons RERUN_STILL_FAILING, RULE_VERSION_DIFFERS
+    (the rule changed version; no rerun is made), RULE_NOT_MEASURABLE (a disabled validity rule with no pattern; no rerun) or NO_RECORDS_TO_CHECK. A disabled rule is still rerun
+    (a passing rerun resolves the issue and clears the failure a disabled critical rule carries; the response says `rule_disabled` and warns RULE_DISABLED). An issue that is not closed is 409 INVALID_STATE; an already verified one 409 ALREADY_RESOLVED.
 13. **C06.** `score` is a decimal string in [0, 1] with at most 6 places; `features` a non-empty map of decimal strings; a pair that exists in either orientation is
     409 DUPLICATE_PAIR; a first-seen pair with left > right is 422 NON_CANONICAL_ORDER (the response names the canonical order); equal records 422 SAME_RECORD;
     unknown records 422 UNKNOWN_RECORD. Records that share a normalized name and an address get the uncertainty "Shared name and address; possible household"
     when the caller gave none, with a warning; a candidate never produces a decision.
-14. **C07/C08.** The reviewer is the actor id; separation of duties is `proposed_by` (an actor id) against the reviewer, 403 with a refusal audit row. One
+14. **C07/C08.** The reviewer is the actor id; separation of duties is `proposed_by` (an actor id) against the reviewer, 409 SELF_REVIEW with a refusal audit row. One
     approve/reject per candidate (409 ALREADY_REVIEWED, also under a race); an approval is refused when either record is already merged away, or when the record that
     would be merged away is itself the target of another merge (409 RECORD_ALREADY_MERGED); a reversal needs a reason, an approval of the candidate, once (409 ALREADY_REVERSED), and a candidate is not
-    re-reviewed after a reversal. Roles come from the header; the API does not check the actor against the owners register.
+    re-reviewed after a reversal. The actor is resolved against the owners register (exact id, active) and the role is the register's (D-10 R7-03).
 15. **C09.** A disabled rule stays disabled (no re-enable); the reason is required.
-16. **C02.** `valid_from` is the server's time and the approver is the actor; statuses are draft and published (the contract's "reviewed" is the steward's act);
+16. **C02.** `valid_from` is the server's time and the approver is the actor; statuses are draft, reviewed and published, each step a new version row (D-10 R7-12);
     a change to an existing metric needs a reason; an incomplete checklist is allowed with a warning and counts as incomplete in definition coverage; an
     unknown owner is 422, an inactive one is allowed; `expected_version` is optional optimistic concurrency (409 STALE_METRIC_VERSION).
 17. **C01.** `registered_at` is the server's time; `last_refreshed_at` may not be in the future; up to 1000 rows may be loaded with the dataset.
@@ -139,4 +146,9 @@ idempotency (the payload hash includes `dataset_version`, the binding includes a
     `unversioned` when nothing was loaded. The seeder's `dataset_version` argument names a load; the hash excludes the synthetic truth.
 22. **Listing.** 1..200 rows per page; equality filters on a per-entity whitelist (unknown: 422 INVALID_FILTER); keys sort in code-point order.
 23. **Several rows per rule.** `quality_rules` holds one current row per rule (version_number); runs record the version they were made under. There is no command
-    that creates or versions a rule; C03 therefore never sees two versions of one rule at once.
+    that creates or versions a rule; C03 therefore never sees two versions of one rule at once. `quality_rule_versions` (append-only) holds the definition of each
+    version, the current one taken from the rule itself.
+24. **Corrections and refreshes.** C11 and C12 are the only ways to change measured rows or a dataset's last refresh after the load; both append (row versions, a refresh
+    history) and the loaded `datasets.last_refreshed_at` stays as loaded. Reads and the SQL reference take, per dataset, the latest refresh not after `as_of` and, per
+    record, the latest version recorded by `as_of`.
+25. **Instants on reads.** `from`, `to` and `as_of` need a zone (`Z` or an offset); a naive value or a date is 422 TIMESTAMP_INVALID.

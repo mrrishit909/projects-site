@@ -4,11 +4,10 @@ from datetime import datetime, timedelta, timezone
 import pytest
 
 from api import clock
-from support_db import (ADMIN, ANALYST, STEWARD, STEWARD2, client, command, conn, count, db_url, get, golden_inputs, load, rule_ids,  # noqa: F401
-                        table_digest)
+from support_db import (ADMIN, ANALYST, INACTIVE, STEWARD, STEWARD2, client, command, conn, count, db_url, get, golden_inputs, load,  # noqa: F401
+                        publish_through_review, rule_ids, table_digest)
 
 AS_OF = datetime(2026, 10, 5, 0, 0, 0, tzinfo=timezone.utc)
-OWN01 = {"X-Actor-Id": "own-01", "X-Actor-Role": "steward"}     # the proposer of every golden candidate
 
 
 @pytest.fixture
@@ -33,7 +32,7 @@ def test_c01_registers_a_dataset_with_owner_classification_and_server_time(lab, 
     assert body["status"] == "cataloged" and body["result"]["registered_at"].startswith("2026-10-05T00:00:00") and body["result"]["rows"] == 2
     assert any(w["code"] == "NEVER_REFRESHED" for w in body["warnings"])
     row = conn.execute("SELECT * FROM datasets WHERE dataset_id = 'ds-new'").fetchone()
-    assert (row["owner_id"], row["classification"], row["registered_by"], row["refresh_timezone"]) == ("own-02", "internal", "usr-analyst01", "Asia/Kolkata")
+    assert (row["owner_id"], row["classification"], row["registered_by"], row["refresh_timezone"]) == ("own-02", "internal", "own-01", "Asia/Kolkata")
     assert count(conn, "dataset_rows", "dataset_id = 'ds-new'") == 2 and count(conn, "fields", "dataset_id = 'ds-new'") == 1
     assert len(audit(conn, "register-dataset", "ds-new")) == 1
 
@@ -69,19 +68,47 @@ def test_c01_duplicate_dataset_is_409(lab):
 # ------------------------------------------------------------------------------------------------------------ C02
 def test_c02_publishes_versions_and_never_rewrites(lab, conn):
     pub = {"metric_id": "m-new", "metric_name": "New metric", "definition": "d", "grain": "order", "source_fields": ["orders.amount"], "owner_id": "own-04", "refresh": "daily"}
-    v1 = command(lab, "publish-definition", pub)
-    assert v1.status_code == 200 and v1.json()["result"]["version_number"] == 1 and v1.json()["result"]["change_id"] is None and v1.json()["warnings"] == []
-    first = conn.execute("SELECT * FROM metric_versions WHERE metric_id = 'm-new'").fetchone()
-    no_reason = command(lab, "publish-definition", {**pub, "definition": "d2"})
-    assert no_reason.status_code == 422 and rule_ids(no_reason) == ["REASON_REQUIRED"]
-    v2 = command(lab, "publish-definition", {**pub, "definition": "d2", "reason": "clearer wording", "expected_version": 1})
-    assert v2.status_code == 200 and v2.json()["result"]["version_number"] == 2 and v2.json()["result"]["previous_metric_version_id"] == first["metric_version_id"]
+    v1 = publish_through_review(lab, pub)                       # draft (v1), reviewed (v2), published (v3): each step a new row
+    assert v1.status_code == 200, v1.text
     rows = conn.execute("SELECT * FROM metric_versions WHERE metric_id = 'm-new' ORDER BY version_number").fetchall()
-    assert [r["definition"] for r in rows] == ["d", "d2"] and rows[0] == first                  # the first version row is untouched
-    ch = conn.execute("SELECT * FROM definition_changes WHERE metric_version_id = %s", (rows[1]["metric_version_id"],)).fetchone()
-    assert (ch["reason"], ch["approved_by"], ch["changed_at"]) == ("clearer wording", "usr-steward01", rows[1]["valid_from"])
-    stale = command(lab, "publish-definition", {**pub, "reason": "again", "expected_version": 1})
+    assert [(r["version_number"], r["status"], r["published_by"]) for r in rows] == [(1, "draft", "own-02"), (2, "reviewed", "own-03"), (3, "published", "own-02")]
+    assert v1.json()["result"]["version_number"] == 3 and v1.json()["result"]["change_id"] is not None and v1.json()["warnings"] == []
+    first = rows[0]
+    no_reason = command(lab, "publish-definition", {**pub, "definition": "d2", "status": "draft"})
+    assert no_reason.status_code == 422 and rule_ids(no_reason) == ["REASON_REQUIRED"]
+    v4 = command(lab, "publish-definition", {**pub, "definition": "d2", "status": "draft", "reason": "clearer wording", "expected_version": 3})
+    assert v4.status_code == 200 and v4.json()["result"]["version_number"] == 4 and v4.json()["result"]["previous_metric_version_id"] == rows[2]["metric_version_id"]
+    rows2 = conn.execute("SELECT * FROM metric_versions WHERE metric_id = 'm-new' ORDER BY version_number").fetchall()
+    assert [r["definition"] for r in rows2] == ["d", "d", "d", "d2"] and rows2[0] == first            # the first version row is untouched
+    ch = conn.execute("SELECT * FROM definition_changes WHERE metric_version_id = %s", (rows2[3]["metric_version_id"],)).fetchone()
+    assert (ch["reason"], ch["approved_by"], ch["changed_at"]) == ("clearer wording", "own-02", rows2[3]["valid_from"])
+    stale = command(lab, "publish-definition", {**pub, "reason": "again", "expected_version": 1, "status": "draft"})
     assert stale.status_code == 409 and rule_ids(stale) == ["STALE_METRIC_VERSION"]
+
+
+def test_c02_the_reviewed_state_sits_between_draft_and_published(lab, conn):
+    """D-10 R7-12 (FLOW-02): draft -> reviewed -> published. No step is skipped, the content is the content that was reviewed, and the reviewer is
+    not the author. Reviewed and draft versions are not counted in definition coverage."""
+    pub = {"metric_id": "m-flow", "metric_name": "Flow", "definition": "d", "grain": "g", "source_fields": ["a.b"], "owner_id": "own-04", "refresh": "daily"}
+    skip = command(lab, "publish-definition", {**pub, "status": "published"})
+    assert skip.status_code == 409 and rule_ids(skip) == ["PUBLICATION_REQUIRES_REVIEW"] and skip.json()["error"]["code"] == "INVALID_TRANSITION"
+    assert command(lab, "publish-definition", {**pub, "status": "reviewed"}).json()["error"]["details"][0]["rule_id"] == "REVIEW_REQUIRES_DRAFT"
+    assert command(lab, "publish-definition", {**pub, "status": "draft"}).json()["status"] == "drafted"
+    self_review = command(lab, "publish-definition", {**pub, "status": "reviewed", "reason": "mine"}, headers=STEWARD)       # own-02 drafted it
+    assert self_review.status_code == 409 and rule_ids(self_review) == ["SELF_REVIEW"] and len(audit(conn, "publish-definition-refused", "m-flow")) == 1
+    published_first = command(lab, "publish-definition", {**pub, "status": "published", "reason": "x"}, headers=STEWARD2)     # still a draft: not reviewed
+    assert published_first.status_code == 409 and rule_ids(published_first) == ["PUBLICATION_REQUIRES_REVIEW"]
+    changed = command(lab, "publish-definition", {**pub, "definition": "other", "status": "reviewed", "reason": "r"}, headers=STEWARD2)
+    assert changed.status_code == 409 and rule_ids(changed) == ["CONTENT_CHANGED"]
+    rev = command(lab, "publish-definition", {**pub, "status": "reviewed", "reason": "checked by a second person"}, headers=STEWARD2)
+    assert rev.status_code == 200 and rev.json()["status"] == "reviewed" and rev.json()["result"]["status"] == "reviewed"
+    cov = get(lab, "/metrics", as_of="2026-10-06T00:00:00Z").json()["data"]["metrics"]["definition_coverage"]
+    assert cov["published_metrics"] == 4                                                                # a reviewed version is not published yet
+    changed2 = command(lab, "publish-definition", {**pub, "grain": "other", "status": "published", "reason": "r"})
+    assert changed2.status_code == 409 and rule_ids(changed2) == ["CONTENT_CHANGED"]
+    done = command(lab, "publish-definition", {**pub, "status": "published", "reason": "approved"})
+    assert done.status_code == 200 and done.json()["status"] == "published"
+    assert get(lab, "/metrics", as_of="2026-10-06T00:00:00Z").json()["data"]["metrics"]["definition_coverage"]["published_metrics"] == 5
 
 
 def test_c02_in_place_rewrite_is_refused_and_audited(lab, conn):
@@ -95,7 +122,7 @@ def test_c02_in_place_rewrite_is_refused_and_audited(lab, conn):
 
 
 def test_c02_incomplete_checklist_warns_and_drafts_stay_out_of_coverage(lab, conn):
-    r = command(lab, "publish-definition", {"metric_id": "m-thin", "metric_name": "Thin", "definition": "d", "grain": "", "source_fields": [], "owner_id": "own-04", "refresh": " "})
+    r = publish_through_review(lab, {"metric_id": "m-thin", "metric_name": "Thin", "definition": "d", "grain": "", "source_fields": [], "owner_id": "own-04", "refresh": " "})
     assert r.status_code == 200 and r.json()["warnings"][0]["code"] == "DEFINITION_INCOMPLETE"
     assert "grain, source_fields, refresh" in r.json()["warnings"][0]["message"]
     command(lab, "publish-definition", {"metric_id": "m-draft", "metric_name": "D", "definition": "d", "grain": "g", "source_fields": ["a"], "owner_id": "own-04",
@@ -103,11 +130,11 @@ def test_c02_incomplete_checklist_warns_and_drafts_stay_out_of_coverage(lab, con
     cov = get(lab, "/metrics", as_of="2026-10-06T00:00:00Z").json()["data"]["metrics"]["definition_coverage"]
     assert cov["published_metrics"] == 5 and cov["incomplete"]["m-thin"] == ["grain", "source_fields", "refresh"] and "m-draft" not in cov["incomplete"]
     assert command(lab, "publish-definition", {"metric_id": "m-z", "metric_name": "Z", "definition": "d", "grain": "g", "source_fields": [], "owner_id": "own-99",
-                                               "refresh": "daily"}).json()["error"]["details"][0]["rule_id"] == "UNKNOWN_OWNER"
+                                               "refresh": "daily", "status": "draft"}).json()["error"]["details"][0]["rule_id"] == "UNKNOWN_OWNER"
 
 
 def test_c02_needs_a_steward_or_admin(lab):
-    pub = {"metric_id": "m-a", "metric_name": "A", "definition": "d", "grain": "g", "source_fields": ["a"], "owner_id": "own-04", "refresh": "daily"}
+    pub = {"metric_id": "m-a", "metric_name": "A", "definition": "d", "grain": "g", "source_fields": ["a"], "owner_id": "own-04", "refresh": "daily", "status": "draft"}
     r = command(lab, "publish-definition", pub, headers=ANALYST)
     assert r.status_code == 403 and rule_ids(r) == ["ROLE_FORBIDDEN"]
     assert command(lab, "publish-definition", pub, headers=ADMIN).status_code == 200
@@ -125,7 +152,7 @@ def test_c03_replays_the_eight_active_rules_and_equals_the_golden_runs(lab, conn
         assert res["run_at"].startswith("2026-10-05T00:00:00") and res["kind"] == "scheduled"
         assert res.get("populated_count") == exp.get("populated_count") and res.get("null_fk_count") == exp.get("null_fk_count")
         stored = conn.execute("SELECT * FROM rule_runs WHERE rule_run_id = %s", (res["rule_run_id"],)).fetchone()
-        assert (stored["eligible_count"], stored["failure_count"], stored["weight_version"], stored["run_by"]) == (exp["eligible_count"], exp["failure_count"], "w2", "usr-analyst01")
+        assert (stored["eligible_count"], stored["failure_count"], stored["weight_version"], stored["run_by"]) == (exp["eligible_count"], exp["failure_count"], "w2", "own-01")
     assert count(conn, "rule_runs") == 13 + 8
 
 
@@ -209,8 +236,10 @@ def test_c05_triage_claim_and_reopen(lab, conn):
 
 
 # ------------------------------------------------------------------------------------------------------------ C10
-def refresh_shipments(conn, at: str):
-    conn.execute("UPDATE datasets SET last_refreshed_at = %s WHERE dataset_id = 'ds-shipments'", (at,))
+def refresh_shipments(lab, at: str):
+    """The shipments feed refreshed at ``at``: recorded through C12 record-refresh, as an operator would (no SQL outside the application)."""
+    r = command(lab, "record-refresh", {"dataset_id": "ds-shipments", "refreshed_at": at}, headers=ANALYST)
+    assert r.status_code == 200, r.text
 
 
 def late_shipments_issue(lab):
@@ -229,7 +258,7 @@ def test_c10_resolves_only_after_a_successful_rerun_of_the_same_rule_version(lab
     assert conn.execute("SELECT verification_run_id FROM issues WHERE issue_id = %s", (iid,)).fetchone()["verification_run_id"] is None
     assert count(conn, "rule_runs", "kind = 'rerun' AND failure_count = 1") == 1       # the failed rerun is evidence and is kept
     clock.freeze(AS_OF + timedelta(hours=12))                                         # a later day: refresh inside [04:00Z, 05:00Z)
-    refresh_shipments(conn, "2026-10-05T04:30:00Z")
+    refresh_shipments(lab, "2026-10-05T04:30:00Z")
     ok = command(lab, "verify-remediation", {"issue_id": iid})
     res = ok.json()["result"]
     assert ok.status_code == 200 and ok.json()["status"] == "resolved" and res["verified"] is True and res["class"] == "resolved"
@@ -252,10 +281,11 @@ def test_c10_needs_a_claimed_issue_a_steward_and_a_live_rule_of_the_same_version
     # records are checked: the five missing e-mails are still missing, so the rerun fails on the issue's own records
     r = command(lab, "verify-remediation", {"issue_id": iid}).json()["result"]
     assert (r["eligible_count"], r["failure_count"], r["verified"]) == (5, 5, False)
-    # disabling the rule is not repair
+    # disabling the rule is not repair: the issue stays claimed, and only a passing rerun resolves it (D-10 R7-02)
     assert command(lab, "disable-rule", {"rule_id": "r-cust-complete-email", "reason": "no longer needed"}).status_code == 200
     d = command(lab, "verify-remediation", {"issue_id": iid})
-    assert d.json()["result"]["reasons"] == ["RULE_DISABLED"] and d.json()["result"]["rerun_run_id"] is None and d.json()["status"] == "claimed"
+    assert d.json()["result"]["reasons"] == ["RERUN_STILL_FAILING"] and d.json()["result"]["rule_disabled"] is True and d.json()["status"] == "claimed"
+    assert d.json()["result"]["rerun_run_id"] is not None and {w["code"] for w in d.json()["warnings"]} == {"RERUN_STILL_FAILING", "RULE_DISABLED"}
     cls = {r["issue_id"]: r for r in get(lab, "/data/issues").json()["data"]}[iid]["class"]
     assert cls == "claimed"
 
@@ -266,7 +296,7 @@ def test_c10_a_rerun_of_another_rule_version_verifies_nothing(lab, conn):
     conn.execute("UPDATE quality_rules SET version_number = 2 WHERE rule_id = 'r-ship-fresh'")
     conn.execute("ALTER TABLE quality_rules ENABLE TRIGGER USER")
     clock.freeze(AS_OF + timedelta(hours=12))
-    refresh_shipments(conn, "2026-10-05T04:30:00Z")                                    # the data is fine now ...
+    refresh_shipments(lab, "2026-10-05T04:30:00Z")                                    # the data is fine now ...
     r = command(lab, "verify-remediation", {"issue_id": iid})
     assert r.json()["result"]["reasons"] == ["RULE_VERSION_DIFFERS"] and r.json()["status"] == "claimed"      # ... but v2 is not the rule that failed
 
@@ -274,7 +304,7 @@ def test_c10_a_rerun_of_another_rule_version_verifies_nothing(lab, conn):
 def test_c10_reopen_then_reclaim_needs_a_new_verification(lab, conn):
     iid = late_shipments_issue(lab)
     clock.freeze(AS_OF + timedelta(hours=12))
-    refresh_shipments(conn, "2026-10-05T04:30:00Z")
+    refresh_shipments(lab, "2026-10-05T04:30:00Z")
     assert command(lab, "verify-remediation", {"issue_id": iid}).json()["status"] == "resolved"
     clock.freeze(AS_OF + timedelta(hours=13))
     assert command(lab, "triage-issue", {"issue_id": iid, "action": "reopen"}).status_code == 200
@@ -302,7 +332,7 @@ def test_c06_suggests_a_canonical_candidate_never_a_merge(lab, conn):
     r = command(lab, "suggest-match", {"left_record_id": "rec-001", "right_record_id": "rec-011", **SUGGEST}, headers=ANALYST)
     assert r.status_code == 200, r.text
     res = r.json()["result"]
-    assert res["uncertainty"] == "Shared name and address; possible household" and res["merged"] is False and res["proposed_by"] == "usr-analyst01"
+    assert res["uncertainty"] == "Shared name and address; possible household" and res["merged"] is False and res["proposed_by"] == "own-01"
     assert r.json()["warnings"][0]["code"] == "SHARED_NAME_AND_ADDRESS"
     assert count(conn, "merge_decisions") == 5 and conn.execute("SELECT left_record_id < right_record_id AS ok FROM match_candidates WHERE candidate_id = %s", (res["candidate_id"],)).fetchone()["ok"]
     diff = command(lab, "suggest-match", {"left_record_id": "rec-003", "right_record_id": "rec-005", **SUGGEST, "uncertainty": "check"}).json()["result"]
@@ -331,7 +361,7 @@ def test_c07_approves_a_merge_with_an_independent_reviewer(lab, conn):
     assert r.status_code == 200, r.text
     res = r.json()["result"]
     assert (r.json()["status"], res["state"], res["reviewer_id"], res["proposed_by"], res["maps"]) == (
-        "linked", "linked", "usr-steward01", "own-01", {"from_record_id": "rec-010", "to_record_id": "rec-009"})
+        "linked", "linked", "own-02", "own-01", {"from_record_id": "rec-010", "to_record_id": "rec-009"})
     assert res["decided_at"].startswith("2026-10-05T00:00:00") and len(audit(conn, "approve-merge", res["merge_id"])) == 1
     assert get(lab, "/data/identity_map").json()["data"]["identity_map"]["rec-010"] == "rec-009"
     again = command(lab, "approve-merge", {"candidate_id": "cand-005"}, headers=ADMIN)
@@ -345,13 +375,22 @@ def test_c07_approves_a_merge_with_an_independent_reviewer(lab, conn):
     assert get(lab, "/data/identity_map").json()["data"]["identity_map"]["rec-011"] == "rec-011"
 
 
-def test_c07_refuses_the_proposer_as_reviewer_and_keeps_the_refusal(lab, conn):
-    r = command(lab, "approve-merge", {"candidate_id": "cand-005"}, headers=OWN01)
-    assert r.status_code == 403 and rule_ids(r) == ["REVIEWER_IS_PROPOSER"]
+def test_c07_a_proposer_cannot_decide_their_own_candidate_and_the_refusal_is_kept(lab, conn):
+    """D-10 R7-03, through the API with separate registered identities: own-02 (a steward) proposes, own-02 cannot approve (409 SELF_REVIEW, audited),
+    own-03 (another steward) can."""
+    add_record(conn, "rec-011", "other person", "addr-9")
+    cid = command(lab, "suggest-match", {"left_record_id": "rec-003", "right_record_id": "rec-011", **SUGGEST}, headers=STEWARD).json()["result"]["candidate_id"]
+    r = command(lab, "approve-merge", {"candidate_id": cid}, headers=STEWARD)
+    assert r.status_code == 409 and rule_ids(r) == ["SELF_REVIEW"] and r.json()["error"]["code"] == "SELF_REVIEW"
     assert count(conn, "merge_decisions") == 5
-    refusal = audit(conn, "approve-merge-refused", "cand-005")
-    assert len(refusal) == 1 and refusal[0]["actor_id"] == "own-01" and refusal[0]["details"]["rule_id"] == "REVIEWER_IS_PROPOSER"
-    assert command(lab, "approve-merge", {"candidate_id": "cand-005"}, headers=ANALYST).status_code == 403          # an analyst cannot decide at all
+    refusal = audit(conn, "approve-merge-refused", cid)
+    assert len(refusal) == 1 and refusal[0]["actor_id"] == "own-02" and refusal[0]["details"]["rule_id"] == "SELF_REVIEW"
+    ok = command(lab, "approve-merge", {"candidate_id": cid}, headers=STEWARD2)
+    assert ok.status_code == 200 and ok.json()["result"]["reviewer_id"] == "own-03" and ok.json()["result"]["proposed_by"] == "own-02"
+    # the golden proposer own-01 is an analyst: an analyst cannot decide at all, and cannot claim to be a steward
+    assert command(lab, "approve-merge", {"candidate_id": "cand-005"}, headers=ANALYST).status_code == 403
+    claim = command(lab, "approve-merge", {"candidate_id": "cand-005"}, headers={"X-Actor-Id": "own-01", "X-Actor-Role": "steward"})
+    assert claim.status_code == 403 and rule_ids(claim) == ["ROLE_MISMATCH"] and count(conn, "merge_decisions") == 6
     assert command(lab, "approve-merge", {"candidate_id": "nope"}).status_code == 404
     assert command(lab, "approve-merge", {"candidate_id": "cand-005", "decision": "maybe"}).json()["error"]["details"][0]["rule_id"] == "INVALID_DECISION"
 
@@ -385,10 +424,13 @@ def test_c08_refusals(lab, conn):
     assert command(lab, "reverse-merge", {"merge_id": "md-5", "reason": "undo"}).json()["error"]["details"][0]["rule_id"] == "NOT_AN_APPROVAL"
     assert command(lab, "reverse-merge", {"merge_id": "md-1", "reason": "  "}).json()["error"]["details"][0]["rule_id"] == "REASON_REQUIRED"
     assert command(lab, "reverse-merge", {"merge_id": "nope", "reason": "x"}).status_code == 404
-    own = command(lab, "reverse-merge", {"merge_id": "md-1", "reason": "x"}, headers=OWN01)
-    assert own.status_code == 403 and rule_ids(own) == ["REVIEWER_IS_PROPOSER"]
     assert command(lab, "reverse-merge", {"merge_id": "md-1", "reason": "x"}, headers=ANALYST).status_code == 403
-    assert count(conn, "merge_decisions") == 5
+    add_record(conn, "rec-011", "other person", "addr-9")           # a steward who proposed a pair cannot reverse its merge either
+    cid = command(lab, "suggest-match", {"left_record_id": "rec-003", "right_record_id": "rec-011", **SUGGEST}, headers=STEWARD).json()["result"]["candidate_id"]
+    mid = command(lab, "approve-merge", {"candidate_id": cid}, headers=STEWARD2).json()["result"]["merge_id"]
+    own = command(lab, "reverse-merge", {"merge_id": mid, "reason": "x"}, headers=STEWARD)
+    assert own.status_code == 409 and rule_ids(own) == ["SELF_REVIEW"]
+    assert count(conn, "merge_decisions") == 6
 
 
 # ------------------------------------------------------------------------------------------------------------ C09
@@ -421,8 +463,17 @@ def test_identity_roles_and_envelope_errors(lab):
     body = {"request_id": "r1", "dataset_version": "x", "idempotency_key": "k1", "input": {"rule_id": "r-cust-fresh"}}
     from api.app import PREFIX
     assert lab.post(f"{PREFIX}/commands/run-rule", json=body).status_code == 401
-    assert lab.post(f"{PREFIX}/commands/run-rule", json=body, headers={"X-Actor-Id": "u", "X-Actor-Role": "root"}).status_code == 403
+    assert lab.post(f"{PREFIX}/commands/run-rule", json=body, headers={"X-Actor-Id": "own-01", "X-Actor-Role": "root"}).status_code == 403
     assert lab.post(f"{PREFIX}/commands/run-rule", json=body, headers={"X-Actor-Id": " ", "X-Actor-Role": "admin"}).status_code == 401
+    # D-10 R7-03: the actor is a registered owner, exactly; the role is the register's; an inactive owner cannot act
+    unknown = lab.post(f"{PREFIX}/commands/run-rule", json=body, headers={"X-Actor-Id": "usr-nobody", "X-Actor-Role": "admin"})
+    assert unknown.status_code == 401 and rule_ids(unknown) == ["UNKNOWN_ACTOR"]
+    for odd in ("OWN-02", "own-2", "own-02x", "own_02"):                                           # no case folding, no near match
+        assert lab.post(f"{PREFIX}/commands/run-rule", json=body, headers={"X-Actor-Id": odd, "X-Actor-Role": "steward"}).status_code == 401, odd
+    mismatch = lab.post(f"{PREFIX}/commands/run-rule", json=body, headers={"X-Actor-Id": "own-01", "X-Actor-Role": "admin"})
+    assert mismatch.status_code == 403 and rule_ids(mismatch) == ["ROLE_MISMATCH"] and mismatch.json()["error"]["details"][0]["context"] == {"registered_role": "analyst"}
+    inactive = lab.post(f"{PREFIX}/commands/run-rule", json=body, headers=INACTIVE)
+    assert inactive.status_code == 403 and rule_ids(inactive) == ["ACTOR_INACTIVE"]
     assert lab.post(f"{PREFIX}/commands/nothing", json=body, headers=ADMIN).status_code == 404
     forbidden = lab.post(f"{PREFIX}/commands/disable-rule", json={"junk": 1}, headers=ANALYST)       # the role is checked before the body is read
     assert forbidden.status_code == 403 and forbidden.json()["error"]["code"] == "FORBIDDEN"
@@ -442,10 +493,10 @@ def test_idempotency_replay_reuse_and_actor_binding(lab, conn):
     assert count(conn, "rule_runs") == n and "Idempotent-Replay" not in first.headers
     other_payload = command(lab, "run-rule", {"rule_id": "r-cust-fresh", "weight_version": "w1"}, key="idem-1", headers=ANALYST)
     assert other_payload.status_code == 409 and rule_ids(other_payload) == ["IDEMPOTENCY_PAYLOAD_MISMATCH"]
-    other_actor = command(lab, "run-rule", {"rule_id": "r-cust-fresh"}, key="idem-1", headers={"X-Actor-Id": "usr-other", "X-Actor-Role": "analyst"})
+    other_actor = command(lab, "run-rule", {"rule_id": "r-cust-fresh"}, key="idem-1", headers=STEWARD2)
     assert other_actor.status_code == 409 and rule_ids(other_actor) == ["IDEMPOTENCY_ACTOR_MISMATCH"]
-    other_role = command(lab, "run-rule", {"rule_id": "r-cust-fresh"}, key="idem-1", headers={"X-Actor-Id": "usr-analyst01", "X-Actor-Role": "admin"})
-    assert other_role.status_code == 409 and rule_ids(other_role) == ["IDEMPOTENCY_ACTOR_MISMATCH"]
+    other_role = command(lab, "run-rule", {"rule_id": "r-cust-fresh"}, key="idem-1", headers={"X-Actor-Id": "own-01", "X-Actor-Role": "admin"})
+    assert other_role.status_code == 403 and rule_ids(other_role) == ["ROLE_MISMATCH"]          # the role is the register's: it cannot be a second binding
     other_version = command(lab, "run-rule", {"rule_id": "r-cust-fresh"}, key="idem-1", headers=ANALYST, dataset_version="ds-other")
     assert other_version.status_code == 409                                              # a different dataset_version is a different request
     assert count(conn, "rule_runs") == n
@@ -468,4 +519,4 @@ def test_every_command_writes_exactly_one_audit_row_and_a_failure_writes_none(la
     assert command(lab, "run-rule", {"rule_id": "r-ord-amount-range"}).status_code == 409
     assert count(conn, "audit_events") == n0 + 1 and count(conn, "command_results") == 1                   # the refusal stored nothing
     a = conn.execute("SELECT * FROM audit_events ORDER BY occurred_at DESC LIMIT 1").fetchone()
-    assert (a["entity_type"], a["action"], a["actor_id"], a["actor_role"], a["request_id"]) == ("rule_run", "run-rule", "usr-steward01", "steward", "req-test")
+    assert (a["entity_type"], a["action"], a["actor_id"], a["actor_role"], a["request_id"]) == ("rule_run", "run-rule", "own-02", "steward", "req-test")
