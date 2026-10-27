@@ -1,0 +1,71 @@
+# Pipeline Observatory — business contracts, version 1 (2026-10-27)
+
+Decision owner: coordinator (Fable 5.1). Spec: `projects/08-pipeline-observatory.md`, SHA-256 `1ffbfbe7…` at pack
+commit `fe5f7981` (verified against `docs/program/source-pack.json`). Rules cite the requirement they satisfy;
+changing one bumps `CONTRACT_VERSION`, this file, the golden fixture and the tests together.
+
+## Decision the product supports
+Is this dataset safe, complete, and fresh enough to publish? (P08-GOAL-01). Primary users: a data engineer and a data
+reliability analyst. Boundaries: PostgreSQL only as a service container on GitHub-hosted runners (P08-DOMAIN-01); the
+repository is the canonical durable state and transient databases are rebuilt from versioned sources on each run
+(P08-DOMAIN-02/03); no exactly-once claim without a boundary proof (P08-DOMAIN-04); publications are immutable static
+snapshots (P08-DOMAIN-05); durable results archived as compact versioned files (P08-DOMAIN-06).
+
+## D-01 Ingestion, idempotency and checkpoints
+* A source is fetched page by page from a cursor; a page carries the next cursor and a rate-limit hint; a retry
+  honours `retry_after_seconds` and never retries sooner; a cursor that repeats itself (same `next_cursor` twice) stops
+  the fetch with `CURSOR_LOOP` (P08-FLOW-01, P08-TEST-03, P08-TEST-10).
+* Every raw record keeps `payload_hash` = sha256 of the canonical payload and `source_key`; within a batch and across
+  batches of one source, a record whose `source_key` was already **accepted** is a **duplicate** (counted separately,
+  never quarantined, never accepted twice); a record that fails the contract (schema or semantic check, e.g. a negative
+  quantity) is **quarantined** with a reason code and is never silently dropped (P08-FLOW-02, P08-MET-04/05,
+  P08-TEST-05). Golden (P08-GOLD-01): received 10, accepted unique 8, duplicate 1, quarantined 1; replaying the batch
+  leaves 8 accepted; a crash after the data write but before the checkpoint leaves 8, never 9 (P08-TEST-01).
+* A batch commits atomically with its checkpoint: accepted records, quarantine rows and the checkpoint row
+  (`committed_cursor`, `version_number` + 1) are one transaction; a replay from the last committed cursor is
+  idempotent on `source_key`; the delivery guarantee claimed is **at-least-once with idempotent apply**, proven at the
+  source-key boundary, never exactly-once (P08-FLOW-03, P08-DOMAIN-04).
+* A schema version that adds a required field is a contract change: the batch is quarantined whole with
+  `SCHEMA_CHANGED` and the source's expected `schema_version` must be bumped explicitly (P08-TEST-04). A delete event
+  is a record with `op = delete` that must propagate to the published snapshot as an exclusion with its reason, never
+  ignored (P08-TEST-08).
+
+## D-02 Freshness, completeness and the publication gate
+* Source freshness = cutoff − latest source event timestamp among accepted records; ingestion age = cutoff − last
+  **successful** ingestion (a batch whose status is `committed`); the two are distinct and a green run with a stale
+  source shows stale freshness (P08-MET-01/02, P08-TEST-06). Completeness = accepted expected records ÷ expected
+  records, where the expectation is the synthetic source's declared count per partition (P08-MET-03). Rejection rate =
+  quarantined ÷ received; duplicate rate = duplicates ÷ received (P08-MET-04/05).
+* The quality gate runs the critical checks (keys unique, relationships intact, reconciliation residual zero,
+  freshness within target); any critical failure **blocks publication** and opens an incident; a failed run never
+  replaces the current publication (the publication pointer moves only to a passed candidate, atomically)
+  (P08-FLOW-05/06, P08-TEST-07). Publication lag = published_at − latest included source event; the publish watermark
+  is disclosed with every publication, and an event later than the watermark that arrives afterwards is a late event
+  counted and included in the next publication, never lost (P08-MET-08, P08-TEST-09).
+* Reconciliation residual = source business total − published business total − explained exclusions (quarantined,
+  duplicates, deletes), zero on the golden fixture and reported with its parts (P08-MET-09).
+
+## D-03 Runs, tasks, incidents and backfills
+* A run has tasks; a task has attempts; task success rate = successful terminal tasks ÷ terminal tasks (attempts are
+  not tasks); pipeline duration = finished_at − started_at with failed and successful distributions separate
+  (P08-MET-06/07). Observed processing rate = accepted records ÷ measured processing seconds with the hardware and the
+  cache state disclosed (P08-MET-12).
+* An incident opens on a failed run or a blocked gate and closes only after a **verified recovery**: a later run
+  passes the gate and reconciles; recovery time = verified recovery − detection, never process restart (P08-FLOW-09,
+  P08-MET-10). A fault injection is allowed only in the synthetic sandbox and is recorded (P08-FLOW-07).
+* A backfill request covers a half-open partition range [start, end); two backfills over overlapping ranges of one
+  source cannot run together (`BACKFILL_OVERLAP`); backfill coverage = verified requested partitions ÷ requested
+  partitions (P08-FLOW-08, P08-MET-11, P08-TEST-02). Structured logs never contain a secret: a redaction check runs on
+  every log line and a workflow never triggers itself (P08-TEST-11/12).
+* Archived evidence carries hashes and the retention mapping (P08-FLOW-10).
+
+## D-04 Numbers, time and absence
+Proportions are decimal strings with 6 places; durations in seconds as integers or minutes with 4 places as stated;
+counts nonnegative integers; money (business totals) Decimal strings with 2 places; null means unknown or zero
+denominator, never 0. Instants are UTC with `Z`. Ranges are half-open. Empty population: every count 0, every ratio
+null, `empty_population` true.
+
+## Mode disclosure
+Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners, including the crash-before-checkpoint and
+overlap experiments. Mode B: TypeScript mirror over the published snapshot; the quarantine desk, backfill console and
+fault injection are browser-memory simulations and say so.
