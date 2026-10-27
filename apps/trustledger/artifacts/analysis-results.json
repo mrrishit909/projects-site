@@ -1,0 +1,5554 @@
+{
+ "meta": [
+  {
+   "dataset_hash": "a9f7a3321b102752dd7aa95b76df14c1d9372103e685e10222959fd6438f27ff",
+   "dataset_version": "tl-20261026-20261026",
+   "code_revision": "0b5d686",
+   "contract_version": 1,
+   "seed": 20261026,
+   "as_of": "2026-10-05T00:00:00Z",
+   "golden_dataset_hash": "f895c02e25d43e2f1a693a37890284d840554fde548391e8bf96ea9de2b28483",
+   "datasets": 40,
+   "issues": 574,
+   "rule_runs": 4609,
+   "reconciliation_rows": 175,
+   "reconciliation_equal": 175,
+   "result_sets": 51,
+   "result_rows": 233
+  }
+ ],
+ "01_ds_customers_override_both_weights__rules": [
+  {
+   "rule_id": "r-customers-complete-email",
+   "dimension": "completeness",
+   "severity": "high",
+   "eligible": "120",
+   "populated": "119",
+   "failing": "1",
+   "score": "0.991667"
+  },
+  {
+   "rule_id": "r-customers-fresh",
+   "dimension": "timeliness",
+   "severity": "medium",
+   "eligible": "1",
+   "populated": "",
+   "failing": "0",
+   "score": "1.000000"
+  },
+  {
+   "rule_id": "r-customers-unique-customer_key",
+   "dimension": "uniqueness",
+   "severity": "critical",
+   "eligible": "120",
+   "populated": "",
+   "failing": "2",
+   "score": "0.983333"
+  },
+  {
+   "rule_id": "r-customers-valid-email",
+   "dimension": "validity",
+   "severity": "medium",
+   "eligible": "120",
+   "populated": "119",
+   "failing": "2",
+   "score": "0.991597"
+  }
+ ],
+ "01_ds_customers_override_both_weights__dimensions": [
+  {
+   "dimension": "completeness",
+   "rules": "1",
+   "score": "0.991667"
+  },
+  {
+   "dimension": "validity",
+   "rules": "1",
+   "score": "0.991597"
+  },
+  {
+   "dimension": "uniqueness",
+   "rules": "1",
+   "score": "0.983333"
+  },
+  {
+   "dimension": "timeliness",
+   "rules": "1",
+   "score": "1.000000"
+  }
+ ],
+ "01_ds_customers_override_both_weights__weighted": [
+  {
+   "weight_version": "w1",
+   "valid_from": "2026-01-01",
+   "measured_dimensions": "completeness,validity,uniqueness,timeliness",
+   "weight_sum": "0.950000",
+   "weighted_score": "0.990329",
+   "above_0_95": "true"
+  },
+  {
+   "weight_version": "w2",
+   "valid_from": "2026-09-01",
+   "measured_dimensions": "completeness,validity,uniqueness,timeliness",
+   "weight_sum": "0.850000",
+   "weighted_score": "0.990175",
+   "above_0_95": "true"
+  }
+ ],
+ "01_ds_customers_override_both_weights__critical": [
+  {
+   "dataset_id": "ds-customers",
+   "critical_failures": "2",
+   "critical_open_issues": "1",
+   "critical_override": "true"
+  }
+ ],
+ "01_ds_customers_override_both_weights__critical_issue": [
+  {
+   "issue_id": "iss-0071",
+   "rule_id": "r-customers-unique-customer_key",
+   "severity": "critical",
+   "status": "closed",
+   "class": "resolved",
+   "detected_at": "2026-07-28T02:26:00Z",
+   "owner_id": "own-07",
+   "age_hours": "100.2000"
+  },
+  {
+   "issue_id": "iss-0176",
+   "rule_id": "r-customers-unique-customer_key",
+   "severity": "critical",
+   "status": "closed",
+   "class": "resolved",
+   "detected_at": "2026-08-13T02:26:00Z",
+   "owner_id": "own-07",
+   "age_hours": "57.3333"
+  },
+  {
+   "issue_id": "iss-0461",
+   "rule_id": "r-customers-unique-customer_key",
+   "severity": "critical",
+   "status": "investigating",
+   "class": "open",
+   "detected_at": "2026-09-22T02:26:00Z",
+   "owner_id": "own-07",
+   "age_hours": "309.5667"
+  }
+ ],
+ "01_ds_customers_override_both_weights__portfolio_override": [
+  {
+   "datasets_overridden": "1"
+  }
+ ],
+ "02_ownership_coverage__summary": [
+  {
+   "datasets": "40",
+   "covered": "35",
+   "uncovered": "5",
+   "coverage": "0.875000"
+  }
+ ],
+ "02_ownership_coverage__uncovered": [
+  {
+   "dataset_id": "ds-contacts",
+   "dataset_name": "Contacts",
+   "classification": "confidential",
+   "monitored": "true",
+   "owner_id": "own-12",
+   "owner_team": "Finance Systems",
+   "owner_deactivated_at": "2026-09-04T09:00:00Z",
+   "unresolved_issues": "8",
+   "active_rules": "2"
+  },
+  {
+   "dataset_id": "ds-invoices",
+   "dataset_name": "Invoices",
+   "classification": "confidential",
+   "monitored": "true",
+   "owner_id": "own-09",
+   "owner_team": "Customer Data",
+   "owner_deactivated_at": "2026-08-18T09:00:00Z",
+   "unresolved_issues": "14",
+   "active_rules": "3"
+  },
+  {
+   "dataset_id": "ds-ledger-entries",
+   "dataset_name": "Ledger entries",
+   "classification": "restricted",
+   "monitored": "false",
+   "owner_id": "own-12",
+   "owner_team": "Finance Systems",
+   "owner_deactivated_at": "2026-09-04T09:00:00Z",
+   "unresolved_issues": "22",
+   "active_rules": "3"
+  },
+  {
+   "dataset_id": "ds-returns",
+   "dataset_name": "Returns",
+   "classification": "internal",
+   "monitored": "false",
+   "owner_id": "own-09",
+   "owner_team": "Customer Data",
+   "owner_deactivated_at": "2026-08-18T09:00:00Z",
+   "unresolved_issues": "10",
+   "active_rules": "1"
+  },
+  {
+   "dataset_id": "ds-suppliers",
+   "dataset_name": "Suppliers",
+   "classification": "confidential",
+   "monitored": "false",
+   "owner_id": "own-15",
+   "owner_team": "Supply Chain",
+   "owner_deactivated_at": "2026-09-22T09:00:00Z",
+   "unresolved_issues": "12",
+   "active_rules": "3"
+  }
+ ],
+ "02_ownership_coverage__by_team": [
+  {
+   "team": "Customer Data",
+   "datasets": "7",
+   "covered": "5",
+   "uncovered": "2",
+   "coverage": "0.714286"
+  },
+  {
+   "team": "Data Governance",
+   "datasets": "5",
+   "covered": "5",
+   "uncovered": "0",
+   "coverage": "1.000000"
+  },
+  {
+   "team": "Data Platform",
+   "datasets": "9",
+   "covered": "9",
+   "uncovered": "0",
+   "coverage": "1.000000"
+  },
+  {
+   "team": "Finance Systems",
+   "datasets": "5",
+   "covered": "3",
+   "uncovered": "2",
+   "coverage": "0.600000"
+  },
+  {
+   "team": "Supply Chain",
+   "datasets": "9",
+   "covered": "8",
+   "uncovered": "1",
+   "coverage": "0.888889"
+  },
+  {
+   "team": "Support Operations",
+   "datasets": "5",
+   "covered": "5",
+   "uncovered": "0",
+   "coverage": "1.000000"
+  }
+ ],
+ "02_ownership_coverage__inactive_owners": [
+  {
+   "owner_id": "own-09",
+   "owner_name": "Ione Kestrel",
+   "team": "Customer Data",
+   "deactivated_at": "2026-08-18T09:00:00Z",
+   "datasets_owned": "2",
+   "unresolved_issues_assigned": "24"
+  },
+  {
+   "owner_id": "own-12",
+   "owner_name": "Linden Thorpe",
+   "team": "Finance Systems",
+   "deactivated_at": "2026-09-04T09:00:00Z",
+   "datasets_owned": "2",
+   "unresolved_issues_assigned": "30"
+  },
+  {
+   "owner_id": "own-15",
+   "owner_name": "Odessa Quillfeather",
+   "team": "Supply Chain",
+   "deactivated_at": "2026-09-22T09:00:00Z",
+   "datasets_owned": "1",
+   "unresolved_issues_assigned": "12"
+  }
+ ],
+ "03_weight_shift_dr03__weights": [
+  {
+   "weight_version": "w1",
+   "valid_from": "2026-01-01",
+   "completeness": "0.400000",
+   "validity": "0.300000",
+   "uniqueness": "0.200000",
+   "relationship": "0.050000",
+   "timeliness": "0.050000"
+  },
+  {
+   "weight_version": "w2",
+   "valid_from": "2026-09-01",
+   "completeness": "0.250000",
+   "validity": "0.250000",
+   "uniqueness": "0.250000",
+   "relationship": "0.150000",
+   "timeliness": "0.100000"
+  }
+ ],
+ "03_weight_shift_dr03__shift_by_dataset": [
+  {
+   "dataset_id": "ds-accounts",
+   "score_w1": "0.990000",
+   "score_w2": "0.981250",
+   "shift": "-0.008750",
+   "differs": "true",
+   "moved_at_least_0_005": "true"
+  },
+  {
+   "dataset_id": "ds-carriers",
+   "score_w1": "0.966387",
+   "score_w2": "0.966387",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-consent-records",
+   "score_w1": "0.916340",
+   "score_w2": "0.932773",
+   "shift": "0.016433",
+   "differs": "true",
+   "moved_at_least_0_005": "true"
+  },
+  {
+   "dataset_id": "ds-contacts",
+   "score_w1": "0.984127",
+   "score_w2": "0.988839",
+   "shift": "0.004712",
+   "differs": "true",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-cost-centres",
+   "score_w1": "0.974359",
+   "score_w2": "0.974359",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-csat-surveys",
+   "score_w1": "0.935484",
+   "score_w2": "0.935484",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-customers",
+   "score_w1": "0.990329",
+   "score_w2": "0.990175",
+   "shift": "-0.000153",
+   "differs": "true",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-delivery-events",
+   "score_w1": "0.955882",
+   "score_w2": "0.955882",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-employees",
+   "score_w1": "1.000000",
+   "score_w2": "1.000000",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-inventory",
+   "score_w1": "1.000000",
+   "score_w2": "1.000000",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-invoices",
+   "score_w1": "0.987767",
+   "score_w2": "0.986495",
+   "shift": "-0.001272",
+   "differs": "true",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-kb-articles",
+   "score_w1": "0.984848",
+   "score_w2": "0.984848",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-ledger-entries",
+   "score_w1": "0.942387",
+   "score_w2": "0.950617",
+   "shift": "0.008230",
+   "differs": "true",
+   "moved_at_least_0_005": "true"
+  },
+  {
+   "dataset_id": "ds-opportunities",
+   "score_w1": "0.886076",
+   "score_w2": "0.886076",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-order-lines",
+   "score_w1": "0.966981",
+   "score_w2": "0.966981",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-orders",
+   "score_w1": "0.936207",
+   "score_w2": "0.891379",
+   "shift": "-0.044828",
+   "differs": "true",
+   "moved_at_least_0_005": "true"
+  },
+  {
+   "dataset_id": "ds-payments",
+   "score_w1": "0.831301",
+   "score_w2": "0.796341",
+   "shift": "-0.034959",
+   "differs": "true",
+   "moved_at_least_0_005": "true"
+  },
+  {
+   "dataset_id": "ds-products",
+   "score_w1": "0.982759",
+   "score_w2": "0.982759",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-purchase-orders",
+   "score_w1": "0.977778",
+   "score_w2": "0.977778",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-refunds",
+   "score_w1": "0.938776",
+   "score_w2": "0.938776",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-returns",
+   "score_w1": "0.930000",
+   "score_w2": "0.930000",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-shipments",
+   "score_w1": "0.848394",
+   "score_w2": "0.850297",
+   "shift": "0.001903",
+   "differs": "true",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-subscriptions",
+   "score_w1": "0.961988",
+   "score_w2": "0.955044",
+   "shift": "-0.006944",
+   "differs": "true",
+   "moved_at_least_0_005": "true"
+  },
+  {
+   "dataset_id": "ds-suppliers",
+   "score_w1": "0.961149",
+   "score_w2": "0.964894",
+   "shift": "0.003745",
+   "differs": "true",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-ticket-events",
+   "score_w1": "0.971429",
+   "score_w2": "0.971429",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-tickets",
+   "score_w1": "0.852608",
+   "score_w2": "0.685131",
+   "shift": "-0.167477",
+   "differs": "true",
+   "moved_at_least_0_005": "true"
+  },
+  {
+   "dataset_id": "ds-warehouses",
+   "score_w1": "0.933333",
+   "score_w2": "0.933333",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-web-sessions",
+   "score_w1": "0.985714",
+   "score_w2": "0.985714",
+   "shift": "0.000000",
+   "differs": "false",
+   "moved_at_least_0_005": "false"
+  },
+  {
+   "dataset_id": "ds-web-users",
+   "score_w1": "0.986014",
+   "score_w2": "0.987374",
+   "shift": "0.001360",
+   "differs": "true",
+   "moved_at_least_0_005": "false"
+  }
+ ],
+ "03_weight_shift_dr03__summary": [
+  {
+   "datasets_scored": "29",
+   "datasets_with_different_score": "13",
+   "datasets_moved_at_least_0_005": "7",
+   "mean_score_w1": "0.950980",
+   "mean_score_w2": "0.943118",
+   "largest_move": "-0.167477",
+   "largest_move_dataset": "ds-tickets"
+  }
+ ],
+ "03_weight_shift_dr03__runs_by_weight_version": [
+  {
+   "weight_version": "w1",
+   "runs": "2568",
+   "first_run": "2026-07-13T02:01:00Z",
+   "last_run": "2026-08-31T23:50:00Z"
+  },
+  {
+   "weight_version": "w2",
+   "runs": "2041",
+   "first_run": "2026-09-01T02:00:00Z",
+   "last_run": "2026-10-04T23:50:00Z"
+  }
+ ],
+ "03_weight_shift_dr03__rule_changes_near_the_weight_change": [
+  {
+   "rule_versions_after_the_first": "15",
+   "within_14_days_of_the_weight_change": "0",
+   "nearest_days": "15",
+   "rules_disabled_within_14_days": "2"
+  }
+ ],
+ "03_weight_shift_dr03__lowest_scores": [
+  {
+   "dataset_id": "ds-tickets",
+   "score_w1": "0.852608",
+   "rank_w1": "3",
+   "score_w2": "0.685131",
+   "rank_w2": "1"
+  },
+  {
+   "dataset_id": "ds-payments",
+   "score_w1": "0.831301",
+   "rank_w1": "1",
+   "score_w2": "0.796341",
+   "rank_w2": "2"
+  },
+  {
+   "dataset_id": "ds-shipments",
+   "score_w1": "0.848394",
+   "rank_w1": "2",
+   "score_w2": "0.850297",
+   "rank_w2": "3"
+  },
+  {
+   "dataset_id": "ds-opportunities",
+   "score_w1": "0.886076",
+   "rank_w1": "4",
+   "score_w2": "0.886076",
+   "rank_w2": "4"
+  },
+  {
+   "dataset_id": "ds-orders",
+   "score_w1": "0.936207",
+   "rank_w1": "9",
+   "score_w2": "0.891379",
+   "rank_w2": "5"
+  },
+  {
+   "dataset_id": "ds-returns",
+   "score_w1": "0.930000",
+   "rank_w1": "6",
+   "score_w2": "0.930000",
+   "rank_w2": "6"
+  },
+  {
+   "dataset_id": "ds-consent-records",
+   "score_w1": "0.916340",
+   "rank_w1": "5",
+   "score_w2": "0.932773",
+   "rank_w2": "7"
+  },
+  {
+   "dataset_id": "ds-warehouses",
+   "score_w1": "0.933333",
+   "rank_w1": "7",
+   "score_w2": "0.933333",
+   "rank_w2": "8"
+  }
+ ],
+ "04_issue_classes_and_resolution__classes": [
+  {
+   "class": "resolved",
+   "issues": "315",
+   "share_of_issues": "0.548780",
+   "reopened": "1"
+  },
+  {
+   "class": "claimed",
+   "issues": "99",
+   "share_of_issues": "0.172474",
+   "reopened": "0"
+  },
+  {
+   "class": "open",
+   "issues": "160",
+   "share_of_issues": "0.278746",
+   "reopened": "8"
+  }
+ ],
+ "04_issue_classes_and_resolution__class_by_severity": [
+  {
+   "severity": "critical",
+   "resolved": "6",
+   "claimed": "0",
+   "open": "1",
+   "issues": "7",
+   "unresolved": "1"
+  },
+  {
+   "severity": "high",
+   "resolved": "197",
+   "claimed": "65",
+   "open": "106",
+   "issues": "368",
+   "unresolved": "171"
+  },
+  {
+   "severity": "medium",
+   "resolved": "96",
+   "claimed": "27",
+   "open": "43",
+   "issues": "166",
+   "unresolved": "70"
+  },
+  {
+   "severity": "low",
+   "resolved": "16",
+   "claimed": "7",
+   "open": "10",
+   "issues": "33",
+   "unresolved": "17"
+  }
+ ],
+ "04_issue_classes_and_resolution__claimed_split": [
+  {
+   "claimed": "99",
+   "claimed_with_a_failed_rerun": "28",
+   "claimed_without_a_rerun": "71",
+   "unresolved": "259",
+   "oldest_unresolved_detected_at": "2026-07-14T02:13:00Z",
+   "oldest_unresolved_issue": "iss-0004",
+   "claimed_among_the_oldest_25_unresolved": "25",
+   "leading_claimed_run": "64",
+   "first_not_claimed": "iss-0252"
+  }
+ ],
+ "04_issue_classes_and_resolution__resolution_by_team": [
+  {
+   "team": "Customer Data",
+   "resolved": "28",
+   "mean_hours": "77.5452"
+  },
+  {
+   "team": "Data Governance",
+   "resolved": "9",
+   "mean_hours": "83.4130"
+  },
+  {
+   "team": "Data Platform",
+   "resolved": "109",
+   "mean_hours": "34.4202"
+  },
+  {
+   "team": "Finance Systems",
+   "resolved": "68",
+   "mean_hours": "91.9537"
+  },
+  {
+   "team": "Supply Chain",
+   "resolved": "55",
+   "mean_hours": "82.8748"
+  },
+  {
+   "team": "Support Operations",
+   "resolved": "46",
+   "mean_hours": "87.4087"
+  }
+ ],
+ "04_issue_classes_and_resolution__fast_team_vs_others": [
+  {
+   "group_name": "Data Platform",
+   "resolved": "109",
+   "mean_hours": "34.4202"
+  },
+  {
+   "group_name": "all other teams",
+   "resolved": "206",
+   "mean_hours": "86.1833"
+  }
+ ],
+ "04_issue_classes_and_resolution__resolution_overall": [
+  {
+   "resolved": "315",
+   "mean_hours": "68.2716",
+   "fast_team_ratio": "0.399384",
+   "open_count": "160",
+   "reopened_issues": "9",
+   "reopen_cycles": "9"
+  }
+ ],
+ "04_issue_classes_and_resolution__disabled_rules": [
+  {
+   "rule_id": "r-cost-centres-complete-owner_ref",
+   "dataset_id": "ds-cost-centres",
+   "disabled_at": "2026-09-29T16:55:00Z",
+   "disabled_reason": "Superseded by the upstream contract check",
+   "runs_retained": "90",
+   "issues_retained": "18",
+   "issues_still_unresolved": "7"
+  },
+  {
+   "rule_id": "r-leads-valid-email",
+   "dataset_id": "ds-leads",
+   "disabled_at": "2026-09-20T01:05:00Z",
+   "disabled_reason": "Superseded by the upstream contract check",
+   "runs_retained": "77",
+   "issues_retained": "17",
+   "issues_still_unresolved": "6"
+  },
+  {
+   "rule_id": "r-purchase-orders-fresh",
+   "dataset_id": "ds-purchase-orders",
+   "disabled_at": "2026-08-20T05:35:00Z",
+   "disabled_reason": "Superseded by the upstream contract check",
+   "runs_retained": "40",
+   "issues_retained": "3",
+   "issues_still_unresolved": "1"
+  },
+  {
+   "rule_id": "r-shipments-fresh",
+   "dataset_id": "ds-shipments",
+   "disabled_at": "2026-08-30T07:47:00Z",
+   "disabled_reason": "Threshold review: check moved to the vendor",
+   "runs_retained": "48",
+   "issues_retained": "0",
+   "issues_still_unresolved": "0"
+  },
+  {
+   "rule_id": "r-tickets-fk-customer_key",
+   "dataset_id": "ds-tickets",
+   "disabled_at": "2026-09-16T04:07:00Z",
+   "disabled_reason": "Threshold review: check moved to the vendor",
+   "runs_retained": "74",
+   "issues_retained": "14",
+   "issues_still_unresolved": "5"
+  }
+ ],
+ "05_lineage_coverage_evidence__evidence_kinds": [
+  {
+   "evidence_type": "declared",
+   "edge_rows": "80",
+   "distinct_pairs": "80",
+   "rows_with_observed_at": "0"
+  },
+  {
+   "evidence_type": "observed",
+   "edge_rows": "70",
+   "distinct_pairs": "70",
+   "rows_with_observed_at": "70"
+  },
+  {
+   "evidence_type": "inferred",
+   "edge_rows": "10",
+   "distinct_pairs": "10",
+   "rows_with_observed_at": "0"
+  }
+ ],
+ "05_lineage_coverage_evidence__coverage": [
+  {
+   "declared_pairs": "80",
+   "observed_pairs": "70",
+   "observed_matching_declared": "58",
+   "coverage": "0.725000",
+   "undeclared_observed": "12",
+   "declared_not_observed": "22",
+   "inferred_pairs": "10",
+   "inferred_on_declared_unobserved": "4",
+   "inferred_also_observed": "0"
+  }
+ ],
+ "05_lineage_coverage_evidence__undeclared_observed": [
+  {
+   "source_dataset_id": "ds-csat-surveys",
+   "target_dataset_id": "ds-cost-centres"
+  },
+  {
+   "source_dataset_id": "ds-employees",
+   "target_dataset_id": "ds-ledger-entries"
+  },
+  {
+   "source_dataset_id": "ds-invoices",
+   "target_dataset_id": "ds-web-sessions"
+  },
+  {
+   "source_dataset_id": "ds-kb-articles",
+   "target_dataset_id": "ds-shipments"
+  },
+  {
+   "source_dataset_id": "ds-leads",
+   "target_dataset_id": "ds-csat-surveys"
+  },
+  {
+   "source_dataset_id": "ds-ledger-entries",
+   "target_dataset_id": "ds-web-users"
+  },
+  {
+   "source_dataset_id": "ds-price-books",
+   "target_dataset_id": "ds-inventory"
+  },
+  {
+   "source_dataset_id": "ds-price-books",
+   "target_dataset_id": "ds-warehouses"
+  },
+  {
+   "source_dataset_id": "ds-refunds",
+   "target_dataset_id": "ds-support-agents"
+  },
+  {
+   "source_dataset_id": "ds-sla-policies",
+   "target_dataset_id": "ds-employees"
+  },
+  {
+   "source_dataset_id": "ds-tickets",
+   "target_dataset_id": "ds-order-lines"
+  },
+  {
+   "source_dataset_id": "ds-web-sessions",
+   "target_dataset_id": "ds-accounts"
+  }
+ ],
+ "05_lineage_coverage_evidence__declared_not_observed": [
+  {
+   "source_dataset_id": "ds-accounts",
+   "target_dataset_id": "ds-carriers",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-billing-accounts",
+   "target_dataset_id": "ds-page-events",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-billing-accounts",
+   "target_dataset_id": "ds-warehouses",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-contacts",
+   "target_dataset_id": "ds-page-events",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-cost-centres",
+   "target_dataset_id": "ds-consent-records",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-cost-centres",
+   "target_dataset_id": "ds-warehouses",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-credit-notes",
+   "target_dataset_id": "ds-consent-records",
+   "an_inferred_edge_covers_it": "true"
+  },
+  {
+   "source_dataset_id": "ds-credit-notes",
+   "target_dataset_id": "ds-csat-surveys",
+   "an_inferred_edge_covers_it": "true"
+  },
+  {
+   "source_dataset_id": "ds-customers",
+   "target_dataset_id": "ds-sla-policies",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-leads",
+   "target_dataset_id": "ds-carriers",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-leads",
+   "target_dataset_id": "ds-cost-centres",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-leads",
+   "target_dataset_id": "ds-suppliers",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-payments",
+   "target_dataset_id": "ds-refunds",
+   "an_inferred_edge_covers_it": "true"
+  },
+  {
+   "source_dataset_id": "ds-price-books",
+   "target_dataset_id": "ds-cost-centres",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-products",
+   "target_dataset_id": "ds-web-sessions",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-shipments",
+   "target_dataset_id": "ds-carriers",
+   "an_inferred_edge_covers_it": "true"
+  },
+  {
+   "source_dataset_id": "ds-sla-policies",
+   "target_dataset_id": "ds-shipments",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-subscriptions",
+   "target_dataset_id": "ds-products",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-subscriptions",
+   "target_dataset_id": "ds-purchase-orders",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-ticket-events",
+   "target_dataset_id": "ds-support-agents",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-tickets",
+   "target_dataset_id": "ds-warehouses",
+   "an_inferred_edge_covers_it": "false"
+  },
+  {
+   "source_dataset_id": "ds-warehouses",
+   "target_dataset_id": "ds-delivery-events",
+   "an_inferred_edge_covers_it": "false"
+  }
+ ],
+ "05_lineage_coverage_evidence__inferred": [
+  {
+   "source_dataset_id": "ds-accounts",
+   "target_dataset_id": "ds-invoices",
+   "declared": "false",
+   "observed": "false"
+  },
+  {
+   "source_dataset_id": "ds-credit-notes",
+   "target_dataset_id": "ds-consent-records",
+   "declared": "true",
+   "observed": "false"
+  },
+  {
+   "source_dataset_id": "ds-credit-notes",
+   "target_dataset_id": "ds-csat-surveys",
+   "declared": "true",
+   "observed": "false"
+  },
+  {
+   "source_dataset_id": "ds-crm-activities",
+   "target_dataset_id": "ds-segments",
+   "declared": "false",
+   "observed": "false"
+  },
+  {
+   "source_dataset_id": "ds-csat-surveys",
+   "target_dataset_id": "ds-shipments",
+   "declared": "false",
+   "observed": "false"
+  },
+  {
+   "source_dataset_id": "ds-payments",
+   "target_dataset_id": "ds-order-lines",
+   "declared": "false",
+   "observed": "false"
+  },
+  {
+   "source_dataset_id": "ds-payments",
+   "target_dataset_id": "ds-refunds",
+   "declared": "true",
+   "observed": "false"
+  },
+  {
+   "source_dataset_id": "ds-purchase-orders",
+   "target_dataset_id": "ds-experiments",
+   "declared": "false",
+   "observed": "false"
+  },
+  {
+   "source_dataset_id": "ds-shipments",
+   "target_dataset_id": "ds-carriers",
+   "declared": "true",
+   "observed": "false"
+  },
+  {
+   "source_dataset_id": "ds-ticket-events",
+   "target_dataset_id": "ds-payments",
+   "declared": "false",
+   "observed": "false"
+  }
+ ],
+ "06_definition_coverage__summary": [
+  {
+   "checklist_version": "cl-1",
+   "published_metrics": "30",
+   "complete_metrics": "23",
+   "incomplete_metrics": "7",
+   "coverage": "0.766667"
+  }
+ ],
+ "06_definition_coverage__incomplete": [
+  {
+   "metric_id": "m-average-order-value",
+   "metric_name": "Average order value",
+   "version_number": "1",
+   "missing_items": "grain",
+   "owner_id": "own-16",
+   "history": "single version"
+  },
+  {
+   "metric_id": "m-csat-score",
+   "metric_name": "CSAT score",
+   "version_number": "2",
+   "missing_items": "source_fields",
+   "owner_id": "own-03",
+   "history": "broken by version 2"
+  },
+  {
+   "metric_id": "m-customer-lifetime-value",
+   "metric_name": "Customer lifetime value",
+   "version_number": "2",
+   "missing_items": "definition",
+   "owner_id": "own-06",
+   "history": "broken by version 2"
+  },
+  {
+   "metric_id": "m-gross-margin",
+   "metric_name": "Gross margin",
+   "version_number": "2",
+   "missing_items": "refresh",
+   "owner_id": "own-18",
+   "history": "broken by version 2"
+  },
+  {
+   "metric_id": "m-net-revenue",
+   "metric_name": "Net revenue",
+   "version_number": "2",
+   "missing_items": "grain",
+   "owner_id": "own-02",
+   "history": "broken by version 2"
+  },
+  {
+   "metric_id": "m-session-conversion-rate",
+   "metric_name": "Session conversion rate",
+   "version_number": "2",
+   "missing_items": "owner",
+   "owner_id": "(none)",
+   "history": "broken by version 2"
+  },
+  {
+   "metric_id": "m-ticket-resolution-time",
+   "metric_name": "Ticket resolution time",
+   "version_number": "1",
+   "missing_items": "refresh",
+   "owner_id": "own-12",
+   "history": "single version"
+  }
+ ],
+ "06_definition_coverage__versions": [
+  {
+   "metrics": "30",
+   "versions": "45",
+   "metrics_with_more_than_one_version": "15",
+   "change_records": "15",
+   "versions_without_change_record": "0",
+   "published_versions": "30",
+   "superseded_versions": "15"
+  }
+ ],
+ "06_definition_coverage__regressions": [
+  {
+   "change_id": "dc-csat-score-2",
+   "metric_id": "m-csat-score",
+   "version_number": "2",
+   "missing_after": "source_fields",
+   "approved_by": "own-06",
+   "changed_at": "2026-08-19T09:00:00Z"
+  },
+  {
+   "change_id": "dc-customer-lifetime-value-2",
+   "metric_id": "m-customer-lifetime-value",
+   "version_number": "2",
+   "missing_after": "definition",
+   "approved_by": "own-18",
+   "changed_at": "2026-08-18T09:00:00Z"
+  },
+  {
+   "change_id": "dc-gross-margin-2",
+   "metric_id": "m-gross-margin",
+   "version_number": "2",
+   "missing_after": "refresh",
+   "approved_by": "own-04",
+   "changed_at": "2026-09-24T09:00:00Z"
+  },
+  {
+   "change_id": "dc-net-revenue-2",
+   "metric_id": "m-net-revenue",
+   "version_number": "2",
+   "missing_after": "grain",
+   "approved_by": "own-02",
+   "changed_at": "2026-07-17T09:00:00Z"
+  },
+  {
+   "change_id": "dc-session-conversion-rate-2",
+   "metric_id": "m-session-conversion-rate",
+   "version_number": "2",
+   "missing_after": "owner",
+   "approved_by": "own-16",
+   "changed_at": "2026-08-13T09:00:00Z"
+  }
+ ],
+ "07_match_precision__precision": [
+  {
+   "approved": "174",
+   "approved_correct": "172",
+   "precision": "0.988506",
+   "reviewed": "220",
+   "rejected": "46",
+   "reviewed_correct": "185",
+   "reviewed_correct_share": "0.840909",
+   "decisions_agreeing_with_truth": "205",
+   "decision_agreement_share": "0.931818"
+  }
+ ],
+ "07_match_precision__review_matrix": [
+  {
+   "decision": "approve",
+   "truth": "same entity",
+   "decisions": "172",
+   "verdict": "agrees with the truth"
+  },
+  {
+   "decision": "approve",
+   "truth": "different entities",
+   "decisions": "2",
+   "verdict": "disagrees"
+  },
+  {
+   "decision": "reject",
+   "truth": "same entity",
+   "decisions": "13",
+   "verdict": "disagrees"
+  },
+  {
+   "decision": "reject",
+   "truth": "different entities",
+   "decisions": "33",
+   "verdict": "agrees with the truth"
+  }
+ ],
+ "07_match_precision__candidates": [
+  {
+   "candidates": "400",
+   "canonical_distinct_pairs": "400",
+   "reviewed": "220",
+   "unreviewed": "180",
+   "reversals": "15",
+   "candidates_flagged_shared_name_and_address": "207",
+   "reviews_by_the_proposer": "0"
+  }
+ ],
+ "07_match_precision__wrong_approvals": [
+  {
+   "candidate_id": "cand-0161",
+   "left_record_id": "rec-0010",
+   "right_record_id": "rec-1165",
+   "score": "0.560000",
+   "flagged_possible_household": "false",
+   "reviewer_id": "own-16",
+   "reversed_afterwards": "true"
+  },
+  {
+   "candidate_id": "cand-0273",
+   "left_record_id": "rec-0381",
+   "right_record_id": "rec-1116",
+   "score": "0.950000",
+   "flagged_possible_household": "true",
+   "reviewer_id": "own-06",
+   "reversed_afterwards": "true"
+  }
+ ],
+ "07_match_precision__reversals": [
+  {
+   "reversals": "15",
+   "approvals_reversed": "15",
+   "reversals_of_wrong_approvals": "2",
+   "reversals_without_a_reason": "0"
+  }
+ ],
+ "08_timeliness_states__at_the_as_of": [
+  {
+   "dataset_id": "ds-campaigns",
+   "timezone": "Asia/Singapore",
+   "scheduled_local": "01:00",
+   "grace_minutes": "60",
+   "evaluated_occurrence_utc": "2026-10-04T17:00:00Z",
+   "deadline_utc": "2026-10-04T18:00:00Z",
+   "last_refreshed_at": "2026-10-04T20:03:25Z",
+   "state": "late",
+   "owner_team": "Customer Data",
+   "owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-consent-records",
+   "timezone": "America/Chicago",
+   "scheduled_local": "15:00",
+   "grace_minutes": "60",
+   "evaluated_occurrence_utc": "2026-10-04T20:00:00Z",
+   "deadline_utc": "2026-10-04T21:00:00Z",
+   "last_refreshed_at": "2026-10-04T20:05:40Z",
+   "state": "on_time",
+   "owner_team": "Supply Chain",
+   "owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-contacts",
+   "timezone": "America/New_York",
+   "scheduled_local": "11:30",
+   "grace_minutes": "30",
+   "evaluated_occurrence_utc": "2026-10-04T15:30:00Z",
+   "deadline_utc": "2026-10-04T16:00:00Z",
+   "last_refreshed_at": "2026-10-04T15:43:25Z",
+   "state": "on_time",
+   "owner_team": "Finance Systems",
+   "owner_active": "false"
+  },
+  {
+   "dataset_id": "ds-customers",
+   "timezone": "America/New_York",
+   "scheduled_local": "06:00",
+   "grace_minutes": "60",
+   "evaluated_occurrence_utc": "2026-10-04T10:00:00Z",
+   "deadline_utc": "2026-10-04T11:00:00Z",
+   "last_refreshed_at": "2026-10-04T10:58:22Z",
+   "state": "on_time",
+   "owner_team": "Customer Data",
+   "owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-inventory",
+   "timezone": "Asia/Kolkata",
+   "scheduled_local": "18:45",
+   "grace_minutes": "30",
+   "evaluated_occurrence_utc": "2026-10-04T13:15:00Z",
+   "deadline_utc": "2026-10-04T13:45:00Z",
+   "last_refreshed_at": "2026-10-04T13:18:39Z",
+   "state": "on_time",
+   "owner_team": "Data Platform",
+   "owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-invoices",
+   "timezone": "Asia/Singapore",
+   "scheduled_local": "12:45",
+   "grace_minutes": "60",
+   "evaluated_occurrence_utc": "2026-10-04T04:45:00Z",
+   "deadline_utc": "2026-10-04T05:45:00Z",
+   "last_refreshed_at": "2026-10-04T05:05:44Z",
+   "state": "on_time",
+   "owner_team": "Customer Data",
+   "owner_active": "false"
+  },
+  {
+   "dataset_id": "ds-orders",
+   "timezone": "Europe/London",
+   "scheduled_local": "15:45",
+   "grace_minutes": "30",
+   "evaluated_occurrence_utc": "2026-10-04T14:45:00Z",
+   "deadline_utc": "2026-10-04T15:15:00Z",
+   "last_refreshed_at": "2026-10-04T17:00:02Z",
+   "state": "late",
+   "owner_team": "Data Platform",
+   "owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-payments",
+   "timezone": "UTC",
+   "scheduled_local": "06:00",
+   "grace_minutes": "120",
+   "evaluated_occurrence_utc": "2026-10-04T06:00:00Z",
+   "deadline_utc": "2026-10-04T08:00:00Z",
+   "last_refreshed_at": "2026-10-04T11:54:24Z",
+   "state": "late",
+   "owner_team": "Data Platform",
+   "owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-price-books",
+   "timezone": "Europe/Berlin",
+   "scheduled_local": "19:15",
+   "grace_minutes": "120",
+   "evaluated_occurrence_utc": "2026-10-04T17:15:00Z",
+   "deadline_utc": "2026-10-04T19:15:00Z",
+   "last_refreshed_at": "2026-10-04T17:28:12Z",
+   "state": "on_time",
+   "owner_team": "Supply Chain",
+   "owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-purchase-orders",
+   "timezone": "America/New_York",
+   "scheduled_local": "18:30",
+   "grace_minutes": "30",
+   "evaluated_occurrence_utc": "2026-10-04T22:30:00Z",
+   "deadline_utc": "2026-10-04T23:00:00Z",
+   "last_refreshed_at": "2026-10-04T22:37:46Z",
+   "state": "on_time",
+   "owner_team": "Data Platform",
+   "owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-shipments",
+   "timezone": "America/New_York",
+   "scheduled_local": "03:45",
+   "grace_minutes": "30",
+   "evaluated_occurrence_utc": "2026-10-04T07:45:00Z",
+   "deadline_utc": "2026-10-04T08:15:00Z",
+   "last_refreshed_at": "2026-10-04T08:14:21Z",
+   "state": "on_time",
+   "owner_team": "Supply Chain",
+   "owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-sla-policies",
+   "timezone": "Asia/Kolkata",
+   "scheduled_local": "14:30",
+   "grace_minutes": "120",
+   "evaluated_occurrence_utc": "2026-10-04T09:00:00Z",
+   "deadline_utc": "2026-10-04T11:00:00Z",
+   "last_refreshed_at": "2026-10-04T10:11:35Z",
+   "state": "on_time",
+   "owner_team": "Finance Systems",
+   "owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-subscriptions",
+   "timezone": "Europe/London",
+   "scheduled_local": "16:30",
+   "grace_minutes": "60",
+   "evaluated_occurrence_utc": "2026-10-04T15:30:00Z",
+   "deadline_utc": "2026-10-04T16:30:00Z",
+   "last_refreshed_at": "2026-10-04T17:23:38Z",
+   "state": "late",
+   "owner_team": "Data Platform",
+   "owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-tickets",
+   "timezone": "America/Chicago",
+   "scheduled_local": "05:45",
+   "grace_minutes": "120",
+   "evaluated_occurrence_utc": "2026-10-04T10:45:00Z",
+   "deadline_utc": "2026-10-04T12:45:00Z",
+   "last_refreshed_at": "2026-10-04T15:17:33Z",
+   "state": "late",
+   "owner_team": "Data Platform",
+   "owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-web-users",
+   "timezone": "Europe/Berlin",
+   "scheduled_local": "12:30",
+   "grace_minutes": "30",
+   "evaluated_occurrence_utc": "2026-10-04T10:30:00Z",
+   "deadline_utc": "2026-10-04T11:00:00Z",
+   "last_refreshed_at": "2026-10-04T10:49:04Z",
+   "state": "on_time",
+   "owner_team": "Data Platform",
+   "owner_active": "true"
+  }
+ ],
+ "08_timeliness_states__summary": [
+  {
+   "monitored_datasets": "15",
+   "on_time": "10",
+   "pending": "0",
+   "late": "5",
+   "evaluated": "15",
+   "timeliness": "0.666667"
+  }
+ ],
+ "08_timeliness_states__by_read_instant": [
+  {
+   "read_no": "0",
+   "label": "as-of",
+   "read_at": "2026-10-05T00:00:00Z",
+   "monitored_datasets": "15",
+   "on_time": "10",
+   "pending": "0",
+   "late": "5",
+   "evaluated": "15",
+   "timeliness": "0.666667"
+  },
+  {
+   "read_no": "1",
+   "label": "as-of + 10h30m",
+   "read_at": "2026-10-05T10:30:00Z",
+   "monitored_datasets": "15",
+   "on_time": "5",
+   "pending": "3",
+   "late": "7",
+   "evaluated": "12",
+   "timeliness": "0.416667"
+  },
+  {
+   "read_no": "2",
+   "label": "as-of + 13h",
+   "read_at": "2026-10-05T13:00:00Z",
+   "monitored_datasets": "15",
+   "on_time": "5",
+   "pending": "0",
+   "late": "10",
+   "evaluated": "15",
+   "timeliness": "0.333333"
+  },
+  {
+   "read_no": "3",
+   "label": "as-of + 25h",
+   "read_at": "2026-10-06T01:00:00Z",
+   "monitored_datasets": "15",
+   "on_time": "0",
+   "pending": "0",
+   "late": "15",
+   "evaluated": "15",
+   "timeliness": "0.000000"
+  }
+ ],
+ "08_timeliness_states__late_with_rules": [
+  {
+   "dataset_id": "ds-campaigns",
+   "deadline_utc": "2026-10-04T18:00:00Z",
+   "last_refreshed_at": "2026-10-04T20:03:25Z",
+   "minutes_after_deadline": "123",
+   "timeliness_rule": "none"
+  },
+  {
+   "dataset_id": "ds-orders",
+   "deadline_utc": "2026-10-04T15:15:00Z",
+   "last_refreshed_at": "2026-10-04T17:00:02Z",
+   "minutes_after_deadline": "105",
+   "timeliness_rule": "r-orders-fresh (active)"
+  },
+  {
+   "dataset_id": "ds-payments",
+   "deadline_utc": "2026-10-04T08:00:00Z",
+   "last_refreshed_at": "2026-10-04T11:54:24Z",
+   "minutes_after_deadline": "234",
+   "timeliness_rule": "r-payments-fresh (active)"
+  },
+  {
+   "dataset_id": "ds-subscriptions",
+   "deadline_utc": "2026-10-04T16:30:00Z",
+   "last_refreshed_at": "2026-10-04T17:23:38Z",
+   "minutes_after_deadline": "54",
+   "timeliness_rule": "none"
+  },
+  {
+   "dataset_id": "ds-tickets",
+   "deadline_utc": "2026-10-04T12:45:00Z",
+   "last_refreshed_at": "2026-10-04T15:17:33Z",
+   "minutes_after_deadline": "153",
+   "timeliness_rule": "r-tickets-fresh (active)"
+  }
+ ],
+ "10_fix_first_queue__unresolved_by_severity_and_class": [
+  {
+   "severity": "critical",
+   "open": "1",
+   "claimed": "0",
+   "unresolved": "1"
+  },
+  {
+   "severity": "high",
+   "open": "106",
+   "claimed": "65",
+   "unresolved": "171"
+  },
+  {
+   "severity": "medium",
+   "open": "43",
+   "claimed": "27",
+   "unresolved": "70"
+  },
+  {
+   "severity": "low",
+   "open": "10",
+   "claimed": "7",
+   "unresolved": "17"
+  }
+ ],
+ "10_fix_first_queue__accountability": [
+  {
+   "unresolved": "259",
+   "issue_owner_inactive": "66",
+   "dataset_owner_inactive": "66",
+   "either_owner_inactive": "66",
+   "critical_or_high": "172",
+   "critical_or_high_with_an_inactive_owner": "48"
+  }
+ ],
+ "10_fix_first_queue__by_team": [
+  {
+   "team": "Data Platform",
+   "unresolved": "90",
+   "claimed": "42",
+   "critical_or_high": "65",
+   "owner_inactive": "0",
+   "oldest_detected_at": "2026-07-15T03:57:00Z"
+  },
+  {
+   "team": "Finance Systems",
+   "unresolved": "50",
+   "claimed": "17",
+   "critical_or_high": "37",
+   "owner_inactive": "30",
+   "oldest_detected_at": "2026-07-22T02:52:00Z"
+  },
+  {
+   "team": "Supply Chain",
+   "unresolved": "41",
+   "claimed": "14",
+   "critical_or_high": "29",
+   "owner_inactive": "12",
+   "oldest_detected_at": "2026-07-29T04:30:00Z"
+  },
+  {
+   "team": "Customer Data",
+   "unresolved": "39",
+   "claimed": "9",
+   "critical_or_high": "19",
+   "owner_inactive": "24",
+   "oldest_detected_at": "2026-07-14T02:13:00Z"
+  },
+  {
+   "team": "Support Operations",
+   "unresolved": "25",
+   "claimed": "12",
+   "critical_or_high": "16",
+   "owner_inactive": "0",
+   "oldest_detected_at": "2026-07-17T03:44:00Z"
+  },
+  {
+   "team": "Data Governance",
+   "unresolved": "14",
+   "claimed": "5",
+   "critical_or_high": "6",
+   "owner_inactive": "0",
+   "oldest_detected_at": "2026-07-19T05:28:00Z"
+  }
+ ],
+ "10_fix_first_queue__queue_top": [
+  {
+   "rank": "1",
+   "issue_id": "iss-0461",
+   "dataset_id": "ds-customers",
+   "rule_id": "r-customers-unique-customer_key",
+   "severity": "critical",
+   "class": "open",
+   "status": "investigating",
+   "age_days": "12.9",
+   "owner_id": "own-07",
+   "owner_team": "Customer Data",
+   "owner_active": "true",
+   "dataset_owner_active": "true"
+  },
+  {
+   "rank": "2",
+   "issue_id": "iss-0031",
+   "dataset_id": "ds-invoices",
+   "rule_id": "r-invoices-valid-currency",
+   "severity": "high",
+   "class": "claimed",
+   "status": "closed",
+   "age_days": "1.5",
+   "owner_id": "own-09",
+   "owner_team": "Customer Data",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  },
+  {
+   "rank": "3",
+   "issue_id": "iss-0046",
+   "dataset_id": "ds-contacts",
+   "rule_id": "r-contacts-complete-email",
+   "severity": "high",
+   "class": "claimed",
+   "status": "closed",
+   "age_days": "1.8",
+   "owner_id": "own-12",
+   "owner_team": "Finance Systems",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  },
+  {
+   "rank": "4",
+   "issue_id": "iss-0055",
+   "dataset_id": "ds-invoices",
+   "rule_id": "r-invoices-valid-currency",
+   "severity": "high",
+   "class": "claimed",
+   "status": "closed",
+   "age_days": "0.7",
+   "owner_id": "own-09",
+   "owner_team": "Customer Data",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  },
+  {
+   "rank": "5",
+   "issue_id": "iss-0082",
+   "dataset_id": "ds-suppliers",
+   "rule_id": "r-suppliers-unique-supplier_key",
+   "severity": "high",
+   "class": "claimed",
+   "status": "closed",
+   "age_days": "1.3",
+   "owner_id": "own-15",
+   "owner_team": "Supply Chain",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  },
+  {
+   "rank": "6",
+   "issue_id": "iss-0091",
+   "dataset_id": "ds-ledger-entries",
+   "rule_id": "r-ledger-entries-valid-currency",
+   "severity": "high",
+   "class": "claimed",
+   "status": "closed",
+   "age_days": "0.6",
+   "owner_id": "own-12",
+   "owner_team": "Finance Systems",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  },
+  {
+   "rank": "7",
+   "issue_id": "iss-0099",
+   "dataset_id": "ds-ledger-entries",
+   "rule_id": "r-ledger-entries-valid-currency",
+   "severity": "high",
+   "class": "claimed",
+   "status": "closed",
+   "age_days": "3.2",
+   "owner_id": "own-12",
+   "owner_team": "Finance Systems",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  },
+  {
+   "rank": "8",
+   "issue_id": "iss-0110",
+   "dataset_id": "ds-ledger-entries",
+   "rule_id": "r-ledger-entries-valid-currency",
+   "severity": "high",
+   "class": "claimed",
+   "status": "closed",
+   "age_days": "1.9",
+   "owner_id": "own-12",
+   "owner_team": "Finance Systems",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  },
+  {
+   "rank": "9",
+   "issue_id": "iss-0119",
+   "dataset_id": "ds-ledger-entries",
+   "rule_id": "r-ledger-entries-valid-currency",
+   "severity": "high",
+   "class": "claimed",
+   "status": "closed",
+   "age_days": "2.9",
+   "owner_id": "own-12",
+   "owner_team": "Finance Systems",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  },
+  {
+   "rank": "10",
+   "issue_id": "iss-0144",
+   "dataset_id": "ds-invoices",
+   "rule_id": "r-invoices-valid-currency",
+   "severity": "high",
+   "class": "claimed",
+   "status": "closed",
+   "age_days": "2.1",
+   "owner_id": "own-09",
+   "owner_team": "Customer Data",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  },
+  {
+   "rank": "11",
+   "issue_id": "iss-0193",
+   "dataset_id": "ds-contacts",
+   "rule_id": "r-contacts-complete-email",
+   "severity": "high",
+   "class": "claimed",
+   "status": "closed",
+   "age_days": "2.3",
+   "owner_id": "own-12",
+   "owner_team": "Finance Systems",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  },
+  {
+   "rank": "12",
+   "issue_id": "iss-0217",
+   "dataset_id": "ds-invoices",
+   "rule_id": "r-invoices-valid-currency",
+   "severity": "high",
+   "class": "claimed",
+   "status": "closed",
+   "age_days": "2.1",
+   "owner_id": "own-09",
+   "owner_team": "Customer Data",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  },
+  {
+   "rank": "13",
+   "issue_id": "iss-0221",
+   "dataset_id": "ds-suppliers",
+   "rule_id": "r-suppliers-unique-supplier_key",
+   "severity": "high",
+   "class": "claimed",
+   "status": "closed",
+   "age_days": "2.7",
+   "owner_id": "own-15",
+   "owner_team": "Supply Chain",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  },
+  {
+   "rank": "14",
+   "issue_id": "iss-0222",
+   "dataset_id": "ds-ledger-entries",
+   "rule_id": "r-ledger-entries-valid-currency",
+   "severity": "high",
+   "class": "claimed",
+   "status": "closed",
+   "age_days": "0.6",
+   "owner_id": "own-12",
+   "owner_team": "Finance Systems",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  },
+  {
+   "rank": "15",
+   "issue_id": "iss-0252",
+   "dataset_id": "ds-invoices",
+   "rule_id": "r-invoices-valid-currency",
+   "severity": "high",
+   "class": "open",
+   "status": "investigating",
+   "age_days": "40.9",
+   "owner_id": "own-09",
+   "owner_team": "Customer Data",
+   "owner_active": "false",
+   "dataset_owner_active": "false"
+  }
+ ],
+ "10_fix_first_queue__datasets_with_the_most_unresolved_serious_issues": [
+  {
+   "dataset_id": "ds-ledger-entries",
+   "unresolved_critical_or_high": "22",
+   "claimed": "5",
+   "dataset_owner_team": "Finance Systems",
+   "dataset_owner_active": "false"
+  },
+  {
+   "dataset_id": "ds-web-users",
+   "unresolved_critical_or_high": "19",
+   "claimed": "7",
+   "dataset_owner_team": "Data Platform",
+   "dataset_owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-subscriptions",
+   "unresolved_critical_or_high": "18",
+   "claimed": "9",
+   "dataset_owner_team": "Data Platform",
+   "dataset_owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-opportunities",
+   "unresolved_critical_or_high": "13",
+   "claimed": "9",
+   "dataset_owner_team": "Data Platform",
+   "dataset_owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-consent-records",
+   "unresolved_critical_or_high": "11",
+   "claimed": "3",
+   "dataset_owner_team": "Supply Chain",
+   "dataset_owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-invoices",
+   "unresolved_critical_or_high": "10",
+   "claimed": "4",
+   "dataset_owner_team": "Customer Data",
+   "dataset_owner_active": "false"
+  },
+  {
+   "dataset_id": "ds-customers",
+   "unresolved_critical_or_high": "9",
+   "claimed": "2",
+   "dataset_owner_team": "Customer Data",
+   "dataset_owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-contacts",
+   "unresolved_critical_or_high": "8",
+   "claimed": "2",
+   "dataset_owner_team": "Finance Systems",
+   "dataset_owner_active": "false"
+  },
+  {
+   "dataset_id": "ds-orders",
+   "unresolved_critical_or_high": "8",
+   "claimed": "4",
+   "dataset_owner_team": "Data Platform",
+   "dataset_owner_active": "true"
+  },
+  {
+   "dataset_id": "ds-suppliers",
+   "unresolved_critical_or_high": "8",
+   "claimed": "4",
+   "dataset_owner_team": "Supply Chain",
+   "dataset_owner_active": "false"
+  }
+ ],
+ "10_fix_first_queue__ordering_sensitivity": [
+  {
+   "first_n": "15",
+   "overlap_with_severity_then_age": "7",
+   "overlap_with_age_only": "3",
+   "stated_with_an_inactive_owner": "14",
+   "severity_then_age_with_an_inactive_owner": "6",
+   "age_only_with_an_inactive_owner": "3"
+  }
+ ],
+ "09_golden_known_answer__completeness_validity": [
+  {
+   "completeness_rule": "r-cust-complete-email",
+   "eligible": "100",
+   "missing": "5",
+   "populated": "95",
+   "completeness": "0.950000",
+   "validity_rule": "r-cust-valid-email",
+   "validity_populated": "95",
+   "passing": "90",
+   "validity_all_eligible": "0.900000",
+   "validity_populated_only": "0.947368"
+  }
+ ],
+ "09_golden_known_answer__uniqueness_relationship": [
+  {
+   "uniqueness_eligible": "100",
+   "distinct_keys": "98",
+   "duplicate_groups": "1",
+   "duplicate_rows": "2",
+   "group_share": "0.010204",
+   "row_share": "0.020000",
+   "fk_total": "40",
+   "fk_null_or_empty": "3",
+   "fk_eligible": "37",
+   "fk_matched": "35",
+   "relationship": "0.945946"
+  }
+ ],
+ "09_golden_known_answer__weighted_scores": [
+  {
+   "weight_version": "w1",
+   "measured_dimensions": "completeness,validity,uniqueness,timeliness",
+   "weight_sum": "0.950000",
+   "weighted_score": "0.958116",
+   "critical_failures": "2",
+   "critical_open_issues": "1",
+   "critical_override": "true"
+  },
+  {
+   "weight_version": "w2",
+   "measured_dimensions": "completeness,validity,uniqueness,timeliness",
+   "weight_sum": "0.850000",
+   "weighted_score": "0.963932",
+   "critical_failures": "2",
+   "critical_open_issues": "1",
+   "critical_override": "true"
+  }
+ ],
+ "09_golden_known_answer__portfolio": [
+  {
+   "timeliness_monitored": "4",
+   "timeliness_on_time": "3",
+   "datasets": "5",
+   "ownership_covered": "4",
+   "published_metrics": "4",
+   "definitions_complete": "3",
+   "lineage_declared": "6",
+   "lineage_observed_matching": "5",
+   "issues_resolved": "3",
+   "issues_claimed": "1",
+   "issues_open": "2",
+   "resolution_mean_hours": "38.4444",
+   "approved_correct": "2",
+   "approved": "3"
+  }
+ ],
+ "bi_measures": [
+  {
+   "measure": "ownership_coverage",
+   "slice": "portfolio",
+   "value": "0.875000",
+   "numerator": "35",
+   "denominator": "40",
+   "status": "value",
+   "note": "datasets whose accountable owner is active / datasets"
+  },
+  {
+   "measure": "datasets_without_an_accountable_owner",
+   "slice": "portfolio",
+   "value": "5",
+   "numerator": "5",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "definition_coverage",
+   "slice": "portfolio",
+   "value": "0.766667",
+   "numerator": "23",
+   "denominator": "30",
+   "status": "value",
+   "note": "published metrics with a complete checklist cl-1 / published metrics"
+  },
+  {
+   "measure": "lineage_coverage",
+   "slice": "portfolio",
+   "value": "0.725000",
+   "numerator": "58",
+   "denominator": "80",
+   "status": "value",
+   "note": "distinct observed pairs that match a declared pair / declared pairs; inferred pairs never count"
+  },
+  {
+   "measure": "undeclared_observed_pairs",
+   "slice": "portfolio",
+   "value": "12",
+   "numerator": "12",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "declared_not_observed_pairs",
+   "slice": "portfolio",
+   "value": "22",
+   "numerator": "22",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "inferred_pairs",
+   "slice": "portfolio",
+   "value": "10",
+   "numerator": "10",
+   "denominator": "",
+   "status": "value",
+   "note": "never counted as observed"
+  },
+  {
+   "measure": "issues",
+   "slice": "resolved",
+   "value": "0.548780",
+   "numerator": "315",
+   "denominator": "574",
+   "status": "value",
+   "note": "share of all issues"
+  },
+  {
+   "measure": "issues",
+   "slice": "claimed",
+   "value": "0.172474",
+   "numerator": "99",
+   "denominator": "574",
+   "status": "value",
+   "note": "share of all issues"
+  },
+  {
+   "measure": "issues",
+   "slice": "open",
+   "value": "0.278746",
+   "numerator": "160",
+   "denominator": "574",
+   "status": "value",
+   "note": "share of all issues"
+  },
+  {
+   "measure": "issues",
+   "slice": "all",
+   "value": "574",
+   "numerator": "574",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "all resolved",
+   "value": "68.2716",
+   "numerator": "315",
+   "denominator": "",
+   "status": "value",
+   "note": "mean of (verifying rerun - first detected_at), 4 places, resolved issues only; claimed and open issues are not in it"
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "Data Platform",
+   "value": "34.4202",
+   "numerator": "109",
+   "denominator": "",
+   "status": "value",
+   "note": "mean of (verifying rerun - first detected_at), 4 places, resolved issues only; claimed and open issues are not in it"
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "all other teams",
+   "value": "86.1833",
+   "numerator": "206",
+   "denominator": "",
+   "status": "value",
+   "note": "mean of (verifying rerun - first detected_at), 4 places, resolved issues only; claimed and open issues are not in it"
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "team: Customer Data",
+   "value": "77.5452",
+   "numerator": "28",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "team: Data Governance",
+   "value": "83.4130",
+   "numerator": "9",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "team: Data Platform",
+   "value": "34.4202",
+   "numerator": "109",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "team: Finance Systems",
+   "value": "91.9537",
+   "numerator": "68",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "team: Supply Chain",
+   "value": "82.8748",
+   "numerator": "55",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "team: Support Operations",
+   "value": "87.4087",
+   "numerator": "46",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "unresolved_issues",
+   "slice": "severity: critical",
+   "value": "1",
+   "numerator": "1",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "unresolved_issues",
+   "slice": "severity: high",
+   "value": "171",
+   "numerator": "171",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "unresolved_issues",
+   "slice": "severity: medium",
+   "value": "70",
+   "numerator": "70",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "unresolved_issues",
+   "slice": "severity: low",
+   "value": "17",
+   "numerator": "17",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "unresolved_issues",
+   "slice": "all",
+   "value": "259",
+   "numerator": "259",
+   "denominator": "",
+   "status": "value",
+   "note": "open + claimed"
+  },
+  {
+   "measure": "unresolved_issues_with_an_inactive_owner",
+   "slice": "all",
+   "value": "66",
+   "numerator": "66",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "timeliness",
+   "slice": "portfolio",
+   "value": "0.666667",
+   "numerator": "10",
+   "denominator": "15",
+   "status": "value",
+   "note": "on time / (monitored - pending); pending is outside the denominator"
+  },
+  {
+   "measure": "timeliness_pending",
+   "slice": "portfolio",
+   "value": "0",
+   "numerator": "0",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "timeliness_late",
+   "slice": "portfolio",
+   "value": "5",
+   "numerator": "5",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "match_precision",
+   "slice": "portfolio",
+   "value": "0.988506",
+   "numerator": "172",
+   "denominator": "174",
+   "status": "value",
+   "note": "approved decisions the truth confirms / approved decisions"
+  },
+  {
+   "measure": "reviewed_correct_share",
+   "slice": "portfolio",
+   "value": "0.840909",
+   "numerator": "185",
+   "denominator": "220",
+   "status": "value",
+   "note": "reviewed candidates that are the same entity / reviewed candidates (the contract's share)"
+  },
+  {
+   "measure": "decision_agreement_share",
+   "slice": "portfolio",
+   "value": "0.931818",
+   "numerator": "205",
+   "denominator": "220",
+   "status": "value",
+   "note": "reviews that agree with the truth / reviews"
+  },
+  {
+   "measure": "approvals_reversed",
+   "slice": "portfolio",
+   "value": "15",
+   "numerator": "15",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-accounts|w1",
+   "value": "0.990000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-accounts|w2",
+   "value": "0.981250",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-billing-accounts|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-billing-accounts|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-campaigns|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-campaigns|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-carriers|w1",
+   "value": "0.966387",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-carriers|w2",
+   "value": "0.966387",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-consent-records|w1",
+   "value": "0.916340",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-consent-records|w2",
+   "value": "0.932773",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-contacts|w1",
+   "value": "0.984127",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-contacts|w2",
+   "value": "0.988839",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-cost-centres|w1",
+   "value": "0.974359",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-cost-centres|w2",
+   "value": "0.974359",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-credit-notes|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-credit-notes|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-crm-activities|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-crm-activities|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-csat-surveys|w1",
+   "value": "0.935484",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-csat-surveys|w2",
+   "value": "0.935484",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-customers|w1",
+   "value": "0.990329",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-customers|w2",
+   "value": "0.990175",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-delivery-events|w1",
+   "value": "0.955882",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-delivery-events|w2",
+   "value": "0.955882",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-employees|w1",
+   "value": "1.000000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-employees|w2",
+   "value": "1.000000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-experiments|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-experiments|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-inventory|w1",
+   "value": "1.000000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-inventory|w2",
+   "value": "1.000000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-invoices|w1",
+   "value": "0.987767",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-invoices|w2",
+   "value": "0.986495",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-kb-articles|w1",
+   "value": "0.984848",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-kb-articles|w2",
+   "value": "0.984848",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-leads|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-leads|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-ledger-entries|w1",
+   "value": "0.942387",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-ledger-entries|w2",
+   "value": "0.950617",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-opportunities|w1",
+   "value": "0.886076",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-opportunities|w2",
+   "value": "0.886076",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-order-lines|w1",
+   "value": "0.966981",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-order-lines|w2",
+   "value": "0.966981",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-orders|w1",
+   "value": "0.936207",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-orders|w2",
+   "value": "0.891379",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-page-events|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-page-events|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-payments|w1",
+   "value": "0.831301",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-payments|w2",
+   "value": "0.796341",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-price-books|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-price-books|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-products|w1",
+   "value": "0.982759",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-products|w2",
+   "value": "0.982759",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-purchase-orders|w1",
+   "value": "0.977778",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-purchase-orders|w2",
+   "value": "0.977778",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-refunds|w1",
+   "value": "0.938776",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-refunds|w2",
+   "value": "0.938776",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-returns|w1",
+   "value": "0.930000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-returns|w2",
+   "value": "0.930000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-segments|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-segments|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-shipments|w1",
+   "value": "0.848394",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-shipments|w2",
+   "value": "0.850297",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-sla-policies|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-sla-policies|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-subscriptions|w1",
+   "value": "0.961988",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-subscriptions|w2",
+   "value": "0.955044",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-suppliers|w1",
+   "value": "0.961149",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-suppliers|w2",
+   "value": "0.964894",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-support-agents|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-support-agents|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-ticket-events|w1",
+   "value": "0.971429",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-ticket-events|w2",
+   "value": "0.971429",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-tickets|w1",
+   "value": "0.852608",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-tickets|w2",
+   "value": "0.685131",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-warehouses|w1",
+   "value": "0.933333",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-warehouses|w2",
+   "value": "0.933333",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-web-sessions|w1",
+   "value": "0.985714",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-web-sessions|w2",
+   "value": "0.985714",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-web-users|w1",
+   "value": "0.986014",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-web-users|w2",
+   "value": "0.987374",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_weighted_score",
+   "slice": "w1",
+   "value": "0.950980",
+   "numerator": "29",
+   "denominator": "",
+   "status": "value",
+   "note": "mean over the 29 datasets that measure something"
+  },
+  {
+   "measure": "mean_weighted_score",
+   "slice": "w2",
+   "value": "0.943118",
+   "numerator": "29",
+   "denominator": "",
+   "status": "value",
+   "note": "mean over the 29 datasets that measure something"
+  },
+  {
+   "measure": "datasets_with_a_different_score",
+   "slice": "w1 vs w2",
+   "value": "0.448276",
+   "numerator": "13",
+   "denominator": "29",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "datasets_moved_at_least_0_005",
+   "slice": "w1 vs w2",
+   "value": "0.241379",
+   "numerator": "7",
+   "denominator": "29",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "largest_move",
+   "slice": "w1 vs w2",
+   "value": "-0.167477",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "critical_failures",
+   "slice": "portfolio",
+   "value": "2",
+   "numerator": "2",
+   "denominator": "",
+   "status": "value",
+   "note": "failing rows of active critical rules, counted apart from any score"
+  },
+  {
+   "measure": "datasets_with_the_critical_override",
+   "slice": "portfolio",
+   "value": "1",
+   "numerator": "1",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "open_critical_issues",
+   "slice": "portfolio",
+   "value": "1",
+   "numerator": "1",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  }
+ ],
+ "bi_measures_portfolio": [
+  {
+   "measure": "ownership_coverage",
+   "slice": "portfolio",
+   "value": "0.875000",
+   "numerator": "35",
+   "denominator": "40",
+   "status": "value",
+   "note": "datasets whose accountable owner is active / datasets"
+  },
+  {
+   "measure": "datasets_without_an_accountable_owner",
+   "slice": "portfolio",
+   "value": "5",
+   "numerator": "5",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "definition_coverage",
+   "slice": "portfolio",
+   "value": "0.766667",
+   "numerator": "23",
+   "denominator": "30",
+   "status": "value",
+   "note": "published metrics with a complete checklist cl-1 / published metrics"
+  },
+  {
+   "measure": "lineage_coverage",
+   "slice": "portfolio",
+   "value": "0.725000",
+   "numerator": "58",
+   "denominator": "80",
+   "status": "value",
+   "note": "distinct observed pairs that match a declared pair / declared pairs; inferred pairs never count"
+  },
+  {
+   "measure": "undeclared_observed_pairs",
+   "slice": "portfolio",
+   "value": "12",
+   "numerator": "12",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "declared_not_observed_pairs",
+   "slice": "portfolio",
+   "value": "22",
+   "numerator": "22",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "inferred_pairs",
+   "slice": "portfolio",
+   "value": "10",
+   "numerator": "10",
+   "denominator": "",
+   "status": "value",
+   "note": "never counted as observed"
+  },
+  {
+   "measure": "issues",
+   "slice": "resolved",
+   "value": "0.548780",
+   "numerator": "315",
+   "denominator": "574",
+   "status": "value",
+   "note": "share of all issues"
+  },
+  {
+   "measure": "issues",
+   "slice": "claimed",
+   "value": "0.172474",
+   "numerator": "99",
+   "denominator": "574",
+   "status": "value",
+   "note": "share of all issues"
+  },
+  {
+   "measure": "issues",
+   "slice": "open",
+   "value": "0.278746",
+   "numerator": "160",
+   "denominator": "574",
+   "status": "value",
+   "note": "share of all issues"
+  },
+  {
+   "measure": "issues",
+   "slice": "all",
+   "value": "574",
+   "numerator": "574",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "all resolved",
+   "value": "68.2716",
+   "numerator": "315",
+   "denominator": "",
+   "status": "value",
+   "note": "mean of (verifying rerun - first detected_at), 4 places, resolved issues only; claimed and open issues are not in it"
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "Data Platform",
+   "value": "34.4202",
+   "numerator": "109",
+   "denominator": "",
+   "status": "value",
+   "note": "mean of (verifying rerun - first detected_at), 4 places, resolved issues only; claimed and open issues are not in it"
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "all other teams",
+   "value": "86.1833",
+   "numerator": "206",
+   "denominator": "",
+   "status": "value",
+   "note": "mean of (verifying rerun - first detected_at), 4 places, resolved issues only; claimed and open issues are not in it"
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "team: Customer Data",
+   "value": "77.5452",
+   "numerator": "28",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "team: Data Governance",
+   "value": "83.4130",
+   "numerator": "9",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "team: Data Platform",
+   "value": "34.4202",
+   "numerator": "109",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "team: Finance Systems",
+   "value": "91.9537",
+   "numerator": "68",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "team: Supply Chain",
+   "value": "82.8748",
+   "numerator": "55",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_resolution_hours",
+   "slice": "team: Support Operations",
+   "value": "87.4087",
+   "numerator": "46",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "unresolved_issues",
+   "slice": "severity: critical",
+   "value": "1",
+   "numerator": "1",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "unresolved_issues",
+   "slice": "severity: high",
+   "value": "171",
+   "numerator": "171",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "unresolved_issues",
+   "slice": "severity: medium",
+   "value": "70",
+   "numerator": "70",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "unresolved_issues",
+   "slice": "severity: low",
+   "value": "17",
+   "numerator": "17",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "unresolved_issues",
+   "slice": "all",
+   "value": "259",
+   "numerator": "259",
+   "denominator": "",
+   "status": "value",
+   "note": "open + claimed"
+  },
+  {
+   "measure": "unresolved_issues_with_an_inactive_owner",
+   "slice": "all",
+   "value": "66",
+   "numerator": "66",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "timeliness",
+   "slice": "portfolio",
+   "value": "0.666667",
+   "numerator": "10",
+   "denominator": "15",
+   "status": "value",
+   "note": "on time / (monitored - pending); pending is outside the denominator"
+  },
+  {
+   "measure": "timeliness_pending",
+   "slice": "portfolio",
+   "value": "0",
+   "numerator": "0",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "timeliness_late",
+   "slice": "portfolio",
+   "value": "5",
+   "numerator": "5",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "match_precision",
+   "slice": "portfolio",
+   "value": "0.988506",
+   "numerator": "172",
+   "denominator": "174",
+   "status": "value",
+   "note": "approved decisions the truth confirms / approved decisions"
+  },
+  {
+   "measure": "reviewed_correct_share",
+   "slice": "portfolio",
+   "value": "0.840909",
+   "numerator": "185",
+   "denominator": "220",
+   "status": "value",
+   "note": "reviewed candidates that are the same entity / reviewed candidates (the contract's share)"
+  },
+  {
+   "measure": "decision_agreement_share",
+   "slice": "portfolio",
+   "value": "0.931818",
+   "numerator": "205",
+   "denominator": "220",
+   "status": "value",
+   "note": "reviews that agree with the truth / reviews"
+  },
+  {
+   "measure": "approvals_reversed",
+   "slice": "portfolio",
+   "value": "15",
+   "numerator": "15",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "mean_weighted_score",
+   "slice": "w1",
+   "value": "0.950980",
+   "numerator": "29",
+   "denominator": "",
+   "status": "value",
+   "note": "mean over the 29 datasets that measure something"
+  },
+  {
+   "measure": "mean_weighted_score",
+   "slice": "w2",
+   "value": "0.943118",
+   "numerator": "29",
+   "denominator": "",
+   "status": "value",
+   "note": "mean over the 29 datasets that measure something"
+  },
+  {
+   "measure": "datasets_with_a_different_score",
+   "slice": "w1 vs w2",
+   "value": "0.448276",
+   "numerator": "13",
+   "denominator": "29",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "datasets_moved_at_least_0_005",
+   "slice": "w1 vs w2",
+   "value": "0.241379",
+   "numerator": "7",
+   "denominator": "29",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "largest_move",
+   "slice": "w1 vs w2",
+   "value": "-0.167477",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "critical_failures",
+   "slice": "portfolio",
+   "value": "2",
+   "numerator": "2",
+   "denominator": "",
+   "status": "value",
+   "note": "failing rows of active critical rules, counted apart from any score"
+  },
+  {
+   "measure": "datasets_with_the_critical_override",
+   "slice": "portfolio",
+   "value": "1",
+   "numerator": "1",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "open_critical_issues",
+   "slice": "portfolio",
+   "value": "1",
+   "numerator": "1",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  }
+ ],
+ "bi_measures_dataset_scores": [
+  {
+   "measure": "weighted_score",
+   "slice": "ds-accounts|w1",
+   "value": "0.990000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-accounts|w2",
+   "value": "0.981250",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-billing-accounts|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-billing-accounts|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-campaigns|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-campaigns|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-carriers|w1",
+   "value": "0.966387",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-carriers|w2",
+   "value": "0.966387",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-consent-records|w1",
+   "value": "0.916340",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-consent-records|w2",
+   "value": "0.932773",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-contacts|w1",
+   "value": "0.984127",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-contacts|w2",
+   "value": "0.988839",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-cost-centres|w1",
+   "value": "0.974359",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-cost-centres|w2",
+   "value": "0.974359",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-credit-notes|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-credit-notes|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-crm-activities|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-crm-activities|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-csat-surveys|w1",
+   "value": "0.935484",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-csat-surveys|w2",
+   "value": "0.935484",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-customers|w1",
+   "value": "0.990329",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-customers|w2",
+   "value": "0.990175",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-delivery-events|w1",
+   "value": "0.955882",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-delivery-events|w2",
+   "value": "0.955882",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-employees|w1",
+   "value": "1.000000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-employees|w2",
+   "value": "1.000000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-experiments|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-experiments|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-inventory|w1",
+   "value": "1.000000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-inventory|w2",
+   "value": "1.000000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-invoices|w1",
+   "value": "0.987767",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-invoices|w2",
+   "value": "0.986495",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-kb-articles|w1",
+   "value": "0.984848",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-kb-articles|w2",
+   "value": "0.984848",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-leads|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-leads|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-ledger-entries|w1",
+   "value": "0.942387",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-ledger-entries|w2",
+   "value": "0.950617",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-opportunities|w1",
+   "value": "0.886076",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-opportunities|w2",
+   "value": "0.886076",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-order-lines|w1",
+   "value": "0.966981",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-order-lines|w2",
+   "value": "0.966981",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-orders|w1",
+   "value": "0.936207",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-orders|w2",
+   "value": "0.891379",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-page-events|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-page-events|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-payments|w1",
+   "value": "0.831301",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-payments|w2",
+   "value": "0.796341",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-price-books|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-price-books|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-products|w1",
+   "value": "0.982759",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-products|w2",
+   "value": "0.982759",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-purchase-orders|w1",
+   "value": "0.977778",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-purchase-orders|w2",
+   "value": "0.977778",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-refunds|w1",
+   "value": "0.938776",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-refunds|w2",
+   "value": "0.938776",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-returns|w1",
+   "value": "0.930000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-returns|w2",
+   "value": "0.930000",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-segments|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-segments|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-shipments|w1",
+   "value": "0.848394",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-shipments|w2",
+   "value": "0.850297",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-sla-policies|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-sla-policies|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-subscriptions|w1",
+   "value": "0.961988",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-subscriptions|w2",
+   "value": "0.955044",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-suppliers|w1",
+   "value": "0.961149",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-suppliers|w2",
+   "value": "0.964894",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-support-agents|w1",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-support-agents|w2",
+   "value": "",
+   "numerator": "",
+   "denominator": "",
+   "status": "not_measured: no rule measures a value",
+   "note": "withheld, never 0"
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-ticket-events|w1",
+   "value": "0.971429",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-ticket-events|w2",
+   "value": "0.971429",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-tickets|w1",
+   "value": "0.852608",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-tickets|w2",
+   "value": "0.685131",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-warehouses|w1",
+   "value": "0.933333",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-warehouses|w2",
+   "value": "0.933333",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-web-sessions|w1",
+   "value": "0.985714",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-web-sessions|w2",
+   "value": "0.985714",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-web-users|w1",
+   "value": "0.986014",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  },
+  {
+   "measure": "weighted_score",
+   "slice": "ds-web-users|w2",
+   "value": "0.987374",
+   "numerator": "",
+   "denominator": "",
+   "status": "value",
+   "note": ""
+  }
+ ],
+ "reconciliation": [
+  {
+   "check": "A golden metric completeness: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "ff3dea65587bcbc3",
+   "second_source": "ff3dea65587bcbc3",
+   "third_source": "ff3dea65587bcbc3",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric validity: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "c4bb5bd20d5428e8",
+   "second_source": "c4bb5bd20d5428e8",
+   "third_source": "c4bb5bd20d5428e8",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric uniqueness: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "89557f868996c08b",
+   "second_source": "89557f868996c08b",
+   "third_source": "89557f868996c08b",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric relationship_integrity: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "f2d094cab3824625",
+   "second_source": "f2d094cab3824625",
+   "third_source": "f2d094cab3824625",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric timeliness: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "b94c195bd9ae62e9",
+   "second_source": "b94c195bd9ae62e9",
+   "third_source": "b94c195bd9ae62e9",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric weighted_score: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "927ae20c7cb18abb",
+   "second_source": "927ae20c7cb18abb",
+   "third_source": "927ae20c7cb18abb",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric critical_failures: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "aeeddc213d634391",
+   "second_source": "aeeddc213d634391",
+   "third_source": "aeeddc213d634391",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric resolution_time: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "36d88ab8c7ed5ec3",
+   "second_source": "36d88ab8c7ed5ec3",
+   "third_source": "36d88ab8c7ed5ec3",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric ownership_coverage: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "f1b7a3c37b430701",
+   "second_source": "f1b7a3c37b430701",
+   "third_source": "f1b7a3c37b430701",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric definition_coverage: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "87e67c9e8daccdf1",
+   "second_source": "87e67c9e8daccdf1",
+   "third_source": "87e67c9e8daccdf1",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric match_precision: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "33737d523d7b82a4",
+   "second_source": "33737d523d7b82a4",
+   "third_source": "33737d523d7b82a4",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden metric lineage_coverage: reference SQL = Python domain = expected.json (digest)",
+   "analysis_sql": "314dda349f639817",
+   "second_source": "314dda349f639817",
+   "third_source": "314dda349f639817",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden empty_population (reference SQL vs expected.json vs domain)",
+   "analysis_sql": "false",
+   "second_source": "false",
+   "third_source": "false",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden whole shape of expected.json (domain result.golden() vs the file, digest)",
+   "analysis_sql": "6c7094178d722e04",
+   "second_source": "6c7094178d722e04",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden timeliness probes (domain vs expected.json, digest)",
+   "analysis_sql": "8950aeba3f05c659",
+   "second_source": "8950aeba3f05c659",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden weighted_score under w1 (reference SQL vs domain, digest)",
+   "analysis_sql": "8d090dabc185e6e4",
+   "second_source": "8d090dabc185e6e4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden weighted_score under w2 (reference SQL vs domain, digest)",
+   "analysis_sql": "927ae20c7cb18abb",
+   "second_source": "927ae20c7cb18abb",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden completeness: eligible | missing | populated | value (09 vs expected.json vs the spec's hand answer 100 | 5 | 95 | 0.950000)",
+   "analysis_sql": "100|5|95|0.950000",
+   "second_source": "100|5|95|0.950000",
+   "third_source": "100|5|95|0.950000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden validity: populated | passing | populated-only | all-eligible (09 vs expected.json vs the hand answer 95 | 90 | 0.947368 | 0.900000)",
+   "analysis_sql": "95|90|0.947368|0.900000",
+   "second_source": "95|90|0.947368|0.900000",
+   "third_source": "95|90|0.947368|0.900000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden uniqueness: eligible | distinct keys | groups | duplicate rows | group share | row share (09 vs expected.json)",
+   "analysis_sql": "100|98|1|2|0.010204|0.020000",
+   "second_source": "100|98|1|2|0.010204|0.020000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden relationship: total | null or empty | eligible | matched | value (09 vs expected.json; ds-orders 35 of 37, D-10 R7-11)",
+   "analysis_sql": "40|3|37|35|0.945946",
+   "second_source": "40|3|37|35|0.945946",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden ds-customers under w1: score | weight sum | critical failures | open critical | override (09 vs domain vs hand answer 0.958116)",
+   "analysis_sql": "0.958116|0.950000|2|1|true",
+   "second_source": "0.958116|0.950000|2|1|true",
+   "third_source": "0.958116|0.950000|2|1|true",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden ds-customers under w2: score | weight sum | critical failures | open critical | override (09 vs domain vs hand answer 0.963932)",
+   "analysis_sql": "0.963932|0.850000|2|1|true",
+   "second_source": "0.963932|0.850000|2|1|true",
+   "third_source": "0.963932|0.850000|2|1|true",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden timeliness: monitored | on time (09 vs expected.json)",
+   "analysis_sql": "4|3",
+   "second_source": "4|3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden ownership: datasets | covered (09 vs expected.json)",
+   "analysis_sql": "5|4",
+   "second_source": "5|4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden definitions: published | complete (09 vs expected.json)",
+   "analysis_sql": "4|3",
+   "second_source": "4|3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden lineage: declared | observed matching declared (09 vs expected.json)",
+   "analysis_sql": "6|5",
+   "second_source": "6|5",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden issues: resolved | claimed | open | mean hours (09 vs expected.json)",
+   "analysis_sql": "3|1|2|38.4444",
+   "second_source": "3|1|2|38.4444",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "A golden match precision: approved | approved correct (09 vs expected.json)",
+   "analysis_sql": "3|2",
+   "second_source": "3|2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B loaded row counts equal the manifest row_counts (every entity)",
+   "analysis_sql": "c430b581c1f29ec3",
+   "second_source": "c430b581c1f29ec3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B verification_truth rows equal the manifest's synthetic truth entries (records)",
+   "analysis_sql": "2000",
+   "second_source": "2000",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on completeness at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "0f93e608f13d6b0e",
+   "second_source": "0f93e608f13d6b0e",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on validity at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "53bf1e76c8a0565f",
+   "second_source": "53bf1e76c8a0565f",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on uniqueness at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "4b8255d0beca4441",
+   "second_source": "4b8255d0beca4441",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on relationship_integrity at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "93f906c9b3d1f0e0",
+   "second_source": "93f906c9b3d1f0e0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on timeliness at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "f29619331a5775ed",
+   "second_source": "f29619331a5775ed",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on weighted_score at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "24133000d3998fda",
+   "second_source": "24133000d3998fda",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on critical_failures at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "aeeddc213d634391",
+   "second_source": "aeeddc213d634391",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on resolution_time at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "16969145064f7f56",
+   "second_source": "16969145064f7f56",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on ownership_coverage at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "c15d2c8b1254d09d",
+   "second_source": "c15d2c8b1254d09d",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on definition_coverage at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "a1fe5673758d2c56",
+   "second_source": "a1fe5673758d2c56",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on match_precision at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "c8ae1b2c24b6e51c",
+   "second_source": "c8ae1b2c24b6e51c",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on lineage_coverage at 2026-10-05T00:00:00Z (digest)",
+   "analysis_sql": "98a7e0f50e6d041a",
+   "second_source": "98a7e0f50e6d041a",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on completeness at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "3413e092b370052a",
+   "second_source": "3413e092b370052a",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on validity at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "ffe179558525f189",
+   "second_source": "ffe179558525f189",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on uniqueness at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "99c533d373ba4f5a",
+   "second_source": "99c533d373ba4f5a",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on relationship_integrity at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "84d453050421fe3e",
+   "second_source": "84d453050421fe3e",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on timeliness at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "03831b69d000ffbc",
+   "second_source": "03831b69d000ffbc",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on weighted_score at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "c8318d2e569f20ad",
+   "second_source": "c8318d2e569f20ad",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on critical_failures at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "0a4ea1e5f89fbdf8",
+   "second_source": "0a4ea1e5f89fbdf8",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on resolution_time at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "30bc3c22861943ac",
+   "second_source": "30bc3c22861943ac",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on ownership_coverage at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "85eee8746642237b",
+   "second_source": "85eee8746642237b",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on definition_coverage at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "2aa51868bf6079bb",
+   "second_source": "2aa51868bf6079bb",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on match_precision at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "6fa6dfffd56fe574",
+   "second_source": "6fa6dfffd56fe574",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on lineage_coverage at 2026-09-14T00:00:00Z (digest)",
+   "analysis_sql": "0c80f910a7ebedcd",
+   "second_source": "0c80f910a7ebedcd",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on completeness at 2026-08-17T00:00:00Z (digest)",
+   "analysis_sql": "38b9b8c9a6633c9e",
+   "second_source": "38b9b8c9a6633c9e",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on validity at 2026-08-17T00:00:00Z (digest)",
+   "analysis_sql": "ffe179558525f189",
+   "second_source": "ffe179558525f189",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on uniqueness at 2026-08-17T00:00:00Z (digest)",
+   "analysis_sql": "99c533d373ba4f5a",
+   "second_source": "99c533d373ba4f5a",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on relationship_integrity at 2026-08-17T00:00:00Z (digest)",
+   "analysis_sql": "84d453050421fe3e",
+   "second_source": "84d453050421fe3e",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on timeliness at 2026-08-17T00:00:00Z (digest)",
+   "analysis_sql": "dccc163ba705c0de",
+   "second_source": "dccc163ba705c0de",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on weighted_score at 2026-08-17T00:00:00Z (digest)",
+   "analysis_sql": "105219c714c6c883",
+   "second_source": "105219c714c6c883",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on critical_failures at 2026-08-17T00:00:00Z (digest)",
+   "analysis_sql": "0a4ea1e5f89fbdf8",
+   "second_source": "0a4ea1e5f89fbdf8",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on resolution_time at 2026-08-17T00:00:00Z (digest)",
+   "analysis_sql": "c9bbf9720e697e9c",
+   "second_source": "c9bbf9720e697e9c",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on ownership_coverage at 2026-08-17T00:00:00Z (digest)",
+   "analysis_sql": "e6fed48ff0605b8c",
+   "second_source": "e6fed48ff0605b8c",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on definition_coverage at 2026-08-17T00:00:00Z (digest)",
+   "analysis_sql": "5ceecc4c6aa199e7",
+   "second_source": "5ceecc4c6aa199e7",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on match_precision at 2026-08-17T00:00:00Z (digest)",
+   "analysis_sql": "dd6d3b10cd3b8966",
+   "second_source": "dd6d3b10cd3b8966",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on lineage_coverage at 2026-08-17T00:00:00Z (digest)",
+   "analysis_sql": "07d9331901782508",
+   "second_source": "07d9331901782508",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on weighted_score and critical_failures under w1 at the as-of (digest)",
+   "analysis_sql": "78b2981635c8c030",
+   "second_source": "78b2981635c8c030",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B reference SQL equals the Python domain on weighted_score and critical_failures under w2 at the as-of (digest)",
+   "analysis_sql": "87d18417a58713eb",
+   "second_source": "87d18417a58713eb",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B timeliness at the probe 2026-10-05T10:30:00Z: reference SQL = Python domain (digest)",
+   "analysis_sql": "d56bedec8bab31ac",
+   "second_source": "d56bedec8bab31ac",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B timeliness at the probe 2026-10-05T10:30:00Z: on time | pending | late | evaluated | value (08 vs reference SQL vs domain)",
+   "analysis_sql": "5|3|7|12|0.416667",
+   "second_source": "5|3|7|12|0.416667",
+   "third_source": "5|3|7|12|0.416667",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B timeliness at the probe 2026-10-05T13:00:00Z: reference SQL = Python domain (digest)",
+   "analysis_sql": "4ced953706b5e616",
+   "second_source": "4ced953706b5e616",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B timeliness at the probe 2026-10-05T13:00:00Z: on time | pending | late | evaluated | value (08 vs reference SQL vs domain)",
+   "analysis_sql": "5|0|10|15|0.333333",
+   "second_source": "5|0|10|15|0.333333",
+   "third_source": "5|0|10|15|0.333333",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B timeliness at the probe 2026-10-06T01:00:00Z: reference SQL = Python domain (digest)",
+   "analysis_sql": "434fc499915be1b5",
+   "second_source": "434fc499915be1b5",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B timeliness at the probe 2026-10-06T01:00:00Z: on time | pending | late | evaluated | value (08 vs reference SQL vs domain)",
+   "analysis_sql": "0|0|15|15|0.000000",
+   "second_source": "0|0|15|15|0.000000",
+   "third_source": "0|0|15|15|0.000000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B per-rule measurement of the 47 row-based rules: eligible | failing | score (analysis temp table vs reference SQL, digest)",
+   "analysis_sql": "219cf6335ead5ad7",
+   "second_source": "219cf6335ead5ad7",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B per-rule measurement of the 47 row-based rules: eligible | failing | score (analysis temp table vs Python domain, digest)",
+   "analysis_sql": "219cf6335ead5ad7",
+   "second_source": "219cf6335ead5ad7",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B timeliness state of each of the 15 monitored datasets at the as-of (analysis tl_tstate vs reference SQL vs domain, digest)",
+   "analysis_sql": "9a53c0e0ae633e76",
+   "second_source": "9a53c0e0ae633e76",
+   "third_source": "9a53c0e0ae633e76",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B class and hours of every one of the 574 issues (analysis tl_issue vs reference SQL, digest)",
+   "analysis_sql": "27e840141a3dd6c4",
+   "second_source": "27e840141a3dd6c4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B class of every issue (analysis vs Python domain, digest)",
+   "analysis_sql": "ffe95e62b96b2b51",
+   "second_source": "ffe95e62b96b2b51",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ds-customers weighted score under the version in force (w2): the analysis vs reference SQL vs domain",
+   "analysis_sql": "0.990175",
+   "second_source": "0.990175",
+   "third_source": "0.990175",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ds-customers weighted score under w1: the analysis vs reference SQL (by_weight_version) vs domain under w1",
+   "analysis_sql": "0.990329",
+   "second_source": "0.990329",
+   "third_source": "0.990329",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ds-customers critical failures | open critical issues | override (01 vs reference SQL vs domain)",
+   "analysis_sql": "2|1|true",
+   "second_source": "2|1|true",
+   "third_source": "2|1|true",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ds-customers dimension scores (01 vs reference SQL vs domain)",
+   "analysis_sql": "924137132e0feb11",
+   "second_source": "924137132e0feb11",
+   "third_source": "924137132e0feb11",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B all 29 scored datasets under w1 and w2 (03 vs reference SQL by_weight_version, digest)",
+   "analysis_sql": "591c89a32155f29d",
+   "second_source": "591c89a32155f29d",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B ownership coverage: datasets | covered | value | uncovered list (02 vs reference SQL vs domain)",
+   "analysis_sql": "40|35|0.875000|ds-contacts,ds-invoices,ds-ledger-entries,ds-returns,ds-suppliers",
+   "second_source": "40|35|0.875000|ds-contacts,ds-invoices,ds-ledger-entries,ds-returns,ds-suppliers",
+   "third_source": "40|35|0.875000|ds-contacts,ds-invoices,ds-ledger-entries,ds-returns,ds-suppliers",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B issues: resolved | claimed | open | reopened | cycles | mean hours (04 vs reference SQL vs domain)",
+   "analysis_sql": "315|99|160|9|9|68.2716",
+   "second_source": "315|99|160|9|9|68.2716",
+   "third_source": "315|99|160|9|9|68.2716",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B lineage: declared | observed | matching | coverage | undeclared | inferred (05 vs reference SQL vs domain)",
+   "analysis_sql": "80|70|58|0.725000|12|10",
+   "second_source": "80|70|58|0.725000|12|10",
+   "third_source": "80|70|58|0.725000|12|10",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B lineage undeclared and declared-not-observed pair lists (05 vs reference SQL, digest)",
+   "analysis_sql": "cfcaee432d315795",
+   "second_source": "cfcaee432d315795",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B definitions: published | complete | value | incomplete metrics and their missing items (06 vs reference SQL vs domain)",
+   "analysis_sql": "30|23|0.766667|f7264522390c8d72",
+   "second_source": "30|23|0.766667|f7264522390c8d72",
+   "third_source": "30|23|0.766667|f7264522390c8d72",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B match precision: approved | correct | precision | reviewed | reviewed correct | share (07 vs reference SQL vs domain)",
+   "analysis_sql": "174|172|0.988506|220|185|0.840909",
+   "second_source": "174|172|0.988506|220|185|0.840909",
+   "third_source": "174|172|0.988506|220|185|0.840909",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B timeliness at the as-of: monitored | evaluated | on time | pending | value (08 vs reference SQL vs domain)",
+   "analysis_sql": "15|15|10|0|0.666667",
+   "second_source": "15|15|10|0|0.666667",
+   "third_source": "15|15|10|0|0.666667",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B critical failures: failures | open critical issues | datasets overridden | carried (analysis 01 and portfolio vs reference SQL vs domain)",
+   "analysis_sql": "2|1|1|0",
+   "second_source": "2|1|1|0",
+   "third_source": "2|1|1|0",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "B unresolved issues (10 vs reference SQL vs domain): open + claimed",
+   "analysis_sql": "259",
+   "second_source": "259",
+   "third_source": "259",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_ds_customers_override_both_weights__rules: 4 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "7966afb5db276365",
+   "second_source": "7966afb5db276365",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_ds_customers_override_both_weights__dimensions: 4 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "9d0d09f1840880e0",
+   "second_source": "9d0d09f1840880e0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_ds_customers_override_both_weights__weighted: 2 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "195bbd6ec3326041",
+   "second_source": "195bbd6ec3326041",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_ds_customers_override_both_weights__critical: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "87f457af38dec1ef",
+   "second_source": "87f457af38dec1ef",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_ds_customers_override_both_weights__critical_issue: 3 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "e4067026818e028d",
+   "second_source": "e4067026818e028d",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 01_ds_customers_override_both_weights__portfolio_override: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "ed5c6f9c0a5aeb48",
+   "second_source": "ed5c6f9c0a5aeb48",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_ownership_coverage__summary: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "72734eaf4246268d",
+   "second_source": "72734eaf4246268d",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_ownership_coverage__uncovered: 5 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "d93247ef789a130e",
+   "second_source": "d93247ef789a130e",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_ownership_coverage__by_team: 6 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "7f0ff310febf6cc5",
+   "second_source": "7f0ff310febf6cc5",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 02_ownership_coverage__inactive_owners: 3 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "e617f4b8c50507e9",
+   "second_source": "e617f4b8c50507e9",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_weight_shift_dr03__weights: 2 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "0beb84846d4b0187",
+   "second_source": "0beb84846d4b0187",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_weight_shift_dr03__shift_by_dataset: 29 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "b39584c9083f40ca",
+   "second_source": "b39584c9083f40ca",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_weight_shift_dr03__summary: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "e01fe7c1686c7493",
+   "second_source": "e01fe7c1686c7493",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_weight_shift_dr03__runs_by_weight_version: 2 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "2e80c8513f772fb4",
+   "second_source": "2e80c8513f772fb4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_weight_shift_dr03__rule_changes_near_the_weight_change: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "7e03de73b23b70ed",
+   "second_source": "7e03de73b23b70ed",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 03_weight_shift_dr03__lowest_scores: 8 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "8fc823427fa2675a",
+   "second_source": "8fc823427fa2675a",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_issue_classes_and_resolution__classes: 3 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "cadc1c0151781b36",
+   "second_source": "cadc1c0151781b36",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_issue_classes_and_resolution__class_by_severity: 4 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "dbb27b8923e846a7",
+   "second_source": "dbb27b8923e846a7",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_issue_classes_and_resolution__claimed_split: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "877b41f3d5e02c83",
+   "second_source": "877b41f3d5e02c83",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_issue_classes_and_resolution__resolution_by_team: 6 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "0765a881e2d7beba",
+   "second_source": "0765a881e2d7beba",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_issue_classes_and_resolution__fast_team_vs_others: 2 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "be27ae19cb17264a",
+   "second_source": "be27ae19cb17264a",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_issue_classes_and_resolution__resolution_overall: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "931425ed9875d4d6",
+   "second_source": "931425ed9875d4d6",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 04_issue_classes_and_resolution__disabled_rules: 5 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "586cb8e93c1b4810",
+   "second_source": "586cb8e93c1b4810",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_lineage_coverage_evidence__evidence_kinds: 3 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "708ef4991a168966",
+   "second_source": "708ef4991a168966",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_lineage_coverage_evidence__coverage: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "ab7cd2643829aeaf",
+   "second_source": "ab7cd2643829aeaf",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_lineage_coverage_evidence__undeclared_observed: 12 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "8f363b59e8613cf6",
+   "second_source": "8f363b59e8613cf6",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_lineage_coverage_evidence__declared_not_observed: 22 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "3fce95ddfc3ef455",
+   "second_source": "3fce95ddfc3ef455",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 05_lineage_coverage_evidence__inferred: 10 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "6f9833ec85996e21",
+   "second_source": "6f9833ec85996e21",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_definition_coverage__summary: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "67bcaebfdd4d12a8",
+   "second_source": "67bcaebfdd4d12a8",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_definition_coverage__incomplete: 7 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "690b6ec20fbfaa70",
+   "second_source": "690b6ec20fbfaa70",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_definition_coverage__versions: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "55833efd032b9ac2",
+   "second_source": "55833efd032b9ac2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 06_definition_coverage__regressions: 5 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "e3039b0bb0be287a",
+   "second_source": "e3039b0bb0be287a",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_match_precision__precision: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "5f4414410b8dbc7e",
+   "second_source": "5f4414410b8dbc7e",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_match_precision__review_matrix: 4 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "c17fc64d5a9ae2db",
+   "second_source": "c17fc64d5a9ae2db",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_match_precision__candidates: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "418e45e8fee1d0b3",
+   "second_source": "418e45e8fee1d0b3",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_match_precision__wrong_approvals: 2 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "fb5d233ad1bddfbd",
+   "second_source": "fb5d233ad1bddfbd",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 07_match_precision__reversals: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "c9040ec30c11e64c",
+   "second_source": "c9040ec30c11e64c",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_timeliness_states__at_the_as_of: 15 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "a1541ac937ef3646",
+   "second_source": "a1541ac937ef3646",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_timeliness_states__summary: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "1610771f874e24d6",
+   "second_source": "1610771f874e24d6",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_timeliness_states__by_read_instant: 4 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "abcd7e40ab7e72fd",
+   "second_source": "abcd7e40ab7e72fd",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 08_timeliness_states__late_with_rules: 5 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "506be82351085ddc",
+   "second_source": "506be82351085ddc",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_fix_first_queue__unresolved_by_severity_and_class: 4 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "c0d4cc50e0ded49f",
+   "second_source": "c0d4cc50e0ded49f",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_fix_first_queue__accountability: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "afa1ef014307db43",
+   "second_source": "afa1ef014307db43",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_fix_first_queue__by_team: 6 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "d546a7250e6ba816",
+   "second_source": "d546a7250e6ba816",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_fix_first_queue__queue_top: 15 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "d395e0b729438dfe",
+   "second_source": "d395e0b729438dfe",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_fix_first_queue__ordering_sensitivity: 1 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "8956726e7964c6c7",
+   "second_source": "8956726e7964c6c7",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "C 10_fix_first_queue__datasets_with_the_most_unresolved_serious_issues: 10 row(s), every cell (SQL result set vs plain Python from the raw JSON)",
+   "analysis_sql": "1833e95dabdbe8e9",
+   "second_source": "1833e95dabdbe8e9",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D injection manifest and manifest carry the dataset hash and version of this package",
+   "analysis_sql": "a9f7a3321b102752dd7aa95b76df14c1d9372103e685e10222959fd6438f27ff|tl-20261026-20261026",
+   "second_source": "a9f7a3321b102752dd7aa95b76df14c1d9372103e685e10222959fd6438f27ff|tl-20261026-20261026",
+   "third_source": "a9f7a3321b102752dd7aa95b76df14c1d9372103e685e10222959fd6438f27ff|tl-20261026-20261026",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-01 near-perfect score with an open critical key failure: w1 | w2 | critical failures | open critical issues | override | datasets overridden | issue | rule (01 vs the manifest)",
+   "analysis_sql": "0.990329|0.990175|2|1|true|1|iss-0461|r-customers-unique-customer_key",
+   "second_source": "0.990329|0.990175|2|1|true|1|iss-0461|r-customers-unique-customer_key",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-02 inactive owners leave five datasets uncovered: covered | value | uncovered list | inactive owners (02 vs the manifest)",
+   "analysis_sql": "35|0.875000|ds-contacts,ds-invoices,ds-ledger-entries,ds-returns,ds-suppliers|own-09,own-12,own-15",
+   "second_source": "35|0.875000|ds-contacts,ds-invoices,ds-ledger-entries,ds-returns,ds-suppliers|own-09,own-12,own-15",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-03 the weight change moves scores: scored | different | moved >= 0.005 | mean w1 | mean w2 | largest move | runs w1 | runs w2 | rule changes within 14 days (03 vs the manifest)",
+   "analysis_sql": "29|13|7|0.950980|0.943118|-0.167477|2568|2041|0",
+   "second_source": "29|13|7|0.950980|0.943118|-0.167477|2568|2041|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-04 one team resolves twice as fast: fast resolved | fast mean | other resolved | other mean | ratio (04 vs the manifest)",
+   "analysis_sql": "109|34.4202|206|86.1833|0.399384",
+   "second_source": "109|34.4202|206|86.1833|0.399384",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-05 the oldest unresolved issues are all claimed: unresolved | oldest issue | oldest detected | claimed among the oldest 25 of 25 (04 vs the manifest)",
+   "analysis_sql": "259|iss-0004|2026-07-14T02:13:00Z|25",
+   "second_source": "259|iss-0004|2026-07-14T02:13:00Z|25",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-05 the leading run of claimed issues among the unresolved, oldest first: length | first issue that is not claimed (04 vs the manifest)",
+   "analysis_sql": "64|iss-0252",
+   "second_source": "64|iss-0252",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-06 precision: candidates | reviewed | approved | rejected | correct | precision | reviewed share | reversals | reversed wrong approvals (07 vs the manifest)",
+   "analysis_sql": "400|220|174|46|172|0.988506|0.840909|15|2",
+   "second_source": "400|220|174|46|172|0.988506|0.840909|15|2",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D DR-06 households: candidates flagged as a possible household | wrongly approved households (07 vs the manifest)",
+   "analysis_sql": "207|1",
+   "second_source": "207|1",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D synthetic_truth precision block in the manifest (07 vs the manifest)",
+   "analysis_sql": "174|172|0.988506|220|0.840909",
+   "second_source": "174|172|0.988506|220|0.840909",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D manifest stats.issues: resolved | claimed | open | claimed with a failed rerun | reopened issues (04 vs the manifest)",
+   "analysis_sql": "315|99|160|28|9",
+   "second_source": "315|99|160|28|9",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D manifest stats.lineage: declared | observed | undeclared observed | inferred | inferred on declared unobserved (05 vs the manifest)",
+   "analysis_sql": "80|70|12|10|4",
+   "second_source": "80|70|12|10|4",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D manifest stats.datasets and timeliness: monitored | on time (08 vs the manifest)",
+   "analysis_sql": "15|10",
+   "second_source": "15|10",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D manifest stats.definitions_incomplete: the seven incomplete metrics and the item missing from each (06 vs the manifest)",
+   "analysis_sql": "ecc9d3a4b494bb35",
+   "second_source": "ecc9d3a4b494bb35",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-11 definitions: change records | versions without a change record | metrics with a second version (06 vs the injection manifest)",
+   "analysis_sql": "15|0|15",
+   "second_source": "15|0|15",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-07 ownership and INJ-08 lineage checks (02 and 05 vs the injection manifest): uncovered list | value | lineage value | observed | matching | undeclared | inferred",
+   "analysis_sql": "ds-contacts,ds-invoices,ds-ledger-entries,ds-returns,ds-suppliers|0.875000|0.725000|70|58|12|10",
+   "second_source": "ds-contacts,ds-invoices,ds-ledger-entries,ds-returns,ds-suppliers|0.875000|0.725000|70|58|12|10",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-09 issues closed without a verifying rerun: claimed | iss-0004 is claimed (04 and 01 vs the injection manifest)",
+   "analysis_sql": "99|iss-0004",
+   "second_source": "99|iss-0004",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-04 null foreign keys counted apart on r-orders-fk-customer_key: null | eligible | unmatched (reference SQL vs the injection manifest)",
+   "analysis_sql": "5|61|0",
+   "second_source": "5|61|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-02 the five disabled rules keep their runs and issues: runs retained | issues retained for each rule (04 vs the injection manifest)",
+   "analysis_sql": "r-cost-centres-complete-owner_ref:90:18|r-leads-valid-email:77:17|r-purchase-orders-fresh:40:3|r-shipments-fresh:48:0|r-tickets-fk-customer_key:74:14",
+   "second_source": "r-cost-centres-complete-owner_ref:90:18|r-leads-valid-email:77:17|r-purchase-orders-fresh:40:3|r-shipments-fresh:48:0|r-tickets-fk-customer_key:74:14",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-05 identical rows score differently under w1 and w2: ds-orders (03 vs the injection manifest)",
+   "analysis_sql": "0.936207|0.891379",
+   "second_source": "0.936207|0.891379",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-06 15 approved merges are reversed and both identities restored: reversals | identity map of rec-1275 and rec-0102 (07 and the domain vs the injection manifest)",
+   "analysis_sql": "15|rec-1275|rec-0102",
+   "second_source": "15|rec-1275|rec-0102",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-03 and INJ-10 400 distinct canonical candidates, none merged automatically: candidates | distinct canonical pairs | reviews by the proposer (07 vs the injection manifest)",
+   "analysis_sql": "400|400|0",
+   "second_source": "400|400|0",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D INJ-12 a changed denominator is not comparable: comparable | reason | previous eligible | current eligible (domain vs the injection manifest)",
+   "analysis_sql": "false|RULE_VERSION_DIFFERS|65|54",
+   "second_source": "false|RULE_VERSION_DIFFERS|65|54",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "D the stored last scheduled run of each active row-based rule equals the row-level measurement except the INJ-12 rule (rules compared | rules that differ: analysis tl_rule_measure vs the stored runs)",
+   "analysis_sql": "47|r-contacts-fk-customer_key",
+   "second_source": "47|r-contacts-fk-customer_key",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI row counts: dim_owner | dim_dataset | dim_rule | dim_metric | fact_rule_measure | fact_dataset_score | fact_issue | fact_lineage_edge | fact_candidate | fact_timeliness",
+   "analysis_sql": "18|40|60|30|55|80|574|160|400|15",
+   "second_source": "18|40|60|30|55|80|574|160|400|15",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI ownership coverage | definition coverage | lineage coverage (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.875000|0.766667|0.725000",
+   "second_source": "0.875000|0.766667|0.725000",
+   "third_source": "0.875000|0.766667|0.725000",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI issue classes | mean resolution hours | Data Platform mean (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "315|99|160|68.2716|34.4202",
+   "second_source": "315|99|160|68.2716|34.4202",
+   "third_source": "315|99|160|68.2716|34.4202",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI timeliness | pending | late (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.666667|0|5",
+   "second_source": "0.666667|0|5",
+   "third_source": "0.666667|0|5",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI match precision | reviewed correct share (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "0.988506|0.840909",
+   "second_source": "0.988506|0.840909",
+   "third_source": "0.988506|0.840909",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI weighted score of every dataset under w1 and w2: the 80 rows recomputed from the exact rule fractions vs the SQL fact vs reference SQL (digest; unmeasured datasets stay empty)",
+   "analysis_sql": "b35a6ef2530f4072",
+   "second_source": "b35a6ef2530f4072",
+   "third_source": "b35a6ef2530f4072",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI weighted score mean under w1 | w2 | datasets that differ | moved | largest move (CSV facts vs 03 vs the manifest DR-03)",
+   "analysis_sql": "0.950980|0.943118|13|7|-0.167477",
+   "second_source": "0.950980|0.943118|13|7|-0.167477",
+   "third_source": "0.950980|0.943118|13|7|-0.167477",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI critical failures | datasets with the override | open critical issues (CSV facts vs reference SQL vs domain)",
+   "analysis_sql": "2|1|1",
+   "second_source": "2|1|1",
+   "third_source": "2|1|1",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI unresolved issues | with an inactive owner (CSV facts vs 10)",
+   "analysis_sql": "259|66",
+   "second_source": "259|66",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  },
+  {
+   "check": "E BI nothing withheld silently: every dataset x weight version has a measure row and each empty value carries a status (rows | empty values | empty values with a non-value status)",
+   "analysis_sql": "80|22|22",
+   "second_source": "80|22|22",
+   "third_source": "",
+   "fourth_source": "",
+   "equal": true
+  }
+ ]
+}

@@ -1,0 +1,122 @@
+measure,slice,value,numerator,denominator,status,note
+ownership_coverage,portfolio,0.875000,35,40,value,datasets whose accountable owner is active / datasets
+datasets_without_an_accountable_owner,portfolio,5,5,,value,
+definition_coverage,portfolio,0.766667,23,30,value,published metrics with a complete checklist cl-1 / published metrics
+lineage_coverage,portfolio,0.725000,58,80,value,distinct observed pairs that match a declared pair / declared pairs; inferred pairs never count
+undeclared_observed_pairs,portfolio,12,12,,value,
+declared_not_observed_pairs,portfolio,22,22,,value,
+inferred_pairs,portfolio,10,10,,value,never counted as observed
+issues,resolved,0.548780,315,574,value,share of all issues
+issues,claimed,0.172474,99,574,value,share of all issues
+issues,open,0.278746,160,574,value,share of all issues
+issues,all,574,574,,value,
+mean_resolution_hours,all resolved,68.2716,315,,value,"mean of (verifying rerun - first detected_at), 4 places, resolved issues only; claimed and open issues are not in it"
+mean_resolution_hours,Data Platform,34.4202,109,,value,"mean of (verifying rerun - first detected_at), 4 places, resolved issues only; claimed and open issues are not in it"
+mean_resolution_hours,all other teams,86.1833,206,,value,"mean of (verifying rerun - first detected_at), 4 places, resolved issues only; claimed and open issues are not in it"
+mean_resolution_hours,team: Customer Data,77.5452,28,,value,
+mean_resolution_hours,team: Data Governance,83.4130,9,,value,
+mean_resolution_hours,team: Data Platform,34.4202,109,,value,
+mean_resolution_hours,team: Finance Systems,91.9537,68,,value,
+mean_resolution_hours,team: Supply Chain,82.8748,55,,value,
+mean_resolution_hours,team: Support Operations,87.4087,46,,value,
+unresolved_issues,severity: critical,1,1,,value,
+unresolved_issues,severity: high,171,171,,value,
+unresolved_issues,severity: medium,70,70,,value,
+unresolved_issues,severity: low,17,17,,value,
+unresolved_issues,all,259,259,,value,open + claimed
+unresolved_issues_with_an_inactive_owner,all,66,66,,value,
+timeliness,portfolio,0.666667,10,15,value,on time / (monitored - pending); pending is outside the denominator
+timeliness_pending,portfolio,0,0,,value,
+timeliness_late,portfolio,5,5,,value,
+match_precision,portfolio,0.988506,172,174,value,approved decisions the truth confirms / approved decisions
+reviewed_correct_share,portfolio,0.840909,185,220,value,reviewed candidates that are the same entity / reviewed candidates (the contract's share)
+decision_agreement_share,portfolio,0.931818,205,220,value,reviews that agree with the truth / reviews
+approvals_reversed,portfolio,15,15,,value,
+weighted_score,ds-accounts|w1,0.990000,,,value,
+weighted_score,ds-accounts|w2,0.981250,,,value,
+weighted_score,ds-billing-accounts|w1,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-billing-accounts|w2,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-campaigns|w1,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-campaigns|w2,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-carriers|w1,0.966387,,,value,
+weighted_score,ds-carriers|w2,0.966387,,,value,
+weighted_score,ds-consent-records|w1,0.916340,,,value,
+weighted_score,ds-consent-records|w2,0.932773,,,value,
+weighted_score,ds-contacts|w1,0.984127,,,value,
+weighted_score,ds-contacts|w2,0.988839,,,value,
+weighted_score,ds-cost-centres|w1,0.974359,,,value,
+weighted_score,ds-cost-centres|w2,0.974359,,,value,
+weighted_score,ds-credit-notes|w1,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-credit-notes|w2,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-crm-activities|w1,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-crm-activities|w2,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-csat-surveys|w1,0.935484,,,value,
+weighted_score,ds-csat-surveys|w2,0.935484,,,value,
+weighted_score,ds-customers|w1,0.990329,,,value,
+weighted_score,ds-customers|w2,0.990175,,,value,
+weighted_score,ds-delivery-events|w1,0.955882,,,value,
+weighted_score,ds-delivery-events|w2,0.955882,,,value,
+weighted_score,ds-employees|w1,1.000000,,,value,
+weighted_score,ds-employees|w2,1.000000,,,value,
+weighted_score,ds-experiments|w1,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-experiments|w2,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-inventory|w1,1.000000,,,value,
+weighted_score,ds-inventory|w2,1.000000,,,value,
+weighted_score,ds-invoices|w1,0.987767,,,value,
+weighted_score,ds-invoices|w2,0.986495,,,value,
+weighted_score,ds-kb-articles|w1,0.984848,,,value,
+weighted_score,ds-kb-articles|w2,0.984848,,,value,
+weighted_score,ds-leads|w1,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-leads|w2,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-ledger-entries|w1,0.942387,,,value,
+weighted_score,ds-ledger-entries|w2,0.950617,,,value,
+weighted_score,ds-opportunities|w1,0.886076,,,value,
+weighted_score,ds-opportunities|w2,0.886076,,,value,
+weighted_score,ds-order-lines|w1,0.966981,,,value,
+weighted_score,ds-order-lines|w2,0.966981,,,value,
+weighted_score,ds-orders|w1,0.936207,,,value,
+weighted_score,ds-orders|w2,0.891379,,,value,
+weighted_score,ds-page-events|w1,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-page-events|w2,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-payments|w1,0.831301,,,value,
+weighted_score,ds-payments|w2,0.796341,,,value,
+weighted_score,ds-price-books|w1,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-price-books|w2,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-products|w1,0.982759,,,value,
+weighted_score,ds-products|w2,0.982759,,,value,
+weighted_score,ds-purchase-orders|w1,0.977778,,,value,
+weighted_score,ds-purchase-orders|w2,0.977778,,,value,
+weighted_score,ds-refunds|w1,0.938776,,,value,
+weighted_score,ds-refunds|w2,0.938776,,,value,
+weighted_score,ds-returns|w1,0.930000,,,value,
+weighted_score,ds-returns|w2,0.930000,,,value,
+weighted_score,ds-segments|w1,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-segments|w2,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-shipments|w1,0.848394,,,value,
+weighted_score,ds-shipments|w2,0.850297,,,value,
+weighted_score,ds-sla-policies|w1,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-sla-policies|w2,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-subscriptions|w1,0.961988,,,value,
+weighted_score,ds-subscriptions|w2,0.955044,,,value,
+weighted_score,ds-suppliers|w1,0.961149,,,value,
+weighted_score,ds-suppliers|w2,0.964894,,,value,
+weighted_score,ds-support-agents|w1,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-support-agents|w2,,,,not_measured: no rule measures a value,"withheld, never 0"
+weighted_score,ds-ticket-events|w1,0.971429,,,value,
+weighted_score,ds-ticket-events|w2,0.971429,,,value,
+weighted_score,ds-tickets|w1,0.852608,,,value,
+weighted_score,ds-tickets|w2,0.685131,,,value,
+weighted_score,ds-warehouses|w1,0.933333,,,value,
+weighted_score,ds-warehouses|w2,0.933333,,,value,
+weighted_score,ds-web-sessions|w1,0.985714,,,value,
+weighted_score,ds-web-sessions|w2,0.985714,,,value,
+weighted_score,ds-web-users|w1,0.986014,,,value,
+weighted_score,ds-web-users|w2,0.987374,,,value,
+mean_weighted_score,w1,0.950980,29,,value,mean over the 29 datasets that measure something
+mean_weighted_score,w2,0.943118,29,,value,mean over the 29 datasets that measure something
+datasets_with_a_different_score,w1 vs w2,0.448276,13,29,value,
+datasets_moved_at_least_0_005,w1 vs w2,0.241379,7,29,value,
+largest_move,w1 vs w2,-0.167477,,,value,
+critical_failures,portfolio,2,2,,value,"failing rows of active critical rules, counted apart from any score"
+datasets_with_the_critical_override,portfolio,1,1,,value,
+open_critical_issues,portfolio,1,1,,value,

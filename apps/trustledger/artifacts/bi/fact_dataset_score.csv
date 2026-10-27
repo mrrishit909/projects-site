@@ -1,0 +1,81 @@
+dataset_id,weight_version,measured_dimensions,weight_sum,weighted_score,score_status,critical_failures,critical_open_issues,critical_override
+ds-accounts,w1,"uniqueness,relationship",0.250000,0.990000,measured,0,0,0
+ds-accounts,w2,"uniqueness,relationship",0.400000,0.981250,measured,0,0,0
+ds-billing-accounts,w1,,,,not_measured: no rule measures a value,0,0,0
+ds-billing-accounts,w2,,,,not_measured: no rule measures a value,0,0,0
+ds-campaigns,w1,,,,not_measured: no rule measures a value,0,0,0
+ds-campaigns,w2,,,,not_measured: no rule measures a value,0,0,0
+ds-carriers,w1,validity,0.300000,0.966387,measured,0,0,0
+ds-carriers,w2,validity,0.250000,0.966387,measured,0,0,0
+ds-consent-records,w1,"completeness,timeliness",0.450000,0.916340,measured,0,0,0
+ds-consent-records,w2,"completeness,timeliness",0.350000,0.932773,measured,0,0,0
+ds-contacts,w1,"completeness,relationship",0.450000,0.984127,measured,0,0,0
+ds-contacts,w2,"completeness,relationship",0.400000,0.988839,measured,0,0,0
+ds-cost-centres,w1,uniqueness,0.200000,0.974359,measured,0,0,0
+ds-cost-centres,w2,uniqueness,0.250000,0.974359,measured,0,0,0
+ds-credit-notes,w1,,,,not_measured: no rule measures a value,0,0,0
+ds-credit-notes,w2,,,,not_measured: no rule measures a value,0,0,0
+ds-crm-activities,w1,,,,not_measured: no rule measures a value,0,0,0
+ds-crm-activities,w2,,,,not_measured: no rule measures a value,0,0,0
+ds-csat-surveys,w1,completeness,0.400000,0.935484,measured,0,0,0
+ds-csat-surveys,w2,completeness,0.250000,0.935484,measured,0,0,0
+ds-customers,w1,"completeness,validity,uniqueness,timeliness",0.950000,0.990329,measured,2,1,1
+ds-customers,w2,"completeness,validity,uniqueness,timeliness",0.850000,0.990175,measured,2,1,1
+ds-delivery-events,w1,validity,0.300000,0.955882,measured,0,0,0
+ds-delivery-events,w2,validity,0.250000,0.955882,measured,0,0,0
+ds-employees,w1,validity,0.300000,1.000000,measured,0,0,0
+ds-employees,w2,validity,0.250000,1.000000,measured,0,0,0
+ds-experiments,w1,,,,not_measured: no rule measures a value,0,0,0
+ds-experiments,w2,,,,not_measured: no rule measures a value,0,0,0
+ds-inventory,w1,"completeness,timeliness",0.450000,1.000000,measured,0,0,0
+ds-inventory,w2,"completeness,timeliness",0.350000,1.000000,measured,0,0,0
+ds-invoices,w1,"validity,relationship,timeliness",0.400000,0.987767,measured,0,0,0
+ds-invoices,w2,"validity,relationship,timeliness",0.500000,0.986495,measured,0,0,0
+ds-kb-articles,w1,uniqueness,0.200000,0.984848,measured,0,0,0
+ds-kb-articles,w2,uniqueness,0.250000,0.984848,measured,0,0,0
+ds-leads,w1,,,,not_measured: no rule measures a value,0,0,0
+ds-leads,w2,,,,not_measured: no rule measures a value,0,0,0
+ds-ledger-entries,w1,"completeness,validity,uniqueness",0.900000,0.942387,measured,0,0,0
+ds-ledger-entries,w2,"completeness,validity,uniqueness",0.750000,0.950617,measured,0,0,0
+ds-opportunities,w1,relationship,0.050000,0.886076,measured,0,0,0
+ds-opportunities,w2,relationship,0.150000,0.886076,measured,0,0,0
+ds-order-lines,w1,relationship,0.050000,0.966981,measured,0,0,0
+ds-order-lines,w2,relationship,0.150000,0.966981,measured,0,0,0
+ds-orders,w1,"completeness,validity,uniqueness,relationship,timeliness",1.000000,0.936207,measured,0,0,0
+ds-orders,w2,"completeness,validity,uniqueness,relationship,timeliness",1.000000,0.891379,measured,0,0,0
+ds-page-events,w1,,,,not_measured: no rule measures a value,0,0,0
+ds-page-events,w2,,,,not_measured: no rule measures a value,0,0,0
+ds-payments,w1,"uniqueness,relationship,timeliness",0.300000,0.831301,measured,0,0,0
+ds-payments,w2,"uniqueness,relationship,timeliness",0.500000,0.796341,measured,0,0,0
+ds-price-books,w1,,,,not_measured: no rule measures a value,0,0,0
+ds-price-books,w2,,,,not_measured: no rule measures a value,0,0,0
+ds-products,w1,"completeness,uniqueness",0.600000,0.982759,measured,0,0,0
+ds-products,w2,"completeness,uniqueness",0.500000,0.982759,measured,0,0,0
+ds-purchase-orders,w1,relationship,0.050000,0.977778,measured,0,0,0
+ds-purchase-orders,w2,relationship,0.150000,0.977778,measured,0,0,0
+ds-refunds,w1,relationship,0.050000,0.938776,measured,0,0,0
+ds-refunds,w2,relationship,0.150000,0.938776,measured,0,0,0
+ds-returns,w1,completeness,0.400000,0.930000,measured,0,0,0
+ds-returns,w2,completeness,0.250000,0.930000,measured,0,0,0
+ds-segments,w1,,,,not_measured: no rule measures a value,0,0,0
+ds-segments,w2,,,,not_measured: no rule measures a value,0,0,0
+ds-shipments,w1,"validity,relationship",0.350000,0.848394,measured,0,0,0
+ds-shipments,w2,"validity,relationship",0.400000,0.850297,measured,0,0,0
+ds-sla-policies,w1,,,,not_measured: no rule measures a value,0,0,0
+ds-sla-policies,w2,,,,not_measured: no rule measures a value,0,0,0
+ds-subscriptions,w1,"completeness,relationship",0.450000,0.961988,measured,0,0,0
+ds-subscriptions,w2,"completeness,relationship",0.400000,0.955044,measured,0,0,0
+ds-suppliers,w1,"completeness,validity,uniqueness",0.900000,0.961149,measured,0,0,0
+ds-suppliers,w2,"completeness,validity,uniqueness",0.750000,0.964894,measured,0,0,0
+ds-support-agents,w1,,,,not_measured: no rule measures a value,0,0,0
+ds-support-agents,w2,,,,not_measured: no rule measures a value,0,0,0
+ds-ticket-events,w1,validity,0.300000,0.971429,measured,0,0,0
+ds-ticket-events,w2,validity,0.250000,0.971429,measured,0,0,0
+ds-tickets,w1,"completeness,timeliness",0.450000,0.852608,measured,0,0,0
+ds-tickets,w2,"completeness,timeliness",0.350000,0.685131,measured,0,0,0
+ds-warehouses,w1,validity,0.300000,0.933333,measured,0,0,0
+ds-warehouses,w2,validity,0.250000,0.933333,measured,0,0,0
+ds-web-sessions,w1,uniqueness,0.200000,0.985714,measured,0,0,0
+ds-web-sessions,w2,uniqueness,0.250000,0.985714,measured,0,0,0
+ds-web-users,w1,"completeness,uniqueness,timeliness",0.650000,0.986014,measured,0,0,0
+ds-web-users,w2,"completeness,uniqueness,timeliness",0.600000,0.987374,measured,0,0,0

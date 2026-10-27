@@ -47,15 +47,26 @@ jobs:
           cache-dependency-path: apps/trustledger/requirements.txt
       - name: Install pinned dependencies
         working-directory: apps/trustledger
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt -r requirements-artifacts.txt
+      - name: Install LibreOffice Calc (the workbook recalculation test must run, not skip)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq --no-install-recommends libreoffice-calc > /dev/null && soffice --version
+      - name: Scratch databases for the artifact package (artifacts07_* only, on the transient service)
+        env:
+          PGPASSWORD: lab
+        run: |
+          psql -h 127.0.0.1 -U lab -d postgres -c "CREATE DATABASE artifacts07_snapshot"
+          psql -h 127.0.0.1 -U lab -d postgres -c "CREATE DATABASE artifacts07_golden"
       - name: Independent reference check (stdlib only, no app imports)
         working-directory: apps/trustledger
         run: python -I tests/reference_check.py
       - name: Fixture hashes unchanged
         working-directory: apps/trustledger
         run: python -I tests/reference_check.py | grep -c "^OK hash." | grep -q "^7$"
-      - name: Domain, migrations, SQL reference and API tests
+      - name: Domain, migrations, SQL reference, API and artifact tests
         working-directory: apps/trustledger
+        env:
+          ARTIFACTS_DATABASE_URL: postgresql://lab:lab@127.0.0.1:5432/artifacts07_snapshot
+          ARTIFACTS_GOLDEN_DATABASE_URL: postgresql://lab:lab@127.0.0.1:5432/artifacts07_golden
         run: python -m pytest -q -ra --junitxml=../../evidence/trustledger/pytest.xml
       - name: No test may be skipped (the database is here, so every test runs)
         working-directory: apps/trustledger

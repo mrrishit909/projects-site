@@ -1,0 +1,31 @@
+metric_id,metric_name,effective_version,versions,owner_id,valid_from,checklist_complete,missing_items
+m-active-customers,Active customers,1,1,own-14,2026-03-18T09:00:00Z,1,
+m-average-order-value,Average order value,1,1,own-16,2026-05-16T09:00:00Z,0,grain
+m-consent-coverage,Consent coverage,2,2,own-11,2026-08-03T09:00:00Z,1,
+m-csat-score,CSAT score,2,2,own-03,2026-08-19T09:00:00Z,0,source_fields
+m-customer-churn-rate,Customer churn rate,2,2,own-16,2026-08-15T09:00:00Z,1,
+m-customer-lifetime-value,Customer lifetime value,2,2,own-06,2026-08-18T09:00:00Z,0,definition
+m-days-sales-outstanding,Days sales outstanding,1,1,own-02,2026-03-20T09:00:00Z,1,
+m-gross-margin,Gross margin,2,2,own-18,2026-09-24T09:00:00Z,0,refresh
+m-inventory-turnover,Inventory turnover,1,1,own-09,2026-05-24T09:00:00Z,1,
+m-invoice-accuracy-rate,Invoice accuracy rate,1,1,own-05,2026-06-14T09:00:00Z,1,
+m-lead-conversion-rate,Lead conversion rate,1,1,own-11,2026-02-02T09:00:00Z,1,
+m-net-promoter-score,Net promoter score,1,1,own-17,2026-06-19T09:00:00Z,1,
+m-net-revenue,Net revenue,2,2,own-02,2026-07-17T09:00:00Z,0,grain
+m-new-customers,New customers,2,2,own-07,2026-08-29T09:00:00Z,1,
+m-on-time-delivery-rate,On-time delivery rate,1,1,own-06,2026-02-18T09:00:00Z,1,
+m-opportunity-win-rate,Opportunity win rate,1,1,own-06,2026-02-13T09:00:00Z,1,
+m-order-fill-rate,Order fill rate,2,2,own-14,2026-08-05T09:00:00Z,1,
+m-pipeline-coverage,Pipeline coverage,1,1,own-13,2026-04-23T09:00:00Z,1,
+m-purchase-price-variance,Purchase price variance,1,1,own-02,2026-02-01T09:00:00Z,1,
+m-refund-rate,Refund rate,1,1,own-02,2026-05-26T09:00:00Z,1,
+m-repeat-purchase-rate,Repeat purchase rate,2,2,own-05,2026-08-24T09:00:00Z,1,
+m-session-conversion-rate,Session conversion rate,2,2,,2026-08-13T09:00:00Z,0,owner
+m-stock-out-rate,Stock-out rate,1,1,own-04,2026-06-13T09:00:00Z,1,
+m-subscription-churn,Subscription churn,2,2,own-02,2026-09-30T09:00:00Z,1,
+m-subscription-mrr,Subscription MRR,2,2,own-13,2026-09-03T09:00:00Z,1,
+m-supplier-lead-time,Supplier lead time,2,2,own-08,2026-07-22T09:00:00Z,1,
+m-support-backlog,Support backlog,2,2,own-08,2026-07-25T09:00:00Z,1,
+m-ticket-first-response-time,Ticket first-response time,2,2,own-10,2026-09-11T09:00:00Z,1,
+m-ticket-resolution-time,Ticket resolution time,1,1,own-12,2026-03-13T09:00:00Z,0,refresh
+m-trial-conversion-rate,Trial conversion rate,1,1,own-04,2026-05-04T09:00:00Z,1,

@@ -1,0 +1,16 @@
+dataset_id,timezone,scheduled_local,grace_minutes,occurrence_utc,deadline_utc,last_refreshed_at,state
+ds-campaigns,Asia/Singapore,01:00,60,2026-10-04T17:00:00Z,2026-10-04T18:00:00Z,2026-10-04T20:03:25Z,late
+ds-consent-records,America/Chicago,15:00,60,2026-10-04T20:00:00Z,2026-10-04T21:00:00Z,2026-10-04T20:05:40Z,on_time
+ds-contacts,America/New_York,11:30,30,2026-10-04T15:30:00Z,2026-10-04T16:00:00Z,2026-10-04T15:43:25Z,on_time
+ds-customers,America/New_York,06:00,60,2026-10-04T10:00:00Z,2026-10-04T11:00:00Z,2026-10-04T10:58:22Z,on_time
+ds-inventory,Asia/Kolkata,18:45,30,2026-10-04T13:15:00Z,2026-10-04T13:45:00Z,2026-10-04T13:18:39Z,on_time
+ds-invoices,Asia/Singapore,12:45,60,2026-10-04T04:45:00Z,2026-10-04T05:45:00Z,2026-10-04T05:05:44Z,on_time
+ds-orders,Europe/London,15:45,30,2026-10-04T14:45:00Z,2026-10-04T15:15:00Z,2026-10-04T17:00:02Z,late
+ds-payments,UTC,06:00,120,2026-10-04T06:00:00Z,2026-10-04T08:00:00Z,2026-10-04T11:54:24Z,late
+ds-price-books,Europe/Berlin,19:15,120,2026-10-04T17:15:00Z,2026-10-04T19:15:00Z,2026-10-04T17:28:12Z,on_time
+ds-purchase-orders,America/New_York,18:30,30,2026-10-04T22:30:00Z,2026-10-04T23:00:00Z,2026-10-04T22:37:46Z,on_time
+ds-shipments,America/New_York,03:45,30,2026-10-04T07:45:00Z,2026-10-04T08:15:00Z,2026-10-04T08:14:21Z,on_time
+ds-sla-policies,Asia/Kolkata,14:30,120,2026-10-04T09:00:00Z,2026-10-04T11:00:00Z,2026-10-04T10:11:35Z,on_time
+ds-subscriptions,Europe/London,16:30,60,2026-10-04T15:30:00Z,2026-10-04T16:30:00Z,2026-10-04T17:23:38Z,late
+ds-tickets,America/Chicago,05:45,120,2026-10-04T10:45:00Z,2026-10-04T12:45:00Z,2026-10-04T15:17:33Z,late
+ds-web-users,Europe/Berlin,12:30,30,2026-10-04T10:30:00Z,2026-10-04T11:00:00Z,2026-10-04T10:49:04Z,on_time

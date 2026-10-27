@@ -1,0 +1,19 @@
+owner_id,owner_name,team,role,active,deactivated_at,accountable_at_as_of
+own-01,Ansel Whitcombe,Data Governance,admin,1,,1
+own-02,Briar Delacroix,Data Governance,steward,1,,1
+own-03,Corvin Ashdown,Data Governance,analyst,1,,1
+own-04,Delphine Marrow,Data Platform,steward,1,,1
+own-05,Eamon Fairweather,Data Platform,analyst,1,,1
+own-06,Fenna Lindqvist,Data Platform,admin,1,,1
+own-07,Garrick Tolland,Customer Data,steward,1,,1
+own-08,Hesper Valdane,Customer Data,analyst,1,,1
+own-09,Ione Kestrel,Customer Data,steward,0,2026-08-18T09:00:00Z,0
+own-10,Jorin Blackwater,Finance Systems,steward,1,,1
+own-11,Kestra Maddox,Finance Systems,analyst,1,,1
+own-12,Linden Thorpe,Finance Systems,admin,0,2026-09-04T09:00:00Z,0
+own-13,Marisol Venn,Supply Chain,steward,1,,1
+own-14,Nikolai Pryce,Supply Chain,analyst,1,,1
+own-15,Odessa Quillfeather,Supply Chain,analyst,0,2026-09-22T09:00:00Z,0
+own-16,Perrin Haldane,Support Operations,steward,1,,1
+own-17,Quentin Brightwell,Support Operations,analyst,1,,1
+own-18,Rowena Stray,Support Operations,admin,1,,1

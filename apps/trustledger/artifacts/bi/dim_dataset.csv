@@ -1,0 +1,41 @@
+dataset_id,dataset_name,source_system,classification,owner_id,monitored,registered_date,has_rows,active_rules,owner_covered
+ds-accounts,Accounts,crm,confidential,own-14,0,2026-03-13,1,2,1
+ds-billing-accounts,Billing accounts,billing,restricted,own-13,0,2026-03-26,0,0,1
+ds-campaigns,Campaigns,crm,internal,own-07,1,2026-05-28,0,0,1
+ds-carriers,Carriers,logistics,internal,own-05,0,2026-04-14,1,1,1
+ds-consent-records,Consent records,web,restricted,own-14,1,2026-08-24,1,2,1
+ds-contacts,Contacts,crm,confidential,own-12,1,2026-04-10,1,2,0
+ds-cost-centres,Cost centres,erp,internal,own-10,0,2026-03-08,1,1,1
+ds-credit-notes,Credit notes,billing,internal,own-08,0,2026-06-02,0,0,1
+ds-crm-activities,CRM activities,crm,internal,own-08,0,2026-03-15,0,0,1
+ds-csat-surveys,CSAT surveys,support,confidential,own-08,0,2026-04-18,1,1,1
+ds-customers,Customers,crm,restricted,own-07,1,2026-06-17,1,4,1
+ds-delivery-events,Delivery events,logistics,internal,own-13,0,2026-08-10,1,1,1
+ds-employees,Employees,erp,restricted,own-16,0,2026-06-24,1,1,1
+ds-experiments,Experiments,web,internal,own-02,0,2026-06-16,0,0,1
+ds-inventory,Inventory,logistics,internal,own-06,1,2026-03-31,1,2,1
+ds-invoices,Invoices,billing,confidential,own-09,1,2026-03-04,1,3,0
+ds-kb-articles,Knowledge articles,support,public,own-14,0,2026-09-14,1,1,1
+ds-leads,Leads,crm,confidential,own-18,0,2026-06-24,1,0,1
+ds-ledger-entries,Ledger entries,erp,restricted,own-12,0,2026-05-11,1,3,0
+ds-opportunities,Opportunities,crm,internal,own-04,0,2026-03-27,1,1,1
+ds-order-lines,Order lines,erp,internal,own-03,0,2026-06-09,1,2,1
+ds-orders,Orders,erp,confidential,own-04,1,2026-06-13,1,5,1
+ds-page-events,Page events,web,internal,own-03,0,2026-06-03,0,0,1
+ds-payments,Payments,billing,restricted,own-06,1,2026-06-07,1,3,1
+ds-price-books,Price books,billing,internal,own-14,1,2026-03-06,0,0,1
+ds-products,Products,erp,internal,own-17,0,2026-05-02,1,2,1
+ds-purchase-orders,Purchase orders,erp,confidential,own-04,1,2026-06-20,1,1,1
+ds-refunds,Refunds,billing,confidential,own-18,0,2026-03-28,1,1,1
+ds-returns,Returns,logistics,internal,own-09,0,2026-04-25,1,1,0
+ds-segments,Segments,crm,internal,own-14,0,2026-03-12,0,0,1
+ds-shipments,Shipments,logistics,internal,own-13,1,2026-05-06,1,2,1
+ds-sla-policies,SLA policies,support,internal,own-11,1,2026-04-19,0,0,1
+ds-subscriptions,Subscriptions,billing,confidential,own-06,1,2026-05-30,1,2,1
+ds-suppliers,Suppliers,erp,confidential,own-15,0,2026-03-17,1,3,0
+ds-support-agents,Support agents,support,restricted,own-02,0,2026-06-07,0,0,1
+ds-ticket-events,Ticket events,support,internal,own-11,0,2026-07-21,1,1,1
+ds-tickets,Tickets,support,confidential,own-05,1,2026-06-04,1,2,1
+ds-warehouses,Warehouses,logistics,internal,own-16,0,2026-03-12,1,1,1
+ds-web-sessions,Web sessions,web,internal,own-02,0,2026-03-08,1,1,1
+ds-web-users,Web users,web,restricted,own-05,1,2026-03-18,1,3,1

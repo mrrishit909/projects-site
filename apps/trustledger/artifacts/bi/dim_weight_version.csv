@@ -1,0 +1,3 @@
+weight_version,valid_from,w_completeness,w_validity,w_uniqueness,w_relationship,w_timeliness
+w1,2026-01-01T00:00:00Z,0.400000,0.300000,0.200000,0.050000,0.050000
+w2,2026-09-01T00:00:00Z,0.250000,0.250000,0.250000,0.150000,0.100000
