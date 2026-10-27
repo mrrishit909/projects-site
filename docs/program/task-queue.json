@@ -658,7 +658,7 @@
       "project": "10-retentionlab",
       "title": "Generator, Mode B site, Playwright evidence, publish, integrate",
       "status": "in_progress",
-      "assignment": "A-068 (generator); web next"
+      "assignment": "A-068 generator done (e81c2b4); A-072 web"
     },
     {
       "id": "T-10-05",
