@@ -1,0 +1,96 @@
+{
+  "contract_version": 1,
+  "as_of": "2028-06-30T00:00:00Z",
+  "period_basis": "annual",
+  "empty_population": true,
+  "ingest": {
+    "counts": {
+      "initiatives": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "process_baselines": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "assumption_versions": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "resources": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "scenario_versions": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "cost_items": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "benefit_items": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "dependencies": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "stakeholder_groups": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "impact_mappings": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "resource_allocations": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "readiness_assessments": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "adoption_observations": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "training_completions": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "benefit_observations": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "risk_items": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "forecast_versions": {
+        "accepted": 0,
+        "rejected": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "metrics": {
+    "summary": {
+      "summary_scenario_id": null,
+      "initiatives": 0,
+      "scenarios": 0,
+      "npv_total": null,
+      "double_count_residual": null,
+      "adoption_rate": null,
+      "training_completion": null,
+      "risk_exposure_total": null,
+      "capacity_released_hours_total": null
+    },
+    "scenarios": {},
+    "initiatives": {},
+    "groups": {},
+    "resources": {}
+  }
+}

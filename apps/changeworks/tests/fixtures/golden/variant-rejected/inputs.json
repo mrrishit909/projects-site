@@ -1,0 +1,742 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-06-30T00:00:00Z",
+  "period_basis": "monthly",
+  "period_start": "2026-01-01",
+  "initiatives": [
+    {
+      "initiative_id": "rj-i1",
+      "title": "Billing cleanup",
+      "sponsor_id": "sp-1",
+      "status": "in_delivery",
+      "baseline_version": "v1",
+      "requested_start_period": 0,
+      "duration_periods": 2,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "rj-i2",
+      "title": "Ticket triage",
+      "sponsor_id": "sp-1",
+      "status": "candidate",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 2,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "rj-i3",
+      "title": "Archive migration",
+      "sponsor_id": "sp-1",
+      "status": "candidate",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "rj-i4",
+      "title": "Hours to cash",
+      "sponsor_id": "sp-1",
+      "status": "candidate",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "rj-i5",
+      "title": "Already funded project",
+      "sponsor_id": "sp-1",
+      "status": "funded",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "rj-i1",
+      "title": "Billing cleanup copy",
+      "sponsor_id": "sp-1",
+      "status": "candidate",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    }
+  ],
+  "process_baselines": [
+    {
+      "baseline_id": "pb-r1",
+      "initiative_id": "rj-i1",
+      "baseline_version": "v1",
+      "volume": 1200,
+      "minutes_per_case": 10,
+      "error_rate": "0.050000",
+      "evidence_ref": "ev:r1",
+      "measured_at": "2025-12-01T00:00:00Z",
+      "reason": null
+    },
+    {
+      "baseline_id": "pb-r2",
+      "initiative_id": "rj-ghost",
+      "baseline_version": "v1",
+      "volume": 10,
+      "minutes_per_case": 10,
+      "error_rate": "0.010000",
+      "evidence_ref": "ev:r2",
+      "measured_at": "2025-12-01T00:00:00Z",
+      "reason": null
+    }
+  ],
+  "assumption_versions": [
+    {
+      "assumption_id": "ra-t1",
+      "initiative_id": "rj-i1",
+      "name": "target_minutes_per_case",
+      "version_number": 1,
+      "value": "8",
+      "values": null,
+      "unit": "minutes",
+      "rationale": "Pilot",
+      "author_id": "analyst-1",
+      "evidence_ref": null,
+      "staffing_change_evidence_ref": null,
+      "created_at": "2026-01-10T00:00:00Z"
+    },
+    {
+      "assumption_id": "ra-t1x",
+      "initiative_id": "rj-i1",
+      "name": "target_minutes_per_case",
+      "version_number": 1,
+      "value": "6",
+      "values": null,
+      "unit": "minutes",
+      "rationale": "Would overwrite version 1",
+      "author_id": "analyst-1",
+      "evidence_ref": null,
+      "staffing_change_evidence_ref": null,
+      "created_at": "2026-01-10T00:00:00Z"
+    },
+    {
+      "assumption_id": "ra-conv",
+      "initiative_id": null,
+      "name": "monthly_rate_conversion",
+      "version_number": 1,
+      "value": "0.007974",
+      "values": null,
+      "unit": "rate per month",
+      "rationale": "(1 + 0.10)^(1/12) - 1 = 0.00797414..., recorded to 6 places",
+      "author_id": "analyst-1",
+      "evidence_ref": null,
+      "staffing_change_evidence_ref": null,
+      "created_at": "2026-01-10T00:00:00Z"
+    },
+    {
+      "assumption_id": "ra-cap",
+      "initiative_id": "rj-i4",
+      "name": "capacity_hourly_rate",
+      "version_number": 1,
+      "value": "25.00",
+      "values": null,
+      "unit": "USD/hour",
+      "rationale": "Loaded hourly cost",
+      "author_id": "analyst-1",
+      "evidence_ref": null,
+      "staffing_change_evidence_ref": "hr:headcount-plan-2026-q2",
+      "created_at": "2026-01-10T00:00:00Z"
+    }
+  ],
+  "resources": [
+    {
+      "resource_id": "res-r1",
+      "name": "Analyst pool",
+      "capacity_per_period": "2.00",
+      "unit": "FTE"
+    }
+  ],
+  "scenario_versions": [
+    {
+      "scenario_id": "rs-1",
+      "baseline_version": "v1",
+      "discount_rate": "0.100000",
+      "rate_basis": "annual",
+      "rate_conversion_assumption_id": null,
+      "horizon_periods": 4,
+      "status": "draft",
+      "initiative_ids": [
+        "rj-i1"
+      ],
+      "pinned_assumption_ids": [],
+      "created_at": "2026-01-05T00:00:00Z"
+    },
+    {
+      "scenario_id": "rs-2",
+      "baseline_version": "v1",
+      "discount_rate": "0.100000",
+      "rate_basis": "annual",
+      "rate_conversion_assumption_id": "ra-conv",
+      "horizon_periods": 4,
+      "status": "draft",
+      "initiative_ids": [
+        "rj-i1",
+        "rj-i3",
+        "rj-i4"
+      ],
+      "pinned_assumption_ids": [
+        "ra-t1",
+        "ra-conv",
+        "ra-cap"
+      ],
+      "created_at": "2026-01-05T00:00:00Z"
+    },
+    {
+      "scenario_id": "rs-3",
+      "baseline_version": "v1",
+      "discount_rate": "0.010000",
+      "rate_basis": "monthly",
+      "rate_conversion_assumption_id": null,
+      "horizon_periods": 4,
+      "status": "draft",
+      "initiative_ids": [
+        "rj-i2"
+      ],
+      "pinned_assumption_ids": [],
+      "created_at": "2026-01-05T00:00:00Z"
+    },
+    {
+      "scenario_id": "rs-4",
+      "baseline_version": "v1",
+      "discount_rate": "0.010000",
+      "rate_basis": "monthly",
+      "rate_conversion_assumption_id": null,
+      "horizon_periods": 4,
+      "status": "funded",
+      "initiative_ids": [
+        "rj-i2"
+      ],
+      "pinned_assumption_ids": [],
+      "created_at": "2026-01-05T00:00:00Z"
+    },
+    {
+      "scenario_id": "rs-5",
+      "baseline_version": "v1",
+      "discount_rate": "0.010000",
+      "rate_basis": "monthly",
+      "rate_conversion_assumption_id": null,
+      "horizon_periods": 4,
+      "status": "draft",
+      "initiative_ids": [
+        "rj-i1",
+        "rj-ghost"
+      ],
+      "pinned_assumption_ids": [],
+      "created_at": "2026-01-05T00:00:00Z"
+    }
+  ],
+  "cost_items": [
+    {
+      "cost_id": "rc-1",
+      "initiative_id": "rj-i1",
+      "cost_key": "ck-a",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "1000.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": "v1"
+    },
+    {
+      "cost_id": "rc-2",
+      "initiative_id": "rj-i1",
+      "cost_key": "ck-a",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "1000.00",
+      "period_index": 2,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": "v1"
+    },
+    {
+      "cost_id": "rc-3",
+      "initiative_id": "rj-i1",
+      "cost_key": "ck-b",
+      "cost_type": "recurring",
+      "cost_basis": "planned",
+      "amount": "50.00",
+      "period_index": null,
+      "start_period": 1,
+      "end_period": 4,
+      "baseline_version": "v1"
+    },
+    {
+      "cost_id": "rc-4",
+      "initiative_id": "rj-i2",
+      "cost_key": "ck-c",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "300.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    },
+    {
+      "cost_id": "rc-5",
+      "initiative_id": "rj-i3",
+      "cost_key": "ck-d",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "500.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    },
+    {
+      "cost_id": "rc-6",
+      "initiative_id": "rj-i4",
+      "cost_key": "ck-e",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "1000.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    },
+    {
+      "cost_id": "rc-7",
+      "initiative_id": "rj-ghost",
+      "cost_key": "ck-f",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "10.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    },
+    {
+      "cost_id": "rc-8",
+      "initiative_id": "rj-i5",
+      "cost_key": "ck-g",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "10.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    }
+  ],
+  "benefit_items": [
+    {
+      "benefit_id": "rb-1",
+      "initiative_id": "rj-i1",
+      "benefit_type": "cash",
+      "amount": "700.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-2",
+      "initiative_id": "rj-i1",
+      "benefit_type": "cash",
+      "amount": "700.00",
+      "period_index": 2,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-3",
+      "initiative_id": "rj-i1",
+      "benefit_type": "cash",
+      "amount": "700.00",
+      "period_index": 3,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-4",
+      "initiative_id": "rj-i1",
+      "benefit_type": "cash",
+      "amount": "300.00",
+      "period_index": 0,
+      "starts_period": 0,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-5",
+      "initiative_id": "rj-i2",
+      "benefit_type": "cash",
+      "amount": "150.00",
+      "period_index": 2,
+      "starts_period": 2,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-6",
+      "initiative_id": "rj-i2",
+      "benefit_type": "cash",
+      "amount": "150.00",
+      "period_index": 3,
+      "starts_period": 2,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-7",
+      "initiative_id": "rj-i2",
+      "benefit_type": "capacity",
+      "amount": "40.00",
+      "period_index": 2,
+      "starts_period": 2,
+      "unit": "hours",
+      "cash_realisation": true,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-8",
+      "initiative_id": "rj-i3",
+      "benefit_type": "cash",
+      "amount": "50.00",
+      "period_index": 2,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-9",
+      "initiative_id": "rj-i3",
+      "benefit_type": "cash",
+      "amount": "50.00",
+      "period_index": 3,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-10",
+      "initiative_id": "rj-i3",
+      "benefit_type": "avoided_cost",
+      "amount": "200.00",
+      "period_index": 2,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": true,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-11",
+      "initiative_id": "rj-i4",
+      "benefit_type": "capacity",
+      "amount": "100.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "hours",
+      "cash_realisation": false,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-12",
+      "initiative_id": "rj-i4",
+      "benefit_type": "capacity",
+      "amount": "100.00",
+      "period_index": 2,
+      "starts_period": 1,
+      "unit": "hours",
+      "cash_realisation": false,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    }
+  ],
+  "dependencies": [
+    {
+      "dependency_id": "rd-1",
+      "initiative_id": "rj-i2",
+      "prerequisite_id": "rj-i1",
+      "dependency_type": "finish_to_start",
+      "lag_periods": 0
+    },
+    {
+      "dependency_id": "rd-2",
+      "initiative_id": "rj-i3",
+      "prerequisite_id": "rj-i2",
+      "dependency_type": "finish_to_start",
+      "lag_periods": 1
+    },
+    {
+      "dependency_id": "rd-3",
+      "initiative_id": "rj-i1",
+      "prerequisite_id": "rj-i3",
+      "dependency_type": "finish_to_start",
+      "lag_periods": 0
+    },
+    {
+      "dependency_id": "rd-4",
+      "initiative_id": "rj-i4",
+      "prerequisite_id": "rj-ghost",
+      "dependency_type": "finish_to_start",
+      "lag_periods": 0
+    },
+    {
+      "dependency_id": "rd-5",
+      "initiative_id": "rj-i1",
+      "prerequisite_id": "rj-i5",
+      "dependency_type": "finish_to_start",
+      "lag_periods": 0
+    }
+  ],
+  "stakeholder_groups": [
+    {
+      "group_id": "rg-1",
+      "group_name": "Billing team",
+      "owner_id": "sp-1",
+      "affected_count": 12,
+      "impact_level": "high"
+    }
+  ],
+  "impact_mappings": [
+    {
+      "mapping_id": "im-r1",
+      "initiative_id": "rj-i1",
+      "group_id": "rg-1",
+      "operating_change": "Invoices are corrected at source",
+      "impact_level": "high"
+    },
+    {
+      "mapping_id": "im-r2",
+      "initiative_id": "rj-i1",
+      "group_id": "rg-ghost",
+      "operating_change": "Unknown group",
+      "impact_level": "low"
+    }
+  ],
+  "resource_allocations": [
+    {
+      "allocation_id": "al-r1",
+      "resource_id": "res-r1",
+      "initiative_id": "rj-i1",
+      "period_index": 0,
+      "amount": "1.50"
+    },
+    {
+      "allocation_id": "al-r2",
+      "resource_id": "res-r1",
+      "initiative_id": "rj-i2",
+      "period_index": 0,
+      "amount": "1.00"
+    },
+    {
+      "allocation_id": "al-r3",
+      "resource_id": "res-r1",
+      "initiative_id": "rj-i3",
+      "period_index": 1,
+      "amount": "2.00"
+    },
+    {
+      "allocation_id": "al-r4",
+      "resource_id": "res-ghost",
+      "initiative_id": "rj-i3",
+      "period_index": 1,
+      "amount": "1.00"
+    }
+  ],
+  "readiness_assessments": [
+    {
+      "assessment_id": "rra-1",
+      "group_id": "rg-1",
+      "dimension": "awareness",
+      "score": 4,
+      "weight": "1.00",
+      "assessed_at": "2026-02-01T00:00:00Z"
+    },
+    {
+      "assessment_id": "rra-2",
+      "group_id": "rg-1",
+      "dimension": "desire",
+      "score": 6,
+      "weight": "1.00",
+      "assessed_at": "2026-02-01T00:00:00Z"
+    },
+    {
+      "assessment_id": "rra-3",
+      "group_id": "rg-ghost",
+      "dimension": "desire",
+      "score": 3,
+      "weight": "1.00",
+      "assessed_at": "2026-02-01T00:00:00Z"
+    },
+    {
+      "assessment_id": "rra-4",
+      "group_id": "rg-1",
+      "dimension": "enthusiasm",
+      "score": 3,
+      "weight": "1.00",
+      "assessed_at": "2026-02-01T00:00:00Z"
+    }
+  ],
+  "adoption_observations": [
+    {
+      "observation_id": "rao-1",
+      "initiative_id": "rj-i1",
+      "eligible_count": 20,
+      "adopted_count": 8,
+      "observed_at": "2026-04-30T00:00:00Z",
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "observation_id": "rao-2",
+      "initiative_id": "rj-i1",
+      "eligible_count": 20,
+      "adopted_count": 25,
+      "observed_at": "2026-05-31T00:00:00Z",
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "observation_id": "rao-3",
+      "initiative_id": "rj-i1",
+      "eligible_count": 20,
+      "adopted_count": 10,
+      "observed_at": "2026-05-31T00:00:00Z",
+      "eligibility_rule_version": "elig-v2"
+    }
+  ],
+  "training_completions": [
+    {
+      "training_id": "rt-1",
+      "initiative_id": "rj-i1",
+      "eligible_trainees": 20,
+      "completed": 18,
+      "recorded_at": "2026-04-30T00:00:00Z",
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "training_id": "rt-2",
+      "initiative_id": "rj-i1",
+      "eligible_trainees": 20,
+      "completed": 21,
+      "recorded_at": "2026-05-31T00:00:00Z",
+      "eligibility_rule_version": "elig-v1"
+    }
+  ],
+  "benefit_observations": [
+    {
+      "benefit_observation_id": "rbo-1",
+      "benefit_id": "rb-1",
+      "measured_value": "500.00",
+      "evidence_ref": "ev:rbo1",
+      "observed_at": "2026-03-31T00:00:00Z"
+    },
+    {
+      "benefit_observation_id": "rbo-2",
+      "benefit_id": "rb-4",
+      "measured_value": "300.00",
+      "evidence_ref": "ev:rbo2",
+      "observed_at": "2026-02-28T00:00:00Z"
+    },
+    {
+      "benefit_observation_id": "rbo-3",
+      "benefit_id": "rb-ghost",
+      "measured_value": "1.00",
+      "evidence_ref": "ev:rbo3",
+      "observed_at": "2026-02-28T00:00:00Z"
+    }
+  ],
+  "risk_items": [
+    {
+      "risk_id": "rk-1",
+      "initiative_id": "rj-i1",
+      "probability": "0.100000",
+      "impact": "1000.00",
+      "mitigation": "Review"
+    },
+    {
+      "risk_id": "rk-2",
+      "initiative_id": "rj-i1",
+      "probability": "1.500000",
+      "impact": "1000.00",
+      "mitigation": "Review"
+    },
+    {
+      "risk_id": "rk-3",
+      "initiative_id": "rj-i5",
+      "probability": "0.100000",
+      "impact": "10.00",
+      "mitigation": "n/a"
+    },
+    {
+      "risk_id": "rk-4",
+      "initiative_id": "rj-ghost",
+      "probability": "0.100000",
+      "impact": "10.00",
+      "mitigation": "n/a"
+    }
+  ],
+  "forecast_versions": [
+    {
+      "forecast_id": "rf-1",
+      "initiative_id": "rj-i1",
+      "version_number": 1,
+      "period_index": 1,
+      "amount": "700.00",
+      "reason": "Approved forecast",
+      "created_at": "2026-01-20T00:00:00Z"
+    },
+    {
+      "forecast_id": "rf-2",
+      "initiative_id": "rj-i1",
+      "version_number": 1,
+      "period_index": 1,
+      "amount": "650.00",
+      "reason": "Attempt to overwrite the approved forecast",
+      "created_at": "2026-03-20T00:00:00Z"
+    }
+  ]
+}

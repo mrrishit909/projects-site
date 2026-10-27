@@ -1,0 +1,1564 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-06-30T00:00:00Z",
+  "period_basis": "monthly",
+  "empty_population": false,
+  "ingest": {
+    "counts": {
+      "initiatives": {
+        "accepted": 4,
+        "rejected": 2
+      },
+      "process_baselines": {
+        "accepted": 1,
+        "rejected": 1
+      },
+      "assumption_versions": {
+        "accepted": 3,
+        "rejected": 1
+      },
+      "resources": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "scenario_versions": {
+        "accepted": 2,
+        "rejected": 3
+      },
+      "cost_items": {
+        "accepted": 5,
+        "rejected": 3
+      },
+      "benefit_items": {
+        "accepted": 10,
+        "rejected": 2
+      },
+      "dependencies": {
+        "accepted": 2,
+        "rejected": 3
+      },
+      "stakeholder_groups": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "impact_mappings": {
+        "accepted": 1,
+        "rejected": 1
+      },
+      "resource_allocations": {
+        "accepted": 2,
+        "rejected": 2
+      },
+      "readiness_assessments": {
+        "accepted": 1,
+        "rejected": 3
+      },
+      "adoption_observations": {
+        "accepted": 1,
+        "rejected": 2
+      },
+      "training_completions": {
+        "accepted": 1,
+        "rejected": 1
+      },
+      "benefit_observations": {
+        "accepted": 1,
+        "rejected": 2
+      },
+      "risk_items": {
+        "accepted": 1,
+        "rejected": 3
+      },
+      "forecast_versions": {
+        "accepted": 1,
+        "rejected": 1
+      }
+    },
+    "rejected_records": [
+      {
+        "entity": "initiatives",
+        "id": "rj-i5",
+        "status": "rejected",
+        "reason_code": "STATUS_NOT_ALLOWED",
+        "details": {
+          "status": "funded"
+        },
+        "raw_row": {
+          "initiative_id": "rj-i5",
+          "title": "Already funded project",
+          "sponsor_id": "sp-1",
+          "status": "funded",
+          "baseline_version": null,
+          "requested_start_period": 0,
+          "duration_periods": 1,
+          "deployment_period": 1,
+          "eligibility_rule_version": "elig-v1"
+        }
+      },
+      {
+        "entity": "initiatives",
+        "id": "rj-i1",
+        "status": "rejected",
+        "reason_code": "DUPLICATE_ID",
+        "raw_row": {
+          "initiative_id": "rj-i1",
+          "title": "Billing cleanup copy",
+          "sponsor_id": "sp-1",
+          "status": "candidate",
+          "baseline_version": null,
+          "requested_start_period": 0,
+          "duration_periods": 1,
+          "deployment_period": 1,
+          "eligibility_rule_version": "elig-v1"
+        }
+      },
+      {
+        "entity": "process_baselines",
+        "id": "pb-r2",
+        "status": "rejected",
+        "reason_code": "UNKNOWN_INITIATIVE",
+        "raw_row": {
+          "baseline_id": "pb-r2",
+          "initiative_id": "rj-ghost",
+          "baseline_version": "v1",
+          "volume": 10,
+          "minutes_per_case": 10,
+          "error_rate": "0.010000",
+          "evidence_ref": "ev:r2",
+          "measured_at": "2025-12-01T00:00:00Z",
+          "reason": null
+        }
+      },
+      {
+        "entity": "assumption_versions",
+        "id": "ra-t1x",
+        "status": "rejected",
+        "reason_code": "VERSION_EXISTS",
+        "details": {
+          "existing_id": "ra-t1",
+          "version_number": 1
+        },
+        "raw_row": {
+          "assumption_id": "ra-t1x",
+          "initiative_id": "rj-i1",
+          "name": "target_minutes_per_case",
+          "version_number": 1,
+          "value": "6",
+          "values": null,
+          "unit": "minutes",
+          "rationale": "Would overwrite version 1",
+          "author_id": "analyst-1",
+          "evidence_ref": null,
+          "staffing_change_evidence_ref": null,
+          "created_at": "2026-01-10T00:00:00Z"
+        }
+      },
+      {
+        "entity": "scenario_versions",
+        "id": "rs-1",
+        "status": "rejected",
+        "reason_code": "RATE_PERIOD_MISMATCH",
+        "details": {
+          "rate_basis": "annual",
+          "period_basis": "monthly"
+        },
+        "raw_row": {
+          "scenario_id": "rs-1",
+          "baseline_version": "v1",
+          "discount_rate": "0.100000",
+          "rate_basis": "annual",
+          "rate_conversion_assumption_id": null,
+          "horizon_periods": 4,
+          "status": "draft",
+          "initiative_ids": [
+            "rj-i1"
+          ],
+          "pinned_assumption_ids": [],
+          "created_at": "2026-01-05T00:00:00Z"
+        }
+      },
+      {
+        "entity": "scenario_versions",
+        "id": "rs-4",
+        "status": "rejected",
+        "reason_code": "STATUS_NOT_ALLOWED",
+        "details": {
+          "status": "funded"
+        },
+        "raw_row": {
+          "scenario_id": "rs-4",
+          "baseline_version": "v1",
+          "discount_rate": "0.010000",
+          "rate_basis": "monthly",
+          "rate_conversion_assumption_id": null,
+          "horizon_periods": 4,
+          "status": "funded",
+          "initiative_ids": [
+            "rj-i2"
+          ],
+          "pinned_assumption_ids": [],
+          "created_at": "2026-01-05T00:00:00Z"
+        }
+      },
+      {
+        "entity": "scenario_versions",
+        "id": "rs-5",
+        "status": "rejected",
+        "reason_code": "UNKNOWN_INITIATIVE",
+        "raw_row": {
+          "scenario_id": "rs-5",
+          "baseline_version": "v1",
+          "discount_rate": "0.010000",
+          "rate_basis": "monthly",
+          "rate_conversion_assumption_id": null,
+          "horizon_periods": 4,
+          "status": "draft",
+          "initiative_ids": [
+            "rj-i1",
+            "rj-ghost"
+          ],
+          "pinned_assumption_ids": [],
+          "created_at": "2026-01-05T00:00:00Z"
+        }
+      },
+      {
+        "entity": "cost_items",
+        "id": "rc-2",
+        "status": "rejected",
+        "reason_code": "ONE_TIME_COST_REPEATED",
+        "details": {
+          "first_cost_id": "rc-1",
+          "first_period": 0,
+          "repeat_period": 2
+        },
+        "raw_row": {
+          "cost_id": "rc-2",
+          "initiative_id": "rj-i1",
+          "cost_key": "ck-a",
+          "cost_type": "one_time",
+          "cost_basis": "planned",
+          "amount": "1000.00",
+          "period_index": 2,
+          "start_period": null,
+          "end_period": null,
+          "baseline_version": "v1"
+        }
+      },
+      {
+        "entity": "cost_items",
+        "id": "rc-7",
+        "status": "rejected",
+        "reason_code": "UNKNOWN_INITIATIVE",
+        "raw_row": {
+          "cost_id": "rc-7",
+          "initiative_id": "rj-ghost",
+          "cost_key": "ck-f",
+          "cost_type": "one_time",
+          "cost_basis": "planned",
+          "amount": "10.00",
+          "period_index": 0,
+          "start_period": null,
+          "end_period": null,
+          "baseline_version": null
+        }
+      },
+      {
+        "entity": "cost_items",
+        "id": "rc-8",
+        "status": "rejected",
+        "reason_code": "DEPENDENT_REJECTED",
+        "raw_row": {
+          "cost_id": "rc-8",
+          "initiative_id": "rj-i5",
+          "cost_key": "ck-g",
+          "cost_type": "one_time",
+          "cost_basis": "planned",
+          "amount": "10.00",
+          "period_index": 0,
+          "start_period": null,
+          "end_period": null,
+          "baseline_version": null
+        }
+      },
+      {
+        "entity": "benefit_items",
+        "id": "rb-4",
+        "status": "rejected",
+        "reason_code": "BENEFIT_BEFORE_DEPLOYMENT",
+        "details": {
+          "starts_period": 0,
+          "deployment_period": 1
+        },
+        "raw_row": {
+          "benefit_id": "rb-4",
+          "initiative_id": "rj-i1",
+          "benefit_type": "cash",
+          "amount": "300.00",
+          "period_index": 0,
+          "starts_period": 0,
+          "unit": "USD",
+          "cash_realisation": null,
+          "evidence_ref": null,
+          "benefit_source_key": null,
+          "baseline_trend_per_period": null
+        }
+      },
+      {
+        "entity": "benefit_items",
+        "id": "rb-7",
+        "status": "rejected",
+        "reason_code": "CAPACITY_WITHOUT_CONVERSION",
+        "details": {
+          "hours": "40.00"
+        },
+        "raw_row": {
+          "benefit_id": "rb-7",
+          "initiative_id": "rj-i2",
+          "benefit_type": "capacity",
+          "amount": "40.00",
+          "period_index": 2,
+          "starts_period": 2,
+          "unit": "hours",
+          "cash_realisation": true,
+          "evidence_ref": null,
+          "benefit_source_key": null,
+          "baseline_trend_per_period": null
+        }
+      },
+      {
+        "entity": "dependencies",
+        "id": "rd-3",
+        "status": "rejected",
+        "reason_code": "DEPENDENCY_CYCLE",
+        "details": {
+          "cycle": [
+            "rj-i1",
+            "rj-i3",
+            "rj-i2",
+            "rj-i1"
+          ]
+        },
+        "raw_row": {
+          "dependency_id": "rd-3",
+          "initiative_id": "rj-i1",
+          "prerequisite_id": "rj-i3",
+          "dependency_type": "finish_to_start",
+          "lag_periods": 0
+        }
+      },
+      {
+        "entity": "dependencies",
+        "id": "rd-4",
+        "status": "rejected",
+        "reason_code": "UNKNOWN_INITIATIVE",
+        "raw_row": {
+          "dependency_id": "rd-4",
+          "initiative_id": "rj-i4",
+          "prerequisite_id": "rj-ghost",
+          "dependency_type": "finish_to_start",
+          "lag_periods": 0
+        }
+      },
+      {
+        "entity": "dependencies",
+        "id": "rd-5",
+        "status": "rejected",
+        "reason_code": "DEPENDENT_REJECTED",
+        "raw_row": {
+          "dependency_id": "rd-5",
+          "initiative_id": "rj-i1",
+          "prerequisite_id": "rj-i5",
+          "dependency_type": "finish_to_start",
+          "lag_periods": 0
+        }
+      },
+      {
+        "entity": "impact_mappings",
+        "id": "im-r2",
+        "status": "rejected",
+        "reason_code": "UNKNOWN_GROUP",
+        "raw_row": {
+          "mapping_id": "im-r2",
+          "initiative_id": "rj-i1",
+          "group_id": "rg-ghost",
+          "operating_change": "Unknown group",
+          "impact_level": "low"
+        }
+      },
+      {
+        "entity": "resource_allocations",
+        "id": "al-r2",
+        "status": "rejected",
+        "reason_code": "RESOURCE_OVERALLOCATED",
+        "details": {
+          "resource_id": "res-r1",
+          "periods": [
+            0
+          ],
+          "allocated_before": "1.50",
+          "requested": "1.00",
+          "capacity": "2.00"
+        },
+        "raw_row": {
+          "allocation_id": "al-r2",
+          "resource_id": "res-r1",
+          "initiative_id": "rj-i2",
+          "period_index": 0,
+          "amount": "1.00"
+        }
+      },
+      {
+        "entity": "resource_allocations",
+        "id": "al-r4",
+        "status": "rejected",
+        "reason_code": "UNKNOWN_RESOURCE",
+        "raw_row": {
+          "allocation_id": "al-r4",
+          "resource_id": "res-ghost",
+          "initiative_id": "rj-i3",
+          "period_index": 1,
+          "amount": "1.00"
+        }
+      },
+      {
+        "entity": "readiness_assessments",
+        "id": "rra-2",
+        "status": "rejected",
+        "reason_code": "INVALID_SCORE",
+        "details": {
+          "score": 6
+        },
+        "raw_row": {
+          "assessment_id": "rra-2",
+          "group_id": "rg-1",
+          "dimension": "desire",
+          "score": 6,
+          "weight": "1.00",
+          "assessed_at": "2026-02-01T00:00:00Z"
+        }
+      },
+      {
+        "entity": "readiness_assessments",
+        "id": "rra-3",
+        "status": "rejected",
+        "reason_code": "UNKNOWN_GROUP",
+        "raw_row": {
+          "assessment_id": "rra-3",
+          "group_id": "rg-ghost",
+          "dimension": "desire",
+          "score": 3,
+          "weight": "1.00",
+          "assessed_at": "2026-02-01T00:00:00Z"
+        }
+      },
+      {
+        "entity": "readiness_assessments",
+        "id": "rra-4",
+        "status": "rejected",
+        "reason_code": "INVALID_DIMENSION",
+        "raw_row": {
+          "assessment_id": "rra-4",
+          "group_id": "rg-1",
+          "dimension": "enthusiasm",
+          "score": 3,
+          "weight": "1.00",
+          "assessed_at": "2026-02-01T00:00:00Z"
+        }
+      },
+      {
+        "entity": "adoption_observations",
+        "id": "rao-2",
+        "status": "rejected",
+        "reason_code": "ADOPTED_EXCEEDS_ELIGIBLE",
+        "details": {
+          "eligible": 20,
+          "numerator": 25
+        },
+        "raw_row": {
+          "observation_id": "rao-2",
+          "initiative_id": "rj-i1",
+          "eligible_count": 20,
+          "adopted_count": 25,
+          "observed_at": "2026-05-31T00:00:00Z",
+          "eligibility_rule_version": "elig-v1"
+        }
+      },
+      {
+        "entity": "adoption_observations",
+        "id": "rao-3",
+        "status": "rejected",
+        "reason_code": "ELIGIBILITY_RULE_MISMATCH",
+        "details": {
+          "initiative_rule": "elig-v1",
+          "row_rule": "elig-v2"
+        },
+        "raw_row": {
+          "observation_id": "rao-3",
+          "initiative_id": "rj-i1",
+          "eligible_count": 20,
+          "adopted_count": 10,
+          "observed_at": "2026-05-31T00:00:00Z",
+          "eligibility_rule_version": "elig-v2"
+        }
+      },
+      {
+        "entity": "training_completions",
+        "id": "rt-2",
+        "status": "rejected",
+        "reason_code": "COMPLETED_EXCEEDS_ELIGIBLE",
+        "details": {
+          "eligible": 20,
+          "numerator": 21
+        },
+        "raw_row": {
+          "training_id": "rt-2",
+          "initiative_id": "rj-i1",
+          "eligible_trainees": 20,
+          "completed": 21,
+          "recorded_at": "2026-05-31T00:00:00Z",
+          "eligibility_rule_version": "elig-v1"
+        }
+      },
+      {
+        "entity": "benefit_observations",
+        "id": "rbo-2",
+        "status": "rejected",
+        "reason_code": "DEPENDENT_REJECTED",
+        "raw_row": {
+          "benefit_observation_id": "rbo-2",
+          "benefit_id": "rb-4",
+          "measured_value": "300.00",
+          "evidence_ref": "ev:rbo2",
+          "observed_at": "2026-02-28T00:00:00Z"
+        }
+      },
+      {
+        "entity": "benefit_observations",
+        "id": "rbo-3",
+        "status": "rejected",
+        "reason_code": "UNKNOWN_BENEFIT",
+        "raw_row": {
+          "benefit_observation_id": "rbo-3",
+          "benefit_id": "rb-ghost",
+          "measured_value": "1.00",
+          "evidence_ref": "ev:rbo3",
+          "observed_at": "2026-02-28T00:00:00Z"
+        }
+      },
+      {
+        "entity": "risk_items",
+        "id": "rk-2",
+        "status": "rejected",
+        "reason_code": "PROBABILITY_OUT_OF_RANGE",
+        "details": {
+          "probability": "1.500000"
+        },
+        "raw_row": {
+          "risk_id": "rk-2",
+          "initiative_id": "rj-i1",
+          "probability": "1.500000",
+          "impact": "1000.00",
+          "mitigation": "Review"
+        }
+      },
+      {
+        "entity": "risk_items",
+        "id": "rk-3",
+        "status": "rejected",
+        "reason_code": "DEPENDENT_REJECTED",
+        "raw_row": {
+          "risk_id": "rk-3",
+          "initiative_id": "rj-i5",
+          "probability": "0.100000",
+          "impact": "10.00",
+          "mitigation": "n/a"
+        }
+      },
+      {
+        "entity": "risk_items",
+        "id": "rk-4",
+        "status": "rejected",
+        "reason_code": "UNKNOWN_INITIATIVE",
+        "raw_row": {
+          "risk_id": "rk-4",
+          "initiative_id": "rj-ghost",
+          "probability": "0.100000",
+          "impact": "10.00",
+          "mitigation": "n/a"
+        }
+      },
+      {
+        "entity": "forecast_versions",
+        "id": "rf-2",
+        "status": "rejected",
+        "reason_code": "VERSION_EXISTS",
+        "details": {
+          "existing_id": "rf-1",
+          "version_number": 1
+        },
+        "raw_row": {
+          "forecast_id": "rf-2",
+          "initiative_id": "rj-i1",
+          "version_number": 1,
+          "period_index": 1,
+          "amount": "650.00",
+          "reason": "Attempt to overwrite the approved forecast",
+          "created_at": "2026-03-20T00:00:00Z"
+        }
+      }
+    ]
+  },
+  "metrics": {
+    "summary": {
+      "summary_scenario_id": "rs-2",
+      "initiatives": 4,
+      "scenarios": 2,
+      "npv_total": "4458.17",
+      "double_count_residual": "0.00",
+      "adoption_rate": "0.400000",
+      "training_completion": "0.900000",
+      "risk_exposure_total": "100.00",
+      "capacity_released_hours_total": "40.0000"
+    },
+    "scenarios": {
+      "rs-2": {
+        "status": "draft",
+        "baseline_version": "v1",
+        "horizon_periods": 4,
+        "rate_basis": "annual",
+        "declared_rate": "0.100000",
+        "effective_period_rate": "0.007974",
+        "effective_period_rate_exact": "3987/500000",
+        "rate_source": "conversion:ra-conv",
+        "initiatives": {
+          "rj-i1": {
+            "cash_flow": [
+              {
+                "period_index": 0,
+                "period_start": "2026-01-01",
+                "costs": "1000.00",
+                "benefits_by_class": {
+                  "cash": "0.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "0.00",
+                "net_cash_flow": "-1000.00",
+                "cumulative": "-1000.00",
+                "discount_factor": "1.000000",
+                "discount_factor_exact": "1",
+                "discounted_cash_flow": "-1000.00",
+                "discounted_exact": "-1000",
+                "cumulative_discounted": "-1000.00"
+              },
+              {
+                "period_index": 1,
+                "period_start": "2026-02-01",
+                "costs": "50.00",
+                "benefits_by_class": {
+                  "cash": "700.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "700.00",
+                "net_cash_flow": "650.00",
+                "cumulative": "-350.00",
+                "discount_factor": "0.992089",
+                "discount_factor_exact": "500000/503987",
+                "discounted_cash_flow": "644.86",
+                "discounted_exact": "325000000/503987",
+                "cumulative_discounted": "-355.14"
+              },
+              {
+                "period_index": 2,
+                "period_start": "2026-03-01",
+                "costs": "50.00",
+                "benefits_by_class": {
+                  "cash": "700.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "700.00",
+                "net_cash_flow": "650.00",
+                "cumulative": "300.00",
+                "discount_factor": "0.984241",
+                "discount_factor_exact": "250000000000/254002896169",
+                "discounted_cash_flow": "639.76",
+                "discounted_exact": "162500000000000/254002896169",
+                "cumulative_discounted": "284.61"
+              },
+              {
+                "period_index": 3,
+                "period_start": "2026-04-01",
+                "costs": "50.00",
+                "benefits_by_class": {
+                  "cash": "700.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "700.00",
+                "net_cash_flow": "650.00",
+                "cumulative": "950.00",
+                "discount_factor": "0.976454",
+                "discount_factor_exact": "125000000000000000/128014157631525803",
+                "discounted_cash_flow": "634.70",
+                "discounted_exact": "81250000000000000000/128014157631525803",
+                "cumulative_discounted": "919.31"
+              }
+            ],
+            "expanded_planned_costs": [
+              {
+                "cost_id": "rc-1",
+                "cost_key": "ck-a",
+                "period_index": 0,
+                "amount": "1000.00"
+              },
+              {
+                "cost_id": "rc-3",
+                "cost_key": "ck-b",
+                "period_index": 1,
+                "amount": "50.00"
+              },
+              {
+                "cost_id": "rc-3",
+                "cost_key": "ck-b",
+                "period_index": 2,
+                "amount": "50.00"
+              },
+              {
+                "cost_id": "rc-3",
+                "cost_key": "ck-b",
+                "period_index": 3,
+                "amount": "50.00"
+              }
+            ],
+            "excluded_from_cash_flow": {
+              "capacity_not_converted": [],
+              "capacity_hours_not_converted": null,
+              "avoided_cost_beside": [],
+              "avoided_cost_beside_total": null,
+              "beyond_horizon": []
+            },
+            "converted_capacity": [],
+            "ramp": null,
+            "unramped_net_cash_flow": null,
+            "planned_money_benefits": {
+              "ramped": "2100.00",
+              "unramped": "2100.00"
+            },
+            "npv": {
+              "value": "919.31",
+              "exact": "117684671123399197000/128014157631525803",
+              "unit": "USD",
+              "label": "estimate"
+            },
+            "payback": {
+              "simple": {
+                "period": 2,
+                "interpolated": "1.5385"
+              },
+              "discounted": {
+                "period": 2,
+                "interpolated": "1.5551"
+              }
+            },
+            "capacity_released": {
+              "hours": "40.0000",
+              "reason": null,
+              "baseline_version": "v1",
+              "target_assumption_id": "ra-t1",
+              "volume": 1200,
+              "baseline_minutes_per_case": 10,
+              "target_minutes_per_case": "8"
+            },
+            "cost_variance": {
+              "window": {
+                "from_period": 0,
+                "to_period": 4
+              },
+              "baseline_version": "v1",
+              "approved_baseline_cost": "1150.00",
+              "actual_cost": null,
+              "variance": null,
+              "reason": "NO_ACTUALS"
+            },
+            "benefit_realization": {
+              "cash": {
+                "unit": "USD",
+                "comparable_items": [
+                  "rb-1"
+                ],
+                "planned_comparable": "700.00",
+                "observed_comparable": "500.00",
+                "realization": "0.714286",
+                "baseline_trend": null,
+                "observed_above_trend": null,
+                "attribution": "observed, not attributed",
+                "matured_unobserved_items": [
+                  "rb-2",
+                  "rb-3"
+                ]
+              }
+            },
+            "immature_observation_ids": []
+          },
+          "rj-i3": {
+            "cash_flow": [
+              {
+                "period_index": 0,
+                "period_start": "2026-01-01",
+                "costs": "500.00",
+                "benefits_by_class": {
+                  "cash": "0.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "0.00",
+                "net_cash_flow": "-500.00",
+                "cumulative": "-500.00",
+                "discount_factor": "1.000000",
+                "discount_factor_exact": "1",
+                "discounted_cash_flow": "-500.00",
+                "discounted_exact": "-500",
+                "cumulative_discounted": "-500.00"
+              },
+              {
+                "period_index": 1,
+                "period_start": "2026-02-01",
+                "costs": "0.00",
+                "benefits_by_class": {
+                  "cash": "0.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "0.00",
+                "net_cash_flow": "0.00",
+                "cumulative": "-500.00",
+                "discount_factor": "0.992089",
+                "discount_factor_exact": "500000/503987",
+                "discounted_cash_flow": "0.00",
+                "discounted_exact": "0",
+                "cumulative_discounted": "-500.00"
+              },
+              {
+                "period_index": 2,
+                "period_start": "2026-03-01",
+                "costs": "0.00",
+                "benefits_by_class": {
+                  "cash": "50.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "50.00",
+                "net_cash_flow": "50.00",
+                "cumulative": "-450.00",
+                "discount_factor": "0.984241",
+                "discount_factor_exact": "250000000000/254002896169",
+                "discounted_cash_flow": "49.21",
+                "discounted_exact": "12500000000000/254002896169",
+                "cumulative_discounted": "-450.79"
+              },
+              {
+                "period_index": 3,
+                "period_start": "2026-04-01",
+                "costs": "0.00",
+                "benefits_by_class": {
+                  "cash": "50.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "50.00",
+                "net_cash_flow": "50.00",
+                "cumulative": "-400.00",
+                "discount_factor": "0.976454",
+                "discount_factor_exact": "125000000000000000/128014157631525803",
+                "discounted_cash_flow": "48.82",
+                "discounted_exact": "6250000000000000000/128014157631525803",
+                "cumulative_discounted": "-401.97"
+              }
+            ],
+            "expanded_planned_costs": [
+              {
+                "cost_id": "rc-5",
+                "cost_key": "ck-d",
+                "period_index": 0,
+                "amount": "500.00"
+              }
+            ],
+            "excluded_from_cash_flow": {
+              "capacity_not_converted": [],
+              "capacity_hours_not_converted": null,
+              "avoided_cost_beside": [
+                {
+                  "benefit_id": "rb-10",
+                  "period_index": 2,
+                  "amount": "200.00",
+                  "reason": "NO_EVIDENCE_REF"
+                }
+              ],
+              "avoided_cost_beside_total": "200.00",
+              "beyond_horizon": []
+            },
+            "converted_capacity": [],
+            "ramp": null,
+            "unramped_net_cash_flow": null,
+            "planned_money_benefits": {
+              "ramped": "300.00",
+              "unramped": "300.00"
+            },
+            "npv": {
+              "value": "-401.97",
+              "exact": "-51457241315762901500/128014157631525803",
+              "unit": "USD",
+              "label": "estimate"
+            },
+            "payback": {
+              "simple": {
+                "period": null,
+                "interpolated": null
+              },
+              "discounted": {
+                "period": null,
+                "interpolated": null
+              }
+            },
+            "capacity_released": {
+              "hours": null,
+              "reason": "NO_APPROVED_BASELINE",
+              "baseline_version": null,
+              "target_assumption_id": null
+            },
+            "cost_variance": {
+              "window": {
+                "from_period": 0,
+                "to_period": 4
+              },
+              "baseline_version": null,
+              "approved_baseline_cost": null,
+              "actual_cost": null,
+              "variance": null,
+              "reason": "NO_APPROVED_BASELINE"
+            },
+            "benefit_realization": {
+              "cash": {
+                "unit": "USD",
+                "comparable_items": [],
+                "planned_comparable": null,
+                "observed_comparable": null,
+                "realization": null,
+                "baseline_trend": null,
+                "observed_above_trend": null,
+                "attribution": "observed, not attributed",
+                "matured_unobserved_items": [
+                  "rb-8",
+                  "rb-9"
+                ]
+              },
+              "avoided_cost": {
+                "unit": "USD",
+                "comparable_items": [],
+                "planned_comparable": null,
+                "observed_comparable": null,
+                "realization": null,
+                "baseline_trend": null,
+                "observed_above_trend": null,
+                "attribution": "observed, not attributed",
+                "matured_unobserved_items": [
+                  "rb-10"
+                ]
+              }
+            },
+            "immature_observation_ids": []
+          },
+          "rj-i4": {
+            "cash_flow": [
+              {
+                "period_index": 0,
+                "period_start": "2026-01-01",
+                "costs": "1000.00",
+                "benefits_by_class": {
+                  "cash": "0.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "0.00",
+                "net_cash_flow": "-1000.00",
+                "cumulative": "-1000.00",
+                "discount_factor": "1.000000",
+                "discount_factor_exact": "1",
+                "discounted_cash_flow": "-1000.00",
+                "discounted_exact": "-1000",
+                "cumulative_discounted": "-1000.00"
+              },
+              {
+                "period_index": 1,
+                "period_start": "2026-02-01",
+                "costs": "0.00",
+                "benefits_by_class": {
+                  "cash": "0.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "2500.00"
+                },
+                "cash_benefits": "2500.00",
+                "net_cash_flow": "2500.00",
+                "cumulative": "1500.00",
+                "discount_factor": "0.992089",
+                "discount_factor_exact": "500000/503987",
+                "discounted_cash_flow": "2480.22",
+                "discounted_exact": "1250000000/503987",
+                "cumulative_discounted": "1480.22"
+              },
+              {
+                "period_index": 2,
+                "period_start": "2026-03-01",
+                "costs": "0.00",
+                "benefits_by_class": {
+                  "cash": "0.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "2500.00"
+                },
+                "cash_benefits": "2500.00",
+                "net_cash_flow": "2500.00",
+                "cumulative": "4000.00",
+                "discount_factor": "0.984241",
+                "discount_factor_exact": "250000000000/254002896169",
+                "discounted_cash_flow": "2460.60",
+                "discounted_exact": "625000000000000/254002896169",
+                "cumulative_discounted": "3940.82"
+              },
+              {
+                "period_index": 3,
+                "period_start": "2026-04-01",
+                "costs": "0.00",
+                "benefits_by_class": {
+                  "cash": "0.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "0.00",
+                "net_cash_flow": "0.00",
+                "cumulative": "4000.00",
+                "discount_factor": "0.976454",
+                "discount_factor_exact": "125000000000000000/128014157631525803",
+                "discounted_cash_flow": "0.00",
+                "discounted_exact": "0",
+                "cumulative_discounted": "3940.82"
+              }
+            ],
+            "expanded_planned_costs": [
+              {
+                "cost_id": "rc-6",
+                "cost_key": "ck-e",
+                "period_index": 0,
+                "amount": "1000.00"
+              }
+            ],
+            "excluded_from_cash_flow": {
+              "capacity_not_converted": [],
+              "capacity_hours_not_converted": null,
+              "avoided_cost_beside": [],
+              "avoided_cost_beside_total": null,
+              "beyond_horizon": []
+            },
+            "converted_capacity": [
+              {
+                "source_benefit_id": "rb-11",
+                "period_index": 1,
+                "hours": "100.00",
+                "hourly_rate": "25.00",
+                "amount": "2500.00",
+                "conversion_assumption_id": "ra-cap",
+                "staffing_change_evidence_ref": "hr:headcount-plan-2026-q2"
+              },
+              {
+                "source_benefit_id": "rb-12",
+                "period_index": 2,
+                "hours": "100.00",
+                "hourly_rate": "25.00",
+                "amount": "2500.00",
+                "conversion_assumption_id": "ra-cap",
+                "staffing_change_evidence_ref": "hr:headcount-plan-2026-q2"
+              }
+            ],
+            "ramp": null,
+            "unramped_net_cash_flow": null,
+            "planned_money_benefits": {
+              "ramped": "5000.00",
+              "unramped": "5000.00"
+            },
+            "npv": {
+              "value": "3940.82",
+              "exact": "1000980853831000/254002896169",
+              "unit": "USD",
+              "label": "estimate"
+            },
+            "payback": {
+              "simple": {
+                "period": 1,
+                "interpolated": "0.4000"
+              },
+              "discounted": {
+                "period": 1,
+                "interpolated": "0.4032"
+              }
+            },
+            "capacity_released": {
+              "hours": null,
+              "reason": "NO_APPROVED_BASELINE",
+              "baseline_version": null,
+              "target_assumption_id": null
+            },
+            "cost_variance": {
+              "window": {
+                "from_period": 0,
+                "to_period": 4
+              },
+              "baseline_version": null,
+              "approved_baseline_cost": null,
+              "actual_cost": null,
+              "variance": null,
+              "reason": "NO_APPROVED_BASELINE"
+            },
+            "benefit_realization": {
+              "capacity": {
+                "unit": "hours",
+                "comparable_items": [],
+                "planned_comparable": null,
+                "observed_comparable": null,
+                "realization": null,
+                "baseline_trend": null,
+                "observed_above_trend": null,
+                "attribution": "observed, not attributed",
+                "matured_unobserved_items": [
+                  "rb-11",
+                  "rb-12"
+                ]
+              }
+            },
+            "immature_observation_ids": []
+          }
+        },
+        "double_count": {
+          "planned_benefits": "7400.00",
+          "attributable_benefits": "7400.00",
+          "residual": "0.00",
+          "overlaps": [],
+          "explanation_required": false
+        },
+        "npv_total": {
+          "value": "4458.17",
+          "exact": "570708767387360492500/128014157631525803"
+        }
+      },
+      "rs-3": {
+        "status": "draft",
+        "baseline_version": "v1",
+        "horizon_periods": 4,
+        "rate_basis": "monthly",
+        "declared_rate": "0.010000",
+        "effective_period_rate": "0.010000",
+        "effective_period_rate_exact": "1/100",
+        "rate_source": "declared",
+        "initiatives": {
+          "rj-i2": {
+            "cash_flow": [
+              {
+                "period_index": 0,
+                "period_start": "2026-01-01",
+                "costs": "300.00",
+                "benefits_by_class": {
+                  "cash": "0.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "0.00",
+                "net_cash_flow": "-300.00",
+                "cumulative": "-300.00",
+                "discount_factor": "1.000000",
+                "discount_factor_exact": "1",
+                "discounted_cash_flow": "-300.00",
+                "discounted_exact": "-300",
+                "cumulative_discounted": "-300.00"
+              },
+              {
+                "period_index": 1,
+                "period_start": "2026-02-01",
+                "costs": "0.00",
+                "benefits_by_class": {
+                  "cash": "0.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "0.00",
+                "net_cash_flow": "0.00",
+                "cumulative": "-300.00",
+                "discount_factor": "0.990099",
+                "discount_factor_exact": "100/101",
+                "discounted_cash_flow": "0.00",
+                "discounted_exact": "0",
+                "cumulative_discounted": "-300.00"
+              },
+              {
+                "period_index": 2,
+                "period_start": "2026-03-01",
+                "costs": "0.00",
+                "benefits_by_class": {
+                  "cash": "150.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "150.00",
+                "net_cash_flow": "150.00",
+                "cumulative": "-150.00",
+                "discount_factor": "0.980296",
+                "discount_factor_exact": "10000/10201",
+                "discounted_cash_flow": "147.04",
+                "discounted_exact": "1500000/10201",
+                "cumulative_discounted": "-152.96"
+              },
+              {
+                "period_index": 3,
+                "period_start": "2026-04-01",
+                "costs": "0.00",
+                "benefits_by_class": {
+                  "cash": "150.00",
+                  "revenue": "0.00",
+                  "avoided_cost_realised": "0.00",
+                  "capacity_converted": "0.00"
+                },
+                "cash_benefits": "150.00",
+                "net_cash_flow": "150.00",
+                "cumulative": "0.00",
+                "discount_factor": "0.970590",
+                "discount_factor_exact": "1000000/1030301",
+                "discounted_cash_flow": "145.59",
+                "discounted_exact": "150000000/1030301",
+                "cumulative_discounted": "-7.37"
+              }
+            ],
+            "expanded_planned_costs": [
+              {
+                "cost_id": "rc-4",
+                "cost_key": "ck-c",
+                "period_index": 0,
+                "amount": "300.00"
+              }
+            ],
+            "excluded_from_cash_flow": {
+              "capacity_not_converted": [],
+              "capacity_hours_not_converted": null,
+              "avoided_cost_beside": [],
+              "avoided_cost_beside_total": null,
+              "beyond_horizon": []
+            },
+            "converted_capacity": [],
+            "ramp": null,
+            "unramped_net_cash_flow": null,
+            "planned_money_benefits": {
+              "ramped": "300.00",
+              "unramped": "300.00"
+            },
+            "npv": {
+              "value": "-7.37",
+              "exact": "-7590300/1030301",
+              "unit": "USD",
+              "label": "estimate"
+            },
+            "payback": {
+              "simple": {
+                "period": 3,
+                "interpolated": "3.0000"
+              },
+              "discounted": {
+                "period": null,
+                "interpolated": null
+              }
+            },
+            "capacity_released": {
+              "hours": null,
+              "reason": "NO_APPROVED_BASELINE",
+              "baseline_version": null,
+              "target_assumption_id": null
+            },
+            "cost_variance": {
+              "window": {
+                "from_period": 0,
+                "to_period": 4
+              },
+              "baseline_version": null,
+              "approved_baseline_cost": null,
+              "actual_cost": null,
+              "variance": null,
+              "reason": "NO_APPROVED_BASELINE"
+            },
+            "benefit_realization": {
+              "cash": {
+                "unit": "USD",
+                "comparable_items": [],
+                "planned_comparable": null,
+                "observed_comparable": null,
+                "realization": null,
+                "baseline_trend": null,
+                "observed_above_trend": null,
+                "attribution": "observed, not attributed",
+                "matured_unobserved_items": [
+                  "rb-5",
+                  "rb-6"
+                ]
+              }
+            },
+            "immature_observation_ids": []
+          }
+        },
+        "double_count": {
+          "planned_benefits": "300.00",
+          "attributable_benefits": "300.00",
+          "residual": "0.00",
+          "overlaps": [],
+          "explanation_required": false
+        },
+        "npv_total": {
+          "value": "-7.37",
+          "exact": "-7590300/1030301"
+        }
+      }
+    },
+    "initiatives": {
+      "rj-i1": {
+        "roadmap": {
+          "requested_start": 0,
+          "duration_periods": 2,
+          "dependency_feasible_start": 0,
+          "dependency_delay": 0,
+          "binding_dependency_id": null,
+          "finish": 2,
+          "resource_constrained_start": 0,
+          "resource_delay": 0
+        },
+        "adoption": {
+          "eligibility_rule_version": "elig-v1",
+          "adoption_rate": "0.400000",
+          "eligible_count": 20,
+          "adopted_count": 8,
+          "latest_observation_id": "rao-1",
+          "series": [
+            {
+              "observation_id": "rao-1",
+              "observed_at": "2026-04-30T00:00:00Z",
+              "eligible_count": 20,
+              "adopted_count": 8,
+              "adoption_rate": "0.400000"
+            }
+          ],
+          "excluded_after_as_of": []
+        },
+        "training": {
+          "training_completion": "0.900000",
+          "eligible_trainees": 20,
+          "completed": 18,
+          "training_id": "rt-1",
+          "substituted_for_adoption": false,
+          "differs_from_adoption": true
+        },
+        "risk": {
+          "risk_exposure": "100.00",
+          "label": "scenario estimate",
+          "items": [
+            {
+              "risk_id": "rk-1",
+              "probability": "0.100000",
+              "impact": "1000.00",
+              "expected_loss": "100.00"
+            }
+          ]
+        },
+        "forecast": {
+          "versions": [
+            {
+              "version_number": 1,
+              "created_at": "2026-01-20T00:00:00Z",
+              "reason": "Approved forecast",
+              "total": "700.00",
+              "by_period": [
+                {
+                  "period_index": 1,
+                  "amount": "700.00"
+                }
+              ]
+            }
+          ],
+          "original_version": 1,
+          "original_preserved": true,
+          "latest_version": 1,
+          "latest_minus_original": "0.00",
+          "observed": [
+            {
+              "benefit_id": "rb-1",
+              "period_index": 1,
+              "measured_value": "500.00",
+              "observed_at": "2026-03-31T00:00:00Z",
+              "period_matured": true
+            }
+          ]
+        }
+      },
+      "rj-i2": {
+        "roadmap": {
+          "requested_start": 0,
+          "duration_periods": 1,
+          "dependency_feasible_start": 2,
+          "dependency_delay": 2,
+          "binding_dependency_id": "rd-1",
+          "finish": 3,
+          "resource_constrained_start": 2,
+          "resource_delay": 0
+        },
+        "adoption": {
+          "eligibility_rule_version": "elig-v1",
+          "adoption_rate": null,
+          "eligible_count": null,
+          "adopted_count": null,
+          "latest_observation_id": null,
+          "series": [],
+          "excluded_after_as_of": []
+        },
+        "training": {
+          "training_completion": null,
+          "eligible_trainees": null,
+          "completed": null,
+          "training_id": null,
+          "substituted_for_adoption": false,
+          "differs_from_adoption": null
+        },
+        "risk": {
+          "risk_exposure": null,
+          "label": "scenario estimate",
+          "items": []
+        },
+        "forecast": null
+      },
+      "rj-i3": {
+        "roadmap": {
+          "requested_start": 0,
+          "duration_periods": 1,
+          "dependency_feasible_start": 4,
+          "dependency_delay": 4,
+          "binding_dependency_id": "rd-2",
+          "finish": 5,
+          "resource_constrained_start": 4,
+          "resource_delay": 0
+        },
+        "adoption": {
+          "eligibility_rule_version": "elig-v1",
+          "adoption_rate": null,
+          "eligible_count": null,
+          "adopted_count": null,
+          "latest_observation_id": null,
+          "series": [],
+          "excluded_after_as_of": []
+        },
+        "training": {
+          "training_completion": null,
+          "eligible_trainees": null,
+          "completed": null,
+          "training_id": null,
+          "substituted_for_adoption": false,
+          "differs_from_adoption": null
+        },
+        "risk": {
+          "risk_exposure": null,
+          "label": "scenario estimate",
+          "items": []
+        },
+        "forecast": null
+      },
+      "rj-i4": {
+        "roadmap": {
+          "requested_start": 0,
+          "duration_periods": 1,
+          "dependency_feasible_start": 0,
+          "dependency_delay": 0,
+          "binding_dependency_id": null,
+          "finish": 1,
+          "resource_constrained_start": 0,
+          "resource_delay": 0
+        },
+        "adoption": {
+          "eligibility_rule_version": "elig-v1",
+          "adoption_rate": null,
+          "eligible_count": null,
+          "adopted_count": null,
+          "latest_observation_id": null,
+          "series": [],
+          "excluded_after_as_of": []
+        },
+        "training": {
+          "training_completion": null,
+          "eligible_trainees": null,
+          "completed": null,
+          "training_id": null,
+          "substituted_for_adoption": false,
+          "differs_from_adoption": null
+        },
+        "risk": {
+          "risk_exposure": null,
+          "label": "scenario estimate",
+          "items": []
+        },
+        "forecast": null
+      }
+    },
+    "groups": {
+      "rg-1": {
+        "affected_count": 12,
+        "impact_level": "high",
+        "readiness_score": "4.0000",
+        "readiness_exact": "4",
+        "label": "assessment, not a probability",
+        "dimensions_assessed": 1,
+        "dimensions": [
+          {
+            "dimension": "awareness",
+            "score": 4,
+            "weight": "1.00",
+            "assessment_id": "rra-1"
+          }
+        ]
+      }
+    },
+    "resources": {
+      "res-r1": {
+        "capacity_per_period": "2.00",
+        "unit": "FTE",
+        "by_period": [
+          {
+            "period_index": 0,
+            "allocated": "1.50",
+            "headroom": "0.50"
+          },
+          {
+            "period_index": 1,
+            "allocated": "2.00",
+            "headroom": "0.00"
+          }
+        ],
+        "overallocated_periods": []
+      }
+    }
+  }
+}

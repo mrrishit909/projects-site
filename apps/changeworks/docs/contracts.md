@@ -103,6 +103,46 @@ rounding only at the declared presentation step, ROUND_HALF_UP. Proportions: dec
 date; ranges half-open `[from, to)`. Instants UTC with `Z`, server-stamped. Null means unknown, no baseline or a
 zero denominator, never 0. Empty population: every count 0, every ratio and NPV null, `empty_population` true.
 
+## D-05 Fixture decisions (adopted from the golden fixture, P09-GOLD-11)
+Adopted verbatim from `tests/fixtures/golden/CALCULATION.md` DECISIONS D-P9-01..24; the fixture and `reference_check.py`
+are the binding form. The points that sharpen D-01..D-04:
+* **Import order (D-P9-01):** parents first; per record duplicate id, then foreign keys (`UNKNOWN_*` / `DEPENDENT_REJECTED`),
+  then rules; the later of two repeated records is rejected.
+* **Ramp (D-P9-02):** `values[min(period − starts_period, last)]` indexed from each benefit row's own `starts_period`, last
+  value held. **Avoided cost (D-P9-03):** enters the cash flow only with `cash_realisation` true **and** an `evidence_ref`;
+  otherwise reported beside it, never refused. **Capacity conversion (D-P9-04):** a derived cash item (hours × rate) citing
+  the assumption and evidence. **Monthly rate (D-P9-06):** the converted monthly rate is a declared 6-place decimal
+  assumption version (the twelfth root is irrational); NPV is exact rational over that decimal.
+* **Cost variance (D-P9-05):** over `[0, min(horizon, matured periods))` against the planned rows whose `baseline_version`
+  equals the initiative's approved one; null without an approved baseline, a matured period or actuals. **Matured
+  (D-P9-22):** a period whose end ≤ as-of; observations after as-of are ignored.
+* **Payback (D-P9-07):** first t with cumulative ≥ 0, interpolated `(t−1) + (−cum[t−1]) ÷ (cum[t] − cum[t−1])`, 0.0000 at
+  t = 0, null when never crossed; NPV and paybacks null when there are no flows.
+* **Roadmap (D-P9-08):** feasible start = max(requested start, prerequisite constraints) propagated through the chain
+  (FS: predecessor feasible start + duration + lag; SS: predecessor feasible start + lag); delay never negative; the roadmap
+  does not re-time cash flows. **Allocations (D-P9-15):** checked in id order; the row that crosses capacity is rejected with
+  its periods; a sum equal to capacity is allowed.
+* **Double count (D-P9-09):** benefits sharing a key in one period across two or more initiatives count once at the largest
+  claim; planned is the ramped money-class total, hours excluded.
+* **Readiness (D-P9-10):** latest assessment per dimension at or before as-of, per-row decimal weights, incomplete sets
+  allowed. **Adoption and training (D-P9-11):** latest record at or before as-of; zero eligible gives null; an eligibility
+  rule-version mismatch is rejected. **Realization (D-P9-12):** matured rows with an observation only; unobserved rows listed,
+  never counted as 0; trend = Σ `baseline_trend_per_period`.
+* **Risk (D-P9-13):** `risk_items.impact` is a USD decimal string (clarifying the section-03 text type); null without items;
+  probability outside [0, 1] is `PROBABILITY_OUT_OF_RANGE`. **Assumptions (D-P9-14):** the scenario's pinned version, else the
+  latest. **Costs (D-P9-16):** recurring rows carry a half-open `[start_period, end_period)` and null `period_index`; a repeated
+  one-time cost is identified by (`initiative_id`, `cost_key`, `cost_basis`). **Forecasts (D-P9-17):** one row per
+  (initiative, version, period); a repeat is `VERSION_EXISTS`. **Cycles (D-P9-18):** reported from the initiative of the
+  rejected edge; a self-dependency is a two-element cycle. **Statuses (D-P9-19):** initiative candidate | assessed |
+  in_delivery | adopted | closed; scenario draft | proposed; "funded" is `STATUS_NOT_ALLOWED`.
+* **Formats (D-P9-20/21):** hours, paybacks and readiness as 4-place strings with every exact rational also recorded as
+  `n/d`; `metrics.summary` pools only what can be pooled and is null on an empty population. **Baselines (D-P9-23):**
+  `process_baselines` carry `baseline_version`, `evidence_ref`, `measured_at`, optional `reason`; a later version stays
+  readable but unused until approved. **Impact mappings (D-P9-24):** validated and counted only.
+* **Not proven by the fixture:** golden on monthly periods, benefit rows beyond the horizon, metric windows beyond the matured
+  clip, baseline approval by role and the immutability of an approved baseline, resource-levelling shifts, ties and three
+  claimants in the double-count rule, the C07 proposal transition, API envelopes and idempotency; the backend tests carry them.
+
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners. Mode B: TypeScript mirror over the published
 snapshot; the sensitivity lab, roadmap edits and scenario selection are browser-memory simulations and say so.
