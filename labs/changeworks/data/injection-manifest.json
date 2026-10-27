@@ -1,0 +1,2099 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "6bf7ebaad6bf75084c82c41de1031d6d585af730c8a22979ed7c77df2a38e3a9",
+  "dataset_version": "cw-20261026-20261026",
+  "designed_relationships": [
+    {
+      "id": "DR-01",
+      "name": "an initiative whose only benefit is released capacity",
+      "realised": {
+        "benefit_classes": [
+          "capacity"
+        ],
+        "capacity_hours_not_converted": "2920.49",
+        "capacity_released_hours_per_period": "405.6250",
+        "cash_benefits_total": "0.00",
+        "converted_capacity_items": 0,
+        "initiative_id": "init-009",
+        "npv": "-761535.73",
+        "planned_hours": "4380.72",
+        "scenario_id": "scn-025",
+        "simple_payback": null
+      },
+      "statement": "init-009 plans only capacity hours; with no conversion there is no cash case."
+    },
+    {
+      "id": "DR-02",
+      "name": "two initiatives claim the same released capacity",
+      "realised": {
+        "attributable_benefits": "32470748.38",
+        "benefit_source_key": "src-fin-ap-shared-team",
+        "first_overlap_period": 3,
+        "initiatives": [
+          "init-001",
+          "init-002"
+        ],
+        "last_overlap_period": 12,
+        "overlap_periods": 10,
+        "planned_benefits": "32677894.70",
+        "residual": "207146.32",
+        "scenario_id": "scn-025",
+        "scenarios_with_a_residual": [
+          "scn-002",
+          "scn-003",
+          "scn-006",
+          "scn-025",
+          "scn-027"
+        ],
+        "scenarios_with_no_residual": [
+          "scn-001",
+          "scn-004",
+          "scn-005",
+          "scn-007",
+          "scn-008",
+          "scn-009",
+          "scn-010",
+          "scn-011",
+          "scn-012",
+          "scn-013",
+          "scn-014",
+          "scn-015",
+          "scn-016",
+          "scn-017",
+          "scn-018",
+          "scn-019",
+          "scn-020",
+          "scn-021",
+          "scn-022",
+          "scn-023",
+          "scn-024",
+          "scn-026",
+          "scn-028",
+          "scn-029",
+          "scn-030"
+        ]
+      },
+      "statement": "init-001 and init-002 both claim the accounts-payable team's time (benefit_source_key src-fin-ap-shared-team)."
+    },
+    {
+      "id": "DR-03",
+      "name": "an initiative that never pays back",
+      "realised": {
+        "benefit_to_cost": "0.620043",
+        "benefits_entering_the_cash_flow": "805466.72",
+        "initiative_id": "init-015",
+        "npv_highest": "-508801.53",
+        "npv_lowest": "-619344.67",
+        "planned_cost": "1299050.00",
+        "scenarios": [
+          "scn-013",
+          "scn-014",
+          "scn-015",
+          "scn-016",
+          "scn-017",
+          "scn-018",
+          "scn-025",
+          "scn-026"
+        ],
+        "scenarios_with_discounted_payback_null": 8,
+        "scenarios_with_simple_payback_null": 8
+      },
+      "statement": "init-015 recovers well under its cost over its benefit window."
+    },
+    {
+      "id": "DR-04",
+      "name": "a forecast revised twice after a missed target, the original kept",
+      "realised": {
+        "initiative_id": "init-003",
+        "latest_minus_original": "-211592.52",
+        "latest_observed": {
+          "3": "1844.17",
+          "4": "5993.50",
+          "5": "11522.63",
+          "6": "19017.91",
+          "7": "26848.82",
+          "8": "40340.98"
+        },
+        "miss_tolerance_percent": 10,
+        "misses": [
+          {
+            "all_checked_periods_observed_over_forecast": {
+              "3": "0.672385",
+              "4": "0.678912"
+            },
+            "created_at": "2026-06-12T10:00:00Z",
+            "observed_over_forecast": {
+              "3": "0.672385",
+              "4": "0.678912"
+            },
+            "periods_below_the_previous_forecast": [
+              3,
+              4
+            ],
+            "periods_checked": [
+              3,
+              4
+            ],
+            "revises_version": 1,
+            "revision": 2
+          },
+          {
+            "all_checked_periods_observed_over_forecast": {
+              "5": "0.849750",
+              "6": "0.824670",
+              "7": "0.792000"
+            },
+            "created_at": "2026-09-09T10:00:00Z",
+            "observed_over_forecast": {
+              "5": "0.849750",
+              "6": "0.824670",
+              "7": "0.792000"
+            },
+            "periods_below_the_previous_forecast": [
+              5,
+              6,
+              7
+            ],
+            "periods_checked": [
+              5,
+              6,
+              7
+            ],
+            "revises_version": 2,
+            "revision": 3
+          }
+        ],
+        "original_preserved": true,
+        "versions": [
+          {
+            "created_at": "2026-03-12T10:00:00Z",
+            "reason": "Approved forecast",
+            "total": "745800.06",
+            "version_number": 1
+          },
+          {
+            "created_at": "2026-06-12T10:00:00Z",
+            "reason": "Revised after April and May fell short of the approved forecast",
+            "total": "598900.05",
+            "version_number": 2
+          },
+          {
+            "created_at": "2026-09-09T10:00:00Z",
+            "reason": "Revised again after June, July and August fell short of the revised forecast",
+            "total": "534207.54",
+            "version_number": 3
+          }
+        ]
+      },
+      "statement": "init-003's approved forecast (version 1) is revised in June and again in September after the observed cash benefit fell short."
+    },
+    {
+      "id": "DR-05",
+      "name": "a shared specialist overallocated in three periods",
+      "realised": {
+        "allocated": {
+          "14": "2.00",
+          "15": "2.00",
+          "16": "2.00"
+        },
+        "capacity_per_period": "2.00",
+        "headroom": {
+          "14": "0.00",
+          "15": "0.00",
+          "16": "0.00"
+        },
+        "initiatives_allocated_in_those_periods": [
+          "init-017",
+          "init-019",
+          "init-020",
+          "init-023"
+        ],
+        "periods": [
+          14,
+          15,
+          16
+        ],
+        "refused_periods": [
+          14,
+          15,
+          16
+        ],
+        "requested": [
+          "0.50",
+          "0.50",
+          "0.50"
+        ],
+        "requests_refused": 3,
+        "resource_id": "res-03",
+        "stored_overallocated_periods": []
+      },
+      "statement": "res-03 is allocated to capacity in periods [14, 15, 16]; further requests there are refused at ingest and kept in the replay events."
+    },
+    {
+      "id": "DR-06",
+      "name": "an observed improvement that is mostly the baseline trend",
+      "realised": {
+        "attribution": "observed, not attributed",
+        "baseline_trend": "143941.18",
+        "comparable_rows": 6,
+        "initiative_id": "init-008",
+        "observed_above_trend": "25651.95",
+        "observed_comparable": "169593.13",
+        "parameter_trend_share_percent": 85,
+        "planned_comparable": "173800.00",
+        "realization": "0.975795",
+        "scenario_id": "scn-025",
+        "trend_share_of_observed": "0.848744"
+      },
+      "statement": "init-008's cash benefit is close to plan, and most of it is the trend recorded before deployment."
+    },
+    {
+      "id": "DR-07",
+      "name": "adoption that lags training completion by several periods",
+      "realised": {
+        "adoption_rate_summary": "0.532881",
+        "initiatives": [
+          {
+            "adoption_50_percent_on": "2026-07-07T06:00:00Z",
+            "adoption_rate_now": "0.841346",
+            "initiative_id": "init-001",
+            "lag_periods": 4,
+            "periods_since_training_90_percent": 7,
+            "training_90_percent_on": "2026-03-20T15:00:00Z",
+            "training_completion_now": "0.948235"
+          },
+          {
+            "adoption_50_percent_on": "2026-09-11T12:00:00Z",
+            "adoption_rate_now": "0.578512",
+            "initiative_id": "init-002",
+            "lag_periods": 6,
+            "periods_since_training_90_percent": 7,
+            "training_90_percent_on": "2026-03-26T15:00:00Z",
+            "training_completion_now": "0.968794"
+          },
+          {
+            "adoption_50_percent_on": null,
+            "adoption_rate_now": "0.232258",
+            "initiative_id": "init-003",
+            "lag_periods": null,
+            "periods_since_training_90_percent": 5,
+            "training_90_percent_on": "2026-05-02T15:00:00Z",
+            "training_completion_now": "0.977918"
+          },
+          {
+            "adoption_50_percent_on": null,
+            "adoption_rate_now": "0.444444",
+            "initiative_id": "init-004",
+            "lag_periods": null,
+            "periods_since_training_90_percent": 5,
+            "training_90_percent_on": "2026-05-18T15:00:00Z",
+            "training_completion_now": "0.959792"
+          },
+          {
+            "adoption_50_percent_on": "2026-07-22T03:00:00Z",
+            "adoption_rate_now": "0.739708",
+            "initiative_id": "init-007",
+            "lag_periods": 4,
+            "periods_since_training_90_percent": 7,
+            "training_90_percent_on": "2026-03-15T15:00:00Z",
+            "training_completion_now": "0.979702"
+          },
+          {
+            "adoption_50_percent_on": "2026-08-06T19:00:00Z",
+            "adoption_rate_now": "0.710462",
+            "initiative_id": "init-008",
+            "lag_periods": 5,
+            "periods_since_training_90_percent": 7,
+            "training_90_percent_on": "2026-03-13T15:00:00Z",
+            "training_completion_now": "0.968370"
+          },
+          {
+            "adoption_50_percent_on": null,
+            "adoption_rate_now": "0.412742",
+            "initiative_id": "init-009",
+            "lag_periods": null,
+            "periods_since_training_90_percent": 6,
+            "training_90_percent_on": "2026-04-25T15:00:00Z",
+            "training_completion_now": "0.958904"
+          },
+          {
+            "adoption_50_percent_on": "2026-08-01T05:00:00Z",
+            "adoption_rate_now": "0.708772",
+            "initiative_id": "init-013",
+            "lag_periods": 5,
+            "periods_since_training_90_percent": 7,
+            "training_90_percent_on": "2026-03-17T15:00:00Z",
+            "training_completion_now": "0.949233"
+          },
+          {
+            "adoption_50_percent_on": null,
+            "adoption_rate_now": "0.229508",
+            "initiative_id": "init-014",
+            "lag_periods": null,
+            "periods_since_training_90_percent": 4,
+            "training_90_percent_on": "2026-06-12T15:00:00Z",
+            "training_completion_now": "0.979592"
+          },
+          {
+            "adoption_50_percent_on": null,
+            "adoption_rate_now": "0.349544",
+            "initiative_id": "init-015",
+            "lag_periods": null,
+            "periods_since_training_90_percent": 5,
+            "training_90_percent_on": "2026-05-16T15:00:00Z",
+            "training_completion_now": "0.979412"
+          },
+          {
+            "adoption_50_percent_on": null,
+            "adoption_rate_now": "0.174334",
+            "initiative_id": "init-016",
+            "lag_periods": null,
+            "periods_since_training_90_percent": 3,
+            "training_90_percent_on": "2026-07-22T15:00:00Z",
+            "training_completion_now": "0.938875"
+          }
+        ],
+        "initiatives_whose_adoption_never_reached_50_percent": [
+          "init-003",
+          "init-004",
+          "init-009",
+          "init-014",
+          "init-015",
+          "init-016"
+        ],
+        "lag_periods_sorted": [
+          4,
+          4,
+          5,
+          5,
+          6
+        ],
+        "training_completion_summary": "0.888443"
+      },
+      "statement": "In every initiative with both series, 90 % of the eligible trainees complete training long before half of the eligible staff have adopted."
+    }
+  ],
+  "events": [
+    {
+      "event_id": "EV-01",
+      "injection": "INJ-01",
+      "requires": [
+        "init-009"
+      ],
+      "steps": [
+        {
+          "details": {
+            "hours": "100.00"
+          },
+          "entity": "benefit_items",
+          "expected": "rejected",
+          "kind": "ingest",
+          "reason_code": "CAPACITY_WITHOUT_CONVERSION",
+          "row": {
+            "amount": "100.00",
+            "baseline_trend_per_period": "5.00",
+            "benefit_id": "b-inj-01",
+            "benefit_source_key": "src-009-triage-time",
+            "benefit_type": "capacity",
+            "cash_realisation": true,
+            "evidence_ref": null,
+            "initiative_id": "init-009",
+            "period_index": 12,
+            "starts_period": 12,
+            "unit": "hours"
+          }
+        },
+        {
+          "entity": "assumption_versions",
+          "expected": "accepted",
+          "kind": "ingest",
+          "row": {
+            "assumption_id": "a-inj-01-rate",
+            "author_id": "an-02",
+            "created_at": "2026-10-04T09:00:00Z",
+            "evidence_ref": null,
+            "initiative_id": "init-009",
+            "name": "capacity_hourly_rate",
+            "rationale": "Loaded cost of a triage handler",
+            "staffing_change_evidence_ref": "ev:hr-headcount-plan-complaints-2026",
+            "unit": "USD per hour",
+            "value": "31.50",
+            "values": null,
+            "version_number": 1
+          }
+        },
+        {
+          "entity": "benefit_items",
+          "expected": "accepted",
+          "kind": "ingest",
+          "row": {
+            "amount": "100.00",
+            "baseline_trend_per_period": "5.00",
+            "benefit_id": "b-inj-01b",
+            "benefit_source_key": "src-009-triage-time",
+            "benefit_type": "capacity",
+            "cash_realisation": true,
+            "evidence_ref": null,
+            "initiative_id": "init-009",
+            "period_index": 12,
+            "starts_period": 12,
+            "unit": "hours"
+          }
+        },
+        {
+          "command": "build-cash-flows",
+          "expected_reason": "CAPACITY_WITHOUT_CONVERSION",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-01-a",
+            "input": {
+              "baseline_version": "v2",
+              "benefits": [
+                {
+                  "amount": "100.00",
+                  "benefit_type": "capacity",
+                  "cash_realisation": true,
+                  "initiative_id": "init-009",
+                  "period_index": 12,
+                  "starts_period": 12,
+                  "unit": "hours"
+                }
+              ],
+              "discount_rate": "0.080000",
+              "horizon_periods": 24,
+              "initiative_ids": [
+                "init-009"
+              ],
+              "pinned_assumption_ids": [],
+              "rate_basis": "annual",
+              "rate_conversion_assumption_id": "a-conv-monthl-2",
+              "scenario_id": "scn-inj-01"
+            },
+            "request_id": "req-inj-01-a"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-02",
+      "injection": "INJ-02",
+      "requires": [
+        "scn-025",
+        "scn-001"
+      ],
+      "steps": [
+        {
+          "command": "select-scenario",
+          "expected_reason": "DOUBLE_COUNT_UNEXPLAINED",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-sponsor01",
+            "X-Actor-Role": "sponsor"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-02-a",
+            "input": {
+              "compared_scenario_ids": [
+                "scn-001"
+              ],
+              "scenario_id": "scn-025"
+            },
+            "request_id": "req-inj-02-a"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "select-scenario",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-sponsor01",
+            "X-Actor-Role": "sponsor"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-02-b",
+            "input": {
+              "compared_scenario_ids": [
+                "scn-001"
+              ],
+              "residual_explanation": "Both initiatives release time of the same accounts-payable team; the larger claim is counted once and the overlap is listed.",
+              "scenario_id": "scn-025"
+            },
+            "request_id": "req-inj-02-b"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "select-scenario",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-sponsor01",
+            "X-Actor-Role": "sponsor"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-02-c",
+            "input": {
+              "scenario_id": "scn-001"
+            },
+            "request_id": "req-inj-02-c"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-03",
+      "injection": "INJ-03",
+      "requires": [
+        "init-001"
+      ],
+      "steps": [
+        {
+          "details": {
+            "period_basis": "monthly",
+            "rate_basis": "annual"
+          },
+          "entity": "scenario_versions",
+          "expected": "rejected",
+          "kind": "ingest",
+          "reason_code": "RATE_PERIOD_MISMATCH",
+          "row": {
+            "baseline_version": "v2",
+            "created_at": "2026-10-04T09:00:00Z",
+            "discount_rate": "0.080000",
+            "horizon_periods": 36,
+            "initiative_ids": [
+              "init-001"
+            ],
+            "pinned_assumption_ids": [],
+            "rate_basis": "annual",
+            "rate_conversion_assumption_id": null,
+            "scenario_id": "scn-inj-03",
+            "status": "draft"
+          }
+        },
+        {
+          "entity": "scenario_versions",
+          "expected": "accepted",
+          "kind": "ingest",
+          "row": {
+            "baseline_version": "v2",
+            "created_at": "2026-10-04T09:00:00Z",
+            "discount_rate": "0.080000",
+            "horizon_periods": 36,
+            "initiative_ids": [
+              "init-001"
+            ],
+            "pinned_assumption_ids": [],
+            "rate_basis": "annual",
+            "rate_conversion_assumption_id": "a-conv-monthl-2",
+            "scenario_id": "scn-inj-03b",
+            "status": "draft"
+          }
+        },
+        {
+          "command": "build-cash-flows",
+          "expected_reason": "RATE_PERIOD_MISMATCH",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-03-a",
+            "input": {
+              "baseline_version": "v2",
+              "discount_rate": "0.080000",
+              "horizon_periods": 36,
+              "initiative_ids": [
+                "init-001"
+              ],
+              "rate_basis": "annual",
+              "scenario_id": "scn-inj-03"
+            },
+            "request_id": "req-inj-03-a"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "build-cash-flows",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-03-b",
+            "input": {
+              "baseline_version": "v2",
+              "discount_rate": "0.080000",
+              "horizon_periods": 36,
+              "initiative_ids": [
+                "init-001"
+              ],
+              "rate_basis": "annual",
+              "rate_conversion_assumption_id": "a-conv-monthl-2",
+              "scenario_id": "scn-inj-03b"
+            },
+            "request_id": "req-inj-03-b"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-04",
+      "injection": "INJ-04",
+      "requires": [
+        "init-005"
+      ],
+      "steps": [
+        {
+          "details": {
+            "deployment_period": 10,
+            "starts_period": 7
+          },
+          "entity": "benefit_items",
+          "expected": "rejected",
+          "kind": "ingest",
+          "reason_code": "BENEFIT_BEFORE_DEPLOYMENT",
+          "row": {
+            "amount": "9000.00",
+            "baseline_trend_per_period": "100.00",
+            "benefit_id": "b-inj-04",
+            "benefit_source_key": "src-005-early",
+            "benefit_type": "cash",
+            "cash_realisation": null,
+            "evidence_ref": null,
+            "initiative_id": "init-005",
+            "period_index": 7,
+            "starts_period": 7,
+            "unit": "USD"
+          }
+        },
+        {
+          "entity": "benefit_items",
+          "expected": "accepted",
+          "kind": "ingest",
+          "row": {
+            "amount": "9000.00",
+            "baseline_trend_per_period": "100.00",
+            "benefit_id": "b-inj-04b",
+            "benefit_source_key": "src-005-early",
+            "benefit_type": "cash",
+            "cash_realisation": null,
+            "evidence_ref": null,
+            "initiative_id": "init-005",
+            "period_index": 10,
+            "starts_period": 10,
+            "unit": "USD"
+          }
+        },
+        {
+          "command": "build-cash-flows",
+          "expected_reason": "BENEFIT_BEFORE_DEPLOYMENT",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-04-a",
+            "input": {
+              "baseline_version": "v2",
+              "benefits": [
+                {
+                  "amount": "9000.00",
+                  "baseline_trend_per_period": "100.00",
+                  "benefit_source_key": "src-005-early",
+                  "benefit_type": "cash",
+                  "cash_realisation": null,
+                  "evidence_ref": null,
+                  "initiative_id": "init-005",
+                  "period_index": 7,
+                  "starts_period": 7,
+                  "unit": "USD"
+                }
+              ],
+              "discount_rate": "0.080000",
+              "horizon_periods": 36,
+              "initiative_ids": [
+                "init-005"
+              ],
+              "rate_basis": "annual",
+              "rate_conversion_assumption_id": "a-conv-monthl-2",
+              "scenario_id": "scn-inj-04"
+            },
+            "request_id": "req-inj-04-a"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-05",
+      "injection": "INJ-05",
+      "requires": [
+        "init-003"
+      ],
+      "steps": [
+        {
+          "details": {
+            "initiative_rule": "elig-v1",
+            "row_rule": "elig-training"
+          },
+          "entity": "adoption_observations",
+          "expected": "rejected",
+          "kind": "ingest",
+          "reason_code": "ELIGIBILITY_RULE_MISMATCH",
+          "row": {
+            "adopted_count": 310,
+            "eligibility_rule_version": "elig-training",
+            "eligible_count": 317,
+            "initiative_id": "init-003",
+            "observation_id": "ad-inj-05",
+            "observed_at": "2026-10-04T09:00:00Z"
+          }
+        },
+        {
+          "details": {
+            "eligible": 155,
+            "numerator": 310
+          },
+          "entity": "adoption_observations",
+          "expected": "rejected",
+          "kind": "ingest",
+          "reason_code": "ADOPTED_EXCEEDS_ELIGIBLE",
+          "row": {
+            "adopted_count": 310,
+            "eligibility_rule_version": "elig-v1",
+            "eligible_count": 155,
+            "initiative_id": "init-003",
+            "observation_id": "ad-inj-05b",
+            "observed_at": "2026-10-04T09:00:00Z"
+          }
+        },
+        {
+          "command": "record-adoption",
+          "expected_reason": "ELIGIBILITY_RULE_MISMATCH",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-05-a",
+            "input": {
+              "adopted_count": 310,
+              "eligibility_rule_version": "elig-training",
+              "eligible_count": 317,
+              "initiative_id": "init-003"
+            },
+            "request_id": "req-inj-05-a"
+          },
+          "kind": "command"
+        },
+        {
+          "expect": [
+            {
+              "equals": "0.232258",
+              "path": "metrics.initiatives.init-003.adoption.adoption_rate"
+            },
+            {
+              "equals": "0.977918",
+              "path": "metrics.initiatives.init-003.training.training_completion"
+            },
+            {
+              "equals": true,
+              "path": "metrics.initiatives.init-003.training.differs_from_adoption"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "as_of": "2026-10-05T00:00:00Z"
+          },
+          "path": "/metrics"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-06",
+      "injection": "INJ-06",
+      "requires": [
+        "init-003"
+      ],
+      "steps": [
+        {
+          "details": {
+            "existing_id": "f-003-1-05",
+            "version_number": 1
+          },
+          "entity": "forecast_versions",
+          "expected": "rejected",
+          "kind": "ingest",
+          "reason_code": "VERSION_EXISTS",
+          "row": {
+            "amount": "1.00",
+            "created_at": "2026-10-04T09:00:00Z",
+            "forecast_id": "f-inj-06",
+            "initiative_id": "init-003",
+            "period_index": 5,
+            "reason": "Overwrite attempt",
+            "version_number": 1
+          }
+        },
+        {
+          "entity": "forecast_versions",
+          "expected": "accepted",
+          "kind": "ingest",
+          "row": {
+            "amount": "16950.03",
+            "created_at": "2026-10-04T09:00:00Z",
+            "forecast_id": "f-inj-06b",
+            "initiative_id": "init-003",
+            "period_index": 5,
+            "reason": "Revision four",
+            "version_number": 4
+          }
+        },
+        {
+          "command": "revise-forecast",
+          "expected_reason": "STALE_FORECAST_VERSION",
+          "expected_status": 409,
+          "headers": {
+            "X-Actor-Id": "usr-sponsor01",
+            "X-Actor-Role": "sponsor"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-06-a",
+            "input": {
+              "expected_version": 1,
+              "initiative_id": "init-003",
+              "periods": [
+                {
+                  "amount": "1.00",
+                  "period_index": 5
+                }
+              ],
+              "reason": "Overwrite attempt"
+            },
+            "request_id": "req-inj-06-a"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "revise-forecast",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-sponsor01",
+            "X-Actor-Role": "sponsor"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-06-b",
+            "input": {
+              "expected_version": 3,
+              "initiative_id": "init-003",
+              "periods": [
+                {
+                  "amount": "16950.03",
+                  "period_index": 5
+                }
+              ],
+              "reason": "Fourth revision"
+            },
+            "request_id": "req-inj-06-b"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-07",
+      "injection": "INJ-07",
+      "requires": [
+        "d-001",
+        "d-004"
+      ],
+      "steps": [
+        {
+          "details": {
+            "cycle": [
+              "init-001",
+              "init-004",
+              "init-001"
+            ]
+          },
+          "entity": "dependencies",
+          "expected": "rejected",
+          "kind": "ingest",
+          "reason_code": "DEPENDENCY_CYCLE",
+          "row": {
+            "dependency_id": "d-inj-07",
+            "dependency_type": "finish_to_start",
+            "initiative_id": "init-001",
+            "lag_periods": 0,
+            "prerequisite_id": "init-004"
+          }
+        },
+        {
+          "command": "plan-roadmap",
+          "expected_reason": "DEPENDENCY_CYCLE",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-07-a",
+            "input": {
+              "dependencies": [
+                {
+                  "dependency_type": "finish_to_start",
+                  "initiative_id": "init-001",
+                  "lag_periods": 0,
+                  "prerequisite_id": "init-004"
+                }
+              ]
+            },
+            "request_id": "req-inj-07-a"
+          },
+          "kind": "command"
+        },
+        {
+          "expect": [
+            {
+              "equals": 2,
+              "path": "metrics.initiatives.init-004.roadmap.dependency_feasible_start"
+            },
+            {
+              "equals": null,
+              "path": "metrics.initiatives.init-004.roadmap.binding_dependency_id"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "as_of": "2026-10-05T00:00:00Z"
+          },
+          "path": "/metrics"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-08",
+      "injection": "INJ-08",
+      "requires": [
+        "init-015"
+      ],
+      "steps": [
+        {
+          "entity": "scenario_versions",
+          "expected": "accepted",
+          "kind": "ingest",
+          "row": {
+            "baseline_version": "v1",
+            "created_at": "2026-10-04T09:00:00Z",
+            "discount_rate": "0.080000",
+            "horizon_periods": 120,
+            "initiative_ids": [
+              "init-015"
+            ],
+            "pinned_assumption_ids": [],
+            "rate_basis": "annual",
+            "rate_conversion_assumption_id": "a-conv-monthl-2",
+            "scenario_id": "scn-inj-08",
+            "status": "draft"
+          }
+        },
+        {
+          "command": "build-cash-flows",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-08-a",
+            "input": {
+              "baseline_version": "v1",
+              "discount_rate": "0.080000",
+              "horizon_periods": 120,
+              "initiative_ids": [
+                "init-015"
+              ],
+              "rate_basis": "annual",
+              "rate_conversion_assumption_id": "a-conv-monthl-2",
+              "scenario_id": "scn-inj-08"
+            },
+            "request_id": "req-inj-08-a"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-09",
+      "injection": "INJ-09",
+      "requires": [
+        "res-03",
+        "init-012"
+      ],
+      "steps": [
+        {
+          "details": {
+            "allocated_before": "2.00",
+            "capacity": "2.00",
+            "periods": [
+              14
+            ],
+            "requested": "0.50",
+            "resource_id": "res-03"
+          },
+          "entity": "resource_allocations",
+          "expected": "rejected",
+          "kind": "ingest",
+          "reason_code": "RESOURCE_OVERALLOCATED",
+          "row": {
+            "allocation_id": "al-inj-09-1",
+            "amount": "0.50",
+            "initiative_id": "init-012",
+            "period_index": 14,
+            "resource_id": "res-03"
+          }
+        },
+        {
+          "details": {
+            "allocated_before": "2.00",
+            "capacity": "2.00",
+            "periods": [
+              15
+            ],
+            "requested": "0.50",
+            "resource_id": "res-03"
+          },
+          "entity": "resource_allocations",
+          "expected": "rejected",
+          "kind": "ingest",
+          "reason_code": "RESOURCE_OVERALLOCATED",
+          "row": {
+            "allocation_id": "al-inj-09-2",
+            "amount": "0.50",
+            "initiative_id": "init-012",
+            "period_index": 15,
+            "resource_id": "res-03"
+          }
+        },
+        {
+          "details": {
+            "allocated_before": "2.00",
+            "capacity": "2.00",
+            "periods": [
+              16
+            ],
+            "requested": "0.50",
+            "resource_id": "res-03"
+          },
+          "entity": "resource_allocations",
+          "expected": "rejected",
+          "kind": "ingest",
+          "reason_code": "RESOURCE_OVERALLOCATED",
+          "row": {
+            "allocation_id": "al-inj-09-3",
+            "amount": "0.50",
+            "initiative_id": "init-012",
+            "period_index": 16,
+            "resource_id": "res-03"
+          }
+        },
+        {
+          "entity": "resource_allocations",
+          "expected": "accepted",
+          "kind": "ingest",
+          "row": {
+            "allocation_id": "al-inj-09-moved",
+            "amount": "0.50",
+            "initiative_id": "init-012",
+            "period_index": 18,
+            "resource_id": "res-03"
+          }
+        },
+        {
+          "command": "plan-roadmap",
+          "expected_reason": "RESOURCE_OVERALLOCATED",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-09-a",
+            "input": {
+              "allocations": [
+                {
+                  "amount": "0.50",
+                  "initiative_id": "init-012",
+                  "period_index": 14,
+                  "resource_id": "res-03"
+                }
+              ]
+            },
+            "request_id": "req-inj-09-a"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-10",
+      "injection": "INJ-10",
+      "requires": [
+        "b-0235"
+      ],
+      "steps": [
+        {
+          "command": "track-benefits",
+          "expected_reason": "ATTRIBUTION_NOT_ESTABLISHED",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-10-a",
+            "input": {
+              "attribution": "caused_by_rollout",
+              "benefit_id": "b-0235",
+              "evidence_ref": "ev:ledger-contact-centre-2026-09",
+              "measured_value": "50000.00",
+              "observed_on": "2026-10-04",
+              "unit": "USD"
+            },
+            "request_id": "req-inj-10-a"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "track-benefits",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-10-b",
+            "input": {
+              "attribution": "observed_not_attributed",
+              "benefit_id": "b-0235",
+              "evidence_ref": "ev:ledger-contact-centre-2026-09",
+              "measured_value": "50000.00",
+              "observed_on": "2026-10-04",
+              "unit": "USD"
+            },
+            "request_id": "req-inj-10-b"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-11",
+      "injection": "INJ-11",
+      "requires": [
+        "c-0042"
+      ],
+      "steps": [
+        {
+          "details": {
+            "first_cost_id": "c-0042",
+            "first_period": 1,
+            "repeat_period": 5
+          },
+          "entity": "cost_items",
+          "expected": "rejected",
+          "kind": "ingest",
+          "reason_code": "ONE_TIME_COST_REPEATED",
+          "row": {
+            "amount": "13500.00",
+            "baseline_version": "v2",
+            "cost_basis": "planned",
+            "cost_id": "c-inj-11",
+            "cost_key": "ck-001-licence-setup-1",
+            "cost_type": "one_time",
+            "end_period": null,
+            "initiative_id": "init-001",
+            "period_index": 5,
+            "start_period": null
+          }
+        },
+        {
+          "entity": "cost_items",
+          "expected": "accepted",
+          "kind": "ingest",
+          "row": {
+            "amount": "13500.00",
+            "baseline_version": "v2",
+            "cost_basis": "planned",
+            "cost_id": "c-inj-11b",
+            "cost_key": "ck-001-licence-renewal",
+            "cost_type": "recurring",
+            "end_period": 6,
+            "initiative_id": "init-001",
+            "period_index": null,
+            "start_period": 2
+          }
+        },
+        {
+          "command": "build-cash-flows",
+          "expected_reason": "ONE_TIME_COST_REPEATED",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-11-a",
+            "input": {
+              "baseline_version": "v2",
+              "costs": [
+                {
+                  "amount": "13500.00",
+                  "baseline_version": "v2",
+                  "cost_basis": "planned",
+                  "cost_key": "ck-001-licence-setup-1",
+                  "cost_type": "one_time",
+                  "end_period": null,
+                  "initiative_id": "init-001",
+                  "period_index": 5,
+                  "start_period": null
+                }
+              ],
+              "discount_rate": "0.080000",
+              "horizon_periods": 36,
+              "initiative_ids": [
+                "init-001"
+              ],
+              "rate_basis": "annual",
+              "rate_conversion_assumption_id": "a-conv-monthl-2",
+              "scenario_id": "scn-inj-11"
+            },
+            "request_id": "req-inj-11-a"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-12",
+      "injection": "INJ-12",
+      "requires": [
+        "init-002",
+        "init-003",
+        "init-001"
+      ],
+      "steps": [
+        {
+          "expect": [
+            {
+              "equals": "309599.99",
+              "path": "metrics.scenarios.scn-025.initiatives.init-002.excluded_from_cash_flow.avoided_cost_beside_total"
+            },
+            {
+              "equals": "NOT_CASH_REALISED",
+              "path": "metrics.scenarios.scn-025.initiatives.init-002.excluded_from_cash_flow.avoided_cost_beside[0].reason"
+            },
+            {
+              "equals": "223666.69",
+              "path": "metrics.scenarios.scn-025.initiatives.init-003.excluded_from_cash_flow.avoided_cost_beside_total"
+            },
+            {
+              "equals": "NO_EVIDENCE_REF",
+              "path": "metrics.scenarios.scn-025.initiatives.init-003.excluded_from_cash_flow.avoided_cost_beside[0].reason"
+            },
+            {
+              "equals": null,
+              "path": "metrics.scenarios.scn-025.initiatives.init-001.excluded_from_cash_flow.avoided_cost_beside_total"
+            },
+            {
+              "equals": "578533.26",
+              "path": "metrics.scenarios.scn-025.initiatives.init-001.npv.value"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "as_of": "2026-10-05T00:00:00Z",
+            "scenario_id": "scn-025"
+          },
+          "path": "/metrics"
+        }
+      ]
+    }
+  ],
+  "injections": [
+    {
+      "checks": [
+        {
+          "equals": "2920.49",
+          "path": "metrics.scenarios.scn-025.initiatives.init-009.excluded_from_cash_flow.capacity_hours_not_converted"
+        },
+        {
+          "equals": [],
+          "path": "metrics.scenarios.scn-025.initiatives.init-009.converted_capacity"
+        },
+        {
+          "equals": "-761535.73",
+          "path": "metrics.scenarios.scn-025.initiatives.init-009.npv.value"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.scenarios.scn-025.initiatives.init-009.cash_flow[20].cash_benefits"
+        }
+      ],
+      "defect": "init-009 (Complaint triage routing) has released capacity as its only benefit; a row claims 100 of those hours as realised cash, with no capacity_hourly_rate and no staffing change evidence.",
+      "events": [
+        "EV-01"
+      ],
+      "expected_handling": "The claim is refused CAPACITY_WITHOUT_CONVERSION; the hours stay out of the cash flow (listed as not converted, NPV from costs alone); a derived cash item exists only after a conversion assumption with a staffing change evidence reference, and then as a separate item citing it.",
+      "expected_rejections": [
+        {
+          "details": {
+            "hours": "100.00"
+          },
+          "entity": "benefit_items",
+          "id": "b-inj-01",
+          "reason_code": "CAPACITY_WITHOUT_CONVERSION"
+        }
+      ],
+      "id": "INJ-01",
+      "location": "both",
+      "name": "time savings booked as cash without a staffing change",
+      "records": [
+        {
+          "entity": "initiatives",
+          "id": "init-009"
+        },
+        {
+          "entity": "benefit_items",
+          "id": "b-inj-01"
+        }
+      ],
+      "test": "P09-TEST-01"
+    },
+    {
+      "checks": [
+        {
+          "equals": "32677894.70",
+          "path": "metrics.scenarios.scn-025.double_count.planned_benefits"
+        },
+        {
+          "equals": "32470748.38",
+          "path": "metrics.scenarios.scn-025.double_count.attributable_benefits"
+        },
+        {
+          "equals": "207146.32",
+          "path": "metrics.scenarios.scn-025.double_count.residual"
+        },
+        {
+          "equals": true,
+          "path": "metrics.scenarios.scn-025.double_count.explanation_required"
+        },
+        {
+          "equals": "src-fin-ap-shared-team",
+          "path": "metrics.scenarios.scn-025.double_count.overlaps[0].benefit_source_key"
+        },
+        {
+          "equals": "1233.00",
+          "path": "metrics.scenarios.scn-025.double_count.overlaps[0].overlap"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.scenarios.scn-001.double_count.residual"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.scenarios.scn-004.double_count.residual"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.scenarios.scn-005.double_count.residual"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.scenarios.scn-007.double_count.residual"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.scenarios.scn-008.double_count.residual"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.scenarios.scn-009.double_count.residual"
+        }
+      ],
+      "defect": "init-001 and init-002 both claim the time of the same accounts-payable team (benefit_source_key src-fin-ap-shared-team); with the capacity converted (rate pinned from May) the portfolio adds both claims.",
+      "events": [
+        "EV-02"
+      ],
+      "expected_handling": "The claims sharing a key in a period count once, at the larger claim; the rest is the double-count residual with the overlaps listed; select-scenario is refused DOUBLE_COUNT_UNEXPLAINED until the residual is explained; a scenario without the overlap (for example scn-026, the portfolio without init-002) has a residual of 0.00 and can be proposed without an explanation.",
+      "expected_rejections": [],
+      "id": "INJ-02",
+      "location": "both",
+      "name": "two initiatives claim the same released capacity",
+      "records": [
+        {
+          "entity": "benefit_items",
+          "id": "b-0025"
+        },
+        {
+          "entity": "benefit_items",
+          "id": "b-0026"
+        }
+      ],
+      "test": "P09-TEST-02"
+    },
+    {
+      "checks": [
+        {
+          "equals": "annual",
+          "path": "metrics.scenarios.scn-001.rate_basis"
+        },
+        {
+          "equals": "0.080000",
+          "path": "metrics.scenarios.scn-001.declared_rate"
+        },
+        {
+          "equals": "0.006434",
+          "path": "metrics.scenarios.scn-001.effective_period_rate"
+        },
+        {
+          "equals": "3217/500000",
+          "path": "metrics.scenarios.scn-001.effective_period_rate_exact"
+        },
+        {
+          "equals": "conversion:a-conv-monthl-2",
+          "path": "metrics.scenarios.scn-001.rate_source"
+        }
+      ],
+      "defect": "A scenario declares an annual discount rate of 0.08 on monthly periods and cites no conversion.",
+      "events": [
+        "EV-03"
+      ],
+      "expected_handling": "Refused RATE_PERIOD_MISMATCH, never applied raw; an annual rate is accepted only with its recorded conversion (1 + r)^(1/12) - 1, a declared six-place assumption version (0.006434 for 0.08), and the scenario then reports the converted rate and its source.",
+      "expected_rejections": [
+        {
+          "details": {
+            "period_basis": "monthly",
+            "rate_basis": "annual"
+          },
+          "entity": "scenario_versions",
+          "id": "scn-inj-03",
+          "reason_code": "RATE_PERIOD_MISMATCH"
+        }
+      ],
+      "id": "INJ-03",
+      "location": "both",
+      "name": "an annual rate applied to monthly periods",
+      "records": [
+        {
+          "entity": "assumption_versions",
+          "id": "a-conv-monthl-2"
+        },
+        {
+          "entity": "scenario_versions",
+          "id": "scn-001"
+        }
+      ],
+      "test": "P09-TEST-03"
+    },
+    {
+      "checks": [
+        {
+          "equals": [
+            "0.066667",
+            "0.200000",
+            "0.400000",
+            "0.666667",
+            "1.000000"
+          ],
+          "path": "metrics.scenarios.scn-001.initiatives.init-001.ramp.values"
+        },
+        {
+          "equals": "1744400.12",
+          "path": "metrics.scenarios.scn-001.initiatives.init-001.planned_money_benefits.ramped"
+        },
+        {
+          "equals": "2242800.00",
+          "path": "metrics.scenarios.scn-001.initiatives.init-001.planned_money_benefits.unramped"
+        }
+      ],
+      "defect": "A cash benefit for init-005 starts in period 7, three periods before its deployment period 10.",
+      "events": [
+        "EV-04"
+      ],
+      "expected_handling": "Refused BENEFIT_BEFORE_DEPLOYMENT; every benefit stream of the world starts at or after deployment (lag 0 to 2) and the adoption ramp, indexed from each row's own starts_period, is applied beside the unramped plan.",
+      "expected_rejections": [
+        {
+          "details": {
+            "deployment_period": 10,
+            "starts_period": 7
+          },
+          "entity": "benefit_items",
+          "id": "b-inj-04",
+          "reason_code": "BENEFIT_BEFORE_DEPLOYMENT"
+        }
+      ],
+      "id": "INJ-04",
+      "location": "both",
+      "name": "a benefit before deployment",
+      "records": [
+        {
+          "entity": "benefit_items",
+          "id": "b-inj-04"
+        }
+      ],
+      "test": "P09-TEST-04"
+    },
+    {
+      "checks": [
+        {
+          "equals": "0.232258",
+          "path": "metrics.initiatives.init-003.adoption.adoption_rate"
+        },
+        {
+          "equals": 310,
+          "path": "metrics.initiatives.init-003.adoption.eligible_count"
+        },
+        {
+          "equals": 72,
+          "path": "metrics.initiatives.init-003.adoption.adopted_count"
+        },
+        {
+          "equals": "0.977918",
+          "path": "metrics.initiatives.init-003.training.training_completion"
+        },
+        {
+          "equals": false,
+          "path": "metrics.initiatives.init-003.training.substituted_for_adoption"
+        },
+        {
+          "equals": true,
+          "path": "metrics.initiatives.init-003.training.differs_from_adoption"
+        }
+      ],
+      "defect": "init-003: nearly everyone completed training (see the figures) while adoption stalled; rows that restate training completion as adoption are offered.",
+      "events": [
+        "EV-05"
+      ],
+      "expected_handling": "Adoption and training stay two series: the adoption rate comes only from adoption observations on the initiative's eligibility rule, training completion beside it, substituted_for_adoption false and differs_from_adoption true; the substitution rows are refused (ELIGIBILITY_RULE_MISMATCH, ADOPTED_EXCEEDS_ELIGIBLE).",
+      "expected_rejections": [
+        {
+          "details": {
+            "initiative_rule": "elig-v1",
+            "row_rule": "elig-training"
+          },
+          "entity": "adoption_observations",
+          "id": "ad-inj-05",
+          "reason_code": "ELIGIBILITY_RULE_MISMATCH"
+        },
+        {
+          "details": {
+            "eligible": 155,
+            "numerator": 310
+          },
+          "entity": "adoption_observations",
+          "id": "ad-inj-05b",
+          "reason_code": "ADOPTED_EXCEEDS_ELIGIBLE"
+        }
+      ],
+      "id": "INJ-05",
+      "location": "both",
+      "name": "training completion substituted for adoption",
+      "records": [
+        {
+          "entity": "training_completions",
+          "id": "tc-0045"
+        }
+      ],
+      "test": "P09-TEST-05"
+    },
+    {
+      "checks": [
+        {
+          "equals": 1,
+          "path": "metrics.initiatives.init-003.forecast.original_version"
+        },
+        {
+          "equals": true,
+          "path": "metrics.initiatives.init-003.forecast.original_preserved"
+        },
+        {
+          "equals": 3,
+          "path": "metrics.initiatives.init-003.forecast.latest_version"
+        },
+        {
+          "equals": "-211592.52",
+          "path": "metrics.initiatives.init-003.forecast.latest_minus_original"
+        },
+        {
+          "equals": "745800.06",
+          "path": "metrics.initiatives.init-003.forecast.versions[0].total"
+        },
+        {
+          "equals": "598900.05",
+          "path": "metrics.initiatives.init-003.forecast.versions[1].total"
+        },
+        {
+          "equals": "534207.54",
+          "path": "metrics.initiatives.init-003.forecast.versions[2].total"
+        },
+        {
+          "equals": "2026-03-12T10:00:00Z",
+          "path": "metrics.initiatives.init-003.forecast.versions[0].created_at"
+        },
+        {
+          "equals": "2026-09-09T10:00:00Z",
+          "path": "metrics.initiatives.init-003.forecast.versions[2].created_at"
+        }
+      ],
+      "defect": "After the target was missed, a row rewrites version 1 of the init-003 forecast instead of adding a revision.",
+      "events": [
+        "EV-06"
+      ],
+      "expected_handling": "Refused VERSION_EXISTS (the database also refuses UPDATE and DELETE); a revision is the next version, the original approved version 1 stays unchanged and the comparison lists the original, every revision and the observed values with their dates.",
+      "expected_rejections": [
+        {
+          "details": {
+            "existing_id": "f-003-1-05",
+            "version_number": 1
+          },
+          "entity": "forecast_versions",
+          "id": "f-inj-06",
+          "reason_code": "VERSION_EXISTS"
+        }
+      ],
+      "id": "INJ-06",
+      "location": "both",
+      "name": "a forecast overwrite",
+      "records": [
+        {
+          "entity": "forecast_versions",
+          "id": "f-003-1-05"
+        }
+      ],
+      "test": "P09-TEST-06"
+    },
+    {
+      "checks": [
+        {
+          "equals": 2,
+          "path": "metrics.initiatives.init-004.roadmap.requested_start"
+        },
+        {
+          "equals": 2,
+          "path": "metrics.initiatives.init-004.roadmap.dependency_feasible_start"
+        },
+        {
+          "equals": 0,
+          "path": "metrics.initiatives.init-004.roadmap.dependency_delay"
+        },
+        {
+          "equals": null,
+          "path": "metrics.initiatives.init-004.roadmap.binding_dependency_id"
+        }
+      ],
+      "defect": "init-001 is asked to depend on init-004 which already depends (through init-002) on it.",
+      "events": [
+        "EV-07"
+      ],
+      "expected_handling": "Refused DEPENDENCY_CYCLE with the cycle listed from the rejected edge's initiative; the 40 dependencies of the world form no cycle and every initiative has a feasible start, the dependency delay reported beside the requested start.",
+      "expected_rejections": [
+        {
+          "details": {
+            "cycle": [
+              "init-001",
+              "init-004",
+              "init-001"
+            ]
+          },
+          "entity": "dependencies",
+          "id": "d-inj-07",
+          "reason_code": "DEPENDENCY_CYCLE"
+        }
+      ],
+      "id": "INJ-07",
+      "location": "both",
+      "name": "a dependency cycle",
+      "records": [
+        {
+          "entity": "dependencies",
+          "id": "d-001"
+        },
+        {
+          "entity": "dependencies",
+          "id": "d-004"
+        }
+      ],
+      "test": "P09-TEST-07"
+    },
+    {
+      "checks": [
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-013.initiatives.init-015.payback.simple.period"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-013.initiatives.init-015.payback.discounted.period"
+        },
+        {
+          "equals": "-508801.53",
+          "path": "metrics.scenarios.scn-013.initiatives.init-015.npv.value"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-014.initiatives.init-015.payback.simple.period"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-014.initiatives.init-015.payback.discounted.period"
+        },
+        {
+          "equals": "-515329.28",
+          "path": "metrics.scenarios.scn-014.initiatives.init-015.npv.value"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-015.initiatives.init-015.payback.simple.period"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-015.initiatives.init-015.payback.discounted.period"
+        },
+        {
+          "equals": "-618556.03",
+          "path": "metrics.scenarios.scn-015.initiatives.init-015.npv.value"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-016.initiatives.init-015.payback.simple.period"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-016.initiatives.init-015.payback.discounted.period"
+        },
+        {
+          "equals": "-512146.04",
+          "path": "metrics.scenarios.scn-016.initiatives.init-015.npv.value"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-017.initiatives.init-015.payback.simple.period"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-017.initiatives.init-015.payback.discounted.period"
+        },
+        {
+          "equals": "-512146.04",
+          "path": "metrics.scenarios.scn-017.initiatives.init-015.npv.value"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-018.initiatives.init-015.payback.simple.period"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-018.initiatives.init-015.payback.discounted.period"
+        },
+        {
+          "equals": "-619344.67",
+          "path": "metrics.scenarios.scn-018.initiatives.init-015.npv.value"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-025.initiatives.init-015.payback.simple.period"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-025.initiatives.init-015.payback.discounted.period"
+        },
+        {
+          "equals": "-618556.03",
+          "path": "metrics.scenarios.scn-025.initiatives.init-015.npv.value"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-026.initiatives.init-015.payback.simple.period"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-026.initiatives.init-015.payback.discounted.period"
+        },
+        {
+          "equals": "-618556.03",
+          "path": "metrics.scenarios.scn-026.initiatives.init-015.npv.value"
+        }
+      ],
+      "defect": "init-015 (Carrier booking automation) recovers about 62 % of its cost over its benefit window; a presentation shows a payback period anyway.",
+      "events": [
+        "EV-08"
+      ],
+      "expected_handling": "Simple and discounted payback are null (not 0, not rejected) in every scenario that holds it, with a negative NPV; a longer horizon does not create a payback because the benefits end with the window; the page says it does not pay back within the horizon.",
+      "expected_rejections": [],
+      "id": "INJ-08",
+      "location": "dataset",
+      "name": "a case that never pays back presented with a payback",
+      "records": [
+        {
+          "entity": "initiatives",
+          "id": "init-015"
+        }
+      ],
+      "test": "P09-TEST-08"
+    },
+    {
+      "checks": [
+        {
+          "equals": [],
+          "path": "metrics.resources.res-03.overallocated_periods"
+        },
+        {
+          "equals": {
+            "allocated": "2.00",
+            "headroom": "0.00",
+            "period_index": 14
+          },
+          "path": "metrics.resources.res-03.by_period[8]"
+        },
+        {
+          "equals": {
+            "allocated": "2.00",
+            "headroom": "0.00",
+            "period_index": 15
+          },
+          "path": "metrics.resources.res-03.by_period[9]"
+        },
+        {
+          "equals": {
+            "allocated": "2.00",
+            "headroom": "0.00",
+            "period_index": 16
+          },
+          "path": "metrics.resources.res-03.by_period[10]"
+        }
+      ],
+      "defect": "res-03 (2.00 FTE) is already allocated to capacity in periods 14, 15 and 16; init-012 asks for 0.50 more in each.",
+      "events": [
+        "EV-09"
+      ],
+      "expected_handling": "Each request is refused RESOURCE_OVERALLOCATED with its period (a sum equal to capacity is allowed); the refused rows are kept in the replay events; the stored allocations show 2.00 allocated and 0.00 headroom in those periods and no overallocated period.",
+      "expected_rejections": [
+        {
+          "details": {
+            "allocated_before": "2.00",
+            "capacity": "2.00",
+            "periods": [
+              14
+            ],
+            "requested": "0.50",
+            "resource_id": "res-03"
+          },
+          "entity": "resource_allocations",
+          "id": "al-inj-09-1",
+          "reason_code": "RESOURCE_OVERALLOCATED"
+        },
+        {
+          "details": {
+            "allocated_before": "2.00",
+            "capacity": "2.00",
+            "periods": [
+              15
+            ],
+            "requested": "0.50",
+            "resource_id": "res-03"
+          },
+          "entity": "resource_allocations",
+          "id": "al-inj-09-2",
+          "reason_code": "RESOURCE_OVERALLOCATED"
+        },
+        {
+          "details": {
+            "allocated_before": "2.00",
+            "capacity": "2.00",
+            "periods": [
+              16
+            ],
+            "requested": "0.50",
+            "resource_id": "res-03"
+          },
+          "entity": "resource_allocations",
+          "id": "al-inj-09-3",
+          "reason_code": "RESOURCE_OVERALLOCATED"
+        }
+      ],
+      "id": "INJ-09",
+      "location": "both",
+      "name": "a shared specialist overallocated",
+      "records": [
+        {
+          "entity": "resources",
+          "id": "res-03"
+        }
+      ],
+      "test": "P09-TEST-09"
+    },
+    {
+      "checks": [
+        {
+          "equals": "173800.00",
+          "path": "metrics.scenarios.scn-025.initiatives.init-008.benefit_realization.cash.planned_comparable"
+        },
+        {
+          "equals": "169593.13",
+          "path": "metrics.scenarios.scn-025.initiatives.init-008.benefit_realization.cash.observed_comparable"
+        },
+        {
+          "equals": "0.975795",
+          "path": "metrics.scenarios.scn-025.initiatives.init-008.benefit_realization.cash.realization"
+        },
+        {
+          "equals": "143941.18",
+          "path": "metrics.scenarios.scn-025.initiatives.init-008.benefit_realization.cash.baseline_trend"
+        },
+        {
+          "equals": "25651.95",
+          "path": "metrics.scenarios.scn-025.initiatives.init-008.benefit_realization.cash.observed_above_trend"
+        },
+        {
+          "equals": "observed, not attributed",
+          "path": "metrics.scenarios.scn-025.initiatives.init-008.benefit_realization.cash.attribution"
+        }
+      ],
+      "defect": "The cash benefit of init-008 (Knowledge-assisted contact handling) is close to plan, and a client claims all of it for the rollout; most of it is the trend that was already under way.",
+      "events": [
+        "EV-10"
+      ],
+      "expected_handling": "An observed improvement is compared with the baseline trend recorded before deployment and reported as 'observed, not attributed'; the share above the trend sits beside the raw change, never in place of it; a claim of full attribution is refused ATTRIBUTION_NOT_ESTABLISHED.",
+      "expected_rejections": [],
+      "id": "INJ-10",
+      "location": "both",
+      "name": "an improvement attributed entirely to the rollout",
+      "records": [
+        {
+          "entity": "initiatives",
+          "id": "init-008"
+        }
+      ],
+      "test": "P09-TEST-10"
+    },
+    {
+      "checks": [
+        {
+          "equals": 900,
+          "path": "ingest.counts.cost_items.accepted"
+        },
+        {
+          "equals": 0,
+          "path": "ingest.counts.cost_items.rejected"
+        }
+      ],
+      "defect": "The one-time cost ck-001-licence-setup-1 (13500.00, period 1) is entered again 4 periods later.",
+      "events": [
+        "EV-11"
+      ],
+      "expected_handling": "The repeat is refused ONE_TIME_COST_REPEATED and the first row is kept; a cost that really recurs is a recurring row over an explicit half-open range, expanded one row per period by the command that builds the cash flows; no cost key of the world repeats as a one-time cost.",
+      "expected_rejections": [
+        {
+          "details": {
+            "first_cost_id": "c-0042",
+            "first_period": 1,
+            "repeat_period": 5
+          },
+          "entity": "cost_items",
+          "id": "c-inj-11",
+          "reason_code": "ONE_TIME_COST_REPEATED"
+        }
+      ],
+      "id": "INJ-11",
+      "location": "both",
+      "name": "a one-time cost that recurs",
+      "records": [
+        {
+          "entity": "cost_items",
+          "id": "c-0042"
+        }
+      ],
+      "test": "P09-TEST-11"
+    },
+    {
+      "checks": [
+        {
+          "equals": "309599.99",
+          "path": "metrics.scenarios.scn-025.initiatives.init-002.excluded_from_cash_flow.avoided_cost_beside_total"
+        },
+        {
+          "equals": "NOT_CASH_REALISED",
+          "path": "metrics.scenarios.scn-025.initiatives.init-002.excluded_from_cash_flow.avoided_cost_beside[0].reason"
+        },
+        {
+          "equals": "223666.69",
+          "path": "metrics.scenarios.scn-025.initiatives.init-003.excluded_from_cash_flow.avoided_cost_beside_total"
+        },
+        {
+          "equals": "NO_EVIDENCE_REF",
+          "path": "metrics.scenarios.scn-025.initiatives.init-003.excluded_from_cash_flow.avoided_cost_beside[0].reason"
+        },
+        {
+          "equals": null,
+          "path": "metrics.scenarios.scn-025.initiatives.init-001.excluded_from_cash_flow.avoided_cost_beside_total"
+        },
+        {
+          "equals": "578533.26",
+          "path": "metrics.scenarios.scn-025.initiatives.init-001.npv.value"
+        }
+      ],
+      "defect": "init-002 avoids cost that no budget line removed; init-003 says its avoided cost is realised but cites no evidence; init-001 removed a budget line and cites it.",
+      "events": [
+        "EV-12"
+      ],
+      "expected_handling": "Avoided cost enters the cash flow only when cash_realisation is true and an evidence_ref names the budget line removed (NPV of the evidenced item inside); the rest is reported beside the cash flow (NOT_CASH_REALISED, NO_EVIDENCE_REF) with its total, never added and never refused.",
+      "expected_rejections": [],
+      "id": "INJ-12",
+      "location": "dataset",
+      "name": "cost avoidance added to realised cash savings",
+      "records": [
+        {
+          "entity": "benefit_items",
+          "id": "b-0049"
+        },
+        {
+          "entity": "benefit_items",
+          "id": "b-0050"
+        }
+      ],
+      "test": "P09-TEST-12"
+    }
+  ],
+  "seed": 20261026
+}

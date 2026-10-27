@@ -1,0 +1,1359 @@
+{
+  "as_of": "2026-10-05T00:00:00Z",
+  "config": {
+    "as_of": "2026-10-05T00:00:00Z",
+    "contract_version": 1,
+    "period_basis": "monthly",
+    "period_start": "2026-01-01",
+    "periods": 36
+  },
+  "contract_version": "v1",
+  "dataset_hash": "6bf7ebaad6bf75084c82c41de1031d6d585af730c8a22979ed7c77df2a38e3a9",
+  "dataset_version": "cw-20261026-20261026",
+  "designed_relationships": [
+    {
+      "id": "DR-01",
+      "name": "an initiative whose only benefit is released capacity",
+      "realised": {
+        "benefit_classes": [
+          "capacity"
+        ],
+        "capacity_hours_not_converted": "2920.49",
+        "capacity_released_hours_per_period": "405.6250",
+        "cash_benefits_total": "0.00",
+        "converted_capacity_items": 0,
+        "initiative_id": "init-009",
+        "npv": "-761535.73",
+        "planned_hours": "4380.72",
+        "scenario_id": "scn-025",
+        "simple_payback": null
+      },
+      "statement": "init-009 plans only capacity hours; with no conversion there is no cash case."
+    },
+    {
+      "id": "DR-02",
+      "name": "two initiatives claim the same released capacity",
+      "realised": {
+        "attributable_benefits": "32470748.38",
+        "benefit_source_key": "src-fin-ap-shared-team",
+        "first_overlap_period": 3,
+        "initiatives": [
+          "init-001",
+          "init-002"
+        ],
+        "last_overlap_period": 12,
+        "overlap_periods": 10,
+        "planned_benefits": "32677894.70",
+        "residual": "207146.32",
+        "scenario_id": "scn-025",
+        "scenarios_with_a_residual": [
+          "scn-002",
+          "scn-003",
+          "scn-006",
+          "scn-025",
+          "scn-027"
+        ],
+        "scenarios_with_no_residual": [
+          "scn-001",
+          "scn-004",
+          "scn-005",
+          "scn-007",
+          "scn-008",
+          "scn-009",
+          "scn-010",
+          "scn-011",
+          "scn-012",
+          "scn-013",
+          "scn-014",
+          "scn-015",
+          "scn-016",
+          "scn-017",
+          "scn-018",
+          "scn-019",
+          "scn-020",
+          "scn-021",
+          "scn-022",
+          "scn-023",
+          "scn-024",
+          "scn-026",
+          "scn-028",
+          "scn-029",
+          "scn-030"
+        ]
+      },
+      "statement": "init-001 and init-002 both claim the accounts-payable team's time (benefit_source_key src-fin-ap-shared-team)."
+    },
+    {
+      "id": "DR-03",
+      "name": "an initiative that never pays back",
+      "realised": {
+        "benefit_to_cost": "0.620043",
+        "benefits_entering_the_cash_flow": "805466.72",
+        "initiative_id": "init-015",
+        "npv_highest": "-508801.53",
+        "npv_lowest": "-619344.67",
+        "planned_cost": "1299050.00",
+        "scenarios": [
+          "scn-013",
+          "scn-014",
+          "scn-015",
+          "scn-016",
+          "scn-017",
+          "scn-018",
+          "scn-025",
+          "scn-026"
+        ],
+        "scenarios_with_discounted_payback_null": 8,
+        "scenarios_with_simple_payback_null": 8
+      },
+      "statement": "init-015 recovers well under its cost over its benefit window."
+    },
+    {
+      "id": "DR-04",
+      "name": "a forecast revised twice after a missed target, the original kept",
+      "realised": {
+        "initiative_id": "init-003",
+        "latest_minus_original": "-211592.52",
+        "latest_observed": {
+          "3": "1844.17",
+          "4": "5993.50",
+          "5": "11522.63",
+          "6": "19017.91",
+          "7": "26848.82",
+          "8": "40340.98"
+        },
+        "miss_tolerance_percent": 10,
+        "misses": [
+          {
+            "all_checked_periods_observed_over_forecast": {
+              "3": "0.672385",
+              "4": "0.678912"
+            },
+            "created_at": "2026-06-12T10:00:00Z",
+            "observed_over_forecast": {
+              "3": "0.672385",
+              "4": "0.678912"
+            },
+            "periods_below_the_previous_forecast": [
+              3,
+              4
+            ],
+            "periods_checked": [
+              3,
+              4
+            ],
+            "revises_version": 1,
+            "revision": 2
+          },
+          {
+            "all_checked_periods_observed_over_forecast": {
+              "5": "0.849750",
+              "6": "0.824670",
+              "7": "0.792000"
+            },
+            "created_at": "2026-09-09T10:00:00Z",
+            "observed_over_forecast": {
+              "5": "0.849750",
+              "6": "0.824670",
+              "7": "0.792000"
+            },
+            "periods_below_the_previous_forecast": [
+              5,
+              6,
+              7
+            ],
+            "periods_checked": [
+              5,
+              6,
+              7
+            ],
+            "revises_version": 2,
+            "revision": 3
+          }
+        ],
+        "original_preserved": true,
+        "versions": [
+          {
+            "created_at": "2026-03-12T10:00:00Z",
+            "reason": "Approved forecast",
+            "total": "745800.06",
+            "version_number": 1
+          },
+          {
+            "created_at": "2026-06-12T10:00:00Z",
+            "reason": "Revised after April and May fell short of the approved forecast",
+            "total": "598900.05",
+            "version_number": 2
+          },
+          {
+            "created_at": "2026-09-09T10:00:00Z",
+            "reason": "Revised again after June, July and August fell short of the revised forecast",
+            "total": "534207.54",
+            "version_number": 3
+          }
+        ]
+      },
+      "statement": "init-003's approved forecast (version 1) is revised in June and again in September after the observed cash benefit fell short."
+    },
+    {
+      "id": "DR-05",
+      "name": "a shared specialist overallocated in three periods",
+      "realised": {
+        "allocated": {
+          "14": "2.00",
+          "15": "2.00",
+          "16": "2.00"
+        },
+        "capacity_per_period": "2.00",
+        "headroom": {
+          "14": "0.00",
+          "15": "0.00",
+          "16": "0.00"
+        },
+        "initiatives_allocated_in_those_periods": [
+          "init-017",
+          "init-019",
+          "init-020",
+          "init-023"
+        ],
+        "periods": [
+          14,
+          15,
+          16
+        ],
+        "refused_periods": [
+          14,
+          15,
+          16
+        ],
+        "requested": [
+          "0.50",
+          "0.50",
+          "0.50"
+        ],
+        "requests_refused": 3,
+        "resource_id": "res-03",
+        "stored_overallocated_periods": []
+      },
+      "statement": "res-03 is allocated to capacity in periods [14, 15, 16]; further requests there are refused at ingest and kept in the replay events."
+    },
+    {
+      "id": "DR-06",
+      "name": "an observed improvement that is mostly the baseline trend",
+      "realised": {
+        "attribution": "observed, not attributed",
+        "baseline_trend": "143941.18",
+        "comparable_rows": 6,
+        "initiative_id": "init-008",
+        "observed_above_trend": "25651.95",
+        "observed_comparable": "169593.13",
+        "parameter_trend_share_percent": 85,
+        "planned_comparable": "173800.00",
+        "realization": "0.975795",
+        "scenario_id": "scn-025",
+        "trend_share_of_observed": "0.848744"
+      },
+      "statement": "init-008's cash benefit is close to plan, and most of it is the trend recorded before deployment."
+    },
+    {
+      "id": "DR-07",
+      "name": "adoption that lags training completion by several periods",
+      "realised": {
+        "adoption_rate_summary": "0.532881",
+        "initiatives": [
+          {
+            "adoption_50_percent_on": "2026-07-07T06:00:00Z",
+            "adoption_rate_now": "0.841346",
+            "initiative_id": "init-001",
+            "lag_periods": 4,
+            "periods_since_training_90_percent": 7,
+            "training_90_percent_on": "2026-03-20T15:00:00Z",
+            "training_completion_now": "0.948235"
+          },
+          {
+            "adoption_50_percent_on": "2026-09-11T12:00:00Z",
+            "adoption_rate_now": "0.578512",
+            "initiative_id": "init-002",
+            "lag_periods": 6,
+            "periods_since_training_90_percent": 7,
+            "training_90_percent_on": "2026-03-26T15:00:00Z",
+            "training_completion_now": "0.968794"
+          },
+          {
+            "adoption_50_percent_on": null,
+            "adoption_rate_now": "0.232258",
+            "initiative_id": "init-003",
+            "lag_periods": null,
+            "periods_since_training_90_percent": 5,
+            "training_90_percent_on": "2026-05-02T15:00:00Z",
+            "training_completion_now": "0.977918"
+          },
+          {
+            "adoption_50_percent_on": null,
+            "adoption_rate_now": "0.444444",
+            "initiative_id": "init-004",
+            "lag_periods": null,
+            "periods_since_training_90_percent": 5,
+            "training_90_percent_on": "2026-05-18T15:00:00Z",
+            "training_completion_now": "0.959792"
+          },
+          {
+            "adoption_50_percent_on": "2026-07-22T03:00:00Z",
+            "adoption_rate_now": "0.739708",
+            "initiative_id": "init-007",
+            "lag_periods": 4,
+            "periods_since_training_90_percent": 7,
+            "training_90_percent_on": "2026-03-15T15:00:00Z",
+            "training_completion_now": "0.979702"
+          },
+          {
+            "adoption_50_percent_on": "2026-08-06T19:00:00Z",
+            "adoption_rate_now": "0.710462",
+            "initiative_id": "init-008",
+            "lag_periods": 5,
+            "periods_since_training_90_percent": 7,
+            "training_90_percent_on": "2026-03-13T15:00:00Z",
+            "training_completion_now": "0.968370"
+          },
+          {
+            "adoption_50_percent_on": null,
+            "adoption_rate_now": "0.412742",
+            "initiative_id": "init-009",
+            "lag_periods": null,
+            "periods_since_training_90_percent": 6,
+            "training_90_percent_on": "2026-04-25T15:00:00Z",
+            "training_completion_now": "0.958904"
+          },
+          {
+            "adoption_50_percent_on": "2026-08-01T05:00:00Z",
+            "adoption_rate_now": "0.708772",
+            "initiative_id": "init-013",
+            "lag_periods": 5,
+            "periods_since_training_90_percent": 7,
+            "training_90_percent_on": "2026-03-17T15:00:00Z",
+            "training_completion_now": "0.949233"
+          },
+          {
+            "adoption_50_percent_on": null,
+            "adoption_rate_now": "0.229508",
+            "initiative_id": "init-014",
+            "lag_periods": null,
+            "periods_since_training_90_percent": 4,
+            "training_90_percent_on": "2026-06-12T15:00:00Z",
+            "training_completion_now": "0.979592"
+          },
+          {
+            "adoption_50_percent_on": null,
+            "adoption_rate_now": "0.349544",
+            "initiative_id": "init-015",
+            "lag_periods": null,
+            "periods_since_training_90_percent": 5,
+            "training_90_percent_on": "2026-05-16T15:00:00Z",
+            "training_completion_now": "0.979412"
+          },
+          {
+            "adoption_50_percent_on": null,
+            "adoption_rate_now": "0.174334",
+            "initiative_id": "init-016",
+            "lag_periods": null,
+            "periods_since_training_90_percent": 3,
+            "training_90_percent_on": "2026-07-22T15:00:00Z",
+            "training_completion_now": "0.938875"
+          }
+        ],
+        "initiatives_whose_adoption_never_reached_50_percent": [
+          "init-003",
+          "init-004",
+          "init-009",
+          "init-014",
+          "init-015",
+          "init-016"
+        ],
+        "lag_periods_sorted": [
+          4,
+          4,
+          5,
+          5,
+          6
+        ],
+        "training_completion_summary": "0.888443"
+      },
+      "statement": "In every initiative with both series, 90 % of the eligible trainees complete training long before half of the eligible staff have adopted."
+    }
+  ],
+  "generated_at": "2026-10-05T00:00:00Z",
+  "generator": {
+    "name": "generate.py",
+    "parameters": {
+      "as_of": "2026-10-05T00:00:00Z",
+      "benefit_lag": "0 to 2 periods after deployment",
+      "benefit_life": "12 periods per stream",
+      "d4_observed_over_plan_percent": "68 then 66",
+      "d4_revised_forecast_percent_of_plan": "80 then 70",
+      "disclosures": "Every designed relationship is built into the draws as a parameter chosen before the first run: the capacity-only initiative (init-009), the shared capacity pool (init-001 and init-002, key src-fin-ap-shared-team), the benefit-to-cost ratio of 0.62 for init-015, the forecast misses of init-003 (observed at 68 and 66 per cent of plan, revised forecasts at 80 and 70 per cent, a miss being more than 10 per cent below the forecast), the specialist res-03 filled to capacity in periods 14 to 16, the baseline trend of init-008 set to 85 per cent of its observed cash benefit, and an adoption curve that starts at go-live while training ends about a month earlier. Their realised values are in designed_relationships. | Outcome-informed changes after the first runs, all kept: (1) the first run showed a simple payback of 0 for any initiative whose first cash flow is after period 0 (the domain's rule D-P9-07 counts a cumulative of 0 at t = 0 as paid back), so every initiative now carries a small planned discovery cost in period 0 (2 per cent of its one-time cost) and its payback is measured from a negative position; (2) the benefit shares of an initiative are normalised to 100 per cent after a first run gave init-007 a ratio below 1 for a reason that was a bug, not a design; (3) init-002 is sized at no less than 8,000 cases a month and 24 minutes so that its overlap with init-001 is a material residual; (4) benefit observations were first drawn with three readings per matured row, which gave 332 readings, so two further readings (a flash reading one to two days after the period and a restated reading 95 to 120 days after it) were added, and readings were then trimmed or added in a fixed shuffled order to reach exactly 400. | Sizes are exact by construction, not by tuning outcomes: benefit rows are 12 per stream (shortened or lengthened one row at a time in a fixed order to reach 700), cost items are completed with contingency tranches (see pad_notes), adoption observations are the 3.5-day telemetry candidates thinned by drawn outages to 500, and training completions are weekly readings thinned or extended with refresher readings to 200. | The business case recognises benefits for 12 periods per stream and recurring costs run only over that window (D-07): the dataset has 700 benefit rows, which cannot cover 36 periods for all 24 initiatives, so payback and NPV describe a first-year-after-go-live case, not a three-year one. | The synthetic counterfactual (the true share of each observed improvement that the rollout caused, and the true trend) is in synthetic_truth of this manifest only and is never loaded by the seeder, the API or the web. | Baseline trends on observed rows are drawn as a share of the row's observed value (5 to 25 per cent, with a per-stream estimation error of -8 to +8 per cent), which is outcome-informed by design: a trend recorded before deployment cannot depend on a later observation in the real world. | The adoption ramp of each initiative (the days from go-live to full effect) was first drawn from 190 to 330 days; the first run gave a lag of 2 periods for the earliest initiative, which is not 'several', so the range was moved to 270 to 340 days before the final run. The forecast of init-003: the second observed ratio was first 70 per cent of plan, which left June only 0.1 point inside the 10 per cent tolerance of the revised forecast, so it became 66 per cent, and the second revision moved from 10 to 12 June so that every May reading exists when it is made. No other parameter was changed after seeing the designed relationships.",
+      "discount_rates": "annual 0.06/0.08/0.10/0.12 with monthly_rate_conversion assumption versions; 0.007000 declared monthly",
+      "forecast_miss_tolerance_percent": "10",
+      "initiatives": "24 in 4 programmes",
+      "matured_periods_at_as_of": "9 (2026-01 .. 2026-09)",
+      "period_basis": "monthly",
+      "periods": "36 (2026-01 .. 2028-12)",
+      "process_baselines": "30 (18 initiatives v1, 12 corrected to v2)",
+      "profile": "demo (section 12): about 500 primary business objects, enough linked events for every required path",
+      "seed": "20261026",
+      "size_cap_bytes": "5000000",
+      "trend_share_dr06_percent": "85"
+    },
+    "seed": 20261026
+  },
+  "injection_manifest": "injection-manifest.json",
+  "programmes": [
+    {
+      "approved_baseline_version": "v2",
+      "initiative_ids": [
+        "init-001",
+        "init-002",
+        "init-003",
+        "init-004",
+        "init-005",
+        "init-006"
+      ],
+      "name": "Finance Operations Renewal",
+      "programme_id": "prog-fin",
+      "sponsor_id": "sp-cfo"
+    },
+    {
+      "approved_baseline_version": "v2",
+      "initiative_ids": [
+        "init-007",
+        "init-008",
+        "init-009",
+        "init-010",
+        "init-011",
+        "init-012"
+      ],
+      "name": "Customer Service Transformation",
+      "programme_id": "prog-cust",
+      "sponsor_id": "sp-coo"
+    },
+    {
+      "approved_baseline_version": "v1",
+      "initiative_ids": [
+        "init-013",
+        "init-014",
+        "init-015",
+        "init-016",
+        "init-017",
+        "init-018"
+      ],
+      "name": "Supply Chain Digitisation",
+      "programme_id": "prog-supply",
+      "sponsor_id": "sp-cscm"
+    },
+    {
+      "approved_baseline_version": null,
+      "initiative_ids": [
+        "init-019",
+        "init-020",
+        "init-021",
+        "init-022",
+        "init-023",
+        "init-024"
+      ],
+      "name": "Workplace and Technology Modernisation",
+      "programme_id": "prog-work",
+      "sponsor_id": "sp-cio"
+    }
+  ],
+  "row_counts": {
+    "adoption_observations": 500,
+    "assumption_versions": 160,
+    "benefit_items": 700,
+    "benefit_observations": 400,
+    "cost_items": 900,
+    "dependencies": 40,
+    "forecast_versions": 144,
+    "impact_mappings": 106,
+    "initiatives": 24,
+    "process_baselines": 30,
+    "readiness_assessments": 300,
+    "resource_allocations": 557,
+    "resources": 8,
+    "risk_items": 120,
+    "scenario_versions": 30,
+    "stakeholder_groups": 60,
+    "training_completions": 200
+  },
+  "stats": {
+    "adoption_parameters": {
+      "init-001": {
+        "adoption_max_pct": 89,
+        "plateau_pct": 95,
+        "population": 425,
+        "ramp_days": 277,
+        "training_days": 77,
+        "training_start": "2026-01-09T15:00:00Z"
+      },
+      "init-002": {
+        "adoption_max_pct": 70,
+        "plateau_pct": 97,
+        "population": 705,
+        "ramp_days": 293,
+        "training_days": 76,
+        "training_start": "2026-01-15T15:00:00Z"
+      },
+      "init-003": {
+        "adoption_max_pct": 41,
+        "plateau_pct": 98,
+        "population": 317,
+        "ramp_days": 328,
+        "training_days": 79,
+        "training_start": "2026-02-21T15:00:00Z"
+      },
+      "init-004": {
+        "adoption_max_pct": 78,
+        "plateau_pct": 96,
+        "population": 771,
+        "ramp_days": 271,
+        "training_days": 82,
+        "training_start": "2026-03-09T15:00:00Z"
+      },
+      "init-005": {
+        "adoption_max_pct": 82,
+        "plateau_pct": 99,
+        "population": 421,
+        "ramp_days": 338,
+        "training_days": 73,
+        "training_start": "2026-09-21T15:00:00Z"
+      },
+      "init-007": {
+        "adoption_max_pct": 76,
+        "plateau_pct": 98,
+        "population": 739,
+        "ramp_days": 277,
+        "training_days": 60,
+        "training_start": "2026-01-18T15:00:00Z"
+      },
+      "init-008": {
+        "adoption_max_pct": 87,
+        "plateau_pct": 97,
+        "population": 411,
+        "ramp_days": 285,
+        "training_days": 59,
+        "training_start": "2026-01-16T15:00:00Z"
+      },
+      "init-009": {
+        "adoption_max_pct": 74,
+        "plateau_pct": 96,
+        "population": 365,
+        "ramp_days": 331,
+        "training_days": 82,
+        "training_start": "2026-02-14T15:00:00Z"
+      },
+      "init-010": {
+        "adoption_max_pct": 74,
+        "plateau_pct": 95,
+        "population": 508,
+        "ramp_days": 323,
+        "training_days": 81,
+        "training_start": "2026-04-18T15:00:00Z"
+      },
+      "init-013": {
+        "adoption_max_pct": 82,
+        "plateau_pct": 95,
+        "population": 847,
+        "ramp_days": 305,
+        "training_days": 72,
+        "training_start": "2026-01-13T15:00:00Z"
+      },
+      "init-014": {
+        "adoption_max_pct": 72,
+        "plateau_pct": 98,
+        "population": 441,
+        "ramp_days": 309,
+        "training_days": 64,
+        "training_start": "2026-04-17T15:00:00Z"
+      },
+      "init-015": {
+        "adoption_max_pct": 76,
+        "plateau_pct": 98,
+        "population": 340,
+        "ramp_days": 309,
+        "training_days": 74,
+        "training_start": "2026-03-14T15:00:00Z"
+      },
+      "init-016": {
+        "adoption_max_pct": 71,
+        "plateau_pct": 94,
+        "population": 409,
+        "ramp_days": 281,
+        "training_days": 68,
+        "training_start": "2026-05-20T15:00:00Z"
+      },
+      "init-023": {
+        "adoption_max_pct": 90,
+        "plateau_pct": 97,
+        "population": 220,
+        "ramp_days": 304,
+        "training_days": 76,
+        "training_start": "2026-07-19T15:00:00Z"
+      },
+      "init-024": {
+        "adoption_max_pct": 80,
+        "plateau_pct": 97,
+        "population": 315,
+        "ramp_days": 312,
+        "training_days": 81,
+        "training_start": "2026-08-11T15:00:00Z"
+      }
+    },
+    "entity_file_bytes": 867512,
+    "forecast_version_sets": 12,
+    "ingest": {
+      "adoption_observations": {
+        "accepted": 500,
+        "rejected": 0
+      },
+      "assumption_versions": {
+        "accepted": 160,
+        "rejected": 0
+      },
+      "benefit_items": {
+        "accepted": 700,
+        "rejected": 0
+      },
+      "benefit_observations": {
+        "accepted": 400,
+        "rejected": 0
+      },
+      "cost_items": {
+        "accepted": 900,
+        "rejected": 0
+      },
+      "dependencies": {
+        "accepted": 40,
+        "rejected": 0
+      },
+      "forecast_versions": {
+        "accepted": 144,
+        "rejected": 0
+      },
+      "impact_mappings": {
+        "accepted": 106,
+        "rejected": 0
+      },
+      "initiatives": {
+        "accepted": 24,
+        "rejected": 0
+      },
+      "process_baselines": {
+        "accepted": 30,
+        "rejected": 0
+      },
+      "readiness_assessments": {
+        "accepted": 300,
+        "rejected": 0
+      },
+      "resource_allocations": {
+        "accepted": 557,
+        "rejected": 0
+      },
+      "resources": {
+        "accepted": 8,
+        "rejected": 0
+      },
+      "risk_items": {
+        "accepted": 120,
+        "rejected": 0
+      },
+      "scenario_versions": {
+        "accepted": 30,
+        "rejected": 0
+      },
+      "stakeholder_groups": {
+        "accepted": 60,
+        "rejected": 0
+      },
+      "training_completions": {
+        "accepted": 200,
+        "rejected": 0
+      }
+    },
+    "initiatives_in_scn-025": {
+      "init-001": {
+        "adoption_rate": "0.841346",
+        "capacity_released_hours": "1347.8717",
+        "cost_variance": "35261.71",
+        "discounted_payback": 10,
+        "npv": "578533.26",
+        "simple_payback": 10,
+        "training_completion": "0.948235"
+      },
+      "init-002": {
+        "adoption_rate": "0.578512",
+        "capacity_released_hours": "1005.8667",
+        "cost_variance": "-37445.59",
+        "discounted_payback": 11,
+        "npv": "413388.43",
+        "simple_payback": 10,
+        "training_completion": "0.968794"
+      },
+      "init-003": {
+        "adoption_rate": "0.232258",
+        "capacity_released_hours": "1505.4767",
+        "cost_variance": "31430.68",
+        "discounted_payback": 12,
+        "npv": "363049.68",
+        "simple_payback": 12,
+        "training_completion": "0.977918"
+      },
+      "init-004": {
+        "adoption_rate": "0.444444",
+        "capacity_released_hours": "1841.4667",
+        "cost_variance": "-63009.39",
+        "discounted_payback": 14,
+        "npv": "523302.08",
+        "simple_payback": 14,
+        "training_completion": "0.959792"
+      },
+      "init-005": {
+        "adoption_rate": null,
+        "capacity_released_hours": "1973.4400",
+        "cost_variance": "-59088.59",
+        "discounted_payback": 19,
+        "npv": "209002.21",
+        "simple_payback": 19,
+        "training_completion": "0.023753"
+      },
+      "init-006": {
+        "adoption_rate": null,
+        "capacity_released_hours": "1628.9400",
+        "cost_variance": null,
+        "discounted_payback": null,
+        "npv": "-535631.92",
+        "simple_payback": null,
+        "training_completion": null
+      },
+      "init-007": {
+        "adoption_rate": "0.739708",
+        "capacity_released_hours": "770.6083",
+        "cost_variance": "23326.08",
+        "discounted_payback": 11,
+        "npv": "415366.00",
+        "simple_payback": 11,
+        "training_completion": "0.979702"
+      },
+      "init-008": {
+        "adoption_rate": "0.710462",
+        "capacity_released_hours": "889.7400",
+        "cost_variance": "-37080.34",
+        "discounted_payback": 13,
+        "npv": "65253.91",
+        "simple_payback": 13,
+        "training_completion": "0.968370"
+      },
+      "init-009": {
+        "adoption_rate": "0.412742",
+        "capacity_released_hours": "405.6250",
+        "cost_variance": "-73360.58",
+        "discounted_payback": null,
+        "npv": "-761535.73",
+        "simple_payback": null,
+        "training_completion": "0.958904"
+      },
+      "init-010": {
+        "adoption_rate": null,
+        "capacity_released_hours": "955.6883",
+        "cost_variance": "121733.80",
+        "discounted_payback": 18,
+        "npv": "423409.74",
+        "simple_payback": 18,
+        "training_completion": "0.948819"
+      },
+      "init-011": {
+        "adoption_rate": null,
+        "capacity_released_hours": "399.3400",
+        "cost_variance": null,
+        "discounted_payback": 21,
+        "npv": "84012.76",
+        "simple_payback": 21,
+        "training_completion": null
+      },
+      "init-012": {
+        "adoption_rate": null,
+        "capacity_released_hours": "2745.2700",
+        "cost_variance": null,
+        "discounted_payback": 27,
+        "npv": "126524.02",
+        "simple_payback": 27,
+        "training_completion": null
+      },
+      "init-013": {
+        "adoption_rate": "0.708772",
+        "capacity_released_hours": "430.6667",
+        "cost_variance": "170496.08",
+        "discounted_payback": 11,
+        "npv": "463582.30",
+        "simple_payback": 11,
+        "training_completion": "0.949233"
+      },
+      "init-014": {
+        "adoption_rate": "0.229508",
+        "capacity_released_hours": "1557.8667",
+        "cost_variance": "84441.17",
+        "discounted_payback": 16,
+        "npv": "76930.78",
+        "simple_payback": 15,
+        "training_completion": "0.979592"
+      },
+      "init-015": {
+        "adoption_rate": "0.349544",
+        "capacity_released_hours": "1816.1467",
+        "cost_variance": "93702.86",
+        "discounted_payback": null,
+        "npv": "-618556.03",
+        "simple_payback": null,
+        "training_completion": "0.979412"
+      },
+      "init-016": {
+        "adoption_rate": "0.174334",
+        "capacity_released_hours": "972.0000",
+        "cost_variance": "-36605.56",
+        "discounted_payback": 17,
+        "npv": "46285.40",
+        "simple_payback": 17,
+        "training_completion": "0.938875"
+      },
+      "init-017": {
+        "adoption_rate": null,
+        "capacity_released_hours": "841.9667",
+        "cost_variance": null,
+        "discounted_payback": 23,
+        "npv": "93546.29",
+        "simple_payback": 22,
+        "training_completion": null
+      },
+      "init-018": {
+        "adoption_rate": null,
+        "capacity_released_hours": "597.6167",
+        "cost_variance": null,
+        "discounted_payback": 28,
+        "npv": "15040.08",
+        "simple_payback": 28,
+        "training_completion": null
+      },
+      "init-019": {
+        "adoption_rate": null,
+        "capacity_released_hours": null,
+        "cost_variance": null,
+        "discounted_payback": null,
+        "npv": "-1002807.01",
+        "simple_payback": null,
+        "training_completion": null
+      },
+      "init-020": {
+        "adoption_rate": null,
+        "capacity_released_hours": null,
+        "cost_variance": null,
+        "discounted_payback": 27,
+        "npv": "112711.77",
+        "simple_payback": 27,
+        "training_completion": null
+      },
+      "init-021": {
+        "adoption_rate": null,
+        "capacity_released_hours": null,
+        "cost_variance": null,
+        "discounted_payback": null,
+        "npv": "-337229.75",
+        "simple_payback": null,
+        "training_completion": null
+      },
+      "init-022": {
+        "adoption_rate": null,
+        "capacity_released_hours": null,
+        "cost_variance": null,
+        "discounted_payback": null,
+        "npv": "-61430.84",
+        "simple_payback": null,
+        "training_completion": null
+      },
+      "init-023": {
+        "adoption_rate": null,
+        "capacity_released_hours": null,
+        "cost_variance": null,
+        "discounted_payback": 22,
+        "npv": "515502.07",
+        "simple_payback": 22,
+        "training_completion": "0.968182"
+      },
+      "init-024": {
+        "adoption_rate": null,
+        "capacity_released_hours": null,
+        "cost_variance": null,
+        "discounted_payback": 21,
+        "npv": "230132.79",
+        "simple_payback": 20,
+        "training_completion": "0.511111"
+      }
+    },
+    "linked_events": 1544,
+    "pad_notes": {
+      "adoption_candidates": 592,
+      "benefit_rows_before_adjustment": 707,
+      "cost_items_before_padding": 882,
+      "cost_items_padded": 18,
+      "observation_readings_before_trimming": 332,
+      "training_candidates": 212
+    },
+    "primary_objects": 2747,
+    "scenarios": {
+      "scn-001": {
+        "baseline_version": "v2",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.006434",
+        "horizon_periods": 36,
+        "npv_total": "953382.86",
+        "rate_source": "conversion:a-conv-monthl-2",
+        "status": "draft"
+      },
+      "scn-002": {
+        "baseline_version": "v2",
+        "double_count_residual": "253178.85",
+        "effective_period_rate": "0.009489",
+        "horizon_periods": 36,
+        "npv_total": "2083397.09",
+        "rate_source": "conversion:a-conv-monthl-4",
+        "status": "draft"
+      },
+      "scn-003": {
+        "baseline_version": "v2",
+        "double_count_residual": "253178.85",
+        "effective_period_rate": "0.006434",
+        "horizon_periods": 24,
+        "npv_total": "1980952.24",
+        "rate_source": "conversion:a-conv-monthl-2",
+        "status": "draft"
+      },
+      "scn-004": {
+        "baseline_version": "v2",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.007974",
+        "horizon_periods": 36,
+        "npv_total": "99957.44",
+        "rate_source": "conversion:a-conv-monthl-3",
+        "status": "draft"
+      },
+      "scn-005": {
+        "baseline_version": "v2",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.007974",
+        "horizon_periods": 36,
+        "npv_total": "892632.76",
+        "rate_source": "conversion:a-conv-monthl-3",
+        "status": "draft"
+      },
+      "scn-006": {
+        "baseline_version": "v2",
+        "double_count_residual": "207146.32",
+        "effective_period_rate": "0.007000",
+        "horizon_periods": 36,
+        "npv_total": "1523563.61",
+        "rate_source": "declared",
+        "status": "draft"
+      },
+      "scn-007": {
+        "baseline_version": "v2",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.006434",
+        "horizon_periods": 36,
+        "npv_total": "791876.77",
+        "rate_source": "conversion:a-conv-monthl-2",
+        "status": "draft"
+      },
+      "scn-008": {
+        "baseline_version": "v2",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.009489",
+        "horizon_periods": 36,
+        "npv_total": "804919.25",
+        "rate_source": "conversion:a-conv-monthl-4",
+        "status": "draft"
+      },
+      "scn-009": {
+        "baseline_version": "v2",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.006434",
+        "horizon_periods": 24,
+        "npv_total": "334667.51",
+        "rate_source": "conversion:a-conv-monthl-2",
+        "status": "draft"
+      },
+      "scn-010": {
+        "baseline_version": "v2",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.007974",
+        "horizon_periods": 36,
+        "npv_total": "-362653.93",
+        "rate_source": "conversion:a-conv-monthl-3",
+        "status": "draft"
+      },
+      "scn-011": {
+        "baseline_version": "v2",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.007974",
+        "horizon_periods": 36,
+        "npv_total": "706407.57",
+        "rate_source": "conversion:a-conv-monthl-3",
+        "status": "draft"
+      },
+      "scn-012": {
+        "baseline_version": "v2",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.007000",
+        "horizon_periods": 36,
+        "npv_total": "322261.60",
+        "rate_source": "declared",
+        "status": "draft"
+      },
+      "scn-013": {
+        "baseline_version": "v1",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.006434",
+        "horizon_periods": 36,
+        "npv_total": "817592.33",
+        "rate_source": "conversion:a-conv-monthl-2",
+        "status": "draft"
+      },
+      "scn-014": {
+        "baseline_version": "v1",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.009489",
+        "horizon_periods": 36,
+        "npv_total": "796700.44",
+        "rate_source": "conversion:a-conv-monthl-4",
+        "status": "draft"
+      },
+      "scn-015": {
+        "baseline_version": "v1",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.006434",
+        "horizon_periods": 24,
+        "npv_total": "-47204.81",
+        "rate_source": "conversion:a-conv-monthl-2",
+        "status": "draft"
+      },
+      "scn-016": {
+        "baseline_version": "v1",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.007974",
+        "horizon_periods": 36,
+        "npv_total": "-61970.90",
+        "rate_source": "conversion:a-conv-monthl-3",
+        "status": "draft"
+      },
+      "scn-017": {
+        "baseline_version": "v1",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.007974",
+        "horizon_periods": 36,
+        "npv_total": "744598.77",
+        "rate_source": "conversion:a-conv-monthl-3",
+        "status": "draft"
+      },
+      "scn-018": {
+        "baseline_version": "v1",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.007000",
+        "horizon_periods": 36,
+        "npv_total": "52603.38",
+        "rate_source": "declared",
+        "status": "draft"
+      },
+      "scn-019": {
+        "baseline_version": "v1",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.006434",
+        "horizon_periods": 36,
+        "npv_total": "-543120.97",
+        "rate_source": "conversion:a-conv-monthl-2",
+        "status": "draft"
+      },
+      "scn-020": {
+        "baseline_version": "v1",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.009489",
+        "horizon_periods": 36,
+        "npv_total": "-661017.95",
+        "rate_source": "conversion:a-conv-monthl-4",
+        "status": "draft"
+      },
+      "scn-021": {
+        "baseline_version": "v1",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.006434",
+        "horizon_periods": 24,
+        "npv_total": "-1380296.98",
+        "rate_source": "conversion:a-conv-monthl-2",
+        "status": "draft"
+      },
+      "scn-022": {
+        "baseline_version": "v1",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.007974",
+        "horizon_periods": 36,
+        "npv_total": "673071.47",
+        "rate_source": "conversion:a-conv-monthl-3",
+        "status": "draft"
+      },
+      "scn-023": {
+        "baseline_version": "v1",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.007974",
+        "horizon_periods": 36,
+        "npv_total": "-604162.03",
+        "rate_source": "conversion:a-conv-monthl-3",
+        "status": "draft"
+      },
+      "scn-024": {
+        "baseline_version": "v1",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.007000",
+        "horizon_periods": 36,
+        "npv_total": "-565945.30",
+        "rate_source": "declared",
+        "status": "draft"
+      },
+      "scn-025": {
+        "baseline_version": "v2",
+        "double_count_residual": "207146.32",
+        "effective_period_rate": "0.006434",
+        "horizon_periods": 36,
+        "npv_total": "1438382.25",
+        "rate_source": "conversion:a-conv-monthl-2",
+        "status": "draft"
+      },
+      "scn-026": {
+        "baseline_version": "v2",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.006434",
+        "horizon_periods": 36,
+        "npv_total": "1024993.83",
+        "rate_source": "conversion:a-conv-monthl-2",
+        "status": "draft"
+      },
+      "scn-027": {
+        "baseline_version": "v2",
+        "double_count_residual": "207146.32",
+        "effective_period_rate": "0.007974",
+        "horizon_periods": 24,
+        "npv_total": "1838021.19",
+        "rate_source": "conversion:a-conv-monthl-3",
+        "status": "draft"
+      },
+      "scn-028": {
+        "baseline_version": "v2",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.007974",
+        "horizon_periods": 36,
+        "npv_total": "147903.44",
+        "rate_source": "conversion:a-conv-monthl-3",
+        "status": "draft"
+      },
+      "scn-029": {
+        "baseline_version": "v2",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.009489",
+        "horizon_periods": 36,
+        "npv_total": "-1343076.84",
+        "rate_source": "conversion:a-conv-monthl-4",
+        "status": "draft"
+      },
+      "scn-030": {
+        "baseline_version": "v2",
+        "double_count_residual": "0.00",
+        "effective_period_rate": "0.007974",
+        "horizon_periods": 36,
+        "npv_total": "1748559.44",
+        "rate_source": "conversion:a-conv-monthl-3",
+        "status": "draft"
+      }
+    },
+    "summary": {
+      "adoption_rate": "0.532881",
+      "capacity_released_hours_total": "10178.3434",
+      "double_count_residual": "0.00",
+      "initiatives": 24,
+      "npv_total": "953382.86",
+      "risk_exposure_total": "7485779.58",
+      "scenarios": 30,
+      "summary_scenario_id": "scn-001",
+      "training_completion": "0.888443"
+    },
+    "warnings": {
+      "BASELINE_VERSION_DIFFERS": 19
+    }
+  },
+  "synthetic_truth": {
+    "by_initiative_and_type": {
+      "init-001/avoided_cost": {
+        "observed_comparable_cents": 26100563,
+        "true_attributable_share": "0.890000",
+        "true_trend_cents": 2871061
+      },
+      "init-001/capacity": {
+        "observed_comparable_cents": 488525,
+        "true_attributable_share": "0.800002",
+        "true_trend_cents": 97704
+      },
+      "init-001/cash": {
+        "observed_comparable_cents": 23314705,
+        "true_attributable_share": "0.930000",
+        "true_trend_cents": 1632029
+      },
+      "init-002/avoided_cost": {
+        "observed_comparable_cents": 3829087,
+        "true_attributable_share": "0.940000",
+        "true_trend_cents": 229747
+      },
+      "init-002/capacity": {
+        "observed_comparable_cents": 117106,
+        "true_attributable_share": "0.760004",
+        "true_trend_cents": 28105
+      },
+      "init-002/cash": {
+        "observed_comparable_cents": 26589046,
+        "true_attributable_share": "0.790000",
+        "true_trend_cents": 5583700
+      },
+      "init-003/avoided_cost": {
+        "observed_comparable_cents": 1736672,
+        "true_attributable_share": "0.890000",
+        "true_trend_cents": 191034
+      },
+      "init-003/capacity": {
+        "observed_comparable_cents": 66897,
+        "true_attributable_share": "0.859994",
+        "true_trend_cents": 9366
+      },
+      "init-003/cash": {
+        "observed_comparable_cents": 10556801,
+        "true_attributable_share": "0.890000",
+        "true_trend_cents": 1161249
+      },
+      "init-004/avoided_cost": {
+        "observed_comparable_cents": 11185947,
+        "true_attributable_share": "0.850000",
+        "true_trend_cents": 1677892
+      },
+      "init-004/capacity": {
+        "observed_comparable_cents": 36163,
+        "true_attributable_share": "0.760003",
+        "true_trend_cents": 8679
+      },
+      "init-004/cash": {
+        "observed_comparable_cents": 5247286,
+        "true_attributable_share": "0.790000",
+        "true_trend_cents": 1101930
+      },
+      "init-007/avoided_cost": {
+        "observed_comparable_cents": 13116904,
+        "true_attributable_share": "0.810000",
+        "true_trend_cents": 2492212
+      },
+      "init-007/capacity": {
+        "observed_comparable_cents": 110509,
+        "true_attributable_share": "0.900008",
+        "true_trend_cents": 11050
+      },
+      "init-007/revenue": {
+        "observed_comparable_cents": 63248559,
+        "true_attributable_share": "0.890000",
+        "true_trend_cents": 6957341
+      },
+      "init-008/capacity": {
+        "observed_comparable_cents": 82149,
+        "true_attributable_share": "0.770015",
+        "true_trend_cents": 18893
+      },
+      "init-008/cash": {
+        "observed_comparable_cents": 16959313,
+        "true_attributable_share": "0.150000",
+        "true_trend_cents": 14415415
+      },
+      "init-008/revenue": {
+        "observed_comparable_cents": 8633517,
+        "true_attributable_share": "0.930000",
+        "true_trend_cents": 604346
+      },
+      "init-009/capacity": {
+        "observed_comparable_cents": 38777,
+        "true_attributable_share": "0.830028",
+        "true_trend_cents": 6591
+      },
+      "init-013/avoided_cost": {
+        "observed_comparable_cents": 15801004,
+        "true_attributable_share": "0.900000",
+        "true_trend_cents": 1580100
+      },
+      "init-013/capacity": {
+        "observed_comparable_cents": 83533,
+        "true_attributable_share": "0.830007",
+        "true_trend_cents": 14200
+      },
+      "init-013/cash": {
+        "observed_comparable_cents": 38388331,
+        "true_attributable_share": "0.780000",
+        "true_trend_cents": 8445433
+      },
+      "init-014/avoided_cost": {
+        "observed_comparable_cents": 750085,
+        "true_attributable_share": "0.900001",
+        "true_trend_cents": 75008
+      },
+      "init-014/capacity": {
+        "observed_comparable_cents": 15524,
+        "true_attributable_share": "0.840054",
+        "true_trend_cents": 2483
+      },
+      "init-014/cash": {
+        "observed_comparable_cents": 9278129,
+        "true_attributable_share": "0.860000",
+        "true_trend_cents": 1298938
+      },
+      "init-015/avoided_cost": {
+        "observed_comparable_cents": 1358733,
+        "true_attributable_share": "0.950000",
+        "true_trend_cents": 67936
+      },
+      "init-015/capacity": {
+        "observed_comparable_cents": 56760,
+        "true_attributable_share": "0.900000",
+        "true_trend_cents": 5676
+      },
+      "init-015/cash": {
+        "observed_comparable_cents": 10369376,
+        "true_attributable_share": "0.910000",
+        "true_trend_cents": 933243
+      },
+      "init-016/avoided_cost": {
+        "observed_comparable_cents": 160649,
+        "true_attributable_share": "0.770002",
+        "true_trend_cents": 36949
+      },
+      "init-016/capacity": {
+        "observed_comparable_cents": 13645,
+        "true_attributable_share": "0.900037",
+        "true_trend_cents": 1364
+      },
+      "init-016/cash": {
+        "observed_comparable_cents": 750996,
+        "true_attributable_share": "0.770000",
+        "true_trend_cents": 172729
+      }
+    },
+    "note": "Synthetic counterfactual for the verification layer only: the true share of each observed improvement that the rollout caused. It is never loaded by the seeder, the API or the web."
+  },
+  "code_sha": "d9e76fa9c3ee49043044be9d2d191ba902baeb65",
+  "published_at": "2026-10-27T05:35:22Z",
+  "source": "https://github.com/mrrishit909/projects-site/tree/d9e76fa9c3ee49043044be9d2d191ba902baeb65/apps/changeworks"
+}

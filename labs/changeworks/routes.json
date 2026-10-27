@@ -1,0 +1,17 @@
+{
+  "routes": [
+    "",
+    "portfolio/",
+    "baseline/",
+    "business-case/",
+    "sensitivity/",
+    "roadmap/",
+    "impact/",
+    "readiness/",
+    "benefits/",
+    "forecast/",
+    "evidence/",
+    "case-study/"
+  ],
+  "generated_at": "2026-10-27T05:24:56.457Z"
+}

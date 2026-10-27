@@ -1,0 +1,731 @@
+{
+  "contract_version": 1,
+  "as_of": "2028-06-30T00:00:00Z",
+  "period_basis": "annual",
+  "period_start": "2026-01-01",
+  "initiatives": [
+    {
+      "initiative_id": "init-001",
+      "title": "Invoice automation",
+      "sponsor_id": "sp-fin",
+      "status": "in_delivery",
+      "baseline_version": "v1",
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "init-002",
+      "title": "Onboarding redesign",
+      "sponsor_id": "sp-ops",
+      "status": "in_delivery",
+      "baseline_version": "v1",
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "init-003",
+      "title": "Vendor consolidation",
+      "sponsor_id": "sp-proc",
+      "status": "candidate",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 2,
+      "eligibility_rule_version": "elig-v1"
+    }
+  ],
+  "process_baselines": [
+    {
+      "baseline_id": "pb-101",
+      "initiative_id": "init-001",
+      "baseline_version": "v1",
+      "volume": 12000,
+      "minutes_per_case": 10,
+      "error_rate": "0.040000",
+      "evidence_ref": "ev:ap-timesheet-2025",
+      "measured_at": "2025-11-30T00:00:00Z",
+      "reason": null
+    },
+    {
+      "baseline_id": "pb-201",
+      "initiative_id": "init-002",
+      "baseline_version": "v1",
+      "volume": 6000,
+      "minutes_per_case": 30,
+      "error_rate": "0.100000",
+      "evidence_ref": "ev:onboarding-log-2025",
+      "measured_at": "2025-11-30T00:00:00Z",
+      "reason": null
+    },
+    {
+      "baseline_id": "pb-202",
+      "initiative_id": "init-002",
+      "baseline_version": "v2",
+      "volume": 6600,
+      "minutes_per_case": 30,
+      "error_rate": "0.100000",
+      "evidence_ref": "ev:onboarding-log-2025-restated",
+      "measured_at": "2026-03-31T00:00:00Z",
+      "reason": "Volume restated after the Q3 audit; v1 stays the approved baseline"
+    },
+    {
+      "baseline_id": "pb-301",
+      "initiative_id": "init-003",
+      "baseline_version": "v1",
+      "volume": 900,
+      "minutes_per_case": 20,
+      "error_rate": "0.080000",
+      "evidence_ref": "ev:vendor-register-2025",
+      "measured_at": "2025-12-15T00:00:00Z",
+      "reason": null
+    }
+  ],
+  "assumption_versions": [
+    {
+      "assumption_id": "a-101-t1",
+      "initiative_id": "init-001",
+      "name": "target_minutes_per_case",
+      "version_number": 1,
+      "value": "8",
+      "values": null,
+      "unit": "minutes",
+      "rationale": "Pilot team handled matched invoices in 8 minutes",
+      "author_id": "analyst-1",
+      "evidence_ref": null,
+      "staffing_change_evidence_ref": null,
+      "created_at": "2026-01-10T00:00:00Z"
+    },
+    {
+      "assumption_id": "a-201-t1",
+      "initiative_id": "init-002",
+      "name": "target_minutes_per_case",
+      "version_number": 1,
+      "value": "24",
+      "values": null,
+      "unit": "minutes",
+      "rationale": "Redesign pilot",
+      "author_id": "analyst-1",
+      "evidence_ref": null,
+      "staffing_change_evidence_ref": null,
+      "created_at": "2026-01-10T00:00:00Z"
+    },
+    {
+      "assumption_id": "a-201-t2",
+      "initiative_id": "init-002",
+      "name": "target_minutes_per_case",
+      "version_number": 2,
+      "value": "25",
+      "values": null,
+      "unit": "minutes",
+      "rationale": "Pilot repeated with a larger sample",
+      "author_id": "analyst-1",
+      "evidence_ref": null,
+      "staffing_change_evidence_ref": null,
+      "created_at": "2026-02-10T00:00:00Z"
+    },
+    {
+      "assumption_id": "a-201-r1",
+      "initiative_id": "init-002",
+      "name": "adoption_ramp",
+      "version_number": 1,
+      "value": null,
+      "values": [
+        "0.500000",
+        "1.000000"
+      ],
+      "unit": "fraction",
+      "rationale": "Half of the eligible staff use the new flow in the first period",
+      "author_id": "analyst-1",
+      "evidence_ref": null,
+      "staffing_change_evidence_ref": null,
+      "created_at": "2026-01-10T00:00:00Z"
+    }
+  ],
+  "resources": [
+    {
+      "resource_id": "res-001",
+      "name": "Data engineer pool",
+      "capacity_per_period": "2.00",
+      "unit": "FTE"
+    }
+  ],
+  "scenario_versions": [
+    {
+      "scenario_id": "scn-001",
+      "baseline_version": "v1",
+      "discount_rate": "0.100000",
+      "rate_basis": "annual",
+      "rate_conversion_assumption_id": null,
+      "horizon_periods": 3,
+      "status": "draft",
+      "initiative_ids": [
+        "init-001",
+        "init-002",
+        "init-003"
+      ],
+      "pinned_assumption_ids": [
+        "a-101-t1",
+        "a-201-t1",
+        "a-201-r1"
+      ],
+      "created_at": "2026-01-15T09:00:00Z"
+    }
+  ],
+  "cost_items": [
+    {
+      "cost_id": "c-101",
+      "initiative_id": "init-001",
+      "cost_key": "ck-101-licence",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "1000.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": "v1"
+    },
+    {
+      "cost_id": "c-102",
+      "initiative_id": "init-001",
+      "cost_key": "ck-101-licence",
+      "cost_type": "one_time",
+      "cost_basis": "actual",
+      "amount": "1000.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    },
+    {
+      "cost_id": "c-201",
+      "initiative_id": "init-002",
+      "cost_key": "ck-201-build",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "500.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": "v1"
+    },
+    {
+      "cost_id": "c-202",
+      "initiative_id": "init-002",
+      "cost_key": "ck-201-run",
+      "cost_type": "recurring",
+      "cost_basis": "planned",
+      "amount": "100.00",
+      "period_index": null,
+      "start_period": 1,
+      "end_period": 3,
+      "baseline_version": "v1"
+    },
+    {
+      "cost_id": "c-203",
+      "initiative_id": "init-002",
+      "cost_key": "ck-201-build",
+      "cost_type": "one_time",
+      "cost_basis": "actual",
+      "amount": "520.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    },
+    {
+      "cost_id": "c-204",
+      "initiative_id": "init-002",
+      "cost_key": "ck-201-run",
+      "cost_type": "recurring",
+      "cost_basis": "actual",
+      "amount": "100.00",
+      "period_index": null,
+      "start_period": 1,
+      "end_period": 2,
+      "baseline_version": null
+    },
+    {
+      "cost_id": "c-301",
+      "initiative_id": "init-003",
+      "cost_key": "ck-301-exit",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "800.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    }
+  ],
+  "benefit_items": [
+    {
+      "benefit_id": "b-101",
+      "initiative_id": "init-001",
+      "benefit_type": "cash",
+      "amount": "600.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": "50.00"
+    },
+    {
+      "benefit_id": "b-102",
+      "initiative_id": "init-001",
+      "benefit_type": "cash",
+      "amount": "600.00",
+      "period_index": 2,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": "50.00"
+    },
+    {
+      "benefit_id": "b-103",
+      "initiative_id": "init-001",
+      "benefit_type": "capacity",
+      "amount": "400.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "hours",
+      "cash_realisation": false,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-104",
+      "initiative_id": "init-001",
+      "benefit_type": "capacity",
+      "amount": "400.00",
+      "period_index": 2,
+      "starts_period": 1,
+      "unit": "hours",
+      "cash_realisation": false,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-201",
+      "initiative_id": "init-002",
+      "benefit_type": "cash",
+      "amount": "400.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": "20.00"
+    },
+    {
+      "benefit_id": "b-202",
+      "initiative_id": "init-002",
+      "benefit_type": "cash",
+      "amount": "400.00",
+      "period_index": 2,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": "20.00"
+    },
+    {
+      "benefit_id": "b-203",
+      "initiative_id": "init-002",
+      "benefit_type": "avoided_cost",
+      "amount": "150.00",
+      "period_index": 2,
+      "starts_period": 2,
+      "unit": "USD",
+      "cash_realisation": true,
+      "evidence_ref": "budget-line:CC-4410-removed",
+      "benefit_source_key": "cost-line:CC-4410",
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-204",
+      "initiative_id": "init-002",
+      "benefit_type": "avoided_cost",
+      "amount": "80.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": false,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-205",
+      "initiative_id": "init-002",
+      "benefit_type": "avoided_cost",
+      "amount": "80.00",
+      "period_index": 2,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": false,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-206",
+      "initiative_id": "init-002",
+      "benefit_type": "revenue",
+      "amount": "100.00",
+      "period_index": 2,
+      "starts_period": 2,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-301",
+      "initiative_id": "init-003",
+      "benefit_type": "avoided_cost",
+      "amount": "150.00",
+      "period_index": 2,
+      "starts_period": 2,
+      "unit": "USD",
+      "cash_realisation": true,
+      "evidence_ref": "budget-line:CC-4410-removed",
+      "benefit_source_key": "cost-line:CC-4410",
+      "baseline_trend_per_period": null
+    }
+  ],
+  "dependencies": [
+    {
+      "dependency_id": "d-1",
+      "initiative_id": "init-002",
+      "prerequisite_id": "init-001",
+      "dependency_type": "finish_to_start",
+      "lag_periods": 1
+    },
+    {
+      "dependency_id": "d-2",
+      "initiative_id": "init-003",
+      "prerequisite_id": "init-002",
+      "dependency_type": "finish_to_start",
+      "lag_periods": 0
+    },
+    {
+      "dependency_id": "d-3",
+      "initiative_id": "init-003",
+      "prerequisite_id": "init-001",
+      "dependency_type": "start_to_start",
+      "lag_periods": 1
+    }
+  ],
+  "stakeholder_groups": [
+    {
+      "group_id": "grp-001",
+      "group_name": "Accounts payable clerks",
+      "owner_id": "sp-fin",
+      "affected_count": 40,
+      "impact_level": "high"
+    },
+    {
+      "group_id": "grp-002",
+      "group_name": "Finance managers",
+      "owner_id": "sp-fin",
+      "affected_count": 10,
+      "impact_level": "medium"
+    },
+    {
+      "group_id": "grp-003",
+      "group_name": "Procurement buyers",
+      "owner_id": "sp-proc",
+      "affected_count": 25,
+      "impact_level": "low"
+    }
+  ],
+  "impact_mappings": [
+    {
+      "mapping_id": "im-1",
+      "initiative_id": "init-001",
+      "group_id": "grp-001",
+      "operating_change": "Invoices are matched by the system; clerks resolve exceptions only",
+      "impact_level": "high"
+    },
+    {
+      "mapping_id": "im-2",
+      "initiative_id": "init-001",
+      "group_id": "grp-002",
+      "operating_change": "The approval queue becomes a weekly exception report",
+      "impact_level": "medium"
+    },
+    {
+      "mapping_id": "im-3",
+      "initiative_id": "init-003",
+      "group_id": "grp-003",
+      "operating_change": "Orders move to the consolidated vendor list",
+      "impact_level": "low"
+    }
+  ],
+  "resource_allocations": [
+    {
+      "allocation_id": "al-1",
+      "resource_id": "res-001",
+      "initiative_id": "init-001",
+      "period_index": 0,
+      "amount": "1.00"
+    },
+    {
+      "allocation_id": "al-2",
+      "resource_id": "res-001",
+      "initiative_id": "init-002",
+      "period_index": 0,
+      "amount": "0.75"
+    },
+    {
+      "allocation_id": "al-3",
+      "resource_id": "res-001",
+      "initiative_id": "init-002",
+      "period_index": 2,
+      "amount": "1.50"
+    },
+    {
+      "allocation_id": "al-4",
+      "resource_id": "res-001",
+      "initiative_id": "init-003",
+      "period_index": 3,
+      "amount": "2.00"
+    }
+  ],
+  "readiness_assessments": [
+    {
+      "assessment_id": "ra-1b",
+      "group_id": "grp-001",
+      "dimension": "awareness",
+      "score": 2,
+      "weight": "1.00",
+      "assessed_at": "2026-11-01T00:00:00Z"
+    },
+    {
+      "assessment_id": "ra-1",
+      "group_id": "grp-001",
+      "dimension": "awareness",
+      "score": 4,
+      "weight": "1.00",
+      "assessed_at": "2027-02-01T00:00:00Z"
+    },
+    {
+      "assessment_id": "ra-2",
+      "group_id": "grp-001",
+      "dimension": "desire",
+      "score": 3,
+      "weight": "2.00",
+      "assessed_at": "2027-02-01T00:00:00Z"
+    },
+    {
+      "assessment_id": "ra-3",
+      "group_id": "grp-001",
+      "dimension": "knowledge",
+      "score": 2,
+      "weight": "1.00",
+      "assessed_at": "2027-02-01T00:00:00Z"
+    },
+    {
+      "assessment_id": "ra-4",
+      "group_id": "grp-001",
+      "dimension": "ability",
+      "score": 3,
+      "weight": "1.00",
+      "assessed_at": "2027-02-01T00:00:00Z"
+    },
+    {
+      "assessment_id": "ra-5",
+      "group_id": "grp-001",
+      "dimension": "reinforcement",
+      "score": 5,
+      "weight": "1.00",
+      "assessed_at": "2027-02-01T00:00:00Z"
+    },
+    {
+      "assessment_id": "ra-6",
+      "group_id": "grp-002",
+      "dimension": "awareness",
+      "score": 5,
+      "weight": "1.00",
+      "assessed_at": "2027-02-01T00:00:00Z"
+    },
+    {
+      "assessment_id": "ra-7",
+      "group_id": "grp-002",
+      "dimension": "ability",
+      "score": 3,
+      "weight": "1.00",
+      "assessed_at": "2027-02-01T00:00:00Z"
+    }
+  ],
+  "adoption_observations": [
+    {
+      "observation_id": "ad-1",
+      "initiative_id": "init-001",
+      "eligible_count": 40,
+      "adopted_count": 10,
+      "observed_at": "2027-03-31T00:00:00Z",
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "observation_id": "ad-2",
+      "initiative_id": "init-001",
+      "eligible_count": 40,
+      "adopted_count": 30,
+      "observed_at": "2028-03-31T00:00:00Z",
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "observation_id": "ad-3",
+      "initiative_id": "init-001",
+      "eligible_count": 40,
+      "adopted_count": 36,
+      "observed_at": "2028-09-30T00:00:00Z",
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "observation_id": "ad-4",
+      "initiative_id": "init-002",
+      "eligible_count": 50,
+      "adopted_count": 20,
+      "observed_at": "2028-03-31T00:00:00Z",
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "observation_id": "ad-5",
+      "initiative_id": "init-003",
+      "eligible_count": 0,
+      "adopted_count": 0,
+      "observed_at": "2028-03-31T00:00:00Z",
+      "eligibility_rule_version": "elig-v1"
+    }
+  ],
+  "training_completions": [
+    {
+      "training_id": "tc-1",
+      "initiative_id": "init-001",
+      "eligible_trainees": 40,
+      "completed": 38,
+      "recorded_at": "2028-03-31T00:00:00Z",
+      "eligibility_rule_version": "elig-v1"
+    }
+  ],
+  "benefit_observations": [
+    {
+      "benefit_observation_id": "bo-1",
+      "benefit_id": "b-101",
+      "measured_value": "480.00",
+      "evidence_ref": "ev:ap-ledger-2027",
+      "observed_at": "2028-01-31T00:00:00Z"
+    },
+    {
+      "benefit_observation_id": "bo-2",
+      "benefit_id": "b-103",
+      "measured_value": "340.00",
+      "evidence_ref": "ev:ap-timesheet-2027",
+      "observed_at": "2028-01-31T00:00:00Z"
+    },
+    {
+      "benefit_observation_id": "bo-3",
+      "benefit_id": "b-102",
+      "measured_value": "300.00",
+      "evidence_ref": "ev:ap-ledger-2028-h1",
+      "observed_at": "2028-06-15T00:00:00Z"
+    },
+    {
+      "benefit_observation_id": "bo-4",
+      "benefit_id": "b-201",
+      "measured_value": "150.00",
+      "evidence_ref": "ev:onboarding-2027",
+      "observed_at": "2028-01-31T00:00:00Z"
+    },
+    {
+      "benefit_observation_id": "bo-5",
+      "benefit_id": "b-204",
+      "measured_value": "30.00",
+      "evidence_ref": "ev:ops-budget-2027",
+      "observed_at": "2028-01-31T00:00:00Z"
+    }
+  ],
+  "risk_items": [
+    {
+      "risk_id": "r-101a",
+      "initiative_id": "init-001",
+      "probability": "0.200000",
+      "impact": "5000.00",
+      "mitigation": "Parallel run for one cycle"
+    },
+    {
+      "risk_id": "r-101b",
+      "initiative_id": "init-001",
+      "probability": "0.050000",
+      "impact": "20000.00",
+      "mitigation": "Rollback plan"
+    },
+    {
+      "risk_id": "r-201a",
+      "initiative_id": "init-002",
+      "probability": "0.500000",
+      "impact": "1000.00",
+      "mitigation": "Staged rollout"
+    },
+    {
+      "risk_id": "r-201b",
+      "initiative_id": "init-002",
+      "probability": "0.000000",
+      "impact": "9999.00",
+      "mitigation": "Closed by contract"
+    }
+  ],
+  "forecast_versions": [
+    {
+      "forecast_id": "f-101-1-1",
+      "initiative_id": "init-001",
+      "version_number": 1,
+      "period_index": 1,
+      "amount": "600.00",
+      "reason": "Approved forecast",
+      "created_at": "2026-01-20T00:00:00Z"
+    },
+    {
+      "forecast_id": "f-101-1-2",
+      "initiative_id": "init-001",
+      "version_number": 1,
+      "period_index": 2,
+      "amount": "600.00",
+      "reason": "Approved forecast",
+      "created_at": "2026-01-20T00:00:00Z"
+    },
+    {
+      "forecast_id": "f-101-2-1",
+      "initiative_id": "init-001",
+      "version_number": 2,
+      "period_index": 1,
+      "amount": "480.00",
+      "reason": "Observed shortfall in the first full period",
+      "created_at": "2028-02-15T00:00:00Z"
+    },
+    {
+      "forecast_id": "f-101-2-2",
+      "initiative_id": "init-001",
+      "version_number": 2,
+      "period_index": 2,
+      "amount": "500.00",
+      "reason": "Observed shortfall in the first full period",
+      "created_at": "2028-02-15T00:00:00Z"
+    }
+  ]
+}
