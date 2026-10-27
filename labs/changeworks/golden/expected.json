@@ -81,12 +81,17 @@
       "summary_scenario_id": "scn-001",
       "initiatives": 3,
       "scenarios": 1,
-      "npv_total": "-692.56",
+      "npv_total": "-754.55",
+      "npv_sum_of_initiatives": "-692.56",
+      "double_counted_amount": "75.00",
+      "double_counted_pv": "61.98",
       "double_count_residual": "75.00",
+      "hours_residual": "0.00",
       "adoption_rate": "0.555556",
       "training_completion": "0.950000",
       "risk_exposure_total": "2500.00",
-      "capacity_released_hours_total": "1000.0000"
+      "capacity_released_hours_total": "1000.0000",
+      "capacity_released_hours_double_counted": "0.0000"
     },
     "scenarios": {
       "scn-001": {
@@ -203,11 +208,13 @@
             "payback": {
               "simple": {
                 "period": 2,
-                "interpolated": "1.6667"
+                "interpolated": "1.6667",
+                "reason": null
               },
               "discounted": {
                 "period": 2,
-                "interpolated": "1.9167"
+                "interpolated": "1.9167",
+                "reason": null
               }
             },
             "capacity_released": {
@@ -215,6 +222,7 @@
               "reason": null,
               "baseline_version": "v1",
               "target_assumption_id": "a-101-t1",
+              "hours_exact": "400",
               "volume": 12000,
               "baseline_minutes_per_case": 10,
               "target_minutes_per_case": "8"
@@ -241,6 +249,10 @@
                 "realization": "0.800000",
                 "baseline_trend": "50.00",
                 "observed_above_trend": "430.00",
+                "trend_coverage": {
+                  "complete": true,
+                  "rows_without_trend": []
+                },
                 "attribution": "observed, not attributed",
                 "matured_unobserved_items": []
               },
@@ -254,13 +266,20 @@
                 "realization": "0.850000",
                 "baseline_trend": null,
                 "observed_above_trend": null,
+                "trend_coverage": {
+                  "complete": false,
+                  "rows_without_trend": [
+                    "b-103"
+                  ]
+                },
                 "attribution": "observed, not attributed",
                 "matured_unobserved_items": []
               }
             },
             "immature_observation_ids": [
               "bo-3"
-            ]
+            ],
+            "late_recorded_observation_ids": []
           },
           "init-002": {
             "cash_flow": [
@@ -388,11 +407,13 @@
             "payback": {
               "simple": {
                 "period": 2,
-                "interpolated": "1.9412"
+                "interpolated": "1.9412",
+                "reason": null
               },
               "discounted": {
                 "period": null,
-                "interpolated": null
+                "interpolated": null,
+                "reason": "NOT_RECOVERED"
               }
             },
             "capacity_released": {
@@ -400,6 +421,7 @@
               "reason": null,
               "baseline_version": "v1",
               "target_assumption_id": "a-201-t1",
+              "hours_exact": "600",
               "volume": 6000,
               "baseline_minutes_per_case": 30,
               "target_minutes_per_case": "24"
@@ -426,6 +448,10 @@
                 "realization": "0.750000",
                 "baseline_trend": "20.00",
                 "observed_above_trend": "130.00",
+                "trend_coverage": {
+                  "complete": true,
+                  "rows_without_trend": []
+                },
                 "attribution": "observed, not attributed",
                 "matured_unobserved_items": []
               },
@@ -439,11 +465,18 @@
                 "realization": "0.750000",
                 "baseline_trend": null,
                 "observed_above_trend": null,
+                "trend_coverage": {
+                  "complete": false,
+                  "rows_without_trend": [
+                    "b-204"
+                  ]
+                },
                 "attribution": "observed, not attributed",
                 "matured_unobserved_items": []
               }
             },
-            "immature_observation_ids": []
+            "immature_observation_ids": [],
+            "late_recorded_observation_ids": []
           },
           "init-003": {
             "cash_flow": [
@@ -536,11 +569,13 @@
             "payback": {
               "simple": {
                 "period": null,
-                "interpolated": null
+                "interpolated": null,
+                "reason": "NOT_RECOVERED"
               },
               "discounted": {
                 "period": null,
-                "interpolated": null
+                "interpolated": null,
+                "reason": "NOT_RECOVERED"
               }
             },
             "capacity_released": {
@@ -561,13 +596,31 @@
               "reason": "NO_APPROVED_BASELINE"
             },
             "benefit_realization": {},
-            "immature_observation_ids": []
+            "immature_observation_ids": [],
+            "late_recorded_observation_ids": []
           }
         },
         "double_count": {
           "planned_benefits": "2195.00",
           "attributable_benefits": "2120.00",
           "residual": "75.00",
+          "double_counted_amount": "75.00",
+          "double_counted_pv": "61.98",
+          "double_counted_pv_exact": "7500/121",
+          "double_counted_by_class": {
+            "cash": "0.00",
+            "revenue": "0.00",
+            "avoided_cost_realised": "75.00",
+            "capacity_converted": "0.00",
+            "avoided_cost_beside": "0.00"
+          },
+          "double_counted_by_class_exact": {
+            "cash": "0",
+            "revenue": "0",
+            "avoided_cost_realised": "75",
+            "capacity_converted": "0",
+            "avoided_cost_beside": "0"
+          },
           "overlaps": [
             {
               "benefit_source_key": "cost-line:CC-4410",
@@ -576,23 +629,37 @@
                 {
                   "initiative_id": "init-002",
                   "benefit_id": "b-203",
-                  "amount": "75.00"
+                  "amount": "75.00",
+                  "benefit_class": "avoided_cost_realised",
+                  "enters_cash_flow": true
                 },
                 {
                   "initiative_id": "init-003",
                   "benefit_id": "b-301",
-                  "amount": "150.00"
+                  "amount": "150.00",
+                  "benefit_class": "avoided_cost_realised",
+                  "enters_cash_flow": true
                 }
               ],
               "counted_once": "150.00",
               "overlap": "75.00"
             }
           ],
-          "explanation_required": true
+          "planned_hours": "800.00",
+          "attributable_hours": "800.00",
+          "hours_residual": "0.00",
+          "hours_overlaps": [],
+          "explanation_required": true,
+          "explanation_required_for": [
+            "money"
+          ]
         },
         "npv_total": {
-          "value": "-692.56",
-          "exact": "-83800/121"
+          "value": "-754.55",
+          "exact": "-8300/11",
+          "basis": "attributable",
+          "sum_of_initiatives": "-692.56",
+          "sum_of_initiatives_exact": "-83800/121"
         }
       }
     },
@@ -606,7 +673,9 @@
           "binding_dependency_id": null,
           "finish": 1,
           "resource_constrained_start": 0,
-          "resource_delay": 0
+          "resource_delay": 0,
+          "deployment_period": 1,
+          "warnings": []
         },
         "adoption": {
           "eligibility_rule_version": "elig-v1",
@@ -632,7 +701,8 @@
           ],
           "excluded_after_as_of": [
             "ad-3"
-          ]
+          ],
+          "late_recorded": []
         },
         "training": {
           "training_completion": "0.950000",
@@ -640,10 +710,12 @@
           "completed": 38,
           "training_id": "tc-1",
           "substituted_for_adoption": false,
-          "differs_from_adoption": true
+          "differs_from_adoption": true,
+          "late_recorded": []
         },
         "risk": {
           "risk_exposure": "2000.00",
+          "risk_exposure_exact": "2000",
           "label": "scenario estimate",
           "items": [
             {
@@ -698,6 +770,7 @@
           "original_version": 1,
           "original_preserved": true,
           "latest_version": 2,
+          "revisions_cover_original_periods": true,
           "latest_minus_original": "-220.00",
           "observed": [
             {
@@ -726,7 +799,16 @@
           "binding_dependency_id": "d-1",
           "finish": 3,
           "resource_constrained_start": 2,
-          "resource_delay": 0
+          "resource_delay": 0,
+          "deployment_period": 1,
+          "warnings": [
+            {
+              "code": "DEPLOYMENT_BEFORE_FEASIBLE_START",
+              "deployment_period": 1,
+              "dependency_feasible_start": 2,
+              "periods_early": 1
+            }
+          ]
         },
         "adoption": {
           "eligibility_rule_version": "elig-v1",
@@ -743,7 +825,8 @@
               "adoption_rate": "0.400000"
             }
           ],
-          "excluded_after_as_of": []
+          "excluded_after_as_of": [],
+          "late_recorded": []
         },
         "training": {
           "training_completion": null,
@@ -751,10 +834,12 @@
           "completed": null,
           "training_id": null,
           "substituted_for_adoption": false,
-          "differs_from_adoption": null
+          "differs_from_adoption": null,
+          "late_recorded": []
         },
         "risk": {
           "risk_exposure": "500.00",
+          "risk_exposure_exact": "500",
           "label": "scenario estimate",
           "items": [
             {
@@ -782,7 +867,16 @@
           "binding_dependency_id": "d-2",
           "finish": 4,
           "resource_constrained_start": 3,
-          "resource_delay": 0
+          "resource_delay": 0,
+          "deployment_period": 2,
+          "warnings": [
+            {
+              "code": "DEPLOYMENT_BEFORE_FEASIBLE_START",
+              "deployment_period": 2,
+              "dependency_feasible_start": 3,
+              "periods_early": 1
+            }
+          ]
         },
         "adoption": {
           "eligibility_rule_version": "elig-v1",
@@ -799,7 +893,8 @@
               "adoption_rate": null
             }
           ],
-          "excluded_after_as_of": []
+          "excluded_after_as_of": [],
+          "late_recorded": []
         },
         "training": {
           "training_completion": null,
@@ -807,10 +902,12 @@
           "completed": null,
           "training_id": null,
           "substituted_for_adoption": false,
-          "differs_from_adoption": null
+          "differs_from_adoption": null,
+          "late_recorded": []
         },
         "risk": {
           "risk_exposure": null,
+          "risk_exposure_exact": null,
           "label": "scenario estimate",
           "items": []
         },
