@@ -1,0 +1,25 @@
+initiative_id,title,sponsor_id,status,approved_baseline_version,requested_start_period,duration_periods,deployment_period,eligibility_rule_version,dependency_feasible_start,dependency_delay,binding_dependency_id,deployment_before_feasible_start
+init-001,Invoice-to-pay automation,sp-cfo,adopted,v2,0,4,1,elig-v1,0,0,,0
+init-002,Automated bank reconciliation,sp-cfo,adopted,v2,0,5,2,elig-v1,0,0,,0
+init-003,Expense report straight-through processing,sp-cfo,in_delivery,v2,1,6,3,elig-v1,1,0,,0
+init-004,Month-end close orchestration,sp-cfo,in_delivery,v2,2,7,4,elig-v1,2,0,,0
+init-005,Credit-control workflow,sp-cfo,assessed,v2,8,6,10,elig-v1,8,0,,0
+init-006,Supplier onboarding portal,sp-cfo,candidate,v2,12,6,15,elig-v1,12,0,,0
+init-007,Claims intake digitisation,sp-coo,closed,v2,0,3,1,elig-v1,0,0,,0
+init-008,Knowledge-assisted contact handling,sp-coo,adopted,v2,0,4,2,elig-v2,0,0,,0
+init-009,Complaint triage routing,sp-cx,in_delivery,v2,1,6,3,elig-v1,1,0,,0
+init-010,Customer onboarding verification,sp-coo,in_delivery,v2,3,6,9,elig-v1,3,0,,0
+init-011,Self-service address changes,sp-coo,assessed,v2,9,5,12,elig-v1,9,0,,0
+init-012,Returns and refunds workflow,sp-coo,candidate,v2,14,6,17,elig-v1,14,0,,0
+init-013,Demand-planning consolidation,sp-cscm,adopted,v1,0,4,1,elig-v2,0,0,,0
+init-014,Warehouse slotting optimisation,sp-cscm,in_delivery,v1,3,6,5,elig-v1,3,0,,0
+init-015,Carrier booking automation,sp-cscm,in_delivery,v1,2,6,4,elig-v1,2,0,,0
+init-016,Purchase-order approval redesign,sp-cscm,in_delivery,v1,4,7,6,elig-v1,4,0,,0
+init-017,Supplier quality scorecards,sp-cscm,assessed,v1,10,6,13,elig-v1,13,3,d-029,0
+init-018,Inventory count automation,sp-cscm,candidate,v1,15,6,18,elig-v1,22,7,d-031,1
+init-019,HR case management,sp-cio,assessed,,9,7,14,elig-v1,19,10,d-033,1
+init-020,Employee onboarding workflow,sp-cio,assessed,,12,8,16,elig-v1,18,6,d-035,1
+init-021,Meeting-room and desk booking,sp-cio,candidate,,16,6,19,elig-v1,16,0,,0
+init-022,IT service desk deflection,sp-cio,candidate,,18,6,24,elig-v1,18,0,,0
+init-023,Data platform consolidation,sp-cdo,in_delivery,,6,12,12,elig-v1,6,0,,0
+init-024,Identity and access automation,sp-ciso,in_delivery,,7,8,11,elig-v1,7,0,,0

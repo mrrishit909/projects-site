@@ -1,0 +1,7 @@
+class_code,label,unit,enters_cash_flow,rule
+avoided_cost_beside,"Avoided cost, beside the cash flow",USD,0,"not cash-realised or no evidence: reported beside, never in the flow"
+avoided_cost_realised,"Avoided cost, realised",USD,1,cash_realisation true and a non-blank evidence_ref
+capacity_converted,"Capacity, converted to money",USD,1,a capacity_hourly_rate with a non-blank staffing_change_evidence_ref: a separate derived cash item
+capacity_hours,"Capacity hours, not converted",hours,0,never enters the cash flow and is never added to dollars
+cash,Cash,USD,1,enters the net cash flow
+revenue,Revenue,USD,1,enters the net cash flow

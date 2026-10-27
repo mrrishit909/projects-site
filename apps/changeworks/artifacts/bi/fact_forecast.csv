@@ -1,0 +1,145 @@
+initiative_id,version_number,period_index,amount,created_at,reason
+init-001,1,2,4005.33,2026-01-30T10:00:00Z,Approved forecast
+init-001,1,3,12016.09,2026-01-30T10:00:00Z,Approved forecast
+init-001,1,4,24032.17,2026-01-30T10:00:00Z,Approved forecast
+init-001,1,5,40053.59,2026-01-30T10:00:00Z,Approved forecast
+init-001,1,6,60080.33,2026-01-30T10:00:00Z,Approved forecast
+init-001,1,7,84112.50,2026-01-30T10:00:00Z,Approved forecast
+init-001,1,8,112150.00,2026-01-30T10:00:00Z,Approved forecast
+init-001,1,9,112150.00,2026-01-30T10:00:00Z,Approved forecast
+init-001,1,10,112150.00,2026-01-30T10:00:00Z,Approved forecast
+init-001,1,11,112150.00,2026-01-30T10:00:00Z,Approved forecast
+init-001,1,12,112150.00,2026-01-30T10:00:00Z,Approved forecast
+init-001,1,13,112150.00,2026-01-30T10:00:00Z,Approved forecast
+init-002,1,2,4608.89,2026-01-30T10:00:00Z,Approved forecast
+init-002,1,3,13826.80,2026-01-30T10:00:00Z,Approved forecast
+init-002,1,4,27653.61,2026-01-30T10:00:00Z,Approved forecast
+init-002,1,5,46089.30,2026-01-30T10:00:00Z,Approved forecast
+init-002,1,6,69133.89,2026-01-30T10:00:00Z,Approved forecast
+init-002,1,7,96787.50,2026-01-30T10:00:00Z,Approved forecast
+init-002,1,8,129050.00,2026-01-30T10:00:00Z,Approved forecast
+init-002,1,9,129050.00,2026-01-30T10:00:00Z,Approved forecast
+init-002,1,10,129050.00,2026-01-30T10:00:00Z,Approved forecast
+init-002,1,11,129050.00,2026-01-30T10:00:00Z,Approved forecast
+init-002,1,12,129050.00,2026-01-30T10:00:00Z,Approved forecast
+init-002,1,13,129050.00,2026-01-30T10:00:00Z,Approved forecast
+init-003,1,3,2825.02,2026-03-12T10:00:00Z,Approved forecast
+init-003,1,4,8474.97,2026-03-12T10:00:00Z,Approved forecast
+init-003,1,5,16950.03,2026-03-12T10:00:00Z,Approved forecast
+init-003,1,6,28250.02,2026-03-12T10:00:00Z,Approved forecast
+init-003,1,7,42375.03,2026-03-12T10:00:00Z,Approved forecast
+init-003,1,8,59324.97,2026-03-12T10:00:00Z,Approved forecast
+init-003,1,9,79100.02,2026-03-12T10:00:00Z,Approved forecast
+init-003,1,10,101700.00,2026-03-12T10:00:00Z,Approved forecast
+init-003,1,11,101700.00,2026-03-12T10:00:00Z,Approved forecast
+init-003,1,12,101700.00,2026-03-12T10:00:00Z,Approved forecast
+init-003,1,13,101700.00,2026-03-12T10:00:00Z,Approved forecast
+init-003,1,14,101700.00,2026-03-12T10:00:00Z,Approved forecast
+init-003,2,3,2825.02,2026-06-12T10:00:00Z,Revised after April and May fell short of the approved forecast
+init-003,2,4,8474.97,2026-06-12T10:00:00Z,Revised after April and May fell short of the approved forecast
+init-003,2,5,13560.02,2026-06-12T10:00:00Z,Revised after April and May fell short of the approved forecast
+init-003,2,6,22600.02,2026-06-12T10:00:00Z,Revised after April and May fell short of the approved forecast
+init-003,2,7,33900.02,2026-06-12T10:00:00Z,Revised after April and May fell short of the approved forecast
+init-003,2,8,47459.98,2026-06-12T10:00:00Z,Revised after April and May fell short of the approved forecast
+init-003,2,9,63280.02,2026-06-12T10:00:00Z,Revised after April and May fell short of the approved forecast
+init-003,2,10,81360.00,2026-06-12T10:00:00Z,Revised after April and May fell short of the approved forecast
+init-003,2,11,81360.00,2026-06-12T10:00:00Z,Revised after April and May fell short of the approved forecast
+init-003,2,12,81360.00,2026-06-12T10:00:00Z,Revised after April and May fell short of the approved forecast
+init-003,2,13,81360.00,2026-06-12T10:00:00Z,Revised after April and May fell short of the approved forecast
+init-003,2,14,81360.00,2026-06-12T10:00:00Z,Revised after April and May fell short of the approved forecast
+init-003,3,3,2825.02,2026-09-09T10:00:00Z,"Revised again after June, July and August fell short of the revised forecast"
+init-003,3,4,8474.97,2026-09-09T10:00:00Z,"Revised again after June, July and August fell short of the revised forecast"
+init-003,3,5,13560.02,2026-09-09T10:00:00Z,"Revised again after June, July and August fell short of the revised forecast"
+init-003,3,6,22600.02,2026-09-09T10:00:00Z,"Revised again after June, July and August fell short of the revised forecast"
+init-003,3,7,33900.02,2026-09-09T10:00:00Z,"Revised again after June, July and August fell short of the revised forecast"
+init-003,3,8,41527.48,2026-09-09T10:00:00Z,"Revised again after June, July and August fell short of the revised forecast"
+init-003,3,9,55370.01,2026-09-09T10:00:00Z,"Revised again after June, July and August fell short of the revised forecast"
+init-003,3,10,71190.00,2026-09-09T10:00:00Z,"Revised again after June, July and August fell short of the revised forecast"
+init-003,3,11,71190.00,2026-09-09T10:00:00Z,"Revised again after June, July and August fell short of the revised forecast"
+init-003,3,12,71190.00,2026-09-09T10:00:00Z,"Revised again after June, July and August fell short of the revised forecast"
+init-003,3,13,71190.00,2026-09-09T10:00:00Z,"Revised again after June, July and August fell short of the revised forecast"
+init-003,3,14,71190.00,2026-09-09T10:00:00Z,"Revised again after June, July and August fell short of the revised forecast"
+init-004,1,5,2563.91,2026-01-29T10:00:00Z,Approved forecast
+init-004,1,6,7691.64,2026-01-29T10:00:00Z,Approved forecast
+init-004,1,7,15383.36,2026-01-29T10:00:00Z,Approved forecast
+init-004,1,8,25638.91,2026-01-29T10:00:00Z,Approved forecast
+init-004,1,9,38458.36,2026-01-29T10:00:00Z,Approved forecast
+init-004,1,10,53841.64,2026-01-29T10:00:00Z,Approved forecast
+init-004,1,11,71788.91,2026-01-29T10:00:00Z,Approved forecast
+init-004,1,12,92300.00,2026-01-29T10:00:00Z,Approved forecast
+init-004,1,13,92300.00,2026-01-29T10:00:00Z,Approved forecast
+init-004,1,14,92300.00,2026-01-29T10:00:00Z,Approved forecast
+init-004,1,15,92300.00,2026-01-29T10:00:00Z,Approved forecast
+init-004,1,16,92300.00,2026-01-29T10:00:00Z,Approved forecast
+init-004,2,5,2563.91,2026-08-23T10:00:00Z,Revised after the first months of operation
+init-004,2,6,7691.64,2026-08-23T10:00:00Z,Revised after the first months of operation
+init-004,2,7,15383.36,2026-08-23T10:00:00Z,Revised after the first months of operation
+init-004,2,8,23587.80,2026-08-23T10:00:00Z,Revised after the first months of operation
+init-004,2,9,35381.69,2026-08-23T10:00:00Z,Revised after the first months of operation
+init-004,2,10,49534.31,2026-08-23T10:00:00Z,Revised after the first months of operation
+init-004,2,11,66045.80,2026-08-23T10:00:00Z,Revised after the first months of operation
+init-004,2,12,84916.00,2026-08-23T10:00:00Z,Revised after the first months of operation
+init-004,2,13,84916.00,2026-08-23T10:00:00Z,Revised after the first months of operation
+init-004,2,14,84916.00,2026-08-23T10:00:00Z,Revised after the first months of operation
+init-004,2,15,84916.00,2026-08-23T10:00:00Z,Revised after the first months of operation
+init-004,2,16,84916.00,2026-08-23T10:00:00Z,Revised after the first months of operation
+init-008,1,2,3103.55,2026-01-22T10:00:00Z,Approved forecast
+init-008,1,3,9310.73,2026-01-22T10:00:00Z,Approved forecast
+init-008,1,4,18621.45,2026-01-22T10:00:00Z,Approved forecast
+init-008,1,5,31035.73,2026-01-22T10:00:00Z,Approved forecast
+init-008,1,6,46553.55,2026-01-22T10:00:00Z,Approved forecast
+init-008,1,7,65175.00,2026-01-22T10:00:00Z,Approved forecast
+init-008,1,8,86900.00,2026-01-22T10:00:00Z,Approved forecast
+init-008,1,9,86900.00,2026-01-22T10:00:00Z,Approved forecast
+init-008,1,10,86900.00,2026-01-22T10:00:00Z,Approved forecast
+init-008,1,11,86900.00,2026-01-22T10:00:00Z,Approved forecast
+init-008,1,12,86900.00,2026-01-22T10:00:00Z,Approved forecast
+init-008,1,13,86900.00,2026-01-22T10:00:00Z,Approved forecast
+init-013,1,1,5340.32,2026-01-26T10:00:00Z,Approved forecast
+init-013,1,2,16020.77,2026-01-26T10:00:00Z,Approved forecast
+init-013,1,3,32041.73,2026-01-26T10:00:00Z,Approved forecast
+init-013,1,4,53402.82,2026-01-26T10:00:00Z,Approved forecast
+init-013,1,5,80104.23,2026-01-26T10:00:00Z,Approved forecast
+init-013,1,6,112145.77,2026-01-26T10:00:00Z,Approved forecast
+init-013,1,7,149527.82,2026-01-26T10:00:00Z,Approved forecast
+init-013,1,8,192250.00,2026-01-26T10:00:00Z,Approved forecast
+init-013,1,9,192250.00,2026-01-26T10:00:00Z,Approved forecast
+init-013,1,10,192250.00,2026-01-26T10:00:00Z,Approved forecast
+init-013,1,11,192250.00,2026-01-26T10:00:00Z,Approved forecast
+init-013,1,12,192250.00,2026-01-26T10:00:00Z,Approved forecast
+init-013,2,1,5340.32,2026-06-06T10:00:00Z,Revised for a change of scope in the second wave
+init-013,2,2,16020.77,2026-06-06T10:00:00Z,Revised for a change of scope in the second wave
+init-013,2,3,32041.73,2026-06-06T10:00:00Z,Revised for a change of scope in the second wave
+init-013,2,4,53402.82,2026-06-06T10:00:00Z,Revised for a change of scope in the second wave
+init-013,2,5,80104.23,2026-06-06T10:00:00Z,Revised for a change of scope in the second wave
+init-013,2,6,121117.43,2026-06-06T10:00:00Z,Revised for a change of scope in the second wave
+init-013,2,7,161490.05,2026-06-06T10:00:00Z,Revised for a change of scope in the second wave
+init-013,2,8,207630.00,2026-06-06T10:00:00Z,Revised for a change of scope in the second wave
+init-013,2,9,207630.00,2026-06-06T10:00:00Z,Revised for a change of scope in the second wave
+init-013,2,10,207630.00,2026-06-06T10:00:00Z,Revised for a change of scope in the second wave
+init-013,2,11,207630.00,2026-06-06T10:00:00Z,Revised for a change of scope in the second wave
+init-013,2,12,207630.00,2026-06-06T10:00:00Z,Revised for a change of scope in the second wave
+init-014,1,5,6207.09,2026-01-22T10:00:00Z,Approved forecast
+init-014,1,6,18621.45,2026-01-22T10:00:00Z,Approved forecast
+init-014,1,7,37242.91,2026-01-22T10:00:00Z,Approved forecast
+init-014,1,8,62071.45,2026-01-22T10:00:00Z,Approved forecast
+init-014,1,9,93107.09,2026-01-22T10:00:00Z,Approved forecast
+init-014,1,10,130350.00,2026-01-22T10:00:00Z,Approved forecast
+init-014,1,11,173800.00,2026-01-22T10:00:00Z,Approved forecast
+init-014,1,12,173800.00,2026-01-22T10:00:00Z,Approved forecast
+init-014,1,13,173800.00,2026-01-22T10:00:00Z,Approved forecast
+init-014,1,14,173800.00,2026-01-22T10:00:00Z,Approved forecast
+init-014,1,15,173800.00,2026-01-22T10:00:00Z,Approved forecast
+init-014,1,16,173800.00,2026-01-22T10:00:00Z,Approved forecast
+init-016,1,6,2139.27,2026-01-29T10:00:00Z,Approved forecast
+init-016,1,7,6417.87,2026-01-29T10:00:00Z,Approved forecast
+init-016,1,8,12835.73,2026-01-29T10:00:00Z,Approved forecast
+init-016,1,9,21392.87,2026-01-29T10:00:00Z,Approved forecast
+init-016,1,10,32089.27,2026-01-29T10:00:00Z,Approved forecast
+init-016,1,11,44925.00,2026-01-29T10:00:00Z,Approved forecast
+init-016,1,12,59900.00,2026-01-29T10:00:00Z,Approved forecast
+init-016,1,13,59900.00,2026-01-29T10:00:00Z,Approved forecast
+init-016,1,14,59900.00,2026-01-29T10:00:00Z,Approved forecast
+init-016,1,15,59900.00,2026-01-29T10:00:00Z,Approved forecast
+init-016,1,16,59900.00,2026-01-29T10:00:00Z,Approved forecast
+init-016,1,17,59900.00,2026-01-29T10:00:00Z,Approved forecast

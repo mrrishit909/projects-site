@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T09:37:57Z",
+  "updated_at": "2026-10-27T09:50:03Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -256,7 +256,7 @@
     },
     "09-changeworks": {
       "slug": "changeworks",
-      "stage": "artifacts (A-081 running)",
+      "stage": "artifacts committed; CI pending",
       "built": true,
       "verified": {
         "live_check_run": 40474949237,
@@ -319,6 +319,12 @@
         "review_checks": "63/34",
         "e2e": 81,
         "ci": "run 40474351325 green both modes"
+      },
+      "artifacts": {
+        "assignment": "A-081",
+        "status": "committed; CI pending (no-skip gate)",
+        "tests": "495 = 454 + 41",
+        "reconciliation": "763/763"
       }
     },
     "10-retentionlab": {
@@ -391,7 +397,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 09: A-081 artifacts hand-back -> verify (artifacts09_*) -> commit -> CI -> complete. Then the final report with all ten URLs. Projects 01-08 and 10 are complete.",
+    "next_concrete_task": "Project 09: artifacts committed -> CI poll -> complete. Then the final report with all ten URLs. Projects 01-08 and 10 are complete.",
     "acceptance": "see task-queue.json"
   }
 }

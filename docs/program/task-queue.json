@@ -624,15 +624,16 @@
       "id": "T-09-05",
       "project": "09-changeworks",
       "title": "Independent disproof review, fixes, republish",
-      "status": "in_progress",
-      "assignment": "A-074 review (14 defects); A-078 fixes committed 29948f9 (CI 40474351325 green); republished 8b9bcd3; live check pending"
+      "status": "done",
+      "assignment": "A-074 review (14 defects); A-078 fixes committed 29948f9 (CI 40474351325 green); republished 8b9bcd3; live check pending",
+      "result": "14 defects fixed at 29948f9 (D-09); republished 8b9bcd3; live-verified 40474949237; case study states the fixes"
     },
     {
       "id": "T-09-06",
       "project": "09-changeworks",
       "title": "Artifacts P09-ART-01..10",
       "status": "in_progress",
-      "assignment": "A-081 dispatched"
+      "assignment": "A-081 accepted; committed; CI pending"
     },
     {
       "id": "T-10-01",

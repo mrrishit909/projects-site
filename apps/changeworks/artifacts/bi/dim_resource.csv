@@ -1,0 +1,9 @@
+resource_id,name,capacity,unit
+res-01,Process analyst pool,6.00,FTE
+res-02,Change manager pool,3.00,FTE
+res-03,Data migration specialist,2.00,FTE
+res-04,Integration engineer pool,4.00,FTE
+res-05,Training developer pool,2.50,FTE
+res-06,Finance subject-matter expert,2.00,FTE
+res-07,Operations subject-matter expert,3.00,FTE
+res-08,Test lead,2.00,FTE

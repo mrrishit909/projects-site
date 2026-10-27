@@ -1,0 +1,25 @@
+initiative_id,eligibility_rule_version,adoption_eligible,adopted,adoption_rate,adoption_status,training_eligible,training_completed,training_completion,training_status
+init-001,elig-v1,416,350,0.841346,value,425,403,0.948235,value
+init-002,elig-v1,726,420,0.578512,value,705,683,0.968794,value
+init-003,elig-v1,310,72,0.232258,value,317,310,0.977918,value
+init-004,elig-v1,747,332,0.444444,value,771,740,0.959792,value
+init-005,elig-v1,,,,no adoption observation by the as-of,421,10,0.023753,value
+init-006,elig-v1,,,,no adoption observation by the as-of,,,,no training record by the as-of
+init-007,elig-v1,753,557,0.739708,value,739,724,0.979702,value
+init-008,elig-v2,411,292,0.710462,value,411,398,0.968370,value
+init-009,elig-v1,361,149,0.412742,value,365,350,0.958904,value
+init-010,elig-v1,,,,no adoption observation by the as-of,508,482,0.948819,value
+init-011,elig-v1,,,,no adoption observation by the as-of,,,,no training record by the as-of
+init-012,elig-v1,,,,no adoption observation by the as-of,,,,no training record by the as-of
+init-013,elig-v2,855,606,0.708772,value,847,804,0.949233,value
+init-014,elig-v1,427,98,0.229508,value,441,432,0.979592,value
+init-015,elig-v1,329,115,0.349544,value,340,333,0.979412,value
+init-016,elig-v1,413,72,0.174334,value,409,384,0.938875,value
+init-017,elig-v1,,,,no adoption observation by the as-of,,,,no training record by the as-of
+init-018,elig-v1,,,,no adoption observation by the as-of,,,,no training record by the as-of
+init-019,elig-v1,,,,no adoption observation by the as-of,,,,no training record by the as-of
+init-020,elig-v1,,,,no adoption observation by the as-of,,,,no training record by the as-of
+init-021,elig-v1,,,,no adoption observation by the as-of,,,,no training record by the as-of
+init-022,elig-v1,,,,no adoption observation by the as-of,,,,no training record by the as-of
+init-023,elig-v1,,,,no adoption observation by the as-of,220,213,0.968182,value
+init-024,elig-v1,,,,no adoption observation by the as-of,315,161,0.511111,value
