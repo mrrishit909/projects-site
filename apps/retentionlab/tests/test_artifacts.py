@@ -775,7 +775,7 @@ def test_resume_bullets_are_four_to_six_and_claim_no_business_impact_and_match_t
     assert str(RES["meta"][0]["reconciliation_rows"]) in body
     if PROJECT:
         tech = " ".join(PROJECT["tech"])
-        assert "342 Python tests" in tech and "3,197 TypeScript golden" in tech and "95 review checks" in tech and "90 browser tests" in tech
+        assert "383 Python tests" in tech and "342 of the application" in tech and "3,197 TypeScript golden" in tech and "95 review checks" in tech and "90 browser tests" in tech
 
 
 def test_public_case_study_figures_agree_with_the_stored_results():

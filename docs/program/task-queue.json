@@ -678,7 +678,7 @@
       "project": "10-retentionlab",
       "title": "Artifacts P10-ART-01..10",
       "status": "in_progress",
-      "assignment": "A-077 fixes done (ce96e65), republished cf04a0e; A-079 artifacts"
+      "assignment": "A-079 accepted; committed d5416dd; CI pending"
     },
     {
       "id": "T-07-07",

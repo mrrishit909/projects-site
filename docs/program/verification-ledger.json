@@ -1433,6 +1433,13 @@
       "check": "live URL verification from GitHub Actions after the review republish (deploy-wait on code_sha, route 200s, case-study links both ways, browser journey) for all ten sites",
       "run": "https://github.com/mrrishit909/projects-site/actions/runs/40474949237",
       "result": "success; changeworks live code_sha 29948f92f0c3839f070e4b6499b99f3810d1361b; portfolio release 8b9bcd3"
+    },
+    {
+      "ts": "2026-10-27T08:49:22Z",
+      "project": "10-retentionlab",
+      "check": "coordinator verification of the artifact package (A-079) before commit",
+      "run": "local, cloud container",
+      "result": "run_all.py on fresh artifacts10_* scratch databases: RESULT OK (393/393 reconciliation rows, 43 result sets, 229 rows), results JSON and BI CSVs identical to the committed ones; sha256sum -c 61 OK; full suite 383 collected: 381 passed and 2 failed (provenance and checksums) because of the coordinator's own edits during the run (reverted / regenerated), then tests/test_artifacts.py 41 passed; protected paths unchanged against ce96e65"
     }
   ]
 }

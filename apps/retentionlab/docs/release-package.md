@@ -159,7 +159,7 @@ No existing domain, API, migration, loader, reference-SQL, web, fixture, generat
 | `docs/web-brief.md` | `822783b8f9a7bbe7a7a6f05be3be5adbbec059b10a6431958775f24d558b51e8` |
 | `docs/workbook.md` | `a4581811a579295313299d4845db92b97557ccc30a8c352c9b4fbf54b32049cb` |
 | `requirements-artifacts.txt` | `06d28d69e958deafb09f0a44fcae9b548f15e4debc14ebc39aad5f0934856fbf` |
-| `tests/test_artifacts.py` | `e08a5feedb7f1a68044674071a7b7c8ab7c26603cb02f7cb473f3508d926447f` |
+| `tests/test_artifacts.py` | `032fa0ca9571011570a8d704f035a09b74105af5015936047e54259bcc060c3d` |
 <!-- END:checksums -->
 
 ## Verification status of this package (stated plainly)

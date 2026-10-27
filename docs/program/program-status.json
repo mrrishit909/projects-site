@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T08:41:13Z",
+  "updated_at": "2026-10-27T08:49:22Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -315,7 +315,7 @@
     },
     "10-retentionlab": {
       "slug": "retentionlab",
-      "stage": "queued",
+      "stage": "artifacts committed; CI pending",
       "built": true,
       "verified": {
         "live_check_run": 40464668157,
@@ -370,6 +370,13 @@
         "documentation": 12,
         "status": "fixed and republished (ce96e65, cf04a0e)",
         "case_study_wording_fixed": "356be88"
+      },
+      "artifacts": {
+        "assignment": "A-079",
+        "commit": "d5416dd",
+        "status": "committed; CI pending (no-skip gate)",
+        "tests": "383 = 342 + 41",
+        "reconciliation": "393/393"
       }
     }
   },
