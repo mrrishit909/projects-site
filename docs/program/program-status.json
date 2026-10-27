@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T05:32:09Z",
+  "updated_at": "2026-10-27T05:34:06Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -191,10 +191,15 @@
     "08-pipeline-observatory": {
       "slug": "pipeline-observatory",
       "stage": "contracts v1 and tooling committed (3a0fae2; spec hash 1ffbfbe7 verified against the source pack); golden fixture A-058 running",
-      "built": false,
-      "verified": false,
-      "published": false,
-      "integrated": false,
+      "built": true,
+      "verified": "pending live check",
+      "published": {
+        "release": "83b6a60",
+        "rollback": "eecd593",
+        "source": "a2ef4f4",
+        "at": "2026-10-27T05:34:06Z"
+      },
+      "integrated": true,
       "last_verified_sha": null,
       "latest_run_url": null,
       "site_url": null,
@@ -224,7 +229,7 @@
       },
       "web": {
         "commit": "1d2d55b",
-        "status": "done; CI pending"
+        "status": "done; CI green both modes (run 40455458608)"
       }
     },
     "09-changeworks": {
@@ -311,7 +316,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 07: CI on eb83f43 -> complete. Project 08: CI on 1d2d55b -> publish labs/pipeline-observatory -> manifest -> live check -> case study (draft in scratchpad/p08) -> review -> fixes -> artifacts. Project 09: CI on 9a71687 -> publish labs/changeworks -> manifest -> live check -> case study (draft in scratchpad/p09) -> review -> fixes (payback rule, PARTIAL_TREND_COVERAGE) -> artifacts. Project 10: A-072 web hand-back -> verify -> D-08 -> commit -> CI -> publish -> ...",
+    "next_concrete_task": "Project 07: CI on eb83f43 -> complete. Project 08: live check on 83b6a60 -> reviewer -> fixes -> republish -> artifacts. Project 09: CI on 9a71687 -> publish labs/changeworks (case study held in scratchpad/p09/hold) -> manifest -> live check -> review -> fixes -> artifacts. Project 10: A-072 web hand-back -> ...",
     "acceptance": "see task-queue.json"
   }
 }

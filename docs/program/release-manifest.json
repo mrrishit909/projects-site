@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T04:22:33Z",
+  "updated_at": "2026-10-27T05:34:06Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -142,6 +142,21 @@
           "live_check_run": 40439868137
         }
       ]
+    },
+    {
+      "slug": "pipeline-observatory",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/pipeline-observatory/",
+      "site_path": "labs/pipeline-observatory/ on unified-portfolio",
+      "release_commit_unified_portfolio": "83b6a60",
+      "rollback_commit_unified_portfolio": "eecd593",
+      "source_commit_business_data_lab": "a2ef4f4130e04f5d70795ba8d83b97f02d962583",
+      "published_tree_sha256": "be18a9ca9fe935d5ba75d87c764c5bcfe546bd05e6190e38428b9e6663ea6409",
+      "files": 41,
+      "dataset_version": "po-20261026-20261026",
+      "dataset_hash": "d9f0aa18ec6c54d3f09cf16cce3c159960411e36de59b4d7831220547fcbf12e",
+      "contract_version": "v1",
+      "publication_status": "published 83b6a60 (CI 40455458608 green both modes on 1d2d55b; a2ef4f4 adds ledgers only); live check pending; case study integrated in the same commit",
+      "live_verification": null
     }
   ],
   "last_all_sites_live_check": {
