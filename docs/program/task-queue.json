@@ -676,8 +676,16 @@
       "id": "T-07-07",
       "project": "07-trustledger",
       "title": "Fix R7-01..R7-19, republish, live check, update case study",
+      "status": "done",
+      "assignment": "A-063",
+      "result": "fixes 1e0283f, CI 40448066870, republished e205202, case study updated"
+    },
+    {
+      "id": "T-07-05",
+      "project": "07-trustledger",
+      "title": "Artifacts P07-ART-01..10",
       "status": "in_progress",
-      "assignment": "A-063"
+      "assignment": "A-069"
     }
   ]
 }
