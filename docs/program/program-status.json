@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T09:50:03Z",
+  "updated_at": "2026-10-27T10:08:18Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -322,7 +322,7 @@
       },
       "artifacts": {
         "assignment": "A-081",
-        "status": "committed; CI pending (no-skip gate)",
+        "status": "committed; first CI run 40483802100 failed on a pre-existing order-dependent application test (fixed); CI pending again",
         "tests": "495 = 454 + 41",
         "reconciliation": "763/763"
       }

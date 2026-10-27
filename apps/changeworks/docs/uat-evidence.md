@@ -49,3 +49,12 @@ The disproof review (assignment A-074) found 14 defects, fixed as R9-01..R9-22 b
 The public site has twelve routes: `/`, `/portfolio/`, `/baseline/`, `/business-case/`, `/sensitivity/`, `/roadmap/`, `/impact/`, `/readiness/`, `/benefits/`, `/forecast/`, `/evidence/`, `/case-study/`. The screenshot set (`web/evidence/`, not committed) has 65 files: `home`, `portfolio`, `baseline`, `business-case`, `business-case-golden`, `sensitivity`, `roadmap`, `impact`, `readiness`, `benefits`, `forecast`, `evidence`, `case-study`, each at 360, 768, 1280 and 1920 px and as `-zoom200.png`; `web/evidence/index.json` records no horizontal overflow on any of the 65. The local Playwright report in `web/evidence/playwright-report.json` (started 2026-10-27T08:30:12Z, run by the coordinator, not by this pass) records 81 expected, 0 unexpected, 0 flaky, 0 skipped. Browser journeys cited by the requirements: e2e "portfolio: every figure equals the Python domain's, class columns apart, nothing summed across classes", e2e "business case: the cash-flow table beside its assumption versions, NPV and both paybacks, the golden case recomputed", e2e "forecast: original, revisions and observed, with the original kept".
 
 This pass did **not** run `npm run e2e` and did not fetch the live site. Hosted runs from the ledgers: CI 40474351325 (both modes green on `29948f9`); live verification 40474949237 (verified 2026-10-27T08:41:13Z, live code_sha `29948f9...`, portfolio release 8b9bcd3); earlier: 40447123155, 40450783026, 40464667889, 40456429847. A hosted run of `tests/test_artifacts.py`: pending (the package is not committed).
+
+## Erratum recorded by the coordinator (2026-10-27)
+
+* The hosted run of this package (CI run 40483802100 on 273a078) failed one pre-existing application test,
+  `tests/test_api_commands.py::test_c03_builds_a_new_scenario_and_expands_recurring_costs_explicitly`, and no artifact test.
+  Its assertion assumed the seeded cost `c-101` is the first row of `expanded_costs`, but the API orders the rows by `cost_id` and the
+  new cost's id is server-generated hex, so about one run in sixteen sorted the new id before `c-101`. The assertion now finds the
+  new id and checks the same rows (periods 1 and 2 at 50.00, `c-101` at period 0 for 1,000.00, rows ordered by cost id then period).
+  The published code 29948f9 is unchanged; the provenance test excludes that one test file and says why.

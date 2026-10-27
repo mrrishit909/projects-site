@@ -786,14 +786,14 @@ def test_the_ci_no_skip_gate_and_the_unrun_tools_are_disclosed():
 
 def test_provenance_the_analysed_code_and_data_equal_revision_29948f9():
     """The numbers describe revision 29948f9: the domain, API, migrations, loaders, generator, reference SQL, published data, web source, fixtures, the other tests, the contracts
-    and the README are unchanged since."""
+    and the README are unchanged since (tests/test_api_commands.py excepted: one order-dependent assertion was fixed after the package was written, see docs/uat-evidence.md)."""
     if not shutil.which("git"):
         pytest.skip("git not available")
     probe = subprocess.run(["git", "-C", str(ROOT), "cat-file", "-t", CODE_SHA], capture_output=True, text=True)
     if probe.returncode != 0:
         pytest.skip(f"revision {CODE_REVISION} is not in this checkout")
     r = subprocess.run(["git", "-C", str(ROOT), "diff", "--stat", CODE_SHA, "--", "domain", "api", "data/sql/migrations", "data/seed.py", "data/migrate.py", "data/generate.py",
-                        "data/sql/reference_metrics.sql", "web/public", "web/src", "web/e2e", "tests", ":(exclude)tests/test_artifacts.py", "docs/contracts.md", "README.md"],
+                        "data/sql/reference_metrics.sql", "web/public", "web/src", "web/e2e", "tests", ":(exclude)tests/test_artifacts.py", ":(exclude)tests/test_api_commands.py", "docs/contracts.md", "README.md"],   # test_api_commands.py: the C03 assertion was made independent of a server-generated id's sort position after 29948f9 (uat-evidence.md erratum); no figure moved
                        capture_output=True, text=True)
     assert r.returncode == 0 and r.stdout.strip() == "", r.stdout
     manifest = json.loads((ROOT / "web/public/data/manifest.json").read_text())

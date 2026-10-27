@@ -167,7 +167,12 @@ def test_c03_builds_a_new_scenario_and_expands_recurring_costs_explicitly(lab, c
     assert r.status_code == 200, r.text
     res = r.json()["result"]
     assert res["rows_added"] == {"assumption_versions": 0, "cost_items": 1, "benefit_items": 1, "expanded_costs": 3}
-    assert [(e["cost_id"], e["period_index"], e["amount"]) for e in res["expanded_costs"] if e["cost_id"] != "c-101"] == [(res["expanded_costs"][1]["cost_id"], 1, "50.00"), (res["expanded_costs"][2]["cost_id"], 2, "50.00")]
+    new_ids = {e["cost_id"] for e in res["expanded_costs"]} - {"c-101"}                 # the new cost's id is server-generated, so no row position is assumed
+    assert len(new_ids) == 1
+    new_id = new_ids.pop()
+    assert [(e["cost_id"], e["period_index"], e["amount"]) for e in res["expanded_costs"] if e["cost_id"] == new_id] == [(new_id, 1, "50.00"), (new_id, 2, "50.00")]
+    assert [(e["period_index"], e["amount"]) for e in res["expanded_costs"] if e["cost_id"] == "c-101"] == [(0, "1000.00")]
+    assert res["expanded_costs"] == sorted(res["expanded_costs"], key=lambda e: (e["cost_id"], e["period_index"]))   # ordered by cost_id then period, as the API sorts them
     blk = res["scenario"]["initiatives"]["init-001"]
     assert [x["costs"] for x in blk["cash_flow"]] == ["1000.00", "50.00", "50.00"] and blk["npv"]["label"] == "estimate" and res["label"] == "estimate"
     rows = conn.execute("SELECT period_index, amount::text AS a, cost_id FROM expanded_costs WHERE scenario_id = 'scn-new' ORDER BY period_index, cost_id").fetchall()

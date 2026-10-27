@@ -1468,6 +1468,13 @@
       "check": "coordinator verification of the artifact package (A-081) before commit",
       "run": "local, cloud container",
       "result": "run_all.py on fresh scratch databases: RESULT OK (763/763 reconciliation rows, 56 result sets, 567 rows, 48,476 + 167 leaves equal), results JSON and BI CSVs identical to the committed ones; sha256sum -c 63 OK; full suite 495 passed (454 + 41), junit skipped=0; tracked files unchanged against 29948f9"
+    },
+    {
+      "ts": "2026-10-27T10:08:18Z",
+      "project": "09-changeworks",
+      "check": "CI on the hosted runner with the artifact package, first attempt",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40483802100",
+      "result": "Mode B success; Mode A failure: 1 failed / 494 passed; the failure is the pre-existing application test test_c03_builds_a_new_scenario_and_expands_recurring_costs_explicitly, whose assertion assumed the seeded cost c-101 sorts first while the API orders expanded costs by cost_id and the new id is random hex (about one run in sixteen). Fixed by making the assertion find the server-generated id and check the same rows (not weakened: it now also pins c-101's row and the ordering); provenance test excludes that one file with the reason; erratum in docs/uat-evidence.md; checksums regenerated; 144 tests (artifacts + commands) pass locally; re-pushed"
     }
   ]
 }

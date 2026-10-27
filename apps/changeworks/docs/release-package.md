@@ -119,9 +119,9 @@ Excel and Power BI were not run. The workbook and the BI files are not attached 
 | `docs/resume-bullets.md` | `5e8562d70ba6f9f10cecd90274c8c1c3967431068ca268b201bb227cbd93693e` |
 | `docs/sql-analysis.md` | `b648b3a0e7a370d074c70f5f2123be8f448ba776fb9d667483073ed39bfebbbb` |
 | `docs/technical-case-study.md` | `162a0908e30ec25ead13bb82307a936392b45aebdcb940d40d92dd75e369e5dd` |
-| `docs/uat-evidence.md` | `91fe68c37b2b26b4334b463e59b2350ca6888117493b3828adadd0686f75e6d5` |
+| `docs/uat-evidence.md` | `e3d43985793de293be6f8223616cd713537ee8031a7072908d5b54bff1ba15a6` |
 | `docs/web-brief.md` | `ac048e227ed01ad2a6ae307141ba9e3849f2d6cc32d1516a18ed9c533ff7ad9d` |
 | `docs/workbook.md` | `3bef0ce509fa0ca80b7fc1fb9575aafd09ad7251f7c32555d4649dc3114f97bd` |
 | `requirements-artifacts.txt` | `06d28d69e958deafb09f0a44fcae9b548f15e4debc14ebc39aad5f0934856fbf` |
-| `tests/test_artifacts.py` | `647d802cdeca0392647ab2cdcfeaf70f51d2f160f3d53f07c0a3009d339547dd` |
+| `tests/test_artifacts.py` | `f283e5052285c370fbab4722ab26287127a7e1271b9710a3aba39e0ec8de741f` |
 <!-- END:checksums -->
