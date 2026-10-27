@@ -1,0 +1,228 @@
+{
+ "id": "P10-TEST-02",
+ "clock": "2026-05-01T12:00:00Z",
+ "expect_rejected": [],
+ "hypothesis": "Feature event occurred earlier but arrived after cutoff",
+ "inputs": {
+  "contract_version": 1,
+  "as_of": "2026-05-01T00:00:00Z",
+  "label_version": {
+   "label_version_id": "lv-1",
+   "horizon_days": 90,
+   "grace_days": 14
+  },
+  "feature_version_spec": {
+   "feature_version": "fv-1",
+   "observation_days": 90
+  },
+  "feature_registry": [
+   {
+    "feature_name": "usage_events_30d",
+    "feature_version": "fv-1",
+    "source_entity": "usage_events",
+    "window_days": 30,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "days_since_last_usage",
+    "feature_version": "fv-1",
+    "source_entity": "usage_events",
+    "window_days": 90,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "high_severity_support_90d",
+    "feature_version": "fv-1",
+    "source_entity": "support_events",
+    "window_days": 90,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "billing_total_90d",
+    "feature_version": "fv-1",
+    "source_entity": "billing_events",
+    "window_days": 90,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "cancellation_reason",
+    "feature_version": "fv-1",
+    "source_entity": "subscription_events",
+    "window_days": null,
+    "post_outcome": true,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "cancellation_survey_score",
+    "feature_version": "fv-1",
+    "source_entity": "support_events",
+    "window_days": null,
+    "post_outcome": true,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "refund_after_cancel",
+    "feature_version": "fv-1",
+    "source_entity": "billing_events",
+    "window_days": null,
+    "post_outcome": true,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "latent_churn_propensity",
+    "feature_version": "fv-1",
+    "source_entity": "generator_manifest",
+    "window_days": null,
+    "post_outcome": false,
+    "latent": true,
+    "id_derived": false,
+    "lineage": "generator_manifest"
+   },
+   {
+    "feature_name": "account_id",
+    "feature_version": "fv-1",
+    "source_entity": "accounts",
+    "window_days": null,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": true,
+    "lineage": "identifier"
+   },
+   {
+    "feature_name": "account_id_hash",
+    "feature_version": "fv-1",
+    "source_entity": "accounts",
+    "window_days": null,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": true,
+    "lineage": "identifier"
+   },
+   {
+    "feature_name": "creation_sequence",
+    "feature_version": "fv-1",
+    "source_entity": "accounts",
+    "window_days": null,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": true,
+    "lineage": "identifier"
+   }
+  ],
+  "accounts": [
+   {
+    "account_id": 1,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   }
+  ],
+  "subscription_events": [
+   {
+    "subscription_event_id": "sub-0001",
+    "account_id": 1,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   }
+  ],
+  "billing_events": [],
+  "usage_events": [
+   {
+    "usage_event_id": "usa-0002",
+    "account_id": 1,
+    "event_at": "2025-12-20T00:00:00Z",
+    "available_at": "2025-12-20T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0003",
+    "account_id": 1,
+    "event_at": "2025-12-30T00:00:00Z",
+    "available_at": "2026-01-05T00:00:00Z",
+    "event_name": "login"
+   }
+  ],
+  "support_events": [],
+  "prediction_cutoffs": [
+   {
+    "cutoff_id": "co-01-20260101000000",
+    "account_id": 1,
+    "prediction_at": "2026-01-01T00:00:00Z",
+    "horizon_end": "2026-04-01T00:00:00Z",
+    "observation_start": "2025-10-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-01-20260110000000",
+    "account_id": 1,
+    "prediction_at": "2026-01-10T00:00:00Z",
+    "horizon_end": "2026-04-10T00:00:00Z",
+    "observation_start": "2025-10-12T00:00:00Z"
+   }
+  ],
+  "feature_rows": [],
+  "labels": [],
+  "training_runs": [],
+  "predictions": [],
+  "intervention_scenarios": [],
+  "outreach_events": [],
+  "split_assignments": [],
+  "scoring_publications": []
+ },
+ "setup": [],
+ "detect": {
+  "command": "build-point-in-time-features",
+  "input": {
+   "prediction_at": "2026-01-01T00:00:00Z"
+  },
+  "expect": {
+   "status": 200,
+   "result": {
+    "built": 1,
+    "arrived_late.usage_events": 1,
+    "arrived_late.total": 1,
+    "availability_proof.all_before_cutoff": true
+   },
+   "warning": "LATE_EVENTS_EXCLUDED"
+  },
+  "db_refuse": [
+   {
+    "sql": "INSERT INTO feature_rows VALUES ('fr-bad', 'co-01-20260101000000', 'fv-1', '{}', '2026-01-05T00:00:00Z')",
+    "error": "IntegrityError",
+    "match": "AVAILABILITY_AFTER_CUTOFF"
+   }
+  ]
+ },
+ "recover": {
+  "command": "build-point-in-time-features",
+  "input": {
+   "prediction_at": "2026-01-10T00:00:00Z"
+  },
+  "expect": {
+   "status": 200,
+   "result": {
+    "built": 1,
+    "arrived_late.total": 0
+   }
+  }
+ }
+}

@@ -128,6 +128,34 @@ are the binding form. The points that sharpen D-01..D-04:
   threshold rules, experiment design, multi-refresh monitoring, the metrics-endpoint K refusal, non-UTC zones, HTTP
   envelopes; the backend tests carry them.
 
+## D-06 Backend clarifications (adopted from the backend hand-back; the 20 numbered assumptions are in README.md)
+* A command's `as_of` is the server clock; a report's `as_of` defaults to it and is a snapshot (later-arriving events,
+  predictions and publications are invisible). Clients never supply decision instants; analysis parameters (cutoff set,
+  split boundaries, reference cohort) are the client's. C01 stores the four registry features for every eligible cutoff.
+* The business rule flags no usage in 30 days or a high-severity support event in 90 days (no closure events exist);
+  the random baseline is a SHA-256 of seed and cutoff id. Preprocessing is exact then frozen to 6 places (population
+  standard deviation, zero deviation → 1, missing indicators only where fit rows had missing values). Logistic
+  objective: mean log-loss + l2/2n × Σ weights² (intercept unpenalised), zero start, 500 iterations at rate 0.1;
+  sigmoid through a deterministic `det_exp` built from basic arithmetic so results do not depend on libm. Platt:
+  `p' = sigmoid(a·logit(p) + b)`, 500 iterations at 0.1, `Decimal.ln` for the logit, fitted on the validation rows'
+  uncalibrated logistic probabilities; only the logistic model is calibrated. Training rows = retained train rows with a
+  stored feature row and a stored mature label.
+* `config_hash` is recomputed on each C04–C06 change; the first prediction freezes the run (409 `INVALID_STATE`); C04
+  resets models and calibration, C05 resets calibration. Predictions and publications carry `model_name`; C07 needs
+  stored feature rows (422 `FEATURES_NOT_BUILT`) and scores only the missing accounts on a repeat; publication status
+  is derived. C08/C09 take a stored or inline scenario (immutable once created); `selected_on: "test"` is
+  `THRESHOLD_ON_TEST`; `basis` must be `risk_ranking`; one draft queue per scenario. Unknown run/scenario/set is 404
+  with an `UNKNOWN_*` rule; domain refusals are 422 with the offending items in `details[].context`; leakage,
+  threshold, capacity and responsiveness refusals are audited in their own transaction. `/metrics`: sets default to
+  all, run defaults to the only run (422 `TRAINING_RUN_REQUIRED` if several), the K refusal only when the set has
+  evaluated rows, drift only with `reference_prediction_at`, and the response carries `consistency`. Entity reads show
+  NUMERIC(20,6) as stored; metrics use the D-04 formats. Labels are append-only except a censored label maturing
+  once; C10 stores an audit event and the idempotent result.
+* Gaps: no randomised-experiment design (`experiment_id` recorded only); the test-read-once rule rests on a declared
+  provenance field; cursors are not bound to a dataset_version; no SQL recomputation of AP or PSI (the stdlib
+  reference is the independent check); no hyper-parameter search, monitoring history or non-UTC zones; not
+  benchmarked at 10,000 accounts.
+
 ## Mode disclosure
 Mode A: Python domain (features, labels, splits, fitting, calibration, scoring, metrics) + PostgreSQL + FastAPI
 verified on hosted runners. Mode B: TypeScript mirror over the published snapshot (frozen predictions and rows);

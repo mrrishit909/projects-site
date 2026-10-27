@@ -1,0 +1,973 @@
+{
+ "id": "P10-TEST-11",
+ "clock": "2026-05-01T12:00:00Z",
+ "expect_rejected": [],
+ "hypothesis": "Calibration evaluated on calibration training data",
+ "inputs": {
+  "contract_version": 1,
+  "as_of": "2026-05-01T00:00:00Z",
+  "label_version": {
+   "label_version_id": "lv-1",
+   "horizon_days": 90,
+   "grace_days": 14
+  },
+  "feature_version_spec": {
+   "feature_version": "fv-1",
+   "observation_days": 90
+  },
+  "feature_registry": [
+   {
+    "feature_name": "usage_events_30d",
+    "feature_version": "fv-1",
+    "source_entity": "usage_events",
+    "window_days": 30,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "days_since_last_usage",
+    "feature_version": "fv-1",
+    "source_entity": "usage_events",
+    "window_days": 90,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "high_severity_support_90d",
+    "feature_version": "fv-1",
+    "source_entity": "support_events",
+    "window_days": 90,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "billing_total_90d",
+    "feature_version": "fv-1",
+    "source_entity": "billing_events",
+    "window_days": 90,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "cancellation_reason",
+    "feature_version": "fv-1",
+    "source_entity": "subscription_events",
+    "window_days": null,
+    "post_outcome": true,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "cancellation_survey_score",
+    "feature_version": "fv-1",
+    "source_entity": "support_events",
+    "window_days": null,
+    "post_outcome": true,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "refund_after_cancel",
+    "feature_version": "fv-1",
+    "source_entity": "billing_events",
+    "window_days": null,
+    "post_outcome": true,
+    "latent": false,
+    "id_derived": false,
+    "lineage": "events"
+   },
+   {
+    "feature_name": "latent_churn_propensity",
+    "feature_version": "fv-1",
+    "source_entity": "generator_manifest",
+    "window_days": null,
+    "post_outcome": false,
+    "latent": true,
+    "id_derived": false,
+    "lineage": "generator_manifest"
+   },
+   {
+    "feature_name": "account_id",
+    "feature_version": "fv-1",
+    "source_entity": "accounts",
+    "window_days": null,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": true,
+    "lineage": "identifier"
+   },
+   {
+    "feature_name": "account_id_hash",
+    "feature_version": "fv-1",
+    "source_entity": "accounts",
+    "window_days": null,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": true,
+    "lineage": "identifier"
+   },
+   {
+    "feature_name": "creation_sequence",
+    "feature_version": "fv-1",
+    "source_entity": "accounts",
+    "window_days": null,
+    "post_outcome": false,
+    "latent": false,
+    "id_derived": true,
+    "lineage": "identifier"
+   }
+  ],
+  "accounts": [
+   {
+    "account_id": 1,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   },
+   {
+    "account_id": 2,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   },
+   {
+    "account_id": 3,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   },
+   {
+    "account_id": 4,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   },
+   {
+    "account_id": 5,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   },
+   {
+    "account_id": 6,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   },
+   {
+    "account_id": 7,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   },
+   {
+    "account_id": 8,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   },
+   {
+    "account_id": 9,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   },
+   {
+    "account_id": 10,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   },
+   {
+    "account_id": 11,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   },
+   {
+    "account_id": 12,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   },
+   {
+    "account_id": 13,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   },
+   {
+    "account_id": 14,
+    "created_at": "2024-01-01T00:00:00Z",
+    "segment": "mid",
+    "region": "amer",
+    "synthetic": true
+   }
+  ],
+  "subscription_events": [
+   {
+    "subscription_event_id": "sub-0001",
+    "account_id": 1,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   },
+   {
+    "subscription_event_id": "sub-0003",
+    "account_id": 1,
+    "event_at": "2025-02-22T00:00:00Z",
+    "available_at": "2025-02-23T00:00:00Z",
+    "event_type": "cancel"
+   },
+   {
+    "subscription_event_id": "sub-0005",
+    "account_id": 2,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   },
+   {
+    "subscription_event_id": "sub-0007",
+    "account_id": 2,
+    "event_at": "2025-02-23T00:00:00Z",
+    "available_at": "2025-02-24T00:00:00Z",
+    "event_type": "cancel"
+   },
+   {
+    "subscription_event_id": "sub-0009",
+    "account_id": 3,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   },
+   {
+    "subscription_event_id": "sub-0011",
+    "account_id": 3,
+    "event_at": "2025-02-24T00:00:00Z",
+    "available_at": "2025-02-25T00:00:00Z",
+    "event_type": "cancel"
+   },
+   {
+    "subscription_event_id": "sub-0013",
+    "account_id": 4,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   },
+   {
+    "subscription_event_id": "sub-0020",
+    "account_id": 5,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   },
+   {
+    "subscription_event_id": "sub-0027",
+    "account_id": 6,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   },
+   {
+    "subscription_event_id": "sub-0034",
+    "account_id": 7,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   },
+   {
+    "subscription_event_id": "sub-0036",
+    "account_id": 7,
+    "event_at": "2025-06-28T00:00:00Z",
+    "available_at": "2025-06-29T00:00:00Z",
+    "event_type": "cancel"
+   },
+   {
+    "subscription_event_id": "sub-0038",
+    "account_id": 8,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   },
+   {
+    "subscription_event_id": "sub-0040",
+    "account_id": 8,
+    "event_at": "2025-06-29T00:00:00Z",
+    "available_at": "2025-06-30T00:00:00Z",
+    "event_type": "cancel"
+   },
+   {
+    "subscription_event_id": "sub-0042",
+    "account_id": 9,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   },
+   {
+    "subscription_event_id": "sub-0046",
+    "account_id": 10,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   },
+   {
+    "subscription_event_id": "sub-0050",
+    "account_id": 11,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   },
+   {
+    "subscription_event_id": "sub-0052",
+    "account_id": 11,
+    "event_at": "2025-11-01T00:00:00Z",
+    "available_at": "2025-11-02T00:00:00Z",
+    "event_type": "cancel"
+   },
+   {
+    "subscription_event_id": "sub-0054",
+    "account_id": 12,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   },
+   {
+    "subscription_event_id": "sub-0056",
+    "account_id": 12,
+    "event_at": "2025-11-02T00:00:00Z",
+    "available_at": "2025-11-03T00:00:00Z",
+    "event_type": "cancel"
+   },
+   {
+    "subscription_event_id": "sub-0058",
+    "account_id": 13,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   },
+   {
+    "subscription_event_id": "sub-0066",
+    "account_id": 14,
+    "event_at": "2024-01-01T00:00:00Z",
+    "available_at": "2024-01-01T00:00:00Z",
+    "event_type": "start"
+   }
+  ],
+  "billing_events": [
+   {
+    "billing_event_id": "bil-0004",
+    "account_id": 1,
+    "event_at": "2024-12-23T00:00:00Z",
+    "available_at": "2024-12-23T00:00:00Z",
+    "amount": "10.00"
+   },
+   {
+    "billing_event_id": "bil-0008",
+    "account_id": 2,
+    "event_at": "2024-12-23T00:00:00Z",
+    "available_at": "2024-12-23T00:00:00Z",
+    "amount": "10.00"
+   },
+   {
+    "billing_event_id": "bil-0012",
+    "account_id": 3,
+    "event_at": "2024-12-23T00:00:00Z",
+    "available_at": "2024-12-23T00:00:00Z",
+    "amount": "10.00"
+   },
+   {
+    "billing_event_id": "bil-0019",
+    "account_id": 4,
+    "event_at": "2024-12-23T00:00:00Z",
+    "available_at": "2024-12-23T00:00:00Z",
+    "amount": "10.00"
+   },
+   {
+    "billing_event_id": "bil-0026",
+    "account_id": 5,
+    "event_at": "2024-12-23T00:00:00Z",
+    "available_at": "2024-12-23T00:00:00Z",
+    "amount": "10.00"
+   },
+   {
+    "billing_event_id": "bil-0033",
+    "account_id": 6,
+    "event_at": "2024-12-23T00:00:00Z",
+    "available_at": "2024-12-23T00:00:00Z",
+    "amount": "10.00"
+   },
+   {
+    "billing_event_id": "bil-0037",
+    "account_id": 7,
+    "event_at": "2025-04-22T00:00:00Z",
+    "available_at": "2025-04-22T00:00:00Z",
+    "amount": "10.00"
+   },
+   {
+    "billing_event_id": "bil-0041",
+    "account_id": 8,
+    "event_at": "2025-04-22T00:00:00Z",
+    "available_at": "2025-04-22T00:00:00Z",
+    "amount": "10.00"
+   },
+   {
+    "billing_event_id": "bil-0045",
+    "account_id": 9,
+    "event_at": "2025-04-22T00:00:00Z",
+    "available_at": "2025-04-22T00:00:00Z",
+    "amount": "10.00"
+   },
+   {
+    "billing_event_id": "bil-0049",
+    "account_id": 10,
+    "event_at": "2025-04-22T00:00:00Z",
+    "available_at": "2025-04-22T00:00:00Z",
+    "amount": "10.00"
+   },
+   {
+    "billing_event_id": "bil-0053",
+    "account_id": 11,
+    "event_at": "2025-08-22T00:00:00Z",
+    "available_at": "2025-08-22T00:00:00Z",
+    "amount": "10.00"
+   },
+   {
+    "billing_event_id": "bil-0057",
+    "account_id": 12,
+    "event_at": "2025-08-22T00:00:00Z",
+    "available_at": "2025-08-22T00:00:00Z",
+    "amount": "10.00"
+   },
+   {
+    "billing_event_id": "bil-0065",
+    "account_id": 13,
+    "event_at": "2025-08-22T00:00:00Z",
+    "available_at": "2025-08-22T00:00:00Z",
+    "amount": "10.00"
+   },
+   {
+    "billing_event_id": "bil-0073",
+    "account_id": 14,
+    "event_at": "2025-08-22T00:00:00Z",
+    "available_at": "2025-08-22T00:00:00Z",
+    "amount": "10.00"
+   }
+  ],
+  "usage_events": [
+   {
+    "usage_event_id": "usa-0002",
+    "account_id": 1,
+    "event_at": "2024-12-02T00:00:00Z",
+    "available_at": "2024-12-02T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0006",
+    "account_id": 2,
+    "event_at": "2024-12-01T00:00:00Z",
+    "available_at": "2024-12-01T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0010",
+    "account_id": 3,
+    "event_at": "2024-12-03T00:00:00Z",
+    "available_at": "2024-12-03T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0014",
+    "account_id": 4,
+    "event_at": "2025-01-29T00:00:00Z",
+    "available_at": "2025-01-29T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0015",
+    "account_id": 4,
+    "event_at": "2025-01-24T00:00:00Z",
+    "available_at": "2025-01-24T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0016",
+    "account_id": 4,
+    "event_at": "2025-01-20T00:00:00Z",
+    "available_at": "2025-01-20T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0017",
+    "account_id": 4,
+    "event_at": "2025-01-14T00:00:00Z",
+    "available_at": "2025-01-14T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0018",
+    "account_id": 4,
+    "event_at": "2025-01-07T00:00:00Z",
+    "available_at": "2025-01-07T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0021",
+    "account_id": 5,
+    "event_at": "2025-01-28T00:00:00Z",
+    "available_at": "2025-01-28T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0022",
+    "account_id": 5,
+    "event_at": "2025-01-23T00:00:00Z",
+    "available_at": "2025-01-23T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0023",
+    "account_id": 5,
+    "event_at": "2025-01-19T00:00:00Z",
+    "available_at": "2025-01-19T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0024",
+    "account_id": 5,
+    "event_at": "2025-01-13T00:00:00Z",
+    "available_at": "2025-01-13T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0025",
+    "account_id": 5,
+    "event_at": "2025-01-06T00:00:00Z",
+    "available_at": "2025-01-06T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0028",
+    "account_id": 6,
+    "event_at": "2025-01-29T00:00:00Z",
+    "available_at": "2025-01-29T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0029",
+    "account_id": 6,
+    "event_at": "2025-01-24T00:00:00Z",
+    "available_at": "2025-01-24T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0030",
+    "account_id": 6,
+    "event_at": "2025-01-20T00:00:00Z",
+    "available_at": "2025-01-20T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0031",
+    "account_id": 6,
+    "event_at": "2025-01-14T00:00:00Z",
+    "available_at": "2025-01-14T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0032",
+    "account_id": 6,
+    "event_at": "2025-01-07T00:00:00Z",
+    "available_at": "2025-01-07T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0035",
+    "account_id": 7,
+    "event_at": "2025-04-01T00:00:00Z",
+    "available_at": "2025-04-01T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0039",
+    "account_id": 8,
+    "event_at": "2025-03-31T00:00:00Z",
+    "available_at": "2025-03-31T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0043",
+    "account_id": 9,
+    "event_at": "2025-05-28T00:00:00Z",
+    "available_at": "2025-05-28T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0044",
+    "account_id": 9,
+    "event_at": "2025-05-23T00:00:00Z",
+    "available_at": "2025-05-23T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0047",
+    "account_id": 10,
+    "event_at": "2025-05-29T00:00:00Z",
+    "available_at": "2025-05-29T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0048",
+    "account_id": 10,
+    "event_at": "2025-05-24T00:00:00Z",
+    "available_at": "2025-05-24T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0051",
+    "account_id": 11,
+    "event_at": "2025-07-31T00:00:00Z",
+    "available_at": "2025-07-31T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0055",
+    "account_id": 12,
+    "event_at": "2025-08-02T00:00:00Z",
+    "available_at": "2025-08-02T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0059",
+    "account_id": 13,
+    "event_at": "2025-09-27T00:00:00Z",
+    "available_at": "2025-09-27T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0060",
+    "account_id": 13,
+    "event_at": "2025-09-24T00:00:00Z",
+    "available_at": "2025-09-24T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0061",
+    "account_id": 13,
+    "event_at": "2025-09-21T00:00:00Z",
+    "available_at": "2025-09-21T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0062",
+    "account_id": 13,
+    "event_at": "2025-09-18T00:00:00Z",
+    "available_at": "2025-09-18T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0063",
+    "account_id": 13,
+    "event_at": "2025-09-12T00:00:00Z",
+    "available_at": "2025-09-12T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0064",
+    "account_id": 13,
+    "event_at": "2025-09-08T00:00:00Z",
+    "available_at": "2025-09-08T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0067",
+    "account_id": 14,
+    "event_at": "2025-09-28T00:00:00Z",
+    "available_at": "2025-09-28T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0068",
+    "account_id": 14,
+    "event_at": "2025-09-25T00:00:00Z",
+    "available_at": "2025-09-25T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0069",
+    "account_id": 14,
+    "event_at": "2025-09-22T00:00:00Z",
+    "available_at": "2025-09-22T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0070",
+    "account_id": 14,
+    "event_at": "2025-09-19T00:00:00Z",
+    "available_at": "2025-09-19T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0071",
+    "account_id": 14,
+    "event_at": "2025-09-13T00:00:00Z",
+    "available_at": "2025-09-13T00:00:00Z",
+    "event_name": "login"
+   },
+   {
+    "usage_event_id": "usa-0072",
+    "account_id": 14,
+    "event_at": "2025-09-09T00:00:00Z",
+    "available_at": "2025-09-09T00:00:00Z",
+    "event_name": "login"
+   }
+  ],
+  "support_events": [
+   {
+    "support_event_id": "sup-0074",
+    "account_id": 1,
+    "event_at": "2025-01-22T00:00:00Z",
+    "available_at": "2025-01-22T00:00:00Z",
+    "severity": "high"
+   }
+  ],
+  "prediction_cutoffs": [
+   {
+    "cutoff_id": "co-01-20250201000000",
+    "account_id": 1,
+    "prediction_at": "2025-02-01T00:00:00Z",
+    "horizon_end": "2025-05-02T00:00:00Z",
+    "observation_start": "2024-11-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-02-20250201000000",
+    "account_id": 2,
+    "prediction_at": "2025-02-01T00:00:00Z",
+    "horizon_end": "2025-05-02T00:00:00Z",
+    "observation_start": "2024-11-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-03-20250201000000",
+    "account_id": 3,
+    "prediction_at": "2025-02-01T00:00:00Z",
+    "horizon_end": "2025-05-02T00:00:00Z",
+    "observation_start": "2024-11-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-04-20250201000000",
+    "account_id": 4,
+    "prediction_at": "2025-02-01T00:00:00Z",
+    "horizon_end": "2025-05-02T00:00:00Z",
+    "observation_start": "2024-11-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-05-20250201000000",
+    "account_id": 5,
+    "prediction_at": "2025-02-01T00:00:00Z",
+    "horizon_end": "2025-05-02T00:00:00Z",
+    "observation_start": "2024-11-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-06-20250201000000",
+    "account_id": 6,
+    "prediction_at": "2025-02-01T00:00:00Z",
+    "horizon_end": "2025-05-02T00:00:00Z",
+    "observation_start": "2024-11-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-07-20250601000000",
+    "account_id": 7,
+    "prediction_at": "2025-06-01T00:00:00Z",
+    "horizon_end": "2025-08-30T00:00:00Z",
+    "observation_start": "2025-03-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-08-20250601000000",
+    "account_id": 8,
+    "prediction_at": "2025-06-01T00:00:00Z",
+    "horizon_end": "2025-08-30T00:00:00Z",
+    "observation_start": "2025-03-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-09-20250601000000",
+    "account_id": 9,
+    "prediction_at": "2025-06-01T00:00:00Z",
+    "horizon_end": "2025-08-30T00:00:00Z",
+    "observation_start": "2025-03-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-10-20250601000000",
+    "account_id": 10,
+    "prediction_at": "2025-06-01T00:00:00Z",
+    "horizon_end": "2025-08-30T00:00:00Z",
+    "observation_start": "2025-03-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-11-20251001000000",
+    "account_id": 11,
+    "prediction_at": "2025-10-01T00:00:00Z",
+    "horizon_end": "2025-12-30T00:00:00Z",
+    "observation_start": "2025-07-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-12-20251001000000",
+    "account_id": 12,
+    "prediction_at": "2025-10-01T00:00:00Z",
+    "horizon_end": "2025-12-30T00:00:00Z",
+    "observation_start": "2025-07-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-13-20251001000000",
+    "account_id": 13,
+    "prediction_at": "2025-10-01T00:00:00Z",
+    "horizon_end": "2025-12-30T00:00:00Z",
+    "observation_start": "2025-07-03T00:00:00Z"
+   },
+   {
+    "cutoff_id": "co-14-20251001000000",
+    "account_id": 14,
+    "prediction_at": "2025-10-01T00:00:00Z",
+    "horizon_end": "2025-12-30T00:00:00Z",
+    "observation_start": "2025-07-03T00:00:00Z"
+   }
+  ],
+  "feature_rows": [],
+  "labels": [],
+  "training_runs": [],
+  "predictions": [],
+  "intervention_scenarios": [],
+  "outreach_events": [],
+  "split_assignments": [],
+  "scoring_publications": []
+ },
+ "setup": [
+  {
+   "command": "build-point-in-time-features",
+   "input": {
+    "prediction_at": "2025-02-01T00:00:00Z"
+   }
+  },
+  {
+   "command": "define-label",
+   "input": {
+    "prediction_at": "2025-02-01T00:00:00Z"
+   }
+  },
+  {
+   "command": "build-point-in-time-features",
+   "input": {
+    "prediction_at": "2025-06-01T00:00:00Z"
+   }
+  },
+  {
+   "command": "define-label",
+   "input": {
+    "prediction_at": "2025-06-01T00:00:00Z"
+   }
+  },
+  {
+   "command": "build-point-in-time-features",
+   "input": {
+    "prediction_at": "2025-10-01T00:00:00Z"
+   }
+  },
+  {
+   "command": "define-label",
+   "input": {
+    "prediction_at": "2025-10-01T00:00:00Z"
+   }
+  },
+  {
+   "command": "split-evaluation",
+   "input": {
+    "training_run_id": "tr-1",
+    "train_end": "2025-06-01T00:00:00Z",
+    "validation_end": "2025-10-01T00:00:00Z",
+    "test_end": "2026-06-01T00:00:00Z"
+   }
+  },
+  {
+   "command": "fit-preprocessing",
+   "input": {
+    "training_run_id": "tr-1"
+   }
+  },
+  {
+   "command": "train-baseline",
+   "input": {
+    "training_run_id": "tr-1"
+   }
+  }
+ ],
+ "detect": {
+  "command": "calibrate-model",
+  "input": {
+   "training_run_id": "tr-1",
+   "fit_rows": [
+    "co-07-20250601000000",
+    "co-08-20250601000000",
+    "co-09-20250601000000",
+    "co-10-20250601000000"
+   ],
+   "evaluation_rows": [
+    "co-09-20250601000000",
+    "co-11-20251001000000"
+   ]
+  },
+  "expect": {
+   "status": 422,
+   "rules": [
+    "CALIBRATION_ON_FIT_ROWS"
+   ],
+   "offending": [
+    {
+     "item": "co-09-20250601000000",
+     "code": "IN_FIT_ROWS"
+    }
+   ]
+  },
+  "audit": "calibrate-model-refused",
+  "unchanged": [
+   "training_runs",
+   "calibration_maps"
+  ]
+ },
+ "recover": {
+  "command": "calibrate-model",
+  "input": {
+   "training_run_id": "tr-1"
+  },
+  "expect": {
+   "status": 200,
+   "result": {
+    "method": "platt",
+    "fit_rows": 4,
+    "evaluation_rows": 4,
+    "evaluation_rows_overlap_fit_rows": 0,
+    "test_rows_read": 0
+   }
+  }
+ }
+}
