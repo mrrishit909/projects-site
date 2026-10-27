@@ -1349,6 +1349,13 @@
       "check": "live URL verification from GitHub Actions (deploy-wait on code_sha, route 200s, case-study links both ways, browser journey) for all eight sites",
       "run": "https://github.com/mrrishit909/projects-site/actions/runs/40456053215",
       "result": "success; pipeline-observatory live code_sha a2ef4f4130e04f5d70795ba8d83b97f02d962583"
+    },
+    {
+      "ts": "2026-10-27T05:40:23Z",
+      "project": "09-changeworks",
+      "check": "live URL verification from GitHub Actions (deploy-wait on code_sha, route 200s, case-study links both ways, browser journey) for all nine sites",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40456429847",
+      "result": "success; changeworks live code_sha d9e76fa9c3ee49043044be9d2d191ba902baeb65"
     }
   ]
 }
