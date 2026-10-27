@@ -51,6 +51,34 @@
           "newcombe_95_low": "0.000812",
           "relative_lift": "0.301587"
         },
+        "instrumentation_gap_disclosure": {
+          "by_arm": {
+            "control": {
+              "drawn_activated": 63,
+              "drawn_activated_excluding_gap": 63,
+              "gap_accounts": 5,
+              "gap_drawn_activations": 0,
+              "mature": 200,
+              "mature_excluding_gap": 195,
+              "published_activated": 63
+            },
+            "treatment": {
+              "drawn_activated": 86,
+              "drawn_activated_excluding_gap": 82,
+              "gap_accounts": 6,
+              "gap_drawn_activations": 4,
+              "mature": 200,
+              "mature_excluding_gap": 194,
+              "published_activated": 82
+            }
+          },
+          "drawn_lift_pp": "11.50",
+          "gap_ends": "2026-04-08T00:00:00Z",
+          "lift_excluding_gap_accounts_pp": "9.96",
+          "note": "The instrumentation gap (INJ-10, no `activated` event for signups before 2026-04-08, both arms) is not confined to the early read it was planted for: it reaches the v1 accounts that are mature at the as-of too. Those accounts count as not activated in the published figures, so the published lift understates the lift as drawn (the gap removed activations in the treatment arm and none in the control arm, by chance). The domain cannot see the gap: it is a known limitation of the data, disclosed here, not corrected. Excluding the gap accounts from both arms gives the third figure.",
+          "published_lift_pp": "9.50",
+          "v1_gap_accounts": 11
+        },
         "true_effect_pp": "8.00"
       },
       "statement": "v1's true activation effect is +8 percentage points (every account's 7-day activation probability is raised by 0.08, exposed or not). The realised lift is what one draw gave: it is reported, not selected."
@@ -873,7 +901,35 @@
         "early_cutoff": "2026-04-15T00:00:00Z",
         "gap_ends": "2026-04-08T00:00:00Z",
         "mature_control": 5,
-        "mature_treatment": 6
+        "mature_treatment": 6,
+        "reaches_the_as_of_read": {
+          "by_arm": {
+            "control": {
+              "drawn_activated": 63,
+              "drawn_activated_excluding_gap": 63,
+              "gap_accounts": 5,
+              "gap_drawn_activations": 0,
+              "mature": 200,
+              "mature_excluding_gap": 195,
+              "published_activated": 63
+            },
+            "treatment": {
+              "drawn_activated": 86,
+              "drawn_activated_excluding_gap": 82,
+              "gap_accounts": 6,
+              "gap_drawn_activations": 4,
+              "mature": 200,
+              "mature_excluding_gap": 194,
+              "published_activated": 82
+            }
+          },
+          "drawn_lift_pp": "11.50",
+          "gap_ends": "2026-04-08T00:00:00Z",
+          "lift_excluding_gap_accounts_pp": "9.96",
+          "note": "The instrumentation gap (INJ-10, no `activated` event for signups before 2026-04-08, both arms) is not confined to the early read it was planted for: it reaches the v1 accounts that are mature at the as-of too. Those accounts count as not activated in the published figures, so the published lift understates the lift as drawn (the gap removed activations in the treatment arm and none in the control arm, by chance). The domain cannot see the gap: it is a known limitation of the data, disclosed here, not corrected. Excluding the gap accounts from both arms gives the third figure.",
+          "published_lift_pp": "9.50",
+          "v1_gap_accounts": 11
+        }
       },
       "entity": "events",
       "expected": {
@@ -913,7 +969,7 @@
         "exposed_at": "2026-06-04T22:51:45Z"
       },
       "entity": "exposures",
-      "expected_handling": "C05 record-exposure refuses it: 422 EXPOSURE_BEFORE_ASSIGNMENT; the raw row is kept in rejected_records and no exposure is written.",
+      "expected_handling": "C05 record-exposure refuses it: 422 EXPOSURE_BEFORE_ASSIGNMENT; the raw row is kept in rejected_records and no exposure is written. (D-10: the server stamps exposed_at, so the early instant is an admin backfill with backfill: true; any other caller gets 403.)",
       "expected_merges": [],
       "expected_rejections": [],
       "handling_kind": "replay_only",
