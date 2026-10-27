@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T10:13:55Z",
+  "updated_at": "2026-10-27T10:16:09Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -399,7 +399,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "All ten projects complete (built, verified, published, integrated, reviewed, artifacts with hosted CI). Remaining: closing all-sites live check and the final report. Nothing is in progress; no worker is running.",
+    "next_concrete_task": "Programme complete: all ten projects built, verified, published, integrated, reviewed, with artifact packages and hosted CI; closing live check run 40486882515 green for 10 sites; final report in docs/program/final-report.md. Nothing is in progress.",
     "acceptance": "see task-queue.json"
   }
 }

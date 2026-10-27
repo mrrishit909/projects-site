@@ -1482,6 +1482,13 @@
       "check": "CI on the hosted runner with the artifact package, second attempt after the C03 test fix (Mode A: reference check, 495 tests with the artifacts09_* scratch databases and LibreOffice, junit no-skip gate; Mode B: build, golden, browser evidence)",
       "run": "https://github.com/mrrishit909/projects-site/actions/runs/40486164950",
       "result": "success both modes on 6609676; project 09 complete"
+    },
+    {
+      "ts": "2026-10-27T10:16:09Z",
+      "project": "program",
+      "check": "closing live URL verification from GitHub Actions for all ten sites after the last case-study updates",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40486882515",
+      "result": "success; 10 sites green with their recorded code_sha"
     }
   ]
 }
