@@ -1,0 +1,8 @@
+{"entity":"source_contracts","dataset_version":"po-20261026-20261026","rows":[
+{"expected_frequency":"every 4 hours","freshness_target_seconds":19800,"owner_id":"own-01","schema_version":"1","source_id":"src-orders","source_name":"Synthetic orders feed"},
+{"expected_frequency":"every 4 hours","freshness_target_seconds":21600,"owner_id":"own-01","schema_version":"2","source_id":"src-payments","source_name":"Synthetic payments feed"},
+{"expected_frequency":"every 6 hours","freshness_target_seconds":604800,"owner_id":"own-01","schema_version":"1","source_id":"src-refunds","source_name":"Synthetic refunds feed"},
+{"expected_frequency":"every 6 hours","freshness_target_seconds":259200,"owner_id":"own-02","schema_version":"1","source_id":"src-shipments","source_name":"Synthetic shipments feed"},
+{"expected_frequency":"daily","freshness_target_seconds":259200,"owner_id":"own-02","schema_version":"1","source_id":"src-inventory","source_name":"Synthetic inventory feed"},
+{"expected_frequency":"every 12 hours","freshness_target_seconds":216000,"owner_id":"own-03","schema_version":"1","source_id":"src-web-events","source_name":"Synthetic web events feed"}
+]}

@@ -1,0 +1,17 @@
+{"entity":"backfill_requests","dataset_version":"po-20261026-20261026","rows":[
+{"backfill_id":"bf-001","end_at":"2026-08-16T00:00:00Z","partitions":[{"partition":"2026-08-15","verified":true}],"source_id":"src-shipments","start_at":"2026-08-15T00:00:00Z","status":"complete"},
+{"backfill_id":"bf-002","end_at":"2026-08-14T00:00:00Z","partitions":[{"partition":"2026-08-13","verified":false}],"source_id":"src-web-events","start_at":"2026-08-13T00:00:00Z","status":"partial"},
+{"backfill_id":"bf-003","end_at":"2026-08-21T00:00:00Z","partitions":[{"partition":"2026-08-20","verified":true}],"source_id":"src-inventory","start_at":"2026-08-20T00:00:00Z","status":"complete"},
+{"backfill_id":"bf-004","end_at":"2026-08-23T00:00:00Z","partitions":[{"partition":"2026-08-22","verified":false}],"source_id":"src-inventory","start_at":"2026-08-22T00:00:00Z","status":"partial"},
+{"backfill_id":"bf-005","end_at":"2026-08-26T00:00:00Z","partitions":[{"partition":"2026-08-24","verified":true},{"partition":"2026-08-25","verified":true}],"source_id":"src-refunds","start_at":"2026-08-24T00:00:00Z","status":"complete"},
+{"backfill_id":"bf-006","end_at":"2026-08-24T00:00:00Z","partitions":[{"partition":"2026-08-22","verified":false},{"partition":"2026-08-23","verified":false}],"source_id":"src-inventory","start_at":"2026-08-22T00:00:00Z","status":"requested"},
+{"backfill_id":"bf-007","end_at":"2026-08-29T00:00:00Z","partitions":[{"partition":"2026-08-28","verified":true}],"source_id":"src-inventory","start_at":"2026-08-28T00:00:00Z","status":"complete"},
+{"backfill_id":"bf-008","end_at":"2026-09-04T00:00:00Z","partitions":[{"partition":"2026-09-03","verified":true}],"source_id":"src-inventory","start_at":"2026-09-03T00:00:00Z","status":"complete"},
+{"backfill_id":"bf-009","end_at":"2026-08-22T00:00:00Z","partitions":[{"partition":"2026-08-21","verified":true}],"source_id":"src-web-events","start_at":"2026-08-21T00:00:00Z","status":"complete"},
+{"backfill_id":"bf-010","end_at":"2026-08-27T00:00:00Z","partitions":[{"partition":"2026-08-26","verified":true}],"source_id":"src-web-events","start_at":"2026-08-26T00:00:00Z","status":"complete"},
+{"backfill_id":"bf-011","end_at":"2026-09-08T00:00:00Z","partitions":[{"partition":"2026-09-07","verified":false}],"source_id":"src-web-events","start_at":"2026-09-07T00:00:00Z","status":"partial"},
+{"backfill_id":"bf-012","end_at":"2026-08-28T00:00:00Z","partitions":[{"partition":"2026-08-26","verified":false},{"partition":"2026-08-27","verified":false}],"source_id":"src-web-events","start_at":"2026-08-26T00:00:00Z","status":"requested"},
+{"backfill_id":"bf-013","end_at":"2026-09-18T00:00:00Z","partitions":[{"partition":"2026-09-17","verified":false}],"source_id":"src-inventory","start_at":"2026-09-17T00:00:00Z","status":"partial"},
+{"backfill_id":"bf-014","end_at":"2026-09-11T00:00:00Z","partitions":[{"partition":"2026-09-10","verified":true}],"source_id":"src-shipments","start_at":"2026-09-10T00:00:00Z","status":"complete"},
+{"backfill_id":"bf-015","end_at":"2026-09-24T00:00:00Z","partitions":[{"partition":"2026-09-22","verified":true},{"partition":"2026-09-23","verified":true}],"source_id":"src-refunds","start_at":"2026-09-22T00:00:00Z","status":"complete"}
+]}

@@ -129,6 +129,46 @@ are the binding form. In short:
 * Known gaps: the SQL reference does not model delete events (domain and API tests do); no real fetcher, scheduler or
   retention job; the workflow guard reads workflow text (no YAML parser in the pinned requirements).
 
+## D-07 Synthetic world (adopted from the generator hand-back; the 17 numbered assumptions are in README.md / the manifest)
+Seed 20261026, hourly runs 2026-08-10T01:15 .. 2026-10-04T23:15 (1,343 runs, 1,318 succeeded, 25 planned failures),
+`as_of` 2026-10-05T00:00:00Z; 6 sources with cadences 4h/6h/12h/daily, per-source freshness targets (orders 5.5 h,
+payments 6 h, shipments 72 h, inventory 72 h, web events 60 h, refunds 7 d) and `src-payments` declaring schema "2"
+from 2026-09-15; 1,311 batches (1,278 live, 15 backfill, 8 aborted + 8 replays, 1 schema-quarantined + 1 refetch),
+1,302 checkpoints; 40,191 raw rows written, 39,901 received by committed batches, classified 37,248 accepted / 2,101
+duplicate / 429 quarantined (plus deletes); 12 models over 3 layers; 5,462 task runs; 6,640 quality results; 1,318
+publications; 25 incidents all closed by verified recovery (mean 60.6827 min); 15 backfills (13 accepted, 2 refused
+`BACKFILL_OVERLAP`), coverage 11/15 = 0.733333. `dataset_version` po-20261026-20261026, `dataset_hash` d9f0aa18…
+over the 16 entity files; `generated_at` = `as_of`.
+* A run starts at hh:15 and publishes the snapshot of the UTC day of the tick minus one hour, rebuilt hourly; accepted
+  backfills ride on the first run after their batches commit. The watermark is the earliest, over all sources, of the
+  window end of the latest batch committed before the gate (so backfill records are always late). Refused backfills
+  keep status `requested` with their ids consumed. Crashed ingests end `aborted` with rows and no checkpoint (the
+  cleanup state after D-06's `staged`). Stale batches replay the last accepted rows (all duplicates), cursor unchanged,
+  checkpoint version still +1. Quality results sit on the quality-gate task run (five checks per gate). No
+  `keys_unique` failure occurs in the history (the duplicate-key fault lives in replay event EV-07).
+* Extra entities `source_expectations`, `model_output_totals` (the stored candidate total per run; blocked runs'
+  residuals come from it), `batch_summaries`, `fetch_log`; extra fields `model_definitions.layer/depends_on`,
+  `source_contracts.freshness_target_seconds`; `task_runs.attempt` is an integer in the world (strings in the golden).
+* **Published `raw_records` is a sample** of 2,000 rows in 62 whole batches; metrics over the published files describe
+  the sample (`content_hash_ok` false for every publication there, `quarantine_rows_match` false for unsampled
+  batches) and the manifest states the counts for both the complete and the published world. The processing
+  measurement is one synthetic batch, disclosed. Replay events EV-01..12 (74 steps) run after the as-of on a fresh
+  database seeded from the published files with the clock frozen per step. The generator memoises `parse_ts` at
+  runtime without changing the domain files.
+* Designed relationships, realised: DR-01 `src-refunds` stale from 2026-10-02 (freshness 262,378 s vs ingestion age
+  17,363 s, 72 green runs, completeness 0.000000 on three days; its 7-day target hides it from the gate, deliberately);
+  DR-02 `run-1187` blocked on relationships, pointer stays on `pub-1186`, `inc-022` recovered by `run-1188` after
+  67.8833 min; DR-03 49 rate-limited responses on `src-shipments`, all retries honouring retry-after; DR-04 757 late
+  events (9 designed, 41 corrections, 707 backfilled), all in the next publication, 0 lost; DR-05 every publication
+  reconciles to 0.00 and the one unexplained residual (−141.46 on `run-0731`, 2026-09-09) blocks and opens `inc-015`.
+* Outcome-informed choices, disclosed in the manifest: event rates up about 5 % and the shipments cadence 8h → 6h to
+  reach the brief's volume; freshness targets loosened and backfills restricted after unplanned gate failures;
+  backfill dates re-spaced; slot-flag spacing 3 → 2 days; the freshness-delay margin 2 h → 15 min; no designed
+  relationship was tuned on its realised value.
+* Gaps: the seeded database is the sample (`seed.py` loads neither `fetch_log`, `model_output_totals` nor the
+  processing measurement); late events are dominated by backfills; no replay event exercises C09 or C10; the domain
+  over 40,000 rows takes about a minute.
+
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners, including the crash-before-checkpoint and
 overlap experiments. Mode B: TypeScript mirror over the published snapshot; the quarantine desk, backfill console and

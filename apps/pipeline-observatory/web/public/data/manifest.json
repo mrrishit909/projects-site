@@ -1,0 +1,775 @@
+{
+  "as_of": "2026-10-05T00:00:00Z",
+  "config": {
+    "as_of": "2026-10-05T00:00:00Z",
+    "business_total_field": "amount",
+    "contract_version": 1,
+    "cutoff": "2026-10-05T00:00:00Z",
+    "freshness_targets_seconds": {
+      "src-inventory": 259200,
+      "src-orders": 19800,
+      "src-payments": 21600,
+      "src-refunds": 604800,
+      "src-shipments": 259200,
+      "src-web-events": 216000
+    },
+    "freshness_timestamp_field": "event_ts",
+    "partition_rule": "UTC date of the freshness timestamp field",
+    "processing_measurement": {
+      "batch_id": "b-1121",
+      "cache_state": "cold",
+      "hardware": "Synthetic world value, not a benchmark: 2 vCPU, 8 GB RAM, GitHub-hosted runner class",
+      "measured_seconds": "2.573",
+      "source_id": "src-orders"
+    }
+  },
+  "contract_version": 1,
+  "dataset_hash": "d9f0aa18ec6c54d3f09cf16cce3c159960411e36de59b4d7831220547fcbf12e",
+  "dataset_version": "po-20261026-20261026",
+  "designed_relationships": [
+    {
+      "id": "DR-01",
+      "name": "a source stale for three days while its jobs stay green",
+      "parameters": {
+        "declared_frequency": "every 6 hours",
+        "freshness_target_seconds": 604800,
+        "replayed_rows_per_batch": 14,
+        "source_id": "src-refunds",
+        "stops_at": "2026-10-02T00:00:00Z"
+      },
+      "realised": {
+        "accepted_in_window": 16,
+        "batches_with_no_accepted_record": 11,
+        "committed_batches_in_window": 12,
+        "completeness": {
+          "2026-10-02": "0.000000",
+          "2026-10-03": "0.000000",
+          "2026-10-04": "0.000000"
+        },
+        "duplicates_in_window": 156,
+        "freshness_seconds": 262378,
+        "ingestion_age_seconds": 17363,
+        "last_successful_ingestion_at": "2026-10-04T19:10:37Z",
+        "latest_accepted_event_at": "2026-10-01T23:07:02Z",
+        "runs_allowed_by_the_gate": 72,
+        "runs_in_window": 72,
+        "runs_succeeded": 72
+      },
+      "statement": "src-refunds stops delivering new events at 2026-10-02T00:00:00Z; its batches keep committing (the same page again) and every run stays green."
+    },
+    {
+      "id": "DR-02",
+      "name": "a failed run that never replaces the publication",
+      "parameters": {
+        "failure": "relationships_intact critical check, one orphan output row",
+        "rule": "the second relationships failure in time order is the designated run (P08-TEST-07)"
+      },
+      "realised": {
+        "critical_failures": 1,
+        "gate_decision": "blocked",
+        "incident_id": "inc-022",
+        "pointer_after": "pub-1186",
+        "pointer_before": "pub-1186",
+        "pointer_history_index": 1186,
+        "pointer_unchanged": true,
+        "publication_exists": false,
+        "recovery_minutes": "67.8833",
+        "recovery_run_id": "run-1188",
+        "run_id": "run-1187",
+        "run_status": "failed"
+      },
+      "statement": "A run whose critical relationships check fails is blocked, opens an incident and publishes nothing; the pointer stays where it was."
+    },
+    {
+      "id": "DR-03",
+      "name": "a rate-limited source whose retries honour retry-after",
+      "parameters": {
+        "rate_limit_ppm": 125000,
+        "retry_after_choices_seconds": [
+          30,
+          60,
+          90,
+          120
+        ],
+        "retry_slack_seconds": "0..25",
+        "second_429_ppm": 300000,
+        "source_id": "src-shipments"
+      },
+      "realised": {
+        "cursor_loops": 1,
+        "fetch_rows": 1361,
+        "max_slack_seconds": 25,
+        "min_slack_seconds": 0,
+        "rate_limited_responses": 49,
+        "retries": 49,
+        "retries_honouring_retry_after": 49,
+        "retries_too_soon": 0,
+        "sessions_rate_limited": 33,
+        "source_id": "src-shipments",
+        "sources_rate_limited": [
+          "src-shipments"
+        ]
+      },
+      "statement": "src-shipments answers some fetches with 429 and a retry-after; every retry waits at least that long."
+    },
+    {
+      "id": "DR-04",
+      "name": "late events behind the watermark, included in the next publication",
+      "parameters": {
+        "delivered_in_the_batch_of": "2026-09-18T16:00:00Z",
+        "event_window": "2026-09-17T18:00:00Z..2026-09-17T23:50:00Z",
+        "events": 9,
+        "source_id": "src-orders",
+        "watermark_rule": "the earliest, over all sources, of the end of the window of the latest committed batch"
+      },
+      "realised": {
+        "by_cause": {
+          "backfill": 707,
+          "corrections": 41,
+          "designed": 9
+        },
+        "designed": [
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T18:38:41Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011279",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T19:00:02Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011284",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T19:12:50Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011287",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T19:43:41Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011294",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T20:16:57Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011302",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T20:18:10Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011303",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T20:31:06Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011309",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T21:06:14Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011315",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T21:16:18Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011317",
+            "watermark": "2026-09-18T05:05:30Z"
+          }
+        ],
+        "designed_events": 9,
+        "included_in_next_publication": 757,
+        "late_events_in_all": 757,
+        "lost": 0
+      },
+      "statement": "Nine src-orders events dated before the watermark of the preceding publication arrive in one later batch; each is accepted and enters the next publication."
+    },
+    {
+      "id": "DR-05",
+      "name": "residual zero except one day with an unexplained residual",
+      "parameters": {
+        "amount": "the candidate table holds the amount of the first 3 new records of the crashed payments batch b-0714 beyond the accepted records of its scope",
+        "cause_recorded": "none: no quarantine, duplicate or delete accounts for it",
+        "day": "2026-09-09",
+        "tick": "2026-09-09T11:00:00Z"
+      },
+      "realised": {
+        "candidates_with_nonzero_residual": [
+          {
+            "day": "2026-09-09",
+            "exclusions_total": "1137.66",
+            "published_total": "22698.71",
+            "residual": "-141.46",
+            "run_id": "run-0731",
+            "source_total": "23694.91"
+          }
+        ],
+        "days_with_nonzero_residual": [
+          "2026-09-09"
+        ],
+        "incident_id": "inc-015",
+        "incident_run_id": "run-0731",
+        "leak_batch_id": "b-0714",
+        "leaked_rows": 3,
+        "publications": 1318,
+        "publications_with_nonzero_residual": 0,
+        "recovery_minutes": "63.1000",
+        "recovery_run_id": "run-0732"
+      },
+      "statement": "Every publication reconciles to 0.00; on one day the transform of one run read the staged rows of a crashed batch, the candidate reconciliation was off by their amount, the gate blocked and an incident opened."
+    }
+  ],
+  "full_world": {
+    "domain_ingest_counts": {
+      "backfill_requests": 13,
+      "checkpoints": 1302,
+      "incidents": 25,
+      "ingestion_batches": 1311,
+      "model_definitions": 12,
+      "pipeline_runs": 1343,
+      "publications": 1318,
+      "quality_results": 6640,
+      "quarantine_records": 446,
+      "raw_records": 40191,
+      "source_contracts": 6,
+      "task_runs": 5462
+    },
+    "domain_rejected": {
+      "backfill_requests": 2
+    },
+    "note": "Counts of the complete world the domain was run over (regenerate it with generate.py --full-inputs); raw_records are published as a sample only.",
+    "raw_records_received_by_committed_batches": 39901,
+    "raw_records_written_in_all_batches": 40191,
+    "row_counts": {
+      "backfill_requests": 15,
+      "batch_summaries": 1311,
+      "checkpoints": 1302,
+      "fetch_log": 1361,
+      "incidents": 25,
+      "ingestion_batches": 1311,
+      "model_definitions": 12,
+      "model_output_totals": 1331,
+      "pipeline_runs": 1343,
+      "publications": 1318,
+      "quality_results": 6640,
+      "quarantine_records": 446,
+      "raw_records": 40191,
+      "source_contracts": 6,
+      "source_expectations": 336,
+      "task_runs": 5462
+    }
+  },
+  "generated_at": "2026-10-05T00:00:00Z",
+  "generator": {
+    "disclosures": [
+      "Parameters fixed BEFORE the first run, and not changed afterwards to improve an outcome: the six cadences and offsets; src-refunds stops delivering new events at 2026-10-02T00:00:00Z and declares a 7-day freshness target; src-shipments is rate limited on 12.5 % of its fetches (retry-after 30, 60, 90 or 120 s); nine src-orders events dated 2026-09-17 18:00..23:50 are held back to the batch of 2026-09-18 16:00; src-payments declares schema version 2 from 2026-09-15; 25 runs fail (9 transform, 3 ingest, 3 gate task, 4 relationships, 5 freshness, 1 residual on 2026-09-09 11:00); 15 backfill requests, two of them (bf-006, bf-012) overlapping an earlier one.",
+      "OUTCOME-INFORMED choices, all made while building the generator and before the reported run: (a) the first complete world had 38,249 raw rows and 1,263 batches, so the hourly event rates were raised by about 5 % and the src-shipments cadence went from 8 to 6 hours to come near 40,000 and 1,300; (b) the first freshness targets (orders 4.5 h, payments 5 h, shipments 24 h, inventory 48 h, web events 30 h) made the gate fail on runs the plan had not designated (thin night windows; whole-day backfilled partitions), so they were loosened to orders 5.5 h, payments 6 h, shipments 72 h, inventory 72 h, web events 60 h, backfills were limited to one day per partition (refunds up to two), never on adjacent days of one source, and src-payments was removed from the backfill sources; (c) the backfill request dates were re-spaced after two requests fell after the as-of, the minimum spacing of the flagged slots went from 3 to 2 days when placement failed, and the margin before the next slot in the freshness scenario went from 2 h to 15 min.",
+      "The reported world is the first run of the final code; no draw was repeated or filtered by its value. Every designed relationship came out as designed once the code ran; none was tuned on the realised value. The realised values are in designed_relationships and are computed by the domain from the rows.",
+      "src-refunds declares a freshness target (7 days) looser than its silence on purpose: the gate cannot see the staleness, which is the defect P08-TEST-06 shows. The unexplained residual of 2026-09-09 is constructed (the candidate table holds the amount of three records of a crashed batch beyond the accepted records); the pipeline records no cause.",
+      "The watermark of a publication is the earliest, over all sources, of the end of the window of the latest batch committed before the gate. Late events are therefore rare for live batches (the designed nine and the corrections of rejected rows) and common for backfills, whose records are weeks old when they arrive; all of them are included in the next publication.",
+      "raw_records is a SAMPLE: whole batches (the injected defects and designed relationships first, then a seeded shuffle) until the next batch would pass 2,000 rows. Every other count comes from batch_summaries, which the domain computed over all raw records. The 5 MB size cap did not bind: the sample is capped at 2,000 rows by the brief.",
+      "Quality results sit on the quality_gate task run (five checks per gate); the two tests the transform runs (keys, relationships) are the gate's keys_unique and relationships_intact. Hardware, cache state and the measured seconds of the processing rate are synthetic values for one batch, not a benchmark."
+    ],
+    "name": "generate.py",
+    "parameters": {
+      "aborted_ingests": "7 random + 1 designed",
+      "as_of": "2026-10-05T00:00:00Z",
+      "backfills": "15 requests: 13 accepted, 2 refused (bf-006, bf-012)",
+      "cadences": "src-orders every 4 hours at minute 3; src-payments every 4 hours at minute 4; src-refunds every 6 hours at minute 5; src-shipments every 6 hours at minute 6; src-inventory daily at minute 7; src-web-events every 12 hours at minute 8",
+      "events_per_hour_x100": "src-orders 1260; src-payments 790; src-refunds 315; src-shipments 315; src-inventory 131; src-web-events 131",
+      "failure_plan": "{\"freshness\":5,\"gate_infra\":3,\"ingest\":3,\"relationships\":4,\"residual\":1,\"transform\":9}",
+      "freshness_targets_seconds": "src-orders 19800; src-payments 21600; src-refunds 604800; src-shipments 259200; src-inventory 259200; src-web-events 216000",
+      "late_events": "9 events of src-orders held to the batch of 2026-09-18T16:00:00Z",
+      "ppm": "{\"cancel\":4000,\"cancel_dirty\":100000,\"double_delete\":60000,\"fix\":350000,\"flaky_run\":70000,\"invalid\":2500,\"missing\":2500,\"neg\":6000}",
+      "publication_scope": "every batch committed before the run started, on the UTC day of (the run's hour tick minus one hour): the day's snapshot, rebuilt hourly; backfill batches enter on the day they commit",
+      "rate_limit": "src-shipments 125000 ppm of fetches, retry-after [30, 60, 90, 120]",
+      "residual_day": "2026-09-09",
+      "run_start_offset_seconds": "900",
+      "sample_cap_rows": "2000",
+      "sample_rows_published": "2000",
+      "schema_bump": "src-payments to version 2 on 2026-09-15",
+      "size_cap_binding": "false",
+      "size_cap_bytes": "5000000",
+      "sources": "6",
+      "stale_source": "src-refunds from 2026-10-02T00:00:00Z",
+      "unknown_op_rows": "3: one slot each of src-orders, src-payments, src-shipments",
+      "watermark": "the earliest, over all sources, of the end of the window of the latest batch committed before the gate",
+      "window": "2026-08-10 .. 2026-10-04 (56 days, hourly runs)"
+    },
+    "seed": 20261026
+  },
+  "injection_manifest": "injection-manifest.json",
+  "row_counts": {
+    "backfill_requests": 15,
+    "batch_summaries": 1311,
+    "checkpoints": 1302,
+    "fetch_log": 1361,
+    "incidents": 25,
+    "ingestion_batches": 1311,
+    "model_definitions": 12,
+    "model_output_totals": 1331,
+    "pipeline_runs": 1343,
+    "publications": 1318,
+    "quality_results": 6640,
+    "quarantine_records": 446,
+    "raw_records": 2000,
+    "source_contracts": 6,
+    "source_expectations": 336,
+    "task_runs": 5462
+  },
+  "sample": {
+    "batches_in_all": 1311,
+    "batches_sampled": 62,
+    "cap_rows": 2000,
+    "cap_used": 2000,
+    "entity_bytes": 4282522,
+    "published_world": {
+      "current_publication_id": "pub-1343",
+      "domain_ingest_counts": {
+        "backfill_requests": 13,
+        "checkpoints": 1302,
+        "incidents": 25,
+        "ingestion_batches": 1311,
+        "model_definitions": 12,
+        "pipeline_runs": 1343,
+        "publications": 1318,
+        "quality_results": 6640,
+        "quarantine_records": 446,
+        "raw_records": 2000,
+        "source_contracts": 6,
+        "task_runs": 5462
+      },
+      "ingestion_overall": {
+        "accepted_unique": 1822,
+        "duplicate": 23,
+        "duplicate_rate": "0.012247",
+        "quarantined": 32,
+        "received": 1878,
+        "rejection_rate": "0.017039"
+      },
+      "note": "the domain over the sampled files: the per-batch rows of unsampled batches are absent there, so use batch_summaries for those",
+      "publications": 1318,
+      "publications_content_hash_ok": 0
+    },
+    "raw_records_published": 2000,
+    "rule": "whole batches: the injected defects and designed relationships first, then a seeded shuffle of the live batches until the next batch would pass the cap",
+    "size_cap_binding": false,
+    "size_cap_bytes": 5000000
+  },
+  "stats": {
+    "backfills": {
+      "overall": {
+        "coverage": "0.733333",
+        "requested_partitions": 15,
+        "verified_partitions": 11
+      },
+      "refused": [
+        "bf-006",
+        "bf-012"
+      ],
+      "requests": {
+        "bf-001": {
+          "coverage": "1.000000",
+          "requested_partitions": 1,
+          "source_id": "src-shipments",
+          "verified_partitions": 1
+        },
+        "bf-002": {
+          "coverage": "0.000000",
+          "requested_partitions": 1,
+          "source_id": "src-web-events",
+          "verified_partitions": 0
+        },
+        "bf-003": {
+          "coverage": "1.000000",
+          "requested_partitions": 1,
+          "source_id": "src-inventory",
+          "verified_partitions": 1
+        },
+        "bf-004": {
+          "coverage": "0.000000",
+          "requested_partitions": 1,
+          "source_id": "src-inventory",
+          "verified_partitions": 0
+        },
+        "bf-005": {
+          "coverage": "1.000000",
+          "requested_partitions": 2,
+          "source_id": "src-refunds",
+          "verified_partitions": 2
+        },
+        "bf-007": {
+          "coverage": "1.000000",
+          "requested_partitions": 1,
+          "source_id": "src-inventory",
+          "verified_partitions": 1
+        },
+        "bf-008": {
+          "coverage": "1.000000",
+          "requested_partitions": 1,
+          "source_id": "src-inventory",
+          "verified_partitions": 1
+        },
+        "bf-009": {
+          "coverage": "1.000000",
+          "requested_partitions": 1,
+          "source_id": "src-web-events",
+          "verified_partitions": 1
+        },
+        "bf-010": {
+          "coverage": "1.000000",
+          "requested_partitions": 1,
+          "source_id": "src-web-events",
+          "verified_partitions": 1
+        },
+        "bf-011": {
+          "coverage": "0.000000",
+          "requested_partitions": 1,
+          "source_id": "src-web-events",
+          "verified_partitions": 0
+        },
+        "bf-013": {
+          "coverage": "0.000000",
+          "requested_partitions": 1,
+          "source_id": "src-inventory",
+          "verified_partitions": 0
+        },
+        "bf-014": {
+          "coverage": "1.000000",
+          "requested_partitions": 1,
+          "source_id": "src-shipments",
+          "verified_partitions": 1
+        },
+        "bf-015": {
+          "coverage": "1.000000",
+          "requested_partitions": 2,
+          "source_id": "src-refunds",
+          "verified_partitions": 2
+        }
+      }
+    },
+    "batches_by_kind": {
+      "aborted": 8,
+      "backfill": 15,
+      "live": 1278,
+      "replay": 8,
+      "schema_q": 1,
+      "schema_refetch": 1
+    },
+    "completeness_by_source": {
+      "src-inventory": {
+        "accepted_records": 1630,
+        "expected_records": 1645,
+        "partitions": 56,
+        "value": "0.990881"
+      },
+      "src-orders": {
+        "accepted_records": 16066,
+        "expected_records": 16176,
+        "partitions": 56,
+        "value": "0.993200"
+      },
+      "src-payments": {
+        "accepted_records": 10125,
+        "expected_records": 10207,
+        "partitions": 56,
+        "value": "0.991966"
+      },
+      "src-refunds": {
+        "accepted_records": 3785,
+        "expected_records": 4003,
+        "partitions": 56,
+        "value": "0.945541"
+      },
+      "src-shipments": {
+        "accepted_records": 3985,
+        "expected_records": 4004,
+        "partitions": 56,
+        "value": "0.995255"
+      },
+      "src-web-events": {
+        "accepted_records": 1657,
+        "expected_records": 1678,
+        "partitions": 56,
+        "value": "0.987485"
+      }
+    },
+    "freshness_at_as_of": {
+      "src-inventory": {
+        "freshness_seconds": 79203,
+        "ingestion_age_seconds": 67674,
+        "last_successful_ingestion_at": "2026-10-04T05:12:06Z",
+        "latest_accepted_event_at": "2026-10-04T01:59:57Z"
+      },
+      "src-orders": {
+        "freshness_seconds": 14514,
+        "ingestion_age_seconds": 13887,
+        "last_successful_ingestion_at": "2026-10-04T20:08:33Z",
+        "latest_accepted_event_at": "2026-10-04T19:58:06Z"
+      },
+      "src-payments": {
+        "freshness_seconds": 7766,
+        "ingestion_age_seconds": 6638,
+        "last_successful_ingestion_at": "2026-10-04T22:09:22Z",
+        "latest_accepted_event_at": "2026-10-04T21:50:34Z"
+      },
+      "src-refunds": {
+        "freshness_seconds": 262378,
+        "ingestion_age_seconds": 17363,
+        "last_successful_ingestion_at": "2026-10-04T19:10:37Z",
+        "latest_accepted_event_at": "2026-10-01T23:07:02Z"
+      },
+      "src-shipments": {
+        "freshness_seconds": 11789,
+        "ingestion_age_seconds": 9931,
+        "last_successful_ingestion_at": "2026-10-04T21:14:29Z",
+        "latest_accepted_event_at": "2026-10-04T20:43:31Z"
+      },
+      "src-web-events": {
+        "freshness_seconds": 21398,
+        "ingestion_age_seconds": 20724,
+        "last_successful_ingestion_at": "2026-10-04T18:14:36Z",
+        "latest_accepted_event_at": "2026-10-04T18:03:22Z"
+      }
+    },
+    "incidents": {
+      "all_closures_consistent": true,
+      "by_type": {
+        "freshness": 5,
+        "gate_infra": 3,
+        "ingest": 3,
+        "relationships": 4,
+        "residual": 1,
+        "transform": 9
+      },
+      "closed": 25,
+      "mean_recovery_minutes": "60.6827",
+      "open": 0,
+      "total": 25,
+      "verified": 25
+    },
+    "ingestion": {
+      "overall": {
+        "accepted_unique": 37248,
+        "duplicate": 2101,
+        "duplicate_rate": "0.052655",
+        "quarantined": 429,
+        "received": 39901,
+        "rejection_rate": "0.010752"
+      },
+      "sources": {
+        "src-inventory": {
+          "accepted_unique": 1630,
+          "checkpoint_version": 61,
+          "duplicate": 72,
+          "duplicate_rate": "0.041788",
+          "quarantine_by_reason": {
+            "INVALID_FIELD": 4,
+            "MISSING_FIELD": 4,
+            "NEGATIVE_QUANTITY": 13
+          },
+          "quarantined": 21,
+          "quarantined_distinct_keys": 21,
+          "received": 1723,
+          "rejection_rate": "0.012188"
+        },
+        "src-orders": {
+          "accepted_unique": 16066,
+          "checkpoint_version": 335,
+          "duplicate": 502,
+          "duplicate_rate": "0.029854",
+          "quarantine_by_reason": {
+            "DELETE_TARGET_UNKNOWN": 14,
+            "INVALID_FIELD": 39,
+            "MISSING_FIELD": 41,
+            "NEGATIVE_QUANTITY": 86,
+            "UNKNOWN_OP": 1
+          },
+          "quarantined": 181,
+          "quarantined_distinct_keys": 166,
+          "received": 16815,
+          "rejection_rate": "0.010764"
+        },
+        "src-payments": {
+          "accepted_unique": 10125,
+          "checkpoint_version": 336,
+          "duplicate": 522,
+          "duplicate_rate": "0.048311",
+          "quarantine_by_reason": {
+            "DELETE_TARGET_UNKNOWN": 8,
+            "INVALID_FIELD": 23,
+            "MISSING_FIELD": 24,
+            "NEGATIVE_QUANTITY": 67,
+            "UNKNOWN_OP": 1
+          },
+          "quarantined": 123,
+          "quarantined_distinct_keys": 115,
+          "received": 10805,
+          "rejection_rate": "0.011384"
+        },
+        "src-refunds": {
+          "accepted_unique": 3785,
+          "checkpoint_version": 228,
+          "duplicate": 468,
+          "duplicate_rate": "0.108964",
+          "quarantine_by_reason": {
+            "INVALID_FIELD": 11,
+            "MISSING_FIELD": 8,
+            "NEGATIVE_QUANTITY": 23
+          },
+          "quarantined": 42,
+          "quarantined_distinct_keys": 42,
+          "received": 4295,
+          "rejection_rate": "0.009779"
+        },
+        "src-shipments": {
+          "accepted_unique": 3985,
+          "checkpoint_version": 226,
+          "duplicate": 368,
+          "duplicate_rate": "0.083447",
+          "quarantine_by_reason": {
+            "DELETE_TARGET_UNKNOWN": 3,
+            "INVALID_FIELD": 5,
+            "MISSING_FIELD": 12,
+            "NEGATIVE_QUANTITY": 14,
+            "UNKNOWN_OP": 1
+          },
+          "quarantined": 35,
+          "quarantined_distinct_keys": 32,
+          "received": 4410,
+          "rejection_rate": "0.007937"
+        },
+        "src-web-events": {
+          "accepted_unique": 1657,
+          "checkpoint_version": 116,
+          "duplicate": 169,
+          "duplicate_rate": "0.091203",
+          "quarantine_by_reason": {
+            "INVALID_FIELD": 3,
+            "MISSING_FIELD": 7,
+            "NEGATIVE_QUANTITY": 17
+          },
+          "quarantined": 27,
+          "quarantined_distinct_keys": 27,
+          "received": 1853,
+          "rejection_rate": "0.014571"
+        }
+      }
+    },
+    "late_events": {
+      "by_cause": {
+        "backfill": 707,
+        "corrections": 41,
+        "designed": 9
+      },
+      "count": 757,
+      "included_in_next_publication": 757,
+      "lost": 0
+    },
+    "models": {
+      "intermediate": 3,
+      "marts": 3,
+      "staging": 6
+    },
+    "processing_rate": {
+      "accepted_records": 101,
+      "cache_state": "cold",
+      "hardware": "Synthetic world value, not a benchmark: 2 vCPU, 8 GB RAM, GitHub-hosted runner class",
+      "measured_seconds": "2.573",
+      "records_per_second": "39.253789"
+    },
+    "publications": {
+      "content_hash_ok": 1318,
+      "count": 1318,
+      "current_publication_id": "pub-1343",
+      "first_published_at": "2026-08-10T01:30:34Z",
+      "last_published_at": "2026-10-04T23:34:14Z"
+    },
+    "quality_gate": {
+      "allowed": 1318,
+      "blocked": 25
+    },
+    "quarantine_by_reason_committed_batches": {
+      "DELETE_TARGET_UNKNOWN": 25,
+      "INVALID_FIELD": 85,
+      "MISSING_FIELD": 96,
+      "NEGATIVE_QUANTITY": 220,
+      "UNKNOWN_OP": 3
+    },
+    "quarantine_rows_by_reason": {
+      "DELETE_TARGET_UNKNOWN": 25,
+      "INVALID_FIELD": 85,
+      "MISSING_FIELD": 96,
+      "NEGATIVE_QUANTITY": 220,
+      "SCHEMA_CHANGED": 17,
+      "UNKNOWN_OP": 3
+    },
+    "reconciliation": {
+      "candidates": 1331,
+      "candidates_residual_not_zero": 1,
+      "publications": 1318,
+      "residual_not_zero": 0
+    },
+    "retry": {
+      "cursor_loops": 1,
+      "fetch_rows": 1361,
+      "max_slack_seconds": 25,
+      "min_slack_seconds": 0,
+      "rate_limited_responses": 49,
+      "retries": 49,
+      "retries_honouring_retry_after": 49,
+      "retries_too_soon": 0,
+      "sessions_rate_limited": 33,
+      "source_id": "src-shipments",
+      "sources_rate_limited": [
+        "src-shipments"
+      ]
+    },
+    "runs": {
+      "backfill_runs": 13,
+      "failed": {
+        "count": 25,
+        "mean_minutes": "13.7227"
+      },
+      "overall": {
+        "attempt_success_rate": "0.971622",
+        "attempts": 5462,
+        "attempts_successful": 5307,
+        "task_success_rate": "0.995311",
+        "tasks_successful": 5307,
+        "tasks_terminal": 5332
+      },
+      "successful": {
+        "count": 1318,
+        "mean_minutes": "13.9114"
+      }
+    }
+  },
+  "window_end": "2026-10-04T23:59:59Z",
+  "window_start": "2026-08-10T00:00:00Z"
+}
