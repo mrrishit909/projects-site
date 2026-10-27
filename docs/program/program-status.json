@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T06:56:44Z",
+  "updated_at": "2026-10-27T07:02:05Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -306,15 +306,13 @@
       "slug": "retentionlab",
       "stage": "queued",
       "built": true,
-      "verified": {
-        "live_check_run": 40456970303,
-        "at": "2026-10-27T05:44:58Z"
-      },
+      "verified": "pending live check on cf04a0e",
       "published": {
-        "release": "b5168a2",
-        "rollback": "7c6e357",
-        "source": "3c6550e",
-        "at": "2026-10-27T05:43:46Z"
+        "release": "cf04a0e",
+        "rollback": "28d974b",
+        "source": "c17fa32",
+        "at": "2026-10-27T07:02:05Z",
+        "note": "republish after review fixes"
       },
       "integrated": true,
       "last_verified_sha": null,
@@ -355,7 +353,7 @@
         "assignment": "A-075",
         "defects": 3,
         "documentation": 12,
-        "status": "fixed ce96e65; CI pending; republish next",
+        "status": "fixed and republished (ce96e65, cf04a0e)",
         "case_study_wording_fixed": "356be88"
       }
     }

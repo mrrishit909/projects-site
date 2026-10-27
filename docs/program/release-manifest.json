@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T05:44:58Z",
+  "updated_at": "2026-10-27T07:02:05Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -185,20 +185,23 @@
       "slug": "retentionlab",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/retentionlab/",
       "site_path": "labs/retentionlab/ on unified-portfolio",
-      "release_commit_unified_portfolio": "b5168a2",
-      "rollback_commit_unified_portfolio": "7c6e357",
-      "source_commit_business_data_lab": "3c6550efe301e23d53c21bf147d7ea6d1a5506cd",
-      "published_tree_sha256": "57acd37b7335d3f8fb5bc9bd7e879a75623f7137fb0af3c7f9625d04af93563a",
+      "release_commit_unified_portfolio": "cf04a0e",
+      "rollback_commit_unified_portfolio": "28d974b",
+      "source_commit_business_data_lab": "c17fa321f28605ac56e24b59837441c29cc16d41",
+      "published_tree_sha256": "4013064ff2bbc4bab4a482c7dc2b008a54292c2271635b9fee5f3935def12413",
       "files": 39,
       "dataset_version": "rl-20261026-20261026",
-      "dataset_hash": "11d2975c3c640a989793b4bcb4b33bb4d505c5741505dfaa7bdd359db178b468",
+      "dataset_hash": "9ebaaadab8a2f70e5f25820616391ee0aec55fbf0b121dee25460de469821b1c",
       "contract_version": "v1",
-      "publication_status": "published b5168a2 (CI 40456539440 green both modes on 7b47757); live-verified with the release commit on the live manifest (run 40456970303); case study integrated",
-      "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40456970303",
-        "verified_at": "2026-10-27T05:44:58Z",
-        "live_code_sha_matched": "3c6550efe301e23d53c21bf147d7ea6d1a5506cd"
-      }
+      "publication_status": "republished after review R10 fixes (cf04a0e; CI 40464123151 green both modes on c17fa32); live check pending; case study updated in the same commit",
+      "live_verification": null,
+      "previous_releases": [
+        {
+          "release": "b5168a2",
+          "source": "3c6550efe301e23d53c21bf147d7ea6d1a5506cd",
+          "live_check_run": 40456970303
+        }
+      ]
     }
   ],
   "last_all_sites_live_check": {
