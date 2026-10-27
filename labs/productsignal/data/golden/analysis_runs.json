@@ -1,0 +1,4 @@
+{"entity":"analysis_runs","dataset_version":"golden-v1","rows":[
+{"analysis_id":"an-001","config_hash":"b3e7466e10b2c0d3fd1adfed5155c60a18447dac1af3d9ebde02be35ec77d659","created_at":"2026-10-10T00:05:00Z","cutoff_at":"2026-10-10T00:00:00Z","experiment_version_id":"xv-001"},
+{"analysis_id":"an-002","config_hash":"b3e7466e10b2c0d3fd1adfed5155c60a18447dac1af3d9ebde02be35ec77d659","created_at":"2026-10-26T00:05:00Z","cutoff_at":"2026-10-26T00:00:00Z","experiment_version_id":"xv-001"}
+]}

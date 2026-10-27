@@ -1,0 +1,481 @@
+{
+  "analysis_plan": {
+    "activation_window_days": 7,
+    "allocation": {
+      "control": "0.500000",
+      "treatment": "0.500000"
+    },
+    "confidence": "0.95",
+    "config_hash": "5f76c305b85b7c53df19375d393c7ac4972b745bd47dc57fc772edd11dc3f707",
+    "experiment_version_id": "xv-001",
+    "frozen_at": "2026-04-05T12:00:00Z",
+    "guardrail": {
+      "metric": "product_error_rate",
+      "window_days": 7
+    },
+    "planned_end": "2026-08-02T00:00:00Z",
+    "primary_metric": "activation_7d",
+    "revenue_window": {
+      "from": "2026-04-06T00:00:00Z",
+      "to": "2026-08-02T00:00:00Z"
+    },
+    "srm": {
+      "min_expected_cell": 5,
+      "p_threshold": "0.001"
+    },
+    "unit_type": "account",
+    "z": "1.959964"
+  },
+  "analysis_plans": {
+    "xv-001": {
+      "activation_window_days": 7,
+      "allocation": {
+        "control": "0.500000",
+        "treatment": "0.500000"
+      },
+      "confidence": "0.95",
+      "config_hash": "5f76c305b85b7c53df19375d393c7ac4972b745bd47dc57fc772edd11dc3f707",
+      "experiment_version_id": "xv-001",
+      "frozen_at": "2026-04-05T12:00:00Z",
+      "guardrail": {
+        "metric": "product_error_rate",
+        "window_days": 7
+      },
+      "planned_end": "2026-08-02T00:00:00Z",
+      "primary_metric": "activation_7d",
+      "revenue_window": {
+        "from": "2026-04-06T00:00:00Z",
+        "to": "2026-08-02T00:00:00Z"
+      },
+      "srm": {
+        "min_expected_cell": 5,
+        "p_threshold": "0.001"
+      },
+      "unit_type": "account",
+      "z": "1.959964"
+    },
+    "xv-002": {
+      "activation_window_days": 7,
+      "allocation": {
+        "control": "0.600000",
+        "treatment": "0.400000"
+      },
+      "confidence": "0.95",
+      "config_hash": "9ba9590cfd4ebaf0dcfd8f0a4ca39f3d60e66e726d8f20efd13f8b92a1d6638d",
+      "experiment_version_id": "xv-002",
+      "frozen_at": "2026-08-02T12:00:00Z",
+      "guardrail": {
+        "metric": "product_error_rate",
+        "window_days": 7
+      },
+      "planned_end": "2026-10-04T00:00:00Z",
+      "primary_metric": "activation_7d",
+      "revenue_window": {
+        "from": "2026-08-03T00:00:00Z",
+        "to": "2026-10-04T00:00:00Z"
+      },
+      "srm": {
+        "min_expected_cell": 5,
+        "p_threshold": "0.001"
+      },
+      "unit_type": "account",
+      "z": "1.959964"
+    }
+  },
+  "as_of": "2026-10-05T00:00:00Z",
+  "contract_version": "v1",
+  "cutoff": "2026-10-05T00:00:00Z",
+  "dataset_hash": "12672f9c39402517083bbbbe9164cbefe3435361dff086eb0d9e16e60f9b66f8",
+  "dataset_version": "ps-20261026-20261026",
+  "designed_relationships": [
+    {
+      "id": "DR-01",
+      "name": "the treatment lifts activation",
+      "realised": {
+        "at_as_of": {
+          "absolute_lift_pp": "9.50",
+          "arms": {
+            "control": {
+              "activated": 63,
+              "assigned": 200,
+              "conversion": "0.315000",
+              "mature": 200
+            },
+            "treatment": {
+              "activated": 82,
+              "assigned": 200,
+              "conversion": "0.410000",
+              "mature": 200
+            }
+          },
+          "cutoff": "2026-10-05T00:00:00Z",
+          "interval_includes_zero": false,
+          "newcombe_95_high": "0.186863",
+          "newcombe_95_low": "0.000812",
+          "relative_lift": "0.301587"
+        },
+        "at_planned_end": {
+          "absolute_lift_pp": "9.50",
+          "arms": {
+            "control": {
+              "activated": 63,
+              "assigned": 200,
+              "conversion": "0.315000",
+              "mature": 200
+            },
+            "treatment": {
+              "activated": 82,
+              "assigned": 200,
+              "conversion": "0.410000",
+              "mature": 200
+            }
+          },
+          "cutoff": "2026-08-02T00:00:00Z",
+          "interval_includes_zero": false,
+          "newcombe_95_high": "0.186863",
+          "newcombe_95_low": "0.000812",
+          "relative_lift": "0.301587"
+        },
+        "true_effect_pp": "8.00"
+      },
+      "statement": "v1's true activation effect is +8 percentage points (every account's 7-day activation probability is raised by 0.08, exposed or not). The realised lift is what one draw gave: it is reported, not selected."
+    },
+    {
+      "id": "DR-02",
+      "name": "the treatment does not lift week-4 retention",
+      "realised": {
+        "difference_pp": "-4.50",
+        "experiment_version_id": "xv-001",
+        "interval_includes_zero": true,
+        "newcombe_95_high": "0.047102",
+        "newcombe_95_low": "-0.136053",
+        "week4": {
+          "control": {
+            "mature": 200,
+            "rate": "0.355000",
+            "retained": 71
+          },
+          "treatment": {
+            "mature": 200,
+            "rate": "0.310000",
+            "retained": 62
+          }
+        }
+      },
+      "statement": "Sessions depend on the account's plan and on whether it would have activated anyway (organic activation), never on the arm: the accounts the treatment activates in addition are not more engaged."
+    },
+    {
+      "id": "DR-03",
+      "name": "the business segment activates faster",
+      "realised": {
+        "plan": {
+          "business": {
+            "accounts": 36,
+            "activated": 19,
+            "median_hours_to_activate": "9.62",
+            "rate": "0.527778"
+          },
+          "free": {
+            "accounts": 117,
+            "activated": 26,
+            "median_hours_to_activate": "19.27",
+            "rate": "0.222222"
+          },
+          "team": {
+            "accounts": 131,
+            "activated": 47,
+            "median_hours_to_activate": "22.12",
+            "rate": "0.358779"
+          }
+        },
+        "segment": {
+          "enterprise": {
+            "accounts": 39,
+            "activated": 17,
+            "median_hours_to_activate": "11.85",
+            "rate": "0.435897"
+          },
+          "mid": {
+            "accounts": 70,
+            "activated": 27,
+            "median_hours_to_activate": "5.53",
+            "rate": "0.385714"
+          },
+          "smb": {
+            "accounts": 175,
+            "activated": 48,
+            "median_hours_to_activate": "22.22",
+            "rate": "0.274286"
+          }
+        }
+      },
+      "statement": "Accounts on the business plan activate more often and sooner (a higher 7-day rate and a shorter median time to activation); the enterprise segment, correlated with the plan, has the highest rate by segment (its median time is not the shortest: noise). Read over accounts not assigned to the treatment (control and unassigned) so the experiment's effect does not mix in."
+    },
+    {
+      "id": "DR-04",
+      "name": "guardrail error rate is equal across variants",
+      "realised": {
+        "by_variant": {
+          "control": {
+            "eligible_units": 200,
+            "error_rate": "0.155000",
+            "units_with_error": 31
+          },
+          "treatment": {
+            "eligible_units": 200,
+            "error_rate": "0.150000",
+            "units_with_error": 30
+          }
+        },
+        "difference_pp": "-0.50",
+        "experiment_version_id": "xv-001",
+        "interval_includes_zero": true,
+        "newcombe_95_high": "0.066018",
+        "newcombe_95_low": "-0.076005",
+        "window_days": 7
+      },
+      "statement": "product_error depends on plan and engagement, not on the arm."
+    },
+    {
+      "id": "DR-05",
+      "name": "revenue per assigned account is noisy and inconclusive",
+      "realised": {
+        "approx_95_high": "91.64",
+        "approx_95_low": "-25.40",
+        "by_variant": {
+          "control": {
+            "accounts": 200,
+            "mean": "97.83",
+            "total": "19566.00"
+          },
+          "treatment": {
+            "accounts": 200,
+            "mean": "130.95",
+            "total": "26190.00"
+          }
+        },
+        "currency": "USD",
+        "difference_of_means": "33.12",
+        "experiment_version_id": "xv-001",
+        "interval_includes_zero": true,
+        "note": "normal-approximation interval of the difference (the contract pins only per-variant t-intervals)"
+      },
+      "statement": "Subscriptions depend on plan and signup date only; the difference between arms is noise and its interval is wide."
+    },
+    {
+      "id": "DR-06",
+      "name": "v2 has a sample ratio mismatch, v1 does not",
+      "realised": {
+        "v1": {
+          "expected": {
+            "control": "200.00",
+            "treatment": "200.00"
+          },
+          "experiment_version_id": "xv-001",
+          "observed": {
+            "control": 200,
+            "treatment": 200
+          },
+          "p_value": "1.000000",
+          "statistic": "0.000000",
+          "verdict": "OK"
+        },
+        "v2": {
+          "expected": {
+            "control": "92.40",
+            "treatment": "61.60"
+          },
+          "experiment_version_id": "xv-002",
+          "observed": {
+            "control": 62,
+            "treatment": 92
+          },
+          "p_value": "0.000001",
+          "statistic": "25.004329",
+          "verdict": "MISMATCH"
+        }
+      },
+      "statement": "v1 assigns in permuted blocks of four (two control, two treatment), so its counts match the 50/50 plan by construction; v2's randomiser was configured the wrong way round and sends 3 of every 5 accounts to treatment while the plan says 0.40: a mismatch by construction."
+    },
+    {
+      "id": "DR-07",
+      "name": "exposure rate is about 85 %",
+      "realised": {
+        "by_variant": {
+          "control": {
+            "assigned": 200,
+            "exposed": 175,
+            "rate": "0.875000"
+          },
+          "treatment": {
+            "assigned": 200,
+            "exposed": 174,
+            "rate": "0.870000"
+          }
+        },
+        "experiment_version_id": "xv-001",
+        "overall": "0.872500"
+      },
+      "statement": "Exposure is recorded for 78 % to 92 % of assigned accounts (higher for accounts that would activate); ITT counts the unexposed too."
+    }
+  ],
+  "generated_at": "2026-10-26T23:28:22Z",
+  "generator": {
+    "name": "generate.py",
+    "parameters": {
+      "accounts": 600,
+      "bot_users": 18,
+      "bounce_visitors": 3000,
+      "delayed_share": "0.020000",
+      "disclosures": [
+        "v1 is randomised in permuted blocks of four. The first draft used an independent fair coin per account and gave 223 control / 177 treatment (sample ratio p = 0.021: still OK, but unlucky); blocks make 'v1 passes the sample-ratio check' a property of the design rather than of one coin flip. This was chosen after seeing that draw.",
+        "product_error is generated per session (8 % of sessions, whatever the arm). The first draft drew a number of errors per account and gave 21.1 % of control and 34.5 % of treatment accounts with an error in the 7-day guardrail window (a difference whose Newcombe interval excluded 0, from noise alone), and an error rate that was unrealistically high. The per-session model was written after seeing that draw; the realised guardrail difference is reported as drawn.",
+        "v2's enrolment starts 2026-08-05 (first draft 2026-08-04: 157 accounts) so that v2 has about 150 assigned accounts; the number of bounce visitors was raised from 1,600 to 3,000 so that signup conversion is not implausibly high. Both are count choices.",
+        "INJ-06 candidates are signups from 2026-09-28T06:00Z to 2026-10-02T04:00Z (widened from 10-01T12:00Z so that other seeds also have eight): the picked accounts, and so the later random draws, changed; the activation outcomes did not.",
+        "Every other draw (activation, retention, revenue, exposure) is made once from the seed; the realised relationships, including the ones that did not come out as 'interesting' as designed, are in designed_relationships."
+      ],
+      "duplicate_share": "0.010000",
+      "exposure_mean": "0.850000",
+      "ghost_events": 30,
+      "internal_accounts": 12,
+      "link_share": "0.700000",
+      "offsets_hours": {
+        "America/Los_Angeles": -7,
+        "America/New_York": -4,
+        "Europe/London": 1
+      },
+      "outcome_selection": "no outcome is re-drawn, kept or dropped because of its value; the design choices below were made after looking at earlier drafts and are disclosed",
+      "plans": [
+        "free",
+        "team",
+        "business"
+      ],
+      "segments": [
+        "smb",
+        "mid",
+        "enterprise"
+      ],
+      "size_cap_binding": false,
+      "size_cap_bytes": 5000000,
+      "timezones": [
+        "America/New_York",
+        "America/Los_Angeles",
+        "Europe/London"
+      ],
+      "true_activation_effect_pp": "8.00",
+      "v1": {
+        "allocation": "0.500000/0.500000",
+        "enrolled_signups": "2026-04-06T00:00:00Z .. 2026-07-26T00:00:00Z",
+        "frozen_at": "2026-04-05T12:00:00Z",
+        "planned_end": "2026-08-02T00:00:00Z",
+        "runs": [
+          "2026-05-18T00:00:00Z",
+          "2026-06-15T00:00:00Z",
+          "2026-07-13T00:00:00Z",
+          "2026-08-02T00:00:00Z"
+        ]
+      },
+      "v2": {
+        "allocation": "0.600000/0.400000",
+        "enrolled_signups": "2026-08-05T00:00:00Z .. 2026-10-01T00:00:00Z",
+        "frozen_at": "2026-08-02T12:00:00Z",
+        "planned_end": "2026-10-04T00:00:00Z",
+        "randomiser": "3 treatment : 2 control per block of 5",
+        "runs": [
+          "2026-10-04T00:00:00Z"
+        ]
+      },
+      "weeks": 26,
+      "window_end": "2026-10-04T23:59:59Z",
+      "window_start": "2026-04-06T00:00:00Z"
+    },
+    "seed": 20261026
+  },
+  "injection_manifest": "injection-manifest.json",
+  "metric_windows": {
+    "activation": {
+      "from": "2026-09-07T00:00:00Z",
+      "to": "2026-10-05T00:00:00Z",
+      "window_days": 7
+    },
+    "feature_adoption": {
+      "eligible_plans": [
+        "team",
+        "business"
+      ],
+      "feature": "export",
+      "from": "2026-09-28T00:00:00Z",
+      "to": "2026-10-05T00:00:00Z"
+    },
+    "funnel": {
+      "definition_id": "fun-001",
+      "from": "2026-09-28T00:00:00Z",
+      "max_gap_hours": 48,
+      "steps": [
+        "visit",
+        "signup",
+        "onboarding_step_1",
+        "activated"
+      ],
+      "to": "2026-10-05T00:00:00Z",
+      "version": 1
+    },
+    "retention": {
+      "signup_from": "2026-08-24",
+      "signup_to": "2026-08-31"
+    },
+    "signup_conversion": {
+      "from": "2026-09-28T00:00:00Z",
+      "to": "2026-10-05T00:00:00Z"
+    }
+  },
+  "row_counts": {
+    "accounts": 600,
+    "analysis_runs": 5,
+    "assignments": 554,
+    "event_properties": 2561,
+    "events": 12552,
+    "experiment_versions": 2,
+    "exposures": 484,
+    "identity_links": 1264,
+    "metric_observations": 544,
+    "sessions": 3420,
+    "subscriptions": 207,
+    "users": 1824
+  },
+  "stats": {
+    "anonymous_visitors": 4264,
+    "bot_share": "0.009868",
+    "bot_users": 18,
+    "delayed_over_24h": 237,
+    "delayed_share": "0.019070",
+    "duplicate_share": "0.009977",
+    "duplicates_resent": 124,
+    "entity_file_bytes": 3569786,
+    "events_by_name": {
+      "activated": 263,
+      "feature_used": 2197,
+      "onboarding_step_1": 1334,
+      "onboarding_step_2": 729,
+      "onboarding_step_3": 317,
+      "product_error": 364,
+      "signup": 1845,
+      "visit": 5503
+    },
+    "events_total": 12552,
+    "ghost_events": 30,
+    "internal_accounts": 12,
+    "linked_share": "0.697121",
+    "linked_signups": 1259,
+    "real_users": 1806,
+    "subscribing_accounts": 198,
+    "subscribing_share": "0.330000",
+    "v1_assigned": 400,
+    "v2_assigned": 154
+  },
+  "window_end": "2026-10-04T23:59:59Z",
+  "window_start": "2026-04-06T00:00:00Z",
+  "code_sha": "ccf70f52fc2af7c9c15f4d0ffb1d82df449a8990",
+  "published_at": "2026-10-27T00:30:02Z",
+  "source": "https://github.com/mrrishit909/projects-site/tree/ccf70f52fc2af7c9c15f4d0ffb1d82df449a8990/apps/productsignal"
+}

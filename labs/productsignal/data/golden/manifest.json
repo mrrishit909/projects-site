@@ -1,0 +1,94 @@
+{
+  "analysis_plan": {
+    "activation_window_days": 7,
+    "allocation": {
+      "control": "0.500000",
+      "treatment": "0.500000"
+    },
+    "confidence": "0.95",
+    "config_hash": "b3e7466e10b2c0d3fd1adfed5155c60a18447dac1af3d9ebde02be35ec77d659",
+    "experiment_version_id": "xv-001",
+    "frozen_at": "2026-09-30T12:00:00Z",
+    "guardrail": {
+      "metric": "product_error_rate",
+      "window_days": 7
+    },
+    "planned_end": "2026-10-15T00:00:00Z",
+    "primary_metric": "activation_7d",
+    "revenue_window": {
+      "from": "2026-10-01T00:00:00Z",
+      "to": "2026-10-15T00:00:00Z"
+    },
+    "srm": {
+      "min_expected_cell": 5,
+      "p_threshold": "0.001"
+    },
+    "unit_type": "account",
+    "z": "1.959964"
+  },
+  "as_of": "2026-10-26T00:10:00Z",
+  "contract_version": "v1",
+  "cutoff": "2026-10-26T00:00:00Z",
+  "dataset_hash": "e5dc14a1979132141a924770ff6c4a008a9975ce8b71ee0f831c44168b42e7fe",
+  "dataset_version": "golden-v1",
+  "designed_relationships": [],
+  "expected": "expected.json",
+  "fixture_id": "productsignal-golden-v1",
+  "generated_at": "2026-10-26T00:00:00Z",
+  "generator": {
+    "name": "tests/fixtures/golden (hand-derived, no generator)",
+    "parameters": {},
+    "seed": 0
+  },
+  "metric_windows": {
+    "activation": {
+      "from": "2026-10-05T00:00:00Z",
+      "to": "2026-10-26T00:00:00Z",
+      "window_days": 7
+    },
+    "feature_adoption": {
+      "eligible_plans": [
+        "team",
+        "business"
+      ],
+      "feature": "export",
+      "from": "2026-09-21T00:00:00Z",
+      "to": "2026-09-28T00:00:00Z"
+    },
+    "funnel": {
+      "definition_id": "fun-001",
+      "from": "2026-10-05T00:00:00Z",
+      "max_gap_hours": 48,
+      "steps": [
+        "visit",
+        "signup",
+        "onboarding_step_1",
+        "activated"
+      ],
+      "to": "2026-10-12T00:00:00Z",
+      "version": 1
+    },
+    "retention": {
+      "signup_from": "2026-09-14",
+      "signup_to": "2026-09-21"
+    },
+    "signup_conversion": {
+      "from": "2026-10-05T00:00:00Z",
+      "to": "2026-10-12T00:00:00Z"
+    }
+  },
+  "row_counts": {
+    "accounts": 235,
+    "analysis_runs": 2,
+    "assignments": 200,
+    "event_properties": 379,
+    "events": 529,
+    "experiment_versions": 1,
+    "exposures": 180,
+    "identity_links": 11,
+    "metric_observations": 200,
+    "sessions": 30,
+    "subscriptions": 10,
+    "users": 236
+  }
+}

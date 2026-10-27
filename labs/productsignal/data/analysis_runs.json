@@ -1,0 +1,7 @@
+{"entity":"analysis_runs","dataset_version":"ps-20261026-20261026","rows":[
+{"analysis_id":"an-001","config_hash":"5f76c305b85b7c53df19375d393c7ac4972b745bd47dc57fc772edd11dc3f707","created_at":"2026-05-18T00:05:00Z","cutoff_at":"2026-05-18T00:00:00Z","experiment_version_id":"xv-001"},
+{"analysis_id":"an-002","config_hash":"5f76c305b85b7c53df19375d393c7ac4972b745bd47dc57fc772edd11dc3f707","created_at":"2026-06-15T00:05:00Z","cutoff_at":"2026-06-15T00:00:00Z","experiment_version_id":"xv-001"},
+{"analysis_id":"an-003","config_hash":"5f76c305b85b7c53df19375d393c7ac4972b745bd47dc57fc772edd11dc3f707","created_at":"2026-07-13T00:05:00Z","cutoff_at":"2026-07-13T00:00:00Z","experiment_version_id":"xv-001"},
+{"analysis_id":"an-004","config_hash":"5f76c305b85b7c53df19375d393c7ac4972b745bd47dc57fc772edd11dc3f707","created_at":"2026-08-02T00:05:00Z","cutoff_at":"2026-08-02T00:00:00Z","experiment_version_id":"xv-001"},
+{"analysis_id":"an-005","config_hash":"9ba9590cfd4ebaf0dcfd8f0a4ca39f3d60e66e726d8f20efd13f8b92a1d6638d","created_at":"2026-10-04T00:05:00Z","cutoff_at":"2026-10-04T00:00:00Z","experiment_version_id":"xv-002"}
+]}

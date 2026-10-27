@@ -1,0 +1,17 @@
+{
+  "routes": [
+    "",
+    "overview/",
+    "funnel/",
+    "cohorts/",
+    "tracking/",
+    "experiments/",
+    "result/",
+    "population/",
+    "segments/",
+    "decision/",
+    "evidence/",
+    "case-study/"
+  ],
+  "generated_at": "2026-10-27T00:25:18.105Z"
+}

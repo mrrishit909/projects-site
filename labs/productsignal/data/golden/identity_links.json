@@ -1,0 +1,13 @@
+{"entity":"identity_links","dataset_version":"golden-v1","rows":[
+{"anonymous_id":"a-f01","identity_link_id":"il-f01","linked_at":"2026-10-05T09:10:00Z","rule_version":"v1","user_id":"u-f01"},
+{"anonymous_id":"a-f02","identity_link_id":"il-f02","linked_at":"2026-10-06T09:05:00Z","rule_version":"v1","user_id":"u-f02"},
+{"anonymous_id":"a-f03","identity_link_id":"il-f03","linked_at":"2026-10-06T12:10:00Z","rule_version":"v1","user_id":"u-f03"},
+{"anonymous_id":"a-f04","identity_link_id":"il-f04","linked_at":"2026-10-06T09:01:00Z","rule_version":"v1","user_id":"u-f04"},
+{"anonymous_id":"a-f05","identity_link_id":"il-f05","linked_at":"2026-10-07T07:10:00Z","rule_version":"v1","user_id":"u-f05"},
+{"anonymous_id":"a-f06","identity_link_id":"il-f06","linked_at":"2026-10-07T09:10:00Z","rule_version":"v1","user_id":"u-f06"},
+{"anonymous_id":"a-f07","identity_link_id":"il-f07","linked_at":"2026-10-07T10:10:00Z","rule_version":"v1","user_id":"u-f07"},
+{"anonymous_id":"a-f08","identity_link_id":"il-f08","linked_at":"2026-10-08T09:10:00Z","rule_version":"v1","user_id":"u-f08"},
+{"anonymous_id":"a-f09","identity_link_id":"il-f09","linked_at":"2026-10-08T10:10:00Z","rule_version":"v1","user_id":"u-f09"},
+{"anonymous_id":"a-f10","identity_link_id":"il-f10","linked_at":"2026-10-08T14:00:00Z","rule_version":"v1","user_id":"u-f10"},
+{"anonymous_id":"a-f11","identity_link_id":"il-f11","linked_at":"2026-10-09T09:10:00Z","rule_version":"v1","user_id":"u-f11"}
+]}

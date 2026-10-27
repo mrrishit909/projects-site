@@ -1,0 +1,1157 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "12672f9c39402517083bbbbe9164cbefe3435361dff086eb0d9e16e60f9b66f8",
+  "dataset_version": "ps-20261026-20261026",
+  "designed_relationships": [
+    {
+      "id": "DR-01",
+      "name": "the treatment lifts activation",
+      "realised": {
+        "at_as_of": {
+          "absolute_lift_pp": "9.50",
+          "arms": {
+            "control": {
+              "activated": 63,
+              "assigned": 200,
+              "conversion": "0.315000",
+              "mature": 200
+            },
+            "treatment": {
+              "activated": 82,
+              "assigned": 200,
+              "conversion": "0.410000",
+              "mature": 200
+            }
+          },
+          "cutoff": "2026-10-05T00:00:00Z",
+          "interval_includes_zero": false,
+          "newcombe_95_high": "0.186863",
+          "newcombe_95_low": "0.000812",
+          "relative_lift": "0.301587"
+        },
+        "at_planned_end": {
+          "absolute_lift_pp": "9.50",
+          "arms": {
+            "control": {
+              "activated": 63,
+              "assigned": 200,
+              "conversion": "0.315000",
+              "mature": 200
+            },
+            "treatment": {
+              "activated": 82,
+              "assigned": 200,
+              "conversion": "0.410000",
+              "mature": 200
+            }
+          },
+          "cutoff": "2026-08-02T00:00:00Z",
+          "interval_includes_zero": false,
+          "newcombe_95_high": "0.186863",
+          "newcombe_95_low": "0.000812",
+          "relative_lift": "0.301587"
+        },
+        "true_effect_pp": "8.00"
+      },
+      "statement": "v1's true activation effect is +8 percentage points (every account's 7-day activation probability is raised by 0.08, exposed or not). The realised lift is what one draw gave: it is reported, not selected."
+    },
+    {
+      "id": "DR-02",
+      "name": "the treatment does not lift week-4 retention",
+      "realised": {
+        "difference_pp": "-4.50",
+        "experiment_version_id": "xv-001",
+        "interval_includes_zero": true,
+        "newcombe_95_high": "0.047102",
+        "newcombe_95_low": "-0.136053",
+        "week4": {
+          "control": {
+            "mature": 200,
+            "rate": "0.355000",
+            "retained": 71
+          },
+          "treatment": {
+            "mature": 200,
+            "rate": "0.310000",
+            "retained": 62
+          }
+        }
+      },
+      "statement": "Sessions depend on the account's plan and on whether it would have activated anyway (organic activation), never on the arm: the accounts the treatment activates in addition are not more engaged."
+    },
+    {
+      "id": "DR-03",
+      "name": "the business segment activates faster",
+      "realised": {
+        "plan": {
+          "business": {
+            "accounts": 36,
+            "activated": 19,
+            "median_hours_to_activate": "9.62",
+            "rate": "0.527778"
+          },
+          "free": {
+            "accounts": 117,
+            "activated": 26,
+            "median_hours_to_activate": "19.27",
+            "rate": "0.222222"
+          },
+          "team": {
+            "accounts": 131,
+            "activated": 47,
+            "median_hours_to_activate": "22.12",
+            "rate": "0.358779"
+          }
+        },
+        "segment": {
+          "enterprise": {
+            "accounts": 39,
+            "activated": 17,
+            "median_hours_to_activate": "11.85",
+            "rate": "0.435897"
+          },
+          "mid": {
+            "accounts": 70,
+            "activated": 27,
+            "median_hours_to_activate": "5.53",
+            "rate": "0.385714"
+          },
+          "smb": {
+            "accounts": 175,
+            "activated": 48,
+            "median_hours_to_activate": "22.22",
+            "rate": "0.274286"
+          }
+        }
+      },
+      "statement": "Accounts on the business plan activate more often and sooner (a higher 7-day rate and a shorter median time to activation); the enterprise segment, correlated with the plan, has the highest rate by segment (its median time is not the shortest: noise). Read over accounts not assigned to the treatment (control and unassigned) so the experiment's effect does not mix in."
+    },
+    {
+      "id": "DR-04",
+      "name": "guardrail error rate is equal across variants",
+      "realised": {
+        "by_variant": {
+          "control": {
+            "eligible_units": 200,
+            "error_rate": "0.155000",
+            "units_with_error": 31
+          },
+          "treatment": {
+            "eligible_units": 200,
+            "error_rate": "0.150000",
+            "units_with_error": 30
+          }
+        },
+        "difference_pp": "-0.50",
+        "experiment_version_id": "xv-001",
+        "interval_includes_zero": true,
+        "newcombe_95_high": "0.066018",
+        "newcombe_95_low": "-0.076005",
+        "window_days": 7
+      },
+      "statement": "product_error depends on plan and engagement, not on the arm."
+    },
+    {
+      "id": "DR-05",
+      "name": "revenue per assigned account is noisy and inconclusive",
+      "realised": {
+        "approx_95_high": "91.64",
+        "approx_95_low": "-25.40",
+        "by_variant": {
+          "control": {
+            "accounts": 200,
+            "mean": "97.83",
+            "total": "19566.00"
+          },
+          "treatment": {
+            "accounts": 200,
+            "mean": "130.95",
+            "total": "26190.00"
+          }
+        },
+        "currency": "USD",
+        "difference_of_means": "33.12",
+        "experiment_version_id": "xv-001",
+        "interval_includes_zero": true,
+        "note": "normal-approximation interval of the difference (the contract pins only per-variant t-intervals)"
+      },
+      "statement": "Subscriptions depend on plan and signup date only; the difference between arms is noise and its interval is wide."
+    },
+    {
+      "id": "DR-06",
+      "name": "v2 has a sample ratio mismatch, v1 does not",
+      "realised": {
+        "v1": {
+          "expected": {
+            "control": "200.00",
+            "treatment": "200.00"
+          },
+          "experiment_version_id": "xv-001",
+          "observed": {
+            "control": 200,
+            "treatment": 200
+          },
+          "p_value": "1.000000",
+          "statistic": "0.000000",
+          "verdict": "OK"
+        },
+        "v2": {
+          "expected": {
+            "control": "92.40",
+            "treatment": "61.60"
+          },
+          "experiment_version_id": "xv-002",
+          "observed": {
+            "control": 62,
+            "treatment": 92
+          },
+          "p_value": "0.000001",
+          "statistic": "25.004329",
+          "verdict": "MISMATCH"
+        }
+      },
+      "statement": "v1 assigns in permuted blocks of four (two control, two treatment), so its counts match the 50/50 plan by construction; v2's randomiser was configured the wrong way round and sends 3 of every 5 accounts to treatment while the plan says 0.40: a mismatch by construction."
+    },
+    {
+      "id": "DR-07",
+      "name": "exposure rate is about 85 %",
+      "realised": {
+        "by_variant": {
+          "control": {
+            "assigned": 200,
+            "exposed": 175,
+            "rate": "0.875000"
+          },
+          "treatment": {
+            "assigned": 200,
+            "exposed": 174,
+            "rate": "0.870000"
+          }
+        },
+        "experiment_version_id": "xv-001",
+        "overall": "0.872500"
+      },
+      "statement": "Exposure is recorded for 78 % to 92 % of assigned accounts (higher for accounts that would activate); ITT counts the unexposed too."
+    }
+  ],
+  "events_file": "data/injection-events.json",
+  "injections": [
+    {
+      "description": "An analysis of the account-randomised experiment at the user level (users of one account are not independent).",
+      "detail": {
+        "analysis_unit": "user",
+        "experiment_version_id": "xv-001"
+      },
+      "entity": "analysis_requests",
+      "expected_handling": "C08 analyze-experiment refuses an analysis_unit other than account: 422 UNIT_MISMATCH; the request is not a run.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "replay_only",
+      "id": "INJ-01",
+      "location": "events",
+      "record_ids": [
+        "xv-001"
+      ],
+      "replay": [
+        "EV-01"
+      ],
+      "test": "P06-TEST-01"
+    },
+    {
+      "description": "An analysis that excludes accounts by a fact that depends on the treatment (exposure).",
+      "detail": {
+        "exclusions": [
+          {
+            "field": "exposed",
+            "values": [
+              "false"
+            ]
+          }
+        ]
+      },
+      "entity": "analysis_requests",
+      "expected_handling": "C08 refuses an exclusion on anything decided after assignment: 422 TREATMENT_DEPENDENT_EXCLUSION; only plan, segment, timezone and internal are allowed.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "replay_only",
+      "id": "INJ-02",
+      "location": "events",
+      "record_ids": [
+        "xv-001"
+      ],
+      "replay": [
+        "EV-02"
+      ],
+      "test": "P06-TEST-02"
+    },
+    {
+      "description": "The second interim run of v1 (cutoff 2026-06-15, before planned_end) presented as the final result and used to ship.",
+      "detail": {
+        "analysis_id": "an-002",
+        "cutoff_at": "2026-06-15T00:00:00Z",
+        "planned_end": "2026-08-02T00:00:00Z",
+        "prior_runs": 1,
+        "runs_of_v1": 4
+      },
+      "entity": "analysis_runs",
+      "expected_handling": "the run is interim (cutoff < planned_end), the count of prior runs is shown, and C10 record-decision ship on it is refused: 409 INTERIM_RUN_CANNOT_SHIP.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "replay_only",
+      "id": "INJ-03",
+      "location": "entity_files+events",
+      "record_ids": [
+        "an-002"
+      ],
+      "replay": [
+        "EV-03"
+      ],
+      "test": "P06-TEST-03"
+    },
+    {
+      "description": "Accounts that signed up less than seven days before the as-of: their activation window is not complete.",
+      "detail": {
+        "activation_window": {
+          "from": "2026-09-07T00:00:00Z",
+          "to": "2026-10-05T00:00:00Z",
+          "window_days": 7
+        },
+        "immature": 17,
+        "signups_in_window": 76,
+        "v2_assigned_immature": 10,
+        "v2_assigned_immature_ids": [
+          "acc-0584",
+          "acc-0585",
+          "acc-0586",
+          "acc-0587",
+          "acc-0588",
+          "acc-0589",
+          "acc-0590",
+          "acc-0591",
+          "acc-0592",
+          "acc-0593"
+        ]
+      },
+      "entity": "accounts",
+      "expected": {
+        "activation_immature_excluded": 17,
+        "v2_immature_or_unobserved_excluded": 10
+      },
+      "expected_handling": "nobody is rejected: the activation metric and the experiment exclude a signup whose signup_at + 7 d is after the cutoff and count it (activation.immature_excluded, experiment.immature_or_unobserved_excluded).",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "excluded_and_counted",
+      "id": "INJ-04",
+      "location": "entity_files",
+      "record_ids": [
+        "acc-0584",
+        "acc-0585",
+        "acc-0586",
+        "acc-0587",
+        "acc-0588",
+        "acc-0589",
+        "acc-0590",
+        "acc-0591",
+        "acc-0592",
+        "acc-0593",
+        "acc-0594",
+        "acc-0595",
+        "acc-0596",
+        "acc-0597",
+        "acc-0598",
+        "acc-0599",
+        "acc-0600"
+      ],
+      "test": "P06-TEST-04"
+    },
+    {
+      "description": "14 `activated` events re-sent under a new event id (same user, name and instant).",
+      "detail": [
+        {
+          "duplicate_of": "ev-000320",
+          "event_at": "2026-04-11T15:36:11Z",
+          "event_id": "ev-000321",
+          "received_at": "2026-04-11T15:37:05Z",
+          "user_id": "u-00056"
+        },
+        {
+          "duplicate_of": "ev-000638",
+          "event_at": "2026-04-16T19:14:45Z",
+          "event_id": "ev-000640",
+          "received_at": "2026-04-16T19:15:18Z",
+          "user_id": "u-00106"
+        },
+        {
+          "duplicate_of": "ev-001090",
+          "event_at": "2026-04-22T19:53:31Z",
+          "event_id": "ev-001091",
+          "received_at": "2026-04-22T19:53:49Z",
+          "user_id": "u-00179"
+        },
+        {
+          "duplicate_of": "ev-001648",
+          "event_at": "2026-04-30T06:38:03Z",
+          "event_id": "ev-001649",
+          "received_at": "2026-04-30T06:38:52Z",
+          "user_id": "u-00253"
+        },
+        {
+          "duplicate_of": "ev-001736",
+          "event_at": "2026-05-01T08:32:10Z",
+          "event_id": "ev-001742",
+          "received_at": "2026-05-01T09:59:54Z",
+          "user_id": "u-00268"
+        },
+        {
+          "duplicate_of": "ev-002227",
+          "event_at": "2026-05-07T22:52:05Z",
+          "event_id": "ev-002228",
+          "received_at": "2026-05-07T22:53:36Z",
+          "user_id": "u-00347"
+        },
+        {
+          "duplicate_of": "ev-004690",
+          "event_at": "2026-06-08T12:40:08Z",
+          "event_id": "ev-004691",
+          "received_at": "2026-06-08T12:45:46Z",
+          "user_id": "u-00726"
+        },
+        {
+          "duplicate_of": "ev-005933",
+          "event_at": "2026-06-24T02:18:58Z",
+          "event_id": "ev-005934",
+          "received_at": "2026-06-24T02:23:54Z",
+          "user_id": "u-00912"
+        },
+        {
+          "duplicate_of": "ev-006446",
+          "event_at": "2026-06-30T20:59:13Z",
+          "event_id": "ev-006447",
+          "received_at": "2026-06-30T21:00:18Z",
+          "user_id": "u-00985"
+        },
+        {
+          "duplicate_of": "ev-006741",
+          "event_at": "2026-07-04T15:28:37Z",
+          "event_id": "ev-006742",
+          "received_at": "2026-07-04T15:29:45Z",
+          "user_id": "u-01015"
+        },
+        {
+          "duplicate_of": "ev-006999",
+          "event_at": "2026-07-08T08:56:06Z",
+          "event_id": "ev-007000",
+          "received_at": "2026-07-08T08:57:32Z",
+          "user_id": "u-01058"
+        },
+        {
+          "duplicate_of": "ev-009031",
+          "event_at": "2026-08-10T16:58:14Z",
+          "event_id": "ev-009032",
+          "received_at": "2026-08-10T16:59:01Z",
+          "user_id": "u-01349"
+        },
+        {
+          "duplicate_of": "ev-010609",
+          "event_at": "2026-09-03T19:26:11Z",
+          "event_id": "ev-010623",
+          "received_at": "2026-09-03T21:02:13Z",
+          "user_id": "u-01517"
+        },
+        {
+          "duplicate_of": "ev-011371",
+          "event_at": "2026-09-16T10:38:43Z",
+          "event_id": "ev-011372",
+          "received_at": "2026-09-16T10:39:11Z",
+          "user_id": "u-01666"
+        }
+      ],
+      "entity": "events",
+      "expected": {
+        "duplicates_dropped_at_as_of": 124
+      },
+      "expected_handling": "ingest accepts every row (the log is immutable); the canonical events of a run drop the re-send (duplicates_dropped) and no account-level figure changes: an account is activated once.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "merged",
+      "id": "INJ-05",
+      "location": "entity_files",
+      "record_ids": [
+        "ev-000321",
+        "ev-000640",
+        "ev-001091",
+        "ev-001649",
+        "ev-001742",
+        "ev-002228",
+        "ev-004691",
+        "ev-005934",
+        "ev-006447",
+        "ev-006742",
+        "ev-007000",
+        "ev-009032",
+        "ev-010623",
+        "ev-011372"
+      ],
+      "test": "P06-TEST-05"
+    },
+    {
+      "description": "8 `onboarding_step_1` events that happened before 2026-10-02T12:00:00Z but were received days later; 4 of the visitors also have an `activated` event received on time.",
+      "detail": {
+        "activated_event_ids": [
+          "ev-012126",
+          "ev-012148",
+          "ev-012171",
+          "ev-012230"
+        ],
+        "earlier_cutoff": "2026-10-02T12:00:00Z",
+        "funnel_window": {
+          "definition_id": "fun-001",
+          "from": "2026-09-28T00:00:00Z",
+          "max_gap_hours": 48,
+          "steps": [
+            "visit",
+            "signup",
+            "onboarding_step_1",
+            "activated"
+          ],
+          "to": "2026-10-05T00:00:00Z",
+          "version": 1
+        },
+        "late_events": [
+          {
+            "account_id": "acc-0589",
+            "event_at": "2026-09-29T22:02:17Z",
+            "event_id": "ev-012446",
+            "received_at": "2026-10-03T00:11:31Z",
+            "user_id": "u-01772"
+          },
+          {
+            "account_id": "acc-0593",
+            "event_at": "2026-09-30T22:30:17Z",
+            "event_id": "ev-012467",
+            "received_at": "2026-10-03T10:49:25Z",
+            "user_id": "u-01786"
+          },
+          {
+            "account_id": "acc-0591",
+            "event_at": "2026-09-30T10:19:03Z",
+            "event_id": "ev-012503",
+            "received_at": "2026-10-03T21:49:16Z",
+            "user_id": "u-01780"
+          },
+          {
+            "account_id": "acc-0594",
+            "event_at": "2026-10-01T01:17:45Z",
+            "event_id": "ev-012511",
+            "received_at": "2026-10-04T00:44:59Z",
+            "user_id": "u-01788"
+          },
+          {
+            "account_id": "acc-0592",
+            "event_at": "2026-09-30T14:59:48Z",
+            "event_id": "ev-012521",
+            "received_at": "2026-10-04T07:01:22Z",
+            "user_id": "u-01783"
+          },
+          {
+            "account_id": "acc-0585",
+            "event_at": "2026-09-28T14:41:51Z",
+            "event_id": "ev-012522",
+            "received_at": "2026-10-04T09:57:05Z",
+            "user_id": "u-01762"
+          },
+          {
+            "account_id": "acc-0587",
+            "event_at": "2026-09-29T11:24:32Z",
+            "event_id": "ev-012525",
+            "received_at": "2026-10-04T10:23:28Z",
+            "user_id": "u-01769"
+          },
+          {
+            "account_id": "acc-0586",
+            "event_at": "2026-09-28T17:19:43Z",
+            "event_id": "ev-012535",
+            "received_at": "2026-10-04T12:47:27Z",
+            "user_id": "u-01764"
+          }
+        ]
+      },
+      "entity": "events",
+      "expected": {
+        "funnel_activated_units_added": 4,
+        "funnel_step_1_units_added": 8
+      },
+      "expected_handling": "a run at an earlier cutoff does not see them (the funnel stops at signup for these visitors); a later run does and differs as a disclosed revision; the earlier published result is never rewritten.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "late_event",
+      "id": "INJ-06",
+      "location": "entity_files",
+      "record_ids": [
+        "ev-012446",
+        "ev-012467",
+        "ev-012503",
+        "ev-012511",
+        "ev-012521",
+        "ev-012522",
+        "ev-012525",
+        "ev-012535"
+      ],
+      "test": "P06-TEST-06"
+    },
+    {
+      "description": "15 visitors with two or three anonymous visits before their identity link and one anonymous visit after it.",
+      "detail": {
+        "after_link_event_ids": [
+          "ev-002940",
+          "ev-003304",
+          "ev-004010",
+          "ev-004245",
+          "ev-004609",
+          "ev-004874",
+          "ev-005431",
+          "ev-005527",
+          "ev-006680",
+          "ev-007688",
+          "ev-007967",
+          "ev-009305",
+          "ev-009968",
+          "ev-010971",
+          "ev-011212"
+        ],
+        "before_link_event_ids": [
+          "ev-002788",
+          "ev-002810",
+          "ev-003123",
+          "ev-003124",
+          "ev-003130",
+          "ev-003760",
+          "ev-003761",
+          "ev-004109",
+          "ev-004161",
+          "ev-004187",
+          "ev-004189",
+          "ev-004628",
+          "ev-004657",
+          "ev-005252",
+          "ev-005259",
+          "ev-005325",
+          "ev-005328",
+          "ev-005333",
+          "ev-006380",
+          "ev-006731",
+          "ev-006749",
+          "ev-007614",
+          "ev-007615",
+          "ev-007931",
+          "ev-007937",
+          "ev-009284",
+          "ev-009285",
+          "ev-009860",
+          "ev-009863",
+          "ev-009870",
+          "ev-010301",
+          "ev-010308",
+          "ev-011140",
+          "ev-011141"
+        ],
+        "links": [
+          {
+            "anonymous_id": "a-01020",
+            "linked_at": "2026-05-15T19:15:52Z",
+            "user_id": "u-00439"
+          },
+          {
+            "anonymous_id": "a-01128",
+            "linked_at": "2026-05-19T16:56:00Z",
+            "user_id": "u-00489"
+          },
+          {
+            "anonymous_id": "a-01338",
+            "linked_at": "2026-05-27T10:23:39Z",
+            "user_id": "u-00593"
+          },
+          {
+            "anonymous_id": "a-01485",
+            "linked_at": "2026-06-01T18:13:29Z",
+            "user_id": "u-00648"
+          },
+          {
+            "anonymous_id": "a-01459",
+            "linked_at": "2026-06-03T19:08:08Z",
+            "user_id": "u-00680"
+          },
+          {
+            "anonymous_id": "a-01646",
+            "linked_at": "2026-06-09T18:07:15Z",
+            "user_id": "u-00740"
+          },
+          {
+            "anonymous_id": "a-01847",
+            "linked_at": "2026-06-16T20:57:20Z",
+            "user_id": "u-00823"
+          },
+          {
+            "anonymous_id": "a-01874",
+            "linked_at": "2026-06-16T20:58:15Z",
+            "user_id": "u-00824"
+          },
+          {
+            "anonymous_id": "a-02237",
+            "linked_at": "2026-06-30T20:49:32Z",
+            "user_id": "u-00985"
+          },
+          {
+            "anonymous_id": "a-02671",
+            "linked_at": "2026-07-17T13:14:56Z",
+            "user_id": "u-01154"
+          },
+          {
+            "anonymous_id": "a-02787",
+            "linked_at": "2026-07-22T19:03:00Z",
+            "user_id": "u-01193"
+          },
+          {
+            "anonymous_id": "a-03224",
+            "linked_at": "2026-08-13T19:02:07Z",
+            "user_id": "u-01395"
+          },
+          {
+            "anonymous_id": "a-03408",
+            "linked_at": "2026-08-23T23:34:15Z",
+            "user_id": "u-01471"
+          },
+          {
+            "anonymous_id": "a-03537",
+            "linked_at": "2026-09-08T21:34:35Z",
+            "user_id": "u-01614"
+          },
+          {
+            "anonymous_id": "a-03810",
+            "linked_at": "2026-09-12T19:13:13Z",
+            "user_id": "u-01644"
+          }
+        ]
+      },
+      "entity": "identity_links",
+      "expected": {
+        "attributed_by_link": [
+          "ev-002940",
+          "ev-003304",
+          "ev-004010",
+          "ev-004245",
+          "ev-004609",
+          "ev-004874",
+          "ev-005431",
+          "ev-005527",
+          "ev-006680",
+          "ev-007688",
+          "ev-007967",
+          "ev-009305",
+          "ev-009968",
+          "ev-010971",
+          "ev-011212"
+        ],
+        "remain_anonymous": [
+          "ev-002788",
+          "ev-002810",
+          "ev-003123",
+          "ev-003124",
+          "ev-003130",
+          "ev-003760",
+          "ev-003761",
+          "ev-004109",
+          "ev-004161",
+          "ev-004187",
+          "ev-004189",
+          "ev-004628",
+          "ev-004657",
+          "ev-005252",
+          "ev-005259",
+          "ev-005325",
+          "ev-005328",
+          "ev-005333",
+          "ev-006380",
+          "ev-006731",
+          "ev-006749",
+          "ev-007614",
+          "ev-007615",
+          "ev-007931",
+          "ev-007937",
+          "ev-009284",
+          "ev-009285",
+          "ev-009860",
+          "ev-009863",
+          "ev-009870",
+          "ev-010301",
+          "ev-010308",
+          "ev-011140",
+          "ev-011141"
+        ]
+      },
+      "expected_handling": "the link attributes only events with event_at >= linked_at: the earlier visits stay anonymous (never re-attributed backward), the later ones are attributed to the user.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "accepted_time_aware",
+      "id": "INJ-07",
+      "location": "entity_files",
+      "record_ids": [
+        "a-01020",
+        "a-01128",
+        "a-01338",
+        "a-01459",
+        "a-01485",
+        "a-01646",
+        "a-01847",
+        "a-01874",
+        "a-02237",
+        "a-02671",
+        "a-02787",
+        "a-03224",
+        "a-03408",
+        "a-03537",
+        "a-03810"
+      ],
+      "test": "P06-TEST-07"
+    },
+    {
+      "description": "v2 was planned 60/40 (control/treatment) but its randomiser sent 3 of every 5 accounts to treatment: the assignments do not match the allocation and a ship decision is attempted anyway.",
+      "detail": {
+        "expected": {
+          "control": "92.40",
+          "treatment": "61.60"
+        },
+        "experiment_version_id": "xv-002",
+        "observed": {
+          "control": 62,
+          "treatment": 92
+        },
+        "p_value": "0.000001",
+        "statistic": "25.004329",
+        "verdict": "MISMATCH"
+      },
+      "entity": "assignments",
+      "expected_handling": "the sample ratio verdict is MISMATCH and is shown before any lift; C10 ship and C10 stop on the run are refused (409 SRM_MISMATCH_BLOCKS_DECISION), inconclusive is recorded.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "replay_only",
+      "id": "INJ-08",
+      "location": "entity_files+events",
+      "record_ids": [
+        "xv-002"
+      ],
+      "replay": [
+        "EV-08"
+      ],
+      "test": "P06-TEST-08"
+    },
+    {
+      "description": "A segment result (the best-looking of three) cited as the basis of a decision.",
+      "detail": {
+        "analysis_id": "an-004",
+        "by": "segment",
+        "segments_tested": 3
+      },
+      "entity": "analysis_requests",
+      "expected_handling": "the segment analysis is labelled exploratory with the number of segments tested and the Bonferroni threshold; C10 with a segment basis is refused: 422 SEGMENT_NOT_A_DECISION_BASIS.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "replay_only",
+      "id": "INJ-09",
+      "location": "events",
+      "record_ids": [
+        "an-004"
+      ],
+      "replay": [
+        "EV-09"
+      ],
+      "test": "P06-TEST-09"
+    },
+    {
+      "description": "`activated` was not instrumented for signups before 2026-04-08 (both arms alike): an early read of v1 finds zero control conversions.",
+      "detail": {
+        "early_cutoff": "2026-04-15T00:00:00Z",
+        "gap_ends": "2026-04-08T00:00:00Z",
+        "mature_control": 5,
+        "mature_treatment": 6
+      },
+      "entity": "events",
+      "expected": {
+        "absolute_lift_pp": "0.00",
+        "control_conversion": "0.000000",
+        "relative_lift": null
+      },
+      "expected_handling": "at the early cutoff the control conversion is 0/n: the relative lift is null (never infinity or 0), the absolute lift is reported, nothing is divided by zero.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "replay_only",
+      "id": "INJ-10",
+      "location": "entity_files+events",
+      "record_ids": [
+        "acc-0001",
+        "acc-0002",
+        "acc-0003",
+        "acc-0004",
+        "acc-0005",
+        "acc-0006",
+        "acc-0007",
+        "acc-0008",
+        "acc-0009",
+        "acc-0010",
+        "acc-0011"
+      ],
+      "replay": [
+        "EV-10"
+      ],
+      "test": "P06-TEST-10"
+    },
+    {
+      "description": "An exposure recorded one hour before the assignment it belongs to.",
+      "detail": {
+        "assigned_at": "2026-06-04T23:51:45Z",
+        "assignment_id": "as-0225",
+        "exposed_at": "2026-06-04T22:51:45Z"
+      },
+      "entity": "exposures",
+      "expected_handling": "C05 record-exposure refuses it: 422 EXPOSURE_BEFORE_ASSIGNMENT; the raw row is kept in rejected_records and no exposure is written.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "replay_only",
+      "id": "INJ-11",
+      "location": "events",
+      "record_ids": [
+        "as-0225"
+      ],
+      "replay": [
+        "EV-11"
+      ],
+      "test": "P06-TEST-11"
+    },
+    {
+      "description": "10 accounts that return on day 8-11 but not on day 7 (counted by a rolling `on or after day 7` definition, not by the exact day) and 5 whose day-7 session is on day 7 only in their own calendar (the UTC date says day 8).",
+      "detail": {
+        "late_returners": [
+          {
+            "account_id": "acc-0411",
+            "local_day_indices": [
+              0,
+              11
+            ],
+            "timezone": "America/Los_Angeles"
+          },
+          {
+            "account_id": "acc-0413",
+            "local_day_indices": [
+              0,
+              1,
+              10
+            ],
+            "timezone": "America/New_York"
+          },
+          {
+            "account_id": "acc-0419",
+            "local_day_indices": [
+              0,
+              10
+            ],
+            "timezone": "Europe/London"
+          },
+          {
+            "account_id": "acc-0433",
+            "local_day_indices": [
+              0,
+              3,
+              8,
+              13,
+              14,
+              22,
+              23,
+              27,
+              59
+            ],
+            "timezone": "America/New_York"
+          },
+          {
+            "account_id": "acc-0435",
+            "local_day_indices": [
+              0,
+              3,
+              6,
+              8,
+              10,
+              14,
+              16,
+              17,
+              20,
+              21,
+              22,
+              23,
+              24,
+              27,
+              35,
+              57
+            ],
+            "timezone": "America/New_York"
+          },
+          {
+            "account_id": "acc-0444",
+            "local_day_indices": [
+              0,
+              5,
+              11,
+              16,
+              26,
+              32,
+              40
+            ],
+            "timezone": "Europe/London"
+          },
+          {
+            "account_id": "acc-0471",
+            "local_day_indices": [
+              0,
+              1,
+              8
+            ],
+            "timezone": "America/Los_Angeles"
+          },
+          {
+            "account_id": "acc-0479",
+            "local_day_indices": [
+              0,
+              1,
+              2,
+              4,
+              5,
+              8,
+              12,
+              14,
+              15,
+              20,
+              26,
+              30,
+              34,
+              35,
+              43
+            ],
+            "timezone": "America/Los_Angeles"
+          },
+          {
+            "account_id": "acc-0500",
+            "local_day_indices": [
+              0,
+              10
+            ],
+            "timezone": "Europe/London"
+          },
+          {
+            "account_id": "acc-0503",
+            "local_day_indices": [
+              0,
+              11
+            ],
+            "timezone": "America/New_York"
+          }
+        ],
+        "retention_window": {
+          "signup_from": "2026-07-27",
+          "signup_to": "2026-08-31"
+        },
+        "timezone_edge": [
+          {
+            "account_id": "acc-0426",
+            "local_day_indices": [
+              0,
+              2,
+              4,
+              7,
+              9,
+              10,
+              11,
+              13,
+              14,
+              18,
+              20,
+              21,
+              25,
+              33,
+              35,
+              59
+            ],
+            "timezone": "America/Los_Angeles"
+          },
+          {
+            "account_id": "acc-0461",
+            "local_day_indices": [
+              0,
+              1,
+              2,
+              7
+            ],
+            "timezone": "America/Los_Angeles"
+          },
+          {
+            "account_id": "acc-0481",
+            "local_day_indices": [
+              0,
+              7
+            ],
+            "timezone": "America/Los_Angeles"
+          },
+          {
+            "account_id": "acc-0494",
+            "local_day_indices": [
+              0,
+              7
+            ],
+            "timezone": "America/Los_Angeles"
+          },
+          {
+            "account_id": "acc-0496",
+            "local_day_indices": [
+              0,
+              1,
+              6,
+              7,
+              9,
+              12,
+              13,
+              15,
+              19
+            ],
+            "timezone": "America/New_York"
+          }
+        ]
+      },
+      "entity": "sessions",
+      "expected": {
+        "on_or_after_minus_exact_day7_at_least": 10
+      },
+      "expected_handling": "exact day 7 and `on or after day 7` are two figures that are never mixed: for the stated cohort the second exceeds the first by at least the late returners; day indices are on the account's local calendar.",
+      "expected_merges": [],
+      "expected_rejections": [],
+      "handling_kind": "accepted_separate_figures",
+      "id": "INJ-12",
+      "location": "entity_files",
+      "record_ids": [
+        "acc-0411",
+        "acc-0413",
+        "acc-0419",
+        "acc-0433",
+        "acc-0435",
+        "acc-0444",
+        "acc-0471",
+        "acc-0479",
+        "acc-0500",
+        "acc-0503",
+        "acc-0426",
+        "acc-0461",
+        "acc-0481",
+        "acc-0494",
+        "acc-0496"
+      ],
+      "test": "P06-TEST-12"
+    }
+  ],
+  "seed": 20261026
+}
