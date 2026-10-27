@@ -428,7 +428,7 @@
       "id": "T-06-04",
       "project": "06-productsignal",
       "title": "Generator + web + e2e + publish + integrate",
-      "status": "in_progress",
+      "status": "done (published; live check pending); review and artifacts follow",
       "prereqs": [
         "T-06-03"
       ],

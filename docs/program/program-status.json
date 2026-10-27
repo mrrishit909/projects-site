@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T00:00:05Z",
+  "updated_at": "2026-10-27T00:30:34Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -122,16 +122,17 @@
     },
     "06-productsignal": {
       "slug": "productsignal",
-      "stage": "gate-A passed; backend and generator CI-green Mode A; cutoff rule fixed (D-08); web A-047 running",
-      "built": false,
-      "verified": false,
-      "published": false,
+      "stage": "built, verified (CI green both modes on d7111f1), published 6e381bf (live check pending), integrated (case study pushed; link check pending); reviewer A-048 running",
+      "built": true,
+      "verified": true,
+      "published": true,
       "integrated": false,
-      "last_verified_sha": "8fcb252 (Mode A)",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40423197317",
-      "site_url": null,
+      "last_verified_sha": "d7111f1",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40426536267",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/productsignal/",
       "blockers": [],
-      "next_task": "T-06-04 (A-047 web -> CI Mode B -> publish -> integrate)"
+      "next_task": "live check -> A-048 review -> fixes -> artifacts",
+      "portfolio_case_study": "https://mrrishit909.github.io/projects-site/productsignal/"
     },
     "07-trustledger": {
       "slug": "trustledger",
@@ -188,7 +189,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 05: A-045 artifacts hand-back -> verify -> commit. Project 06: A-046 cutoff fix hand-back -> verify -> commit -> web worker -> publish labs/productsignal -> manifest -> live check -> portfolio case study (draft in scratchpad/p06/project.json; tile exists) -> review -> fixes -> artifacts. Then project 07 trustledger (contracts first).",
+    "next_concrete_task": "Project 05: A-045 artifacts hand-back -> verify -> commit. Project 06: confirm live-check on the manifest commit; A-048 reviewer hand-back -> fix worker -> republish -> artifacts. Then project 07 trustledger (contracts first).",
     "acceptance": "see task-queue.json"
   }
 }

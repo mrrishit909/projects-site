@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T23:15:18Z",
+  "updated_at": "2026-10-27T00:30:34Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -96,6 +96,24 @@
         "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40418131237",
         "verified_at": "2026-10-26T23:15:18Z",
         "live_code_sha_matched": "2dcc460d2d5d1528151fda8bc2d22ef2f1e58d2a"
+      }
+    },
+    {
+      "slug": "productsignal",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/productsignal/",
+      "site_path": "labs/productsignal/ on unified-portfolio",
+      "release_commit_unified_portfolio": "6e381bf",
+      "rollback_commit_unified_portfolio": "188e409",
+      "source_commit_business_data_lab": "ccf70f52fc2af7c9c15f4d0ffb1d82df449a8990",
+      "published_tree_sha256": "d98ebb4dd2ba8d869251d892539fb3a2c51d01fd055025d83fa14e6ff4e6dd5a",
+      "files": 43,
+      "dataset_version": "ps-20261026-20261026",
+      "dataset_hash": "12672f9c39402517083bbbbe9164cbefe3435361dff086eb0d9e16e60f9b66f8",
+      "contract_version": "v1",
+      "publication_status": "published with the case study (6e381bf; CI 40426536267 green both modes on d7111f1; stamped code_sha ccf70f5 differs from d7111f1 only in docs/program); live check pending",
+      "live_verification": {
+        "run_url": null,
+        "verified_at": null
       }
     }
   ]

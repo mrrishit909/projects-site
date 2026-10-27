@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T00:00:05Z",
+  "updated_at": "2026-10-27T00:30:34Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1133,6 +1133,28 @@
       "code_sha": "8fcb252",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40423197317",
       "ts": "2026-10-27T00:00:05Z"
+    },
+    {
+      "requirement": "P06 Mode B (static build, 2,510 TS golden and snapshot checks, 77 Playwright tests at 360/768/1280/1920 + 200% zoom) and Mode A on the site commit, github-hosted",
+      "project": "06-productsignal",
+      "status": "verified",
+      "command": "productsignal-ci.yml run 40426536267",
+      "exit_code": 0,
+      "actual": "both jobs success; evidence artifact uploaded",
+      "code_sha": "d7111f1",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40426536267",
+      "ts": "2026-10-27T00:30:34Z"
+    },
+    {
+      "requirement": "P06 publication: labs/productsignal on unified-portfolio with code_sha stamped; case study productsignal/ added (build.py); figures taken from the TS/Python-digest-checked snapshot",
+      "project": "06-productsignal",
+      "status": "verified",
+      "command": "tools/publish-site.sh productsignal; python3 build.py; git push origin unified-portfolio",
+      "exit_code": 0,
+      "actual": "43 files, tree sha256 d98ebb4d...; portfolio 6e381bf",
+      "code_sha": "ccf70f5",
+      "evidence": "docs/program/release-manifest.json",
+      "ts": "2026-10-27T00:30:34Z"
     }
   ]
 }
