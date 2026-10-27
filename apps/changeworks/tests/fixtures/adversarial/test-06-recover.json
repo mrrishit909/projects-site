@@ -1,0 +1,137 @@
+{
+  "description": "P09-TEST-06 recover: the revision is version 2 (480 + 500), created 2028-02-15",
+  "expect": "both versions are listed; latest minus original = -220.00; the observed 480.00 sits beside them; the original approval is unchanged",
+  "contract_version": 1,
+  "as_of": "2028-06-30T00:00:00Z",
+  "period_basis": "annual",
+  "period_start": "2026-01-01",
+  "initiatives": [
+    {
+      "initiative_id": "i-1",
+      "title": "Initiative i-1",
+      "sponsor_id": "sp-1",
+      "status": "in_delivery",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    }
+  ],
+  "process_baselines": [],
+  "assumption_versions": [],
+  "resources": [],
+  "scenario_versions": [
+    {
+      "scenario_id": "scn-1",
+      "baseline_version": "v1",
+      "discount_rate": "0.100000",
+      "rate_basis": "annual",
+      "rate_conversion_assumption_id": null,
+      "horizon_periods": 3,
+      "status": "draft",
+      "initiative_ids": [
+        "i-1"
+      ],
+      "pinned_assumption_ids": [],
+      "created_at": "2026-01-15T09:00:00Z"
+    }
+  ],
+  "cost_items": [
+    {
+      "cost_id": "c-1",
+      "initiative_id": "i-1",
+      "cost_key": "ck-1",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "100.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    }
+  ],
+  "benefit_items": [
+    {
+      "benefit_id": "b-1",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "600.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-2",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "600.00",
+      "period_index": 2,
+      "starts_period": 2,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    }
+  ],
+  "dependencies": [],
+  "stakeholder_groups": [],
+  "impact_mappings": [],
+  "resource_allocations": [],
+  "readiness_assessments": [],
+  "adoption_observations": [],
+  "training_completions": [],
+  "benefit_observations": [
+    {
+      "benefit_observation_id": "bo-1",
+      "benefit_id": "b-1",
+      "measured_value": "480.00",
+      "evidence_ref": "ev:ledger",
+      "observed_at": "2028-01-31T00:00:00Z"
+    }
+  ],
+  "risk_items": [],
+  "forecast_versions": [
+    {
+      "forecast_id": "f-i-1-1-1-600.00",
+      "initiative_id": "i-1",
+      "version_number": 1,
+      "period_index": 1,
+      "amount": "600.00",
+      "reason": "Approved forecast",
+      "created_at": "2026-01-20T00:00:00Z"
+    },
+    {
+      "forecast_id": "f-i-1-1-2-600.00",
+      "initiative_id": "i-1",
+      "version_number": 1,
+      "period_index": 2,
+      "amount": "600.00",
+      "reason": "Approved forecast",
+      "created_at": "2026-01-20T00:00:00Z"
+    },
+    {
+      "forecast_id": "f-i-1-2-1-480.00",
+      "initiative_id": "i-1",
+      "version_number": 2,
+      "period_index": 1,
+      "amount": "480.00",
+      "reason": "Observed shortfall",
+      "created_at": "2028-02-15T00:00:00Z"
+    },
+    {
+      "forecast_id": "f-i-1-2-2-500.00",
+      "initiative_id": "i-1",
+      "version_number": 2,
+      "period_index": 2,
+      "amount": "500.00",
+      "reason": "Observed shortfall",
+      "created_at": "2028-02-15T00:00:00Z"
+    }
+  ]
+}

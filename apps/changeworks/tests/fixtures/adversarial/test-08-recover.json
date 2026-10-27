@@ -1,0 +1,223 @@
+{
+  "description": "P09-TEST-08 recover: a new scenario scn-2 with a 12-period horizon and the benefits that continue",
+  "expect": "scn-1 still reports null paybacks; scn-2 reaches cumulative >= 0 at period 10 (simple payback 10, interpolated 10.0000)",
+  "contract_version": 1,
+  "as_of": "2028-06-30T00:00:00Z",
+  "period_basis": "annual",
+  "period_start": "2026-01-01",
+  "initiatives": [
+    {
+      "initiative_id": "i-1",
+      "title": "Initiative i-1",
+      "sponsor_id": "sp-1",
+      "status": "in_delivery",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    }
+  ],
+  "process_baselines": [],
+  "assumption_versions": [],
+  "resources": [],
+  "scenario_versions": [
+    {
+      "scenario_id": "scn-1",
+      "baseline_version": "v1",
+      "discount_rate": "0.100000",
+      "rate_basis": "annual",
+      "rate_conversion_assumption_id": null,
+      "horizon_periods": 3,
+      "status": "draft",
+      "initiative_ids": [
+        "i-1"
+      ],
+      "pinned_assumption_ids": [],
+      "created_at": "2026-01-15T09:00:00Z"
+    },
+    {
+      "scenario_id": "scn-2",
+      "baseline_version": "v1",
+      "discount_rate": "0.100000",
+      "rate_basis": "annual",
+      "rate_conversion_assumption_id": null,
+      "horizon_periods": 12,
+      "status": "draft",
+      "initiative_ids": [
+        "i-1"
+      ],
+      "pinned_assumption_ids": [],
+      "created_at": "2026-01-15T09:00:00Z"
+    }
+  ],
+  "cost_items": [
+    {
+      "cost_id": "c-1",
+      "initiative_id": "i-1",
+      "cost_key": "ck-1",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "1000.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    }
+  ],
+  "benefit_items": [
+    {
+      "benefit_id": "b-1",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-2",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 2,
+      "starts_period": 2,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-3",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 3,
+      "starts_period": 3,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-4",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 4,
+      "starts_period": 4,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-5",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 5,
+      "starts_period": 5,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-6",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 6,
+      "starts_period": 6,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-7",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 7,
+      "starts_period": 7,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-8",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 8,
+      "starts_period": 8,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-9",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 9,
+      "starts_period": 9,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-10",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 10,
+      "starts_period": 10,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-11",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 11,
+      "starts_period": 11,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    }
+  ],
+  "dependencies": [],
+  "stakeholder_groups": [],
+  "impact_mappings": [],
+  "resource_allocations": [],
+  "readiness_assessments": [],
+  "adoption_observations": [],
+  "training_completions": [],
+  "benefit_observations": [],
+  "risk_items": [],
+  "forecast_versions": []
+}

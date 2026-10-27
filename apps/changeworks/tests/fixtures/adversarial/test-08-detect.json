@@ -1,0 +1,92 @@
+{
+  "description": "P09-TEST-08 detect: cost 1000 at period 0 and 100 of benefit a year for 2 years, horizon 3",
+  "expect": "the cumulative flow stays negative: both paybacks are null (not 0, not rejected) and the NPV is negative",
+  "contract_version": 1,
+  "as_of": "2028-06-30T00:00:00Z",
+  "period_basis": "annual",
+  "period_start": "2026-01-01",
+  "initiatives": [
+    {
+      "initiative_id": "i-1",
+      "title": "Initiative i-1",
+      "sponsor_id": "sp-1",
+      "status": "in_delivery",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    }
+  ],
+  "process_baselines": [],
+  "assumption_versions": [],
+  "resources": [],
+  "scenario_versions": [
+    {
+      "scenario_id": "scn-1",
+      "baseline_version": "v1",
+      "discount_rate": "0.100000",
+      "rate_basis": "annual",
+      "rate_conversion_assumption_id": null,
+      "horizon_periods": 3,
+      "status": "draft",
+      "initiative_ids": [
+        "i-1"
+      ],
+      "pinned_assumption_ids": [],
+      "created_at": "2026-01-15T09:00:00Z"
+    }
+  ],
+  "cost_items": [
+    {
+      "cost_id": "c-1",
+      "initiative_id": "i-1",
+      "cost_key": "ck-1",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "1000.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    }
+  ],
+  "benefit_items": [
+    {
+      "benefit_id": "b-1",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-2",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 2,
+      "starts_period": 2,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    }
+  ],
+  "dependencies": [],
+  "stakeholder_groups": [],
+  "impact_mappings": [],
+  "resource_allocations": [],
+  "readiness_assessments": [],
+  "adoption_observations": [],
+  "training_completions": [],
+  "benefit_observations": [],
+  "risk_items": [],
+  "forecast_versions": []
+}

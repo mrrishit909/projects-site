@@ -510,7 +510,7 @@ def compute(data):
                 comp, unobs = [], []
                 for b in sorted(items, key=lambda b: b["benefit_id"]):
                     obs = sorted((o for o in acc["benefit_observations"] if o["benefit_id"] == b["benefit_id"]
-                                  and parse_ts(o["observed_at"]) <= asof), key=lambda o: (o["observed_at"], o["benefit_observation_id"]))
+                                  and parse_ts(o["observed_at"]) <= asof), key=lambda o: (parse_ts(o["observed_at"]), o["benefit_observation_id"]))
                     if not matured(data, b["period_index"]):
                         immature += [o["benefit_observation_id"] for o in obs]
                         continue
@@ -596,7 +596,7 @@ def compute(data):
                    "binding_dependency_id": bind, "finish": fs + i["duration_periods"],
                    "resource_constrained_start": fs, "resource_delay": 0}
         obs = sorted((o for o in acc["adoption_observations"] if o["initiative_id"] == iid and parse_ts(o["observed_at"]) <= asof),
-                     key=lambda o: (o["observed_at"], o["observation_id"]))
+                     key=lambda o: (parse_ts(o["observed_at"]), o["observation_id"]))
         late = sorted(o["observation_id"] for o in acc["adoption_observations"] if o["initiative_id"] == iid and parse_ts(o["observed_at"]) > asof)
         series = [{"observation_id": o["observation_id"], "observed_at": o["observed_at"], "eligible_count": o["eligible_count"],
                    "adopted_count": o["adopted_count"],
@@ -608,7 +608,7 @@ def compute(data):
                     "latest_observation_id": last["observation_id"] if last else None, "series": series,
                     "excluded_after_as_of": late}
         tr = sorted((t for t in acc["training_completions"] if t["initiative_id"] == iid and parse_ts(t["recorded_at"]) <= asof),
-                    key=lambda t: (t["recorded_at"], t["training_id"]))
+                    key=lambda t: (parse_ts(t["recorded_at"]), t["training_id"]))
         tl = tr[-1] if tr else None
         trate = p6(F(tl["completed"], tl["eligible_trainees"])) if tl and tl["eligible_trainees"] else None
         training = {"training_completion": trate, "eligible_trainees": tl["eligible_trainees"] if tl else None,
@@ -645,7 +645,7 @@ def compute(data):
     for g in sorted(acc["stakeholder_groups"], key=lambda g: g["group_id"]):
         latest = {}
         for a in sorted((a for a in acc["readiness_assessments"] if a["group_id"] == g["group_id"] and parse_ts(a["assessed_at"]) <= asof),
-                        key=lambda a: (a["assessed_at"], a["assessment_id"])):
+                        key=lambda a: (parse_ts(a["assessed_at"]), a["assessment_id"])):
             latest[a["dimension"]] = a
         dims = [latest[d] for d in DIMENSIONS if d in latest]
         sw = sum((dec(a["weight"]) for a in dims), F(0))

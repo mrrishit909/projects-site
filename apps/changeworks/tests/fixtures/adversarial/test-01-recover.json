@@ -1,0 +1,134 @@
+{
+  "description": "P09-TEST-01 recover: a capacity_hourly_rate of 25.00 USD with a staffing change evidence reference is recorded and pinned",
+  "expect": "the hours become SEPARATE derived cash items (100 x 25 at period 1, 50 x 25 at period 2) citing a-rate; b-bad is accepted; NPV = 356000/121 = 2942.15",
+  "contract_version": 1,
+  "as_of": "2028-06-30T00:00:00Z",
+  "period_basis": "annual",
+  "period_start": "2026-01-01",
+  "initiatives": [
+    {
+      "initiative_id": "i-1",
+      "title": "Initiative i-1",
+      "sponsor_id": "sp-1",
+      "status": "in_delivery",
+      "baseline_version": "v1",
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    }
+  ],
+  "process_baselines": [
+    {
+      "baseline_id": "pb-i-1-v1",
+      "initiative_id": "i-1",
+      "baseline_version": "v1",
+      "volume": 1200,
+      "minutes_per_case": 10,
+      "error_rate": "0.040000",
+      "evidence_ref": "ev:timesheet",
+      "measured_at": "2025-11-30T00:00:00Z",
+      "reason": null
+    }
+  ],
+  "assumption_versions": [
+    {
+      "assumption_id": "a-rate",
+      "initiative_id": "i-1",
+      "name": "capacity_hourly_rate",
+      "version_number": 1,
+      "value": "25.00",
+      "values": null,
+      "unit": "USD/hour",
+      "rationale": "synthetic rationale",
+      "author_id": "analyst-1",
+      "evidence_ref": null,
+      "staffing_change_evidence_ref": "hr:headcount-plan-2026",
+      "created_at": "2026-01-10T00:00:00Z"
+    }
+  ],
+  "resources": [],
+  "scenario_versions": [
+    {
+      "scenario_id": "scn-1",
+      "baseline_version": "v1",
+      "discount_rate": "0.100000",
+      "rate_basis": "annual",
+      "rate_conversion_assumption_id": null,
+      "horizon_periods": 3,
+      "status": "draft",
+      "initiative_ids": [
+        "i-1"
+      ],
+      "pinned_assumption_ids": [
+        "a-rate"
+      ],
+      "created_at": "2026-01-15T09:00:00Z"
+    }
+  ],
+  "cost_items": [
+    {
+      "cost_id": "c-1",
+      "initiative_id": "i-1",
+      "cost_key": "ck-1",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "1000.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": "v1"
+    }
+  ],
+  "benefit_items": [
+    {
+      "benefit_id": "b-cash",
+      "initiative_id": "i-1",
+      "benefit_type": "cash",
+      "amount": "700.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-cap",
+      "initiative_id": "i-1",
+      "benefit_type": "capacity",
+      "amount": "100.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "hours",
+      "cash_realisation": false,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "b-bad",
+      "initiative_id": "i-1",
+      "benefit_type": "capacity",
+      "amount": "50.00",
+      "period_index": 2,
+      "starts_period": 2,
+      "unit": "hours",
+      "cash_realisation": true,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    }
+  ],
+  "dependencies": [],
+  "stakeholder_groups": [],
+  "impact_mappings": [],
+  "resource_allocations": [],
+  "readiness_assessments": [],
+  "adoption_observations": [],
+  "training_completions": [],
+  "benefit_observations": [],
+  "risk_items": [],
+  "forecast_versions": []
+}

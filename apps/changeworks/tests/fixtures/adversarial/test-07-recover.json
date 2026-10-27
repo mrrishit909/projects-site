@@ -1,0 +1,92 @@
+{
+  "description": "P09-TEST-07 recover: the closing edge is replaced by i-4 needing i-3",
+  "expect": "no cycle; feasible starts i-1 0, i-2 1, i-3 2, i-4 3 (delays 0, 1, 2, 3)",
+  "contract_version": 1,
+  "as_of": "2028-06-30T00:00:00Z",
+  "period_basis": "annual",
+  "period_start": "2026-01-01",
+  "initiatives": [
+    {
+      "initiative_id": "i-1",
+      "title": "Initiative i-1",
+      "sponsor_id": "sp-1",
+      "status": "in_delivery",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "i-2",
+      "title": "Initiative i-2",
+      "sponsor_id": "sp-1",
+      "status": "in_delivery",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "i-3",
+      "title": "Initiative i-3",
+      "sponsor_id": "sp-1",
+      "status": "in_delivery",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "i-4",
+      "title": "Initiative i-4",
+      "sponsor_id": "sp-1",
+      "status": "in_delivery",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    }
+  ],
+  "process_baselines": [],
+  "assumption_versions": [],
+  "resources": [],
+  "scenario_versions": [],
+  "cost_items": [],
+  "benefit_items": [],
+  "dependencies": [
+    {
+      "dependency_id": "d-1",
+      "initiative_id": "i-2",
+      "prerequisite_id": "i-1",
+      "dependency_type": "finish_to_start",
+      "lag_periods": 0
+    },
+    {
+      "dependency_id": "d-2",
+      "initiative_id": "i-3",
+      "prerequisite_id": "i-2",
+      "dependency_type": "finish_to_start",
+      "lag_periods": 0
+    },
+    {
+      "dependency_id": "d-3",
+      "initiative_id": "i-4",
+      "prerequisite_id": "i-3",
+      "dependency_type": "finish_to_start",
+      "lag_periods": 0
+    }
+  ],
+  "stakeholder_groups": [],
+  "impact_mappings": [],
+  "resource_allocations": [],
+  "readiness_assessments": [],
+  "adoption_observations": [],
+  "training_completions": [],
+  "benefit_observations": [],
+  "risk_items": [],
+  "forecast_versions": []
+}

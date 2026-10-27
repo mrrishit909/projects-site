@@ -1,0 +1,77 @@
+{
+  "description": "P09-TEST-09 detect: res-1 has 2.00 FTE; al-1 takes 1.50 in period 0, al-2 asks for 1.00 more, al-3 asks for 0.50",
+  "expect": "al-2 is rejected RESOURCE_OVERALLOCATED with periods [0]; al-3 brings the sum to exactly 2.00, which is allowed",
+  "contract_version": 1,
+  "as_of": "2028-06-30T00:00:00Z",
+  "period_basis": "annual",
+  "period_start": "2026-01-01",
+  "initiatives": [
+    {
+      "initiative_id": "i-1",
+      "title": "Initiative i-1",
+      "sponsor_id": "sp-1",
+      "status": "in_delivery",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "i-2",
+      "title": "Initiative i-2",
+      "sponsor_id": "sp-1",
+      "status": "in_delivery",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    }
+  ],
+  "process_baselines": [],
+  "assumption_versions": [],
+  "resources": [
+    {
+      "resource_id": "res-1",
+      "name": "Data engineer pool",
+      "capacity_per_period": "2.00",
+      "unit": "FTE"
+    }
+  ],
+  "scenario_versions": [],
+  "cost_items": [],
+  "benefit_items": [],
+  "dependencies": [],
+  "stakeholder_groups": [],
+  "impact_mappings": [],
+  "resource_allocations": [
+    {
+      "allocation_id": "al-1",
+      "resource_id": "res-1",
+      "initiative_id": "i-1",
+      "period_index": 0,
+      "amount": "1.50"
+    },
+    {
+      "allocation_id": "al-2",
+      "resource_id": "res-1",
+      "initiative_id": "i-2",
+      "period_index": 0,
+      "amount": "1.00"
+    },
+    {
+      "allocation_id": "al-3",
+      "resource_id": "res-1",
+      "initiative_id": "i-2",
+      "period_index": 0,
+      "amount": "0.50"
+    }
+  ],
+  "readiness_assessments": [],
+  "adoption_observations": [],
+  "training_completions": [],
+  "benefit_observations": [],
+  "risk_items": [],
+  "forecast_versions": []
+}

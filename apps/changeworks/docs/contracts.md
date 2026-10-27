@@ -143,6 +143,42 @@ are the binding form. The points that sharpen D-01..D-04:
   clip, baseline approval by role and the immutability of an approved baseline, resource-levelling shifts, ties and three
   claimants in the double-count rule, the C07 proposal transition, API envelopes and idempotency; the backend tests carry them.
 
+## D-06 Backend clarifications (adopted from the backend hand-back; the 23 numbered assumptions are in README.md)
+* `/metrics` returns `{as_of, window, scenario_id, period_basis, period_start, empty_population, ingest, metrics}`;
+  `period_basis` and `period_start` live in the one-row `dataset_config`; default `as_of` is the server's now. Rows dated
+  after `as_of` (adoption, training, readiness, observations, forecast versions) do not exist yet; plan rows are not
+  clipped by `created_at`. The window narrows observations by instant and cost variance and realization by period
+  start; the dated model is not windowed (`MODEL_NOT_WINDOWED`).
+* Metrics use the initiative's current approved baseline; a scenario's `baseline_version` is its label and
+  `BASELINE_VERSION_DIFFERS` is returned when they differ. One baseline row per (initiative, version); a second row for
+  an approved version is 409 `BASELINE_FROZEN`, for an unapproved one 409 `VERSION_EXISTS`; correcting an approved
+  baseline needs a reason; approving a superseded version is 409 `ALREADY_APPROVED`; C01 refuses assumption-like
+  fields with 422 `ASSUMPTION_IN_EVIDENCE`.
+* Clients never supply instants; evidence dates are plain dates (`measured_on`, `observed_on`, never in the future);
+  only the seeder enters back-dated history. Reserved assumption names: `adoption_ramp`, `target_minutes_per_case`,
+  `capacity_hourly_rate`, `monthly_rate_conversion`; version numbers server-assigned unless sent; author = actor.
+  Ranges: discount rate 0..1, horizon 1..600, periods 0..100000, decimals ≤ 14 integer and 6 decimal digits.
+* C02 is an exact, versioned weighted-score ranking aid and may create a candidate initiative; C03 is all-or-nothing
+  and always creates a new `scenario_id`, writing `expanded_costs`; C04 refuses non-synthetic stakeholder labels
+  (`LABEL_NOT_SYNTHETIC`); C06 checks allocations in the order sent (no resource levelling: the resource-constrained
+  start equals the dependency-feasible start); C07 accepts only `proposed`, computes the residual at the server's now,
+  stores the explanation and the comparison, and a proposal is final; C08 may carry a training block as a separate
+  series; C09 requires the benefit's unit and only `observed_not_attributed`; C10's first forecast is version 1.
+* Identity (401) and role (403) are checked before the body; the C01 approve role after the body with a refusal
+  audit row. Reads also expose `baseline_approvals`, `opportunity_scores`, `expanded_costs`, `rejected_records`,
+  `audit_events`, `dataset_versions`. Extra ingest codes `MALFORMED_RECORD`, `INVALID_*`, `RATIONALE_REQUIRED`,
+  `EVIDENCE_REQUIRED` (README). The SQL reference runs with `SET jit = off`; its NPV is compared within 0.000001 USD
+  (PostgreSQL `power(numeric, integer)` precision), every other figure exactly.
+* **Partial trend coverage (coordinator decision, to implement in the fix round T-09-05 with the review):**
+  `observed_above_trend` is published only when every observed matured row of the benefit type carries a recorded
+  trend; otherwise it is null and the warning `PARTIAL_TREND_COVERAGE` lists the rows without one. The generator
+  world records a trend on every observed benefit so the published figures are unaffected.
+* **Reference fix (coordinator):** `reference_check.py` now orders instants by parsed value, not string (the domain
+  already does); the fixture carries no fractional seconds, so no figure changed.
+* Gaps: no resource levelling; the double-count rule is enforced by C07, not a trigger (the database forbids
+  `funded`); initiative status moves only candidate → assessed; no command edits or removes plan rows; the workbook and
+  export belong to the artifacts; `/metrics` is unpaged and recomputed per call.
+
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners. Mode B: TypeScript mirror over the published
 snapshot; the sensitivity lab, roadmap edits and scenario selection are browser-memory simulations and say so.

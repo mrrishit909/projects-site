@@ -1,0 +1,63 @@
+{
+  "description": "P09-TEST-05 detect: 38 of 40 staff completed training; nobody has recorded adoption; one adoption row counts training as adoption",
+  "expect": "adoption is null (not 0.95); training_completion 0.950000 stays separate (substituted_for_adoption false); ad-bad (38 adopted of 30 eligible) and ad-rule (rule elig-v2) are rejected",
+  "contract_version": 1,
+  "as_of": "2028-06-30T00:00:00Z",
+  "period_basis": "annual",
+  "period_start": "2026-01-01",
+  "initiatives": [
+    {
+      "initiative_id": "i-1",
+      "title": "Initiative i-1",
+      "sponsor_id": "sp-1",
+      "status": "in_delivery",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    }
+  ],
+  "process_baselines": [],
+  "assumption_versions": [],
+  "resources": [],
+  "scenario_versions": [],
+  "cost_items": [],
+  "benefit_items": [],
+  "dependencies": [],
+  "stakeholder_groups": [],
+  "impact_mappings": [],
+  "resource_allocations": [],
+  "readiness_assessments": [],
+  "adoption_observations": [
+    {
+      "observation_id": "ad-bad",
+      "initiative_id": "i-1",
+      "eligible_count": 30,
+      "adopted_count": 38,
+      "observed_at": "2028-03-31T00:00:00Z",
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "observation_id": "ad-rule",
+      "initiative_id": "i-1",
+      "eligible_count": 40,
+      "adopted_count": 38,
+      "observed_at": "2028-03-31T00:00:00Z",
+      "eligibility_rule_version": "elig-v2"
+    }
+  ],
+  "training_completions": [
+    {
+      "training_id": "tc-1",
+      "initiative_id": "i-1",
+      "eligible_trainees": 40,
+      "completed": 38,
+      "recorded_at": "2028-03-31T00:00:00Z",
+      "eligibility_rule_version": "elig-v1"
+    }
+  ],
+  "benefit_observations": [],
+  "risk_items": [],
+  "forecast_versions": []
+}
