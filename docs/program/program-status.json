@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T04:22:33Z",
+  "updated_at": "2026-10-27T04:28:46Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -212,6 +212,10 @@
       "generator": {
         "commit": "9743a33",
         "status": "done"
+      },
+      "portfolio_prep": {
+        "motion_tile": "pipeline-observatory/loop.mp4+webm on unified-portfolio (a1ee8fe)",
+        "case_study_draft": "scratchpad/p08/project.json (placeholders __TESTS__, __NOTE__, __WEBCHECKS__, __RESULTS__)"
       }
     },
     "09-changeworks": {
@@ -242,6 +246,10 @@
         "commit": "83158f5",
         "tests": 346,
         "status": "done; Mode A green on hosted runner (run 40447123155)"
+      },
+      "portfolio_prep": {
+        "motion_tile": "changeworks/loop.mp4+webm on unified-portfolio (a1ee8fe)",
+        "case_study_draft": "scratchpad/p09/project.json (placeholders __TESTS__, __NOTE__, __WEBCHECKS__, __WORLD__, __RESULTS__)"
       }
     },
     "10-retentionlab": {
@@ -272,6 +280,10 @@
         "commit": "4b957ca",
         "tests": 299,
         "status": "done; Mode A green on hosted runner (run 40447567631)"
+      },
+      "portfolio_prep": {
+        "motion_tile": "retentionlab/loop.mp4+webm on unified-portfolio (a1ee8fe)",
+        "case_study_draft": "scratchpad/p10/project.json (placeholders __TESTS__, __NOTE__, __WEBCHECKS__, __WORLD__, __RESULTS__)"
       }
     }
   },
