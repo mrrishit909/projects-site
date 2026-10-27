@@ -632,8 +632,9 @@
       "id": "T-09-06",
       "project": "09-changeworks",
       "title": "Artifacts P09-ART-01..10",
-      "status": "in_progress",
-      "assignment": "A-081 accepted; committed; CI pending"
+      "status": "done",
+      "assignment": "A-081 accepted; committed 273a078 + test fix 6609676; CI run 40486164950 green both modes, no-skip gate passed",
+      "result": "artifact package P09-ART-01..10 on the branch; 495 tests on the hosted runner"
     },
     {
       "id": "T-10-01",

@@ -207,7 +207,12 @@
           "reason": "review R9 fixes (D-09) republished"
         }
       ],
-      "published_at": "2026-10-27T08:38:29Z"
+      "published_at": "2026-10-27T08:38:29Z",
+      "artifact_package": {
+        "commit": "6609676",
+        "ci_run": "https://github.com/mrrishit909/projects-site/actions/runs/40486164950",
+        "verification": "41 artifact tests on the hosted runner against artifacts09_* scratch databases with LibreOffice recalculation; workbook built on hosted compute in CI, not attached to a GitHub release; Excel and Power BI not run"
+      }
     },
     {
       "slug": "retentionlab",

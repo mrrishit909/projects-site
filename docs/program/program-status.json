@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T10:08:18Z",
+  "updated_at": "2026-10-27T10:13:55Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -134,7 +134,7 @@
     },
     "06-productsignal": {
       "slug": "productsignal",
-      "stage": "built, verified (reviewer findings fixed; CI green on fdf911a), published and live-verified (run 40435315836), integrated (case study live); artifacts A-056 running",
+      "stage": "complete: built, verified (reviewer findings fixed; CI green on fdf911a), published and live-verified (run 40435315836), integrated (case study live), artifacts delivered (A-056 accepted, CI 40441332040)",
       "built": true,
       "verified": true,
       "published": true,
@@ -156,7 +156,7 @@
     },
     "07-trustledger": {
       "slug": "trustledger",
-      "stage": "gate-A passed; backend CI-green Mode A; generator committed 0d1b3e4 (301 tests); web A-057 running",
+      "stage": "complete: built, verified (A-060 review, fixes 1e0283f), published e205202 and live-verified (run 40448466520), integrated, artifacts delivered (a856f7c + eb83f43, CI 40454781567 green, no skips)",
       "built": true,
       "verified": {
         "live_check_run": 40448466520,
@@ -256,7 +256,7 @@
     },
     "09-changeworks": {
       "slug": "changeworks",
-      "stage": "artifacts committed; CI pending",
+      "stage": "complete",
       "built": true,
       "verified": {
         "live_check_run": 40474949237,
@@ -279,7 +279,8 @@
         "at": "2026-10-27T02:46:45Z"
       },
       "notes": [
-        "spec 09-changeworks.md hash 7ae9dea5… verified at pack commit fe5f7981; 10-retentionlab.md hash 6784f44e… verified too; contracts D-01..D-04 written by the coordinator"
+        "spec 09-changeworks.md hash 7ae9dea5… verified at pack commit fe5f7981; 10-retentionlab.md hash 6784f44e… verified too; contracts D-01..D-04 written by the coordinator",
+        "complete 2026-10-27: built, verified (live run 40474949237 on 29948f9), published 8b9bcd3, integrated (case study 3e67ad1), reviewed (A-074, fixes 29948f9), artifacts (A-081, 6609676, CI 40486164950)"
       ],
       "fixture": {
         "commit": "fd2ca25",
@@ -322,7 +323,8 @@
       },
       "artifacts": {
         "assignment": "A-081",
-        "status": "committed; first CI run 40483802100 failed on a pre-existing order-dependent application test (fixed); CI pending again",
+        "commit": "6609676",
+        "status": "done; CI run 40486164950 green both modes under the no-skip gate (first run 40483802100 failed on a pre-existing order-dependent application test, fixed)",
         "tests": "495 = 454 + 41",
         "reconciliation": "763/763"
       }
@@ -397,7 +399,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 09: artifacts committed -> CI poll -> complete. Then the final report with all ten URLs. Projects 01-08 and 10 are complete.",
+    "next_concrete_task": "All ten projects complete (built, verified, published, integrated, reviewed, artifacts with hosted CI). Remaining: closing all-sites live check and the final report. Nothing is in progress; no worker is running.",
     "acceptance": "see task-queue.json"
   }
 }

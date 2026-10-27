@@ -1475,6 +1475,13 @@
       "check": "CI on the hosted runner with the artifact package, first attempt",
       "run": "https://github.com/mrrishit909/projects-site/actions/runs/40483802100",
       "result": "Mode B success; Mode A failure: 1 failed / 494 passed; the failure is the pre-existing application test test_c03_builds_a_new_scenario_and_expands_recurring_costs_explicitly, whose assertion assumed the seeded cost c-101 sorts first while the API orders expanded costs by cost_id and the new id is random hex (about one run in sixteen). Fixed by making the assertion find the server-generated id and check the same rows (not weakened: it now also pins c-101's row and the ordering); provenance test excludes that one file with the reason; erratum in docs/uat-evidence.md; checksums regenerated; 144 tests (artifacts + commands) pass locally; re-pushed"
+    },
+    {
+      "ts": "2026-10-27T10:13:55Z",
+      "project": "09-changeworks",
+      "check": "CI on the hosted runner with the artifact package, second attempt after the C03 test fix (Mode A: reference check, 495 tests with the artifacts09_* scratch databases and LibreOffice, junit no-skip gate; Mode B: build, golden, browser evidence)",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40486164950",
+      "result": "success both modes on 6609676; project 09 complete"
     }
   ]
 }
