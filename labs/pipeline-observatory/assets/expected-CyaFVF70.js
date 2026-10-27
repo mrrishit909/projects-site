@@ -91,6 +91,7 @@ const n=`{
       "src-orders": {
         "latest_accepted_event_at": null,
         "freshness_seconds": null,
+        "freshness_reason": "NO_ACCEPTED_EVENT",
         "last_successful_ingestion_at": null,
         "ingestion_age_seconds": null
       }

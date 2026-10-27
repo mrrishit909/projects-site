@@ -279,6 +279,7 @@ const n=`{
       "src-orders": {
         "latest_accepted_event_at": "2026-10-04T09:30:00Z",
         "freshness_seconds": 52200,
+        "freshness_reason": null,
         "last_successful_ingestion_at": "2026-10-04T10:05:00Z",
         "ingestion_age_seconds": 50100
       }

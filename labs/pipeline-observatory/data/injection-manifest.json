@@ -10,7 +10,7 @@
   },
   "checks_run_against": "the complete world (generate.py --full-inputs, then the domain's run_pipeline with the published totals); paths are into the shape of expected.json",
   "contract_version": 1,
-  "dataset_hash": "d9f0aa18ec6c54d3f09cf16cce3c159960411e36de59b4d7831220547fcbf12e",
+  "dataset_hash": "0a90687778634365c402c5431661b56625de20785e28d9b2388d36c0cad19aab",
   "dataset_version": "po-20261026-20261026",
   "designed_relationships": [
     {
@@ -53,6 +53,13 @@
       "realised": {
         "critical_failures": 1,
         "gate_decision": "blocked",
+        "gate_funnel": {
+          "allowed": 1318,
+          "blocked_at_gate": 10,
+          "failed_before_gate": 15,
+          "reached_gate": 1328,
+          "runs": 1343
+        },
         "incident_id": "inc-022",
         "pointer_after": "pub-1186",
         "pointer_before": "pub-1186",
@@ -83,6 +90,12 @@
       },
       "realised": {
         "cursor_loops": 1,
+        "fetch_log_statuses": {
+          "cursor_loop": 1,
+          "ok": 1263,
+          "rate_limited": 49,
+          "refetch": 48
+        },
         "fetch_rows": 1361,
         "max_slack_seconds": 25,
         "min_slack_seconds": 0,
@@ -253,6 +266,7 @@
             "input": {
               "batch_id": "b-ev01-a",
               "cursor": "off-ev01",
+              "fetch_session": "ev-01-a",
               "page": {
                 "next_cursor": "off-ev01-n",
                 "records": [
@@ -427,6 +441,7 @@
             "input": {
               "batch_id": "b-ev01-b",
               "cursor": "off-ev01",
+              "fetch_session": "ev-01-b",
               "page": {
                 "next_cursor": "off-ev01-n",
                 "records": [
@@ -634,6 +649,7 @@
             "idempotency_key": "ev-03-a",
             "input": {
               "cursor": "off-ev03",
+              "fetch_session": "ev03-s",
               "page": {
                 "retry_after_seconds": 90,
                 "status": 429
@@ -662,6 +678,7 @@
             "input": {
               "batch_id": "b-ev03",
               "cursor": "off-ev03",
+              "fetch_session": "ev03-s",
               "page": {
                 "next_cursor": "off-ev03-n",
                 "records": [
@@ -699,6 +716,7 @@
             "input": {
               "batch_id": "b-ev03",
               "cursor": "off-ev03",
+              "fetch_session": "ev03-s",
               "page": {
                 "next_cursor": "off-ev03-n",
                 "records": [
@@ -756,6 +774,7 @@
             "input": {
               "batch_id": "b-ev04-a",
               "cursor": "off-ev04",
+              "fetch_session": "ev04-a",
               "page": {
                 "next_cursor": "off-ev04-n",
                 "records": [
@@ -852,6 +871,7 @@
             "input": {
               "batch_id": "b-ev04-b",
               "cursor": "off-ev04",
+              "fetch_session": "ev04-b",
               "page": {
                 "next_cursor": "off-ev04-n",
                 "records": [
@@ -978,6 +998,7 @@
             "input": {
               "batch_id": "b-ev05",
               "cursor": "off-ev05",
+              "fetch_session": "ev-05-a",
               "page": {
                 "next_cursor": "off-ev05-n",
                 "records": [
@@ -1158,6 +1179,7 @@
             "input": {
               "batch_id": "b-ev07",
               "cursor": "off-ev07",
+              "fetch_session": "ev-07-a",
               "page": {
                 "next_cursor": "off-ev07-n",
                 "records": [
@@ -1250,7 +1272,8 @@
               "batch_ids": [
                 "b-ev07"
               ],
-              "run_id": "run-ev07"
+              "run_id": "run-ev07",
+              "scope_from": "2026-10-05T03:30:00Z"
             },
             "request_id": "req-ev-07-transform"
           },
@@ -1395,6 +1418,7 @@
             "input": {
               "batch_id": "b-ev08-a",
               "cursor": "off-ev08",
+              "fetch_session": "ev-08-a",
               "page": {
                 "next_cursor": "off-ev08-n",
                 "records": [
@@ -1480,6 +1504,7 @@
             "input": {
               "batch_id": "b-ev08-b",
               "cursor": "off-ev08-n",
+              "fetch_session": "ev-08-b",
               "page": {
                 "next_cursor": "off-ev08-m",
                 "records": [
@@ -1579,7 +1604,8 @@
                 "b-ev08-a",
                 "b-ev08-b"
               ],
-              "run_id": "run-ev08"
+              "run_id": "run-ev08",
+              "scope_from": "2026-10-05T04:00:00Z"
             },
             "request_id": "req-ev-08-transform"
           },
@@ -1664,6 +1690,7 @@
             "input": {
               "batch_id": "b-ev09-a",
               "cursor": "off-ev09",
+              "fetch_session": "ev-09-a",
               "page": {
                 "next_cursor": "off-ev09-a",
                 "records": [
@@ -1747,7 +1774,8 @@
               "batch_ids": [
                 "b-ev09-a"
               ],
-              "run_id": "run-ev09x"
+              "run_id": "run-ev09x",
+              "scope_from": "2026-10-05T04:30:00Z"
             },
             "request_id": "req-ev-09-x-transform"
           },
@@ -1813,6 +1841,7 @@
             "input": {
               "batch_id": "b-ev09-b",
               "cursor": "off-ev09-a",
+              "fetch_session": "ev-09-b",
               "page": {
                 "next_cursor": "off-ev09-b",
                 "records": [
@@ -1888,7 +1917,8 @@
                 "b-ev09-a",
                 "b-ev09-b"
               ],
-              "run_id": "run-ev09y"
+              "run_id": "run-ev09y",
+              "scope_from": "2026-10-05T04:30:00Z"
             },
             "request_id": "req-ev-09-y-transform"
           },
@@ -2312,7 +2342,7 @@
           "path": "ingest.counts.backfill_requests.rejected"
         }
       ],
-      "defect": "Two backfill requests (bf-006 and bf-012) overlap an earlier accepted request of the same source.",
+      "defect": "Two backfill requests (bf-006 and bf-012) overlap an earlier request of the same source that is still requested or running (bf-004 and bf-010, whose last batch had just committed).",
       "events": [
         "EV-02"
       ],
@@ -2320,15 +2350,19 @@
         "refused": {
           "bf-006": {
             "overlaps": "bf-004",
-            "source_id": "src-inventory"
+            "requested_at": "2026-08-27T19:25:34Z",
+            "source_id": "src-inventory",
+            "victim_settled_at": "2026-08-27T20:26:17Z"
           },
           "bf-012": {
             "overlaps": "bf-010",
-            "source_id": "src-web-events"
+            "requested_at": "2026-09-13T06:40:44Z",
+            "source_id": "src-web-events",
+            "victim_settled_at": "2026-09-13T07:26:02Z"
           }
         }
       },
-      "expected_handling": "Each is refused with BACKFILL_OVERLAP and keeps its id; the earlier request stands; touching half-open ranges are accepted.",
+      "expected_handling": "Each is refused with BACKFILL_OVERLAP and keeps its id; the earlier request stands; touching half-open ranges are accepted; a request that has settled (partial or complete) no longer blocks.",
       "expected_rejections": [
         {
           "entity": "backfill_requests",
@@ -2373,6 +2407,12 @@
       "evidence": {
         "recorded_retries": {
           "cursor_loops": 1,
+          "fetch_log_statuses": {
+            "cursor_loop": 1,
+            "ok": 1263,
+            "rate_limited": 49,
+            "refetch": 48
+          },
           "fetch_rows": 1361,
           "max_slack_seconds": 25,
           "min_slack_seconds": 0,
@@ -2588,6 +2628,13 @@
       "evidence": {
         "critical_failures": 1,
         "gate_decision": "blocked",
+        "gate_funnel": {
+          "allowed": 1318,
+          "blocked_at_gate": 10,
+          "failed_before_gate": 15,
+          "reached_gate": 1328,
+          "runs": 1343
+        },
         "incident_id": "inc-022",
         "pointer_after": "pub-1186",
         "pointer_before": "pub-1186",
@@ -2834,16 +2881,16 @@
     },
     {
       "checks": [],
-      "defect": "src-web-events answers the fetch from off-000693 with next_cursor off-000693, the cursor just fetched.",
+      "defect": "In one fetch session src-web-events answers the page after off-000693 (cursor off-000713) with next_cursor off-000693, the cursor the session started from.",
       "events": [
         "EV-10"
       ],
       "evidence": {
-        "fetch_log_row": 576,
-        "fetched_at": "2026-09-02T18:10:26Z",
-        "session_id": "src-web-events:47:a"
+        "fetch_log_row": 577,
+        "fetched_at": "2026-09-02T18:21:49Z",
+        "session_id": "src-web-events:47"
       },
-      "expected_handling": "The fetch stops with CURSOR_LOOP (409) and is recorded; the session is dead; a new session fetches the window; no batch is created by the looping page.",
+      "expected_handling": "The fetch stops with CURSOR_LOOP (409) and is recorded; the session is dead; a new session may fetch a cursor again (recorded as a refetch); no batch is created by the looping page.",
       "expected_rejections": [],
       "id": "INJ-10",
       "location": "both",
@@ -2851,7 +2898,7 @@
       "records": [
         {
           "entity": "fetch_log",
-          "id": 576
+          "id": 577
         }
       ],
       "test": "P08-TEST-10"
