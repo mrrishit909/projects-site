@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T01:54:30Z",
+  "updated_at": "2026-10-27T01:56:15Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -134,28 +134,28 @@
     },
     "06-productsignal": {
       "slug": "productsignal",
-      "stage": "built, verified (reviewer findings fixed and regression-tested at fdf911a), republished e360bf1 (CI and live check pending), integrated (case study updated); artifacts A-056 running",
+      "stage": "built, verified (reviewer findings fixed; CI green on fdf911a), published and live-verified (run 40435315836), integrated (case study live); artifacts A-056 running",
       "built": true,
       "verified": true,
       "published": true,
       "integrated": true,
-      "last_verified_sha": "fdf911a (local)",
-      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40426536267",
+      "last_verified_sha": "fdf911a",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40435203915",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/productsignal/",
       "blockers": [],
-      "next_task": "confirm CI and live check; A-056 artifacts",
+      "next_task": "A-056 artifacts -> then nothing open",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/productsignal/",
       "verified_note": "Entry journey + reviewer disproof pass; all 14 findings fixed in T-06-07 with tests in Python, SQL, TypeScript and the API; the INJ-10 gap inside the published lift disclosed"
     },
     "07-trustledger": {
       "slug": "trustledger",
-      "stage": "gate-A passed; backend slice committed (274 tests local); CI Mode A pending; generator A-055 running",
+      "stage": "gate-A passed; backend CI-green Mode A (9e0adb0, run 40433219610); generator A-055 running",
       "built": false,
       "verified": false,
       "published": false,
       "integrated": false,
-      "last_verified_sha": null,
-      "latest_run_url": null,
+      "last_verified_sha": "9e0adb0 (Mode A)",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40433219610",
       "site_url": null,
       "blockers": [],
       "next_task": "T-07-04 (A-055 generator -> web -> publish -> integrate)"

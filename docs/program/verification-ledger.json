@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T01:54:30Z",
+  "updated_at": "2026-10-27T01:56:15Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1210,6 +1210,39 @@
       "code_sha": "fdf911a",
       "evidence": "apps/productsignal/docs/uat-evidence.md; tests/test_review_findings.py; web/scripts/review-check.ts",
       "ts": "2026-10-27T01:54:30Z"
+    },
+    {
+      "requirement": "P06 CI after the reviewer fixes (357 tests Mode A; 2,519 golden + 36 review checks, 77 Playwright tests Mode B) on github-hosted",
+      "project": "06-productsignal",
+      "status": "verified",
+      "command": "productsignal-ci.yml run 40435203915",
+      "exit_code": 0,
+      "actual": "both jobs success",
+      "code_sha": "fdf911a",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40435203915",
+      "ts": "2026-10-27T01:56:15Z"
+    },
+    {
+      "requirement": "P06-REL after the republish: live manifest code_sha == fdf911a..., 12 routes, links both ways; all six sites green",
+      "project": "06-productsignal",
+      "status": "verified",
+      "command": "live-check.yml run 40435315836 (matrix)",
+      "exit_code": 0,
+      "actual": "all jobs success",
+      "code_sha": "fdf911a / portfolio e360bf1",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40435315836",
+      "ts": "2026-10-27T01:56:15Z"
+    },
+    {
+      "requirement": "P07 domain/API slice Mode A on github-hosted (reference check, domain, postgres:16 service, API, adversarial; 274 tests)",
+      "project": "07-trustledger",
+      "status": "verified",
+      "command": "trustledger-ci.yml run 40433219610 job 'Mode A' (push of 9e0adb0+8cf240c)",
+      "exit_code": 0,
+      "actual": "Mode A success; Mode B failing until the site source exists",
+      "code_sha": "9e0adb0",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40433219610",
+      "ts": "2026-10-27T01:56:15Z"
     }
   ]
 }
