@@ -1419,6 +1419,20 @@
       "check": "coordinator verification of the A-078 review fixes (R9-01..R9-22, D-09) before commit",
       "run": "local, cloud container",
       "result": "reference_check ALL OK (3156 checks, 7 hash OK); generator byte-identical (990,783 bytes, dataset_hash unchanged 6bf7ebaa…); pytest 454 passed, no skips, on the second run (the first run reported 1 failed / 453 passed with the test name not captured while two other apps' suites ran concurrently on the host; it did not reproduce on a clean rerun with -x and is recorded here as an unexplained single failure, not a flake dismissal); npm run check 643 golden leaves + 63 review checks / 34 worlds; build:pages 12 routes; e2e 81 passed from clean evidence on PW_PORT=4279"
+    },
+    {
+      "ts": "2026-10-27T08:40:46Z",
+      "project": "09-changeworks",
+      "check": "live URL verification from GitHub Actions after the review republish (deploy-wait on code_sha, route 200s, case-study links both ways, browser journey) for all ten sites",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40474949237",
+      "result": "success; changeworks live code_sha 29948f92f0c3839f070e4b6499b99f3810d1361b; portfolio release 8b9bcd3"
+    },
+    {
+      "ts": "2026-10-27T08:41:13Z",
+      "project": "09-changeworks",
+      "check": "live URL verification from GitHub Actions after the review republish (deploy-wait on code_sha, route 200s, case-study links both ways, browser journey) for all ten sites",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40474949237",
+      "result": "success; changeworks live code_sha 29948f92f0c3839f070e4b6499b99f3810d1361b; portfolio release 8b9bcd3"
     }
   ]
 }

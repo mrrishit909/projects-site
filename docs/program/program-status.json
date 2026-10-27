@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T08:33:31Z",
+  "updated_at": "2026-10-27T08:41:13Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -248,22 +248,22 @@
     },
     "09-changeworks": {
       "slug": "changeworks",
-      "stage": "queued",
+      "stage": "artifacts (A-081 running)",
       "built": true,
       "verified": {
-        "live_check_run": 40456429847,
-        "at": "2026-10-27T05:40:23Z"
+        "live_check_run": 40474949237,
+        "at": "2026-10-27T08:41:13Z"
       },
       "published": {
-        "release": "7c6e357",
-        "rollback": "7f31179",
-        "source": "d9e76fa",
-        "at": "2026-10-27T05:35:46Z"
+        "release": "8b9bcd3",
+        "rollback": "d58209f",
+        "source": "29948f9",
+        "at": "2026-10-27T08:36:00Z"
       },
       "integrated": true,
-      "last_verified_sha": null,
-      "latest_run_url": null,
-      "site_url": null,
+      "last_verified_sha": "29948f92f0c3839f070e4b6499b99f3810d1361b",
+      "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40474949237",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/changeworks/",
       "blockers": [],
       "next_task": null,
       "contracts": {
@@ -300,8 +300,17 @@
         "assignment": "A-074",
         "defects": 14,
         "documentation": 8,
-        "status": "fixes in progress (A-078)",
-        "case_study_wording_fixed": "28d974b"
+        "status": "fixed (A-078, D-09) at 29948f9; republished 8b9bcd3; live-verified 40474949237",
+        "case_study_wording_fixed": "28d974b",
+        "case_study_then_fixed": "8b9bcd3"
+      },
+      "fixes": {
+        "commit": "29948f9",
+        "tests": 454,
+        "golden": 3812,
+        "review_checks": "63/34",
+        "e2e": 81,
+        "ci": "run 40474351325 green both modes"
       }
     },
     "10-retentionlab": {
@@ -366,7 +375,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 09: A-078 fixes committed; push, CI poll, then republish labs/changeworks with the case study 'then fixed' paragraph, manifest entry, live check, artifacts worker. Project 10: A-079 artifacts hand-back -> verify -> commit -> CI -> complete. Project 08: A-080 artifacts hand-back -> verify -> commit -> CI -> complete. Then the final report with all ten URLs.",
+    "next_concrete_task": "Project 10: A-079 artifacts hand-back verified by the coordinator (run_all RESULT OK 393/393, BI identical, checksums 61 OK; full suite running) -> commit -> CI (no-skip gate now on all four workflows) -> case-study counts -> complete. Project 08: A-080 artifacts hand-back -> verify -> commit -> CI -> complete. Project 09: A-081 artifacts hand-back -> verify -> commit -> CI -> complete. Then the final report with all ten URLs.",
     "acceptance": "see task-queue.json"
   }
 }

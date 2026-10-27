@@ -625,13 +625,14 @@
       "project": "09-changeworks",
       "title": "Independent disproof review, fixes, republish",
       "status": "in_progress",
-      "assignment": "A-074 review done (14 defects); A-078 fixes verified and committed (D-09); republish + live check next"
+      "assignment": "A-074 review (14 defects); A-078 fixes committed 29948f9 (CI 40474351325 green); republished 8b9bcd3; live check pending"
     },
     {
       "id": "T-09-06",
       "project": "09-changeworks",
       "title": "Artifacts P09-ART-01..10",
-      "status": "pending"
+      "status": "in_progress",
+      "assignment": "A-081 dispatched"
     },
     {
       "id": "T-10-01",
