@@ -620,6 +620,43 @@
       "project": "09-changeworks",
       "title": "Artifacts P09-ART-01..10",
       "status": "pending"
+    },
+    {
+      "id": "T-10-01",
+      "project": "10-retentionlab",
+      "title": "Contracts D-01..D-04, API inventory, site brief, generator spec, scaffold, CI workflow",
+      "status": "done",
+      "result": "coordinator-written; spec hash 6784f44e\u2026 verified at fe5f7981"
+    },
+    {
+      "id": "T-10-02",
+      "project": "10-retentionlab",
+      "title": "Golden fixture (precision/recall .5 at K=2, Brier .1925, AP .833333) + variants + stdlib reference check",
+      "status": "pending"
+    },
+    {
+      "id": "T-10-03",
+      "project": "10-retentionlab",
+      "title": "Mode A slice: domain (features, labels, splits, fitting, calibration, scoring), migrations, SQL reference, FastAPI C01..C10, tests incl. P10-TEST-01..12",
+      "status": "pending"
+    },
+    {
+      "id": "T-10-04",
+      "project": "10-retentionlab",
+      "title": "Generator, Mode B site, Playwright evidence, publish, integrate",
+      "status": "pending"
+    },
+    {
+      "id": "T-10-05",
+      "project": "10-retentionlab",
+      "title": "Independent disproof review, fixes, republish",
+      "status": "pending"
+    },
+    {
+      "id": "T-10-06",
+      "project": "10-retentionlab",
+      "title": "Artifacts P10-ART-01..10",
+      "status": "pending"
     }
   ]
 }

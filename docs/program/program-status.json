@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T02:46:45Z",
+  "updated_at": "2026-10-27T02:49:00Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -220,12 +220,19 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": null
+      "next_task": null,
+      "contracts": {
+        "status": "done",
+        "at": "2026-10-27T02:49:00Z"
+      },
+      "notes": [
+        "spec 10-retentionlab.md hash 6784f44e\u2026 verified at pack commit fe5f7981; contracts D-01..D-04 written by the coordinator"
+      ]
     }
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 06: A-056 artifacts hand-back -> verify -> commit. Project 07: live-verified; A-060 reviewer hand-back -> fix worker -> republish -> live check -> artifacts. Project 08: A-059 backend hand-back -> verify -> D-06 -> commit -> CI Mode A -> generator -> web -> publish -> integrate -> review -> artifacts. Project 09: contracts done; dispatch the fixture worker (T-09-02) when a worker slot frees, then backend -> generator -> web -> publish -> integrate -> review -> artifacts. Project 10: contracts next (spec copy in scratchpad, hash verified).",
+    "next_concrete_task": "Project 06: A-056 artifacts hand-back -> verify -> commit. Project 07: live-verified; A-060 reviewer hand-back -> fix worker -> republish -> live check -> artifacts. Project 08: A-059 backend hand-back -> verify -> D-06 -> commit -> CI Mode A -> generator -> web -> publish -> integrate -> review -> artifacts. Projects 09 and 10: contracts done (f93e8cb, this commit); dispatch their fixture workers (T-09-02, T-10-02) as worker slots free, then backend -> generator -> web -> publish -> integrate -> review -> artifacts.",
     "acceptance": "see task-queue.json"
   }
 }

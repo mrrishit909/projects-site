@@ -1,0 +1,117 @@
+name: retentionlab-ci
+
+on:
+  push:
+    branches: [business-data-lab]
+    paths:
+      - "apps/retentionlab/**"
+      - ".github/workflows/retentionlab-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: retentionlab-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  reference-and-domain:
+    name: Mode A — reference check, domain, PostgreSQL, API
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: lab
+          POSTGRES_PASSWORD: lab
+          POSTGRES_DB: retentionlab
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U lab -d retentionlab"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://lab:lab@127.0.0.1:5432/retentionlab
+      CODE_SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Runner identity (must be GitHub-hosted)
+        run: |
+          echo "runner.name=${{ runner.name }} runner.os=${{ runner.os }} runner.environment=${{ runner.environment }}"
+          test "${{ runner.environment }}" = "github-hosted"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: apps/retentionlab/requirements.txt
+      - name: Install pinned dependencies
+        working-directory: apps/retentionlab
+        run: pip install -r requirements.txt
+      - name: Independent reference check (stdlib only, no app imports)
+        working-directory: apps/retentionlab
+        run: python -I tests/reference_check.py
+      - name: Fixture hashes unchanged
+        working-directory: apps/retentionlab
+        run: python -I tests/reference_check.py | grep -c "^OK hash." | grep -q "^7$"
+      - name: Domain, migrations, SQL reference and API tests
+        working-directory: apps/retentionlab
+        run: python -m pytest -q --junitxml=../../evidence/retentionlab/pytest.xml
+      - name: Evidence summary
+        if: always()
+        working-directory: apps/retentionlab
+        run: |
+          mkdir -p ../../evidence/retentionlab
+          python - <<'PY'
+          import json, os, datetime, platform
+          json.dump({
+            "project": "retentionlab", "mode": "A",
+            "code_sha": os.environ.get("CODE_SHA"),
+            "run_url": f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}",
+            "runner": {"os": platform.platform(), "environment": "github-hosted"},
+            "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+          }, open("../../evidence/retentionlab/run.json", "w"), indent=2)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: retentionlab-mode-a-${{ github.sha }}
+          path: evidence/retentionlab
+          retention-days: 30
+
+  web:
+    name: Mode B — static build, TS golden check, browser evidence
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Runner identity (must be GitHub-hosted)
+        run: test "${{ runner.environment }}" = "github-hosted"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/retentionlab/web/package-lock.json
+      - name: Install locked dependencies
+        working-directory: apps/retentionlab/web
+        run: npm ci
+      - name: Typecheck and TS golden check
+        working-directory: apps/retentionlab/web
+        run: npm run check
+      - name: Build with the Pages base path
+        working-directory: apps/retentionlab/web
+        run: npm run build:pages
+      - name: Install Chromium
+        working-directory: apps/retentionlab/web
+        run: npx playwright install --with-deps chromium
+      - name: Browser journey and screenshots (360, 768, 1280, 1920)
+        working-directory: apps/retentionlab/web
+        run: npm run e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: retentionlab-mode-b-${{ github.sha }}
+          path: |
+            apps/retentionlab/web/evidence
+            apps/retentionlab/web/dist
+          retention-days: 30
