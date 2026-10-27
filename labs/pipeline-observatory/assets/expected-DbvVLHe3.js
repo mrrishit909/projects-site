@@ -1,0 +1,169 @@
+const n=`{
+  "contract_version": 1,
+  "as_of": "2026-10-05T00:00:00Z",
+  "cutoff": "2026-10-05T00:00:00Z",
+  "empty_population": true,
+  "ingest": {
+    "counts": {
+      "source_contracts": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "ingestion_batches": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "raw_records": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "quarantine_records": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "checkpoints": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "model_definitions": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "pipeline_runs": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "task_runs": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "quality_results": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "publications": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "incidents": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "backfill_requests": {
+        "accepted": 0,
+        "rejected": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "metrics": {
+    "ingestion": {
+      "sources": {
+        "src-orders": {
+          "batches": {},
+          "received": 0,
+          "accepted_unique": 0,
+          "duplicate": 0,
+          "quarantined": 0,
+          "quarantined_distinct_keys": 0,
+          "rejection_rate": null,
+          "duplicate_rate": null,
+          "quarantine_by_reason": {},
+          "checkpoint": {
+            "committed_version": null,
+            "committed_cursor": null,
+            "committed_batch_id": null,
+            "uncommitted_batches": [],
+            "uncommitted_batches_with_checkpoint": 0
+          }
+        }
+      },
+      "overall": {
+        "received": 0,
+        "accepted_unique": 0,
+        "duplicate": 0,
+        "quarantined": 0,
+        "rejection_rate": null,
+        "duplicate_rate": null
+      }
+    },
+    "freshness": {
+      "src-orders": {
+        "latest_accepted_event_at": null,
+        "freshness_seconds": null,
+        "last_successful_ingestion_at": null,
+        "ingestion_age_seconds": null
+      }
+    },
+    "completeness": {
+      "src-orders": {
+        "2026-10-04": {
+          "expected_records": 0,
+          "accepted_records": 0,
+          "value": null
+        }
+      }
+    },
+    "runs": {
+      "runs": {},
+      "overall": {
+        "tasks_terminal": 0,
+        "tasks_successful": 0,
+        "task_success_rate": null,
+        "attempts": 0,
+        "attempts_successful": 0,
+        "attempt_success_rate": null
+      },
+      "durations": {
+        "successful": {
+          "count": 0,
+          "durations_seconds": [],
+          "mean_minutes": null
+        },
+        "failed": {
+          "count": 0,
+          "durations_seconds": [],
+          "mean_minutes": null
+        }
+      }
+    },
+    "quality_gate": {},
+    "publications": {
+      "current_publication_id": null,
+      "pointer_history": [],
+      "publications": {}
+    },
+    "late_events": {
+      "count": 0,
+      "included_in_next_publication": 0,
+      "lost": 0,
+      "events": []
+    },
+    "reconciliation": {},
+    "incidents": {
+      "total": 0,
+      "open": 0,
+      "closed": 0,
+      "verified": 0,
+      "mean_recovery_minutes": null,
+      "incidents": {}
+    },
+    "backfills": {
+      "requests": {},
+      "refused": [],
+      "overall": {
+        "requested_partitions": 0,
+        "verified_partitions": 0,
+        "coverage": null
+      }
+    },
+    "processing_rate": {
+      "accepted_records": 0,
+      "measured_seconds": null,
+      "records_per_second": null,
+      "hardware": null,
+      "cache_state": null
+    }
+  }
+}
+`;export{n as default};

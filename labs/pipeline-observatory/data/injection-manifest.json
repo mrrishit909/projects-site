@@ -1,0 +1,2918 @@
+{
+  "check_operators": {
+    "absent": "the path does not exist",
+    "contains": "list or string contains",
+    "equals": "exact value",
+    "find": "pick the list element whose fields equal `find`, then compare `equals` as a subset",
+    "max": "at most (integer)",
+    "min": "at least (integer)",
+    "not_contains": "string does not contain"
+  },
+  "checks_run_against": "the complete world (generate.py --full-inputs, then the domain's run_pipeline with the published totals); paths are into the shape of expected.json",
+  "contract_version": 1,
+  "dataset_hash": "d9f0aa18ec6c54d3f09cf16cce3c159960411e36de59b4d7831220547fcbf12e",
+  "dataset_version": "po-20261026-20261026",
+  "designed_relationships": [
+    {
+      "id": "DR-01",
+      "name": "a source stale for three days while its jobs stay green",
+      "parameters": {
+        "declared_frequency": "every 6 hours",
+        "freshness_target_seconds": 604800,
+        "replayed_rows_per_batch": 14,
+        "source_id": "src-refunds",
+        "stops_at": "2026-10-02T00:00:00Z"
+      },
+      "realised": {
+        "accepted_in_window": 16,
+        "batches_with_no_accepted_record": 11,
+        "committed_batches_in_window": 12,
+        "completeness": {
+          "2026-10-02": "0.000000",
+          "2026-10-03": "0.000000",
+          "2026-10-04": "0.000000"
+        },
+        "duplicates_in_window": 156,
+        "freshness_seconds": 262378,
+        "ingestion_age_seconds": 17363,
+        "last_successful_ingestion_at": "2026-10-04T19:10:37Z",
+        "latest_accepted_event_at": "2026-10-01T23:07:02Z",
+        "runs_allowed_by_the_gate": 72,
+        "runs_in_window": 72,
+        "runs_succeeded": 72
+      },
+      "statement": "src-refunds stops delivering new events at 2026-10-02T00:00:00Z; its batches keep committing (the same page again) and every run stays green."
+    },
+    {
+      "id": "DR-02",
+      "name": "a failed run that never replaces the publication",
+      "parameters": {
+        "failure": "relationships_intact critical check, one orphan output row",
+        "rule": "the second relationships failure in time order is the designated run (P08-TEST-07)"
+      },
+      "realised": {
+        "critical_failures": 1,
+        "gate_decision": "blocked",
+        "incident_id": "inc-022",
+        "pointer_after": "pub-1186",
+        "pointer_before": "pub-1186",
+        "pointer_history_index": 1186,
+        "pointer_unchanged": true,
+        "publication_exists": false,
+        "recovery_minutes": "67.8833",
+        "recovery_run_id": "run-1188",
+        "run_id": "run-1187",
+        "run_status": "failed"
+      },
+      "statement": "A run whose critical relationships check fails is blocked, opens an incident and publishes nothing; the pointer stays where it was."
+    },
+    {
+      "id": "DR-03",
+      "name": "a rate-limited source whose retries honour retry-after",
+      "parameters": {
+        "rate_limit_ppm": 125000,
+        "retry_after_choices_seconds": [
+          30,
+          60,
+          90,
+          120
+        ],
+        "retry_slack_seconds": "0..25",
+        "second_429_ppm": 300000,
+        "source_id": "src-shipments"
+      },
+      "realised": {
+        "cursor_loops": 1,
+        "fetch_rows": 1361,
+        "max_slack_seconds": 25,
+        "min_slack_seconds": 0,
+        "rate_limited_responses": 49,
+        "retries": 49,
+        "retries_honouring_retry_after": 49,
+        "retries_too_soon": 0,
+        "sessions_rate_limited": 33,
+        "source_id": "src-shipments",
+        "sources_rate_limited": [
+          "src-shipments"
+        ]
+      },
+      "statement": "src-shipments answers some fetches with 429 and a retry-after; every retry waits at least that long."
+    },
+    {
+      "id": "DR-04",
+      "name": "late events behind the watermark, included in the next publication",
+      "parameters": {
+        "delivered_in_the_batch_of": "2026-09-18T16:00:00Z",
+        "event_window": "2026-09-17T18:00:00Z..2026-09-17T23:50:00Z",
+        "events": 9,
+        "source_id": "src-orders",
+        "watermark_rule": "the earliest, over all sources, of the end of the window of the latest committed batch"
+      },
+      "realised": {
+        "by_cause": {
+          "backfill": 707,
+          "corrections": 41,
+          "designed": 9
+        },
+        "designed": [
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T18:38:41Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011279",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T19:00:02Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011284",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T19:12:50Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011287",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T19:43:41Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011294",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T20:16:57Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011302",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T20:18:10Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011303",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T20:31:06Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011309",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T21:06:14Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011315",
+            "watermark": "2026-09-18T05:05:30Z"
+          },
+          {
+            "arrival_at": "2026-09-18T16:08:48Z",
+            "behind_publication_id": "pub-0951",
+            "event_at": "2026-09-17T21:16:18Z",
+            "included_in_publication_id": "pub-0952",
+            "source_key": "ORD-011317",
+            "watermark": "2026-09-18T05:05:30Z"
+          }
+        ],
+        "designed_events": 9,
+        "included_in_next_publication": 757,
+        "late_events_in_all": 757,
+        "lost": 0
+      },
+      "statement": "Nine src-orders events dated before the watermark of the preceding publication arrive in one later batch; each is accepted and enters the next publication."
+    },
+    {
+      "id": "DR-05",
+      "name": "residual zero except one day with an unexplained residual",
+      "parameters": {
+        "amount": "the candidate table holds the amount of the first 3 new records of the crashed payments batch b-0714 beyond the accepted records of its scope",
+        "cause_recorded": "none: no quarantine, duplicate or delete accounts for it",
+        "day": "2026-09-09",
+        "tick": "2026-09-09T11:00:00Z"
+      },
+      "realised": {
+        "candidates_with_nonzero_residual": [
+          {
+            "day": "2026-09-09",
+            "exclusions_total": "1137.66",
+            "published_total": "22698.71",
+            "residual": "-141.46",
+            "run_id": "run-0731",
+            "source_total": "23694.91"
+          }
+        ],
+        "days_with_nonzero_residual": [
+          "2026-09-09"
+        ],
+        "incident_id": "inc-015",
+        "incident_run_id": "run-0731",
+        "leak_batch_id": "b-0714",
+        "leaked_rows": 3,
+        "publications": 1318,
+        "publications_with_nonzero_residual": 0,
+        "recovery_minutes": "63.1000",
+        "recovery_run_id": "run-0732"
+      },
+      "statement": "Every publication reconciles to 0.00; on one day the transform of one run read the staged rows of a crashed batch, the candidate reconciliation was off by their amount, the gate blocked and an incident opened."
+    }
+  ],
+  "events": [
+    {
+      "event_id": "EV-01",
+      "injection": "INJ-01",
+      "requires": [],
+      "steps": [
+        {
+          "at": "2026-10-05T00:30:00Z",
+          "command": "fetch-source-page",
+          "expected_body": {
+            "status": "staged"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-01-a-fetch",
+            "input": {
+              "batch_id": "b-ev01-a",
+              "cursor": "off-ev01",
+              "page": {
+                "next_cursor": "off-ev01-n",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:41:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-CR-1",
+                      "unit_price": "10.00"
+                    }
+                  },
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:42:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-CR-2",
+                      "unit_price": "10.00"
+                    }
+                  },
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:43:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-CR-3",
+                      "unit_price": "10.00"
+                    }
+                  }
+                ]
+              },
+              "source_id": "src-orders"
+            },
+            "request_id": "req-ev-01-a-fetch"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T00:30:00Z",
+          "command": "validate-contract",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-01-a-validate",
+            "input": {
+              "batch_id": "b-ev01-a"
+            },
+            "request_id": "req-ev-01-a-validate"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T00:31:00Z",
+          "command": "inject-fault",
+          "expected_body": {
+            "result": {
+              "armed": true
+            }
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-01-fault",
+            "input": {
+              "fault_type": "crash_before_checkpoint",
+              "note": "P08-TEST-01",
+              "target_id": "src-orders"
+            },
+            "request_id": "req-ev-01-fault"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T00:32:00Z",
+          "command": "commit-batch",
+          "expected_reason": "INJECTED_CRASH",
+          "expected_status": 500,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-01-crash",
+            "input": {
+              "batch_id": "b-ev01-a"
+            },
+            "request_id": "req-ev-01-crash"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T00:32:30Z",
+          "expect": [
+            {
+              "equals": 0,
+              "path": "meta.total_count"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "batch_id": "b-ev01-a"
+          },
+          "path": "/data/accepted_records"
+        },
+        {
+          "at": "2026-10-05T00:33:00Z",
+          "command": "commit-batch",
+          "expected_body": {
+            "result": {
+              "accepted_unique": 3,
+              "checkpoint": {
+                "version_number": 336
+              },
+              "duplicate": 0
+            }
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-01-retry",
+            "input": {
+              "batch_id": "b-ev01-a"
+            },
+            "request_id": "req-ev-01-retry"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T00:33:30Z",
+          "expect": [
+            {
+              "equals": 3,
+              "path": "meta.total_count"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "batch_id": "b-ev01-a"
+          },
+          "path": "/data/accepted_records"
+        },
+        {
+          "at": "2026-10-05T00:34:00Z",
+          "command": "fetch-source-page",
+          "expected_body": {
+            "status": "staged"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-01-b-fetch",
+            "input": {
+              "batch_id": "b-ev01-b",
+              "cursor": "off-ev01",
+              "page": {
+                "next_cursor": "off-ev01-n",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:41:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-CR-1",
+                      "unit_price": "10.00"
+                    }
+                  },
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:42:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-CR-2",
+                      "unit_price": "10.00"
+                    }
+                  },
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:43:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-CR-3",
+                      "unit_price": "10.00"
+                    }
+                  }
+                ]
+              },
+              "source_id": "src-orders"
+            },
+            "request_id": "req-ev-01-b-fetch"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T00:34:00Z",
+          "command": "validate-contract",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-01-b-validate",
+            "input": {
+              "batch_id": "b-ev01-b"
+            },
+            "request_id": "req-ev-01-b-validate"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T00:35:00Z",
+          "command": "commit-batch",
+          "expected_body": {
+            "result": {
+              "accepted_unique": 0,
+              "checkpoint": {
+                "version_number": 337
+              },
+              "duplicate": 3
+            }
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-01-b-commit",
+            "input": {
+              "batch_id": "b-ev01-b"
+            },
+            "request_id": "req-ev-01-b-commit"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-02",
+      "injection": "INJ-02",
+      "requires": [
+        "bf-006",
+        "bf-012"
+      ],
+      "steps": [
+        {
+          "at": "2026-10-05T01:00:00Z",
+          "command": "request-backfill",
+          "expected_body": {
+            "result": {
+              "backfill_id": "bf-016",
+              "requested_partitions": 2
+            }
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-02-a",
+            "input": {
+              "end_at": "2026-10-09T00:00:00Z",
+              "source_id": "src-inventory",
+              "start_at": "2026-10-07T00:00:00Z"
+            },
+            "request_id": "req-ev-02-a"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T01:01:00Z",
+          "command": "request-backfill",
+          "expected_reason": "BACKFILL_OVERLAP",
+          "expected_status": 409,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-02-b",
+            "input": {
+              "end_at": "2026-10-10T00:00:00Z",
+              "source_id": "src-inventory",
+              "start_at": "2026-10-08T00:00:00Z"
+            },
+            "request_id": "req-ev-02-b"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T01:02:00Z",
+          "command": "request-backfill",
+          "expected_body": {
+            "result": {
+              "backfill_id": "bf-018"
+            }
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-02-c",
+            "input": {
+              "end_at": "2026-10-11T00:00:00Z",
+              "source_id": "src-inventory",
+              "start_at": "2026-10-09T00:00:00Z"
+            },
+            "request_id": "req-ev-02-c"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T01:03:00Z",
+          "expect": [
+            {
+              "equals": 3,
+              "path": "meta.total_count"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "entity": "backfill_requests",
+            "reason_code": "BACKFILL_OVERLAP"
+          },
+          "path": "/data/rejected_records"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-03",
+      "injection": "INJ-03",
+      "requires": [],
+      "steps": [
+        {
+          "at": "2026-10-05T01:30:00Z",
+          "command": "fetch-source-page",
+          "expected_body": {
+            "result": {
+              "retry_not_before": "2026-10-05T01:31:30Z"
+            },
+            "status": "rate_limited"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-03-a",
+            "input": {
+              "cursor": "off-ev03",
+              "page": {
+                "retry_after_seconds": 90,
+                "status": 429
+              },
+              "source_id": "src-shipments"
+            },
+            "request_id": "req-ev-03-a"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T01:30:12Z",
+          "command": "fetch-source-page",
+          "expected_headers": {
+            "Retry-After": "78"
+          },
+          "expected_reason": "RETRY_TOO_SOON",
+          "expected_status": 429,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-03-b",
+            "input": {
+              "batch_id": "b-ev03",
+              "cursor": "off-ev03",
+              "page": {
+                "next_cursor": "off-ev03-n",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:30:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-RA-1",
+                      "unit_price": "10.00"
+                    }
+                  }
+                ]
+              },
+              "source_id": "src-shipments"
+            },
+            "request_id": "req-ev-03-b"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T01:31:30Z",
+          "command": "fetch-source-page",
+          "expected_body": {
+            "status": "staged"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-03-c",
+            "input": {
+              "batch_id": "b-ev03",
+              "cursor": "off-ev03",
+              "page": {
+                "next_cursor": "off-ev03-n",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:30:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-RA-1",
+                      "unit_price": "10.00"
+                    }
+                  }
+                ]
+              },
+              "source_id": "src-shipments"
+            },
+            "request_id": "req-ev-03-c"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T01:32:00Z",
+          "expect": [
+            {
+              "equals": 1,
+              "path": "meta.total_count"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "source_id": "src-shipments",
+            "status": "rate_limited"
+          },
+          "path": "/data/fetch_log"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-04",
+      "injection": "INJ-04",
+      "requires": [],
+      "steps": [
+        {
+          "at": "2026-10-05T02:00:00Z",
+          "command": "fetch-source-page",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-04-a-fetch",
+            "input": {
+              "batch_id": "b-ev04-a",
+              "cursor": "off-ev04",
+              "page": {
+                "next_cursor": "off-ev04-n",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "channel": "web",
+                      "currency": "EUR",
+                      "event_ts": "2026-10-04T23:51:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-SC-1",
+                      "unit_price": "10.00"
+                    }
+                  },
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "channel": "web",
+                      "currency": "EUR",
+                      "event_ts": "2026-10-04T23:52:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-SC-2",
+                      "unit_price": "10.00"
+                    }
+                  }
+                ],
+                "schema_version": "3"
+              },
+              "source_id": "src-payments"
+            },
+            "request_id": "req-ev-04-a-fetch"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T02:00:10Z",
+          "command": "validate-contract",
+          "expected_body": {
+            "result": {
+              "quarantine_by_reason": {
+                "SCHEMA_CHANGED": 2
+              }
+            },
+            "status": "quarantined"
+          },
+          "expected_status": 200,
+          "expected_warning_codes": [
+            "SCHEMA_CHANGED"
+          ],
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-04-a-validate",
+            "input": {
+              "batch_id": "b-ev04-a"
+            },
+            "request_id": "req-ev-04-a-validate"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T02:00:20Z",
+          "command": "commit-batch",
+          "expected_reason": "BATCH_QUARANTINED",
+          "expected_status": 409,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-04-a-commit",
+            "input": {
+              "batch_id": "b-ev04-a"
+            },
+            "request_id": "req-ev-04-a-commit"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T02:30:00Z",
+          "command": "fetch-source-page",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-04-b-fetch",
+            "input": {
+              "batch_id": "b-ev04-b",
+              "cursor": "off-ev04",
+              "page": {
+                "next_cursor": "off-ev04-n",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "channel": "web",
+                      "currency": "EUR",
+                      "event_ts": "2026-10-04T23:51:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-SC-1",
+                      "unit_price": "10.00"
+                    }
+                  },
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "channel": "web",
+                      "currency": "EUR",
+                      "event_ts": "2026-10-04T23:52:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-SC-2",
+                      "unit_price": "10.00"
+                    }
+                  }
+                ],
+                "schema_version": "3"
+              },
+              "source_id": "src-payments"
+            },
+            "request_id": "req-ev-04-b-fetch"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T02:30:10Z",
+          "command": "validate-contract",
+          "expected_reason": "ROLE_FORBIDDEN",
+          "expected_status": 403,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-04-b-bump-engineer",
+            "input": {
+              "batch_id": "b-ev04-b",
+              "bump_schema_version": "3"
+            },
+            "request_id": "req-ev-04-b-bump-engineer"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T02:30:20Z",
+          "command": "validate-contract",
+          "expected_body": {
+            "result": {
+              "accepted_unique": 2
+            },
+            "status": "validated"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-04-b-bump",
+            "input": {
+              "batch_id": "b-ev04-b",
+              "bump_schema_version": "3"
+            },
+            "request_id": "req-ev-04-b-bump"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T02:30:30Z",
+          "command": "commit-batch",
+          "expected_body": {
+            "result": {
+              "accepted_unique": 2
+            }
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-04-b-commit",
+            "input": {
+              "batch_id": "b-ev04-b"
+            },
+            "request_id": "req-ev-04-b-commit"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-05",
+      "injection": "INJ-05",
+      "requires": [],
+      "steps": [
+        {
+          "at": "2026-10-05T02:40:00Z",
+          "command": "fetch-source-page",
+          "expected_body": {
+            "status": "staged"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-05-a-fetch",
+            "input": {
+              "batch_id": "b-ev05",
+              "cursor": "off-ev05",
+              "page": {
+                "next_cursor": "off-ev05-n",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:40:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-MF-1",
+                      "unit_price": "10.00"
+                    }
+                  },
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:41:00Z",
+                      "quantity": 1,
+                      "unit_price": "10.00"
+                    }
+                  },
+                  {
+                    "payload": {
+                      "amount": "12,50",
+                      "event_ts": "2026-10-04T23:42:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-MF-3",
+                      "unit_price": "10.00"
+                    }
+                  }
+                ]
+              },
+              "source_id": "src-orders"
+            },
+            "request_id": "req-ev-05-a-fetch"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T02:40:00Z",
+          "command": "validate-contract",
+          "expected_body": {
+            "result": {
+              "accepted_unique": 1,
+              "quarantine_by_reason": {
+                "INVALID_FIELD": 1,
+                "MISSING_FIELD": 1
+              },
+              "quarantined": 2,
+              "received": 3
+            }
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-05-a-validate",
+            "input": {
+              "batch_id": "b-ev05"
+            },
+            "request_id": "req-ev-05-a-validate"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T02:40:30Z",
+          "command": "commit-batch",
+          "expected_body": {
+            "result": {
+              "accepted_unique": 1,
+              "quarantined": 2,
+              "received": 3
+            }
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-05-commit",
+            "input": {
+              "batch_id": "b-ev05"
+            },
+            "request_id": "req-ev-05-commit"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T02:41:00Z",
+          "expect": [
+            {
+              "equals": 2,
+              "path": "meta.total_count"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "batch_id": "b-ev05"
+          },
+          "path": "/data/quarantine_records"
+        },
+        {
+          "at": "2026-10-05T02:41:10Z",
+          "expect": [
+            {
+              "equals": 3,
+              "path": "meta.total_count"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "batch_id": "b-ev05"
+          },
+          "path": "/data/raw_records"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-06",
+      "injection": "INJ-06",
+      "requires": [
+        "src-refunds"
+      ],
+      "steps": [
+        {
+          "at": "2026-10-05T03:00:00Z",
+          "expect": [
+            {
+              "equals": 262378,
+              "path": "data.metrics.freshness.src-refunds.freshness_seconds"
+            },
+            {
+              "equals": 17363,
+              "path": "data.metrics.freshness.src-refunds.ingestion_age_seconds"
+            },
+            {
+              "equals": "0.000000",
+              "path": "data.metrics.completeness.src-refunds.2026-10-03.value"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "cutoff": "2026-10-05T00:00:00Z",
+            "source_id": "src-refunds"
+          },
+          "path": "/metrics"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-07",
+      "injection": "INJ-07",
+      "requires": [
+        "pub-1343"
+      ],
+      "steps": [
+        {
+          "at": "2026-10-05T03:30:00Z",
+          "command": "fetch-source-page",
+          "expected_body": {
+            "status": "staged"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-07-a-fetch",
+            "input": {
+              "batch_id": "b-ev07",
+              "cursor": "off-ev07",
+              "page": {
+                "next_cursor": "off-ev07-n",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:41:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-FR-1",
+                      "unit_price": "10.00"
+                    }
+                  },
+                  {
+                    "payload": {
+                      "amount": "20.00",
+                      "event_ts": "2026-10-04T23:42:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-FR-2",
+                      "unit_price": "20.00"
+                    }
+                  },
+                  {
+                    "payload": {
+                      "amount": "30.00",
+                      "event_ts": "2026-10-04T23:43:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-FR-3",
+                      "unit_price": "30.00"
+                    }
+                  }
+                ]
+              },
+              "source_id": "src-orders"
+            },
+            "request_id": "req-ev-07-a-fetch"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T03:30:00Z",
+          "command": "validate-contract",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-07-a-validate",
+            "input": {
+              "batch_id": "b-ev07"
+            },
+            "request_id": "req-ev-07-a-validate"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T03:30:00Z",
+          "command": "commit-batch",
+          "expected_body": {
+            "status": "committed"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-07-a-commit",
+            "input": {
+              "batch_id": "b-ev07"
+            },
+            "request_id": "req-ev-07-a-commit"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T03:31:00Z",
+          "command": "transform-models",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-07-transform",
+            "input": {
+              "batch_ids": [
+                "b-ev07"
+              ],
+              "run_id": "run-ev07"
+            },
+            "request_id": "req-ev-07-transform"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T03:32:00Z",
+          "command": "inject-fault",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-07-fault",
+            "input": {
+              "fault_type": "duplicate_key",
+              "note": "P08-TEST-07",
+              "target_id": "run-ev07"
+            },
+            "request_id": "req-ev-07-fault"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T03:33:00Z",
+          "command": "run-quality-gate",
+          "expected_body": {
+            "result": {
+              "critical_failures": 2,
+              "decision": "blocked"
+            },
+            "status": "blocked"
+          },
+          "expected_status": 200,
+          "expected_warning_codes": [
+            "GATE_BLOCKED"
+          ],
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-07-gate",
+            "input": {
+              "run_id": "run-ev07"
+            },
+            "request_id": "req-ev-07-gate"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T03:34:00Z",
+          "command": "publish-snapshot",
+          "expected_reason": "RUN_NOT_SUCCESSFUL",
+          "expected_status": 409,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-07-publish",
+            "input": {
+              "run_id": "run-ev07",
+              "watermark": "2026-10-05T03:00:00Z"
+            },
+            "request_id": "req-ev-07-publish"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T03:35:00Z",
+          "expect": [
+            {
+              "equals": "pub-1343",
+              "path": "data.0.publication_id"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {},
+          "path": "/data/publication_pointer"
+        },
+        {
+          "at": "2026-10-05T03:35:10Z",
+          "expect": [
+            {
+              "equals": 0,
+              "path": "meta.total_count"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "run_id": "run-ev07"
+          },
+          "path": "/data/publications"
+        },
+        {
+          "at": "2026-10-05T03:35:20Z",
+          "expect": [
+            {
+              "equals": 1,
+              "path": "meta.total_count"
+            },
+            {
+              "equals": "open",
+              "path": "data.0.status"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "run_id": "run-ev07"
+          },
+          "path": "/data/incidents"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-08",
+      "injection": "INJ-08",
+      "requires": [],
+      "steps": [
+        {
+          "at": "2026-10-05T04:00:00Z",
+          "command": "fetch-source-page",
+          "expected_body": {
+            "status": "staged"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-08-a-fetch",
+            "input": {
+              "batch_id": "b-ev08-a",
+              "cursor": "off-ev08",
+              "page": {
+                "next_cursor": "off-ev08-n",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:40:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-DEL-1",
+                      "unit_price": "10.00"
+                    }
+                  },
+                  {
+                    "payload": {
+                      "amount": "20.00",
+                      "event_ts": "2026-10-04T23:41:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-DEL-2",
+                      "unit_price": "20.00"
+                    }
+                  }
+                ]
+              },
+              "source_id": "src-orders"
+            },
+            "request_id": "req-ev-08-a-fetch"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:00:00Z",
+          "command": "validate-contract",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-08-a-validate",
+            "input": {
+              "batch_id": "b-ev08-a"
+            },
+            "request_id": "req-ev-08-a-validate"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:00:00Z",
+          "command": "commit-batch",
+          "expected_body": {
+            "status": "committed"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-08-a-commit",
+            "input": {
+              "batch_id": "b-ev08-a"
+            },
+            "request_id": "req-ev-08-a-commit"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:10:00Z",
+          "command": "fetch-source-page",
+          "expected_body": {
+            "status": "staged"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-08-b-fetch",
+            "input": {
+              "batch_id": "b-ev08-b",
+              "cursor": "off-ev08-n",
+              "page": {
+                "next_cursor": "off-ev08-m",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "0.00",
+                      "event_ts": "2026-10-04T23:50:00Z",
+                      "op": "delete",
+                      "record_id": "INJ-DEL-1"
+                    }
+                  },
+                  {
+                    "payload": {
+                      "amount": "0.00",
+                      "event_ts": "2026-10-04T23:51:00Z",
+                      "op": "delete",
+                      "record_id": "INJ-DEL-404"
+                    }
+                  }
+                ]
+              },
+              "source_id": "src-orders"
+            },
+            "request_id": "req-ev-08-b-fetch"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:10:00Z",
+          "command": "validate-contract",
+          "expected_body": {
+            "result": {
+              "deleted": 1,
+              "quarantine_by_reason": {
+                "DELETE_TARGET_UNKNOWN": 1
+              },
+              "quarantined": 1
+            }
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-08-b-validate",
+            "input": {
+              "batch_id": "b-ev08-b"
+            },
+            "request_id": "req-ev-08-b-validate"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:10:30Z",
+          "command": "commit-batch",
+          "expected_body": {
+            "result": {
+              "deleted": 1,
+              "quarantined": 1
+            }
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-08-b-commit",
+            "input": {
+              "batch_id": "b-ev08-b"
+            },
+            "request_id": "req-ev-08-b-commit"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:11:00Z",
+          "command": "transform-models",
+          "expected_body": {
+            "result": {
+              "outputs": 1
+            }
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-08-transform",
+            "input": {
+              "batch_ids": [
+                "b-ev08-a",
+                "b-ev08-b"
+              ],
+              "run_id": "run-ev08"
+            },
+            "request_id": "req-ev-08-transform"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:12:00Z",
+          "command": "run-quality-gate",
+          "expected_body": {
+            "result": {
+              "reconciliation": {
+                "exclusions": {
+                  "deletes": "10.00",
+                  "duplicates": "0.00",
+                  "quarantined": "0.00"
+                },
+                "residual": "0.00"
+              }
+            },
+            "status": "allowed"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-08-gate",
+            "input": {
+              "run_id": "run-ev08"
+            },
+            "request_id": "req-ev-08-gate"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:13:00Z",
+          "command": "publish-snapshot",
+          "expected_body": {
+            "result": {
+              "published_records": 1
+            }
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-08-publish",
+            "input": {
+              "run_id": "run-ev08",
+              "watermark": "2026-10-05T04:00:00Z"
+            },
+            "request_id": "req-ev-08-publish"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-09",
+      "injection": "INJ-09",
+      "requires": [],
+      "steps": [
+        {
+          "at": "2026-10-05T04:30:00Z",
+          "command": "fetch-source-page",
+          "expected_body": {
+            "status": "staged"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-09-a-fetch",
+            "input": {
+              "batch_id": "b-ev09-a",
+              "cursor": "off-ev09",
+              "page": {
+                "next_cursor": "off-ev09-a",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-05T00:00:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-LATE-0",
+                      "unit_price": "10.00"
+                    }
+                  },
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-05T00:01:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-LATE-00",
+                      "unit_price": "10.00"
+                    }
+                  }
+                ]
+              },
+              "source_id": "src-orders"
+            },
+            "request_id": "req-ev-09-a-fetch"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:30:00Z",
+          "command": "validate-contract",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-09-a-validate",
+            "input": {
+              "batch_id": "b-ev09-a"
+            },
+            "request_id": "req-ev-09-a-validate"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:30:00Z",
+          "command": "commit-batch",
+          "expected_body": {
+            "status": "committed"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-09-a-commit",
+            "input": {
+              "batch_id": "b-ev09-a"
+            },
+            "request_id": "req-ev-09-a-commit"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:31:00Z",
+          "command": "transform-models",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-09-x-transform",
+            "input": {
+              "batch_ids": [
+                "b-ev09-a"
+              ],
+              "run_id": "run-ev09x"
+            },
+            "request_id": "req-ev-09-x-transform"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:31:00Z",
+          "command": "run-quality-gate",
+          "expected_body": {
+            "status": "allowed"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-09-x-gate",
+            "input": {
+              "run_id": "run-ev09x"
+            },
+            "request_id": "req-ev-09-x-gate"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:31:00Z",
+          "command": "publish-snapshot",
+          "expected_body": {
+            "status": "published"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-09-x-publish",
+            "input": {
+              "run_id": "run-ev09x",
+              "watermark": "2026-10-05T04:20:00Z"
+            },
+            "request_id": "req-ev-09-x-publish"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:40:00Z",
+          "command": "fetch-source-page",
+          "expected_body": {
+            "status": "staged"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-09-b-fetch",
+            "input": {
+              "batch_id": "b-ev09-b",
+              "cursor": "off-ev09-a",
+              "page": {
+                "next_cursor": "off-ev09-b",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-05T00:10:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-LATE-1",
+                      "unit_price": "10.00"
+                    }
+                  }
+                ]
+              },
+              "source_id": "src-orders"
+            },
+            "request_id": "req-ev-09-b-fetch"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:40:00Z",
+          "command": "validate-contract",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-09-b-validate",
+            "input": {
+              "batch_id": "b-ev09-b"
+            },
+            "request_id": "req-ev-09-b-validate"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:40:00Z",
+          "command": "commit-batch",
+          "expected_body": {
+            "status": "committed"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-09-b-commit",
+            "input": {
+              "batch_id": "b-ev09-b"
+            },
+            "request_id": "req-ev-09-b-commit"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:50:00Z",
+          "command": "transform-models",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-09-y-transform",
+            "input": {
+              "batch_ids": [
+                "b-ev09-a",
+                "b-ev09-b"
+              ],
+              "run_id": "run-ev09y"
+            },
+            "request_id": "req-ev-09-y-transform"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:50:00Z",
+          "command": "run-quality-gate",
+          "expected_body": {
+            "status": "allowed"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-09-y-gate",
+            "input": {
+              "run_id": "run-ev09y"
+            },
+            "request_id": "req-ev-09-y-gate"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T04:50:00Z",
+          "command": "publish-snapshot",
+          "expected_body": {
+            "status": "published"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-09-y-publish",
+            "input": {
+              "run_id": "run-ev09y",
+              "watermark": "2026-10-05T04:45:00Z"
+            },
+            "request_id": "req-ev-09-y-publish"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T05:00:00Z",
+          "expect": [
+            {
+              "equals": {
+                "batch_id": "b-ev09-b",
+                "behind_publication_id": "pub-ev09x",
+                "included_in_publication_id": "pub-ev09y"
+              },
+              "find": {
+                "source_key": "INJ-LATE-1"
+              },
+              "path": "data.metrics.late_events.events"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "cutoff": "2026-10-05T05:00:00Z",
+            "source_id": "src-orders"
+          },
+          "path": "/metrics"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-10",
+      "injection": "INJ-10",
+      "requires": [],
+      "steps": [
+        {
+          "at": "2026-10-05T05:30:00Z",
+          "command": "fetch-source-page",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-10-p0",
+            "input": {
+              "cursor": "c0",
+              "fetch_session": "ev10-s1",
+              "page": {
+                "next_cursor": "c1",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:30:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-CL-0",
+                      "unit_price": "10.00"
+                    }
+                  }
+                ]
+              },
+              "source_id": "src-web-events"
+            },
+            "request_id": "req-ev-10-p0"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T05:30:00Z",
+          "command": "fetch-source-page",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-10-p1",
+            "input": {
+              "cursor": "c1",
+              "fetch_session": "ev10-s1",
+              "page": {
+                "next_cursor": "c2",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:30:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-CL-1",
+                      "unit_price": "10.00"
+                    }
+                  }
+                ]
+              },
+              "source_id": "src-web-events"
+            },
+            "request_id": "req-ev-10-p1"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T05:30:00Z",
+          "command": "fetch-source-page",
+          "expected_reason": "CURSOR_LOOP",
+          "expected_status": 409,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-10-p2",
+            "input": {
+              "cursor": "c2",
+              "fetch_session": "ev10-s1",
+              "page": {
+                "next_cursor": "c1",
+                "records": [
+                  {
+                    "payload": {
+                      "amount": "10.00",
+                      "event_ts": "2026-10-04T23:30:00Z",
+                      "quantity": 1,
+                      "record_id": "INJ-CL-2",
+                      "unit_price": "10.00"
+                    }
+                  }
+                ]
+              },
+              "source_id": "src-web-events"
+            },
+            "request_id": "req-ev-10-p2"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T05:31:00Z",
+          "command": "fetch-source-page",
+          "expected_reason": "CURSOR_LOOP",
+          "expected_status": 409,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-10-stopped",
+            "input": {
+              "cursor": "c9",
+              "fetch_session": "ev10-s1",
+              "page": {
+                "next_cursor": "c10",
+                "records": []
+              },
+              "source_id": "src-web-events"
+            },
+            "request_id": "req-ev-10-stopped"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T05:32:00Z",
+          "command": "fetch-source-page",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-eng01",
+            "X-Actor-Role": "engineer"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-10-new-session",
+            "input": {
+              "cursor": "c9",
+              "fetch_session": "ev10-s2",
+              "page": {
+                "next_cursor": "c10",
+                "records": []
+              },
+              "source_id": "src-web-events"
+            },
+            "request_id": "req-ev-10-new-session"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T05:33:00Z",
+          "expect": [
+            {
+              "equals": 1,
+              "path": "meta.total_count"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "source_id": "src-web-events",
+            "status": "cursor_loop"
+          },
+          "path": "/data/fetch_log"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-11",
+      "injection": "INJ-11",
+      "requires": [],
+      "steps": [
+        {
+          "at": "2026-10-05T06:00:00Z",
+          "command": "inject-fault",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-op01",
+            "X-Actor-Role": "operator"
+          },
+          "input": {
+            "dataset_version": "po-20261026-20261026",
+            "idempotency_key": "ev-11-fault",
+            "input": {
+              "fault_type": "crash_before_checkpoint",
+              "note": "retry with api_key=SYNTHETIC-NOT-A-KEY-0001 and Authorization: Bearer SYNTHETICTOKEN0000",
+              "target_id": "src-web-events"
+            },
+            "request_id": "req-ev-11-fault"
+          },
+          "kind": "command"
+        },
+        {
+          "at": "2026-10-05T06:00:30Z",
+          "expect": [
+            {
+              "contains": "[REDACTED]",
+              "path": "data.0.note"
+            },
+            {
+              "not_contains": "SYNTHETIC-NOT-A-KEY-0001",
+              "path": "data.0.note"
+            },
+            {
+              "not_contains": "SYNTHETICTOKEN0000",
+              "path": "data.0.note"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "target_id": "src-web-events"
+          },
+          "path": "/data/fault_injections"
+        },
+        {
+          "args": {
+            "line": "{\"event\":\"fetch\",\"level\":\"INFO\",\"msg\":\"retrying src-shipments\",\"api_key\":\"SYNTHETIC-NOT-A-KEY-0001\",\"headers\":{\"Authorization\":\"Bearer SYNTHETICTOKEN0000\"},\"url\":\"https://api.example.test/shipments?token=SYNTHETIC-TOKEN-0002\"}"
+          },
+          "expect_contains": [
+            "[REDACTED]"
+          ],
+          "expect_not_contains": [
+            "SYNTHETIC-NOT-A-KEY-0001",
+            "SYNTHETICTOKEN0000",
+            "SYNTHETIC-TOKEN-0002"
+          ],
+          "fn": "redaction.safe_line",
+          "kind": "check"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-12",
+      "injection": "INJ-12",
+      "requires": [],
+      "steps": [
+        {
+          "args": {
+            "file_name": "refresh-generated-evidence.yml",
+            "text": "name: refresh-generated-evidence\non:\n  push:\n    branches: [main]\npermissions:\n  contents: write\njobs:\n  refresh:\n    runs-on: ubuntu-24.04\n    steps:\n      - uses: actions/checkout@v4\n      - run: python data/generate.py\n      - run: |\n          git config user.name synthetic-bot\n          git add -A\n          git commit -m \"refresh generated evidence\"\n          git push origin main\n"
+          },
+          "expect_codes": [
+            "SELF_PUSH"
+          ],
+          "fn": "workflow_guard.analyze",
+          "kind": "check"
+        },
+        {
+          "args": {
+            "file_name": "refresh-generated-evidence.yml",
+            "text": "name: refresh-generated-evidence\non:\n  push:\n    branches: [main]\npermissions:\n  contents: write\njobs:\n  refresh:\n    runs-on: ubuntu-24.04\n    steps:\n      - uses: actions/checkout@v4\n      - run: python data/generate.py\n      - run: |\n          git config user.name synthetic-bot\n          git add -A\n          git commit -m \"refresh generated evidence [skip ci]\"\n          git push origin main\n"
+          },
+          "expect_codes": [],
+          "fn": "workflow_guard.analyze",
+          "kind": "check"
+        }
+      ]
+    }
+  ],
+  "injections": [
+    {
+      "checks": [
+        {
+          "equals": false,
+          "path": "metrics.ingestion.sources.src-orders.batches.b-0596.counted"
+        },
+        {
+          "equals": "aborted",
+          "path": "metrics.ingestion.sources.src-orders.batches.b-0596.status"
+        },
+        {
+          "equals": 71,
+          "path": "metrics.ingestion.sources.src-orders.batches.b-0596.written_rows"
+        },
+        {
+          "equals": 0,
+          "path": "metrics.ingestion.sources.src-orders.batches.b-0596.accepted_unique"
+        },
+        {
+          "equals": 69,
+          "path": "metrics.ingestion.sources.src-orders.batches.b-0597.accepted_unique"
+        },
+        {
+          "equals": 71,
+          "path": "metrics.ingestion.sources.src-orders.batches.b-0597.received"
+        },
+        {
+          "contains": "b-0596",
+          "path": "metrics.ingestion.sources.src-orders.checkpoint.uncommitted_batches"
+        }
+      ],
+      "defect": "The ingest of b-0596 wrote its 71 rows and died before the checkpoint; the batch was re-fetched from the same cursor as b-0597.",
+      "events": [
+        "EV-01"
+      ],
+      "evidence": {
+        "aborted_batch": "b-0596",
+        "accepted_by_the_replay": 69,
+        "replay_batch": "b-0597",
+        "rows_accepted_in_the_aborted_batch": 0,
+        "rows_written": 71
+      },
+      "expected_handling": "The aborted batch counts for nothing (no checkpoint, counted false); the replay accepts each key exactly once; the checkpoint versions stay consecutive.",
+      "expected_rejections": [],
+      "id": "INJ-01",
+      "location": "both",
+      "name": "crash after the data write, before the checkpoint",
+      "records": [
+        {
+          "entity": "ingestion_batches",
+          "id": "b-0596"
+        },
+        {
+          "entity": "ingestion_batches",
+          "id": "b-0597"
+        },
+        {
+          "entity": "checkpoints",
+          "id": "cp-b-0597"
+        }
+      ],
+      "test": "P08-TEST-01"
+    },
+    {
+      "checks": [
+        {
+          "equals": [
+            "bf-006",
+            "bf-012"
+          ],
+          "path": "metrics.backfills.refused"
+        },
+        {
+          "equals": 13,
+          "path": "ingest.counts.backfill_requests.accepted"
+        },
+        {
+          "equals": 2,
+          "path": "ingest.counts.backfill_requests.rejected"
+        }
+      ],
+      "defect": "Two backfill requests (bf-006 and bf-012) overlap an earlier accepted request of the same source.",
+      "events": [
+        "EV-02"
+      ],
+      "evidence": {
+        "refused": {
+          "bf-006": {
+            "overlaps": "bf-004",
+            "source_id": "src-inventory"
+          },
+          "bf-012": {
+            "overlaps": "bf-010",
+            "source_id": "src-web-events"
+          }
+        }
+      },
+      "expected_handling": "Each is refused with BACKFILL_OVERLAP and keeps its id; the earlier request stands; touching half-open ranges are accepted.",
+      "expected_rejections": [
+        {
+          "entity": "backfill_requests",
+          "id": "bf-006",
+          "reason_code": "BACKFILL_OVERLAP"
+        },
+        {
+          "entity": "backfill_requests",
+          "id": "bf-012",
+          "reason_code": "BACKFILL_OVERLAP"
+        }
+      ],
+      "id": "INJ-02",
+      "location": "both",
+      "name": "overlapping backfills",
+      "records": [
+        {
+          "entity": "backfill_requests",
+          "id": "bf-004"
+        },
+        {
+          "entity": "backfill_requests",
+          "id": "bf-006"
+        },
+        {
+          "entity": "backfill_requests",
+          "id": "bf-010"
+        },
+        {
+          "entity": "backfill_requests",
+          "id": "bf-012"
+        }
+      ],
+      "test": "P08-TEST-02"
+    },
+    {
+      "checks": [],
+      "defect": "A client retries src-shipments 80 s too early after a 429 with retry-after 120 s.",
+      "events": [
+        "EV-03"
+      ],
+      "evidence": {
+        "recorded_retries": {
+          "cursor_loops": 1,
+          "fetch_rows": 1361,
+          "max_slack_seconds": 25,
+          "min_slack_seconds": 0,
+          "rate_limited_responses": 49,
+          "retries": 49,
+          "retries_honouring_retry_after": 49,
+          "retries_too_soon": 0,
+          "sessions_rate_limited": 33,
+          "source_id": "src-shipments",
+          "sources_rate_limited": [
+            "src-shipments"
+          ]
+        },
+        "refused_attempt": {
+          "attempted_at": "2026-08-12T15:07:04Z",
+          "cursor": "off-000166",
+          "rate_limited_at": "2026-08-12T15:06:24Z",
+          "refused": "RETRY_TOO_SOON",
+          "remaining_seconds": 80,
+          "retry_after_seconds": 120,
+          "retry_not_before": "2026-08-12T15:08:24Z",
+          "source_id": "src-shipments"
+        }
+      },
+      "expected_handling": "The early retry is refused with RETRY_TOO_SOON (429, Retry-After header, nothing staged); the fetches recorded in fetch_log all wait at least retry-after.",
+      "expected_rejections": [],
+      "id": "INJ-03",
+      "location": "both",
+      "name": "retries that ignore retry-after",
+      "records": [
+        {
+          "entity": "fetch_log",
+          "id": 61
+        },
+        {
+          "entity": "fetch_log",
+          "id": 62
+        },
+        {
+          "entity": "fetch_log",
+          "id": 63
+        }
+      ],
+      "test": "P08-TEST-03"
+    },
+    {
+      "checks": [
+        {
+          "equals": "quarantined",
+          "path": "metrics.ingestion.sources.src-payments.batches.b-0847.status"
+        },
+        {
+          "equals": false,
+          "path": "metrics.ingestion.sources.src-payments.batches.b-0847.counted"
+        },
+        {
+          "equals": 17,
+          "path": "metrics.ingestion.sources.src-payments.batches.b-0847.written_rows"
+        },
+        {
+          "equals": 15,
+          "path": "metrics.ingestion.sources.src-payments.batches.b-0848.accepted_unique"
+        }
+      ],
+      "defect": "From 2026-09-15 src-payments declares schema_version 2 and adds the required field channel; the first page (b-0847) arrives before the expected version is bumped.",
+      "events": [
+        "EV-04"
+      ],
+      "evidence": {
+        "accepted_after_the_bump": 15,
+        "bumped_at": "2026-09-15T02:41:37Z",
+        "from_version": "1",
+        "quarantined_batch": "b-0847",
+        "refetch_batch": "b-0848",
+        "rows_quarantined_whole": 17,
+        "to_version": "2"
+      },
+      "expected_handling": "The batch is quarantined whole with SCHEMA_CHANGED and the checkpoint does not move; an operator bumps the expected version explicitly and the window is fetched again.",
+      "expected_rejections": [],
+      "id": "INJ-04",
+      "location": "both",
+      "name": "an unexpected required field",
+      "records": [
+        {
+          "entity": "ingestion_batches",
+          "id": "b-0847"
+        },
+        {
+          "entity": "ingestion_batches",
+          "id": "b-0848"
+        },
+        {
+          "entity": "source_contracts",
+          "id": "src-payments"
+        }
+      ],
+      "test": "P08-TEST-04"
+    },
+    {
+      "checks": [
+        {
+          "equals": true,
+          "path": "metrics.ingestion.sources.src-orders.batches.b-0405.quarantine_rows_match"
+        },
+        {
+          "min": 1,
+          "path": "metrics.ingestion.sources.src-orders.batches.b-0405.quarantined"
+        },
+        {
+          "min": 1,
+          "path": "metrics.ingestion.sources.src-orders.quarantine_by_reason.MISSING_FIELD"
+        }
+      ],
+      "defect": "b-0405 carries a row with no record_id and no key.",
+      "events": [
+        "EV-05"
+      ],
+      "evidence": {
+        "batch": "b-0405",
+        "raw_record_id": "rr-b-0405-0033"
+      },
+      "expected_handling": "The row is quarantined MISSING_FIELD with a null source_key and has a quarantine row; received equals accepted + duplicate + quarantined + deleted for the batch.",
+      "expected_rejections": [],
+      "id": "INJ-05",
+      "location": "both",
+      "name": "a malformed row that would vanish",
+      "records": [
+        {
+          "entity": "raw_records",
+          "id": "rr-b-0405-0033"
+        },
+        {
+          "entity": "quarantine_records",
+          "id": "q-b-0405-02"
+        }
+      ],
+      "test": "P08-TEST-05"
+    },
+    {
+      "checks": [
+        {
+          "min": 259200,
+          "path": "metrics.freshness.src-refunds.freshness_seconds"
+        },
+        {
+          "max": 21600,
+          "path": "metrics.freshness.src-refunds.ingestion_age_seconds"
+        },
+        {
+          "equals": "0.000000",
+          "path": "metrics.completeness.src-refunds.2026-10-02.value"
+        },
+        {
+          "equals": "0.000000",
+          "path": "metrics.completeness.src-refunds.2026-10-04.value"
+        }
+      ],
+      "defect": "src-refunds stops delivering new events at 2026-10-02T00:00:00Z but its fetches keep succeeding.",
+      "events": [
+        "EV-06"
+      ],
+      "evidence": {
+        "committed_batches_in_window": 12
+      },
+      "expected_handling": "Freshness (now minus the latest accepted event) reads three days while the ingestion age stays hours; completeness of the silent partitions is 0; every run is green.",
+      "expected_rejections": [],
+      "id": "INJ-06",
+      "location": "both",
+      "name": "a green job on a stale source",
+      "records": [
+        {
+          "entity": "source_contracts",
+          "id": "src-refunds"
+        },
+        {
+          "entity": "ingestion_batches",
+          "id": "b-1244"
+        },
+        {
+          "entity": "ingestion_batches",
+          "id": "b-1308"
+        }
+      ],
+      "test": "P08-TEST-06"
+    },
+    {
+      "checks": [
+        {
+          "equals": "blocked",
+          "path": "metrics.quality_gate.run-1187.decision"
+        },
+        {
+          "equals": 1,
+          "path": "metrics.quality_gate.run-1187.critical_failures"
+        },
+        {
+          "equals": "blocked",
+          "path": "metrics.publications.pointer_history.1186.gate_decision"
+        },
+        {
+          "equals": "pub-1186",
+          "path": "metrics.publications.pointer_history.1186.pointer_after"
+        },
+        {
+          "absent": true,
+          "path": "metrics.publications.publications.pub-1187"
+        }
+      ],
+      "defect": "run-1187 fails its critical relationships check; a pipeline that publishes it anyway would replace the current publication with a snapshot that failed the gate.",
+      "events": [
+        "EV-07"
+      ],
+      "evidence": {
+        "critical_failures": 1,
+        "gate_decision": "blocked",
+        "incident_id": "inc-022",
+        "pointer_after": "pub-1186",
+        "pointer_before": "pub-1186",
+        "pointer_history_index": 1186,
+        "pointer_unchanged": true,
+        "publication_exists": false,
+        "recovery_minutes": "67.8833",
+        "recovery_run_id": "run-1188",
+        "run_id": "run-1187",
+        "run_status": "failed"
+      },
+      "expected_handling": "The gate blocks, the run fails, an incident opens, no publication row exists and the pointer stays on the previous publication.",
+      "expected_rejections": [],
+      "id": "INJ-07",
+      "location": "both",
+      "name": "a failed run that would replace a publication",
+      "records": [
+        {
+          "entity": "pipeline_runs",
+          "id": "run-1187"
+        },
+        {
+          "entity": "quality_results",
+          "id": "qr-1187-02"
+        },
+        {
+          "entity": "quality_results",
+          "id": "qr-1187-05"
+        },
+        {
+          "entity": "incidents",
+          "id": "inc-022"
+        }
+      ],
+      "test": "P08-TEST-07"
+    },
+    {
+      "checks": [
+        {
+          "equals": "80.00",
+          "path": "metrics.reconciliation.pub-1044.exclusions.deletes"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.reconciliation.pub-1043.exclusions.deletes"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.reconciliation.pub-1044.residual"
+        },
+        {
+          "equals": 300,
+          "path": "metrics.publications.publications.pub-1044.published_records"
+        },
+        {
+          "equals": 230,
+          "path": "metrics.publications.publications.pub-1043.published_records"
+        }
+      ],
+      "defect": "ORD-012484 is accepted in b-1019 and cancelled by a delete event in b-1022 the same day; a pipeline that ignores op = delete would keep it in every later snapshot.",
+      "events": [
+        "EV-08"
+      ],
+      "evidence": {
+        "accepted_in": "b-1019",
+        "deleted_in": "b-1022",
+        "first_publication_without_it": "pub-1044",
+        "last_publication_with_the_record": "pub-1043",
+        "record": "ORD-012484"
+      },
+      "expected_handling": "The delete row is classified deleted; the record leaves the snapshot from the first publication that includes the delete and appears as a deletes exclusion in the reconciliation; a delete of an unknown key is quarantined DELETE_TARGET_UNKNOWN.",
+      "expected_rejections": [],
+      "id": "INJ-08",
+      "location": "both",
+      "name": "a delete that is not propagated",
+      "records": [
+        {
+          "entity": "raw_records",
+          "id": "rr-b-1022-0075"
+        },
+        {
+          "entity": "ingestion_batches",
+          "id": "b-1019"
+        },
+        {
+          "entity": "ingestion_batches",
+          "id": "b-1022"
+        },
+        {
+          "entity": "publications",
+          "id": "pub-1043"
+        },
+        {
+          "entity": "publications",
+          "id": "pub-1044"
+        }
+      ],
+      "test": "P08-TEST-08"
+    },
+    {
+      "checks": [
+        {
+          "equals": 0,
+          "path": "metrics.late_events.lost"
+        },
+        {
+          "equals": {
+            "batch_id": "b-0932",
+            "behind_publication_id": "pub-0951",
+            "included_in_publication_id": "pub-0952"
+          },
+          "find": {
+            "source_key": "ORD-011279"
+          },
+          "path": "metrics.late_events.events"
+        },
+        {
+          "equals": {
+            "batch_id": "b-0932",
+            "behind_publication_id": "pub-0951",
+            "included_in_publication_id": "pub-0952"
+          },
+          "find": {
+            "source_key": "ORD-011284"
+          },
+          "path": "metrics.late_events.events"
+        },
+        {
+          "equals": {
+            "batch_id": "b-0932",
+            "behind_publication_id": "pub-0951",
+            "included_in_publication_id": "pub-0952"
+          },
+          "find": {
+            "source_key": "ORD-011287"
+          },
+          "path": "metrics.late_events.events"
+        },
+        {
+          "equals": {
+            "batch_id": "b-0932",
+            "behind_publication_id": "pub-0951",
+            "included_in_publication_id": "pub-0952"
+          },
+          "find": {
+            "source_key": "ORD-011294"
+          },
+          "path": "metrics.late_events.events"
+        },
+        {
+          "equals": {
+            "batch_id": "b-0932",
+            "behind_publication_id": "pub-0951",
+            "included_in_publication_id": "pub-0952"
+          },
+          "find": {
+            "source_key": "ORD-011302"
+          },
+          "path": "metrics.late_events.events"
+        },
+        {
+          "equals": {
+            "batch_id": "b-0932",
+            "behind_publication_id": "pub-0951",
+            "included_in_publication_id": "pub-0952"
+          },
+          "find": {
+            "source_key": "ORD-011303"
+          },
+          "path": "metrics.late_events.events"
+        },
+        {
+          "equals": {
+            "batch_id": "b-0932",
+            "behind_publication_id": "pub-0951",
+            "included_in_publication_id": "pub-0952"
+          },
+          "find": {
+            "source_key": "ORD-011309"
+          },
+          "path": "metrics.late_events.events"
+        },
+        {
+          "equals": {
+            "batch_id": "b-0932",
+            "behind_publication_id": "pub-0951",
+            "included_in_publication_id": "pub-0952"
+          },
+          "find": {
+            "source_key": "ORD-011315"
+          },
+          "path": "metrics.late_events.events"
+        },
+        {
+          "equals": {
+            "batch_id": "b-0932",
+            "behind_publication_id": "pub-0951",
+            "included_in_publication_id": "pub-0952"
+          },
+          "find": {
+            "source_key": "ORD-011317"
+          },
+          "path": "metrics.late_events.events"
+        }
+      ],
+      "defect": "9 src-orders events dated 2026-09-17 18:00..23:50 arrive in b-0932 (2026-09-18), after the preceding publication whose watermark is later than they are.",
+      "events": [
+        "EV-09"
+      ],
+      "evidence": {
+        "batch": "b-0932",
+        "designed_events": [
+          "ORD-011279",
+          "ORD-011284",
+          "ORD-011287",
+          "ORD-011294",
+          "ORD-011302",
+          "ORD-011303",
+          "ORD-011309",
+          "ORD-011315",
+          "ORD-011317"
+        ]
+      },
+      "expected_handling": "Each is accepted, counted as a late event with the publication it is behind, and included in the next publication; none is lost.",
+      "expected_rejections": [],
+      "id": "INJ-09",
+      "location": "both",
+      "name": "a late event behind the watermark",
+      "records": [
+        {
+          "entity": "ingestion_batches",
+          "id": "b-0932"
+        },
+        {
+          "entity": "publications",
+          "id": "pub-0951"
+        },
+        {
+          "entity": "publications",
+          "id": "pub-0952"
+        }
+      ],
+      "test": "P08-TEST-09"
+    },
+    {
+      "checks": [],
+      "defect": "src-web-events answers the fetch from off-000693 with next_cursor off-000693, the cursor just fetched.",
+      "events": [
+        "EV-10"
+      ],
+      "evidence": {
+        "fetch_log_row": 576,
+        "fetched_at": "2026-09-02T18:10:26Z",
+        "session_id": "src-web-events:47:a"
+      },
+      "expected_handling": "The fetch stops with CURSOR_LOOP (409) and is recorded; the session is dead; a new session fetches the window; no batch is created by the looping page.",
+      "expected_rejections": [],
+      "id": "INJ-10",
+      "location": "both",
+      "name": "a pagination token that repeats",
+      "records": [
+        {
+          "entity": "fetch_log",
+          "id": 576
+        }
+      ],
+      "test": "P08-TEST-10"
+    },
+    {
+      "checks": [],
+      "defect": "A structured log line (and a fault note) carries an API key, a bearer token and a token in a URL.",
+      "events": [
+        "EV-11"
+      ],
+      "evidence": {
+        "log_line": "{\"event\":\"fetch\",\"level\":\"INFO\",\"msg\":\"retrying src-shipments\",\"api_key\":\"SYNTHETIC-NOT-A-KEY-0001\",\"headers\":{\"Authorization\":\"Bearer SYNTHETICTOKEN0000\"},\"url\":\"https://api.example.test/shipments?token=SYNTHETIC-TOKEN-0002\"}",
+        "redacted_by_the_domain": "{\"event\":\"fetch\",\"level\":\"INFO\",\"msg\":\"retrying src-shipments\",\"api_key\":[REDACTED],\"headers\":{\"Authorization\":\"[REDACTED]\"},\"url\":\"https://api.example.test/shipments?token=[REDACTED]\"}",
+        "secrets": [
+          "SYNTHETIC-NOT-A-KEY-0001",
+          "SYNTHETICTOKEN0000",
+          "SYNTHETIC-TOKEN-0002"
+        ]
+      },
+      "expected_handling": "Every secret span is replaced by [REDACTED] before the line is emitted or stored; a line that still matches is withheld whole.",
+      "expected_rejections": [],
+      "id": "INJ-11",
+      "location": "replay",
+      "name": "a secret in a structured log line",
+      "records": [],
+      "test": "P08-TEST-11"
+    },
+    {
+      "checks": [],
+      "defect": "A workflow that runs on push to main commits and pushes to main without a skip marker.",
+      "events": [
+        "EV-12"
+      ],
+      "evidence": {
+        "findings": [
+          {
+            "code": "SELF_PUSH",
+            "line": 17
+          }
+        ],
+        "fixed_text": "name: refresh-generated-evidence\non:\n  push:\n    branches: [main]\npermissions:\n  contents: write\njobs:\n  refresh:\n    runs-on: ubuntu-24.04\n    steps:\n      - uses: actions/checkout@v4\n      - run: python data/generate.py\n      - run: |\n          git config user.name synthetic-bot\n          git add -A\n          git commit -m \"refresh generated evidence [skip ci]\"\n          git push origin main\n",
+        "workflow_file": "refresh-generated-evidence.yml",
+        "workflow_text": "name: refresh-generated-evidence\non:\n  push:\n    branches: [main]\npermissions:\n  contents: write\njobs:\n  refresh:\n    runs-on: ubuntu-24.04\n    steps:\n      - uses: actions/checkout@v4\n      - run: python data/generate.py\n      - run: |\n          git config user.name synthetic-bot\n          git add -A\n          git commit -m \"refresh generated evidence\"\n          git push origin main\n"
+      },
+      "expected_handling": "The static guard reports SELF_PUSH for the workflow; with the [skip ci] marker in the commit message it reports nothing.",
+      "expected_rejections": [],
+      "id": "INJ-12",
+      "location": "replay",
+      "name": "a workflow that triggers itself",
+      "records": [],
+      "test": "P08-TEST-12"
+    }
+  ],
+  "replay": {
+    "clock": "each step carries `at`: freeze the API clock there",
+    "database": "seed data/seed.py with the published entity files, dataset_version = dataset_version",
+    "step_kinds": [
+      "command",
+      "read",
+      "check"
+    ]
+  },
+  "seed": 20261026
+}

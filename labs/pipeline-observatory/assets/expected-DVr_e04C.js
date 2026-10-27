@@ -1,0 +1,502 @@
+const n=`{
+  "contract_version": 1,
+  "as_of": "2026-10-05T00:00:00Z",
+  "cutoff": "2026-10-05T00:00:00Z",
+  "empty_population": false,
+  "ingest": {
+    "counts": {
+      "source_contracts": {
+        "accepted": 2,
+        "rejected": 0
+      },
+      "ingestion_batches": {
+        "accepted": 4,
+        "rejected": 0
+      },
+      "raw_records": {
+        "accepted": 31,
+        "rejected": 0
+      },
+      "quarantine_records": {
+        "accepted": 2,
+        "rejected": 0
+      },
+      "checkpoints": {
+        "accepted": 3,
+        "rejected": 0
+      },
+      "model_definitions": {
+        "accepted": 2,
+        "rejected": 0
+      },
+      "pipeline_runs": {
+        "accepted": 3,
+        "rejected": 0
+      },
+      "task_runs": {
+        "accepted": 12,
+        "rejected": 0
+      },
+      "quality_results": {
+        "accepted": 7,
+        "rejected": 0
+      },
+      "publications": {
+        "accepted": 2,
+        "rejected": 0
+      },
+      "incidents": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "backfill_requests": {
+        "accepted": 1,
+        "rejected": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "metrics": {
+    "ingestion": {
+      "sources": {
+        "src-orders": {
+          "batches": {
+            "b-001": {
+              "status": "committed",
+              "counted": true,
+              "written_rows": 10,
+              "received": 10,
+              "accepted_unique": 8,
+              "duplicate": 1,
+              "quarantined": 1,
+              "rejection_rate": "0.100000",
+              "duplicate_rate": "0.100000",
+              "quarantine_rows_match": true
+            },
+            "b-002": {
+              "status": "committed",
+              "counted": true,
+              "written_rows": 10,
+              "received": 10,
+              "accepted_unique": 0,
+              "duplicate": 9,
+              "quarantined": 1,
+              "rejection_rate": "0.100000",
+              "duplicate_rate": "0.900000",
+              "quarantine_rows_match": true
+            },
+            "b-003": {
+              "status": "aborted",
+              "counted": false,
+              "written_rows": 10,
+              "received": 0,
+              "accepted_unique": 0,
+              "duplicate": 0,
+              "quarantined": 0,
+              "rejection_rate": null,
+              "duplicate_rate": null,
+              "quarantine_rows_match": true
+            }
+          },
+          "received": 20,
+          "accepted_unique": 8,
+          "duplicate": 10,
+          "quarantined": 2,
+          "quarantined_distinct_keys": 1,
+          "rejection_rate": "0.100000",
+          "duplicate_rate": "0.500000",
+          "quarantine_by_reason": {
+            "NEGATIVE_QUANTITY": 2
+          },
+          "checkpoint": {
+            "committed_version": 2,
+            "committed_cursor": "cur-010",
+            "committed_batch_id": "b-002",
+            "uncommitted_batches": [
+              "b-003"
+            ],
+            "uncommitted_batches_with_checkpoint": 0
+          }
+        },
+        "src-refunds": {
+          "batches": {
+            "b-101": {
+              "status": "committed",
+              "counted": true,
+              "written_rows": 1,
+              "received": 1,
+              "accepted_unique": 1,
+              "duplicate": 0,
+              "quarantined": 0,
+              "rejection_rate": "0.000000",
+              "duplicate_rate": "0.000000",
+              "quarantine_rows_match": true
+            }
+          },
+          "received": 1,
+          "accepted_unique": 1,
+          "duplicate": 0,
+          "quarantined": 0,
+          "quarantined_distinct_keys": 0,
+          "rejection_rate": "0.000000",
+          "duplicate_rate": "0.000000",
+          "quarantine_by_reason": {},
+          "checkpoint": {
+            "committed_version": 1,
+            "committed_cursor": "cur-001",
+            "committed_batch_id": "b-101",
+            "uncommitted_batches": [],
+            "uncommitted_batches_with_checkpoint": 0
+          }
+        }
+      },
+      "overall": {
+        "received": 21,
+        "accepted_unique": 9,
+        "duplicate": 10,
+        "quarantined": 2,
+        "rejection_rate": "0.095238",
+        "duplicate_rate": "0.476190"
+      }
+    },
+    "freshness": {
+      "src-orders": {
+        "latest_accepted_event_at": "2026-10-04T09:30:00Z",
+        "freshness_seconds": 52200,
+        "last_successful_ingestion_at": "2026-10-04T12:05:00Z",
+        "ingestion_age_seconds": 42900
+      },
+      "src-refunds": {
+        "latest_accepted_event_at": "2026-10-04T09:10:00Z",
+        "freshness_seconds": 53400,
+        "last_successful_ingestion_at": "2026-10-04T11:05:00Z",
+        "ingestion_age_seconds": 46500
+      }
+    },
+    "completeness": {
+      "src-orders": {
+        "2026-10-04": {
+          "expected_records": 9,
+          "accepted_records": 8,
+          "value": "0.888889"
+        }
+      },
+      "src-refunds": {
+        "2026-10-04": {
+          "expected_records": 1,
+          "accepted_records": 1,
+          "value": "1.000000"
+        }
+      }
+    },
+    "runs": {
+      "runs": {
+        "run-001": {
+          "status": "success",
+          "duration_seconds": 1200,
+          "tasks": {
+            "ingest": {
+              "attempts": 1,
+              "final_status": "success"
+            },
+            "publish": {
+              "attempts": 1,
+              "final_status": "success"
+            },
+            "quality_gate": {
+              "attempts": 1,
+              "final_status": "success"
+            },
+            "transform": {
+              "attempts": 2,
+              "final_status": "success"
+            }
+          },
+          "tasks_terminal": 4,
+          "tasks_successful": 4,
+          "task_success_rate": "1.000000",
+          "attempts": 5,
+          "attempts_successful": 4,
+          "attempt_success_rate": "0.800000"
+        },
+        "run-002": {
+          "status": "failed",
+          "duration_seconds": 600,
+          "tasks": {
+            "ingest": {
+              "attempts": 1,
+              "final_status": "success"
+            },
+            "quality_gate": {
+              "attempts": 1,
+              "final_status": "failed"
+            },
+            "transform": {
+              "attempts": 1,
+              "final_status": "success"
+            }
+          },
+          "tasks_terminal": 3,
+          "tasks_successful": 2,
+          "task_success_rate": "0.666667",
+          "attempts": 3,
+          "attempts_successful": 2,
+          "attempt_success_rate": "0.666667"
+        },
+        "run-003": {
+          "status": "success",
+          "duration_seconds": 900,
+          "tasks": {
+            "ingest": {
+              "attempts": 1,
+              "final_status": "success"
+            },
+            "publish": {
+              "attempts": 1,
+              "final_status": "success"
+            },
+            "quality_gate": {
+              "attempts": 1,
+              "final_status": "success"
+            },
+            "transform": {
+              "attempts": 1,
+              "final_status": "success"
+            }
+          },
+          "tasks_terminal": 4,
+          "tasks_successful": 4,
+          "task_success_rate": "1.000000",
+          "attempts": 4,
+          "attempts_successful": 4,
+          "attempt_success_rate": "1.000000"
+        }
+      },
+      "overall": {
+        "tasks_terminal": 11,
+        "tasks_successful": 10,
+        "task_success_rate": "0.909091",
+        "attempts": 12,
+        "attempts_successful": 10,
+        "attempt_success_rate": "0.833333"
+      },
+      "durations": {
+        "successful": {
+          "count": 2,
+          "durations_seconds": [
+            900,
+            1200
+          ],
+          "mean_minutes": "17.5000"
+        },
+        "failed": {
+          "count": 1,
+          "durations_seconds": [
+            600
+          ],
+          "mean_minutes": "10.0000"
+        }
+      }
+    },
+    "quality_gate": {
+      "run-001": {
+        "results": {
+          "keys_unique": {
+            "severity": "critical",
+            "eligible": 8,
+            "failures": 0,
+            "passed": true
+          },
+          "completeness_vs_expectation": {
+            "severity": "warning",
+            "eligible": 9,
+            "failures": 1,
+            "passed": false
+          }
+        },
+        "critical_failures": 0,
+        "noncritical_failures": 1,
+        "decision": "allowed"
+      },
+      "run-002": {
+        "results": {
+          "keys_unique": {
+            "severity": "critical",
+            "eligible": 9,
+            "failures": 1,
+            "passed": false
+          },
+          "completeness_vs_expectation": {
+            "severity": "warning",
+            "eligible": 9,
+            "failures": 1,
+            "passed": false
+          }
+        },
+        "critical_failures": 1,
+        "noncritical_failures": 1,
+        "decision": "blocked"
+      },
+      "run-003": {
+        "results": {
+          "keys_unique": {
+            "severity": "critical",
+            "eligible": 9,
+            "failures": 0,
+            "passed": true
+          },
+          "reconciliation_residual_zero": {
+            "severity": "critical",
+            "eligible": 1,
+            "failures": 0,
+            "passed": true
+          },
+          "completeness_vs_expectation": {
+            "severity": "warning",
+            "eligible": 9,
+            "failures": 1,
+            "passed": false
+          }
+        },
+        "critical_failures": 0,
+        "noncritical_failures": 1,
+        "decision": "allowed"
+      }
+    },
+    "publications": {
+      "current_publication_id": "pub-003",
+      "pointer_history": [
+        {
+          "run_id": "run-001",
+          "gate_decision": "allowed",
+          "pointer_after": "pub-001"
+        },
+        {
+          "run_id": "run-002",
+          "gate_decision": "blocked",
+          "pointer_after": "pub-001"
+        },
+        {
+          "run_id": "run-003",
+          "gate_decision": "allowed",
+          "pointer_after": "pub-003"
+        }
+      ],
+      "publications": {
+        "pub-001": {
+          "run_id": "run-001",
+          "published_at": "2026-10-04T10:30:00Z",
+          "watermark": "2026-10-04T10:00:00Z",
+          "included_batches": [
+            "b-001"
+          ],
+          "published_records": 8,
+          "latest_included_event_at": "2026-10-04T09:30:00Z",
+          "lag_seconds": 3600,
+          "content_hash_ok": true
+        },
+        "pub-003": {
+          "run_id": "run-003",
+          "published_at": "2026-10-04T20:15:00Z",
+          "watermark": "2026-10-04T11:00:00Z",
+          "included_batches": [
+            "b-001",
+            "b-002",
+            "b-101"
+          ],
+          "published_records": 9,
+          "latest_included_event_at": "2026-10-04T09:30:00Z",
+          "lag_seconds": 38700,
+          "content_hash_ok": true
+        }
+      }
+    },
+    "late_events": {
+      "count": 1,
+      "included_in_next_publication": 1,
+      "lost": 0,
+      "events": [
+        {
+          "source_id": "src-refunds",
+          "source_key": "REF-2001",
+          "batch_id": "b-101",
+          "event_at": "2026-10-04T09:10:00Z",
+          "arrival_at": "2026-10-04T11:05:00Z",
+          "behind_publication_id": "pub-001",
+          "watermark": "2026-10-04T10:00:00Z",
+          "included_in_publication_id": "pub-003"
+        }
+      ]
+    },
+    "reconciliation": {
+      "pub-001": {
+        "source_total": "289.94",
+        "published_total": "289.97",
+        "exclusions": {
+          "quarantined": "-30.00",
+          "duplicates": "29.97",
+          "deletes": "0.00"
+        },
+        "exclusions_total": "-0.03",
+        "residual": "0.00"
+      },
+      "pub-003": {
+        "source_total": "591.88",
+        "published_total": "301.97",
+        "exclusions": {
+          "quarantined": "-60.00",
+          "duplicates": "349.91",
+          "deletes": "0.00"
+        },
+        "exclusions_total": "289.91",
+        "residual": "0.00"
+      }
+    },
+    "incidents": {
+      "total": 1,
+      "open": 0,
+      "closed": 1,
+      "verified": 1,
+      "mean_recovery_minutes": "475.0000",
+      "incidents": {
+        "inc-001": {
+          "run_id": "run-002",
+          "status": "closed",
+          "detected_at": "2026-10-04T12:20:00Z",
+          "verified": true,
+          "recovery_run_id": "run-003",
+          "verified_at": "2026-10-04T20:15:00Z",
+          "recovery_seconds": 28500,
+          "recovery_minutes": "475.0000",
+          "closure_consistent": true
+        }
+      }
+    },
+    "backfills": {
+      "requests": {
+        "bf-001": {
+          "source_id": "src-orders",
+          "start_at": "2026-09-01T00:00:00Z",
+          "end_at": "2026-09-04T00:00:00Z",
+          "requested_partitions": 3,
+          "verified_partitions": 2,
+          "coverage": "0.666667"
+        }
+      },
+      "refused": [],
+      "overall": {
+        "requested_partitions": 3,
+        "verified_partitions": 2,
+        "coverage": "0.666667"
+      }
+    },
+    "processing_rate": {
+      "accepted_records": 8,
+      "measured_seconds": "12",
+      "records_per_second": "0.666667",
+      "hardware": "Synthetic fixture value, not a benchmark: 2 vCPU, 8 GB RAM, GitHub-hosted runner class",
+      "cache_state": "cold"
+    }
+  }
+}
+`;export{n as default};
