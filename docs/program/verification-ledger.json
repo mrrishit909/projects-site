@@ -1384,6 +1384,27 @@
       "check": "live URL verification from GitHub Actions after the review republish (deploy-wait on code_sha, route 200s, case-study links both ways, browser journey) for all ten sites",
       "run": "https://github.com/mrrishit909/projects-site/actions/runs/40464668157",
       "result": "success; retentionlab live code_sha c17fa321f28605ac56e24b59837441c29cc16d41"
+    },
+    {
+      "ts": "2026-10-27T07:07:23Z",
+      "project": "08-pipeline-observatory",
+      "check": "CI on the workflow provisioning commit 7a748ac (LibreOffice Calc, artifact scratch databases, full history, portfolio case study; no artifact tests yet)",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40464667890",
+      "result": "success on both modes"
+    },
+    {
+      "ts": "2026-10-27T07:07:23Z",
+      "project": "09-changeworks",
+      "check": "CI on the workflow provisioning commit 7a748ac (LibreOffice Calc, artifact scratch databases, full history, portfolio case study; no artifact tests yet)",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40464667889",
+      "result": "success on both modes"
+    },
+    {
+      "ts": "2026-10-27T07:07:23Z",
+      "project": "10-retentionlab",
+      "check": "CI on the workflow provisioning commit 7a748ac (LibreOffice Calc, artifact scratch databases, full history, portfolio case study; no artifact tests yet)",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40464667982",
+      "result": "success on both modes"
     }
   ]
 }
