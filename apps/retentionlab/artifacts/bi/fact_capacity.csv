@@ -1,0 +1,19 @@
+population_key,model_key,scenario_id,capacity,evaluated_rows,positives,churners_in_top_k,precision_at_k,recall_at_k,risk_lift_at_k,contact_budget,expected_value,status
+test_world,random_baseline,sc-001,5,1513,189,0,0.000000,0.000000,0.000000,,,outcomes known; economics not computed on this population
+test_world,random_baseline,sc-002,10,1513,189,1,0.100000,0.005291,0.800529,,,outcomes known; economics not computed on this population
+test_world,random_baseline,sc-003,20,1513,189,1,0.050000,0.005291,0.400265,,,outcomes known; economics not computed on this population
+test_world,business_rule,sc-001,5,1513,189,2,0.400000,0.010582,3.202116,,,outcomes known; economics not computed on this population
+test_world,business_rule,sc-002,10,1513,189,3,0.300000,0.015873,2.401587,,,outcomes known; economics not computed on this population
+test_world,business_rule,sc-003,20,1513,189,3,0.150000,0.015873,1.200794,,,outcomes known; economics not computed on this population
+test_world,logistic_regression,sc-001,5,1513,189,0,0.000000,0.000000,0.000000,,,outcomes known; economics not computed on this population
+test_world,logistic_regression,sc-002,10,1513,189,2,0.200000,0.010582,1.601058,,,outcomes known; economics not computed on this population
+test_world,logistic_regression,sc-003,20,1513,189,5,0.250000,0.026455,2.001323,,,outcomes known; economics not computed on this population
+test_world,prevalence_baseline,sc-001,5,1513,189,0,0.000000,0.000000,0.000000,,,outcomes known; economics not computed on this population
+test_world,prevalence_baseline,sc-002,10,1513,189,0,0.000000,0.000000,0.000000,,,outcomes known; economics not computed on this population
+test_world,prevalence_baseline,sc-003,20,1513,189,0,0.000000,0.000000,0.000000,,,outcomes known; economics not computed on this population
+cohort_200,logistic_regression,sc-001,5,97,,,,,,40.00,21.38,"HYPOTHETICAL expected value on the 97 scored accounts of the published cohort at 2026-09-01; outcomes censored, so precision and recall are not available"
+cohort_200,logistic_regression,sc-002,10,97,,,,,,80.00,-6.87,"HYPOTHETICAL expected value on the 97 scored accounts of the published cohort at 2026-09-01; outcomes censored, so precision and recall are not available"
+cohort_200,logistic_regression,sc-003,20,97,,,,,,160.00,-95.46,"HYPOTHETICAL expected value on the 97 scored accounts of the published cohort at 2026-09-01; outcomes censored, so precision and recall are not available"
+world_2400,logistic_regression,sc-001,5,1241,,,,,,40.00,81.13,"HYPOTHETICAL expected value on the 1,241 scored accounts of the whole synthetic world at 2026-09-01 (published aggregate); outcomes censored"
+world_2400,logistic_regression,sc-002,10,1241,,,,,,80.00,71.04,"HYPOTHETICAL expected value on the 1,241 scored accounts of the whole synthetic world at 2026-09-01 (published aggregate); outcomes censored"
+world_2400,logistic_regression,sc-003,20,1241,,,,,,160.00,-29.12,"HYPOTHETICAL expected value on the 1,241 scored accounts of the whole synthetic world at 2026-09-01 (published aggregate); outcomes censored"

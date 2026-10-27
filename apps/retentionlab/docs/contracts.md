@@ -187,7 +187,7 @@ Seed 20261026; 2,400 accounts over 4 segments and 5 regions, monthly cutoffs 202
   counts published (train loses 879 LABEL_WINDOW, 124 GROUP_TEST, 52 GROUP_VALIDATION; validation 1,291 and 13).
   Economics at the 2026-09-01 cutoff on the 97 scored accounts of the published cohort: capacity 5 → +21.38, 10 → −6.87, 20 → −95.46; on the whole 2,400-account
   world (1,241 scored accounts) the same scenarios give +81.13, +71.04, −29.12 (D-09 R10-04); all hypothetical. Scoring freshness
-  812 h, data freshness 1 h (latest `available_at` 2026-10-04T22:09:42Z against the 2026-10-05 as-of).
+  812 h, data freshness 0 h.
 * Injections INJ-01..12 map to P10-TEST-01..12 (INJ-02/03/04/07 present in the data, the rest request-level), with 12
   replay events of 33 steps through the API at server clock 2026-10-05T12:00Z.
 * **Outcome-informed choices, disclosed in the manifest (D-G02) and to be stated on the site and the case study:** the

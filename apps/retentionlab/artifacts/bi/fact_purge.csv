@@ -1,0 +1,9 @@
+population_key,split_range,cutoff_rows,retained,label_window,group_test,group_validation
+cohort_200,train,220,86,97,32,5
+cohort_200,validation,141,31,107,3,0
+cohort_200,test,161,161,0,0,0
+cohort_200,outside,448,448,0,0,0
+world_2400,train,2143,1088,879,124,52
+world_2400,validation,1688,384,1291,13,0
+world_2400,test,1862,1862,0,0,0
+world_2400,outside,5550,5550,0,0,0

@@ -1,0 +1,92 @@
+source,grp,prediction_at,reference_rows,current_rows,psi,floored_bins,exceeds_threshold
+published full world,all_accounts,2025-01-01T00:00:00+00:00,364,113,0.016721,,false
+published full world,all_accounts,2025-02-01T00:00:00+00:00,364,126,0.022450,,false
+published full world,all_accounts,2025-03-01T00:00:00+00:00,364,131,0.009982,,false
+published full world,all_accounts,2025-04-01T00:00:00+00:00,364,150,0.006141,,false
+published full world,all_accounts,2025-05-01T00:00:00+00:00,364,165,0.012696,,false
+published full world,all_accounts,2025-06-01T00:00:00+00:00,364,183,0.043730,,false
+published full world,all_accounts,2025-07-01T00:00:00+00:00,364,198,0.002029,,false
+published full world,all_accounts,2025-08-01T00:00:00+00:00,364,214,0.001181,,false
+published full world,all_accounts,2025-09-01T00:00:00+00:00,364,228,0.018325,,false
+published full world,all_accounts,2025-10-01T00:00:00+00:00,364,300,0.011837,,false
+published full world,all_accounts,2025-11-01T00:00:00+00:00,364,318,0.003782,,false
+published full world,all_accounts,2025-12-01T00:00:00+00:00,364,329,0.010498,,false
+published full world,all_accounts,2026-01-01T00:00:00+00:00,364,353,0.004366,,false
+published full world,all_accounts,2026-02-01T00:00:00+00:00,364,364,0.000000,,false
+published full world,all_accounts,2026-03-01T00:00:00+00:00,364,372,0.028286,,false
+published full world,all_accounts,2026-04-01T00:00:00+00:00,364,385,0.009458,,false
+published full world,all_accounts,2026-05-01T00:00:00+00:00,364,392,0.017043,,false
+published full world,all_accounts,2026-06-01T00:00:00+00:00,364,1124,0.000867,,false
+published full world,all_accounts,2026-07-01T00:00:00+00:00,364,1154,0.000647,,false
+published full world,all_accounts,2026-08-01T00:00:00+00:00,364,1199,0.003020,,false
+published full world,all_accounts,2026-09-01T00:00:00+00:00,364,1241,0.002069,,false
+published full world,apac,2025-01-01T00:00:00+00:00,57,21,0.108350,0,false
+published full world,apac,2025-02-01T00:00:00+00:00,57,24,0.638981,1,true
+published full world,apac,2025-03-01T00:00:00+00:00,57,28,0.051031,0,false
+published full world,apac,2025-04-01T00:00:00+00:00,57,30,0.006783,0,false
+published full world,apac,2025-05-01T00:00:00+00:00,57,33,0.111157,0,false
+published full world,apac,2025-06-01T00:00:00+00:00,57,38,0.641052,1,true
+published full world,apac,2025-07-01T00:00:00+00:00,57,38,0.026742,0,false
+published full world,apac,2025-08-01T00:00:00+00:00,57,37,0.623027,1,true
+published full world,apac,2025-09-01T00:00:00+00:00,57,39,0.181500,0,false
+published full world,apac,2025-10-01T00:00:00+00:00,57,49,0.679573,1,true
+published full world,apac,2025-11-01T00:00:00+00:00,57,54,0.085816,0,false
+published full world,apac,2025-12-01T00:00:00+00:00,57,57,0.139882,0,false
+published full world,apac,2026-01-01T00:00:00+00:00,57,62,0.251339,0,true
+published full world,apac,2026-02-01T00:00:00+00:00,57,57,0.000000,0,false
+published full world,apac,2026-03-01T00:00:00+00:00,57,59,0.142972,0,false
+published full world,apac,2026-04-01T00:00:00+00:00,57,61,0.058749,0,false
+published full world,apac,2026-05-01T00:00:00+00:00,57,56,0.513545,0,true
+published full world,apac,2026-06-01T00:00:00+00:00,57,184,0.551353,0,true
+published full world,apac,2026-07-01T00:00:00+00:00,57,188,0.579740,0,true
+published full world,apac,2026-08-01T00:00:00+00:00,57,190,0.765053,0,true
+published full world,apac,2026-09-01T00:00:00+00:00,57,199,0.491035,0,true
+published full world,other_regions,2025-01-01T00:00:00+00:00,307,92,0.023959,0,false
+published full world,other_regions,2025-02-01T00:00:00+00:00,307,102,0.051631,0,false
+published full world,other_regions,2025-03-01T00:00:00+00:00,307,103,0.007233,0,false
+published full world,other_regions,2025-04-01T00:00:00+00:00,307,120,0.009378,0,false
+published full world,other_regions,2025-05-01T00:00:00+00:00,307,132,0.007907,0,false
+published full world,other_regions,2025-06-01T00:00:00+00:00,307,145,0.018169,0,false
+published full world,other_regions,2025-07-01T00:00:00+00:00,307,160,0.000923,0,false
+published full world,other_regions,2025-08-01T00:00:00+00:00,307,177,0.004830,0,false
+published full world,other_regions,2025-09-01T00:00:00+00:00,307,189,0.008635,0,false
+published full world,other_regions,2025-10-01T00:00:00+00:00,307,251,0.025216,0,false
+published full world,other_regions,2025-11-01T00:00:00+00:00,307,264,0.000323,0,false
+published full world,other_regions,2025-12-01T00:00:00+00:00,307,272,0.009134,0,false
+published full world,other_regions,2026-01-01T00:00:00+00:00,307,291,0.013403,0,false
+published full world,other_regions,2026-02-01T00:00:00+00:00,307,307,0.000000,0,false
+published full world,other_regions,2026-03-01T00:00:00+00:00,307,313,0.018526,0,false
+published full world,other_regions,2026-04-01T00:00:00+00:00,307,324,0.017150,0,false
+published full world,other_regions,2026-05-01T00:00:00+00:00,307,336,0.010967,0,false
+published full world,other_regions,2026-06-01T00:00:00+00:00,307,940,0.016833,0,false
+published full world,other_regions,2026-07-01T00:00:00+00:00,307,966,0.020612,0,false
+published full world,other_regions,2026-08-01T00:00:00+00:00,307,1009,0.014031,0,false
+published full world,other_regions,2026-09-01T00:00:00+00:00,307,1042,0.022153,0,false
+recomputed from the test table,all_accounts,2026-02-01T00:00:00+00:00,364,364,0.000000,0,false
+recomputed from the test table,all_accounts,2026-03-01T00:00:00+00:00,364,372,0.028286,0,false
+recomputed from the test table,all_accounts,2026-04-01T00:00:00+00:00,364,385,0.009458,0,false
+recomputed from the test table,all_accounts,2026-05-01T00:00:00+00:00,364,392,0.017043,0,false
+recomputed from the test table,amer,2026-02-01T00:00:00+00:00,148,148,0.000000,0,false
+recomputed from the test table,amer,2026-03-01T00:00:00+00:00,148,147,0.019362,0,false
+recomputed from the test table,amer,2026-04-01T00:00:00+00:00,148,150,0.016363,0,false
+recomputed from the test table,amer,2026-05-01T00:00:00+00:00,148,152,0.045941,0,false
+recomputed from the test table,anz,2026-02-01T00:00:00+00:00,30,30,0.000000,0,false
+recomputed from the test table,anz,2026-03-01T00:00:00+00:00,30,30,0.000000,0,false
+recomputed from the test table,anz,2026-04-01T00:00:00+00:00,30,36,0.194195,1,false
+recomputed from the test table,anz,2026-05-01T00:00:00+00:00,30,39,0.185016,0,false
+recomputed from the test table,apac,2026-02-01T00:00:00+00:00,57,57,0.000000,0,false
+recomputed from the test table,apac,2026-03-01T00:00:00+00:00,57,59,0.142972,0,false
+recomputed from the test table,apac,2026-04-01T00:00:00+00:00,57,61,0.058749,0,false
+recomputed from the test table,apac,2026-05-01T00:00:00+00:00,57,56,0.513545,0,true
+recomputed from the test table,emea,2026-02-01T00:00:00+00:00,87,87,0.000000,1,false
+recomputed from the test table,emea,2026-03-01T00:00:00+00:00,87,93,0.020644,1,false
+recomputed from the test table,emea,2026-04-01T00:00:00+00:00,87,95,0.132971,1,false
+recomputed from the test table,emea,2026-05-01T00:00:00+00:00,87,98,0.108827,1,false
+recomputed from the test table,latam,2026-02-01T00:00:00+00:00,42,42,0.000000,0,false
+recomputed from the test table,latam,2026-03-01T00:00:00+00:00,42,43,0.065902,0,false
+recomputed from the test table,latam,2026-04-01T00:00:00+00:00,42,43,0.052904,0,false
+recomputed from the test table,latam,2026-05-01T00:00:00+00:00,42,47,0.128171,0,false
+recomputed from the test table,other_regions,2026-02-01T00:00:00+00:00,307,307,0.000000,0,false
+recomputed from the test table,other_regions,2026-03-01T00:00:00+00:00,307,313,0.018526,0,false
+recomputed from the test table,other_regions,2026-04-01T00:00:00+00:00,307,324,0.017150,0,false
+recomputed from the test table,other_regions,2026-05-01T00:00:00+00:00,307,336,0.010967,0,false

@@ -1,0 +1,4 @@
+scenario_id,capacity,contact_cost,assumed_effect,margin_value,label,basis
+sc-001,5,8.000000,0.300000,200.000000,hypothetical,assumption-based: no randomised experiment supports the assumed effect
+sc-002,10,8.000000,0.200000,200.000000,hypothetical,assumption-based: no randomised experiment supports the assumed effect
+sc-003,20,8.000000,0.100000,200.000000,hypothetical,assumption-based: no randomised experiment supports the assumed effect

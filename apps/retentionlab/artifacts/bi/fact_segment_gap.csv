@@ -1,0 +1,10 @@
+population_key,dimension,group_key,test_rows,churning_rows,mean_predicted,observed_rate,gap_pp
+test_world,region,amer,597,58,0.091238,0.097152,-0.59
+test_world,region,anz,135,17,0.092662,0.125926,-3.33
+test_world,region,apac,233,49,0.103481,0.210300,-10.68
+test_world,region,emea,373,42,0.102085,0.112601,-1.05
+test_world,region,latam,175,23,0.094605,0.131429,-3.68
+test_world,segment,enterprise,213,11,0.038807,0.051643,-1.28
+test_world,segment,mid,380,34,0.069537,0.089474,-1.99
+test_world,segment,smb,498,52,0.106581,0.104418,0.22
+test_world,segment,starter,422,92,0.137336,0.218009,-8.07

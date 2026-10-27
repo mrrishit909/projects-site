@@ -1,0 +1,6 @@
+population_key,model_key,evaluated_rows,distinct_accounts,positive_rows,prevalence,average_precision,brier_score,mean_probability,interpretation
+test_world,random_baseline,1513,442,189,0.124917,0.126793,0.326543,0.491803,"met by construction (D-G02): a property of the synthetic world, not evidence about real accounts"
+test_world,business_rule,1513,442,189,0.124917,0.136653,0.109255,0.103818,"met by construction (D-G02): a property of the synthetic world, not evidence about real accounts"
+test_world,logistic_regression,1513,442,189,0.124917,0.238552,0.105019,0.096314,"met by construction (D-G02): a property of the synthetic world, not evidence about real accounts"
+test_world,prevalence_baseline,1513,442,189,0.124917,0.124917,0.109664,0.106183,"met by construction (D-G02): a property of the synthetic world, not evidence about real accounts"
+test_world,logistic_uncalibrated,1513,442,189,0.124917,0.238552,0.104515,0.102358,"met by construction (D-G02): a property of the synthetic world, not evidence about real accounts"

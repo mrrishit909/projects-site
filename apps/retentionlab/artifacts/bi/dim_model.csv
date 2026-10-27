@@ -1,0 +1,6 @@
+model_key,model_name,model_kind,is_calibrated,display_order,description
+random_baseline,Random baseline,baseline,false,1,a seeded SHA-256 of the cutoff id; carries no information
+business_rule,Business rule,rule,false,2,flags no usage in 30 days or a high-severity support event in 90 days; two observed rates
+logistic_regression,Logistic regression (Platt-calibrated),learned,true,3,the model whose margins are met by construction (D-G02)
+prevalence_baseline,Prevalence constant,baseline,false,4,the training prevalence for every account; its average precision is the prevalence
+logistic_uncalibrated,Logistic regression (before Platt),learned,false,5,the same ranking before the Platt mapping

@@ -1,0 +1,4 @@
+population_key,population_name,description,accounts,evaluated_rows,outcomes
+cohort_200,Published cohort,200 uniformly sampled accounts with every record published; the economics queue is drawn from its 97 scored accounts at 2026-09-01,200,,mixed
+test_world,Test table of the full world,"rows of the test range with a known outcome (4 cutoffs, 2026-02-01 .. 2026-05-01)",442,1513,known
+world_2400,Whole synthetic world,"2,400 accounts as built by the domain; only published aggregates are available (no row-level data)",2400,,mixed
