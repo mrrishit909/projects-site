@@ -492,7 +492,7 @@
       "id": "T-07-03",
       "project": "07-trustledger",
       "title": "Domain + Postgres + FastAPI slice + CI",
-      "status": "in_progress",
+      "status": "done (local); CI pending",
       "prereqs": [
         "T-07-02"
       ],
@@ -503,7 +503,7 @@
       "id": "T-07-04",
       "project": "07-trustledger",
       "title": "Generator + web + e2e + publish + integrate",
-      "status": "pending",
+      "status": "in_progress",
       "prereqs": [
         "T-07-03"
       ],

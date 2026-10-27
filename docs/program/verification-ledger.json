@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T00:49:51Z",
+  "updated_at": "2026-10-27T01:32:40Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1188,6 +1188,17 @@
       "code_sha": "596b127",
       "evidence": "apps/trustledger/tests/fixtures/golden/",
       "ts": "2026-10-27T00:49:51Z"
+    },
+    {
+      "requirement": "P07 domain/API slice: golden and variants key by key through domain, SQL and API; P07-TEST-01..12; concurrency (one decision per candidate, parallel runs, raced key, deadlock retry); SQL = domain on 160 random worlds and six clock-change days",
+      "project": "07-trustledger",
+      "status": "verified",
+      "command": "reference_check.py; DATABASE_URL=... pytest -q; env -u DATABASE_URL pytest -q",
+      "exit_code": 0,
+      "actual": "ALL OK (736); 274 passed; 133 passed 141 skipped (local; CI Mode A pending)",
+      "code_sha": "pending-commit",
+      "evidence": "apps/trustledger/tests/",
+      "ts": "2026-10-27T01:32:40Z"
     }
   ]
 }
