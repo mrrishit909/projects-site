@@ -168,4 +168,40 @@ def random_world(seed: int) -> dict[str, Any]:
             d["scenario_versions"].append(sc(f"s{s}", use, rate=f"0.{rnd.randint(0, 25):02d}0000", basis=other, h=rnd.randint(2, 6), pins=pins, conv="a-conv"))
         else:
             d["scenario_versions"].append(sc(f"s{s}", use, rate=f"0.{rnd.randint(0, 25):02d}0000", basis=basis, h=rnd.randint(2, 6), pins=pins))
+    return stamp_world(d, seed)
+
+
+def stamp_world(d: dict[str, Any], seed: int) -> dict[str, Any]:
+    """The review-9 dimensions of a random population, drawn from a stream of their own (the draws above stay what they were): scenarios created at different
+    instants, assumption versions created before and after them, plan rows recorded before and after them (R9-01), observations recorded after the event and
+    sometimes after as_of (R9-11)."""
+    import random
+    from datetime import datetime, timedelta, timezone
+    r = random.Random(seed * 7919 + 13)
+    base = datetime(2026, 1, 1, 9, tzinfo=timezone.utc)
+    when = lambda days: (base + timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    for x in d["scenario_versions"]:
+        x["created_at"] = when(r.randint(10, 700))
+    for x in d["assumption_versions"]:
+        x["created_at"] = when(r.randint(0, 700))
+    for x in d["benefit_items"]:       # more claims on a shared source in a shared period, in money and in hours (R9-02, R9-03)
+        if r.random() < 0.4 and x["starts_period"] <= 3:
+            x["period_index"], x["benefit_source_key"] = r.choice([3, 4]) if x["starts_period"] <= 3 else x["period_index"], r.choice(["kk1", "kk2"])
+            if r.random() < 0.5:
+                x["benefit_type"], x["unit"], x["cash_realisation"] = "capacity", "hours", False
+    for x in d["benefit_items"]:       # a baseline trend on some rows and not on others: partial coverage (R9-13)
+        x["baseline_trend_per_period"] = None if r.random() < 0.35 else x["baseline_trend_per_period"] or ("5.00" if r.random() < 0.5 else None)
+    if len(d["initiatives"]) >= 2 and r.random() < 0.5:        # two initiatives claim the same team's hours in one period
+        for k, hours in enumerate(("40.00", "60.00")):
+            i = d["initiatives"][k]
+            d["benefit_items"].append(ben(f"b-kk-{k}", i["initiative_id"], "capacity", hours, 3, starts=max(i["deployment_period"], 1), real=False, key="kk3"))
+    for e in ("cost_items", "benefit_items"):
+        for x in d[e]:
+            if r.random() < 0.3:
+                x["recorded_at"] = when(r.randint(0, 800))
+    for e, f, stamp in (("adoption_observations", "observed_at", "recorded_at"), ("benefit_observations", "observed_at", "recorded_at"), ("training_completions", "recorded_at", "entered_at")):
+        for x in d[e]:
+            if r.random() < 0.35:
+                happened = datetime.strptime(x[f], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+                x[stamp] = (happened + timedelta(days=r.randint(0, 400), hours=r.randint(0, 23))).strftime("%Y-%m-%dT%H:%M:%SZ")
     return d

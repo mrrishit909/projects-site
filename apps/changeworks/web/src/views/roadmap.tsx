@@ -13,6 +13,8 @@ export function RoadmapView() { return <WithData>{(ds) => <Roadmap ds={ds} />}</
 
 const PX = 22, ROW = 28, LEFT = 190, TOP = 34;
 
+const warnOf = (ds: Dataset, iid: string): Row | null => ((ds.metrics["initiatives"][iid]?.["roadmap"]?.["warnings"] ?? []) as Row[])[0] ?? null;
+
 function Roadmap({ ds }: { ds: Dataset }) {
   const edits = useRoadmapEdits();
   const model = buildRoadmap(ds, edits);
@@ -106,14 +108,14 @@ function Roadmap({ ds }: { ds: Dataset }) {
             <thead><tr><th>Initiative</th><th className="num">Requested</th><th className="num">Duration</th><th className="num">Feasible start</th><th className="num">Dependency delay</th><th>Binding dependency</th><th>Prerequisites</th><th className="num">Finish</th><th className="num">Resource delay</th></tr></thead>
             <tbody>{[...model.items].sort((a, b) => cmp(a.iid, b.iid)).map((it) => (
               <tr key={it.iid} data-initiative={it.iid} className={sel === it.iid ? "is-on" : undefined}>
-                <th scope="row" className="wrapcell"><button type="button" className="button--quiet" onClick={() => setSel(it.iid)} aria-label={`Select ${it.iid}`}>{it.iid}</button> <span className="small muted">{it.title}</span></th>
+                <th scope="row" className="wrapcell"><button type="button" className="button--quiet" onClick={() => setSel(it.iid)} aria-label={`Select ${it.iid}`}>{it.iid}</button> <span className="small muted">{it.title}</span>{warnOf(ds, it.iid) && <><br /><Chip kind="note" title={`The deployment is planned in period ${warnOf(ds, it.iid)!["deployment_period"]}, ${warnOf(ds, it.iid)!["periods_early"]} periods before the dependency-feasible start ${warnOf(ds, it.iid)!["dependency_feasible_start"]}; the cash flow is not re-timed`}>deployment before feasible start</Chip></>}</th>
                 <td className="num">{it.requested}</td><td className="num">{it.duration}</td><td className="num" data-k="feasible">{it.feasible}</td><td className="num" data-k="delay">{it.delay}</td>
                 <td data-k="binding">{it.binding ?? "none"}</td><td className="wrapcell small">{it.prereqs.map((d) => `${d["prerequisite_id"]} (${d["dependency_type"] === "finish_to_start" ? "FS" : "SS"}+${d["lag_periods"]})`).join(", ") || "none"}</td>
                 <td className="num">{it.finish}</td><td className="num">0</td>
               </tr>))}</tbody>
           </table>
         </Scroll>
-        <p className="small muted">Feasible start = the latest of the requested start and every prerequisite's constraint (finish-to-start: its feasible start + duration + lag; start-to-start: its feasible start + lag), propagated along the chain. Delay is never negative. Resource constraints are reported separately; resource levelling is not implemented, so the resource delay is 0 and an overallocation can only be refused. The roadmap does not re-time the cash flows.</p>
+        <p className="small muted">Feasible start = the latest of the requested start and every prerequisite's constraint (finish-to-start: its feasible start + duration + lag; start-to-start: its feasible start + lag), propagated along the chain. Delay is never negative. Resource constraints are reported separately; resource levelling is not implemented, so the resource delay is 0 and an overallocation can only be refused. The roadmap does not re-time the cash flows: an initiative whose deployment is planned before its dependency-feasible start carries the warning DEPLOYMENT_BEFORE_FEASIBLE_START ({[...ds.byId.initiatives.keys()].filter((i) => warnOf(ds, i)).length} in this dataset) and its cash flow is shown as recorded.</p>
       </section>
       <Edits ds={ds} model={model} edits={edits} sel={selected?.iid ?? null} />
     </>

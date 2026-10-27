@@ -16,7 +16,7 @@ from .contract import (BASES, BENEFIT_TYPES, COST_BASES, DEPENDENCY_TYPES, DIMEN
                        IMPACT_LEVELS, INITIATIVE_STATUSES, MAX_HORIZON, MAX_PERIOD, SCENARIO_STATUSES, CAPACITY_RATE_NAME, CONVERSION_NAME,
                        RAMP_NAME)
 from .numbers import dec, is_decimal, money
-from .timeutil import is_ts, parse_ts
+from .timeutil import check_period_start, is_ts, parse_ts
 
 Row = dict[str, Any]
 INT_LIMIT = 2_000_000_000
@@ -104,11 +104,25 @@ SHAPES: dict[str, dict[str, str]] = {e: _spec(s) for e, s in {
 }.items()}
 
 
+#: Server-stamped instants (R9-01, R9-11): absent on the rows of a loaded world (they then count from the start of time / equal the event time), present on
+#: every row the API writes. ``recorded_at`` of a plan row is when it was entered; of an observation, when it was recorded (as opposed to when it happened).
+OPTIONAL_TS: dict[str, tuple[str, ...]] = {"cost_items": ("recorded_at",), "benefit_items": ("recorded_at",), "adoption_observations": ("recorded_at",),
+                                           "benefit_observations": ("recorded_at",), "training_completions": ("entered_at",)}
+
+
+def has_text(v: Any) -> bool:
+    """A non-blank string (Python ``strip()`` whitespace): the test every evidence reference passes (R9-04)."""
+    return isinstance(v, str) and bool(v.strip())
+
+
 def shape_problems(entity: str, row: Any) -> dict[str, str]:
     """Fields that are missing, null where not allowed, or of the wrong type / format (empty when the row is well formed)."""
     if not isinstance(row, dict):
         return {"$": "a record must be an object"}
     bad: dict[str, str] = {}
+    for name in OPTIONAL_TS.get(entity, ()):
+        if name in row and row[name] is not None and not is_ts(row[name]):
+            bad[name] = "not a valid ts"
     for name, kind in SHAPES[entity].items():
         nullable = kind.endswith("?")
         check = KINDS[kind.rstrip("?")]
@@ -170,7 +184,7 @@ class Validator:
         return next(i for i in self.acc["initiatives"] if i["initiative_id"] == iid)
 
     def conversion_exists(self, iid: str) -> bool:
-        return any(a["initiative_id"] == iid and a["name"] == CAPACITY_RATE_NAME and a.get("staffing_change_evidence_ref")
+        return any(a["initiative_id"] == iid and a["name"] == CAPACITY_RATE_NAME and has_text(a.get("staffing_change_evidence_ref"))
                    for a in self.acc["assumption_versions"])
 
     def cycle_from(self, a: str, b: str) -> list[str] | None:
@@ -202,10 +216,12 @@ class Validator:
             if not 1 <= r["duration_periods"] <= MAX_PERIOD:
                 return "INVALID_DURATION", {"duration_periods": r["duration_periods"]}
         elif e == "process_baselines":
-            if r["volume"] < 0 or r["minutes_per_case"] < 0 or not 0 <= dec(r["error_rate"]) <= 1:
+            if r["volume"] < 0 or r["minutes_per_case"] < 0:
                 return "INVALID_AMOUNT", {}
+            if not 0 <= dec(r["error_rate"]) <= 1:
+                return "INVALID_FIELD", {"field": "error_rate", "reason": "a proportion in [0, 1]"}
             if not r["evidence_ref"].strip():
-                return "EVIDENCE_REQUIRED", {}
+                return "EVIDENCE_REQUIRED", {"field": "evidence_ref"}
             for b in acc[e]:
                 if (b["initiative_id"], b["baseline_version"]) == (r["initiative_id"], r["baseline_version"]):
                     ini = self._initiative(r["initiative_id"])
@@ -219,6 +235,9 @@ class Validator:
                 return "RATIONALE_REQUIRED", {}
             if not r["author_id"].strip():
                 return "AUTHOR_REQUIRED", {}
+            for fld in ("evidence_ref", "staffing_change_evidence_ref"):
+                if r[fld] is not None and not r[fld].strip():
+                    return "EVIDENCE_REQUIRED", {"field": fld}
             if (r["value"] is None) == (r["values"] is None):
                 return "INVALID_ASSUMPTION", {"reason": "exactly one of value and values"}
             if r["name"] == RAMP_NAME:
@@ -252,6 +271,11 @@ class Validator:
                 if conv["name"] != CONVERSION_NAME or conv["value"] is None or not F(0) <= dec(conv["value"]) <= F(1):
                     return "INVALID_CONVERSION", {"assumption_id": cid, "expected_name": CONVERSION_NAME}
         elif e == "cost_items":
+            if r["cost_type"] in ("one_time", "recurring"):
+                for c in acc[e]:       # R9-05: one cost key is one kind of cost for an initiative and a basis
+                    if (c["initiative_id"], c["cost_key"], c["cost_basis"]) == (r["initiative_id"], r["cost_key"], r["cost_basis"]) and c["cost_type"] != r["cost_type"]:
+                        return "COST_KEY_BASIS_CONFLICT", {"first_cost_id": c["cost_id"], "first_cost_type": c["cost_type"], "this_cost_type": r["cost_type"],
+                                                           "cost_key": r["cost_key"], "cost_basis": r["cost_basis"]}
             if r["cost_type"] == "one_time":
                 if r["period_index"] is None or not 0 <= r["period_index"] <= MAX_PERIOD or r["start_period"] is not None or r["end_period"] is not None:
                     return "INVALID_PERIOD", {}
@@ -273,6 +297,8 @@ class Validator:
                 return "INVALID_AMOUNT", {}
             if r["unit"] != ("hours" if r["benefit_type"] == "capacity" else "USD"):
                 return "INVALID_UNIT", {"unit": r["unit"], "benefit_type": r["benefit_type"]}
+            if r["evidence_ref"] is not None and not r["evidence_ref"].strip():
+                return "EVIDENCE_REQUIRED", {"field": "evidence_ref"}
             ini = self._initiative(r["initiative_id"])
             if r["starts_period"] < ini["deployment_period"]:
                 return "BENEFIT_BEFORE_DEPLOYMENT", {"starts_period": r["starts_period"], "deployment_period": ini["deployment_period"]}
@@ -325,6 +351,8 @@ class Validator:
         elif e == "benefit_observations":
             if dec(r["measured_value"]) < 0:
                 return "INVALID_AMOUNT", {}
+            if not r["evidence_ref"].strip():
+                return "EVIDENCE_REQUIRED", {"field": "evidence_ref"}
         elif e == "risk_items":
             if not F(0) <= dec(r["probability"]) <= F(1):
                 return "PROBABILITY_OUT_OF_RANGE", {"probability": r["probability"]}
@@ -354,6 +382,7 @@ class Ingest:
 
 
 def config_of(inputs: dict[str, Any]) -> dict[str, Any]:
+    check_period_start(inputs["period_start"])           # R9-14: refused cleanly, never a crash inside the calendar
     return {"period_basis": inputs["period_basis"], "period_start": inputs["period_start"], "as_of": inputs.get("as_of")}
 
 

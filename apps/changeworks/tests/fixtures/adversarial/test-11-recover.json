@@ -1,5 +1,5 @@
 {
-  "description": "P09-TEST-11 recover: the second cost is the real thing, a recurring support fee over the half-open range [1, 3)",
+  "description": "P09-TEST-11 recover: the second cost is not the licence retyped but a different cost, a recurring support fee over the half-open range [1, 3); it is recorded under a NEW key (ck-fee) and the reason is stated: the licence key ck-lic stays one-time, because one key is one kind of cost (a recurring row under ck-lic is COST_KEY_BASIS_CONFLICT)",
   "expect": "c-2 is accepted as recurring 100.00 and expanded explicitly to periods 1 and 2; the licence stays one row",
   "contract_version": 1,
   "as_of": "2028-06-30T00:00:00Z",
@@ -100,5 +100,6 @@
   "training_completions": [],
   "benefit_observations": [],
   "risk_items": [],
-  "forecast_versions": []
+  "forecast_versions": [],
+  "reason": "the support fee recurs every period and is a different cost from the one-time licence; reusing ck-lic as recurring would retype the licence"
 }

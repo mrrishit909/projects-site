@@ -12,6 +12,10 @@ fractions.Fraction for every ratio, rate and discount factor, decimal.Decimal fo
 Money 2-place strings, proportions 6-place strings, paybacks / hours / readiness 4-place strings, ROUND_HALF_UP,
 half-open ranges, null never 0. Contract v1, D-01..D-04, plus decisions D-P9-01.. of CALCULATION.md.
 
+Review-9 rules (contract D-09, R9-01..R9-22) are implemented here again, independently of the application: scenario figures from the plan rows and assumption
+versions that existed at the scenario's created_at; attributable NPV and double-counted amount / present value; the double-count rule on hours; last-crossing
+payback with NO_INVESTMENT; partial trend coverage; exact aggregates rounded once; stamped observations; the deployment-before-feasible-start warning.
+
 Usage:
   python3 -I reference_check.py                  # check everything, exit 0 only if all OK
   python3 -I reference_check.py --write-expected # (re)generate the three expected.json from inputs.json, then check
@@ -168,7 +172,7 @@ def validate(data):
 
     def conversion_exists(ini_id):
         return any(a["initiative_id"] == ini_id and a["name"] == "capacity_hourly_rate"
-                   and a.get("staffing_change_evidence_ref") for a in acc["assumption_versions"])
+                   and (a.get("staffing_change_evidence_ref") or "").strip() for a in acc["assumption_versions"])
 
     def cycle_from(a, b):
         """path b -> ... -> a over accepted prerequisite edges (initiative -> prerequisite); returns cycle list or None"""
@@ -194,6 +198,9 @@ def validate(data):
             if r["status"] not in INI_STATUS:
                 return "STATUS_NOT_ALLOWED", {"status": r["status"]}
         elif e == "assumption_versions":
+            for fld in ("evidence_ref", "staffing_change_evidence_ref"):
+                if r[fld] is not None and not r[fld].strip():      # R9-04
+                    return "EVIDENCE_REQUIRED", {"field": fld}
             key = (r["initiative_id"], r["name"], r["version_number"])
             for a in acc[e]:
                 if (a["initiative_id"], a["name"], a["version_number"]) == key:
@@ -206,6 +213,11 @@ def validate(data):
             if r["rate_basis"] != data["period_basis"] and r["rate_conversion_assumption_id"] is None:
                 return "RATE_PERIOD_MISMATCH", {"rate_basis": r["rate_basis"], "period_basis": data["period_basis"]}
         elif e == "cost_items":
+            for c in acc[e]:       # R9-05
+                if (c["initiative_id"], c["cost_key"], c["cost_basis"]) == (r["initiative_id"], r["cost_key"], r["cost_basis"]) and c["cost_type"] != r["cost_type"] \
+                        and r["cost_type"] in ("one_time", "recurring"):
+                    return "COST_KEY_BASIS_CONFLICT", {"first_cost_id": c["cost_id"], "first_cost_type": c["cost_type"], "this_cost_type": r["cost_type"],
+                                                       "cost_key": r["cost_key"], "cost_basis": r["cost_basis"]}
             if r["cost_type"] == "one_time":
                 if r["period_index"] is None or r["period_index"] < 0:
                     return "INVALID_PERIOD", {}
@@ -230,6 +242,8 @@ def validate(data):
                                                       "deployment_period": ini["deployment_period"]}
             if r["period_index"] < r["starts_period"]:
                 return "INVALID_PERIOD", {}
+            if r["evidence_ref"] is not None and not r["evidence_ref"].strip():      # R9-04
+                return "EVIDENCE_REQUIRED", {"field": "evidence_ref"}
             if r["benefit_type"] == "capacity" and r["cash_realisation"] and not conversion_exists(r["initiative_id"]):
                 return "CAPACITY_WITHOUT_CONVERSION", {"hours": r["amount"]}
         elif e == "dependencies":
@@ -271,6 +285,8 @@ def validate(data):
         elif e == "benefit_observations":
             if dec(r["measured_value"]) < 0:
                 return "INVALID_AMOUNT", {}
+            if not r["evidence_ref"].strip():
+                return "EVIDENCE_REQUIRED", {"field": "evidence_ref"}
         elif e == "risk_items":
             if not F(0) <= dec(r["probability"]) <= F(1):
                 return "PROBABILITY_OUT_OF_RANGE", {"probability": r["probability"]}
@@ -331,17 +347,19 @@ def expand_costs(c, H=None):
 
 
 def payback(cum):
-    """first t with cumulative >= 0, plus linear interpolation (t-1) + (-cum[t-1]) / (cum[t] - cum[t-1]); null if never"""
-    for t, v in enumerate(cum):
-        if v >= 0:
-            if t == 0:
-                return t, F(0)
-            return t, (t - 1) + (-cum[t - 1]) / (v - cum[t - 1])
-    return None, None
+    """R9-12: the last crossing. A series that is never negative has no investment to pay back (NO_INVESTMENT); one that ends negative has not paid back
+    (NOT_RECOVERED); otherwise the first period after the last negative cumulative, interpolated (t-1) + (-cum[t-1]) / (cum[t] - cum[t-1])."""
+    neg = [t for t, v in enumerate(cum) if v < 0]
+    if not neg:
+        return None, None, "NO_INVESTMENT"
+    if neg[-1] == len(cum) - 1:
+        return None, None, "NOT_RECOVERED"
+    t = neg[-1] + 1
+    return t, (t - 1) + (-cum[t - 1]) / (cum[t] - cum[t - 1]), None
 
 
-def pb_out(pair):
-    return {"period": pair[0], "interpolated": m4(pair[1])}
+def pb_out(trip):
+    return {"period": trip[0], "interpolated": m4(trip[1]), "reason": trip[2]}
 
 
 def compute(data):
@@ -358,13 +376,24 @@ def compute(data):
                       key=lambda a: a["version_number"])
 
     def pick(init_id, name, sc):
-        """the assumption version used: the one pinned by the scenario, otherwise the latest version (D-P9-14)"""
+        """the assumption version used: the one pinned by the scenario, otherwise the latest version that existed when the scenario was created (D-P9-14, R9-01)"""
         vs = versions(init_id, name)
         pinned = [a for a in vs if a["assumption_id"] in sc["pinned_assumption_ids"]]
-        return pinned[-1] if pinned else (vs[-1] if vs else None)
+        if pinned:
+            return pinned[-1]
+        known = [a for a in vs if parse_ts(a["created_at"]) <= parse_ts(sc["created_at"])]
+        return known[-1] if known else None
+
+    def plan_rows(entity, sc):
+        """the plan rows recorded by the scenario's created_at (rows with no recorded_at are part of the loaded world) (R9-01)"""
+        return [x for x in acc[entity] if x.get("recorded_at") is None or parse_ts(x["recorded_at"]) <= parse_ts(sc["created_at"])]
+
+    def text(v):
+        return isinstance(v, str) and bool(v.strip())
 
     # ------------------------------------------------ scenario level
     scenarios = {}
+    hour_groups = {}
     for sc in sorted(acc["scenario_versions"], key=lambda s: s["scenario_id"]):
         H = sc["horizon_periods"]
         if sc["rate_basis"] == data["period_basis"]:
@@ -376,13 +405,15 @@ def compute(data):
             src = "conversion:" + conv["assumption_id"]
         out_i = {}
         claims = []                      # money benefit claims for the double-count residual
+        all_hour_claims = []             # hours of every capacity row, converted or not
         for iid in sc["initiative_ids"]:
             i = ini[iid]
             ramp_a = pick(iid, "adoption_ramp", sc)
             ramp = [dec(v) for v in ramp_a["values"]] if ramp_a else None
             conv_a = pick(iid, "capacity_hourly_rate", sc)
-            conv_ok = conv_a is not None and bool(conv_a.get("staffing_change_evidence_ref"))
+            conv_ok = conv_a is not None and text(conv_a.get("staffing_change_evidence_ref")) and conv_a["value"] is not None
             rate_cap = dec(conv_a["value"]) if conv_ok else None
+            sc_costs, sc_bens = plan_rows("cost_items", sc), plan_rows("benefit_items", sc)
 
             def ramped(b):
                 a = dec(b["amount"])
@@ -393,7 +424,7 @@ def compute(data):
 
             cost_rows = {}
             planned_rows = []
-            for c in acc["cost_items"]:
+            for c in sc_costs:
                 if c["initiative_id"] == iid and c["cost_basis"] == "planned":
                     for _, p, a in expand_costs(c, H):
                         planned_rows.append({"cost_id": c["cost_id"], "cost_key": c["cost_key"], "period_index": p, "amount": money(a)})
@@ -402,30 +433,38 @@ def compute(data):
             by_class = {p: {"cash": F(0), "revenue": F(0), "avoided_cost_realised": F(0), "capacity_converted": F(0)} for p in range(H)}
             unr_by_class = {p: F(0) for p in range(H)}
             beside, cap_excl, cap_conv, beyond = [], [], [], []
+            beside_x, cap_excl_x = [], []
+            hour_claims = []
             planned_money = F(0)
             planned_money_unramped = F(0)
             has_rows = bool(cost_rows)
-            for b in sorted((b for b in acc["benefit_items"] if b["initiative_id"] == iid), key=lambda b: b["benefit_id"]):
+            for b in sorted((b for b in sc_bens if b["initiative_id"] == iid), key=lambda b: b["benefit_id"]):
                 p = b["period_index"]
                 if p >= H:
                     beyond.append(b["benefit_id"])
                     continue
                 a, au = ramped(b), dec(b["amount"])
                 t = b["benefit_type"]
+                cls = t
                 if t in ("cash", "revenue"):
                     by_class[p][t] += a
                     unr_by_class[p] += au
                     has_rows = True
                 elif t == "avoided_cost":
-                    if b["cash_realisation"] and b["evidence_ref"]:
+                    if b["cash_realisation"] and text(b["evidence_ref"]):
                         by_class[p]["avoided_cost_realised"] += a
                         unr_by_class[p] += au
                         has_rows = True
+                        cls = "avoided_cost_realised"
                     else:
                         beside.append({"benefit_id": b["benefit_id"], "period_index": p, "amount": money(a),
                                        "reason": "NO_EVIDENCE_REF" if b["cash_realisation"] else "NOT_CASH_REALISED"})
+                        beside_x.append(a)
+                        cls = "avoided_cost_beside"
                 elif t == "capacity":
+                    hour_claims.append((b["benefit_source_key"], p, iid, b["benefit_id"], a))
                     if conv_ok:
+                        cls = "capacity_converted"
                         by_class[p]["capacity_converted"] += a * rate_cap
                         unr_by_class[p] += au * rate_cap
                         has_rows = True
@@ -436,15 +475,18 @@ def compute(data):
                     else:
                         cap_excl.append({"benefit_id": b["benefit_id"], "period_index": p, "hours": money(a),
                                          "reason": "NO_CONVERSION_ASSUMPTION"})
+                        cap_excl_x.append(a)
                 # money-class claims (hours are never added to dollars)
                 if t in MONEY_TYPES:
                     planned_money += a
                     planned_money_unramped += au
-                    claims.append((b["benefit_source_key"], p, iid, b["benefit_id"], a))
+                    claims.append((b["benefit_source_key"], p, iid, b["benefit_id"], a, cls, cls != "avoided_cost_beside"))
                 elif t == "capacity" and conv_ok:
                     planned_money += a * rate_cap
                     planned_money_unramped += au * rate_cap
-                    claims.append((b["benefit_source_key"], p, iid, b["benefit_id"], a * rate_cap))
+                    claims.append((b["benefit_source_key"], p, iid, b["benefit_id"], a * rate_cap, cls, True))
+                all_hour_claims.extend(hour_claims)
+                hour_claims = []
             rows, cum, cumd, cfs, dcfs = [], F(0), F(0), [], []
             for p in range(H):
                 bc = by_class[p]
@@ -465,8 +507,8 @@ def compute(data):
                              "cumulative_discounted": money(cumd)})
             npv = sum((c * (1 / (1 + r) ** p) for p, c in enumerate(cfs)), F(0)) if has_rows else None
             cum_list = [sum(cfs[:k + 1], F(0)) for k in range(H)]
-            sp = payback(cum_list) if has_rows else (None, None)
-            dp_ = payback(dcfs) if has_rows else (None, None)
+            sp = payback(cum_list) if has_rows else (None, None, "NO_FLOWS")
+            dp_ = payback(dcfs) if has_rows else (None, None, "NO_FLOWS")
             unramped = None
             if ramp:
                 unramped = [money(unr_by_class[p] - cost_rows.get(p, F(0))) for p in range(H)]
@@ -481,7 +523,7 @@ def compute(data):
                 cap["reason"] = "NO_TARGET_ASSUMPTION"
             else:
                 hrs = F(base["volume"]) * (F(base["minutes_per_case"]) - dec(tgt["value"])) / 60
-                cap.update({"hours": m4(hrs), "volume": base["volume"], "baseline_minutes_per_case": base["minutes_per_case"],
+                cap.update({"hours": m4(hrs), "hours_exact": ex(hrs), "volume": base["volume"], "baseline_minutes_per_case": base["minutes_per_case"],
                             "target_minutes_per_case": tgt["value"]})
             # cost variance on the matured part of the horizon, against the approved baseline (D-02, D-P9-05)
             wend = min(H, M)
@@ -492,9 +534,9 @@ def compute(data):
             elif wend == 0:
                 cv["reason"] = "NO_MATURED_PERIOD"
             else:
-                bl = sum((a for c in acc["cost_items"] if c["initiative_id"] == iid and c["cost_basis"] == "planned"
+                bl = sum((a for c in sc_costs if c["initiative_id"] == iid and c["cost_basis"] == "planned"
                           and c["baseline_version"] == i["baseline_version"] for _, p, a in expand_costs(c, wend)), F(0))
-                act_rows = [a for c in acc["cost_items"] if c["initiative_id"] == iid and c["cost_basis"] == "actual"
+                act_rows = [a for c in sc_costs if c["initiative_id"] == iid and c["cost_basis"] == "actual"
                             for _, p, a in expand_costs(c, wend)]
                 cv["approved_baseline_cost"] = money(bl)
                 if not act_rows:
@@ -504,13 +546,15 @@ def compute(data):
                     cv["actual_cost"] = money(act)
                     cv["variance"] = money(act - bl)
             # benefit realization within one benefit type, matured periods only (D-02)
-            realization, immature = {}, []
+            realization, immature, late_rec = {}, [], []
             for t in BEN_TYPES:
-                items = [b for b in acc["benefit_items"] if b["initiative_id"] == iid and b["benefit_type"] == t and b["period_index"] < H]
+                items = [b for b in sc_bens if b["initiative_id"] == iid and b["benefit_type"] == t and b["period_index"] < H]
                 comp, unobs = [], []
                 for b in sorted(items, key=lambda b: b["benefit_id"]):
-                    obs = sorted((o for o in acc["benefit_observations"] if o["benefit_id"] == b["benefit_id"]
-                                  and parse_ts(o["observed_at"]) <= asof), key=lambda o: (parse_ts(o["observed_at"]), o["benefit_observation_id"]))
+                    happened = [o for o in acc["benefit_observations"] if o["benefit_id"] == b["benefit_id"] and parse_ts(o["observed_at"]) <= asof]
+                    late_rec += [o["benefit_observation_id"] for o in happened if o.get("recorded_at") and parse_ts(o["recorded_at"]) > asof]
+                    obs = sorted((o for o in happened if not o.get("recorded_at") or parse_ts(o["recorded_at"]) <= asof),
+                                 key=lambda o: (parse_ts(o["observed_at"]), parse_ts(o.get("recorded_at") or o["observed_at"]), o["benefit_observation_id"]))
                     if not matured(data, b["period_index"]):
                         immature += [o["benefit_observation_id"] for o in obs]
                         continue
@@ -524,20 +568,23 @@ def compute(data):
                 observed = sum((dec(o["measured_value"]) for _, o in comp), F(0))
                 trends = [dec(b["baseline_trend_per_period"]) for b, _ in comp if b["baseline_trend_per_period"] is not None]
                 trend = sum(trends, F(0)) if trends else None
+                no_trend = [b["benefit_id"] for b, _ in comp if b["baseline_trend_per_period"] is None]
                 realization[t] = {"unit": "hours" if t == "capacity" else "USD",
                                   "comparable_items": [b["benefit_id"] for b, _ in comp],
                                   "planned_comparable": money(planned) if comp else None,
                                   "observed_comparable": money(observed) if comp else None,
                                   "realization": p6(observed / planned) if comp and planned != 0 else None,
-                                  "baseline_trend": mn(trend), "observed_above_trend": mn(observed - trend) if trend is not None and comp else None,
+                                  "baseline_trend": mn(trend),
+                                  "observed_above_trend": mn(observed - trend) if trend is not None and comp and not no_trend else None,
+                                  "trend_coverage": {"complete": not no_trend, "rows_without_trend": no_trend},
                                   "attribution": "observed, not attributed",
                                   "matured_unobserved_items": unobs}
             out_i[iid] = {"cash_flow": rows,
                           "expanded_planned_costs": planned_rows,
                           "excluded_from_cash_flow": {"capacity_not_converted": cap_excl,
-                                                      "capacity_hours_not_converted": money(sum((dec(x["hours"]) for x in cap_excl), F(0))) if cap_excl else None,
+                                                      "capacity_hours_not_converted": money(sum(cap_excl_x, F(0))) if cap_excl else None,
                                                       "avoided_cost_beside": beside,
-                                                      "avoided_cost_beside_total": money(sum((dec(x["amount"]) for x in beside), F(0))) if beside else None,
+                                                      "avoided_cost_beside_total": money(sum(beside_x, F(0))) if beside else None,
                                                       "beyond_horizon": beyond},
                           "converted_capacity": cap_conv,
                           "ramp": {"assumption_id": ramp_a["assumption_id"], "values": ramp_a["values"]} if ramp_a else None,
@@ -546,29 +593,57 @@ def compute(data):
                           "npv": {"value": mn(npv), "exact": ex(npv), "unit": "USD", "label": "estimate"},
                           "payback": {"simple": pb_out(sp), "discounted": pb_out(dp_)},
                           "capacity_released": cap, "cost_variance": cv,
-                          "benefit_realization": realization, "immature_observation_ids": sorted(immature)}
-        # double-count residual (D-01, D-P9-09)
+                          "benefit_realization": realization, "immature_observation_ids": sorted(immature),
+                          "late_recorded_observation_ids": sorted(late_rec)}
+        # double-count rule (D-01, D-P9-09, R9-02, R9-03): money and hours are two separate rules, never added
+        def shared(cs):
+            groups = {}
+            for c in cs:
+                if c[0] is not None:
+                    groups.setdefault((c[0], c[1]), []).append(c)
+            return sorted((k, v) for k, v in groups.items() if len({c[2] for c in v}) >= 2)
+
         planned = sum((c[4] for c in claims), F(0))
-        groups = {}
-        for key, p, iid, bid, a in claims:
-            if key is not None:
-                groups.setdefault((key, p), []).append((iid, bid, a))
-        overlaps, removed = [], F(0)
-        for (key, p), cl in sorted(groups.items()):
-            if len({c[0] for c in cl}) >= 2:
-                tot, mx = sum((c[2] for c in cl), F(0)), max(c[2] for c in cl)
-                removed += tot - mx
-                overlaps.append({"benefit_source_key": key, "period_index": p,
-                                 "claims": [{"initiative_id": c[0], "benefit_id": c[1], "amount": money(c[2])} for c in sorted(cl)],
-                                 "counted_once": money(mx), "overlap": money(tot - mx)})
-        dc = {"planned_benefits": money(planned), "attributable_benefits": money(planned - removed),
-              "residual": money(removed), "overlaps": overlaps, "explanation_required": removed != 0}
-        npvs = [dec_exact for dec_exact in (F(x["npv"]["exact"]) for x in out_i.values() if x["npv"]["exact"] is not None)]
+        overlaps, removed, pv = [], F(0), F(0)
+        by_cls = {k: F(0) for k in ("cash", "revenue", "avoided_cost_realised", "capacity_converted", "avoided_cost_beside")}
+        for (key, p), cl in shared(claims):
+            keep = sorted(cl, key=lambda c: (-c[4], 0 if c[6] else 1, c[2], c[3]))[0]
+            tot, mx = sum((c[4] for c in cl), F(0)), keep[4]
+            removed += tot - mx
+            for c in cl:
+                if c is not keep:
+                    by_cls[c[5]] += c[4]
+                    if c[6]:
+                        pv += c[4] / (1 + r) ** p
+            overlaps.append({"benefit_source_key": key, "period_index": p,
+                             "claims": [{"initiative_id": c[2], "benefit_id": c[3], "amount": money(c[4]), "benefit_class": c[5], "enters_cash_flow": c[6]}
+                                        for c in sorted(cl, key=lambda c: (c[2], c[3]))],
+                             "counted_once": money(mx), "overlap": money(tot - mx)})
+        h_planned = sum((c[4] for c in all_hour_claims), F(0))
+        h_removed, h_overlaps = F(0), []
+        for (key, p), cl in shared(all_hour_claims):
+            tot, mx = sum((c[4] for c in cl), F(0)), max(c[4] for c in cl)
+            h_removed += tot - mx
+            h_overlaps.append({"benefit_source_key": key, "period_index": p,
+                               "claims": [{"initiative_id": c[2], "benefit_id": c[3], "hours": money(c[4])} for c in sorted(cl, key=lambda c: (c[2], c[3]))],
+                               "counted_once": money(mx), "hours_residual": money(tot - mx)})
+        need = [k for k, v in (("money", removed), ("hours", h_removed)) if v != 0]
+        dc = {"planned_benefits": money(planned), "attributable_benefits": money(planned - removed), "residual": money(removed),
+              "double_counted_amount": money(removed), "double_counted_pv": money(pv), "double_counted_pv_exact": ex(pv),
+              "double_counted_by_class": {k: money(v) for k, v in by_cls.items()}, "double_counted_by_class_exact": {k: ex(v) for k, v in by_cls.items()},
+              "overlaps": overlaps,
+              "planned_hours": money(h_planned), "attributable_hours": money(h_planned - h_removed), "hours_residual": money(h_removed),
+              "hours_overlaps": h_overlaps, "explanation_required": bool(need), "explanation_required_for": need}
+        hour_groups[sc["scenario_id"]] = [v for _, v in shared(all_hour_claims)]
+        npvs = [F(x["npv"]["exact"]) for x in out_i.values() if x["npv"]["exact"] is not None]
+        total = sum(npvs, F(0))
+        attributable = total - pv if npvs else None
         scenarios[sc["scenario_id"]] = {"status": sc["status"], "baseline_version": sc["baseline_version"], "horizon_periods": H,
                                         "rate_basis": sc["rate_basis"], "declared_rate": sc["discount_rate"],
                                         "effective_period_rate": p6(r), "effective_period_rate_exact": ex(r), "rate_source": src,
                                         "initiatives": out_i, "double_count": dc,
-                                        "npv_total": {"value": mn(sum(npvs, F(0))) if npvs else None, "exact": ex(sum(npvs, F(0))) if npvs else None}}
+                                        "npv_total": {"value": mn(attributable), "exact": ex(attributable), "basis": "attributable",
+                                                      "sum_of_initiatives": mn(total) if npvs else None, "sum_of_initiatives_exact": ex(total) if npvs else None}}
 
     # ------------------------------------------------ scenario-independent initiative metrics
     feas = {}
@@ -594,10 +669,14 @@ def compute(data):
         roadmap = {"requested_start": i["requested_start_period"], "duration_periods": i["duration_periods"],
                    "dependency_feasible_start": fs, "dependency_delay": fs - i["requested_start_period"],
                    "binding_dependency_id": bind, "finish": fs + i["duration_periods"],
-                   "resource_constrained_start": fs, "resource_delay": 0}
-        obs = sorted((o for o in acc["adoption_observations"] if o["initiative_id"] == iid and parse_ts(o["observed_at"]) <= asof),
-                     key=lambda o: (parse_ts(o["observed_at"]), o["observation_id"]))
-        late = sorted(o["observation_id"] for o in acc["adoption_observations"] if o["initiative_id"] == iid and parse_ts(o["observed_at"]) > asof)
+                   "resource_constrained_start": fs, "resource_delay": 0, "deployment_period": i["deployment_period"],
+                   "warnings": ([{"code": "DEPLOYMENT_BEFORE_FEASIBLE_START", "deployment_period": i["deployment_period"], "dependency_feasible_start": fs,
+                                  "periods_early": fs - i["deployment_period"]}] if i["deployment_period"] < fs else [])}
+        mine_a = [o for o in acc["adoption_observations"] if o["initiative_id"] == iid]
+        seen_a = lambda o: parse_ts(o["observed_at"]) <= asof and (not o.get("recorded_at") or parse_ts(o["recorded_at"]) <= asof)
+        obs = sorted((o for o in mine_a if seen_a(o)), key=lambda o: (parse_ts(o["observed_at"]), parse_ts(o.get("recorded_at") or o["observed_at"]), o["observation_id"]))
+        late = sorted(o["observation_id"] for o in mine_a if parse_ts(o["observed_at"]) > asof)
+        late_rec_a = sorted(o["observation_id"] for o in mine_a if parse_ts(o["observed_at"]) <= asof and o.get("recorded_at") and parse_ts(o["recorded_at"]) > asof)
         series = [{"observation_id": o["observation_id"], "observed_at": o["observed_at"], "eligible_count": o["eligible_count"],
                    "adopted_count": o["adopted_count"],
                    "adoption_rate": p6(F(o["adopted_count"], o["eligible_count"])) if o["eligible_count"] else None} for o in obs]
@@ -606,37 +685,44 @@ def compute(data):
                     "adoption_rate": series[-1]["adoption_rate"] if series else None,
                     "eligible_count": last["eligible_count"] if last else None, "adopted_count": last["adopted_count"] if last else None,
                     "latest_observation_id": last["observation_id"] if last else None, "series": series,
-                    "excluded_after_as_of": late}
-        tr = sorted((t for t in acc["training_completions"] if t["initiative_id"] == iid and parse_ts(t["recorded_at"]) <= asof),
-                    key=lambda t: (parse_ts(t["recorded_at"]), t["training_id"]))
+                    "excluded_after_as_of": late, "late_recorded": late_rec_a}
+        mine_t = [t for t in acc["training_completions"] if t["initiative_id"] == iid]
+        seen_t = lambda t: parse_ts(t["recorded_at"]) <= asof and (not t.get("entered_at") or parse_ts(t["entered_at"]) <= asof)
+        tr = sorted((t for t in mine_t if seen_t(t)), key=lambda t: (parse_ts(t["recorded_at"]), parse_ts(t.get("entered_at") or t["recorded_at"]), t["training_id"]))
+        late_rec_t = sorted(t["training_id"] for t in mine_t if parse_ts(t["recorded_at"]) <= asof and t.get("entered_at") and parse_ts(t["entered_at"]) > asof)
         tl = tr[-1] if tr else None
         trate = p6(F(tl["completed"], tl["eligible_trainees"])) if tl and tl["eligible_trainees"] else None
         training = {"training_completion": trate, "eligible_trainees": tl["eligible_trainees"] if tl else None,
                     "completed": tl["completed"] if tl else None, "training_id": tl["training_id"] if tl else None,
                     "substituted_for_adoption": False,
-                    "differs_from_adoption": (trate != adoption["adoption_rate"]) if trate is not None and adoption["adoption_rate"] is not None else None}
+                    "differs_from_adoption": (trate != adoption["adoption_rate"]) if trate is not None and adoption["adoption_rate"] is not None else None,
+                    "late_recorded": late_rec_t}
         rs = sorted((x for x in acc["risk_items"] if x["initiative_id"] == iid), key=lambda x: x["risk_id"])
         exposure = sum((dec(x["probability"]) * dec(x["impact"]) for x in rs), F(0)) if rs else None
-        risk = {"risk_exposure": mn(exposure), "label": "scenario estimate",
+        risk = {"risk_exposure": mn(exposure), "risk_exposure_exact": ex(exposure), "label": "scenario estimate",
                 "items": [{"risk_id": x["risk_id"], "probability": x["probability"], "impact": x["impact"],
                            "expected_loss": money(dec(x["probability"]) * dec(x["impact"]))} for x in rs]}
         fvs = [f for f in acc["forecast_versions"] if f["initiative_id"] == iid]
         forecast = None
         if fvs:
-            vers = []
+            vers, tot_x, per_x = [], {}, {}
             for v in sorted({f["version_number"] for f in fvs}):
                 rows = sorted((f for f in fvs if f["version_number"] == v), key=lambda f: f["period_index"])
-                vers.append({"version_number": v, "created_at": rows[0]["created_at"], "reason": rows[0]["reason"],
-                             "total": money(sum((dec(f["amount"]) for f in rows), F(0))),
+                tot_x[v] = sum((dec(f["amount"]) for f in rows), F(0))
+                per_x[v] = {f["period_index"] for f in rows}
+                vers.append({"version_number": v, "created_at": rows[0]["created_at"], "reason": rows[0]["reason"], "total": money(tot_x[v]),
                              "by_period": [{"period_index": f["period_index"], "amount": f["amount"]} for f in rows]})
             observed = []
             for b in sorted((b for b in acc["benefit_items"] if b["initiative_id"] == iid and b["benefit_type"] == "cash"), key=lambda b: b["benefit_id"]):
-                for o in sorted((o for o in acc["benefit_observations"] if o["benefit_id"] == b["benefit_id"]), key=lambda o: o["benefit_observation_id"]):
+                for o in sorted((o for o in acc["benefit_observations"] if o["benefit_id"] == b["benefit_id"]
+                                 and (not o.get("recorded_at") or parse_ts(o["recorded_at"]) <= asof)), key=lambda o: o["benefit_observation_id"]):
                     observed.append({"benefit_id": b["benefit_id"], "period_index": b["period_index"], "measured_value": o["measured_value"],
                                      "observed_at": o["observed_at"], "period_matured": matured(data, b["period_index"])})
-            forecast = {"versions": vers, "original_version": vers[0]["version_number"], "original_preserved": True,
-                        "latest_version": vers[-1]["version_number"],
-                        "latest_minus_original": money(dec(vers[-1]["total"]) - dec(vers[0]["total"])),
+            v0, v9 = vers[0]["version_number"], vers[-1]["version_number"]
+            cover = all(per_x[v0] <= per_x[v] for v in per_x)
+            forecast = {"versions": vers, "original_version": v0, "original_preserved": v0 == 1 and bool(per_x[v0]),
+                        "latest_version": v9, "revisions_cover_original_periods": cover,
+                        "latest_minus_original": money(tot_x[v9] - tot_x[v0]) if cover else None,
                         "observed": observed}
         inits[iid] = {"roadmap": roadmap, "adoption": adoption, "training": training, "risk": risk, "forecast": forecast}
 
@@ -672,15 +758,35 @@ def compute(data):
     elig = sum(x["adoption"]["eligible_count"] for x in inits.values() if x["adoption"]["eligible_count"])
     tcomp = sum(x["training"]["completed"] for x in inits.values() if x["training"]["eligible_trainees"])
     telig = sum(x["training"]["eligible_trainees"] for x in inits.values() if x["training"]["eligible_trainees"])
-    risks = [F(x["risk"]["risk_exposure"]) for x in inits.values() if x["risk"]["risk_exposure"] is not None]
-    caps = [F(x["capacity_released"]["hours"]) for x in (first["initiatives"].values() if first else []) if x["capacity_released"]["hours"] is not None]
-    summary = {"summary_scenario_id": next(iter(scenarios), None), "initiatives": len(ini), "scenarios": len(scenarios),
+    risks = [F(x["risk"]["risk_exposure_exact"]) for x in inits.values() if x["risk"]["risk_exposure_exact"] is not None]
+    first_id = next(iter(scenarios), None)
+    caps = {k: F(x["capacity_released"]["hours_exact"]) for k, x in (first["initiatives"].items() if first else []) if x["capacity_released"]["hours"] is not None}
+    # initiatives that claim the same capacity (a shared key in a shared period) are one group; their released hours count once, at the largest
+    linked = []
+    for cl in (hour_groups[first_id] if first_id else []):
+        linked.append({c[2] for c in cl})
+    merged = []
+    for g in linked:
+        g = set(g)
+        for m in [m for m in merged if m & g]:
+            g |= m
+            merged.remove(m)
+        merged.append(g)
+    twice = sum((sum((caps[i] for i in g if i in caps), F(0)) - max(caps[i] for i in g if i in caps) for g in merged if len([i for i in g if i in caps]) > 1), F(0))
+    dcf = first["double_count"] if first else None
+    live = bool(first and first["initiatives"])
+    summary = {"summary_scenario_id": first_id, "initiatives": len(ini), "scenarios": len(scenarios),
                "npv_total": first["npv_total"]["value"] if first else None,
-               "double_count_residual": first["double_count"]["residual"] if first and first["initiatives"] else None,
+               "npv_sum_of_initiatives": first["npv_total"]["sum_of_initiatives"] if first else None,
+               "double_counted_amount": dcf["double_counted_amount"] if live else None,
+               "double_counted_pv": dcf["double_counted_pv"] if live else None,
+               "double_count_residual": dcf["residual"] if live else None,
+               "hours_residual": dcf["hours_residual"] if live else None,
                "adoption_rate": p6(F(adopted, elig)) if elig else None,
                "training_completion": p6(F(tcomp, telig)) if telig else None,
                "risk_exposure_total": mn(sum(risks, F(0))) if risks else None,
-               "capacity_released_hours_total": m4(sum(caps, F(0))) if caps else None}
+               "capacity_released_hours_total": m4(sum(caps.values(), F(0)) - twice) if caps else None,
+               "capacity_released_hours_double_counted": m4(twice) if caps else None}
     return {"contract_version": 1, "as_of": data["as_of"], "period_basis": data["period_basis"], "empty_population": empty,
             "ingest": {"counts": counts, "rejected_records": rejected},
             "metrics": {"summary": summary, "scenarios": scenarios, "initiatives": inits, "groups": groups, "resources": resources}}
@@ -782,7 +888,36 @@ def hand(g, rj, em):
         ("hand.i3_discounted_payback_interpolated_null", None, i3["payback"]["discounted"]["interpolated"]),
         ("hand.i3_capacity_released_null_no_approved_baseline", None, i3["capacity_released"]["hours"]),
         ("hand.i3_cost_variance_null_no_approved_baseline", None, i3["cost_variance"]["variance"]),
-        ("hand.scenario_npv_total_exact_-83800/121", "-83800/121", s["npv_total"]["exact"]),
+        ("hand.scenario_sum_of_initiative_npvs_exact_-83800/121", "-83800/121", s["npv_total"]["sum_of_initiatives_exact"]),
+        ("hand.scenario_sum_of_initiative_npvs_-692.56", "-692.56", s["npv_total"]["sum_of_initiatives"]),
+        # R9-02: the shared claim counts once; the 75.00 that counts twice is received in period 2, so its present value is 75/1.1^2 = 7500/121 = 61.98
+        ("hand.double_counted_amount_75.00", "75.00", s["double_count"]["double_counted_amount"]),
+        ("hand.double_counted_pv_exact_7500/121", "7500/121", s["double_count"]["double_counted_pv_exact"]),
+        ("hand.double_counted_pv_61.98", "61.98", s["double_count"]["double_counted_pv"]),
+        ("hand.attributable_npv_exact_-91300/121_is_-8300/11", "-8300/11", s["npv_total"]["exact"]),
+        ("hand.attributable_npv_-754.55", "-754.55", s["npv_total"]["value"]),
+        ("hand.summary_npv_total_is_the_attributable_-754.55", "-754.55", g["metrics"]["summary"]["npv_total"]),
+        ("hand.summary_npv_sum_of_initiatives_-692.56", "-692.56", g["metrics"]["summary"]["npv_sum_of_initiatives"]),
+        ("hand.summary_double_counted_pv_61.98", "61.98", g["metrics"]["summary"]["double_counted_pv"]),
+        ("hand.double_count_by_class_avoided_cost_realised_75", "75", s["double_count"]["double_counted_by_class_exact"]["avoided_cost_realised"]),
+        ("hand.double_count_retained_claim_is_150_avoided_cost_realised", ["150.00", "avoided_cost_realised"], [s["double_count"]["overlaps"][0]["counted_once"], s["double_count"]["overlaps"][0]["claims"][1]["benefit_class"]]),
+        # R9-03: the golden has 800 hours claimed once (init-001, no key): nothing to count twice, no hours residual
+        ("hand.hours_planned_800.00_no_hours_residual", ["800.00", "800.00", "0.00", []], [s["double_count"]["planned_hours"], s["double_count"]["attributable_hours"], s["double_count"]["hours_residual"], s["double_count"]["hours_overlaps"]]),
+        ("hand.summary_capacity_hours_1000.0000_none_counted_twice", ["1000.0000", "0.0000"], [g["metrics"]["summary"]["capacity_released_hours_total"], g["metrics"]["summary"]["capacity_released_hours_double_counted"]]),
+        # R9-06: deployment_period 1 < feasible start 2 (init-002), 2 < 3 (init-003); init-001 deploys at 1 after its start 0
+        ("hand.i1_no_deployment_warning", [], mi["init-001"]["roadmap"]["warnings"]),
+        ("hand.i2_deployment_1_before_feasible_start_2", [{"code": "DEPLOYMENT_BEFORE_FEASIBLE_START", "deployment_period": 1, "dependency_feasible_start": 2, "periods_early": 1}], mi["init-002"]["roadmap"]["warnings"]),
+        ("hand.i3_deployment_2_before_feasible_start_3", [{"code": "DEPLOYMENT_BEFORE_FEASIBLE_START", "deployment_period": 2, "dependency_feasible_start": 3, "periods_early": 1}], mi["init-003"]["roadmap"]["warnings"]),
+        ("hand.i2_cash_flow_not_re_timed_p1_net_100.00", "100.00", i2["cash_flow"][1]["net_cash_flow"]),
+        # R9-12: payback reasons (golden: found, or never recovered, with the reason named)
+        ("hand.i1_payback_reasons_none", [None, None], [i1["payback"]["simple"]["reason"], i1["payback"]["discounted"]["reason"]]),
+        ("hand.i2_discounted_payback_not_recovered", "NOT_RECOVERED", i2["payback"]["discounted"]["reason"]),
+        ("hand.i3_payback_not_recovered", ["NOT_RECOVERED", "NOT_RECOVERED"], [i3["payback"]["simple"]["reason"], i3["payback"]["discounted"]["reason"]]),
+        # R9-13: init-001 cash (one compared row, with a trend) is complete; init-001 capacity has no trend at all (nothing to show above it)
+        ("hand.i1_cash_trend_coverage_complete", {"complete": True, "rows_without_trend": []}, i1["benefit_realization"]["cash"]["trend_coverage"]),
+        ("hand.i1_capacity_no_trend_no_above_trend", [None, ["b-103"]], [i1["benefit_realization"]["capacity"]["observed_above_trend"], i1["benefit_realization"]["capacity"]["trend_coverage"]["rows_without_trend"]]),
+        # R9-10: the one revision covers the original's twelve... two periods
+        ("hand.forecast_revision_covers_the_original_periods_and_the_original_is_preserved", [True, True], [mi["init-001"]["forecast"]["revisions_cover_original_periods"], mi["init-001"]["forecast"]["original_preserved"]]),
         # cost variance
         ("hand.i1_cost_variance_0.00_not_null", "0.00", i1["cost_variance"]["variance"]),
         ("hand.i2_cost_variance_window_0_2", 2, i2["cost_variance"]["window"]["to_period"]),
@@ -861,6 +996,25 @@ def hand(g, rj, em):
         ("hand.rej_i4_converted_capacity_100h_x_25.00_is_2500.00", "2500.00", rj["metrics"]["scenarios"]["rs-2"]["initiatives"]["rj-i4"]["cash_flow"][1]["net_cash_flow"]),
         ("hand.rej_i4_simple_payback_interpolated_0.4000", "0.4000", rj["metrics"]["scenarios"]["rs-2"]["initiatives"]["rj-i4"]["payback"]["simple"]["interpolated"]),
         ("hand.rej_i1_simple_payback_interpolated_1.5385", "1.5385", rj["metrics"]["scenarios"]["rs-2"]["initiatives"]["rj-i1"]["payback"]["simple"]["interpolated"]),
+        # R9-12 probes (monthly, rate 0, horizon 5): the three series that the first-crossing rule got wrong, and a series with no flows
+        ("hand.probe_p1_never_negative_cumulative_0_600_1200_has_no_payback_NO_INVESTMENT", ["NO_INVESTMENT", None, "1200.00"], [rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p1"]["payback"]["simple"]["reason"], rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p1"]["payback"]["simple"]["period"], rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p1"]["npv"]["value"]]),
+        ("hand.probe_p2_dips_again_cumulative_-1000_200_-100_400_400_payback_3_2.2000", [3, "2.2000", "400.00"], [rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p2"]["payback"]["simple"]["period"], rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p2"]["payback"]["simple"]["interpolated"], rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p2"]["npv"]["value"]]),
+        ("hand.probe_p3_ends_negative_cumulative_-1000_500_-200_-200_-200_not_recovered", [None, "NOT_RECOVERED", "-200.00"], [rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p3"]["payback"]["simple"]["period"], rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p3"]["payback"]["simple"]["reason"], rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p3"]["npv"]["value"]]),
+        ("hand.probe_p4_payback_2_1.5000", [2, "1.5000"], [rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p4"]["payback"]["simple"]["period"], rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p4"]["payback"]["simple"]["interpolated"]]),
+        ("hand.probe_p5_no_flows_npv_null_payback_NO_FLOWS", [None, "NO_FLOWS"], [rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p5"]["npv"]["value"], rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p5"]["payback"]["simple"]["reason"]]),
+        # R9-01: the 500.00 cost of rj-p2 was recorded on 2026-02-01, after rs-6 (2026-01-05) and before rs-7 (2026-03-01): rs-6 does not see it, rs-7 does
+        ("hand.probe_p2_in_rs-6_is_built_without_the_later_cost_npv_400.00", ["400.00", 2], [rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p2"]["npv"]["value"], len(rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p2"]["expanded_planned_costs"])]),
+        ("hand.probe_p2_in_rs-7_includes_it_npv_-100.00", ["-100.00", 3], [rj["metrics"]["scenarios"]["rs-7"]["initiatives"]["rj-p2"]["npv"]["value"], len(rj["metrics"]["scenarios"]["rs-7"]["initiatives"]["rj-p2"]["expanded_planned_costs"])]),
+        # R9-13 probe: two compared cash rows, one with a trend 10.00 and one without
+        ("hand.probe_p4_partial_trend_realization_170_of_200_is_0.850000", ["200.00", "170.00", "0.850000", "10.00"], [rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p4"]["benefit_realization"]["cash"][k] for k in ("planned_comparable", "observed_comparable", "realization", "baseline_trend")]),
+        ("hand.probe_p4_partial_trend_withholds_observed_above_trend", [None, {"complete": False, "rows_without_trend": ["rb-p4b"]}], [rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p4"]["benefit_realization"]["cash"]["observed_above_trend"], rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p4"]["benefit_realization"]["cash"]["trend_coverage"]]),
+        # R9-11 probes: recorded after as_of, so they do not exist yet (the later reading 95.00 of rb-p4a, adoption 16/20, training 19/20 are not used)
+        ("hand.probe_late_recorded_benefit_observation_listed_not_used", ["rbo-p4c", "90.00"], [rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p4"]["late_recorded_observation_ids"][0], "90.00" if rj["metrics"]["scenarios"]["rs-6"]["initiatives"]["rj-p4"]["benefit_realization"]["cash"]["observed_comparable"] == "170.00" else "?"]),
+        ("hand.probe_late_recorded_adoption_listed_rate_stays_0.400000", [["rao-4"], "0.400000"], [rj["metrics"]["initiatives"]["rj-i1"]["adoption"]["late_recorded"], rj["metrics"]["initiatives"]["rj-i1"]["adoption"]["adoption_rate"]]),
+        ("hand.probe_late_recorded_training_listed_rate_stays_0.900000", [["rt-3"], "0.900000"], [rj["metrics"]["initiatives"]["rj-i1"]["training"]["late_recorded"], rj["metrics"]["initiatives"]["rj-i1"]["training"]["training_completion"]]),
+        # R9-03 probe: two initiatives claim the same 40 and 60 hours in period 2 (no conversion): 100 - 60 = 40 hours count twice
+        ("hand.probe_hours_overlap_40_and_60_count_once_at_60_residual_40.00", ["100.00", "60.00", "40.00", ["hours"], "0.00"], [rj["metrics"]["scenarios"]["rs-6"]["double_count"][k] for k in ("planned_hours", "attributable_hours", "hours_residual", "explanation_required_for", "residual")]),
+        ("hand.probe_attributable_npv_1450.00_1200_400_-200_50", "1450.00", rj["metrics"]["scenarios"]["rs-6"]["npv_total"]["value"]),
         ("hand.rej_i1_planned_cost_rows_1_one_time_plus_3_recurring", 4, len(rj["metrics"]["scenarios"]["rs-2"]["initiatives"]["rj-i1"]["expanded_planned_costs"])),
         ("hand.rej_i1_npv_919.31_at_converted_monthly_rate", "919.31", rj["metrics"]["scenarios"]["rs-2"]["initiatives"]["rj-i1"]["npv"]["value"]),
         ("hand.rej_i3_npv_-401.97", "-401.97", rj["metrics"]["scenarios"]["rs-2"]["initiatives"]["rj-i3"]["npv"]["value"]),

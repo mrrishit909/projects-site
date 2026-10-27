@@ -10,7 +10,7 @@
         "benefit_classes": [
           "capacity"
         ],
-        "capacity_hours_not_converted": "2920.49",
+        "capacity_hours_not_converted": "2920.48",
         "capacity_released_hours_per_period": "405.6250",
         "cash_benefits_total": "0.00",
         "converted_capacity_items": 0,
@@ -28,12 +28,16 @@
       "realised": {
         "attributable_benefits": "32470748.38",
         "benefit_source_key": "src-fin-ap-shared-team",
+        "double_counted_pv": "195233.20",
         "first_overlap_period": 3,
+        "hours_residual": "5974.80",
         "initiatives": [
           "init-001",
           "init-002"
         ],
         "last_overlap_period": 12,
+        "npv_sum_of_initiatives": "1438382.25",
+        "npv_total_attributable": "1243149.05",
         "overlap_periods": 10,
         "planned_benefits": "32677894.70",
         "residual": "207146.32",
@@ -41,6 +45,15 @@
         "scenarios_with_a_residual": [
           "scn-002",
           "scn-003",
+          "scn-006",
+          "scn-025",
+          "scn-027"
+        ],
+        "scenarios_with_an_hours_residual": [
+          "scn-001",
+          "scn-002",
+          "scn-003",
+          "scn-005",
           "scn-006",
           "scn-025",
           "scn-027"
@@ -79,12 +92,67 @@
       "id": "DR-03",
       "name": "an initiative that never pays back",
       "realised": {
-        "benefit_to_cost": "0.620043",
-        "benefits_entering_the_cash_flow": "805466.72",
+        "by_scenario": {
+          "scn-013": {
+            "benefit_to_cost": "0.620043",
+            "benefits_entering_the_cash_flow": "805466.72",
+            "npv": "-508801.53",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-1"
+          },
+          "scn-014": {
+            "benefit_to_cost": "0.620043",
+            "benefits_entering_the_cash_flow": "805466.72",
+            "npv": "-515329.28",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-1"
+          },
+          "scn-015": {
+            "benefit_to_cost": "0.531465",
+            "benefits_entering_the_cash_flow": "690400.00",
+            "npv": "-618556.03",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-2"
+          },
+          "scn-016": {
+            "benefit_to_cost": "0.620043",
+            "benefits_entering_the_cash_flow": "805466.72",
+            "npv": "-512146.04",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-1"
+          },
+          "scn-017": {
+            "benefit_to_cost": "0.620043",
+            "benefits_entering_the_cash_flow": "805466.72",
+            "npv": "-512146.04",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-1"
+          },
+          "scn-018": {
+            "benefit_to_cost": "0.531465",
+            "benefits_entering_the_cash_flow": "690400.00",
+            "npv": "-619344.67",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-2"
+          },
+          "scn-025": {
+            "benefit_to_cost": "0.531465",
+            "benefits_entering_the_cash_flow": "690400.00",
+            "npv": "-618556.03",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-2"
+          },
+          "scn-026": {
+            "benefit_to_cost": "0.531465",
+            "benefits_entering_the_cash_flow": "690400.00",
+            "npv": "-618556.03",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-2"
+          }
+        },
         "initiative_id": "init-015",
         "npv_highest": "-508801.53",
         "npv_lowest": "-619344.67",
-        "planned_cost": "1299050.00",
         "scenarios": [
           "scn-013",
           "scn-014",
@@ -95,10 +163,24 @@
           "scn-025",
           "scn-026"
         ],
+        "scenarios_by_benefit_to_cost": {
+          "0.531465": [
+            "scn-015",
+            "scn-018",
+            "scn-025",
+            "scn-026"
+          ],
+          "0.620043": [
+            "scn-013",
+            "scn-014",
+            "scn-016",
+            "scn-017"
+          ]
+        },
         "scenarios_with_discounted_payback_null": 8,
         "scenarios_with_simple_payback_null": 8
       },
-      "statement": "init-015 recovers well under its cost over its benefit window."
+      "statement": "init-015 recovers well under its cost over its benefit window; the ratio depends on the adoption ramp the scenario pins, so each value names its scenarios."
     },
     {
       "id": "DR-04",
@@ -189,15 +271,24 @@
     },
     {
       "id": "DR-05",
-      "name": "a shared specialist overallocated in three periods",
+      "name": "a shared specialist at capacity",
       "realised": {
         "allocated": {
+          "12": "2.00",
+          "13": "2.00",
           "14": "2.00",
           "15": "2.00",
           "16": "2.00"
         },
         "capacity_per_period": "2.00",
+        "designed_periods": [
+          14,
+          15,
+          16
+        ],
         "headroom": {
+          "12": "0.00",
+          "13": "0.00",
           "14": "0.00",
           "15": "0.00",
           "16": "0.00"
@@ -209,6 +300,8 @@
           "init-023"
         ],
         "periods": [
+          12,
+          13,
           14,
           15,
           16
@@ -227,7 +320,7 @@
         "resource_id": "res-03",
         "stored_overallocated_periods": []
       },
-      "statement": "res-03 is allocated to capacity in periods [14, 15, 16]; further requests there are refused at ingest and kept in the replay events."
+      "statement": "res-03 is designed to be allocated to capacity in periods [14, 15, 16]; the periods at capacity in the rows are in realised.periods (the draws also fill it earlier); further requests there are refused at ingest and kept in the replay events."
     },
     {
       "id": "DR-06",
@@ -485,7 +578,7 @@
       "injection": "INJ-02",
       "requires": [
         "scn-025",
-        "scn-001"
+        "scn-004"
       ],
       "steps": [
         {
@@ -501,7 +594,7 @@
             "idempotency_key": "inj-02-a",
             "input": {
               "compared_scenario_ids": [
-                "scn-001"
+                "scn-004"
               ],
               "scenario_id": "scn-025"
             },
@@ -521,7 +614,7 @@
             "idempotency_key": "inj-02-b",
             "input": {
               "compared_scenario_ids": [
-                "scn-001"
+                "scn-004"
               ],
               "residual_explanation": "Both initiatives release time of the same accounts-payable team; the larger claim is counted once and the overlap is listed.",
               "scenario_id": "scn-025"
@@ -541,7 +634,7 @@
             "dataset_version": "cw-20261026-20261026",
             "idempotency_key": "inj-02-c",
             "input": {
-              "scenario_id": "scn-001"
+              "scenario_id": "scn-004"
             },
             "request_id": "req-inj-02-c"
           },
@@ -897,6 +990,32 @@
         },
         {
           "command": "revise-forecast",
+          "expected_reason": "REVISION_PERIODS_INCOMPLETE",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-sponsor01",
+            "X-Actor-Role": "sponsor"
+          },
+          "input": {
+            "dataset_version": "cw-20261026-20261026",
+            "idempotency_key": "inj-06-c",
+            "input": {
+              "expected_version": 3,
+              "initiative_id": "init-003",
+              "periods": [
+                {
+                  "amount": "16950.03",
+                  "period_index": 5
+                }
+              ],
+              "reason": "Partial revision"
+            },
+            "request_id": "req-inj-06-c"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "revise-forecast",
           "expected_status": 200,
           "headers": {
             "X-Actor-Id": "usr-sponsor01",
@@ -910,8 +1029,52 @@
               "initiative_id": "init-003",
               "periods": [
                 {
-                  "amount": "16950.03",
+                  "amount": "2825.02",
+                  "period_index": 3
+                },
+                {
+                  "amount": "8474.97",
+                  "period_index": 4
+                },
+                {
+                  "amount": "13560.02",
                   "period_index": 5
+                },
+                {
+                  "amount": "22600.02",
+                  "period_index": 6
+                },
+                {
+                  "amount": "33900.02",
+                  "period_index": 7
+                },
+                {
+                  "amount": "41527.48",
+                  "period_index": 8
+                },
+                {
+                  "amount": "55370.01",
+                  "period_index": 9
+                },
+                {
+                  "amount": "71190.00",
+                  "period_index": 10
+                },
+                {
+                  "amount": "71190.00",
+                  "period_index": 11
+                },
+                {
+                  "amount": "71190.00",
+                  "period_index": 12
+                },
+                {
+                  "amount": "71190.00",
+                  "period_index": 13
+                },
+                {
+                  "amount": "71190.00",
+                  "period_index": 14
                 }
               ],
               "reason": "Fourth revision"
@@ -1315,7 +1478,7 @@
         {
           "expect": [
             {
-              "equals": "309599.99",
+              "equals": "309600.00",
               "path": "metrics.scenarios.scn-025.initiatives.init-002.excluded_from_cash_flow.avoided_cost_beside_total"
             },
             {
@@ -1354,7 +1517,7 @@
     {
       "checks": [
         {
-          "equals": "2920.49",
+          "equals": "2920.48",
           "path": "metrics.scenarios.scn-025.initiatives.init-009.excluded_from_cash_flow.capacity_hours_not_converted"
         },
         {
@@ -1374,7 +1537,7 @@
       "events": [
         "EV-01"
       ],
-      "expected_handling": "The claim is refused CAPACITY_WITHOUT_CONVERSION; the hours stay out of the cash flow (listed as not converted, NPV from costs alone); a derived cash item exists only after a conversion assumption with a staffing change evidence reference, and then as a separate item citing it.",
+      "expected_handling": "The claim is refused CAPACITY_WITHOUT_CONVERSION; the hours stay out of the cash flow (listed as not converted, NPV from costs alone); a derived cash item exists only after a conversion assumption with a staffing change evidence reference, and then as a separate item citing it, in a scenario built after that assumption existed (a scenario keeps the assumptions it was built on).",
       "expected_rejections": [
         {
           "details": {
@@ -1427,8 +1590,31 @@
           "path": "metrics.scenarios.scn-025.double_count.overlaps[0].overlap"
         },
         {
-          "equals": "0.00",
-          "path": "metrics.scenarios.scn-001.double_count.residual"
+          "equals": "207146.32",
+          "path": "metrics.scenarios.scn-025.double_count.double_counted_amount"
+        },
+        {
+          "equals": "195233.20",
+          "path": "metrics.scenarios.scn-025.double_count.double_counted_pv"
+        },
+        {
+          "equals": "5974.80",
+          "path": "metrics.scenarios.scn-025.double_count.hours_residual"
+        },
+        {
+          "equals": [
+            "money",
+            "hours"
+          ],
+          "path": "metrics.scenarios.scn-025.double_count.explanation_required_for"
+        },
+        {
+          "equals": "1243149.05",
+          "path": "metrics.scenarios.scn-025.npv_total.value"
+        },
+        {
+          "equals": "1438382.25",
+          "path": "metrics.scenarios.scn-025.npv_total.sum_of_initiatives"
         },
         {
           "equals": "0.00",
@@ -1436,7 +1622,7 @@
         },
         {
           "equals": "0.00",
-          "path": "metrics.scenarios.scn-005.double_count.residual"
+          "path": "metrics.scenarios.scn-004.double_count.hours_residual"
         },
         {
           "equals": "0.00",
@@ -1444,18 +1630,46 @@
         },
         {
           "equals": "0.00",
+          "path": "metrics.scenarios.scn-007.double_count.hours_residual"
+        },
+        {
+          "equals": "0.00",
           "path": "metrics.scenarios.scn-008.double_count.residual"
         },
         {
           "equals": "0.00",
+          "path": "metrics.scenarios.scn-008.double_count.hours_residual"
+        },
+        {
+          "equals": "0.00",
           "path": "metrics.scenarios.scn-009.double_count.residual"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.scenarios.scn-009.double_count.hours_residual"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.scenarios.scn-010.double_count.residual"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.scenarios.scn-010.double_count.hours_residual"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.scenarios.scn-011.double_count.residual"
+        },
+        {
+          "equals": "0.00",
+          "path": "metrics.scenarios.scn-011.double_count.hours_residual"
         }
       ],
       "defect": "init-001 and init-002 both claim the time of the same accounts-payable team (benefit_source_key src-fin-ap-shared-team); with the capacity converted (rate pinned from May) the portfolio adds both claims.",
       "events": [
         "EV-02"
       ],
-      "expected_handling": "The claims sharing a key in a period count once, at the larger claim; the rest is the double-count residual with the overlaps listed; select-scenario is refused DOUBLE_COUNT_UNEXPLAINED until the residual is explained; a scenario without the overlap (for example scn-026, the portfolio without init-002) has a residual of 0.00 and can be proposed without an explanation.",
+      "expected_handling": "The claims sharing a key in a period count once, at the larger claim; the rest is the double-count residual with the overlaps listed; select-scenario is refused DOUBLE_COUNT_UNEXPLAINED until the residual is explained (in money or in hours, with an explanation of at least 20 characters); the portfolio NPV is the attributable one, the sum of the initiative NPVs less the present value of the claim that counts twice; a scenario without an overlap in money or in hours (for example scn-026, the portfolio without init-002) has both residuals at 0.00 and can be proposed without an explanation.",
       "expected_rejections": [],
       "id": "INJ-02",
       "location": "both",
@@ -1680,7 +1894,7 @@
       "events": [
         "EV-06"
       ],
-      "expected_handling": "Refused VERSION_EXISTS (the database also refuses UPDATE and DELETE); a revision is the next version, the original approved version 1 stays unchanged and the comparison lists the original, every revision and the observed values with their dates.",
+      "expected_handling": "Refused VERSION_EXISTS (the database also refuses UPDATE and DELETE); a revision is the next version and restates every period of the original (a partial one is REVISION_PERIODS_INCOMPLETE), the original approved version 1 stays unchanged and the comparison lists the original, every revision and the observed values with their dates.",
       "expected_rejections": [
         {
           "details": {
@@ -2049,7 +2263,7 @@
     {
       "checks": [
         {
-          "equals": "309599.99",
+          "equals": "309600.00",
           "path": "metrics.scenarios.scn-025.initiatives.init-002.excluded_from_cash_flow.avoided_cost_beside_total"
         },
         {

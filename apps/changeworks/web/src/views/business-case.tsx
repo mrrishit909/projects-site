@@ -13,7 +13,8 @@ export function BusinessCaseView() {
   return <WithData>{(ds) => <><Case ds={ds} /><GoldenRecomputed /></>}</WithData>;
 }
 
-const pb = (p: Row): string => (p["period"] === null ? "never within the horizon (null)" : `period ${p["period"]}, interpolated ${p["interpolated"]}`);
+const REASON: Record<string, string> = { NO_INVESTMENT: "no investment: the cumulative flow is never negative", NOT_RECOVERED: "the cumulative flow ends below zero", NO_FLOWS: "no flows" };
+const pb = (p: Row): string => (p["period"] === null ? `never within the horizon (null${p["reason"] ? `: ${REASON[p["reason"]] ?? p["reason"]}` : ""})` : `period ${p["period"]}, interpolated ${p["interpolated"]}`);
 
 function Case({ ds }: { ds: Dataset }) {
   const [sid] = useScenario(ds);
@@ -27,6 +28,7 @@ function Case({ ds }: { ds: Dataset }) {
   const asm = ds.result.population.acc.assumption_versions.filter((a) => a["initiative_id"] === iid).sort((a, b) => cmp(a["name"], b["name"]) || a["version_number"] - b["version_number"]);
   const pinned = new Set<string>(ds.byId.scenarios.get(sid)!["pinned_assumption_ids"]);
   const ex_ = blk["excluded_from_cash_flow"] as Row;
+  const warn = ((ds.metrics["initiatives"][iid] as Row)["roadmap"]["warnings"] as Row[])[0] ?? null;
   const csv = toCsv(["period", "period_start", "costs", "cash", "revenue", "avoided_cost_realised", "capacity_converted", "net_cash_flow", "cumulative", "discount_factor", "discount_factor_exact", "discounted_cash_flow", "cumulative_discounted", "assumptions"],
     cf.map((r, i) => [r["period_index"], r["period_start"], r["costs"], r["benefits_by_class"]["cash"], r["benefits_by_class"]["revenue"], r["benefits_by_class"]["avoided_cost_realised"], r["benefits_by_class"]["capacity_converted"], r["net_cash_flow"], r["cumulative"], r["discount_factor"], r["discount_factor_exact"], r["discounted_cash_flow"], r["cumulative_discounted"], trail[i]!.items.map((x) => x.text).join(" | ")]));
   void ex1;
@@ -42,15 +44,21 @@ function Case({ ds }: { ds: Dataset }) {
       <p className="muted small">{ds.byId.initiatives.get(iid)!["title"]}. Also in scenarios {scenariosWith(ds, iid).filter((s) => s !== sid).slice(0, 6).map((s) => <span key={s}><Link to={`business-case?scenario=${s}&initiative=${iid}`}>{s}</Link> </span>)}{scenariosWith(ds, iid).length > 7 ? "…" : ""}</p>
       <section aria-labelledby="h-fig" data-testid="measures">
         <h2 id="h-fig">NPV and payback <Chip kind="note">estimate</Chip></h2>
+        <dl className="facts" data-testid="scenario-npv">
+          <div><dt>Scenario NPV total, attributable (USD)</dt><dd data-figure="npv-attributable">{group(sc["npv_total"]["value"])}</dd></div>
+          <div><dt>Sum of the initiative NPVs, beside (USD)</dt><dd data-figure="npv-sum">{group(sc["npv_total"]["sum_of_initiatives"])}</dd></div>
+          <div><dt>Counted twice, present value, beside (USD)</dt><dd data-figure="double-counted-pv">{group(sc["double_count"]["double_counted_pv"])}</dd></div>
+        </dl>
+        {warn && <p className="notice" data-testid="deployment-warning"><Chip kind="note">deployment before feasible start</Chip> Deployment is planned in period {warn["deployment_period"]}, {warn["periods_early"]} periods before the dependency-feasible start (period {warn["dependency_feasible_start"]}). The cash flow below is the plan as recorded and is not re-timed.</p>}
         <dl className="facts">
-          <div><dt>NPV (USD, 2 places)</dt><dd data-figure="npv">{group(blk["npv"]["value"])}</dd></div>
+          <div><dt>This initiative's NPV (USD, 2 places), before shared claims are removed</dt><dd data-figure="npv">{group(blk["npv"]["value"])}</dd></div>
           <div><dt>NPV, exact rational</dt><dd data-figure="npv-exact">{blk["npv"]["exact"] ?? "n/a"}</dd></div>
           <div><dt>Simple payback (undiscounted)</dt><dd data-figure="simple-payback">{pb(blk["payback"]["simple"])}</dd></div>
           <div><dt>Discounted payback</dt><dd data-figure="discounted-payback">{pb(blk["payback"]["discounted"])}</dd></div>
           <div><dt>Capacity released (hours per period)</dt><dd data-figure="capacity-released">{blk["capacity_released"]["hours"] ?? `n/a (${blk["capacity_released"]["reason"]})`}</dd></div>
           <div><dt>Rate used</dt><dd data-figure="rate" className="wrapcell">{rate.text}</dd></div>
         </dl>
-        <p className="small muted">NPV = Σ CF<sub>t</sub> ÷ (1 + r)<sup>t</sup> over {sc["horizon_periods"]} periods with r = {sc["effective_period_rate_exact"]} per {String(ds.result.population.config["period_basis"]).replace("ly", "")}. {win ? `This initiative's benefit rows fall in periods ${win.from} to ${win.to - 1} (${win.rows} rows): ` : ""}the snapshot recognises benefits for 12 periods per stream, so this is a <strong>first-year case</strong>, not a multi-year forecast. A payback is null, not zero, when the cumulative flow never reaches zero.</p>
+        <p className="small muted">NPV = Σ CF<sub>t</sub> ÷ (1 + r)<sup>t</sup> over {sc["horizon_periods"]} periods with r = {sc["effective_period_rate_exact"]} per {String(ds.result.population.config["period_basis"]).replace("ly", "")}. {win ? `This initiative's benefit rows fall in periods ${win.from} to ${win.to - 1} (${win.rows} rows): ` : ""}the snapshot recognises benefits within a <strong>twelve-period benefit window</strong> per stream (some streams are shorter), so this is not a multi-year forecast. A payback is the period of the last crossing from below zero; it is null, not zero, when the flow never recovers, never goes negative or has no flows, and the reason is named.</p>
         {target && <p className="small muted">Target assumption {target["assumption_id"]} v{target["version_number"]}: {target["value"]} minutes per case, from the approved baseline {blk["capacity_released"]["baseline_version"] ?? "(none)"}; hours are never a payroll saving by themselves.</p>}
       </section>
       <section aria-labelledby="h-cf">
@@ -133,7 +141,7 @@ function GoldenRecomputed() {
             <div><dt>Double-count residual</dt><dd data-g="residual">{dc["residual"]} ({(dc["overlaps"] as Row[])[0]!["benefit_source_key"]})</dd></div>
             <div><dt>Dependency delays</dt><dd data-g="delays">init-002: {roadmap["init-002"]["roadmap"]["dependency_delay"]} periods; init-003: {roadmap["init-003"]["roadmap"]["dependency_delay"]} periods</dd></div>
           </dl>
-          <p className="small">Every one of the 572 leaves of the expected answer is compared on the <Link to="evidence">Evidence plate</Link>. Open the whole site on it: <a href={`${import.meta.env.BASE_URL}business-case/?dataset=golden`}>?dataset=golden</a>.</p>
+          <p className="small">Every one of the 643 leaves of the expected answer is compared on the <Link to="evidence">Evidence plate</Link>. Open the whole site on it: <a href={`${import.meta.env.BASE_URL}business-case/?dataset=golden`}>?dataset=golden</a>.</p>
         </section>
       );
     }}</WithDataset>

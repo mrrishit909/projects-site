@@ -78,7 +78,7 @@ export function Layout({ route, title, children }: { route: string | null; title
             <strong>Synthetic data, demo mode.</strong> No real company, person or money. Nothing here is funded.
             <ul>
               <li>The sensitivity lab, roadmap edits and scenario selection are <strong>simulations in browser memory</strong>: they reset on reload and change no published figure.</li>
-              <li>The snapshot is a <strong>first-year case</strong>: benefits are recognised for 12 periods per stream, so NPV and payback describe the first year after go-live.</li>
+              <li>Benefits are recognised <strong>within a twelve-period benefit window</strong> per stream (some streams are shorter), so NPV and payback describe that window after go-live, not a multi-year case.</li>
               <li>Every scenario is a draft estimate; selecting one only makes a <strong>proposal</strong>, and an observed change is <strong>not attributed</strong> to the rollout.</li>
             </ul>
           </div>

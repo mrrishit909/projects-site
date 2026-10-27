@@ -355,9 +355,27 @@ def test_c07_proposes_only_never_funds_and_needs_the_residual_explained(lab, con
     assert {w["code"] for w in ok.json()["warnings"]} == {"PROPOSAL_NOT_FUNDING", "RESIDUAL_EXPLAINED"}
     row = conn.execute("SELECT status, proposed_by, residual_explanation, comparison, cw_iso(proposed_at) AS p FROM scenario_versions").fetchone()
     assert (row["status"], row["proposed_by"]) == ("proposed", "usr-sponsor01") and row["p"].startswith("2028-07-01T12:00:00")
-    assert row["comparison"]["scenarios"]["scn-001"]["npv_total"]["value"] == "-692.56" and row["comparison"]["label"] == "estimates"
+    assert row["comparison"]["scenarios"]["scn-001"]["npv_total"]["value"] == "-754.55" and row["comparison"]["label"] == "estimates"      # R9-02: the attributable total
+    assert row["comparison"]["scenarios"]["scn-001"]["npv_total"]["sum_of_initiatives"] == "-692.56" and len(row["comparison"]["snapshot_hash"]) == 64
     assert len(audit(conn, "select-scenario", "scn-001")) == 1
     assert get(lab, "/data/scenario_versions").json()["data"][0]["status"] == "proposed"
+
+
+def test_c07_an_explanation_needs_twenty_characters_and_the_hours_residual_needs_one_too(lab, conn):
+    """R9-22 and R9-03: 'x' explains nothing; a scenario whose only residual is in hours is refused without an explanation as well."""
+    r = refused(lab, conn, "select-scenario", {"scenario_id": "scn-001", "residual_explanation": "too short to say"}, 422, "EXPLANATION_TOO_SHORT")
+    assert r.json()["error"]["details"][0]["context"] == {"minimum": 20, "length": 16}
+    refused(lab, conn, "select-scenario", {"scenario_id": "scn-001", "residual_explanation": "          x          "}, 422, "EXPLANATION_TOO_SHORT")        # stripped first
+    hours = command(lab, "build-cash-flows", {**SCN, "scenario_id": "scn-hours", "initiative_ids": ["init-001", "init-002"], "benefits": [
+        {"initiative_id": "init-001", "benefit_type": "capacity", "amount": "40.00", "period_index": 2, "starts_period": 1, "benefit_source_key": "team:ap"},
+        {"initiative_id": "init-002", "benefit_type": "capacity", "amount": "60.00", "period_index": 2, "starts_period": 1, "benefit_source_key": "team:ap"}]}, headers=ANALYST)
+    assert hours.status_code == 200, hours.text
+    dc = hours.json()["result"]["scenario"]["double_count"]
+    assert (dc["residual"], dc["hours_residual"], dc["explanation_required"], dc["explanation_required_for"]) == ("0.00", "40.00", True, ["hours"])
+    r = refused(lab, conn, "select-scenario", {"scenario_id": "scn-hours"}, 422, "DOUBLE_COUNT_UNEXPLAINED", audited=True)
+    assert r.json()["error"]["details"][0]["context"]["hours_residual"] == "40.00" and r.json()["error"]["details"][0]["context"]["hours_overlaps"][0]["benefit_source_key"] == "team:ap"
+    ok = command(lab, "select-scenario", {"scenario_id": "scn-hours", "residual_explanation": "The AP team's hours are claimed by both initiatives; counted once"})
+    assert ok.status_code == 200 and ok.json()["result"]["double_count"]["hours_residual"] == "40.00"
 
 
 def test_c07_a_proposal_is_final_and_a_scenario_without_overlap_needs_no_explanation(lab, conn):
@@ -378,7 +396,7 @@ def test_c07_needs_a_sponsor_or_admin_and_refuses_before_reading_the_body(lab):
     r = command(lab, "select-scenario", {"scenario_id": "scn-001", "residual_explanation": "x"}, headers=ANALYST)
     assert r.status_code == 403 and rule_ids(r) == ["ROLE_FORBIDDEN"]
     assert lab.post(f"{PREFIX}/commands/select-scenario", json={"junk": 1}, headers=ANALYST).status_code == 403
-    assert command(lab, "select-scenario", {"scenario_id": "scn-001", "residual_explanation": "ok"}, headers=ADMIN).status_code == 200
+    assert command(lab, "select-scenario", {"scenario_id": "scn-001", "residual_explanation": "CC-4410 is claimed twice and counted once"}, headers=ADMIN).status_code == 200
 
 
 # ------------------------------------------------------------------------------------------------------------ C08 record-adoption
@@ -443,12 +461,13 @@ def test_c09_hard_validation(lab, conn, patch, status, rule):
 
 
 # ------------------------------------------------------------------------------------------------------------ C10 revise-forecast
-REVISE = {"initiative_id": "init-001", "reason": "Observed shortfall again", "periods": [{"period_index": 1, "amount": "450.00"}, {"period_index": 2, "amount": "500.00"}]}
+REVISE = {"initiative_id": "init-001", "reason": "Observed shortfall again", "expected_version": 2,
+          "periods": [{"period_index": 1, "amount": "450.00"}, {"period_index": 2, "amount": "500.00"}]}
 
 
 def test_c10_creates_version_n_plus_1_and_never_touches_the_original(lab, conn):
     before = conn.execute("SELECT * FROM forecast_versions WHERE version_number = 1 ORDER BY forecast_id").fetchall()
-    r = command(lab, "revise-forecast", {**REVISE, "expected_version": 2})
+    r = command(lab, "revise-forecast", REVISE)
     assert r.status_code == 200, r.text
     res = r.json()["result"]
     assert (res["version_number"], res["original_version"], res["original_preserved"], res["total"], res["latest_minus_original"]) == (3, 1, True, "950.00", "-250.00")
@@ -461,7 +480,7 @@ def test_c10_creates_version_n_plus_1_and_never_touches_the_original(lab, conn):
 
 
 def test_c10_the_first_forecast_is_the_original_and_an_overwrite_is_impossible(lab, conn):
-    first = command(lab, "revise-forecast", {"initiative_id": "init-002", "reason": "Approved forecast", "periods": [{"period_index": 1, "amount": "200.00"}]}, headers=ADMIN)
+    first = command(lab, "revise-forecast", {"initiative_id": "init-002", "reason": "Approved forecast", "expected_version": 0, "periods": [{"period_index": 1, "amount": "200.00"}]}, headers=ADMIN)
     assert first.status_code == 200 and first.json()["result"]["version_number"] == 1 and first.json()["warnings"][0]["code"] == "FIRST_FORECAST"
     refused(lab, conn, "revise-forecast", {**REVISE, "version_number": 1}, 422, "FIELD_UNEXPECTED")                    # there is no way to name a version to replace
     with pytest.raises(Exception, match="FORECAST_OVERWRITE"):
@@ -560,3 +579,126 @@ def test_values_with_more_than_two_decimals_survive_the_database_round_trip(lab,
     assert "10.125" in [x["amount"] for x in rows] and "1000.00" in [x["amount"] for x in rows]
     cf = metrics(lab, scenario_id="scn-dec", as_of="2028-06-30T00:00:00Z")["data"]["metrics"]["scenarios"]["scn-dec"]["initiatives"]["init-001"]["cash_flow"]
     assert cf[1]["costs"] == "10.13"                                                                      # ROUND_HALF_UP at the declared step only
+
+
+# ------------------------------------------------------------------------------------------------------------ review 9: the plan a scenario was built on (R9-01)
+def test_a_proposed_scenario_keeps_its_figures_after_a_later_build_on_the_same_initiatives(lab, conn):
+    """The reviewer's reproduction: propose scn-001, then build a second scenario that adds a cost, a capacity conversion and a slower ramp for init-001. The proposal's figures
+    are the ones it was proposed on: its stored comparison, its snapshot hash and a fresh computation agree."""
+    asof = "2028-07-02T00:00:00Z"
+    before = metrics(lab, scenario_id="scn-001", as_of=asof)["data"]["metrics"]["scenarios"]["scn-001"]
+    assert before["npv_total"]["value"] == "-754.55"
+    ok = command(lab, "select-scenario", {"scenario_id": "scn-001", "residual_explanation": "CC-4410 is claimed by two initiatives; counted once at the larger claim"})
+    assert ok.status_code == 200, ok.text
+    stored = ok.json()["result"]["comparison"]["scenarios"]["scn-001"]
+    sealed = ok.json()["result"]["snapshot_hash"]
+    assert conn.execute("SELECT snapshot_hash FROM scenario_versions WHERE scenario_id = 'scn-001'").fetchone()["snapshot_hash"] == sealed
+    later = command(lab, "build-cash-flows", {**SCN, "scenario_id": "scn-later", "assumptions": [
+        {"initiative_id": "init-001", "name": "capacity_hourly_rate", "value": "30.00", "rationale": "converted after the proposal", "staffing_change_evidence_ref": "hr:plan-2028"},
+        {"initiative_id": "init-001", "name": "adoption_ramp", "values": ["0.100000", "0.200000"], "rationale": "a slower ramp"}],
+        "costs": [{"initiative_id": "init-001", "cost_key": "ck-new", "cost_type": "one_time", "amount": "5000.00", "period_index": 1}]}, headers=ANALYST)
+    assert later.status_code == 200, later.text
+    new = later.json()["result"]["scenario"]["initiatives"]["init-001"]
+    assert new["npv"]["value"] != before["initiatives"]["init-001"]["npv"]["value"] and new["converted_capacity"] and new["ramp"]            # the new scenario does see them
+    m = metrics(lab, scenario_id="scn-001", as_of=asof)
+    after = m["data"]["metrics"]["scenarios"]["scn-001"]
+    assert after["npv_total"] == stored["npv_total"] == before["npv_total"] and after["initiatives"]["init-001"]["npv"] == before["initiatives"]["init-001"]["npv"]
+    assert after["initiatives"]["init-001"]["converted_capacity"] == [] and after["initiatives"]["init-001"]["ramp"] is None
+    assert after["double_count"]["residual"] == stored["residual"] and after["initiatives"]["init-001"]["cash_flow"] == before["initiatives"]["init-001"]["cash_flow"]
+    proof = m["data"]["proposals"]["scn-001"]
+    assert proof["snapshot_verified"] is True and proof["snapshot_hash_stored"] == proof["snapshot_hash_now"] == sealed and proof["figures_equal_the_stored_comparison"] is True
+
+
+def test_the_sets_of_a_scenario_are_sealed_by_the_database(lab, conn):
+    """R9-01: once a scenario exists, no initiative and no pinned assumption can be added to it, whatever road the row takes."""
+    for table, col, value in (("scenario_pins", "assumption_id", "a-201-t2"), ("scenario_initiatives", "initiative_id", "init-003")):
+        with pytest.raises(Exception, match="SCENARIO_IMMUTABLE"):
+            conn.execute(f"INSERT INTO {table} (scenario_id, {col}) VALUES ('scn-001', %s)", (value,))        # constants
+    with pytest.raises(Exception, match="SCENARIO_IMMUTABLE"):
+        conn.execute("UPDATE scenario_versions SET pins_expected = 9 WHERE scenario_id = 'scn-001'")
+    assert count(conn, "scenario_pins", "scenario_id = 'scn-001'") == 3 and count(conn, "scenario_initiatives", "scenario_id = 'scn-001'") == 3
+    ok = command(lab, "build-cash-flows", {**SCN, "scenario_id": "scn-sealed", "pinned_assumption_ids": ["a-201-t1"], "initiative_ids": ["init-001", "init-002"]}, headers=ANALYST)
+    assert ok.status_code == 200 and count(conn, "scenario_pins", "scenario_id = 'scn-sealed'") == 1 and count(conn, "scenario_initiatives", "scenario_id = 'scn-sealed'") == 2
+
+
+def test_plan_rows_and_observations_carry_the_servers_instant(lab, conn):
+    """R9-01 and R9-11: every row the API writes to a plan or an observation says when the server recorded it, whatever date the caller gives."""
+    r = command(lab, "build-cash-flows", {**SCN, "scenario_id": "scn-stamps", "costs": [{"initiative_id": "init-001", "cost_key": "ck-s", "cost_type": "one_time", "amount": "1.00", "period_index": 1}],
+                                          "benefits": [{"initiative_id": "init-001", "benefit_type": "cash", "amount": "2.00", "period_index": 2, "starts_period": 1}]}, headers=ANALYST)
+    assert r.status_code == 200, r.text
+    served = lambda t: NOW <= t < NOW.replace(minute=1)           # the frozen clock steps by a millisecond per reading
+    assert served(conn.execute("SELECT recorded_at FROM cost_items WHERE cost_key = 'ck-s'").fetchone()["recorded_at"])
+    assert served(conn.execute("SELECT recorded_at FROM benefit_items WHERE amount = 2 AND initiative_id = 'init-001' AND period_index = 2 AND starts_period = 1 AND recorded_at IS NOT NULL").fetchone()["recorded_at"])
+    a = command(lab, "record-adoption", {"initiative_id": "init-001", "eligible_count": 40, "adopted_count": 31, "eligibility_rule_version": "elig-v1", "observed_on": "2028-03-31",
+                                         "training": {"eligible_trainees": 40, "completed": 39}}, headers=ANALYST)
+    assert a.status_code == 200, a.text
+    row = conn.execute("SELECT cw_iso(observed_at) AS o, recorded_at FROM adoption_observations WHERE adopted_count = 31").fetchone()
+    assert row["o"] == "2028-03-31T00:00:00Z" and served(row["recorded_at"])                  # it happened on the 31st of March, the server recorded it on 1 July
+    assert served(conn.execute("SELECT entered_at FROM training_completions WHERE completed = 39").fetchone()["entered_at"])
+    b = command(lab, "track-benefits", {"benefit_id": "b-101", "measured_value": "470.00", "unit": "USD", "evidence_ref": "  ev:ledger-2028  ", "observed_on": "2028-02-01"}, headers=ANALYST)
+    assert b.status_code == 200, b.text
+    row = conn.execute("SELECT recorded_at, evidence_ref FROM benefit_observations WHERE measured_value = 470").fetchone()
+    assert served(row["recorded_at"]) and row["evidence_ref"] == "ev:ledger-2028"             # stripped
+
+
+def test_a_back_dated_observation_cannot_change_an_earlier_as_of_and_is_listed_as_late_recorded(lab, conn):
+    """R9-11: an observation entered on 1 July for 31 March is not part of what was published for 30 June; the same-day tie goes to the later record."""
+    asof = "2028-06-30T00:00:00Z"
+    base = metrics(lab, as_of=asof)["data"]["metrics"]["initiatives"]["init-001"]["adoption"]
+    assert base["adoption_rate"] == "0.750000" and base["latest_observation_id"] == "ad-2"
+    r = command(lab, "record-adoption", {"initiative_id": "init-001", "eligible_count": 40, "adopted_count": 0, "eligibility_rule_version": "elig-v1", "observed_on": "2028-03-31"}, headers=ANALYST)
+    assert r.status_code == 200, r.text
+    new_id = r.json()["result"]["observation_id"]
+    again = metrics(lab, as_of=asof)["data"]["metrics"]["initiatives"]["init-001"]["adoption"]
+    assert again["adoption_rate"] == "0.750000" and again["late_recorded"] == [new_id] and [x["observation_id"] for x in again["series"]] == [x["observation_id"] for x in base["series"]]
+    later = metrics(lab, as_of="2028-07-02T00:00:00Z")["data"]["metrics"]["initiatives"]["init-001"]["adoption"]
+    assert later["latest_observation_id"] == new_id and later["adoption_rate"] == "0.000000"            # same day as ad-2, recorded later: it wins the tie from 2 July on
+    assert later["late_recorded"] == []
+
+
+@pytest.mark.parametrize("patch,rule", [({"observed_on": "1999-01-01"}, "OBSERVED_BEFORE_START"), ({"observed_on": "2030-01-01"}, "DATE_IN_FUTURE")])
+def test_c08_and_c09_observed_on_lies_between_the_first_period_start_and_the_servers_date(lab, conn, patch, rule):
+    refused(lab, conn, "record-adoption", {"initiative_id": "init-001", "eligible_count": 40, "adopted_count": 1, "eligibility_rule_version": "elig-v1", **patch}, 422, rule)
+    refused(lab, conn, "track-benefits", {**TRACK, **patch}, 422, rule)
+    ok = command(lab, "record-adoption", {"initiative_id": "init-001", "eligible_count": 40, "adopted_count": 1, "eligibility_rule_version": "elig-v1", "observed_on": "2026-01-01"}, headers=ANALYST)
+    assert ok.status_code == 200                                                    # exactly the first period start of init-001 (requested start 0 = 2026-01-01) is allowed
+
+
+# ------------------------------------------------------------------------------------------------------------ review 9: evidence, cost keys, validation
+@pytest.mark.parametrize("field,where", [("evidence_ref", "benefit"), ("staffing_change_evidence_ref", "assumption"), ("evidence_ref", "assumption")])
+def test_blank_evidence_is_refused_in_the_command_and_never_opens_the_cash_flow(lab, conn, field, where):
+    """R9-04: '   ' is not evidence: avoided cost does not enter the cash flow on it and capacity is not converted on it; the command refuses it EVIDENCE_REQUIRED."""
+    if where == "benefit":
+        body = {**SCN, "scenario_id": "scn-blank", "benefits": [{"initiative_id": "init-001", "benefit_type": "avoided_cost", "amount": "999.00", "period_index": 1, "starts_period": 1,
+                                                             "cash_realisation": True, "evidence_ref": "   "}]}
+    else:
+        body = {**SCN, "scenario_id": "scn-blank", "initiative_ids": ["init-003"], "assumptions": [{"initiative_id": "init-003", "name": "capacity_hourly_rate", "value": "40.00",
+                                                                                                    "rationale": "r", field: "  \t "}]}
+    refused(lab, conn, "build-cash-flows", body, 422, "EVIDENCE_REQUIRED")
+
+
+def test_a_cost_key_cannot_be_retyped_from_one_time_to_recurring_and_a_new_key_can(lab, conn):
+    """R9-05: the reviewer's attack (ck-101-licence is the golden licence); the recovery is a different key."""
+    retyped = {**SCN, "scenario_id": "scn-retyped", "costs": [{"initiative_id": "init-001", "cost_key": "ck-101-licence", "cost_type": "recurring", "amount": "1000.00", "start_period": 1, "end_period": 3}]}
+    r = refused(lab, conn, "build-cash-flows", retyped, 422, "COST_KEY_BASIS_CONFLICT")
+    assert r.json()["error"]["details"][0]["context"]["first_cost_id"] in ("c-101", "c-102")
+    ok = command(lab, "build-cash-flows", {**retyped, "costs": [{**retyped["costs"][0], "cost_key": "ck-101-support"}]}, headers=ANALYST)
+    assert ok.status_code == 200 and ok.json()["result"]["rows_added"]["cost_items"] == 1
+    actual = command(lab, "build-cash-flows", {**SCN, "scenario_id": "scn-actual", "costs": [{"initiative_id": "init-001", "cost_key": "ck-101-licence", "cost_type": "recurring",
+                                                                                          "cost_basis": "actual", "amount": "1.00", "start_period": 1, "end_period": 2}]}, headers=ANALYST)
+    assert actual.status_code == 422 and rule_ids(actual) == ["COST_KEY_BASIS_CONFLICT"]            # the golden also has an ACTUAL one-time cost under this key (c-102)
+
+
+def test_c01_an_error_rate_outside_0_1_is_invalid_field_and_c10_needs_expected_version(lab, conn):
+    refused(lab, conn, "establish-baseline", {**BASE, "error_rate": "1.5"}, 422, "INVALID_FIELD")
+    refused(lab, conn, "revise-forecast", {k: v for k, v in REVISE.items() if k != "expected_version"}, 422, "FIELD_REQUIRED")      # R9-22: the version last read is always named
+
+
+def test_c10_a_revision_covers_the_periods_of_the_original(lab, conn):
+    """R9-10: the reviewer's partial revision (period 2 only) is refused; a full one is accepted, and the stored original stays preserved."""
+    partial = {"initiative_id": "init-001", "reason": "partial: only period 2", "expected_version": 2, "periods": [{"period_index": 2, "amount": "550.00"}]}
+    r = refused(lab, conn, "revise-forecast", partial, 422, "REVISION_PERIODS_INCOMPLETE")
+    assert r.json()["error"]["details"][0]["context"] == {"missing_periods": [1], "original_periods": [1, 2]}
+    ok = command(lab, "revise-forecast", {**partial, "periods": [{"period_index": 1, "amount": "450.00"}, {"period_index": 2, "amount": "550.00"}]})
+    assert ok.status_code == 200 and ok.json()["result"]["latest_minus_original"] == "-200.00" and ok.json()["result"]["forecast"]["revisions_cover_original_periods"] is True
+    assert ok.json()["result"]["original_preserved"] is True

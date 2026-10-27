@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { expectNoOverflow, plain, readData, ready, reference, watch } from "./support";
+import { expectNoOverflow, lowContrast, plain, readData, ready, reference, watch } from "./support";
 
 const manifest = readData<{ dataset_version: string; dataset_hash: string; generated_at: string; as_of: string }>("manifest.json");
 const ref = reference();
@@ -18,7 +18,7 @@ test("landing: honesty labels, manifest strip, back-link, the decision and the s
   await expect(honesty).toContainText("Synthetic data, demo mode");
   await expect(honesty).toContainText("simulations in browser memory");
   await expect(honesty).toContainText("reset on reload");
-  await expect(honesty).toContainText("first-year case");
+  await expect(honesty).toContainText("twelve-period benefit window");
   await expect(honesty).toContainText("Nothing here is funded");
   await expect(honesty).toContainText("proposal");
   const strip = page.getByTestId("manifest-strip");
@@ -56,7 +56,7 @@ test("every route is reachable by direct entry and reload on the nested base pat
     await expect(page.getByTestId("synthetic-badge")).toBeVisible();
     await expect(page.getByTestId("honesty")).toContainText("Synthetic data, demo mode");
     await expect(page.getByTestId("honesty")).toContainText("simulations in browser memory");
-    await expect(page.getByTestId("honesty")).toContainText("first-year case");
+    await expect(page.getByTestId("honesty")).toContainText("twelve-period benefit window");
     await expect(page.getByTestId("footer-honesty")).toContainText("Nothing here is live and nothing is funded");
     await expect(page.locator("nav[aria-label=Primary] a[aria-current=page]")).toHaveAttribute("href", `${BASE}${path}/`);
   }
@@ -84,7 +84,18 @@ test("portfolio: every figure equals the Python domain's, class columns apart, n
   expect(await txt(page, "[data-testid=double-count] [data-figure=planned]")).toBe(p.planned);
   expect(await txt(page, "[data-testid=double-count] [data-figure=attributable]")).toBe(p.attributable);
   expect(await txt(page, "[data-testid=double-count] [data-figure=residual]")).toBe("207146.32");
-  await expect(page.locator("[data-testid=double-count] [data-figure=explanation]")).toHaveText("yes");
+  await expect(page.locator("[data-testid=double-count] [data-figure=explanation]")).toContainText("yes");
+  // R9-02, R9-03: the attributable total first, the plain sum, the present value counted twice and the hours beside it
+  expect(await txt(page, "[data-testid=attributable-facts] [data-figure=npv-attributable]")).toBe(p.npv_total);
+  expect(await txt(page, "[data-testid=attributable-facts] [data-figure=npv-sum]")).toBe(p.npv_sum);
+  expect(await txt(page, "[data-testid=attributable-facts] [data-figure=double-counted-pv]")).toBe(p.double_counted_pv);
+  expect(await txt(page, "[data-testid=attributable-facts] [data-figure=double-counted-amount]")).toBe(p.double_counted_amount);
+  expect(await txt(page, "[data-testid=double-count] [data-figure=hours-residual]")).toBe(p.hours_residual);
+  expect(await txt(page, "[data-testid=initiatives-table] tfoot tr[data-total=listed] [data-k=npv]")).toBe(p.npv_sum);
+  expect(await txt(page, "[data-testid=initiatives-table] tfoot tr[data-total=removed] [data-k=capacity-usd]")).toBe(p.removed.capacity_usd);
+  expect(await txt(page, "[data-testid=initiatives-table] tfoot tr[data-total=listed] [data-k=capacity-usd]")).toBe(p.listed.capacity_usd);
+  await expect(page.locator("[data-testid=hours-overlaps] tbody tr").first()).toBeVisible();
+  await expect(page.locator("[data-testid=initiatives-table] tr[data-initiative=init-018]")).toContainText("deployment before feasible start");
   await expect(page.locator("[data-testid=overlaps] tbody tr")).toHaveCount(10);
   await expect(page.locator("[data-testid=overlaps] tbody tr").first()).toContainText("src-fin-ap-shared-team");
   await expect(page.locator("[data-testid=overlaps] tbody tr").first()).toContainText("init-001");
@@ -99,8 +110,8 @@ test("portfolio: every figure equals the Python domain's, class columns apart, n
   // an initiative row: init-009 is capacity only
   const r9 = page.locator("[data-testid=initiatives-table] tr[data-initiative=init-009]");
   expect(await txt(page, "[data-testid=initiatives-table] tr[data-initiative=init-009] [data-k=npv]")).toBe(ref.designed["DR-01"]["init-009"].npv);
-  await expect(r9.locator("[data-k=capacity-hours]")).toContainText("2,920.49");
-  await expect(r9.locator("[data-k=simple]")).toHaveText("never");
+  await expect(r9.locator("[data-k=capacity-hours]")).toContainText("2,920.48");
+  await expect(r9.locator("[data-k=simple]")).toHaveText("never (not recovered)");
   // a scenario without a residual
   await page.getByTestId("scenario-picker").selectOption("scn-001");
   await expect(page.getByTestId("no-overlap")).toBeVisible();
@@ -147,11 +158,11 @@ test("business case: the cash-flow table beside its assumption versions, NPV and
   await page.getByTestId("cashflow-table").waitFor();
   const d1 = ref.designed["DR-01"]["init-009"];
   expect(await txt(page, "[data-figure=npv]")).toBe(d1.npv);
-  await expect(page.locator("[data-figure=simple-payback]")).toContainText("never within the horizon (null)");
-  await expect(page.locator("[data-figure=discounted-payback]")).toContainText("never within the horizon (null)");
+  await expect(page.locator("[data-figure=simple-payback]")).toContainText("never within the horizon (null: the cumulative flow ends below zero)");
+  await expect(page.locator("[data-figure=discounted-payback]")).toContainText("never within the horizon (null: the cumulative flow ends below zero)");
   expect(await txt(page, "[data-k=capacity-excluded]")).toContain(d1.capacity_hours_not_converted);
   await expect(page.locator("[data-figure=capacity-released]")).toHaveText(d1.released);
-  await expect(page.getByTestId("measures")).toContainText("first-year case");
+  await expect(page.getByTestId("measures")).toContainText("twelve-period benefit window");
   await expect(page.getByTestId("measures")).toContainText("estimate");
   await expect(page.locator("[data-testid=cashflow-table] tbody tr")).toHaveCount(36);
   await expect(page.locator("[data-testid=cashflow-table] tbody tr").first().locator("[data-k=assumptions]")).toContainText("rate:");
@@ -209,7 +220,7 @@ test("?dataset=golden: the whole site on the hand-derived case", async ({ page }
   expect([await txt(page, "[data-testid=roadmap-table] tr[data-initiative=init-002] [data-k=delay]"), await txt(page, "[data-testid=roadmap-table] tr[data-initiative=init-003] [data-k=delay]")]).toEqual(["2", "3"]);
   await page.goto("evidence/?dataset=golden");
   await ready(page);
-  await expect(page.locator("[data-testid=evidence-golden] [data-k=leaves]")).toHaveText("572 of 572");
+  await expect(page.locator("[data-testid=evidence-golden] [data-k=leaves]")).toHaveText("643 of 643");
   await page.goto("./?dataset=golden");
   await ready(page);
   await expect(page.getByTestId("snapshot-note")).toContainText("The golden fixture");
@@ -426,7 +437,7 @@ test("evidence: the golden case equals expected.json live; the designed relation
   await ready(page);
   const g = page.getByTestId("evidence-golden");
   await expect(g.locator(".callout")).toHaveAttribute("data-ok", "true");
-  await expect(g.locator("[data-k=leaves]")).toHaveText("572 of 572");
+  await expect(g.locator("[data-k=leaves]")).toHaveText("643 of 643");
   await page.getByTestId("designed").waitFor();
   await expect(page.locator("[data-testid=designed-table] tbody tr")).toHaveCount(7);
   await expect(page.locator("[data-testid=designed-table] [data-k=holds]").filter({ hasText: "differs" })).toHaveCount(0);
@@ -434,12 +445,12 @@ test("evidence: the golden case equals expected.json live; the designed relation
   await expect(page.locator("[data-testid=injections-table] [data-k=holds]").filter({ hasText: "hold" })).toHaveCount(12);
   await expect(page.locator("[data-testid=replay-table] tbody tr")).toHaveCount(19);
   await expect(page.locator("[data-testid=replay-table] tbody tr").filter({ hasText: "differs" })).toHaveCount(0);
-  await expect(page.getByTestId("disclosures")).toContainText("first-year-after-go-live case");
+  await expect(page.getByTestId("disclosures")).toContainText("twelve-period benefit window");
   await expect(page.getByTestId("truth-disclosure")).toContainText("never an input");
   await expect(page.getByTestId("truth-disclosure")).toContainText("0.150000");
   await expect(page.locator("[data-testid=row-counts] tr[data-entity=benefit_items] td").nth(1)).toHaveText("700");
   await expect(page.getByTestId("limits")).toContainText("browser-memory simulations");
-  await expect(page.getByTestId("limits")).toContainText(/first-year case/i);
+  await expect(page.getByTestId("limits")).toContainText(/twelve-period benefit window/i);
   await expectNoOverflow(page);
   expect(errors).toEqual([]);
 });
@@ -478,4 +489,14 @@ test("a failed data load shows an honest error and no figures; retry recovers", 
   await page.route("**/data/benefit_items.json", (r) => r.fulfill({ status: 500, body: "boom" }));
   await page.goto("business-case/");
   await expect(page.getByTestId("load-error")).toContainText("HTTP 500");
+});
+
+test("R9-21: every text node under 18 px on every route has a contrast of at least 4.5:1 at 1280 px", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  for (const path of ["", ...ROUTES]) {
+    await page.goto(path ? `${path}/` : "./");
+    await ready(page);
+    await page.waitForTimeout(300);
+    expect(await lowContrast(page), `low contrast on /${path}`).toEqual([]);
+  }
 });

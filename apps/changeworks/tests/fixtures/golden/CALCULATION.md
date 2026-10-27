@@ -1,4 +1,4 @@
-# ChangeWorks golden calculation (contract v1, decisions D-01..D-04, proposed D-P9-01..D-P9-24)
+# ChangeWorks golden calculation (contract v1, decisions D-01..D-04, proposed D-P9-01..D-P9-24, review-9 rules D-P9-25..D-P9-38 and contract D-09)
 
 Independent of application code. `../../reference_check.py` recomputes every figure below from `inputs.json` (and from the two
 variants) and compares it with `expected.json` leaf by leaf (standard library only, no app imports, `fractions.Fraction` for every
@@ -13,8 +13,9 @@ t+1) is <= as_of: periods 0 and 1 are matured (end 2027-01-01 and 2028-01-01), p
 Key nesting of `expected.json`: `ingest.counts.<entity>.{accepted,rejected}`, `ingest.rejected_records[]` (entity, id, status,
 reason_code, optional details, raw_row), `metrics.summary`, `metrics.scenarios.<scenario_id>.{effective_period_rate,
 initiatives.<id>.{cash_flow[],expanded_planned_costs[],excluded_from_cash_flow,converted_capacity[],ramp,unramped_net_cash_flow,
-planned_money_benefits,npv,payback.{simple,discounted},capacity_released,cost_variance,benefit_realization.<type>},
-double_count,npv_total}`, `metrics.initiatives.<id>.{roadmap,adoption,training,risk,forecast}`,
+planned_money_benefits,npv,payback.{simple,discounted}.{period,interpolated,reason},capacity_released,cost_variance,
+benefit_realization.<type>.{...,trend_coverage}},double_count.{...,double_counted_amount,double_counted_pv,hours_residual,hours_overlaps},
+npv_total.{value,exact,basis,sum_of_initiatives}}`, `metrics.initiatives.<id>.{roadmap.{...,warnings},adoption,training,risk,forecast}`,
 `metrics.groups.<group_id>.readiness_*`, `metrics.resources.<resource_id>`. Metrics that depend on the scenario (cash flow,
 NPV, paybacks, ramp, pinned target, matured window, double count) sit under the scenario; the others do not.
 
@@ -77,7 +78,8 @@ Capacity released: baseline v1 `pb-201` 6000 cases, 30 min; target pinned `a-201
 Cost `c-301` 800.00 at 0; avoided cost `b-301` 150.00 at period 2, cash_realisation true with evidence -> t2 = +150. Net: -800, 0, +150;
 cumulative -800, -800, -650, never >= 0. NPV = -800 + 150 x 100/121 = (-96800 + 15000)/121 = **-81800/121 = -676.03**. Simple and discounted
 paybacks **null** (not rejected, TEST-08). `baseline_version` is null, so capacity released and cost variance are **null** (not 0).
-Scenario total NPV = (5000 - 7000 - 81800)/121 = **-83800/121 = -692.56**.
+Sum of the three initiative NPVs = (5000 - 7000 - 81800)/121 = **-83800/121 = -692.56** (`npv_total.sum_of_initiatives`); the scenario's
+`npv_total` is the attributable figure of Part (h), -754.55.
 
 ## Part (d): cost variance (P09-MET-07), matured window (D-P9-05)
 
@@ -112,9 +114,35 @@ init-001 capacity (never mixed with cash): 340 / 400 hours = **0.850000**. init-
 * **Double-count residual** (MET-12): money-class ramped planned benefits: init-001 600 + 600 = 1200; init-002 200 + 400 + 75 + 40 + 80 + 50 = 845;
   init-003 150 -> **2195.00**. `b-203` (75, init-002) and `b-301` (150, init-003) share `benefit_source_key` "cost-line:CC-4410" in period 2: counted
   once at the larger claim 150, overlap 225 - 150 = 75. Attributable 2195 - 75 = **2120.00**, **residual 75.00** (non-zero, so `explanation_required` true
-  and the overlap is listed). Hours are never added to dollars.
+  and the overlap is listed). Hours are never added to dollars. The 75.00 that counts twice is a claim of `init-002` (`b-203`, class
+  `avoided_cost_realised`, which enters the cash flow) in period 2; its present value and the attributable NPV are in Part (h).
 * **Forecast** (TEST-06): original `f-101-1-*` v1 = 600 + 600 = 1200.00 stays unchanged; revision v2 = 480 + 500 = 980.00 (created 2028-02-15);
   latest minus original = **-220.00**; observed values with dates: 480.00 on 2028-01-31 (matured), 300.00 on 2028-06-15 (period not matured).
+
+## Part (h): the review-9 rules on the golden case (D-P9-25..D-P9-38)
+
+* **Attributable NPV and the double-counted amount (R9-02).** The 75.00 that counts twice (`b-203`, init-002, period 2, the smaller claim; `b-301` of init-003
+  at 150.00 is the one that counts) enters the cash flow in period 2, so its present value at 10 % is 75 / 1.1^2 = 75 x 100/121 = **7500/121 = 61.98**
+  (`double_counted_pv`; `double_counted_amount` 75.00 = the residual, by class `avoided_cost_realised` 75). The attributable `npv_total` is the sum of the
+  initiative NPVs less that present value: -83800/121 - 7500/121 = -91300/121 = **-8300/11 = -754.55** (`npv_total.value`, also `summary.npv_total`);
+  `npv_total.sum_of_initiatives` keeps -83800/121 = -692.56 beside it. Check: -692.56 - 61.98 = -754.54 by rounded parts; the exact rational rounds once to -754.55.
+* **Hours (R9-03).** The golden has 800.00 capacity hours (init-001, `b-103` 400 + `b-104` 400), none with a source key: `planned_hours` 800.00,
+  nothing shared, `hours_residual` 0.00, `attributable_hours` 800.00, `hours_overlaps` empty. `summary.capacity_released_hours_total` = 400.0000 + 600.0000 =
+  1000.0000 with 0.0000 counted twice (no two initiatives share a capacity key). `explanation_required` stays true because of the **money** residual (75.00);
+  `explanation_required_for` = ["money"].
+* **Deployment before the feasible start (R9-06).** Benefits are booked from `deployment_period`. init-001: deployment 1, feasible start 0: none. init-002:
+  deployment 1 < feasible start 2 (Part (f): requested 0 + duration 1 + lag 1): `DEPLOYMENT_BEFORE_FEASIBLE_START`, 1 period early. init-003: deployment 2 <
+  feasible start 3: the same, 1 period early. The cash flow is not re-timed (D-P9-08): init-002 still has net 100.00 in period 1.
+* **Payback reasons (R9-12).** init-001: both paybacks found (cumulative -1000, -400, +200 stays >= 0), reason null. init-002 simple: cumulative -500, -400, +25:
+  last negative at t = 1, payback 2 (1.9412); discounted cumulative -500, -409.09, -57.85 ends negative: null, reason `NOT_RECOVERED`. init-003: -800, -800, -650 ends
+  negative: both null, `NOT_RECOVERED`. (A cumulative that is never negative would be `NO_INVESTMENT`; no flows at all, `NO_FLOWS`: see the probes below.)
+* **Trend coverage (R9-13).** init-001 cash compares `b-101` only, which carries a trend: coverage complete, 430.00 above the trend as before. init-001 capacity
+  compares `b-103`, which carries none: `baseline_trend` null, `observed_above_trend` null, `rows_without_trend` [b-103]; init-002 avoided cost likewise (`b-204`).
+  No warning is raised for a type with no trend at all (nothing is shown that could mislead); `PARTIAL_TREND_COVERAGE` is for some-but-not-all rows (probe below).
+* **Forecast (R9-07, R9-10).** v1 covers periods 1 and 2, v2 covers periods 1 and 2: the revision covers the original's periods, `original_preserved` true (the stored
+  version 1 exists); latest minus original = 980.00 - 1200.00 = -220.00 from the exact totals (480.000000 + 500.000000 and 600.000000 + 600.000000).
+* **Exact totals (R9-07).** Every aggregate is the exact sum rounded once: `capacity_hours_not_converted` 800.00 = 400 + 400, `avoided_cost_beside_total` 120.00 =
+  40 + 80, `risk_exposure_total` 2500.00, `capacity_released_hours_total` 1000.0000 (each initiative also records its exact rational: `hours_exact` "400", `risk_exposure_exact`).
 
 ## Part (g): ingest counts (golden)
 
@@ -164,12 +192,44 @@ Accepted records still compute. Scenario `rs-2` (rate 0.100000 annual on monthly
 * Scenario `rs-3` (monthly 0.010000 declared, no conversion needed), rj-i2: -300, 0, 150, 150; cumulative -300, -300, -150, **0** -> simple payback 3
   (a cumulative of exactly 0 counts), interpolated 2 + 150/150 = **3.0000**; discounted cumulative -300, -300, -152.96, -7.37 -> **null**; NPV =
   -300 + 150/1.0201 + 150/1.030301 = **-7.37** (exact -7590300/1030301).
-* Roadmap: rd-1, rd-2 accepted; rj-i1 duration 2 -> rj-i2 feasible 2 (delay 2), finish 3 -> rj-i3 FS lag 1 -> 4 (delay 4).
+* Roadmap: rd-1, rd-2 accepted; rj-i1 duration 2 -> rj-i2 feasible 2 (delay 2), finish 3 -> rj-i3 FS lag 1 -> 4 (delay 4); rj-i3 deploys at 1 < 4:
+  `DEPLOYMENT_BEFORE_FEASIBLE_START`, 3 periods early.
+
+### Probe block (review 9): payback, plan as built, partial trend, shared hours, late-recorded observations
+
+Six accepted probe initiatives `rj-p1..rj-p6` (all request start 0, duration 1, deployment 1, no dependency: no deployment warning) in two scenarios on monthly periods at a
+0.000000 monthly rate (so every discount factor is 1 and the discounted series equals the plain one). `rs-6` (created 2026-01-05) has horizon 5 and all six; `rs-7`
+(created 2026-03-01) has horizon 5 and `rj-p2`. No new rejection: the 30 records above are unchanged.
+
+| initiative | net cash flow t = 0..4 | cumulative | rule | result |
+|---|---|---|---|---|
+| rj-p1 (benefits 600 at t = 1, 2, no cost) | 0, 600, 600, 0, 0 | 0, 600, 1200, 1200, 1200 | never negative: no investment (R9-12; the first-crossing rule said 0.0000) | payback null, `NO_INVESTMENT`; NPV 1200.00 |
+| rj-p2 in rs-6 (cost 1000 at 0, 300 at 2; benefits 1200 at 1, 500 at 3) | -1000, 1200, -300, 500, 0 | -1000, 200, -100, 400, 400 | last negative at t = 2, so the last crossing is t = 3: 2 + 100/500 | payback **3, 2.2000** (the first-crossing rule said 1); NPV **400.00** |
+| rj-p3 (cost 1000 at 0, 700 at 2; benefit 1500 at 1) | -1000, 1500, -700, 0, 0 | -1000, 500, -200, -200, -200 | ends negative after having crossed once | payback null, `NOT_RECOVERED`; NPV -200.00 |
+| rj-p4 (cost 150 at 0; benefits 100 at 1 and 2) | -150, 100, 100, 0, 0 | -150, -50, 50, 50, 50 | 1 + 50/100 | payback 2, **1.5000**; NPV 50.00 |
+| rj-p5, rj-p6 (capacity only, 40 and 60 hours at t = 2, no conversion) | none | none | no cost and no cash row: nothing to pay back | NPV null, payback null, `NO_FLOWS` |
+
+* **Plan as it was built (R9-01).** `rc-p2c` (500.00 for rj-p2 at period 3) was recorded 2026-02-01: after `rs-6` was created (2026-01-05) and before `rs-7` (2026-03-01).
+  `rs-6` therefore holds rj-p2's two earlier costs (2 expanded rows, NPV above) and `rs-7` all three: net -1000, 1200, -300, 500 - 500 = 0, 0; cumulative
+  -1000, 200, -100, -100, -100; payback null, `NOT_RECOVERED`; NPV **-100.00**. The same initiative has two answers because the two scenarios were built on different plans.
+* **Attributable NPV of rs-6.** The probes share no money claim, so the attributable NPV equals the sum: 1200 + 400 - 200 + 50 = **1450.00** (rj-p5/p6 null, not 0).
+  Money planned: rj-p1 600 + 600, rj-p2 1200 + 500, rj-p3 1500, rj-p4 100 + 100 = 1200 + 1700 + 1500 + 200 = 4600.00 (attributable 4600.00, residual 0.00).
+* **Hours counted twice (R9-03).** `rb-p5` (40.00 h, rj-p5) and `rb-p6` (60.00 h, rj-p6) claim `src-probe-team` in period 2, neither converted: counted once at the
+  larger, 100 - 60 = **40.00** `hours_residual`; `planned_hours` 100.00, `attributable_hours` 60.00; the money residual is 0.00 and `explanation_required_for` = ["hours"]
+  (the proposal needs its explanation for either residual). `rj-p5` and `rj-p6` each list their hours under `capacity_hours_not_converted` (40.00, 60.00).
+* **Partial trend (R9-13).** rj-p4's cash rows `rb-p4a` (planned 100, trend 10.00) and `rb-p4b` (planned 100, no trend) are matured (periods 1, 2) and observed (90.00 on
+  2026-03-15; 80.00 on 2026-04-15): planned 200.00, observed 170.00, realization **0.850000**, `baseline_trend` 10.00 (the rows that carry one), `observed_above_trend`
+  **null** (it would be 160.00 against a trend that covers only half the compared rows), `trend_coverage` incomplete with `rows_without_trend` [rb-p4b], and a
+  `PARTIAL_TREND_COVERAGE` warning from the domain.
+* **Recorded after as_of (R9-11).** `rbo-p4c` (95.00 for rb-p4a, observed 2026-05-01) was recorded 2026-07-15, `rao-4` (rj-i1, 16 of 20, observed 2026-05-31) the same day and
+  `rt-3` (rj-i1 training 19 of 20, event 2026-05-15) was entered 2026-07-10: all after as_of 2026-06-30, so none of them exists yet. The published figures stay what they were
+  (rb-p4a observed 90.00; adoption 8/20 = 0.400000; training 18/20 = 0.900000) and each is listed (`late_recorded_observation_ids`, `adoption.late_recorded`, `training.late_recorded`).
 
 ## variant-empty (P09-GOLD-09)
 
 Every entity list empty: every count 0 (accepted and rejected), `empty_population` true, `summary.npv_total`, `double_count_residual`,
-`adoption_rate`, `training_completion`, `risk_exposure_total`, `capacity_released_hours_total` null, `summary_scenario_id` null, and the
+`adoption_rate`, `training_completion`, `risk_exposure_total`, `capacity_released_hours_total` and the new `npv_sum_of_initiatives`, `double_counted_amount`,
+`double_counted_pv`, `hours_residual`, `capacity_released_hours_double_counted` null, `summary_scenario_id` null, and the
 scenario, initiative, group and resource maps empty. Nothing is fabricated as 0.
 
 ## DECISIONS (proposed, for the coordinator; each lists the alternative rejected)
@@ -197,14 +257,13 @@ scenario, initiative, group and resource maps empty. Nothing is fabricated as 0.
   `scenario_versions.rate_conversion_assumption_id`; NPV is exact rational over that decimal. `rate_basis` is a scenario field; the dataset's `period_basis`
   is top-level. The contract does not require the stored value to be consistent with the declared annual rate (not checked; a reviewer decision).
   *Rejected:* computing the 12th root in the domain (needs floats or an arbitrary-precision root, contradicts D-01).
-* **D-P9-07 Payback.** Over t = 0..H-1 only. Integer payback = first t with cumulative >= 0 (exactly 0 counts); interpolated = (t-1) + (-cum[t-1])/(cum[t]-cum[t-1]),
-  and 0.0000 when t = 0. Null when never crossed, **and** null for both paybacks and NPV when the initiative has no cost or cash rows in the horizon (nothing to
-  pay back). *Rejected:* payback 0 for an initiative with no flows.
+* **D-P9-07 Payback (superseded by D-P9-25 for the rule; the formats stand).** Over t = 0..H-1 only; interpolated = (t-1) + (-cum[t-1])/(cum[t]-cum[t-1]); null for both paybacks
+  and NPV when the initiative has no cost or cash rows in the horizon (nothing to pay back). *Rejected:* payback 0 for an initiative with no flows.
 * **D-P9-08 Roadmap.** Feasible start = max(requested start, over prerequisites of: FS -> prerequisite feasible start + its duration + lag; SS -> prerequisite
   feasible start + lag), propagated through the chain; delay = feasible - requested (never negative). The roadmap is reported beside the cash flows and does not
   re-time them. Initiatives gain `requested_start_period`, `duration_periods`, `deployment_period`, `eligibility_rule_version`. *Rejected:* using requested starts of
   prerequisites (understates a chain's delay: init-003 would show 0) and shifting the cash flows by the delay (changes the NPV the golden case pins).
-* **D-P9-09 Double count.** Planned = ramped money-class benefit amounts (including derived converted capacity, excluding hours) of the scenario's initiatives within
+* **D-P9-09 Double count (amended by D-P9-26 and D-P9-27).** Planned = ramped money-class benefit amounts (including derived converted capacity, excluding hours) of the scenario's initiatives within
   the horizon. Rows sharing a `benefit_source_key` in one period across >= 2 initiatives count once at the **largest** claim; the rest is the overlap and the
   residual. Same-initiative repeats are not an overlap. *Rejected:* first-claimant-wins by initiative id (arbitrary) and the smallest claim (hides money the portfolio
   could genuinely attribute).
@@ -219,7 +278,7 @@ scenario, initiative, group and resource maps empty. Nothing is fabricated as 0.
   above-trend = observed - trend, shown beside, never instead of, the raw figure. *Rejected:* treating a missing observation as 0 (null never 0).
 * **D-P9-13 Risk exposure.** Null when the initiative has no risk items (unknown, not 0); `risk_items.impact` is a decimal USD string (the data-model text type is
   read through D-02, "impact (USD)"); probability outside [0, 1] rejected `PROBABILITY_OUT_OF_RANGE`.
-* **D-P9-14 Scenario pins.** The assumption version used for (initiative, name) is the one pinned by the scenario, otherwise the latest `version_number`. Scenarios
+* **D-P9-14 Scenario pins (amended by D-P9-30).** The assumption version used for (initiative, name) is the one pinned by the scenario, otherwise the latest `version_number` that existed when the scenario was created. Scenarios
   gain `rate_basis`, `rate_conversion_assumption_id`, `status` (draft or proposed), `initiative_ids`, `pinned_assumption_ids`. *Rejected:* failing when unpinned.
 * **D-P9-15 Allocation check.** `resource_allocations` are checked in id order against accepted rows of the same resource and roadmap period; the row that would push the sum above
   `capacity_per_period` is rejected with the periods; a sum equal to capacity is allowed. The resource-constrained start therefore equals the dependency-feasible start
@@ -242,6 +301,38 @@ scenario, initiative, group and resource maps empty. Nothing is fabricated as 0.
   approved set and later versions (pb-202 v2) stay readable but unused until approved.
 * **D-P9-24 Impact mappings.** `impact_mappings` (mapping_id, initiative_id, group_id, operating_change, impact_level) are validated and counted; no numeric metric is derived.
 
+## DECISIONS of review 9 (D-P9-25..D-P9-38; contract D-09; each lists the alternative rejected)
+
+* **D-P9-25 Payback is the last crossing.** The integer payback is the first period t after the last negative cumulative, provided the cumulative stays >= 0 for every later
+  period of the horizon; interpolated as before (always t >= 1, so no 0.0000). A cumulative of exactly 0 is back (>= 0). A series that is never negative has no investment:
+  null with `reason` `NO_INVESTMENT`; one that ends negative: null, `NOT_RECOVERED`; no cost or cash row at all: null, `NO_FLOWS`. *Rejected:* the first t with cumulative >= 0
+  (reports 0 for a first flow of zero and ignores a later dip).
+* **D-P9-26 Attributable totals.** `npv_total` is the sum of the initiative NPVs less `double_counted_pv`, the present value (each period at its own discount factor) of the
+  removed shared claims that enter the cash flow; `double_counted_amount` (= the residual) and `double_counted_pv` are published beside it with `sum_of_initiatives`. The class
+  totals of the portfolio subtract the removed claims by class (`double_counted_by_class`). *Rejected:* a note beside a total that still counts the claim twice.
+* **D-P9-27 Hours are a second double-count rule.** Capacity rows (converted or not) sharing a `benefit_source_key` in one period across two or more initiatives count once at the
+  largest hours; `hours_residual` per overlap and in total; `explanation_required` is true for either residual (`explanation_required_for`). `summary.capacity_released_hours_total`
+  counts the released hours of initiatives that share a capacity key once, at the largest. *Rejected:* adding hours to dollars to reuse the money rule.
+* **D-P9-28 Evidence is words.** An evidence reference (baseline, assumption, staffing change, benefit, benefit observation) is stripped and, when present, non-blank
+  (`EVIDENCE_REQUIRED`); the cash flow tests the stripped text. *Rejected:* accepting "   " as evidence.
+* **D-P9-29 One key, one kind of cost.** A `cost_key` used as one_time and as recurring for the same initiative and basis is `COST_KEY_BASIS_CONFLICT`. *Rejected:* letting a
+  one-time cost be retyped as recurring under its own key.
+* **D-P9-30 A scenario is built on its own past.** Its figures use the cost and benefit rows recorded by its `created_at` (`recorded_at`; absent: part of the loaded world) and, per
+  assumption name, the pinned version or else the latest version created by then. *Rejected:* recomputing an old scenario from today's plan.
+* **D-P9-31 Deployment before the feasible start is reported.** `roadmap.warnings` carries `DEPLOYMENT_BEFORE_FEASIBLE_START`; the cash flow is not re-timed (D-P9-08).
+* **D-P9-32 Exact aggregates.** Every total is an exact sum rounded once (never a sum of rounded rows); `latest_minus_original` is the difference of exact totals, published only when the
+  latest version covers the original's periods (`revisions_cover_original_periods`), `original_preserved` is read from the stored rows.
+* **D-P9-33 Observations carry two instants.** The event time (`observed_at`) and the server-recorded time (`recorded_at`; training: `entered_at`). At as_of an observation exists only when
+  both are <= as_of; one recorded later is listed (`late_recorded`); a same-day tie goes to the later record. *Rejected:* letting a back-dated entry rewrite an earlier as_of.
+* **D-P9-34 Partial trend coverage.** `observed_above_trend` is published only when every compared row carries a trend; otherwise null, with `trend_coverage.rows_without_trend` and the
+  warning `PARTIAL_TREND_COVERAGE` when some rows do.
+* **D-P9-35 A period start has a day <= 28** (`PERIOD_START_INVALID`), so that every month has it.
+* **D-P9-36 Out-of-range proportion.** An error rate outside [0, 1] is `INVALID_FIELD` (field named), not `INVALID_AMOUNT`.
+* **D-P9-37 Shared claims keep their class.** Each claim in an overlap names its `benefit_class` and whether it `enters_cash_flow`; among equal claims the one that enters the cash flow, then the
+  smaller (initiative, benefit), is the one that counts.
+* **D-P9-38 Probes.** The probe block of variant-rejected pins the three series the first-crossing rule got wrong (never negative, dips again, ends negative), a scenario built before a later cost, a
+  partial trend, hours claimed twice and observations recorded after as_of.
+
 ## Gaps and tensions found in the contract (none blocking)
 
 1. D-01 "exact rational arithmetic" and "(1 + r)^(1/12) - 1" cannot both hold (D-P9-06).
@@ -253,7 +344,7 @@ scenario, initiative, group and resource maps empty. Nothing is fabricated as 0.
 
 ## Not exercised
 
-Change of `period_basis` to monthly in the golden file (only in the variant); an unramped initiative with a ramp assumption that is not pinned; a ramp longer than the number of
+Change of `period_basis` to monthly in the golden file (only in the variant); an unramped initiative with a ramp assumption that is not pinned (the unpinned-version-as-of-created_at rule is covered by the backend tests and the generated world); a ramp longer than the number of
 periods; benefit rows beyond the horizon (`beyond_horizon` is always empty); `from` / `to` window parameters of the metrics endpoint other than the matured clip; baseline approval
 by role, `BASELINE_FROZEN` (rewriting rows of an approved version) and the audit trail; resource-levelling start shifts and a non-zero `resource_delay`; ties in the double-count rule
 (two equal claims) and three or more claimants; consistency of the declared monthly conversion value with the declared annual rate; the SQL, workbook, API envelope, idempotency and

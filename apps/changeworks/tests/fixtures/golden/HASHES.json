@@ -2,11 +2,11 @@
   "algorithm": "sha256",
   "sha256": {
     "inputs.json": "e69d2a6af260354ab5e97841e656b442d6f3296973546f49cd255b7959264ae3",
-    "expected.json": "73972ec728a7d0c59951510812ae0dc438112dc182db5cfa135cf601aacb5d32",
-    "CALCULATION.md": "bf0fe03609cd1760298208806ddc6231adc256df47692064b1f8a3c569ae3f2a",
-    "variant-rejected/inputs.json": "79be5f86d6a0f2638f389c21135c1d87f37e386e1ad5eaa0804835a84340f9db",
-    "variant-rejected/expected.json": "7aa1826d36e436490ffdd5c90948223bc06b42957cbee6f36deffab32b12c9a9",
+    "expected.json": "c0c162ab6ae14b088d709a9b40dbccb13fc6fee0ce87dc99e3ed2846880a50a0",
+    "CALCULATION.md": "eb53951eb9b1c9a57f99779a0337ab9293479648ef57c8e914fbe68ad5e59bde",
+    "variant-rejected/inputs.json": "9b43f7a16ebb7b60b0b7c9a2bdda8c5148ee3c477872c27cff0125fa1023ed91",
+    "variant-rejected/expected.json": "23280ab3da67a24c2c7d2f4b2cbf9364a57998ede53c3a7f7a616a829c40999f",
     "variant-empty/inputs.json": "c2460565bb08b872933febb10566816502ca5bce8c96a91c8fab7d1ba602cfee",
-    "variant-empty/expected.json": "4e0f11b7293aea62da0a89c5ed3f80f93964a26a277ed918ed3b95b85bc9e7d9"
+    "variant-empty/expected.json": "8f91f64b34bfa9ac854165ba95b7ba636b42861d67f346876cee66b3494a95b9"
   }
 }

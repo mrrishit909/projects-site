@@ -210,7 +210,13 @@ def test_the_domain_ingests_the_world_with_the_manifests_counts(built):
     counts = res.counts
     assert counts == {e: {"accepted": m["row_counts"][e], "rejected": 0} for e in DOMAIN_ENTITIES}
     assert m["stats"]["ingest"] == counts and res.ingest.rejected_records() == [] and not res.empty_population
-    assert {x["code"] for x in res.warnings} <= {"BASELINE_VERSION_DIFFERS"} and m["stats"]["warnings"] == {"BASELINE_VERSION_DIFFERS": len(res.warnings)}
+    codes = [x["code"] for x in res.warnings]
+    assert set(codes) == {"BASELINE_VERSION_DIFFERS", "DEPLOYMENT_BEFORE_FEASIBLE_START"}      # the second is R9-06; a partial trend never fires in the world
+    assert m["stats"]["warnings"] == {c: codes.count(c) for c in sorted(set(codes))}
+    early = m["stats"]["deployment_before_feasible_start"]                                      # the manifest names the initiatives, computed by the domain
+    assert [e["initiative_id"] for e in early] == sorted(x["path"].split(".")[2] for x in res.warnings if x["code"] == "DEPLOYMENT_BEFORE_FEASIBLE_START") and len(early) == 3
+    assert all(e["periods_early"] == e["dependency_feasible_start"] - e["deployment_period"] > 0 for e in early)
+    assert "3 initiatives book benefits from a deployment period earlier than their dependency-feasible start" in m["generator"]["parameters"]["disclosures"]
 
 
 def test_the_manifests_numbers_are_the_domains(built):
@@ -257,7 +263,10 @@ def test_dr01_capacity_is_the_only_benefit(built):
     assert d["benefit_classes"] == ["capacity"] and d["cash_benefits_total"] == "0.00" and d["converted_capacity_items"] == 0
     blk = M["scenarios"][d["scenario_id"]]["initiatives"][iid]
     assert blk["payback"]["simple"]["period"] is None and d["simple_payback"] is None and Fraction(blk["npv"]["value"]) < 0
-    assert blk["excluded_from_cash_flow"]["capacity_hours_not_converted"] == d["capacity_hours_not_converted"]
+    assert blk["excluded_from_cash_flow"]["capacity_hours_not_converted"] == d["capacity_hours_not_converted"] == "2920.48"
+    rows = blk["excluded_from_cash_flow"]["capacity_not_converted"]
+    assert sum(Fraction(x["hours"]) for x in rows) == Fraction("2920.49")                                             # the rows shown to the cent add to 2,920.49 ... not the figure (R9-07)
+    assert d["capacity_released_hours_per_period"] == blk["capacity_released"]["hours"] == "405.6250"
     assert not [a for a in built["rows"]["assumption_versions"] if a["initiative_id"] == iid and a["name"] == "capacity_hourly_rate"]
 
 
@@ -276,15 +285,36 @@ def test_dr02_two_initiatives_claim_the_same_capacity(built):
     assert pins_before_may and all(M["scenarios"][s["scenario_id"]]["double_count"]["residual"] == "0.00" for s in pins_before_may)
 
 
+def test_dr02_the_portfolio_npv_is_the_attributable_one_and_the_manifest_says_so(built):
+    """R9-02: the sum of the initiative NPVs counts the shared capacity twice; the figure is the sum less the present value of the removed claim, with both beside it."""
+    d = built["dr"]["DR-02"]["realised"]
+    s = metrics_of(built)["scenarios"][d["scenario_id"]]
+    assert (d["npv_sum_of_initiatives"], d["double_counted_pv"], d["npv_total_attributable"]) == ("1438382.25", "195233.20", "1243149.05")
+    assert s["npv_total"]["value"] == d["npv_total_attributable"] and s["npv_total"]["sum_of_initiatives"] == d["npv_sum_of_initiatives"]
+    assert Fraction(s["npv_total"]["exact"]) == Fraction(s["npv_total"]["sum_of_initiatives_exact"]) - Fraction(s["double_count"]["double_counted_pv_exact"])
+    assert s["double_count"]["double_counted_by_class"]["capacity_converted"] == d["residual"] == "207146.32"        # the shared claim is converted capacity
+    assert d["scenarios_with_an_hours_residual"] == sorted(k for k, v in metrics_of(built)["scenarios"].items() if v["double_count"]["hours_residual"] != "0.00")
+
+
 def test_dr03_one_initiative_never_pays_back(built):
     d = built["dr"]["DR-03"]["realised"]
     M = metrics_of(built)
     assert d["scenarios"] and d["scenarios_with_simple_payback_null"] == d["scenarios_with_discounted_payback_null"] == len(d["scenarios"])
     for sid in d["scenarios"]:
         b = M["scenarios"][sid]["initiatives"][d["initiative_id"]]
-        assert b["payback"]["simple"] == {"period": None, "interpolated": None} and b["payback"]["discounted"] == {"period": None, "interpolated": None}
+        nothing = {"period": None, "interpolated": None, "reason": "NOT_RECOVERED"}
+        assert b["payback"]["simple"] == nothing and b["payback"]["discounted"] == nothing
         assert Fraction(b["npv"]["value"]) < 0
-    assert Fraction(d["benefit_to_cost"]) < 1 and Fraction(d["npv_highest"]) < 0
+    assert Fraction(d["npv_highest"]) < 0
+    # R9-09: every ratio names its scenario; the ramp the scenario pins decides which of the two values it has
+    assert sorted(d["by_scenario"]) == d["scenarios"] and all(Fraction(v["benefit_to_cost"]) < 1 for v in d["by_scenario"].values())
+    assert sorted(d["scenarios_by_benefit_to_cost"]) == ["0.531465", "0.620043"]
+    for sid, v in d["by_scenario"].items():
+        b = M["scenarios"][sid]["initiatives"][d["initiative_id"]]
+        assert v["ramp_assumption_id"] == b["ramp"]["assumption_id"] and v["npv"] == b["npv"]["value"]
+        assert sum(Fraction(x["cash_benefits"]) for x in b["cash_flow"]) / sum(Fraction(x["costs"]) for x in b["cash_flow"]) - Fraction(v["benefit_to_cost"]) < Fraction(1, 10 ** 6)
+        assert sid in d["scenarios_by_benefit_to_cost"][v["benefit_to_cost"]]
+    assert d["by_scenario"]["scn-025"]["benefit_to_cost"] == "0.531465" and d["by_scenario"]["scn-013"]["benefit_to_cost"] == "0.620043"
     others = [i["initiative_id"] for i in built["rows"]["initiatives"] if i["initiative_id"] != d["initiative_id"]]
     assert sum(1 for iid in others if M["scenarios"]["scn-025"]["initiatives"][iid]["payback"]["simple"]["period"] is not None) >= 12      # the others do pay back
 
@@ -308,12 +338,15 @@ def test_dr04_a_forecast_revised_twice_after_a_missed_target(built):
     assert len(d["misses"]) == 2 and all(o["period_matured"] for o in fc["observed"] if o["period_index"] <= 8)
 
 
-def test_dr05_a_specialist_is_overallocated_in_three_periods(built):
+def test_dr05_a_specialist_is_at_capacity_and_three_further_requests_are_refused(built):
+    """R9-08: designed for periods 14 to 16; the periods at capacity are what the domain finds in the rows (12 to 16), not what was designed."""
     d = built["dr"]["DR-05"]["realised"]
     M = metrics_of(built)
-    assert d["periods"] == d["refused_periods"] == [14, 15, 16] and d["requests_refused"] == 3 and d["stored_overallocated_periods"] == []
     res = M["resources"][d["resource_id"]]
-    assert res["overallocated_periods"] == [] and all(res["by_period"][i]["allocated"] == "2.00" for i in range(len(res["by_period"])) if res["by_period"][i]["period_index"] in (14, 15, 16))
+    assert d["designed_periods"] == d["refused_periods"] == [14, 15, 16] and d["requests_refused"] == 3 and d["stored_overallocated_periods"] == []
+    assert d["periods"] == [12, 13, 14, 15, 16] == [b["period_index"] for b in res["by_period"] if b["headroom"] == "0.00"]
+    assert res["overallocated_periods"] == [] and all(b["allocated"] == "2.00" for b in res["by_period"] if b["period_index"] in d["periods"])
+    assert set(d["allocated"]) == {str(p) for p in d["periods"]} == set(d["headroom"])
     for r in M["resources"].values():
         assert r["overallocated_periods"] == []
     ev = built["events"]["EV-09"]["steps"]
@@ -447,6 +480,11 @@ def test_recoveries_change_the_figures_as_the_contract_says(built):
             v.add(s["entity"], copy.deepcopy(s["row"]))
     res = run_pipeline({**built["inputs"], **{e: v.acc[e] for e in DOMAIN_ENTITIES}})
     blk = res.metrics["scenarios"]["scn-025"]["initiatives"]["init-009"]
+    assert blk["converted_capacity"] == []                  # R9-01: scn-025 was built on 2026-09-02, before the conversion existed (2026-10-04): it keeps what it was built on
+    later = {"scenario_id": "scn-after-01", "baseline_version": "v2", "discount_rate": "0.080000", "rate_basis": "annual", "rate_conversion_assumption_id": "a-conv-monthl-2",
+             "horizon_periods": 36, "status": "draft", "initiative_ids": ["init-009"], "pinned_assumption_ids": [], "created_at": "2026-10-04T12:00:00Z"}
+    res = run_pipeline({**built["inputs"], **{e: v.acc[e] for e in DOMAIN_ENTITIES}, "scenario_versions": v.acc["scenario_versions"] + [later]})
+    blk = res.metrics["scenarios"]["scn-after-01"]["initiatives"]["init-009"]                    # a scenario built after the conversion gets the derived cash item
     item = next(c for c in blk["converted_capacity"] if c["source_benefit_id"] == "b-inj-01b")
     assert item["hourly_rate"] == "31.50" and item["conversion_assumption_id"] == "a-inj-01-rate" and Fraction(item["amount"]) > 0
     assert abs(Fraction(item["amount"]) - Fraction(item["hours"]) * Fraction("31.5")) <= Fraction(1, 5)              # hours (shown to 2 places, ramped) x rate

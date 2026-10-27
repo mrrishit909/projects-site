@@ -17,8 +17,8 @@ export function WithData({ children }: { children: (ds: Dataset) => ReactNode })
 
 export type ChipKind = "ok" | "note" | "crit" | "hatch" | "plain";
 /** A status label; the colour is never the only signal (the word is always printed). The dry red (`crit`) is reserved for refusals and overallocation. */
-export function Chip({ kind = "plain", children, k }: { kind?: ChipKind; children: ReactNode; k?: string }) {
-  return <span className={`chip chip--${kind}`} {...(k ? { "data-chip": k } : {})}>{children}</span>;
+export function Chip({ kind = "plain", children, k, title }: { kind?: ChipKind; children: ReactNode; k?: string; title?: string }) {
+  return <span className={`chip chip--${kind}`} {...(k ? { "data-chip": k } : {})} {...(title ? { title } : {})}>{children}</span>;
 }
 /** A definition popover: a native disclosure, so it works with keyboard and without a script. */
 export function Def({ term, children }: { term: string; children: ReactNode }) {

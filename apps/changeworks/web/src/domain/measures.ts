@@ -3,7 +3,7 @@
 import { expandCosts, type Model } from "./cashflow";
 import type { Ctx } from "./context";
 import { BENEFIT_TYPES, TARGET_NAME, type Row } from "./contract";
-import { cmp, dec, div, fr, m4, money, mn, mul, p6, sub, sumFr, type Fr } from "./num";
+import { cmp, dec, div, ex, fr, m4, money, mn, mul, p6, sub, sumFr, type Fr } from "./num";
 import { matured, parseTs } from "./time";
 
 export function capacityReleased(ctx: Ctx, sc: Row, iid: string): Row {
@@ -15,7 +15,7 @@ export function capacityReleased(ctx: Ctx, sc: Row, iid: string): Row {
   else if (tgt === null || tgt["value"] === null) cap["reason"] = "NO_TARGET_ASSUMPTION";
   else {
     const hrs = div(mul(fr(base["volume"]), sub(fr(base["minutes_per_case"]), dec(tgt["value"]))), fr(60));
-    Object.assign(cap, { hours: m4(hrs), volume: base["volume"], baseline_minutes_per_case: base["minutes_per_case"], target_minutes_per_case: tgt["value"] });
+    Object.assign(cap, { hours: m4(hrs), hours_exact: ex(hrs), volume: base["volume"], baseline_minutes_per_case: base["minutes_per_case"], target_minutes_per_case: tgt["value"] });
   }
   return cap;
 }
@@ -28,7 +28,7 @@ export function costVariance(ctx: Ctx, sc: Row, iid: string): Row {
   const cv: Row = { window: { from_period: lo, to_period: hi }, baseline_version: i["baseline_version"], approved_baseline_cost: null, actual_cost: null, variance: null, reason: null };
   if (i["baseline_version"] === null) { cv["reason"] = "NO_APPROVED_BASELINE"; return cv; }
   if (hi <= lo) { cv["reason"] = "NO_MATURED_PERIOD"; return cv; }
-  const rows = (basis: string, version: string | null): Fr[] => ctx.acc.cost_items
+  const rows = (basis: string, version: string | null): Fr[] => ctx.costs(sc)
     .filter((c) => c["initiative_id"] === iid && c["cost_basis"] === basis && (version === null || c["baseline_version"] === version))
     .flatMap((c) => expandCosts(c, hi).filter(([, p]) => p >= lo).map(([, , a]) => a));
   const bl = sumFr(rows("planned", i["baseline_version"]));
@@ -44,19 +44,28 @@ export function costVariance(ctx: Ctx, sc: Row, iid: string): Row {
 }
 
 /** Observed comparable benefit / planned comparable benefit, within ONE type, matured periods with an observation only. Unobserved matured rows
- * are listed, never counted as 0; the baseline trend sits beside the raw change and the page says "observed, not attributed". */
-export function benefitRealization(ctx: Ctx, sc: Row, iid: string, model: Model): [Row, string[]] {
+ * are listed, never counted as 0; the baseline trend sits beside the raw change and the page says "observed, not attributed". An observation counts
+ * when it happened and was recorded by as_of (R9-11); one recorded later is listed. `observed_above_trend` is published only when every compared row
+ * carries a recorded trend (R9-13): otherwise it is null and the rows without a trend are listed. */
+export function benefitRealization(ctx: Ctx, sc: Row, iid: string, model: Model): [Row, string[], string[]] {
   const H: number = sc["horizon_periods"];
   const realization: Row = {};
-  const immature: string[] = [];
+  const immature: string[] = [], late: string[] = [];
   for (const t of BENEFIT_TYPES) {
-    const items = ctx.acc.benefit_items.filter((b) => b["initiative_id"] === iid && b["benefit_type"] === t && b["period_index"] < H);
+    const items = ctx.benefits(sc).filter((b) => b["initiative_id"] === iid && b["benefit_type"] === t && b["period_index"] < H);
     const comp: [Row, Row][] = [];
     const unobs: string[] = [];
     for (const b of [...items].sort((x, y) => cmp(x["benefit_id"], y["benefit_id"]))) {
-      const obs = ctx.acc.benefit_observations.filter((o) => o["benefit_id"] === b["benefit_id"] && parseTs(o["observed_at"]) <= ctx.asOf)
-        .sort((x, y) => { const a = parseTs(x["observed_at"]), c = parseTs(y["observed_at"]); return a < c ? -1 : a > c ? 1 : cmp(x["benefit_observation_id"], y["benefit_observation_id"]); });
-      if (!matured(ctx.cfg, b["period_index"], ctx.asOf)) { immature.push(...obs.map((o) => o["benefit_observation_id"])); continue; }
+      const mine = ctx.acc.benefit_observations.filter((o) => o["benefit_id"] === b["benefit_id"] && parseTs(o["observed_at"]) <= ctx.asOf);
+      late.push(...mine.filter((o) => o["recorded_at"] != null && parseTs(o["recorded_at"]) > ctx.asOf).map((o) => o["benefit_observation_id"] as string));
+      const obs = mine.filter((o) => o["recorded_at"] == null || parseTs(o["recorded_at"]) <= ctx.asOf)
+        .sort((x, y) => {
+          const a = parseTs(x["observed_at"]), c = parseTs(y["observed_at"]);
+          if (a !== c) return a < c ? -1 : 1;
+          const ra = parseTs(x["recorded_at"] ?? x["observed_at"]), rc = parseTs(y["recorded_at"] ?? y["observed_at"]);
+          return ra < rc ? -1 : ra > rc ? 1 : cmp(x["benefit_observation_id"], y["benefit_observation_id"]);
+        });
+      if (!matured(ctx.cfg, b["period_index"], ctx.asOf)) { immature.push(...obs.map((o) => o["benefit_observation_id"] as string)); continue; }
       if (!ctx.periodInWindow(b["period_index"])) continue;
       if (obs.length) comp.push([b, obs[obs.length - 1]!]);
       else unobs.push(b["benefit_id"]);
@@ -66,13 +75,15 @@ export function benefitRealization(ctx: Ctx, sc: Row, iid: string, model: Model)
     const observed = sumFr(comp.map(([, o]) => dec(o["measured_value"])));
     const trends = comp.filter(([b]) => b["baseline_trend_per_period"] !== null).map(([b]) => dec(b["baseline_trend_per_period"]));
     const trend = trends.length ? sumFr(trends) : null;
+    const missing = comp.filter(([b]) => b["baseline_trend_per_period"] === null).map(([b]) => b["benefit_id"] as string);
     realization[t] = {
       unit: t === "capacity" ? "hours" : "USD", comparable_items: comp.map(([b]) => b["benefit_id"]),
       planned_comparable: comp.length ? money(planned) : null, observed_comparable: comp.length ? money(observed) : null,
       realization: comp.length && planned.n !== 0n ? p6(div(observed, planned)) : null,
-      baseline_trend: mn(trend), observed_above_trend: trend !== null && comp.length ? mn(sub(observed, trend)) : null,
+      baseline_trend: mn(trend), observed_above_trend: trend !== null && comp.length && !missing.length ? mn(sub(observed, trend)) : null,
+      trend_coverage: { complete: !missing.length, rows_without_trend: missing },
       attribution: "observed, not attributed", matured_unobserved_items: unobs,
     };
   }
-  return [realization, immature.sort(cmp)];
+  return [realization, immature.sort(cmp), late.sort(cmp)];
 }

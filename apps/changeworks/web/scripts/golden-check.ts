@@ -12,7 +12,7 @@ import { GOLDEN_HASH } from "../src/data/load";
 import { ENTITIES, type Row } from "../src/domain/contract";
 import { Ctx } from "../src/domain/context";
 import { compute } from "../src/domain/metrics";
-import { cmp, dec, discountFactor, ex, fr, m4, monthlyFromAnnual, p6, rnd } from "../src/domain/num";
+import { cmp, dec, discountFactor, div, ex, fr, m4, monthlyFromAnnual, p6, rnd, sumFr } from "../src/domain/num";
 import { goldenOf, runPipeline } from "../src/domain/pipeline";
 import { isTs, isoSeconds, isoZ, maturedCount, parseTs, periodStartInstant } from "../src/domain/time";
 import { designedClaims, injectionChecks, replayInjections } from "../src/lib/claims";
@@ -73,7 +73,7 @@ leaves("golden dataset object (as the site builds it) = expected.json", gold.gol
 {
   const m = gold.metrics, b = m.scenarios["scn-001"].initiatives["init-001"], dc = m.scenarios["scn-001"].double_count;
   eq("spec: cost 1000 at t=0, inflows 600 and 600, 10 % annual: NPV = 5000/121 = 41.32 USD, an estimate", [b.npv.exact, b.npv.value, b.npv.label, b.npv.unit], ["5000/121", "41.32", "estimate", "USD"]);
-  eq("spec: simple payback 2 (interpolated 1.6667) and discounted payback 2 (interpolated 1.9167), labelled separately", [b.payback.simple, b.payback.discounted], [{ period: 2, interpolated: "1.6667" }, { period: 2, interpolated: "1.9167" }]);
+  eq("spec: simple payback 2 (interpolated 1.6667) and discounted payback 2 (interpolated 1.9167), labelled separately", [b.payback.simple, b.payback.discounted], [{ period: 2, interpolated: "1.6667", reason: null }, { period: 2, interpolated: "1.9167", reason: null }]);
   eq("spec: 800 capacity hours are excluded from the cash flow (no conversion); capacity released 400.0000 h per period", [b.excluded_from_cash_flow.capacity_hours_not_converted, b.converted_capacity, b.capacity_released.hours], ["800.00", [], "400.0000"]);
   eq("spec: the double-count residual 75.00 is explained by one shared key, claimed twice in period 2 (counted once at 150.00)", [dc.residual, dc.explanation_required, dc.overlaps.length, dc.overlaps[0].benefit_source_key, dc.overlaps[0].counted_once], ["75.00", true, 1, "cost-line:CC-4410", "150.00"]);
   eq("spec: dependency delays 2 and 3, bound by d-1 and d-2; resource delay 0", [m.initiatives["init-002"].roadmap.dependency_delay, m.initiatives["init-003"].roadmap.dependency_delay, m.initiatives["init-002"].roadmap.binding_dependency_id, m.initiatives["init-003"].roadmap.binding_dependency_id, m.initiatives["init-003"].roadmap.resource_delay], [2, 3, "d-1", "d-2", 0]);
@@ -166,17 +166,22 @@ for (const [sid, annual, mth] of ref.published_conversions as [string, string, s
 console.log(`OK       ${ref.published_conversions.length} published monthly conversions (annual-rate scenarios) equal the integer-root conversion`);
 {
   const got = Object.fromEntries(scenarioTotals(ds).map((s) => [s.id, { costs: s.costs, cash: s.cash, revenue: s.revenue, avoided: s.avoided, capacity_usd: s.capacityUsd, avoided_beside: s.avoidedBeside, capacity_hours: s.capacityHours,
-    npv_total: s.npv, residual: s.residual, planned: s.planned, attributable: s.attributable, initiatives: s.initiatives, never_simple: s.neverSimple, never_discounted: s.neverDiscounted }]));
+    listed: { cash: s.listed.cash, revenue: s.listed.revenue, avoided: s.listed.avoided, capacity_usd: s.listed.capacityUsd, avoided_beside: s.listed.avoidedBeside },
+    removed: { cash: s.removed.cash, revenue: s.removed.revenue, avoided: s.removed.avoided, capacity_usd: s.removed.capacityUsd, avoided_beside: s.removed.avoidedBeside },
+    npv_total: s.npv, npv_sum: s.npvSum, double_counted_pv: s.doubledPv, double_counted_amount: s.doubledAmount, hours_residual: s.hoursResidual,
+    residual: s.residual, planned: s.planned, attributable: s.attributable, initiatives: s.initiatives, never_simple: s.neverSimple, never_discounted: s.neverDiscounted }]));
   const want = Object.fromEntries(Object.entries<Row>(ref.portfolio).map(([k, v]) => { const { per_initiative_digest: _d, ...rest } = v; void _d; return [k, rest]; }));
-  eq("the portfolio table (costs and each benefit class per scenario, NPV, residual, paybacks never reached) equals Python's, for all 30 scenarios", got, want);
+  eq("the portfolio table (costs and each benefit class per scenario as attributable totals, the plain sums and what was taken off them, the attributable NPV and the sum beside it, residuals, paybacks never reached) equals Python's, for all 30 scenarios", got, want);
 }
 {
   const m = ds.metrics, d = ref.designed;
   const b9 = m.scenarios["scn-025"].initiatives["init-009"];
   eq("DR-01 (Python): init-009 NPV, hours not converted, no payback, released hours", [b9.npv.value, b9.excluded_from_cash_flow.capacity_hours_not_converted, b9.payback.simple.period, b9.capacity_released.hours], [d["DR-01"]["init-009"].npv, d["DR-01"]["init-009"].capacity_hours_not_converted, d["DR-01"]["init-009"].simple_payback, d["DR-01"]["init-009"].released]);
   const dc = m.scenarios["scn-025"].double_count;
-  eq("DR-02 (Python): planned, attributable, residual, overlap periods, scenarios with a residual", [dc.planned_benefits, dc.attributable_benefits, dc.residual, dc.overlaps.length, Object.keys(m.scenarios).filter((k) => m.scenarios[k].double_count.residual !== "0.00")], [d["DR-02"].planned, d["DR-02"].attributable, d["DR-02"].residual, d["DR-02"].overlap_periods, d["DR-02"].scenarios_with_residual]);
+  eq("DR-02 (Python): planned, attributable, residual, overlap periods, scenarios with a residual in money and in hours, the attributable NPV, the sum beside it, the present value that counts twice", [dc.planned_benefits, dc.attributable_benefits, dc.residual, dc.overlaps.length, Object.keys(m.scenarios).filter((k) => m.scenarios[k].double_count.residual !== "0.00"), Object.keys(m.scenarios).filter((k) => m.scenarios[k].double_count.hours_residual !== "0.00"), m.scenarios["scn-025"].npv_total.value, m.scenarios["scn-025"].npv_total.sum_of_initiatives, dc.double_counted_pv, dc.hours_residual],
+    [d["DR-02"].planned, d["DR-02"].attributable, d["DR-02"].residual, d["DR-02"].overlap_periods, d["DR-02"].scenarios_with_residual, d["DR-02"].scenarios_with_hours_residual, d["DR-02"].npv_attributable, d["DR-02"].npv_sum, d["DR-02"].double_counted_pv, d["DR-02"].hours_residual]);
   eq("DR-03 (Python): init-015 NPV and both paybacks in each of its scenarios", Object.fromEntries(Object.entries(m.scenarios as Row).filter(([, s]) => "init-015" in s.initiatives).map(([sid, s]) => [sid, [s.initiatives["init-015"].npv.value, s.initiatives["init-015"].payback.simple.period, s.initiatives["init-015"].payback.discounted.period]])), d["DR-03"]["init-015"]);
+  eq("DR-03 (Python): the benefit-to-cost ratio of init-015 in each of its scenarios, exactly", Object.fromEntries(Object.entries(m.scenarios as Row).filter(([, s]) => "init-015" in s.initiatives).map(([sid, s]) => [sid, ex(div(sumFr((s.initiatives["init-015"].cash_flow as Row[]).map((r) => dec(r["cash_benefits"]))), sumFr((s.initiatives["init-015"].cash_flow as Row[]).map((r) => dec(r["costs"])))))])), d["DR-03"].benefit_to_cost);
   eq("DR-04 (Python): init-003 forecast versions and latest minus original", [m.initiatives["init-003"].forecast.versions.map((v: Row) => [v.version_number, v.total, v.created_at]), m.initiatives["init-003"].forecast.latest_minus_original], [d["DR-04"].versions, d["DR-04"].latest_minus_original]);
   eq("DR-05 (Python): res-03 by period and its overallocated periods", m.resources["res-03"], d["DR-05"]["res-03"]);
   eq("DR-06 (Python): init-008 cash realisation block", m.scenarios["scn-025"].initiatives["init-008"].benefit_realization.cash, d["DR-06"]);

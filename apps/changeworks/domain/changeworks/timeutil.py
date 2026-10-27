@@ -5,6 +5,8 @@ import re
 from datetime import date, datetime, timezone
 from typing import Any
 
+from .errors import DomainError
+
 _TS = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?Z$")
 
 
@@ -30,6 +32,19 @@ def iso_z(d: datetime | None) -> str | None:
         return None
     d = d.astimezone(timezone.utc)
     return d.strftime("%Y-%m-%dT%H:%M:%S") + (f".{d.microsecond:06d}".rstrip("0") if d.microsecond else "") + "Z"
+
+
+def check_period_start(s: Any) -> date:
+    """R9-14: a period start is a real calendar date whose day is at most 28, so the same day exists in every month and every year (PERIOD_START_INVALID)."""
+    try:
+        if not isinstance(s, str) or not re.match(r"^\d{4}-\d{2}-\d{2}$", s):
+            raise ValueError(s)
+        d = date.fromisoformat(s)
+    except ValueError:
+        raise DomainError("PERIOD_START_INVALID", f"period_start must be a calendar date YYYY-MM-DD, got {s!r}", "period_start") from None
+    if d.day > 28:
+        raise DomainError("PERIOD_START_INVALID", f"period_start day must be at most 28 so that every month has it, got {s}", "period_start", {"day": d.day})
+    return d
 
 
 def period_date(config: dict[str, Any], t: int) -> date:

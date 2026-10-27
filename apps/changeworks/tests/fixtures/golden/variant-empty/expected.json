@@ -82,11 +82,16 @@
       "initiatives": 0,
       "scenarios": 0,
       "npv_total": null,
+      "npv_sum_of_initiatives": null,
+      "double_counted_amount": null,
+      "double_counted_pv": null,
       "double_count_residual": null,
+      "hours_residual": null,
       "adoption_rate": null,
       "training_completion": null,
       "risk_exposure_total": null,
-      "capacity_released_hours_total": null
+      "capacity_released_hours_total": null,
+      "capacity_released_hours_double_counted": null
     },
     "scenarios": {},
     "initiatives": {},

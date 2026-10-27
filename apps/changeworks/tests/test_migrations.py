@@ -6,7 +6,7 @@ from data import migrate
 
 from support_db import conn, count, db_url, golden_inputs, load, table_digest  # noqa: F401
 
-FILES = ["0001_schema.sql", "0002_constraints.sql"]
+FILES = ["0001_schema.sql", "0002_constraints.sql", "0003_review9.sql"]
 TABLES = ["dataset_config", "initiatives", "process_baselines", "baseline_approvals", "assumption_versions", "opportunity_scores", "resources", "scenario_versions",
           "scenario_initiatives", "scenario_pins", "cost_items", "expanded_costs", "benefit_items", "dependencies", "stakeholder_groups", "impact_mappings",
           "resource_allocations", "readiness_assessments", "adoption_observations", "training_completions", "benefit_observations", "risk_items", "forecast_versions",
@@ -100,10 +100,22 @@ def test_seed_keeps_rejected_records_with_raw_rows_and_does_not_load_them(conn):
     row = conn.execute("SELECT * FROM rejected_records WHERE id = 'rd-3'").fetchone()
     assert row["entity"] == "dependencies" and row["reason_code"] == "DEPENDENCY_CYCLE" and row["details"]["cycle"] == ["rj-i1", "rj-i3", "rj-i2", "rj-i1"]
     assert row["raw_row"]["prerequisite_id"] == "rj-i3"
-    assert count(conn, "dependencies") == 2 and count(conn, "initiatives") == 4
+    assert count(conn, "dependencies") == 2 and count(conn, "initiatives") == 10          # four of the original six, and the six probe initiatives
     assert conn.execute("SELECT status FROM initiatives WHERE initiative_id = 'rj-i1'").fetchone()["status"] == "in_delivery"      # the first of the two repeats is kept
     seqs = [r["seq"] for r in conn.execute("SELECT seq FROM rejected_records ORDER BY seq").fetchall()]
     assert seqs == sorted(seqs)
+
+
+def test_the_rejected_record_echo_keeps_the_original_number_text(conn):
+    """R9-22: a fractional or exponent number in a rejected row is echoed as written (1.50, 1e3, 0.0), not as the float it parses to."""
+    import json as _json
+    from data import seed
+    d = _json.loads(_json.dumps(golden_inputs()))
+    text = _json.dumps(d).replace('"cost_items": [', '"cost_items": [{"cost_id": "raw-1", "initiative_id": "i-1", "amount": 1.50, "extra": [1e3, 0.0]}, ', 1)
+    assert '"raw-1"' in text
+    load(conn, seed.load_json(text))
+    raw = conn.execute("SELECT raw_row::text AS t FROM rejected_records WHERE id = 'raw-1'").fetchone()["t"]
+    assert "1.50" in raw and "0.0" in raw and "1000" in raw.replace("1e3", "1000")
 
 
 def test_an_initiative_naming_a_baseline_that_was_not_loaded_is_loaded_without_an_approved_baseline(conn):
@@ -218,3 +230,42 @@ def test_helper_functions(conn):
     row = conn.execute("SELECT cw_dec(600::numeric(20,6)) AS a, cw_dec(0.125000::numeric(20,6)) AS b, cw_dec(-3::numeric) AS c, cw_iso('2028-03-31 00:00:00+00'::timestamptz) AS d, "
                        "cw_iso('2028-03-31 00:00:00.5+00'::timestamptz) AS e, cw_dec(NULL) AS f").fetchone()
     assert row == {"a": "600.00", "b": "0.125", "c": "-3.00", "d": "2028-03-31T00:00:00Z", "e": "2028-03-31T00:00:00.5Z", "f": None}
+
+
+# ------------------------------------------------------------------------------------------------------------------------------ review 9
+def test_the_database_refuses_a_period_start_over_the_28th_blank_evidence_and_a_draft_with_a_snapshot(golden):
+    fails(golden, "UPDATE dataset_config SET period_start = '2026-01-31'", contains="dataset_config_day_ck")
+    fails(golden, "INSERT INTO benefit_items (benefit_id, initiative_id, benefit_type, amount, period_index, starts_period, unit, evidence_ref) "
+                  "VALUES ('b-x', 'init-001', 'avoided_cost', 1, 2, 1, 'USD', E'  \\t ')", contains="benefit_items_evidence_ck")
+    fails(golden, "INSERT INTO assumption_versions (assumption_id, initiative_id, name, version_number, value, rationale, author_id, staffing_change_evidence_ref, created_at) "
+                  "VALUES ('a-x', 'init-001', 'capacity_hourly_rate', 9, '1', 'r', 'a', '   ', now())", contains="assumptions_evidence_ck")
+    fails(golden, "INSERT INTO benefit_observations (benefit_observation_id, benefit_id, measured_value, evidence_ref, observed_at) VALUES ('bo-x', 'b-101', 1, '  ', now())",
+          contains="benefit_obs_evidence_ck")
+    fails(golden, "UPDATE scenario_versions SET snapshot_hash = repeat('a', 64) WHERE scenario_id = 'scn-001'", contains="scenarios_snapshot_ck")
+
+
+def test_the_seeder_refuses_a_dataset_whose_period_start_has_a_day_over_28(conn):
+    from changeworks import DomainError
+    d = golden_inputs()
+    d["period_start"] = "2026-01-31"
+    with pytest.raises(DomainError) as e:
+        load(conn, d)
+    assert e.value.code == "PERIOD_START_INVALID" and count(conn, "initiatives") == 0
+
+
+def test_migration_0003_seals_scenarios_that_exist_already(db_url):
+    """An upgrade from the schema of 0001 and 0002: the scenarios already stored are sealed at the size they have, and the new rules are in force afterwards."""
+    with psycopg.connect(db_url) as c:
+        migrate.reset(c)
+        for name in FILES[:2]:
+            c.execute((migrate.MIGRATIONS_DIR / name).read_text())
+        c.execute("INSERT INTO dataset_config VALUES (1, 'annual', '2026-01-01', NULL)")
+        c.execute("INSERT INTO initiatives (initiative_id, title, sponsor_id, status, requested_start_period, duration_periods, deployment_period, eligibility_rule_version) "
+                  "VALUES ('i-1', 't', 's', 'candidate', 0, 1, 1, 'elig-v1')")
+        c.execute("INSERT INTO scenario_versions (scenario_id, baseline_version, discount_rate, rate_basis, horizon_periods, status, created_at) VALUES ('s-1', 'v1', 0.1, 'annual', 3, 'draft', now())")
+        c.execute("INSERT INTO scenario_initiatives VALUES ('s-1', 'i-1')")
+    with psycopg.connect(db_url) as c:
+        c.execute((migrate.MIGRATIONS_DIR / FILES[2]).read_text())
+        assert c.execute("SELECT initiatives_expected, pins_expected FROM scenario_versions").fetchone() == (1, 0)
+        with pytest.raises(psycopg.errors.IntegrityError, match="SCENARIO_IMMUTABLE"):
+            c.execute("INSERT INTO scenario_pins SELECT 's-1', 'nope'")

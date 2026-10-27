@@ -32,12 +32,13 @@ from changeworks.contract import ROLES as ROLE_LIST
 from changeworks.errors import DomainError
 from changeworks.ingest import Rejection
 from changeworks.numbers import canon, dec, ex, m4, money
+from changeworks.snapshot import snapshot_hash
 from changeworks.people import adoption as adoption_metric
 from changeworks.people import forecast as forecast_metric
 from changeworks.people import readiness as readiness_metric
 from changeworks.people import training as training_metric
-from changeworks.roadmap import feasible_starts, resource_views
-from changeworks.timeutil import iso_z, matured
+from changeworks.roadmap import feasible_starts, initiative_roadmap, resource_views
+from changeworks.timeutil import iso_z, matured, period_start_instant
 from psycopg.types.json import Jsonb
 
 from data.seed import canonical_json, insert_row, sha256_hex
@@ -66,7 +67,10 @@ MESSAGES = {
     "ELIGIBILITY_RULE_MISMATCH": "the observation uses another eligibility rule than the initiative fixes", "LABEL_NOT_SYNTHETIC": "a stakeholder label must be a synthetic role or team "
     "label, not personal data", "OPERATING_CHANGE_REQUIRED": "describe the operating change", "INVALID_UNIT": "capacity is measured in hours, every other benefit in USD",
     "INVALID_RAMP": "a ramp is a non-decreasing list of fractions in [0, 1]", "RATIONALE_REQUIRED": "a rationale is required", "INVALID_PERIOD": "the period is out of range or inconsistent",
+    "EVIDENCE_REQUIRED": "an evidence reference is text that says where the evidence is; blank is not evidence", "COST_KEY_BASIS_CONFLICT": "a cost key is one kind of cost "
+    "(one-time or recurring) for an initiative and a basis; record a different kind of cost under a new key and say why", "INVALID_FIELD": "the field is outside its range",
 }
+MIN_EXPLANATION = 20       # characters of a double-count explanation (R9-22)
 
 
 @dataclass(frozen=True)
@@ -162,6 +166,24 @@ def _plain_date(s: str, now: datetime, path: str) -> datetime:
     if at > now:
         raise _invalid("DATE_IN_FUTURE", f"{path} may not lie in the future (the server's date is {now.date().isoformat()})", path)
     return at
+
+
+def _observed_on(s: str | None, now: datetime, path: str, ini: Any, config: dict[str, Any]) -> datetime:
+    """R9-11: an observation happened between the first period start of its initiative and the server's date; without a date it happened now. Whatever it
+    says, the server stamps when it was recorded."""
+    if not s:
+        return now
+    at = _plain_date(s, now, path)
+    first = period_start_instant(config, ini["requested_start_period"])
+    if at < first:
+        raise _invalid("OBSERVED_BEFORE_START", f"{path} {s} is before the first period start of {ini['initiative_id']} ({first.date().isoformat()})", path,
+                       {"first_period_start": first.date().isoformat()})
+    return at
+
+
+def _ev(v: str | None) -> str | None:
+    """R9-04: an evidence reference is stored stripped; a blank one is kept blank so that the domain refuses it (EVIDENCE_REQUIRED)."""
+    return None if v is None else v.strip()
 
 
 # --- idempotent execution ---------------------------------------------------------------------------------------
@@ -290,9 +312,10 @@ def _check_all(v: Validator, items: list[tuple[str, str, dict[str, Any]]]) -> li
     return rejected
 
 
-def _insert(conn: Conn, items: list[tuple[str, str, dict[str, Any]]], actor: Actor) -> None:
+def _insert(conn: Conn, items: list[tuple[str, str, dict[str, Any]]], actor: Actor, at: datetime | None = None) -> None:
+    """Write the rows; ``at`` is the server instant they were recorded (it stamps plan rows and observations, R9-01 and R9-11)."""
     for _, entity, row in items:
-        insert_row(conn, entity, row, by=actor.actor_id)
+        insert_row(conn, entity, row, by=actor.actor_id, at=at)
 
 
 def _ctx(pop: Any, at: datetime, scenario_ids: list[str] | None = None) -> Ctx:
@@ -344,7 +367,7 @@ def establish_baseline(conn: Conn, req: Any, actor: Actor) -> Outcome:
     if ini["baseline_version"] is not None and not (inp.reason or "").strip():
         raise _invalid("REASON_REQUIRED", "a correction of an approved baseline is a new version with a reason", "input.reason")
     row = {"baseline_id": inp.baseline_id or _new_id("pb"), "initiative_id": inp.initiative_id, "baseline_version": inp.baseline_version, "volume": inp.volume,
-           "minutes_per_case": inp.minutes_per_case, "error_rate": inp.error_rate, "evidence_ref": inp.evidence_ref,
+           "minutes_per_case": inp.minutes_per_case, "error_rate": inp.error_rate, "evidence_ref": _ev(inp.evidence_ref),
            "measured_at": iso_z(_plain_date(inp.measured_on, now, "input.measured_on")), "reason": inp.reason}
     items = [("input", "process_baselines", row)]
     rej = _check_all(Validator(pop), items)
@@ -438,8 +461,8 @@ def build_cash_flows(conn: Conn, req: Any, actor: Actor) -> Outcome:
         next_version[key] = max(last, nv)
         items.append((f"input.assumptions[{i}]", "assumption_versions", {
             "assumption_id": a.assumption_id or _new_id("as"), "initiative_id": a.initiative_id, "name": a.name, "version_number": nv,
-            "value": a.value, "values": a.values, "unit": a.unit, "rationale": a.rationale, "author_id": actor.actor_id, "evidence_ref": a.evidence_ref,
-            "staffing_change_evidence_ref": a.staffing_change_evidence_ref, "created_at": iso_z(now)}))
+            "value": a.value, "values": a.values, "unit": a.unit, "rationale": a.rationale, "author_id": actor.actor_id, "evidence_ref": _ev(a.evidence_ref),
+            "staffing_change_evidence_ref": _ev(a.staffing_change_evidence_ref), "created_at": iso_z(now)}))
     sc = {"scenario_id": inp.scenario_id, "baseline_version": inp.baseline_version, "discount_rate": inp.discount_rate, "rate_basis": inp.rate_basis,
           "rate_conversion_assumption_id": inp.rate_conversion_assumption_id, "horizon_periods": inp.horizon_periods, "status": "draft",
           "initiative_ids": list(dict.fromkeys(inp.initiative_ids)), "pinned_assumption_ids": list(dict.fromkeys(inp.pinned_assumption_ids)), "created_at": iso_z(now)}
@@ -447,16 +470,18 @@ def build_cash_flows(conn: Conn, req: Any, actor: Actor) -> Outcome:
     for i, c in enumerate(inp.costs):
         items.append((f"input.costs[{i}]", "cost_items", {
             "cost_id": c.cost_id or _new_id("c"), "initiative_id": c.initiative_id, "cost_key": c.cost_key, "cost_type": c.cost_type, "cost_basis": c.cost_basis,
-            "amount": c.amount, "period_index": c.period_index, "start_period": c.start_period, "end_period": c.end_period, "baseline_version": c.baseline_version}))
+            "amount": c.amount, "period_index": c.period_index, "start_period": c.start_period, "end_period": c.end_period, "baseline_version": c.baseline_version,
+            "recorded_at": iso_z(now)}))
     for i, b in enumerate(inp.benefits):
         items.append((f"input.benefits[{i}]", "benefit_items", {
             "benefit_id": b.benefit_id or _new_id("b"), "initiative_id": b.initiative_id, "benefit_type": b.benefit_type, "amount": b.amount, "period_index": b.period_index,
             "starts_period": b.starts_period, "unit": b.unit or ("hours" if b.benefit_type == "capacity" else "USD"), "cash_realisation": b.cash_realisation,
-            "evidence_ref": b.evidence_ref, "benefit_source_key": b.benefit_source_key, "baseline_trend_per_period": b.baseline_trend_per_period}))
+            "evidence_ref": _ev(b.evidence_ref), "benefit_source_key": b.benefit_source_key, "baseline_trend_per_period": b.baseline_trend_per_period,
+            "recorded_at": iso_z(now)}))
     rej = _check_all(v, items)
     if rej:
         raise _rejections(rej)
-    _insert(conn, items, actor)
+    _insert(conn, items, actor, now)
     expanded = []
     for iid in sc["initiative_ids"]:
         for c in sorted((c for c in v.acc["cost_items"] if c["initiative_id"] == iid and c["cost_basis"] == "planned"), key=lambda c: c["cost_id"]):
@@ -585,13 +610,8 @@ def plan_roadmap(conn: Conn, req: Any, actor: Actor) -> Outcome:
         feas = feasible_starts({i["initiative_id"]: i for i in v.acc["initiatives"]}, v.acc["dependencies"])
     except DomainError as err:
         raise _domain(err, "input.dependencies") from None
-    schedule = {}
-    for iid in sorted(feas):
-        i = by_id[iid]
-        fs, bind = feas[iid]
-        schedule[iid] = {"requested_start": i["requested_start_period"], "duration_periods": i["duration_periods"], "dependency_feasible_start": fs,
-                         "dependency_delay": fs - i["requested_start_period"], "binding_dependency_id": bind, "finish": fs + i["duration_periods"],
-                         "resource_constrained_start": fs, "resource_delay": 0}
+    plan_ctx = Ctx(v.pop, _now())
+    schedule = {iid: initiative_roadmap(plan_ctx, feas, iid) for iid in sorted(feas)}
     audits.append(Audit("roadmap", "roadmap", "plan-roadmap", None, None, None, {"dependencies": len(inp.dependencies), "allocations": len(inp.allocations),
                                                                                  "schedule_changes": sorted(changed)}))
     version = max([ver + 1 for _, _, ver in changed.values()], default=1)
@@ -630,20 +650,26 @@ def select_scenario(conn: Conn, req: Any, actor: Actor) -> Outcome:
     explanation = (inp.residual_explanation or "").strip()
     if dc["explanation_required"] and not explanation:
         _refusal(actor, req, "select-scenario", "scenario", inp.scenario_id, "DOUBLE_COUNT_UNEXPLAINED", f"residual {dc['residual']} has no explanation")
-        raise _invalid("DOUBLE_COUNT_UNEXPLAINED", f"the double-count residual is {dc['residual']} USD and must be explained on the portfolio before a scenario can be proposed",
-                       "input.residual_explanation", {"residual": dc["residual"], "overlaps": dc["overlaps"]})
-    comparison = {"compared_scenario_ids": compared, "as_of": iso_z(now), "scenarios": {
-        sid: {"npv_total": s["npv_total"], "residual": s["double_count"]["residual"], "status": s["status"],
+        raise _invalid("DOUBLE_COUNT_UNEXPLAINED", f"the double-count residual is {dc['residual']} USD and {dc['hours_residual']} hours (explain: "
+                       f"{' and '.join(dc['explanation_required_for'])}) and must be explained on the portfolio before a scenario can be proposed",
+                       "input.residual_explanation", {"residual": dc["residual"], "hours_residual": dc["hours_residual"], "overlaps": dc["overlaps"],
+                                                      "hours_overlaps": dc["hours_overlaps"]})
+    if explanation and len(explanation) < MIN_EXPLANATION:
+        raise _invalid("EXPLANATION_TOO_SHORT", f"an explanation says what the shared claim is and why it is counted once: at least {MIN_EXPLANATION} characters "
+                       f"(got {len(explanation)})", "input.residual_explanation", {"minimum": MIN_EXPLANATION, "length": len(explanation)})
+    resolved = snapshot_hash(Ctx(pop, now, None, compared), next(sv for sv in pop.acc["scenario_versions"] if sv["scenario_id"] == inp.scenario_id))
+    comparison = {"compared_scenario_ids": compared, "as_of": iso_z(now), "snapshot_hash": resolved, "scenarios": {
+        sid: {"npv_total": s["npv_total"], "residual": s["double_count"]["residual"], "hours_residual": s["double_count"]["hours_residual"], "status": s["status"],
               "initiatives": {iid: {"npv": b["npv"]["value"], "simple_payback": b["payback"]["simple"]["period"],
                                     "discounted_payback": b["payback"]["discounted"]["period"]} for iid, b in s["initiatives"].items()}}
         for sid, s in metrics["scenarios"].items()}, "label": "estimates"}
-    conn.execute("UPDATE scenario_versions SET status = 'proposed', proposed_at = %s, proposed_by = %s, comparison = %s, residual_explanation = %s WHERE scenario_id = %s",
-                 (now, actor.actor_id, Jsonb(comparison), explanation or None, inp.scenario_id))
+    conn.execute("UPDATE scenario_versions SET status = 'proposed', proposed_at = %s, proposed_by = %s, comparison = %s, residual_explanation = %s, snapshot_hash = %s "
+                 "WHERE scenario_id = %s", (now, actor.actor_id, Jsonb(comparison), explanation or None, resolved, inp.scenario_id))
     warns = [_warning("PROPOSAL_NOT_FUNDING", "a proposal; nothing here funds anything", "result.status")]
     if dc["explanation_required"]:
-        warns.append(_warning("RESIDUAL_EXPLAINED", f"residual {dc['residual']} USD accepted with the stated explanation", "input.residual_explanation"))
+        warns.append(_warning("RESIDUAL_EXPLAINED", f"residual {dc['residual']} USD and {dc['hours_residual']} hours accepted with the stated explanation", "input.residual_explanation"))
     return Outcome("proposed", {"scenario_id": inp.scenario_id, "status": "proposed", "funded": False, "proposed_by": actor.actor_id, "proposed_at": iso_z(now),
-                                "double_count": dc, "residual_explanation": explanation or None, "comparison": comparison},
+                                "double_count": dc, "residual_explanation": explanation or None, "snapshot_hash": resolved, "comparison": comparison},
                    1, warns, Audit("scenario", inp.scenario_id, "select-scenario", None, None, explanation or None, {"compared": compared, "residual": dc["residual"]}))
 
 
@@ -654,21 +680,21 @@ def record_adoption(conn: Conn, req: Any, actor: Actor) -> Outcome:
     may travel with it but is a separate series and is never substituted for adoption."""
     inp = req.input
     now = _now()
-    _lock_initiatives(conn, [inp.initiative_id])
-    at = _plain_date(inp.observed_on, now, "input.observed_on") if inp.observed_on else now
+    ini = _lock_initiatives(conn, [inp.initiative_id])[inp.initiative_id]
     pop = db.load_population(conn)
+    at = _observed_on(inp.observed_on, now, "input.observed_on", ini, pop.config)
     v = Validator(pop)
     items: list[tuple[str, str, dict[str, Any]]] = [("input", "adoption_observations", {
         "observation_id": _new_id("ad"), "initiative_id": inp.initiative_id, "eligible_count": inp.eligible_count, "adopted_count": inp.adopted_count,
-        "observed_at": iso_z(at), "eligibility_rule_version": inp.eligibility_rule_version})]
+        "observed_at": iso_z(at), "eligibility_rule_version": inp.eligibility_rule_version, "recorded_at": iso_z(now)})]
     if inp.training is not None:
         items.append(("input.training", "training_completions", {"training_id": _new_id("tc"), "initiative_id": inp.initiative_id,
                                                                  "eligible_trainees": inp.training.eligible_trainees, "completed": inp.training.completed,
-                                                                 "recorded_at": iso_z(at), "eligibility_rule_version": inp.eligibility_rule_version}))
+                                                                 "recorded_at": iso_z(at), "eligibility_rule_version": inp.eligibility_rule_version, "entered_at": iso_z(now)}))
     rej = _check_all(v, items)
     if rej:
         raise _rejections(rej)
-    _insert(conn, items, actor)
+    _insert(conn, items, actor, now)
     ctx = _ctx(v.pop, _now())
     ad = adoption_metric(ctx, inp.initiative_id)
     tr = training_metric(ctx, inp.initiative_id, ad["adoption_rate"])
@@ -699,18 +725,19 @@ def track_benefits(conn: Conn, req: Any, actor: Actor) -> Outcome:
                      (inp.benefit_id,)).fetchone()
     if b is None:
         raise _err(404, "NOT_FOUND", "UNKNOWN_BENEFIT", f"benefit {inp.benefit_id!r} does not exist", "input.benefit_id")
-    _lock_initiatives(conn, [b["initiative_id"]])
+    ini = _lock_initiatives(conn, [b["initiative_id"]])[b["initiative_id"]]
     if inp.unit != b["unit"]:
         raise _invalid("BENEFIT_TYPE_MISMATCH", f"{inp.benefit_id} is a {b['benefit_type']} benefit measured in {b['unit']}; an observation in {inp.unit} is a different type "
                        "and is never added or compared", "input.unit", {"benefit_type": b["benefit_type"], "unit": b["unit"]})
-    at = _plain_date(inp.observed_on, now, "input.observed_on") if inp.observed_on else now
     pop = db.load_population(conn)
+    at = _observed_on(inp.observed_on, now, "input.observed_on", ini, pop.config)
     v = Validator(pop)
-    row = {"benefit_observation_id": _new_id("bo"), "benefit_id": inp.benefit_id, "measured_value": inp.measured_value, "evidence_ref": inp.evidence_ref, "observed_at": iso_z(at)}
+    row = {"benefit_observation_id": _new_id("bo"), "benefit_id": inp.benefit_id, "measured_value": inp.measured_value, "evidence_ref": _ev(inp.evidence_ref),
+           "observed_at": iso_z(at), "recorded_at": iso_z(now)}
     rej = _check_all(v, [("input", "benefit_observations", row)])
     if rej:
         raise _rejections(rej)
-    insert_row(conn, "benefit_observations", row, by=actor.actor_id)
+    insert_row(conn, "benefit_observations", row, by=actor.actor_id, at=now)
     when = _now()
     metrics, _ = compute(v.pop, when, None, None)
     iid = b["initiative_id"]
@@ -741,7 +768,7 @@ def revise_forecast(conn: Conn, req: Any, actor: Actor) -> Outcome:
             raise _invalid("DUPLICATE_PERIOD", f"period {p} appears twice", f"input.periods[{i}].period_index")
     ini = _lock_initiatives(conn, [inp.initiative_id], exclusive=True)[inp.initiative_id]
     n = conn.execute("SELECT coalesce(max(version_number), 0) AS n FROM forecast_versions WHERE initiative_id = %s", (inp.initiative_id,)).fetchone()["n"]
-    if inp.expected_version is not None and inp.expected_version != n:
+    if inp.expected_version != n:                       # R9-22: the version the caller last read is always named (0: no forecast yet)
         raise _conflict("STALE_FORECAST_VERSION", f"the latest forecast is version {n}, not {inp.expected_version}", "input.expected_version", {"current": n, "requested": inp.expected_version})
     pop = db.load_population(conn)
     v = Validator(pop)
@@ -751,6 +778,12 @@ def revise_forecast(conn: Conn, req: Any, actor: Actor) -> Outcome:
     rej = _check_all(v, items)
     if rej:
         raise _rejections(rej)
+    if n:                                               # R9-10: a revision restates every period of the original, so its total is comparable with it
+        original = {r["period_index"] for r in conn.execute("SELECT period_index FROM forecast_versions WHERE initiative_id = %s AND version_number = 1", (inp.initiative_id,)).fetchall()}
+        missing = sorted(original - set(pers))
+        if missing:
+            raise _invalid("REVISION_PERIODS_INCOMPLETE", f"a revision covers every period of the original forecast; periods {missing} are missing",
+                           "input.periods", {"missing_periods": missing, "original_periods": sorted(original)})
     _insert(conn, items, actor)
     fc = forecast_metric(_ctx(v.pop, _now()), inp.initiative_id)
     assert fc is not None

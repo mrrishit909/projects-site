@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T07:53:13Z",
+  "updated_at": "2026-10-27T08:33:31Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -271,7 +271,7 @@
         "at": "2026-10-27T02:46:45Z"
       },
       "notes": [
-        "spec 09-changeworks.md hash 7ae9dea5\u2026 verified at pack commit fe5f7981; 10-retentionlab.md hash 6784f44e\u2026 verified too; contracts D-01..D-04 written by the coordinator"
+        "spec 09-changeworks.md hash 7ae9dea5… verified at pack commit fe5f7981; 10-retentionlab.md hash 6784f44e… verified too; contracts D-01..D-04 written by the coordinator"
       ],
       "fixture": {
         "commit": "fd2ca25",
@@ -331,7 +331,7 @@
         "at": "2026-10-27T02:49:00Z"
       },
       "notes": [
-        "spec 10-retentionlab.md hash 6784f44e\u2026 verified at pack commit fe5f7981; contracts D-01..D-04 written by the coordinator"
+        "spec 10-retentionlab.md hash 6784f44e… verified at pack commit fe5f7981; contracts D-01..D-04 written by the coordinator"
       ],
       "fixture": {
         "commit": "f736858",
@@ -366,7 +366,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 08: live check on d58209f; A-080 artifacts hand-back -> verify -> commit -> CI -> complete. Project 09: A-078 fix hand-back -> verify -> commit -> CI -> republish -> live check -> case study 'then fixed' -> artifacts worker. Project 10: A-079 artifacts hand-back -> verify -> commit -> CI -> complete. Then the final report with all ten URLs.",
+    "next_concrete_task": "Project 09: A-078 fixes committed; push, CI poll, then republish labs/changeworks with the case study 'then fixed' paragraph, manifest entry, live check, artifacts worker. Project 10: A-079 artifacts hand-back -> verify -> commit -> CI -> complete. Project 08: A-080 artifacts hand-back -> verify -> commit -> CI -> complete. Then the final report with all ten URLs.",
     "acceptance": "see task-queue.json"
   }
 }

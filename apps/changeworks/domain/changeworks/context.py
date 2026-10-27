@@ -48,14 +48,43 @@ class Ctx:
         ps = [p for p in range(end) if self.period_in_window(p)]
         return (ps[0], ps[-1] + 1) if ps else (0, 0)
 
-    # -- assumptions (D-P9-14): the version the scenario pins, otherwise the latest
+    def observation_visible(self, observed_at: str, stamp: str | None) -> bool:
+        """R9-11: an observation exists at as_of when it happened by then AND was recorded by then (``stamp`` is its server-recorded instant; absent: the event
+        time), and its event time lies in the window."""
+        t = parse_ts(observed_at)
+        if t > self.as_of or (stamp is not None and parse_ts(stamp) > self.as_of):
+            return False
+        return self.ts_in_window(t)
+
+    @staticmethod
+    def stamp_of(row: Row, field: str = "recorded_at") -> str | None:
+        return row.get(field)
+
+    # -- the plan as it was when a scenario was built (R9-01)
+    def created(self, sc: Row) -> datetime:
+        return parse_ts(sc["created_at"])
+
+    def costs(self, sc: Row) -> list[Row]:
+        """The cost rows that existed at the scenario's ``created_at`` (rows with no ``recorded_at`` are part of the loaded world and always do)."""
+        t = self.created(sc)
+        return [c for c in self.acc["cost_items"] if c.get("recorded_at") is None or parse_ts(c["recorded_at"]) <= t]
+
+    def benefits(self, sc: Row) -> list[Row]:
+        t = self.created(sc)
+        return [b for b in self.acc["benefit_items"] if b.get("recorded_at") is None or parse_ts(b["recorded_at"]) <= t]
+
+    # -- assumptions (D-P9-14, R9-01): the version the scenario pins, otherwise the latest that existed when the scenario was created
     def versions(self, iid: str | None, name: str) -> list[Row]:
         return sorted((a for a in self.acc["assumption_versions"] if a["initiative_id"] == iid and a["name"] == name), key=lambda a: a["version_number"])
 
     def pick(self, iid: str, name: str, sc: Row) -> Row | None:
         vs = self.versions(iid, name)
         pinned = [a for a in vs if a["assumption_id"] in sc["pinned_assumption_ids"]]
-        return pinned[-1] if pinned else (vs[-1] if vs else None)
+        if pinned:
+            return pinned[-1]
+        t = self.created(sc)
+        known = [a for a in vs if parse_ts(a["created_at"]) <= t]
+        return known[-1] if known else None
 
     def assumption(self, aid: str) -> Row:
         return next(a for a in self.acc["assumption_versions"] if a["assumption_id"] == aid)

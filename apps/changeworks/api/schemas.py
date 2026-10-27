@@ -340,7 +340,7 @@ class ReviseForecastInput(Strict):
     initiative_id: Id
     reason: Text
     periods: list[PeriodAmountIn] = Field(min_length=1, max_length=1200)
-    expected_version: StrictInt | None = Field(default=None, ge=0)
+    expected_version: StrictInt = Field(ge=0)         # R9-22: the version the caller last read, 0 when there is none: always named
 
 
 def _request(input_model: type[BaseModel], name: str) -> type[Envelope]:

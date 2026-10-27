@@ -9,7 +9,7 @@ from .cashflow import Model, expand_costs
 from .context import Ctx
 from .contract import BENEFIT_TYPES, TARGET_NAME
 from .ingest import Row
-from .numbers import canon, dec, m4, money, mn, p6
+from .numbers import canon, dec, ex, m4, money, mn, p6
 from .timeutil import matured, parse_ts
 
 
@@ -27,7 +27,7 @@ def capacity_released(ctx: Ctx, sc: Row, iid: str) -> dict[str, Any]:
         cap["reason"] = "NO_TARGET_ASSUMPTION"
     else:
         hrs = F(base["volume"]) * (F(base["minutes_per_case"]) - dec(tgt["value"])) / 60
-        cap.update({"hours": m4(hrs), "volume": base["volume"], "baseline_minutes_per_case": base["minutes_per_case"],
+        cap.update({"hours": m4(hrs), "hours_exact": ex(hrs), "volume": base["volume"], "baseline_minutes_per_case": base["minutes_per_case"],
                     "target_minutes_per_case": tgt["value"]})
     return cap
 
@@ -47,7 +47,7 @@ def cost_variance(ctx: Ctx, sc: Row, iid: str) -> dict[str, Any]:
         return cv
 
     def rows(basis: str, version: str | None) -> list[F]:
-        return [a for c in ctx.acc["cost_items"] if c["initiative_id"] == iid and c["cost_basis"] == basis and (version is None or c["baseline_version"] == version)
+        return [a for c in ctx.costs(sc) if c["initiative_id"] == iid and c["cost_basis"] == basis and (version is None or c["baseline_version"] == version)
                 for _, p, a in expand_costs(c, hi) if p >= lo]
     bl = sum(rows("planned", i["baseline_version"]), F(0))
     act_rows = rows("actual", None)
@@ -61,19 +61,24 @@ def cost_variance(ctx: Ctx, sc: Row, iid: str) -> dict[str, Any]:
     return cv
 
 
-def benefit_realization(ctx: Ctx, sc: Row, iid: str, model: Model) -> tuple[dict[str, Any], list[str]]:
+def benefit_realization(ctx: Ctx, sc: Row, iid: str, model: Model) -> tuple[dict[str, Any], list[str], list[str]]:
     """Observed comparable benefit / planned comparable benefit, within ONE type, matured periods with an observation only. Unobserved matured rows
-    are listed, never counted as 0; the baseline trend sits beside the raw change and the page says "observed, not attributed"."""
+    are listed, never counted as 0; the baseline trend sits beside the raw change and the page says "observed, not attributed". An observation counts
+    when it happened and was recorded by as_of (R9-11); one recorded later is listed in ``late``. ``observed_above_trend`` is published only when every
+    compared row carries a recorded trend (R9-13): otherwise it is null and the rows without a trend are listed."""
     H = sc["horizon_periods"]
     realization: dict[str, Any] = {}
     immature: list[str] = []
+    late: list[str] = []
     for t in BENEFIT_TYPES:
-        items = [b for b in ctx.acc["benefit_items"] if b["initiative_id"] == iid and b["benefit_type"] == t and b["period_index"] < H]
+        items = [b for b in ctx.benefits(sc) if b["initiative_id"] == iid and b["benefit_type"] == t and b["period_index"] < H]
         comp: list[tuple[Row, Row]] = []
         unobs: list[str] = []
         for b in sorted(items, key=lambda b: b["benefit_id"]):
-            obs = sorted((o for o in ctx.acc["benefit_observations"] if o["benefit_id"] == b["benefit_id"] and parse_ts(o["observed_at"]) <= ctx.as_of),
-                         key=lambda o: (parse_ts(o["observed_at"]), o["benefit_observation_id"]))
+            mine = [o for o in ctx.acc["benefit_observations"] if o["benefit_id"] == b["benefit_id"] and parse_ts(o["observed_at"]) <= ctx.as_of]
+            late += [o["benefit_observation_id"] for o in mine if o.get("recorded_at") is not None and parse_ts(o["recorded_at"]) > ctx.as_of]
+            obs = sorted((o for o in mine if o.get("recorded_at") is None or parse_ts(o["recorded_at"]) <= ctx.as_of),
+                         key=lambda o: (parse_ts(o["observed_at"]), parse_ts(o.get("recorded_at") or o["observed_at"]), o["benefit_observation_id"]))
             if not matured(ctx.cfg, b["period_index"], ctx.as_of):
                 immature += [o["benefit_observation_id"] for o in obs]
                 continue
@@ -89,12 +94,15 @@ def benefit_realization(ctx: Ctx, sc: Row, iid: str, model: Model) -> tuple[dict
         observed = sum((dec(o["measured_value"]) for _, o in comp), F(0))
         trends = [dec(b["baseline_trend_per_period"]) for b, _ in comp if b["baseline_trend_per_period"] is not None]
         trend = sum(trends, F(0)) if trends else None
+        missing = [b["benefit_id"] for b, _ in comp if b["baseline_trend_per_period"] is None]
         realization[t] = {"unit": "hours" if t == "capacity" else "USD", "comparable_items": [b["benefit_id"] for b, _ in comp],
                           "planned_comparable": money(planned) if comp else None, "observed_comparable": money(observed) if comp else None,
                           "realization": p6(observed / planned) if comp and planned != 0 else None,
-                          "baseline_trend": mn(trend), "observed_above_trend": mn(observed - trend) if trend is not None and comp else None,
+                          "baseline_trend": mn(trend),
+                          "observed_above_trend": mn(observed - trend) if trend is not None and comp and not missing else None,
+                          "trend_coverage": {"complete": not missing, "rows_without_trend": missing},
                           "attribution": "observed, not attributed", "matured_unobserved_items": unobs}
-    return realization, sorted(immature)
+    return realization, sorted(immature), sorted(late)
 
 
 def canon_or_none(v: str | None) -> str | None:

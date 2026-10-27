@@ -4,6 +4,7 @@ import psycopg
 import pytest
 
 from api import clock
+from changeworks import run_pipeline
 from api.app import PREFIX
 
 from support_db import (VARIANTS, ADMIN, client, command, conn, count, db_url, flat, get, golden_expected, golden_inputs, load, metrics, SPONSOR,  # noqa: F401
@@ -35,7 +36,8 @@ def test_metrics_endpoint_equals_expected_json_leaf_for_leaf_ingest_included(cli
     assert flat(r["data"]["ingest"]) == flat(want["ingest"])               # counts and the rejected records with their raw rows
     d = r["data"]
     assert (d["empty_population"], d["period_basis"], d["as_of"]) == (want["empty_population"], want["period_basis"], want["as_of"])
-    assert r["meta"]["contract_version"] == 1 and r["meta"]["dataset_version"].startswith("ds-") and r["warnings"] == []
+    assert r["meta"]["contract_version"] == 1 and r["meta"]["dataset_version"].startswith("ds-")
+    assert sorted({w["code"] for w in r["warnings"]}) == sorted({w["code"] for w in run_pipeline(inputs).warnings})          # the domain's own: deployment before the feasible start, a partial trend
     assert set(r["meta"]) == {"dataset_version", "code_sha", "contract_version", "generated_at", "applied_filters", "total_count", "next_cursor", "exclusions"}
 
 
@@ -72,14 +74,20 @@ def test_window_is_half_open_and_says_the_model_is_not_windowed(client, conn):
     load(conn, golden_inputs())
     r = metrics(client, as_of="2028-06-30T00:00:00Z", **{"from": "2027-01-01", "to": "2028-03-31"})          # ad-1 (2027-03-31) in; ad-2 is exactly at `to`: out
     ad = r["data"]["metrics"]["initiatives"]["init-001"]["adoption"]
-    assert [s["observation_id"] for s in ad["series"]] == ["ad-1"] and [w["code"] for w in r["warnings"]] == ["MODEL_NOT_WINDOWED"]
+    assert [s["observation_id"] for s in ad["series"]] == ["ad-1"] and [w["code"] for w in r["warnings"]][0] == "MODEL_NOT_WINDOWED"
+    assert {w["code"] for w in r["warnings"]} == {"MODEL_NOT_WINDOWED", "DEPLOYMENT_BEFORE_FEASIBLE_START"}
     assert r["data"]["window"] == {"from": "2027-01-01T00:00:00Z", "to": "2028-03-31T00:00:00Z"} and r["meta"]["applied_filters"]["from"] == "2027-01-01T00:00:00Z"
     assert r["data"]["metrics"]["scenarios"]["scn-001"]["initiatives"]["init-001"]["npv"]["value"] == "41.32"     # the dated model is not windowed
     only = metrics(client, as_of="2028-06-30T00:00:00Z", **{"from": "2028-01-01"})["data"]["metrics"]["scenarios"]["scn-001"]["initiatives"]["init-002"]["cost_variance"]
     assert only["reason"] == "NO_MATURED_PERIOD" and only["variance"] is None             # a window that starts at period 2 holds no matured period
-    for bad in ({"from": "2028-01-01", "to": "2027-01-01"}, {"from": "2028-01-01", "to": "2028-01-01"}, {"from": "yesterday"}, {"to": "2028-13-01"}, {"as_of": "soon"}):
+    for bad in ({"from": "2028-01-01", "to": "2027-01-01"}, {"from": "yesterday"}, {"to": "2028-13-01"}, {"as_of": "soon"}):
         r = get(client, "/metrics", **bad)
         assert r.status_code == 422 and r.json()["error"]["code"] == "VALIDATION_FAILED", bad
+    # R9-22: from = to is an empty window, here and on the entity reads: no observation, no matured period, and not an error
+    empty = metrics(client, as_of="2028-06-30T00:00:00Z", **{"from": "2028-01-01", "to": "2028-01-01"})["data"]["metrics"]
+    assert empty["initiatives"]["init-001"]["adoption"]["series"] == [] and empty["scenarios"]["scn-001"]["initiatives"]["init-002"]["cost_variance"]["reason"] == "NO_MATURED_PERIOD"
+    none = get(client, "/data/adoption_observations", **{"from": "2028-03-31T00:00:00Z", "to": "2028-03-31T00:00:00Z"})
+    assert none.status_code == 200 and none.json()["data"] == [] and none.json()["meta"]["total_count"] == 0
 
 
 # ------------------------------------------------------------------------------------------------------------ entity reads

@@ -594,7 +594,7 @@
       "project": "09-changeworks",
       "title": "Contracts D-01..D-04, API inventory, site brief, generator spec, scaffold, CI workflow",
       "status": "done",
-      "result": "coordinator-written; spec hash 7ae9dea5\u2026 verified at fe5f7981"
+      "result": "coordinator-written; spec hash 7ae9dea5… verified at fe5f7981"
     },
     {
       "id": "T-09-02",
@@ -625,7 +625,7 @@
       "project": "09-changeworks",
       "title": "Independent disproof review, fixes, republish",
       "status": "in_progress",
-      "assignment": "A-074 review done (14 defects); A-078 fixes"
+      "assignment": "A-074 review done (14 defects); A-078 fixes verified and committed (D-09); republish + live check next"
     },
     {
       "id": "T-09-06",
@@ -638,7 +638,7 @@
       "project": "10-retentionlab",
       "title": "Contracts D-01..D-04, API inventory, site brief, generator spec, scaffold, CI workflow",
       "status": "done",
-      "result": "coordinator-written; spec hash 6784f44e\u2026 verified at fe5f7981"
+      "result": "coordinator-written; spec hash 6784f44e… verified at fe5f7981"
     },
     {
       "id": "T-10-02",

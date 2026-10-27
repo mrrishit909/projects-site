@@ -4,7 +4,7 @@
 import type { Dataset } from "../data/dataset";
 import { ENTITIES, ID_FIELD, type Entity, type Row } from "../domain/contract";
 import { Validator, type Population } from "../domain/ingest";
-import { cmp, cmpNum, dec, div, money, p6, rnd, sumFr, fr, ZERO, mul, type Fr } from "../domain/num";
+import { cmp, cmpNum, dec, div, money, p6, rnd, sumFr, fr, mul, type Fr } from "../domain/num";
 import { scenariosWith } from "./derive";
 
 export interface Claim { id: string; label: string; want: string; got: string; ok: boolean }
@@ -49,22 +49,30 @@ export function designedClaims(ds: Dataset): Claim[] {
       c("overlap periods (count, first, last)", [dc["overlaps"].length, dc["overlaps"][0].period_index, dc["overlaps"][dc["overlaps"].length - 1].period_index], [R["overlap_periods"], R["first_overlap_period"], R["last_overlap_period"]]);
       c("scenarios with a residual", withRes, R["scenarios_with_a_residual"]);
       c("scenarios with no residual", ids.filter((s) => !withRes.includes(s)), R["scenarios_with_no_residual"]);
+      c("scenarios with an hours residual", ids.filter((s) => M["scenarios"][s]["double_count"]["hours_residual"] !== "0.00"), R["scenarios_with_an_hours_residual"]);
+      c("attributable NPV, the sum of the initiative NPVs, the present value that counts twice, hours residual", [M["scenarios"][sid]["npv_total"]["value"], M["scenarios"][sid]["npv_total"]["sum_of_initiatives"], dc["double_counted_pv"], dc["hours_residual"]],
+        [R["npv_total_attributable"], R["npv_sum_of_initiatives"], R["double_counted_pv"], R["hours_residual"]]);
     } else if (d.id === "DR-03") {
       const iid = R["initiative_id"] as string;
       const sids = scenariosWith(ds, iid);
       const rows = sids.map((s) => M["scenarios"][s]["initiatives"][iid] as Row);
       const npvs = sorted(rows.map((b) => b["npv"]["exact"] as string), (a, b) => { const x = a.split("/"), y = b.split("/"); const l = BigInt(x[0]!) * BigInt(y[1] ?? 1), r = BigInt(y[0]!) * BigInt(x[1] ?? 1); return l < r ? -1 : l > r ? 1 : 0; });
-      const planned = acc.cost_items.filter((x) => x["initiative_id"] === iid && x["cost_basis"] === "planned");
-      const cost = sumFr(planned.map((x) => (x["cost_type"] === "one_time" ? dec(x["amount"]) : mul(dec(x["amount"]), fr(x["end_period"] - x["start_period"])))));
-      const ben = rows.length ? sumFr((rows[0]!["cash_flow"] as Row[]).map((r) => dec(r["cash_benefits"]))) : ZERO;
       c("scenarios", sids, R["scenarios"]);
       c("simple payback null in", rows.filter((b) => b["payback"]["simple"]["period"] === null).length, R["scenarios_with_simple_payback_null"]);
       c("discounted payback null in", rows.filter((b) => b["payback"]["discounted"]["period"] === null).length, R["scenarios_with_discounted_payback_null"]);
       const parse = (s: string): Fr => { const [n, dd] = s.split("/"); return fr(BigInt(n!), BigInt(dd ?? 1)); };
       c("NPV lowest and highest", [rnd(parse(npvs[0]!), 2), rnd(parse(npvs[npvs.length - 1]!), 2)], [R["npv_lowest"], R["npv_highest"]]);
-      c("planned cost", rnd(cost, 2), R["planned_cost"]);
-      c("benefits entering the cash flow", rnd(ben, 2), R["benefits_entering_the_cash_flow"]);
-      c("benefit-to-cost ratio", p6(div(ben, cost)), R["benefit_to_cost"]);
+      // every ratio names its scenario (R9-09): the ramp a scenario pins decides which benefits enter its cash flow
+      const per: Row = {};
+      sids.forEach((sid, k) => {
+        const cf = rows[k]!["cash_flow"] as Row[];
+        const cost = sumFr(cf.map((r) => dec(r["costs"]))), ben = sumFr(cf.map((r) => dec(r["cash_benefits"])));
+        per[sid] = { planned_cost: rnd(cost, 2), benefits_entering_the_cash_flow: rnd(ben, 2), benefit_to_cost: p6(div(ben, cost)), npv: rows[k]!["npv"]["value"], ramp_assumption_id: rows[k]!["ramp"] ? rows[k]!["ramp"]["assumption_id"] : null };
+      });
+      c("per scenario: planned cost, benefits entering the cash flow, benefit-to-cost, NPV, ramp pinned", per, R["by_scenario"]);
+      const byRatio: Row = {};
+      for (const [sid, v] of Object.entries(per)) (byRatio[v["benefit_to_cost"]] ?? (byRatio[v["benefit_to_cost"]] = [])).push(sid);
+      c("scenarios by benefit-to-cost value", byRatio, R["scenarios_by_benefit_to_cost"]);
     } else if (d.id === "DR-04") {
       const iid = R["initiative_id"] as string;
       const fc = M["initiatives"][iid]["forecast"] as Row;
@@ -98,10 +106,12 @@ export function designedClaims(ds: Dataset): Claim[] {
       const rid = R["resource_id"] as string;
       const res = M["resources"][rid] as Row;
       const byp = new Map<number, Row>((res["by_period"] as Row[]).map((b) => [b["period_index"], b]));
+      const full = (res["by_period"] as Row[]).filter((b) => b["headroom"] === "0.00").map((b) => b["period_index"] as number).sort(cmpNum); // every period at capacity, not only the designed ones
       const periods = R["periods"] as number[];
       const refused = replayInjections(ds).steps.filter((s) => s.event === "EV-09" && s.kind === "ingest").slice(0, 3);
       c("capacity", res["capacity_per_period"], R["capacity_per_period"]);
-      c("allocated and headroom in the periods", [Object.fromEntries(periods.map((p) => [String(p), byp.get(p)!["allocated"]])), Object.fromEntries(periods.map((p) => [String(p), byp.get(p)!["headroom"]]))], [R["allocated"], R["headroom"]]);
+      c("the full set of periods at capacity", full, periods);
+      c("allocated and headroom in the periods", [Object.fromEntries(periods.map((p) => [String(p), byp.get(p)?.["allocated"]])), Object.fromEntries(periods.map((p) => [String(p), byp.get(p)?.["headroom"]]))], [R["allocated"], R["headroom"]]);
       c("stored overallocated periods", res["overallocated_periods"], R["stored_overallocated_periods"]);
       c("requests refused (count, periods, amounts) when replayed", [refused.length, refused.map((s) => s.details["periods"]?.[0]), refused.map((s) => s.details["requested"])], [R["requests_refused"], R["refused_periods"], R["requested"]]);
       c("initiatives allocated in those periods", [...new Set(acc.resource_allocations.filter((a) => a["resource_id"] === rid && periods.includes(a["period_index"])).map((a) => a["initiative_id"] as string))].sort(cmp), R["initiatives_allocated_in_those_periods"]);

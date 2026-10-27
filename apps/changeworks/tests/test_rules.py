@@ -210,22 +210,37 @@ def test_npv_on_monthly_periods_with_a_declared_monthly_rate_is_exact():
 def test_a_zero_rate_is_allowed_and_npv_is_the_plain_sum():
     r = one(dataset(initiatives=[ini(base=None)], scenario_versions=[sc(rate="0.000000")], cost_items=[cost("c-1", "i-1", "k", "one_time", "100.00", p=0)],
                     benefit_items=[ben("b-1", "i-1", "cash", "60.00", 1), ben("b-2", "i-1", "cash", "60.00", 2)]))
-    assert r["npv"]["exact"] == "20" and r["npv"]["value"] == "20.00" and r["payback"]["simple"] == r["payback"]["discounted"] == {"period": 2, "interpolated": "1.6667"}
+    assert r["npv"]["exact"] == "20" and r["npv"]["value"] == "20.00" and r["payback"]["simple"] == r["payback"]["discounted"] == {"period": 2, "interpolated": "1.6667", "reason": None}
 
 
-def test_payback_cumulative_exactly_zero_counts_and_period_zero_gives_zero():
+def test_payback_cumulative_exactly_zero_counts_and_a_flow_with_no_investment_has_no_payback():
     r = one(dataset(initiatives=[ini(base=None)], scenario_versions=[sc(rate="0.000000")], cost_items=[cost("c-1", "i-1", "k", "one_time", "100.00", p=0)],
                     benefit_items=[ben("b-1", "i-1", "cash", "50.00", 1), ben("b-2", "i-1", "cash", "50.00", 2)]))
-    assert r["payback"]["simple"] == {"period": 2, "interpolated": "2.0000"}
+    assert r["payback"]["simple"] == {"period": 2, "interpolated": "2.0000", "reason": None}          # cumulative -100, -50, exactly 0: back
     r0 = one(dataset(initiatives=[ini(base=None, dep=0)], scenario_versions=[sc(h=2)], benefit_items=[ben("b-1", "i-1", "cash", "50.00", 0)]))
-    assert r0["payback"]["simple"] == {"period": 0, "interpolated": "0.0000"} and r0["payback"]["discounted"] == {"period": 0, "interpolated": "0.0000"}
+    nothing = {"period": None, "interpolated": None, "reason": "NO_INVESTMENT"}                       # R9-12: +50 at t = 0 and no cost: nothing was invested (was 0.0000)
+    assert r0["payback"]["simple"] == nothing and r0["payback"]["discounted"] == nothing and r0["npv"]["value"] == "50.00"
+
+
+def test_payback_is_the_last_crossing_and_a_series_that_ends_negative_has_none():
+    """R9-12 on a scenario of its own: cumulative -100, +20, -60, +10 pays back at 3 (not at 1); -100, +20, -60 ends negative."""
+    dips = one(dataset(initiatives=[ini(base=None)], scenario_versions=[sc(rate="0.000000", h=4)],
+                       cost_items=[cost("c-1", "i-1", "k", "one_time", "100.00", p=0), cost("c-2", "i-1", "k2", "one_time", "80.00", p=2)],
+                       benefit_items=[ben("b-1", "i-1", "cash", "120.00", 1), ben("b-2", "i-1", "cash", "70.00", 3)]))
+    assert [x["cumulative"] for x in dips["cash_flow"]] == ["-100.00", "20.00", "-60.00", "10.00"]
+    assert dips["payback"]["simple"] == {"period": 3, "interpolated": "2.8571", "reason": None}          # 2 + 60/70
+    ends = one(dataset(initiatives=[ini(base=None)], scenario_versions=[sc(rate="0.000000", h=3)],
+                       cost_items=[cost("c-1", "i-1", "k", "one_time", "100.00", p=0), cost("c-2", "i-1", "k2", "one_time", "80.00", p=2)],
+                       benefit_items=[ben("b-1", "i-1", "cash", "120.00", 1)]))
+    assert ends["payback"]["simple"] == {"period": None, "interpolated": None, "reason": "NOT_RECOVERED"}
 
 
 def test_no_flows_means_null_npv_and_paybacks_not_zero():
     r = one(dataset(initiatives=[ini(base=None)], scenario_versions=[sc()]))
     assert r["npv"]["value"] is None and r["npv"]["exact"] is None and r["payback"]["simple"]["period"] is None and r["payback"]["discounted"]["period"] is None
+    assert r["payback"]["simple"]["reason"] == "NO_FLOWS"
     sc_ = run(dataset(initiatives=[ini(base=None)], scenario_versions=[sc()])).metrics["scenarios"]["scn-1"]
-    assert sc_["npv_total"] == {"value": None, "exact": None}
+    assert sc_["npv_total"] == {"value": None, "exact": None, "basis": "attributable", "sum_of_initiatives": None, "sum_of_initiatives_exact": None}
 
 
 def test_negative_cash_flow_never_pays_back_and_the_two_paybacks_can_differ():
@@ -430,3 +445,213 @@ def test_as_of_time_travel_matures_periods_one_at_a_time():
 
 def test_canonical_amount_text():
     assert [canon(x) for x in ("1000.000000", "0.5", "7", "0.125000", "-3.10", "12.340000")] == ["1000.00", "0.50", "7.00", "0.125", "-3.10", "12.34"]
+
+
+# ------------------------------------------------------------------------------------------------------------------ review 9 (contract D-09)
+def _with(row, **kw):
+    return {**row, **kw}
+
+
+def test_a_scenario_is_built_on_the_plan_and_assumptions_that_existed_when_it_was_created():
+    """R9-01: assumption versions and plan rows that came after the scenario do not enter it; a pinned version always does; a later scenario sees them."""
+    base = dict(initiatives=[ini(base=None)],
+                assumption_versions=[_with(asm("a-r1", "i-1", "adoption_ramp", 1, values=["0.500000", "1.000000"]), created_at="2026-01-10T00:00:00Z"),
+                                     _with(asm("a-r2", "i-1", "adoption_ramp", 2, values=["0.100000", "0.200000"]), created_at="2026-02-10T00:00:00Z")],
+                cost_items=[cost("c-1", "i-1", "k", "one_time", "100.00", p=0), _with(cost("c-2", "i-1", "k2", "one_time", "50.00", p=1), recorded_at="2026-02-01T00:00:00Z")],
+                benefit_items=[ben("b-1", "i-1", "cash", "200.00", 1), _with(ben("b-2", "i-1", "cash", "400.00", 2, starts=1), recorded_at="2026-02-01T00:00:00Z")])
+    early = _with(sc("early"), created_at="2026-01-15T00:00:00Z")
+    late = _with(sc("late"), created_at="2026-03-01T00:00:00Z")
+    pinned = _with(sc("pinned", pins=("a-r2",)), created_at="2026-01-15T00:00:00Z")
+    m = run(dataset(scenario_versions=[early, late, pinned], **base)).metrics["scenarios"]
+    e, l, p = (m[k]["initiatives"]["i-1"] for k in ("early", "late", "pinned"))
+    assert e["ramp"]["assumption_id"] == "a-r1" and l["ramp"]["assumption_id"] == "a-r2" and p["ramp"]["assumption_id"] == "a-r2"      # latest by then; latest later; pinned wins
+    assert [r["costs"] for r in e["cash_flow"]] == ["100.00", "0.00", "0.00"] and [r["costs"] for r in l["cash_flow"]] == ["100.00", "50.00", "0.00"]
+    assert [r["cash_benefits"] for r in e["cash_flow"]] == ["0.00", "100.00", "0.00"] and [r["cash_benefits"] for r in l["cash_flow"]] == ["0.00", "20.00", "80.00"]
+    assert e["excluded_from_cash_flow"]["beyond_horizon"] == [] and len(e["expanded_planned_costs"]) == 1 and len(l["expanded_planned_costs"]) == 2
+    nothing = run(dataset(scenario_versions=[_with(sc("before"), created_at="2026-01-01T00:00:00Z")], **base)).metrics["scenarios"]["before"]["initiatives"]["i-1"]
+    assert nothing["ramp"] is None                                                       # no version existed yet: no ramp is invented from the future
+
+
+def test_plan_rows_recorded_later_do_not_move_a_costs_variance_or_a_realization_of_an_earlier_scenario():
+    d = dataset(initiatives=[ini(base="v1")], process_baselines=[pb()], scenario_versions=[_with(sc(h=3), created_at="2026-01-15T00:00:00Z")],
+                cost_items=[cost("c-1", "i-1", "k", "one_time", "100.00", p=0, bv="v1"), cost("c-a", "i-1", "k", "one_time", "100.00", p=0, basis="actual"),
+                            _with(cost("c-2", "i-1", "k2", "one_time", "50.00", p=1, bv="v1"), recorded_at="2027-01-01T00:00:00Z")],
+                benefit_items=[ben("b-1", "i-1", "cash", "300.00", 1, trend="10.00"), _with(ben("b-2", "i-1", "cash", "300.00", 1, trend="10.00"), recorded_at="2027-01-01T00:00:00Z")],
+                benefit_observations=[bo("o-1", "b-1", "250.00"), bo("o-2", "b-2", "100.00")])
+    i = one(d)
+    assert i["cost_variance"]["approved_baseline_cost"] == "100.00" and i["benefit_realization"]["cash"]["comparable_items"] == ["b-1"]
+
+
+def test_the_portfolio_npv_counts_a_shared_claim_once_at_the_largest_claim_discounted_in_its_own_period():
+    """R9-02: three initiatives claim one source in periods 1 and 2: 100 / 150 / 70 and 40 / 40 / 10. Counted once at the largest."""
+    inis = ["i-1", "i-2", "i-3"]
+    d = dataset(initiatives=[ini(i) for i in inis], scenario_versions=[sc(inis=inis, rate="0.100000", h=3)],
+                cost_items=[cost(f"c-{i}", i, "k", "one_time", "10.00", p=0) for i in inis],
+                benefit_items=[ben(f"b-{i}-{p}", i, "cash", str(a), p, starts=1, key="src") for i, p, a in (("i-1", 1, 100), ("i-2", 1, 150), ("i-3", 1, 70), ("i-1", 2, 40), ("i-2", 2, 40), ("i-3", 2, 10))])
+    s = run(d).metrics["scenarios"]["scn-1"]
+    dc = s["double_count"]
+    assert (dc["planned_benefits"], dc["residual"], dc["attributable_benefits"]) == ("410.00", "220.00", "190.00")             # 320 + 90 claimed, kept 150 + 40, removed 170 + 50
+    pv = F(100 + 70, 1) / F(11, 10) + F(40 + 10, 1) / F(11, 10) ** 2                                                  # the removed claims: 170 in period 1, 50 in period 2 (the first of the equal 40s is kept)
+    assert F(dc["double_counted_pv_exact"]) == pv and dc["double_counted_amount"] == dc["residual"] == "220.00"
+    total = sum(F(b["npv"]["exact"]) for b in s["initiatives"].values())
+    assert F(s["npv_total"]["exact"]) == total - pv and s["npv_total"]["sum_of_initiatives"] == money_of(total)
+    assert dc["double_counted_by_class_exact"]["cash"] == "220"                                                       # 170 + 50 removed, all of it cash
+    assert [c["initiative_id"] for c in dc["overlaps"][1]["claims"]] == ["i-1", "i-2", "i-3"] and dc["overlaps"][1]["counted_once"] == "40.00"
+
+
+def money_of(x):
+    from changeworks.numbers import money
+    return money(x)
+
+
+def test_a_claim_that_does_not_enter_the_cash_flow_is_removed_from_the_amount_but_not_from_the_npv():
+    """R9-02: avoided cost that no budget line removed is beside the cash flow; if it is the removed claim it counts twice in the amount and never in the NPV."""
+    d = dataset(initiatives=[ini("i-1"), ini("i-2")], scenario_versions=[sc(inis=["i-1", "i-2"], rate="0.000000", h=3)],
+                benefit_items=[ben("b-1", "i-1", "avoided_cost", "100.00", 1, real=False, key="src"), ben("b-2", "i-2", "cash", "300.00", 1, key="src")])
+    s = run(d).metrics["scenarios"]["scn-1"]
+    assert s["double_count"]["residual"] == "100.00" and s["double_count"]["double_counted_pv"] == "0.00"                                 # the 100 beside the flow never was in the NPV
+    assert s["npv_total"]["value"] == s["npv_total"]["sum_of_initiatives"] == "300.00" and s["double_count"]["double_counted_by_class"]["avoided_cost_beside"] == "100.00"
+
+
+def test_hours_claimed_twice_are_a_second_residual_and_the_released_hours_total_counts_them_once():
+    """R9-03: money and hours are separate rules; either one needs the explanation; the pooled released hours count the shared team once, at the larger figure."""
+    d = dataset(initiatives=[ini("i-1"), ini("i-2"), ini("i-3")], process_baselines=[pb("i-1", vol=1200, mins=10), pb("i-2", vol=600, mins=10), pb("i-3", vol=60, mins=10)],
+                assumption_versions=[asm(f"a-{k}", f"i-{k}", "target_minutes_per_case", value="8") for k in (1, 2, 3)],
+                scenario_versions=[sc(inis=["i-1", "i-2", "i-3"], h=3)],
+                benefit_items=[ben("b-1", "i-1", "capacity", "40.00", 1, key="team"), ben("b-2", "i-2", "capacity", "60.00", 1, key="team"), ben("b-3", "i-3", "capacity", "5.00", 1, key="team")])
+    r = run(d)
+    dc = r.metrics["scenarios"]["scn-1"]["double_count"]
+    assert (dc["residual"], dc["planned_hours"], dc["attributable_hours"], dc["hours_residual"], dc["explanation_required"], dc["explanation_required_for"]) == \
+        ("0.00", "105.00", "60.00", "45.00", True, ["hours"]) and dc["hours_overlaps"][0]["counted_once"] == "60.00" and len(dc["hours_overlaps"][0]["claims"]) == 3
+    s = r.metrics["summary"]                                                                    # released per period: 40 + 20 + 2 hours; the three share a team: counted once, at 40
+    assert (s["capacity_released_hours_total"], s["capacity_released_hours_double_counted"], s["hours_residual"]) == ("40.0000", "22.0000", "45.00")
+    apart = dataset(initiatives=[ini("i-1"), ini("i-2")], process_baselines=[pb("i-1"), pb("i-2")], assumption_versions=[asm("a-1", "i-1", "target_minutes_per_case", value="8"),
+                    asm("a-2", "i-2", "target_minutes_per_case", value="8")], scenario_versions=[sc(inis=["i-1", "i-2"], h=3)],
+                    benefit_items=[ben("b-1", "i-1", "capacity", "40.00", 1, key="team"), ben("b-2", "i-2", "capacity", "60.00", 2, key="team")])          # the same team in different periods
+    assert run(apart).metrics["scenarios"]["scn-1"]["double_count"]["hours_residual"] == "0.00" and run(apart).metrics["summary"]["capacity_released_hours_double_counted"] == "0.0000"
+
+
+@pytest.mark.parametrize("blank", ["", "   ", "\t\n", "　", "   "])
+def test_blank_evidence_is_refused_everywhere_an_evidence_reference_is_given(blank):
+    """R9-04 (Python strip() whitespace, the ideographic space included)."""
+    d = dataset(initiatives=[ini()], assumption_versions=[_with(asm("a-1", "i-1", "capacity_hourly_rate", value="30.00"), staffing_change_evidence_ref=blank),
+                                                          _with(asm("a-2", "i-1", "target_minutes_per_case", value="8"), evidence_ref=blank)],
+                benefit_items=[ben("b-1", "i-1", "avoided_cost", "10.00", 1, real=True, ev=blank)], process_baselines=[_with(pb(), evidence_ref=blank)],
+                benefit_observations=[_with(bo("o-1", "b-1", "1.00"), evidence_ref=blank)])
+    got = codes(d)
+    assert got[("assumption_versions", "a-1")] == got[("assumption_versions", "a-2")] == got[("benefit_items", "b-1")] == got[("process_baselines", "pb-i-1-v1")] == "EVIDENCE_REQUIRED"
+    assert got[("benefit_observations", "o-1")] == "DEPENDENT_REJECTED"                         # its benefit was refused; on its own it is refused for the same reason
+    assert codes(dataset(initiatives=[ini()], benefit_items=[ben("b-1", "i-1", "cash", "1.00", 1)], benefit_observations=[_with(bo("o-1", "b-1", "1.00"), evidence_ref=blank)])) == \
+        {("benefit_observations", "o-1"): "EVIDENCE_REQUIRED"}
+
+
+def test_the_cash_flow_tests_the_stripped_evidence_even_for_a_population_that_skipped_ingest():
+    """Defence in depth: rows that reach the calculation without the validator (an old database) still cannot use '   ' as evidence."""
+    d = dataset(initiatives=[ini(base=None)], scenario_versions=[sc(h=3)], assumption_versions=[asm("a-c", "i-1", "capacity_hourly_rate", value="40.00", staff="  ")],
+                benefit_items=[ben("b-1", "i-1", "avoided_cost", "999.00", 1, real=True, ev="   "), ben("b-2", "i-1", "capacity", "10.00", 1)])
+    pop = validate_batch({**d, "assumption_versions": [], "benefit_items": []}).population
+    pop.acc["assumption_versions"], pop.acc["benefit_items"] = d["assumption_versions"], d["benefit_items"]
+    from changeworks import compute
+    from changeworks.timeutil import parse_ts
+    i = compute(pop, parse_ts("2028-06-30T00:00:00Z"))[0]["scenarios"]["scn-1"]["initiatives"]["i-1"]
+    assert [x["reason"] for x in i["excluded_from_cash_flow"]["avoided_cost_beside"]] == ["NO_EVIDENCE_REF"] and i["converted_capacity"] == []
+
+
+def test_a_cost_key_is_one_kind_of_cost_for_an_initiative_and_a_basis():
+    """R9-05."""
+    d = dataset(initiatives=[ini(), ini("i-2")], cost_items=[cost("c-1", "i-1", "k", "one_time", "100.00", p=0), cost("c-2", "i-1", "k", "recurring", "10.00", s=1, e=3),
+                                                             cost("c-3", "i-1", "k", "recurring", "10.00", s=1, e=3, basis="actual"), cost("c-4", "i-2", "k", "recurring", "10.00", s=1, e=3),
+                                                             cost("c-5", "i-1", "k", "recurring", "10.00", s=3, e=5, basis="actual")])
+    assert codes(d) == {("cost_items", "c-2"): "COST_KEY_BASIS_CONFLICT"}                       # another basis and another initiative are free; recurring tranches of one key are fine
+    r = validate_batch(d).rejected[0]
+    assert r.details == {"first_cost_id": "c-1", "first_cost_type": "one_time", "this_cost_type": "recurring", "cost_key": "k", "cost_basis": "planned"}
+
+
+@pytest.mark.parametrize("start", ["2026-01-29", "2026-01-31", "2026-02-30", "2026-13-01", "26-01-01", "2026-1-1", "", "soon", None, 20260101])
+def test_a_period_start_with_a_day_over_28_or_not_a_date_is_refused_cleanly(start):
+    """R9-14: PERIOD_START_INVALID, not a crash somewhere in the calendar."""
+    d = dataset(initiatives=[ini()], scenario_versions=[sc()])
+    d["period_start"] = start
+    with pytest.raises(DomainError) as e:
+        run(d)
+    assert e.value.code == "PERIOD_START_INVALID"
+
+
+def test_a_period_start_of_the_28th_is_fine_in_every_month():
+    d = dataset("monthly", initiatives=[ini(base=None)], scenario_versions=[sc(rate="0.010000", basis="monthly", h=14)], cost_items=[cost("c-1", "i-1", "k", "one_time", "1.00", p=0)])
+    d["period_start"] = "2026-01-28"
+    rows = one(d)["cash_flow"]
+    assert [r["period_start"] for r in rows][:3] == ["2026-01-28", "2026-02-28", "2026-03-28"] and rows[13]["period_start"] == "2027-02-28"
+
+
+def test_an_error_rate_outside_0_1_is_invalid_field_and_a_negative_volume_is_invalid_amount():
+    """R9-22."""
+    assert codes(dataset(initiatives=[ini()], process_baselines=[_with(pb(), error_rate="1.500000")])) == {("process_baselines", "pb-i-1-v1"): "INVALID_FIELD"}
+    r = validate_batch(dataset(initiatives=[ini()], process_baselines=[_with(pb(), error_rate="1.500000")])).rejected[0]
+    assert r.details == {"field": "error_rate", "reason": "a proportion in [0, 1]"}
+    assert codes(dataset(initiatives=[ini()], process_baselines=[_with(pb(), volume=-1)])) == {("process_baselines", "pb-i-1-v1"): "INVALID_AMOUNT"}
+
+
+def test_observations_count_when_recorded_and_a_same_day_tie_goes_to_the_later_record():
+    """R9-11."""
+    d = dataset(initiatives=[ini()], adoption_observations=[ad("a-1", "i-1", 40, 10, "2028-03-31T00:00:00Z"),
+                                                          _with(ad("a-2", "i-1", 40, 20, "2028-03-31T00:00:00Z"), recorded_at="2028-04-01T00:00:00Z"),
+                                                          _with(ad("a-3", "i-1", 40, 30, "2028-03-31T00:00:00Z"), recorded_at="2028-07-05T00:00:00Z")],
+                training_completions=[tc("t-1", "i-1", 40, 38, "2028-03-31T00:00:00Z"), _with(tc("t-2", "i-1", 40, 40, "2028-03-31T00:00:00Z"), entered_at="2028-07-05T00:00:00Z")])
+    m = run(d, as_of="2028-06-30T00:00:00Z").metrics["initiatives"]["i-1"]
+    assert (m["adoption"]["latest_observation_id"], m["adoption"]["adoption_rate"], m["adoption"]["late_recorded"]) == ("a-2", "0.500000", ["a-3"])
+    assert (m["training"]["training_id"], m["training"]["late_recorded"]) == ("t-1", ["t-2"])
+    later = run(d, as_of="2028-07-06T00:00:00Z").metrics["initiatives"]["i-1"]
+    assert (later["adoption"]["latest_observation_id"], later["adoption"]["late_recorded"], later["training"]["training_id"]) == ("a-3", [], "t-2")
+    with_window = run(d, as_of="2028-07-06T00:00:00Z", window=(datetime(2028, 4, 1, tzinfo=UTC), None)).metrics["initiatives"]["i-1"]
+    assert with_window["adoption"]["series"] == []                                             # the window still applies to the event time
+
+
+def test_partial_trend_coverage_withholds_observed_above_trend_and_lists_the_rows():
+    """R9-13."""
+    d = dataset(initiatives=[ini(base=None)], scenario_versions=[sc(h=3)], benefit_items=[ben("b-1", "i-1", "cash", "100.00", 1, trend="10.00"), ben("b-2", "i-1", "cash", "100.00", 1, trend=None)],
+                benefit_observations=[bo("o-1", "b-1", "90.00", "2027-06-30T00:00:00Z"), bo("o-2", "b-2", "80.00", "2027-06-30T00:00:00Z")])
+    r = run(d)
+    cash = r.metrics["scenarios"]["scn-1"]["initiatives"]["i-1"]["benefit_realization"]["cash"]
+    assert (cash["baseline_trend"], cash["observed_above_trend"], cash["trend_coverage"]) == ("10.00", None, {"complete": False, "rows_without_trend": ["b-2"]})
+    w = [x for x in r.warnings if x["code"] == "PARTIAL_TREND_COVERAGE"]
+    assert len(w) == 1 and w[0]["rows"] == ["b-2"] and w[0]["path"].endswith("benefit_realization.cash")
+    full = run({**d, "benefit_items": [_with(b, baseline_trend_per_period="10.00") for b in d["benefit_items"]]})
+    cash = full.metrics["scenarios"]["scn-1"]["initiatives"]["i-1"]["benefit_realization"]["cash"]
+    assert cash["observed_above_trend"] == "150.00" and cash["trend_coverage"]["complete"] and not [x for x in full.warnings if x["code"] == "PARTIAL_TREND_COVERAGE"]
+    none = run({**d, "benefit_items": [_with(b, baseline_trend_per_period=None) for b in d["benefit_items"]]})
+    assert none.metrics["scenarios"]["scn-1"]["initiatives"]["i-1"]["benefit_realization"]["cash"]["observed_above_trend"] is None and not none.warnings
+
+
+def test_aggregates_are_exact_sums_rounded_once():
+    """R9-07: three 0.004-hour rows are 0.012 hours, not 0.00; two exposures of 0.005 are 0.010, not 0.02; the forecast difference is of exact totals."""
+    d = dataset(initiatives=[ini(base=None), ini("i-2", base=None)], scenario_versions=[sc(inis=["i-1", "i-2"], h=4)],
+                benefit_items=[ben(f"b-{k}", "i-1", "capacity", "0.004", k, starts=1) for k in (1, 2, 3)] + [ben(f"a-{k}", "i-2", "avoided_cost", "0.004", k, starts=1, real=False) for k in (1, 2, 3)],
+                risk_items=[risk("r-1", "i-1", "0.005000", "1.00"), risk("r-2", "i-2", "0.005000", "1.00")],
+                forecast_versions=[fc("i-1", 1, 1, "100.004"), fc("i-1", 1, 2, "100.004"), fc("i-1", 2, 1, "100.002", at="2026-02-01T00:00:00Z"), fc("i-1", 2, 2, "100.002", at="2026-02-01T00:00:00Z")])
+    m = run(d).metrics
+    blk = m["scenarios"]["scn-1"]["initiatives"]
+    assert blk["i-1"]["excluded_from_cash_flow"]["capacity_hours_not_converted"] == "0.01" and blk["i-2"]["excluded_from_cash_flow"]["avoided_cost_beside_total"] == "0.01"
+    assert [x["hours"] for x in blk["i-1"]["excluded_from_cash_flow"]["capacity_not_converted"]] == ["0.00"] * 3          # each row shown as it is, the total is not their sum
+    assert m["summary"]["risk_exposure_total"] == "0.01" and (m["initiatives"]["i-1"]["risk"]["risk_exposure"], m["initiatives"]["i-2"]["risk"]["risk_exposure"]) == ("0.01", "0.01")
+    f = m["initiatives"]["i-1"]["forecast"]
+    assert (f["versions"][0]["total"], f["versions"][1]["total"]) == ("200.01", "200.00")
+    assert f["latest_minus_original"] == "-0.00"[1:]                      # 200.004 - 200.008 = -0.004: the exact difference rounds to 0.00 (the totals as shown would say -0.01)
+
+
+def test_a_revision_must_restate_the_original_periods_to_have_a_difference_and_the_preserved_flag_is_read_from_the_rows():
+    """R9-10: a partial revision has no difference (null), a missing version 1 is not a preserved original."""
+    d = dataset(initiatives=[ini()], forecast_versions=[fc("i-1", 1, 1, "600.00"), fc("i-1", 1, 2, "600.00"), fc("i-1", 2, 2, "550.00", at="2026-02-01T00:00:00Z")])
+    f = run(d).metrics["initiatives"]["i-1"]["forecast"]
+    assert (f["revisions_cover_original_periods"], f["latest_minus_original"], f["original_preserved"]) == (False, None, True)
+    d = dataset(initiatives=[ini()], forecast_versions=[fc("i-1", 2, 1, "600.00")])
+    f = run(d).metrics["initiatives"]["i-1"]["forecast"]
+    assert (f["original_version"], f["original_preserved"]) == (2, False)
+
+
+def test_deployment_before_the_feasible_start_is_a_warning_on_the_roadmap_and_in_the_warnings_list():
+    """R9-06: i-2 deploys at 1 but its prerequisite finishes at 3."""
+    d = dataset(initiatives=[ini("i-1", dur=3), ini("i-2", dep=1)], dependencies=[dep("d-1", "i-2", "i-1")])
+    r = run(d)
+    assert r.metrics["initiatives"]["i-2"]["roadmap"]["warnings"] == [{"code": "DEPLOYMENT_BEFORE_FEASIBLE_START", "deployment_period": 1, "dependency_feasible_start": 3, "periods_early": 2}]
+    assert r.metrics["initiatives"]["i-1"]["roadmap"]["warnings"] == [] and [w["code"] for w in r.warnings] == ["DEPLOYMENT_BEFORE_FEASIBLE_START"]

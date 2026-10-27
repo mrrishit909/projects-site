@@ -1,14 +1,14 @@
 # ChangeWorks (project 09) — backend (Mode A: Python domain + PostgreSQL + FastAPI)
 
-Decision: which transformation initiative should be funded, and how will success be established? Contracts in `docs/contracts.md` (D-01..D-05; D-05 adopts the
+Decision: which transformation initiative should be funded, and how will success be established? Contracts in `docs/contracts.md` (D-01..D-09; D-05 adopts the
 fixture's decisions D-P9-01..24, full text in `tests/fixtures/golden/CALCULATION.md`), API inventory in `docs/api-contract.md`, site brief in `docs/web-brief.md`,
 generator spec in `docs/data-generator.md`. Layout and conventions follow `apps/trustledger`. The domain is standard library only (`fractions.Fraction` for every
 ratio, rate and discount factor, `decimal`/integers for money, no float in any published figure); the API adds FastAPI, pydantic and psycopg. Nothing imports another
 lab app. Nothing here funds anything: a selected scenario is a **proposal**. The Mode B web mirror (`web/`) is separate.
 
 ```
-domain/changeworks/  contract, errors, numbers, timeutil, ingest, context, cashflow, measures, people, roadmap, metrics, pipeline
-data/                migrate.py, seed.py, sql/migrations/0001_schema.sql, 0002_constraints.sql, sql/reference_metrics.sql
+domain/changeworks/  contract, errors, numbers, timeutil, ingest, context, cashflow, measures, people, roadmap, metrics, snapshot, pipeline
+data/                migrate.py, seed.py, sql/migrations/0001_schema.sql, 0002_constraints.sql, 0003_review9.sql, sql/reference_metrics.sql
 api/                 app, clock, db, schemas, commands, reads, errors     (prefix /api/v1/changeworks)
 tests/               golden (domain), variants, rules, migrations, SQL reference, API commands, API reads, adversarial; reference_check.py (stdlib only)
 tests/fixtures/      golden/ (the pack's fixture, never edited here), adversarial/ (the smallest dataset of each P09-TEST-01..12, detect and recover)
@@ -18,8 +18,8 @@ tests/fixtures/      golden/ (the pack's fixture, never edited here), adversaria
 
 ```
 pip install -r requirements.txt
-python -I tests/reference_check.py                                   # independent recomputation, ALL OK (1810 checks)
-DATABASE_URL=postgresql://lab:lab@127.0.0.1:5432/changeworks python -m pytest -q -ra        # 346 tests, 0 skips, 1.5 to 2.5 minutes
+python -I tests/reference_check.py                                   # independent recomputation, ALL OK (3156 checks)
+DATABASE_URL=postgresql://lab:lab@127.0.0.1:5432/changeworks python -m pytest -q -ra        # 454 tests, 0 skips, 3 to 4 minutes
 python -m pytest -q tests/test_golden_domain.py tests/test_variants.py tests/test_rules.py  # the pure-domain tests need no database
 DATABASE_URL=... python data/migrate.py [--reset]                    # apply the migrations (empty database or second run)
 DATABASE_URL=... python data/seed.py tests/fixtures/golden/inputs.json [--dataset-version NAME]
@@ -37,7 +37,7 @@ of `expected.json` (counts, rejected records, `metrics`). `metrics` has the key 
 horizon_periods, rate_basis, declared_rate, effective_period_rate(_exact), rate_source, initiatives.<id>.{cash_flow[], expanded_planned_costs[],
 excluded_from_cash_flow, converted_capacity[], ramp, unramped_net_cash_flow, planned_money_benefits, npv, payback.{simple,discounted}, capacity_released,
 cost_variance, benefit_realization.<type>, immature_observation_ids}, double_count, npv_total}`; `initiatives.<id>.{roadmap, adoption, training, risk, forecast}`;
-`groups.<id>`; `resources.<id>`. All three fixtures reproduce it leaf for leaf (572, 1044 and 52 leaves).
+`groups.<id>`; `resources.<id>`. All three fixtures reproduce it leaf for leaf (643, 2277 and 57 leaves).
 
 * **Four benefit classes, never summed into one number.** Cash and revenue enter the net cash flow; avoided cost only with `cash_realisation` **and** an
   `evidence_ref` (otherwise `avoided_cost_beside`, reason `NOT_CASH_REALISED` / `NO_EVIDENCE_REF`); capacity hours never, unless a `capacity_hourly_rate` assumption
@@ -107,11 +107,11 @@ role under the same key is 409 `IDEMPOTENCY_KEY_REUSED`; a refused command store
 
 | Claim | Test file / test |
 |---|---|
-| golden figures, key nesting, every leaf of the three expected files; the spec sentence NPV 5000/121 = 41.32 | `test_golden_domain.py` (27), `test_variants.py` (7): 572 / 1044 / 52 leaves |
-| ingest codes and cascades, shapes, ramps, avoided cost, capacity conversion, monthly rates, paybacks, variance, realization, adoption, risk, readiness, roadmap, ties, window, as_of | `test_rules.py` (74) |
-| migrations from empty and on a second run, append-only, frozen baseline, forecast overwrite, scenario immutability, checks, seed idempotency | `test_migrations.py` (35) |
-| the SQL recomputation equals `expected.json` leaf for leaf, equals the domain at other `as_of`, and on 60 seeded random populations; NPV tolerance 0.000001 | `test_sql_reference.py` (16) |
-| C01..C10 happy paths, hard validation, roles, idempotency, stale dataset, audit, atomicity, no client instants | `test_api_commands.py` (90) |
+| golden figures, key nesting, every leaf of the three expected files; the spec sentence NPV 5000/121 = 41.32 | `test_golden_domain.py` (29), `test_variants.py` (10): 643 / 2277 / 57 leaves |
+| ingest codes and cascades, shapes, ramps, avoided cost, capacity conversion, monthly rates, paybacks, variance, realization, adoption, risk, readiness, roadmap, ties, window, as_of | `test_rules.py` (104) |
+| migrations from empty and on a second run, append-only, frozen baseline, forecast overwrite, scenario immutability, checks, seed idempotency | `test_migrations.py` (39) |
+| the SQL recomputation equals `expected.json` leaf for leaf, equals the domain at other `as_of`, and on 60 seeded random populations; NPV tolerance 0.000001 | `test_sql_reference.py` (18) |
+| C01..C10 happy paths, hard validation, roles, idempotency, stale dataset, audit, atomicity, no client instants | `test_api_commands.py` (103) |
 | metrics endpoint = `expected.json` for all three fixtures (ingest included); window, as_of, entity reads (no records, one, many pages, filters, order, reconciliation) | `test_api_reads.py` (46) |
 | P09-TEST-01..12 detect and recover on the smallest fixtures (`tests/fixtures/adversarial/`), races, deadlock retry, rollback, interrupted command, hostile input | `test_adversarial.py` (51) |
 
@@ -173,8 +173,8 @@ role under the same key is 409 `IDEMPOTENCY_KEY_REUSED`; a refused command store
 21. **Seed.** An initiative naming a baseline version with no accepted baseline row is loaded without an approved baseline (warning `BASELINE_NOT_LOADED`); approvals found in an
     inputs file are recorded as approved by `seed`.
 22. **Instants sort as instants.** Observations, assessments and records are ordered by their parsed instant (ties by id), never as strings (`...00Z` sorts after `...00.5Z`).
-23. **Partial trend coverage.** `observed_above_trend` subtracts the trends that were recorded (D-P9-12); when only some comparable rows carry a trend the figure is partial. C09 warns
-    `NO_BASELINE_TREND` for the row it tracks; the metrics tree has no flag for it (the shape is fixed by `expected.json`).
+23. **Partial trend coverage.** `observed_above_trend` is null with the warning `PARTIAL_TREND_COVERAGE` (and `trend_coverage.rows_without_trend`) unless every compared observed row carries a trend
+    (D-09 R9-13). C09 warns `NO_BASELINE_TREND` for the row it tracks.
 
 ## Not implemented / open gaps
 
@@ -185,4 +185,13 @@ role under the same key is 409 `IDEMPOTENCY_KEY_REUSED`; a refused command store
 * No workbook, export or recommendation endpoint (P09-DOMAIN-06 belongs to the artifact work packages).
 * A "safe rejected-attempt security log" beyond the `*-refused` audit rows is not written; malformed input writes nothing.
 * The metrics endpoint is not paged and recomputes from the tables on every call (fine at the fixture's size; the generator profiles in `docs/data-generator.md` were not benchmarked).
-* The SQL reference needs `SET jit = off` for speed, and its NPV is exact only for the horizons PostgreSQL's `power` keeps exact (<= 12 periods at 6 decimals in the tests).
+* The SQL reference needs `SET jit = off` for speed. Its NPV computes each discount factor by exact recursion (no `power()`), is exact to 0.000001 for horizons up to 36 periods and 14-digit amounts (tested on the published 36-period world and on a 14-digit case), and every other figure is compared exactly. Beyond that bound the tolerance is not claimed.
+
+## Review R9 (D-09)
+
+The fixes adopted from review R9 are listed one by one in `docs/contracts.md` D-09. In short: scenario figures come from the rows and assumption versions that existed at the scenario's `created_at`
+(migration `0003_review9.sql`, `recorded_at` on every plan and observation row, a snapshot hash on a proposed scenario); `npv_total` and the class totals are attributable with the plain sum and the
+amount counted twice beside them; the overlap rule also runs on hours; evidence references must be non-blank; payback is the last crossing with the reasons `NO_INVESTMENT`, `NOT_RECOVERED` and `NO_FLOWS`;
+`observed_above_trend` is null under `PARTIAL_TREND_COVERAGE`; `DEPLOYMENT_BEFORE_FEASIBLE_START` is a warning, not a re-timing; `period_start` days are 1 to 28; C07 explanations need 20 characters and C10 needs
+`expected_version`. The published world is unchanged in size class (990,783 bytes, dataset hash `6bf7ebaa…`), and its headline figures moved only where the rules above say: attributable NPV 1,243,149.05 against
+a plain sum of 1,438,382.25 in scn-025.

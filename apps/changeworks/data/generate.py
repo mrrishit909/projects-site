@@ -1085,7 +1085,7 @@ class Injections:
         scn_pair = next(s["scenario_id"] for s in E["scenario_versions"] if s["status"] == "draft" and iid(D2A) in s["initiative_ids"] and iid(D2B) in s["initiative_ids"]
                         and self.read.get(f"metrics.scenarios.{s['scenario_id']}.double_count.residual") != "0.00")
         scn_pair_all = "scn-025"
-        clean_draft = "scn-001"
+        clean_draft = next(s["scenario_id"] for s in E["scenario_versions"] if self.read.get(f"metrics.scenarios.{s['scenario_id']}.double_count.explanation_required") is False)
         scn_d6 = "scn-025"
         scn_d4 = scn_pair_all
 
@@ -1106,7 +1106,8 @@ class Injections:
         self.inj(1, "time savings booked as cash without a staffing change", "both",
                  f"{iid(D1)} ({INI[D1 - 1][1]}) has released capacity as its only benefit; a row claims 100 of those hours as realised cash, with no capacity_hourly_rate and no staffing change evidence.",
                  "The claim is refused CAPACITY_WITHOUT_CONVERSION; the hours stay out of the cash flow (listed as not converted, NPV from costs alone); a derived cash item exists only after a "
-                 "conversion assumption with a staffing change evidence reference, and then as a separate item citing it.",
+                 "conversion assumption with a staffing change evidence reference, and then as a separate item citing it, in a scenario built after that assumption existed (a scenario "
+                 "keeps the assumptions it was built on).",
                  [{"entity": "initiatives", "id": iid(D1)}, {"entity": "benefit_items", "id": "b-inj-01"}],
                  self.checks([self.sc_path(scn_d1, D1, "excluded_from_cash_flow.capacity_hours_not_converted"), self.sc_path(scn_d1, D1, "converted_capacity"),
                               self.sc_path(scn_d1, D1, "npv.value"), self.sc_path(scn_d1, D1, "cash_flow[20].cash_benefits")]),
@@ -1119,16 +1120,20 @@ class Injections:
                                                   "residual_explanation": "Both initiatives release time of the same accounts-payable team; the larger claim is counted once and the overlap is listed."},
                               "inj-02-b", 200, None, role="sponsor"),
                  self.command("select-scenario", {"scenario_id": clean_draft}, "inj-02-c", 200, None, role="sponsor")]
-        proposable = [s["scenario_id"] for s in E["scenario_versions"] if self.read.get(f"metrics.scenarios.{s['scenario_id']}.double_count.residual") == "0.00"]
+        proposable = [s["scenario_id"] for s in E["scenario_versions"] if self.read.get(f"metrics.scenarios.{s['scenario_id']}.double_count.explanation_required") is False]
         chk = self.checks([f"metrics.scenarios.{scn_pair_all}.double_count.{k}" for k in ("planned_benefits", "attributable_benefits", "residual", "explanation_required")]
                           + [f"metrics.scenarios.{scn_pair_all}.double_count.overlaps[0].benefit_source_key", f"metrics.scenarios.{scn_pair_all}.double_count.overlaps[0].overlap"]
-                          + [f"metrics.scenarios.{p}.double_count.residual" for p in proposable[:6]])
+                          + [f"metrics.scenarios.{scn_pair_all}.double_count.{k}" for k in ("double_counted_amount", "double_counted_pv", "hours_residual", "explanation_required_for")]
+                          + [f"metrics.scenarios.{scn_pair_all}.npv_total.{k}" for k in ("value", "sum_of_initiatives")]
+                          + [f"metrics.scenarios.{p}.double_count.{k}" for p in proposable[:6] for k in ("residual", "hours_residual")])
         self.event("EV-02", "INJ-02", [scn_pair_all, clean_draft], steps)
         self.inj(2, "two initiatives claim the same released capacity", "both",
                  f"{iid(D2A)} and {iid(D2B)} both claim the time of the same accounts-payable team (benefit_source_key {SHARED_CAP_KEY}); with the capacity converted (rate pinned from May) "
                  f"the portfolio adds both claims.",
                  "The claims sharing a key in a period count once, at the larger claim; the rest is the double-count residual with the overlaps listed; select-scenario is refused "
-                 "DOUBLE_COUNT_UNEXPLAINED until the residual is explained; a scenario without the overlap (for example scn-026, the portfolio without init-002) has a residual of 0.00 and can be proposed without an explanation.",
+                 "DOUBLE_COUNT_UNEXPLAINED until the residual is explained (in money or in hours, with an explanation of at least 20 characters); the portfolio NPV is the attributable one, the "
+                 "sum of the initiative NPVs less the present value of the claim that counts twice; a scenario without an overlap in money or in hours (for example scn-026, the portfolio without init-002) "
+                 "has both residuals at 0.00 and can be proposed without an explanation.",
                  [{"entity": "benefit_items", "id": b["benefit_id"]} for b in E["benefit_items"] if b["benefit_source_key"] == SHARED_CAP_KEY][:2], chk, [], ["EV-02"])
 
         # INJ-03 / EV-03: an annual rate on monthly periods
@@ -1200,16 +1205,20 @@ class Injections:
         v = self.read.validator()
         over = {**f3, "forecast_id": "f-inj-06", "amount": "1.00", "reason": "Overwrite attempt", "created_at": "2026-10-04T09:00:00Z"}
         v4 = {**f3, "forecast_id": "f-inj-06b", "version_number": 4, "reason": "Revision four", "created_at": "2026-10-04T09:00:00Z"}
+        v3_rows = [f for f in E["forecast_versions"] if f["initiative_id"] == iid(n6) and f["version_number"] == 3]
         steps = [self.ingest(v, "forecast_versions", over, "VERSION_EXISTS"), self.ingest(v, "forecast_versions", v4, None),
                  self.command("revise-forecast", {"initiative_id": iid(n6), "reason": "Overwrite attempt", "periods": [{"period_index": f3["period_index"], "amount": "1.00"}],
                                                   "expected_version": 1}, "inj-06-a", 409, "STALE_FORECAST_VERSION", role="sponsor"),
-                 self.command("revise-forecast", {"initiative_id": iid(n6), "reason": "Fourth revision", "periods": [{"period_index": f3["period_index"], "amount": f3["amount"]}],
+                 self.command("revise-forecast", {"initiative_id": iid(n6), "reason": "Partial revision", "periods": [{"period_index": f3["period_index"], "amount": f3["amount"]}],
+                                                  "expected_version": 3}, "inj-06-c", 422, "REVISION_PERIODS_INCOMPLETE", role="sponsor"),
+                 self.command("revise-forecast", {"initiative_id": iid(n6), "reason": "Fourth revision", "periods": [{"period_index": f["period_index"], "amount": f["amount"]} for f in v3_rows],
                                                   "expected_version": 3}, "inj-06-b", 200, None, role="sponsor")]
         self.event("EV-06", "INJ-06", [iid(n6)], steps)
         self.inj(6, "a forecast overwrite", "both",
                  f"After the target was missed, a row rewrites version 1 of the {iid(n6)} forecast instead of adding a revision.",
-                 "Refused VERSION_EXISTS (the database also refuses UPDATE and DELETE); a revision is the next version, the original approved version 1 stays unchanged and the "
-                 "comparison lists the original, every revision and the observed values with their dates.",
+                 "Refused VERSION_EXISTS (the database also refuses UPDATE and DELETE); a revision is the next version and restates every period of the original "
+                 "(a partial one is REVISION_PERIODS_INCOMPLETE), the original approved version 1 stays unchanged and the comparison lists the original, every revision and the "
+                 "observed values with their dates.",
                  [{"entity": "forecast_versions", "id": f3["forecast_id"]}],
                  self.checks([f"metrics.initiatives.{iid(n6)}.forecast.{k}" for k in ("original_version", "original_preserved", "latest_version", "latest_minus_original", "versions[0].total",
                                                                                    "versions[1].total", "versions[2].total", "versions[0].created_at", "versions[2].created_at")]),
@@ -1342,28 +1351,37 @@ class Injections:
         sid = "scn-025"
         dc = M["scenarios"][sid]["double_count"]
         resid = [s["scenario_id"] for s in E["scenario_versions"] if M["scenarios"][s["scenario_id"]]["double_count"]["residual"] != "0.00"]
+        hres = [s["scenario_id"] for s in E["scenario_versions"] if M["scenarios"][s["scenario_id"]]["double_count"]["hours_residual"] != "0.00"]
         out.append({"id": "DR-02", "name": "two initiatives claim the same released capacity",
                     "statement": f"{iid(D2A)} and {iid(D2B)} both claim the accounts-payable team's time (benefit_source_key {SHARED_CAP_KEY}).",
                     "realised": {"scenario_id": sid, "initiatives": [iid(D2A), iid(D2B)], "benefit_source_key": SHARED_CAP_KEY, "planned_benefits": dc["planned_benefits"],
                                  "attributable_benefits": dc["attributable_benefits"], "residual": dc["residual"], "overlap_periods": len(dc["overlaps"]),
                                  "first_overlap_period": dc["overlaps"][0]["period_index"], "last_overlap_period": dc["overlaps"][-1]["period_index"],
                                  "scenarios_with_a_residual": resid,
-                                 "scenarios_with_no_residual": [s["scenario_id"] for s in E["scenario_versions"] if s["scenario_id"] not in resid]}})
+                                 "scenarios_with_no_residual": [s["scenario_id"] for s in E["scenario_versions"] if s["scenario_id"] not in resid],
+                                 "double_counted_pv": dc["double_counted_pv"], "npv_total_attributable": M["scenarios"][sid]["npv_total"]["value"],
+                                 "npv_sum_of_initiatives": M["scenarios"][sid]["npv_total"]["sum_of_initiatives"], "hours_residual": dc["hours_residual"],
+                                 "scenarios_with_an_hours_residual": hres}})
 
-        # DR-03 never pays back
+        # DR-03 never pays back: every ratio names its scenario (the ramp the scenario pins changes the benefits that enter the cash flow)
         n = D3
         sids = self.scenarios_with(n)
         rows = [M["scenarios"][s]["initiatives"][iid(n)] for s in sids]
         npvs = sorted(Fraction(b["npv"]["exact"]) for b in rows)
-        cost_total = sum(Fraction(c["amount"]) for c in E["cost_items"] if c["initiative_id"] == iid(n) and c["cost_basis"] == "planned" and c["cost_type"] == "one_time") \
-            + sum(Fraction(c["amount"]) * (c["end_period"] - c["start_period"]) for c in E["cost_items"] if c["initiative_id"] == iid(n) and c["cost_basis"] == "planned" and c["cost_type"] == "recurring")
-        ben = sum((Fraction(x["cash_benefits"]) for x in rows[0]["cash_flow"]), Fraction(0)) if rows else Fraction(0)
+        per_scn = {}
+        for sid_, b in zip(sids, rows):
+            cost_s = sum((Fraction(x["costs"]) for x in b["cash_flow"]), Fraction(0))                     # planned costs inside the scenario's horizon
+            ben_s = sum((Fraction(x["cash_benefits"]) for x in b["cash_flow"]), Fraction(0))
+            per_scn[sid_] = {"planned_cost": rhu(cost_s, 2), "benefits_entering_the_cash_flow": rhu(ben_s, 2), "benefit_to_cost": rhu(ben_s / cost_s, 6), "npv": b["npv"]["value"],
+                             "ramp_assumption_id": b["ramp"]["assumption_id"] if b["ramp"] else None}
+        by_ratio: dict[str, list[str]] = {}
+        for sid_, v_ in per_scn.items():
+            by_ratio.setdefault(v_["benefit_to_cost"], []).append(sid_)
         out.append({"id": "DR-03", "name": "an initiative that never pays back",
-                    "statement": f"{iid(n)} recovers well under its cost over its benefit window.",
+                    "statement": f"{iid(n)} recovers well under its cost over its benefit window; the ratio depends on the adoption ramp the scenario pins, so each value names its scenarios.",
                     "realised": {"initiative_id": iid(n), "scenarios": sids, "scenarios_with_simple_payback_null": sum(1 for b in rows if b["payback"]["simple"]["period"] is None),
                                  "scenarios_with_discounted_payback_null": sum(1 for b in rows if b["payback"]["discounted"]["period"] is None),
-                                 "npv_lowest": rhu(npvs[0], 2), "npv_highest": rhu(npvs[-1], 2), "planned_cost": rhu(cost_total, 2), "benefits_entering_the_cash_flow": rhu(ben, 2),
-                                 "benefit_to_cost": rhu(ben / cost_total, 6)}})
+                                 "npv_lowest": rhu(npvs[0], 2), "npv_highest": rhu(npvs[-1], 2), "by_scenario": per_scn, "scenarios_by_benefit_to_cost": by_ratio}})
 
         # DR-04 forecast revised twice after a missed target, the original kept
         n = D4
@@ -1395,17 +1413,19 @@ class Injections:
                                  "original_preserved": fc["original_preserved"], "latest_minus_original": fc["latest_minus_original"], "miss_tolerance_percent": FORECAST_MISS_TOLERANCE_PCT,
                                  "misses": misses, "latest_observed": {str(p): rhu(o, 2) for p, o in sorted(obs.items())}}})
 
-        # DR-05 a shared specialist overallocated in three periods
+        # DR-05 a shared specialist at capacity: designed for three periods, the periods the domain finds are the realised ones
         res = M["resources"][D5_RESOURCE]
         byp = {b["period_index"]: b for b in res["by_period"]}
+        full = sorted(p for p, b in byp.items() if b["headroom"] == "0.00")
         refused = [x for x in self.events if x["event_id"] == "EV-09"][0]["steps"][:3]
-        out.append({"id": "DR-05", "name": "a shared specialist overallocated in three periods",
-                    "statement": f"{D5_RESOURCE} is allocated to capacity in periods {list(D5_PERIODS)}; further requests there are refused at ingest and kept in the replay events.",
-                    "realised": {"resource_id": D5_RESOURCE, "capacity_per_period": res["capacity_per_period"], "periods": list(D5_PERIODS),
-                                 "allocated": {str(p): byp[p]["allocated"] for p in D5_PERIODS}, "headroom": {str(p): byp[p]["headroom"] for p in D5_PERIODS},
+        out.append({"id": "DR-05", "name": "a shared specialist at capacity",
+                    "statement": f"{D5_RESOURCE} is designed to be allocated to capacity in periods {list(D5_PERIODS)}; the periods at capacity in the rows are in realised.periods (the draws "
+                                 "also fill it earlier); further requests there are refused at ingest and kept in the replay events.",
+                    "realised": {"resource_id": D5_RESOURCE, "capacity_per_period": res["capacity_per_period"], "designed_periods": list(D5_PERIODS), "periods": full,
+                                 "allocated": {str(p): byp[p]["allocated"] for p in full}, "headroom": {str(p): byp[p]["headroom"] for p in full},
                                  "stored_overallocated_periods": res["overallocated_periods"], "requests_refused": len(refused),
                                  "refused_periods": [s["details"]["periods"][0] for s in refused], "requested": [s["details"]["requested"] for s in refused],
-                                 "initiatives_allocated_in_those_periods": sorted({a["initiative_id"] for a in E["resource_allocations"] if a["resource_id"] == D5_RESOURCE and a["period_index"] in D5_PERIODS})}})
+                                 "initiatives_allocated_in_those_periods": sorted({a["initiative_id"] for a in E["resource_allocations"] if a["resource_id"] == D5_RESOURCE and a["period_index"] in full})}})
 
         # DR-06 an observed improvement that is mostly the baseline trend
         n = D6
@@ -1444,19 +1464,22 @@ class Injections:
 DISCLOSURES = [
     "Every designed relationship is built into the draws as a parameter chosen before the first run: the capacity-only initiative (init-009), the shared capacity pool (init-001 and "
     "init-002, key src-fin-ap-shared-team), the benefit-to-cost ratio of 0.62 for init-015, the forecast misses of init-003 (observed at 68 and 66 per cent of plan, revised forecasts at 80 and "
-    "70 per cent, a miss being more than 10 per cent below the forecast), the specialist res-03 filled to capacity in periods 14 to 16, the baseline trend of init-008 set to 85 per "
+    "70 per cent, a miss being more than 10 per cent below the forecast), the specialist res-03 filled to capacity in periods 14 to 16 (the rows also fill it earlier; the periods at "
+    "capacity are computed by the domain and listed in DR-05), the baseline trend of init-008 set to 85 per "
     "cent of its observed cash benefit, and an adoption curve that starts at go-live while training ends about a month earlier. Their realised values are in designed_relationships.",
     "Outcome-informed changes after the first runs, all kept: (1) the first run showed a simple payback of 0 for any initiative whose first cash flow is after period 0 (the domain's "
     "rule D-P9-07 counts a cumulative of 0 at t = 0 as paid back), so every initiative now carries a small planned discovery cost in period 0 (2 per cent of its one-time cost) and "
     "its payback is measured from a negative position; (2) the benefit shares of an initiative are normalised to 100 per cent after a first run gave init-007 a ratio below 1 for a "
     "reason that was a bug, not a design; (3) init-002 is sized at no less than 8,000 cases a month and 24 minutes so that its overlap with init-001 is a material residual; (4) "
     "benefit observations were first drawn with three readings per matured row, which gave 332 readings, so two further readings (a flash reading one to two days after the period "
-    "and a restated reading 95 to 120 days after it) were added, and readings were then trimmed or added in a fixed shuffled order to reach exactly 400.",
+    "and a restated reading 95 to 120 days after it) were added, and readings were then trimmed or added in a fixed shuffled order to reach exactly 400; (5) the baseline trend "
+    "recorded on an observed row is drawn as a share of that row's observed value (5 to 25 per cent, and 85 per cent for init-008), so the trend was fixed after the observation it is "
+    "compared with: a design choice made after the outcome was known, in this synthetic world only.",
     "Sizes are exact by construction, not by tuning outcomes: benefit rows are 12 per stream (shortened or lengthened one row at a time in a fixed order to reach 700), cost items are "
     "completed with contingency tranches (see pad_notes), adoption observations are the 3.5-day telemetry candidates thinned by drawn outages to 500, and training completions are "
     "weekly readings thinned or extended with refresher readings to 200.",
     "The business case recognises benefits for 12 periods per stream and recurring costs run only over that window (D-07): the dataset has 700 benefit rows, which cannot cover 36 "
-    "periods for all 24 initiatives, so payback and NPV describe a first-year-after-go-live case, not a three-year one.",
+    "periods for all 24 initiatives, so payback and NPV describe the twelve-period benefit window (some streams are shorter), not a three-year case.",
     "The synthetic counterfactual (the true share of each observed improvement that the rollout caused, and the true trend) is in synthetic_truth of this manifest only and is never "
     "loaded by the seeder, the API or the web.",
     "Baseline trends on observed rows are drawn as a share of the row's observed value (5 to 25 per cent, with a per-stream estimation error of -8 to +8 per cent), which is "
@@ -1468,14 +1491,14 @@ DISCLOSURES = [
 ]
 
 
-def parameters(w: World) -> dict[str, str]:
+def parameters(w: World, extra: list[str] | None = None) -> dict[str, str]:
     return {"seed": str(w.seed), "profile": "demo (section 12): about 500 primary business objects, enough linked events for every required path",
             "period_basis": "monthly", "periods": "36 (2026-01 .. 2028-12)", "as_of": AS_OF_TEXT, "matured_periods_at_as_of": "9 (2026-01 .. 2026-09)",
             "initiatives": "24 in 4 programmes", "process_baselines": "30 (18 initiatives v1, 12 corrected to v2)", "discount_rates": "annual 0.06/0.08/0.10/0.12 with monthly_rate_conversion "
             "assumption versions; 0.007000 declared monthly", "benefit_life": f"{BENEFIT_LIFE} periods per stream", "benefit_lag": "0 to 2 periods after deployment",
             "forecast_miss_tolerance_percent": str(FORECAST_MISS_TOLERANCE_PCT), "trend_share_dr06_percent": str(SHARE_ABOVE_TREND),
             "d4_observed_over_plan_percent": f"{D4_PERF[0]} then {D4_PERF[1]}", "d4_revised_forecast_percent_of_plan": f"{D4_REVISION[0]} then {D4_REVISION[1]}",
-            "size_cap_bytes": str(SIZE_CAP), "disclosures": " | ".join(DISCLOSURES)}
+            "size_cap_bytes": str(SIZE_CAP), "disclosures": " | ".join(DISCLOSURES + (extra or []))}
 
 
 def build(seed: int) -> tuple[World, dict[str, list[dict]], Injections]:
@@ -1515,17 +1538,22 @@ def write_all(seed: int, out: Path) -> dict[str, Any]:
         initiatives[iid_] = {"npv": b["npv"]["value"], "simple_payback": b["payback"]["simple"]["period"], "discounted_payback": b["payback"]["discounted"]["period"],
                              "capacity_released_hours": b["capacity_released"]["hours"], "cost_variance": b["cost_variance"]["variance"],
                              "adoption_rate": R.metrics["initiatives"][iid_]["adoption"]["adoption_rate"], "training_completion": R.metrics["initiatives"][iid_]["training"]["training_completion"]}
+    early = [{"initiative_id": i_, "deployment_period": x["roadmap"]["deployment_period"], "dependency_feasible_start": x["roadmap"]["dependency_feasible_start"],
+              "periods_early": x["roadmap"]["warnings"][0]["periods_early"]} for i_, x in R.metrics["initiatives"].items() if x["roadmap"]["warnings"]]
+    each = "; ".join("{} deploys at {} but cannot start before {}".format(e_["initiative_id"], e_["deployment_period"], e_["dependency_feasible_start"]) for e_ in early)
+    early_note = (f"{len(early)} initiatives book benefits from a deployment period earlier than their dependency-feasible start ({each}): "
+                  "the draws set deployment periods and dependencies independently. The domain reports DEPLOYMENT_BEFORE_FEASIBLE_START on each and does not re-time the cash flow (D-P9-08).")
     truth = {k: {"observed_comparable_cents": v[0], "true_trend_cents": v[1], "true_attributable_share": rhu(Fraction(v[0] - v[1], v[0]), 6)} for k, v in sorted(w.truth.get("trend", {}).items())}
     manifest = {
         "dataset_version": version, "dataset_hash": dhash, "generated_at": AS_OF_TEXT, "contract_version": CONTRACT_VERSION, "as_of": AS_OF_TEXT,
         "config": {"contract_version": 1, "period_basis": "monthly", "period_start": "2026-01-01", "periods": PERIODS, "as_of": AS_OF_TEXT},
-        "generator": {"name": "generate.py", "seed": seed, "parameters": parameters(w)},
+        "generator": {"name": "generate.py", "seed": seed, "parameters": parameters(w, [early_note])},
         "programmes": [{"programme_id": pid, "name": name, "sponsor_id": sp, "approved_baseline_version": bv,
                         "initiative_ids": [w.iid(n) for n in sorted(w.t) if w.t[n]["pi"] == pi]} for pi, (pid, name, sp, bv) in enumerate(PROGRAMMES)],
         "row_counts": {name: len(ents[name]) for name in ENTITIES}, "designed_relationships": inj.designed, "injection_manifest": "injection-manifest.json",
         "stats": {"entity_file_bytes": nbytes, "forecast_version_sets": len({(f["initiative_id"], f["version_number"]) for f in ents["forecast_versions"]}), "primary_objects": objects, "linked_events": events, "ingest": {e: counts[e] for e in sorted(counts)},
                   "warnings": dict(sorted(warn.items())), "summary": R.metrics["summary"], "scenarios": scen_table, "initiatives_in_scn-025": initiatives,
-                  "pad_notes": w.pad_notes, "adoption_parameters": {w.iid(n): p for n, p in sorted(w.adopt_params.items())}},
+                  "deployment_before_feasible_start": early, "pad_notes": w.pad_notes, "adoption_parameters": {w.iid(n): p for n, p in sorted(w.adopt_params.items())}},
         "synthetic_truth": {"note": "Synthetic counterfactual for the verification layer only: the true share of each observed improvement that the rollout caused. It is never loaded by "
                                     "the seeder, the API or the web.", "by_initiative_and_type": truth}}
     (out / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")

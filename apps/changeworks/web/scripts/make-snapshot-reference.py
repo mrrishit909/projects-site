@@ -7,8 +7,8 @@ Contents: sha256 digests (canonical JSON, sorted keys, compact) of every metric 
 period boundaries (a matured period is one whose end is <= as-of, so 2026-03-31T23:59:59Z, 2026-04-01T00:00:00Z and 2026-04-01T00:00:01Z
 straddle one), half-open windows (including an empty one and one that starts exactly on a period start), a scenario narrowing, the NPV and both
 paybacks of every initiative at seven horizons, the annual-to-monthly rate conversion on a grid (high-precision Decimal, an independent method),
-the portfolio table (costs and each benefit class per scenario, summed from the domain's own pieces with Fractions) and the figures behind the
-seven designed relationships.
+the portfolio table (costs and each benefit class per scenario, summed from the domain's own pieces with Fractions: exact sums rounded once, never a sum of
+rounded rows; the class totals are attributable, the claims that count twice taken off class by class) and the figures behind the seven designed relationships.
 """
 import copy
 import hashlib
@@ -99,17 +99,19 @@ ctx = Ctx(pop, res.as_of)
 
 
 def scenario_totals(sc):
+    """Per scenario: costs and each class summed from the exact amounts of the plan rows the scenario was built on (R9-01), rounded once (R9-07)."""
     tot = {"costs": F(0), "cash": F(0), "revenue": F(0), "avoided": F(0), "capacity_usd": F(0), "avoided_beside": F(0), "capacity_hours": F(0)}
     per = {}
+    costs, bens = ctx.costs(sc), ctx.benefits(sc)
     for iid in sc["initiative_ids"]:
         model = Model(ctx, sc, iid)
         H = sc["horizon_periods"]
         c = {k: F(0) for k in tot}
-        for ci in pop.acc["cost_items"]:
+        for ci in costs:
             if ci["initiative_id"] == iid and ci["cost_basis"] == "planned":
                 for _, p, a in expand_costs(ci, H):
                     c["costs"] += a
-        for b in pop.acc["benefit_items"]:
+        for b in bens:
             if b["initiative_id"] != iid or b["period_index"] >= H:
                 continue
             a, t = model.ramped(b), b["benefit_type"]
@@ -118,26 +120,32 @@ def scenario_totals(sc):
             elif t == "revenue":
                 c["revenue"] += a
             elif t == "avoided_cost":
-                if b["cash_realisation"] and b["evidence_ref"]:
+                if b["cash_realisation"] and (b["evidence_ref"] or "").strip():
                     c["avoided"] += a
                 else:
-                    c["avoided_beside"] += F(money(a))        # the block reports each beside amount to 2 places and sums those
+                    c["avoided_beside"] += a
             elif t == "capacity":
                 if model.conv_ok:
                     c["capacity_usd"] += a * model.rate_cap
                 else:
-                    c["capacity_hours"] += F(money(a))
+                    c["capacity_hours"] += a
         for k in tot:
-            tot[k] += c[k] if k not in ("avoided_beside", "capacity_hours") else c[k]
+            tot[k] += c[k]
         per[iid] = {k: money(v) for k, v in c.items()}
-    return {k: money(v) for k, v in tot.items()}, per
+    return tot, per
 
 
 portfolio = {}
+CLASS_OF = {"cash": "cash", "revenue": "revenue", "avoided": "avoided_cost_realised", "capacity_usd": "capacity_converted", "avoided_beside": "avoided_cost_beside"}
 for sc in ctx.scenarios:
     t, per = scenario_totals(sc)
     blk = res.metrics["scenarios"][sc["scenario_id"]]
-    portfolio[sc["scenario_id"]] = {**t, "npv_total": blk["npv_total"]["value"], "residual": blk["double_count"]["residual"], "planned": blk["double_count"]["planned_benefits"],
+    removed = {k: F(blk["double_count"]["double_counted_by_class_exact"][CLASS_OF[k]]) for k in CLASS_OF}
+    attributable = {k: money(t[k] - removed[k]) if k in CLASS_OF else money(t[k]) for k in t}              # the class totals less the claims that count twice; hours are never added
+    portfolio[sc["scenario_id"]] = {**attributable, "listed": {k: money(t[k]) for k in CLASS_OF}, "removed": {k: money(removed[k]) for k in CLASS_OF},
+                                    "npv_total": blk["npv_total"]["value"], "npv_sum": blk["npv_total"]["sum_of_initiatives"], "double_counted_pv": blk["double_count"]["double_counted_pv"],
+                                    "double_counted_amount": blk["double_count"]["double_counted_amount"], "hours_residual": blk["double_count"]["hours_residual"],
+                                    "residual": blk["double_count"]["residual"], "planned": blk["double_count"]["planned_benefits"],
                                     "attributable": blk["double_count"]["attributable_benefits"], "initiatives": len(sc["initiative_ids"]),
                                     "never_simple": sum(1 for b in blk["initiatives"].values() if b["payback"]["simple"]["period"] is None),
                                     "never_discounted": sum(1 for b in blk["initiatives"].values() if b["payback"]["discounted"]["period"] is None),
@@ -150,9 +158,14 @@ designed = {
     "DR-01": {"init-009": {"npv": S25["initiatives"]["init-009"]["npv"]["value"], "capacity_hours_not_converted": S25["initiatives"]["init-009"]["excluded_from_cash_flow"]["capacity_hours_not_converted"],
                            "simple_payback": S25["initiatives"]["init-009"]["payback"]["simple"]["period"], "released": S25["initiatives"]["init-009"]["capacity_released"]["hours"]}},
     "DR-02": {"planned": S25["double_count"]["planned_benefits"], "attributable": S25["double_count"]["attributable_benefits"], "residual": S25["double_count"]["residual"],
-              "overlap_periods": len(S25["double_count"]["overlaps"]), "scenarios_with_residual": [k for k, s in M["scenarios"].items() if s["double_count"]["residual"] != "0.00"]},
+              "npv_attributable": S25["npv_total"]["value"], "npv_sum": S25["npv_total"]["sum_of_initiatives"], "double_counted_pv": S25["double_count"]["double_counted_pv"],
+              "hours_residual": S25["double_count"]["hours_residual"],
+              "overlap_periods": len(S25["double_count"]["overlaps"]), "scenarios_with_residual": [k for k, s in M["scenarios"].items() if s["double_count"]["residual"] != "0.00"],
+              "scenarios_with_hours_residual": [k for k, s in M["scenarios"].items() if s["double_count"]["hours_residual"] != "0.00"]},
     "DR-03": {"init-015": {sid: [s["initiatives"]["init-015"]["npv"]["value"], s["initiatives"]["init-015"]["payback"]["simple"]["period"], s["initiatives"]["init-015"]["payback"]["discounted"]["period"]]
-                           for sid, s in M["scenarios"].items() if "init-015" in s["initiatives"]}},
+                           for sid, s in M["scenarios"].items() if "init-015" in s["initiatives"]},
+              "benefit_to_cost": {sid: str(F(sum(F(r["cash_benefits"]) for r in s["initiatives"]["init-015"]["cash_flow"]), 1) / sum(F(r["costs"]) for r in s["initiatives"]["init-015"]["cash_flow"]))
+                                  for sid, s in M["scenarios"].items() if "init-015" in s["initiatives"]}},
     "DR-04": {"versions": [[v["version_number"], v["total"], v["created_at"]] for v in M["initiatives"]["init-003"]["forecast"]["versions"]], "latest_minus_original": M["initiatives"]["init-003"]["forecast"]["latest_minus_original"]},
     "DR-05": {"res-03": M["resources"]["res-03"]},
     "DR-06": S25["initiatives"]["init-008"]["benefit_realization"]["cash"],

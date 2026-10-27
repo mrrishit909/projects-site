@@ -1,8 +1,8 @@
 """Read side: GET /data/{entity} and GET /metrics (docs/api-contract.md, D-04, D-05).
 
 * Entity reads are ordered by the entity's key (code-point order) and paged with an opaque cursor (base64 of the last key), so pages are stable with no
-  duplicates or gaps. ``from``/``to`` filter the entity's time field on the half-open window ``[from, to)`` (from inclusive, to exclusive; reversed or
-  invalid is 422); other filters are equality on a whitelist of columns per entity (unknown filter: 422 INVALID_FILTER). No actor is needed. Amounts
+  duplicates or gaps. ``from``/``to`` filter the entity's time field on the half-open window ``[from, to)`` (from inclusive, to exclusive; from = to is an empty window, from after to or an
+  invalid instant is 422); other filters are equality on a whitelist of columns per entity (unknown filter: 422 INVALID_FILTER). No actor is needed. Amounts
   are decimal strings (2 places or more), proportions 6 places, instants UTC with Z.
 * GET /metrics runs the domain over the tables at ``as_of`` (default: the server's now): the full ``metrics`` tree in the nesting of expected.json, the
   ``ingest`` counts and rejected records, narrowed by ``scenario_id``. ``from``/``to`` (half-open, ISO date or instant) narrow the observations and the
@@ -20,7 +20,9 @@ from typing import Any
 
 import psycopg
 from changeworks import CONTRACT_VERSION, compute
+from changeworks.context import Ctx
 from changeworks.contract import ENTITIES
+from changeworks.snapshot import snapshot_hash
 from changeworks.timeutil import iso_z
 
 from . import clock, db
@@ -84,9 +86,10 @@ def parse_instant(value: str, name: str) -> datetime:
 
 
 def parse_window(lo: str | None, hi: str | None) -> tuple[datetime | None, datetime | None]:
+    """The half-open window [from, to). from = to is an empty window (R9-22), not an error; from after to is."""
     window = (parse_instant(lo, "from") if lo else None, parse_instant(hi, "to") if hi else None)
-    if window[0] is not None and window[1] is not None and window[0] >= window[1]:
-        raise ApiError(422, "VALIDATION_FAILED", "from must be before to (the window is half-open)", [detail("from", "INVALID_WINDOW", "from must be before to")])
+    if window[0] is not None and window[1] is not None and window[0] > window[1]:
+        raise ApiError(422, "VALIDATION_FAILED", "from must not be after to (the window is half-open)", [detail("from", "INVALID_WINDOW", "from must not be after to")])
     return window
 
 
@@ -165,6 +168,33 @@ def read_entity(entity: str, limit: int, cursor: str | None, lo: str | None, hi:
         return {"data": [db.jsonable_row(r) for r in rows], "meta": meta(conn, applied, total, next_cursor, _exclusions(conn)), "warnings": []}
 
 
+def _figures(s: dict[str, Any]) -> dict[str, Any]:
+    """What a proposal's comparison stores about a scenario (status aside, which may legitimately change)."""
+    return {"npv_total": s["npv_total"], "residual": s["double_count"]["residual"], "hours_residual": s["double_count"]["hours_residual"],
+            "initiatives": {iid: {"npv": b["npv"]["value"], "simple_payback": b["payback"]["simple"]["period"], "discounted_payback": b["payback"]["discounted"]["period"]}
+                            for iid, b in s["initiatives"].items()}}
+
+
+def _proposals(conn: Conn, pop: Any, metrics: dict[str, Any], when: datetime) -> dict[str, Any]:
+    """R9-01: a proposed scenario is served from the inputs it was proposed on. Its figures are computed from the plan rows and assumption versions that existed when
+    it was created, so a later build on the same initiatives cannot move them; this block proves it: the hash of the resolved inputs against the hash stored with the
+    proposal, and the current figures against the comparison stored with it."""
+    out: dict[str, Any] = {}
+    rows = conn.execute("SELECT scenario_id, cw_iso(proposed_at) AS proposed_at, snapshot_hash, comparison FROM scenario_versions WHERE status = 'proposed' ORDER BY scenario_id COLLATE \"C\"").fetchall()
+    for r in rows:
+        sid = r["scenario_id"]
+        if sid not in metrics["scenarios"]:
+            continue
+        sc = next(x for x in pop.acc["scenario_versions"] if x["scenario_id"] == sid)
+        now_hash = snapshot_hash(Ctx(pop, when), sc)
+        stored = (r["comparison"] or {}).get("scenarios", {})
+        matches = all({f: _figures(metrics["scenarios"][k])[f] for f in v if f in ("npv_total", "residual", "hours_residual", "initiatives")} ==
+                      {f: v[f] for f in v if f in ("npv_total", "residual", "hours_residual", "initiatives")} for k, v in stored.items() if k in metrics["scenarios"])
+        out[sid] = {"proposed_at": r["proposed_at"], "snapshot_hash_stored": r["snapshot_hash"], "snapshot_hash_now": now_hash,
+                    "snapshot_verified": r["snapshot_hash"] == now_hash if r["snapshot_hash"] else None, "figures_equal_the_stored_comparison": matches}
+    return out
+
+
 def read_metrics(scenario_id: str | None, lo: str | None, hi: str | None, as_of: str | None) -> dict[str, Any]:
     window = parse_window(lo, hi)
     when = parse_instant(as_of, "as_of") if as_of else clock.now()
@@ -183,7 +213,8 @@ def read_metrics(scenario_id: str | None, lo: str | None, hi: str | None, as_of:
             item["raw_row"] = r["raw_row"]
             records.append(item)
         counts = {e: {"accepted": len(pop.acc[e]), "rejected": sum(1 for r in records if r["entity"] == e)} for e in ENTITIES}
-        data = {"as_of": iso_z(when), "window": {"from": iso_z(window[0]), "to": iso_z(window[1])}, "scenario_id": scenario_id,
+        proposals = _proposals(conn, pop, metrics, when)
+        data = {"as_of": iso_z(when), "window": {"from": iso_z(window[0]), "to": iso_z(window[1])}, "scenario_id": scenario_id, "proposals": proposals,
                 "period_basis": pop.config["period_basis"], "period_start": pop.config["period_start"], "empty_population": not pop.acc["initiatives"],
                 "ingest": {"counts": counts, "rejected_records": records}, "metrics": metrics}
         applied = {"from": iso_z(window[0]), "to": iso_z(window[1]), "as_of": iso_z(when), "scenario_id": scenario_id}

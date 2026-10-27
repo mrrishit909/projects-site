@@ -69,6 +69,72 @@
       "duration_periods": 1,
       "deployment_period": 1,
       "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "rj-p1",
+      "title": "Probe: no investment",
+      "sponsor_id": "sp-1",
+      "status": "candidate",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "rj-p2",
+      "title": "Probe: dips again",
+      "sponsor_id": "sp-1",
+      "status": "candidate",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "rj-p3",
+      "title": "Probe: ends negative",
+      "sponsor_id": "sp-1",
+      "status": "candidate",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "rj-p4",
+      "title": "Probe: partial trend",
+      "sponsor_id": "sp-1",
+      "status": "candidate",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "rj-p5",
+      "title": "Probe: shared hours A",
+      "sponsor_id": "sp-1",
+      "status": "candidate",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "initiative_id": "rj-p6",
+      "title": "Probe: shared hours B",
+      "sponsor_id": "sp-1",
+      "status": "candidate",
+      "baseline_version": null,
+      "requested_start_period": 0,
+      "duration_periods": 1,
+      "deployment_period": 1,
+      "eligibility_rule_version": "elig-v1"
     }
   ],
   "process_baselines": [
@@ -238,6 +304,39 @@
       ],
       "pinned_assumption_ids": [],
       "created_at": "2026-01-05T00:00:00Z"
+    },
+    {
+      "scenario_id": "rs-6",
+      "baseline_version": "v1",
+      "discount_rate": "0.000000",
+      "rate_basis": "monthly",
+      "rate_conversion_assumption_id": null,
+      "horizon_periods": 5,
+      "status": "draft",
+      "initiative_ids": [
+        "rj-p1",
+        "rj-p2",
+        "rj-p3",
+        "rj-p4",
+        "rj-p5",
+        "rj-p6"
+      ],
+      "pinned_assumption_ids": [],
+      "created_at": "2026-01-05T00:00:00Z"
+    },
+    {
+      "scenario_id": "rs-7",
+      "baseline_version": "v1",
+      "discount_rate": "0.000000",
+      "rate_basis": "monthly",
+      "rate_conversion_assumption_id": null,
+      "horizon_periods": 5,
+      "status": "draft",
+      "initiative_ids": [
+        "rj-p2"
+      ],
+      "pinned_assumption_ids": [],
+      "created_at": "2026-03-01T00:00:00Z"
     }
   ],
   "cost_items": [
@@ -332,6 +431,79 @@
       "cost_type": "one_time",
       "cost_basis": "planned",
       "amount": "10.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    },
+    {
+      "cost_id": "rc-p2a",
+      "initiative_id": "rj-p2",
+      "cost_key": "ck-p2a",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "1000.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    },
+    {
+      "cost_id": "rc-p2b",
+      "initiative_id": "rj-p2",
+      "cost_key": "ck-p2b",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "300.00",
+      "period_index": 2,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    },
+    {
+      "cost_id": "rc-p2c",
+      "initiative_id": "rj-p2",
+      "cost_key": "ck-p2c",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "500.00",
+      "period_index": 3,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null,
+      "recorded_at": "2026-02-01T00:00:00Z"
+    },
+    {
+      "cost_id": "rc-p3a",
+      "initiative_id": "rj-p3",
+      "cost_key": "ck-p3a",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "1000.00",
+      "period_index": 0,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    },
+    {
+      "cost_id": "rc-p3b",
+      "initiative_id": "rj-p3",
+      "cost_key": "ck-p3b",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "700.00",
+      "period_index": 2,
+      "start_period": null,
+      "end_period": null,
+      "baseline_version": null
+    },
+    {
+      "cost_id": "rc-p4",
+      "initiative_id": "rj-p4",
+      "cost_key": "ck-p4",
+      "cost_type": "one_time",
+      "cost_basis": "planned",
+      "amount": "150.00",
       "period_index": 0,
       "start_period": null,
       "end_period": null,
@@ -494,6 +666,123 @@
       "evidence_ref": null,
       "benefit_source_key": null,
       "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-p1a",
+      "initiative_id": "rj-p1",
+      "benefit_type": "cash",
+      "amount": "600.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-p1b",
+      "initiative_id": "rj-p1",
+      "benefit_type": "cash",
+      "amount": "600.00",
+      "period_index": 2,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-p2a",
+      "initiative_id": "rj-p2",
+      "benefit_type": "cash",
+      "amount": "1200.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-p2b",
+      "initiative_id": "rj-p2",
+      "benefit_type": "cash",
+      "amount": "500.00",
+      "period_index": 3,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-p3",
+      "initiative_id": "rj-p3",
+      "benefit_type": "cash",
+      "amount": "1500.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-p4a",
+      "initiative_id": "rj-p4",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 1,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": "10.00"
+    },
+    {
+      "benefit_id": "rb-p4b",
+      "initiative_id": "rj-p4",
+      "benefit_type": "cash",
+      "amount": "100.00",
+      "period_index": 2,
+      "starts_period": 1,
+      "unit": "USD",
+      "cash_realisation": null,
+      "evidence_ref": null,
+      "benefit_source_key": null,
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-p5",
+      "initiative_id": "rj-p5",
+      "benefit_type": "capacity",
+      "amount": "40.00",
+      "period_index": 2,
+      "starts_period": 1,
+      "unit": "hours",
+      "cash_realisation": false,
+      "evidence_ref": null,
+      "benefit_source_key": "src-probe-team",
+      "baseline_trend_per_period": null
+    },
+    {
+      "benefit_id": "rb-p6",
+      "initiative_id": "rj-p6",
+      "benefit_type": "capacity",
+      "amount": "60.00",
+      "period_index": 2,
+      "starts_period": 1,
+      "unit": "hours",
+      "cash_realisation": false,
+      "evidence_ref": null,
+      "benefit_source_key": "src-probe-team",
+      "baseline_trend_per_period": null
     }
   ],
   "dependencies": [
@@ -646,6 +935,15 @@
       "adopted_count": 10,
       "observed_at": "2026-05-31T00:00:00Z",
       "eligibility_rule_version": "elig-v2"
+    },
+    {
+      "observation_id": "rao-4",
+      "initiative_id": "rj-i1",
+      "eligible_count": 20,
+      "adopted_count": 16,
+      "observed_at": "2026-05-31T00:00:00Z",
+      "eligibility_rule_version": "elig-v1",
+      "recorded_at": "2026-07-15T00:00:00Z"
     }
   ],
   "training_completions": [
@@ -664,6 +962,15 @@
       "completed": 21,
       "recorded_at": "2026-05-31T00:00:00Z",
       "eligibility_rule_version": "elig-v1"
+    },
+    {
+      "training_id": "rt-3",
+      "initiative_id": "rj-i1",
+      "eligible_trainees": 20,
+      "completed": 19,
+      "recorded_at": "2026-05-15T00:00:00Z",
+      "eligibility_rule_version": "elig-v1",
+      "entered_at": "2026-07-10T00:00:00Z"
     }
   ],
   "benefit_observations": [
@@ -687,6 +994,28 @@
       "measured_value": "1.00",
       "evidence_ref": "ev:rbo3",
       "observed_at": "2026-02-28T00:00:00Z"
+    },
+    {
+      "benefit_observation_id": "rbo-p4a",
+      "benefit_id": "rb-p4a",
+      "measured_value": "90.00",
+      "evidence_ref": "ev:p4a",
+      "observed_at": "2026-03-15T00:00:00Z"
+    },
+    {
+      "benefit_observation_id": "rbo-p4b",
+      "benefit_id": "rb-p4b",
+      "measured_value": "80.00",
+      "evidence_ref": "ev:p4b",
+      "observed_at": "2026-04-15T00:00:00Z"
+    },
+    {
+      "benefit_observation_id": "rbo-p4c",
+      "benefit_id": "rb-p4a",
+      "measured_value": "95.00",
+      "evidence_ref": "ev:p4c",
+      "observed_at": "2026-05-01T00:00:00Z",
+      "recorded_at": "2026-07-15T00:00:00Z"
     }
   ],
   "risk_items": [

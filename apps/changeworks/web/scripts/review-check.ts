@@ -100,7 +100,7 @@ world("an overallocation and a touching allocation");
 world("a case that never pays back");
 {
   const r = run(world0("annual", "2028-06-30T00:00:00Z", { initiatives: [ini()], scenario_versions: [sc("s-1", ["i-1"], "0.100000", "annual", 4)], cost_items: [cost("c-1", "i-1", "ck", "one_time", "1000.00", 0)], benefit_items: [ben("b-1", "i-1", "cash", "100.00", 1), ben("b-2", "i-1", "cash", "100.00", 2), ben("b-3", "i-1", "cash", "100.00", 3)] }));
-  eq("both paybacks null, cumulative ends at -700.00", [blk(r).payback, blk(r).cash_flow[3].cumulative], [{ simple: { period: null, interpolated: null }, discounted: { period: null, interpolated: null } }, "-700.00"]);
+  eq("both paybacks null, cumulative ends at -700.00", [blk(r).payback, blk(r).cash_flow[3].cumulative], [{ simple: { period: null, interpolated: null, reason: "NOT_RECOVERED" }, discounted: { period: null, interpolated: null, reason: "NOT_RECOVERED" } }, "-700.00"]);
   // NPV = -1000 + 100/1.1 + 100/1.21 + 100/1.331 = (-1331000 + 121000 + 110000 + 100000)/1331 = -1000000/1331 = -751.31...
   eq("NPV = -1000000/1331 = -751.31", [blk(r).npv.exact, blk(r).npv.value], ["-1000000/1331", "-751.31"]);
 }
@@ -109,14 +109,14 @@ world("simple payback without a discounted one");
 {
   const r = run(world0("annual", "2028-06-30T00:00:00Z", { initiatives: [ini()], scenario_versions: [sc("s-1", ["i-1"], "0.500000", "annual", 3)], cost_items: [cost("c-1", "i-1", "ck", "one_time", "1000.00", 0)], benefit_items: [ben("b-1", "i-1", "cash", "600.00", 1), ben("b-2", "i-1", "cash", "600.00", 2)] }));
   // simple: t=2, 1 + 400/(200+400) = 1.6667 ; discounted: -1000 + 400 + 266.666... = -333.33 -> never
-  eq("simple payback 2 (1.6667), discounted null: two paybacks, labelled separately", blk(r).payback, { simple: { period: 2, interpolated: "1.6667" }, discounted: { period: null, interpolated: null } });
+  eq("simple payback 2 (1.6667), discounted null: two paybacks, labelled separately", blk(r).payback, { simple: { period: 2, interpolated: "1.6667", reason: null }, discounted: { period: null, interpolated: null, reason: "NOT_RECOVERED" } });
 }
 // ------------------------------------------------------------------------------------------------------------------------ 10. no flows, and a flow at t=0
 world("no flows at all, and a first flow at t=0");
 {
   const r = run(world0("annual", "2028-06-30T00:00:00Z", { initiatives: [ini("i-1", 0), ini("i-2", 0)], scenario_versions: [sc("s-1", ["i-1", "i-2"], "0.100000", "annual", 2)], benefit_items: [ben("b-1", "i-1", "cash", "100.00", 0)] }));
-  eq("an initiative with no costs and no benefits has NPV and both paybacks null, not 0, and rows of zeros", [blk(r, "s-1", "i-2").npv, blk(r, "s-1", "i-2").payback.simple, blk(r, "s-1", "i-2").cash_flow.map((x: Row) => x["net_cash_flow"])], [{ value: null, exact: null, unit: "USD", label: "estimate" }, { period: null, interpolated: null }, ["0.00", "0.00"]]);
-  eq("a flow of +100 at t=0 with no cost reports payback 0 (0.0000), the D-P9-07 rule that the world's period-0 discovery cost avoids; NPV 100", [blk(r).payback.simple, blk(r).npv.exact], [{ period: 0, interpolated: "0.0000" }, "100"]);
+  eq("an initiative with no costs and no benefits has NPV and both paybacks null, not 0, and rows of zeros", [blk(r, "s-1", "i-2").npv, blk(r, "s-1", "i-2").payback.simple, blk(r, "s-1", "i-2").cash_flow.map((x: Row) => x["net_cash_flow"])], [{ value: null, exact: null, unit: "USD", label: "estimate" }, { period: null, interpolated: null, reason: "NO_FLOWS" }, ["0.00", "0.00"]]);
+  eq("a flow of +100 at t=0 with no cost never goes negative: payback null, reason NO_INVESTMENT (R9-12); NPV 100", [blk(r).payback.simple, blk(r).npv.exact], [{ period: null, interpolated: null, reason: "NO_INVESTMENT" }, "100"]);
 }
 // ------------------------------------------------------------------------------------------------------------------------ 11. avoided cost
 // cost 100 at t=0; avoided 100 with budget evidence (enters), 50 with a claim but no evidence, 30 not cash-realised, 20 with no flag. r=0: NPV = 0.
@@ -164,7 +164,7 @@ world("one initiative claiming a key twice is not an overlap; a null key never o
 world("an empty population");
 {
   const r = run(world0());
-  eq("everything null or zero by contract: empty_population, no scenarios, summary nulls", [r.emptyPopulation, goldenOf(r)["empty_population"], r.metrics["summary"]], [true, true, { summary_scenario_id: null, initiatives: 0, scenarios: 0, npv_total: null, double_count_residual: null, adoption_rate: null, training_completion: null, risk_exposure_total: null, capacity_released_hours_total: null }]);
+  eq("everything null or zero by contract: empty_population, no scenarios, summary nulls", [r.emptyPopulation, goldenOf(r)["empty_population"], r.metrics["summary"]], [true, true, { summary_scenario_id: null, initiatives: 0, scenarios: 0, npv_total: null, npv_sum_of_initiatives: null, double_counted_amount: null, double_counted_pv: null, double_count_residual: null, hours_residual: null, adoption_rate: null, training_completion: null, risk_exposure_total: null, capacity_released_hours_total: null, capacity_released_hours_double_counted: null }]);
 }
 world("zero eligible, no training, an unmatched rule and an impossible count");
 {
@@ -265,7 +265,7 @@ world("a benefit beyond the horizon, and a zero rate");
 {
   const r = run(world0("annual", "2028-06-30T00:00:00Z", { initiatives: [ini()], scenario_versions: [sc("s-1", ["i-1"], "0.000000", "annual", 3)], cost_items: [cost("c-1", "i-1", "ck", "one_time", "300.00", 0)], benefit_items: [ben("b-1", "i-1", "cash", "200.00", 1), ben("b-2", "i-1", "cash", "5000.00", 5), ben("b-3", "i-1", "cash", "200.00", 2)] }));
   eq("the period-5 row is listed as beyond the horizon and is not in the NPV; at r = 0 the NPV is the plain sum -300 + 200 + 200 = 100; every discount factor is 1", [blk(r).excluded_from_cash_flow.beyond_horizon, blk(r).npv.value, blk(r).cash_flow.map((x: Row) => x["discount_factor_exact"])], [["b-2"], "100.00", ["1", "1", "1"]]);
-  eq("paybacks at r = 0 coincide: cumulative -300, -100, 100 -> period 2, 1 + 100/200 = 1.5000", [blk(r).payback.simple, blk(r).payback.discounted], [{ period: 2, interpolated: "1.5000" }, { period: 2, interpolated: "1.5000" }]);
+  eq("paybacks at r = 0 coincide: cumulative -300, -100, 100 -> period 2, 1 + 100/200 = 1.5000", [blk(r).payback.simple, blk(r).payback.discounted], [{ period: 2, interpolated: "1.5000", reason: null }, { period: 2, interpolated: "1.5000", reason: null }]);
 }
 // ------------------------------------------------------------------------------------------------------------------------ 31. instants
 world("instants sort as instants, not as strings");

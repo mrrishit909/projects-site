@@ -1,6 +1,6 @@
 // Calendar (D-04): integer periods from 0 with a `period_basis` and a `period_start` date; ranges half-open; instants UTC with Z.
 // An instant is a BigInt count of microseconds since 1970-01-01T00:00:00Z, so comparisons are exact and fractional seconds keep their order.
-import type { Row } from "./contract";
+import { DomainError, type Row } from "./contract";
 
 export type Instant = bigint;
 const TS = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,6}))?Z$/;
@@ -63,6 +63,13 @@ export function isoSeconds(t: Instant): string { const s = isoZ(t - (t % US + US
 
 export interface Config { period_basis: string; period_start: string; as_of: string | null }
 export interface Ymd { y: number; m: number; d: number }
+
+/** R9-14: a period start is a real calendar date whose day is at most 28, so the same day exists in every month and every year (PERIOD_START_INVALID). */
+export function checkPeriodStart(s: unknown): void {
+  const m = typeof s === "string" ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(s) : null;
+  if (!m || !validDate(Number(m[1]), Number(m[2]), Number(m[3]))) throw new DomainError("PERIOD_START_INVALID", `period_start must be a calendar date YYYY-MM-DD, got ${JSON.stringify(s)}`, {});
+  if (Number(m[3]) > 28) throw new DomainError("PERIOD_START_INVALID", `period_start day must be at most 28 so that every month has it, got ${String(s)}`, { day: Number(m[3]) });
+}
 
 /** `period_start` of period `t` (the start of the half-open period [t, t+1)); throws when the calendar date does not exist. */
 export function periodDate(config: Row, t: number): Ymd {

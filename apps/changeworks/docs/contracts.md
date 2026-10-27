@@ -146,8 +146,8 @@ are the binding form. The points that sharpen D-01..D-04:
 ## D-06 Backend clarifications (adopted from the backend hand-back; the 23 numbered assumptions are in README.md)
 * `/metrics` returns `{as_of, window, scenario_id, period_basis, period_start, empty_population, ingest, metrics}`;
   `period_basis` and `period_start` live in the one-row `dataset_config`; default `as_of` is the server's now. Rows dated
-  after `as_of` (adoption, training, readiness, observations, forecast versions) do not exist yet; plan rows are not
-  clipped by `created_at`. The window narrows observations by instant and cost variance and realization by period
+  after `as_of` (adoption, training, readiness, observations, forecast versions) do not exist yet; a scenario's plan rows
+  and assumption versions are those recorded by its `created_at` (D-09 R9-01). The window narrows observations by instant and cost variance and realization by period
   start; the dated model is not windowed (`MODEL_NOT_WINDOWED`).
 * Metrics use the initiative's current approved baseline; a scenario's `baseline_version` is its label and
   `BASELINE_VERSION_DIFFERS` is returned when they differ. One baseline row per (initiative, version); a second row for
@@ -168,11 +168,10 @@ are the binding form. The points that sharpen D-01..D-04:
   audit row. Reads also expose `baseline_approvals`, `opportunity_scores`, `expanded_costs`, `rejected_records`,
   `audit_events`, `dataset_versions`. Extra ingest codes `MALFORMED_RECORD`, `INVALID_*`, `RATIONALE_REQUIRED`,
   `EVIDENCE_REQUIRED` (README). The SQL reference runs with `SET jit = off`; its NPV is compared within 0.000001 USD
-  (PostgreSQL `power(numeric, integer)` precision), every other figure exactly.
-* **Partial trend coverage (coordinator decision, to implement in the fix round T-09-05 with the review):**
-  `observed_above_trend` is published only when every observed matured row of the benefit type carries a recorded
-  trend; otherwise it is null and the warning `PARTIAL_TREND_COVERAGE` lists the rows without one. The generator
-  world records a trend on every observed benefit so the published figures are unaffected.
+  (the bound is stated in D-09 R9-20), every other figure exactly.
+* **Partial trend coverage:** `observed_above_trend` is published only when every observed matured row of the benefit type
+  carries a recorded trend; otherwise it is null and the warning `PARTIAL_TREND_COVERAGE` lists the rows without one
+  (implemented in every implementation by D-09 R9-13).
 * **Reference fix (coordinator):** `reference_check.py` now orders instants by parsed value, not string (the domain
   already does); the fixture carries no fractional seconds, so no figure changed.
 * Gaps: no resource levelling; the double-count rule is enforced by C07, not a trigger (the database forbids
@@ -187,7 +186,8 @@ completions, 400 benefit observations, 120 risks, 30 scenarios, 12 forecast vers
 mappings and 557 allocations; 2,747 primary objects and 1,544 linked events reported separately; `dataset_version`
 cw-20261026-20261026, `dataset_hash` 6bf7ebaa…, `generated_at` = `as_of`; 978,954 bytes published.
 * Benefits are recognised for 12 periods per stream and recurring costs over the same window (700 rows cannot cover
-  36 periods for 24 initiatives), so NPV and payback describe a first-year case and the site says so. Every initiative
+  36 periods for 24 initiatives), so NPV and payback describe the twelve-period benefit window (the shorter streams run for fewer periods) and the site says so,
+  never "first-year" (D-09 R9-17). Every initiative
   carries a planned discovery cost in period 0 (2 % of its one-time cost); see the payback note below. All 30 world
   scenarios are `draft` (the seeder cannot load `proposed_at`; proposing is shown by the C07 replay). Annual rates carry
   `monthly_rate_conversion` versions; two rates are declared monthly. Baseline trends are recorded on every benefit
@@ -217,10 +217,8 @@ cw-20261026-20261026, `dataset_hash` 6bf7ebaa…, `generated_at` = `as_of`; 978,
   manifest disclosures.
 
 ## D-08 Site decisions (adopted from the web hand-back; the 14 numbered assumptions are in the web README / evidence page)
-* The mirror follows the Python domain exactly, including the D-P9-07 payback-at-zero behaviour (pinned by a review
-  world and stated on the evidence page) and without the `PARTIAL_TREND_COVERAGE` warning (a display-only flag on the
-  benefits page stands in); both change together with the Python domain in the fix round T-09-05, after which
-  `scripts/snapshot-reference.json` is regenerated.
+* The mirror follows the Python domain exactly, including the payback rule (last crossing, D-09 R9-12) and the
+  `PARTIAL_TREND_COVERAGE` warning (D-09 R9-13); `scripts/snapshot-reference.json` is regenerated from the domain.
 * The golden copy lives in `public/golden/` (byte-identical to the fixture, checked by the golden check). The default
   scenario is `scn-025`, the one carrying the designed relationships; every page has a scenario picker.
 * **Confidence** (portfolio page) is a printed four-point assessment (approved baseline; matured benefits with an
@@ -233,8 +231,49 @@ cw-20261026-20261026, `dataset_hash` 6bf7ebaa…, `generated_at` = `as_of`; 978,
   (`DOUBLE_COUNT_UNEXPLAINED` without an explanation; a proposal is final in the session).
 * The synthetic attributable share appears only as a disclosure (benefits and evidence pages) and the golden check
   asserts it is absent from the domain inputs. A JSON number such as `1.0` cannot be told from `1` in JavaScript, so
-  only fractional floats are rejected; a numeric `amount` is `MALFORMED_RECORD`. Python `strip()` and code-point
+  only fractional floats are rejected (the database echo of a rejected row keeps the original number text, D-09 R9-22); a numeric `amount` is `MALFORMED_RECORD`. Python `strip()` and code-point
   ordering are mirrored explicitly; instants are BigInt microseconds. The Playwright preview port honours `PW_PORT`.
+
+## D-09 Review fixes (adopted from review R9)
+* **R9-01 Scenario figures as of `created_at`.** A scenario's figures come from the cost and benefit rows recorded by its `created_at` (every cost
+  and benefit row carries a server `recorded_at`; a row without one is always included) and from the latest assumption version created by then, unless pinned.
+  C07 stores a snapshot hash (`snapshot.py`, sha-256 over the resolved inputs) in `scenario_versions.snapshot_hash`; a proposed scenario is served from
+  that snapshot and `/metrics` reports `snapshot_verified` and `figures_equal_the_stored_comparison`. `scenario_pins` and `scenario_initiatives`
+  are frozen by trigger once a scenario is sealed (`initiatives_expected`, `pins_expected`). Rejected: a copy of the computed figures per scenario (a second source of
+  truth that can drift from the rows).
+* **R9-02 Attributable totals.** `npv_total` is the sum of the initiative NPVs less the present value of the claims that count twice
+  (`double_counted_pv`); the plain sum (`sum_of_initiatives`) and `double_counted_amount` sit beside it, and class totals are attributable class by class.
+  The portfolio and business-case pages show the attributable total first. Rejected: keeping the plain sum as the headline with a footnote.
+* **R9-03 Hours overlap.** The overlap rule also runs on capacity hours (`hours_residual` per shared key, `hours_overlaps`); `explanation_required` is true for either
+  residual and C07 needs the explanation for either; `capacity_released_hours_total` is attributable. Rejected: converting hours to money to reuse the money rule
+  (hours are never added to dollars, D-01).
+* **R9-04 Evidence references** are stripped and non-blank (`EVIDENCE_REQUIRED`) in the API, domain, TypeScript mirror, SQL (CHECK and reference) and `reference_check.py`.
+* **R9-05 Cost key basis.** One `cost_key` has one basis: `COST_KEY_BASIS_CONFLICT` (domain, trigger `cost_items_key_guard`, reference). The P09-TEST-11 recover path uses a new key
+  with a stated reason. Rejected: silently re-keying the later row.
+* **R9-06 Deployment before feasible start.** The warning `DEPLOYMENT_BEFORE_FEASIBLE_START` is in the metrics tree (`roadmap.warnings`) and on the portfolio, roadmap and
+  business-case pages; the cash flow is not re-timed. The manifest discloses the three affected initiatives (init-018, init-019, init-020). Rejected: moving the cash flow to the feasible start (it would
+  change recorded plan rows).
+* **R9-07 Exact sums, rounded once.** Aggregates are exact sums rounded once, never sums of rounded rows (DR-01 hours 2,920.48; scn-025 unconverted hours 145,045.62).
+* **R9-08 DR-05 periods** are computed by the domain (12 to 16) and the site claims check asserts the full set.
+* **R9-09 DR-03 names its scenario.** Every ratio of a designed relationship names its scenario: 0.531465 on the ramp-v2 scenarios (scn-015, 018, 025, 026) and 0.620043 on the others.
+* **R9-10 Forecast revisions.** A revision must cover every period of the original: `REVISION_PERIODS_INCOMPLETE`; `original_preserved` is derived from the stored rows.
+* **R9-11 Observation dates.** `observed_on` lies within [the initiative's first period start, the server date] (`OBSERVED_BEFORE_START`). Every observation has a server
+  `recorded_at`; as-of filtering uses it, `late_recorded` lists what was recorded after the as-of, and same-day ties are broken by `recorded_at`.
+* **R9-12 Payback** is the last crossing from below zero; a never-negative series has a null payback with reason `NO_INVESTMENT` (`NOT_RECOVERED`, `NO_FLOWS` otherwise), in Python, SQL,
+  TypeScript and the reference. Three reviewer series are pinned in the variant-rejected probe block. Rejected: keeping "first period at or above zero" (it reports 0 for a series that never needed paying back).
+* **R9-13 Partial trend coverage:** `observed_above_trend` is null with `PARTIAL_TREND_COVERAGE` unless every observed matured row carries a trend (pinned in a probe).
+* **R9-14 Period start** day must be at most 28 (`PERIOD_START_INVALID`) in the domain, the mirror and a database CHECK (`dataset_config_day_ck`).
+* **R9-15 Test counts.** README and site state the true count of the final run (the review expected 399; tests were added, so the figure is the one in the README).
+* **R9-16 Training against adoption** is compared on the common population and the counts are stated: eleven initiatives have both series; five reached half adoption with lags 4, 4, 5, 5, 6 periods; six have not yet.
+* **R9-17 Window wording.** The site says "within the twelve-period benefit window" and lists the shorter streams; "first-year" is gone.
+* **R9-18 Outcome-informed choices.** The case-study route lists the trend-share design choice. DR-02 is worded as the main site: of the portfolio's 32,677,894.70 of money-class benefits (including the
+  4,025,383.47 shown beside the flow) only 32,470,748.38 are attributable once. The main site's own `project.json` is outside this app.
+* **R9-19 Not built** lists the declared uncertainty ranges and the workbook and executive recommendation.
+* **R9-20 SQL NPV bound.** The SQL reference computes S_t / q^t with exact recursion (no `power()`); its NPV is exact to 0.000001 for horizons up to 36 periods and 14-digit amounts, tested on the
+  published world and on a 14-digit case. Rejected: widening `NPV_TOLERANCE`.
+* **R9-21 Contrast.** The brass text is `#6b5329` (at least 4.5:1 on every wash) and the current nav number is `#1d1608` on brass; an e2e test measures every text node under 18 px on every route at 1280 px (disabled controls excepted).
+* **R9-22 Small rules.** C07 explanations need at least 20 characters (`EXPLANATION_TOO_SHORT`); `expected_version` is required on C10 (0 when there is none); `from = to` is an empty window everywhere;
+  `error_rate "1.5"` is `INVALID_FIELD`; the rejected-record echo keeps the original number text (the seeder reads numbers with their lexeme).
 
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners. Mode B: TypeScript mirror over the published

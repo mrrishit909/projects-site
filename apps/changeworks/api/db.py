@@ -13,7 +13,7 @@ from typing import Any, Iterator
 
 import psycopg
 from changeworks.contract import ENTITIES
-from changeworks.ingest import Population
+from changeworks.ingest import OPTIONAL_TS, Population
 from changeworks.timeutil import iso_z
 from psycopg.rows import dict_row
 
@@ -91,23 +91,23 @@ SPECS: dict[str, tuple[str, str, str, tuple[str, ...]]] = {
     "resources": ("resources", f"resource_id, name, {_d('capacity_per_period')}, unit", "", ("resource_id",)),
     "scenario_versions": ("scenario_versions", f"scenario_id, baseline_version, {_p('discount_rate')}, rate_basis, rate_conversion_assumption_id, horizon_periods, status, "
                           f"{_agg('scenario_initiatives', 'initiative_id', 'initiative_ids')}, {_agg('scenario_pins', 'assumption_id', 'pinned_assumption_ids')}, "
-                          f"{_t('created_at')}", f"created_by, {_t('proposed_at')}, proposed_by, comparison, residual_explanation", ("scenario_id",)),
-    "cost_items": ("cost_items", f"cost_id, initiative_id, cost_key, cost_type, cost_basis, {_d('amount')}, period_index, start_period, end_period, baseline_version",
-                   "", ("cost_id",)),
+                          f"{_t('created_at')}", f"created_by, {_t('proposed_at')}, proposed_by, comparison, residual_explanation, snapshot_hash", ("scenario_id",)),
+    "cost_items": ("cost_items", f"cost_id, initiative_id, cost_key, cost_type, cost_basis, {_d('amount')}, period_index, start_period, end_period, baseline_version, "
+                   f"{_t('recorded_at')}", "", ("cost_id",)),
     "benefit_items": ("benefit_items", f"benefit_id, initiative_id, benefit_type, {_d('amount')}, period_index, starts_period, unit, cash_realisation, evidence_ref, "
-                      f"benefit_source_key, {_d('baseline_trend_per_period')}", "", ("benefit_id",)),
+                      f"benefit_source_key, {_d('baseline_trend_per_period')}, {_t('recorded_at')}", "", ("benefit_id",)),
     "dependencies": ("dependencies", "dependency_id, initiative_id, prerequisite_id, dependency_type, lag_periods", "", ("dependency_id",)),
     "stakeholder_groups": ("stakeholder_groups", "group_id, group_name, owner_id, affected_count, impact_level", "", ("group_id",)),
     "impact_mappings": ("impact_mappings", "mapping_id, initiative_id, group_id, operating_change, impact_level", "", ("mapping_id",)),
     "resource_allocations": ("resource_allocations", f"allocation_id, resource_id, initiative_id, period_index, {_d('amount')}", "", ("allocation_id",)),
     "readiness_assessments": ("readiness_assessments", f"assessment_id, group_id, dimension, score, {_d('weight')}, {_t('assessed_at')}", "assessed_by",
                               ("assessment_id",)),
-    "adoption_observations": ("adoption_observations", f"observation_id, initiative_id, eligible_count, adopted_count, {_t('observed_at')}, eligibility_rule_version",
-                              "recorded_by", ("observation_id",)),
-    "training_completions": ("training_completions", f"training_id, initiative_id, eligible_trainees, completed, {_t('recorded_at')}, eligibility_rule_version",
-                             "recorded_by", ("training_id",)),
-    "benefit_observations": ("benefit_observations", f"benefit_observation_id, benefit_id, {_d('measured_value')}, evidence_ref, {_t('observed_at')}", "recorded_by",
-                             ("benefit_observation_id",)),
+    "adoption_observations": ("adoption_observations", f"observation_id, initiative_id, eligible_count, adopted_count, {_t('observed_at')}, eligibility_rule_version, "
+                              f"{_t('recorded_at')}", "recorded_by", ("observation_id",)),
+    "training_completions": ("training_completions", f"training_id, initiative_id, eligible_trainees, completed, {_t('recorded_at')}, eligibility_rule_version, "
+                             f"{_t('entered_at')}", "recorded_by", ("training_id",)),
+    "benefit_observations": ("benefit_observations", f"benefit_observation_id, benefit_id, {_d('measured_value')}, evidence_ref, {_t('observed_at')}, {_t('recorded_at')}",
+                             "recorded_by", ("benefit_observation_id",)),
     "risk_items": ("risk_items", f"risk_id, initiative_id, {_p('probability')}, {_d('impact')}, mitigation", "", ("risk_id",)),
     "forecast_versions": ("forecast_versions", f"forecast_id, initiative_id, version_number, {_d('amount')}, period_index, reason, {_t('created_at')}", "created_by",
                           ("forecast_id",)),
@@ -123,7 +123,12 @@ def load_population(conn: psycopg.Connection[Row]) -> Population:
     for ent in ENTITIES:
         table, cols, _, key = SPECS[ent]
         order = ", ".join(f'{k} COLLATE "C"' for k in key)
-        pop.acc[ent] = list(conn.execute(f"SELECT {cols} FROM {table} ORDER BY {order}").fetchall())     # constants only
+        rows = list(conn.execute(f"SELECT {cols} FROM {table} ORDER BY {order}").fetchall())     # constants only
+        for opt in OPTIONAL_TS.get(ent, ()):         # a server-stamped instant that was never set is absent, as in the rows of inputs.json
+            for r in rows:
+                if r.get(opt) is None:
+                    r.pop(opt, None)
+        pop.acc[ent] = rows
     pop.approvals = list(conn.execute("SELECT initiative_id, baseline_version FROM baseline_approvals ORDER BY approval_id").fetchall())
     return pop
 

@@ -7,7 +7,7 @@ import {
   INITIATIVE_STATUSES, MAX_HORIZON, MAX_PERIOD, RAMP_NAME, SCENARIO_STATUSES, type Entity, type Row,
 } from "./contract";
 import { add, cmp, dec, ge, gt, isDecimal, le, lt, money, ONE, sumFr, ZERO } from "./num";
-import { isTs, parseTs, type Instant } from "./time";
+import { checkPeriodStart, isTs, parseTs, type Instant } from "./time";
 
 const INT_LIMIT = 2_000_000_000;
 
@@ -74,11 +74,19 @@ export const SHAPES: Record<Entity, Record<string, string>> = {
   forecast_versions: spec("forecast_id:id initiative_id:id version_number:int period_index:int amount:dec reason:text created_at:ts"),
 };
 
+/** Server-stamped instants (R9-01, R9-11): absent on the rows of a loaded world, present on every row the API writes. */
+export const OPTIONAL_TS: Partial<Record<Entity, readonly string[]>> = {
+  cost_items: ["recorded_at"], benefit_items: ["recorded_at"], adoption_observations: ["recorded_at"], benefit_observations: ["recorded_at"], training_completions: ["entered_at"],
+};
+/** A non-blank string (Python `strip()` whitespace): the test every evidence reference passes (R9-04). */
+export const hasText = (v: unknown): boolean => typeof v === "string" && pyStrip(v) !== "";
+
 /** Fields that are missing, null where not allowed, or of the wrong type / format (empty when the row is well formed). */
 export function shapeProblems(entity: Entity, row: unknown): Record<string, string> {
   if (row === null || typeof row !== "object" || Array.isArray(row)) return { $: "a record must be an object" };
   const r = row as Row;
   const bad: Record<string, string> = {};
+  for (const name of OPTIONAL_TS[entity] ?? []) if (name in r && r[name] !== null && !isTs(r[name])) bad[name] = "not a valid ts";
   for (const [name, kind] of Object.entries(SHAPES[entity])) {
     const nullable = kind.endsWith("?");
     const base = kind.replace(/\?+$/, "");
@@ -138,7 +146,7 @@ export class Validator {
 
   private initiative(iid: string): Row { return this.acc.initiatives.find((i) => i["initiative_id"] === iid)!; }
   conversionExists(iid: string): boolean {
-    return this.acc.assumption_versions.some((a) => a["initiative_id"] === iid && a["name"] === CAPACITY_RATE_NAME && !!a["staffing_change_evidence_ref"]);
+    return this.acc.assumption_versions.some((a) => a["initiative_id"] === iid && a["name"] === CAPACITY_RATE_NAME && hasText(a["staffing_change_evidence_ref"]));
   }
   /** A path b -> ... -> a over accepted prerequisite edges (initiative -> prerequisite); the cycle that adding a -> b would close. */
   cycleFrom(a: string, b: string): string[] | null {
@@ -167,8 +175,9 @@ export class Validator {
         return null;
       }
       case "process_baselines": {
-        if (r["volume"] < 0 || r["minutes_per_case"] < 0 || !(ge(dec(r["error_rate"]), ZERO) && le(dec(r["error_rate"]), ONE))) return ["INVALID_AMOUNT", {}];
-        if (!pyStrip(r["evidence_ref"])) return ["EVIDENCE_REQUIRED", {}];
+        if (r["volume"] < 0 || r["minutes_per_case"] < 0) return ["INVALID_AMOUNT", {}];
+        if (!(ge(dec(r["error_rate"]), ZERO) && le(dec(r["error_rate"]), ONE))) return ["INVALID_FIELD", { field: "error_rate", reason: "a proportion in [0, 1]" }];
+        if (!pyStrip(r["evidence_ref"])) return ["EVIDENCE_REQUIRED", { field: "evidence_ref" }];
         for (const b of acc[e]) {
           if (b["initiative_id"] === r["initiative_id"] && b["baseline_version"] === r["baseline_version"]) {
             const ini = this.initiative(r["initiative_id"]);
@@ -182,6 +191,7 @@ export class Validator {
         if (r["version_number"] < 1) return ["INVALID_VERSION", {}];
         if (!pyStrip(r["rationale"])) return ["RATIONALE_REQUIRED", {}];
         if (!pyStrip(r["author_id"])) return ["AUTHOR_REQUIRED", {}];
+        for (const fld of ["evidence_ref", "staffing_change_evidence_ref"]) if (r[fld] !== null && !pyStrip(r[fld])) return ["EVIDENCE_REQUIRED", { field: fld }];
         if (nul(r["value"]) === nul(r["values"])) return ["INVALID_ASSUMPTION", { reason: "exactly one of value and values" }];
         if (r["name"] === RAMP_NAME) {
           const vals = ((r["values"] ?? []) as string[]).map(dec);
@@ -218,6 +228,13 @@ export class Validator {
         return null;
       }
       case "cost_items": {
+        if (r["cost_type"] === "one_time" || r["cost_type"] === "recurring") { // R9-05: one cost key is one kind of cost for an initiative and a basis
+          for (const c of acc[e]) {
+            if (c["initiative_id"] === r["initiative_id"] && c["cost_key"] === r["cost_key"] && c["cost_basis"] === r["cost_basis"] && c["cost_type"] !== r["cost_type"]) {
+              return ["COST_KEY_BASIS_CONFLICT", { first_cost_id: c["cost_id"], first_cost_type: c["cost_type"], this_cost_type: r["cost_type"], cost_key: r["cost_key"], cost_basis: r["cost_basis"] }];
+            }
+          }
+        }
         if (r["cost_type"] === "one_time") {
           if (r["period_index"] === null || !(r["period_index"] >= 0 && r["period_index"] <= MAX_PERIOD) || r["start_period"] !== null || r["end_period"] !== null) return ["INVALID_PERIOD", {}];
           for (const c of acc[e]) {
@@ -235,6 +252,7 @@ export class Validator {
         if (!has(BENEFIT_TYPES, r["benefit_type"])) return ["INVALID_BENEFIT_TYPE", {}];
         if (lt(dec(r["amount"]), ZERO) || (r["baseline_trend_per_period"] !== null && lt(dec(r["baseline_trend_per_period"]), ZERO))) return ["INVALID_AMOUNT", {}];
         if (r["unit"] !== (r["benefit_type"] === "capacity" ? "hours" : "USD")) return ["INVALID_UNIT", { unit: r["unit"], benefit_type: r["benefit_type"] }];
+        if (r["evidence_ref"] !== null && !pyStrip(r["evidence_ref"])) return ["EVIDENCE_REQUIRED", { field: "evidence_ref" }];
         const ini = this.initiative(r["initiative_id"]);
         if (r["starts_period"] < ini["deployment_period"]) return ["BENEFIT_BEFORE_DEPLOYMENT", { starts_period: r["starts_period"], deployment_period: ini["deployment_period"] }];
         if (r["period_index"] < r["starts_period"] || r["period_index"] > MAX_PERIOD) return ["INVALID_PERIOD", {}];
@@ -284,6 +302,7 @@ export class Validator {
       }
       case "benefit_observations": {
         if (lt(dec(r["measured_value"]), ZERO)) return ["INVALID_AMOUNT", {}];
+        if (!pyStrip(r["evidence_ref"])) return ["EVIDENCE_REQUIRED", { field: "evidence_ref" }];
         return null;
       }
       case "risk_items": {
@@ -310,7 +329,10 @@ export function ingestCounts(ing: Ingest): Record<string, { accepted: number; re
   return Object.fromEntries(ENTITIES.map((e) => [e, { accepted: ing.population.acc[e].length, rejected: ing.rejected.filter((r) => r.entity === e).length }]));
 }
 export const rejectedRecords = (ing: Ingest): Row[] => ing.rejected.map(rejectionRecord);
-export const configOf = (inputs: Row): Row => ({ period_basis: inputs["period_basis"], period_start: inputs["period_start"], as_of: inputs["as_of"] ?? null });
+export const configOf = (inputs: Row): Row => {
+  checkPeriodStart(inputs["period_start"]); // R9-14: refused cleanly, never a crash inside the calendar
+  return { period_basis: inputs["period_basis"], period_start: inputs["period_start"], as_of: inputs["as_of"] ?? null };
+};
 
 /** Validate a whole dataset (the shape of inputs.json): accepted rows per entity and the rejected records in entity order then row order. */
 export function validateBatch(inputs: Row): Ingest {

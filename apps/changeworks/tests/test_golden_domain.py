@@ -8,7 +8,7 @@ from changeworks.numbers import rnd
 
 from support_db import flat, golden_expected, golden_inputs
 
-LEAVES = 572
+LEAVES = 643
 
 
 @pytest.fixture(scope="module")
@@ -44,8 +44,8 @@ def test_spec_sentence_p09_gold_01(result):
     assert [r["net_cash_flow"] for r in i1["cash_flow"]] == ["-1000.00", "600.00", "600.00"]
     assert i1["npv"] == {"value": "41.32", "exact": "5000/121", "unit": "USD", "label": "estimate"}
     assert F(i1["npv"]["exact"]) == -1000 + F(600) / F(11, 10) + F(600) / F(11, 10) ** 2
-    assert i1["payback"]["simple"] == {"period": 2, "interpolated": "1.6667"}
-    assert i1["payback"]["discounted"] == {"period": 2, "interpolated": "1.9167"}                # two different numbers, two labels
+    assert i1["payback"]["simple"] == {"period": 2, "interpolated": "1.6667", "reason": None}
+    assert i1["payback"]["discounted"] == {"period": 2, "interpolated": "1.9167", "reason": None}                # two different numbers, two labels
     assert i1["excluded_from_cash_flow"]["capacity_hours_not_converted"] == "800.00"
     assert all(r["cash_benefits"] in ("0.00", "600.00") for r in i1["cash_flow"])               # hours are never added to dollars
     assert i1["capacity_released"]["hours"] == "400.0000"
@@ -58,7 +58,7 @@ def test_ramp_lag_and_benefit_classes_of_init_002(result):
     assert i2["cash_flow"][2]["benefits_by_class"] == {"cash": "400.00", "revenue": "50.00", "avoided_cost_realised": "75.00", "capacity_converted": "0.00"}
     assert i2["excluded_from_cash_flow"]["avoided_cost_beside_total"] == "120.00"
     assert [r["amount"] for r in i2["expanded_planned_costs"]] == ["500.00", "100.00", "100.00"]  # the recurring cost, expanded explicitly
-    assert i2["payback"]["discounted"] == {"period": None, "interpolated": None}
+    assert i2["payback"]["discounted"] == {"period": None, "interpolated": None, "reason": "NOT_RECOVERED"}
 
 
 def test_null_is_unknown_never_zero(result):
@@ -77,12 +77,34 @@ def test_double_count_residual_at_the_largest_claim(result):
     assert dc["overlaps"][0]["counted_once"] == "150.00" and [c["amount"] for c in dc["overlaps"][0]["claims"]] == ["75.00", "150.00"]
 
 
+def test_the_portfolio_npv_counts_the_shared_claim_once_and_shows_the_sum_beside_it(result):
+    """R9-02: the 75.00 of init-002 that init-003 also claims is received in period 2; its present value 75/1.1^2 = 7500/121 comes off the sum of the NPVs."""
+    sc = result.metrics["scenarios"]["scn-001"]
+    assert sc["npv_total"] == {"value": "-754.55", "exact": "-8300/11", "basis": "attributable", "sum_of_initiatives": "-692.56", "sum_of_initiatives_exact": "-83800/121"}
+    assert F(sc["npv_total"]["exact"]) == F(sc["npv_total"]["sum_of_initiatives_exact"]) - F(sc["double_count"]["double_counted_pv_exact"]) == F(-91300, 121)
+    dc = sc["double_count"]
+    assert (dc["double_counted_amount"], dc["double_counted_pv"], dc["double_counted_pv_exact"]) == ("75.00", "61.98", "7500/121")
+    assert dc["double_counted_by_class"]["avoided_cost_realised"] == "75.00" and dc["overlaps"][0]["claims"][0]["benefit_class"] == "avoided_cost_realised"
+
+
+def test_deployment_before_the_feasible_start_is_reported_not_repaired(result):
+    """R9-06: init-002 deploys at 1 but cannot start before 2, init-003 deploys at 2 and cannot start before 3; init-001 is fine. The cash flow keeps its timing."""
+    m = result.metrics
+    assert m["initiatives"]["init-001"]["roadmap"]["warnings"] == []
+    assert [w["periods_early"] for w in m["initiatives"]["init-002"]["roadmap"]["warnings"]] == [1] and m["initiatives"]["init-003"]["roadmap"]["warnings"][0]["code"] == "DEPLOYMENT_BEFORE_FEASIBLE_START"
+    assert sorted(w["path"] for w in result.warnings if w["code"] == "DEPLOYMENT_BEFORE_FEASIBLE_START") == ["metrics.initiatives.init-002.roadmap", "metrics.initiatives.init-003.roadmap"]
+    assert m["scenarios"]["scn-001"]["initiatives"]["init-002"]["cash_flow"][1]["net_cash_flow"] == "100.00"
+
+
 def test_summary_pools_only_what_can_be_pooled(result):
     s = result.metrics["summary"]
-    assert s["adoption_rate"] == "0.555556" and s["training_completion"] == "0.950000" and s["npv_total"] == "-692.56"
-    assert s["risk_exposure_total"] == "2500.00" and s["capacity_released_hours_total"] == "1000.0000"
-    assert set(s) == {"summary_scenario_id", "initiatives", "scenarios", "npv_total", "double_count_residual", "adoption_rate", "training_completion",
-                      "risk_exposure_total", "capacity_released_hours_total"}                    # no pooled payback, realization, readiness, variance or delay
+    assert s["adoption_rate"] == "0.555556" and s["training_completion"] == "0.950000"
+    assert s["npv_total"] == "-754.55" and s["npv_sum_of_initiatives"] == "-692.56"                # R9-02: the attributable total, the sum beside it
+    assert (s["double_counted_amount"], s["double_counted_pv"], s["double_count_residual"], s["hours_residual"]) == ("75.00", "61.98", "75.00", "0.00")
+    assert s["risk_exposure_total"] == "2500.00" and s["capacity_released_hours_total"] == "1000.0000" and s["capacity_released_hours_double_counted"] == "0.0000"
+    assert set(s) == {"summary_scenario_id", "initiatives", "scenarios", "npv_total", "npv_sum_of_initiatives", "double_counted_amount", "double_counted_pv",
+                      "double_count_residual", "hours_residual", "adoption_rate", "training_completion", "risk_exposure_total", "capacity_released_hours_total",
+                      "capacity_released_hours_double_counted"}                                  # no pooled payback, realization, readiness, variance or delay
 
 
 def test_no_float_anywhere_in_inputs_or_outputs(result):

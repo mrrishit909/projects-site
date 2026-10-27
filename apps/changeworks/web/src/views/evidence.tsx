@@ -100,11 +100,13 @@ function SnapshotEvidence({ ds }: { ds: Dataset }) {
         <h2 id="h-lim">What this cannot show</h2>
         <ul>
           <li><strong>Mode.</strong> The backend (Python domain, PostgreSQL, FastAPI) is verified on hosted runners; this site is the TypeScript mirror over a published snapshot. The sensitivity lab, the roadmap edits and the scenario selection are browser-memory simulations that reset on reload.</li>
-          <li><strong>First-year case.</strong> Benefits are recognised for 12 periods per stream and recurring costs run over the same window, so NPV and payback describe the first year after go-live, not a multi-year case.</li>
+          <li><strong>Twelve-period benefit window.</strong> Benefits are recognised within a twelve-period window per stream (the shorter streams run for fewer periods) and recurring costs run over the same window, so NPV and payback describe that window after go-live, not a multi-year case.</li>
           <li><strong>Drafts.</strong> All 30 scenarios are drafts; the seeder cannot load a proposed one. Nothing is funded and there is no funded status.</li>
           <li><strong>Attribution.</strong> An observed change is never attributed to the rollout; the baseline trend sits beside it.</li>
-          <li><strong>Payback rule.</strong> A cumulative of exactly 0 at period 0 counts as paid back in the current domain; the coordinator's planned NO_INVESTMENT rule is not yet implemented, and the world's period-0 discovery cost keeps every published payback honest.</li>
-          <li><strong>Partial trend coverage.</strong> Where only some compared rows carry a trend, the register says so instead of showing a partial difference (the mirror's flag; the Python domain's fix is pending). The world records a trend on every observed benefit.</li>
+          <li><strong>Payback rule.</strong> A payback is the period of the last crossing from below zero. A series that is never negative has no payback and the reason NO_INVESTMENT; one that ends negative has NOT_RECOVERED; one with no flows has NO_FLOWS. The same rule runs in the Python domain, the SQL reference and this mirror.</li>
+          <li><strong>Partial trend coverage.</strong> Where only some compared rows carry a trend, the figure "observed above trend" is null with the warning PARTIAL_TREND_COVERAGE instead of a partial difference (all implementations). The world records a trend on every observed benefit.</li>
+          <li><strong>Timing.</strong> Three initiatives are deployed before their dependency-feasible start (DEPLOYMENT_BEFORE_FEASIBLE_START); the cash flow is shown as recorded and not re-timed.</li>
+          <li><strong>Attributable totals.</strong> A total is attributable: a claim two initiatives make on one source counts once. The plain sum and the amount counted twice are shown beside it, in money and in hours.</li>
         </ul>
       </section>
     </>

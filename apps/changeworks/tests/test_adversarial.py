@@ -104,8 +104,8 @@ def test_02_detect_the_overlap_is_counted_once_listed_and_blocks_the_proposal_un
     start(client, conn, "02-detect")
     dc = read(client)["metrics"]["scenarios"]["scn-1"]["double_count"]
     assert (dc["planned_benefits"], dc["attributable_benefits"], dc["residual"], dc["explanation_required"]) == ("800.00", "500.00", "300.00", True)
-    assert dc["overlaps"] == [{"benefit_source_key": "cost-line:CC-1", "period_index": 1, "claims": [{"initiative_id": "i-1", "benefit_id": "b-1", "amount": "500.00"},
-                                                                                                  {"initiative_id": "i-2", "benefit_id": "b-2", "amount": "300.00"}],
+    assert dc["overlaps"] == [{"benefit_source_key": "cost-line:CC-1", "period_index": 1, "claims": [{"initiative_id": "i-1", "benefit_id": "b-1", "amount": "500.00", "benefit_class": "avoided_cost_realised", "enters_cash_flow": True},
+                                                                                                  {"initiative_id": "i-2", "benefit_id": "b-2", "amount": "300.00", "benefit_class": "avoided_cost_realised", "enters_cash_flow": True}],
                               "counted_once": "500.00", "overlap": "300.00"}]
     r = command(client, "select-scenario", {"scenario_id": "scn-1"})
     assert r.status_code == 422 and rule_ids(r) == ["DOUBLE_COUNT_UNEXPLAINED"] and r.json()["error"]["details"][0]["context"]["residual"] == "300.00"
@@ -197,7 +197,8 @@ def test_05_recover_from_the_detect_state_through_the_command(client, conn):
     start(client, conn, "05-detect")
     ok = command(client, "record-adoption", {"initiative_id": "i-1", "eligible_count": 40, "adopted_count": 30, "eligibility_rule_version": "elig-v1", "observed_on": "2028-06-15"})
     assert ok.status_code == 200
-    m = read(client)["metrics"]["initiatives"]["i-1"]
+    assert read(client)["metrics"]["initiatives"]["i-1"]["adoption"]["adoption_rate"] != "0.750000"            # recorded on 2028-07-01: it does not exist at the as-of 2028-06-30 (R9-11)
+    m = read(client, as_of="2028-07-02T00:00:00Z")["metrics"]["initiatives"]["i-1"]
     assert m["adoption"]["adoption_rate"] == "0.750000" and m["training"]["training_completion"] == "0.950000"
 
 
@@ -261,7 +262,8 @@ def test_08_detect_a_flow_that_never_pays_back_has_null_paybacks_not_zero_and_no
     start(client, conn, "08-detect")
     assert rejected(client) == {}
     i = init(read(client))
-    assert i["payback"] == {"simple": {"period": None, "interpolated": None}, "discounted": {"period": None, "interpolated": None}}
+    nothing = {"period": None, "interpolated": None, "reason": "NOT_RECOVERED"}
+    assert i["payback"] == {"simple": nothing, "discounted": nothing}
     assert [x["cumulative"] for x in i["cash_flow"]] == ["-1000.00", "-900.00", "-800.00"] and F(i["npv"]["exact"]) < 0 and i["npv"]["label"] == "estimate"
 
 
@@ -270,7 +272,8 @@ def test_08_recover_a_longer_horizon_is_a_new_scenario_and_the_old_one_still_say
     sc = read(client)["metrics"]["scenarios"]
     assert sc["scn-1"]["initiatives"]["i-1"]["payback"]["simple"]["period"] is None                                    # the first scenario was not edited
     two = sc["scn-2"]["initiatives"]["i-1"]
-    assert two["payback"]["simple"] == {"period": 10, "interpolated": "10.0000"} and two["payback"]["discounted"] == {"period": None, "interpolated": None}      # exactly 0 counts
+    assert two["payback"]["simple"] == {"period": 10, "interpolated": "10.0000", "reason": None}      # exactly 0 counts
+    assert two["payback"]["discounted"] == {"period": None, "interpolated": None, "reason": "NOT_RECOVERED"}
     assert F(two["npv"]["exact"]) < 0                                                                                 # it pays back undiscounted, not in present value
 
 
@@ -338,10 +341,18 @@ def test_11_detect_a_repeated_one_time_cost_is_refused_and_the_first_is_kept(cli
     assert r.json()["error"]["details"][0]["context"]["first_period"] == 0
     with pytest.raises(psycopg.errors.UniqueViolation):                                                              # the database refuses it as well
         conn.execute("INSERT INTO cost_items (cost_id, initiative_id, cost_key, cost_type, cost_basis, amount, period_index) VALUES ('c-9', 'i-1', 'ck-lic', 'one_time', 'planned', 1, 2)")
+    # R9-05: the same key retyped as a recurring cost is the same defect by another road: refused by the command and by the database
+    retyped = {"scenario_id": "scn-api", "baseline_version": "v1", "discount_rate": "0.10", "rate_basis": "annual", "horizon_periods": 3, "initiative_ids": ["i-1"],
+               "costs": [{"initiative_id": "i-1", "cost_key": "ck-lic", "cost_type": "recurring", "amount": "1000.00", "start_period": 1, "end_period": 3}]}
+    r = refused(client, conn, "build-cash-flows", retyped, 422, "COST_KEY_BASIS_CONFLICT")
+    assert r.json()["error"]["details"][0]["context"]["first_cost_type"] == "one_time" and r.json()["error"]["details"][0]["context"]["this_cost_type"] == "recurring"
+    with pytest.raises(psycopg.errors.IntegrityError, match="COST_KEY_BASIS_CONFLICT"):
+        conn.execute("INSERT INTO cost_items (cost_id, initiative_id, cost_key, cost_type, cost_basis, amount, start_period, end_period) VALUES ('c-9', 'i-1', 'ck-lic', 'recurring', 'planned', 1, 1, 3)")
 
 
 def test_11_recover_the_second_cost_is_a_recurring_fee_expanded_explicitly(client, conn):
-    start(client, conn, "11-recover")
+    d = start(client, conn, "11-recover")
+    assert "NEW key" in d["description"] and d["reason"] and {c["cost_key"] for c in d["cost_items"]} == {"ck-lic", "ck-fee"}      # a new key, and the reason stated
     assert rejected(client) == {}
     i = init(read(client))
     assert [x["costs"] for x in i["cash_flow"]] == ["1000.00", "100.00", "100.00"] and [(x["cost_id"], x["period_index"]) for x in i["expanded_planned_costs"]] == [("c-1", 0), ("c-2", 1), ("c-2", 2)]
@@ -402,21 +413,20 @@ def test_two_approvals_of_one_baseline_version_leave_one_approval(lab, conn):
 
 
 def test_two_proposals_of_one_scenario_leave_one(lab, conn):
-    inp = {"scenario_id": "scn-001", "residual_explanation": "counted once"}
+    inp = {"scenario_id": "scn-001", "residual_explanation": "CC-4410 is claimed twice, counted once"}
     out = _race(lambda i: command(_client(), "select-scenario", inp, key=f"sel-{i}", headers=(SPONSOR, SPONSOR2)[i]))
     assert sorted(r.status_code for r in out) == [200, 409] and count(conn, "audit_events", "action = 'select-scenario'") == 1
     assert [r.json()["error"]["details"][0]["rule_id"] for r in out if r.status_code == 409] == ["ALREADY_PROPOSED"]
 
 
 def test_two_revisions_of_one_forecast_serialise_and_never_overwrite(lab, conn):
-    body = lambda n: {"initiative_id": "init-001", "reason": f"revision {n}", "periods": [{"period_index": 1, "amount": f"{400 + n}.00"}]}
-    out = _race(lambda i: command(_client(), "revise-forecast", body(i), key=f"rev-{i}", headers=(SPONSOR, SPONSOR2)[i]), 2)
-    assert [r.status_code for r in out] == [200, 200] and sorted(r.json()["result"]["version_number"] for r in out) == [3, 4]          # serialised: n+1 each time
-    assert count(conn, "forecast_versions", "version_number IN (1, 2)") == 4
-    same = lambda i: command(_client(), "revise-forecast", {**body(i), "expected_version": 4}, key=f"revx-{i}", headers=(SPONSOR, SPONSOR2)[i])
-    out = _race(same)
+    body = lambda n, v: {"initiative_id": "init-001", "reason": f"revision {n}", "expected_version": v, "periods": [{"period_index": 1, "amount": f"{400 + n}.00"}, {"period_index": 2, "amount": "500.00"}]}
+    out = _race(lambda i: command(_client(), "revise-forecast", body(i, 2), key=f"rev-{i}", headers=(SPONSOR, SPONSOR2)[i]), 2)
     assert sorted(r.status_code for r in out) == [200, 409] and [r.json()["error"]["details"][0]["rule_id"] for r in out if r.status_code == 409] == ["STALE_FORECAST_VERSION"]
-    assert count(conn, "forecast_versions", "version_number = 5") == 1
+    assert [r.json()["result"]["version_number"] for r in out if r.status_code == 200] == [3]                          # serialised: one revision per version read
+    assert count(conn, "forecast_versions", "version_number IN (1, 2)") == 4 and count(conn, "forecast_versions", "version_number = 3") == 2
+    again = _race(lambda i: command(_client(), "revise-forecast", body(i, 3), key=f"revx-{i}", headers=(SPONSOR, SPONSOR2)[i]))
+    assert sorted(r.status_code for r in again) == [200, 409] and count(conn, "forecast_versions", "version_number = 4") == 2
 
 
 def test_two_builds_of_one_scenario_id_leave_one(lab, conn):

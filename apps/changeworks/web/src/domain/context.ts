@@ -37,6 +37,17 @@ export class Ctx {
     const [lo, hi] = this.window;
     return (lo === null || t >= lo) && (hi === null || t < hi);
   }
+  /** R9-11: an observation exists at as_of when it happened by then AND was recorded by then (`stamp`: its server-recorded instant; absent: the event time), and its event time lies in the window. */
+  observationVisible(observedAt: string, stamp: string | null | undefined): boolean {
+    const t = parseTs(observedAt);
+    if (t > this.asOf || (stamp !== null && stamp !== undefined && parseTs(stamp) > this.asOf)) return false;
+    return this.tsInWindow(t);
+  }
+  // -- the plan as it was when a scenario was built (R9-01)
+  created(sc: Row): Instant { return parseTs(sc["created_at"]); }
+  /** The cost rows that existed at the scenario's `created_at` (rows with no `recorded_at` are part of the loaded world and always do). */
+  costs(sc: Row): Row[] { const t = this.created(sc); return this.acc.cost_items.filter((c) => c["recorded_at"] == null || parseTs(c["recorded_at"]) <= t); }
+  benefits(sc: Row): Row[] { const t = this.created(sc); return this.acc.benefit_items.filter((b) => b["recorded_at"] == null || parseTs(b["recorded_at"]) <= t); }
   periodInWindow(p: number): boolean { return this.tsInWindow(periodStartInstant(this.cfg, p)); }
   /** The periods [a, b) of [0, end) whose start lies in the window. */
   windowPeriods(end: number): [number, number] {
@@ -46,14 +57,17 @@ export class Ctx {
     return ps.length ? [ps[0]!, ps[ps.length - 1]! + 1] : [0, 0];
   }
 
-  // -- assumptions (D-P9-14): the version the scenario pins, otherwise the latest
+  // -- assumptions (D-P9-14, R9-01): the version the scenario pins, otherwise the latest that existed when the scenario was created
   versions(iid: string | null, name: string): Row[] {
     return this.acc.assumption_versions.filter((a) => a["initiative_id"] === iid && a["name"] === name).sort((a, b) => a["version_number"] - b["version_number"]);
   }
   pick(iid: string, name: string, sc: Row): Row | null {
     const vs = this.versions(iid, name);
     const pinned = vs.filter((a) => (sc["pinned_assumption_ids"] as string[]).includes(a["assumption_id"]));
-    return pinned.length ? pinned[pinned.length - 1]! : vs.length ? vs[vs.length - 1]! : null;
+    if (pinned.length) return pinned[pinned.length - 1]!;
+    const t = this.created(sc);
+    const known = vs.filter((a) => parseTs(a["created_at"]) <= t);
+    return known.length ? known[known.length - 1]! : null;
   }
   assumption(aid: string): Row { return this.acc.assumption_versions.find((a) => a["assumption_id"] === aid)!; }
   /** The effective per-period rate and where it comes from (D-01, D-P9-06). */

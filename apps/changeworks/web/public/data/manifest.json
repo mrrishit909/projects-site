@@ -18,7 +18,7 @@
         "benefit_classes": [
           "capacity"
         ],
-        "capacity_hours_not_converted": "2920.49",
+        "capacity_hours_not_converted": "2920.48",
         "capacity_released_hours_per_period": "405.6250",
         "cash_benefits_total": "0.00",
         "converted_capacity_items": 0,
@@ -36,12 +36,16 @@
       "realised": {
         "attributable_benefits": "32470748.38",
         "benefit_source_key": "src-fin-ap-shared-team",
+        "double_counted_pv": "195233.20",
         "first_overlap_period": 3,
+        "hours_residual": "5974.80",
         "initiatives": [
           "init-001",
           "init-002"
         ],
         "last_overlap_period": 12,
+        "npv_sum_of_initiatives": "1438382.25",
+        "npv_total_attributable": "1243149.05",
         "overlap_periods": 10,
         "planned_benefits": "32677894.70",
         "residual": "207146.32",
@@ -49,6 +53,15 @@
         "scenarios_with_a_residual": [
           "scn-002",
           "scn-003",
+          "scn-006",
+          "scn-025",
+          "scn-027"
+        ],
+        "scenarios_with_an_hours_residual": [
+          "scn-001",
+          "scn-002",
+          "scn-003",
+          "scn-005",
           "scn-006",
           "scn-025",
           "scn-027"
@@ -87,12 +100,67 @@
       "id": "DR-03",
       "name": "an initiative that never pays back",
       "realised": {
-        "benefit_to_cost": "0.620043",
-        "benefits_entering_the_cash_flow": "805466.72",
+        "by_scenario": {
+          "scn-013": {
+            "benefit_to_cost": "0.620043",
+            "benefits_entering_the_cash_flow": "805466.72",
+            "npv": "-508801.53",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-1"
+          },
+          "scn-014": {
+            "benefit_to_cost": "0.620043",
+            "benefits_entering_the_cash_flow": "805466.72",
+            "npv": "-515329.28",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-1"
+          },
+          "scn-015": {
+            "benefit_to_cost": "0.531465",
+            "benefits_entering_the_cash_flow": "690400.00",
+            "npv": "-618556.03",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-2"
+          },
+          "scn-016": {
+            "benefit_to_cost": "0.620043",
+            "benefits_entering_the_cash_flow": "805466.72",
+            "npv": "-512146.04",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-1"
+          },
+          "scn-017": {
+            "benefit_to_cost": "0.620043",
+            "benefits_entering_the_cash_flow": "805466.72",
+            "npv": "-512146.04",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-1"
+          },
+          "scn-018": {
+            "benefit_to_cost": "0.531465",
+            "benefits_entering_the_cash_flow": "690400.00",
+            "npv": "-619344.67",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-2"
+          },
+          "scn-025": {
+            "benefit_to_cost": "0.531465",
+            "benefits_entering_the_cash_flow": "690400.00",
+            "npv": "-618556.03",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-2"
+          },
+          "scn-026": {
+            "benefit_to_cost": "0.531465",
+            "benefits_entering_the_cash_flow": "690400.00",
+            "npv": "-618556.03",
+            "planned_cost": "1299050.00",
+            "ramp_assumption_id": "a-015-adopti-2"
+          }
+        },
         "initiative_id": "init-015",
         "npv_highest": "-508801.53",
         "npv_lowest": "-619344.67",
-        "planned_cost": "1299050.00",
         "scenarios": [
           "scn-013",
           "scn-014",
@@ -103,10 +171,24 @@
           "scn-025",
           "scn-026"
         ],
+        "scenarios_by_benefit_to_cost": {
+          "0.531465": [
+            "scn-015",
+            "scn-018",
+            "scn-025",
+            "scn-026"
+          ],
+          "0.620043": [
+            "scn-013",
+            "scn-014",
+            "scn-016",
+            "scn-017"
+          ]
+        },
         "scenarios_with_discounted_payback_null": 8,
         "scenarios_with_simple_payback_null": 8
       },
-      "statement": "init-015 recovers well under its cost over its benefit window."
+      "statement": "init-015 recovers well under its cost over its benefit window; the ratio depends on the adoption ramp the scenario pins, so each value names its scenarios."
     },
     {
       "id": "DR-04",
@@ -197,15 +279,24 @@
     },
     {
       "id": "DR-05",
-      "name": "a shared specialist overallocated in three periods",
+      "name": "a shared specialist at capacity",
       "realised": {
         "allocated": {
+          "12": "2.00",
+          "13": "2.00",
           "14": "2.00",
           "15": "2.00",
           "16": "2.00"
         },
         "capacity_per_period": "2.00",
+        "designed_periods": [
+          14,
+          15,
+          16
+        ],
         "headroom": {
+          "12": "0.00",
+          "13": "0.00",
           "14": "0.00",
           "15": "0.00",
           "16": "0.00"
@@ -217,6 +308,8 @@
           "init-023"
         ],
         "periods": [
+          12,
+          13,
           14,
           15,
           16
@@ -235,7 +328,7 @@
         "resource_id": "res-03",
         "stored_overallocated_periods": []
       },
-      "statement": "res-03 is allocated to capacity in periods [14, 15, 16]; further requests there are refused at ingest and kept in the replay events."
+      "statement": "res-03 is designed to be allocated to capacity in periods [14, 15, 16]; the periods at capacity in the rows are in realised.periods (the draws also fill it earlier); further requests there are refused at ingest and kept in the replay events."
     },
     {
       "id": "DR-06",
@@ -390,7 +483,7 @@
       "benefit_life": "12 periods per stream",
       "d4_observed_over_plan_percent": "68 then 66",
       "d4_revised_forecast_percent_of_plan": "80 then 70",
-      "disclosures": "Every designed relationship is built into the draws as a parameter chosen before the first run: the capacity-only initiative (init-009), the shared capacity pool (init-001 and init-002, key src-fin-ap-shared-team), the benefit-to-cost ratio of 0.62 for init-015, the forecast misses of init-003 (observed at 68 and 66 per cent of plan, revised forecasts at 80 and 70 per cent, a miss being more than 10 per cent below the forecast), the specialist res-03 filled to capacity in periods 14 to 16, the baseline trend of init-008 set to 85 per cent of its observed cash benefit, and an adoption curve that starts at go-live while training ends about a month earlier. Their realised values are in designed_relationships. | Outcome-informed changes after the first runs, all kept: (1) the first run showed a simple payback of 0 for any initiative whose first cash flow is after period 0 (the domain's rule D-P9-07 counts a cumulative of 0 at t = 0 as paid back), so every initiative now carries a small planned discovery cost in period 0 (2 per cent of its one-time cost) and its payback is measured from a negative position; (2) the benefit shares of an initiative are normalised to 100 per cent after a first run gave init-007 a ratio below 1 for a reason that was a bug, not a design; (3) init-002 is sized at no less than 8,000 cases a month and 24 minutes so that its overlap with init-001 is a material residual; (4) benefit observations were first drawn with three readings per matured row, which gave 332 readings, so two further readings (a flash reading one to two days after the period and a restated reading 95 to 120 days after it) were added, and readings were then trimmed or added in a fixed shuffled order to reach exactly 400. | Sizes are exact by construction, not by tuning outcomes: benefit rows are 12 per stream (shortened or lengthened one row at a time in a fixed order to reach 700), cost items are completed with contingency tranches (see pad_notes), adoption observations are the 3.5-day telemetry candidates thinned by drawn outages to 500, and training completions are weekly readings thinned or extended with refresher readings to 200. | The business case recognises benefits for 12 periods per stream and recurring costs run only over that window (D-07): the dataset has 700 benefit rows, which cannot cover 36 periods for all 24 initiatives, so payback and NPV describe a first-year-after-go-live case, not a three-year one. | The synthetic counterfactual (the true share of each observed improvement that the rollout caused, and the true trend) is in synthetic_truth of this manifest only and is never loaded by the seeder, the API or the web. | Baseline trends on observed rows are drawn as a share of the row's observed value (5 to 25 per cent, with a per-stream estimation error of -8 to +8 per cent), which is outcome-informed by design: a trend recorded before deployment cannot depend on a later observation in the real world. | The adoption ramp of each initiative (the days from go-live to full effect) was first drawn from 190 to 330 days; the first run gave a lag of 2 periods for the earliest initiative, which is not 'several', so the range was moved to 270 to 340 days before the final run. The forecast of init-003: the second observed ratio was first 70 per cent of plan, which left June only 0.1 point inside the 10 per cent tolerance of the revised forecast, so it became 66 per cent, and the second revision moved from 10 to 12 June so that every May reading exists when it is made. No other parameter was changed after seeing the designed relationships.",
+      "disclosures": "Every designed relationship is built into the draws as a parameter chosen before the first run: the capacity-only initiative (init-009), the shared capacity pool (init-001 and init-002, key src-fin-ap-shared-team), the benefit-to-cost ratio of 0.62 for init-015, the forecast misses of init-003 (observed at 68 and 66 per cent of plan, revised forecasts at 80 and 70 per cent, a miss being more than 10 per cent below the forecast), the specialist res-03 filled to capacity in periods 14 to 16 (the rows also fill it earlier; the periods at capacity are computed by the domain and listed in DR-05), the baseline trend of init-008 set to 85 per cent of its observed cash benefit, and an adoption curve that starts at go-live while training ends about a month earlier. Their realised values are in designed_relationships. | Outcome-informed changes after the first runs, all kept: (1) the first run showed a simple payback of 0 for any initiative whose first cash flow is after period 0 (the domain's rule D-P9-07 counts a cumulative of 0 at t = 0 as paid back), so every initiative now carries a small planned discovery cost in period 0 (2 per cent of its one-time cost) and its payback is measured from a negative position; (2) the benefit shares of an initiative are normalised to 100 per cent after a first run gave init-007 a ratio below 1 for a reason that was a bug, not a design; (3) init-002 is sized at no less than 8,000 cases a month and 24 minutes so that its overlap with init-001 is a material residual; (4) benefit observations were first drawn with three readings per matured row, which gave 332 readings, so two further readings (a flash reading one to two days after the period and a restated reading 95 to 120 days after it) were added, and readings were then trimmed or added in a fixed shuffled order to reach exactly 400; (5) the baseline trend recorded on an observed row is drawn as a share of that row's observed value (5 to 25 per cent, and 85 per cent for init-008), so the trend was fixed after the observation it is compared with: a design choice made after the outcome was known, in this synthetic world only. | Sizes are exact by construction, not by tuning outcomes: benefit rows are 12 per stream (shortened or lengthened one row at a time in a fixed order to reach 700), cost items are completed with contingency tranches (see pad_notes), adoption observations are the 3.5-day telemetry candidates thinned by drawn outages to 500, and training completions are weekly readings thinned or extended with refresher readings to 200. | The business case recognises benefits for 12 periods per stream and recurring costs run only over that window (D-07): the dataset has 700 benefit rows, which cannot cover 36 periods for all 24 initiatives, so payback and NPV describe the twelve-period benefit window (some streams are shorter), not a three-year case. | The synthetic counterfactual (the true share of each observed improvement that the rollout caused, and the true trend) is in synthetic_truth of this manifest only and is never loaded by the seeder, the API or the web. | Baseline trends on observed rows are drawn as a share of the row's observed value (5 to 25 per cent, with a per-stream estimation error of -8 to +8 per cent), which is outcome-informed by design: a trend recorded before deployment cannot depend on a later observation in the real world. | The adoption ramp of each initiative (the days from go-live to full effect) was first drawn from 190 to 330 days; the first run gave a lag of 2 periods for the earliest initiative, which is not 'several', so the range was moved to 270 to 340 days before the final run. The forecast of init-003: the second observed ratio was first 70 per cent of plan, which left June only 0.1 point inside the 10 per cent tolerance of the revised forecast, so it became 66 per cent, and the second revision moved from 10 to 12 June so that every May reading exists when it is made. No other parameter was changed after seeing the designed relationships. | 3 initiatives book benefits from a deployment period earlier than their dependency-feasible start (init-018 deploys at 18 but cannot start before 22; init-019 deploys at 14 but cannot start before 19; init-020 deploys at 16 but cannot start before 18): the draws set deployment periods and dependencies independently. The domain reports DEPLOYMENT_BEFORE_FEASIBLE_START on each and does not re-time the cash flow (D-P9-08).",
       "discount_rates": "annual 0.06/0.08/0.10/0.12 with monthly_rate_conversion assumption versions; 0.007000 declared monthly",
       "forecast_miss_tolerance_percent": "10",
       "initiatives": "24 in 4 programmes",
@@ -606,6 +699,26 @@
         "training_start": "2026-08-11T15:00:00Z"
       }
     },
+    "deployment_before_feasible_start": [
+      {
+        "dependency_feasible_start": 22,
+        "deployment_period": 18,
+        "initiative_id": "init-018",
+        "periods_early": 4
+      },
+      {
+        "dependency_feasible_start": 19,
+        "deployment_period": 14,
+        "initiative_id": "init-019",
+        "periods_early": 5
+      },
+      {
+        "dependency_feasible_start": 18,
+        "deployment_period": 16,
+        "initiative_id": "init-020",
+        "periods_early": 2
+      }
+    ],
     "entity_file_bytes": 867512,
     "forecast_version_sets": 12,
     "ingest": {
@@ -921,7 +1034,7 @@
         "double_count_residual": "253178.85",
         "effective_period_rate": "0.009489",
         "horizon_periods": 36,
-        "npv_total": "2083397.09",
+        "npv_total": "1850194.72",
         "rate_source": "conversion:a-conv-monthl-4",
         "status": "draft"
       },
@@ -930,7 +1043,7 @@
         "double_count_residual": "253178.85",
         "effective_period_rate": "0.006434",
         "horizon_periods": 24,
-        "npv_total": "1980952.24",
+        "npv_total": "1741529.16",
         "rate_source": "conversion:a-conv-monthl-2",
         "status": "draft"
       },
@@ -957,7 +1070,7 @@
         "double_count_residual": "207146.32",
         "effective_period_rate": "0.007000",
         "horizon_periods": 36,
-        "npv_total": "1523563.61",
+        "npv_total": "1329339.78",
         "rate_source": "declared",
         "status": "draft"
       },
@@ -1128,7 +1241,7 @@
         "double_count_residual": "207146.32",
         "effective_period_rate": "0.006434",
         "horizon_periods": 36,
-        "npv_total": "1438382.25",
+        "npv_total": "1243149.05",
         "rate_source": "conversion:a-conv-monthl-2",
         "status": "draft"
       },
@@ -1146,7 +1259,7 @@
         "double_count_residual": "207146.32",
         "effective_period_rate": "0.007974",
         "horizon_periods": 24,
-        "npv_total": "1838021.19",
+        "npv_total": "1645520.17",
         "rate_source": "conversion:a-conv-monthl-3",
         "status": "draft"
       },
@@ -1180,9 +1293,14 @@
     },
     "summary": {
       "adoption_rate": "0.532881",
-      "capacity_released_hours_total": "10178.3434",
+      "capacity_released_hours_double_counted": "1189.8667",
+      "capacity_released_hours_total": "8988.4767",
       "double_count_residual": "0.00",
+      "double_counted_amount": "0.00",
+      "double_counted_pv": "0.00",
+      "hours_residual": "7302.53",
       "initiatives": 24,
+      "npv_sum_of_initiatives": "953382.86",
       "npv_total": "953382.86",
       "risk_exposure_total": "7485779.58",
       "scenarios": 30,
@@ -1190,7 +1308,8 @@
       "training_completion": "0.888443"
     },
     "warnings": {
-      "BASELINE_VERSION_DIFFERS": 19
+      "BASELINE_VERSION_DIFFERS": 19,
+      "DEPLOYMENT_BEFORE_FEASIBLE_START": 3
     }
   },
   "synthetic_truth": {

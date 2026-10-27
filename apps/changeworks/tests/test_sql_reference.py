@@ -4,6 +4,7 @@ result, and equals expected.json leaf for leaf on the three fixtures and the dom
 
 The ONLY tolerance in the project is the NPV: PostgreSQL's power(numeric, integer) keeps a bounded number of digits, so the SQL NPV (6 places) is compared
 with the exact rational of the domain within 0.000001 USD; every other figure, the 2-place NPV included, is compared for equality."""
+import json
 import re
 from fractions import Fraction as F
 from pathlib import Path
@@ -15,7 +16,7 @@ from changeworks import run_pipeline
 from changeworks.timeutil import parse_ts
 
 from support_db import VARIANTS, conn, db_url, flat, golden_expected, golden_inputs, load, ts  # noqa: F401
-from worlds import random_world
+from worlds import ben, cost, dataset, ini, random_world, sc
 
 SQL = (Path(__file__).resolve().parents[1] / "data" / "sql" / "reference_metrics.sql").read_text()
 NPV_TOLERANCE = F(1, 1_000_000)
@@ -23,14 +24,17 @@ S = r"metrics\.scenarios\.[^.]+\.initiatives\.[^.]+\."
 COVERED = re.compile("^(" + "|".join([
     "empty_population",
     S + r"cash_flow\[\d+\]\.(costs|cash_benefits|net_cash_flow|cumulative|discounted_cash_flow|cumulative_discounted)",
-    S + r"npv\.value", S + r"payback\.(simple|discounted)\.(period|interpolated)", S + r"capacity_released\.(hours|reason)",
+    S + r"npv\.value", S + r"payback\.(simple|discounted)\.(period|interpolated|reason)", S + r"capacity_released\.(hours|reason)",
+    S + r"excluded_from_cash_flow\.(capacity_hours_not_converted|avoided_cost_beside_total)",
     S + r"cost_variance\.(window\.to_period|approved_baseline_cost|actual_cost|variance|reason)",
     S + r"benefit_realization\.[a-z_]+\.(planned_comparable|observed_comparable|realization|baseline_trend|observed_above_trend)",
-    r"metrics\.scenarios\.[^.]+\.double_count\.(planned_benefits|attributable_benefits|residual)", r"metrics\.scenarios\.[^.]+\.npv_total\.value",
+    r"metrics\.scenarios\.[^.]+\.double_count\.(planned_benefits|attributable_benefits|residual|double_counted_amount|double_counted_pv|planned_hours|attributable_hours|hours_residual)",
+    r"metrics\.scenarios\.[^.]+\.npv_total\.(value|sum_of_initiatives)",
     r"metrics\.initiatives\.[^.]+\.adoption\.(adoption_rate|eligible_count|adopted_count)", r"metrics\.initiatives\.[^.]+\.training\.(training_completion|eligible_trainees|completed)",
     r"metrics\.initiatives\.[^.]+\.risk\.risk_exposure", r"metrics\.initiatives\.[^.]+\.roadmap\.(dependency_feasible_start|dependency_delay|binding_dependency_id)",
     r"metrics\.groups\.[^.]+\.readiness_score",
-    r"metrics\.summary\.(npv_total|double_count_residual|adoption_rate|training_completion|risk_exposure_total|capacity_released_hours_total)",
+    r"metrics\.summary\.(npv_total|npv_sum_of_initiatives|double_counted_amount|double_counted_pv|double_count_residual|hours_residual|adoption_rate|training_completion|"
+    r"risk_exposure_total|capacity_released_hours_total|capacity_released_hours_double_counted)",
 ]) + ")$")
 
 
@@ -62,7 +66,7 @@ def test_sql_equals_expected_for_every_fixture_leaf_by_leaf(conn, variant):
     load(conn, inputs)
     sql = reference(conn, inputs["as_of"])
     n = compare(sql, flat(golden_expected(variant)), variant)
-    assert n == {"": 157, "variant-rejected": 229, "variant-empty": 7}[variant]
+    assert n == {"": 180, "variant-rejected": 706, "variant-empty": 12}[variant]
 
 
 def test_sql_spec_sentence_values(conn):
@@ -73,7 +77,7 @@ def test_sql_spec_sentence_values(conn):
     assert (r[p + "npv.value"], r[p + "payback.simple.interpolated"], r[p + "payback.discounted.interpolated"]) == ("41.32", "1.6667", "1.9167")
     assert r[p + "cash_flow[1].cash_benefits"] == "600.00" and r[p + "capacity_released.hours"] == "400.0000"       # the 800 capacity hours are not in the cash flow
     assert r["metrics.scenarios.scn-001.double_count.residual"] == "75.00" and r["metrics.groups.grp-001.readiness_score"] == "3.3333"
-    assert r["metrics.summary.npv_total"] == "-692.56" and r["metrics.initiatives.init-003.roadmap.dependency_delay"] == "3"
+    assert r["metrics.summary.npv_total"] == "-754.55" and r["metrics.summary.npv_sum_of_initiatives"] == "-692.56" and r["metrics.initiatives.init-003.roadmap.dependency_delay"] == "3"
 
 
 @pytest.mark.parametrize("variant", VARIANTS)
@@ -88,7 +92,7 @@ def test_sql_npv_is_within_the_documented_tolerance_of_the_exact_rational(conn, 
             six = sql[path[: -len("exact")] + "value_6dp"]
             assert abs(F(six) - F(exact)) <= NPV_TOLERANCE, (path, six, exact)
             checked += 1
-    assert checked == {"": 3, "variant-rejected": 4, "variant-empty": 0}[variant]
+    assert checked == {"": 3, "variant-rejected": 9, "variant-empty": 0}[variant]
 
 
 def test_sql_reads_only_facts_not_stored_results_and_not_the_session_time_zone(conn):
@@ -143,10 +147,12 @@ def test_sql_equals_the_domain_on_random_populations(conn, start):
 
 
 def test_the_random_worlds_exercise_the_rules():
-    """The populations are not trivial: across the seeds ramps, conversions, avoided cost beside the flow, overlaps, paybacks, null paybacks, variances,
-    realization, dependency delays, rejections and monthly periods all occur."""
-    seen = {k: 0 for k in ("ramp", "converted", "beside", "overlap", "payback", "never", "variance", "realization", "delay", "rejected", "monthly", "conversion_rate", "unobserved")}
-    for s in range(60):
+    """The populations are not trivial: across the seeds ramps, conversions, avoided cost beside the flow, overlaps (in money and in hours), paybacks, null
+    paybacks and the reasons for them, variances, realization, partial trend coverage, observations recorded late, dependency delays, rejections and monthly
+    periods all occur."""
+    seen = {k: 0 for k in ("ramp", "converted", "beside", "overlap", "payback", "never", "variance", "realization", "delay", "rejected", "monthly", "conversion_rate", "unobserved",
+                           "hours_overlap", "no_investment", "not_recovered", "partial_trend", "late_recorded")}
+    for s in range(600):
         d = random_world(s)
         r = run_pipeline(d)
         seen["rejected"] += len(r.ingest.rejected)
@@ -154,14 +160,53 @@ def test_the_random_worlds_exercise_the_rules():
         for sc in r.metrics["scenarios"].values():
             seen["conversion_rate"] += sc["rate_source"] != "declared"
             seen["overlap"] += bool(sc["double_count"]["overlaps"])
+            seen["hours_overlap"] += bool(sc["double_count"]["hours_overlaps"])
             for i in sc["initiatives"].values():
                 seen["ramp"] += i["ramp"] is not None
                 seen["converted"] += bool(i["converted_capacity"])
                 seen["beside"] += bool(i["excluded_from_cash_flow"]["avoided_cost_beside"])
                 seen["payback"] += i["payback"]["simple"]["period"] is not None
                 seen["never"] += i["npv"]["value"] is not None and i["payback"]["simple"]["period"] is None
+                seen["no_investment"] += i["payback"]["simple"]["reason"] == "NO_INVESTMENT"
+                seen["not_recovered"] += i["payback"]["simple"]["reason"] == "NOT_RECOVERED"
                 seen["variance"] += i["cost_variance"]["variance"] is not None
                 seen["realization"] += bool(i["benefit_realization"])
                 seen["unobserved"] += any(x["matured_unobserved_items"] for x in i["benefit_realization"].values())
+                seen["partial_trend"] += any(not x["trend_coverage"]["complete"] and x["baseline_trend"] is not None for x in i["benefit_realization"].values())
+                seen["late_recorded"] += bool(i["late_recorded_observation_ids"])
         seen["delay"] += sum(x["roadmap"]["dependency_delay"] > 0 for x in r.metrics["initiatives"].values())
-    assert all(v > 5 for v in seen.values()), seen
+    assert all(v > 5 for v in seen.values()), {k: v for k, v in seen.items() if v <= 5}
+
+
+def _npv_within_tolerance(conn, inputs, label):
+    """Load ``inputs``; every initiative's 6-place SQL NPV is within the documented tolerance of the domain's exact rational; returns how many were compared."""
+    load(conn, inputs)
+    sql = reference(conn, inputs["as_of"])
+    exp = flat(run_pipeline(inputs).metrics)
+    n = 0
+    for path, exact in exp.items():
+        if path.endswith(".npv.exact") and exact is not None:
+            six = sql["metrics." + path[: -len("exact")] + "value_6dp"]
+            assert abs(F(six) - F(exact)) <= NPV_TOLERANCE, (label, path, six, exact)
+            n += 1
+    return n
+
+
+def test_sql_npv_bound_holds_on_the_published_world_36_monthly_periods(conn):
+    """R9-20: the documented bound (exact to 0.000001 for horizons up to 36 periods) is tested at the horizon of the published world, not only at the fixtures' 3 to 12."""
+    from changeworks.contract import ENTITIES
+    data = Path(__file__).resolve().parents[1] / "web" / "public" / "data"
+    manifest = json.loads((data / "manifest.json").read_text())
+    inputs = dict(manifest["config"])
+    inputs.update({e: json.loads((data / f"{e}.json").read_text())["rows"] for e in ENTITIES})
+    assert max(sc["horizon_periods"] for sc in inputs["scenario_versions"]) == 36 and inputs["period_basis"] == "monthly"
+    assert _npv_within_tolerance(conn, inputs, "world") == 210
+
+
+def test_sql_npv_bound_holds_for_14_digit_amounts_over_36_periods(conn):
+    """R9-20: amounts of 14 integer digits and 6 decimals, a 6-decimal rate, 36 periods: the 6-place NPV is within 0.000001 of the exact rational."""
+    big = "99999999999999.999999"
+    inputs = dataset("monthly", as_of="2029-01-01T00:00:00Z", initiatives=[ini(base=None, dep=0)], scenario_versions=[sc(rate="0.009489", basis="monthly", h=36)],
+                     cost_items=[cost("c-1", "i-1", "k", "one_time", big, p=0), cost("c-2", "i-1", "k2", "recurring", "12345678901234.123457", s=1, e=36)],
+                     benefit_items=[ben(f"b-{p}", "i-1", "cash", big if p % 2 else "87654321098765.432101", p, starts=0) for p in range(36)])
+    assert _npv_within_tolerance(conn, inputs, "14 digits") == 1

@@ -32,8 +32,11 @@ export function initiativeRoadmap(ctx: Ctx, feas: ReadonlyMap<string, [number, s
   const [fs, bind] = feas.get(iid)!;
   // D-P9-15: allocations that would cross a capacity are refused when they are recorded, so the resource-constrained start equals the
   // dependency-feasible one and the resource delay is 0 (a levelling shift is not implemented).
+  // R9-06: benefits are booked from `deployment_period`; when that is earlier than the dependency-feasible start the plan books benefits before the work can begin.
+  // The cash flow is not re-timed (D-P9-08): the inconsistency is reported, not repaired.
+  const warnings: Row[] = i["deployment_period"] < fs ? [{ code: "DEPLOYMENT_BEFORE_FEASIBLE_START", deployment_period: i["deployment_period"], dependency_feasible_start: fs, periods_early: fs - i["deployment_period"] }] : [];
   return { requested_start: i["requested_start_period"], duration_periods: i["duration_periods"], dependency_feasible_start: fs, dependency_delay: fs - i["requested_start_period"],
-    binding_dependency_id: bind, finish: fs + i["duration_periods"], resource_constrained_start: fs, resource_delay: 0 };
+    binding_dependency_id: bind, finish: fs + i["duration_periods"], resource_constrained_start: fs, resource_delay: 0, deployment_period: i["deployment_period"], warnings };
 }
 
 export function resourceViews(ctx: Ctx): Row {

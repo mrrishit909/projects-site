@@ -25,7 +25,8 @@ OWNED_TABLES = (
     "dependencies", "expanded_costs", "benefit_items", "cost_items", "scenario_pins", "scenario_initiatives", "scenario_versions", "resources",
     "opportunity_scores", "assumption_versions", "baseline_approvals", "process_baselines", "initiatives", "dataset_config", "schema_migrations",
 )
-OWNED_FUNCTION_SIGNATURES = ("cw_forbid_mutation()", "cw_initiative_guard()", "cw_scenario_guard()", "cw_iso(timestamptz)", "cw_dec(numeric)")
+OWNED_FUNCTION_SIGNATURES = ("cw_forbid_mutation()", "cw_initiative_guard()", "cw_scenario_guard()", "cw_cost_key_guard()", "cw_scenario_sets_guard()", "cw_iso(timestamptz)",
+                             "cw_dec(numeric)")
 
 
 def reset(conn: psycopg.Connection) -> None:

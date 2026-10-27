@@ -4,7 +4,7 @@
 :root {
   color-scheme: light;
   --parch: #f3ead8; --wash: #ebe0c8; --paper: #f9f3e4; --rule: #d9ccb2; --rule-dark: #bfae8a;
-  --green: #17382b; --green-2: #24503d; --green-wash: #dde3d2; --brass: #b08d57; --brass-text: #7d6236; --brass-wash: #eadcb9;
+  --green: #17382b; --green-2: #24503d; --green-wash: #dde3d2; --brass: #b08d57; --brass-text: #6b5329; --brass-wash: #eadcb9;
   --muted: #5c5a52; --red: #9e3b2f; --red-wash: #f1dcd5; --ink: #1b2a22;
   --display: Baskerville, "Baskerville Old Face", "Hoefler Text", "Big Caslon", "Iowan Old Style", Georgia, "Times New Roman", serif;
   --read: "Source Sans 3", "Segoe UI", "Helvetica Neue", "Noto Sans", "DejaVu Sans", Arial, sans-serif;
@@ -39,7 +39,7 @@ a { color: var(--green); text-underline-offset: 3px; text-decoration-thickness: 
 .chapters a { display: grid; grid-template-columns: 2.3rem 1fr; align-items: baseline; padding: .42rem .2rem; text-decoration: none; font-size: .95rem; }
 .chapters a:hover { background: rgba(176, 141, 87, .18); }
 .chapters a[aria-current=page] { background: var(--brass); color: #1d1608; font-weight: 700; }
-.chapters .n { font-family: var(--mono); font-size: .78rem; color: #d9c79b; } .chapters a[aria-current=page] .n { color: #3a2c0e; }
+.chapters .n { font-family: var(--mono); font-size: .78rem; color: #d9c79b; } .chapters a[aria-current=page] .n { color: #1d1608; }
 .badge { margin: 1rem 0 0; padding: .45rem .55rem; border: 1px solid var(--brass); font-size: .8rem; line-height: 1.3; color: #f2e6c6; }
 .sheet { min-width: 0; display: flex; flex-direction: column; }
 .wrap { width: 100%; max-width: 78rem; padding: 0 1.4rem; margin: 0 auto; }
