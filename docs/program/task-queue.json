@@ -509,6 +509,17 @@
       ],
       "retries": 0,
       "acceptance": "see T-06 equivalents"
+    },
+    {
+      "id": "T-06-07",
+      "project": "06-productsignal",
+      "title": "Fix reviewer findings R6-01..R6-14; regression tests; republish",
+      "status": "in_progress",
+      "prereqs": [
+        "T-06-04"
+      ],
+      "retries": 0,
+      "acceptance": "hand/py/sql/ts agree on every review case; tests pass; CI green; republished and live-verified"
     }
   ]
 }
