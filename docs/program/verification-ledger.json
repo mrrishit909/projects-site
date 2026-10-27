@@ -1342,6 +1342,13 @@
       "check": "portfolio catalogue",
       "run": null,
       "result": "the Pipeline Observatory publish commit 83b6a60 rebuilt the catalogue while an unpublished ChangeWorks case study sat untracked in the portfolio tree, so the home and archive carried a ChangeWorks entry pointing at a page and a demo that were not live for about two minutes; corrected by 7f31179 (entry removed until the ChangeWorks site is live; its files are held in the scratchpad)"
+    },
+    {
+      "ts": "2026-10-27T05:38:02Z",
+      "project": "08-pipeline-observatory",
+      "check": "live URL verification from GitHub Actions (deploy-wait on code_sha, route 200s, case-study links both ways, browser journey) for all eight sites",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40456053215",
+      "result": "success; pipeline-observatory live code_sha a2ef4f4130e04f5d70795ba8d83b97f02d962583"
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T05:35:46Z",
+  "updated_at": "2026-10-27T05:38:02Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -155,8 +155,12 @@
       "dataset_version": "po-20261026-20261026",
       "dataset_hash": "d9f0aa18ec6c54d3f09cf16cce3c159960411e36de59b4d7831220547fcbf12e",
       "contract_version": "v1",
-      "publication_status": "published 83b6a60 (CI 40455458608 green both modes on 1d2d55b; a2ef4f4 adds ledgers only); live check pending; case study integrated in the same commit",
-      "live_verification": null
+      "publication_status": "published 83b6a60 (CI 40455458608 green both modes on 1d2d55b); live-verified with the release commit on the live manifest (run 40456053215); case study integrated",
+      "live_verification": {
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40456053215",
+        "verified_at": "2026-10-27T05:38:02Z",
+        "live_code_sha_matched": "a2ef4f4130e04f5d70795ba8d83b97f02d962583"
+      }
     },
     {
       "slug": "changeworks",
@@ -175,9 +179,9 @@
     }
   ],
   "last_all_sites_live_check": {
-    "run_id": 40448466520,
-    "sites": 7,
+    "run_id": 40456053215,
+    "sites": 8,
     "result": "all green",
-    "at": "2026-10-27T04:22:33Z"
+    "at": "2026-10-27T05:38:02Z"
   }
 }
