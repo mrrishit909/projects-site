@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T04:12:33Z",
+  "updated_at": "2026-10-27T04:22:33Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -158,7 +158,11 @@
       "slug": "trustledger",
       "stage": "gate-A passed; backend CI-green Mode A; generator committed 0d1b3e4 (301 tests); web A-057 running",
       "built": true,
-      "verified": "pending live check on e205202",
+      "verified": {
+        "live_check_run": 40448466520,
+        "at": "2026-10-27T04:22:33Z",
+        "release": "e205202"
+      },
       "published": {
         "release": "e205202",
         "rollback": "031705d",
@@ -204,6 +208,10 @@
         "commit": "3f3fc11",
         "tests": 381,
         "status": "done; Mode A green on hosted runner (run 40442468507); Mode B pending the web"
+      },
+      "generator": {
+        "commit": "9743a33",
+        "status": "done"
       }
     },
     "09-changeworks": {
@@ -269,7 +277,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 07: live check on e205202 -> A-069 artifacts hand-back -> verify -> commit -> complete. Project 08: A-065 generator hand-back -> verify -> D-07 -> commit -> web -> publish -> integrate -> review -> artifacts. Project 09: A-067 generator hand-back -> ... Project 10: A-068 generator hand-back -> ...",
+    "next_concrete_task": "Project 07: live-verified on e205202; A-069 artifacts hand-back -> verify -> commit -> complete. Project 08: generator 9743a33; A-070 web hand-back -> verify -> D-08 -> commit -> CI Mode B -> publish labs/pipeline-observatory -> manifest -> live check -> portfolio case study + motion tile -> review -> fixes -> artifacts. Project 09: A-067 generator hand-back -> ... Project 10: A-068 generator hand-back -> ...",
     "acceptance": "see task-queue.json"
   }
 }

@@ -578,7 +578,7 @@
       ],
       "retries": 0,
       "acceptance": "see T-07 equivalents",
-      "assignment": "A-065"
+      "assignment": "A-065 generator done (9743a33); A-070 web"
     },
     {
       "id": "T-07-06",
