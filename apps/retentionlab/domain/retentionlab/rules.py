@@ -16,10 +16,17 @@ def _refuse(code: str, message: str, offending: list[dict[str, Any]], path: str 
 
 def check_feature_request(registry: dict[str, dict[str, Any]], fields: Iterable[str]) -> list[str]:
     """Refuse a request naming a post-outcome, latent, identifier-derived or unregistered field; the code is the first in the order
-    POST_OUTCOME_FIELD, LATENT_TRUTH, ID_FEATURE, UNKNOWN_FEATURE and every offending field is listed with its own code."""
+    POST_OUTCOME_FIELD, LATENT_TRUTH, ID_FEATURE, UNKNOWN_FEATURE, DUPLICATE_FIELD and every offending field is listed with its own code."""
     names = list(fields)
     bad = [(f, classify_feature(registry, f)) for f in names]
     bad = [(f, c) for f, c in bad if c]
+    flagged = {f for f, _ in bad}
+    seen: set[str] = set()
+    for f in names:                         # D-09 (R10-15): a field named twice is refused, once per repeated name, after every other code
+        if f in seen and f not in flagged:
+            bad.append((f, E.DUPLICATE_FIELD))
+            flagged.add(f)
+        seen.add(f)
     if bad:
         code = min((c for _, c in bad), key=E.FEATURE_PRIORITY.index)
         raise _refuse(code, "the request names fields that cannot be features: " + ", ".join(f for f, _ in bad),
@@ -59,3 +66,10 @@ def check_capacity(scenario_id: str, capacity: int, population: int) -> None:
     if capacity > population:
         raise _refuse(E.CAPACITY_EXCEEDS_POPULATION, f"capacity {capacity} exceeds the population {population}",
                       [{"item": scenario_id, "code": f"CAPACITY_{capacity}_GT_{population}"}], "input.capacity")
+
+
+def check_as_of(as_of: Any, now: Any) -> None:
+    """A report's ``as_of`` may not be later than the server clock (D-09, R10-01): the future is not known, so no label can be mature in it."""
+    if as_of > now:
+        raise _refuse(E.AS_OF_IN_FUTURE, "as_of is later than the server clock; no row can be mature in the future",
+                      [{"item": "as_of", "code": E.AS_OF_IN_FUTURE}], "as_of")

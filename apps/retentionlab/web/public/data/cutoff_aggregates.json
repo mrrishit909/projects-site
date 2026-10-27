@@ -33,6 +33,14 @@
           "positives": 12,
           "prevalence": "0.106195"
         },
+        "prevalence_baseline": {
+          "average_precision": "0.106195",
+          "brier_score": "0.094917",
+          "mean_probability": "0.106183",
+          "n": 113,
+          "positives": 12,
+          "prevalence": "0.106195"
+        },
         "random_baseline": {
           "average_precision": "0.131682",
           "brier_score": "0.337071",
@@ -87,6 +95,14 @@
           "average_precision": "0.443624",
           "brier_score": "0.081489",
           "mean_probability": "0.100875",
+          "n": 126,
+          "positives": 13,
+          "prevalence": "0.103175"
+        },
+        "prevalence_baseline": {
+          "average_precision": "0.103175",
+          "brier_score": "0.092539",
+          "mean_probability": "0.106183",
           "n": 126,
           "positives": 13,
           "prevalence": "0.103175"
@@ -149,6 +165,14 @@
           "positives": 12,
           "prevalence": "0.091603"
         },
+        "prevalence_baseline": {
+          "average_precision": "0.091603",
+          "brier_score": "0.083425",
+          "mean_probability": "0.106183",
+          "n": 131,
+          "positives": 12,
+          "prevalence": "0.091603"
+        },
         "random_baseline": {
           "average_precision": "0.087462",
           "brier_score": "0.327745",
@@ -203,6 +227,14 @@
           "average_precision": "0.146009",
           "brier_score": "0.072342",
           "mean_probability": "0.100371",
+          "n": 150,
+          "positives": 12,
+          "prevalence": "0.080000"
+        },
+        "prevalence_baseline": {
+          "average_precision": "0.080000",
+          "brier_score": "0.074286",
+          "mean_probability": "0.106183",
           "n": 150,
           "positives": 12,
           "prevalence": "0.080000"
@@ -265,6 +297,14 @@
           "positives": 13,
           "prevalence": "0.078788"
         },
+        "prevalence_baseline": {
+          "average_precision": "0.078788",
+          "brier_score": "0.073331",
+          "mean_probability": "0.106183",
+          "n": 165,
+          "positives": 13,
+          "prevalence": "0.078788"
+        },
         "random_baseline": {
           "average_precision": "0.130650",
           "brier_score": "0.304647",
@@ -319,6 +359,14 @@
           "average_precision": "0.237688",
           "brier_score": "0.080562",
           "mean_probability": "0.099089",
+          "n": 183,
+          "positives": 17,
+          "prevalence": "0.092896"
+        },
+        "prevalence_baseline": {
+          "average_precision": "0.092896",
+          "brier_score": "0.084443",
+          "mean_probability": "0.106183",
           "n": 183,
           "positives": 17,
           "prevalence": "0.092896"
@@ -381,6 +429,14 @@
           "positives": 20,
           "prevalence": "0.101010"
         },
+        "prevalence_baseline": {
+          "average_precision": "0.101010",
+          "brier_score": "0.090834",
+          "mean_probability": "0.106183",
+          "n": 198,
+          "positives": 20,
+          "prevalence": "0.101010"
+        },
         "random_baseline": {
           "average_precision": "0.131854",
           "brier_score": "0.310091",
@@ -435,6 +491,14 @@
           "average_precision": "0.166690",
           "brier_score": "0.111273",
           "mean_probability": "0.100012",
+          "n": 214,
+          "positives": 27,
+          "prevalence": "0.126168"
+        },
+        "prevalence_baseline": {
+          "average_precision": "0.126168",
+          "brier_score": "0.110649",
+          "mean_probability": "0.106183",
           "n": 214,
           "positives": 27,
           "prevalence": "0.126168"
@@ -497,6 +561,14 @@
           "positives": 23,
           "prevalence": "0.100877"
         },
+        "prevalence_baseline": {
+          "average_precision": "0.100877",
+          "brier_score": "0.090729",
+          "mean_probability": "0.106183",
+          "n": 228,
+          "positives": 23,
+          "prevalence": "0.100877"
+        },
         "random_baseline": {
           "average_precision": "0.140537",
           "brier_score": "0.319697",
@@ -551,6 +623,14 @@
           "average_precision": "0.133978",
           "brier_score": "0.081082",
           "mean_probability": "0.095614",
+          "n": 300,
+          "positives": 27,
+          "prevalence": "0.090000"
+        },
+        "prevalence_baseline": {
+          "average_precision": "0.090000",
+          "brier_score": "0.082162",
+          "mean_probability": "0.106183",
           "n": 300,
           "positives": 27,
           "prevalence": "0.090000"
@@ -613,6 +693,14 @@
           "positives": 25,
           "prevalence": "0.078616"
         },
+        "prevalence_baseline": {
+          "average_precision": "0.078616",
+          "brier_score": "0.073196",
+          "mean_probability": "0.106183",
+          "n": 318,
+          "positives": 25,
+          "prevalence": "0.078616"
+        },
         "random_baseline": {
           "average_precision": "0.078339",
           "brier_score": "0.316302",
@@ -667,6 +755,14 @@
           "average_precision": "0.122959",
           "brier_score": "0.072878",
           "mean_probability": "0.096663",
+          "n": 329,
+          "positives": 26,
+          "prevalence": "0.079027"
+        },
+        "prevalence_baseline": {
+          "average_precision": "0.079027",
+          "brier_score": "0.073519",
+          "mean_probability": "0.106183",
           "n": 329,
           "positives": 26,
           "prevalence": "0.079027"
@@ -729,6 +825,14 @@
           "positives": 36,
           "prevalence": "0.101983"
         },
+        "prevalence_baseline": {
+          "average_precision": "0.101983",
+          "brier_score": "0.091600",
+          "mean_probability": "0.106183",
+          "n": 353,
+          "positives": 36,
+          "prevalence": "0.101983"
+        },
         "random_baseline": {
           "average_precision": "0.121528",
           "brier_score": "0.340214",
@@ -783,6 +887,14 @@
           "average_precision": "0.271982",
           "brier_score": "0.107872",
           "mean_probability": "0.096410",
+          "n": 364,
+          "positives": 47,
+          "prevalence": "0.129121"
+        },
+        "prevalence_baseline": {
+          "average_precision": "0.129121",
+          "brier_score": "0.112975",
+          "mean_probability": "0.106183",
           "n": 364,
           "positives": 47,
           "prevalence": "0.129121"
@@ -845,6 +957,14 @@
           "positives": 46,
           "prevalence": "0.123656"
         },
+        "prevalence_baseline": {
+          "average_precision": "0.123656",
+          "brier_score": "0.108670",
+          "mean_probability": "0.106183",
+          "n": 372,
+          "positives": 46,
+          "prevalence": "0.123656"
+        },
         "random_baseline": {
           "average_precision": "0.158610",
           "brier_score": "0.321959",
@@ -899,6 +1019,14 @@
           "average_precision": "0.284081",
           "brier_score": "0.109707",
           "mean_probability": "0.095011",
+          "n": 385,
+          "positives": 51,
+          "prevalence": "0.132468"
+        },
+        "prevalence_baseline": {
+          "average_precision": "0.132468",
+          "brier_score": "0.115611",
+          "mean_probability": "0.106183",
           "n": 385,
           "positives": 51,
           "prevalence": "0.132468"
@@ -961,6 +1089,14 @@
           "positives": 45,
           "prevalence": "0.114796"
         },
+        "prevalence_baseline": {
+          "average_precision": "0.114796",
+          "brier_score": "0.101692",
+          "mean_probability": "0.106183",
+          "n": 392,
+          "positives": 45,
+          "prevalence": "0.114796"
+        },
         "random_baseline": {
           "average_precision": "0.113863",
           "brier_score": "0.324894",
@@ -1019,6 +1155,14 @@
           "positives": 117,
           "prevalence": "0.104093"
         },
+        "prevalence_baseline": {
+          "average_precision": "0.104093",
+          "brier_score": "0.093262",
+          "mean_probability": "0.106183",
+          "n": 1124,
+          "positives": 117,
+          "prevalence": "0.104093"
+        },
         "random_baseline": {
           "average_precision": "0.097155",
           "brier_score": "0.336668",
@@ -1070,6 +1214,14 @@
           "prevalence": null
         },
         "logistic_regression": {
+          "average_precision": null,
+          "brier_score": null,
+          "mean_probability": null,
+          "n": 0,
+          "positives": 0,
+          "prevalence": null
+        },
+        "prevalence_baseline": {
           "average_precision": null,
           "brier_score": null,
           "mean_probability": null,
@@ -1135,6 +1287,14 @@
           "positives": 0,
           "prevalence": null
         },
+        "prevalence_baseline": {
+          "average_precision": null,
+          "brier_score": null,
+          "mean_probability": null,
+          "n": 0,
+          "positives": 0,
+          "prevalence": null
+        },
         "random_baseline": {
           "average_precision": null,
           "brier_score": null,
@@ -1186,6 +1346,14 @@
           "prevalence": null
         },
         "logistic_regression": {
+          "average_precision": null,
+          "brier_score": null,
+          "mean_probability": null,
+          "n": 0,
+          "positives": 0,
+          "prevalence": null
+        },
+        "prevalence_baseline": {
           "average_precision": null,
           "brier_score": null,
           "mean_probability": null,
@@ -1260,6 +1428,7 @@
         "apac": {
           "current_rows": 21,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "7.14",
           "psi": "0.108350",
           "reference_rows": 57
@@ -1268,6 +1437,7 @@
         "other_regions": {
           "current_rows": 92,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "5.75",
           "psi": "0.023959",
           "reference_rows": 307
@@ -1285,6 +1455,7 @@
         "apac": {
           "current_rows": 24,
           "exceeds_threshold": true,
+          "floored_bins": 1,
           "mean_usage_events_30d": "7.13",
           "psi": "0.638981",
           "reference_rows": 57
@@ -1293,6 +1464,7 @@
         "other_regions": {
           "current_rows": 102,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "5.99",
           "psi": "0.051631",
           "reference_rows": 307
@@ -1310,6 +1482,7 @@
         "apac": {
           "current_rows": 28,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "8.32",
           "psi": "0.051031",
           "reference_rows": 57
@@ -1318,6 +1491,7 @@
         "other_regions": {
           "current_rows": 103,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "5.96",
           "psi": "0.007233",
           "reference_rows": 307
@@ -1335,6 +1509,7 @@
         "apac": {
           "current_rows": 30,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.70",
           "psi": "0.006783",
           "reference_rows": 57
@@ -1343,6 +1518,7 @@
         "other_regions": {
           "current_rows": 120,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "5.63",
           "psi": "0.009378",
           "reference_rows": 307
@@ -1360,6 +1536,7 @@
         "apac": {
           "current_rows": 33,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "7.24",
           "psi": "0.111157",
           "reference_rows": 57
@@ -1368,6 +1545,7 @@
         "other_regions": {
           "current_rows": 132,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "5.85",
           "psi": "0.007907",
           "reference_rows": 307
@@ -1385,6 +1563,7 @@
         "apac": {
           "current_rows": 38,
           "exceeds_threshold": true,
+          "floored_bins": 1,
           "mean_usage_events_30d": "7.18",
           "psi": "0.641052",
           "reference_rows": 57
@@ -1393,6 +1572,7 @@
         "other_regions": {
           "current_rows": 145,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.32",
           "psi": "0.018169",
           "reference_rows": 307
@@ -1410,6 +1590,7 @@
         "apac": {
           "current_rows": 38,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.82",
           "psi": "0.026742",
           "reference_rows": 57
@@ -1418,6 +1599,7 @@
         "other_regions": {
           "current_rows": 160,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.03",
           "psi": "0.000923",
           "reference_rows": 307
@@ -1435,6 +1617,7 @@
         "apac": {
           "current_rows": 37,
           "exceeds_threshold": true,
+          "floored_bins": 1,
           "mean_usage_events_30d": "6.65",
           "psi": "0.623027",
           "reference_rows": 57
@@ -1443,6 +1626,7 @@
         "other_regions": {
           "current_rows": 177,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.15",
           "psi": "0.004830",
           "reference_rows": 307
@@ -1460,6 +1644,7 @@
         "apac": {
           "current_rows": 39,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.23",
           "psi": "0.181500",
           "reference_rows": 57
@@ -1468,6 +1653,7 @@
         "other_regions": {
           "current_rows": 189,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.22",
           "psi": "0.008635",
           "reference_rows": 307
@@ -1485,6 +1671,7 @@
         "apac": {
           "current_rows": 49,
           "exceeds_threshold": true,
+          "floored_bins": 1,
           "mean_usage_events_30d": "5.20",
           "psi": "0.679573",
           "reference_rows": 57
@@ -1493,6 +1680,7 @@
         "other_regions": {
           "current_rows": 251,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.93",
           "psi": "0.025216",
           "reference_rows": 307
@@ -1510,6 +1698,7 @@
         "apac": {
           "current_rows": 54,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.37",
           "psi": "0.085816",
           "reference_rows": 57
@@ -1518,6 +1707,7 @@
         "other_regions": {
           "current_rows": 264,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.47",
           "psi": "0.000323",
           "reference_rows": 307
@@ -1535,6 +1725,7 @@
         "apac": {
           "current_rows": 57,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "5.88",
           "psi": "0.139882",
           "reference_rows": 57
@@ -1543,6 +1734,7 @@
         "other_regions": {
           "current_rows": 272,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.65",
           "psi": "0.009134",
           "reference_rows": 307
@@ -1560,6 +1752,7 @@
         "apac": {
           "current_rows": 62,
           "exceeds_threshold": true,
+          "floored_bins": 0,
           "mean_usage_events_30d": "5.85",
           "psi": "0.251339",
           "reference_rows": 57
@@ -1568,6 +1761,7 @@
         "other_regions": {
           "current_rows": 291,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.74",
           "psi": "0.013403",
           "reference_rows": 307
@@ -1585,6 +1779,7 @@
         "apac": {
           "current_rows": 57,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "7.44",
           "psi": "0.000000",
           "reference_rows": 57
@@ -1593,6 +1788,7 @@
         "other_regions": {
           "current_rows": 307,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.26",
           "psi": "0.000000",
           "reference_rows": 307
@@ -1610,6 +1806,7 @@
         "apac": {
           "current_rows": 59,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "7.03",
           "psi": "0.142972",
           "reference_rows": 57
@@ -1618,6 +1815,7 @@
         "other_regions": {
           "current_rows": 313,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.57",
           "psi": "0.018526",
           "reference_rows": 307
@@ -1635,6 +1833,7 @@
         "apac": {
           "current_rows": 61,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.56",
           "psi": "0.058749",
           "reference_rows": 57
@@ -1643,6 +1842,7 @@
         "other_regions": {
           "current_rows": 324,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.62",
           "psi": "0.017150",
           "reference_rows": 307
@@ -1660,6 +1860,7 @@
         "apac": {
           "current_rows": 56,
           "exceeds_threshold": true,
+          "floored_bins": 0,
           "mean_usage_events_30d": "3.00",
           "psi": "0.513545",
           "reference_rows": 57
@@ -1668,6 +1869,7 @@
         "other_regions": {
           "current_rows": 336,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.62",
           "psi": "0.010967",
           "reference_rows": 307
@@ -1685,6 +1887,7 @@
         "apac": {
           "current_rows": 184,
           "exceeds_threshold": true,
+          "floored_bins": 0,
           "mean_usage_events_30d": "2.76",
           "psi": "0.551353",
           "reference_rows": 57
@@ -1693,6 +1896,7 @@
         "other_regions": {
           "current_rows": 940,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.65",
           "psi": "0.016833",
           "reference_rows": 307
@@ -1710,6 +1914,7 @@
         "apac": {
           "current_rows": 188,
           "exceeds_threshold": true,
+          "floored_bins": 0,
           "mean_usage_events_30d": "2.89",
           "psi": "0.579740",
           "reference_rows": 57
@@ -1718,6 +1923,7 @@
         "other_regions": {
           "current_rows": 966,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.61",
           "psi": "0.020612",
           "reference_rows": 307
@@ -1735,6 +1941,7 @@
         "apac": {
           "current_rows": 190,
           "exceeds_threshold": true,
+          "floored_bins": 0,
           "mean_usage_events_30d": "2.59",
           "psi": "0.765053",
           "reference_rows": 57
@@ -1743,6 +1950,7 @@
         "other_regions": {
           "current_rows": 1009,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.64",
           "psi": "0.014031",
           "reference_rows": 307
@@ -1760,6 +1968,7 @@
         "apac": {
           "current_rows": 199,
           "exceeds_threshold": true,
+          "floored_bins": 0,
           "mean_usage_events_30d": "2.88",
           "psi": "0.491035",
           "reference_rows": 57
@@ -1768,6 +1977,7 @@
         "other_regions": {
           "current_rows": 1042,
           "exceeds_threshold": false,
+          "floored_bins": 0,
           "mean_usage_events_30d": "6.73",
           "psi": "0.022153",
           "reference_rows": 307
@@ -1784,6 +1994,54 @@
     "region": "apac",
     "target_psi": "0.200000",
     "threshold": "0.200000"
+  },
+  "economics_full_world": {
+    "population": "all 2,400 accounts as built by the domain: the eligible accounts of the cutoff that carry a prediction",
+    "prediction_at": "2026-09-01T00:00:00Z",
+    "scenarios": {
+      "sc-001": {
+        "assumption_based": true,
+        "assumptions": {
+          "assumed_effect": "0.300000",
+          "contact_cost": "8.00",
+          "margin_value": "200.00"
+        },
+        "capacity": 5,
+        "contact_budget": "40.00",
+        "expected_value": "81.13",
+        "label": "hypothetical",
+        "scored_accounts": 1241,
+        "treatment_effect_estimate": null
+      },
+      "sc-002": {
+        "assumption_based": true,
+        "assumptions": {
+          "assumed_effect": "0.200000",
+          "contact_cost": "8.00",
+          "margin_value": "200.00"
+        },
+        "capacity": 10,
+        "contact_budget": "80.00",
+        "expected_value": "71.04",
+        "label": "hypothetical",
+        "scored_accounts": 1241,
+        "treatment_effect_estimate": null
+      },
+      "sc-003": {
+        "assumption_based": true,
+        "assumptions": {
+          "assumed_effect": "0.100000",
+          "contact_cost": "8.00",
+          "margin_value": "200.00"
+        },
+        "capacity": 20,
+        "contact_budget": "160.00",
+        "expected_value": "-29.12",
+        "label": "hypothetical",
+        "scored_accounts": 1241,
+        "treatment_effect_estimate": null
+      }
+    }
   },
   "population": "all 2,400 accounts as built by the domain; a cutoff before 2026-06-01 holds the accounts of the matching role only",
   "training_run_id": "tr-001"

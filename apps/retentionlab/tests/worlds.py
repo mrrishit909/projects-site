@@ -15,7 +15,7 @@ from support_db import golden_inputs
 
 UTC = timezone.utc
 AS_OF = "2026-05-01T00:00:00Z"                    # the dataset's own as_of (inputs)
-READ_AS_OF = "2026-05-02T00:00:00Z"               # a report read after the commands ran (the test clock starts at 2026-05-01T12:00:00Z)
+READ_AS_OF = "2026-05-02T00:00:00Z"               # a report read after the commands ran (the test clock starts at 2026-05-01T12:00:00Z; support_db.get moves the clock past an as_of for the call)
 TRAIN_END, VALIDATION_END, TEST_END = "2025-06-01T00:00:00Z", "2025-10-01T00:00:00Z", "2026-06-01T00:00:00Z"
 SETS = {"train": ["2025-01-01T00:00:00Z", "2025-02-01T00:00:00Z"], "validation": ["2025-06-01T00:00:00Z"],
         "test": ["2025-10-01T00:00:00Z"], "new": ["2026-03-01T00:00:00Z"]}

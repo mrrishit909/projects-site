@@ -29,7 +29,7 @@ FEATURES = ("usage_events_30d", "days_since_last_usage", "high_severity_support_
 #: Features that can be missing (null), and therefore get a missing indicator when training rows miss them.
 NULLABLE_FEATURES = ("days_since_last_usage", "billing_total_90d")
 CAL_BINS = 10
-MODELS = ("random_baseline", "business_rule", "logistic_regression")
+MODELS = ("random_baseline", "business_rule", "logistic_regression", "prevalence_baseline")      # D-09 (R10-14): the constant is the honest Brier reference
 DEFAULT_MODEL = "logistic_regression"
 BUSINESS_RULE = "no_usage_30d_or_open_high_severity_support"
 DEFAULT_DRIFT_BINS = ({"label": "0", "lower": 0, "upper": 1}, {"label": "1-2", "lower": 1, "upper": 3}, {"label": "3+", "lower": 3, "upper": None})

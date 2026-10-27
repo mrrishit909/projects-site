@@ -2,6 +2,7 @@ import { Link } from "../components/link";
 import { Chip, Fig, Related, Scroll, ScopeStrip, TableFold, ViewHead, WithData } from "../components/ui";
 import type { Dataset } from "../data/dataset";
 import type { Row } from "../domain/models";
+import { TEST_COUNTS } from "../lib/counts";
 import { designedClaims, injectionChecks, leafDiff, replayRefusals } from "../lib/claims";
 import { n0 } from "../lib/format";
 
@@ -98,6 +99,7 @@ function Evidence({ ds }: { ds: Dataset }) {
           <li><strong>This page</strong>: the manifest's claims set against this browser's figures, and the recorded requests re-run through the refusal rules. It cannot recompute figures that need events of accounts that are not published.</li>
           <li><strong>The end-to-end suite</strong>: Playwright drives the built site on the nested base path and records screenshots at four widths and 200 % zoom.</li>
         </ol>
+        <p data-testid="test-counts">Counts of the final run: <Fig k="count-pytest">{n0(TEST_COUNTS.pytest)}</Fig> Python tests (domain, API, PostgreSQL, generator), <Fig k="count-reference">{n0(TEST_COUNTS.reference)}</Fig> stdlib reference checks of the golden fixture, <Fig k="count-golden">{n0(TEST_COUNTS.golden)}</Fig> mirror checks, <Fig k="count-review">{n0(TEST_COUNTS.review)}</Fig> adversarial mirror checks and <Fig k="count-e2e">{n0(TEST_COUNTS.e2e)}</Fig> browser tests.</p>
         <p>What none of it shows: that any retention action works. The economics are hypothetical, the world is synthetic and the margin over the baselines was built in. <Link to="case-study">The case study</Link> says so at length.</p>
       </section>
       <TableFold summary="The published files" open={false}>

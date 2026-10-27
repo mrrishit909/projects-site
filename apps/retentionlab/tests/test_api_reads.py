@@ -3,9 +3,11 @@ as_of, run, cutoff set, scenario, the K refusal). Minimum read tests: no records
 evidence reconciliation."""
 import base64
 import json
+from datetime import datetime, timezone
 
 import pytest
 
+from api import clock
 from api.reads import ENTITIES
 from support_db import (FEB, JAN, client, command, conn, count, db_url, flat, get, golden_expected, golden_inputs, load, metrics, rule_ids)  # noqa: F401
 from mini import Mini
@@ -217,9 +219,19 @@ def test_as_of_decides_what_is_known_and_what_is_mature(golden):
     early = metrics(golden, training_run_id="tr-001", prediction_at=JAN, as_of="2026-04-12T00:00:00Z")["data"]["cutoff_sets"][JAN]
     assert mature["population"]["mature"] == 4 and mature["churn_rate"]["value"] == "0.500000"
     assert early["population"]["mature"] == 0 and early["population"]["censored"] == 4 and early["churn_rate"]["value"] is None and early["precision_at_k"] is None
+    # D-09 (R10-01): the future is not known. An as_of later than the server clock is refused; and a stored CENSORED label stays censored in every report
+    # until the labelling command (C02) matures it at a clock past its label_end, so a later as_of can never relabel a row by itself.
+    future = get(golden, "/metrics", _server_clock=True, training_run_id="tr-001", prediction_at=FEB, as_of="2026-05-17T00:00:00Z")
+    assert future.status_code == 422 and rule_ids(future) == ["AS_OF_IN_FUTURE"]
+    before = metrics(golden, training_run_id="tr-001", prediction_at=FEB, as_of="2026-05-17T00:00:00Z")["data"]
+    assert before["cutoff_sets"][FEB]["population"]["mature"] == 0 and before["cutoff_sets"][FEB]["churn_rate"]["value"] is None       # stored labels are authoritative
+    assert before["consistency"]["labels_mismatched"] != []                                                                          # the disagreement is a finding, not a relabel
+    clock.freeze(datetime(2026, 5, 17, 12, 0, 0, tzinfo=timezone.utc))
+    assert command(golden, "define-label", {"prediction_at": FEB}).json()["result"]["matured_now"] == 4                               # the one place a label matures
     late = metrics(golden, training_run_id="tr-001", prediction_at=FEB, as_of="2026-05-17T00:00:00Z")["data"]["cutoff_sets"][FEB]
     assert late["population"]["mature"] == 4 and late["population"]["unscored_excluded"] == 1 and late["population"]["evaluated"] == 3        # now Feb labels are known
     assert late["churn_rate"]["churned"] == 4 and late["churn_rate"]["value"] == "1.000000"                                           # all four cancel inside the Feb horizon and arrive before 05-16
+    clock.freeze(datetime(2026, 5, 1, 12, 0, 0, tzinfo=timezone.utc))                                                                  # back to the test clock
     default = metrics(golden)["data"]
     assert default["as_of"].startswith("2026-05-01T12:00:00")                                                                         # the server's clock
 

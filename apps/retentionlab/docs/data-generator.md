@@ -5,7 +5,7 @@
   three cutoffs are immature); subscription, billing, usage and support events with `available_at` ≥ `event_at`
   (a declared share arrives late); a latent churn propensity per account per cutoff kept only in the manifest;
   feature registry v1 (about 20 features); labels; one training run (train to 2025-10-01, validation to 2026-02-01,
-  test to 2026-06-01) with purge counts; predictions from the three models; 3 intervention scenarios; a draft
+  test to 2026-06-01) with purge counts; predictions from the four models (random, rule, logistic, prevalence constant); 3 intervention scenarios; a draft
   outreach queue; the demo profile of section 12.
 * Designed relationships: the logistic model beats the rule and the random baseline on the test set by a margin
   the manifest states; a segment with a calibration gap; a cohort with population drift after 2026-03; a late

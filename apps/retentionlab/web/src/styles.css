@@ -2,7 +2,7 @@
    Display: a geometric sans; reading: a humanist sans; figures: a mono. System stacks only (no network fonts). */
 :root {
   --plum: #2a1630; --plum-2: #34193b; --plum-3: #3d2046; --rule: #4a2e52; --cream: #f4ecdf; --cream-2: #e9dfcf; --muted: #bfae9f;
-  --coral: #ef7a6a; --coral-ink: #a8402f; --teal: #7fc8b8; --teal-ink: #1f6b5d; --ink: #2a1630; --gold: #e3c58a;
+  --coral: #ef7a6a; --coral-ink: #a8402f; --teal: #7fc8b8; --teal-ink: #1f6b5d; --ink: #2a1630; --gold: #e3c58a; --brass-ink: #6b4f17;
   --display: "Avenir Next", Avenir, "Century Gothic", "URW Gothic", Futura, "Trebuchet MS", system-ui, sans-serif;
   --read: "Gill Sans", "Gill Sans MT", Optima, Candara, "Segoe UI", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
   --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
@@ -113,7 +113,8 @@ tr.is-empty td { color: var(--muted); }
 .legend { display: flex; flex-wrap: wrap; gap: .3rem 1rem; font-size: .84rem; color: var(--cream-2); margin-top: .4rem; } .legend i { display: inline-block; width: 18px; height: 0; border-top: 3px solid; margin-right: .35rem; vertical-align: middle; } .legend i.dash { border-top-style: dashed; }
 .readout { min-height: 3.2em; padding: .5rem .8rem; border: 1px solid var(--rule); border-radius: 8px; background: var(--plum); font: .9rem var(--mono); }
 
-dl.kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .25rem 1rem; margin: 0; } dl.kv dt { color: var(--muted); } dl.kv dd { margin: 0; font-family: var(--mono); }
+dl.kv { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .25rem 1rem; margin: 0; } dl.kv dt { color: var(--muted); } dl.kv dd { margin: 0; font-family: var(--mono); overflow-wrap: break-word; word-break: normal; }
+@media (max-width: 479px) { dl.kv { grid-template-columns: minmax(0, 1fr); gap: 0; } dl.kv dt { margin-top: .7rem; } dl.kv dt:first-child { margin-top: 0; } }
 details.def { display: inline-block; max-width: 100%; vertical-align: baseline; } details.def summary { cursor: pointer; color: var(--gold); list-style: none; display: inline-flex; gap: .3rem; align-items: baseline; } details.def summary::-webkit-details-marker { display: none; }
 .def__q { border: 1px solid var(--gold); border-radius: 50%; width: 1.15em; height: 1.15em; font-size: .75em; display: inline-grid; place-items: center; }
 .def__body { display: block; margin-top: .3rem; padding: .5rem .7rem; background: var(--plum); border: 1px solid var(--rule); border-radius: 8px; font-size: .88rem; color: var(--cream-2); max-width: 60ch; }
@@ -128,3 +129,9 @@ ul.plain { list-style: none; padding: 0; margin: 0; } ul.tight li { margin: .15r
 .paper .scroll { background: #fbf6ec; border-color: #cdbfa9; } .paper td, .paper caption, .paper dd { color: var(--ink); } .paper .neg { color: var(--coral-ink); } .paper .pos { color: var(--teal-ink); }
 .paper .mono, .paper .fig { color: var(--ink); } .paper .big { color: var(--ink); }
 .scroll table { width: max-content; min-width: 100%; } .scroll th, .scroll td { white-space: nowrap; } .scroll td.t, .scroll caption { white-space: normal; min-width: 14ch; } .scroll caption { min-width: 0; position: sticky; left: 0; max-width: 90vw; }
+
+/* D-09 (R10-02): on the cream panels the gold of the plum theme is 1.4:1; chips, definition links and labels use a dark brass or the plum ink (4.5:1 and above). */
+.paper .chip--note, .paper details.def summary, .paper details.fold > summary { color: var(--brass-ink); border-color: var(--brass-ink); }
+.paper .def__q { border-color: var(--brass-ink); } .paper .chip--hatch { color: #5a4560; border-color: #5a4560; }
+.paper dl.kv dt { color: var(--ink); font-weight: 600; } .paper .simnote { color: var(--brass-ink); border-color: var(--brass-ink); background: rgba(107,79,23,.07); }
+.paper .note strong { color: var(--coral-ink); }

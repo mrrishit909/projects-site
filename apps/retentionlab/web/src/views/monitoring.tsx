@@ -23,6 +23,12 @@ function Monitoring({ ds }: { ds: Dataset }) {
   const censored = rows.filter((r) => r.censored > 0);
   const last = byCutoff[byCutoff.length - 1];
   const worst = byCutoff.length ? byCutoff.reduce((a, b) => (cmpFr(parseFraction(b["apac"]["psi"]), parseFraction(a["apac"]["psi"])) > 0 ? b : a)) : null;
+  const apacSeries = drift ? (() => {
+    const exceed = byCutoff.filter((c) => c["apac"]["exceeds_threshold"]), changeAt = String(drift["change_at"]);
+    const pre = exceed.filter((c) => String(c["prediction_at"]) < changeAt), post = exceed.filter((c) => String(c["prediction_at"]) >= changeAt);
+    return { values: byCutoff.map((c) => String(c["apac"]["psi"])), exceed, pre, post, preFloored: pre.filter((c) => (c["apac"]["floored_bins"] ?? 0) > 0).length,
+      minFloored: pre.filter((c) => (c["apac"]["floored_bins"] ?? 0) > 0).map((c) => String(c["apac"]["psi"])).sort()[0] ?? "", refRows: byCutoff[0]?.["apac"]["reference_rows"] };
+  })() : null;
   const goldenSets = !drift ? Object.entries(ds.primary.result["cutoff_sets"] as Record<string, Row>).filter(([, s]) => s["population_drift"]) : [];
   return (
     <>
@@ -33,7 +39,13 @@ function Monitoring({ ds }: { ds: Dataset }) {
       {drift ? (
         <section aria-labelledby="drift-h">
           <h2 id="drift-h">Drift by region: the whole population hides the apac cohort</h2>
-          <p className="note" data-testid="hide-note">At the {String(last?.["prediction_at"]).slice(0, 10)} cutoff the whole population's usage PSI is <Fig k="psi-all-last">{last?.["all_accounts"]["psi"]}</Fig> and the other regions' <Fig k="psi-other-last">{last?.["other_regions"]["psi"]}</Fig>, both far below 0.2, while apac's is <Fig k="psi-apac-last" tone="neg">{last?.["apac"]["psi"]}</Fig> (peak <Fig k="psi-apac-max" tone="neg">{worst?.["apac"]["psi"]}</Fig> at {String(worst?.["prediction_at"]).slice(0, 10)}). apac is about {orDash(p6(ratio(last?.["apac"]["current_rows"] ?? 0, last?.["all_accounts"]["current_rows"] ?? 0)))} of the accounts; from 2026-03-31 the generator records only 40 % of apac logins (an instrumentation change, not a change in behaviour; see the manifest). Before the change apac spikes above 0.2 in some months too: its cohorts are small ({last?.["apac"]["reference_rows"]} reference rows, a few dozen per cutoff), so its PSI is noisy; the sustained level from 2026-05-01 is the signal. <Chip kind="note">designed in the synthetic world</Chip></p>
+          <p className="note" data-testid="hide-note">At the {String(last?.["prediction_at"]).slice(0, 10)} cutoff the whole population's usage PSI is <Fig k="psi-all-last">{last?.["all_accounts"]["psi"]}</Fig> and the other regions' <Fig k="psi-other-last">{last?.["other_regions"]["psi"]}</Fig>, both far below 0.2, while apac's is <Fig k="psi-apac-last" tone="neg">{last?.["apac"]["psi"]}</Fig> (peak <Fig k="psi-apac-max" tone="neg">{worst?.["apac"]["psi"]}</Fig> at {String(worst?.["prediction_at"]).slice(0, 10)}). apac is about {orDash(p6(ratio(last?.["apac"]["current_rows"] ?? 0, last?.["all_accounts"]["current_rows"] ?? 0)))} of the accounts; from 2026-03-31 the generator records only 40 % of apac logins (an instrumentation change, not a change in behaviour; see the manifest). <Chip kind="note">designed in the synthetic world</Chip></p>
+          {apacSeries && (
+            <div className="note" data-testid="apac-series">
+              <p><strong>The full apac series, and what the threshold gets wrong.</strong> apac’s PSI against the {String(drift["reference_prediction_at"]).slice(0, 10)} cohort at the {byCutoff.length} cutoffs is <span className="mono" data-k="apac-series">{apacSeries.values.join(", ")}</span>. It is above 0.2 at <Fig k="apac-exceed">{apacSeries.exceed.length}</Fig> of them: <Fig k="apac-false">{apacSeries.pre.length}</Fig> before the change of {String(drift["change_at"]).slice(0, 10)} ({apacSeries.pre.map((e) => String(e["prediction_at"]).slice(0, 7)).join(", ")}) and <Fig k="apac-real">{apacSeries.post.length}</Fig> after it ({apacSeries.post.map((e) => String(e["prediction_at"]).slice(0, 7)).join(", ")}).</p>
+              <p><strong>The {apacSeries.pre.length} pre-change exceedances are false positives.</strong> Nothing changed in how apac logins were recorded before {String(drift["change_at"]).slice(0, 10)}. They are the noise of a small cohort, mostly through the 0.0001 floor: apac has {apacSeries.refRows} reference rows, so a bin that is empty in one cohort is not given a zero proportion but the floor, and its term (actual − expected) × ln(actual ÷ expected) is large on its own. <Fig k="apac-false-floored">{apacSeries.preFloored}</Fig> of the {apacSeries.pre.length} have a floored bin{apacSeries.preFloored > 0 ? <> and a PSI of at least <span className="mono">{apacSeries.minFloored}</span></> : null}; the other {apacSeries.pre.length - apacSeries.preFloored} is ordinary sampling variation. A single PSI above 0.2 on a cohort of a few dozen rows is a prompt to look, not a finding; the sustained level after the change is the signal.</p>
+            </div>
+          )}
           <figure className="figure">
             <LineSeries labels={byCutoff.map((c) => String(c["prediction_at"]).slice(0, 7))} threshold="0.200000" testid="drift-chart" caption="Population stability index of usage_events_30d by cutoff for the whole population, the other regions and apac"
               series={[

@@ -1,8 +1,10 @@
 import { useState, type KeyboardEvent } from "react";
+import { Link } from "../components/link";
 import { Legend, ReliabilityChart } from "../components/charts";
 import { Chip, Choice, Def, ExportButton, Fig, ParamSelect, Related, Scroll, ScopeStrip, ViewHead, WithData } from "../components/ui";
 import type { Dataset } from "../data/dataset";
-import { blockOf, gapOfItems, groupGaps } from "../lib/derive";
+import { blockOf, gapOfItems, groupGaps, seriesOf } from "../lib/derive";
+import { abs, cmpFr, parseFraction } from "../domain/num";
 import { n0, orDash, pp } from "../lib/format";
 import { cohortRows, groupStats } from "../lib/cohort";
 import { useParam } from "../router";
@@ -36,6 +38,17 @@ function Calibration({ ds }: { ds: Dataset }) {
   const segs = ds.testRows && pop.id === "test" ? groupGaps(ds.testRows, "segment", key === "logistic_uncalibrated" ? "logistic_uncalibrated" : "logistic_calibrated") : null;
   const regs = ds.testRows && pop.id === "test" ? groupGaps(ds.testRows, "region", key === "logistic_uncalibrated" ? "logistic_uncalibrated" : "logistic_calibrated") : null;
   const goldenGroups = !ds.testRows ? { seg: groupStats(cohortRows(ds), "segment"), reg: groupStats(cohortRows(ds), "region") } : null;
+  // Platt scaling read on the whole test range, whichever population is selected above (D-09, R10-08).
+  const tp = ds.populations[0]!;
+  const plattEffect = ds.id === "snapshot" && cal ? (() => {
+    const unc = seriesOf(tp, "logistic_uncalibrated"), calib = seriesOf(tp, "logistic_calibrated");
+    const bu = blockOf(unc), bc = blockOf(calib), gu = gapOfItems(unc), gc = gapOfItems(calib);
+    const worse = bu.brier_score !== null && bc.brier_score !== null && cmpFr(parseFraction(bc.brier_score), parseFraction(bu.brier_score)) > 0;
+    const cuts = Object.entries((cal["fit_rows_by_cutoff"] ?? {}) as Record<string, number>);
+    return { bu, bc, gu, gc, worse, cuts };
+  })() : null;
+  const regAll = ds.testRows ? groupGaps(ds.testRows, "region", "logistic_calibrated") : null;
+  const worstRegion = regAll ? Object.entries(regAll).filter(([, x]) => x.gap_pp !== null).reduce((a, b) => (cmpFr(abs(parseFraction(b[1].gap_pp!)), abs(parseFraction(a[1].gap_pp!))) > 0 ? b : a)) : null;
   const readout = bin.count === 0
     ? `Bin ${bin.lower} to ${bin.upper}${bin.closed_upper ? " (closed)" : ""}: no rows. Observed rate and gap are unknown, not zero.`
     : `Bin ${bin.lower} to ${bin.upper}${bin.closed_upper ? " (closed)" : ""}: ${bin.count} rows, mean predicted ${bin.mean_predicted}, observed ${bin.observed_rate}, gap ${pp(bin.gap_pp)}.${bin.count < 30 ? " Few rows: read with care." : ""}`;
@@ -92,6 +105,14 @@ function Calibration({ ds }: { ds: Dataset }) {
         <section className="paper" data-testid="platt" aria-labelledby="platt-h">
           <h2 id="platt-h">How the calibration was made, and what it was read on</h2>
           <p>Platt scaling maps the logistic model's log-odds <code>z</code> to <code>sigmoid(a·z + b)</code> with <code>a</code> = <Fig k="platt-a">{cal["a"]}</Fig> and <code>b</code> = <Fig k="platt-b">{cal["b"]}</Fig>. It was fitted on <Fig k="platt-fit">{n0(cal["fit_rows"])}</Fig> retained, mature <strong>validation</strong> rows; this curve is read on <Fig k="platt-eval">{n0(cal["evaluation_rows"])}</Fig> <strong>test</strong> rows. The two sets share no row, and a request that evaluates on its own fit rows is refused CALIBRATION_ON_FIT_ROWS. The fit set is small, so the mapping is noisy: <Chip kind="note">read with care</Chip>.</p>
+          {plattEffect && (
+            <p className="note" data-testid="platt-worse">
+              <strong>{plattEffect.worse ? "Platt scaling made the model worse on the test rows." : "Platt scaling's effect on the test rows."}</strong> The Brier score went from <Fig k="platt-brier-before">{plattEffect.bu.brier_score}</Fig> before to <Fig k="platt-brier-after">{plattEffect.bc.brier_score}</Fig> after,
+              and the overall calibration gap from <Fig k="platt-gap-before">{pp(plattEffect.gu.gap_pp)}</Fig> to <Fig k="platt-gap-after">{pp(plattEffect.gc.gap_pp)}</Fig>. The reason is the size of the fit set: its two parameters were fitted on <Fig k="platt-fit-n">{n0(cal["fit_rows"])}</Fig> rows
+              {plattEffect.cuts.length === 1 ? <> from <strong>one cutoff</strong> ({plattEffect.cuts[0]![0].slice(0, 10)})</> : <> from {plattEffect.cuts.length} cutoffs</>} (the label-window purge removes the later validation cutoffs), and one month of a small fit set does not transfer to the next four. Read the
+              “before Platt scaling” series as the better-calibrated one.
+            </p>
+          )}
           <p>Only the logistic model is calibrated. The random baseline's probabilities are uniform noise and the rule's are two numbers, so neither has a meaningful reliability curve.</p>
         </section>
       )}
@@ -110,7 +131,13 @@ function Calibration({ ds }: { ds: Dataset }) {
         ) : goldenGroups ? (
           <p>The golden set has {n0(b.n)} rows; by plan: {goldenGroups.seg.map((s) => `${s.group} ${s.n} rows, gap ${pp(s.gap)}`).join("; ")}.</p>
         ) : <p>Group gaps are shown for the whole test range; pick it above.</p>}
-        <p className="note"><strong>An unobserved cause.</strong> The starter plan's under-prediction comes from a repricing on 2026-02-01 that no feature sees, and apac's from a change in how logins are recorded. Recalibrating on the overall population would not fix either. <Chip kind="note">designed in the synthetic world, disclosed</Chip></p>
+        <p className="note"><strong>An unobserved cause.</strong> The starter plan's under-prediction comes from a repricing on 2026-02-01 that no feature sees; recalibrating on the overall population would not fix it. <Chip kind="note">designed in the synthetic world, disclosed</Chip></p>
+        {worstRegion && (
+          <p className="note" data-testid="apac-gap">
+            <strong>The largest gap by region is {worstRegion[0]}, at <Fig k="worst-region-gap" tone="neg">{pp(worstRegion[1].gap_pp)}</Fig>, and it was not designed.</strong> It is a one-draw realisation of this seed's world: the change in how apac logins are recorded was built to move
+            apac's usage distribution (see <Link to="monitoring">monitoring</Link>), and no effect on its calibration was designed or tested. Another seed could put the largest gap in another region.
+          </p>
+        )}
       </section>
       <Related also={["models", "cohorts"]} />
     </>

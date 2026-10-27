@@ -27,12 +27,13 @@ from retentionlab.contract import CONTRACT_VERSION, DEFAULT_DRIFT, MODELS
 from retentionlab.ingest import Ingest
 from retentionlab.metrics import freshness, publications, set_metrics
 from retentionlab.pipeline import consistency
+from retentionlab.rules import check_as_of
 from retentionlab.split import split_run
 from retentionlab.timeutil import iso_z, parse_ts
 from retentionlab.world import World
 
 from . import clock, db
-from .errors import ApiError, detail
+from .errors import ApiError, detail, from_domain
 
 Conn = psycopg.Connection[db.Row]
 RESERVED = frozenset({"limit", "cursor", "from", "to"})
@@ -182,6 +183,10 @@ def read_metrics(training_run_id: str | None, cutoff_id: str | None, prediction_
         raise ApiError(422, "VALIDATION_FAILED", f"unknown model {model!r}", [detail("model", E.UNKNOWN_MODEL, f"use one of {', '.join(MODELS)}")])
     window = parse_window(lo, hi)
     when = parse_instant(as_of, "as_of") if as_of else clock.now()
+    try:
+        check_as_of(when, clock.now())                                  # D-09 (R10-01): the future is not known, so nothing is mature in it
+    except E.DomainError as err:
+        raise from_domain(err, "as_of") from None
     wanted = [iso_z(parse_instant(p, "prediction_at")) for p in _names(prediction_at)]
     with db.transaction() as conn:
         data = db.load_data(conn, when, model)

@@ -46,7 +46,7 @@
     "training_run_id": "tr-001"
   },
   "contract_version": "v1",
-  "dataset_hash": "11d2975c3c640a989793b4bcb4b33bb4d505c5741505dfaa7bdd359db178b468",
+  "dataset_hash": "9ebaaadab8a2f70e5f25820616391ee0aec55fbf0b121dee25460de469821b1c",
   "dataset_version": "rl-20261026-20261026",
   "designed_relationships": [
     {
@@ -80,6 +80,13 @@
           "brier_under_random": true,
           "brier_under_rule": true
         },
+        "prevalence_baseline": {
+          "average_precision": "0.124917",
+          "brier_score": "0.109664",
+          "n": 1513,
+          "positives": 189,
+          "prevalence": "0.124917"
+        },
         "random_baseline": {
           "average_precision": "0.126793",
           "brier_score": "0.326543",
@@ -87,11 +94,21 @@
           "positives": 189,
           "prevalence": "0.124917"
         },
+        "reference_margins": {
+          "ap_over_prevalence_constant": "0.113635",
+          "brier_under_prevalence_constant": "0.004645"
+        },
         "stated_margins": {
           "ap_over_random": "0.050000",
           "ap_over_rule": "0.030000",
           "brier_under_random": "0.050000",
           "brier_under_rule": "0.002000"
+        },
+        "uninformative_margin": {
+          "key": "brier_under_random",
+          "prevalence_constant_brier": "0.109664",
+          "random_brier": "0.326543",
+          "why": "a uniform random score has a Brier near one third on a population that is 12 % positive, so any model that is not absurd clears a margin over it; the honest reference is the prevalence constant"
         }
       },
       "statement": "On the test range (the cutoffs 2026-02-01 .. 2026-05-01, mature eligible rows with a prediction, as one evaluation population) the logistic regression's average precision exceeds the rule's by at least 0.030000 and the random baseline's by at least 0.050000, and its Brier score is lower than the rule's by at least 0.002000 and the random baseline's by at least 0.050000."
@@ -169,12 +186,27 @@
           }
         },
         "largest_other_segment_abs_gap_pp": "1.99",
+        "largest_region_gap": {
+          "designed": false,
+          "gap_pp": "-10.68",
+          "note": "the largest regional calibration gap is a one-draw realisation of this seed's world, not a designed relationship: the instrumentation change was designed to move the apac usage distribution (DR-03), and no effect on its calibration was designed",
+          "region": "apac"
+        },
         "overall": {
           "gap_pp": "-2.86",
           "mean_predicted": "0.096314",
           "n": 1513,
           "observed_rate": "0.124917",
           "positives": 189
+        },
+        "platt_effect": {
+          "brier_calibrated": "0.105019",
+          "brier_uncalibrated": "0.104515",
+          "fit_rows": 289,
+          "gap_pp_calibrated": "-2.86",
+          "gap_pp_uncalibrated": "-2.26",
+          "why": "the mapping has two parameters and was fitted on the retained validation rows, all of which come from the first validation cutoff (the label-window purge removes the later ones); a small fit set from one month does not transfer to the next four",
+          "worse_on_test": true
         },
         "segment": "starter",
         "uncalibrated_overall": {
@@ -313,15 +345,30 @@
     },
     {
       "id": "D-G02",
-      "text": "Outcome-informed changes, in order. (1) After the first simulation the starter 90-day churn was 20-27 % per cutoff: the weekly hazard intercepts were lowered (starter -4800 to -5100, smb -5000 to -5100, mid -5300 to -5400, enterprise -5700 to -5800 milli-logit) and the starter repricing uplift from 700 to 600. (2) The first model fit gave logistic AP 0.199 against the rule's 0.116 and a Brier margin of 0.0010, below the stated 0.002, and a high-severity coefficient near zero: a per-account long-run engagement offset (+-500, then +-900 milli) was added and the engagement coefficient raised 1100 to 1500 to 2200, with the intercepts lowered once more (starter and smb to -5400, mid -5700, enterprise -6100) to keep the churn level. These changes strengthen the signal the four features can see; they were made until the stated margins were met and are why the margins are met. (3) The first drift run showed PSI 0.138 at 2026-04-01 for the drifting region (the change straddled the window): the change moved from 2026-03-15 to 2026-03-31, 40 % of logins kept instead of 50 %, and the statement narrowed from 'every cutoff after 2026-03' to 'every cutoff from 2026-05-01'. (4) The share of cancellations that arrive after the 14-day grace went from 2 % to 4 % (range 15 to 60 days) so that the label effect is visible. (5) The late-arrival target changed from 'all four features flip' to 'at least three of four' after the high-severity count flipped on no test row. (6) The INJ-02 examples were allowed in any range (they were all outside the cohort when restricted to the test range). (7) The scenario assumptions were changed once after the first run showed negative expected value for all three (contact cost 8 / 12 / 20, effect 0.20 / 0.15 / 0.10, margin 150 / 220 / 320 became cost 8, effect 0.30 / 0.20 / 0.10, margin 200), so that the lab shows a range of outcomes; the values remain assumptions. (8) The cohort grew from 140 to 200 accounts once the first output measured 3.1 MB."
+      "items": [
+        "After the first simulation the starter 90-day churn was 20-27 % per cutoff: the weekly hazard intercepts were lowered (starter -4800 to -5100, smb -5000 to -5100, mid -5300 to -5400, enterprise -5700 to -5800 milli-logit) and the starter repricing uplift from 700 to 600.",
+        "The first model fit gave logistic AP 0.199 against the rule's 0.116 and a Brier margin of 0.0010, below the stated 0.002, and a high-severity coefficient near zero: a per-account long-run engagement offset (+-500, then +-900 milli) was added and the engagement coefficient raised 1100 to 1500 to 2200, with the intercepts lowered once more (starter and smb to -5400, mid -5700, enterprise -6100) to keep the churn level. These changes strengthen the signal the four features can see; they were made until the stated margins were met and are why the margins are met.",
+        "The first drift run showed PSI 0.138 at 2026-04-01 for the drifting region (the change straddled the window): the change moved from 2026-03-15 to 2026-03-31, 40 % of logins kept instead of 50 %, and the statement narrowed from 'every cutoff after 2026-03' to 'every cutoff from 2026-05-01'.",
+        "The share of cancellations that arrive after the 14-day grace went from 2 % to 4 % (range 15 to 60 days) so that the label effect is visible.",
+        "The late-arrival target changed from 'all four features flip' to 'at least three of four' after the high-severity count flipped on no test row.",
+        "The INJ-02 examples (usage events that arrive after the cutoff) were allowed in any range: they were all outside the cohort when restricted to the test range.",
+        "The scenario assumptions were changed once after the first run showed negative expected value for all three (contact cost 8 / 12 / 20, effect 0.20 / 0.15 / 0.10, margin 150 / 220 / 320 became cost 8, effect 0.30 / 0.20 / 0.10, margin 200), so that the lab shows a range of outcomes; the values remain assumptions.",
+        "The cohort grew from 140 to 200 accounts once the first output measured 3.1 MB."
+      ],
+      "text": "Outcome-informed changes, in order. (1) After the first simulation the starter 90-day churn was 20-27 % per cutoff: the weekly hazard intercepts were lowered (starter -4800 to -5100, smb -5000 to -5100, mid -5300 to -5400, enterprise -5700 to -5800 milli-logit) and the starter repricing uplift from 700 to 600. (2) The first model fit gave logistic AP 0.199 against the rule's 0.116 and a Brier margin of 0.0010, below the stated 0.002, and a high-severity coefficient near zero: a per-account long-run engagement offset (+-500, then +-900 milli) was added and the engagement coefficient raised 1100 to 1500 to 2200, with the intercepts lowered once more (starter and smb to -5400, mid -5700, enterprise -6100) to keep the churn level. These changes strengthen the signal the four features can see; they were made until the stated margins were met and are why the margins are met. (3) The first drift run showed PSI 0.138 at 2026-04-01 for the drifting region (the change straddled the window): the change moved from 2026-03-15 to 2026-03-31, 40 % of logins kept instead of 50 %, and the statement narrowed from 'every cutoff after 2026-03' to 'every cutoff from 2026-05-01'. (4) The share of cancellations that arrive after the 14-day grace went from 2 % to 4 % (range 15 to 60 days) so that the label effect is visible. (5) The late-arrival target changed from 'all four features flip' to 'at least three of four' after the high-severity count flipped on no test row. (6) The INJ-02 examples (usage events that arrive after the cutoff) were allowed in any range: they were all outside the cohort when restricted to the test range. (7) The scenario assumptions were changed once after the first run showed negative expected value for all three (contact cost 8 / 12 / 20, effect 0.20 / 0.15 / 0.10, margin 150 / 220 / 320 became cost 8, effect 0.30 / 0.20 / 0.10, margin 200), so that the lab shows a range of outcomes; the values remain assumptions. (8) The cohort grew from 140 to 200 accounts once the first output measured 3.1 MB."
     },
     {
       "id": "D-G03",
-      "text": "Account-level roles. Each account is assigned to train (32 %), validation (36 %) or test (32 %) by a hash of its id, independent of everything else, and has cutoff rows only in the cutoffs of its role plus every cutoff from 2026-06-01 (outside the test range, where every active account is scored). The group purge of D-02 would otherwise remove every earlier row of every surviving account. The injected violators (INJ-03) are accounts given a second role."
+      "items": [
+        "Each account is assigned to train (32 %), validation (36 %) or test (32 %) by a hash of its id, independent of everything else, and has cutoff rows only in the cutoffs of its role plus every cutoff from 2026-06-01 (outside the test range, where every active account is scored). The group purge of D-02 would otherwise remove every earlier row of every surviving account.",
+        "The consequence is part of the design: the test population is the test-role accounts' rows, 1,513 rows from 442 accounts, not every account at every test cutoff, and the same account contributes several rows across overlapping cutoffs.",
+        "The injected violators (INJ-03) are accounts given a second role."
+      ],
+      "text": "Account-level roles, a design choice made to keep the contract's group purge workable and therefore listed with the outcome-informed choices. (1) Each account is assigned to train (32 %), validation (36 %) or test (32 %) by a hash of its id, independent of everything else, and has cutoff rows only in the cutoffs of its role plus every cutoff from 2026-06-01 (outside the test range, where every active account is scored). The group purge of D-02 would otherwise remove every earlier row of every surviving account. (2) The consequence is part of the design: the test population is the test-role accounts' rows, 1,513 rows from 442 accounts, not every account at every test cutoff, and the same account contributes several rows across overlapping cutoffs. (3) The injected violators (INJ-03) are accounts given a second role."
     },
     {
       "id": "D-G04",
-      "text": "What is published. The 2,400-account world is built and evaluated by the domain in full; the files carry (a) the COMPLETE records of a uniform sample of accounts (the published cohort, entity files, cohort size in the manifest), so that the domain rebuilds every row from events, (b) per-cutoff aggregates of the whole population, (c) the whole test range as one compact table (features, outcome, the four probabilities) for the browser, and (d) the population-level calibration, split and drift summaries. Predictions and scoring publications of the cohort start at the 2025-10-01 cutoff (the validation range); the world also scored the earlier rows. Events of the other accounts are not published. The size cap (5 MB) set the cohort size; it is a sample, not the population."
+      "text": "What is published. The 2,400-account world is built and evaluated by the domain in full; the files carry (a) the COMPLETE records of a uniform sample of accounts (the published cohort, entity files, cohort size in the manifest), so that the domain rebuilds every row from events, (b) per-cutoff aggregates of the whole population, (c) the whole test range as one compact table (features, outcome, the five probabilities: random, rule, logistic before and after Platt scaling, prevalence constant) for the browser, and (d) the population-level calibration, split and drift summaries. Predictions and scoring publications of the cohort start at the 2025-10-01 cutoff (the validation range); the world also scored the earlier rows. Events of the other accounts are not published. The size cap (5 MB) set the cohort size; it is a sample, not the population."
     },
     {
       "id": "D-G05",
@@ -344,6 +391,54 @@
       "text": "Simplifications: one cancellation per account (no win-back), renewals at the billing interval (30 days or 365), refunds only after a cancellation, the usage event names carry no information, amounts are synthetic USD, accounts are not deleted. The logistic model is trained on the survivors of the account-level split (train rows are those of train-role accounts in 2025-01 .. 2025-06), which is what the contract's group purge produces. The demo profile of the brief's section 12 was not available to the generator; the full population can be written as one inputs object with --inputs."
     }
   ],
+  "economics_full_world": {
+    "population": "all 2,400 accounts as built by the domain: the eligible accounts of the cutoff that carry a prediction",
+    "prediction_at": "2026-09-01T00:00:00Z",
+    "scenarios": {
+      "sc-001": {
+        "assumption_based": true,
+        "assumptions": {
+          "assumed_effect": "0.300000",
+          "contact_cost": "8.00",
+          "margin_value": "200.00"
+        },
+        "capacity": 5,
+        "contact_budget": "40.00",
+        "expected_value": "81.13",
+        "label": "hypothetical",
+        "scored_accounts": 1241,
+        "treatment_effect_estimate": null
+      },
+      "sc-002": {
+        "assumption_based": true,
+        "assumptions": {
+          "assumed_effect": "0.200000",
+          "contact_cost": "8.00",
+          "margin_value": "200.00"
+        },
+        "capacity": 10,
+        "contact_budget": "80.00",
+        "expected_value": "71.04",
+        "label": "hypothetical",
+        "scored_accounts": 1241,
+        "treatment_effect_estimate": null
+      },
+      "sc-003": {
+        "assumption_based": true,
+        "assumptions": {
+          "assumed_effect": "0.100000",
+          "contact_cost": "8.00",
+          "margin_value": "200.00"
+        },
+        "capacity": 20,
+        "contact_budget": "160.00",
+        "expected_value": "-29.12",
+        "label": "hypothetical",
+        "scored_accounts": 1241,
+        "treatment_effect_estimate": null
+      }
+    }
+  },
   "generated_at": "2026-10-05T00:00:00Z",
   "generator": {
     "name": "generate.py",
@@ -448,8 +543,8 @@
     "feature_rows": 9039,
     "immature_rows_excluded_from_every_metric": 3594,
     "monthly_billed_accounts": 1666,
-    "predictions": 27117,
-    "scoring_publications": 63
+    "predictions": 36156,
+    "scoring_publications": 84
   },
   "published_cohort": {
     "account_ids": [
@@ -2098,6 +2193,727 @@
           }
         }
       },
+      "prevalence_baseline": {
+        "consistency": {
+          "config_hash_mismatched": [],
+          "cutoff_windows_mismatched": [],
+          "feature_rows_mismatched": [],
+          "labels_mismatched": [],
+          "outreach_queue_mismatched": [],
+          "predictions_citation_mismatched": [],
+          "scoring_publications_mismatched": [],
+          "split_assignments_mismatched": []
+        },
+        "cutoff_sets": {
+          "2025-01-01T00:00:00Z": {
+            "average_precision": null,
+            "brier_score": null,
+            "censored": 0,
+            "churn_rate": "0.071429",
+            "churned": 1,
+            "cutoff_rows": 14,
+            "eligible": 14,
+            "evaluated": 0,
+            "ineligible": {},
+            "late_events": {
+              "billing_events": 1,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 1,
+              "usage_events": 0
+            },
+            "mature": 14,
+            "missingness_overall": "0.125000",
+            "positives": 0,
+            "prevalence": null,
+            "scored": 0
+          },
+          "2025-02-01T00:00:00Z": {
+            "average_precision": null,
+            "brier_score": null,
+            "censored": 0,
+            "churn_rate": "0.071429",
+            "churned": 1,
+            "cutoff_rows": 16,
+            "eligible": 14,
+            "evaluated": 0,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 2
+            },
+            "late_events": {
+              "billing_events": 0,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 0,
+              "usage_events": 0
+            },
+            "mature": 14,
+            "missingness_overall": "0.125000",
+            "positives": 0,
+            "prevalence": null,
+            "scored": 0
+          },
+          "2025-03-01T00:00:00Z": {
+            "average_precision": null,
+            "brier_score": null,
+            "censored": 0,
+            "churn_rate": "0.071429",
+            "churned": 1,
+            "cutoff_rows": 19,
+            "eligible": 14,
+            "evaluated": 0,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 5
+            },
+            "late_events": {
+              "billing_events": 0,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 2,
+              "usage_events": 2
+            },
+            "mature": 14,
+            "missingness_overall": "0.125000",
+            "positives": 0,
+            "prevalence": null,
+            "scored": 0
+          },
+          "2025-04-01T00:00:00Z": {
+            "average_precision": null,
+            "brier_score": null,
+            "censored": 0,
+            "churn_rate": "0.000000",
+            "churned": 0,
+            "cutoff_rows": 22,
+            "eligible": 13,
+            "evaluated": 0,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 9
+            },
+            "late_events": {
+              "billing_events": 0,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 2,
+              "usage_events": 2
+            },
+            "mature": 13,
+            "missingness_overall": "0.076923",
+            "positives": 0,
+            "prevalence": null,
+            "scored": 0
+          },
+          "2025-05-01T00:00:00Z": {
+            "average_precision": null,
+            "brier_score": null,
+            "censored": 0,
+            "churn_rate": "0.066667",
+            "churned": 1,
+            "cutoff_rows": 25,
+            "eligible": 15,
+            "evaluated": 0,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 10
+            },
+            "late_events": {
+              "billing_events": 1,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 3,
+              "usage_events": 2
+            },
+            "mature": 15,
+            "missingness_overall": "0.066667",
+            "positives": 0,
+            "prevalence": null,
+            "scored": 0
+          },
+          "2025-06-01T00:00:00Z": {
+            "average_precision": null,
+            "brier_score": null,
+            "censored": 0,
+            "churn_rate": "0.125000",
+            "churned": 2,
+            "cutoff_rows": 27,
+            "eligible": 16,
+            "evaluated": 0,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 11
+            },
+            "late_events": {
+              "billing_events": 0,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 2,
+              "usage_events": 2
+            },
+            "mature": 16,
+            "missingness_overall": "0.062500",
+            "positives": 0,
+            "prevalence": null,
+            "scored": 0
+          },
+          "2025-07-01T00:00:00Z": {
+            "average_precision": null,
+            "brier_score": null,
+            "censored": 0,
+            "churn_rate": "0.150000",
+            "churned": 3,
+            "cutoff_rows": 28,
+            "eligible": 20,
+            "evaluated": 0,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 8
+            },
+            "late_events": {
+              "billing_events": 0,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 3,
+              "usage_events": 3
+            },
+            "mature": 20,
+            "missingness_overall": "0.075000",
+            "positives": 0,
+            "prevalence": null,
+            "scored": 0
+          },
+          "2025-08-01T00:00:00Z": {
+            "average_precision": null,
+            "brier_score": null,
+            "censored": 0,
+            "churn_rate": "0.136364",
+            "churned": 3,
+            "cutoff_rows": 33,
+            "eligible": 22,
+            "evaluated": 0,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 11
+            },
+            "late_events": {
+              "billing_events": 0,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 5,
+              "usage_events": 5
+            },
+            "mature": 22,
+            "missingness_overall": "0.079545",
+            "positives": 0,
+            "prevalence": null,
+            "scored": 0
+          },
+          "2025-09-01T00:00:00Z": {
+            "average_precision": null,
+            "brier_score": null,
+            "censored": 0,
+            "churn_rate": "0.043478",
+            "churned": 1,
+            "cutoff_rows": 36,
+            "eligible": 23,
+            "evaluated": 0,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 13
+            },
+            "late_events": {
+              "billing_events": 1,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 2,
+              "usage_events": 1
+            },
+            "mature": 23,
+            "missingness_overall": "0.076087",
+            "positives": 0,
+            "prevalence": null,
+            "scored": 0
+          },
+          "2025-10-01T00:00:00Z": {
+            "average_precision": "0.083333",
+            "brier_score": "0.076911",
+            "censored": 0,
+            "churn_rate": "0.083333",
+            "churned": 2,
+            "cutoff_rows": 34,
+            "eligible": 24,
+            "evaluated": 24,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 10
+            },
+            "late_events": {
+              "billing_events": 0,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 4,
+              "usage_events": 4
+            },
+            "mature": 24,
+            "missingness_overall": "0.093750",
+            "positives": 2,
+            "prevalence": "0.083333",
+            "scored": 24
+          },
+          "2025-11-01T00:00:00Z": {
+            "average_precision": "0.040000",
+            "brier_score": "0.042780",
+            "censored": 0,
+            "churn_rate": "0.040000",
+            "churned": 1,
+            "cutoff_rows": 34,
+            "eligible": 25,
+            "evaluated": 25,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 9
+            },
+            "late_events": {
+              "billing_events": 0,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 2,
+              "usage_events": 2
+            },
+            "mature": 25,
+            "missingness_overall": "0.090000",
+            "positives": 1,
+            "prevalence": "0.040000",
+            "scored": 25
+          },
+          "2025-12-01T00:00:00Z": {
+            "average_precision": "0.035714",
+            "brier_score": "0.039405",
+            "censored": 0,
+            "churn_rate": "0.035714",
+            "churned": 1,
+            "cutoff_rows": 35,
+            "eligible": 28,
+            "evaluated": 28,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 7
+            },
+            "late_events": {
+              "billing_events": 0,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 2,
+              "usage_events": 2
+            },
+            "mature": 28,
+            "missingness_overall": "0.098214",
+            "positives": 1,
+            "prevalence": "0.035714",
+            "scored": 28
+          },
+          "2026-01-01T00:00:00Z": {
+            "average_precision": "0.133333",
+            "brier_score": "0.116293",
+            "censored": 0,
+            "churn_rate": "0.133333",
+            "churned": 4,
+            "cutoff_rows": 38,
+            "eligible": 30,
+            "evaluated": 30,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 8
+            },
+            "late_events": {
+              "billing_events": 1,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 4,
+              "usage_events": 3
+            },
+            "mature": 30,
+            "missingness_overall": "0.075000",
+            "positives": 4,
+            "prevalence": "0.133333",
+            "scored": 30
+          },
+          "2026-02-01T00:00:00Z": {
+            "average_precision": "0.125000",
+            "brier_score": "0.109729",
+            "censored": 0,
+            "churn_rate": "0.125000",
+            "churned": 4,
+            "cutoff_rows": 37,
+            "eligible": 32,
+            "evaluated": 32,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 5
+            },
+            "late_events": {
+              "billing_events": 0,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 0,
+              "usage_events": 0
+            },
+            "mature": 32,
+            "missingness_overall": "0.078125",
+            "positives": 4,
+            "prevalence": "0.125000",
+            "scored": 32
+          },
+          "2026-03-01T00:00:00Z": {
+            "average_precision": "0.156250",
+            "brier_score": "0.134343",
+            "censored": 0,
+            "churn_rate": "0.156250",
+            "churned": 5,
+            "cutoff_rows": 40,
+            "eligible": 32,
+            "evaluated": 32,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 8
+            },
+            "late_events": {
+              "billing_events": 1,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 3,
+              "usage_events": 2
+            },
+            "mature": 32,
+            "missingness_overall": "0.062500",
+            "positives": 5,
+            "prevalence": "0.156250",
+            "scored": 32
+          },
+          "2026-04-01T00:00:00Z": {
+            "average_precision": "0.176471",
+            "brier_score": "0.150269",
+            "censored": 0,
+            "churn_rate": "0.176471",
+            "churned": 6,
+            "cutoff_rows": 42,
+            "eligible": 34,
+            "evaluated": 34,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 8
+            },
+            "late_events": {
+              "billing_events": 4,
+              "subscription_events": 1,
+              "support_events": 0,
+              "total": 7,
+              "usage_events": 2
+            },
+            "mature": 34,
+            "missingness_overall": "0.051471",
+            "positives": 6,
+            "prevalence": "0.176471",
+            "scored": 34
+          },
+          "2026-05-01T00:00:00Z": {
+            "average_precision": "0.181818",
+            "brier_score": "0.154481",
+            "censored": 0,
+            "churn_rate": "0.181818",
+            "churned": 6,
+            "cutoff_rows": 42,
+            "eligible": 33,
+            "evaluated": 33,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 9
+            },
+            "late_events": {
+              "billing_events": 2,
+              "subscription_events": 1,
+              "support_events": 0,
+              "total": 10,
+              "usage_events": 7
+            },
+            "mature": 33,
+            "missingness_overall": "0.060606",
+            "positives": 6,
+            "prevalence": "0.181818",
+            "scored": 33
+          },
+          "2026-06-01T00:00:00Z": {
+            "average_precision": "0.133333",
+            "brier_score": "0.116293",
+            "censored": 0,
+            "churn_rate": "0.133333",
+            "churned": 12,
+            "cutoff_rows": 118,
+            "eligible": 90,
+            "evaluated": 90,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 28
+            },
+            "late_events": {
+              "billing_events": 2,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 12,
+              "usage_events": 10
+            },
+            "mature": 90,
+            "missingness_overall": "0.063889",
+            "positives": 12,
+            "prevalence": "0.133333",
+            "scored": 90
+          },
+          "2026-07-01T00:00:00Z": {
+            "average_precision": null,
+            "brier_score": null,
+            "censored": 94,
+            "churn_rate": null,
+            "churned": 0,
+            "cutoff_rows": 119,
+            "eligible": 94,
+            "evaluated": 0,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 25
+            },
+            "late_events": {
+              "billing_events": 5,
+              "subscription_events": 0,
+              "support_events": 1,
+              "total": 17,
+              "usage_events": 11
+            },
+            "mature": 0,
+            "missingness_overall": "0.074468",
+            "positives": 0,
+            "prevalence": null,
+            "scored": 94
+          },
+          "2026-08-01T00:00:00Z": {
+            "average_precision": null,
+            "brier_score": null,
+            "censored": 95,
+            "churn_rate": null,
+            "churned": 0,
+            "cutoff_rows": 109,
+            "eligible": 95,
+            "evaluated": 0,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 14
+            },
+            "late_events": {
+              "billing_events": 5,
+              "subscription_events": 1,
+              "support_events": 1,
+              "total": 14,
+              "usage_events": 7
+            },
+            "mature": 0,
+            "missingness_overall": "0.084211",
+            "positives": 0,
+            "prevalence": null,
+            "scored": 95
+          },
+          "2026-09-01T00:00:00Z": {
+            "average_precision": null,
+            "brier_score": null,
+            "censored": 97,
+            "churn_rate": null,
+            "churned": 0,
+            "cutoff_rows": 102,
+            "eligible": 97,
+            "evaluated": 0,
+            "ineligible": {
+              "CREATED_ON_OR_AFTER_OBSERVATION_START": 5
+            },
+            "late_events": {
+              "billing_events": 4,
+              "subscription_events": 0,
+              "support_events": 0,
+              "total": 13,
+              "usage_events": 9
+            },
+            "mature": 0,
+            "missingness_overall": "0.087629",
+            "positives": 0,
+            "prevalence": null,
+            "scored": 97
+          }
+        },
+        "freshness": {
+          "as_of": "2026-10-05T00:00:00Z",
+          "data_hours": 1,
+          "latest_available_at": "2026-10-04T22:09:42Z",
+          "latest_completed_publication_id": "sp-tr-001-prevalence_baseline-20260901-1",
+          "latest_completed_published_at": "2026-09-01T04:00:00Z",
+          "scoring_hours": 812
+        },
+        "ingest": {
+          "accounts": {
+            "accepted": 200,
+            "rejected": 0
+          },
+          "billing_events": {
+            "accepted": 1567,
+            "rejected": 0
+          },
+          "feature_registry": {
+            "accepted": 12,
+            "rejected": 0
+          },
+          "feature_rows": {
+            "accepted": 765,
+            "rejected": 0
+          },
+          "intervention_scenarios": {
+            "accepted": 3,
+            "rejected": 0
+          },
+          "labels": {
+            "accepted": 765,
+            "rejected": 4
+          },
+          "outreach_events": {
+            "accepted": 35,
+            "rejected": 0
+          },
+          "prediction_cutoffs": {
+            "accepted": 970,
+            "rejected": 0
+          },
+          "predictions": {
+            "accepted": 614,
+            "rejected": 0
+          },
+          "scoring_publications": {
+            "accepted": 12,
+            "rejected": 0
+          },
+          "split_assignments": {
+            "accepted": 970,
+            "rejected": 0
+          },
+          "subscription_events": {
+            "accepted": 1646,
+            "rejected": 0
+          },
+          "support_events": {
+            "accepted": 322,
+            "rejected": 0
+          },
+          "training_runs": {
+            "accepted": 1,
+            "rejected": 0
+          },
+          "usage_events": {
+            "accepted": 13329,
+            "rejected": 0
+          }
+        },
+        "publications": {
+          "2025-10-01T00:00:00Z": [
+            24,
+            24,
+            "completed"
+          ],
+          "2025-11-01T00:00:00Z": [
+            25,
+            25,
+            "completed"
+          ],
+          "2025-12-01T00:00:00Z": [
+            28,
+            28,
+            "completed"
+          ],
+          "2026-01-01T00:00:00Z": [
+            30,
+            30,
+            "completed"
+          ],
+          "2026-02-01T00:00:00Z": [
+            32,
+            32,
+            "completed"
+          ],
+          "2026-03-01T00:00:00Z": [
+            32,
+            32,
+            "completed"
+          ],
+          "2026-04-01T00:00:00Z": [
+            34,
+            34,
+            "completed"
+          ],
+          "2026-05-01T00:00:00Z": [
+            33,
+            33,
+            "completed"
+          ],
+          "2026-06-01T00:00:00Z": [
+            90,
+            90,
+            "completed"
+          ],
+          "2026-07-01T00:00:00Z": [
+            94,
+            94,
+            "completed"
+          ],
+          "2026-08-01T00:00:00Z": [
+            95,
+            95,
+            "completed"
+          ],
+          "2026-09-01T00:00:00Z": [
+            97,
+            97,
+            "completed"
+          ]
+        },
+        "rejected_records": [
+          {
+            "entity": "labels",
+            "id": "lb-inj-co-1781-20260701",
+            "reason_code": "CENSORED_LABEL"
+          },
+          {
+            "entity": "labels",
+            "id": "lb-inj-co-1795-20260801",
+            "reason_code": "CENSORED_LABEL"
+          },
+          {
+            "entity": "labels",
+            "id": "lb-inj-co-2051-20260801",
+            "reason_code": "CENSORED_LABEL"
+          },
+          {
+            "entity": "labels",
+            "id": "lb-inj-co-2196-20260901",
+            "reason_code": "CENSORED_LABEL"
+          }
+        ],
+        "split_counts": {
+          "outside": {
+            "group_test": 0,
+            "group_validation": 0,
+            "label_window": 0,
+            "retained": 448,
+            "total": 448
+          },
+          "test": {
+            "group_test": 0,
+            "group_validation": 0,
+            "label_window": 0,
+            "retained": 161,
+            "total": 161
+          },
+          "train": {
+            "group_test": 32,
+            "group_validation": 5,
+            "label_window": 97,
+            "retained": 86,
+            "total": 220
+          },
+          "validation": {
+            "group_test": 3,
+            "group_validation": 0,
+            "label_window": 107,
+            "retained": 31,
+            "total": 141
+          }
+        }
+      },
       "random_baseline": {
         "consistency": {
           "config_hash_mismatched": [],
@@ -2852,6 +3668,7 @@
         "treatment_effect_estimate": null
       }
     },
+    "economics_population": "97 scored accounts of the published cohort (not the population; see economics_full_world)",
     "queue_account_ids": {
       "sc-001": [
         1928,
@@ -2908,8 +3725,8 @@
     "labels": 769,
     "outreach_events": 35,
     "prediction_cutoffs": 970,
-    "predictions": 1842,
-    "scoring_publications": 36,
+    "predictions": 2456,
+    "scoring_publications": 48,
     "split_assignments": 970,
     "subscription_events": 1646,
     "support_events": 322,
@@ -2918,7 +3735,7 @@
     "usage_events": 13329
   },
   "stats": {
-    "data_file_bytes_without_manifest": 3953380,
+    "data_file_bytes_without_manifest": 4193744,
     "size_cap_binding": true,
     "size_cap_bytes": 5000000
   },
@@ -12069,7 +12886,7 @@
       "fit_rows_sha256": "1790d783b7532f480c29f29f9d2d874ee1f510cd549639043597edda140d5e51",
       "method": "platt"
     },
-    "config_hash": "65f5880e2a6a22407157d6a30c58ee1395b16e1aad933f48618c5db8f2937726",
+    "config_hash": "292dc93c5fbc3c721d01af367a1a11a3f350cd38bcc440e6316f5ead866ad358",
     "embargo_days": 104,
     "models": [
       {
@@ -12097,6 +12914,10 @@
         "l2": "1.000000",
         "learning_rate": "0.100000",
         "name": "logistic_regression"
+      },
+      {
+        "name": "prevalence_baseline",
+        "prevalence": "0.106183"
       }
     ],
     "preprocessing": {

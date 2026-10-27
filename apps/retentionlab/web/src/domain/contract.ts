@@ -24,6 +24,6 @@ export const FK: Partial<Record<Entity, [string, Entity, string][]>> = {
 /** The registered features of feature version fv-1, in column order. */
 export const FEATURES = ["usage_events_30d", "days_since_last_usage", "high_severity_support_90d", "billing_total_90d"] as const;
 export const CAL_BINS = 10;
-export const MODELS = ["random_baseline", "business_rule", "logistic_regression"] as const;
+export const MODELS = ["random_baseline", "business_rule", "logistic_regression", "prevalence_baseline"] as const;
 export type ModelName = (typeof MODELS)[number];
-export const MODEL_LABEL: Record<ModelName, string> = { random_baseline: "Random baseline", business_rule: "Business rule", logistic_regression: "Logistic regression (Platt)" };
+export const MODEL_LABEL: Record<ModelName, string> = { random_baseline: "Random baseline", business_rule: "Business rule", logistic_regression: "Logistic regression (Platt)", prevalence_baseline: "Prevalence constant" };

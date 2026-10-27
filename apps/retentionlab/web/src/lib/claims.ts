@@ -5,7 +5,7 @@ import type { Dataset } from "../data/dataset";
 import * as E from "../domain/errors";
 import type { Row } from "../domain/models";
 import { canon, deepEqual } from "../domain/models";
-import { cmpFr, p6, parseFraction, ratio, sub } from "../domain/num";
+import { abs, cmpFr, p6, parseFraction, ratio, sub } from "../domain/num";
 import { checkBasis, checkCalibrationRows, checkCapacity, checkFeatureRequest, checkFitRows, checkThreshold } from "../domain/rules";
 import { retained } from "../domain/split";
 import { blockOf, driftByRegion, gapOf, groupGaps, seriesOf } from "./derive";
@@ -30,7 +30,7 @@ export function designedClaims(ds: Dataset): Claim[] {
   const rows = ds.testRows;
   const pop = ds.populations[0]!;
   // DR-01: average precision and Brier per model on the whole test range, the margins and whether each stated margin is met
-  const models: [string, string][] = [["random_baseline", "random_baseline"], ["business_rule", "business_rule"], ["logistic_regression", "logistic_calibrated"]];
+  const models: [string, string][] = [["random_baseline", "random_baseline"], ["business_rule", "business_rule"], ["logistic_regression", "logistic_calibrated"], ["prevalence_baseline", "prevalence_baseline"]];
   const blocks: Record<string, ReturnType<typeof blockOf>> = {};
   for (const [name, key] of models) {
     const b = (blocks[name] = blockOf(seriesOf(pop, key)));
@@ -43,6 +43,8 @@ export function designedClaims(ds: Dataset): Claim[] {
     ap_over_rule: p6(sub(parseFraction(lr.average_precision!), parseFraction(ru.average_precision!)))!, ap_over_random: p6(sub(parseFraction(lr.average_precision!), parseFraction(ra.average_precision!)))!,
     brier_under_rule: p6(sub(parseFraction(ru.brier_score!), parseFraction(lr.brier_score!)))!, brier_under_random: p6(sub(parseFraction(ra.brier_score!), parseFraction(lr.brier_score!)))!,
   };
+  const prevBrier = blocks["prevalence_baseline"]!.brier_score!;
+  out.push(claim("DR-01", "reference margin brier_under_prevalence_constant (not a target)", real("DR-01")["reference_margins"]["brier_under_prevalence_constant"], p6(sub(parseFraction(prevBrier), parseFraction(lr.brier_score!)))));
   for (const [k, v] of Object.entries(margins)) {
     out.push(claim("DR-01", `margin ${k}`, real("DR-01")["margins"][k], v));
     out.push(claim("DR-01", `stated margin ${k} met`, real("DR-01")["met"][k], cmpFr(parseFraction(v), parseFraction(real("DR-01")["stated_margins"][k])) >= 0));
@@ -59,6 +61,12 @@ export function designedClaims(ds: Dataset): Claim[] {
   const others = Object.entries(groupGaps(rows, "segment")).filter(([g]) => g !== r2["segment"]).map(([, g]) => g.gap_pp!);
   const largest = others.map((g) => g.replace("-", "")).reduce((a, b) => (cmpFr(parseFraction(a), parseFraction(b)) >= 0 ? a : b));
   out.push(claim("DR-02", "largest other segment absolute gap", r2["largest_other_segment_abs_gap_pp"], largest));
+  const worst = Object.entries(groupGaps(rows, "region")).reduce((a, b) => (cmpFr(abs(parseFraction(b[1].gap_pp!)), abs(parseFraction(a[1].gap_pp!))) > 0 ? b : a));
+  out.push(claim("DR-02", "largest regional gap: region", r2["largest_region_gap"]["region"], worst[0]), claim("DR-02", "largest regional gap: gap_pp", r2["largest_region_gap"]["gap_pp"], worst[1].gap_pp),
+    claim("DR-02", "largest regional gap is not a designed relationship", r2["largest_region_gap"]["designed"], false));
+  const pe = r2["platt_effect"];
+  out.push(claim("DR-02", "Platt scaling: Brier before", pe["brier_uncalibrated"], blockOf(seriesOf(pop, "logistic_uncalibrated")).brier_score), claim("DR-02", "Platt scaling: Brier after", pe["brier_calibrated"], blockOf(seriesOf(pop, "logistic_calibrated")).brier_score),
+    claim("DR-02", "Platt scaling: made the model worse on test", pe["worse_on_test"], cmpFr(parseFraction(blockOf(seriesOf(pop, "logistic_calibrated")).brier_score!), parseFraction(blockOf(seriesOf(pop, "logistic_uncalibrated")).brier_score!)) > 0));
   // DR-03: PSI of the apac cohort against its 2026-02-01 cohort; the four test cutoffs are recomputed, the later ones are the manifest's
   const r3 = real("DR-03");
   const drift = driftByRegion(rows, 4);

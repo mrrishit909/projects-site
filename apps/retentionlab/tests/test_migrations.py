@@ -6,7 +6,7 @@ from data import migrate
 
 from support_db import conn, count, db_url, golden_inputs, load  # noqa: F401
 
-FILES = ["0001_schema.sql", "0002_constraints.sql"]
+FILES = ["0001_schema.sql", "0002_constraints.sql", "0003_prevalence_model.sql"]
 TABLES = ["label_versions", "feature_versions", "feature_registry", "accounts", "subscription_events", "billing_events", "usage_events", "support_events",
           "prediction_cutoffs", "feature_rows", "labels", "training_runs", "model_preprocessing", "model_coefficients", "calibration_maps", "split_assignments",
           "predictions", "scoring_publications", "intervention_scenarios", "outreach_events", "rejected_records", "audit_events", "command_results", "dataset_versions"]
@@ -42,7 +42,7 @@ def test_migrations_apply_from_empty_and_are_idempotent(db_url):
 
 
 def test_the_command_line_entry_point_is_idempotent_too(db_url, capsys):
-    assert migrate.main(["--reset"]) == 0 and "applied: 0001_schema.sql, 0002_constraints.sql" in capsys.readouterr().out
+    assert migrate.main(["--reset"]) == 0 and "applied: 0001_schema.sql, 0002_constraints.sql, 0003_prevalence_model.sql" in capsys.readouterr().out
     assert migrate.main([]) == 0 and "nothing (up to date)" in capsys.readouterr().out
 
 

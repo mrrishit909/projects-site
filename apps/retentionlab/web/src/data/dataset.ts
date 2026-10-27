@@ -9,11 +9,12 @@ import { canonAscii, evaluate, sha256Hex, type Evaluation } from "../domain/pipe
 export type DatasetId = "snapshot" | "golden";
 export interface Strip { dataset_version: string; dataset_hash: string; generated_at: string; as_of: string; contract_version: string }
 
-/** The four probability columns of the published test table. */
-export const TEST_MODELS = ["random_baseline", "business_rule", "logistic_uncalibrated", "logistic_calibrated"] as const;
+/** The five probability columns of the published test table (D-09 R10-14 added the prevalence constant). */
+export const TEST_MODELS = ["random_baseline", "business_rule", "logistic_uncalibrated", "logistic_calibrated", "prevalence_baseline"] as const;
 export type TestModel = (typeof TEST_MODELS)[number];
 export const TEST_MODEL_LABEL: Record<TestModel, string> = {
   random_baseline: "Random baseline", business_rule: "Business rule", logistic_uncalibrated: "Logistic regression, before Platt scaling", logistic_calibrated: "Logistic regression (Platt-calibrated)",
+  prevalence_baseline: "Prevalence constant (training prevalence for every account)",
 };
 export interface TestRow {
   account_id: number; cut: number; segment: string; region: string; usage_events_30d: number; days_since_last_usage: number | null; high_severity_support_90d: number;
@@ -65,13 +66,13 @@ export function parseTestCohort(file: Row): TestRow[] {
   const cols: string[] = file["head"]["columns"];
   const idx = (n: string): number => { const i = cols.indexOf(n); if (i < 0) throw new Error(`test_cohort.json: column ${n} is missing`); return i; };
   const c = Object.fromEntries(["account_id", "cutoff_index", "segment", "region", "usage_events_30d", "days_since_last_usage", "high_severity_support_90d", "billing_total_90d", "churned",
-    "p_random_baseline", "p_business_rule", "p_logistic_uncalibrated", "p_logistic_calibrated"].map((n) => [n, idx(n)])) as Record<string, number>;
+    "p_random_baseline", "p_business_rule", "p_logistic_uncalibrated", "p_logistic_calibrated", "p_prevalence_baseline"].map((n) => [n, idx(n)])) as Record<string, number>;
   return (file["rows"] as unknown[][]).map((r) => ({
     account_id: r[c["account_id"]!] as number, cut: r[c["cutoff_index"]!] as number, segment: r[c["segment"]!] as string, region: r[c["region"]!] as string,
     usage_events_30d: r[c["usage_events_30d"]!] as number, days_since_last_usage: r[c["days_since_last_usage"]!] as number | null,
     high_severity_support_90d: r[c["high_severity_support_90d"]!] as number, billing_total_90d: r[c["billing_total_90d"]!] as string | null, y: r[c["churned"]!] as 0 | 1,
     p: { random_baseline: r[c["p_random_baseline"]!] as string, business_rule: r[c["p_business_rule"]!] as string, logistic_uncalibrated: r[c["p_logistic_uncalibrated"]!] as string,
-      logistic_calibrated: r[c["p_logistic_calibrated"]!] as string },
+      logistic_calibrated: r[c["p_logistic_calibrated"]!] as string, prevalence_baseline: r[c["p_prevalence_baseline"]!] as string },
   }));
 }
 const monthLabel = (iso: string): string => iso.slice(0, 7);
@@ -80,6 +81,7 @@ function makePopulations(rows: TestRow[], cutoffs: string[]): Population[] {
   const models = (sub: TestRow[]): ModelSeries[] => [
     { key: "random_baseline", label: TEST_MODEL_LABEL.random_baseline, role: "baseline", items: rankTest(sub, "random_baseline") },
     { key: "business_rule", label: TEST_MODEL_LABEL.business_rule, role: "baseline", items: rankTest(sub, "business_rule") },
+    { key: "prevalence_baseline", label: TEST_MODEL_LABEL.prevalence_baseline, role: "baseline", items: rankTest(sub, "prevalence_baseline") },
     { key: "logistic_uncalibrated", label: TEST_MODEL_LABEL.logistic_uncalibrated, role: "reference", items: rankTest(sub, "logistic_uncalibrated") },
     { key: "logistic_calibrated", label: TEST_MODEL_LABEL.logistic_calibrated, role: "candidate", items: rankTest(sub, "logistic_calibrated") },
   ];
@@ -189,5 +191,5 @@ export async function buildGolden(inputsText: string, expected: Row): Promise<Da
   });
 }
 
-export const modelLabel = (k: string): string => (MODELS as readonly string[]).includes(k) ? ({ random_baseline: "Random baseline", business_rule: "Business rule", logistic_regression: "Logistic regression (Platt)" } as Record<string, string>)[k]! : k === "default" ? "Frozen predictions" : k;
+export const modelLabel = (k: string): string => (MODELS as readonly string[]).includes(k) ? ({ random_baseline: "Random baseline", business_rule: "Business rule", logistic_regression: "Logistic regression (Platt)", prevalence_baseline: "Prevalence constant" } as Record<string, string>)[k]! : k === "default" ? "Frozen predictions" : k;
 export type { Fr, ModelName };

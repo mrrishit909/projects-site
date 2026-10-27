@@ -8,7 +8,7 @@ import { evaluate, type Evaluation } from "../src/domain/pipeline";
 import { economics, evaluateRanked, setMetrics, type Item } from "../src/domain/metrics";
 import { canon, type Row } from "../src/domain/models";
 import { fr, parseFraction } from "../src/domain/num";
-import { checkBasis, checkCalibrationRows, checkCapacity, checkFeatureRequest, checkFitRows, checkThreshold } from "../src/domain/rules";
+import { checkAsOf, checkBasis, checkCalibrationRows, checkCapacity, checkFeatureRequest, checkFitRows, checkThreshold } from "../src/domain/rules";
 import { daysUs, isoZ, parseTs } from "../src/domain/time";
 import { DomainError } from "../src/domain/errors";
 
@@ -428,6 +428,34 @@ world("evaluateRanked directly: K = 0 and K above n are refused, K = n is the wh
   eq("the golden ranking: AP 0.833333, Brier 0.192500", [g(2).average_precision.value, g(2).brier_score.value], ["0.833333", "0.192500"]);
   eq("fr and parseFraction agree on exactness", [fr(1n, 3n).n, parseFraction("0.333333").d], [1n, 1000000n]);
   void setMetrics;
+}
+
+// 30. D-09 (R10-01): a stored censored label is authoritative; a recomputed maturity that disagrees is a consistency finding, not a relabel
+world("a 2027 as_of must not relabel a stored censored label (R10-01), and the as_of itself may not be in the future");
+{
+  // One account, active since 2024-06, cutoff 2026-03-01 (label_end 2026-06-13). Its stored label is CENSORED (mature false, churned null) as it was when the
+  // server clock was 2026-05-01. A report with as_of 2027-01-01 recomputes label_end <= as_of, but the stored label wins: the row is censored, no outcome.
+  const LAB = "2026-03-01", LE = plus(LAB, 104);
+  const w = scored(["0.300000"], [0], null, LAB, { as_of: "2027-01-01T00:00:00Z", labels: [{ label_id: "lb1", cutoff_id: `co-1-${LAB}`, churned: null, label_end: LE, mature: false }] });
+  const e = run(w);
+  const r = e.world.analyse(`co-1-${LAB}`);
+  eq("the row is censored and has no outcome although label_end <= as_of", [r.mature, r.churned, e.world.recomputed(`co-1-${LAB}`)], [false, null, [true, false]]);
+  eq("the set reports 0 mature, 1 censored, churn rate null", [S(e, LAB)["population"].mature, S(e, LAB)["population"].censored, S(e, LAB)["churn_rate"].value], [0, 1, null]);
+  eq("the disagreement is a consistency finding on the label", e.result["consistency"].labels_mismatched, ["lb1"]);
+  const nolabel = scored(["0.300000"], [0], null, LAB, { as_of: "2027-01-01T00:00:00Z" });
+  eq("without a stored label the rules decide: mature and churned in 2027", [S(run(nolabel), LAB)["population"].mature, S(run(nolabel), LAB)["churn_rate"].mature_eligible], [1, 1]);
+  const now = parseTs("2026-05-01T12:00:00Z");
+  eq("the planner's guard: an as_of after the clock is refused AS_OF_IN_FUTURE; at the clock it passes",
+    [refusal(() => checkAsOf(parseTs("2026-07-01T00:00:00Z"), now)), refusal(() => checkAsOf(now, now))],
+    [{ code: "AS_OF_IN_FUTURE", offending: [{ item: "as_of", code: "AS_OF_IN_FUTURE" }] }, null]);
+}
+// 31. D-09 (R10-15): a feature request naming a field twice
+world("a duplicated feature field (R10-15)");
+{
+  const reg = run(base()).world.registry;
+  eq("usage_events_30d twice -> DUPLICATE_FIELD naming it once", refusal(() => checkFeatureRequest(reg, ["usage_events_30d", "billing_total_90d", "usage_events_30d"])), { code: "DUPLICATE_FIELD", offending: [{ item: "usage_events_30d", code: "DUPLICATE_FIELD" }] });
+  eq("an identifier plus a duplicate: the identifier's code wins, both are listed", refusal(() => checkFeatureRequest(reg, ["account_id", "usage_events_30d", "usage_events_30d"])),
+    { code: "ID_FEATURE", offending: [{ item: "account_id", code: "ID_FEATURE" }, { item: "usage_events_30d", code: "DUPLICATE_FIELD" }] });
 }
 
 if (process.env["REVIEW_DUMP"]) { const { writeFileSync } = await import("node:fs"); writeFileSync(process.env["REVIEW_DUMP"], JSON.stringify(dump)); }

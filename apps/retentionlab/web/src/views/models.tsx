@@ -11,7 +11,7 @@ import { blockOf } from "../lib/derive";
 import { n0, orDash } from "../lib/format";
 import { useParam } from "../router";
 
-const SHORT: Record<string, string> = { random_baseline: "Random", business_rule: "Rule", logistic_uncalibrated: "Logistic, no Platt", logistic_calibrated: "Logistic (Platt)" };
+const SHORT: Record<string, string> = { random_baseline: "Random", business_rule: "Rule", prevalence_baseline: "Prevalence constant", logistic_uncalibrated: "Logistic, no Platt", logistic_calibrated: "Logistic (Platt)" };
 export function ModelsView() {
   return <WithData>{(ds) => <Models ds={ds} />}</WithData>;
 }
@@ -63,7 +63,7 @@ function Models({ ds }: { ds: Dataset }) {
   const pop = ds.populations.find((p) => p.id === pid) ?? ds.populations[0]!;
   const blocks = pop.models.map((m) => ({ m, b: blockOf(m.items) }));
   const by = (k: string): ReturnType<typeof blockOf> | undefined => blocks.find((x) => x.m.key === k)?.b;
-  const lr = by(ds.primarySeries), rule = by("business_rule"), rand = by("random_baseline");
+  const lr = by(ds.primarySeries), rule = by("business_rule"), rand = by("random_baseline"), prev = by("prevalence_baseline");
   const dr1 = ds.manifest ? ((ds.manifest["designed_relationships"] as Row[]).find((d) => d["id"] === "DR-01")?.["realised"] as Row | undefined) : undefined;
   const stated = dr1?.["stated_margins"] as Record<string, string> | undefined;
   const margin = (a: string | null, b: string | null, lowerBetter: boolean): string | null => (a === null || b === null ? null : p6(lowerBetter ? sub(parseFraction(b), parseFraction(a)) : sub(parseFraction(a), parseFraction(b))));
@@ -71,19 +71,30 @@ function Models({ ds }: { ds: Dataset }) {
     ap_over_rule: margin(lr.average_precision, rule.average_precision, false), ap_over_random: margin(lr.average_precision, rand.average_precision, false),
     brier_under_rule: margin(lr.brier_score, rule.brier_score, true), brier_under_random: margin(lr.brier_score, rand.brier_score, true),
   } : null;
+  const refBrier = lr && prev ? margin(lr.brier_score, prev.brier_score, true) : null;      // the honest Brier reference: a constant at the training prevalence (D-09, R10-14)
   const met = (k: string): boolean | null => (margins && stated && margins[k as keyof typeof margins] ? cmpFr(parseFraction(margins[k as keyof typeof margins]!), parseFraction(stated[k]!)) >= 0 : null);
+  const primaryItems = pop.models.find((m) => m.key === ds.primarySeries)?.items ?? [];
+  const accountsOf = (xs: typeof primaryItems): number => new Set(xs.map((i) => String(i.account_id))).size;
+  const churnRows = primaryItems.filter((i) => i.y);
   const exportRows = blocks.map(({ m, b }) => [m.key, m.label, b.n, b.positives, b.prevalence, b.average_precision, b.brier_score]);
   const ordered = [...blocks].sort((x, y) => (x.m.role === y.m.role ? 0 : x.m.role === "baseline" ? -1 : 1));
   return (
     <>
       <ViewHead mark="04 · Models" title="Model comparison" contracts="P10-MET-04, P10-MET-05, P10-FLOW-05, P10-DOMAIN-04, P10-TEST-06, D-02, D-03, D-07">
-        <p className="lede">A churn model is only as good as the simple things it must beat. Here a random baseline, a one-line business rule and a logistic regression are judged on the same held-out rows, with the same two numbers: how well they rank the churners (average precision) and how honest their probabilities are (Brier score).</p>
+        <p className="lede">A churn model is only as good as the simple things it must beat. Here a random baseline, a one-line business rule, a constant at the training prevalence and a logistic regression are judged on the same held-out rows, with the same two numbers: how well they rank the churners (average precision) and how honest their probabilities are (Brier score).</p>
       </ViewHead>
       <ScopeStrip ds={ds} items={[["population", pop.detail], ["split", ds.testRows ? "train to 2025-10-01, validation to 2026-02-01, test to 2026-06-01; read once" : "the golden set"], ["rows", n0(pop.models[0]?.items.length ?? 0)]]} />
       <div className="controls"><ParamSelect name="pop" label="Evaluation population" dflt={ds.populations[0]!.id} options={options} testid="pop-select" /></div>
       <ByConstruction />
+      {ds.testRows && primaryItems.length > 0 && (
+        <p className="note" data-testid="rows-accounts">
+          <strong>Rows are not accounts.</strong> The <Fig k="rows-n">{n0(primaryItems.length)}</Fig> rows of this population come from <Fig k="rows-accounts">{n0(accountsOf(primaryItems))}</Fig> distinct accounts, and its <Fig k="churn-rows-n">{n0(churnRows.length)}</Fig> churning rows
+          from <Fig k="churn-accounts">{n0(accountsOf(churnRows))}</Fig> accounts. An account can appear at several test cutoffs and their 90-day windows overlap, so the rows are correlated; every metric here is computed on rows
+          and <strong>no confidence interval is given</strong>, because an interval that treated the rows as independent would be too narrow.
+        </p>
+      )}
       <section aria-labelledby="cmp-h">
-        <h2 id="cmp-h">Held-out test: the three models side by side</h2>
+        <h2 id="cmp-h">Held-out test: the models side by side</h2>
         <div className="two">
           <figure className="figure">
             <HBars rows={ordered.map(({ m, b }) => ({ label: SHORT[m.key] ?? m.label, value: b.average_precision, tone: m.role === "candidate" ? "coral" : "muted" }))} ref={lr?.prevalence ? { label: "prevalence", value: lr.prevalence } : undefined} caption="Average precision of each model on the evaluation population" testid="ap-chart" />
@@ -111,13 +122,21 @@ function Models({ ds }: { ds: Dataset }) {
           <h2 id="mar-h">Margins over the baselines</h2>
           <Scroll label="Margins">
             <table>
-              <caption>Margin = logistic regression minus the baseline (average precision) or baseline minus logistic regression (Brier). The stated margins were declared before the first run and changed afterwards; see the disclosure.</caption>
-              <thead><tr><th scope="col">Margin</th><th scope="col">On this population</th><th scope="col">Stated target</th><th scope="col">Met</th></tr></thead>
+              <caption>Margin = logistic regression minus the baseline (average precision) or baseline minus logistic regression (Brier). The stated margins were declared before the first run, against the rule and the random baseline, and changed afterwards; see the disclosure. The last row is a reference, not a target.</caption>
+              <thead><tr><th scope="col">Margin</th><th scope="col">On this population</th><th scope="col">Stated target</th><th scope="col">Reading</th></tr></thead>
               <tbody>{(["ap_over_rule", "ap_over_random", "brier_under_rule", "brier_under_random"] as const).map((k) => (
-                <tr key={k} data-margin={k}><td className="l">{k.replace(/_/g, " ")}</td><td data-k="margin">{orDash(margins[k])}</td><td>{stated[k]}</td><td className="t">{met(k) ? <Chip kind="ok">met, by construction</Chip> : <Chip kind="risk">not met</Chip>}</td></tr>
-              ))}</tbody>
+                <tr key={k} data-margin={k}><td className="l">{k.replace(/_/g, " ")}</td><td data-k="margin">{orDash(margins[k])}</td><td>{stated[k]}</td>
+                  <td className="t">{met(k) ? <Chip kind="ok">met, by construction</Chip> : <Chip kind="risk">not met</Chip>}{k === "brier_under_random" && <> <Chip kind="hatch" >uninformative</Chip></>}</td></tr>
+              ))}
+              {refBrier !== null && <tr data-margin="brier_under_prevalence_constant"><td className="l">brier under prevalence constant</td><td data-k="margin">{orDash(refBrier)}</td><td>none declared</td><td className="t"><Chip kind="note">reference</Chip></td></tr>}</tbody>
             </table>
           </Scroll>
+          {rand && prev && refBrier !== null && (
+            <p data-testid="uninformative">
+              <strong>One margin tells you nothing.</strong> The Brier margin over the random baseline is uninformative: a random score scores a Brier of <Fig k="rand-brier">{rand.brier_score}</Fig> here, so any model that is not absurd clears it. The honest reference is
+              a constant that gives every account the training prevalence: it scores <Fig k="prev-brier">{prev.brier_score}</Fig>, and the logistic model beats it by <Fig k="prev-margin">{refBrier}</Fig>. That, not 0.05, is how much probability quality the four features add.
+            </p>
+          )}
           <p>The latent ceiling and the synthetic world's design are in the <Link to="evidence">evidence</Link> as disclosures only; no model, metric or chart on this site reads them.</p>
         </section>
       )}
@@ -125,6 +144,7 @@ function Models({ ds }: { ds: Dataset }) {
       <TableFold summary="What each model is" open={false}>
         <ul className="tight">
           <li><strong>Random baseline.</strong> A seeded hash of the cutoff id; a ranking with no information.</li>
+          <li><strong>Prevalence constant.</strong> Every account gets the churn share of the training rows, frozen to six places. It ranks nothing (every row ties) and is the reference for the Brier score: a model that cannot beat it has learned nothing about how likely each account is to leave.</li>
           <li><strong>Business rule.</strong> Flags accounts with no usage in the last 30 days or a high-severity support case in the last 90; the two probabilities are the observed churn rates of flagged and unflagged training rows, so many accounts tie.</li>
           <li><strong>Logistic regression.</strong> Four features, standardised on the training rows only, L2-penalised, fitted by deterministic gradient descent; coefficients and probabilities are frozen as six-place strings and every metric is computed exactly on them. Platt scaling is fitted on validation rows only. Fitting is not mirrored in the browser: predictions are frozen inputs.</li>
         </ul>

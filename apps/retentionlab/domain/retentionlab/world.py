@@ -56,6 +56,15 @@ class World:
         self.scenarios = {s["scenario_id"]: s for s in accepted["intervention_scenarios"]}
         self.preds: dict[tuple[str, str], dict[str, Any]] = {(p["training_run_id"], p["cutoff_id"]): p for p in accepted["predictions"]}
         self._cache: dict[str, dict[str, Any]] = {}
+        #: The stored label of each cutoff (D-09, R10-01): a stored CENSORED label is authoritative, so a recomputed maturity that
+        #: disagrees (an as_of later than the labelling instant) is a consistency finding (``recomputed``), never a relabel.
+        self.stored_labels = {lb["cutoff_id"]: lb for lb in accepted.get("labels", [])}
+        self._recomputed: dict[str, tuple[bool, bool | None]] = {}
+
+    def recomputed(self, cutoff_id: str) -> tuple[bool, bool | None]:
+        """(mature, churned) as the rules compute them from the events and the as_of alone, ignoring the stored label."""
+        self.analyse(cutoff_id)
+        return self._recomputed[cutoff_id]
 
     def window(self, name: str, default: int) -> int:
         r = self.registry.get(name)
@@ -67,8 +76,11 @@ class World:
         c = self.cutoffs[cutoff_id]
         pa, obs, he = parse_ts(c["prediction_at"]), parse_ts(c["observation_start"]), parse_ts(c["horizon_end"])
         label_end = he + days(self.grace)
-        mature = label_end <= self.as_of
+        recomputed_mature = label_end <= self.as_of
+        stored = self.stored_labels.get(cutoff_id)
+        mature = recomputed_mature and not (stored is not None and not stored["mature"])      # a stored censored label is never reported mature
         aid = c["account_id"]
+        recomputed_churned: bool | None = None
         row: dict[str, Any] = {"cutoff_id": cutoff_id, "account_id": aid, "prediction_at": iso_z(pa), "eligible": False,
                                "ineligible_code": None, "label_end": iso_z(label_end), "mature": mature, "churned": None,
                                "features": None, "max_available_at": None, "arrived_late": None}
@@ -83,9 +95,12 @@ class World:
             row["eligible"] = True
         if row["eligible"]:
             row.update(self._features(aid, pa, obs))
-            if mature:
-                row["churned"] = any(s["event_type"] == "cancel" and pa <= parse_ts(s["event_at"]) < he and parse_ts(s["available_at"]) < label_end
-                                     for s in subs)
+            if recomputed_mature:
+                recomputed_churned = any(s["event_type"] == "cancel" and pa <= parse_ts(s["event_at"]) < he and parse_ts(s["available_at"]) < label_end
+                                         for s in subs)
+                if mature:
+                    row["churned"] = recomputed_churned
+        self._recomputed[cutoff_id] = (recomputed_mature, recomputed_churned if row["eligible"] and recomputed_mature else None)
         self._cache[cutoff_id] = row
         return row
 

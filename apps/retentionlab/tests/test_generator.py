@@ -221,7 +221,7 @@ def test_every_prediction_cites_the_run_and_probabilities_are_frozen_six_place_s
     cal = run["config"]["calibration"]
     assert cal["method"] == "platt" and re.fullmatch(r"-?\d+\.\d{6}", cal["a"]) and re.fullmatch(r"-?\d+\.\d{6}", cal["b"])
     assert [m["name"] for m in run["config"]["models"]] == list(MODELS)
-    # every eligible cutoff of a published range has all three predictions
+    # every eligible cutoff of a published range has all four predictions
     world, _ = cohort_world(inputs)
     have = {(p["cutoff_id"], p["model_name"]) for p in inputs["predictions"]}
     for c in inputs["prediction_cutoffs"]:
@@ -455,7 +455,7 @@ def test_inj08_and_12_nothing_latent_or_identifier_derived_is_a_feature(manifest
     walk(files["test_cohort"], "test_cohort")
     assert not [f for f in found if not f.startswith("feature_registry")], found
     assert files["test_cohort"]["columns"] == ["account_id", "cutoff_index", "segment", "region", *FEATURES, "churned", "p_random_baseline", "p_business_rule",
-                                                "p_logistic_uncalibrated", "p_logistic_calibrated"]
+                                                "p_logistic_uncalibrated", "p_logistic_calibrated", "p_prevalence_baseline"]
     reg = {r["feature_name"]: r for r in inputs["feature_registry"]}
     usable = [n for n in reg if not (reg[n]["post_outcome"] or reg[n]["latent"] or reg[n]["id_derived"])]
     assert usable == list(FEATURES) and check_feature_request(reg, usable) == usable
@@ -555,3 +555,150 @@ def test_every_injection_event_replays_through_the_api_as_recorded(client, conn,
             else:
                 for x in step["expect"]:
                     assert dig(body, x["path"]) == x["equals"], (where, x["path"], dig(body, x["path"]))
+
+
+# ---------------------------------------------------------------------------------------------------- review R10 (docs/contracts.md D-09)
+FULL_WORLD_ECONOMICS = {"sc-001": ("81.13", 5), "sc-002": ("71.04", 10), "sc-003": ("-29.12", 20)}      # +81.13 / +71.04 / -29.12 on 1,241 scored accounts (R10-04)
+
+
+def test_r10_04_the_economics_of_the_whole_world_are_published_beside_the_cohorts_and_equal_the_domain_over_the_full_inputs(manifest, files, built):
+    agg = files["cutoff_aggregates"]["economics_full_world"]
+    assert agg == manifest["economics_full_world"] == gen.economics_full_world(built["world"], built["ext"])
+    assert agg["prediction_at"] == "2026-09-01T00:00:00Z"
+    for sid, (ev, k) in FULL_WORLD_ECONOMICS.items():
+        e = agg["scenarios"][sid]
+        assert (e["expected_value"], e["capacity"], e["scored_accounts"], e["label"], e["treatment_effect_estimate"]) == (ev, k, 1241, "hypothetical", None), sid
+    # the same figures from the domain over the FULL inputs object that generate.py --inputs writes, without the generator's helper
+    from retentionlab.metrics import set_metrics
+    full = {**{n: [] for n in ENTITIES}, **built["data"], "training_runs": [built["fit"]["run"]], "intervention_scenarios": [dict(x) for x in gen.SCENARIOS],
+            "predictions": [p for p in built["preds"] if p["model_name"] == "logistic_regression"]}
+    world, _ = cohort_world(full)
+    for sid, (ev, k) in FULL_WORLD_ECONOMICS.items():
+        sm = set_metrics(world, "tr-001", "2026-09-01T00:00:00Z", sid, None)
+        assert sm["economics"]["expected_value"] == ev and sm["outreach_queue"]["population"] == 1241, sid
+    cohort = manifest["published_cohort"]["economics"]
+    assert {sid: cohort[sid]["expected_value"] for sid in cohort} == {"sc-001": "21.38", "sc-002": "-6.87", "sc-003": "-95.46"}      # the cohort's figures are a different population
+    assert all(cohort[sid]["population"] == 97 for sid in cohort) and "97 scored accounts of the published cohort" in manifest["published_cohort"]["economics_population"]
+
+
+def test_r10_06_rows_are_not_accounts_on_the_test_population(files):
+    t = files["test_cohort"]
+    ix = {c: i for i, c in enumerate(t["columns"])}
+    rows = t["rows"]
+    churn = [r for r in rows if r[ix["churned"]] == 1]
+    assert (len(rows), len({r[ix["account_id"]] for r in rows}), len(churn), len({r[ix["account_id"]] for r in churn})) == (1513, 442, 189, 95)
+
+
+def test_r10_08_and_09_platt_made_the_model_worse_on_test_and_the_largest_regional_gap_was_not_designed(manifest, files):
+    cal = files["calibration"]
+    pe = cal["platt_effect"]
+    assert (pe["brier_uncalibrated"], pe["brier_calibrated"], pe["gap_pp_uncalibrated"], pe["gap_pp_calibrated"], pe["worse_on_test"]) == ("0.104515", "0.105019", "-2.26", "-2.86", True)
+    assert cal["fit_rows_by_cutoff"] == {"2025-10-01T00:00:00Z": 289} and pe["fit_rows"] == 289
+    t = files["test_cohort"]
+    items_u = table_items(t, "p_logistic_uncalibrated")
+    items_c = table_items(t, "p_logistic_calibrated")
+    assert ap_brier(items_u)[1] == pe["brier_uncalibrated"] and ap_brier(items_c)[1] == pe["brier_calibrated"]
+    worst = cal["largest_region_gap"]
+    assert (worst["region"], worst["gap_pp"], worst["designed"]) == ("apac", "-10.68", False) and cal["by_region"]["apac"]["gap_pp"] == "-10.68"
+    assert max(cal["by_region"], key=lambda r: abs(Fraction(cal["by_region"][r]["gap_pp"]))) == "apac"
+    dr02 = manifest["designed_relationships"][1]["realised"]
+    assert dr02["largest_region_gap"] == worst and dr02["platt_effect"] == pe
+
+
+def test_r10_07_the_apac_series_has_five_pre_change_false_positives_and_five_real_exceedances(files):
+    drift = files["cutoff_aggregates"]["drift"]
+    exceed = [e for e in drift["by_cutoff"] if e["apac"]["exceeds_threshold"]]
+    pre = [e for e in exceed if e["prediction_at"] < drift["change_at"]]
+    post = [e for e in exceed if e["prediction_at"] >= drift["change_at"]]
+    assert [e["prediction_at"][:7] for e in pre] == ["2025-02", "2025-06", "2025-08", "2025-10", "2026-01"]
+    assert [e["prediction_at"][:7] for e in post] == ["2026-05", "2026-06", "2026-07", "2026-08", "2026-09"]
+    assert sorted(e["apac"]["floored_bins"] for e in pre) == [0, 1, 1, 1, 1]                 # four of the five pre-change exceedances are a floored empty bin
+    assert all(e["apac"]["floored_bins"] == 0 for e in post)                                  # the real shift is not a floor artefact
+    assert all(e["apac"]["reference_rows"] == 57 for e in drift["by_cutoff"])
+
+
+def test_r10_11_every_outcome_informed_choice_is_a_numbered_item_of_the_manifest(manifest):
+    d = {x["id"]: x for x in manifest["disclosures"]}
+    g02, g03 = d["D-G02"]["items"], d["D-G03"]["items"]
+    assert len(g02) == 8 and len(g03) == 3
+    assert d["D-G02"]["text"].count("(8)") == 1 and all(f"({n}) {t}" in d["D-G02"]["text"] for n, t in enumerate(g02, 1))
+    joined = " ".join(g02)
+    assert "from 700 to 600" in joined and "INJ-02 examples" in joined and "allowed in any range" in joined and "140 to 200" in joined
+    assert "hash of its id" in " ".join(g03) and "442 accounts" in " ".join(g03)
+
+
+def test_r10_14_the_prevalence_constant_is_a_fourth_model_and_the_stated_margins_are_unchanged(manifest, files, inputs):
+    t = files["test_cohort"]
+    ix = {c: i for i, c in enumerate(t["columns"])}
+    const = {r[ix["p_prevalence_baseline"]] for r in t["rows"]}
+    cfg = inputs["training_runs"][0]["config"]
+    prev = next(m for m in cfg["models"] if m["name"] == "prevalence_baseline")
+    tr = manifest["training"]
+    assert const == {prev["prevalence"]} == {rnd(Fraction(tr["training_positives"], tr["training_rows"]), 6)}
+    dr = manifest["designed_relationships"][0]["realised"]
+    assert dr["stated_margins"] == gen.MARGINS == {"ap_over_rule": "0.030000", "ap_over_random": "0.050000", "brier_under_rule": "0.002000", "brier_under_random": "0.050000"}
+    ap, brier = ap_brier(table_items(t, "p_prevalence_baseline"))
+    assert (dr["prevalence_baseline"]["average_precision"], dr["prevalence_baseline"]["brier_score"]) == (ap, brier) == (p6(Fraction(189, 1513)), "0.109664")
+    lr_brier = ap_brier(table_items(t, "p_logistic_calibrated"))[1]
+    assert dr["reference_margins"]["brier_under_prevalence_constant"] == rnd(Fraction(brier) - Fraction(lr_brier), 6) == "0.004645"
+    assert dr["uninformative_margin"]["key"] == "brier_under_random" and all(dr["met"].values())
+    cfgs = [m["name"] for m in cfg["models"]]
+    assert cfgs == list(MODELS) and "prevalence_baseline" in {p["model_name"] for p in inputs["predictions"]}
+
+
+def test_r10_10_the_fit_does_not_depend_on_account_ids_or_row_order_and_refuses_seed_derived_fields(built, inputs):
+    """P10-TEST-12 reinterpreted (D-09): the same world with every account id permuted and every row list shuffled is refitted; the frozen preprocessing,
+    coefficients, rates, prevalence and Platt mapping, and every probability of the four models except the seeded random baseline (which is keyed by the cutoff
+    id on purpose), are byte-identical. Seed-derived fields are refused by the registry (INJ-12, tested above)."""
+    import random
+    data = built["data"]
+    r = random.Random(7)
+    ids = list(range(1, gen.N_ACCOUNTS + 1))
+    r.shuffle(ids)
+    pi = {i + 1: ids[i] for i in range(gen.N_ACCOUNTS)}
+
+    def cid(old: str, aid: int) -> str:
+        return f"co-{aid}-{old.rsplit('-', 1)[1]}"
+    d2: dict[str, Any] = {}
+    for k, v in data.items():
+        if isinstance(v, list) and v and isinstance(v[0], dict) and "account_id" in v[0]:
+            out = []
+            for row in v:
+                row = dict(row)
+                row["account_id"] = pi[row["account_id"]]
+                if "cutoff_id" in row:
+                    row["cutoff_id"] = cid(row["cutoff_id"], row["account_id"])
+                out.append(row)
+            d2[k] = out
+        else:
+            d2[k] = v
+    shuffler = random.Random(11)
+    for k, v in d2.items():
+        if isinstance(v, list):
+            v = list(v)
+            shuffler.shuffle(v)
+            d2[k] = v
+    ing = validate(d2)
+    assert not ing.rejected
+    w2 = World(d2, ing.accepted)
+    rows2 = {c["cutoff_id"]: w2.analyse(c["cutoff_id"]) for c in ing.accepted["prediction_cutoffs"]}
+    fit2 = gen.fit_run(w2, rows2)
+    c1, c2 = built["fit"]["run"]["config"], fit2["run"]["config"]
+    strip = lambda pre: {k: v for k, v in pre.items() if k != "fit_rows_sha256"}      # noqa: E731  (the hash of the row ids names the permuted ids)
+    assert strip(c1["preprocessing"]) == strip(c2["preprocessing"])
+    assert c1["models"] == c2["models"]
+    assert {k: v for k, v in c1["calibration"].items() if k != "fit_rows_sha256"} == {k: v for k, v in c2["calibration"].items() if k != "fit_rows_sha256"}
+    from retentionlab.fitting import score_features
+    compared = 0
+    for c, a in built["rows"].items():
+        if not a["eligible"]:
+            continue
+        c_new = cid(c, pi[a["account_id"]])
+        for m in ("logistic_regression", "business_rule", "prevalence_baseline"):
+            assert score_features(c1, m, c, a["features"]) == score_features(c2, m, c_new, rows2[c_new]["features"]), (m, c)
+            compared += 1
+    assert compared > 20_000
+    reg = {r["feature_name"]: r for r in inputs["feature_registry"]}
+    with pytest.raises(E.DomainError) as e:
+        check_feature_request(reg, ["usage_events_30d", "generator_seed_bucket", "creation_sequence"])
+    assert e.value.code == E.LATENT_TRUTH and {o["item"] for o in e.value.details["offending"]} == {"generator_seed_bucket", "creation_sequence"}

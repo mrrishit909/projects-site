@@ -52,7 +52,7 @@ function Queue({ ds }: { ds: Dataset }) {
         <div className="card"><div className="big"><Fig k="queue-k">{q?.account_ids.length ?? 0}</Fig><small>draft actions of K = {scenario["capacity"]}</small></div></div>
         <div className="card"><div className="big"><Fig k="queue-sent">0</Fig><small>sent: nothing is ever sent</small></div></div>
         {eco && <div className="card"><div className="big"><Fig k="queue-budget">{usd(eco.contact_budget)}</Fig><small>contact budget</small></div></div>}
-        {eco && <div className="card"><div className="big"><Fig k="queue-ev" tone={eco.expected_value.startsWith("-") ? "neg" : "pos"}>{usd(eco.expected_value)}</Fig><small>expected value, hypothetical (assumed effect {scenario["assumed_effect"]}); no treatment effect is estimated</small></div></div>}
+        {eco && <div className="card"><div className="big"><Fig k="queue-ev" tone={eco.expected_value.startsWith("-") ? "neg" : "pos"}>{usd(eco.expected_value)}</Fig><small>expected value, hypothetical (assumed effect {scenario["assumed_effect"]}), on the {n0(q?.population ?? 0)} scored accounts of the published cohort; no treatment effect is estimated</small></div></div>}
       </div>
       <section aria-labelledby="q-h">
         <h2 id="q-h">Draft queue</h2>

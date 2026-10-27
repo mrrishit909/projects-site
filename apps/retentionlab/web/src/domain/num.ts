@@ -21,6 +21,7 @@ export function add(a: Fr, b: Fr): Fr {
   return { n: n / g2, d: ad * (b.d / g2) };
 }
 export const neg = (a: Fr): Fr => ({ n: -a.n, d: a.d });
+export const abs = (a: Fr): Fr => (a.n < 0n ? neg(a) : a);
 export const sub = (a: Fr, b: Fr): Fr => add(a, neg(b));
 export function mul(a: Fr, b: Fr): Fr {
   const g1 = gcd(a.n, b.d) || 1n, g2 = gcd(b.n, a.d) || 1n;
@@ -124,7 +125,7 @@ export function lnScaled(x: Fr): bigint {
   while (n * 2n >= d * 3n) { d *= 2n; k += 1n; }
   return k * LN2 + atanhSeries(n - d, n + d);
 }
-/** A scaled (10^60) value as a decimal string with `dp` places, ROUND_HALF_UP (away from zero). */
+/** A scaled (10^90) value as a decimal string with `dp` places, ROUND_HALF_UP (away from zero). */
 export function scaledToString(v: bigint, dp: number): string {
   return quant({ n: v, d: SCALE }, dp);
 }

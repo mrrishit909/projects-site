@@ -35,7 +35,8 @@ def consistency(world: World, ingest: Ingest, splits: dict[str, Any], pubs: list
             out["feature_rows_mismatched"].append(fr["feature_row_id"])
     for lb in acc["labels"]:
         a = world.analyse(lb["cutoff_id"])
-        if not (a["eligible"] and lb["churned"] == a["churned"] and lb["mature"] == a["mature"] and lb["label_end"] == a["label_end"]):
+        mature, churned = world.recomputed(lb["cutoff_id"])          # the rules' own maturity, not the authoritative one (D-09, R10-01)
+        if not (a["eligible"] and lb["churned"] == churned and lb["mature"] == mature and lb["label_end"] == a["label_end"]):
             out["labels_mismatched"].append(lb["label_id"])
     for r in acc["training_runs"]:
         if config_hash(r["config"]) != r["config_hash"]:

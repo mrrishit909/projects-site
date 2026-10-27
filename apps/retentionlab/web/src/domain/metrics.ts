@@ -81,7 +81,7 @@ export function economics(scenario: Row, queue: { pstr: string; account_id: Id }
 }
 export interface PsiBin { label: string; reference_count: number; current_count: number; reference_proportion: string; current_proportion: string; floored: boolean; term: string }
 /** PSI = sum (actual - expected) x ln(actual / expected), the natural log in fixed-point BigInt arithmetic at 60 digits; a zero proportion is
- * replaced by `floor` without renormalising (D-P10-10). null when either cohort is empty. `total` is scaled by 10^60. */
+ * replaced by `floor` without renormalising (D-P10-10). null when either cohort is empty. `total` is scaled by 10^90. */
 export function psi(reference: number[], current: number[], labels: string[], floor: string): { total: bigint; bins: PsiBin[] } | null {
   const rTotal = reference.reduce((a, b) => a + b, 0), cTotal = current.reduce((a, b) => a + b, 0);
   if (rTotal === 0 || cTotal === 0) return null;

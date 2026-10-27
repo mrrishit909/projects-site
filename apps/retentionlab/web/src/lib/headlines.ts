@@ -1,7 +1,8 @@
 // The one verified figure each route leads with on the start page. Every value is computed from the loaded dataset by the domain mirror.
 import type { Dataset } from "../data/dataset";
 import { p6, ratio } from "../domain/num";
-import { minus } from "./format";
+import { minus, n0 } from "./format";
+import type { Row } from "../domain/models";
 import { cohortRows, groupStats } from "./cohort";
 import { blockOf, driftByRegion, seriesOf } from "./derive";
 import { designedClaims, injectionChecks } from "./claims";
@@ -22,7 +23,9 @@ export function headlines(ds: Dataset): Record<string, Headline> {
     out["models"] = { value: primary.average_precision!, label: "average precision, logistic (test)", note: `rule ${rule.average_precision}; margin reached by construction` };
     out["calibration"] = { value: primary.brier_score!, label: "Brier score, test", note: `${primary.bins.filter((b) => b.count === 0).length} of 10 bins have no rows` };
     const sc = ds.setAt("2026-09-01T00:00:00Z", "logistic_regression", "sc-001")["economics"];
-    out["capacity"] = { value: sc ? sc.expected_value : "n/a", label: "expected value at K = 5, hypothetical (USD)", note: `contact budget ${sc?.contact_budget}` };
+    const fwSc = (ds.aggregates?.["economics_full_world"] as Row | undefined)?.["scenarios"]?.["sc-001"] as Row | undefined;
+    out["capacity"] = { value: sc ? sc.expected_value : "n/a", label: "expected value at K = 5, hypothetical (USD), on the scored accounts of the published cohort",
+      note: `contact budget ${sc?.contact_budget}; the whole world (${fwSc ? n0(fwSc["scored_accounts"]) : "?"} scored accounts): ${fwSc?.["expected_value"] ?? "n/a"}` };
     const drift = driftByRegion(ds.testRows!, 4)[3]!;
     out["monitoring"] = { value: drift.apac.psi ?? "n/a", label: "apac usage drift (PSI, 2026-05-01)", note: `the whole population: ${drift.all_accounts.psi}` };
     const q = ds.setAt("2026-09-01T00:00:00Z", "logistic_regression", "sc-001")["outreach_queue"];

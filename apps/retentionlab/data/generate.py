@@ -3,7 +3,7 @@
 
 Standard library only. The generator simulates the world (accounts, latent state, events) with child ``random.Random`` streams and
 integer arithmetic (``Decimal`` for the two transcendental functions), then hands EVERYTHING that is a result to the domain
-(``domain/retentionlab``): eligibility, point-in-time features, labels, the split and its purge counts, preprocessing, the three
+(``domain/retentionlab``): eligibility, point-in-time features, labels, the split and its purge counts, preprocessing, the four
 models, the Platt calibration, every metric and every realised value of a designed relationship. No number in the manifest is typed.
 Same seed, same bytes (checked under PYTHONHASHSEED 0/1/2).
 
@@ -14,6 +14,7 @@ Same seed, same bytes (checked under PYTHONHASHSEED 0/1/2).
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import hashlib
 import json
 import random
@@ -486,7 +487,7 @@ def fit_run(world: World, rows: dict[str, dict[str, Any]]) -> dict[str, Any]:
 
 
 def score_all(rows: dict[str, dict[str, Any]], run: dict[str, Any]) -> list[dict[str, Any]]:
-    """Every eligible cutoff scored by the three models from the frozen run (the logistic one is Platt-scaled)."""
+    """Every eligible cutoff scored by the four models from the frozen run (the logistic one is Platt-scaled)."""
     out = []
     for cid in sorted(rows):
         a = rows[cid]
@@ -556,6 +557,14 @@ def dr_models(world: World, rows: dict[str, dict[str, Any]], ext: dict[str, Any]
                       "brier_under_rule": margin(rule["brier_score"], lr["brier_score"]), "brier_under_random": margin(rnd_["brier_score"], lr["brier_score"])}
     res["stated_margins"] = stated
     res["met"] = {k: Fraction(res["margins"][k]) >= Fraction(stated[k]) for k in stated}
+    # D-09 (R10-14): the prevalence constant is the honest Brier reference. The stated margins stay as declared against the rule and the random
+    # baseline; the margin over the constant is reported beside them, and the random baseline's Brier margin is named uninformative.
+    prev = res["prevalence_baseline"]
+    res["reference_margins"] = {"brier_under_prevalence_constant": margin(prev["brier_score"], lr["brier_score"]),
+                                "ap_over_prevalence_constant": margin(lr["average_precision"], prev["average_precision"])}
+    res["uninformative_margin"] = {"key": "brier_under_random", "random_brier": rnd_["brier_score"], "prevalence_constant_brier": prev["brier_score"],
+                                   "why": "a uniform random score has a Brier near one third on a population that is 12 % positive, so any model that is not absurd clears a margin over it; "
+                                          "the honest reference is the prevalence constant"}
     return res
 
 
@@ -578,11 +587,21 @@ def dr_calibration(world: World, rows: dict[str, dict[str, Any]], ext: dict[str,
     by_seg = {s: gap_block([it for it in items if accounts[it["account_id"] - 1]["segment"] == s]) for s in SEGMENT_NAMES}
     by_reg = {s: gap_block([it for it in items if accounts[it["account_id"] - 1]["region"] == s]) for s in REGION_NAMES}
     others = [abs(Fraction(v["gap_pp"])) for k, v in by_seg.items() if k != PRICE_SEGMENT]
-    return {"overall": gap_block(items), "by_segment": by_seg, "by_region": by_reg, "reliability_calibrated": calibration_bins(items),
+    worst_region = max(by_reg, key=lambda k: abs(Fraction(by_reg[k]["gap_pp"])))
+    b_cal, b_unc = ap_brier(items), ap_brier(uncal)
+    platt = {"brier_uncalibrated": b_unc["brier_score"], "brier_calibrated": b_cal["brier_score"], "gap_pp_uncalibrated": gap_block(uncal)["gap_pp"], "gap_pp_calibrated": gap_block(items)["gap_pp"],
+             "worse_on_test": Fraction(b_cal["brier_score"]) > Fraction(b_unc["brier_score"]) and abs(Fraction(gap_block(items)["gap_pp"])) > abs(Fraction(gap_block(uncal)["gap_pp"])),
+             "fit_rows": cfg["calibration"]["fit_rows"],
+             "why": "the mapping has two parameters and was fitted on the retained validation rows, all of which come from the first validation cutoff (the label-window purge removes the later ones); "
+                    "a small fit set from one month does not transfer to the next four"}
+    return {"platt_effect": platt, "overall": gap_block(items), "by_segment": by_seg, "by_region": by_reg, "reliability_calibrated": calibration_bins(items),
             "reliability_uncalibrated": calibration_bins(uncal), "uncalibrated_overall": gap_block(uncal),
             "segment_with_gap": PRICE_SEGMENT, "target_gap_pp": TARGETS["calibration_gap_pp"],
             "met": Fraction(by_seg[PRICE_SEGMENT]["gap_pp"]) <= -Fraction(TARGETS["calibration_gap_pp"]),
-            "largest_other_segment_abs_gap_pp": rnd(max(others), 2)}
+            "largest_other_segment_abs_gap_pp": rnd(max(others), 2),
+            "largest_region_gap": {"region": worst_region, "gap_pp": by_reg[worst_region]["gap_pp"], "designed": False,
+                                   "note": "the largest regional calibration gap is a one-draw realisation of this seed's world, not a designed relationship: the instrumentation change "
+                                           "was designed to move the apac usage distribution (DR-03), and no effect on its calibration was designed"}}
 
 
 def drift_counts(rs: list[dict[str, Any]], drift: dict[str, Any]) -> list[int]:
@@ -615,7 +634,8 @@ def dr_drift(world: World, rows: dict[str, dict[str, Any]], ext: dict[str, Any],
             cc = [r for r in cur if test(accounts[r["account_id"] - 1])]
             res = psi(drift_counts(rr, drift), drift_counts(cc, drift), [b["label"] for b in drift["bins"]], drift["floor"])
             entry[label] = None if res is None else {"psi": rnd(Fraction(res[0]), 6), "exceeds_threshold": res[0] > Decimal(drift["threshold"]), "reference_rows": len(rr),
-                                                     "current_rows": len(cc), "mean_usage_events_30d": rnd(Fraction(sum(r["features"]["usage_events_30d"] for r in cc), len(cc)), 2) if cc else None}
+                                                     "current_rows": len(cc), "mean_usage_events_30d": rnd(Fraction(sum(r["features"]["usage_events_30d"] for r in cc), len(cc)), 2) if cc else None,
+                                                     "floored_bins": sum(1 for b in res[1] if b["floored"])}
         out_rows.append(entry)
     after = [e for e in out_rows if parse_ts(e["prediction_at"]) >= datetime(2026, 5, 1, tzinfo=UTC)]
     before = [e for e in out_rows if datetime(2026, 2, 1, tzinfo=UTC) <= parse_ts(e["prediction_at"]) <= datetime(2026, 3, 1, tzinfo=UTC)]
@@ -782,7 +802,7 @@ def test_cohort_table(rows: dict[str, dict[str, Any]], preds: list[dict[str, Any
     lr = next(m for m in cfg["models"] if m["name"] == "logistic_regression")
     by = {m: {p["cutoff_id"]: p["probability"] for p in preds if p["model_name"] == m} for m in MODELS}
     test_cutoffs = [Z(pa) for pa in CUTOFFS if range_of(pa) == "test"]
-    cols = ["account_id", "cutoff_index", "segment", "region", *FEATURES, "churned", "p_random_baseline", "p_business_rule", "p_logistic_uncalibrated", "p_logistic_calibrated"]
+    cols = ["account_id", "cutoff_index", "segment", "region", *FEATURES, "churned", "p_random_baseline", "p_business_rule", "p_logistic_uncalibrated", "p_logistic_calibrated", "p_prevalence_baseline"]
     table = []
     for cid in sorted(rows, key=lambda c: (rows[c]["prediction_at"], rows[c]["account_id"])):
         a = rows[cid]
@@ -791,8 +811,24 @@ def test_cohort_table(rows: dict[str, dict[str, Any]], preds: list[dict[str, Any
         acc = pop["accounts"][a["account_id"] - 1]
         f = a["features"]
         table.append([a["account_id"], test_cutoffs.index(a["prediction_at"]), acc["segment"], acc["region"], *[f[n] for n in FEATURES], 1 if a["churned"] else 0,
-                      by["random_baseline"][cid], by["business_rule"][cid], predict_logistic(cfg["preprocessing"], lr["coefficients"], f), by["logistic_regression"][cid]])
+                      by["random_baseline"][cid], by["business_rule"][cid], predict_logistic(cfg["preprocessing"], lr["coefficients"], f), by["logistic_regression"][cid], by["prevalence_baseline"][cid]])
     return {"cutoffs": test_cutoffs, "columns": cols, "rows": table}
+
+
+def economics_full_world(world: World, ext: dict[str, Any]) -> dict[str, Any]:
+    """D-09 (R10-04): the three scenarios' economics over the WHOLE 2,400-account world at the production cutoff, by the domain's own function. The
+    published cohort's figures (97 scored accounts) are a different population; both are shown wherever economics appear. Hypothetical."""
+    at = Z(CUTOFFS[-1])
+    wl = with_predictions(world, {**ext, "intervention_scenarios": [dict(x) for x in SCENARIOS]}, "logistic_regression")
+    out: dict[str, Any] = {}
+    for sc in SCENARIOS:
+        m = set_metrics(wl, RUN_ID, at, sc["scenario_id"], None)
+        e = m["economics"]
+        out[sc["scenario_id"]] = {"capacity": sc["capacity"], "scored_accounts": m["outreach_queue"]["population"], "contact_budget": e["contact_budget"],
+                                  "expected_value": e["expected_value"], "label": e["label"], "assumption_based": e["assumption_based"],
+                                  "assumptions": e["assumptions"], "treatment_effect_estimate": e["treatment_effect_estimate"]}
+    return {"prediction_at": at, "population": "all 2,400 accounts as built by the domain: the eligible accounts of the cutoff that carry a prediction",
+            "scenarios": out}
 
 
 def aggregates(world: World, rows: dict[str, dict[str, Any]], ext: dict[str, Any]) -> list[dict[str, Any]]:
@@ -1170,7 +1206,9 @@ def parse_pa(cid: str) -> str:
 
 
 # ---- disclosures --------------------------------------------------------------------------------------------------------------------
-def disclosures() -> list[tuple[str, str]]:
+def disclosures(B: dict[str, Any]) -> list[tuple[str, str] | tuple[str, str, list[str]]]:
+    trows = B["test_table"]["rows"]
+    tn, ta = len(trows), len({r[0] for r in trows})
     sh = GROUP_SHARE
     lt = {e: LATE[e][0] // 10_000 for e in LATE}
     return [
@@ -1178,25 +1216,31 @@ def disclosures() -> list[tuple[str, str]]:
                   "(MARGINS, TARGETS), the drift and repricing designs, the late-arrival shares, the scenario capacities 5 / 10 / 20 and the cohort size rule. The values below "
                   "were changed AFTER looking at outcomes during development; the published world is the first run of the final code and nothing was re-drawn, kept or dropped "
                   "after it."),
-        ("D-G02", "Outcome-informed changes, in order. (1) After the first simulation the starter 90-day churn was 20-27 % per cutoff: the weekly hazard intercepts were lowered "
-                  "(starter -4800 to -5100, smb -5000 to -5100, mid -5300 to -5400, enterprise -5700 to -5800 milli-logit) and the starter repricing uplift from 700 to 600. (2) The first "
-                  "model fit gave logistic AP 0.199 against the rule's 0.116 and a Brier margin of 0.0010, below the stated 0.002, and a high-severity coefficient near zero: a per-account "
-                  "long-run engagement offset (+-500, then +-900 milli) was added and the engagement coefficient raised 1100 to 1500 to 2200, with the intercepts lowered once more "
-                  "(starter and smb to -5400, mid -5700, enterprise -6100) to keep the churn level. These changes strengthen the signal the four features can see; they were made until the "
-                  "stated margins were met and are why the margins are met. (3) The first drift run showed PSI 0.138 at 2026-04-01 for the drifting region (the change straddled the "
-                  "window): the change moved from 2026-03-15 to 2026-03-31, 40 % of logins kept instead of 50 %, and the statement narrowed from 'every cutoff after 2026-03' to 'every "
-                  "cutoff from 2026-05-01'. (4) The share of cancellations that arrive after the 14-day grace went from 2 % to 4 % (range 15 to 60 days) so that the label effect is "
-                  "visible. (5) The late-arrival target changed from 'all four features flip' to 'at least three of four' after the high-severity count flipped on no test row. (6) The "
-                  "INJ-02 examples were allowed in any range (they were all outside the cohort when restricted to the test range). (7) The scenario assumptions were changed once after the "
-                  "first run showed negative expected value for all three (contact cost 8 / 12 / 20, effect 0.20 / 0.15 / 0.10, margin 150 / 220 / 320 became cost 8, effect 0.30 / 0.20 / "
-                  "0.10, margin 200), so that the lab shows a range of outcomes; the values remain assumptions. (8) The cohort grew from 140 to 200 accounts once the first output measured "
-                  "3.1 MB."),
-        ("D-G03", f"Account-level roles. Each account is assigned to train ({sh[0]} %), validation ({sh[1]} %) or test ({sh[2]} %) by a hash of its id, independent of everything else, and has "
-                  "cutoff rows only in the cutoffs of its role plus every cutoff from 2026-06-01 (outside the test range, where every active account is scored). The group purge of D-02 "
-                  "would otherwise remove every earlier row of every surviving account. The injected violators (INJ-03) are accounts given a second role."),
+        ("D-G02", "Outcome-informed changes, in order.", [
+            "After the first simulation the starter 90-day churn was 20-27 % per cutoff: the weekly hazard intercepts were lowered (starter -4800 to -5100, smb -5000 to -5100, mid -5300 to "
+            "-5400, enterprise -5700 to -5800 milli-logit) and the starter repricing uplift from 700 to 600.",
+            "The first model fit gave logistic AP 0.199 against the rule's 0.116 and a Brier margin of 0.0010, below the stated 0.002, and a high-severity coefficient near zero: a "
+            "per-account long-run engagement offset (+-500, then +-900 milli) was added and the engagement coefficient raised 1100 to 1500 to 2200, with the intercepts lowered once more "
+            "(starter and smb to -5400, mid -5700, enterprise -6100) to keep the churn level. These changes strengthen the signal the four features can see; they were made until the "
+            "stated margins were met and are why the margins are met.",
+            "The first drift run showed PSI 0.138 at 2026-04-01 for the drifting region (the change straddled the window): the change moved from 2026-03-15 to 2026-03-31, 40 % of logins "
+            "kept instead of 50 %, and the statement narrowed from 'every cutoff after 2026-03' to 'every cutoff from 2026-05-01'.",
+            "The share of cancellations that arrive after the 14-day grace went from 2 % to 4 % (range 15 to 60 days) so that the label effect is visible.",
+            "The late-arrival target changed from 'all four features flip' to 'at least three of four' after the high-severity count flipped on no test row.",
+            "The INJ-02 examples (usage events that arrive after the cutoff) were allowed in any range: they were all outside the cohort when restricted to the test range.",
+            "The scenario assumptions were changed once after the first run showed negative expected value for all three (contact cost 8 / 12 / 20, effect 0.20 / 0.15 / 0.10, margin 150 / "
+            "220 / 320 became cost 8, effect 0.30 / 0.20 / 0.10, margin 200), so that the lab shows a range of outcomes; the values remain assumptions.",
+            "The cohort grew from 140 to 200 accounts once the first output measured 3.1 MB."]),
+        ("D-G03", "Account-level roles, a design choice made to keep the contract's group purge workable and therefore listed with the outcome-informed choices.", [
+            f"Each account is assigned to train ({sh[0]} %), validation ({sh[1]} %) or test ({sh[2]} %) by a hash of its id, independent of everything else, and has cutoff rows only in the "
+            "cutoffs of its role plus every cutoff from 2026-06-01 (outside the test range, where every active account is scored). The group purge of D-02 would otherwise remove every "
+            "earlier row of every surviving account.",
+            f"The consequence is part of the design: the test population is the test-role accounts' rows, {tn:,} rows from {ta} accounts, not every account at every test cutoff, and the same "
+            "account contributes several rows across overlapping cutoffs.",
+            "The injected violators (INJ-03) are accounts given a second role."]),
         ("D-G04", "What is published. The 2,400-account world is built and evaluated by the domain in full; the files carry (a) the COMPLETE records of a uniform sample of "
                   "accounts (the published cohort, entity files, cohort size in the manifest), so that the domain rebuilds every row from events, (b) per-cutoff aggregates of the whole "
-                  "population, (c) the whole test range as one compact table (features, outcome, the four probabilities) for the browser, and (d) the population-level calibration, split "
+                  "population, (c) the whole test range as one compact table (features, outcome, the five probabilities: random, rule, logistic before and after Platt scaling, prevalence constant) for the browser, and (d) the population-level calibration, split "
                   "and drift summaries. Predictions and scoring publications of the cohort start at the 2025-10-01 cutoff (the validation range); the world also scored the earlier rows. "
                   "Events of the other accounts are not published. The size cap (5 MB) set the cohort size; it is a sample, not the population."),
         ("D-G05", "Latent truth. The per-account, per-cutoff churn propensity is a stylised 90-day probability (one minus the product over 13 weeks of one minus the weekly hazard, the "
@@ -1216,6 +1260,14 @@ def disclosures() -> list[tuple[str, str]]:
                   "those of train-role accounts in 2025-01 .. 2025-06), which is what the contract's group purge produces. The demo profile of the brief's section 12 was not available "
                   "to the generator; the full population can be written as one inputs object with --inputs."),
     ]
+
+
+def disclosure_entry(d: tuple[Any, ...]) -> dict[str, Any]:
+    """A disclosure as the manifest carries it: ``text`` is the whole statement; ``items`` (when the disclosure is an ordered list) are its numbered
+    parts, so that a page can list every one of them (D-09, R10-11)."""
+    if len(d) == 2:
+        return {"id": d[0], "text": d[1]}
+    return {"id": d[0], "text": d[1] + " " + " ".join(f"({n}) {t}" for n, t in enumerate(d[2], 1)), "items": list(d[2])}
 
 
 NOTE_TRUTH = ("Synthetic truth for the verification layer only: the latent churn propensities (parts per million) of the published cohort's and the test table's eligible "
@@ -1255,6 +1307,7 @@ def build_all(seed: int = DEFAULT_SEED) -> dict[str, Any]:
                 raise AssertionError(f"injection check {path} ({scope}): expected {want!r}, got {got!r}")
     B["test_table"] = test_cohort_table(rows, preds, pop, fit)
     B["aggregates"] = aggregates(world, rows, ext)
+    B["economics_full_world"] = economics_full_world(world, ext)
     return B
 
 
@@ -1316,10 +1369,12 @@ def write_all(seed: int, out: Path, data_dir: Path, inputs_path: Path | None = N
     cal = B["dr"]["calibration"]
     calibration = {"dataset_version": version, "training_run_id": RUN_ID, "method": "platt", "a": fit["run"]["config"]["calibration"]["a"], "b": fit["run"]["config"]["calibration"]["b"],
                    "fit_rows": fit["run"]["config"]["calibration"]["fit_rows"], "fit_range": "validation (retained, mature rows only)", "evaluation_range": "test",
+                   "platt_effect": cal["platt_effect"], "fit_rows_by_cutoff": dict(sorted(Counter(rows[c]["prediction_at"] for c in fit["validation_ids"]).items())),
                    "evaluation_rows": cal["overall"]["n"], "overall": cal["overall"], "uncalibrated_overall": cal["uncalibrated_overall"], "by_segment": cal["by_segment"],
-                   "by_region": cal["by_region"], "reliability_calibrated": cal["reliability_calibrated"], "reliability_uncalibrated": cal["reliability_uncalibrated"]}
+                   "by_region": cal["by_region"], "largest_region_gap": cal["largest_region_gap"],
+                   "reliability_calibrated": cal["reliability_calibrated"], "reliability_uncalibrated": cal["reliability_uncalibrated"]}
     agg = {"dataset_version": version, "training_run_id": RUN_ID, "population": "all 2,400 accounts as built by the domain; a cutoff before 2026-06-01 holds the accounts of the matching role only",
-           "cutoffs": B["aggregates"], "drift": B["dr"]["drift"]}
+           "cutoffs": B["aggregates"], "drift": B["dr"]["drift"], "economics_full_world": B["economics_full_world"]}
     files: dict[str, str] = {}
     for name in ENTITIES:
         files[f"{name}.json"] = entity_text(name, version, ents_c[name])
@@ -1358,13 +1413,14 @@ def write_all(seed: int, out: Path, data_dir: Path, inputs_path: Path | None = N
                    "cutoffs": [Z(c) for c in CUTOFFS], "immature_cutoffs": [Z(c) for c in CUTOFFS if c + days(HORIZON + GRACE) > AS_OF], "training_run_id": RUN_ID,
                    "scoring": {"backtest_scored_at": Z(SCORE_BACKTEST_AT), "production_scored_at": Z(SCORE_PRODUCTION_AT), "run_frozen_at": Z(RUN_FROZEN_AT)}},
         "generator": {"name": "generate.py", "seed": seed, "parameters": generator_parameters(B)},
-        "disclosures": [{"id": i, "text": t} for i, t in disclosures()],
+        "disclosures": [disclosure_entry(d) for d in disclosures(B)],
         "row_counts": {**{n: len(ents_c[n]) for n in ENTITIES}, "test_cohort": len(B["test_table"]["rows"]), "cutoff_aggregates": len(B["aggregates"])},
         "designed_relationships": designed, "injection_manifest": "injection-manifest.json",
         "published_cohort": {"accounts": len(ents_c["accounts"]), "sampling": f"uniform sample of {COHORT_N} of {N_ACCOUNTS} accounts by seeded draw; every record of each sampled account is published",
                              "account_ids": pop["cohort"], "claims": B["claims"], "economics": {k: {x: y for x, y in v.items() if x != "account_ids"} for k, v in coh["economics"].items()},
+                             "economics_population": f"{coh['economics']['sc-001']['population']} scored accounts of the published cohort (not the population; see economics_full_world)",
                              "queue_prediction_at": coh["queue_at"], "queue_account_ids": {k: v["account_ids"] for k, v in coh["economics"].items()}},
-        "population": population_stats(B), "training": training_summary(B),
+        "population": population_stats(B), "training": training_summary(B), "economics_full_world": B["economics_full_world"],
         "stats": {"data_file_bytes_without_manifest": sum(len(t.encode()) for t in files.values()), "size_cap_bytes": SIZE_CAP_BYTES, "size_cap_binding": True},
         "synthetic_truth": {"note": NOTE_TRUTH, "latent_churn_propensity_ppm": latent,
                             "latent_reference_test": B["dr"]["models"]["latent_propensity_reference"],
@@ -1402,12 +1458,14 @@ def designed_relationships(B: dict[str, Any]) -> list[dict[str, Any]]:
          "statement": ("On the test range (the cutoffs 2026-02-01 .. 2026-05-01, mature eligible rows with a prediction, as one evaluation population) the logistic regression's average "
                        f"precision exceeds the rule's by at least {MARGINS['ap_over_rule']} and the random baseline's by at least {MARGINS['ap_over_random']}, and its Brier score is lower "
                        f"than the rule's by at least {MARGINS['brier_under_rule']} and the random baseline's by at least {MARGINS['brier_under_random']}."),
-         "realised": {k: m[k] for k in ("logistic_regression", "business_rule", "random_baseline", "margins", "stated_margins", "met")}, "met": all(m["met"].values())},
+         "realised": {k: m[k] for k in ("logistic_regression", "business_rule", "random_baseline", "prevalence_baseline", "margins", "stated_margins", "met", "reference_margins",
+                                       "uninformative_margin")}, "met": all(m["met"].values())},
         {"id": "DR-02", "name": "a segment with a calibration gap",
          "statement": (f"The {PRICE_SEGMENT} segment's mean predicted churn on the test range is at least {TARGETS['calibration_gap_pp']} percentage points below its observed churn "
                        f"(an unobserved repricing from {Z(PRICE_CHANGE_AT)} that no feature sees); the gap is mean predicted minus observed."),
          "realised": {"segment": c["segment_with_gap"], "by_segment": c["by_segment"], "overall": c["overall"], "uncalibrated_overall": c["uncalibrated_overall"],
-                      "largest_other_segment_abs_gap_pp": c["largest_other_segment_abs_gap_pp"], "by_region": c["by_region"]}, "met": c["met"]},
+                      "largest_other_segment_abs_gap_pp": c["largest_other_segment_abs_gap_pp"], "by_region": c["by_region"], "largest_region_gap": c["largest_region_gap"],
+                      "platt_effect": c["platt_effect"]}, "met": c["met"]},
         {"id": "DR-03", "name": "a cohort with population drift after 2026-03",
          "statement": (f"From the 2026-05-01 cutoff the usage_events_30d distribution of the {DRIFT_REGION} region has a PSI above {TARGETS['drift_psi']} against its "
                        f"{d['reference_prediction_at']} cohort ({100 - DRIFT_KEEP_PPM // 10_000} % of logins are not recorded from {Z(DRIFT_AT)}), while the other regions stay below it. "

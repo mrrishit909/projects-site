@@ -9,7 +9,7 @@ import { buildGolden, buildSnapshot, isManifest, SNAPSHOT_FILES, TEST_MODELS, ty
 import { MODELS } from "../src/domain/contract";
 import { averagePrecision, calibrationBins, economics, evaluateRanked, psi, rankItems, setMetrics, type Item } from "../src/domain/metrics";
 import { canon, cmpId, cmpStr } from "../src/domain/models";
-import { div, fr, lnScaled, money, p6, parseFraction, pp2, rnd, scaledToDecimalStr, scaledToString, SCALED_ONE } from "../src/domain/num";
+import { div, fr, lnScaled, money, p6, parseFraction, pp2, rnd, sub, scaledToDecimalStr, scaledToString, SCALED_ONE } from "../src/domain/num";
 import { canonAscii, evaluate, sha256Hex } from "../src/domain/pipeline";
 import { daysFromCivil, hoursBetween, isoZ, parseTs, wholeDays } from "../src/domain/time";
 import { designedClaims, injectionChecks, leavesOf, replayRefusals } from "../src/lib/claims";
@@ -240,9 +240,24 @@ const asJson = (v: unknown): unknown => JSON.parse(JSON.stringify(v));
   eq(`DR-01..05: ${dr.length} figures (${dr.filter((c) => c.recomputed).length} recomputed here, ${dr.filter((c) => !c.recomputed).length} shown as published) equal the manifest`, dr.filter((c) => !c.ok).map((c) => `${c.id} ${c.label}: want ${c.want} got ${c.got}`), []);
   eq("DR: all five relationships are represented", [...new Set(dr.map((c) => c.id))], ["DR-01", "DR-02", "DR-03", "DR-04", "DR-05"]);
   console.log(`OK       ${nLeaves} designed-relationship leaves in the manifest equal the reference`);
+  // D-09 (R10-15): the reference's own description of what each relationship recomputes is a compared value (a mutation of its text was not caught before)
+  eq("reference: what each designed relationship recomputes (the description strings are compared, not carried)", (ref.designed as any).recomputed,  // eslint-disable-line @typescript-eslint/no-explicit-any
+    { "DR-01": ["average_precision", "brier_score", "margins", "reference_margins"], "DR-02": ["gap_pp by segment and region, overall", "largest regional gap", "Platt effect"],
+      "DR-03": ["PSI in the four test cutoffs (before change and first after change)"], "DR-04": ["the shares as ratios of the manifest's counts"], "DR-05": ["eligible, censored, share, mature churn from the aggregates"] }, true);
+  eq("reference: the relationships it says it recomputes are those this browser recomputes", Object.keys((ref.designed as any).recomputed).sort(), [...new Set(dr.filter((c) => c.recomputed).map((c) => c.id))].sort(), true);  // eslint-disable-line @typescript-eslint/no-explicit-any
   const lr = blockOf(seriesOf(pop0, "logistic_calibrated")), ru = blockOf(seriesOf(pop0, "business_rule")), ra = blockOf(seriesOf(pop0, "random_baseline"));
   eq("DR-01: per-model AP and Brier on the 1,513 test rows (logistic 0.238552 / 0.105019, rule 0.136653 / 0.109255, random 0.126793 / 0.326543)", [lr.average_precision, lr.brier_score, ru.average_precision, ru.brier_score, ra.average_precision, ra.brier_score],
     ["0.238552", "0.105019", "0.136653", "0.109255", "0.126793", "0.326543"]);
+
+  // D-09 (R10-14): the prevalence constant is the honest Brier reference; (R10-04) the economics of the whole world beside the cohort's; (R10-06) rows are not accounts
+  const pv = blockOf(seriesOf(pop0, "prevalence_baseline"));
+  eq("R10-14: the prevalence constant scores AP = prevalence 0.124917 and Brier 0.109664; the logistic model beats it by 0.004645", [pv.average_precision, pv.brier_score, p6(sub(parseFraction(pv.brier_score!), parseFraction(lr.brier_score!)))], ["0.124917", "0.109664", "0.004645"]);
+  const fw = (ds.aggregates!["economics_full_world"] as any).scenarios;  // eslint-disable-line @typescript-eslint/no-explicit-any
+  eq("R10-04: the whole world's economics (1,241 scored accounts) are +81.13 / +71.04 / -29.12, beside the cohort's 21.38 / -6.87 / -95.46 (97 scored accounts)",
+    [["sc-001", "sc-002", "sc-003"].map((id) => fw[id].expected_value), fw["sc-001"].scored_accounts, ["sc-001", "sc-002", "sc-003"].map((id) => manifest.published_cohort.economics[id].expected_value), manifest.published_cohort.economics["sc-001"].population],
+    [["81.13", "71.04", "-29.12"], 1241, ["21.38", "-6.87", "-95.46"], 97]);
+  const accountsIn = (xs: Item[]): number => new Set(xs.map((i) => String(i.account_id))).size;
+  eq("R10-06: 1,513 rows from 442 accounts; 189 churning rows from 95 accounts", [seriesOf(pop0, "logistic_calibrated").length, accountsIn(seriesOf(pop0, "logistic_calibrated")), seriesOf(pop0, "logistic_calibrated").filter((i) => i.y).length, accountsIn(seriesOf(pop0, "logistic_calibrated").filter((i) => i.y))], [1513, 442, 189, 95]);
 
   // the injected defects
   const ic = injectionChecks(ds);

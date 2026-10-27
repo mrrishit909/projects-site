@@ -1,6 +1,10 @@
 // Domain errors and reason codes (docs/contracts.md D-01..D-05; the fixture's D-P10-14/15). The strings are the Python domain's.
 export const POST_OUTCOME_FIELD = "POST_OUTCOME_FIELD", LATENT_TRUTH = "LATENT_TRUTH", ID_FEATURE = "ID_FEATURE", UNKNOWN_FEATURE = "UNKNOWN_FEATURE";
-export const FEATURE_PRIORITY = [POST_OUTCOME_FIELD, LATENT_TRUTH, ID_FEATURE, UNKNOWN_FEATURE] as const;
+/** D-09 (R10-15): the same field named twice in one request; last in the priority order. */
+export const DUPLICATE_FIELD = "DUPLICATE_FIELD";
+export const FEATURE_PRIORITY = [POST_OUTCOME_FIELD, LATENT_TRUTH, ID_FEATURE, UNKNOWN_FEATURE, DUPLICATE_FIELD] as const;
+/** D-09 (R10-01): a report as_of later than the server clock. */
+export const AS_OF_IN_FUTURE = "AS_OF_IN_FUTURE";
 export const LEAKAGE = "LEAKAGE", CALIBRATION_ON_FIT_ROWS = "CALIBRATION_ON_FIT_ROWS", THRESHOLD_ON_TEST = "THRESHOLD_ON_TEST";
 export const CAPACITY_EXCEEDS_POPULATION = "CAPACITY_EXCEEDS_POPULATION";
 export const DUPLICATE_ID = "DUPLICATE_ID", DEPENDENT_REJECTED = "DEPENDENT_REJECTED", UNKNOWN_ACCOUNT = "UNKNOWN_ACCOUNT", UNKNOWN_CUTOFF = "UNKNOWN_CUTOFF";

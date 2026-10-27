@@ -386,10 +386,11 @@ def define_label(conn: Conn, req: Any, actor: Actor) -> Outcome:
     mismatched: list[str] = []
     ineligible: dict[str, int] = {}
     for c in cutoffs:
-        a = world.analyse(c["cutoff_id"])
+        a = dict(world.analyse(c["cutoff_id"]))
         if not a["eligible"]:
             ineligible[a["ineligible_code"]] = ineligible.get(a["ineligible_code"], 0) + 1
             continue
+        a["mature"], a["churned"] = world.recomputed(c["cutoff_id"])        # labelling is the one writer: it reads the rules' maturity at the server clock, not the stored label
         censored += 0 if a["mature"] else 1
         if a["mature"]:
             mature += 1
@@ -541,7 +542,8 @@ def train_baseline(conn: Conn, req: Any, actor: Actor) -> Outcome:
     comparison = _validation_comparison(config, [(c, f, y) for c, f, y in validation])
     lr, rule, rnd_ = comparison["logistic_regression"], comparison["business_rule"], comparison["random_baseline"]
     beats = {"business_rule": _better(lr["average_precision"], rule["average_precision"], False) and _better(lr["brier_score"], rule["brier_score"], True),
-             "random_baseline": _better(lr["average_precision"], rnd_["average_precision"], False) and _better(lr["brier_score"], rnd_["brier_score"], True)}
+             "random_baseline": _better(lr["average_precision"], rnd_["average_precision"], False) and _better(lr["brier_score"], rnd_["brier_score"], True),
+             "prevalence_baseline": _better(lr["brier_score"], comparison["prevalence_baseline"]["brier_score"], True)}      # AP of a constant is the prevalence: Brier only
     warnings = [_warning("VALIDATION_ONLY", "the comparison uses validation rows; the test set is read once, by the final evaluation", "result.validation_comparison")]
     return Outcome("trained", {"training_run_id": i.training_run_id, "training_rows": len(train), "models": models, "config_hash": h,
                                "validation_comparison": comparison, "logistic_beats_references_on_validation": beats,

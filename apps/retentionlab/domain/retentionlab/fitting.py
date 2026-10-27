@@ -1,4 +1,4 @@
-"""Fitting and scoring (D-02): preprocessing fitted on training rows only, three models, Platt calibration on validation rows only.
+"""Fitting and scoring (D-02): preprocessing fitted on training rows only, four models, Platt calibration on validation rows only.
 
 FLOATS ARE ALLOWED INSIDE THIS MODULE'S FITTING LOOPS ONLY (gradient descent, sigmoid). Everything that leaves a function is a frozen
 6-place decimal string: coefficients, preprocessing parameters, Platt a and b, probabilities. Every published metric is then computed
@@ -137,6 +137,15 @@ def predict_rule(rates: dict[str, str], features: dict[str, Any]) -> str:
     return rates["flagged" if rule_flag(features) else "unflagged"]
 
 
+def fit_prevalence(rows: Sequence[tuple[dict[str, Any], bool]]) -> str:
+    """The prevalence-constant baseline (D-09, R10-14): every account gets the training prevalence, frozen to 6 places. It ranks nothing
+    (all ties) and is the honest reference for a Brier comparison: a model that does not beat a constant has learned nothing about
+    calibration."""
+    if not rows:
+        raise E.DomainError(E.NO_TRAINING_ROWS, "the prevalence baseline needs training rows", "input.fit_rows")
+    return rnd(F(sum(1 for _, y in rows if y), len(rows)), 6)
+
+
 def fit_logistic(pre: dict[str, Any], rows: Sequence[tuple[dict[str, Any], bool]], l2: str = DEFAULT_L2, iterations: int = DEFAULT_ITERATIONS,
                  learning_rate: str = LEARNING_RATE) -> dict[str, str]:
     """Logistic regression by deterministic full-batch gradient descent: objective mean log-loss + (l2 / 2n) x sum(w^2) (the intercept
@@ -213,11 +222,13 @@ def model_config(config: dict[str, Any], name: str) -> dict[str, Any] | None:
 
 def train_models(pre: dict[str, Any], rows: Sequence[tuple[dict[str, Any], bool]], random_seed: int = 7, l2: str = DEFAULT_L2,
                  iterations: int = DEFAULT_ITERATIONS, learning_rate: str = LEARNING_RATE) -> list[dict[str, Any]]:
-    """The three model entries of a run's ``config.models``: the seeded random baseline, the business rule, the logistic regression."""
+    """The four model entries of a run's ``config.models``: the seeded random baseline, the business rule, the logistic regression and
+    the prevalence-constant baseline (appended last, D-09 R10-14)."""
     return [{"name": "random_baseline", "seed": random_seed},
             {"name": "business_rule", "rule": BUSINESS_RULE, "rates": fit_rule(rows)},
             {"name": "logistic_regression", "l2": l2, "iterations": iterations, "learning_rate": learning_rate,
-             "coefficients": fit_logistic(pre, rows, l2, iterations, learning_rate)}]
+             "coefficients": fit_logistic(pre, rows, l2, iterations, learning_rate)},
+            {"name": "prevalence_baseline", "prevalence": fit_prevalence(rows)}]
 
 
 def score_features(config: dict[str, Any], model: str, cutoff_id: str, features: dict[str, Any], calibrated: bool = True) -> str:
@@ -230,6 +241,8 @@ def score_features(config: dict[str, Any], model: str, cutoff_id: str, features:
         return random_probability(int(m["seed"]), cutoff_id)
     if model == "business_rule":
         return predict_rule(m["rates"], features)
+    if model == "prevalence_baseline":
+        return m["prevalence"]
     pre = config.get("preprocessing")
     if pre is None or "coefficients" not in m or not set(design_names(pre)) <= set(m["coefficients"]):
         raise E.DomainError(E.PREPROCESSING_REQUIRED, "the logistic model needs the fitted preprocessing it was trained with", "input.model")

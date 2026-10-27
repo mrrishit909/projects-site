@@ -27,6 +27,9 @@ def write_artefacts(conn: psycopg.Connection, run_id: str, config: dict[str, Any
         for term, value in sorted((m.get("rates") or {}).items()):
             conn.execute("INSERT INTO model_coefficients (training_run_id, model_name, term, value) VALUES (%s,%s,%s,%s)",
                          (run_id, m["name"], "rate_" + term, value))
+        if m.get("prevalence") is not None:
+            conn.execute("INSERT INTO model_coefficients (training_run_id, model_name, term, value) VALUES (%s,%s,%s,%s)",
+                         (run_id, m["name"], "prevalence", m["prevalence"]))
     cal = config.get("calibration")
     if cal and cal.get("method") == "platt":
         conn.execute("INSERT INTO calibration_maps (training_run_id, method, a, b, fit_rows) VALUES (%s,%s,%s,%s,%s)",

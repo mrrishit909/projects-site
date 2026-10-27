@@ -47,14 +47,14 @@ Identity headers `X-Actor-Id` (401 when missing) and `X-Actor-Role` in `scientis
 | C02 | `POST /commands/define-label` | scientist, admin | labels with censoring (null, never false); a censored label matures once |
 | C03 | `POST /commands/split-evaluation` | scientist, admin | creates a run with boundaries; split + label-window and group purge counts |
 | C04 | `POST /commands/fit-preprocessing` | scientist, admin | median / standardisation / missing indicators fitted on retained training rows; else LEAKAGE |
-| C05 | `POST /commands/train-baseline` | scientist, admin | random, rule and logistic (frozen strings); validation comparison |
+| C05 | `POST /commands/train-baseline` | scientist, admin | random, rule, logistic and the prevalence constant (frozen strings); validation comparison |
 | C06 | `POST /commands/calibrate-model` | scientist, admin | Platt on validation rows; CALIBRATION_ON_FIT_ROWS / LEAKAGE |
 | C07 | `POST /commands/score-accounts` | scientist, admin | predictions citing run, config_hash, feature_version, label_version; publication |
 | C08 | `POST /commands/prioritize-outreach` | scientist, analyst, admin | capacity-limited DRAFT queue; CAPACITY_EXCEEDS_POPULATION; RISK_NOT_RESPONSIVENESS; nothing is sent |
 | C09 | `POST /commands/simulate-economics` | scientist, analyst, admin | contact budget and expected value, labelled hypothetical |
 | C10 | `POST /commands/monitor-refresh` | scientist, admin | drift (PSI diagnostic), missingness, freshness, performance only on mature rows with the immature count |
 | R | `GET /data/{entity}` | none | 12 entities + `feature_registry`, `split_assignments`, `scoring_publications` (+ `audit_events`, `rejected_records`, `dataset_versions`); `limit` 1..200, opaque `cursor`, `from`/`to` half-open, whitelisted equality filters |
-| M | `GET /metrics` | none | `training_run_id`, `prediction_at` / `cutoff_id` (comma lists) or `from`/`to`, `as_of`, `scenario_id`, `model`, `reference_prediction_at` |
+| M | `GET /metrics` | none | `training_run_id`, `prediction_at` / `cutoff_id` (comma lists) or `from`/`to`, `as_of` (never later than the server clock: 422 `AS_OF_IN_FUTURE`), `scenario_id`, `model`, `reference_prediction_at` |
 
 Any other `POST /commands/{x}` is 404 `UNSUPPORTED_ACTION`. There is no route that sends anything.
 
@@ -68,6 +68,8 @@ Any other `POST /commands/{x}` is 404 `UNSUPPORTED_ACTION`. There is no route th
 | Each rule below the HTTP layer (registry codes, late arrival, window edges, eligibility, censoring, label/group purge, ties, bins, PSI floor, economics rounding) | `test_rules.py` |
 | Migrations from empty and idempotent; append-only; availability, citation, frozen-run, label-maturity triggers; NUMERIC(20,6); no float column | `test_migrations.py` |
 | SQL recomputation equals `expected.json` (all sets, both variants) and the domain on a fitted synthetic world, model-selectable | `test_sql_reference.py` (AP and PSI are NOT recomputed in SQL: Python only) |
+| Review R10 (D-09): a future `as_of` is refused and a stored censored label is never reported mature; the prevalence-constant model; a duplicated feature field is refused | `test_review10.py`, `test_api_reads.py` |
+| The fit depends on no account identifier and no row order: the 2,400-account world refitted with every account id permuted and every row list shuffled gives byte-identical frozen preprocessing, coefficients, rule rates, prevalence, Platt mapping and probabilities (the seeded random baseline, keyed by the cutoff id on purpose, is the one exception); seed-derived fields are refused | `test_generator.py::test_r10_10_*` |
 | Commands: 401/403/404/409/422, malformed, stale version, repeated, unsupported; idempotency bound to actor, role, dataset_version; server-stamped instants; lock order, deadlock retry then 409 CONCURRENT_UPDATE, concurrent identical requests run once; draft-only queue; hypothetical economics; monitor with immature labels | `test_api_commands.py` |
 | Reads: no records, one, multiple pages, invalid filter/cursor/window, stable order, evidence reconciliation, the metrics endpoint equals `expected.json`, `as_of`, K refusal | `test_api_reads.py` |
 | P10-TEST-01..12, DETECT and RECOVER from their smallest fixtures (`tests/fixtures/adversarial/p10-test-NN.json`); interruption leaves nothing; hostile input; role boundaries | `test_adversarial.py` |
@@ -94,6 +96,9 @@ Any other `POST /commands/{x}` is 404 `UNSUPPORTED_ACTION`. There is no route th
 18. **Labels.** Append-only except one transition: a censored label (`churned` NULL, `mature` false) becomes mature with a known outcome, once (trigger LABEL_IMMUTABLE otherwise).
 19. **C10 stores nothing** beyond its audit event and idempotent result; there is no monitoring history table.
 20. **Unit of idempotency payload.** Instants under `*_at` / `*_end` keys are hashed as the UTC instant they name.
+21. **`as_of` and stored labels (D-09, R10-01).** An `as_of` later than the server clock is 422 `AS_OF_IN_FUTURE`. A stored label that is censored stays censored in every report; a recomputed maturity that disagrees is listed in `consistency.labels_mismatched`. Only C02 matures a label, at the server clock.
+22. **The prevalence constant (D-09, R10-14).** `prevalence_baseline` is the fourth model: every account gets the training prevalence frozen to 6 places. It is stored (`model_coefficients`, term `prevalence`), scored and published like the others (migration 0003 widens the `model_name` checks).
+23. **Duplicate fields (D-09, R10-15).** A feature request naming a field twice is refused `DUPLICATE_FIELD`, after the other codes in priority, each repeated name listed once.
 
 ## Not implemented / open gaps
 

@@ -104,7 +104,7 @@ tc = load("test_cohort")
 COLS = tc["head"]["columns"]
 rows = [dict(zip(COLS, r)) for r in tc["rows"]]
 CUTS = tc["head"]["cutoffs"]
-PCOL = {"random_baseline": "p_random_baseline", "business_rule": "p_business_rule", "logistic_uncalibrated": "p_logistic_uncalibrated", "logistic_calibrated": "p_logistic_calibrated"}
+PCOL = {"random_baseline": "p_random_baseline", "business_rule": "p_business_rule", "logistic_uncalibrated": "p_logistic_uncalibrated", "logistic_calibrated": "p_logistic_calibrated", "prevalence_baseline": "p_prevalence_baseline"}
 KS = [1, 2, 5, 10, 20, 50, 100, 189, 500, 1513]
 SCEN = {s["scenario_id"]: s for s in base["intervention_scenarios"]}
 
@@ -194,7 +194,7 @@ def leaves(v, p=""):
 dr = {d["id"]: dict(leaves(d["realised"])) for d in manifest["designed_relationships"]}
 # DR-01: AP and Brier per model on the test population, and the margins
 t = test_table["test"]
-real = {m: (t[mm]["average_precision"], t[mm]["brier_score"]) for m, mm in (("random_baseline", "random_baseline"), ("business_rule", "business_rule"), ("logistic_regression", "logistic_calibrated"))}
+real = {m: (t[mm]["average_precision"], t[mm]["brier_score"]) for m, mm in (("random_baseline", "random_baseline"), ("business_rule", "business_rule"), ("logistic_regression", "logistic_calibrated"), ("prevalence_baseline", "prevalence_baseline"))}
 for m, (a, b) in real.items():
     need(f"DR-01 {m} AP", a, dr["DR-01"][f".{m}.average_precision"])
     need(f"DR-01 {m} Brier", b, dr["DR-01"][f".{m}.brier_score"])
@@ -202,6 +202,7 @@ lr, ru, ra = real["logistic_regression"], real["business_rule"], real["random_ba
 margins = {"ap_over_rule": p6(F(lr[0]) - F(ru[0])), "ap_over_random": p6(F(lr[0]) - F(ra[0])), "brier_under_rule": p6(F(ru[1]) - F(lr[1])), "brier_under_random": p6(F(ra[1]) - F(lr[1]))}
 for k, v in margins.items():
     need(f"DR-01 margin {k}", v, dr["DR-01"][f".margins.{k}"])
+need("DR-01 reference margin brier_under_prevalence_constant", p6(F(real["prevalence_baseline"][1]) - F(lr[1])), dr["DR-01"][".reference_margins.brier_under_prevalence_constant"])      # D-09 R10-14
 # DR-03: the PSI of the apac cohort in the test range
 need("DR-03 before change", [drift[CUTS[0]]["apac"]["psi"], drift[CUTS[1]]["apac"]["psi"]], [dr["DR-03"][".before_change_psi[0]"], dr["DR-03"][".before_change_psi[1]"]])
 need("DR-03 first after change", drift[CUTS[3]]["apac"]["psi"], dr["DR-03"][".after_change_psi[0]"])
@@ -222,7 +223,7 @@ need("DR-04 changed share", p6(F(r4[".test_rows_features_change_if_ignored"], r4
 
 ref = {"generated_by": "scripts/make-snapshot-reference.py", "python": sys.version.split()[0], "dataset_version": manifest["dataset_version"], "dataset_hash": manifest["dataset_hash"],
        "ks": KS, "cohort": cohort, "test_table": test_table, "gaps": gaps, "psi_by_region": drift,
-       "designed": {"leaves": {k: v for k, v in dr.items()}, "recomputed": {"DR-01": ["average_precision", "brier_score", "margins"], "DR-02": ["gap_pp by segment and region, overall"],
+       "designed": {"leaves": {k: v for k, v in dr.items()}, "recomputed": {"DR-01": ["average_precision", "brier_score", "margins", "reference_margins"], "DR-02": ["gap_pp by segment and region, overall", "largest regional gap", "Platt effect"],
                                                                          "DR-03": ["PSI in the four test cutoffs (before change and first after change)"], "DR-04": ["the shares as ratios of the manifest's counts"],
                                                                          "DR-05": ["eligible, censored, share, mature churn from the aggregates"]}}}
 out = Path(__file__).resolve().parent / "snapshot-reference.json"

@@ -1,6 +1,7 @@
 """The ten commands end to end (API over PostgreSQL): envelope, identity, roles, validation, idempotency, server-stamped instants, locking and
 the business results. Minimum request tests per command: valid, malformed, unknown resource, stale version, repeated command, unsupported action."""
 import json
+import re
 import threading
 from datetime import datetime, timedelta, timezone
 from fractions import Fraction
@@ -170,7 +171,8 @@ def test_pipeline_results_are_the_business_values_not_just_statuses(client, conn
     pre = out["preprocessing"].json()["result"]
     assert pre["fit_rows"] == 48 and pre["fitted_on"] == "retained training rows only"
     tr = out["train"].json()["result"]
-    assert tr["training_rows"] == 48 and [m["name"] for m in tr["models"]] == ["random_baseline", "business_rule", "logistic_regression"]
+    assert tr["training_rows"] == 48 and [m["name"] for m in tr["models"]] == ["random_baseline", "business_rule", "logistic_regression", "prevalence_baseline"]
+    assert tr["models"][3] == {"name": "prevalence_baseline", "prevalence": tr["models"][3]["prevalence"]} and re.fullmatch(r"\d\.\d{6}", tr["models"][3]["prevalence"])     # D-09 R10-14
     assert tr["models"][0] == {"name": "random_baseline", "seed": 7} and all(isinstance(v, str) for v in tr["models"][2]["coefficients"].values())
     assert out["train"].json()["warnings"][0]["code"] == "VALIDATION_ONLY"
     cal = out["calibrate"].json()["result"]

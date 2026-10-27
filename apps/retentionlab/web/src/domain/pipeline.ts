@@ -38,7 +38,8 @@ export function consistency(world: World, ingest: Ingest, splits: Splits, pubs: 
   }
   for (const lb of acc.labels) {
     const a = world.analyse(lb["cutoff_id"]);
-    if (!(a.eligible && lb["churned"] === a.churned && lb["mature"] === a.mature && lb["label_end"] === a.label_end)) out["labels_mismatched"]!.push(lb["label_id"]);
+    const [mature, churned] = world.recomputed(lb["cutoff_id"]);          // the rules' own maturity, not the authoritative one (D-09, R10-01)
+    if (!(a.eligible && lb["churned"] === churned && lb["mature"] === mature && lb["label_end"] === a.label_end)) out["labels_mismatched"]!.push(lb["label_id"]);
   }
   if (configHashes) for (const r of acc.training_runs) if (configHashes[r["training_run_id"]] !== r["config_hash"]) out["config_hash_mismatched"]!.push(r["training_run_id"]);
   for (const p of acc.predictions) {

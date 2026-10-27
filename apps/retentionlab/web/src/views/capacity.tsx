@@ -37,6 +37,8 @@ function Capacity({ ds }: { ds: Dataset }) {
   const rowsAt = pts.map((k) => ({ k, r: kAt(items, k) as Exclude<ReturnType<typeof kAt>, string>, e: effectOk && moneyOk ? ecoAt(items, k, { contact_cost: sc.contact_cost, assumed_effect: sc.assumed_effect, margin_value: sc.margin_value }) : null }));
   const qat = queueAt(ds);
   const claims = ds.manifest?.["published_cohort"]?.["economics"] as Record<string, Row> | undefined;
+  const fullWorld = ds.aggregates?.["economics_full_world"] as Row | undefined;                      // D-09 (R10-04): the same scenarios on the whole 2,400-account world
+  const fw = (id: string): Row | undefined => (fullWorld?.["scenarios"] as Record<string, Row> | undefined)?.[id];
   const queueRows = ds.scenarios.map((r) => ({ r, m: ds.setAt(qat, ds.primaryModel, r["scenario_id"]) })).filter((x) => x.m["economics"]);
   const markers = ds.scenarios.map((r) => r["capacity"] as number);
   const exportRows = rowsAt.map(({ k, r, e }) => [k, r.hits, r.precision, r.recall, r.lift, r.tie_split ? "yes" : "no", e && e !== REFUSAL_K ? e.contact_budget : null, e && e !== REFUSAL_K ? e.expected_value : null]);
@@ -121,15 +123,17 @@ function Capacity({ ds }: { ds: Dataset }) {
       </section>
       <section className="paper" data-testid="published-economics" aria-labelledby="pub-h">
         <h2 id="pub-h">The published scenarios on the draft queue</h2>
-        <p>The queue is the top K by risk among the {queueRows[0] ? n0(queueRows[0].m["outreach_queue"].population) : "—"} accounts scored at {qat.slice(0, 10)}. Their outcomes are not known yet (the window is open), so only the budget and the hypothetical value exist. Recomputed here, with the manifest's figures beside them.</p>
+        <p>The queue is the top K by risk among the <Fig k="cohort-scored">{queueRows[0] ? n0(queueRows[0].m["outreach_queue"].population) : "—"}</Fig> scored accounts of the <strong>published cohort</strong> at {qat.slice(0, 10)}. Their outcomes are not known yet (the window is open), so only the budget and the hypothetical value exist. Recomputed here, with the manifest's figures beside them.
+          {fullWorld && fw("sc-001") && <> The same three scenarios on the <strong>whole 2,400-account world</strong> ({n0(fw("sc-001")!["scored_accounts"])} scored accounts) are worth {ds.scenarios.map((r) => `${fw(r["scenario_id"])?.["expected_value"]} at K ${r["capacity"]}`).join(", ")} (USD, hypothetical, by the domain, published in <code>cutoff_aggregates.json</code>); the two populations differ, so the two sets of figures differ.</>}</p>
         <Scroll label="Published scenarios">
           <table data-testid="published-table">
             <caption>Each scenario was fixed before any outcome was looked at; the assumptions were changed once after the first run (disclosure D-G02 item 7).</caption>
-            <thead><tr><th scope="col">Scenario</th><th scope="col">K</th><th scope="col">Cost</th><th scope="col">Effect</th><th scope="col">Margin</th><th scope="col">Budget</th><th scope="col">Expected value (hypothetical)</th><th scope="col">Manifest</th></tr></thead>
+            <thead><tr><th scope="col">Scenario</th><th scope="col">K</th><th scope="col">Cost</th><th scope="col">Effect</th><th scope="col">Margin</th><th scope="col">Budget</th><th scope="col">Expected value, published cohort ({queueRows[0] ? n0(queueRows[0].m["outreach_queue"].population) : "—"} scored accounts; hypothetical)</th><th scope="col">Manifest</th>{fullWorld && <th scope="col">Expected value, full world ({n0(fw("sc-001")?.["scored_accounts"] ?? 0)} scored accounts; hypothetical)</th>}</tr></thead>
             <tbody>{queueRows.map(({ r, m }) => { const e = m["economics"]; const c = claims?.[r["scenario_id"]]; return (
               <tr key={r["scenario_id"]} data-scenario={r["scenario_id"]}><td className="l">{r["scenario_id"]}</td><td>{r["capacity"]}</td><td>{r["contact_cost"]}</td><td>{r["assumed_effect"]}</td><td>{r["margin_value"]}</td>
                 <td data-k="budget">{e.contact_budget}</td><td data-k="ev" className={e.expected_value.startsWith("-") ? "neg" : ""}>{e.expected_value}</td>
-                <td className="t">{c ? (c["expected_value"] === e.expected_value && c["contact_budget"] === e.contact_budget ? <Chip kind="ok">equal</Chip> : <Chip kind="risk">differs</Chip>) : "—"}</td></tr>); })}</tbody>
+                <td className="t">{c ? (c["expected_value"] === e.expected_value && c["contact_budget"] === e.contact_budget ? <Chip kind="ok">equal</Chip> : <Chip kind="risk">differs</Chip>) : "—"}</td>
+                {fullWorld && <td data-k="ev-full" className={String(fw(r["scenario_id"])?.["expected_value"]).startsWith("-") ? "neg" : ""}>{fw(r["scenario_id"])?.["expected_value"] ?? "—"}</td>}</tr>); })}</tbody>
           </table>
         </Scroll>
         <p>The value turns negative as K grows: each extra contact has a lower risk and the same cost. That is the shape of the decision, and it depends entirely on the assumed effect.</p>

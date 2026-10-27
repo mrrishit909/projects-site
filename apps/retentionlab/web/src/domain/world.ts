@@ -44,6 +44,10 @@ export class World {
   scenarios = new Map<string, Row>();
   preds = new Map<string, Row>();
   private cache: Map<string, Analysis>;
+  /** The stored label of each cutoff (D-09, R10-01): a stored CENSORED label is authoritative, so a recomputed maturity that disagrees is a
+   * consistency finding (`recomputed`), never a relabel. */
+  readonly storedLabels = new Map<string, Row>();
+  private recomputedCache = new Map<string, readonly [boolean, boolean | null]>();
   private rowsByAt = new Map<string, Row[]>();
 
   constructor(readonly data: Row, readonly acc: Record<Entity, Row[]>, cache?: Map<string, Analysis>) {
@@ -60,7 +64,26 @@ export class World {
     for (const r of acc.training_runs) this.runs.set(r["training_run_id"], r);
     for (const s of acc.intervention_scenarios) this.scenarios.set(s["scenario_id"], s);
     for (const p of acc.predictions) this.preds.set(`${p["training_run_id"]}\u0000${p["cutoff_id"]}`, p);
+    for (const l of acc.labels ?? []) this.storedLabels.set(l["cutoff_id"], l);
     this.cache = cache ?? new Map();
+  }
+  /** (mature, churned) as the rules compute them from the events and the as_of alone, ignoring the stored label. */
+  recomputed(cutoffId: string): readonly [boolean, boolean | null] {
+    this.analyse(cutoffId);
+    return this.recomputedCache.get(cutoffId) ?? this.recomputedFrom(cutoffId);
+  }
+  private recomputedFrom(cutoffId: string): readonly [boolean, boolean | null] {
+    const a = this.cache.get(cutoffId)!;
+    const c = this.cutoffs.get(cutoffId)!;
+    const mature = parseTs(c["horizon_end"]) + daysUs(this.grace) <= this.asOf;
+    let churned: boolean | null = null;
+    if (a.eligible && mature) {
+      const pa = parseTs(c["prediction_at"]), he = parseTs(c["horizon_end"]), labelEnd = he + daysUs(this.grace);
+      churned = (this.byAcct.subscription_events.get(a.account_id) ?? []).some((s) => s["event_type"] === "cancel" && pa <= parseTs(s["event_at"]) && parseTs(s["event_at"]) < he && parseTs(s["available_at"]) < labelEnd);
+    }
+    const r = [mature, churned] as const;
+    this.recomputedCache.set(cutoffId, r);
+    return r;
   }
   /** The same world with other predictions, publications, runs and scenarios (the analysis cache is shared): one view per model. */
   withEntities(extra: Partial<Record<Entity, Row[]>>): World {
@@ -75,7 +98,8 @@ export class World {
     const c = this.cutoffs.get(cutoffId)!;
     const pa = parseTs(c["prediction_at"]), obs = parseTs(c["observation_start"]), he = parseTs(c["horizon_end"]);
     const labelEnd = he + daysUs(this.grace);
-    const mature = labelEnd <= this.asOf;
+    const stored = this.storedLabels.get(cutoffId);
+    const mature = labelEnd <= this.asOf && !(stored !== undefined && stored["mature"] === false);       // a stored censored label is never reported mature
     const aid = c["account_id"];
     const row: Analysis = { cutoff_id: cutoffId, account_id: aid, prediction_at: isoZ(pa)!, eligible: false, ineligible_code: null, label_end: isoZ(labelEnd)!, mature,
       churned: null, features: null, max_available_at: null, arrived_late: null };

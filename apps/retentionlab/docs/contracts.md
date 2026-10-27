@@ -159,10 +159,10 @@ are the binding form. The points that sharpen D-01..D-04:
 ## D-07 Synthetic world (adopted from the generator hand-back; the 14 numbered assumptions are in generate.py and the manifest)
 Seed 20261026; 2,400 accounts over 4 segments and 5 regions, monthly cutoffs 2025-01-01 .. 2026-09-01 (90-day horizon,
 14-day grace), `as_of` 2026-10-05T00:00:00Z; one training run (train to 2025-10-01, validation to 2026-02-01, test to
-2026-06-01) fitted by the domain; `dataset_version` rl-20261026-20261026, `dataset_hash` 11d2975c…, `generated_at` =
-`as_of`; 4,346,284 bytes published.
+2026-06-01) fitted by the domain; `dataset_version` rl-20261026-20261026, `dataset_hash` 9ebaaada…, `generated_at` =
+`as_of`; 4,614,525 bytes published (D-09 added the prevalence-constant model, so the cohort carries four models' predictions).
 * **The published files are the complete records of a uniform 200-account cohort** (13,329 usage, 1,646 subscription,
-  1,567 billing and 322 support events; 970 cutoffs; 765 feature rows; 769 labels; 1,842 predictions; 36 publications;
+  1,567 billing and 322 support events; 970 cutoffs; 765 feature rows; 769 labels; 2,456 predictions; 48 publications;
   3 scenarios; 35 draft queue rows) plus `test_cohort.json` (all 1,513 mature eligible test-range rows of the full world
   with features, outcome and the four probabilities), `cutoff_aggregates.json` (per-cutoff counts and metrics for all
   2,400 accounts and the drift series), `calibration.json`, `split_summary.json`. The domain evaluates the full world in
@@ -176,15 +176,17 @@ Seed 20261026; 2,400 accounts over 4 segments and 5 regions, monthly cutoffs 202
   per model. Scoring instants are generator choices. The test range is evaluated as the union of its four cutoffs (the
   per-cutoff metrics are also published). Scenario capacities 5, 10, 20 fixed before any outcome, `selected_on`
   validation.
-* Designed relationships, realised by the domain on the 1,513-row test population (prevalence about 0.134): logistic
+* Designed relationships, realised by the domain on the 1,513-row test population (prevalence 0.124917): logistic
   (Platt) AP 0.2386 and Brier 0.1050 against the rule 0.1367 / 0.1093 and random 0.1268 / 0.3265 (DR-01; the latent
   propensity scores AP 0.310, in `synthetic_truth` only); DR-02 starter segment calibration gap −8.07 pp (overall
   −2.86) from an unobserved repricing on 2026-02-01; DR-03 apac `usage_events_30d` PSI 0.491–0.765 from 2026-05-01
   (60 % of logins unrecorded from 2026-03-31) while the whole population stays below 0.03; DR-04 ignoring
   `available_at` would change a feature on 11.57 % of test rows (three of four features flip); DR-05 3,594 of 9,039
-  eligible rows (39.8 %) censored, mature churn 0.108. Training 744 rows (79 churners), validation 289 (27), purge
+  eligible rows (39.8 %) censored, mature churn 0.104500. Training: 1,088 retained rows, 744 eligible and mature for fitting (79 churners); validation: 384 retained rows, 289 eligible and mature for
+  calibration (27 churners); purge
   counts published (train loses 879 LABEL_WINDOW, 124 GROUP_TEST, 52 GROUP_VALIDATION; validation 1,291 and 13).
-  Economics at the 2026-09-01 cutoff: capacity 5 → +21.38, 10 → −6.87, 20 → −95.46, all hypothetical. Scoring freshness
+  Economics at the 2026-09-01 cutoff on the 97 scored accounts of the published cohort: capacity 5 → +21.38, 10 → −6.87, 20 → −95.46; on the whole 2,400-account
+  world (1,241 scored accounts) the same scenarios give +81.13, +71.04, −29.12 (D-09 R10-04); all hypothetical. Scoring freshness
   812 h, data freshness 0 h.
 * Injections INJ-01..12 map to P10-TEST-01..12 (INJ-02/03/04/07 present in the data, the rest request-level), with 12
   replay events of 33 steps through the API at server clock 2026-10-05T12:00Z.
@@ -216,7 +218,7 @@ Seed 20261026; 2,400 accounts over 4 segments and 5 regions, monthly cutoffs 202
   state is module memory; nothing uses browser storage. System font stacks only.
 * Edge cases pinned by the check scripts: a cancellation at the cutoff instant counts as churn; `available_at` equal to
   the cutoff counts as arrived late; a label window ending exactly on a boundary does not cross it; two predictions for
-  one (run, cutoff) keep the later row. Fifteen of the 104 designed-relationship figures need the full event history
+  one (run, cutoff) keep the later row. Fifteen of the 116 designed-relationship figures (104 before D-09 added the prevalence reference, the largest regional gap and the Platt effect, all recomputed here) need the full event history
   and are shown as "published, full world", not recomputed. apac PSI also spikes in some small pre-change months and
   the page says so. The scaffold's `postbuild-routes.mjs` route list and `node-shim.d.ts` were corrected for this app.
 
@@ -224,3 +226,64 @@ Seed 20261026; 2,400 accounts over 4 segments and 5 regions, monthly cutoffs 202
 Mode A: Python domain (features, labels, splits, fitting, calibration, scoring, metrics) + PostgreSQL + FastAPI
 verified on hosted runners. Mode B: TypeScript mirror over the published snapshot (frozen predictions and rows);
 the capacity planner, the economics simulation and the outreach queue are browser-memory simulations and say so.
+
+## D-09 Review fixes (adopted from review R10)
+Binding coordinator decisions after review R10. One bullet per item; where an alternative was rejected it is named. `CONTRACT_VERSION` is unchanged (no
+stored fact of the golden fixture moved); the data generator output, the migrations (0003) and the site moved, and the corrections to D-07 above are part of this
+decision.
+* **R10-01 Future as-of and stored labels.** `GET /metrics` refuses an `as_of` later than the server clock with 422 `AS_OF_IN_FUTURE` (`rules.check_as_of`;
+  mirrored by `checkAsOf` in the TypeScript domain, the only place a planner could choose an as-of: the site offers no such control, so the guard is exercised by
+  `scripts/review-check.ts`). The analysis never reports a row as mature when its stored label is censored: stored labels are authoritative (`World.analyse`),
+  and a recomputed maturity that disagrees is a consistency finding (`labels_mismatched`), not a relabel; the one writer that matures a label is C02
+  `define-label`, which reads the rules' own maturity (`World.recomputed`) at the server clock. Rejected: letting a later `as_of` overwrite the stored label (the
+  reviewer's case: clock 2026-05-01T12:00Z, set 2026-03-01, `as_of=2026-07-01` produced a churn rate for rows whose label is censored); clamping the `as_of` to
+  the clock silently (a hidden change of the question asked). Detect/recover tests: `tests/test_review10.py` (the reviewer's case through the API; the golden cohort
+  with a 2027 as-of through the domain), `tests/test_api_reads.py::test_as_of_decides_what_is_known_and_what_is_mature`, `scripts/review-check.ts` world 30. The
+  earlier tests that read at an `as_of` later than the stepping test clock now read at a clock moved past the `as_of` for the call (`support_db.get`); no assertion
+  was weakened.
+* **R10-02 Contrast on the cream panels.** Chips, definition links, folds and labels on `.paper` use a dark brass (`#6b4f17`, 6.5:1 on the cream) and the
+  `<dt>` labels of the case-study card the plum ink; the note emphasis uses the coral ink. `e2e/review10.spec.ts` measures every text node under 18 px on every route
+  at 1280 px (definitions and folds opened) and fails below 4.5:1, disabled controls excepted (large text, 24 px or 18.66 px bold, needs 3:1). Rejected: darkening
+  the shared gold token (it is the right colour on the plum ground).
+* **R10-03 The model card at 360 px.** Below 480 px the `dt`/`dd` pairs stack; identifiers wrap after an underscore (`<wbr>`) or a hyphen only, never inside a word
+  (`word-break: break-all` and `overflow-wrap: anywhere` are gone from `dd`). `e2e/review10.spec.ts` checks stacking, the absence of `break-all`, and every line
+  break between two letters of one word on the card at 360 px.
+* **R10-04 The population under every economic figure.** Wherever the economics appear they name the population they are computed on ("97 scored accounts of the
+  published cohort") and the full-world values are shown beside them: +81.13 / +71.04 / −29.12 on 1,241 scored accounts, computed by the domain over the full
+  world and published as `economics_full_world` in `cutoff_aggregates.json` (and the manifest). `tests/test_generator.py` asserts them (and recomputes them from
+  the full inputs without the generator's helper). Rejected: replacing the cohort's figures (the browser recomputes the cohort; it cannot recompute the world).
+* **R10-05 Test counts.** The evidence and case-study routes state the counts of the final run from one place (`web/src/lib/counts.ts`), so the two routes cannot
+  disagree with each other or with the run: 342 Python tests (`pytest`; 323 before these fixes plus 19 for them), 1,823 stdlib reference checks, 3,197 mirror checks
+  (`npm run golden`), 95 adversarial mirror checks (`npm run review`) and 90 browser tests. The routes carried no test count before; the coordinator's 323 is the
+  pre-fix pytest figure and is not what the final run reports, so the site states the count it was built with.
+* **R10-06 Rows are not accounts.** The models page states rows and distinct accounts (1,513 rows from 442 accounts; 189 churning rows from 95 accounts) and that
+  the rows are correlated across overlapping cutoffs and no interval is given. Rejected: a cluster-robust interval (it would claim more than the design supports).
+* **R10-07 The monitoring page states the whole apac series.** It prints all 21 values, the 0.0001-floor artefact (four of the five pre-change exceedances have a
+  floored empty bin on 57 reference rows; the fifth is ordinary sampling variation) and labels the five pre-change exceedances as false positives and the five
+  from 2026-05-01 as the shift; the case study matches. `floored_bins` is published per region and cutoff in `cutoff_aggregates.json`. Rejected: raising the floor
+  or changing the PSI (D-P10-10 binds).
+* **R10-08 Platt scaling made the model worse on test.** The calibration page says so: Brier 0.104515 → 0.105019, overall gap −2.26 → −2.86 pp, and why (289 fit rows,
+  all from one cutoff, 2025-10-01: the label-window purge removes the later validation cutoffs). `platt_effect` and `fit_rows_by_cutoff` are in
+  `calibration.json`. Rejected: refitting Platt on more rows after seeing test outcomes (an outcome-informed change); the published result stands and is disclosed.
+* **R10-09 apac's calibration gap.** The page names apac as the largest regional gap (−10.68 pp) and labels it a one-draw realisation of this seed, not a designed
+  relationship (the instrumentation change was designed to move apac's usage distribution, not its calibration). Rejected: designing a regional calibration effect
+  after the fact.
+* **R10-10 P10-TEST-12 reinterpreted.** P10-TEST-12 (an identifier-derived feature) was tested only as a refusal of seed-derived and id-derived fields. It is
+  reinterpreted as "the fitted model depends on no identifier and no row order" and checked by construction: the same world with every account id permuted (cutoff
+  ids follow) and every row list shuffled is refitted, and the frozen preprocessing, coefficients, rule rates, prevalence, Platt mapping and every probability of the
+  logistic, rule and prevalence models are byte-identical (`tests/test_generator.py::test_r10_10_*`; the seeded random baseline is keyed by the cutoff id on purpose
+  and is excluded). The refusal of seed-derived fields (INJ-12) stays, in the same test. README sentence added.
+* **R10-11 Outcome-informed choices on the case study.** The manifest's D-G02 (eight numbered items, including the INJ-02 examples allowed in any range and the
+  starter repricing uplift 700 → 600) and D-G03 (the hash-assigned split roles, the consequence for the test population, the injected violators) carry `items`;
+  the case-study route lists all eleven, and `e2e/review10.spec.ts` compares the list with the manifest. Rejected: leaving the roles out because they are a design
+  choice (they shape the test population).
+* **R10-12 Corrections to D-07.** "prevalence about 0.134" is 0.124917 and "mature churn 0.108" is 0.104500 (both corrected above).
+* **R10-13 Training rows.** Wherever "744 training rows" appeared the text says "1,088 retained rows, 744 eligible and mature for fitting" (validation: 384 retained,
+  289 eligible and mature for calibration).
+* **R10-14 A prevalence-constant baseline.** `prevalence_baseline` is a fourth model in `fitting.py` (`fit_prevalence`: the training prevalence, frozen to 6 places,
+  for every account), in the generator's predictions and publications, the test table (`p_prevalence_baseline`), the models page and its margins table, and in the
+  schema (migration `0003_prevalence_model.sql` widens the `model_name` checks). The stated margins stay as declared against the rule and the random baseline; the
+  margin over the constant (Brier 0.109664 − 0.105019 = 0.004645) is a reference, not a target, and the page says that the Brier margin over the random baseline
+  (random Brier 0.326543) is the uninformative one. C05 reports `beats.prevalence_baseline` on Brier only (the AP of a constant is the prevalence).
+* **R10-15 Smaller defects.** `num.ts` scale comments say 10^90; a feature request naming a field twice is refused `DUPLICATE_FIELD` (last in the priority, after
+  UNKNOWN_FEATURE; every repeated name is listed once; Python, TypeScript and the API); the snapshot reference's DR-03 label leaf is a compared value.

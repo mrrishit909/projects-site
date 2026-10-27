@@ -10,7 +10,7 @@ import hashlib
 import json
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
@@ -160,8 +160,25 @@ def offending(response) -> list[dict[str, str]]:
     return [o for d in response.json()["error"]["details"] for o in d.get("context", {}).get("offending", [])]
 
 
-def get(client, path: str, **params):
-    r = client.get(f"{PREFIX}{path}", params={k: v for k, v in params.items() if v is not None})
+def get(client, path: str, _server_clock: bool = False, **params):
+    """GET one route. A report read at ``as_of`` is a read made AFTER that instant (D-09, R10-01: an as_of later than the server clock is refused
+    AS_OF_IN_FUTURE), so the frozen clock is moved to an hour after the as_of for the duration of the call and then put back, unless
+    ``_server_clock`` asks for the clock as it is (the tests of the refusal)."""
+    from api import clock
+    moved = None
+    if path == "/metrics" and params.get("as_of") and not _server_clock and clock._next is not None:
+        try:
+            later = ts(params["as_of"]) + timedelta(hours=1)
+        except ValueError:                                  # an invalid as_of is the test's point: leave the clock alone
+            later = None
+        if later is not None:
+            moved = (clock._next, clock._step)
+            clock.freeze(later, moved[1])
+    try:
+        r = client.get(f"{PREFIX}{path}", params={k: v for k, v in params.items() if v is not None})
+    finally:
+        if moved is not None:
+            clock.freeze(*moved)
     no_float(r)
     return r
 

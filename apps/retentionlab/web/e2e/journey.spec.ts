@@ -87,7 +87,7 @@ test("models: the figures equal the Python digests; the margin is labelled as re
   await ready(page);
   await page.getByTestId("model-table").waitFor();
   const t = ref.test_table["test"]!;
-  for (const [row, key] of [["random_baseline", "random_baseline"], ["business_rule", "business_rule"], ["logistic_uncalibrated", "logistic_uncalibrated"], ["logistic_calibrated", "logistic_calibrated"]] as const) {
+  for (const [row, key] of [["random_baseline", "random_baseline"], ["business_rule", "business_rule"], ["logistic_uncalibrated", "logistic_uncalibrated"], ["logistic_calibrated", "logistic_calibrated"], ["prevalence_baseline", "prevalence_baseline"]] as const) {
     const r = page.locator(`[data-testid=model-table] tr[data-model=${row}]`);
     await expect(r.locator("[data-k=ap]")).toHaveText(t[key]!.average_precision);
     await expect(r.locator("[data-k=brier]")).toHaveText(t[key]!.brier_score);
@@ -307,8 +307,8 @@ test("cohorts and evidence: filters with a no-data way out; designed relationshi
   await expect(page.locator("[data-testid=cohort-segment] tr")).toHaveCount(5);
   await page.goto("evidence/");
   await ready(page);
-  await expect(fig(page, "dr-ok")).toHaveText("104");
-  await expect(fig(page, "dr-total")).toHaveText("104");
+  await expect(fig(page, "dr-ok")).toHaveText("116");
+  await expect(fig(page, "dr-total")).toHaveText("116");
   await expect(fig(page, "inj-ok")).toHaveText("32");
   await expect(fig(page, "replay-ok")).toHaveText("19");
   await expect(page.getByTestId("disclosures").locator("li")).toHaveCount(9);
