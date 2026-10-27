@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T04:49:35Z",
+  "updated_at": "2026-10-27T04:52:14Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -293,7 +293,7 @@
       },
       "generator": {
         "commit": "e81c2b4",
-        "status": "done; CI pending"
+        "status": "done; Mode A green on hosted runner (run 40451829378)"
       }
     }
   },
