@@ -624,7 +624,8 @@
       "id": "T-09-05",
       "project": "09-changeworks",
       "title": "Independent disproof review, fixes, republish",
-      "status": "pending"
+      "status": "in_progress",
+      "assignment": "A-074 (review); fix worker next"
     },
     {
       "id": "T-09-06",
