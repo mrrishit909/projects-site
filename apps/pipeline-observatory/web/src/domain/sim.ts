@@ -23,26 +23,34 @@ export function retryAdvice(reason: string): { disposition: Disposition; text: s
 }
 export interface RetryOutcome { kind: string; reason: string | null }
 /** Replay one payload as a new row of a source whose accepted keys are `acceptedKeys` (the keys visible to the caller; extended only on acceptance). */
-export function retryRow(sourceKey: string | null, payload: unknown, acceptedKeys: ReadonlySet<unknown>): RetryOutcome {
+export function retryRow(sourceKey: string | null, payload: unknown, acceptedKeys: ReadonlySet<unknown>, cutoff: unknown = null): RetryOutcome {
   const keys = new Set<unknown>(acceptedKeys);
-  const d = classifyRows([{ raw_record_id: "rr-retry", source_key: sourceKey, payload_json: payload }], keys)[0]!;
+  const d = classifyRows([{ raw_record_id: "rr-retry", source_key: sourceKey, payload_json: payload }], keys, new Set(), true, null, cutoff)[0]!;
   return { kind: d.kind, reason: d.reason };
 }
 
 // ------------------------------------------------------------------------------------------------------------ backfill console
 export interface BackfillAsk { source_id: string; start_at: string; end_at: string }
-export interface BackfillDecision { accepted: boolean; code: string | null; message: string; partitions: string[]; overlaps_with: string | null }
-/** The domain's decision on a backfill request against the accepted requests (half-open ranges, daily UTC partitions; touching ranges are allowed). */
+export interface BackfillDecision { accepted: boolean; code: string | null; message: string; partitions: string[]; overlaps_with: string | null; revisits: { backfill_id: string; partition: string }[] }
+/** The domain's decision on a backfill request against the accepted requests (half-open ranges, daily UTC partitions; touching ranges are allowed).
+ * Only requests still requested or running block (D-09, R8-12); a settled (partial or complete) request does not, and the partitions of the ask that
+ * a partial request left unverified are listed in `revisits`: the recovery path. */
 export function decideBackfill(accepted: Row[], ask: BackfillAsk): BackfillDecision {
   let partitions: string[];
   try { partitions = checkRange(ask.start_at, ask.end_at); }
   catch (e) {
-    if (e instanceof DomainError) return { accepted: false, code: e.code, message: e.message.replace(/^[A-Z_]+: /, ""), partitions: [], overlaps_with: null };
-    return { accepted: false, code: E.INVALID_RANGE, message: "start_at and end_at must be UTC instants such as 2026-09-01T00:00:00Z", partitions: [], overlaps_with: null };
+    if (e instanceof DomainError) return { accepted: false, code: e.code, message: e.message.replace(/^[A-Z_]+: /, ""), partitions: [], overlaps_with: null, revisits: [] };
+    return { accepted: false, code: E.INVALID_RANGE, message: "start_at and end_at must be UTC instants such as 2026-09-01T00:00:00Z", partitions: [], overlaps_with: null, revisits: [] };
   }
   const hit = findOverlap(accepted, { source_id: ask.source_id, start_at: ask.start_at, end_at: ask.end_at });
-  if (hit) return { accepted: false, code: E.BACKFILL_OVERLAP, message: `overlaps ${hit["backfill_id"]} [${isoZ(hit["start_at"])}, ${isoZ(hit["end_at"])}) of the same source; two backfills over overlapping ranges cannot run together`, partitions, overlaps_with: hit["backfill_id"] };
-  return { accepted: true, code: null, message: `accepted: ${partitions.length} daily partition${partitions.length === 1 ? "" : "s"}, none verified yet`, partitions, overlaps_with: null };
+  if (hit) return { accepted: false, code: E.BACKFILL_OVERLAP, message: `overlaps ${hit["backfill_id"]} [${isoZ(hit["start_at"])}, ${isoZ(hit["end_at"])}) of the same source, which is still ${hit["status"]}; two backfills over overlapping ranges cannot run together`, partitions, overlaps_with: hit["backfill_id"], revisits: [] };
+  const revisits: { backfill_id: string; partition: string }[] = [];
+  for (const o of accepted) {
+    if (o["source_id"] !== ask.source_id || o["status"] !== "partial") continue;
+    for (const p of (o["partitions"] ?? []) as Row[]) if (!p["verified"] && partitions.includes(p["partition"])) revisits.push({ backfill_id: o["backfill_id"], partition: p["partition"] });
+  }
+  const again = revisits.length ? `; it backfills again ${revisits.map((r) => `${r.partition} (left unverified by ${r.backfill_id}, which has settled)`).join(", ")}` : "";
+  return { accepted: true, code: null, message: `accepted: ${partitions.length} daily partition${partitions.length === 1 ? "" : "s"}, none verified yet${again}`, partitions, overlaps_with: null, revisits };
 }
 
 // ------------------------------------------------------------------------------------------------------------ gate what-if / fault injection

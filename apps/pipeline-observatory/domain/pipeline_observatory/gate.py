@@ -1,10 +1,26 @@
-"""Fail-closed quality gate and the atomic publication pointer (D-02, D-P8-08)."""
+"""Fail-closed quality gate and the atomic publication pointer (D-02, D-P8-08, D-09 R8-02)."""
 from __future__ import annotations
 
 from typing import Any, Iterable
 
+from .timeutil import parse_ts
+
 CRITICAL = "critical"
 ALLOWED, BLOCKED = "allowed", "blocked"
+#: The two critical checks D-09 adds (R8-02): a publication may not silently omit a batch that was committed before its run started, nor a late event.
+SCOPE_COMPLETE = "scope_complete"
+LATE_EVENTS_INCLUDED = "late_events_included"
+
+
+def scope_complete(committed: Iterable[tuple[str, Any]], included: Iterable[str], scope_from: Any, until: Any) -> tuple[int, list[str]]:
+    """``scope_complete``: every committed batch of the run's scope is in the candidate publication. ``committed`` is (batch_id, committed_at) of
+    every committed batch; the scope is the batches committed in ``[scope_from, until)`` (``scope_from`` None = from the beginning, ``until`` = the
+    instant the run started). Returns (eligible = batches in scope, the ids missing from ``included``)."""
+    lo = parse_ts(scope_from) if scope_from is not None else None
+    hi = parse_ts(until)
+    scope = sorted(b for b, at in committed if (lo is None or parse_ts(at) >= lo) and parse_ts(at) < hi)
+    have = set(included)
+    return len(scope), [b for b in scope if b not in have]
 
 
 def check_passed(result: dict[str, Any]) -> bool:

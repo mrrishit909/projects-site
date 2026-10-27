@@ -34,7 +34,7 @@ def test_every_entity_reads_with_the_envelope_and_no_float(gold, entity):
 
 def test_entities_read_the_loaded_golden_rows(gold):
     assert [r["source_id"] for r in get(gold, "/data/source_contracts").json()["data"]] == ["src-orders", "src-refunds"]
-    assert get(gold, "/data/raw_records").json()["meta"]["total_count"] == 31 and get(gold, "/data/accepted_records").json()["meta"]["total_count"] == 9
+    assert get(gold, "/data/raw_records").json()["meta"]["total_count"] == 32 and get(gold, "/data/accepted_records").json()["meta"]["total_count"] == 9
     assert [r["publication_id"] for r in get(gold, "/data/publications").json()["data"]] == ["pub-001", "pub-003"]
     p = get(gold, "/data/publications", run_id="run-003").json()["data"][0]
     assert p["published_at"] == "2026-10-04T20:15:00Z" and p["watermark"] == "2026-10-04T11:00:00Z" and p["included_batch_ids"] == ["b-001", "b-002", "b-101"]
@@ -48,11 +48,11 @@ def test_cursor_pagination_is_stable_with_no_duplicates_or_gaps(gold):
         body = get(gold, "/data/raw_records", limit=7, cursor=cursor).json()
         seen += [r["raw_record_id"] for r in body["data"]]
         pages += 1
-        assert body["meta"]["total_count"] == 31
+        assert body["meta"]["total_count"] == 32
         cursor = body["meta"]["next_cursor"]
         if cursor is None:
             break
-    assert pages == 5 and len(seen) == 31 and len(set(seen)) == 31 and seen == sorted(seen)
+    assert pages == 5 and len(seen) == 32 and len(set(seen)) == 32 and seen == sorted(seen)
     ids, cursor = [], None                                                                   # composite keys page too (accepted_records: source_id, source_key)
     while True:
         body = get(gold, "/data/accepted_records", limit=4, cursor=cursor).json()
@@ -100,7 +100,7 @@ def test_reads_never_need_an_actor_and_the_error_envelope_has_a_request_id(gold)
 def test_filter_values_are_parameters_not_sql(gold):
     r = get(gold, "/data/raw_records", source_key="x'; DROP TABLE raw_records; --")
     assert r.status_code == 200 and r.json()["data"] == []
-    assert get(gold, "/data/raw_records").json()["meta"]["total_count"] == 31
+    assert get(gold, "/data/raw_records").json()["meta"]["total_count"] == 32
 
 
 # ------------------------------------------------------------------------------------------------------------ /metrics
@@ -132,7 +132,7 @@ def test_metrics_window_is_half_open_on_each_entitys_primary_instant(gold):
 
 def test_metrics_source_filter_and_group_by_source(gold):
     one = metrics(gold, source_id="src-refunds", cutoff=CUTOFF)["data"]
-    assert sorted(one["metrics"]["ingestion"]["sources"]) == ["src-refunds"] and one["metrics"]["ingestion"]["overall"]["received"] == 1
+    assert sorted(one["metrics"]["ingestion"]["sources"]) == ["src-refunds"] and one["metrics"]["ingestion"]["overall"]["received"] == 2
     assert set(one["metrics"]["completeness"]) == {"src-refunds"} and one["source_id"] == "src-refunds"
     grouped = metrics(gold, group_by="source", cutoff=CUTOFF)["data"]
     assert sorted(grouped["groups"]) == ["src-orders", "src-refunds"]

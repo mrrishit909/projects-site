@@ -34,7 +34,7 @@ class Facts:
     derived_reasons: dict[str, list[str]] = field(default_factory=dict)
 
 
-def derive(acc: dict[str, list[Row]], totf: str = "amount") -> Facts:
+def derive(acc: dict[str, list[Row]], totf: str = "amount", cutoff: Any = None) -> Facts:
     """Classify every raw row of every committed batch (D-01). Batches are applied per source in checkpoint-version order (the order they
     committed in), falling back to (started_at, batch_id); a batch with a schema_version other than its source contract's is quarantined whole."""
     cp_by_batch = {c["batch_id"]: c for c in acc["checkpoints"]}
@@ -55,7 +55,7 @@ def derive(acc: dict[str, list[Row]], totf: str = "amount") -> Facts:
     for b in committed:
         sid = b["source_id"]
         schema_ok = b.get("schema_version") in (None, contract_schema.get(sid))
-        for d in classify_rows(raws.get(b["batch_id"], []), keys.setdefault(sid, set()), deleted.setdefault(sid, set()), schema_ok):
+        for d in classify_rows(raws.get(b["batch_id"], []), keys.setdefault(sid, set()), deleted.setdefault(sid, set()), schema_ok, b["started_at"], cutoff):
             disposition[d.raw_record_id] = d
         cp = cp_by_batch.get(b["batch_id"])
         for r in raws.get(b["batch_id"], []):
@@ -130,6 +130,7 @@ def _freshness(acc: dict[str, list[Row]], f: Facts, cutoff: str) -> Row:
         le = max(events, key=parse_ts) if events else None          # freshness: cutoff - latest accepted source event
         li = max(ingested, key=parse_ts) if ingested else None      # ingestion age: cutoff - last committed batch (D-P8-03)
         out[sid] = {"latest_accepted_event_at": iso_z(le), "freshness_seconds": seconds_between(le, cutoff) if le else None,
+                    "freshness_reason": None if le else "NO_ACCEPTED_EVENT",
                     "last_successful_ingestion_at": iso_z(li), "ingestion_age_seconds": seconds_between(li, cutoff) if li else None}
     return out
 
@@ -199,7 +200,7 @@ def compute(acc: dict[str, list[Row]], rejected: list[Row], params: dict[str, An
     field is ``event_ts`` in this contract), source_expectations, processing_measurement, and optionally published_totals (publication_id ->
     Decimal total of the stored published table, which replaces the sum of the accepted records in the reconciliation)."""
     cutoff = params["cutoff"]
-    f = derive(acc, params.get("business_total_field", "amount"))
+    f = derive(acc, params.get("business_total_field", "amount"), cutoff)
     counts = {e: {"accepted": len(acc[e]), "rejected": sum(1 for r in rejected if r["entity"] == e)} for e in ENTITIES}
     ingestion = _ingestion(acc, f)
     runs_out, _ = _runs(acc)

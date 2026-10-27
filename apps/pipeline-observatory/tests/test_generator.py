@@ -168,7 +168,9 @@ def test_the_world_has_the_size_and_shape_of_the_brief(built):
         assert x["definition_hash"] == hashlib.sha256(x["definition"].encode()).hexdigest()
     assert len(rows["incidents"]) == 25 and len(rows["backfill_requests"]) == 15 and len(rows["task_runs"]) > len(rows["pipeline_runs"]) * 3
     assert len(rows["quality_results"]) > len(rows["pipeline_runs"]) * 4 and 1300 <= len(rows["publications"]) <= 1343
-    assert {r["rule_name"] for r in rows["quality_results"]} == {"keys_unique", "relationships_intact", "reconciliation_residual_zero", "freshness_within_target", "completeness_vs_expectation"}
+    assert {r["rule_name"] for r in rows["quality_results"]} == {"keys_unique", "relationships_intact", "reconciliation_residual_zero", "freshness_within_target", "completeness_vs_expectation",
+                                                                   "scope_complete", "late_events_included"}      # D-09: the gate gained two critical checks (R8-02)
+    assert len(rows["quality_results"]) == 7 * 1328 and {r["scope_from"][11:] for r in rows["pipeline_runs"]} == {"00:00:00Z"}
     # attempts: some task has more than one attempt, some run has a terminally failed task
     assert any(t["attempt"] > 1 for t in rows["task_runs"]) and any(t["status"] == "failed" for t in rows["task_runs"])
     # checkpoints are consecutive per source and in commit order
@@ -240,7 +242,14 @@ def test_the_metrics_the_manifest_states_are_the_domains(built):
     assert st["incidents"]["mean_recovery_minutes"] == m["incidents"]["mean_recovery_minutes"] and st["processing_rate"] == m["processing_rate"]
     assert st["backfills"]["overall"] == m["backfills"]["overall"] and st["late_events"]["count"] == m["late_events"]["count"]
     assert st["publications"]["current_publication_id"] == m["publications"]["current_publication_id"]
-    assert st["quality_gate"] == {"allowed": 1318, "blocked": 25}
+    # D-09 (R8-07): 1,343 runs, 1,328 reached the gate (1,318 allowed, 10 blocked), 15 failed before it, as the domain counts them
+    assert st["quality_gate"] == {"runs": 1343, "reached_gate": 1328, "allowed": 1318, "blocked_at_gate": 10, "failed_before_gate": 15}
+    gates = m["quality_gate"]
+    assert sum(1 for g in gates.values() if g["results"]) == 1328 and sum(1 for g in gates.values() if not g["results"]) == 15
+    assert all(gates[r["run_id"]]["decision"] == "blocked" and r["status"] == "failed" for r in built["rows"]["pipeline_runs"] if not gates[r["run_id"]]["results"])
+    assert next(d for d in built["manifest"]["designed_relationships"] if d["id"] == "DR-02")["realised"]["gate_funnel"] == st["quality_gate"]
+    assert st["backfills"]["statement"] == "11 of 15 partitions of the 13 accepted requests (0.733333); 2 requests for 4 partitions refused for overlap"
+    assert st["quarantine_scope"]["rows_listed_separately"] == 17 and m["ingestion"]["overall"]["quarantined"] == 429
     # the headline rates are stated to six places and are the exact ratios of the counts
     o = m["ingestion"]["overall"]
     assert o["rejection_rate"] == gen.rnd6(o["quarantined"], o["received"]) and o["duplicate_rate"] == gen.rnd6(o["duplicate"], o["received"])
@@ -398,7 +407,7 @@ def test_dr03_the_rate_limited_source_honours_retry_after(built):
                 fm.check_retry_allowed(parse_ts(r["fetched_at"]), r["retry_after_seconds"], parse_ts(seq[i + 1]["fetched_at"]))      # raises RETRY_TOO_SOON otherwise
                 assert seq[i + 1]["cursor_value"] == r["cursor_value"]
                 n += 1
-        assert seq[-1]["status"] == "ok" or seq[-1]["status"] == "cursor_loop"
+        assert seq[-1]["status"] in ("ok", "refetch", "cursor_loop")
     d = dr(built, "DR-03")["realised"]
     assert n == d["retries"] == d["retries_honouring_retry_after"] == len(limited) and d["retries_too_soon"] == 0 and d["min_slack_seconds"] >= 0
 
@@ -431,6 +440,123 @@ def test_dr05_the_residual_is_zero_except_one_day(built):
     res = next(q for q in built["rows"]["quality_results"] if q["task_run_id"].startswith("tr-" + c["run_id"][4:] + "-") and q["rule_name"] == "reconciliation_residual_zero")
     assert res["failure_count"] == 1 and b.golden["metrics"]["quality_gate"][c["run_id"]]["decision"] == "blocked"
     assert b.golden["metrics"]["incidents"]["incidents"][r["incident_id"]]["verified"] is True
+
+
+# ---------------------------------------------------------------------------------------------------------------------------------- D-09: the world satisfies the new rules
+def test_every_gate_records_scope_complete_and_late_events_included_as_the_domain_computes_them(built):
+    """R8-02: the two critical checks are not typed in; the domain recomputes them for the runs that matter (every backfill run, the hour-0 ticks, the designed late
+    batch's neighbours, and every 37th run) from the commit instants and the publications that existed before the run started."""
+    b, rows = built["b"], built["rows"]
+    gm, rm = b.dom.mod["gate"], b.dom.mod["reconcile"]
+    committed = [(c["batch_id"], c["committed_at"]) for c in rows["checkpoints"]]
+    pubs_by_run = {p["run_id"]: p for p in rows["publications"]}
+    results = {}
+    for q in rows["quality_results"]:
+        results.setdefault(q["task_run_id"].rsplit("-", 1)[0].replace("tr-", "run-"), {})[q["rule_name"]] = q
+    runs = rows["pipeline_runs"]
+    late_batch = [x for x in rows["ingestion_batches"] if x["batch_id"] == built["inj"]["injections"][8]["evidence"]["batch"]][0]
+    chosen = [r for n, r in enumerate(runs) if r["backfill_id"] or r["started_at"][11:13] == "00" or abs(parse_ts(r["started_at"]) - parse_ts(late_batch["started_at"])).total_seconds() < 6 * 3600 or n % 37 == 0]
+    assert len(chosen) > 100
+    checked = 0
+    for r in chosen:
+        res = results.get(r["run_id"])
+        if res is None:
+            continue
+        inc = (pubs_by_run.get(r["run_id"]) or next(t for t in rows["model_output_totals"] if t["run_id"] == r["run_id"]))["included_batch_ids"]
+        n_scope, missing = gm.scope_complete(committed, inc, r["scope_from"], r["started_at"])
+        until = parse_ts(r["started_at"])
+        lo = until.timestamp() - 72 * 3600
+        acc = [a for a in b.facts.accepted if a.arrival and lo <= parse_ts(a.arrival).timestamp() < until.timestamp()]
+        prior = [p for p in rows["publications"] if lo <= parse_ts(p["published_at"]).timestamp() < until.timestamp()]
+        pending = rm.pending_late_events(acc, prior, r["started_at"])
+        left = [e for e in pending if e["batch_id"] not in set(inc)]
+        sc, le = res["scope_complete"], res["late_events_included"]
+        assert (sc["severity"], sc["eligible_count"], sc["failure_count"]) == ("critical", n_scope, len(missing)), r["run_id"]
+        assert (le["severity"], le["failure_count"]) == ("critical", len(left)) and le["eligible_count"] == len(pending), r["run_id"]
+        checked += 1
+    assert checked > 100
+    # every recorded check of the whole world passed (the generator asserts it too: it refuses to build a world its own gate would block)
+    assert all(q["failure_count"] == 0 for q in rows["quality_results"] if q["rule_name"] in ("scope_complete", "late_events_included"))
+    assert sum(q["eligible_count"] for q in rows["quality_results"] if q["rule_name"] == "late_events_included") > 0       # the check had something to judge
+
+
+def test_the_omit_attack_is_visible_in_the_world_as_a_failing_scope(built):
+    """The reviewer's attack on the published data: take a real run, drop one batch of its scope from the candidate, and the domain's check names it."""
+    rows, gm = built["rows"], built["b"].dom.mod["gate"]
+    committed = [(c["batch_id"], c["committed_at"]) for c in rows["checkpoints"]]
+    p = rows["publications"][700]
+    run = next(r for r in rows["pipeline_runs"] if r["run_id"] == p["run_id"])
+    assert gm.scope_complete(committed, p["included_batch_ids"], run["scope_from"], run["started_at"]) == (len(p["included_batch_ids"]), [])
+    omitted = p["included_batch_ids"][:-1]
+    n, missing = gm.scope_complete(committed, omitted, run["scope_from"], run["started_at"])
+    assert n == len(p["included_batch_ids"]) and missing == [p["included_batch_ids"][-1]]
+
+
+def test_publication_watermarks_never_go_back(built):
+    wm = [p["watermark"] for p in sorted(built["rows"]["publications"], key=lambda p: (p["published_at"], p["publication_id"]))]
+    assert all(a <= b for a, b in zip(wm, wm[1:])) and len(wm) == 1318                  # C06 refuses a regression (WATERMARK_REGRESSION); the world never needed it
+
+
+def test_the_fetch_log_is_the_domains_verdict_on_every_page(built):
+    """R8-06: replay the fetch log, source by source, through fetch.judge_fetch with the checkpoint cursor in force at each fetch: every status agrees."""
+    import bisect
+    rows, fm = built["rows"], built["b"].dom.mod["fetch"]
+    cps = {}
+    for c in sorted(built["rows"]["checkpoints"], key=lambda c: (c["committed_at"], c["checkpoint_id"])):
+        cps.setdefault(c["source_id"], []).append((c["committed_at"], c["committed_cursor"]))
+    hist, counts = {}, {}
+    for r in sorted(rows["fetch_log"], key=lambda r: r["fetch_id"]):
+        counts[r["status"]] = counts.get(r["status"], 0) + 1
+        if r["status"] == "rate_limited":
+            continue
+        times = [t for t, _ in cps.get(r["source_id"], [])]
+        i = bisect.bisect_left(times, r["fetched_at"])
+        last = cps[r["source_id"]][i - 1][1] if i else None
+        h = hist.setdefault(r["source_id"], [])
+        if r["status"] == "cursor_loop":
+            with pytest.raises(Exception) as err:
+                fm.judge_fetch(h, last, r["session_id"], r["cursor_value"], r["next_cursor"])
+            assert err.value.code == "CURSOR_LOOP"
+            continue
+        verdict = fm.judge_fetch(h, last, r["session_id"], r["cursor_value"], r["next_cursor"])
+        assert verdict == r["status"], (r["fetch_id"], verdict, r["status"])
+        h.append(fm.Fetched(r["session_id"], r["cursor_value"], r["next_cursor"], r["status"]))
+    assert counts["cursor_loop"] == 1 and counts["refetch"] > 40 and counts["ok"] > 1200 and counts["rate_limited"] == 49
+    # the stale-source polls, the replays after a crash, the refetch after a schema bump and every backfill are refetches; a live first fetch is ok
+    batch_kind = {x.batch_id: x.kind for x in built["w"].batches}
+    by_batch = {r["batch_id"]: r["status"] for r in rows["fetch_log"] if r["batch_id"]}
+    assert all(by_batch[bid] == "refetch" for bid, k in batch_kind.items() if k in ("backfill", "replay", "schema_refetch"))
+    assert all(by_batch[bid] == "ok" for bid, k in batch_kind.items() if k in ("aborted", "schema_q"))
+    stale = [x for x in built["w"].batches if x.src == "src-refunds" and "stale_replay" in x.tags]
+    assert len(stale) >= 11 and all(by_batch[x.batch_id] == "refetch" for x in stale)
+    assert all(r["next_cursor"] is not None or r["status"] != "ok" for r in rows["fetch_log"])
+
+
+def test_the_two_refused_backfills_overlapped_a_request_that_was_still_being_worked_on(built):
+    """R8-12: bf-006 and bf-012 are refusals under the new rule: each was made while the request it overlaps was still requested or running; once that request
+    settled (partial or complete) it no longer blocks, so the partition bf-004 left unverified can be requested again."""
+    from pipeline_observatory.backfill import find_overlap
+    rows = built["rows"]["backfill_requests"]
+    by = {r["backfill_id"]: r for r in rows}
+    for refused, victim in (("bf-006", "bf-004"), ("bf-012", "bf-010")):
+        r, v = by[refused], by[victim]
+        assert v["status"] in ("partial", "complete") and v["settled_at"] and r["status"] == "requested" and r["settled_at"] is None
+        assert v["requested_at"] < r["requested_at"] < v["settled_at"]                          # made after the victim's request and before it settled
+        assert find_overlap([v], r, history=True) is v                                         # it was active at the time: refused
+        later = {**r, "requested_at": v["settled_at"]}
+        assert find_overlap([v], later, history=True) is None                                  # once settled it blocks nothing
+        assert find_overlap([v], r) is None                                                    # live: a partial or complete request is not active
+    assert by["bf-004"]["status"] == "partial" and [p["partition"] for p in by["bf-004"]["partitions"] if not p["verified"]] == ["2026-08-22"]
+    again = {"backfill_id": "bf-016", "source_id": "src-inventory", "start_at": "2026-08-22T00:00:00Z", "end_at": "2026-08-23T00:00:00Z", "status": "requested"}
+    assert find_overlap([r for r in rows if r["status"] != "requested"], again) is None         # the unverified partition may be backfilled again
+    assert all(r["requested_at"] for r in rows) and all(r["settled_at"] for r in rows if r["status"] in ("partial", "complete"))
+
+
+def test_the_world_imports_with_the_new_rules_and_agrees_with_the_manifest(built):
+    from pipeline_observatory.ingest import validate_import
+    b = built["b"]
+    imp = b.imp
+    assert [r["id"] for r in imp.rejected] == ["bf-006", "bf-012"]                                # the history rule: both still refused
 
 
 # ---------------------------------------------------------------------------------------------------------------------------------- injections
@@ -504,11 +630,15 @@ def test_injection_08_a_delete_leaves_the_snapshot_and_shows_as_an_exclusion(bui
     assert sum(1 for x in b.w.committed for r in x.rows if r["label"] == "del" and r["disp"] == "duplicate") >= 1
 
 
-def test_injection_10_the_repeating_cursor_is_a_loop_in_the_fetch_log_and_creates_no_batch(built):
+def test_injection_10_the_repeating_cursor_is_a_loop_inside_one_session_and_creates_no_batch(built):
     rows = built["rows"]["fetch_log"]
     loops = [r for r in rows if r["status"] == "cursor_loop"]
-    assert len(loops) == 1 and loops[0]["next_cursor"] == loops[0]["cursor_value"] and loops[0]["batch_id"] is None
-    nxt = next(r for r in rows if r["source_id"] == loops[0]["source_id"] and r["status"] == "ok" and r["cursor_value"] == loops[0]["cursor_value"] and r["fetched_at"] > loops[0]["fetched_at"])
+    assert len(loops) == 1 and loops[0]["batch_id"] is None
+    session = [r for r in rows if r["source_id"] == loops[0]["source_id"] and r["session_id"] == loops[0]["session_id"]]
+    first = [r for r in session if r["status"] in ("ok", "refetch")]
+    assert len(first) == 1 and first[0]["fetched_at"] < loops[0]["fetched_at"] and first[0]["next_cursor"] == loops[0]["cursor_value"]      # the page before it fetched cursor A and pointed at B ...
+    assert loops[0]["next_cursor"] == first[0]["cursor_value"]                                                                       # ... and B points back at A, inside the same session
+    nxt = next(r for r in rows if r["source_id"] == loops[0]["source_id"] and r["status"] in ("ok", "refetch") and r["cursor_value"] == loops[0]["cursor_value"] and r["fetched_at"] > loops[0]["fetched_at"])
     assert nxt["session_id"] != loops[0]["session_id"] and nxt["next_cursor"] != nxt["cursor_value"]
 
 

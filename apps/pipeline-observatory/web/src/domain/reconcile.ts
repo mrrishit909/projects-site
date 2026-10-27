@@ -65,6 +65,12 @@ export function lateEvents(accepted: Accepted[], pubs: Row[]): LateEvent[] {
   }
   return sortedBy(out, (x) => [parseTs(x.arrival_at), String(x.source_key)]);
 }
+/** The late events that arrived before `until` (the instant a run started) and are in no publication published after their arrival. `pubs` are the
+ * publications that exist when the gate runs; `late_events_included` fails for every one whose batch the candidate does not include (D-09, R8-02). */
+export function pendingLateEvents(accepted: Accepted[], pubs: Row[], until: string): LateEvent[] {
+  const hi = parseTs(until);
+  return lateEvents(accepted.filter((a) => a.arrival !== null && parseTs(a.arrival) < hi), pubs).filter((e) => e.included_in_publication_id === null);
+}
 /** The first run starting at or after `openedAt` that succeeded, passed its gate, published, and whose publication reconciles to 0.00 (D-P8-06). */
 export function verifiedRecovery(openedAt: string, runs: Row[], gateOf: Record<string, string>, pubOfRun: Record<string, string>, residualOfPub: Record<string, string>): { run: Row; publication_id: string } | null {
   const opened = parseTs(openedAt);

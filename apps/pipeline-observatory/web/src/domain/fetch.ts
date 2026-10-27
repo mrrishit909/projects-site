@@ -25,6 +25,24 @@ export function checkCursorProgress(cursor: string, nextCursor: string | null, s
     throw new DomainError(E.CURSOR_LOOP, `cursor ${JSON.stringify(nextCursor)} repeats; the fetch is stopped`, "input.page.next_cursor", { cursor, next_cursor: nextCursor });
   }
 }
+/** One earlier page of a source as the fetch log records it (rate-limited and loop rows are not pages). */
+export interface Fetched { session: string | null; cursor: string; next_cursor: string | null; status?: string }
+/** Judge a page that answered 200 (D-09, R8-06): `ok` (a cursor never fetched before), `refetch` (a cursor fetched before in another session, or the re-poll
+ * of the last committed cursor by a new session whose page points at itself because the source has nothing new), or CURSOR_LOOP. Inside one session: a
+ * next cursor already seen there, a page pointing at itself, or a cursor fetched twice, is a loop - EXCEPT the first page of a session that re-polls the
+ * source's last committed cursor and points at itself. */
+export function judgeFetch(history: Iterable<Fetched>, lastCommittedCursor: string | null, session: string, cursor: string, nextCursor: string | null): "ok" | "refetch" {
+  const pages = [...history].filter((h) => (h.status ?? "ok") === "ok" || h.status === "refetch");
+  const mine = pages.filter((h) => h.session === session);
+  const fetchedHere = new Set<string>(mine.map((h) => h.cursor));
+  const seen = new Set<string>(fetchedHere);
+  for (const h of mine) if (h.next_cursor !== null) seen.add(h.next_cursor);
+  const stale = mine.length === 0 && nextCursor !== null && nextCursor === cursor && cursor === lastCommittedCursor;
+  if (!stale && (fetchedHere.has(cursor) || (nextCursor !== null && (nextCursor === cursor || seen.has(nextCursor))))) {
+    throw new DomainError(E.CURSOR_LOOP, `cursor ${JSON.stringify(nextCursor !== null ? nextCursor : cursor)} repeats inside session ${JSON.stringify(session)}; the fetch is stopped`, "input.page.next_cursor", { cursor, next_cursor: nextCursor });
+  }
+  return stale || pages.some((h) => h.cursor === cursor) ? "refetch" : "ok";
+}
 /** Fetch from `start` until a page has no next cursor. On a 429 wait exactly `retry_after_seconds` (via `sleep`) and ask again; more than
  * `maxRetries` consecutive rate limits is RETRY_EXHAUSTED; a repeated cursor is CURSOR_LOOP. */
 export function fetchAll(fetchPage: (cursor: string) => Page, start: string, now: () => bigint, sleep: (seconds: number) => void, maxPages = 1000, maxRetries = 5): FetchResult {

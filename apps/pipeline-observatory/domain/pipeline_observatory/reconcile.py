@@ -77,6 +77,15 @@ def late_events(accepted: list[Accepted], pubs: list[dict[str, Any]]) -> list[di
     return out
 
 
+def pending_late_events(accepted: list[Accepted], pubs: list[dict[str, Any]], until: Any) -> list[dict[str, Any]]:
+    """The late events that arrived before ``until`` (the instant a run started) and are in no publication published after their arrival.
+    ``pubs`` are the publications that exist when the gate runs. The ``late_events_included`` check fails for every one of them whose batch the
+    candidate does not include (D-09, R8-02)."""
+    hi = parse_ts(until)
+    arrived = [a for a in accepted if a.arrival is not None and parse_ts(a.arrival) < hi]
+    return [e for e in late_events(arrived, pubs) if e["included_in_publication_id"] is None]
+
+
 def verified_recovery(opened_at: str, runs: list[dict[str, Any]], gate_of: dict[str, str], pub_of_run: dict[str, str],
                       residual_of_pub: dict[str, str]) -> dict[str, Any] | None:
     """The first run starting at or after ``opened_at`` that succeeded, passed its gate, published, and whose publication reconciles to

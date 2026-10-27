@@ -1,4 +1,5 @@
 // The three hash kinds of D-P8-10: payload_hash, content_hash, definition_hash. sha256, canonical JSON, no float.
+import { JsonNumber } from "./json";
 import { sha256Hex } from "./sha256";
 
 /** Python's `json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False)`; a float is refused. */
@@ -11,6 +12,7 @@ export function canonicalJson(v: unknown): string {
       return String(v);
     case "string": return asciiString(v);
     case "object": {
+      if (v instanceof JsonNumber) return v.lexeme;                  // a float or an integer beyond 2**53 as the text wrote it (Python prints a float by its own repr)
       if (Array.isArray(v)) return `[${v.map(canonicalJson).join(",")}]`;
       const keys = Object.keys(v as object).sort(cmpCodePoints);
       return `{${keys.map((k) => `${asciiString(k)}:${canonicalJson((v as Record<string, unknown>)[k])}`).join(",")}}`;

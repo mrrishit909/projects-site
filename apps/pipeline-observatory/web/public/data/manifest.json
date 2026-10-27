@@ -24,7 +24,7 @@
     }
   },
   "contract_version": 1,
-  "dataset_hash": "d9f0aa18ec6c54d3f09cf16cce3c159960411e36de59b4d7831220547fcbf12e",
+  "dataset_hash": "0a90687778634365c402c5431661b56625de20785e28d9b2388d36c0cad19aab",
   "dataset_version": "po-20261026-20261026",
   "designed_relationships": [
     {
@@ -67,6 +67,13 @@
       "realised": {
         "critical_failures": 1,
         "gate_decision": "blocked",
+        "gate_funnel": {
+          "allowed": 1318,
+          "blocked_at_gate": 10,
+          "failed_before_gate": 15,
+          "reached_gate": 1328,
+          "runs": 1343
+        },
         "incident_id": "inc-022",
         "pointer_after": "pub-1186",
         "pointer_before": "pub-1186",
@@ -97,6 +104,12 @@
       },
       "realised": {
         "cursor_loops": 1,
+        "fetch_log_statuses": {
+          "cursor_loop": 1,
+          "ok": 1263,
+          "rate_limited": 49,
+          "refetch": 48
+        },
         "fetch_rows": 1361,
         "max_slack_seconds": 25,
         "min_slack_seconds": 0,
@@ -253,7 +266,7 @@
       "model_definitions": 12,
       "pipeline_runs": 1343,
       "publications": 1318,
-      "quality_results": 6640,
+      "quality_results": 9296,
       "quarantine_records": 446,
       "raw_records": 40191,
       "source_contracts": 6,
@@ -276,7 +289,7 @@
       "model_output_totals": 1331,
       "pipeline_runs": 1343,
       "publications": 1318,
-      "quality_results": 6640,
+      "quality_results": 9296,
       "quarantine_records": 446,
       "raw_records": 40191,
       "source_contracts": 6,
@@ -293,20 +306,22 @@
       "src-refunds declares a freshness target (7 days) looser than its silence on purpose: the gate cannot see the staleness, which is the defect P08-TEST-06 shows. The unexplained residual of 2026-09-09 is constructed (the candidate table holds the amount of three records of a crashed batch beyond the accepted records); the pipeline records no cause.",
       "The watermark of a publication is the earliest, over all sources, of the end of the window of the latest batch committed before the gate. Late events are therefore rare for live batches (the designed nine and the corrections of rejected rows) and common for backfills, whose records are weeks old when they arrive; all of them are included in the next publication.",
       "raw_records is a SAMPLE: whole batches (the injected defects and designed relationships first, then a seeded shuffle) until the next batch would pass 2,000 rows. Every other count comes from batch_summaries, which the domain computed over all raw records. The 5 MB size cap did not bind: the sample is capped at 2,000 rows by the brief.",
-      "Quality results sit on the quality_gate task run (five checks per gate); the two tests the transform runs (keys, relationships) are the gate's keys_unique and relationships_intact. Hardware, cache state and the measured seconds of the processing rate are synthetic values for one batch, not a benchmark."
+      "Quality results sit on the quality_gate task run (five checks per gate); the two tests the transform runs (keys, relationships) are the gate's keys_unique and relationships_intact. Hardware, cache state and the measured seconds of the processing rate are synthetic values for one batch, not a benchmark.",
+      "Review round R8 (docs/contracts.md D-09) changed the world, and the generator was adapted to the rules, not the rules to the world: the gate records two more critical checks per run (scope_complete: every batch committed from pipeline_runs.scope_from to the run's start is in the candidate; late_events_included: no late event that has arrived and is in no earlier publication is left out), asked of the domain run by run; the scope of a run now ends at its start (it used to end at the end of the UTC day on the hour-0 tick); the realised values were recomputed by the domain. A publication's watermark never goes back (C06 refuses it).",
+      "Backfill overlap is judged only against requests still requested or running: the two refusals (bf-006 over bf-004, bf-012 over bf-010) were re-timed to two minutes after the victim's last batch committed, before the run that settled it published, and every request carries requested_at (and settled_at when it settled). A page fetched again in a new fetch session is a refetch in fetch_log (stale-source polls, replays of a window, backfills re-reading the last committed cursor); the one loop is now a second page of the same session pointing back at the first cursor. These choices were made after the first run of the previous round's code and are not tuned on any realised value."
     ],
     "name": "generate.py",
     "parameters": {
       "aborted_ingests": "7 random + 1 designed",
       "as_of": "2026-10-05T00:00:00Z",
-      "backfills": "15 requests: 13 accepted, 2 refused (bf-006, bf-012)",
+      "backfills": "15 requests: 13 accepted, 2 refused (bf-006, bf-012), each made while the request it overlaps (bf-004, bf-010) was still requested or running",
       "cadences": "src-orders every 4 hours at minute 3; src-payments every 4 hours at minute 4; src-refunds every 6 hours at minute 5; src-shipments every 6 hours at minute 6; src-inventory daily at minute 7; src-web-events every 12 hours at minute 8",
       "events_per_hour_x100": "src-orders 1260; src-payments 790; src-refunds 315; src-shipments 315; src-inventory 131; src-web-events 131",
       "failure_plan": "{\"freshness\":5,\"gate_infra\":3,\"ingest\":3,\"relationships\":4,\"residual\":1,\"transform\":9}",
       "freshness_targets_seconds": "src-orders 19800; src-payments 21600; src-refunds 604800; src-shipments 259200; src-inventory 259200; src-web-events 216000",
       "late_events": "9 events of src-orders held to the batch of 2026-09-18T16:00:00Z",
       "ppm": "{\"cancel\":4000,\"cancel_dirty\":100000,\"double_delete\":60000,\"fix\":350000,\"flaky_run\":70000,\"invalid\":2500,\"missing\":2500,\"neg\":6000}",
-      "publication_scope": "every batch committed before the run started, on the UTC day of (the run's hour tick minus one hour): the day's snapshot, rebuilt hourly; backfill batches enter on the day they commit",
+      "publication_scope": "every batch committed from the start of the UTC day of (the run's hour tick minus one hour) until the run started (pipeline_runs.scope_from declares the start): the day's snapshot, rebuilt hourly; backfill batches enter on the day they commit",
       "rate_limit": "src-shipments 125000 ppm of fetches, retry-after [30, 60, 90, 120]",
       "residual_day": "2026-09-09",
       "run_start_offset_seconds": "900",
@@ -335,7 +350,7 @@
     "model_output_totals": 1331,
     "pipeline_runs": 1343,
     "publications": 1318,
-    "quality_results": 6640,
+    "quality_results": 9296,
     "quarantine_records": 446,
     "raw_records": 2000,
     "source_contracts": 6,
@@ -347,7 +362,7 @@
     "batches_sampled": 62,
     "cap_rows": 2000,
     "cap_used": 2000,
-    "entity_bytes": 4282522,
+    "entity_bytes": 4739563,
     "published_world": {
       "current_publication_id": "pub-1343",
       "domain_ingest_counts": {
@@ -358,7 +373,7 @@
         "model_definitions": 12,
         "pipeline_runs": 1343,
         "publications": 1318,
-        "quality_results": 6640,
+        "quality_results": 9296,
         "quarantine_records": 446,
         "raw_records": 2000,
         "source_contracts": 6,
@@ -383,6 +398,7 @@
   },
   "stats": {
     "backfills": {
+      "accepted_requests": 13,
       "overall": {
         "coverage": "0.733333",
         "requested_partitions": 15,
@@ -392,6 +408,8 @@
         "bf-006",
         "bf-012"
       ],
+      "refused_partitions": 4,
+      "refused_requests": 2,
       "requests": {
         "bf-001": {
           "coverage": "1.000000",
@@ -471,7 +489,8 @@
           "source_id": "src-refunds",
           "verified_partitions": 2
         }
-      }
+      },
+      "statement": "11 of 15 partitions of the 13 accepted requests (0.733333); 2 requests for 4 partitions refused for overlap"
     },
     "batches_by_kind": {
       "aborted": 8,
@@ -521,36 +540,42 @@
     },
     "freshness_at_as_of": {
       "src-inventory": {
+        "freshness_reason": null,
         "freshness_seconds": 79203,
         "ingestion_age_seconds": 67674,
         "last_successful_ingestion_at": "2026-10-04T05:12:06Z",
         "latest_accepted_event_at": "2026-10-04T01:59:57Z"
       },
       "src-orders": {
+        "freshness_reason": null,
         "freshness_seconds": 14514,
         "ingestion_age_seconds": 13887,
         "last_successful_ingestion_at": "2026-10-04T20:08:33Z",
         "latest_accepted_event_at": "2026-10-04T19:58:06Z"
       },
       "src-payments": {
+        "freshness_reason": null,
         "freshness_seconds": 7766,
         "ingestion_age_seconds": 6638,
         "last_successful_ingestion_at": "2026-10-04T22:09:22Z",
         "latest_accepted_event_at": "2026-10-04T21:50:34Z"
       },
       "src-refunds": {
+        "freshness_reason": null,
         "freshness_seconds": 262378,
         "ingestion_age_seconds": 17363,
         "last_successful_ingestion_at": "2026-10-04T19:10:37Z",
         "latest_accepted_event_at": "2026-10-01T23:07:02Z"
       },
       "src-shipments": {
+        "freshness_reason": null,
         "freshness_seconds": 11789,
         "ingestion_age_seconds": 9931,
         "last_successful_ingestion_at": "2026-10-04T21:14:29Z",
         "latest_accepted_event_at": "2026-10-04T20:43:31Z"
       },
       "src-web-events": {
+        "freshness_reason": null,
         "freshness_seconds": 21398,
         "ingestion_age_seconds": 20724,
         "last_successful_ingestion_at": "2026-10-04T18:14:36Z",
@@ -712,7 +737,10 @@
     },
     "quality_gate": {
       "allowed": 1318,
-      "blocked": 25
+      "blocked_at_gate": 10,
+      "failed_before_gate": 15,
+      "reached_gate": 1328,
+      "runs": 1343
     },
     "quarantine_by_reason_committed_batches": {
       "DELETE_TARGET_UNKNOWN": 25,
@@ -729,6 +757,11 @@
       "SCHEMA_CHANGED": 17,
       "UNKNOWN_OP": 3
     },
+    "quarantine_scope": {
+      "counted_in": "committed batches (the headline quarantined count and rejection rate)",
+      "listed_separately_because": "the rows of the one batch quarantined whole (SCHEMA_CHANGED) belong to no committed batch; their quarantine rows are listed, never counted in the rate",
+      "rows_listed_separately": 17
+    },
     "reconciliation": {
       "candidates": 1331,
       "candidates_residual_not_zero": 1,
@@ -737,6 +770,12 @@
     },
     "retry": {
       "cursor_loops": 1,
+      "fetch_log_statuses": {
+        "cursor_loop": 1,
+        "ok": 1263,
+        "rate_limited": 49,
+        "refetch": 48
+      },
       "fetch_rows": 1361,
       "max_slack_seconds": 25,
       "min_slack_seconds": 0,

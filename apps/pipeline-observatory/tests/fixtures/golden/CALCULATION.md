@@ -38,7 +38,7 @@ Received 10. Accepted unique = rows 01,02,03,04,05,07,09,10 = **8**. Duplicate =
 (a quarantine row `q-b-001-01` exists, so nothing was dropped; 8 + 1 + 1 = 10).
 **Rejection rate = 1/10 = 0.100000. Duplicate rate = 1/10 = 0.100000.**
 `payload_hash` of every row = sha256 of the canonical JSON payload (sorted keys, separators `,` and `:`, ASCII); rows 03 and 06 have
-the same hash; the script recomputes all 31 hashes.
+the same hash; the script recomputes all 32 hashes (31 rows plus REF-2002 of Part (m)).
 
 ## Part (b): the replay, batch `b-002` (same ten rows, same window `cur-000`)
 
@@ -70,7 +70,10 @@ a successful ingestion.
 * Latest accepted event = ORD-1007 at 09:30:00. **Freshness = 00:00 (Oct 5) - 09:30 = 14 h 30 min = 52200 s.**
 * Last successful ingestion = 12:05:00 (b-002). **Ingestion age = 11 h 55 min = 42900 s.**
 They differ (52200 vs 42900): the newest event is older than the newest committed batch (09:30 < 12:05), and a green run on a stale
-source shows the stale freshness. src-refunds: latest event 09:10, ingestion 11:05 -> 53400 s and 46500 s.
+source shows the stale freshness. src-refunds: latest event 09:10, ingestion 11:05 -> 53400 s and 46500 s. The row REF-2002 of b-101 is dated 12:00 and is quarantined
+(Part (m)): a future-dated row never becomes "the latest accepted event", so it cannot make a stale source look fresh (12:00 would give 43200 s).
+`freshness_reason` is null whenever a freshness exists; with no accepted event at all it is `NO_ACCEPTED_EVENT` and the freshness is null, never a
+negative number.
 
 ## Part (e): completeness against the declared expectation [P08-MET-03]
 
@@ -115,8 +118,9 @@ field = `amount` (D-P8-05). Scope = the batches the publication includes. pub-00
 * Published total = the 8 accepted = 25.00 + 40.00 + 29.97 + 20.00 + 100.00 + 29.00 + 31.00 + 15.00 = **289.97**.
 * Exclusions: quarantined row -30.00; duplicate row +29.97; deletes 0.00; total **-0.03**.
 * **Residual = 289.94 - 289.97 - (-0.03) = 0.00.** (Signs matter: a quarantined negative amount is a negative exclusion.)
-pub-003, batches b-001, b-002, b-101: source 289.94 + 289.94 + 12.00 = 591.88; published 289.97 + 12.00 = 301.97; quarantined -30.00 x 2 =
--60.00; duplicates 29.97 + (289.94 + 30.00 = 319.94) = 349.91; exclusions 289.91; residual 591.88 - 301.97 - 289.91 = **0.00**.
+pub-003, batches b-001, b-002, b-101: source 289.94 + 289.94 + 12.00 + 8.00 (REF-2002, Part (m)) = **599.88**; published 289.97 + 12.00 = 301.97;
+quarantined -30.00 x 2 + 8.00 = **-52.00**; duplicates 29.97 + (289.94 + 30.00 = 319.94) = 349.91; exclusions -52.00 + 349.91 + 0.00 = **297.91**;
+residual 599.88 - 301.97 - 297.91 = **0.00**.
 
 ## Part (j): incident and verified recovery [P08-FLOW-09, P08-MET-10]
 
@@ -135,6 +139,23 @@ bf-001 over [2026-09-01T00:00:00Z, 2026-09-04T00:00:00Z) is half-open: partition
 b-001 accepted 8 records in a measured 12 s (a declared synthetic fixture value): **8/12 = 0.666667 records per second**; disclosed with the
 hardware line "Synthetic fixture value, not a benchmark: 2 vCPU, 8 GB RAM, GitHub-hosted runner class" and cache state "cold". Not a
 benchmark claim; an observed rate with its conditions.
+
+## Part (m): a row dated after its batch arrived [D-09, R8-01]
+
+b-101 (src-refunds, started 11:00:00, committed 11:05:00) carries a second row after REF-2001, `rr-b-101-02`: REF-2002, quantity 2 x unit_price 4.00 =
+amount **8.00**, `event_ts` 12:00:00. A batch that started at 11:00 cannot contain an event that happens at 12:00: the row is **quarantined
+`EVENT_IN_FUTURE`** (the event is later than the batch's arrival, its `started_at`; the same code covers an event later than the cutoff). The
+quarantine row `q-b-101-01` exists, so nothing was dropped. Hand counts:
+* b-101: received 2, accepted 1 (REF-2001), duplicate 0, quarantined 1. **Rejection rate 1/2 = 0.500000**, duplicate rate 0/2 = 0.000000.
+  src-refunds (this batch only): received 2, accepted 1, quarantined 1 over 1 distinct key, `quarantine_by_reason` {EVENT_IN_FUTURE: 1}.
+* Overall (committed batches of both sources): received 10 + 10 + 2 = **22**; accepted 8 + 0 + 1 = **9**; duplicates 1 + 9 + 0 = **10**; quarantined 1 + 1 + 1 =
+  **3**. **Rejection rate 3/22 = 0.136364** (0.1363636...), **duplicate rate 10/22 = 0.454545** (0.4545454...). The accepted/duplicate/quarantined counts
+  add up: 9 + 10 + 3 = 22.
+* Freshness of src-refunds is unchanged (53400 s): the accepted row REF-2001 is still the latest accepted event; the rejected REF-2002 is not.
+* Completeness of src-refunds 2026-10-04 is unchanged (1 expected, 1 accepted = 1.000000): the declared expectation counts REF-2001 only.
+* pub-003 includes b-101: source total +8.00, quarantined exclusion +8.00, so the residual stays 0.00 (Part (i)).
+* Entity counts: `raw_records` 32 (was 31), `quarantine_records` 3 (was 2).
+The rule's order of checks is MISSING_FIELD, INVALID_FIELD, NEGATIVE_QUANTITY, EVENT_IN_FUTURE: a row is judged for its shape first, then its sign, then its date.
 
 ## Variant: rejected records [P08-GOLD-08] (`variant-rejected/`)
 
@@ -209,6 +230,15 @@ coverage, processing rate, mean recovery) is **null**, not 0; freshness and inge
 * **D-P8-13 Durations and rates.** Run duration = finished_at - started_at integer seconds; group means in minutes (4 places). Headline ingestion
   rates are per batch (b-001 0.100000 / 0.100000); the source aggregate (over committed batches) is reported beside them. Processing rate =
   accepted records of the measured batch / measured seconds, records per second, 6 places.
+
+* **D-P8-14 Review round R8 (docs/contracts.md D-09).** (a) Quarantine reason `EVENT_IN_FUTURE` (Part (m)). (b) One ASCII-only, full-match pattern set for money
+  (`-?[0-9]+(\.[0-9]{1,2})?`), quantity (a JSON integer of magnitude at most 2**53; `3.0`, `1e2` and booleans are not) and instants; an impossible calendar
+  date or time is `INVALID_FIELD`; digits beyond microseconds are truncated. The shared cases are `../divergence/cases.json`. (c) A payload that is not an
+  object is `INVALID_FIELD` and carries no amount. (d) A repeated primary key of any entity, batches included, is `DUPLICATE_ID`; a quality result whose
+  severity is not `critical` or `warning` is `INVALID_FIELD` at import. (e) Backfill overlap is judged against requests that were still `requested` or
+  `running`; a snapshot whose request has no `requested_at` (this fixture) has no clock and is judged against every earlier accepted request, so bf-002 of
+  the rejected variant is still refused. (f) `metrics.freshness.<source>.freshness_reason`. (g) Fields added to the section-03 minimum:
+  `pipeline_runs.scope_from`, `backfill_requests.requested_at` / `settled_at` (optional; absent here).
 
 ## Not exercised by this fixture
 

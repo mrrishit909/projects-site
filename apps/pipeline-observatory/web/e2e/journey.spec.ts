@@ -26,7 +26,9 @@ test("landing: honesty labels, manifest strip, back-link, the decision and the v
   await expect(fig(page, "current-publication")).toHaveText(ref.complete_world.pointer.current);
   await expect(fig(page, "gate-allowed")).toHaveText(n0(ref.sample_world.headline.gate.allowed));
   await expect(fig(page, "incidents")).toHaveText(String(ref.complete_world.incidents.total));
-  await expect(page.getByTestId("snapshot-note")).toContainText("2,000 are published");
+  await expect(page.getByTestId("snapshot-note")).toContainText("2,000 rows in 62 whole batches, 50 of which carry rows, are published");
+  // D-09 (R8-07): the funnel, not "25 blocked": 1,343 runs, 1,328 reached the gate (1,318 allowed, 10 blocked), 15 failed before it
+  await expect(page.locator("[data-readout=gate-allowed] [data-testid=run-funnel]")).toHaveText("1,343 runs: 1,328 reached the gate (1,318 allowed, 10 blocked); 15 failed before it. A run blocked at the gate or failed before it publishes nothing and opens an incident.");
   const html = await (await request.get("./")).text();
   expect(html).toMatch(/<noscript[^>]*>[\s\S]*https:\/\/mrrishit909\.github\.io\/projects-site\/[\s\S]*<\/noscript>/);
   expect(html).toContain("/projects-site/labs/pipeline-observatory/assets/");
@@ -246,7 +248,13 @@ test("gate: critical checks, the decision, the pointer; fault injection re-decid
   await expect(page.locator("[data-testid=gate-checks] tr[data-rule=keys_unique] [data-k=result]")).toContainText("passed");
   await expect(page.locator("[data-testid=gate-outcome] [data-k=pointer-before]")).toHaveText("pub-1186");
   await expect(page.locator("[data-testid=gate-outcome] [data-k=pointer-after]")).toHaveText("pub-1186");
-  await expect(page.getByTestId("gate-totals")).toContainText(`${n0(ref.sample_world.headline.gate.allowed)} runs allowed`);
+  await expect(page.getByTestId("gate-totals")).toContainText("1,343 runs: 1,328 reached the gate (1,318 allowed, 10 blocked); 15 failed before it");
+  await expect(page.getByRole("heading", { name: "Every failed run" })).toBeVisible();
+  await expect(page.locator("[data-testid=blocked-table] tr[data-kind=blocked]")).toHaveCount(10);
+  await expect(page.locator("[data-testid=blocked-table] tr[data-kind=before-gate]")).toHaveCount(15);
+  await expect(page.locator("[data-testid=blocked-table] tr[data-run=run-1187] [data-k=kind]")).toHaveText("blocked at the gate");
+  await expect(page.getByRole("button", { name: "Show the gate of run-1187" })).toBeVisible();      // the "Show" buttons have accessible names
+  await expect(page.getByTestId("completeness-signal")).toContainText("fails in");
   await expect(page.getByTestId("blocked-table").locator("tbody tr")).toHaveCount(ref.sample_world.headline.gate.blocked);
   // what-if: force the failing check to pass -> allowed, would move to a candidate; force a warning to fail -> still allowed
   await expect(page.getByTestId("whatif-decision")).toContainText("blocked");
@@ -331,7 +339,7 @@ test("quarantine desk: filters, no-data state, replay of a corrected row in memo
   expect(errors).toEqual([]);
 });
 
-test("backfill: totals equal Python's; the refused requests; the console refuses an overlap and accepts a touching range, then resets", async ({ page }) => {
+test("backfill: totals equal Python's; the refused requests; the console accepts the range a settled request left unverified, refuses an overlap with a request still requested, then resets", async ({ page }) => {
   const errors = watch(page);
   await page.goto("backfill/");
   await ready(page);
@@ -346,7 +354,9 @@ test("backfill: totals equal Python's; the refused requests; the console refuses
   await page.getByTestId("bf-start").fill("2026-08-22");
   await page.getByTestId("bf-end").fill("2026-08-24");
   await page.getByTestId("bf-submit").click();
-  await expect(page.getByTestId("bf-result")).toContainText("refused BACKFILL_OVERLAP");
+  // D-09 (R8-12): bf-004 settled partial, so it no longer blocks: the range over its unverified partition is accepted and says what it backfills again
+  await expect(page.getByTestId("bf-result")).toContainText("accepted: 2 daily partitions");
+  await expect(page.getByTestId("bf-result")).toContainText("2026-08-22 (left unverified by bf-004, which has settled)");
   await page.getByTestId("bf-start").fill("2026-09-20");
   await page.getByTestId("bf-end").fill("2026-09-22");
   await page.getByTestId("bf-submit").click();
@@ -355,6 +365,10 @@ test("backfill: totals equal Python's; the refused requests; the console refuses
   await expect(page.locator("tr[data-sim='2'] [data-k=progress]")).toContainText("1/2 = 0.500000");
   await page.getByTestId("bf-start").fill("2026-09-20");
   await page.getByTestId("bf-end").fill("2026-09-21");
+  await page.getByTestId("bf-submit").click();
+  await expect(page.getByTestId("bf-result")).toContainText("refused BACKFILL_OVERLAP");
+  await page.getByTestId("bf-start").fill("2026-08-22");                          // the range accepted first is still requested: a second request over it is refused
+  await page.getByTestId("bf-end").fill("2026-08-24");
   await page.getByTestId("bf-submit").click();
   await expect(page.getByTestId("bf-result")).toContainText("refused BACKFILL_OVERLAP");
   await page.getByTestId("bf-reset").click();
@@ -408,7 +422,7 @@ test("incidents, sources, benchmark, evidence and case study: figures equal Pyth
   for (const k of Object.keys(ref.sample_world.digests)) await expect(page.locator(`[data-testid=digest-table] tr[data-block=${k}] td code`)).toHaveText(ref.sample_world.digests[k]);
   await expect(page.getByTestId("inj-total")).toContainText(`${ref.claims.injection_holding} of ${ref.claims.injection.length}`);
   await expect(page.locator("[data-dr=DR-02] tr[data-claim='DR-02:recovery_minutes']")).toHaveAttribute("data-ok", "true");
-  await expect(page.locator("[data-dr=DR-01] tr[data-claim='DR-01:freshness_seconds']")).toHaveAttribute("data-ok", "true");
+  await expect(page.locator("[data-dr=DR-01] tr[data-claim='DR-01:freshness_seconds']")).toHaveAttribute("data-ok", "null");
   await page.goto("case-study/");
   await ready(page);
   await expect(page.getByTestId("guarantees")).toContainText("never exactly-once");
@@ -443,4 +457,24 @@ test("keyboard: every control on the gate page is reachable and shows a visible 
   }
   expect(seen.has("gate-run")).toBe(true);
   expect(seen.has("fault-keys_unique")).toBe(true);
+});
+
+test("D-09 wording: quarantine scope, minutes beside seconds, header-asserted identity, the staged crash, the vacuous golden crash", async ({ page }) => {
+  const errors = watch(page);
+  await page.goto("overview/");
+  await ready(page);
+  await expect(page.locator("main")).toContainText("in committed batches; the 17 rows of the schema-quarantined batch are listed separately");
+  await expect(page.locator("main")).toContainText(/\d+\.\d{4} min/);
+  await page.goto("evidence/");
+  await ready(page);
+  await expect(page.getByTestId("identity-note")).toContainText("header");
+  await expect(page.locator("main")).toContainText("schema-quarantined batch");
+  await page.goto("case-study/");
+  await ready(page);
+  await expect(page.getByTestId("identity-note")).toContainText("no authentication");
+  await expect(page.locator("main")).toContainText("staged");
+  await page.goto("runs/?dataset=golden");
+  await ready(page);
+  await expect(page.getByTestId("golden-vacuous")).toContainText("vacuous");
+  expect(errors, "console errors").toEqual([]);
 });

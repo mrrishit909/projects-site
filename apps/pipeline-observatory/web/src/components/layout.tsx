@@ -67,7 +67,7 @@ export function Layout({ route, title, children }: { route: string | null; title
           <p className="badge" data-testid="synthetic-badge">Synthetic data, demo mode</p>
           <ManifestStrip />
         </header>
-        {golden && <p className="golden-flag" data-testid="golden-flag">Showing the golden fixture (<code>?dataset=golden</code>): two sources, 31 raw rows, hand-derived expected results, recomputed here from inputs.json. <a href={`${import.meta.env.BASE_URL}${route ? `${route}/` : ""}`} data-testid="golden-exit">Back to the snapshot</a></p>}
+        {golden && <p className="golden-flag" data-testid="golden-flag">Showing the golden fixture (<code>?dataset=golden</code>): two sources, 32 raw rows, hand-derived expected results, recomputed here from inputs.json. <a href={`${import.meta.env.BASE_URL}${route ? `${route}/` : ""}`} data-testid="golden-exit">Back to the snapshot</a></p>}
         <p className="honesty" data-testid="honesty">
           <strong>Synthetic data, demo mode.</strong> The quarantine desk, the backfill console and fault injection are simulations in browser memory that reset on reload; nothing is fetched, retried, published or written. Published <code>raw_records</code> are a 2,000-row sample of 40,191 written rows: a figure tagged <em>2,000-row sample</em> describes the sample, <em>Complete world</em> comes from files published in full, <em>Recorded</em> is the generator&apos;s own statement.
         </p>

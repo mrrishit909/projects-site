@@ -77,14 +77,15 @@ _SELECTS = {
     "quarantine_records": "SELECT quarantine_id, batch_id, source_key, reason_code, payload_hash FROM quarantine_records",
     "checkpoints": "SELECT checkpoint_id, source_id, batch_id, committed_cursor, committed_at, version_number FROM checkpoints",
     "model_definitions": "SELECT model_id, model_name, grain, version_number, definition, definition_hash FROM model_definitions",
-    "pipeline_runs": "SELECT run_id, started_at, finished_at, status, code_sha, backfill_id FROM pipeline_runs",
+    "pipeline_runs": "SELECT run_id, started_at, finished_at, status, code_sha, backfill_id, scope_from FROM pipeline_runs",
     "task_runs": "SELECT task_run_id, run_id, task_name, status, attempt FROM task_runs",
     "quality_results": "SELECT quality_result_id, task_run_id, rule_name, severity, eligible_count, failure_count FROM quality_results",
     "publications": "SELECT publication_id, run_id, dataset_name, published_at, watermark, source_ids, included_batch_ids, content_hash FROM publications",
     "incidents": "SELECT incident_id, run_id, severity, status, opened_at, closed_at, recovery_run_id FROM incidents",
-    "backfill_requests": "SELECT backfill_id, source_id, start_at, end_at, status, partitions FROM backfill_requests",
+    "backfill_requests": "SELECT backfill_id, source_id, start_at, end_at, status, partitions, requested_at, settled_at FROM backfill_requests",
 }
-_INSTANTS = ("started_at", "finished_at", "committed_at", "published_at", "watermark", "opened_at", "closed_at", "start_at", "end_at")
+_INSTANTS = ("started_at", "finished_at", "committed_at", "published_at", "watermark", "opened_at", "closed_at", "start_at", "end_at", "scope_from",
+            "requested_at", "settled_at")
 
 
 def load_rows(conn: Conn) -> dict[str, list[Row]]:

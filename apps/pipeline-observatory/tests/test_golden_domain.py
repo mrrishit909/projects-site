@@ -18,7 +18,7 @@ def test_whole_shape_equals_expected_json_leaf_for_leaf(variant):
     exp, got = flat(golden_expected(variant)), flat(run_pipeline(golden_inputs(variant)).golden)
     assert set(exp) == set(got)
     assert [k for k in exp if exp[k] != got[k]] == []
-    assert len(exp) == {"": 293, "variant-rejected": 264, "variant-empty": 94}[variant]       # the number of leaves of each expected.json
+    assert len(exp) == {"": 295, "variant-rejected": 265, "variant-empty": 95}[variant]       # the number of leaves of each expected.json
 
 
 @pytest.mark.parametrize("variant", VARIANTS)

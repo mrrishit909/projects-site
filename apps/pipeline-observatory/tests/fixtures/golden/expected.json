@@ -14,11 +14,11 @@
         "rejected": 0
       },
       "raw_records": {
-        "accepted": 31,
+        "accepted": 32,
         "rejected": 0
       },
       "quarantine_records": {
-        "accepted": 2,
+        "accepted": 3,
         "rejected": 0
       },
       "checkpoints": {
@@ -123,24 +123,26 @@
             "b-101": {
               "status": "committed",
               "counted": true,
-              "written_rows": 1,
-              "received": 1,
+              "written_rows": 2,
+              "received": 2,
               "accepted_unique": 1,
               "duplicate": 0,
-              "quarantined": 0,
-              "rejection_rate": "0.000000",
+              "quarantined": 1,
+              "rejection_rate": "0.500000",
               "duplicate_rate": "0.000000",
               "quarantine_rows_match": true
             }
           },
-          "received": 1,
+          "received": 2,
           "accepted_unique": 1,
           "duplicate": 0,
-          "quarantined": 0,
-          "quarantined_distinct_keys": 0,
-          "rejection_rate": "0.000000",
+          "quarantined": 1,
+          "quarantined_distinct_keys": 1,
+          "rejection_rate": "0.500000",
           "duplicate_rate": "0.000000",
-          "quarantine_by_reason": {},
+          "quarantine_by_reason": {
+            "EVENT_IN_FUTURE": 1
+          },
           "checkpoint": {
             "committed_version": 1,
             "committed_cursor": "cur-001",
@@ -151,24 +153,26 @@
         }
       },
       "overall": {
-        "received": 21,
+        "received": 22,
         "accepted_unique": 9,
         "duplicate": 10,
-        "quarantined": 2,
-        "rejection_rate": "0.095238",
-        "duplicate_rate": "0.476190"
+        "quarantined": 3,
+        "rejection_rate": "0.136364",
+        "duplicate_rate": "0.454545"
       }
     },
     "freshness": {
       "src-orders": {
         "latest_accepted_event_at": "2026-10-04T09:30:00Z",
         "freshness_seconds": 52200,
+        "freshness_reason": null,
         "last_successful_ingestion_at": "2026-10-04T12:05:00Z",
         "ingestion_age_seconds": 42900
       },
       "src-refunds": {
         "latest_accepted_event_at": "2026-10-04T09:10:00Z",
         "freshness_seconds": 53400,
+        "freshness_reason": null,
         "last_successful_ingestion_at": "2026-10-04T11:05:00Z",
         "ingestion_age_seconds": 46500
       }
@@ -441,14 +445,14 @@
         "residual": "0.00"
       },
       "pub-003": {
-        "source_total": "591.88",
+        "source_total": "599.88",
         "published_total": "301.97",
         "exclusions": {
-          "quarantined": "-60.00",
+          "quarantined": "-52.00",
           "duplicates": "349.91",
           "deletes": "0.00"
         },
-        "exclusions_total": "289.91",
+        "exclusions_total": "297.91",
         "residual": "0.00"
       }
     },

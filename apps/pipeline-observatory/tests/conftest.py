@@ -12,3 +12,9 @@ def fixed_clock():
     clock.freeze(T0)
     yield T0
     clock.freeze(None)
+
+
+@pytest.fixture(autouse=True)
+def sandbox_environment(monkeypatch):
+    """C07 fault injection is allowed only when PIPELINE_ENVIRONMENT equals "sandbox" (D-09, R8-13): the tests say so explicitly."""
+    monkeypatch.setenv("PIPELINE_ENVIRONMENT", "sandbox")

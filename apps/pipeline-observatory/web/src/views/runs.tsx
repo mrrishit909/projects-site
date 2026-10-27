@@ -6,9 +6,14 @@ import type { Dataset } from "../data/analyse";
 import type { Row } from "../domain/contract";
 import { isoZ, parseTs, secondsBetween } from "../domain/time";
 import { blockedRunIds, diagnosis, gateOf, intake, runLog, runsOf, timeLabel } from "../lib/derive";
-import { dayTimeS, dur, n0 } from "../lib/format";
+import { dayTimeS, dur, minutes, n0 } from "../lib/format";
 import { useParam } from "../router";
 
+/** Publication lag (published_at minus the latest included event) is stored in seconds; the minutes (4 places) are shown beside it. */
+const lagText = (ds: Dataset, publicationId: string): string => {
+  const s = ds.g.metrics.publications.publications[publicationId]?.lag_seconds as number | null | undefined;
+  return s === null || s === undefined ? "n/a" : `${n0(s)} s = ${minutes(s)} min`;
+};
 const TASKS = ["ingest", "transform", "quality_gate", "publish"];
 function RunStrip({ ds, runs, sel, pick }: { ds: Dataset; runs: Row[]; sel: string; pick: (id: string) => void }) {
   const W = 1000, H = 44, n = runs.length;
@@ -123,7 +128,7 @@ function RunDetail({ ds, runId }: { ds: Dataset; runId: string }) {
           <tbody>{Object.entries(gate.results as Record<string, Row>).map(([rule, r]) => <tr key={rule} data-rule={rule}><th scope="row"><code>{rule}</code></th><td>{r["severity"]}</td><td>{n0(r["eligible"])}</td><td>{n0(r["failures"])}</td><td><Status tone={r["passed"] ? "ok" : r["severity"] === "critical" ? "bad" : "warn"}>{r["passed"] ? "passed" : "failed"}</Status></td></tr>)}</tbody>
         </table>
       </Scroll>
-      <p className="meaning" data-testid="run-outcome"><strong>Outcome.</strong> {pub ? `Published ${pub["publication_id"]} at ${pub["published_at"]} with watermark ${pub["watermark"]}; the pointer ${hi >= 0 && hist[hi]!["pointer_after"] === pub["publication_id"] ? "moved to it" : `stayed at ${hist[hi]?.["pointer_after"] ?? "its previous value"}`}.` : `No publication row exists for this run; the pointer ${hi >= 0 ? `stays at ${hist[hi]!["pointer_after"] ?? "none"}` : "does not move"}.${gate.decision === "blocked" ? " A failed run never replaces the publication." : ""}`}
+      <p className="meaning" data-testid="run-outcome"><strong>Outcome.</strong> {pub ? `Published ${pub["publication_id"]} at ${pub["published_at"]} with watermark ${pub["watermark"]} (publication lag ${lagText(ds, pub["publication_id"])}); the pointer ${hi >= 0 && hist[hi]!["pointer_after"] === pub["publication_id"] ? "moved to it" : `stayed at ${hist[hi]?.["pointer_after"] ?? "its previous value"}`}.` : `No publication row exists for this run; the pointer ${hi >= 0 ? `stays at ${hist[hi]!["pointer_after"] ?? "none"}` : "does not move"}.${gate.decision === "blocked" ? " A failed run never replaces the publication." : ""}`}
         {inc ? <> Incident <Link to={`incidents?incident=${inc.incident_id}`}>{inc.incident_id}</Link> opened at {inc.opened_at}: {diagnosis(ds, runId)}; verified recovery by {inc.recovery_run_id ?? "none yet"}{inc.recovery_minutes ? ` after ${inc.recovery_minutes} min` : ""}.</> : null}</p>
       <h3>Evidence log</h3>
       <p className="meaning">Structured lines built only from published rows (batches, checkpoints, tasks, gate results, publication). Every line passes the secret-redaction check before it is shown: {n0(log.length)} lines, {n0(withheld)} withheld.</p>
@@ -146,7 +151,7 @@ function Picker({ ds, runs, sel, set }: { ds: Dataset; runs: Row[]; sel: string;
       <div className="controls" data-testid="run-controls">
         <label>Run <select value={ids.includes(sel) ? sel : ""} data-testid="run-select" onChange={(e) => set(e.target.value)}>
           {!ids.includes(sel) && <option value="">(not in this dataset)</option>}
-          {blocked.length > 0 && <optgroup label={`Blocked runs (${blocked.length})`}>{blocked.map((id) => <option key={`b${id}`} value={id}>{id}</option>)}</optgroup>}
+          {blocked.length > 0 && <optgroup label={`Failed runs: blocked at the gate or failed before it (${blocked.length})`}>{blocked.map((id) => <option key={`b${id}`} value={id}>{id}</option>)}</optgroup>}
           <optgroup label="Latest 24 runs">{ids.slice(-24).reverse().map((id) => <option key={`l${id}`} value={id}>{id}</option>)}</optgroup>
         </select></label>
         <label>Go to run id <input list="run-ids" data-testid="run-input" defaultValue="" placeholder={ids[ids.length - 1]} onChange={(e) => { if (ids.includes(e.target.value)) set(e.target.value); }} /></label>

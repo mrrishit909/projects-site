@@ -2,12 +2,34 @@
 import type { Dataset } from "../data/analyse";
 import type { Row } from "../domain/contract";
 import { sortedBy } from "../domain/py";
-import { dur, dayTimeS } from "./format";
+import { dur, dayTimeS, n0 } from "./format";
 import { safeLine } from "../domain/redaction";
 import { isoZ, parseTs, secondsBetween } from "../domain/time";
 
 export const runsOf = (ds: Dataset): Row[] => sortedBy(ds.acc["pipeline_runs"]!, (r) => [parseTs(r["started_at"]), r["run_id"] as string]);
 export const gateOf = (ds: Dataset, runId: string): Row | undefined => ds.g.metrics.quality_gate[runId];
+export interface Funnel { runs: number; reached: number; allowed: number; blocked: number; failedBefore: number }
+/** Where the runs went: a run REACHED the gate when the gate recorded at least one result for it. Of 1,343 runs, 1,328 reached it (1,318 allowed, 10 blocked) and 15
+ * failed before it (an ingest, transform or gate task failed: no quality result exists, and a gate with no critical result fails closed). Counted from the domain's
+ * own gate blocks, never from "blocked": that word also covers the runs that never reached a gate (D-09, R8-07). */
+export function funnel(ds: Dataset): Funnel {
+  const gates = Object.values<{ decision: string; results: Record<string, unknown> }>(ds.g.metrics.quality_gate);
+  const reached = gates.filter((g) => Object.keys(g.results).length > 0);
+  const allowed = reached.filter((g) => g.decision === "allowed").length;
+  return { runs: gates.length, reached: reached.length, allowed, blocked: reached.length - allowed, failedBefore: gates.length - reached.length };
+}
+export const funnelText = (f: Funnel): string => `${n0(f.runs)} runs: ${n0(f.reached)} reached the gate (${n0(f.allowed)} allowed, ${n0(f.blocked)} blocked); ${n0(f.failedBefore)} failed before it`;
+/** Why a run is on the list of failed runs: blocked by a failing critical check at the gate, or failed before the gate (the failed task). */
+export function failureKind(ds: Dataset, runId: string): { kind: "blocked at the gate" | "failed before the gate"; detail: string } {
+  const gate = gateOf(ds, runId);
+  const reached = !!gate && Object.keys(gate.results).length > 0;
+  return { kind: reached ? "blocked at the gate" : "failed before the gate", detail: diagnosis(ds, runId) };
+}
+/** How often the completeness warning fails: it compares every accepted record with every record the source declared for all earlier days, so it fails in most gates. */
+export function completenessSignal(ds: Dataset): { failing: number; gates: number } {
+  const gates = Object.values<{ results: Record<string, { passed: boolean }> }>(ds.g.metrics.quality_gate).filter((g) => g.results["completeness_vs_expectation"]);
+  return { failing: gates.filter((g) => !g.results["completeness_vs_expectation"]!.passed).length, gates: gates.length };
+}
 export const blockedRunIds = (ds: Dataset): string[] => runsOf(ds).filter((r) => gateOf(ds, r["run_id"])?.decision === "blocked").map((r) => r["run_id"] as string);
 
 export interface Verdict { tone: "ok" | "warn" | "bad"; headline: string; rule: string; reasons: string[] }

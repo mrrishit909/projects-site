@@ -34,6 +34,7 @@ jobs:
     env:
       DATABASE_URL: postgresql://lab:lab@127.0.0.1:5432/pipeline_observatory
       CODE_SHA: ${{ github.sha }}
+      PIPELINE_ENVIRONMENT: sandbox
     steps:
       - uses: actions/checkout@v4
         with:

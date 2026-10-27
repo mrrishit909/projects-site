@@ -52,7 +52,7 @@ function Guarantee() {
       <ul className="plain" data-testid="guarantees">
         <li><strong>At-least-once delivery, idempotent apply.</strong> A source may deliver a row again (a retry, a replay, a recovered crash). The key check turns the second delivery into a counted duplicate, so each source key is accepted at most once.</li>
         <li><strong>Proven at the source-key boundary, never exactly-once.</strong> The guarantee is that no source key is accepted twice and no row is lost without a reason code; it does not claim the network delivered each message once.</li>
-        <li><strong>Atomic commit.</strong> A batch commits with its checkpoint (accepted rows, quarantine rows and the next checkpoint version are one transaction). A crash between the data write and the checkpoint leaves an aborted batch that counts for nothing.</li>
+        <li><strong>Atomic commit.</strong> A batch commits with its checkpoint (accepted rows, quarantine rows and the next checkpoint version are one transaction). A crash between the data write and the checkpoint rolls the transaction back and leaves the batch <code>staged</code> (a dying transaction cannot write <code>aborted</code>); a staged or aborted batch counts for nothing. The golden fixture and the generator record the same state, after cleanup, as <code>aborted</code>.</li>
         <li><strong>Fail closed.</strong> No critical result means blocked; a blocked or failed run never moves the publication pointer.</li>
         <li><strong>Nothing silently dropped.</strong> Every row has exactly one disposition: accepted, duplicate, quarantined (with a reason), or deleted.</li>
       </ul>
@@ -82,6 +82,7 @@ function Limits({ ds }: { ds: Dataset }) {
         <li>The data is synthetic. Rates, volumes and the designed relationships come from a seeded generator, not from a real system.</li>
         {ds.id === "snapshot" && <li>The raw records are a sample (2,000 of {ds.ingestion.overall.received ? "40,191 written" : "the written"} rows). Freshness, completeness, late events, reconciliation and content hashes are therefore recorded or sampled, and tagged so.</li>}
         <li>Processing seconds are one synthetic measurement, not a benchmark, and no CI timing is published.</li>
+        <li data-testid="identity-note">Mode A identifies the caller by the <code>X-Actor-Id</code> and <code>X-Actor-Role</code> headers the caller sends: <strong>header-asserted identity, no authentication</strong>. 401 means no actor header and 403 a role the command does not allow; neither proves who the caller is.</li>
         <li>Task attempts carry no timestamps in the published data, so the run timeline places batches, publication and watermark on a time axis and shows tasks as ordered steps.</li>
         <li>The silent-source rule on the overview (more than two cadences) is a display rule; the contract&apos;s gate knows only each source&apos;s own target.</li>
       </ul>

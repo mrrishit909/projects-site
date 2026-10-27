@@ -389,7 +389,7 @@ def test_c05_allowed_gate_and_its_checks(lab, conn):
     res = r.json()["result"]
     checks = {x["rule_name"]: (x["severity"], x["eligible_count"], x["failure_count"]) for x in res["results"]}
     assert checks == {"keys_unique": ("critical", 8, 0), "relationships_intact": ("critical", 8, 0), "reconciliation_residual_zero": ("critical", 1, 0),
-                      "completeness_vs_expectation": ("warning", 9, 1)}
+                      "scope_complete": ("critical", 1, 0), "late_events_included": ("critical", 0, 0), "completeness_vs_expectation": ("warning", 9, 1)}
     assert res["decision"] == "allowed" and res["critical_failures"] == 0 and res["noncritical_failures"] == 1 and res["incident_id"] is None
     assert (res["reconciliation"]["source_total"], res["reconciliation"]["published_total"], res["reconciliation"]["residual"]) == ("289.94", "289.97", "0.00")
     assert conn.execute("SELECT status FROM pipeline_runs").fetchone()["status"] == "success" and count(conn, "incidents") == 0

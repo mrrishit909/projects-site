@@ -153,10 +153,14 @@ def current_dataset_version() -> str:
 
 def command(client, name: str, input_: dict[str, Any], key: str | None = None, headers: dict[str, str] | None = None,
             request_id: str = "req-test", dataset_version: str | None = None):
-    """POST one command with a fresh idempotency key unless ``key`` is given (default actor: the operator, who may run every command)."""
+    """POST one command with a fresh idempotency key unless ``key`` is given (default actor: the operator, who may run every command).
+    A fetch-source-page input without a ``fetch_session`` gets a session of its own (a fetch always names one, D-09; each call is its own
+    session, so a test that wants a loop or a stopped session names it)."""
     if key is None:
         _seq["n"] += 1
         key = f"key-{os.getpid()}-{_seq['n']}"
+    if name == "fetch-source-page" and "fetch_session" not in input_:
+        input_ = {**input_, "fetch_session": f"auto-{os.getpid()}-{_seq['n']}-{key}"}
     body = {"request_id": request_id, "dataset_version": dataset_version or current_dataset_version(), "idempotency_key": key, "input": input_}
     return client.post(f"{PREFIX}/commands/{name}", json=body, headers=OPERATOR if headers is None else headers)
 
@@ -198,7 +202,7 @@ def ingest(client, source_id: str, batch_id: str, records: list[dict[str, Any]],
            commit: bool = True, headers: dict[str, str] | None = None, **page: Any) -> dict[str, Any]:
     """C01 + C02 (+ C03). Returns the three response bodies' results."""
     out: dict[str, Any] = {}
-    r = command(client, "fetch-source-page", {"source_id": source_id, "cursor": cursor, "batch_id": batch_id,
+    r = command(client, "fetch-source-page", {"source_id": source_id, "cursor": cursor, "batch_id": batch_id, "fetch_session": f"s-{batch_id}",
                                               "page": {"records": records, "next_cursor": next_cursor, **page}}, headers=headers)
     assert r.status_code == 200, r.text
     out["fetch"] = r.json()["result"]

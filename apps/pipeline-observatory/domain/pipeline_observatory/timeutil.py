@@ -1,10 +1,10 @@
 """Instants: UTC, one accepted form (``YYYY-MM-DDTHH:MM:SS[.f]`` with ``Z`` or an offset)."""
 from __future__ import annotations
 
-import re
 from datetime import datetime, timedelta, timezone
 
-TS_FORM = re.compile(r"^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(Z|[+-]\d{2}:\d{2})$")
+from .patterns import TIMESTAMP as TS_FORM
+
 UTC = timezone.utc
 
 
@@ -13,14 +13,28 @@ def parse_ts(value: object) -> datetime:
     if isinstance(value, datetime):
         d = value
     elif isinstance(value, str):
-        if not TS_FORM.match(value):
+        m = TS_FORM.fullmatch(value)
+        if not m:
             raise ValueError("timestamp must be YYYY-MM-DDTHH:MM:SS with a zone")
-        d = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        y, mo, dd, h, mi, s = (int(m.group(i)) for i in range(1, 7))
+        micro = int((m.group(7) or "")[:6].ljust(6, "0"))               # digits beyond microseconds are TRUNCATED (D-09, R8-05)
+        zone = m.group(8)
+        if zone == "Z":
+            tz = UTC
+        else:
+            oh, om = int(zone[1:3]), int(zone[4:6])
+            if oh > 23 or om > 59:
+                raise ValueError("offset is out of range")
+            tz = timezone((1 if zone[0] == "+" else -1) * timedelta(hours=oh, minutes=om))
+        d = datetime(y, mo, dd, h, mi, s, micro, tzinfo=tz)            # ValueError for an impossible date or time
     else:
         raise ValueError("timestamp must be an ISO-8601 string")
     if d.tzinfo is None:
         raise ValueError("timestamp needs a timezone")
-    return d.astimezone(UTC)
+    try:
+        return d.astimezone(UTC)
+    except OverflowError:
+        raise ValueError("timestamp is out of range") from None
 
 
 def iso_z(dt: datetime | str | None) -> str | None:

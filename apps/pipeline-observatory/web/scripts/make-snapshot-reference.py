@@ -98,7 +98,8 @@ def headline(shape):
         "backfills": {"overall": m["backfills"]["overall"], "refused": m["backfills"]["refused"]},
         "processing_rate": m["processing_rate"], "runs_overall": m["runs"]["overall"],
         "durations": {k: {"count": v["count"], "mean_minutes": v["mean_minutes"]} for k, v in m["runs"]["durations"].items()},
-        "gate": {"allowed": sum(1 for v in m["quality_gate"].values() if v["decision"] == "allowed"), "blocked": sum(1 for v in m["quality_gate"].values() if v["decision"] == "blocked")},
+        "gate": {"allowed": sum(1 for v in m["quality_gate"].values() if v["decision"] == "allowed"), "blocked": sum(1 for v in m["quality_gate"].values() if v["decision"] == "blocked"),
+                 "reached_gate": sum(1 for v in m["quality_gate"].values() if v["results"])},
         "freshness": fresh, "completeness_partitions": len(comp), "completeness_digest": digest(comp)}
 
 
@@ -178,7 +179,8 @@ for i in limited:
         slacks.append(seconds_between(r["fetched_at"], nxt["fetched_at"]) - r["retry_after_seconds"])
 retry = {"fetch_rows": len(fl), "rate_limited_responses": len(limited), "retries": len(slacks), "retries_honouring_retry_after": sum(1 for s in slacks if s >= 0),
          "retries_too_soon": sum(1 for s in slacks if s < 0), "sessions_rate_limited": len(sessions), "min_slack_seconds": min(slacks), "max_slack_seconds": max(slacks),
-         "cursor_loops": sum(1 for r in fl if r["status"] == "cursor_loop"), "sources_rate_limited": sorted({fl[i]["source_id"] for i in limited})}
+         "cursor_loops": sum(1 for r in fl if r["status"] == "cursor_loop"), "sources_rate_limited": sorted({fl[i]["source_id"] for i in limited}),
+         "by_status": {k: sum(1 for r in fl if r["status"] == k) for k in sorted({r["status"] for r in fl})}}
 
 gate_of = {rid: v["decision"] for rid, v in M["quality_gate"].items()}
 pub_of_run = {p["run_id"]: p["publication_id"] for p in acc["publications"]}
@@ -307,7 +309,7 @@ bat_w = [b for b in files["ingestion_batches"] if b["source_id"] == sid1 and b["
 sum_of = {s["batch_id"]: s for s in summ}
 f1 = next(f for f in fresh_rows if f["source_id"] == sid1)
 claims.update({
-    "DR-01:freshness_seconds": f1["sample_freshness_seconds"], "DR-01:latest_accepted_event_at": M["freshness"][sid1]["latest_accepted_event_at"], "DR-01:ingestion_age_seconds": f1["ingestion_age_seconds"],
+    "DR-01:ingestion_age_seconds": f1["ingestion_age_seconds"],
     "DR-01:last_successful_ingestion_at": iso_z(max(parse_ts(cp_of[b["batch_id"]]["committed_at"]) for b in files["ingestion_batches"] if b["source_id"] == sid1 and b["status"] == "committed" and b["batch_id"] in cp_of)),
     "DR-01:runs_in_window": len(runs_w), "DR-01:runs_succeeded": sum(1 for r in runs_w if r["status"] == "success"), "DR-01:runs_allowed_by_the_gate": sum(1 for r in runs_w if gate_of[r["run_id"]] == "allowed"),
     "DR-01:committed_batches_in_window": len(bat_w), "DR-01:accepted_in_window": sum(sum_of[b["batch_id"]]["accepted_unique"] for b in bat_w),
@@ -322,6 +324,7 @@ claims.update({"DR-02:run_status": next(r for r in files["pipeline_runs"] if r["
                "DR-02:incident_id": inc2["incident_id"], "DR-02:recovery_run_id": inc2["recovery_run_id"], "DR-02:recovery_minutes": inc2["recovery_minutes"]})
 for k in ("fetch_rows", "rate_limited_responses", "retries", "retries_honouring_retry_after", "retries_too_soon", "sessions_rate_limited", "min_slack_seconds", "max_slack_seconds", "cursor_loops", "sources_rate_limited"):
     claims[f"DR-03:{k}"] = retry[k]
+claims["DR-03:fetch_log_statuses"] = retry["by_status"]
 ev = {e["source_key"]: e for e in M["late_events"]["events"]}
 for d in dr["DR-04"]["realised"]["designed"]:
     e = ev.get(d["source_key"])

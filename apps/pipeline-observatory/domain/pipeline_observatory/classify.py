@@ -6,12 +6,14 @@
     a key never accepted is quarantined DELETE_TARGET_UNKNOWN; a repeated delete is a duplicate;
   * otherwise a ``source_key`` already accepted in the same source (earlier batch or earlier in this batch) is a duplicate, whatever its
     payload hash. THE KEY CHECK RUNS BEFORE THE CONTRACT CHECK;
-  * otherwise the contract decides: MISSING_FIELD, INVALID_FIELD, NEGATIVE_QUANTITY quarantine; else the row is accepted.
+  * otherwise the contract decides, in this order: MISSING_FIELD, INVALID_FIELD (a payload that is not an object, a quantity that is not an
+    integer of magnitude at most 2**53, money that is not a 2-place decimal string, an event_ts that is not a real instant), NEGATIVE_QUANTITY,
+    EVENT_IN_FUTURE (an event dated after its batch's arrival, the batch ``started_at``, or after the cutoff; D-09) quarantine; else the row
+    is accepted.
 Nothing is dropped: every row has exactly one disposition.
 """
 from __future__ import annotations
 
-import re
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
 from typing import Any, Iterable
@@ -19,10 +21,10 @@ from typing import Any, Iterable
 from . import errors as E
 from .contract import REQUIRED_FIELDS
 from .errors import DomainError
+from .patterns import is_money, is_quantity
 from .timeutil import parse_ts
 
 ACCEPTED, DUPLICATE, QUARANTINED, DELETED = "accepted", "duplicate", "quarantined", "deleted"
-_MONEY = re.compile(r"^-?\d+(\.\d{1,2})?$")
 
 
 @dataclass(frozen=True)
@@ -45,10 +47,11 @@ def next_checkpoint_version(previous: int, version: int) -> int:
     return version
 
 
-def money_amount(payload: dict[str, Any], field: str = "amount") -> Decimal:
-    """The business amount of a payload as an exact Decimal; a row without a usable amount contributes 0.00 (it has no business value)."""
-    v = payload.get(field)
-    if isinstance(v, str) and _MONEY.match(v):
+def money_amount(payload: Any, field: str = "amount") -> Decimal:
+    """The business amount of a payload as an exact Decimal; a row without a usable amount (a payload that is not an object, a missing or
+    malformed field) contributes 0.00: it has no business value (D-09, R8-08)."""
+    v = payload.get(field) if isinstance(payload, dict) else None
+    if is_money(v):
         try:
             return Decimal(v)
         except InvalidOperation:
@@ -56,32 +59,41 @@ def money_amount(payload: dict[str, Any], field: str = "amount") -> Decimal:
     return Decimal("0")
 
 
-def contract_reason(payload: Any) -> str | None:
-    """The quarantine reason of an upsert payload, or None when it satisfies the contract (D-P8-12 payload fields)."""
+def event_limit(arrival: Any = None, cutoff: Any = None) -> Any:
+    """The latest event instant a row may carry: the earlier of its batch's arrival (``started_at``) and the cutoff; None when neither is given."""
+    limits = [parse_ts(x) for x in (arrival, cutoff) if x is not None]
+    return min(limits) if limits else None
+
+
+def contract_reason(payload: Any, arrival: Any = None, cutoff: Any = None, limit: Any = None) -> str | None:
+    """The quarantine reason of an upsert payload, or None when it satisfies the contract (D-P8-12 payload fields). ``arrival`` (the batch's
+    ``started_at``) and ``cutoff`` bound the event instant: a later event is EVENT_IN_FUTURE (D-09, R8-01). ``limit`` is ``event_limit`` already
+    computed (a batch classifies many rows against one limit)."""
     if not isinstance(payload, dict):
-        return E.MISSING_FIELD
+        return E.INVALID_FIELD
     if any(payload.get(k) is None for k in REQUIRED_FIELDS):
         return E.MISSING_FIELD
-    q = payload["quantity"]
-    if isinstance(q, bool) or not isinstance(q, int):
+    if not is_quantity(payload["quantity"]) or not all(is_money(payload[k]) for k in ("unit_price", "amount")):
         return E.INVALID_FIELD
-    if q < 0:
-        return E.NEGATIVE_QUANTITY
-    for k in ("unit_price", "amount"):
-        if not isinstance(payload[k], str) or not _MONEY.match(payload[k]):
-            return E.INVALID_FIELD
     try:
-        parse_ts(payload["event_ts"])
+        event = parse_ts(payload["event_ts"])
     except ValueError:
         return E.INVALID_FIELD
+    if payload["quantity"] < 0:
+        return E.NEGATIVE_QUANTITY
+    limit = limit if limit is not None else event_limit(arrival, cutoff)
+    if limit is not None and event > limit:
+        return E.EVENT_IN_FUTURE
     return None
 
 
 def classify_rows(rows: Iterable[dict[str, Any]], accepted_keys: set[str], deleted_keys: set[str] | None = None,
-                  schema_ok: bool = True) -> list[Disposition]:
+                  schema_ok: bool = True, arrival: Any = None, cutoff: Any = None) -> list[Disposition]:
     """Classify the rows of ONE batch against ``accepted_keys`` (every key accepted so far in the source; the set is extended in place,
-    as is ``deleted_keys``). Rows are taken in raw_record_id order."""
+    as is ``deleted_keys``). Rows are taken in raw_record_id order. ``arrival`` is the batch's ``started_at``, ``cutoff`` the instant the
+    classification is made for: an upsert dated after either is quarantined EVENT_IN_FUTURE."""
     deleted = deleted_keys if deleted_keys is not None else set()
+    limit = event_limit(arrival, cutoff)
     out: list[Disposition] = []
     for r in sorted(rows, key=lambda r: r["raw_record_id"]):
         rid, key, payload = r["raw_record_id"], r.get("source_key"), r.get("payload_json")
@@ -104,7 +116,7 @@ def classify_rows(rows: Iterable[dict[str, Any]], accepted_keys: set[str], delet
         if key is not None and key in accepted_keys:
             out.append(Disposition(rid, DUPLICATE))
             continue
-        reason = contract_reason(payload)
+        reason = contract_reason(payload, limit=limit)
         if reason or key is None:
             out.append(Disposition(rid, QUARANTINED, reason or E.MISSING_FIELD))
         else:

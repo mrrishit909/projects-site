@@ -4,7 +4,8 @@
 reason code and the raw row exactly as sent). Rules, in the order they are applied to a row:
 duplicate primary key (or repeated run/task/attempt) -> DUPLICATE_ID; foreign key unknown -> UNKNOWN_*; foreign key rejected ->
 DEPENDENT_REJECTED. Backfills overlapping an earlier accepted request of the same source (backfill_id order, half-open) ->
-BACKFILL_OVERLAP. A checkpoint whose version is not previous + 1 (commit order) -> CHECKPOINT_REGRESSION / CHECKPOINT_GAP and its
+BACKFILL_OVERLAP (history rule of backfill.py). A repeated primary key of ANY entity, batches included, is DUPLICATE_ID before the row is accepted.
+A quality result whose severity is not ``critical`` or ``warning`` is INVALID_FIELD. A checkpoint whose version is not previous + 1 (commit order) -> CHECKPOINT_REGRESSION / CHECKPOINT_GAP and its
 batch, and through it the batch's rows, are DEPENDENT_REJECTED (a batch commits atomically with its checkpoint).
 """
 from __future__ import annotations
@@ -64,6 +65,8 @@ def validate_import(data: dict[str, Any]) -> ImportResult:
             return E.MISSING_FIELD
         if rid in seen_pk[entity]:
             return E.DUPLICATE_ID
+        if entity == "quality_results" and row.get("severity") not in ("critical", "warning"):
+            return E.INVALID_FIELD
         if entity == "task_runs" and (row.get("run_id"), row.get("task_name"), int(row.get("attempt", 0))) in seen_attempt:
             return E.DUPLICATE_ID               # a repeated attempt of one task in one run
         if entity in FK:
@@ -90,20 +93,30 @@ def validate_import(data: dict[str, Any]) -> ImportResult:
     plain("source_contracts")
     for row in data["backfill_requests"]:                       # in backfill_id order of the input list
         code = refusal("backfill_requests", row)
-        if code is None and find_overlap(acc["backfill_requests"], row) is not None:
+        if code is None and find_overlap(acc["backfill_requests"], row, history=True) is not None:
             code = E.BACKFILL_OVERLAP
         reject("backfill_requests", row, code) if code else accept("backfill_requests", row)
 
     batch_rows: list[Row] = []
     for row in data["ingestion_batches"]:
         code = refusal("ingestion_batches", row)
-        reject("ingestion_batches", row, code) if code else batch_rows.append(row)
+        if code:
+            reject("ingestion_batches", row, code)
+        else:
+            batch_rows.append(row)
+            seen_pk["ingestion_batches"].add(row["batch_id"])       # a repeated batch_id is DUPLICATE_ID before acceptance (D-09, R8-03)
     live_batches = {b["batch_id"] for b in batch_rows}
     # the atomic commit: every checkpoint of a live batch must be previous + 1 of its source, in commit order
     cp_code: dict[str, str] = {}
     bad_batches: set[str] = set()
     previous: dict[str, int] = {}
-    for c in sorted((c for c in data["checkpoints"] if c.get("batch_id") in live_batches), key=lambda c: (c["committed_at"], c["checkpoint_id"])):
+    first_cp: list[Row] = []
+    seen_cp: set[Any] = set()
+    for c in data["checkpoints"]:                                   # only the FIRST occurrence of a checkpoint id takes part in the ordering: a repeat is DUPLICATE_ID
+        if c.get("checkpoint_id") not in seen_cp:
+            seen_cp.add(c.get("checkpoint_id"))
+            first_cp.append(c)
+    for c in sorted((c for c in first_cp if c.get("batch_id") in live_batches), key=lambda c: (c["committed_at"], c["checkpoint_id"])):
         try:
             previous[c["source_id"]] = next_checkpoint_version(previous.get(c["source_id"], 0), c["version_number"])
         except DomainError as err:
@@ -111,8 +124,11 @@ def validate_import(data: dict[str, Any]) -> ImportResult:
             bad_batches.add(c["batch_id"])
     for b in batch_rows:
         reject("ingestion_batches", b, E.DEPENDENT_REJECTED) if b["batch_id"] in bad_batches else accept("ingestion_batches", b)
+    seen_cp = set()
     for c in data["checkpoints"]:
-        code = cp_code.get(c["checkpoint_id"]) or refusal("checkpoints", c)
+        repeat = c.get("checkpoint_id") in seen_cp
+        seen_cp.add(c.get("checkpoint_id"))
+        code = (E.DUPLICATE_ID if repeat else None) or cp_code.get(c["checkpoint_id"]) or refusal("checkpoints", c)
         reject("checkpoints", c, code) if code else accept("checkpoints", c)
     for entity in ("raw_records", "quarantine_records", "model_definitions", "pipeline_runs", "task_runs", "quality_results", "publications",
                    "incidents"):

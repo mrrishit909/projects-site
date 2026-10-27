@@ -23,10 +23,10 @@ export const BROWSER_EXPERIMENTS: Record<string, (c: ExperimentCtx) => Experimen
     return { ok: e.holds, lines: [...e.steps.map((s) => `${s.label}: ${s.accepted_total} accepted in total`), e.verdict] };
   },
   "INJ-02": () => {
-    const accepted = [{ backfill_id: "bf-1", source_id: "src-a", start_at: "2026-09-01T00:00:00Z", end_at: "2026-09-04T00:00:00Z" }];
+    const accepted = [{ backfill_id: "bf-1", source_id: "src-a", start_at: "2026-09-01T00:00:00Z", end_at: "2026-09-04T00:00:00Z", status: "requested" }];
     const over = decideBackfill(accepted, { source_id: "src-a", start_at: "2026-09-03T00:00:00Z", end_at: "2026-09-06T00:00:00Z" });
     const touch = decideBackfill(accepted, { source_id: "src-a", start_at: "2026-09-04T00:00:00Z", end_at: "2026-09-06T00:00:00Z" });
-    return { ok: over.code === "BACKFILL_OVERLAP" && touch.accepted, lines: [`[Sep 3, Sep 6) after [Sep 1, Sep 4): ${over.code} (overlaps ${over.overlaps_with})`, `[Sep 4, Sep 6) touching [Sep 1, Sep 4): ${touch.accepted ? "accepted" : touch.code}, ${touch.partitions.length} partitions`] };
+    return { ok: over.code === "BACKFILL_OVERLAP" && touch.accepted, lines: [`[Sep 3, Sep 6) after the still-requested [Sep 1, Sep 4): ${over.code} (overlaps ${over.overlaps_with})`, `[Sep 4, Sep 6) touching [Sep 1, Sep 4): ${touch.accepted ? "accepted" : touch.code}, ${touch.partitions.length} partitions`] };
   },
   "INJ-03": () => {
     let clock = parseTs("2026-10-04T08:00:00Z");
@@ -86,7 +86,7 @@ export const BROWSER_EXPERIMENTS: Record<string, (c: ExperimentCtx) => Experimen
     const next: Record<string, string | null> = { A: "B", B: "C", C: "B" };
     let err = "ok";
     try { fetchAll((cur) => ({ status: 200, records: [{ cur }], next_cursor: next[cur] ?? null, retry_after_seconds: null }), "A", () => 0n, () => undefined); } catch (e) { err = e instanceof DomainError ? e.code : "error"; }
-    return { ok: err === "CURSOR_LOOP", lines: [`pages A, B, C where C points back to B: ${err}`, "the fetch stops at the repeat; a new session may fetch the window again"] };
+    return { ok: err === "CURSOR_LOOP", lines: [`pages A, B, C where C points back to B: ${err}`, "the fetch stops at the repeat within one session; a new session may poll the last cursor again (recorded as refetch)"] };
   },
   "INJ-11": () => {
     const lines = ["fetch ok authorization: Bearer abcdef1234567890xyz", "connect postgres://lab:hunter2@db:5432/x", "batch b-0001 committed 12 rows in 3 ms"];

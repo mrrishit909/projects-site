@@ -183,8 +183,8 @@ def test_cursor_progress_accepts_new_cursors_and_the_end_of_the_feed():
 
 
 # ------------------------------------------------------------------------------------------------ backfills (D-03, D-P8-11)
-def bf(i, s, e, src="src-orders"):
-    return {"backfill_id": f"bf-{i:03d}", "source_id": src, "start_at": f"{s}T00:00:00Z", "end_at": f"{e}T00:00:00Z"}
+def bf(i, s, e, src="src-orders", status="requested", **more):
+    return {"backfill_id": f"bf-{i:03d}", "source_id": src, "start_at": f"{s}T00:00:00Z", "end_at": f"{e}T00:00:00Z", "status": status, **more}
 
 
 def test_ranges_are_half_open_touching_ranges_do_not_overlap():
@@ -401,3 +401,133 @@ def test_a_repeated_task_attempt_is_a_duplicate_id_and_the_attempt_is_not_double
     res = run_pipeline(d)
     assert [(r["id"], r["reason_code"]) for r in res.rejected] == [("tr-001-9", "DUPLICATE_ID")]
     assert res.metrics["runs"]["runs"]["run-001"]["attempts"] == 5
+
+
+# ------------------------------------------------------------------------------------------------ D-09 (review round R8)
+ENTITY_ROW = {"source_contracts": 0, "ingestion_batches": 0, "raw_records": 0, "quarantine_records": 0, "checkpoints": 0, "model_definitions": 0, "pipeline_runs": 0,
+              "task_runs": 0, "quality_results": 0, "publications": 0, "incidents": 0}
+
+
+@pytest.mark.parametrize("entity", sorted(ENTITY_ROW))
+def test_r8_03_a_repeated_primary_key_of_any_entity_is_duplicate_id_before_acceptance(entity):
+    from pipeline_observatory.contract import ID
+    d = golden_inputs()
+    first = deepcopy(d[entity][0])
+    d[entity].append(deepcopy(first))
+    res = run_pipeline(d)
+    assert [(r["entity"], r["id"], r["reason_code"]) for r in res.rejected if r["entity"] == entity] == [(entity, first[ID[entity]], "DUPLICATE_ID")]
+    assert len(res.imported.accepted[entity]) == len(golden_inputs()[entity])               # the first occurrence stays, the repeat is not counted
+
+
+def test_r8_03_the_reviewers_duplicated_batch_does_not_double_the_counts():
+    d = golden_inputs()
+    base = run_pipeline(golden_inputs()).metrics["ingestion"]["overall"]
+    d["ingestion_batches"].append(deepcopy(d["ingestion_batches"][0]))                      # b-001 twice (it used to pass import and be applied twice)
+    d["raw_records"] = d["raw_records"] + deepcopy([r for r in d["raw_records"] if r["batch_id"] == "b-001"])        # its rows repeat too
+    res = run_pipeline(d)
+    assert ("ingestion_batches", "b-001", "DUPLICATE_ID") in [(r["entity"], r["id"], r["reason_code"]) for r in res.rejected]
+    assert {r["reason_code"] for r in res.rejected if r["entity"] == "raw_records"} == {"DUPLICATE_ID"}
+    assert res.metrics["ingestion"]["overall"] == base
+
+
+def test_r8_03_a_duplicate_batch_whose_original_is_rejected_for_its_checkpoint_stays_rejected():
+    d = golden_inputs("variant-rejected")
+    d["ingestion_batches"].append(deepcopy(d["ingestion_batches"][2]))
+    got = {(r["entity"], r["id"]): r["reason_code"] for r in run_pipeline(d).rejected}
+    assert got[("ingestion_batches", "b-003")] in ("DUPLICATE_ID", "DEPENDENT_REJECTED")
+
+
+@pytest.mark.parametrize("severity", ["Critical", "CRITICAL", "high", "", None, 1, "critical "])
+def test_severity_is_validated_on_import(severity):
+    d = golden_inputs()
+    d["quality_results"][0]["severity"] = severity
+    got = [(r["id"], r["reason_code"]) for r in run_pipeline(d).rejected]
+    assert got == [(d["quality_results"][0]["quality_result_id"], "INVALID_FIELD")]
+
+
+def test_the_gate_without_the_rejected_result_fails_closed_never_open():
+    d = golden_inputs()
+    d["quality_results"][0]["severity"] = "Critical"                                     # run-001's only critical result is refused at import ...
+    assert run_pipeline(d).metrics["quality_gate"]["run-001"]["decision"] == "blocked"     # ... so the gate has none and blocks
+
+
+def test_event_in_future_is_judged_against_the_batch_arrival_and_the_cutoff():
+    p = row(1, "F", event_ts="2026-10-04T12:00:01Z")["payload_json"]
+    assert contract_reason(p) is None                                                       # no arrival, no cutoff: nothing to compare with
+    assert contract_reason(p, "2026-10-04T12:00:00Z") == "EVENT_IN_FUTURE" and contract_reason(p, "2026-10-04T12:00:01Z") is None
+    assert contract_reason(p, "2026-10-05T00:00:00Z", "2026-10-04T12:00:00Z") == "EVENT_IN_FUTURE"        # the cutoff binds when it is the earlier
+    assert contract_reason({**p, "quantity": -1}, "2026-10-04T12:00:00Z") == "NEGATIVE_QUANTITY"           # sign before date
+    assert [(d.kind, d.reason) for d in classify_rows([row(1, "F", event_ts="2026-10-04T12:00:01Z")], set(), None, True, "2026-10-04T12:00:00Z")] == [(QUARANTINED, "EVENT_IN_FUTURE")]
+    # a future row of a key never accepted does not block the key: the same key later with a real date is accepted
+    seen = set()
+    assert [(d.kind, d.reason) for d in classify_rows([row(1, "F", event_ts="2030-01-01T00:00:00Z"), row(2, "F")], seen, None, True, "2026-10-04T12:00:00Z")] == [(QUARANTINED, "EVENT_IN_FUTURE"), (ACCEPTED, None)]
+
+
+def test_the_golden_future_row_cannot_make_a_stale_source_look_fresh():
+    d = golden_inputs()
+    res = run_pipeline(d)
+    fr = res.metrics["freshness"]["src-refunds"]
+    assert fr["latest_accepted_event_at"] == "2026-10-04T09:10:00Z" and fr["freshness_seconds"] == 53400 and fr["freshness_reason"] is None
+    d["raw_records"] = [r for r in d["raw_records"] if r["raw_record_id"] != "rr-b-101-01"]                    # remove the only accepted refund: nothing is accepted, the future row stays out
+    d["quarantine_records"] = [q for q in d["quarantine_records"] if q["quarantine_id"] != "q-b-101-99"]
+    none = run_pipeline(d).metrics["freshness"]["src-refunds"]
+    assert none["freshness_seconds"] is None and none["latest_accepted_event_at"] is None and none["freshness_reason"] == "NO_ACCEPTED_EVENT"
+
+
+def bfr(i, s, e, status="requested", **more):
+    return {"backfill_id": f"bf-{i:03d}", "source_id": "src-orders", "start_at": f"{s}T00:00:00Z", "end_at": f"{e}T00:00:00Z", "status": status, **more}
+
+
+def test_r8_12_only_requested_or_running_requests_block_and_a_settled_one_does_not():
+    new = bfr(2, "2026-09-02", "2026-09-04")
+    for status, blocks in (("requested", True), ("running", True), ("partial", False), ("complete", False), ("cancelled", False), (None, False)):
+        got = find_overlap([bfr(1, "2026-09-01", "2026-09-03", status)], new)
+        assert (got is not None) is blocks, status
+
+
+def test_r8_12_history_judges_by_what_was_running_at_the_time_and_a_clockless_snapshot_by_order():
+    victim = bfr(1, "2026-09-01", "2026-09-03", "partial", requested_at="2026-08-30T10:00:00Z", settled_at="2026-08-30T12:00:00Z")
+    during = bfr(2, "2026-09-02", "2026-09-04", requested_at="2026-08-30T11:00:00Z")
+    after = bfr(3, "2026-09-02", "2026-09-04", requested_at="2026-08-30T12:00:00Z")           # at the instant it settled: no longer active
+    assert find_overlap([victim], during, history=True) is victim and find_overlap([victim], after, history=True) is None
+    no_clock = bfr(4, "2026-09-02", "2026-09-04")
+    assert find_overlap([bfr(1, "2026-09-01", "2026-09-03", "partial")], no_clock, history=True) is not None      # the snapshot cannot say: every earlier request counts
+
+
+def test_r8_12_import_refuses_the_request_made_while_its_victim_was_running_and_accepts_the_one_made_after():
+    d = golden_inputs()
+    d["backfill_requests"] = [bfr(1, "2026-09-01", "2026-09-03", "partial", requested_at="2026-08-30T10:00:00Z", settled_at="2026-08-30T12:00:00Z",
+                                  partitions=[{"partition": "2026-09-01", "verified": True}, {"partition": "2026-09-02", "verified": False}]),
+                              bfr(2, "2026-09-02", "2026-09-03", requested_at="2026-08-30T11:00:00Z", partitions=[{"partition": "2026-09-02", "verified": False}]),
+                              bfr(3, "2026-09-02", "2026-09-03", requested_at="2026-08-30T13:00:00Z", partitions=[{"partition": "2026-09-02", "verified": False}])]
+    res = run_pipeline(d)
+    assert [(r["id"], r["reason_code"]) for r in res.rejected] == [("bf-002", "BACKFILL_OVERLAP")] and res.metrics["backfills"]["refused"] == ["bf-002"]
+    assert sorted(res.metrics["backfills"]["requests"]) == ["bf-001", "bf-003"]
+
+
+def test_the_two_new_gate_checks_in_the_domain():
+    from pipeline_observatory.gate import LATE_EVENTS_INCLUDED, SCOPE_COMPLETE, scope_complete
+    committed = [("b1", "2026-10-04T10:00:00Z"), ("b2", "2026-10-04T11:00:00Z"), ("b3", "2026-10-04T12:00:00Z")]
+    assert scope_complete(committed, ["b1", "b2", "b3"], None, "2026-10-04T13:00:00Z") == (3, [])
+    assert scope_complete(committed, ["b1", "b3"], None, "2026-10-04T13:00:00Z") == (3, ["b2"])                       # the omit attack
+    assert scope_complete(committed, ["b3"], "2026-10-04T11:30:00Z", "2026-10-04T13:00:00Z") == (1, [])               # a declared scope: [scope_from, run start)
+    assert scope_complete(committed, ["b1"], None, "2026-10-04T11:00:00Z") == (1, [])                                  # a batch committed AT the run's start is the next run's
+    assert (SCOPE_COMPLETE, LATE_EVENTS_INCLUDED) == ("scope_complete", "late_events_included")
+
+
+def test_pending_late_events_are_those_no_publication_after_their_arrival_includes():
+    from pipeline_observatory.reconcile import Accepted, pending_late_events
+    pubs = [{"publication_id": "pub-1", "published_at": "2026-10-04T11:00:00Z", "watermark": "2026-10-04T09:00:00Z", "source_ids": ["s"], "included_batch_ids": ["b1"]}]
+    late = Accepted("s", "b3", "K3", "2026-10-04T08:30:00Z", "2026-10-04T12:00:00Z", "rr", "h", Decimal(0))        # arrives after pub-1, dated before its watermark
+    fresh = Accepted("s", "b4", "K4", "2026-10-04T11:30:00Z", "2026-10-04T12:00:00Z", "rr", "h", Decimal(0))       # dated after the watermark: not late
+    assert [e["source_key"] for e in pending_late_events([late, fresh], pubs, "2026-10-04T13:00:00Z")] == ["K3"]
+    assert pending_late_events([late, fresh], pubs, "2026-10-04T12:00:00Z") == []                                  # not arrived before the run started
+    pubs.append({"publication_id": "pub-2", "published_at": "2026-10-04T12:30:00Z", "watermark": "2026-10-04T10:00:00Z", "source_ids": ["s"], "included_batch_ids": ["b1", "b3"]})
+    assert pending_late_events([late, fresh], pubs, "2026-10-04T13:00:00Z") == []                                  # pub-2 includes b3 after its arrival
+
+
+def test_a_payload_that_is_not_an_object_is_quarantined_and_the_pipeline_does_not_crash():
+    d = golden_inputs()
+    d["raw_records"].append({"raw_record_id": "rr-b-101-03", "batch_id": "b-101", "source_key": "L-1", "payload_hash": payload_hash(["x"]), "payload_json": ["x"]})
+    res = run_pipeline(d)                                                                                              # money_amount used to raise AttributeError on a list
+    assert derive(res.imported.accepted, cutoff=d["cutoff"]).disposition["rr-b-101-03"].reason == "INVALID_FIELD"

@@ -1,6 +1,7 @@
 // Loads a dataset: the published snapshot (manifest.json, injection-manifest.json and the 16 entity files, relative to BASE_URL + "data/") or the golden
 // fixture (bundled). On any failure it returns an explicit error; nothing is ever invented.
 import { checkInstants } from "../domain/ingest";
+import { parseJsonExact } from "../domain/json";
 import { sha256Hex } from "../domain/sha256";
 import { analyseGolden, analyseSnapshot, type Dataset } from "./analyse";
 import { buildInputs, ENTITY_FILES, isManifest, rawOf } from "./files";
@@ -15,7 +16,7 @@ async function getText(url: string, label: string): Promise<string> {
   if (!res.ok) throw new Error(`${label}: HTTP ${res.status}`);
   return res.text();
 }
-const parse = (text: string, label: string): unknown => { try { return JSON.parse(text); } catch { throw new Error(`${label}: response is not valid JSON`); } };
+const parse = (text: string, label: string): unknown => { try { return parseJsonExact(text); } catch { throw new Error(`${label}: response is not valid JSON`); } };
 
 const cache = new Map<DatasetId, Promise<LoadResult>>();
 /** Loaded once per page load and shared by every view (the golden fixture and the snapshot are independent loads). */

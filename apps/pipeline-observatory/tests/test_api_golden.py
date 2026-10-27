@@ -45,7 +45,8 @@ def test_the_whole_golden_story_through_the_commands(client, conn):
     at("2026-10-04T10:20:00Z")
     g = command(client, "run-quality-gate", {"run_id": "run-001"}).json()["result"]
     assert g["decision"] == "allowed" and g["reconciliation"]["residual"] == "0.00" and g["incident_id"] is None
-    assert {x["rule_name"]: x["passed"] for x in g["results"]} == {"keys_unique": True, "relationships_intact": True, "reconciliation_residual_zero": True, "completeness_vs_expectation": False}
+    assert {x["rule_name"]: x["passed"] for x in g["results"]} == {"keys_unique": True, "relationships_intact": True, "reconciliation_residual_zero": True, "scope_complete": True,
+                                                                              "late_events_included": True, "completeness_vs_expectation": False}
     at("2026-10-04T10:30:00Z")
     assert command(client, "publish-snapshot", {"run_id": "run-001", "watermark": "2026-10-04T10:00:00Z"}).status_code == 200
 

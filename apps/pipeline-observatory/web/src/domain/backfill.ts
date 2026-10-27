@@ -7,9 +7,22 @@ import { dayPartitions, MICROS, parseTs } from "./time";
 /** Half-open ranges overlap iff each starts before the other ends: touching ranges ([a, b) and [b, c)) do not overlap. */
 export const rangesOverlap = (aStart: unknown, aEnd: unknown, bStart: unknown, bEnd: unknown): boolean =>
   parseTs(aStart) < parseTs(bEnd) && parseTs(bStart) < parseTs(aEnd);
-/** The first earlier accepted request of the same source whose range overlaps the request's. */
-export function findOverlap(accepted: Iterable<Row>, request: Row): Row | null {
-  for (const o of accepted) if (o["source_id"] === request["source_id"] && rangesOverlap(request["start_at"], request["end_at"], o["start_at"], o["end_at"])) return o;
+/** Overlap is judged only against requests that are still ACTIVE (status `requested` or `running`): a `partial` or `complete` request no longer blocks
+ * a later one, so a partition a backfill left unverified can be backfilled again (D-09, R8-12). A clockless snapshot (an import whose request has no
+ * `requested_at`) cannot say what was running at the time, so it is judged against every earlier accepted request in backfill_id order. */
+export const ACTIVE_STATUSES = ["requested", "running"] as const;
+export function isActive(other: Row, at: unknown = null): boolean {
+  if ((ACTIVE_STATUSES as readonly unknown[]).includes(other["status"])) return true;
+  return at !== null && at !== undefined && other["settled_at"] !== null && other["settled_at"] !== undefined && parseTs(at) < parseTs(other["settled_at"]);
+}
+/** The first earlier accepted request of the same source whose range overlaps the request's and that is active. `history` judges an imported snapshot. */
+export function findOverlap(accepted: Iterable<Row>, request: Row, history = false): Row | null {
+  const at = history ? (request["requested_at"] ?? null) : null;
+  for (const o of accepted) {
+    if (o["source_id"] !== request["source_id"] || !rangesOverlap(request["start_at"], request["end_at"], o["start_at"], o["end_at"])) continue;
+    if (history && at === null) return o;
+    if (isActive(o, at)) return o;
+  }
   return null;
 }
 /** The partitions of a request: both bounds at UTC midnight, start before end; else DomainError. */

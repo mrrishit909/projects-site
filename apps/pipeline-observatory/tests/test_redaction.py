@@ -106,7 +106,7 @@ def test_command_log_lines_are_structured_json_and_name_the_actor_not_a_secret(l
     command(lab, "request-backfill", {"source_id": "src-orders", "start_at": "2026-09-01T00:00:00Z", "end_at": "2026-09-02T00:00:00Z"})
     lines = [json.loads(r.getMessage()) for r in caplog.records if r.name == "pipeline_observatory.api" and r.getMessage().startswith("{")]
     cmd = [l for l in lines if l["event"] == "command"][0]
-    assert cmd["name"] == "request-backfill" and cmd["actor_id"] == "usr-op01" and cmd["role"] == "operator" and cmd["status"] == "scheduled"
+    assert cmd["name"] == "request-backfill" and cmd["actor_id"] == "usr-op01" and cmd["role"] == "operator" and cmd["status"] == "requested"
 
 
 def test_evidence_manifests_are_redacted_before_they_are_hashed():

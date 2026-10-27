@@ -6,6 +6,7 @@
 // headline figures, eight window cases, the complete-world figures, the designed-relationship figures and the injection checks, the three hash kinds.
 // Prints "ALL OK (N checks)" or exits 1.
 import { createHash } from "node:crypto";
+import { parseJsonExact } from "../src/domain/json";
 import { readFileSync } from "node:fs";
 import { analyseGolden, analyseSnapshot } from "../src/data/analyse";
 import { ENTITY_FILES, datasetHash, isManifest, rawOf } from "../src/data/files";
@@ -19,10 +20,11 @@ import { sha256Hex } from "../src/domain/sha256";
 import { goldenExperiments, decideBackfill, retryRow } from "../src/domain/sim";
 import { publishedRecords } from "../src/domain/reconcile";
 import { derive } from "../src/domain/metrics";
+import { funnel } from "../src/lib/derive";
 
 const ROOT = new URL("../../", import.meta.url);
 const WEB = new URL("../", import.meta.url);
-const readJson = (u: URL): any => JSON.parse(readFileSync(u, "utf8")); // eslint-disable-line @typescript-eslint/no-explicit-any
+const readJson = (u: URL): any => parseJsonExact(readFileSync(u, "utf8")); // eslint-disable-line @typescript-eslint/no-explicit-any
 
 let failures = 0, checks = 0;
 const canon = (v: unknown): string => canonicalJson(v ?? null);
@@ -143,7 +145,7 @@ const ref = readJson(new URL("scripts/snapshot-reference.json", WEB));
 const manifest = readJson(new URL("manifest.json", PUB));
 if (!isManifest(manifest)) throw new Error("manifest.json is not a manifest");
 const texts = new Map<string, string>(ENTITY_FILES.map((n) => [n, readFileSync(new URL(`${n}.json`, PUB), "utf8")]));
-const raw = rawOf(new Map(ENTITY_FILES.map((n) => [n, JSON.parse(texts.get(n)!)] as const)));
+const raw = rawOf(new Map(ENTITY_FILES.map((n) => [n, parseJsonExact(texts.get(n)!)] as const)));
 const injm = readJson(new URL("injection-manifest.json", PUB));
 const t0 = Date.now();
 const ds = analyseSnapshot(manifest, raw, injm);
@@ -183,7 +185,7 @@ eq("sample world: the whole computed shape digest = Python's", digest(ds.g), sw.
   eq("sample world: incidents over the sample (residual not evaluable)", { total: M.incidents.total, open: M.incidents.open, closed: M.incidents.closed, verified: M.incidents.verified, mean_recovery_minutes: M.incidents.mean_recovery_minutes }, H.incidents);
   eq("sample world: reconciliation of 1,318 publications over the sample", { publications: Object.keys(M.reconciliation).length, residual_zero: Object.values<any>(M.reconciliation).filter((r) => r.residual === "0.00").length, digest: digest(M.reconciliation) }, H.reconciliation);
   eq("sample world: backfills, processing rate, runs, durations, gate", [M.backfills.overall, M.backfills.refused, M.processing_rate, M.runs.overall, { successful: { count: M.runs.durations.successful.count, mean_minutes: M.runs.durations.successful.mean_minutes }, failed: { count: M.runs.durations.failed.count, mean_minutes: M.runs.durations.failed.mean_minutes } },
-    { allowed: Object.values<any>(M.quality_gate).filter((v) => v.decision === "allowed").length, blocked: Object.values<any>(M.quality_gate).filter((v) => v.decision === "blocked").length }], [H.backfills.overall, H.backfills.refused, H.processing_rate, H.runs_overall, H.durations, H.gate]);
+    { allowed: Object.values<any>(M.quality_gate).filter((v) => v.decision === "allowed").length, blocked: Object.values<any>(M.quality_gate).filter((v) => v.decision === "blocked").length, reached_gate: Object.values<any>(M.quality_gate).filter((v) => Object.keys(v.results).length > 0).length }], [H.backfills.overall, H.backfills.refused, H.processing_rate, H.runs_overall, H.durations, H.gate]);
   eq("sample world: freshness per source (latest event, freshness, last ingestion, ingestion age)", Object.fromEntries(Object.entries<any>(M.freshness).map(([s, v]) => [s, [v.latest_accepted_event_at, v.freshness_seconds, v.last_successful_ingestion_at, v.ingestion_age_seconds]])), H.freshness);
   const comp = Object.entries<any>(M.completeness).sort(([a], [b]) => (a < b ? -1 : 1)).flatMap(([s, days]) => Object.entries<any>(days).sort(([a], [b]) => (a < b ? -1 : 1)).map(([d, v]) => [s, d, v.expected_records, v.accepted_records, v.value]));
   eq("sample world: completeness partitions", [comp.length, digest(comp)], [H.completeness_partitions, H.completeness_digest]);
@@ -237,12 +239,12 @@ eq("sample world: the whole computed shape digest = Python's", digest(ds.g), sw.
   eq("manifest.stats.ingestion.overall = batch_summaries totals", { accepted_unique: I.overall.accepted_unique, duplicate: I.overall.duplicate, duplicate_rate: I.overall.duplicate_rate, quarantined: I.overall.quarantined, received: I.overall.received, rejection_rate: I.overall.rejection_rate }, S["ingestion"].overall);
   eq("manifest.stats.batches_by_kind = batch_summaries kinds", Object.fromEntries(Object.entries(I.by_kind).map(([k, v]) => [k, v.batches])), S["batches_by_kind"]);
   eq("manifest.stats.quarantine_by_reason_committed_batches = summaries", I.overall.quarantine_by_reason, S["quarantine_by_reason_committed_batches"]);
-  eq("manifest.stats.retry = fetch_log (sans source_id)", { ...ds.retry!, source_id: "src-shipments" }, S["retry"]);
+  eq("manifest.stats.retry = fetch_log (sans source_id; by_status is the manifest's fetch_log_statuses)", (({ by_status, ...r }) => ({ ...r, fetch_log_statuses: by_status, source_id: "src-shipments" }))(ds.retry!), S["retry"]);
   eq("manifest.stats.incidents: 25 closed, 25 verified, mean 60.6827, all consistent, by type", [ds.incidents.total, ds.incidents.closed, ds.incidents.open, ds.incidents.verified, ds.incidents.mean_recovery_minutes, ds.incidents.all_closures_consistent, ds.incidents.by_class],
     [S["incidents"].total, S["incidents"].closed, S["incidents"].open, S["incidents"].verified, String(S["incidents"].mean_recovery_minutes).replace(/^60\.6827$/, "60.6827"), S["incidents"].all_closures_consistent, S["incidents"].by_type]);
   eq("manifest.stats.runs: successful 1318 (13.9114 min), failed 25 (13.7227 min), overall rates", [M.runs.durations.successful.count, M.runs.durations.successful.mean_minutes, M.runs.durations.failed.count, M.runs.durations.failed.mean_minutes, M.runs.overall.attempt_success_rate, M.runs.overall.task_success_rate], [S["runs"].successful.count, S["runs"].successful.mean_minutes, S["runs"].failed.count, S["runs"].failed.mean_minutes, S["runs"].overall.attempt_success_rate, S["runs"].overall.task_success_rate]);
-  eq("manifest.stats.quality_gate: allowed 1318, blocked 25; publications; models", [Object.values<any>(M.quality_gate).filter((v) => v.decision === "allowed").length, Object.values<any>(M.quality_gate).filter((v) => v.decision === "blocked").length, raw.publications.length, M.publications.current_publication_id],
-    [S["quality_gate"].allowed, S["quality_gate"].blocked, S["publications"].count, S["publications"].current_publication_id]);
+  eq("manifest.stats.quality_gate (D-09): 1343 runs, 1328 reached the gate, 1318 allowed, 10 blocked at the gate, 15 failed before it; publications; models", [funnel(ds), raw.publications.length, M.publications.current_publication_id],
+    [{ runs: S["quality_gate"].runs, reached: S["quality_gate"].reached_gate, allowed: S["quality_gate"].allowed, blocked: S["quality_gate"].blocked_at_gate, failedBefore: S["quality_gate"].failed_before_gate }, S["publications"].count, S["publications"].current_publication_id]);
   eq("manifest.stats.backfills = the domain's", [M.backfills.overall, M.backfills.refused], [S["backfills"].overall, S["backfills"].refused]);
   eq("manifest.stats.freshness_at_as_of: ingestion ages equal the checkpoints' and the freshness equals cutoff minus the recorded event", ds.freshness.map((f) => [f.source_id, f.freshness_seconds, f.ingestion_age_seconds, f.last_ingestion_at, f.latest_event_at]),
     Object.entries<any>(S["freshness_at_as_of"]).sort(([a], [b]) => (a < b ? -1 : 1)).map(([k, v]) => [k, v.freshness_seconds, v.ingestion_age_seconds, v.last_successful_ingestion_at, v.latest_accepted_event_at]));
@@ -262,7 +264,7 @@ eq("sample world: the whole computed shape digest = Python's", digest(ds.g), sw.
   const sample = ds.claims.filter((c) => c.basis === "sample");
   console.log(`OK       designed relationships over the 2,000-row sample: ${sample.filter((c) => c.ok).length} of ${sample.length} sampled figures hold (the rest describe the complete world; shown as such on screen)`);
   eq("designed relationships: DR-01..DR-05 all represented, recorded-only figures carry no recomputed value", [[...new Set(ds.claims.map((c) => c.id))], ds.claims.filter((c) => c.basis === "recorded").every((c) => c.got === null && c.ok === null)], [["DR-01", "DR-02", "DR-03", "DR-04", "DR-05"], true]);
-  eq("DR-01: the silent source is src-refunds: freshness 262378 s with ingestion age 17363 s, 72 green runs, completeness 0.000000 on the three silent days", [ds.claims.find((c) => c.key === "freshness_seconds")?.got, ds.claims.find((c) => c.key === "ingestion_age_seconds")?.got, ds.claims.find((c) => c.key === "runs_succeeded")?.got, ds.claims.filter((c) => c.key.startsWith("completeness.")).map((c) => c.got)], [262378, 17363, 72, ["0.000000", "0.000000", "0.000000"]]);
+  eq("DR-01: the silent source is src-refunds: freshness 262378 s with ingestion age 17363 s, 72 green runs, completeness 0.000000 on the three silent days", [ds.freshness.find((f) => f.source_id === "src-refunds")?.freshness_seconds, ds.claims.find((c) => c.key === "ingestion_age_seconds")?.got, ds.claims.find((c) => c.key === "runs_succeeded")?.got, ds.claims.filter((c) => c.key.startsWith("completeness.")).map((c) => c.got)], [262378, 17363, 72, ["0.000000", "0.000000", "0.000000"]]);
   const inj = ds.injection;
   eq("injection checks: the pass/fail of every one of the 41 machine-checkable checks over the sample equals Python's", inj.map((c) => [c.injection, c.path, c.ok]), ref.claims.injection);
   eq(`injection checks: ${ref.claims.injection_holding} of ${inj.length} hold over the sample (the rest describe the complete world)`, inj.filter((c) => c.ok).length, ref.claims.injection_holding);
@@ -285,11 +287,17 @@ eq("sample world: the whole computed shape digest = Python's", digest(ds.g), sw.
 // the simulations' building blocks on the published rows
 {
   const accepted = ds.acc["backfill_requests"]!;
-  eq("backfill console: an overlap with bf-004 [Aug 22, Aug 23) is refused with BACKFILL_OVERLAP; a touching range is accepted; a half-day is refused", [
-    decideBackfill(accepted, { source_id: "src-inventory", start_at: "2026-08-22T00:00:00Z", end_at: "2026-08-24T00:00:00Z" }).code,
+  const ask = { source_id: "src-inventory", start_at: "2026-08-22T00:00:00Z", end_at: "2026-08-24T00:00:00Z" };
+  eq("backfill console (D-09): bf-004 settled partial, so a range over its unverified partition is accepted and names what it backfills again; a touching range is accepted; a half-day is refused", [
+    decideBackfill(accepted, ask).accepted, decideBackfill(accepted, ask).revisits,
     decideBackfill(accepted, { source_id: "src-inventory", start_at: "2026-08-23T00:00:00Z", end_at: "2026-08-24T00:00:00Z" }).accepted,
-    decideBackfill(accepted, { source_id: "src-inventory", start_at: "2026-08-22T12:00:00Z", end_at: "2026-08-24T00:00:00Z" }).code,
-    decideBackfill(accepted, { source_id: "src-orders", start_at: "2026-08-22T00:00:00Z", end_at: "2026-08-24T00:00:00Z" }).accepted], ["BACKFILL_OVERLAP", true, "PARTITION_ALIGNMENT", true]);
+    decideBackfill(accepted, { ...ask, start_at: "2026-08-22T12:00:00Z" }).code,
+    decideBackfill(accepted, { ...ask, source_id: "src-orders" }).accepted], [true, [{ backfill_id: "bf-004", partition: "2026-08-22" }], true, "PARTITION_ALIGNMENT", true]);
+  eq("backfill console (D-09): a request that is still requested or running blocks an overlapping one with BACKFILL_OVERLAP; once complete it does not", [
+    decideBackfill([...accepted, { backfill_id: "bf-016", source_id: "src-inventory", start_at: ask.start_at, end_at: ask.end_at, status: "requested" }], ask).code,
+    decideBackfill([...accepted, { backfill_id: "bf-016", source_id: "src-inventory", start_at: ask.start_at, end_at: ask.end_at, status: "running" }], ask).overlaps_with,
+    decideBackfill([...accepted, { backfill_id: "bf-016", source_id: "src-inventory", start_at: ask.start_at, end_at: ask.end_at, status: "complete" }], ask).accepted], ["BACKFILL_OVERLAP", "bf-016", true]);
+  eq("the published refusals were refused in history: bf-006 over bf-004 and bf-012 over bf-010, each made while the earlier request was still running", ds.result.imported.rejected.filter((r) => r.entity === "backfill_requests").map((r) => [r.id, r.reason_code]), [["bf-006", "BACKFILL_OVERLAP"], ["bf-012", "BACKFILL_OVERLAP"]]);
   eq("quarantine desk: a corrected quantity is accepted, the same key again is a duplicate (the key check runs first), an unknown op stays quarantined", [
     retryRow("K1", { record_id: "K1", quantity: 2, unit_price: "1.00", amount: "2.00", event_ts: "2026-10-04T00:00:00Z" }, new Set()).kind,
     retryRow("K1", { record_id: "K1", quantity: -2, unit_price: "1.00", amount: "2.00", event_ts: "2026-10-04T00:00:00Z" }, new Set(["K1"])).kind,

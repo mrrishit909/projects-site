@@ -6,7 +6,7 @@ from data import migrate, seed
 
 from support_db import conn, count, db_url, golden_inputs, load  # noqa: F401
 
-FILES = ["0001_schema.sql", "0002_constraints.sql"]
+FILES = ["0001_schema.sql", "0002_constraints.sql", "0003_review_fixes.sql"]
 TABLES = ["source_contracts", "source_expectations", "ingestion_batches", "raw_records", "accepted_records", "quarantine_records", "checkpoints", "model_definitions",
           "backfill_requests", "pipeline_runs", "task_runs", "quality_results", "publications", "publication_pointer", "incidents", "model_outputs",
           "processing_measurements", "fetch_log", "fault_injections", "evidence_archives", "rejected_records", "audit_events", "command_results", "dataset_versions"]
@@ -74,9 +74,9 @@ def test_changed_migration_is_detected(db_url, monkeypatch, tmp_path):
 
 def test_seed_is_idempotent_and_names_its_dataset_version(conn):
     first = load(conn, golden_inputs(), dataset_version="ds-golden-1")
-    assert first["dataset_version"] == "ds-golden-1" and first["inserted"]["raw_records"] == 31 and first["inserted"]["accepted_records"] == 9 and first["skipped"] == 0
+    assert first["dataset_version"] == "ds-golden-1" and first["inserted"]["raw_records"] == 32 and first["inserted"]["accepted_records"] == 9 and first["skipped"] == 0
     again = load(conn, golden_inputs(), dataset_version="ds-golden-1")
-    assert sum(again["inserted"].values()) == 0 and count(conn, "dataset_versions") == 1 and count(conn, "raw_records") == 31
+    assert sum(again["inserted"].values()) == 0 and count(conn, "dataset_versions") == 1 and count(conn, "raw_records") == 32
     assert count(conn, "accepted_records", "source_id = 'src-orders'") == 8                                        # eight accepted orders, never nine
 
 

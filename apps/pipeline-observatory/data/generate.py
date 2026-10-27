@@ -126,6 +126,14 @@ DISCLOSURES = [
     "Every other count comes from batch_summaries, which the domain computed over all raw records. The 5 MB size cap did not bind: the sample is capped at 2,000 rows by the brief.",
     "Quality results sit on the quality_gate task run (five checks per gate); the two tests the transform runs (keys, relationships) are the gate's keys_unique and relationships_intact. "
     "Hardware, cache state and the measured seconds of the processing rate are synthetic values for one batch, not a benchmark.",
+    "Review round R8 (docs/contracts.md D-09) changed the world, and the generator was adapted to the rules, not the rules to the world: the gate records two more critical "
+    "checks per run (scope_complete: every batch committed from pipeline_runs.scope_from to the run's start is in the candidate; late_events_included: no late event that has "
+    "arrived and is in no earlier publication is left out), asked of the domain run by run; the scope of a run now ends at its start (it used to end at the end of the UTC day on "
+    "the hour-0 tick); the realised values were recomputed by the domain. A publication's watermark never goes back (C06 refuses it).",
+    "Backfill overlap is judged only against requests still requested or running: the two refusals (bf-006 over bf-004, bf-012 over bf-010) were re-timed to two minutes after the "
+    "victim's last batch committed, before the run that settled it published, and every request carries requested_at (and settled_at when it settled). A page fetched again in a new "
+    "fetch session is a refetch in fetch_log (stale-source polls, replays of a window, backfills re-reading the last committed cursor); the one loop is now a second page of the same "
+    "session pointing back at the first cursor. These choices were made after the first run of the previous round's code and are not tuned on any realised value.",
 ]
 
 
@@ -487,10 +495,11 @@ class World:
                     start = t
                     tags.append("rate_limited")
                     self.rl_slots.append((sid, k))
+                loop_here = False
                 if sid == LOOP_SOURCE and k == self.loop_slot:
-                    self.fetch_log.append({"src": sid, "cursor": prev_cursor, "session": f"{sid}:{k}:a", "status": "cursor_loop", "next": prev_cursor, "ra": None, "t": start, "slot": (sid, k)})
-                    start += 600 + rb.randrange(0, 120)
+                    start += 600 + rb.randrange(0, 120)              # the page is fetched late; the page AFTER it points back (recorded below, in the same session)
                     tags.append("cursor_loop")
+                    loop_here = True
                 # --- rows
                 win = self.window(sid, prev_end, end)
                 deliver = [e for e in win if e.hold is None]
@@ -560,6 +569,10 @@ class World:
                     if commits:
                         b.commit = t_start + proc
                     self.batches.append(b)
+                    if loop_here and kind == "live":
+                        # D-09 (R8-06): a loop is a repeated cursor INSIDE one fetch session: the page after this one (cursor_to) answers with the cursor this
+                        # session started from; the session is stopped (nothing is staged for the looping page) and the next slot fetches from cursor_to
+                        self.fetch_log.append({"src": sid, "cursor": cursor_to, "session": b.session, "status": "cursor_loop", "next": prev_cursor, "ra": None, "t": t_start + 45, "slot": (sid, k)})
                     if kind == "schema_q":
                         b.schema = SCHEMA_VERSION
                     if kind == "aborted" and (sid, k) == self.inj01_slot:
@@ -586,11 +599,15 @@ class World:
                 continue
             st = self.states[q["src"]]
             q["batches"] = []
+            live = sorted((x for x in self.batches if x.src == q["src"] and x.kind != "backfill" and x.status == "committed"), key=lambda x: x.commit)
+            live_commits = [x.commit for x in live]
             for j, day in enumerate(q["days"]):
                 evs = [e for e in self.events[q["src"]] if e.designed == q["id"] and e.date == day]
                 rows = [self.mk_row(e.dirty if e.dirty else "ok", e.key, payload_of(e, SCHEMA_VERSION if q["src"] == SCHEMA_SOURCE else None, e.dirty), e) for e in evs]
                 start = q["request"] + 3600 + j * 1800 + rb.randrange(0, 240)
-                b = Batch(q["src"], "backfill", start, rows, "committed", f"bf:{q['id']}:{day}", f"bf:{q['id']}:{day}")
+                i_live = bisect.bisect_left(live_commits, start)
+                cur = live[i_live - 1].cursor_to if i_live else "off-000000"      # D-09: a backfill re-polls the last committed cursor (a refetch), it has no cursor of its own
+                b = Batch(q["src"], "backfill", start, rows, "committed", cur, cur)
                 b.commit = start + 150 + rb.randrange(0, 200) + 2 * len(rows)
                 b.bf, b.session, b.tags = q["id"], f"{q['src']}:{q['id']}:{day}", ["backfill"]
                 if q["src"] == SCHEMA_SOURCE:
@@ -720,10 +737,15 @@ class World:
         deploys = [(at(2026, 8, 10), "c0a81f2"), (at(2026, 8, 21), "5be90d4"), (at(2026, 9, 2), "9d3f7a1"), (at(2026, 9, 16), "e41b6c8"), (at(2026, 9, 28), "27af05e")]
         pub_no = 0
         failed_idx: list[int] = []
+        # D-09 (R8-02): the two checks the gate gained are asked of the DOMAIN (gate.scope_complete, reconcile.late_events), run by run, as the API's C05 asks them
+        gm, rm = self.dom.mod["gate"], self.dom.mod["reconcile"]
+        from decimal import Decimal
+        committed_pairs = [(b.batch_id, iso(b.commit)) for b in self.committed]
+        arr_i, pending, last_wm = 0, [], None
         for i, T in enumerate(self.tick_times, 1):
             S, g, dr = T + RUN_OFFSET_S, self.gate_at[T], self.run_draw[T]
             D0 = ((T - H) // D) * D
-            lo_i, hi_i = bisect.bisect_left(committed_commits, D0), bisect.bisect_left(committed_commits, min(D0 + D, S))
+            lo_i, hi_i = bisect.bisect_left(committed_commits, D0), bisect.bisect_left(committed_commits, S)       # the scope: committed in [the UTC day of the tick minus one hour, the run's start)
             scope = self.committed[lo_i:hi_i]
             ids = sorted(b.batch_id for b in scope)
             idset = set(ids)
@@ -746,6 +768,16 @@ class World:
                     total += r["ev"].amount
             n_pub = len(pub_hashes)
             candidate_total = total + (leak_amount if plan == "residual" else 0)
+            # scope_complete: every batch committed in [D0, S) is in the candidate (the domain judges it from the commit instants, not from how the scope was cut)
+            n_scope, missing = gm.scope_complete(committed_pairs, ids, iso(D0), iso(S))
+            # late_events_included: every late event that has arrived before S and is in no earlier publication is in the candidate
+            while arr_i < len(self.committed) and self.committed[arr_i].commit < S:
+                nb = self.committed[arr_i]
+                arr_i += 1
+                accs = [rm.Accepted(nb.src, nb.batch_id, r["key"], iso(r["ev"].ts), iso(nb.commit), "", r["hash"], Decimal(0)) for r in self.accepted_by_batch[nb.batch_id]]
+                if accs and self.pubs:
+                    pending += rm.late_events(accs, self.pubs[-12:])
+            n_pending, n_left = len(pending), sum(1 for e in pending if e["batch_id"] not in idset)
             # gate numbers as of the gate instant
             while ledger_i < len(self.led) and self.led[ledger_i][0] < g:
                 _, ls, ld = self.led[ledger_i]
@@ -795,7 +827,7 @@ class World:
                         quals = True
             if plan not in ("ingest", "transform", "gate_infra"):
                 quals = True
-            row = {"run_id": run_id, "started_at": iso(S), "finished_at": iso(finish), "status": status, "code_sha": code, "backfill_id": bf}
+            row = {"run_id": run_id, "started_at": iso(S), "finished_at": iso(finish), "status": status, "code_sha": code, "backfill_id": bf, "scope_from": iso(D0)}
             self.runs.append(row)
             tids = {}
             for n, (name, st, att) in enumerate(tl, 1):
@@ -806,7 +838,9 @@ class World:
                 gate_tid = next(t["task_run_id"] for t in reversed(self.tasks) if t["run_id"] == run_id and t["task_name"] == "quality_gate")
                 checks = [("keys_unique", "critical", n_pub, 0), ("relationships_intact", "critical", n_pub, 1 if plan == "relationships" else 0),
                           ("reconciliation_residual_zero", "critical", 1, 1 if plan == "residual" else 0),
-                          ("freshness_within_target", "critical", len(srcs), stale), ("completeness_vs_expectation", "warning", elig, short)]
+                          ("freshness_within_target", "critical", len(srcs), stale), ("completeness_vs_expectation", "warning", elig, short),
+                          (gm.SCOPE_COMPLETE, "critical", n_scope, len(missing)), (gm.LATE_EVENTS_INCLUDED, "critical", n_pending, n_left)]
+                assert not missing and n_left == 0, f"{run_id}: the world does not satisfy the gate it records: missing {missing[:3]}, late events left out {n_left}"
                 for n, (rule, sev, el, fl) in enumerate(checks, 1):
                     self.quals.append({"quality_result_id": f"qr-{i:04d}-{n:02d}", "task_run_id": gate_tid, "rule_name": rule, "severity": sev, "eligible_count": el, "failure_count": fl})
             if plan not in ("ingest", "transform"):
@@ -814,9 +848,12 @@ class World:
                 if status == "success":
                     pub_no += 1
                     horizon = min(self.horizon(sid, g) for sid in SRC_ORDER)
+                    assert last_wm is None or horizon >= last_wm, f"{run_id}: the watermark goes back"          # C06 refuses it (WATERMARK_REGRESSION)
+                    last_wm = horizon
                     pub = {"publication_id": f"pub-{i:04d}", "run_id": run_id, "dataset_name": "sales_daily", "published_at": iso(finish), "watermark": iso(horizon),
                            "source_ids": list(SRC_ORDER), "included_batch_ids": ids, "content_hash": sha("\n".join(sorted(pub_hashes)))}
                     self.pubs.append(pub)
+                    pending = [e for e in pending if e["batch_id"] not in set(ids)]          # included in a publication published after its arrival
                 else:
                     trow["included_batch_ids"] = ids
                 self.totals.append(trow)
@@ -837,26 +874,39 @@ class World:
 
     # ---------------------------------------------------------------------------------------------------------------- backfill rows
     def backfill_rows(self) -> list[dict]:
+        """The requests. D-09 (R8-12): overlap is judged against requests still ``requested`` or ``running``, so a refused request is one made while its
+        victim was still being worked on: the refused rows carry ``requested_at`` two minutes after the victim's last batch committed, before the run that
+        settled the victim published; an accepted request carries ``requested_at`` and ``settled_at`` (the publication of the first successful run that
+        started with or after the run the backfill rode on)."""
         out = []
+        run_start = {r["run_id"]: r["started_at"] for r in self.runs}
+        succeeded = sorted(((p["published_at"], run_start[p["run_id"]]) for p in self.pubs), key=lambda x: x[1])
+        run_of = {bf_id: f"run-{self.tick_times.index(t) + 1:04d}" for t, bf_id in self.bf_run.items()}
         for pos in sorted(self.bf):
             q = self.bf[pos]
             first = q["first"]
             start, end = iso(first), iso(first + len(q["days"]) * D)
             if q["refused"]:
-                out.append({"backfill_id": q["id"], "source_id": q["src"], "start_at": start, "end_at": end, "status": "requested",
-                            "partitions": [{"partition": d, "verified": False} for d in q["days"]]})
+                victim = self.bf[int(q["overlaps"][3:])]
+                q["requested_final"] = victim["commit_last"] + 120
+                out.append({"backfill_id": q["id"], "source_id": q["src"], "start_at": start, "end_at": end, "status": "requested", "requested_at": iso(q["requested_final"]),
+                            "settled_at": None, "partitions": [{"partition": d, "verified": False} for d in q["days"]]})
                 continue
             parts = []
             for day, b in zip(q["days"], q["batches"]):
                 n = sum(1 for r in b.rows if r["disp"] == "accepted")
                 parts.append({"partition": day, "verified": n >= self.expected[(q["src"], day)]})
             q["verified"] = {p["partition"]: p["verified"] for p in parts}
+            attach = run_start[run_of[q["id"]]]
+            settled = next(pub for pub, st in succeeded if st >= attach)
+            q["settled_final"] = settled
             out.append({"backfill_id": q["id"], "source_id": q["src"], "start_at": start, "end_at": end,
-                        "status": "complete" if all(p["verified"] for p in parts) else "partial", "partitions": parts})
+                        "status": "complete" if all(p["verified"] for p in parts) else "partial", "requested_at": iso(q["request"]), "settled_at": settled, "partitions": parts})
         return out
 
     # ---------------------------------------------------------------------------------------------------------------- entities
     def build_all(self) -> None:
+        self.dom = Domain()          # the checks the gate records (scope_complete, late_events_included) and the fetch verdicts are the domain's, not typed here
         self.draw_run_timing()
         self.plan_slots()
         self.emit()
@@ -915,16 +965,46 @@ class World:
                 "backfill_requests": self.backfill_rows(), "model_output_totals": self.totals}
 
     def fetch_rows(self) -> list[dict]:
+        """The fetch log. Every page's status (``ok`` / ``refetch``) and the one loop are the DOMAIN's verdict (``fetch.judge_fetch``) over what the log
+        recorded before it: a cursor fetched again in a new session, or the re-poll of the last committed cursor by a source with nothing new, is a
+        ``refetch``; a repeated cursor inside one session is the loop. Cached: it is asked for several times."""
+        if getattr(self, "_fetch_rows", None) is not None:
+            return self._fetch_rows
+        fm = self.dom.mod["fetch"]
         rows = []
         for f in self.fetch_log:
             rows.append({"source_id": f["src"], "cursor_value": f["cursor"], "session_id": f["session"], "status": f["status"], "next_cursor": f["next"],
-                         "retry_after_seconds": f["ra"], "fetched_at": iso(f["t"]), "batch_id": None})
+                         "retry_after_seconds": f["ra"], "fetched_at": iso(f["t"]), "batch_id": None, "_t": f["t"]})
         for b in self.batches:
             rows.append({"source_id": b.src, "cursor_value": b.cursor_from, "session_id": b.session, "status": "ok", "next_cursor": b.cursor_to,
-                         "retry_after_seconds": None, "fetched_at": iso(b.start), "batch_id": b.batch_id})
+                         "retry_after_seconds": None, "fetched_at": iso(b.start), "batch_id": b.batch_id, "_t": b.start})
         rows.sort(key=lambda x: (x["fetched_at"], x["source_id"], x["status"], x["batch_id"] or ""))
+        cps: dict[str, tuple[list[int], list[str]]] = {}
+        for b in self.committed:
+            cs, cu = cps.setdefault(b.src, ([], []))
+            cs.append(b.commit)
+            cu.append(b.cp_cursor)
+        history: dict[str, list] = {}
         for n, r in enumerate(rows, 1):
             r["fetch_id"] = n
+            t = r.pop("_t")
+            if r["status"] == "rate_limited":
+                continue
+            cs, cu = cps.get(r["source_id"], ([], []))
+            i = bisect.bisect_left(cs, t)
+            last = cu[i - 1] if i else None
+            hist = history.setdefault(r["source_id"], [])
+            if r["status"] == "cursor_loop":
+                try:
+                    fm.judge_fetch(hist, last, r["session_id"], r["cursor_value"], r["next_cursor"])
+                except Exception as err:               # DomainError(CURSOR_LOOP): the world and the domain agree it is a loop
+                    assert getattr(err, "code", None) == "CURSOR_LOOP", err
+                else:
+                    raise AssertionError(f"fetch {n} is recorded as a loop but the domain accepts it")
+                continue
+            r["status"] = fm.judge_fetch(hist, last, r["session_id"], r["cursor_value"], r["next_cursor"])
+            hist.append(fm.Fetched(r["session_id"], r["cursor_value"], r["next_cursor"], r["status"]))
+        self._fetch_rows = rows
         return rows
 
 
@@ -945,15 +1025,15 @@ class Domain:
         if dom not in sys.path:
             sys.path.insert(0, dom)
         import pipeline_observatory as po
-        from pipeline_observatory import backfill, classify, fetch, hashing, ingest, metrics, reconcile, redaction, scope, timeutil, workflow_guard
+        from pipeline_observatory import backfill, classify, fetch, gate, hashing, ingest, metrics, reconcile, redaction, scope, timeutil, workflow_guard
         cached = getattr(timeutil, "_po_memo", None)
         if cached is None:
             cached = functools.lru_cache(maxsize=None)(timeutil.parse_ts)
             timeutil._po_memo = cached
-            for m in (reconcile, metrics, classify, ingest, scope, backfill, fetch):
+            for m in (reconcile, metrics, classify, ingest, scope, backfill, fetch, gate):
                 if hasattr(m, "parse_ts"):
                     m.parse_ts = cached
-        self.po, self.mod = po, dict(backfill=backfill, classify=classify, fetch=fetch, hashing=hashing, ingest=ingest, metrics=metrics, reconcile=reconcile,
+        self.po, self.mod = po, dict(backfill=backfill, classify=classify, fetch=fetch, gate=gate, hashing=hashing, ingest=ingest, metrics=metrics, reconcile=reconcile,
                                      redaction=redaction, scope=scope, timeutil=timeutil, workflow_guard=workflow_guard)
         self.parse_ts = timeutil.parse_ts
 
@@ -999,7 +1079,7 @@ class Built:
         self.version = f"{VERSION_TAG}-{seed}-{DATE_TAG}"
         self.w = World(seed)
         self.w.build_all()
-        self.dom = Domain()
+        self.dom = self.w.dom
         self.assemble()
 
     # ------------------------------------------------------------------------------------------------------------------------------
@@ -1147,7 +1227,10 @@ class Numbers:
                     except Exception:
                         pass
                     slacks.append(int((tm(nxt["fetched_at"]) - tm(r["fetched_at"])).total_seconds()) - r["retry_after_seconds"])
-        return {"source_id": RATE_LIMITED_SOURCE, "rate_limited_responses": limited, "retries": retries, "retries_honouring_retry_after": honoured,
+        by_status: dict[str, int] = {}
+        for r in rows:
+            by_status[r["status"]] = by_status.get(r["status"], 0) + 1
+        return {"source_id": RATE_LIMITED_SOURCE, "fetch_log_statuses": dict(sorted(by_status.items())), "rate_limited_responses": limited, "retries": retries, "retries_honouring_retry_after": honoured,
                 "retries_too_soon": retries - honoured, "min_slack_seconds": min(slacks), "max_slack_seconds": max(slacks), "sessions_rate_limited": len(sessions),
                 "sources_rate_limited": sorted({s for s, _ in sessions}),
                 "cursor_loops": sum(1 for r in rows if r["status"] == "cursor_loop"), "fetch_rows": len(rows)}
@@ -1191,6 +1274,16 @@ class Numbers:
                 by_reason[k] = by_reason.get(k, 0) + v
         gates = m["quality_gate"]
         n_allowed = sum(1 for g_ in gates.values() if g_["decision"] == "allowed")
+        reached = sum(1 for g_ in gates.values() if g_["results"])             # a run reached the gate when the gate recorded at least one result for it
+        funnel = {"runs": len(gates), "reached_gate": reached, "allowed": n_allowed, "blocked_at_gate": sum(1 for g_ in gates.values() if g_["results"] and g_["decision"] == "blocked"),
+                  "failed_before_gate": len(gates) - reached}
+        assert funnel["reached_gate"] == funnel["allowed"] + funnel["blocked_at_gate"] and all(r["status"] == "failed" for r in w.runs if not gates[r["run_id"]]["results"])
+        bf_req = m["backfills"]["requests"]
+        refused_ids = m["backfills"]["refused"]
+        refused_parts = sum(len(x["partitions"]) for x in w.ents["backfill_requests"] if x["backfill_id"] in refused_ids)
+        bo = m["backfills"]["overall"]
+        bf_statement = (f"{bo['verified_partitions']} of {bo['requested_partitions']} partitions of the {len(bf_req)} accepted requests ({bo['coverage']}); "
+                        f"{len(refused_ids)} requests for {refused_parts} partitions refused for overlap")
         runs = m["runs"]
         inc = m["incidents"]
         kinds: dict[str, int] = {}
@@ -1204,12 +1297,15 @@ class Numbers:
             "ingestion": {"overall": ing["overall"], "sources": {sid: {k: v for k, v in s.items() if k not in ("batches", "checkpoint")} | {"checkpoint_version": s["checkpoint"]["committed_version"]}
                                                           for sid, s in ing["sources"].items()}},
             "quarantine_by_reason_committed_batches": dict(sorted(by_reason.items())),
+            "quarantine_scope": {"counted_in": "committed batches (the headline quarantined count and rejection rate)",
+                                 "rows_listed_separately": sum(1 for q in self.b.ents["quarantine_records"] if q["reason_code"] == "SCHEMA_CHANGED"),
+                                 "listed_separately_because": "the rows of the one batch quarantined whole (SCHEMA_CHANGED) belong to no committed batch; their quarantine rows are listed, never counted in the rate"},
             "quarantine_rows_by_reason": dict(sorted(quar_rows.items())),
             "freshness_at_as_of": m["freshness"],
             "completeness_by_source": self.completeness_by_source(),
             "runs": {"overall": runs["overall"], "successful": {k: runs["durations"]["successful"][k] for k in ("count", "mean_minutes")},
                      "failed": {k: runs["durations"]["failed"][k] for k in ("count", "mean_minutes")}, "backfill_runs": sum(1 for r in w.runs if r["backfill_id"])},
-            "quality_gate": {"allowed": n_allowed, "blocked": len(gates) - n_allowed},
+            "quality_gate": funnel,
             "publications": {"count": len(m["publications"]["publications"]), "current_publication_id": m["publications"]["current_publication_id"],
                              "first_published_at": w.pubs[0]["published_at"], "last_published_at": w.pubs[-1]["published_at"],
                              "content_hash_ok": sum(1 for p in m["publications"]["publications"].values() if p["content_hash_ok"])},
@@ -1219,13 +1315,20 @@ class Numbers:
                                "candidates": len(self.b.recon), "candidates_residual_not_zero": len(self.residual_days())},
             "incidents": {"total": inc["total"], "open": inc["open"], "closed": inc["closed"], "verified": inc["verified"], "mean_recovery_minutes": inc["mean_recovery_minutes"],
                           "by_type": dict(sorted(by_type.items())), "all_closures_consistent": all(i["closure_consistent"] for i in inc["incidents"].values())},
-            "backfills": {"overall": m["backfills"]["overall"], "refused": m["backfills"]["refused"], "requests": {k: {"source_id": v["source_id"], "requested_partitions": v["requested_partitions"],
+            "backfills": {"overall": m["backfills"]["overall"], "accepted_requests": len(bf_req), "refused_requests": len(refused_ids), "refused_partitions": refused_parts,
+                          "statement": bf_statement, "refused": m["backfills"]["refused"], "requests": {k: {"source_id": v["source_id"], "requested_partitions": v["requested_partitions"],
                                                                                                                      "verified_partitions": v["verified_partitions"], "coverage": v["coverage"]}
                                                                            for k, v in m["backfills"]["requests"].items()}},
             "processing_rate": m["processing_rate"],
             "models": {layer: sum(1 for x in w.models if x["layer"] == layer) for layer in ("staging", "intermediate", "marts")},
             "retry": self.fetch_analysis(),
         }
+
+    def stats_funnel(self) -> dict:
+        gates = self.m["quality_gate"]
+        reached = sum(1 for g_ in gates.values() if g_["results"])
+        n_allowed = sum(1 for g_ in gates.values() if g_["decision"] == "allowed")
+        return {"runs": len(gates), "reached_gate": reached, "allowed": n_allowed, "blocked_at_gate": reached - n_allowed, "failed_before_gate": len(gates) - reached}
 
     def designed(self) -> list[dict]:
         b, w, m = self.b, self.w, self.m
@@ -1260,7 +1363,8 @@ class Numbers:
                                 "publication_exists": any(p["run_id"] == run["run_id"] for p in w.pubs), "pointer_before": hist[i - 1]["pointer_after"],
                                 "pointer_after": hist[i]["pointer_after"], "pointer_unchanged": hist[i]["pointer_after"] == hist[i - 1]["pointer_after"], "pointer_history_index": i,
                                 "incident_id": inc["incident_id"], "recovery_run_id": inc["recovery_run_id"],
-                                "recovery_minutes": m["incidents"]["incidents"][inc["incident_id"]]["recovery_minutes"]}})
+                                "recovery_minutes": m["incidents"]["incidents"][inc["incident_id"]]["recovery_minutes"],
+                                "gate_funnel": self.stats_funnel()}})
         # DR-03
         fa = self.fetch_analysis()
         dr.append({"id": "DR-03", "name": "a rate-limited source whose retries honour retry-after",
@@ -1356,16 +1460,17 @@ class Injections:
     def ingest(self, ev: str, n: str, src: str, bid: str, cursor: str, nxt: str, recs: list[dict], t: str, validate: bool = True, commit: bool = True,
                hdr: dict | None = None, **page: Any) -> list[dict]:
         hdr = hdr or H_ENG
-        steps = [self.cmd(ev, n + "-fetch", "fetch-source-page", t, hdr, {"source_id": src, "cursor": cursor, "batch_id": bid, "page": {"records": recs, "next_cursor": nxt, **page}}, 200,
-                          body={"status": "staged"})]
+        steps = [self.cmd(ev, n + "-fetch", "fetch-source-page", t, hdr, {"source_id": src, "cursor": cursor, "batch_id": bid, "fetch_session": f"{ev}-{n}",
+                                                                          "page": {"records": recs, "next_cursor": nxt, **page}}, 200, body={"status": "staged"})]
         if validate:
             steps.append(self.cmd(ev, n + "-validate", "validate-contract", t, hdr, {"batch_id": bid}, 200))
         if commit:
             steps.append(self.cmd(ev, n + "-commit", "commit-batch", t, hdr, {"batch_id": bid}, 200, body={"status": "committed"}))
         return steps
 
-    def pipeline(self, ev: str, n: str, run: str, batches: list[str], t: str, wm: str, publish: bool = True) -> list[dict]:
-        steps = [self.cmd(ev, n + "-transform", "transform-models", t, H_OP, {"run_id": run, "batch_ids": batches}, 200),
+    def pipeline(self, ev: str, n: str, run: str, batches: list[str], t: str, wm: str, scope_from: str, publish: bool = True) -> list[dict]:
+        """One run. ``scope_from`` declares the run's scope: the batches committed from there to the run's start (D-09: the gate fails a run that leaves one out)."""
+        steps = [self.cmd(ev, n + "-transform", "transform-models", t, H_OP, {"run_id": run, "batch_ids": batches, "scope_from": scope_from}, 200),
                  self.cmd(ev, n + "-gate", "run-quality-gate", t, H_OP, {"run_id": run}, 200, body={"status": "allowed"})]
         if publish:
             steps.append(self.cmd(ev, n + "-publish", "publish-snapshot", t, H_OP, {"run_id": run, "watermark": wm}, 200, body={"status": "published"}))
@@ -1402,21 +1507,21 @@ class Injections:
         evs.append({"event_id": "EV-02", "injection": "INJ-02", "requires": ["bf-006", "bf-012"], "steps": s})
         # EV-03 a retry that ignores retry-after
         rec1 = [self.rec("INJ-RA-1", ts="2026-10-04T23:30:00Z")]
-        s = [self.cmd("ev-03", "a", "fetch-source-page", T("01:30:00"), H_ENG, {"source_id": "src-shipments", "cursor": "off-ev03", "page": {"status": 429, "retry_after_seconds": 90}}, 200,
+        s = [self.cmd("ev-03", "a", "fetch-source-page", T("01:30:00"), H_ENG, {"source_id": "src-shipments", "cursor": "off-ev03", "fetch_session": "ev03-s", "page": {"status": 429, "retry_after_seconds": 90}}, 200,
                       body={"status": "rate_limited", "result": {"retry_not_before": T("01:31:30")}}),
-             self.cmd("ev-03", "b", "fetch-source-page", T("01:30:12"), H_ENG, {"source_id": "src-shipments", "cursor": "off-ev03", "batch_id": "b-ev03", "page": {"records": rec1, "next_cursor": "off-ev03-n"}}, 429,
+             self.cmd("ev-03", "b", "fetch-source-page", T("01:30:12"), H_ENG, {"source_id": "src-shipments", "cursor": "off-ev03", "batch_id": "b-ev03", "fetch_session": "ev03-s", "page": {"records": rec1, "next_cursor": "off-ev03-n"}}, 429,
                       reason="RETRY_TOO_SOON", headers={"Retry-After": "78"}),
-             self.cmd("ev-03", "c", "fetch-source-page", T("01:31:30"), H_ENG, {"source_id": "src-shipments", "cursor": "off-ev03", "batch_id": "b-ev03", "page": {"records": rec1, "next_cursor": "off-ev03-n"}}, 200,
+             self.cmd("ev-03", "c", "fetch-source-page", T("01:31:30"), H_ENG, {"source_id": "src-shipments", "cursor": "off-ev03", "batch_id": "b-ev03", "fetch_session": "ev03-s", "page": {"records": rec1, "next_cursor": "off-ev03-n"}}, 200,
                       body={"status": "staged"}),
              self.read(T("01:32:00"), "/data/fetch_log", {"source_id": "src-shipments", "status": "rate_limited"}, [{"path": "meta.total_count", "equals": 1}])]
         evs.append({"event_id": "EV-03", "injection": "INJ-03", "requires": [], "steps": s})
         # EV-04 an unexpected required field
         r2 = [self.rec(f"INJ-SC-{i}", ts=f"2026-10-04T23:{50 + i}:00Z", channel="web", currency="EUR") for i in (1, 2)]
-        s = [self.cmd("ev-04", "a-fetch", "fetch-source-page", T("02:00:00"), H_ENG, {"source_id": "src-payments", "cursor": "off-ev04", "batch_id": "b-ev04-a", "page": {"records": r2, "next_cursor": "off-ev04-n", "schema_version": "3"}}, 200),
+        s = [self.cmd("ev-04", "a-fetch", "fetch-source-page", T("02:00:00"), H_ENG, {"source_id": "src-payments", "cursor": "off-ev04", "batch_id": "b-ev04-a", "fetch_session": "ev04-a", "page": {"records": r2, "next_cursor": "off-ev04-n", "schema_version": "3"}}, 200),
              self.cmd("ev-04", "a-validate", "validate-contract", T("02:00:10"), H_ENG, {"batch_id": "b-ev04-a"}, 200, body={"status": "quarantined", "result": {"quarantine_by_reason": {"SCHEMA_CHANGED": 2}}},
                       warnings=["SCHEMA_CHANGED"]),
              self.cmd("ev-04", "a-commit", "commit-batch", T("02:00:20"), H_ENG, {"batch_id": "b-ev04-a"}, 409, reason="BATCH_QUARANTINED"),
-             self.cmd("ev-04", "b-fetch", "fetch-source-page", T("02:30:00"), H_ENG, {"source_id": "src-payments", "cursor": "off-ev04", "batch_id": "b-ev04-b", "page": {"records": r2, "next_cursor": "off-ev04-n", "schema_version": "3"}}, 200),
+             self.cmd("ev-04", "b-fetch", "fetch-source-page", T("02:30:00"), H_ENG, {"source_id": "src-payments", "cursor": "off-ev04", "batch_id": "b-ev04-b", "fetch_session": "ev04-b", "page": {"records": r2, "next_cursor": "off-ev04-n", "schema_version": "3"}}, 200),
              self.cmd("ev-04", "b-bump-engineer", "validate-contract", T("02:30:10"), H_ENG, {"batch_id": "b-ev04-b", "bump_schema_version": "3"}, 403, reason="ROLE_FORBIDDEN"),
              self.cmd("ev-04", "b-bump", "validate-contract", T("02:30:20"), H_OP, {"batch_id": "b-ev04-b", "bump_schema_version": "3"}, 200, body={"status": "validated", "result": {"accepted_unique": 2}}),
              self.cmd("ev-04", "b-commit", "commit-batch", T("02:30:30"), H_OP, {"batch_id": "b-ev04-b"}, 200, body={"result": {"accepted_unique": 2}})]
@@ -1441,7 +1546,7 @@ class Injections:
         # EV-07 a failed run never replaces the publication
         r3 = [self.rec(f"INJ-FR-{i}", ts=f"2026-10-04T23:{40 + i}:00Z", price=f"{i}0.00") for i in range(1, 4)]
         s = self.ingest("ev-07", "a", "src-orders", "b-ev07", "off-ev07", "off-ev07-n", r3, T("03:30:00"))
-        s += [self.cmd("ev-07", "transform", "transform-models", T("03:31:00"), H_OP, {"run_id": "run-ev07", "batch_ids": ["b-ev07"]}, 200),
+        s += [self.cmd("ev-07", "transform", "transform-models", T("03:31:00"), H_OP, {"run_id": "run-ev07", "batch_ids": ["b-ev07"], "scope_from": T("03:30:00")}, 200),
               self.cmd("ev-07", "fault", "inject-fault", T("03:32:00"), H_OP, {"fault_type": "duplicate_key", "target_id": "run-ev07", "note": "P08-TEST-07"}, 200),
               self.cmd("ev-07", "gate", "run-quality-gate", T("03:33:00"), H_OP, {"run_id": "run-ev07"}, 200, body={"status": "blocked", "result": {"decision": "blocked", "critical_failures": 2}}, warnings=["GATE_BLOCKED"]),
               self.cmd("ev-07", "publish", "publish-snapshot", T("03:34:00"), H_OP, {"run_id": "run-ev07", "watermark": T("03:00:00")}, 409, reason="RUN_NOT_SUCCESSFUL"),
@@ -1457,16 +1562,16 @@ class Injections:
         s += self.ingest("ev-08", "b", "src-orders", "b-ev08-b", "off-ev08-n", "off-ev08-m", dl, T("04:10:00"), commit=False)
         s[-1]["expected_body"] = {"result": {"deleted": 1, "quarantined": 1, "quarantine_by_reason": {"DELETE_TARGET_UNKNOWN": 1}}}
         s += [self.cmd("ev-08", "b-commit", "commit-batch", T("04:10:30"), H_ENG, {"batch_id": "b-ev08-b"}, 200, body={"result": {"deleted": 1, "quarantined": 1}}),
-              self.cmd("ev-08", "transform", "transform-models", T("04:11:00"), H_OP, {"run_id": "run-ev08", "batch_ids": ["b-ev08-a", "b-ev08-b"]}, 200, body={"result": {"outputs": 1}}),
+              self.cmd("ev-08", "transform", "transform-models", T("04:11:00"), H_OP, {"run_id": "run-ev08", "batch_ids": ["b-ev08-a", "b-ev08-b"], "scope_from": T("04:00:00")}, 200, body={"result": {"outputs": 1}}),
               self.cmd("ev-08", "gate", "run-quality-gate", T("04:12:00"), H_OP, {"run_id": "run-ev08"}, 200,
                        body={"status": "allowed", "result": {"reconciliation": {"exclusions": {"deletes": "10.00", "quarantined": "0.00", "duplicates": "0.00"}, "residual": "0.00"}}}),
               self.cmd("ev-08", "publish", "publish-snapshot", T("04:13:00"), H_OP, {"run_id": "run-ev08", "watermark": T("04:00:00")}, 200, body={"result": {"published_records": 1}})]
         evs.append({"event_id": "EV-08", "injection": "INJ-08", "requires": [], "steps": s})
         # EV-09 a late event behind the watermark
         s = self.ingest("ev-09", "a", "src-orders", "b-ev09-a", "off-ev09", "off-ev09-a", [self.rec("INJ-LATE-0", ts="2026-10-05T00:00:00Z"), self.rec("INJ-LATE-00", ts="2026-10-05T00:01:00Z")], T("04:30:00"))
-        s += self.pipeline("ev-09", "x", "run-ev09x", ["b-ev09-a"], T("04:31:00"), T("04:20:00"))
+        s += self.pipeline("ev-09", "x", "run-ev09x", ["b-ev09-a"], T("04:31:00"), T("04:20:00"), T("04:30:00"))
         s += self.ingest("ev-09", "b", "src-orders", "b-ev09-b", "off-ev09-a", "off-ev09-b", [self.rec("INJ-LATE-1", ts="2026-10-05T00:10:00Z")], T("04:40:00"))
-        s += self.pipeline("ev-09", "y", "run-ev09y", ["b-ev09-a", "b-ev09-b"], T("04:50:00"), T("04:45:00"))
+        s += self.pipeline("ev-09", "y", "run-ev09y", ["b-ev09-a", "b-ev09-b"], T("04:50:00"), T("04:45:00"), T("04:30:00"))
         s += [self.read(T("05:00:00"), "/metrics", {"cutoff": T("05:00:00"), "source_id": "src-orders"},
                         [{"path": "data.metrics.late_events.events", "find": {"source_key": "INJ-LATE-1"},
                           "equals": {"behind_publication_id": "pub-ev09x", "included_in_publication_id": "pub-ev09y", "batch_id": "b-ev09-b"}}])]
@@ -1496,6 +1601,9 @@ class Injections:
         return evs
 
     # --- the manifest entries ------------------------------------------------------------------------------------------------------------
+    def bf_settled(self, bf_id: str) -> str | None:
+        return next((r["settled_at"] for r in self.b.ents["backfill_requests"] if r["backfill_id"] == bf_id), None)
+
     def entries(self) -> list[dict]:
         b, w, m = self.b, self.w, self.m
         ents = b.ents
@@ -1524,12 +1632,13 @@ class Injections:
             {"aborted_batch": A.batch_id, "replay_batch": R.batch_id, "rows_written": len(A.rows), "accepted_by_the_replay": accR, "rows_accepted_in_the_aborted_batch": 0})
         # 02
         add(2, "overlapping backfills", "P08-TEST-02",
-            "Two backfill requests (bf-006 and bf-012) overlap an earlier accepted request of the same source.",
-            "Each is refused with BACKFILL_OVERLAP and keeps its id; the earlier request stands; touching half-open ranges are accepted.", "both",
+            "Two backfill requests (bf-006 and bf-012) overlap an earlier request of the same source that is still requested or running (bf-004 and bf-010, whose last batch had just committed).",
+            "Each is refused with BACKFILL_OVERLAP and keeps its id; the earlier request stands; touching half-open ranges are accepted; a request that has settled (partial or complete) no longer blocks.", "both",
             [{"entity": "backfill_requests", "id": i} for i in ("bf-004", "bf-006", "bf-010", "bf-012")],
             [{"path": "metrics.backfills.refused", "equals": ["bf-006", "bf-012"]}, {"path": "ingest.counts.backfill_requests.accepted", "equals": 13},
              {"path": "ingest.counts.backfill_requests.rejected", "equals": 2}], ["EV-02"],
-            {"refused": {q["id"]: {"overlaps": q["overlaps"], "source_id": q["src"]} for q in w.bf.values() if q["refused"]}},
+            {"refused": {q["id"]: {"overlaps": q["overlaps"], "source_id": q["src"], "requested_at": iso(q["requested_final"]), "victim_settled_at": self.bf_settled(q["overlaps"])}
+                         for q in w.bf.values() if q["refused"]}},
             rejections=[{"entity": "backfill_requests", "id": q["id"], "reason_code": "BACKFILL_OVERLAP"} for q in sorted(w.bf.values(), key=lambda q: q["id"]) if q["refused"]])
         # 03
         fa = self.n.fetch_analysis()
@@ -1617,8 +1726,8 @@ class Injections:
         # 10
         cl = next(r for r in ents["fetch_log"] if r["status"] == "cursor_loop")
         add(10, "a pagination token that repeats", "P08-TEST-10",
-            f"{LOOP_SOURCE} answers the fetch from {cl['cursor_value']} with next_cursor {cl['next_cursor']}, the cursor just fetched.",
-            "The fetch stops with CURSOR_LOOP (409) and is recorded; the session is dead; a new session fetches the window; no batch is created by the looping page.", "both",
+            f"In one fetch session {LOOP_SOURCE} answers the page after {cl['next_cursor']} (cursor {cl['cursor_value']}) with next_cursor {cl['next_cursor']}, the cursor the session started from.",
+            "The fetch stops with CURSOR_LOOP (409) and is recorded; the session is dead; a new session may fetch a cursor again (recorded as a refetch); no batch is created by the looping page.", "both",
             [{"entity": "fetch_log", "id": cl["fetch_id"]}], [], ["EV-10"], {"fetch_log_row": cl["fetch_id"], "session_id": cl["session_id"], "fetched_at": cl["fetched_at"]})
         # 11
         from_domain = self.b.dom.mod["redaction"].safe_line(LOG_LINE)
@@ -1644,8 +1753,8 @@ def parameters(b: Built) -> dict[str, str]:
          "stale_source": f"{STALE_SOURCE} from {iso(STALE_FROM)}", "rate_limit": f"{RATE_LIMITED_SOURCE} {RATE_LIMIT_PPM} ppm of fetches, retry-after {list(RETRY_AFTER_CHOICES)}",
          "late_events": f"{LATE_N} events of {LATE_SOURCE} held to the batch of {iso(int(LATE_SLOT.timestamp()))}", "residual_day": RESIDUAL_TICK.strftime("%Y-%m-%d"),
          "ppm": canon(PPM), "failure_plan": canon({t: FAIL_TYPES.count(t) for t in sorted(set(FAIL_TYPES))} | {"freshness": N_FRESH, "residual": 1}),
-         "aborted_ingests": f"{N_ABORTED_RANDOM} random + 1 designed", "unknown_op_rows": "3: one slot each of src-orders, src-payments, src-shipments", "backfills": "15 requests: 13 accepted, 2 refused (bf-006, bf-012)",
-         "publication_scope": "every batch committed before the run started, on the UTC day of (the run's hour tick minus one hour): the day's snapshot, rebuilt hourly; backfill batches enter on the day they commit",
+         "aborted_ingests": f"{N_ABORTED_RANDOM} random + 1 designed", "unknown_op_rows": "3: one slot each of src-orders, src-payments, src-shipments", "backfills": "15 requests: 13 accepted, 2 refused (bf-006, bf-012), each made while the request it overlaps (bf-004, bf-010) was still requested or running",
+         "publication_scope": "every batch committed from the start of the UTC day of (the run's hour tick minus one hour) until the run started (pipeline_runs.scope_from declares the start): the day's snapshot, rebuilt hourly; backfill batches enter on the day they commit",
          "watermark": "the earliest, over all sources, of the end of the window of the latest batch committed before the gate",
          "sample_cap_rows": str(SAMPLE_CAP), "sample_rows_published": str(len(b.ents["raw_records"])), "size_cap_bytes": str(SIZE_CAP),
          "size_cap_binding": "false" if b.sample_cap == SAMPLE_CAP else "true", "run_start_offset_seconds": str(RUN_OFFSET_S)}

@@ -1,3 +1,4 @@
+import { parseJsonExact } from "../domain/json";
 import { useMemo, useState } from "react";
 import { Empty, Meaning, Pager, Panel, Scroll, SimNote, Status, ViewHead, WithData, usePage } from "../components/ui";
 import type { Dataset } from "../data/analyse";
@@ -94,8 +95,8 @@ function Detail({ ds, row, close }: { ds: Dataset; row: QRow; close: () => void 
   const keys = useMemo(() => new Set<unknown>(ds.result.facts.accepted.filter((a) => a.source_id === row.source).map((a) => a.key)), [ds, row.source]);
   const retry = (): void => {
     let payload: unknown;
-    try { payload = JSON.parse(text); } catch { setResult("The payload is not valid JSON; nothing was replayed."); return; }
-    const o = retryRow(row.key, payload, keys);
+    try { payload = parseJsonExact(text); } catch { setResult("The payload is not valid JSON; nothing was replayed."); return; }
+    const o = retryRow(row.key, payload, keys, ds.g.cutoff);
     const outcome = o.kind === "accepted" ? "accepted" : o.kind === "duplicate" ? "duplicate" : `still quarantined (${o.reason})`;
     addSimQuarantine({ quarantine_id: row.id, action: "retry", outcome: o.kind === "quarantined" ? `still quarantined: ${o.reason}` : o.kind, reason: o.reason, note: text.slice(0, 80) });
     setResult(`Replayed as a new row of ${row.source}: ${outcome}. ${o.kind === "accepted" ? "Simulated delta: quarantined −1, accepted +1." : o.kind === "duplicate" ? "The key check runs first: its key is already accepted, so it is counted as a duplicate, not a second record." : "It stays quarantined, with a reason code."}`);

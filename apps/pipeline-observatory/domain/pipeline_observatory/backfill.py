@@ -1,4 +1,9 @@
-"""Half-open backfill ranges [start, end) over daily UTC partitions (D-03, D-P8-11)."""
+"""Half-open backfill ranges [start, end) over daily UTC partitions (D-03, D-P8-11, D-09 R8-12).
+
+Overlap is judged only against requests that are still ACTIVE (status ``requested`` or ``running``): a ``partial`` or ``complete`` request no
+longer blocks a later one, so a partition a backfill left unverified can be backfilled again. A clockless snapshot (an import whose request has no
+``requested_at``) cannot say what was running at the time, so it is judged against every earlier accepted request in backfill_id order.
+"""
 from __future__ import annotations
 
 from datetime import timedelta
@@ -16,10 +21,27 @@ def ranges_overlap(a_start: Any, a_end: Any, b_start: Any, b_end: Any) -> bool:
     return parse_ts(a_start) < parse_ts(b_end) and parse_ts(b_start) < parse_ts(a_end)
 
 
-def find_overlap(accepted: Iterable[Row], request: Row) -> Row | None:
-    """The first earlier accepted request of the same source whose range overlaps the request's."""
+ACTIVE_STATUSES = ("requested", "running")
+
+
+def is_active(other: Row, at: Any = None) -> bool:
+    """Was ``other`` still being worked on? Live (``at`` None): its status is requested or running. In history (``at`` the later request's
+    ``requested_at``): it is active now, or it settled (``settled_at``) after ``at``."""
+    if other.get("status") in ACTIVE_STATUSES:
+        return True
+    return at is not None and other.get("settled_at") is not None and parse_ts(at) < parse_ts(other["settled_at"])
+
+
+def find_overlap(accepted: Iterable[Row], request: Row, history: bool = False) -> Row | None:
+    """The first earlier accepted request of the same source whose range overlaps the request's and that is active. ``history=True`` judges an
+    imported snapshot: by the request's ``requested_at`` when it has one, else (no clock) against every earlier request."""
+    at = request.get("requested_at") if history else None
     for other in accepted:
-        if other["source_id"] == request["source_id"] and ranges_overlap(request["start_at"], request["end_at"], other["start_at"], other["end_at"]):
+        if other["source_id"] != request["source_id"] or not ranges_overlap(request["start_at"], request["end_at"], other["start_at"], other["end_at"]):
+            continue
+        if history and at is None:
+            return other
+        if is_active(other, at):
             return other
     return None
 

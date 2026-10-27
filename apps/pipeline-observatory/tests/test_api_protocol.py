@@ -11,7 +11,7 @@ from api.app import PREFIX, create_app
 from api.schemas import FetchSourcePageRequest
 from support_db import (ADMIN, ENGINEER, OPERATOR, OPERATOR2, at, client, command, conn, count, db_url, get, ingest, load_world, rule_ids)
 
-FETCH = {"source_id": "src-orders", "cursor": "c0", "batch_id": "b-1", "page": {"records": [{"payload": {"record_id": "A-1", "quantity": 1, "unit_price": "1.00", "amount": "1.00", "event_ts": "2026-10-04T08:00:00Z"}}]}}
+FETCH = {"source_id": "src-orders", "cursor": "c0", "batch_id": "b-1", "fetch_session": "s-protocol", "page": {"records": [{"payload": {"record_id": "A-1", "quantity": 1, "unit_price": "1.00", "amount": "1.00", "event_ts": "2026-10-04T08:00:00Z"}}]}}
 
 # command -> (minimal valid body, roles allowed)
 ALL3 = {"engineer", "operator", "admin"}

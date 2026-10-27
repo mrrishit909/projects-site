@@ -33,10 +33,10 @@ from pipeline_observatory.classify import (ACCEPTED, DELETED, DUPLICATE, QUARANT
                                            next_checkpoint_version)
 from pipeline_observatory.contract import ROLES as ROLE_LIST
 from pipeline_observatory.errors import DomainError
-from pipeline_observatory.fetch import check_cursor_progress, check_retry_allowed, retry_not_before
+from pipeline_observatory.fetch import Fetched, check_retry_allowed, judge_fetch, retry_not_before
 from pipeline_observatory.hashing import canonical_json, content_hash, payload_hash as hash_payload, sha256_hex
 from pipeline_observatory.metrics import compute
-from pipeline_observatory.reconcile import reconcile
+from pipeline_observatory.reconcile import Accepted, pending_late_events, reconcile
 from pipeline_observatory.redaction import redact_text, redact_value
 from pipeline_observatory.timeutil import iso_z, micros_between, parse_ts, seconds_between, utc_date
 from psycopg.types.json import Jsonb
@@ -305,6 +305,23 @@ def _add_results(conn: Conn, run_id: str, task_run_id: str, results: list[tuple[
     return out
 
 
+def _accepted_with_arrival(conn: Conn, until: datetime) -> list[Accepted]:
+    """The accepted records of committed batches that arrived (checkpoint committed_at) before ``until``, as the domain's ``Accepted``."""
+    rows = conn.execute(
+        "SELECT a.source_id, a.source_key, a.batch_id, a.raw_record_id, r.payload_hash, r.payload_json ->> 'event_ts' AS event_ts, c.committed_at "
+        "FROM accepted_records a JOIN raw_records r ON r.raw_record_id = a.raw_record_id JOIN checkpoints c ON c.batch_id = a.batch_id "
+        "WHERE c.committed_at < %s AND c.committed_at > coalesce((SELECT min(published_at) FROM publications), '-infinity'::timestamptz) "
+        "ORDER BY a.source_id COLLATE \"C\", a.source_key COLLATE \"C\"", (until,)).fetchall()
+    return [Accepted(r["source_id"], r["batch_id"], r["source_key"], r["event_ts"], iso_z(r["committed_at"]), r["raw_record_id"], r["payload_hash"], Decimal("0"))
+            for r in rows]
+
+
+def _publication_rows(conn: Conn) -> list[dict[str, Any]]:
+    return [{"publication_id": r["publication_id"], "published_at": iso_z(r["published_at"]), "watermark": iso_z(r["watermark"]), "source_ids": list(r["source_ids"]),
+             "included_batch_ids": list(r["included_batch_ids"])}
+            for r in conn.execute("SELECT publication_id, published_at, watermark, source_ids, included_batch_ids FROM publications").fetchall()]
+
+
 def _run_gate(conn: Conn, run_id: str) -> dict[str, Any]:
     rows = conn.execute("SELECT q.* FROM quality_results q JOIN task_runs t ON t.task_run_id = q.task_run_id WHERE t.run_id = %s", (run_id,)).fetchall()
     return gate_mod.decide(rows)
@@ -331,13 +348,16 @@ def _scope_facts(conn: Conn, batch_ids: list[str]) -> tuple[list[tuple[str, Deci
 
 def fetch_source_page(conn: Conn, req: Any, actor: Actor) -> Outcome:
     """cursor -> raw page. The page the source answered with is staged as a batch (status ``staged``, rows unclassified). A 429 page records the
-    retry-after hint and a retry sooner than that is refused (RETRY_TOO_SOON); a ``next_cursor`` that repeats inside a fetch session is
-    CURSOR_LOOP and stops the session (P08-FLOW-01, P08-TEST-03, P08-TEST-10)."""
+    retry-after hint and a retry sooner than that is refused (RETRY_TOO_SOON); a cursor that repeats inside a fetch session is CURSOR_LOOP and
+    stops the session, while a page fetched again in a NEW session is recorded as ``refetch`` (D-09, R8-06; P08-FLOW-01, P08-TEST-03, P08-TEST-10).
+    The fetch_session is required (FETCH_SESSION_REQUIRED)."""
     i = req.input
     now = _now()
+    if not i.fetch_session:
+        raise _invalid("FETCH_SESSION_REQUIRED", "a fetch names its fetch_session: a loop is a repeated cursor inside one session, a new session may fetch a cursor again", "input.fetch_session")
     _lock_source(conn, i.source_id)
-    if i.fetch_session and conn.execute("SELECT 1 FROM fetch_log WHERE source_id = %s AND session_id = %s AND status = 'cursor_loop' LIMIT 1",
-                                        (i.source_id, i.fetch_session)).fetchone():
+    if conn.execute("SELECT 1 FROM fetch_log WHERE source_id = %s AND session_id = %s AND status = 'cursor_loop' LIMIT 1",
+                    (i.source_id, i.fetch_session)).fetchone():
         raise _conflict("CURSOR_LOOP", "this fetch session was stopped by a repeating cursor; start a new session", "input.fetch_session", rule_id="CURSOR_LOOP")
     last = conn.execute("SELECT status, retry_after_seconds, fetched_at FROM fetch_log WHERE source_id = %s AND cursor_value = %s "
                         "ORDER BY fetched_at DESC, fetch_id DESC LIMIT 1", (i.source_id, i.cursor)).fetchone()
@@ -358,14 +378,11 @@ def fetch_source_page(conn: Conn, req: Any, actor: Actor) -> Outcome:
                                         "retry_not_before": iso_z(not_before), "batch_id": None},
                        warnings=[_warning("RATE_LIMITED", f"retry no sooner than {iso_z(not_before)}", "input.page")],
                        audit=Audit("source", i.source_id, "fetch-source-page", details={"cursor": i.cursor, "status": "rate_limited", "retry_after_seconds": page.retry_after_seconds}))
-    seen: set[str] = set()
-    if i.fetch_session:
-        for r in conn.execute("SELECT cursor_value, next_cursor FROM fetch_log WHERE source_id = %s AND session_id = %s AND status = 'ok'", (i.source_id, i.fetch_session)).fetchall():
-            seen.add(r["cursor_value"])
-            if r["next_cursor"]:
-                seen.add(r["next_cursor"])
+    history = [Fetched(r["session_id"], r["cursor_value"], r["next_cursor"], r["status"]) for r in conn.execute(
+        "SELECT session_id, cursor_value, next_cursor, status FROM fetch_log WHERE source_id = %s AND status IN ('ok', 'refetch')", (i.source_id,)).fetchall()]
+    committed = conn.execute("SELECT committed_cursor FROM checkpoints WHERE source_id = %s ORDER BY version_number DESC LIMIT 1", (i.source_id,)).fetchone()
     try:
-        check_cursor_progress(i.cursor, page.next_cursor, seen)
+        fetch_status = judge_fetch(history, committed["committed_cursor"] if committed else None, i.fetch_session, i.cursor, page.next_cursor)
     except DomainError as err:
         with db.autocommit() as c:         # the loop is evidence: it survives the rollback of this command
             c.execute("INSERT INTO fetch_log (source_id, cursor_value, session_id, status, next_cursor, fetched_at) VALUES (%s,%s,%s,'cursor_loop',%s,%s)",
@@ -386,9 +403,9 @@ def fetch_source_page(conn: Conn, req: Any, actor: Actor) -> Outcome:
         rid = f"rr-{batch_id}-{n:04d}"
         conn.execute("INSERT INTO raw_records (raw_record_id, batch_id, source_key, payload_hash, payload_json) VALUES (%s,%s,%s,%s,%s)", (rid, batch_id, key, h, Jsonb(rec.payload)))
         ids.append(rid)
-    conn.execute("INSERT INTO fetch_log (source_id, cursor_value, session_id, status, next_cursor, fetched_at, batch_id) VALUES (%s,%s,%s,'ok',%s,%s,%s)",
-                 (i.source_id, i.cursor, i.fetch_session, page.next_cursor, now, batch_id))
-    return Outcome("staged", {"batch_id": batch_id, "source_id": i.source_id, "cursor": i.cursor, "next_cursor": page.next_cursor, "received": len(ids),
+    conn.execute("INSERT INTO fetch_log (source_id, cursor_value, session_id, status, next_cursor, fetched_at, batch_id) VALUES (%s,%s,%s,%s,%s,%s,%s)",
+                 (i.source_id, i.cursor, i.fetch_session, fetch_status, page.next_cursor, now, batch_id))
+    return Outcome("staged", {"batch_id": batch_id, "source_id": i.source_id, "cursor": i.cursor, "next_cursor": page.next_cursor, "fetch_status": fetch_status, "received": len(ids),
                               "schema_version": page.schema_version, "started_at": iso_z(now), "raw_record_ids": ids},
                    audit=Audit("batch", batch_id, "fetch-source-page", details={"source_id": i.source_id, "cursor": i.cursor, "received": len(ids)}))
 
@@ -400,10 +417,11 @@ def _accepted_keys(conn: Conn, source_id: str) -> tuple[set[str], set[str]]:
     return {r["source_key"] for r in rows}, {r["source_key"] for r in rows if r["deleted"]}
 
 
-def _classify_batch(conn: Conn, batch: db.Row, schema_ok: bool) -> list[Any]:
+def _classify_batch(conn: Conn, batch: db.Row, schema_ok: bool, now: datetime) -> list[Any]:
+    """Classify the staged rows against what is accepted NOW. A row dated after the batch's arrival (``started_at``) or after ``now`` is EVENT_IN_FUTURE."""
     rows = conn.execute("SELECT raw_record_id, source_key, payload_json FROM raw_records WHERE batch_id = %s ORDER BY raw_record_id COLLATE \"C\"", (batch["batch_id"],)).fetchall()
     keys, deleted = _accepted_keys(conn, batch["source_id"])
-    return classify_rows(rows, keys, deleted, schema_ok)
+    return classify_rows(rows, keys, deleted, schema_ok, batch["started_at"], now)
 
 
 def _staged_batch(conn: Conn, batch_id: str) -> tuple[db.Row, db.Row]:
@@ -436,7 +454,7 @@ def validate_contract(conn: Conn, req: Any, actor: Actor) -> Outcome:
         audits.append(Audit("source", src["source_id"], "bump-schema-version", reason="explicit bump", details={"from": expected, "to": i.bump_schema_version}))
         expected = i.bump_schema_version
     schema_ok = b["schema_version"] in (None, expected)
-    disp = _classify_batch(conn, b, schema_ok)
+    disp = _classify_batch(conn, b, schema_ok, now)
     reasons: dict[str, int] = {}
     for d in disp:
         conn.execute("UPDATE raw_records SET disposition = %s, reason_code = %s WHERE raw_record_id = %s", (d.kind, d.reason, d.raw_record_id))
@@ -487,7 +505,7 @@ def commit_batch(conn: Conn, req: Any, actor: Actor) -> Outcome:
     except DomainError as err:
         _refusal(actor, req, "commit-batch", "batch", b["batch_id"], err.code, err.message, err.details)
         raise from_domain(err, "input.checkpoint_version") from None
-    disp = _classify_batch(conn, b, True)                      # authoritative: against what is accepted NOW, under the source lock
+    disp = _classify_batch(conn, b, True, now)                      # authoritative: against what is accepted NOW, under the source lock
     raws = {r["raw_record_id"]: r for r in conn.execute("SELECT raw_record_id, source_key, payload_hash, payload_json FROM raw_records WHERE batch_id = %s", (b["batch_id"],)).fetchall()}
     n_acc = n_q = 0
     for d in disp:
@@ -557,14 +575,21 @@ def transform_models(conn: Conn, req: Any, actor: Actor) -> Outcome:
     if conn.execute("SELECT 1 FROM pipeline_runs WHERE run_id = %s", (run_id,)).fetchone() is None:
         if i.backfill_id and not conn.execute("SELECT 1 FROM backfill_requests WHERE backfill_id = %s", (i.backfill_id,)).fetchone():
             raise _not_found("input.backfill_id", "UNKNOWN_BACKFILL", "backfill")
-        conn.execute("INSERT INTO pipeline_runs (run_id, started_at, status, code_sha, backfill_id) VALUES (%s,%s,'running',%s,%s) ON CONFLICT DO NOTHING",
-                     (run_id, now, os.environ.get("CODE_SHA", "dev"), i.backfill_id))
+        scope_from = parse_ts(i.scope_from) if i.scope_from is not None else None
+        if scope_from is not None and scope_from > now:
+            raise _invalid("SCOPE_IN_FUTURE", "scope_from cannot be after the server's time", "input.scope_from")
+        conn.execute("INSERT INTO pipeline_runs (run_id, started_at, status, code_sha, backfill_id, scope_from) VALUES (%s,%s,'running',%s,%s,%s) ON CONFLICT DO NOTHING",
+                     (run_id, now, os.environ.get("CODE_SHA", "dev"), i.backfill_id, scope_from))
+        if i.backfill_id:                                   # the request is being worked on: it blocks an overlapping request until it settles (R8-12)
+            conn.execute("UPDATE backfill_requests SET status = 'running' WHERE backfill_id = %s AND status = 'requested'", (i.backfill_id,))
         created = True
     run = _lock_run(conn, run_id)
     if run["status"] != "running":
         raise _conflict("RUN_NOT_OPEN", f"run {run_id!r} is {run['status']}; start a new run", "input.run_id", {"status": run["status"]})
     if i.backfill_id is not None and run["backfill_id"] != i.backfill_id:
         raise _conflict("BACKFILL_MISMATCH", "the run belongs to another backfill", "input.backfill_id")
+    if i.scope_from is not None and not created and (run["scope_from"] is None or run["scope_from"] != parse_ts(i.scope_from)):
+        raise _conflict("SCOPE_MISMATCH", "the run's scope_from is fixed when the run starts", "input.scope_from")
     if created:
         _add_task(conn, run_id, "ingest", "success", 1)
     attempt = _next_attempt(conn, run_id, "transform", i.attempt)
@@ -621,6 +646,14 @@ def run_quality_gate(conn: Conn, req: Any, actor: Actor) -> Outcome:
     rec = reconcile(src_rows, [], del_amt, removed, published)                       # the published total is the stored table's, not a recomputation
     checks: list[tuple[str, str, int, int]] = [("keys_unique", "critical", keys[0], keys[1]), ("relationships_intact", "critical", rel[0], rel[1]),
                                                ("reconciliation_residual_zero", "critical", 1, 0 if rec["residual"] == "0.00" else 1)]
+    # D-09 (R8-02): the publication may not silently leave out a committed batch of the run's scope, nor a late event that is still unpublished
+    committed = [(r["batch_id"], r["committed_at"]) for r in conn.execute(
+        "SELECT c.batch_id, c.committed_at FROM checkpoints c JOIN ingestion_batches b ON b.batch_id = c.batch_id WHERE b.status = 'committed'").fetchall()]
+    in_scope, missing = gate_mod.scope_complete(committed, batch_ids, run["scope_from"], run["started_at"])
+    checks.append((gate_mod.SCOPE_COMPLETE, "critical", in_scope, len(missing)))
+    pending = pending_late_events(_accepted_with_arrival(conn, run["started_at"]), _publication_rows(conn), run["started_at"])
+    left_out = [e for e in pending if e["batch_id"] not in set(batch_ids)]
+    checks.append((gate_mod.LATE_EVENTS_INCLUDED, "critical", len(pending), len(left_out)))
     targets = conn.execute("SELECT source_id, freshness_target_seconds AS t FROM source_contracts WHERE source_id = ANY(%s) AND freshness_target_seconds IS NOT NULL ORDER BY source_id", (sources,)).fetchall()
     if targets:
         stale = 0
@@ -676,6 +709,12 @@ def publish_snapshot(conn: Conn, req: Any, actor: Actor) -> Outcome:
     watermark = parse_ts(i.watermark)
     if watermark > now:
         raise _invalid("WATERMARK_IN_FUTURE", "the watermark cannot be after the server's time", "input.watermark")
+    previous = conn.execute("SELECT publication_id, watermark FROM publications ORDER BY published_at DESC, publication_id DESC LIMIT 1").fetchone()
+    if previous is not None and watermark < previous["watermark"]:
+        _refusal(actor, req, "publish-snapshot", "run", run["run_id"], "WATERMARK_REGRESSION", "the watermark is earlier than the previous publication's",
+                 {"previous_publication_id": previous["publication_id"], "previous_watermark": iso_z(previous["watermark"]), "watermark": iso_z(watermark)})
+        raise _invalid("WATERMARK_REGRESSION", f"the watermark {iso_z(watermark)} is earlier than {iso_z(previous['watermark'])} of {previous['publication_id']}; a watermark never goes back",
+                       "input.watermark", {"previous_publication_id": previous["publication_id"], "previous_watermark": iso_z(previous["watermark"])})
     attempt = _next_attempt(conn, run["run_id"], "publish", i.attempt)
     hashes = [r["payload_hash"] for r in conn.execute("SELECT payload_hash FROM model_outputs WHERE run_id = %s", (run["run_id"],)).fetchall()]
     sources = [r["source_id"] for r in conn.execute("SELECT source_id FROM source_contracts ORDER BY source_id COLLATE \"C\"").fetchall()]   # the dataset's sources
@@ -692,7 +731,7 @@ def publish_snapshot(conn: Conn, req: Any, actor: Actor) -> Outcome:
     conn.execute("UPDATE pipeline_runs SET finished_at = %s WHERE run_id = %s", (now, run["run_id"]))
     latest = conn.execute("SELECT max((r.payload_json ->> 'event_ts')::timestamptz) AS m FROM model_outputs o JOIN accepted_records a ON a.source_id = o.source_id AND a.source_key = o.record_key "
                           "JOIN raw_records r ON r.raw_record_id = a.raw_record_id WHERE o.run_id = %s", (run["run_id"],)).fetchone()["m"]
-    backfill = _verify_backfill(conn, run, batch_ids) if run["backfill_id"] else None
+    backfill = _verify_backfill(conn, run, batch_ids, now) if run["backfill_id"] else None
     return Outcome("published", {"publication_id": pid, "run_id": run["run_id"], "published_at": iso_z(now), "watermark": iso_z(watermark), "content_hash": chash,
                                  "published_records": len(hashes), "latest_included_event_at": iso_z(latest),
                                  "lag_seconds": seconds_between(latest, now) if latest else None, "included_batch_ids": batch_ids,
@@ -701,7 +740,7 @@ def publish_snapshot(conn: Conn, req: Any, actor: Actor) -> Outcome:
                                                                                 "previous_publication_id": before["publication_id"] if before else None}))
 
 
-def _verify_backfill(conn: Conn, run: db.Row, batch_ids: list[str]) -> dict[str, Any]:
+def _verify_backfill(conn: Conn, run: db.Row, batch_ids: list[str], now: datetime) -> dict[str, Any]:
     """A published backfill run verifies the partitions whose accepted records in the run's scope reach the declared expectation (> 0)."""
     bf = conn.execute("SELECT * FROM backfill_requests WHERE backfill_id = %s FOR UPDATE", (run["backfill_id"],)).fetchone()
     parts = []
@@ -712,15 +751,16 @@ def _verify_backfill(conn: Conn, run: db.Row, batch_ids: list[str]) -> dict[str,
         verified = bool(p["verified"]) or (exp is not None and exp["expected_records"] > 0 and n >= exp["expected_records"])
         parts.append({"partition": p["partition"], "verified": verified})
     status = "complete" if all(p["verified"] for p in parts) else "partial"
-    conn.execute("UPDATE backfill_requests SET partitions = %s, status = %s WHERE backfill_id = %s", (Jsonb(parts), status, bf["backfill_id"]))
+    conn.execute("UPDATE backfill_requests SET partitions = %s, status = %s, settled_at = %s WHERE backfill_id = %s", (Jsonb(parts), status, now, bf["backfill_id"]))
     return {"backfill_id": bf["backfill_id"], "status": status, "verified_partitions": sum(1 for p in parts if p["verified"]), "requested_partitions": len(parts)}
 
 
 # --- C07 inject-fault -----------------------------------------------------------------------------------------------
 
 def sandbox() -> bool:
-    """Fault injection is allowed only in the synthetic sandbox: PIPELINE_ENVIRONMENT must be ``sandbox`` (the default for this synthetic product)."""
-    return os.environ.get("PIPELINE_ENVIRONMENT", "sandbox") == "sandbox"
+    """Fault injection is allowed only in the synthetic sandbox: PIPELINE_ENVIRONMENT must EQUAL ``sandbox``. Unset or any other value is not a
+    sandbox (D-09, R8-13: the default is the safe one)."""
+    return os.environ.get("PIPELINE_ENVIRONMENT") == "sandbox"
 
 
 def inject_fault(conn: Conn, req: Any, actor: Actor) -> Outcome:
@@ -773,7 +813,8 @@ def _next_backfill_id(conn: Conn) -> str:
 
 def request_backfill(conn: Conn, req: Any, actor: Actor) -> Outcome:
     """range -> scheduled partitions. The range is half-open [start_at, end_at) over daily UTC partitions; an earlier accepted request of the same
-    source whose range overlaps it refuses this one with BACKFILL_OVERLAP (a range that only TOUCHES, end = start, is accepted). The refusal is
+    source that is still ACTIVE (status requested or running; a partial or complete request no longer blocks) and whose range overlaps it refuses
+    this one with BACKFILL_OVERLAP (a range that only TOUCHES, end = start, is accepted). The refusal is
     kept in rejected_records and the audit trail. Concurrent requests for one source serialise on the source row (P08-FLOW-08, P08-TEST-02)."""
     i = req.input
     _lock_source(conn, i.source_id)
@@ -782,20 +823,20 @@ def request_backfill(conn: Conn, req: Any, actor: Actor) -> Outcome:
     except DomainError as err:
         raise from_domain(err, "input.start_at") from None
     start, end = parse_ts(i.start_at), parse_ts(i.end_at)
-    existing = conn.execute("SELECT backfill_id, source_id, start_at, end_at FROM backfill_requests WHERE source_id = %s ORDER BY backfill_id COLLATE \"C\"", (i.source_id,)).fetchall()
+    existing = conn.execute("SELECT backfill_id, source_id, start_at, end_at, status FROM backfill_requests WHERE source_id = %s ORDER BY backfill_id COLLATE \"C\"", (i.source_id,)).fetchall()
     bid = _next_backfill_id(conn)
     other = find_overlap(existing, {"source_id": i.source_id, "start_at": start, "end_at": end})
     if other is not None:
         raw = {"backfill_id": bid, "source_id": i.source_id, "start_at": iso_z(start), "end_at": iso_z(end), "status": "requested",
-               "partitions": [{"partition": p, "verified": False} for p in parts]}
+               "partitions": [{"partition": p, "verified": False} for p in parts], "requested_at": iso_z(_now())}
         with db.autocommit() as c:
             c.execute("INSERT INTO rejected_records (batch_id, entity, id, reason_code, raw_row, ordinal) VALUES ('api', 'backfill_requests', %s, 'BACKFILL_OVERLAP', %s, 0) ON CONFLICT DO NOTHING", (bid, Jsonb(raw)))
         _refusal(actor, req, "request-backfill", "backfill", bid, "BACKFILL_OVERLAP", f"overlaps {other['backfill_id']}", {"conflicts_with": other["backfill_id"], "source_id": i.source_id})
         raise _conflict("BACKFILL_OVERLAP", f"[{iso_z(start)}, {iso_z(end)}) overlaps {other['backfill_id']} [{iso_z(other['start_at'])}, {iso_z(other['end_at'])}) of the same source",
                         "input.start_at", {"conflicts_with": other["backfill_id"], "refused_id": bid}, rule_id="BACKFILL_OVERLAP")
-    conn.execute("INSERT INTO backfill_requests (backfill_id, source_id, start_at, end_at, status, partitions, requested_by) VALUES (%s,%s,%s,%s,'scheduled',%s,%s)",
-                 (bid, i.source_id, start, end, Jsonb([{"partition": p, "verified": False} for p in parts]), actor.actor_id))
-    return Outcome("scheduled", {"backfill_id": bid, "source_id": i.source_id, "start_at": iso_z(start), "end_at": iso_z(end), "partitions": parts, "requested_partitions": len(parts),
+    conn.execute("INSERT INTO backfill_requests (backfill_id, source_id, start_at, end_at, status, partitions, requested_by, requested_at) VALUES (%s,%s,%s,%s,'requested',%s,%s,%s)",
+                 (bid, i.source_id, start, end, Jsonb([{"partition": p, "verified": False} for p in parts]), actor.actor_id, _now()))
+    return Outcome("requested", {"backfill_id": bid, "source_id": i.source_id, "start_at": iso_z(start), "end_at": iso_z(end), "partitions": parts, "requested_partitions": len(parts),
                                  "range": "half-open [start_at, end_at)"},
                    audit=Audit("backfill", bid, "request-backfill", details={"source_id": i.source_id, "partitions": len(parts)}))
 

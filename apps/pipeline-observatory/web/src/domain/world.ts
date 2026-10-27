@@ -76,15 +76,17 @@ export function incidentsRecovered(acc: Record<string, Row[]>, gateOf: Record<st
   return { total: views.length, open, closed, verified, mean_recovery_minutes: meanMinutes(seconds, verified), all_closures_consistent: consistentAll, by_class: Object.fromEntries(sortedEntries(byClass)), incidents: views };
 }
 
-export interface RetryStats { fetch_rows: number; rate_limited_responses: number; retries: number; retries_honouring_retry_after: number; retries_too_soon: number; sessions_rate_limited: number; min_slack_seconds: number | null; max_slack_seconds: number | null; cursor_loops: number; sources_rate_limited: string[] }
+export interface RetryStats { fetch_rows: number; rate_limited_responses: number; retries: number; retries_honouring_retry_after: number; retries_too_soon: number; sessions_rate_limited: number; min_slack_seconds: number | null; max_slack_seconds: number | null; cursor_loops: number; sources_rate_limited: string[]; by_status: Record<string, number> }
 /** Retry behaviour from `fetch_log`: a rate-limited response is followed in the same session and for the same cursor by the retry; its slack is the
  * time between the earliest allowed instant (response + retry_after_seconds) and the retry; a negative slack would be a retry that ignored the hint. */
 export function retryStats(fetchLog: Row[]): RetryStats {
   const rows = sortedBy(fetchLog, (r) => [Number(r["fetch_id"])]);
   let limited = 0, retries = 0, honouring = 0, tooSoon = 0, loops = 0;
+  const byStatus: Record<string, number> = {};
   const sessions = new Set<string>(), sources = new Set<string>();
   const slacks: number[] = [];
   rows.forEach((r, i) => {
+    byStatus[r["status"]] = (byStatus[r["status"]] ?? 0) + 1;
     if (r["status"] === "cursor_loop") loops++;
     if (r["status"] !== "rate_limited") return;
     limited++; sessions.add(r["session_id"]); sources.add(r["source_id"]);
@@ -96,7 +98,7 @@ export function retryStats(fetchLog: Row[]): RetryStats {
     if (slack >= 0) honouring++; else tooSoon++;
   });
   return { fetch_rows: rows.length, rate_limited_responses: limited, retries, retries_honouring_retry_after: honouring, retries_too_soon: tooSoon, sessions_rate_limited: sessions.size,
-    min_slack_seconds: slacks.length ? Math.min(...slacks) : null, max_slack_seconds: slacks.length ? Math.max(...slacks) : null, cursor_loops: loops, sources_rate_limited: sortedStrings(sources) };
+    min_slack_seconds: slacks.length ? Math.min(...slacks) : null, max_slack_seconds: slacks.length ? Math.max(...slacks) : null, cursor_loops: loops, sources_rate_limited: sortedStrings(sources), by_status: Object.fromEntries(sortedEntries(byStatus)) };
 }
 
 /** Seconds of a declared cadence: "hourly", "daily", "every 4 hours", "every 30 minutes", "every 2 days"; null when it cannot be read. */

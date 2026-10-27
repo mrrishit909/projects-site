@@ -47,6 +47,7 @@ export function GoldenPanel() {
         </table>
       </Scroll>
       <p className="meaning" data-testid="golden-totals">After b-001 and its replay b-002 the source holds <strong data-figure="golden-accepted">{n0(M.accepted_unique)}</strong> accepted unique records ({n0(M.received)} received, {n0(M.duplicate)} duplicates, {n0(M.quarantined)} quarantined occurrences of {n0(M.quarantined_distinct_keys)} key). The crashed b-003 wrote {n0(Number(b("b-003")["written_rows"]))} rows and counts for nothing; the checkpoint stays at version {M.checkpoint.committed_version}.</p>
+      <p className="meaning" data-testid="golden-vacuous"><strong>Read the crash with care.</strong> In this fixture the crash case is <em>vacuous</em>: every key b-003 re-delivers was already accepted, so the replay adds nothing and the count could not have reached nine whether or not the apply is idempotent. The experiment that can fail is <em>The same crash when the batch also carried one new key</em> below: there the crash must still leave 8, and the new key becomes the ninth record exactly once, when the replay commits.</p>
       <h3>Experiments through the domain</h3>
       <div data-testid="experiments">
         {experiments.map((e) => (

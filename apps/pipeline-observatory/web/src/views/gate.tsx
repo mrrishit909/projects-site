@@ -4,8 +4,8 @@ import { Panel, Scroll, SimNote, Status, ViewHead, WithData } from "../component
 import type { Dataset } from "../data/analyse";
 import type { Row } from "../domain/contract";
 import { gateWhatIf } from "../domain/sim";
-import { blockedRunIds, diagnosis, gateOf, runsOf } from "../lib/derive";
-import { n0 } from "../lib/format";
+import { blockedRunIds, completenessSignal, diagnosis, failureKind, funnel, funnelText, gateOf, runsOf } from "../lib/derive";
+import { minutes, n0 } from "../lib/format";
 import { useParam } from "../router";
 import { addSimFault, resetSim, useSimFaults } from "../state/sim";
 
@@ -14,6 +14,8 @@ const RULE_TEXT: Record<string, string> = {
   relationships_intact: "Every output row refers to a row that exists upstream.",
   reconciliation_residual_zero: "Source total minus published total minus the explained exclusions (quarantined, duplicates, deletes) is exactly 0.00.",
   freshness_within_target: "Every source with a declared freshness target is within it.",
+  scope_complete: "Every batch committed from the run's declared scope_from until the run started is in the candidate publication: a publication may not silently leave a committed batch out.",
+  late_events_included: "No late event (arrived after a publication, dated before its watermark) that is in no publication yet is left out of the candidate: a late event is never lost.",
   completeness_vs_expectation: "Accepted records against the declared expectation per partition. A warning: reported, never blocks.",
 };
 function defaultRun(ds: Dataset): string {
@@ -85,12 +87,13 @@ function GateOne({ ds, runId, set }: { ds: Dataset; runId: string; set: (id: str
   const ids = runs.map((r) => r["run_id"] as string);
   if (!run || !gate) return <div className="notice notice--bad" role="alert" data-testid="gate-missing">No run named “{runId}” in this dataset. <button type="button" onClick={() => set(defaultRun(ds))}>Go to the default run</button></div>;
   const fails = ds.failedChecks[runId] ?? [];
+  const sig = completenessSignal(ds);
   return (
     <>
       <Panel id="decision" title={`Gate of ${runId}`} scope="complete">
         <div className="controls">
           <label>Run <select value={runId} onChange={(e) => set(e.target.value)} data-testid="gate-run">
-            {blocked.length > 0 && <optgroup label={`Blocked runs (${blocked.length})`}>{blocked.map((id) => <option key={`b${id}`} value={id}>{id}</option>)}</optgroup>}
+            {blocked.length > 0 && <optgroup label={`Failed runs: blocked at the gate or failed before it (${blocked.length})`}>{blocked.map((id) => <option key={`b${id}`} value={id}>{id}</option>)}</optgroup>}
             <optgroup label="Latest 24 runs">{ids.slice(-24).reverse().map((id) => <option key={`l${id}`} value={id}>{id}</option>)}</optgroup>
           </select></label>
           <Link to={`runs?run=${runId}`}>Open the run</Link>
@@ -110,8 +113,9 @@ function GateOne({ ds, runId, set }: { ds: Dataset; runId: string; set: (id: str
               </tr>))}</tbody>
           </table>
         </Scroll>
+        <p className="meaning" data-testid="completeness-signal"><code>completeness_vs_expectation</code> is a warning and it fails in {n0(sig.failing)} of {n0(sig.gates)} gates: it sets every accepted record against everything the source declared for every earlier day, so it is almost always short. It carries little signal and never blocks; read the critical checks.</p>
         <div className="outcome" data-testid="gate-outcome">
-          <p><strong>Publication decision.</strong> Run status <code>{run["status"]}</code>; publication row {pub ? <code>{pub}</code> : <strong>none</strong>}. The pointer was <code data-k="pointer-before">{before ?? "none"}</code> and is <code data-k="pointer-after">{after ?? "none"}</code>{pub && after === pub ? " (moved)" : " (unchanged)"}.</p>
+          <p><strong>Publication decision.</strong> {pub ? <>Publication lag {n0(ds.g.metrics.publications.publications[pub]?.lag_seconds ?? 0)} s = {minutes(ds.g.metrics.publications.publications[pub]?.lag_seconds ?? null)} min (published_at minus the latest included event). </> : null}Run status <code>{run["status"]}</code>; publication row {pub ? <code>{pub}</code> : <strong>none</strong>}. The pointer was <code data-k="pointer-before">{before ?? "none"}</code> and is <code data-k="pointer-after">{after ?? "none"}</code>{pub && after === pub ? " (moved)" : " (unchanged)"}.</p>
           <p className="meaning">{gate.decision === "blocked" ? "A blocked run fails, opens an incident and publishes nothing: the publication pointer moves only to a candidate that passed, atomically. A failed run never replaces the publication." : "An allowed run succeeds and publishes; the pointer then moves to its publication. A failing warning is reported but never blocks."}{" "}Diagnosis from the published rows: {diagnosis(ds, runId)}.</p>
         </div>
       </Panel>
@@ -121,20 +125,21 @@ function GateOne({ ds, runId, set }: { ds: Dataset; runId: string; set: (id: str
 }
 function Blocked({ ds, set }: { ds: Dataset; set: (id: string) => void }) {
   const ids = blockedRunIds(ds);
-  const gates = Object.values<{ decision: string }>(ds.g.metrics.quality_gate);
+  const f = funnel(ds);
   return (
-    <Panel id="blocked" title="Every blocked run" scope="complete">
-      <p className="meaning" data-testid="gate-totals"><span data-figure="gate-allowed">{n0(gates.filter((g) => g.decision === "allowed").length)}</span> runs allowed, <span data-figure="gate-blocked">{n0(ids.length)}</span> blocked. Each blocked run opened an incident; none published.</p>
-      {ids.length === 0 ? <p className="notice notice--empty" data-testid="empty">No run was blocked in this dataset.</p> : (
-        <Scroll label="Blocked runs">
+    <Panel id="blocked" title="Every failed run" scope="complete">
+      <p className="meaning" data-testid="gate-totals"><span data-testid="run-funnel">{funnelText(f)}.</span> That is <span data-figure="gate-allowed">{n0(f.allowed)}</span> allowed, <span data-figure="gate-blocked">{n0(f.blocked)}</span> blocked at the gate and <span data-figure="gate-failed-before">{n0(f.failedBefore)}</span> failed before it: <span data-figure="gate-failed">{n0(ids.length)}</span> failed runs in all. Each opened an incident; none published. A run with no gate result at all is shown as blocked because the gate fails closed.</p>
+      {ids.length === 0 ? <p className="notice notice--empty" data-testid="empty">No run failed in this dataset.</p> : (
+        <Scroll label="Failed runs">
           <table className="data" data-testid="blocked-table">
-            <thead><tr><th scope="col">Run</th><th scope="col">Failed check</th><th scope="col">Incident</th><th scope="col">Verified recovery</th><th scope="col" /></tr></thead>
+            <thead><tr><th scope="col">Run</th><th scope="col">Failure kind</th><th scope="col">Failed check or task</th><th scope="col">Incident</th><th scope="col">Verified recovery</th><th scope="col" /></tr></thead>
             <tbody>{ids.map((id) => {
               const inc = ds.incidents.incidents.find((i) => i.run_id === id);
+              const k = failureKind(ds, id);
               return (
-                <tr key={id} data-run={id}>
-                  <th scope="row"><code>{id}</code></th><td>{diagnosis(ds, id)}</td><td>{inc ? <Link to={`incidents?incident=${inc.incident_id}`}>{inc.incident_id}</Link> : "—"}</td>
-                  <td>{inc?.recovery_minutes ? `${inc.recovery_run_id}, ${inc.recovery_minutes} min` : "not yet"}</td><td><button type="button" className="quiet" onClick={() => set(id)}>Show</button></td>
+                <tr key={id} data-run={id} data-kind={k.kind === "blocked at the gate" ? "blocked" : "before-gate"}>
+                  <th scope="row"><code>{id}</code></th><td data-k="kind">{k.kind}</td><td>{k.detail}</td><td>{inc ? <Link to={`incidents?incident=${inc.incident_id}`}>{inc.incident_id}</Link> : "—"}</td>
+                  <td>{inc?.recovery_minutes ? `${inc.recovery_run_id}, ${inc.recovery_minutes} min` : "not yet"}</td><td><button type="button" className="quiet" aria-label={`Show the gate of ${id}`} onClick={() => set(id)}>Show</button></td>
                 </tr>);
             })}</tbody>
           </table>
@@ -156,7 +161,7 @@ function Gate({ ds }: { ds: Dataset }) {
   return (
     <>
       <ViewHead mark="07 · entry screen" title="Quality gate">
-        <p className="lede">May this candidate replace the published dataset? Four critical checks decide; a failed run never replaces the publication.</p>
+        <p className="lede">May this candidate replace the published dataset? Six critical checks decide (keys, relationships, reconciliation, freshness, scope and late events); a failed run never replaces the publication.</p>
       </ViewHead>
       <GateOne ds={ds} runId={runId} set={set} />
       <Blocked ds={ds} set={set} />

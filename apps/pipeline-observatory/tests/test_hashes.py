@@ -16,9 +16,9 @@ def test_every_payload_hash_is_the_sha256_of_the_canonical_payload(variant):
         assert hashlib.sha256(text.encode()).hexdigest() == r["payload_hash"] == payload_hash(r["payload_json"]), r["raw_record_id"]
 
 
-def test_the_golden_has_31_payload_hashes_and_the_duplicate_shares_its_hash():
+def test_the_golden_has_32_payload_hashes_and_the_duplicate_shares_its_hash():
     raws = golden_inputs()["raw_records"]
-    assert len(raws) == 31
+    assert len(raws) == 32
     by = {r["raw_record_id"]: r["payload_hash"] for r in raws}
     assert by["rr-b-001-03"] == by["rr-b-001-06"]                                  # ORD-1003 and its duplicate: same payload, same hash
 

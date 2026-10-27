@@ -21,6 +21,9 @@ export const DELETE_TARGET_UNKNOWN = "DELETE_TARGET_UNKNOWN";
 export const MALFORMED_RECORD = "MALFORMED_RECORD";
 export const PARTITION_ALIGNMENT = "PARTITION_ALIGNMENT";
 export const INVALID_RANGE = "INVALID_RANGE";
+export const EVENT_IN_FUTURE = "EVENT_IN_FUTURE";            // D-09 / R8-01: an event dated after its batch's arrival or after the cutoff
+export const WATERMARK_REGRESSION = "WATERMARK_REGRESSION";  // D-09 / R8-02
+export const FETCH_SESSION_REQUIRED = "FETCH_SESSION_REQUIRED";  // D-09 / R8-06
 
 export class DomainError extends Error {
   readonly code: string; readonly path: string | null; readonly details: Record<string, unknown>;

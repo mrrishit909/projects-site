@@ -67,8 +67,8 @@ def test_sql_equals_the_domain_on_a_changed_population(conn):
     inputs["raw_records"] += [{"raw_record_id": "rr-b-002-11", "batch_id": "b-002", "source_key": "ORD-1001", "payload_hash": payload_hash(extra["payload_json"]), **extra},
                               {"raw_record_id": "rr-b-002-12", "batch_id": "b-002", "source_key": "ORD-7000", "payload_hash": payload_hash({"record_id": "ORD-7000", "quantity": 1}),
                                "payload_json": {"record_id": "ORD-7000", "quantity": 1}},
-                              {"raw_record_id": "rr-b-002-13", "batch_id": "b-002", "source_key": "ORD-7001", "payload_hash": payload_hash({"record_id": "ORD-7001", "quantity": 1, "unit_price": "2.00", "amount": "2.00", "event_ts": "2026-10-04T14:00:00Z"}),
-                               "payload_json": {"record_id": "ORD-7001", "quantity": 1, "unit_price": "2.00", "amount": "2.00", "event_ts": "2026-10-04T14:00:00Z"}}]
+                              {"raw_record_id": "rr-b-002-13", "batch_id": "b-002", "source_key": "ORD-7001", "payload_hash": payload_hash({"record_id": "ORD-7001", "quantity": 1, "unit_price": "2.00", "amount": "2.00", "event_ts": "2026-10-04T11:50:00Z"}),
+                               "payload_json": {"record_id": "ORD-7001", "quantity": 1, "unit_price": "2.00", "amount": "2.00", "event_ts": "2026-10-04T11:50:00Z"}}]
     inputs["quarantine_records"].append({"quarantine_id": "q-b-002-02", "batch_id": "b-002", "source_key": "ORD-7000", "reason_code": "MISSING_FIELD",
                                          "payload_hash": payload_hash({"record_id": "ORD-7000", "quantity": 1})})
     load(conn, inputs)

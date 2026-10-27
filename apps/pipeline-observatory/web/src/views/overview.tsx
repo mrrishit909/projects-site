@@ -2,9 +2,9 @@ import { FreshnessChart } from "../components/freshness-chart";
 import { Link } from "../components/link";
 import { Fig, Meaning, Panel, Readout, Scroll, ScopeTag, Status, ViewHead, WithData } from "../components/ui";
 import type { Dataset } from "../data/analyse";
-import { downloadCsv } from "../lib/derive";
+import { downloadCsv, funnel, funnelText } from "../lib/derive";
 import { p6, ratio } from "../domain/num";
-import { dayTime, dur, n0 } from "../lib/format";
+import { dayTime, dur, minutes, n0 } from "../lib/format";
 
 function Fresh({ ds }: { ds: Dataset }) {
   const rows = ds.freshness;
@@ -18,15 +18,15 @@ function Fresh({ ds }: { ds: Dataset }) {
       <FreshnessChart rows={rows} />
       <Scroll label="Freshness and ingestion age per source">
         <table className="data" data-testid="fresh-table">
-          <caption>Per source, as of {ds.provenance.as_of}. Seconds are whole seconds; the text beside them is the same value in days, hours and minutes.</caption>
+          <caption>Per source, as of {ds.provenance.as_of}. Seconds are whole seconds, the stored and published unit; beside them the same value in minutes (4 places) and in days, hours and minutes (D-09, R8-15).</caption>
           <thead><tr><th scope="col">Source</th><th scope="col">Jobs</th><th scope="col">Ingestion age</th><th scope="col">Freshness</th><th scope="col">Gap</th><th scope="col">Target</th><th scope="col">Cadences</th><th scope="col">State</th></tr></thead>
           <tbody>
             {rows.map((r) => (
               <tr key={r.source_id} data-source={r.source_id}>
                 <th scope="row"><code>{r.source_id}</code><br /><span className="sub">{r.cadence}</span></th>
                 <td data-k="jobs">{r.last_batch ? <Status tone={r.last_batch.status === "committed" ? "ok" : "bad"}>last batch {r.last_batch.status}</Status> : <Status tone="idle">no batch</Status>}<br /><span className="sub">{Object.entries(r.batches_72h).map(([s, n]) => `${n} ${s}`).join(", ") || "none"} in the last 72 h</span></td>
-                <td data-k="ingestion-age" data-seconds={r.ingestion_age_seconds ?? ""}><Fig k={`ingestion-age-${r.source_id}`}>{r.ingestion_age_seconds ?? "n/a"}</Fig> s<br /><span className="sub">{dur(r.ingestion_age_seconds)}</span></td>
-                <td data-k="freshness" data-seconds={r.freshness_seconds ?? ""}><Fig k={`freshness-${r.source_id}`}>{r.freshness_seconds ?? "n/a"}</Fig> s<br /><span className="sub">{dur(r.freshness_seconds)}</span></td>
+                <td data-k="ingestion-age" data-seconds={r.ingestion_age_seconds ?? ""}><Fig k={`ingestion-age-${r.source_id}`}>{r.ingestion_age_seconds ?? "n/a"}</Fig> s<br /><span className="sub" data-k="minutes">{minutes(r.ingestion_age_seconds)} min · {dur(r.ingestion_age_seconds)}</span></td>
+                <td data-k="freshness" data-seconds={r.freshness_seconds ?? ""}><Fig k={`freshness-${r.source_id}`}>{r.freshness_seconds ?? "n/a"}</Fig> s<br /><span className="sub" data-k="minutes">{minutes(r.freshness_seconds)} min · {dur(r.freshness_seconds)}</span></td>
                 <td data-k="gap">{r.gap_seconds === null ? "n/a" : <><Fig k={`gap-${r.source_id}`}>{r.gap_seconds}</Fig> s<br /><span className="sub">{dur(r.gap_seconds)}</span></>}</td>
                 <td data-k="target">{r.target_seconds === null ? "none declared" : <>{r.target_seconds} s<br /><span className="sub">{dur(r.target_seconds)}</span></>}</td>
                 <td data-k="cadences">{r.cadences ?? "n/a"}</td>
@@ -44,14 +44,13 @@ function Fresh({ ds }: { ds: Dataset }) {
 function RunsPanel({ ds }: { ds: Dataset }) {
   const M = ds.g.metrics;
   const R = M.runs;
-  const gates = Object.values<{ decision: string }>(M.quality_gate);
-  const allowed = gates.filter((g) => g.decision === "allowed").length;
+  const f = funnel(ds);
   const total = Object.keys(R.runs).length;
   return (
     <Panel id="runs-panel" title="Runs, tasks and the gate" scope="complete">
       <dl className="readouts">
         <Readout k="runs-total" label="Runs" value={n0(total)} note={`${n0(R.durations.successful.count)} succeeded, ${n0(R.durations.failed.count)} failed`} />
-        <Readout k="gate-allowed" label="Gate allowed" value={n0(allowed)} unit={`of ${n0(gates.length)}`} note={`${n0(gates.length - allowed)} blocked`} />
+        <Readout k="gate-allowed" label="Gate allowed" value={n0(f.allowed)} unit={`of ${n0(f.reached)} that reached it`} note={<span data-testid="run-funnel">{funnelText(f)}</span>} />
         <Readout k="task-success-rate" label="Task success rate" value={R.overall.task_success_rate ?? "n/a"} note={`${n0(R.overall.tasks_successful)} successful of ${n0(R.overall.tasks_terminal)} terminal tasks (attempts are not tasks)`} />
         <Readout k="attempt-success-rate" label="Attempt success rate" value={R.overall.attempt_success_rate ?? "n/a"} note={`${n0(R.overall.attempts_successful)} of ${n0(R.overall.attempts)} attempts; a retry that succeeds still counts a failed attempt`} />
         <Readout k="duration-success" label="Mean duration, succeeded" value={R.durations.successful.mean_minutes ?? "n/a"} unit="min" note="finished_at minus started_at; failed runs are a separate distribution" />
@@ -61,6 +60,12 @@ function RunsPanel({ ds }: { ds: Dataset }) {
       <p><Link to="gate">Open the quality gate</Link> · <Link to="runs">Open a run</Link></p>
     </Panel>
   );
+}
+/** The scope of the quarantined count: rows of committed batches only. The rows of a batch quarantined whole (SCHEMA_CHANGED) belong to no committed batch and are listed apart. */
+export function quarantineScope(ds: Dataset): string {
+  const rows = ds.raw ? ds.raw.batch_summaries.filter((b) => b["status"] === "quarantined").reduce((a, b) => a + (b["written_rows"] as number), 0)
+    : ds.acc["quarantine_records"]!.filter((q) => q["reason_code"] === "SCHEMA_CHANGED").length;
+  return rows ? `in committed batches; the ${n0(rows)} rows of the schema-quarantined batch are listed separately` : "in committed batches; no batch was quarantined whole";
 }
 function Ingestion({ ds }: { ds: Dataset }) {
   const I = ds.ingestion, S = ds.g.metrics.ingestion;
@@ -74,8 +79,8 @@ function Ingestion({ ds }: { ds: Dataset }) {
         <Readout k="received" label="Received" value={n0(O.received)} />
         <Readout k="accepted" label="Accepted unique" value={n0(O.accepted_unique)} />
         <Readout k="duplicate" label="Duplicate" value={n0(O.duplicate)} />
-        <Readout k="quarantined" label="Quarantined" value={n0(O.quarantined)} note={O.deleted ? `plus ${n0(O.deleted)} delete events (propagated, counted apart)` : undefined} />
-        <Readout k="rejection-rate" label="Rejection rate" value={O.rejection_rate ?? "n/a"} />
+        <Readout k="quarantined" label="Quarantined" value={n0(O.quarantined)} note={<span data-testid="quarantine-scope">{quarantineScope(ds)}{O.deleted ? `; plus ${n0(O.deleted)} delete events (propagated, counted apart)` : ""}</span>} />
+        <Readout k="rejection-rate" label="Rejection rate" value={O.rejection_rate ?? "n/a"} note={`quarantined ÷ received, ${quarantineScope(ds)}`} />
         <Readout k="duplicate-rate" label="Duplicate rate" value={O.duplicate_rate ?? "n/a"} />
       </dl>
       <Scroll label="Ingestion per source">

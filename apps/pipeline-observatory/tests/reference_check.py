@@ -7,7 +7,9 @@ source_key, per-batch and per-source counts and rates, checkpoint versions, fres
 completeness against the declared expectation, task and attempt success, run durations, the fail-closed
 quality gate and the atomic publication pointer, publication lag and watermark, late events, reconciliation
 residual with its parts, verified incident recovery, half-open backfills with overlap refusal, the observed
-processing rate) and compares leaf by leaf. It also recomputes every payload_hash, definition_hash and
+processing rate) and compares leaf by leaf, then replays the shared divergence cases (tests/fixtures/divergence/cases.json: ASCII-only
+full-match patterns, big and non-integer JSON numbers, impossible dates, sub-microsecond fractions, future-dated events) with its own
+hand-written parsers. It also recomputes every payload_hash, definition_hash and
 content_hash from the documented rules, and asserts the hand-worked headline figures of CALCULATION.md as
 literals. No float anywhere: fractions.Fraction for every ratio, decimal.Decimal for money. Proportions are
 6-place decimal strings, minutes 4-place, money 2-place, ROUND_HALF_UP. Contract v1, D-01..D-04.
@@ -26,6 +28,7 @@ from fractions import Fraction as F
 from pathlib import Path
 
 GOLDEN = Path(__file__).resolve().parent / "fixtures" / "golden"
+DIVERGENCE = Path(__file__).resolve().parent / "fixtures" / "divergence" / "cases.json"
 FIXTURES = [("golden", ""), ("variant-rejected", "variant-rejected/"), ("variant-empty", "variant-empty/")]
 HASHED = ["inputs.json", "expected.json", "CALCULATION.md",
           "variant-rejected/inputs.json", "variant-rejected/expected.json",
@@ -91,11 +94,12 @@ def ratio(num, den):
 
 
 def ts(s):
-    return datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    return parse_instant(s)
 
 
 def secs(a, b):
-    return int((ts(b) - ts(a)).total_seconds())
+    """Whole seconds from a to b (floor, integer arithmetic)."""
+    return (ts(b) - ts(a)) // timedelta(seconds=1)
 
 
 def sha(s):
@@ -104,6 +108,80 @@ def sha(s):
 
 def canon(p):
     return json.dumps(p, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+
+
+# ---------------------------------------------------------------- D-09 patterns, written by hand (no regular expression, no application import)
+def all_digits(x):
+    return len(x) > 0 and all(c in "0123456789" for c in x)
+
+
+def is_money(v):
+    """-?digits(.d|.dd)? and nothing else: no newline, no space, no non-ASCII digit."""
+    if not isinstance(v, str):
+        return False
+    body = v[1:] if v.startswith("-") else v
+    whole, dot, frac = body.partition(".")
+    return all_digits(whole) and (not dot or (1 <= len(frac) <= 2 and all_digits(frac)))
+
+
+def is_quantity(v):
+    """A JSON integer (not a bool, not a float such as 3.0) of magnitude at most 2**53."""
+    return type(v) is int and abs(v) <= 2 ** 53
+
+
+def parse_instant(v):
+    """UTC datetime of YYYY-MM-DD[T ]HH:MM:SS[.f+](Z|+hh:mm|-hh:mm), or None. Digits beyond microseconds are truncated; a real calendar only."""
+    if not isinstance(v, str) or len(v) < 20:
+        return None
+    if v.endswith("Z"):
+        body, off = v[:-1], timedelta(0)
+    else:
+        if v[-6] not in "+-" or v[-3] != ":" or not (all_digits(v[-5:-3]) and all_digits(v[-2:])):
+            return None
+        if int(v[-5:-3]) > 23 or int(v[-2:]) > 59:
+            return None
+        off = timedelta(hours=int(v[-5:-3]), minutes=int(v[-2:])) * (1 if v[-6] == "+" else -1)
+        body = v[:-6]
+    if len(body) < 19 or body[4] != "-" or body[7] != "-" or body[10] not in "T " or body[13] != ":" or body[16] != ":":
+        return None
+    y, mo, d, h, mi, s = body[0:4], body[5:7], body[8:10], body[11:13], body[14:16], body[17:19]
+    rest = body[19:]
+    if not all(all_digits(x) for x in (y, mo, d, h, mi, s)):
+        return None
+    if rest and not (rest[0] == "." and all_digits(rest[1:])):
+        return None
+    micro = int((rest[1:7] if rest else "").ljust(6, "0"))
+    try:
+        return (datetime(int(y), int(mo), int(d), int(h), int(mi), int(s), micro, tzinfo=timezone.utc) - off).astimezone(timezone.utc)
+    except (ValueError, OverflowError):
+        return None
+
+
+def iso(dt):
+    return dt.strftime("%Y-%m-%dT%H:%M:%S") + (f".{dt.microsecond:06d}" if dt.microsecond else "") + "Z"
+
+
+def contract_reason(p, started_at, cutoff):
+    """MISSING_FIELD, INVALID_FIELD, NEGATIVE_QUANTITY, EVENT_IN_FUTURE (an event after its batch's arrival or after the cutoff), else None."""
+    if not isinstance(p, dict):
+        return "INVALID_FIELD"
+    if any(p.get(k) is None for k in REQUIRED):
+        return "MISSING_FIELD"
+    if not is_quantity(p["quantity"]) or not is_money(p["unit_price"]) or not is_money(p["amount"]):
+        return "INVALID_FIELD"
+    ev = parse_instant(p["event_ts"])
+    if ev is None:
+        return "INVALID_FIELD"
+    if p["quantity"] < 0:
+        return "NEGATIVE_QUANTITY"
+    if ev > min(parse_instant(started_at), parse_instant(cutoff)):
+        return "EVENT_IN_FUTURE"
+    return None
+
+
+def amount_value(p, field):
+    """The business amount of a payload; a row without a usable amount counts 0.00."""
+    return Decimal(p[field]) if isinstance(p, dict) and is_money(p.get(field)) else Decimal("0")
 
 
 # ---------------------------------------------------------------- import validation
@@ -127,6 +205,8 @@ def validate_import(data):
         """duplicate primary key, then foreign key; returns a reason code or None."""
         if row[ID[e]] in seen_pk[e]:
             return "DUPLICATE_ID"
+        if e == "quality_results" and row.get("severity") not in ("critical", "warning"):
+            return "INVALID_FIELD"
         if e == "task_runs" and (row["run_id"], row["task_name"], row["attempt"]) in seen_attempt:
             return "DUPLICATE_ID"          # the attempt of this task in this run repeats
         if e in FK:
@@ -161,15 +241,19 @@ def validate_import(data):
                 take(e, row)
 
     plain("source_contracts")
-    # backfills: half-open [start, end); a request overlapping an earlier accepted one of the same source is refused
+    # backfills: half-open [start, end); a request overlapping an earlier accepted one of the same source that was still ACTIVE is refused.
+    # Active = status requested or running, or (the request carries requested_at) settled after the request was made; a request with no clock
+    # (a static snapshot) cannot say what was running, so every earlier accepted request counts.
     for row in data["backfill_requests"]:
         code = common("backfill_requests", row)
         if code is None:
             s, e_ = ts(row["start_at"]), ts(row["end_at"])
             for o in acc["backfill_requests"]:
                 if o["source_id"] == row["source_id"] and s < ts(o["end_at"]) and ts(o["start_at"]) < e_:
-                    code = "BACKFILL_OVERLAP"
-                    break
+                    at = row.get("requested_at")
+                    if at is None or o["status"] in ("requested", "running") or (o.get("settled_at") is not None and at < o["settled_at"]):
+                        code = "BACKFILL_OVERLAP"
+                        break
         if code:
             rej("backfill_requests", row, code)
         else:
@@ -182,9 +266,15 @@ def validate_import(data):
             rej("ingestion_batches", row, code)
         else:
             batch_rows.append(row)
+            seen_pk["ingestion_batches"].add(row["batch_id"])         # a repeated batch_id is DUPLICATE_ID before acceptance
     batch_ids = {b["batch_id"] for b in batch_rows}
     bad_cp_batches = set()
-    cps = [c for c in data["checkpoints"] if c["batch_id"] in batch_ids]
+    first_ids, firsts = set(), []
+    for c in data["checkpoints"]:                      # a repeated checkpoint id takes no part in the ordering: it is DUPLICATE_ID
+        if c["checkpoint_id"] not in first_ids:
+            first_ids.add(c["checkpoint_id"])
+            firsts.append(c)
+    cps = [c for c in firsts if c["batch_id"] in batch_ids]
     prev = {}
     cp_reason = {}
     for c in sorted(cps, key=lambda c: (c["committed_at"], c["checkpoint_id"])):
@@ -202,8 +292,11 @@ def validate_import(data):
             rej("ingestion_batches", b, "DEPENDENT_REJECTED")
         else:
             take("ingestion_batches", b)
+    seen_cp = set()
     for c in data["checkpoints"]:
-        code = cp_reason.get(c["checkpoint_id"]) or common("checkpoints", c)
+        repeat = c["checkpoint_id"] in seen_cp
+        seen_cp.add(c["checkpoint_id"])
+        code = ("DUPLICATE_ID" if repeat else None) or cp_reason.get(c["checkpoint_id"]) or common("checkpoints", c)
         if code:
             rej("checkpoints", c, code)
         else:
@@ -218,7 +311,7 @@ def validate_import(data):
 
 # ---------------------------------------------------------------- metrics
 def amount_of(raw, field):
-    return Decimal(raw["payload_json"][field])
+    return amount_value(raw["payload_json"], field)
 
 
 def compute(data):
@@ -228,7 +321,7 @@ def compute(data):
     tsf = data["freshness_timestamp_field"]
     totf = data["business_total_field"]
     for r in acc["raw_records"]:
-        assert r["payload_json"].get("op", "upsert") == "upsert", "delete events are not exercised by this fixture"
+        assert not isinstance(r["payload_json"], dict) or r["payload_json"].get("op", "upsert") == "upsert", "delete events are not exercised by this fixture"
     empty = len(acc["raw_records"]) == 0
 
     # ---- classification (D-01): committed batches in (started_at, batch_id) order, rows by raw_record_id;
@@ -252,12 +345,11 @@ def compute(data):
         keys = accepted_keys.setdefault(b["source_id"], set())
         for r in raws.get(b["batch_id"], []):
             p = r["payload_json"]
+            why = contract_reason(p, b["started_at"], cutoff)
             if r["source_key"] in keys:
                 cls[r["raw_record_id"]] = "duplicate"
-            elif any(p.get(k) is None for k in REQUIRED):
-                cls[r["raw_record_id"]], reason[r["raw_record_id"]] = "quarantined", "MISSING_FIELD"
-            elif p["quantity"] < 0:
-                cls[r["raw_record_id"]], reason[r["raw_record_id"]] = "quarantined", "NEGATIVE_QUANTITY"
+            elif why or r["source_key"] is None:
+                cls[r["raw_record_id"]], reason[r["raw_record_id"]] = "quarantined", why or "MISSING_FIELD"
             else:
                 cls[r["raw_record_id"]] = "accepted"
                 keys.add(r["source_key"])
@@ -318,24 +410,25 @@ def compute(data):
         cp = cp_by_batch.get(b["batch_id"])
         for r in raws.get(b["batch_id"], []):
             if cls[r["raw_record_id"]] == "accepted":
+                dt = parse_instant(r["payload_json"][tsf])
                 accepted.append({"source_id": b["source_id"], "batch_id": b["batch_id"], "key": r["source_key"],
-                                 "event": r["payload_json"][tsf], "arrival": cp["committed_at"] if cp else None,
+                                 "event": iso(dt), "dt": dt, "arrival": cp["committed_at"] if cp else None,
                                  "raw": r, "hash": r["payload_hash"]})
 
     # ---- freshness vs ingestion age (D-02)
     freshness = {}
     for sid in sources:
-        ev = [a["event"] for a in accepted if a["source_id"] == sid]
+        ev = [a["dt"] for a in accepted if a["source_id"] == sid]
         ing = [cp_by_batch[b["batch_id"]]["committed_at"] for b in committed
                if b["source_id"] == sid and b["batch_id"] in cp_by_batch]
-        le, li = (max(ev) if ev else None), (max(ing) if ing else None)
+        le, li = (iso(max(ev)) if ev else None), (max(ing, key=ts) if ing else None)
         freshness[sid] = {"latest_accepted_event_at": le, "freshness_seconds": secs(le, cutoff) if le else None,
-                          "last_successful_ingestion_at": li, "ingestion_age_seconds": secs(li, cutoff) if li else None}
+                          "freshness_reason": None if le else "NO_ACCEPTED_EVENT", "last_successful_ingestion_at": li, "ingestion_age_seconds": secs(li, cutoff) if li else None}
 
     # ---- completeness against the declared expectation (D-02)
     completeness = {}
     for x in data["source_expectations"]:
-        n = sum(1 for a in accepted if a["source_id"] == x["source_id"] and a["event"][:10] == x["partition"])
+        n = sum(1 for a in accepted if a["source_id"] == x["source_id"] and a["dt"].strftime("%Y-%m-%d") == x["partition"])
         completeness.setdefault(x["source_id"], {})[x["partition"]] = {
             "expected_records": x["expected_records"], "accepted_records": n,
             "value": p6(ratio(n, x["expected_records"]))}
@@ -400,7 +493,7 @@ def compute(data):
         inc = [b for b in p["included_batch_ids"] if b in {c["batch_id"] for c in committed}]
         rows = [r for b in inc for r in raws.get(b, [])]
         pubd = [a for a in accepted if a["batch_id"] in inc]
-        latest = max((a["event"] for a in pubd), default=None)
+        latest = iso(max((a["dt"] for a in pubd))) if pubd else None
         expect_hash = sha("\n".join(sorted(a["hash"] for a in pubd)))
         pubs[p["publication_id"]] = {
             "run_id": p["run_id"], "published_at": p["published_at"], "watermark": p["watermark"],
@@ -433,7 +526,7 @@ def compute(data):
         if not before:
             continue
         p = before[-1]
-        if a["event"] <= p["watermark"]:
+        if a["dt"] <= ts(p["watermark"]):
             nxt = [q for q in pub_rows if q["published_at"] > a["arrival"] and a["batch_id"] in q["included_batch_ids"]]
             late.append({"source_id": a["source_id"], "source_key": a["key"], "batch_id": a["batch_id"],
                          "event_at": a["event"], "arrival_at": a["arrival"], "behind_publication_id": p["publication_id"],
@@ -599,12 +692,99 @@ def hand(exp):
         ("hand.freshness_differs_from_ingestion_age", True,
          m["freshness"]["src-orders"]["freshness_seconds"] != m["freshness"]["src-orders"]["ingestion_age_seconds"]),
     ]
+    rf, b101 = m["ingestion"]["sources"]["src-refunds"], m["ingestion"]["sources"]["src-refunds"]["batches"]["b-101"]
+    ov, rc3 = m["ingestion"]["overall"], m["reconciliation"]["pub-003"]
+    rows += [
+        # D-09 R8-01: b-101 also carries REF-2002, dated 12:00 while the batch arrived at 11:00 -> quarantined EVENT_IN_FUTURE
+        ("hand.b101_received_2", 2, b101["received"]), ("hand.b101_accepted_1", 1, b101["accepted_unique"]),
+        ("hand.b101_quarantined_1", 1, b101["quarantined"]), ("hand.b101_rejection_rate_1_2", "0.500000", b101["rejection_rate"]),
+        ("hand.b101_reason_EVENT_IN_FUTURE", {"EVENT_IN_FUTURE": 1}, rf["quarantine_by_reason"]),
+        ("hand.refunds_freshness_stays_53400_s", 53400, m["freshness"]["src-refunds"]["freshness_seconds"]),
+        ("hand.refunds_latest_event_still_0910", "2026-10-04T09:10:00Z", m["freshness"]["src-refunds"]["latest_accepted_event_at"]),
+        ("hand.freshness_reason_none_when_a_value_exists", None, m["freshness"]["src-orders"]["freshness_reason"]),
+        ("hand.overall_received_22", 22, ov["received"]), ("hand.overall_accepted_9", 9, ov["accepted_unique"]),
+        ("hand.overall_duplicates_10", 10, ov["duplicate"]), ("hand.overall_quarantined_3", 3, ov["quarantined"]),
+        ("hand.overall_rejection_rate_3_22", "0.136364", ov["rejection_rate"]), ("hand.overall_duplicate_rate_10_22", "0.454545", ov["duplicate_rate"]),
+        ("hand.pub003_source_total_599.88", "599.88", rc3["source_total"]), ("hand.pub003_published_total_301.97", "301.97", rc3["published_total"]),
+        ("hand.pub003_quarantined_-52.00", "-52.00", rc3["exclusions"]["quarantined"]),
+        ("hand.pub003_duplicates_349.91", "349.91", rc3["exclusions"]["duplicates"]),
+        ("hand.pub003_exclusions_297.91", "297.91", rc3["exclusions_total"]), ("hand.pub003_residual_0.00", "0.00", rc3["residual"]),
+    ]
     for name, want, got in rows:
         report(want == got, name, want, got)
     # recomputed here from the stated facts, with Fractions
     report(p6(F(1, 10)) == b1["rejection_rate"] == b1["duplicate_rate"], "hand.1_of_10_is_0.100000", "0.100000", b1["rejection_rate"])
     report(p6(F(8, 9)) == m["completeness"]["src-orders"]["2026-10-04"]["value"], "hand.8_of_9_is_0.888889", "0.888889", p6(F(8, 9)))
     report(p6(F(2, 3)) == m["backfills"]["requests"]["bf-001"]["coverage"], "hand.2_of_3_is_0.666667", "0.666667", p6(F(2, 3)))
+    report(p6(F(1, 2)) == b101["rejection_rate"], "hand.1_of_2_is_0.500000", "0.500000", p6(F(1, 2)))
+    report(p6(F(3, 22)) == ov["rejection_rate"] and p6(F(10, 22)) == ov["duplicate_rate"], "hand.3_and_10_of_22", "0.136364 / 0.454545", (p6(F(3, 22)), p6(F(10, 22))))
+    report(money(Decimal("289.94") + Decimal("289.94") + Decimal("12.00") + Decimal("8.00")) == rc3["source_total"], "hand.pub003_source_289.94+289.94+12.00+8.00", "599.88", rc3["source_total"])
+    report(money(Decimal("-30.00") * 2 + Decimal("8.00")) == rc3["exclusions"]["quarantined"], "hand.pub003_quarantined_-30.00x2+8.00", "-52.00", rc3["exclusions"]["quarantined"])
+
+
+def check_divergence():
+    """The shared divergence cases (D-09): every case classified by this file's own hand-written patterns and parsers."""
+    doc = json.loads(DIVERGENCE.read_text(encoding="utf-8"))          # floats stay floats (3.0), big integers stay integers
+    batches = {b["batch_id"]: b for b in doc["batches"]}
+    bad = []
+    for c in doc["cases"]:
+        why = contract_reason(c["payload"], batches[c["batch"]]["started_at"], doc["cutoff"])
+        got = "quarantined" if why else "accepted"
+        if (got, why) != (c["disposition"], c["reason"]):
+            bad.append((c["id"], (got, why), (c["disposition"], c["reason"])))
+        if "event_at" in c and iso(parse_instant(c["payload"]["event_ts"])) != c["event_at"]:
+            bad.append((c["id"], iso(parse_instant(c["payload"]["event_ts"])), c["event_at"]))
+    report(not bad, "divergence.every_case_classified_as_the_shared_table_says", "none differ", bad or f"all {len(doc['cases'])} agree")
+    # the lexemes the table depends on are still lexemes (a re-serialisation would silently turn 3.0 into 3)
+    by = {c["id"]: c for c in doc["cases"]}
+    report(isinstance(by["quantity-float-3.0"]["payload"]["quantity"], float) and type(by["quantity-big"]["payload"]["quantity"]) is int,
+           "divergence.3.0_is_a_float_and_2^53+1_an_integer", True, True)
+
+
+def check_rules(label, data):
+    """D-09 rules the fixtures do not carry, on mutated copies of the golden inputs, with the outcome written by hand (not compared with another implementation)."""
+    import copy
+    base = compute(data)
+    # R8-03: a repeated batch_id (and its repeated rows) is DUPLICATE_ID; the counts do not double
+    d = copy.deepcopy(data)
+    d["ingestion_batches"].append(copy.deepcopy(d["ingestion_batches"][0]))
+    d["raw_records"] += copy.deepcopy([r for r in d["raw_records"] if r["batch_id"] == "b-001"])
+    got = compute(d)
+    codes = {(r["entity"], r["id"]): r["reason_code"] for r in got["ingest"]["rejected_records"]}
+    report(codes.get(("ingestion_batches", "b-001")) == "DUPLICATE_ID" and got["metrics"]["ingestion"]["overall"] == base["metrics"]["ingestion"]["overall"],
+           f"{label}.rule.a_repeated_batch_id_is_DUPLICATE_ID_and_counts_do_not_double", "DUPLICATE_ID, same counts", (codes.get(("ingestion_batches", "b-001")), got["metrics"]["ingestion"]["overall"]))
+    # a repeated checkpoint id is DUPLICATE_ID and does not poison its batch
+    d = copy.deepcopy(data)
+    d["checkpoints"].append(copy.deepcopy(d["checkpoints"][0]))
+    got = compute(d)
+    report([(r["entity"], r["reason_code"]) for r in got["ingest"]["rejected_records"]] == [("checkpoints", "DUPLICATE_ID")] and got["metrics"]["ingestion"] == base["metrics"]["ingestion"],
+           f"{label}.rule.a_repeated_checkpoint_id_is_DUPLICATE_ID_and_its_batch_stays", "[checkpoints DUPLICATE_ID]", [(r["entity"], r["reason_code"]) for r in got["ingest"]["rejected_records"]])
+    # severity: anything but critical / warning is INVALID_FIELD, and a gate left with no critical result blocks
+    d = copy.deepcopy(data)
+    first = d["quality_results"][0]
+    first["severity"] = "Critical"
+    got = compute(d)
+    report([(r["id"], r["reason_code"]) for r in got["ingest"]["rejected_records"]] == [(first["quality_result_id"], "INVALID_FIELD")]
+           and got["metrics"]["quality_gate"]["run-001"]["decision"] == "blocked", f"{label}.rule.severity_is_validated_and_the_gate_fails_closed", "INVALID_FIELD, blocked", [r["reason_code"] for r in got["ingest"]["rejected_records"]])
+    # R8-12: a request made while its victim was running is refused; one made after the victim settled is accepted; a clockless snapshot counts every earlier one
+    def bfr(i, s_, e, status="requested", **more):
+        return {"backfill_id": f"bf-{i:03d}", "source_id": "src-orders", "start_at": f"{s_}T00:00:00Z", "end_at": f"{e}T00:00:00Z", "status": status,
+                "partitions": [{"partition": s_, "verified": False}], **more}
+    d = copy.deepcopy(data)
+    d["backfill_requests"] = [bfr(1, "2026-09-01", "2026-09-03", "partial", requested_at="2026-08-30T10:00:00Z", settled_at="2026-08-30T12:00:00Z"),
+                              bfr(2, "2026-09-02", "2026-09-03", requested_at="2026-08-30T11:00:00Z"), bfr(3, "2026-09-02", "2026-09-03", requested_at="2026-08-30T13:00:00Z")]
+    got = compute(d)
+    report(got["metrics"]["backfills"]["refused"] == ["bf-002"] and sorted(got["metrics"]["backfills"]["requests"]) == ["bf-001", "bf-003"],
+           f"{label}.rule.overlap_is_judged_against_requests_still_active", "bf-002 refused", got["metrics"]["backfills"]["refused"])
+    d["backfill_requests"] = [bfr(1, "2026-09-01", "2026-09-03", "partial"), bfr(2, "2026-09-02", "2026-09-03")]
+    got = compute(d)
+    report(got["metrics"]["backfills"]["refused"] == ["bf-002"], f"{label}.rule.a_clockless_snapshot_counts_every_earlier_request", "bf-002 refused", got["metrics"]["backfills"]["refused"])
+    # R8-01 with an unaccepted refund: nothing accepted from src-refunds -> freshness null with a reason, never negative
+    d = copy.deepcopy(data)
+    d["raw_records"] = [r for r in d["raw_records"] if r["raw_record_id"] != "rr-b-101-01"]
+    d["quarantine_records"] = [q for q in d["quarantine_records"] if q["quarantine_id"] != "q-b-101-99"]
+    f = compute(d)["metrics"]["freshness"]["src-refunds"]
+    report(f["freshness_seconds"] is None and f["freshness_reason"] == "NO_ACCEPTED_EVENT", f"{label}.rule.freshness_is_null_with_a_reason_when_nothing_is_accepted", "null, NO_ACCEPTED_EVENT", f)
 
 
 def sha_file(rel):
@@ -619,6 +799,8 @@ def main():
     for label, prefix in FIXTURES:
         exps[label] = check_fixture(label, prefix)
     hand(exps["golden"])
+    check_divergence()
+    check_rules("golden", json.loads((GOLDEN / "inputs.json").read_text()))
     e = exps["variant-empty"]
     report(e["empty_population"] is True, "variant-empty.empty_population_true", True, e["empty_population"])
     hp = GOLDEN / "HASHES.json"

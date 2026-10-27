@@ -133,6 +133,12 @@ class TransformModelsInput(Strict):
     batch_ids: list[Id] = Field(min_length=1, max_length=500)
     backfill_id: Id | None = None
     attempt: StrictInt | None = Field(default=None, ge=1)
+    scope_from: StrictStr | None = None          # D-09: the start of the run's declared scope (the gate judges the batches committed in [scope_from, run start))
+
+    @field_validator("scope_from")
+    @classmethod
+    def _scope(cls, v: str | None) -> str | None:
+        return None if v is None else _instant(v)
 
 
 class RunQualityGateInput(Strict):

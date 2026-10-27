@@ -17,7 +17,7 @@ function requests(ds: Dataset): Req[] {
   const all = [...acc, ...ds.result.imported.rejected.filter((r) => r.entity === "backfill_requests").map((r) => r.raw_row as Row)].sort((a, b) => (a["backfill_id"] < b["backfill_id"] ? -1 : 1));
   for (const row of all) {
     const isAcc = acc.includes(row);
-    if (!isAcc) out.push({ id: row["backfill_id"], row, refused: true, overlapsWith: (findOverlap(earlier, row)?.["backfill_id"] as string | undefined) ?? null });
+    if (!isAcc) out.push({ id: row["backfill_id"], row, refused: true, overlapsWith: (findOverlap(earlier, row, true)?.["backfill_id"] as string | undefined) ?? null });
     else earlier.push(row);
   }
   return out.sort((a, b) => (a.id < b.id ? -1 : 1));
@@ -72,7 +72,8 @@ function Console({ ds }: { ds: Dataset }) {
   const [end, setEnd] = useState("2026-09-03");
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const submit = (): void => {
-    const accepted = [...ds.acc["backfill_requests"]!, ...sim.filter((s) => s.accepted).map((s) => ({ backfill_id: s.backfill_id, source_id: s.source_id, start_at: s.start_at, end_at: s.end_at }))];
+    // a request made here stays "requested" until every partition is marked verified; then it is complete and blocks nothing (the domain's rule: only requested or running requests block)
+    const accepted = [...ds.acc["backfill_requests"]!, ...sim.filter((s) => s.accepted).map((s) => ({ backfill_id: s.backfill_id, source_id: s.source_id, start_at: s.start_at, end_at: s.end_at, status: s.verified >= s.partitions.length ? "complete" : "requested" }))];
     const ask = { source_id: source, start_at: `${start}T00:00:00Z`, end_at: `${end}T00:00:00Z` };
     const d = decideBackfill(accepted, ask);
     const maxId = Math.max(0, ...reqs.map((r) => Number(r.id.replace(/\D/g, "")) || 0));
@@ -89,7 +90,7 @@ function Console({ ds }: { ds: Dataset }) {
         <label>End (UTC midnight, exclusive) <input type="date" value={end} onChange={(e) => setEnd(e.target.value)} data-testid="bf-end" /></label>
         <button type="submit" data-testid="bf-submit">Request backfill</button>
       </form>
-      {msg ? <p role="status" data-testid="bf-result" className="sim-result"><Status tone={msg.ok ? "ok" : "bad"}>{msg.text}</Status></p> : <p className="meaning">Try the range 2026-08-22 to 2026-08-24 on src-inventory: it overlaps bf-004, which the published data refused as bf-006.</p>}
+      {msg ? <p role="status" data-testid="bf-result" className="sim-result"><Status tone={msg.ok ? "ok" : "bad"}>{msg.text}</Status></p> : <p className="meaning">Try 2026-08-22 to 2026-08-23 on src-inventory: bf-004 has settled partial with that partition unverified, so the request is accepted and backfills it again. While bf-004 was still running the published data refused the same range as bf-006. Make the request twice: the second is refused, because the first is requested.</p>}
       {sim.length > 0 && (
         <>
           <Scroll label="Backfill requests made this session">

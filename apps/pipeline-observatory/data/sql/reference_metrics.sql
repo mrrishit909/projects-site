@@ -11,7 +11,7 @@
 --
 -- Parameter (psycopg): %(cutoff)s timestamptz. One statement, one row, one jsonb column per metric (same keys and nesting as expected.json).
 -- Exactness: counts are integers; ratios are NUMERIC rounded once by round() (half away from zero = ROUND_HALF_UP on these values);
--- money is NUMERIC(18,2); minutes are round(seconds / 60, 4). Text collation is "C" wherever Python sorts strings.
+-- money is NUMERIC rounded to 2 places by round(); seconds are floor()ed (as timedelta does), minutes are round(seconds / 60, 4). Text collation is "C" wherever Python sorts strings.
 WITH
 p AS (SELECT %(cutoff)s::timestamptz AS cutoff),
 cb AS (                                                -- committed batches in the order they were applied within their source
@@ -23,44 +23,80 @@ cb AS (                                                -- committed batches in t
 ),
 rw AS (                                                -- every raw row of a committed batch, with its contract verdict
     SELECT r.raw_record_id, r.batch_id, r.source_key, r.payload_hash, r.payload_json AS pj, cb.source_id, cb.apply_order, cb.committed_at,
+           cb.started_at AS arrived,
            (cb.batch_schema IS NOT NULL AND cb.batch_schema <> sc.schema_version) AS schema_changed,
-           (r.payload_json ? 'record_id' AND r.payload_json ? 'quantity' AND r.payload_json ? 'unit_price' AND r.payload_json ? 'amount'
+           (jsonb_typeof(r.payload_json) = 'object'
+            AND r.payload_json ? 'record_id' AND r.payload_json ? 'quantity' AND r.payload_json ? 'unit_price' AND r.payload_json ? 'amount'
             AND r.payload_json ? 'event_ts'
             AND jsonb_typeof(r.payload_json -> 'record_id') <> 'null' AND jsonb_typeof(r.payload_json -> 'quantity') <> 'null'
             AND jsonb_typeof(r.payload_json -> 'unit_price') <> 'null' AND jsonb_typeof(r.payload_json -> 'amount') <> 'null'
             AND jsonb_typeof(r.payload_json -> 'event_ts') <> 'null') AS has_all
     FROM raw_records r JOIN cb ON cb.batch_id = r.batch_id JOIN source_contracts sc ON sc.source_id = cb.source_id
 ),
-rv AS (
+-- D-09 patterns (R8-04/05): ASCII digits only, FULL match (\A ... \Z: no newline exception), an instant must be a real calendar instant and its
+-- digits beyond microseconds are TRUNCATED, never rounded (PostgreSQL's own cast would round 08:00:00.9999995 up to 08:00:01).
+tsp AS (
     SELECT rw.*,
-           CASE WHEN NOT has_all THEN 'MISSING_FIELD'
-                WHEN jsonb_typeof(pj -> 'quantity') <> 'number' OR (pj ->> 'quantity') !~ '^-?\d+$'
-                     OR jsonb_typeof(pj -> 'unit_price') <> 'string' OR (pj ->> 'unit_price') !~ '^-?\d+(\.\d{1,2})?$'
-                     OR jsonb_typeof(pj -> 'amount') <> 'string' OR (pj ->> 'amount') !~ '^-?\d+(\.\d{1,2})?$'
-                     OR jsonb_typeof(pj -> 'event_ts') <> 'string'
-                     OR (pj ->> 'event_ts') !~ '^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$' THEN 'INVALID_FIELD'
-                WHEN (pj ->> 'quantity')::numeric < 0 THEN 'NEGATIVE_QUANTITY'
-           END AS contract_reason
+           CASE WHEN jsonb_typeof(rw.pj) = 'object' AND jsonb_typeof(rw.pj -> 'event_ts') = 'string' THEN
+               regexp_match(rw.pj ->> 'event_ts', '\A([0-9]{4})-([0-9]{2})-([0-9]{2})[T ]([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\.([0-9]+))?(Z|[+-][0-9]{2}:[0-9]{2})\Z') END AS m
     FROM rw
+),
+tsv AS (
+    SELECT tsp.*,
+           (tsp.m IS NOT NULL
+            AND (tsp.m[1])::int >= 1 AND (tsp.m[2])::int BETWEEN 1 AND 12
+            AND (tsp.m[3])::int BETWEEN 1 AND (CASE (tsp.m[2])::int
+                    WHEN 2 THEN CASE WHEN (mod((tsp.m[1])::int, 4) = 0 AND mod((tsp.m[1])::int, 100) <> 0) OR mod((tsp.m[1])::int, 400) = 0 THEN 29 ELSE 28 END
+                    WHEN 4 THEN 30 WHEN 6 THEN 30 WHEN 9 THEN 30 WHEN 11 THEN 30 ELSE 31 END)
+            AND (tsp.m[4])::int <= 23 AND (tsp.m[5])::int <= 59 AND (tsp.m[6])::int <= 59
+            AND (tsp.m[8] = 'Z' OR ((substr(tsp.m[8], 2, 2))::int <= 23 AND (substr(tsp.m[8], 5, 2))::int <= 59))) AS ts_shape
+    FROM tsp
+),
+tsw AS (
+    SELECT tsv.*,
+           CASE WHEN tsv.ts_shape THEN
+               (tsv.m[1] || '-' || tsv.m[2] || '-' || tsv.m[3] || ' ' || tsv.m[4] || ':' || tsv.m[5] || ':' || tsv.m[6] || '.'
+                || rpad(substr(coalesce(tsv.m[7], ''), 1, 6), 6, '0') || ' UTC')::timestamptz
+               - (CASE WHEN tsv.m[8] = 'Z' THEN 0 ELSE (CASE WHEN left(tsv.m[8], 1) = '-' THEN -1 ELSE 1 END)
+                                                         * ((substr(tsv.m[8], 2, 2))::int * 60 + (substr(tsv.m[8], 5, 2))::int) END) * interval '1 minute'
+           END AS ev_raw
+    FROM tsv
+),
+rv AS (
+    SELECT tsw.*, (tsw.ts_shape AND tsw.ev_raw >= timestamptz '0001-01-01 00:00:00 UTC' AND tsw.ev_raw <= timestamptz '9999-12-31 23:59:59.999999 UTC') AS ts_ok,
+           (jsonb_typeof(tsw.pj) = 'object' AND jsonb_typeof(tsw.pj -> 'unit_price') = 'string' AND (tsw.pj ->> 'unit_price') ~ '\A-?[0-9]+(\.[0-9]{1,2})?\Z') AS up_ok,
+           (jsonb_typeof(tsw.pj) = 'object' AND jsonb_typeof(tsw.pj -> 'amount') = 'string' AND (tsw.pj ->> 'amount') ~ '\A-?[0-9]+(\.[0-9]{1,2})?\Z') AS am_ok,
+           (jsonb_typeof(tsw.pj) = 'object' AND jsonb_typeof(tsw.pj -> 'quantity') = 'number' AND (tsw.pj ->> 'quantity') ~ '\A-?[0-9]+\Z') AS q_int
+    FROM tsw
+),
+rc AS (                                                -- the contract verdict, in the order MISSING, INVALID, NEGATIVE, FUTURE
+    SELECT rv.*, p.cutoff,
+           CASE WHEN jsonb_typeof(rv.pj) <> 'object' THEN 'INVALID_FIELD'
+                WHEN NOT rv.has_all THEN 'MISSING_FIELD'
+                WHEN NOT rv.q_int OR abs((rv.pj ->> 'quantity')::numeric) > 9007199254740992 OR NOT rv.up_ok OR NOT rv.am_ok OR NOT rv.ts_ok THEN 'INVALID_FIELD'
+                WHEN (rv.pj ->> 'quantity')::numeric < 0 THEN 'NEGATIVE_QUANTITY'
+                WHEN rv.ev_raw > least(rv.arrived, p.cutoff) THEN 'EVENT_IN_FUTURE'
+           END AS contract_reason
+    FROM rv CROSS JOIN p
 ),
 fv AS (                                                -- the first row of each key that satisfies the contract
     SELECT DISTINCT ON (source_id, source_key) source_id, source_key, apply_order AS f_order, raw_record_id AS f_id
-    FROM rv WHERE contract_reason IS NULL AND NOT schema_changed AND source_key IS NOT NULL
+    FROM rc WHERE contract_reason IS NULL AND NOT schema_changed AND source_key IS NOT NULL
     ORDER BY source_id, source_key, apply_order, raw_record_id COLLATE "C"
 ),
 cl AS (
-    SELECT rv.*,
-           CASE WHEN rv.schema_changed THEN 'quarantined'
-                WHEN fv.f_id = rv.raw_record_id THEN 'accepted'
-                WHEN fv.f_id IS NOT NULL AND (rv.apply_order > fv.f_order OR (rv.apply_order = fv.f_order AND rv.raw_record_id COLLATE "C" > fv.f_id COLLATE "C")) THEN 'duplicate'
+    SELECT rc.*,
+           CASE WHEN rc.schema_changed THEN 'quarantined'
+                WHEN fv.f_id = rc.raw_record_id THEN 'accepted'
+                WHEN fv.f_id IS NOT NULL AND (rc.apply_order > fv.f_order OR (rc.apply_order = fv.f_order AND rc.raw_record_id COLLATE "C" > fv.f_id COLLATE "C")) THEN 'duplicate'
                 ELSE 'quarantined' END AS kind,
-           CASE WHEN rv.schema_changed THEN 'SCHEMA_CHANGED' ELSE coalesce(rv.contract_reason, 'MISSING_FIELD') END AS q_reason,
-           CASE WHEN (rv.pj ->> 'amount') ~ '^-?\d+(\.\d{1,2})?$' THEN (rv.pj ->> 'amount')::numeric ELSE 0 END AS amt,
-           CASE WHEN (rv.pj ->> 'event_ts') ~ '^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$' THEN (rv.pj ->> 'event_ts')::timestamptz END AS ev
-    FROM rv LEFT JOIN fv ON fv.source_id = rv.source_id AND fv.source_key = rv.source_key
+           CASE WHEN rc.schema_changed THEN 'SCHEMA_CHANGED' ELSE coalesce(rc.contract_reason, 'MISSING_FIELD') END AS q_reason,
+           CASE WHEN rc.am_ok THEN (rc.pj ->> 'amount')::numeric ELSE 0 END AS amt,
+           CASE WHEN rc.ts_ok THEN rc.ev_raw END AS ev
+    FROM rc LEFT JOIN fv ON fv.source_id = rc.source_id AND fv.source_key = rc.source_key
 ),
 acc AS (SELECT * FROM cl WHERE kind = 'accepted'),
-fmt AS (SELECT 'YYYY-MM-DD"T"HH24:MI:SS"Z"'::text AS f),
+fmt AS (SELECT 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"'::text AS f),               -- microseconds are printed when they are not zero, as iso_z does
 
 -- ------------------------------------------------------------------ ingestion
 batch_json AS (
@@ -113,10 +149,11 @@ ingestion AS (
 -- ------------------------------------------------------------------ freshness and completeness
 freshness AS (
     SELECT coalesce(jsonb_object_agg(s.source_id, jsonb_build_object(
-        'latest_accepted_event_at', to_char(e.ev AT TIME ZONE 'UTC', fmt.f),
-        'freshness_seconds', (extract(epoch FROM p.cutoff - e.ev))::bigint,
-        'last_successful_ingestion_at', to_char(i.at AT TIME ZONE 'UTC', fmt.f),
-        'ingestion_age_seconds', (extract(epoch FROM p.cutoff - i.at))::bigint)), '{}'::jsonb) AS j
+        'latest_accepted_event_at', regexp_replace(to_char(e.ev AT TIME ZONE 'UTC', fmt.f), '\.000000Z\Z', 'Z'),
+        'freshness_seconds', floor(extract(epoch FROM p.cutoff - e.ev))::bigint,
+        'freshness_reason', CASE WHEN e.ev IS NULL THEN 'NO_ACCEPTED_EVENT' END,
+        'last_successful_ingestion_at', regexp_replace(to_char(i.at AT TIME ZONE 'UTC', fmt.f), '\.000000Z\Z', 'Z'),
+        'ingestion_age_seconds', floor(extract(epoch FROM p.cutoff - i.at))::bigint)), '{}'::jsonb) AS j
     FROM source_contracts s CROSS JOIN p CROSS JOIN fmt
     CROSS JOIN LATERAL (SELECT max(ev) AS ev FROM acc WHERE acc.source_id = s.source_id) e
     CROSS JOIN LATERAL (SELECT max(committed_at) AS at FROM cb WHERE cb.source_id = s.source_id AND cb.version_number IS NOT NULL) i
@@ -141,7 +178,7 @@ run_tasks AS (
            (SELECT count(*) FROM last_attempt l WHERE l.run_id = r.run_id AND l.final_status = 'success') AS ok,
            (SELECT count(*) FROM task_runs t WHERE t.run_id = r.run_id) AS attempts,
            (SELECT count(*) FROM task_runs t WHERE t.run_id = r.run_id AND t.status = 'success') AS attempts_ok,
-           (extract(epoch FROM r.finished_at - r.started_at))::bigint AS dur, r.status
+           floor(extract(epoch FROM r.finished_at - r.started_at))::bigint AS dur, r.status
     FROM pipeline_runs r
 ),
 runs AS (
@@ -220,16 +257,16 @@ publications_j AS (
         'current_publication_id', (SELECT pointer_after FROM pointer_hist ORDER BY ord_at DESC, run_id COLLATE "C" DESC LIMIT 1),
         'pointer_history', coalesce((SELECT jsonb_agg(jsonb_build_object('run_id', run_id, 'gate_decision', decision, 'pointer_after', pointer_after)
                                                       ORDER BY ord_at, run_id COLLATE "C") FROM pointer_hist), '[]'::jsonb),
-        'publications', coalesce((SELECT jsonb_object_agg(s.publication_id, jsonb_build_object('run_id', s.run_id, 'published_at', to_char(s.published_at AT TIME ZONE 'UTC', fmt.f),
-              'watermark', to_char(s.watermark AT TIME ZONE 'UTC', fmt.f), 'included_batches', to_jsonb(s.inc), 'published_records', s.n_pub,
-              'latest_included_event_at', to_char(s.latest AT TIME ZONE 'UTC', fmt.f), 'lag_seconds', (extract(epoch FROM s.published_at - s.latest))::bigint,
+        'publications', coalesce((SELECT jsonb_object_agg(s.publication_id, jsonb_build_object('run_id', s.run_id, 'published_at', regexp_replace(to_char(s.published_at AT TIME ZONE 'UTC', fmt.f), '\.000000Z\Z', 'Z'),
+              'watermark', regexp_replace(to_char(s.watermark AT TIME ZONE 'UTC', fmt.f), '\.000000Z\Z', 'Z'), 'included_batches', to_jsonb(s.inc), 'published_records', s.n_pub,
+              'latest_included_event_at', regexp_replace(to_char(s.latest AT TIME ZONE 'UTC', fmt.f), '\.000000Z\Z', 'Z'), 'lag_seconds', floor(extract(epoch FROM s.published_at - s.latest))::bigint,
               'content_hash_ok', s.h = s.content_hash)) FROM pub_stats s CROSS JOIN fmt), '{}'::jsonb)) AS j
 ),
 reconciliation AS (
     SELECT coalesce(jsonb_object_agg(publication_id, jsonb_build_object(
-        'source_total', src_total::numeric(18, 2)::text, 'published_total', pub_total::numeric(18, 2)::text,
-        'exclusions', jsonb_build_object('quarantined', q_total::numeric(18, 2)::text, 'duplicates', d_total::numeric(18, 2)::text, 'deletes', '0.00'),
-        'exclusions_total', (q_total + d_total)::numeric(18, 2)::text, 'residual', (src_total - pub_total - (q_total + d_total))::numeric(18, 2)::text)), '{}'::jsonb) AS j
+        'source_total', round(src_total, 2)::text, 'published_total', round(pub_total, 2)::text,
+        'exclusions', jsonb_build_object('quarantined', round(q_total, 2)::text, 'duplicates', round(d_total, 2)::text, 'deletes', '0.00'),
+        'exclusions_total', round(q_total + d_total, 2)::text, 'residual', round(src_total - pub_total - (q_total + d_total), 2)::text)), '{}'::jsonb) AS j
     FROM pub_stats
 ),
 late AS (
@@ -244,8 +281,8 @@ late AS (
 late_events AS (
     SELECT jsonb_build_object('count', count(*), 'included_in_next_publication', count(*) FILTER (WHERE nxt IS NOT NULL), 'lost', count(*) FILTER (WHERE nxt IS NULL),
         'events', coalesce(jsonb_agg(jsonb_build_object('source_id', source_id, 'source_key', source_key, 'batch_id', batch_id,
-            'event_at', to_char(ev AT TIME ZONE 'UTC', fmt.f), 'arrival_at', to_char(arrival AT TIME ZONE 'UTC', fmt.f), 'behind_publication_id', behind,
-            'watermark', to_char(watermark AT TIME ZONE 'UTC', fmt.f), 'included_in_publication_id', nxt) ORDER BY arrival, source_key COLLATE "C"), '[]'::jsonb)) AS j
+            'event_at', regexp_replace(to_char(ev AT TIME ZONE 'UTC', fmt.f), '\.000000Z\Z', 'Z'), 'arrival_at', regexp_replace(to_char(arrival AT TIME ZONE 'UTC', fmt.f), '\.000000Z\Z', 'Z'), 'behind_publication_id', behind,
+            'watermark', regexp_replace(to_char(watermark AT TIME ZONE 'UTC', fmt.f), '\.000000Z\Z', 'Z'), 'included_in_publication_id', nxt) ORDER BY arrival, source_key COLLATE "C"), '[]'::jsonb)) AS j
     FROM late CROSS JOIN fmt
 ),
 
@@ -261,11 +298,11 @@ verified_run AS (                                      -- per incident, the firs
         ORDER BY r.started_at, r.run_id COLLATE "C" LIMIT 1) v ON true
 ),
 inc_j AS (
-    SELECT i.incident_id, i.status, vr.vrun, vr.vat, (extract(epoch FROM vr.vat - i.opened_at))::bigint AS sec,
-           jsonb_build_object('run_id', i.run_id, 'status', i.status, 'detected_at', to_char(i.opened_at AT TIME ZONE 'UTC', fmt.f), 'verified', vr.vrun IS NOT NULL,
-              'recovery_run_id', vr.vrun, 'verified_at', to_char(vr.vat AT TIME ZONE 'UTC', fmt.f),
-              'recovery_seconds', (extract(epoch FROM vr.vat - i.opened_at))::bigint,
-              'recovery_minutes', round((extract(epoch FROM vr.vat - i.opened_at))::numeric / 60, 4)::text,
+    SELECT i.incident_id, i.status, vr.vrun, vr.vat, floor(extract(epoch FROM vr.vat - i.opened_at))::bigint AS sec,
+           jsonb_build_object('run_id', i.run_id, 'status', i.status, 'detected_at', regexp_replace(to_char(i.opened_at AT TIME ZONE 'UTC', fmt.f), '\.000000Z\Z', 'Z'), 'verified', vr.vrun IS NOT NULL,
+              'recovery_run_id', vr.vrun, 'verified_at', regexp_replace(to_char(vr.vat AT TIME ZONE 'UTC', fmt.f), '\.000000Z\Z', 'Z'),
+              'recovery_seconds', floor(extract(epoch FROM vr.vat - i.opened_at))::bigint,
+              'recovery_minutes', round(floor(extract(epoch FROM vr.vat - i.opened_at))::numeric / 60, 4)::text,
               'closure_consistent', i.status <> 'closed' OR (vr.vrun IS NOT NULL AND i.recovery_run_id = vr.vrun AND i.closed_at = vr.vat)) AS j
     FROM incidents i JOIN verified_run vr ON vr.incident_id = i.incident_id CROSS JOIN fmt
 ),
@@ -288,8 +325,8 @@ bf AS (
 ),
 backfills AS (
     SELECT jsonb_build_object(
-        'requests', coalesce((SELECT jsonb_object_agg(backfill_id, jsonb_build_object('source_id', source_id, 'start_at', to_char(start_at AT TIME ZONE 'UTC', fmt.f),
-              'end_at', to_char(end_at AT TIME ZONE 'UTC', fmt.f), 'requested_partitions', n_req, 'verified_partitions', n_ver,
+        'requests', coalesce((SELECT jsonb_object_agg(backfill_id, jsonb_build_object('source_id', source_id, 'start_at', regexp_replace(to_char(start_at AT TIME ZONE 'UTC', fmt.f), '\.000000Z\Z', 'Z'),
+              'end_at', regexp_replace(to_char(end_at AT TIME ZONE 'UTC', fmt.f), '\.000000Z\Z', 'Z'), 'requested_partitions', n_req, 'verified_partitions', n_ver,
               'coverage', round(n_ver::numeric / nullif(n_req, 0), 6)::text)) FROM bf CROSS JOIN fmt), '{}'::jsonb),
         'refused', coalesce((SELECT jsonb_agg(id ORDER BY id COLLATE "C") FROM rejected_records WHERE entity = 'backfill_requests' AND reason_code = 'BACKFILL_OVERLAP'), '[]'::jsonb),
         'overall', jsonb_build_object('requested_partitions', coalesce(sum(n_req), 0), 'verified_partitions', coalesce(sum(n_ver), 0),

@@ -1,3 +1,4 @@
+import { parseJsonExact } from "../domain/json";
 import { useState } from "react";
 import { Meaning, Panel, Scroll, ScopeTag, Status, ViewHead, WithData } from "../components/ui";
 import type { Dataset } from "../data/analyse";
@@ -88,7 +89,7 @@ function Tester({ ds }: { ds: Dataset }) {
   const eff = declared || want;
   let result: { tone: "ok" | "bad"; text: string };
   try {
-    const payload = JSON.parse(text);
+    const payload = parseJsonExact(text);
     if (eff !== want) result = { tone: "bad", text: `SCHEMA_CHANGED: the batch declares version ${eff} but the contract expects ${want}; the whole batch is quarantined and the checkpoint does not move.` };
     else { const r = contractReason(payload); result = r ? { tone: "bad", text: `Quarantined: ${r}.` } : { tone: "ok", text: "Accepted by the contract (if its key is new; a known key would be a duplicate first)." }; }
   } catch { result = { tone: "bad", text: "Not valid JSON: nothing to check." }; }

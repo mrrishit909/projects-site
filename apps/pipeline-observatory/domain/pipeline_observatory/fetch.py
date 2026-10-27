@@ -3,13 +3,18 @@
 A source is fetched page by page from a cursor. A page carries the next cursor and, when the source rate-limits, a ``retry_after_seconds``
 hint. A retry honours the hint and never happens sooner; a cursor that repeats itself (a ``next_cursor`` seen before, or equal to the cursor
 just fetched) stops the fetch with ``CURSOR_LOOP``. ``fetch_all`` is the pure driver (the transport, the clock and the sleep are injected so
-a test controls time); the API's C01 applies the same two checks one page at a time (``check_retry_allowed`` and ``check_cursor_progress``).
+a test controls time); the API's C01 applies the same two checks one page at a time (``check_retry_allowed`` and ``judge_fetch``).
+
+D-09 (R8-06): a LOOP is a repeated cursor inside ONE fetch session (a next cursor already seen in the session, a cursor fetched twice in it, or a
+page pointing at itself). A NEW session may fetch a cursor again: the fetch is recorded as ``refetch`` (a scheduled re-fetch of a stale source, a
+replay of a window after a crash, a backfill that re-reads the last committed cursor). ``judge_fetch`` is the one pure rule C01, the generator and
+the tests share.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
-from typing import Any, Callable
+from typing import Any, Callable, Iterable
 
 from . import errors as E
 from .errors import DomainError
@@ -50,6 +55,32 @@ def check_cursor_progress(cursor: str, next_cursor: str | None, seen: set[str]) 
     if next_cursor is not None and (next_cursor == cursor or next_cursor in seen):
         raise DomainError(E.CURSOR_LOOP, f"cursor {next_cursor!r} repeats; the fetch is stopped", "input.page.next_cursor",
                           {"cursor": cursor, "next_cursor": next_cursor})
+
+
+@dataclass(frozen=True)
+class Fetched:
+    """One earlier page of a source as the fetch log records it (rate-limited and loop rows are not pages)."""
+    session: str | None
+    cursor: str
+    next_cursor: str | None
+    status: str = "ok"
+
+
+def judge_fetch(history: Iterable[Fetched], last_committed_cursor: str | None, session: str, cursor: str, next_cursor: str | None) -> str:
+    """Judge a page that answered 200: ``ok`` (a cursor never fetched before), ``refetch`` (a cursor fetched before in another session, or the
+    re-poll of the last committed cursor by a new session whose page points at itself because the source has nothing new), or CURSOR_LOOP.
+
+    Inside one session: ``next_cursor`` already seen there (as a cursor or as a next cursor), a page pointing at itself, or a cursor fetched
+    twice, is a loop, EXCEPT the first page of a session that re-polls the source's last committed cursor and points at itself (nothing new)."""
+    pages = [h for h in history if h.status in ("ok", "refetch")]
+    mine = [h for h in pages if h.session == session]
+    fetched_here = {h.cursor for h in mine}
+    seen = fetched_here | {h.next_cursor for h in mine if h.next_cursor is not None}
+    stale_repoll = not mine and next_cursor is not None and next_cursor == cursor and cursor == last_committed_cursor
+    if not stale_repoll and (cursor in fetched_here or (next_cursor is not None and (next_cursor == cursor or next_cursor in seen))):
+        raise DomainError(E.CURSOR_LOOP, f"cursor {(next_cursor if next_cursor is not None else cursor)!r} repeats inside session {session!r}; the fetch is stopped",
+                          "input.page.next_cursor", {"cursor": cursor, "next_cursor": next_cursor})
+    return "refetch" if stale_repoll or any(h.cursor == cursor for h in pages) else "ok"
 
 
 def fetch_all(fetch_page: Callable[[str], Page], start: str, now: Callable[[], datetime], sleep: Callable[[int], None],

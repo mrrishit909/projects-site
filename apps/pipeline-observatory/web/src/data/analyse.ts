@@ -12,7 +12,7 @@ import { freshnessRows, incidentsRecovered, ingestionFromSummaries, retryStats, 
 import { buildInputs, type Manifest, type RawFiles } from "./files";
 
 export type Basis = "complete" | "sample" | "recorded";
-export interface Claim { id: string; key: string; label: string; basis: Basis; want: unknown; got: unknown; ok: boolean | null }
+export interface Claim { id: string; key: string; label: string; basis: Basis; want: unknown; got: unknown; ok: boolean | null; note?: string }
 export interface Provenance { dataset_version: string; dataset_hash: string; generated_at: string; code_sha: string | null; as_of: string }
 export interface Dataset {
   id: "snapshot" | "golden";
@@ -102,9 +102,10 @@ export function designedClaims(ds: Dataset): Claim[] {
   const out: Claim[] = [];
   const M = ds.g["metrics"];
   const asOf = parseTs(m.as_of);
-  const put = (id: string, key: string, label: string, basis: Basis, want: unknown, got: unknown): void => {
-    out.push({ id, key, label, basis, want, got: basis === "recorded" ? null : got, ok: basis === "recorded" ? null : same(want, got) });
+  const put = (id: string, key: string, label: string, basis: Basis, want: unknown, got: unknown, note?: string): void => {
+    out.push({ id, key, label, basis, want, got: basis === "recorded" ? null : got, ok: basis === "recorded" ? null : same(want, got), ...(note ? { note } : {}) });
   };
+  const WEAK = "not discriminating on the sample: the sample holds 2,000 of the 40,191 rows, so accepted ÷ expected is small for every source and a value of 0.000000 says nothing about silence";
   const dr = (id: string): Row => (m.designed_relationships ?? []).find((d) => d["id"] === id) ?? { realised: {}, parameters: {} };
   // DR-01
   {
@@ -114,8 +115,9 @@ export function designedClaims(ds: Dataset): Claim[] {
     const runs = raw.pipeline_runs.filter((r) => inWin(r["started_at"]));
     const batches = raw.ingestion_batches.filter((b) => b["source_id"] === sid && b["status"] === "committed" && inWin(b["started_at"]));
     const sums = batches.map((b) => raw.batch_summaries.find((s) => s["batch_id"] === b["batch_id"])!);
-    put("DR-01", "freshness_seconds", "freshness of the silent source", "sample", R["freshness_seconds"], f?.sample_freshness_seconds ?? null);
-    put("DR-01", "latest_accepted_event_at", "latest accepted event", "sample", R["latest_accepted_event_at"], M.freshness[sid]?.latest_accepted_event_at ?? null);
+    // the freshness of src-refunds carries ONE tag everywhere (landing, overview, here): recorded. The sample cannot show it (its newest accepted refund is not the world's).
+    put("DR-01", "freshness_seconds", "freshness of the silent source", "recorded", R["freshness_seconds"], f?.sample_freshness_seconds ?? null);
+    put("DR-01", "latest_accepted_event_at", "latest accepted event", "recorded", R["latest_accepted_event_at"], M.freshness[sid]?.latest_accepted_event_at ?? null);
     put("DR-01", "ingestion_age_seconds", "ingestion age of the same source", "complete", R["ingestion_age_seconds"], f?.ingestion_age_seconds ?? null);
     put("DR-01", "last_successful_ingestion_at", "last successful ingestion", "complete", R["last_successful_ingestion_at"], f?.last_ingestion_at ?? null);
     put("DR-01", "runs_in_window", "runs since the source went silent", "complete", R["runs_in_window"], runs.length);
@@ -125,7 +127,7 @@ export function designedClaims(ds: Dataset): Claim[] {
     put("DR-01", "accepted_in_window", "records accepted since", "complete", R["accepted_in_window"], sums.reduce((a, s) => a + s["accepted_unique"], 0));
     put("DR-01", "duplicates_in_window", "duplicates since", "complete", R["duplicates_in_window"], sums.reduce((a, s) => a + s["duplicate"], 0));
     put("DR-01", "batches_with_no_accepted_record", "batches that accepted nothing", "complete", R["batches_with_no_accepted_record"], sums.filter((s) => s["accepted_unique"] === 0).length);
-    for (const day of Object.keys(R["completeness"] as Row)) put("DR-01", `completeness.${day}`, `completeness of ${day}`, "sample", (R["completeness"] as Row)[day], M.completeness[sid]?.[day]?.value ?? null);
+    for (const day of Object.keys(R["completeness"] as Row)) put("DR-01", `completeness.${day}`, `completeness of ${day}`, "sample", (R["completeness"] as Row)[day], M.completeness[sid]?.[day]?.value ?? null, WEAK);
   }
   // DR-02
   {
@@ -150,6 +152,7 @@ export function designedClaims(ds: Dataset): Claim[] {
     const R = dr("DR-03")["realised"], r = ds.retry!;
     for (const k of ["fetch_rows", "rate_limited_responses", "retries", "retries_honouring_retry_after", "retries_too_soon", "sessions_rate_limited", "min_slack_seconds", "max_slack_seconds", "cursor_loops"] as const) put("DR-03", k, k.replace(/_/g, " "), "complete", R[k], r[k]);
     put("DR-03", "sources_rate_limited", "sources rate limited", "complete", R["sources_rate_limited"], r.sources_rate_limited);
+    put("DR-03", "fetch_log_statuses", "fetch log by status (ok, refetch, rate_limited, cursor_loop)", "complete", R["fetch_log_statuses"], r.by_status);
   }
   // DR-04
   {

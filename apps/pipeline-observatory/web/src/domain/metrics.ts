@@ -25,8 +25,9 @@ export interface Params {
 }
 
 /** Classify every raw row of every committed batch (D-01). Batches are applied per source in checkpoint-version order (the order they committed in),
- * falling back to (started_at, batch_id); a batch with a schema_version other than its source contract's is quarantined whole. */
-export function derive(acc: Acc, totf = "amount"): Facts {
+ * falling back to (started_at, batch_id); a batch with a schema_version other than its source contract's is quarantined whole. A row dated after its
+ * batch's started_at (its arrival) or after `cutoff` is quarantined EVENT_IN_FUTURE (D-09). */
+export function derive(acc: Acc, totf = "amount", cutoff: unknown = null): Facts {
   const cpByBatch = new Map<string, Row>(acc["checkpoints"]!.map((c) => [c["batch_id"], c]));
   const contractSchema = new Map<string, unknown>(acc["source_contracts"]!.map((s) => [s["source_id"], s["schema_version"]]));
   const committed = sortedBy(acc["ingestion_batches"]!.filter((b) => b["status"] === "committed"),
@@ -44,7 +45,7 @@ export function derive(acc: Acc, totf = "amount"): Facts {
     const bv = b["schema_version"];
     const schemaOk = bv === null || bv === undefined || bv === contractSchema.get(sid);
     const rows = raws.get(b["batch_id"]) ?? [];
-    for (const d of classifyRows(rows, keys.get(sid) ?? keys.set(sid, new Set()).get(sid)!, deleted.get(sid) ?? deleted.set(sid, new Set()).get(sid)!, schemaOk)) disposition.set(d.raw_record_id, d);
+    for (const d of classifyRows(rows, keys.get(sid) ?? keys.set(sid, new Set()).get(sid)!, deleted.get(sid) ?? deleted.set(sid, new Set()).get(sid)!, schemaOk, b["started_at"], cutoff)) disposition.set(d.raw_record_id, d);
     const cp = cpByBatch.get(b["batch_id"]);
     for (const r of rows) {
       const d = disposition.get(r["raw_record_id"])!;
@@ -111,7 +112,7 @@ function freshness(acc: Acc, f: Facts, cutoff: string): Row {
     const sid = s["source_id"] as string;
     const le = maxInstant(f.accepted.filter((a) => a.source_id === sid).map((a) => a.event_at));          // freshness: cutoff - latest accepted source event
     const li = maxInstant(f.committed.filter((b) => b["source_id"] === sid && f.cpByBatch.has(b["batch_id"])).map((b) => f.cpByBatch.get(b["batch_id"])!["committed_at"]));   // ingestion age: cutoff - last committed batch (D-P8-03)
-    out[sid] = { latest_accepted_event_at: isoZ(le), freshness_seconds: le ? secondsBetween(le, cutoff) : null, last_successful_ingestion_at: isoZ(li), ingestion_age_seconds: li ? secondsBetween(li, cutoff) : null };
+    out[sid] = { latest_accepted_event_at: isoZ(le), freshness_seconds: le ? secondsBetween(le, cutoff) : null, freshness_reason: le ? null : "NO_ACCEPTED_EVENT", last_successful_ingestion_at: isoZ(li), ingestion_age_seconds: li ? secondsBetween(li, cutoff) : null };
   }
   return out;
 }
@@ -185,7 +186,7 @@ export function publicationScope(pub: Row, f: Facts): Scope {
  * published_totals (publication_id -> exact total of the stored published table). */
 export function compute(acc: Acc, rejected: Rejected[], params: Params): Row {
   const cutoff = params.cutoff;
-  const f = derive(acc, params.business_total_field ?? "amount");
+  const f = derive(acc, params.business_total_field ?? "amount", params.cutoff);
   const counts = Object.fromEntries(ENTITIES.map((e) => [e, { accepted: (acc[e] ?? []).length, rejected: rejected.filter((r) => r.entity === e).length }]));
   const ing = ingestion(acc, f);
   const runsOut = runsBlock(acc);
@@ -261,7 +262,7 @@ export interface PipelineResult { imported: ImportResult; golden: Row; facts: Fa
 export function runPipeline(data: Record<string, unknown>, published_totals: Record<string, Fr> | null = null): PipelineResult {
   const imp = validateImport(data);
   const params = { ...paramsOf(data), published_totals };
-  return { imported: imp, golden: compute(imp.accepted, imp.rejected, params), facts: derive(imp.accepted, params.business_total_field ?? "amount"), params };
+  return { imported: imp, golden: compute(imp.accepted, imp.rejected, params), facts: derive(imp.accepted, params.business_total_field ?? "amount", params.cutoff), params };
 }
 
 export interface WindowOpts { source_id?: string | null; from?: string | null; to?: string | null; cutoff?: string | null }

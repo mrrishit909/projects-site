@@ -4,15 +4,18 @@
 // written: every expectation also holds under domain/pipeline_observatory). Worlds: replay storms, out-of-order and regressing checkpoints, a delete
 // of an unknown key, delete propagation into reconciliation, a late event exactly at the watermark, a gate with a warning only, a blocked run with a
 // publication attempt, overlapping and touching backfills, empty populations, and more. Run by `npm run check` after the golden check.
-import { writeFileSync } from "node:fs";
-import { checkRange, rangesOverlap } from "../src/domain/backfill";
-import { checkCursorProgress, checkRetryAllowed, fetchAll, type Page } from "../src/domain/fetch";
-import { decide } from "../src/domain/gate";
+import { readFileSync, writeFileSync } from "node:fs";
+import { checkRange, findOverlap, rangesOverlap } from "../src/domain/backfill";
+import { checkCursorProgress, checkRetryAllowed, fetchAll, judgeFetch, type Fetched, type Page } from "../src/domain/fetch";
+import { decide, scopeComplete } from "../src/domain/gate";
+import { parseJsonExact } from "../src/domain/json";
+import { moneyAmount, contractReason } from "../src/domain/classify";
+import { pendingLateEvents, type Accepted } from "../src/domain/reconcile";
 import { canonicalJson, contentHash, payloadHash } from "../src/domain/hashing";
 import { computeWindow, runPipeline } from "../src/domain/metrics";
 import { decFr, type Fr } from "../src/domain/num";
 import { containsSecret, redactText, redactValue, safeLine, WITHHELD } from "../src/domain/redaction";
-import { parseTs } from "../src/domain/time";
+import { isoZ, parseTs } from "../src/domain/time";
 import { DomainError } from "../src/domain/errors";
 import { decideBackfill, gateWhatIf, retryAdvice } from "../src/domain/sim";
 
@@ -203,7 +206,7 @@ W("a repeated attempt of one task is DUPLICATE_ID; attempts count, the last one 
 // 27. The partition is the UTC date of event_ts, half-open at midnight. K1 23:59:59Z -> 10-04; K2 10-05 00:00:00Z -> 10-05; K3 "10-05T01:00:00+02:00" = 10-04 23:00Z -> 10-04.
 //     Expectations: 10-04 declares 2 (accepted 2 -> 1.000000), 10-05 declares 3 (accepted 1 -> 0.333333). An event at the cutoff instant has freshness 0 s.
 W("partitions are UTC dates, half-open at midnight; an offset instant is converted", world({ source_expectations: [{ source_id: "src-a", partition: "2026-10-04", expected_records: 2 }, { source_id: "src-a", partition: "2026-10-05", expected_records: 3 }],
-  ingestion_batches: [batch("b1", at(8))], raw_records: [rr("b1", 1, "K1", { event_ts: "2026-10-04T23:59:59Z" }), rr("b1", 2, "K2", { event_ts: "2026-10-05T00:00:00Z" }), rr("b1", 3, "K3", { event_ts: "2026-10-05T01:00:00+02:00" })], checkpoints: [cp("b1", 1, at(8, 5))] }),
+  ingestion_batches: [batch("b1", at(0, 10, 0, 5))], raw_records: [rr("b1", 1, "K1", { event_ts: "2026-10-04T23:59:59Z" }), rr("b1", 2, "K2", { event_ts: "2026-10-05T00:00:00Z" }), rr("b1", 3, "K3", { event_ts: "2026-10-05T01:00:00+02:00" })], checkpoints: [cp("b1", 1, at(0, 15, 0, 5))] }),
   { "metrics.completeness.src-a.2026-10-04.value": "1.000000", "metrics.completeness.src-a.2026-10-04.accepted_records": 2, "metrics.completeness.src-a.2026-10-05.value": "0.333333", "metrics.freshness.src-a.freshness_seconds": 0, "metrics.freshness.src-a.latest_accepted_event_at": "2026-10-05T00:00:00Z" }, []);
 // 28. Durations: run-1 600 s and run-2 1200 s succeeded (mean 1800/2/60 = 15.0000 min), run-3 failed after 180 s (3.0000), run-4 failed with no finished_at (no duration, in no group).
 W("durations: successful and failed apart, an unfinished run has none", world({ pipeline_runs: [run("run-1", at(8, 15), at(8, 25)), run("run-2", at(9, 15), at(9, 35)), run("run-3", at(10), at(10, 3), "failed"), run("run-4", at(11), null, "failed")] }),
@@ -221,7 +224,7 @@ W("ratios are exact rationals rounded once, half up", world({ source_expectation
 //     Mean over the two verified: (8400 + 7800) / 2 / 60 = 135.0000.
 {
   const g1 = gated("run-1", at(8), at(8, 5), "failed", [["keys_unique", "critical", 1, 1]]), g2 = gated("run-2", at(9, 20), at(9, 30), "success", [["keys_unique", "critical", 1, 0]]), g3 = gated("run-3", at(10, 20), at(10, 30), "success", [["keys_unique", "critical", 1, 0]]);
-  W("verified recovery needs a later successful, allowed, published, reconciled (0.00) run; a drifting candidate is skipped", world({ ingestion_batches: [batch("b1", at(7))], raw_records: [rr("b1", 1, "K1")], checkpoints: [cp("b1", 1, at(7, 5))],
+  W("verified recovery needs a later successful, allowed, published, reconciled (0.00) run; a drifting candidate is skipped", world({ ingestion_batches: [batch("b1", at(7))], raw_records: [rr("b1", 1, "K1", { event_ts: at(6) })], checkpoints: [cp("b1", 1, at(7, 5))],
     pipeline_runs: [...g1.runs, ...g2.runs, ...g3.runs], task_runs: [...g1.tasks, ...g2.tasks, ...g3.tasks], quality_results: [...g1.qrs, ...g2.qrs, ...g3.qrs],
     publications: [pub("pub-2", "run-2", at(9, 30), at(7), ["b1"]), pub("pub-3", "run-3", at(10, 30), at(7), ["b1"])],
     incidents: [inc("inc-1", "run-1", at(8, 10), "closed", at(10, 30), "run-3"), inc("inc-2", "run-3", at(12), "open", null, null), inc("inc-3", "run-1", at(8, 20), "closed", at(10, 30), "run-2")] }),
@@ -229,24 +232,25 @@ W("ratios are exact rationals rounded once, half up", world({ source_expectation
       "metrics.incidents.incidents.inc-2.verified": false, "metrics.incidents.incidents.inc-2.recovery_minutes": null, "metrics.incidents.incidents.inc-2.closure_consistent": true, "metrics.incidents.incidents.inc-3.closure_consistent": false, "metrics.incidents.incidents.inc-3.recovery_minutes": "130.0000",
       "metrics.incidents.verified": 2, "metrics.incidents.open": 1, "metrics.incidents.closed": 2, "metrics.incidents.mean_recovery_minutes": "135.0000" }, [], { "pub-2": "5.00", "pub-3": "10.00" });
 }
-// 31. Money and contract edge cases (one row each, keys K1..K14). Accepted: "12.5", "5.00\n" (Python's $ allows one trailing newline), "-0.00", quantity 0. INVALID_FIELD: "12.505", "1e3", "", " 5.00",
-//     unit_price as a number, quantity true, quantity 2.5, an event_ts without a zone. MISSING_FIELD: amount absent, amount null. So accepted 4, INVALID_FIELD 8, MISSING_FIELD 2, received 14.
+// 31. Money and contract edge cases (one row each, keys K1..K14). Accepted: "12.5", "-0.00", quantity 0. INVALID_FIELD: "12.505", "1e3", "", " 5.00", "5.00\n" (D-09: a trailing
+//     newline is not money, in all three implementations), unit_price as a number, quantity true, quantity 2.5, an event_ts without a zone. MISSING_FIELD: amount absent, amount null.
+//     So accepted 3, INVALID_FIELD 9, MISSING_FIELD 2, received 14.
 {
   const base = (k: string): Row => pay(k);
   const rows: Row[] = [{ ...base("K1"), amount: "12.5" }, { ...base("K2"), amount: "12.505" }, { ...base("K3"), amount: "1e3" }, { ...base("K4"), amount: "" }, { ...base("K5"), amount: " 5.00" }, { ...base("K6"), amount: "5.00\n" }, { ...base("K7"), amount: "-0.00" },
     { ...base("K8"), unit_price: 10 }, { ...base("K9"), quantity: true }, { ...base("K10"), quantity: 2.5 }, { ...base("K11"), quantity: 0 }, { ...base("K12"), event_ts: "2026-10-04T08:00:00" }, (({ amount: _a, ...r }) => r)(base("K13")), { ...base("K14"), amount: null }];
   W("money and contract edges: decimals, exponent, whitespace, bool and fractional quantities, absent and null fields", world({ ingestion_batches: [batch("b1", at(8))], raw_records: rows.map((p, i) => rr("b1", i + 1, `K${i + 1}`, {}, p)), checkpoints: [cp("b1", 1, at(8, 5))] }),
-    { [`${S}.received`]: 14, [`${S}.accepted_unique`]: 4, [`${S}.quarantine_by_reason.INVALID_FIELD`]: 8, [`${S}.quarantine_by_reason.MISSING_FIELD`]: 2 }, []);
+    { [`${S}.received`]: 14, [`${S}.accepted_unique`]: 3, [`${S}.quarantine_by_reason.INVALID_FIELD`]: 9, [`${S}.quarantine_by_reason.MISSING_FIELD`]: 2 }, []);
   // 32. Exact decimal arithmetic: 0.10 + 0.10 + 0.10 + 0.20 = 0.50 and a very large amount stays exact (999999999999.99 + 0.01 = 1000000000000.00).
   const g = gated("run-1", at(9), at(9, 10), "success", [["keys_unique", "critical", 1, 0]]);
   W("money is exact: no binary rounding, no overflow", world({ ingestion_batches: [batch("b1", at(8))], raw_records: [rr("b1", 1, "K1", { amount: "0.10" }), rr("b1", 2, "K2", { amount: "0.10" }), rr("b1", 3, "K3", { amount: "0.10" }), rr("b1", 4, "K4", { amount: "0.20" }), rr("b1", 5, "K5", { amount: "999999999999.99" }), rr("b1", 6, "K6", { amount: "0.01" })],
     checkpoints: [cp("b1", 1, at(8, 5))], pipeline_runs: g.runs, task_runs: g.tasks, quality_results: g.qrs, publications: [pub("pub-1", "run-1", at(9, 10), at(8), ["b1"])] }),
     { "metrics.reconciliation.pub-1.source_total": "1000000000000.50", "metrics.reconciliation.pub-1.published_total": "1000000000000.50", "metrics.reconciliation.pub-1.residual": "0.00" }, []);
 }
-// 33. Two batches of one source with the same id (Python's validate_import checks the primary key only when a row is ACCEPTED, and batches are accepted after the checkpoint loop, so a repeated
-//     batch_id passes). The mirror keeps that behaviour exactly: 2 accepted batch rows, counted twice. Recorded here so a future change of the Python domain is noticed.
-W("known gap mirrored from the Python domain: a repeated batch_id is not refused", world({ ingestion_batches: [batch("b1", at(8)), batch("b1", at(8))], raw_records: [rr("b1", 1, "K1")], checkpoints: [cp("b1", 1, at(8, 5))] }),
-  { "ingest.counts.ingestion_batches.accepted": 2, "ingest.counts.ingestion_batches.rejected": 0 }, []);
+// 33. Two batches of one source with the same id (D-09, R8-03: a repeated primary key of any entity is DUPLICATE_ID before the row is accepted; this used to pass import in both
+//     implementations and be counted twice). The first b1 stays, the repeat is DUPLICATE_ID, and its rows are not counted twice: 1 batch accepted, 1 rejected, 1 row received.
+W("a repeated batch_id is DUPLICATE_ID and its rows are not counted twice", world({ ingestion_batches: [batch("b1", at(8)), batch("b1", at(8))], raw_records: [rr("b1", 1, "K1")], checkpoints: [cp("b1", 1, at(8, 5))] }),
+  { "ingest.counts.ingestion_batches.accepted": 1, "ingest.counts.ingestion_batches.rejected": 1, [`${S}.received`]: 1, [`${S}.accepted_unique`]: 1 }, [["ingestion_batches", "b1", "DUPLICATE_ID"]]);
 // 34. The processing rate: 8 accepted records of the named batch in 12 s = 0.666667 / s; 0 s gives null (zero denominator), never infinity.
 {
   const rows = Array.from({ length: 8 }, (_, i) => rr("b1", i + 1, `K${i}`));
@@ -326,6 +330,85 @@ W("aborted and staged batches count for nothing", world({ ingestion_batches: [ba
   eq("gate.decide is unchanged by the order results arrive in", canon(decide(results)) === canon(decide([...results].reverse())), true);
   eq("retry advice by reason: schema change refetches after a bump; a negative quantity is corrected and replayed; an unknown op needs the source", [retryAdvice("SCHEMA_CHANGED").disposition, retryAdvice("NEGATIVE_QUANTITY").disposition, retryAdvice("UNKNOWN_OP").disposition], ["refetch-after-bump", "correct-and-replay", "no-retry-source-fix"]);
   console.log(`OK       world ${String(worlds).padStart(2, "0")}: gate what-if, decide order, retry advice (3 expectations)`);
+}
+
+// 44. D-09 divergence cases, read as TEXT (3.0 and 9007199254740993 must keep their lexemes): the verdict of every case equals the table that Python, the PostgreSQL reference and
+//     tests/reference_check.py also satisfy (tests/fixtures/divergence/cases.json).
+{
+  worlds++;
+  const doc = parseJsonExact(readFileSync(new URL("../../tests/fixtures/divergence/cases.json", import.meta.url), "utf8")) as Row;
+  const started: Record<string, string> = Object.fromEntries((doc["batches"] as Row[]).map((b) => [b["batch_id"], b["started_at"]]));
+  const bad: string[] = [];
+  for (const c of doc["cases"] as Row[]) {
+    const why = contractReason(c["payload"], started[c["batch"]], doc["cutoff"]);
+    if ((why === null ? "accepted" : "quarantined") !== c["disposition"] || why !== c["reason"]) bad.push(`${c["id"]}: ${why}`);
+  }
+  eq(`divergence: all ${(doc["cases"] as Row[]).length} cases classified as the shared table says`, bad, []);
+  const by = Object.fromEntries((doc["cases"] as Row[]).map((c) => [c["id"], c]));
+  eq("divergence: 3.0 and 1e2 are not integers, 9007199254740993 is kept exact and refused, 2**53 is accepted", [by["quantity-float-3.0"].payload.quantity.lexeme, by["quantity-exponent"].payload.quantity.lexeme, by["quantity-big"].payload.quantity.lexeme, by["ok-quantity-2-53"].payload.quantity], ["3.0", "1e2", "9007199254740993", 9007199254740992]);
+  const rowsOf = (cases: Row[]): Row[] => cases.map((c, i) => ({ raw_record_id: `rr-d-${String(i).padStart(3, "0")}`, batch_id: c["batch"], source_key: c["payload"]?.record_id ?? c["source_key"], payload_hash: "h", payload_json: c["payload"] }));
+  const batches = (doc["batches"] as Row[]).map((b) => batch(b["batch_id"], b["started_at"], "src-div"));
+  const res = runPipeline(world({ source_contracts: [src("src-div")], ingestion_batches: batches, raw_records: rowsOf(doc["cases"]), checkpoints: (doc["batches"] as Row[]).map((b) => cp(b["batch_id"], b["version_number"], b["committed_at"], "src-div", b["committed_cursor"])) }));
+  const facts = res.facts;
+  const wrong = (doc["cases"] as Row[]).filter((c, i) => facts.disposition.get(`rr-d-${String(i).padStart(3, "0")}`)!.kind !== c["disposition"]).map((c) => c["id"]);
+  eq("divergence: the whole pipeline (not only contractReason) agrees, and nothing is rejected at import", [wrong, res.golden.ingest.rejected_records.length], [[], 0]);
+  eq("divergence: the sub-microsecond event is truncated to .999999, never rounded up a second", [isoZ(by["ok-sub-microsecond"].payload.event_ts), by["ok-sub-microsecond"].event_at], ["2026-10-04T08:00:00.999999Z", "2026-10-04T08:00:00.999999Z"]);
+  console.log(`OK       world ${String(worlds).padStart(2, "0")}: the shared divergence cases (${(doc["cases"] as Row[]).length + 4} expectations)`);
+}
+// 45. D-09 rules: a payload that is not an object, a future-dated row against a stale source, severity, overlap against active requests, duplicate keys of every entity.
+{
+  worlds++;
+  eq("moneyAmount guards a payload that is not an object (it used to be a TypeError in the mirror and an AttributeError in Python)", [["x"], "12.00", 12, null, true].map((p) => String(moneyAmount(p).n)), ["0", "0", "0", "0", "0"]);
+  const stale = W("a future-dated row is quarantined and cannot make a stale source look fresh", world({ ingestion_batches: [batch("b1", at(10))],
+    raw_records: [rr("b1", 1, "K1", { event_ts: at(8) }), rr("b1", 2, "K2", { event_ts: "2030-01-01T00:00:00Z" })], checkpoints: [cp("b1", 1, at(10, 5))] }),
+    { [`${S}.accepted_unique`]: 1, [`${S}.quarantined`]: 1, [`${S}.quarantine_by_reason.EVENT_IN_FUTURE`]: 1, "metrics.freshness.src-a.latest_accepted_event_at": at(8), "metrics.freshness.src-a.freshness_seconds": 57600, "metrics.freshness.src-a.freshness_reason": null }, []);
+  void stale;
+  W("freshness is null with a reason when nothing is accepted, never negative", world({ ingestion_batches: [batch("b1", at(10))], raw_records: [rr("b1", 1, "K1", { event_ts: "2030-01-01T00:00:00Z" })], checkpoints: [cp("b1", 1, at(10, 5))] }),
+    { "metrics.freshness.src-a.freshness_seconds": null, "metrics.freshness.src-a.freshness_reason": "NO_ACCEPTED_EVENT", "metrics.freshness.src-a.ingestion_age_seconds": 50100 }, []);
+  W("the cutoff binds when it is earlier than the batch's arrival", world({ cutoff: at(9), as_of: at(9), ingestion_batches: [batch("b1", at(12))], raw_records: [rr("b1", 1, "K1", { event_ts: at(8) }), rr("b1", 2, "K2", { event_ts: at(10) })], checkpoints: [cp("b1", 1, at(12, 5))] }),
+    { [`${S}.accepted_unique`]: 1, [`${S}.quarantine_by_reason.EVENT_IN_FUTURE`]: 1 }, []);
+  const q1 = qr("qr-1", "tr-1", "keys_unique", "Critical", 1, 0);
+  const g = gated("run-1", at(9), at(9, 10), "success", [["keys_unique", "critical", 1, 0]]);
+  W("severity is validated on import: an unknown severity is INVALID_FIELD and the gate left with no critical result blocks", world({ ingestion_batches: [batch("b1", at(8))], raw_records: [rr("b1", 1, "K1")], checkpoints: [cp("b1", 1, at(8, 5))],
+    pipeline_runs: g.runs, task_runs: g.tasks, quality_results: [{ ...g.qrs[0], severity: "Critical" }] }), { "metrics.quality_gate.run-1.decision": "blocked", "ingest.counts.quality_results.rejected": 1 }, [["quality_results", g.qrs[0]!["quality_result_id"], "INVALID_FIELD"]]);
+  void q1;
+  const mk = (i: number, a: string, b: string, status: string, extra: Row = {}): Row => ({ ...bf(`bf-${i}`, "src-a", `2026-09-${a}T00:00:00Z`, `2026-09-${b}T00:00:00Z`, [false]), status, ...extra });
+  const hit = (acc: Row[], req: Row, history = false): string | null => findOverlap(acc, req, history)?.["backfill_id"] ?? null;
+  eq("overlap is judged against requested or running requests only", ["requested", "running", "partial", "complete", "cancelled"].map((st) => hit([mk(1, "01", "03", st)], mk(2, "02", "04", "requested"))), ["bf-1", "bf-1", null, null, null]);
+  const victim = mk(1, "01", "03", "partial", { requested_at: "2026-08-30T10:00:00Z", settled_at: "2026-08-30T12:00:00Z" });
+  eq("history: refused while the victim was running, accepted once it settled; a clockless snapshot counts every earlier request", [hit([victim], mk(2, "02", "03", "requested", { requested_at: "2026-08-30T11:00:00Z" }), true), hit([victim], mk(3, "02", "03", "requested", { requested_at: "2026-08-30T12:00:00Z" }), true),
+    hit([mk(1, "01", "03", "partial")], mk(4, "02", "03", "requested"), true)], ["bf-1", null, "bf-1"]);
+  const dup = (entity: string, row: Row, extra: Row = {}): unknown => rej(runPipeline(world({ ...extra, [entity]: [row, { ...row }] }))).filter((r: any) => r[0] === entity); // eslint-disable-line @typescript-eslint/no-explicit-any
+  eq("a repeated primary key of any entity is DUPLICATE_ID: source, run, publication, incident, model", [
+    dup("source_contracts", src()), dup("pipeline_runs", run("run-1", at(8), at(8, 5)))].map((x) => (x as unknown[][]).map((r) => r[2])), [["DUPLICATE_ID"], ["DUPLICATE_ID"]]);
+  const cpRepeat = runPipeline(world({ ingestion_batches: [batch("b1", at(8))], raw_records: [rr("b1", 1, "K1")], checkpoints: [cp("b1", 1, at(8, 5)), cp("b1", 1, at(8, 5))] }));
+  eq("a repeated checkpoint id is DUPLICATE_ID and does not poison its batch", [rej(cpRepeat), cpRepeat.golden.metrics.ingestion.overall.accepted_unique], [[["checkpoints", "cp-b1", "DUPLICATE_ID"]], 1]);
+  console.log(`OK       world ${String(worlds).padStart(2, "0")}: D-09 rules (see above)`);
+}
+// 46. D-09 fetch sessions: a loop is a repeated cursor inside one session; a new session fetches a cursor again as a refetch; a stale source's re-poll of the last committed cursor is a refetch.
+{
+  worlds++;
+  const h = (...pages: [string, string, string | null][]): Fetched[] => pages.map(([session, cursor, next_cursor]) => ({ session, cursor, next_cursor, status: "ok" }));
+  const j = (history: Fetched[], last: string | null, session: string, cursor: string, next: string | null): string => { try { return judgeFetch(history, last, session, cursor, next); } catch (e) { return e instanceof DomainError ? e.code : "?"; } };
+  const hist = h(["s", "A", "B"], ["s", "B", "C"]);
+  eq("judgeFetch: ok for a new cursor, refetch for a cursor fetched in another session, CURSOR_LOOP for a repeat inside the session", [j([], null, "s", "A", "B"), j(hist, "C", "t", "A", "B"), j(hist, "C", "s", "C", "A"), j(hist, "C", "s", "C", "B"), j(hist, "C", "s", "C", "C"), j(hist, "C", "s", "A", "D")],
+    ["ok", "refetch", "CURSOR_LOOP", "CURSOR_LOOP", "CURSOR_LOOP", "CURSOR_LOOP"]);
+  eq("judgeFetch: the first page of a new session that re-polls the last committed cursor and points at itself is a refetch; the same page elsewhere, or twice in a session, is a loop", [j(hist, "C", "t", "C", "C"), j(hist, "C", "t", "Z", "Z"),
+    j([...hist, { session: "t", cursor: "C", next_cursor: "C", status: "refetch" }], "C", "t", "C", "C"), j([{ session: "s", cursor: "A", next_cursor: "B", status: "rate_limited" }], null, "s", "A", "B")], ["refetch", "CURSOR_LOOP", "CURSOR_LOOP", "ok"]);
+  console.log(`OK       world ${String(worlds).padStart(2, "0")}: fetch sessions (10 expectations)`);
+}
+// 47. D-09 the gate's two new checks: scope_complete and the late events no publication includes.
+{
+  worlds++;
+  const committed: [string, string][] = [["b1", at(10)], ["b2", at(11)], ["b3", at(12)]];
+  eq("scopeComplete: complete, the omit attack, a declared scope, and a batch committed at the run's start belongs to the next run", [scopeComplete(committed, ["b1", "b2", "b3"], null, at(13)), scopeComplete(committed, ["b1", "b3"], null, at(13)), scopeComplete(committed, ["b3"], at(11, 30), at(13)), scopeComplete(committed, ["b1"], null, at(11))],
+    [[3, []], [3, ["b2"]], [1, []], [1, []]]);
+  const acc = (key: string, batchId: string, event: string, arrival: string): Accepted => ({ source_id: "s", batch_id: batchId, key, event_at: event, arrival, raw_record_id: "rr", payload_hash: "h", amount: { n: 0n, d: 1n }, deleted_in: null });
+  const pubs: Row[] = [pub("pub-1", "run-1", at(11), at(9), ["b1"], ["s"])];
+  const late = acc("K3", "b3", at(8, 30), at(12)), fresh = acc("K4", "b4", at(11, 30), at(12));
+  eq("pendingLateEvents: late and unpublished; not before the run started; included by a later publication", [pendingLateEvents([late, fresh], pubs, at(13)).map((e) => e.source_key), pendingLateEvents([late, fresh], pubs, at(12)).length,
+    pendingLateEvents([late, fresh], [...pubs, pub("pub-2", "run-2", at(12, 30), at(10), ["b1", "b3"], ["s"])], at(13)).length], [["K3"], 0, 0]);
+  console.log(`OK       world ${String(worlds).padStart(2, "0")}: the gate's two new checks (5 expectations)`);
 }
 
 if (process.env["REVIEW_DUMP"]) writeFileSync(process.env["REVIEW_DUMP"], JSON.stringify(dump));

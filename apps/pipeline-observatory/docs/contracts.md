@@ -135,16 +135,16 @@ Seed 20261026, hourly runs 2026-08-10T01:15 .. 2026-10-04T23:15 (1,343 runs, 1,3
 payments 6 h, shipments 72 h, inventory 72 h, web events 60 h, refunds 7 d) and `src-payments` declaring schema "2"
 from 2026-09-15; 1,311 batches (1,278 live, 15 backfill, 8 aborted + 8 replays, 1 schema-quarantined + 1 refetch),
 1,302 checkpoints; 40,191 raw rows written, 39,901 received by committed batches, classified 37,248 accepted / 2,101
-duplicate / 429 quarantined (plus deletes); 12 models over 3 layers; 5,462 task runs; 6,640 quality results; 1,318
+duplicate / 429 quarantined (plus deletes); 12 models over 3 layers; 5,462 task runs; 9,296 quality results; 1,318
 publications; 25 incidents all closed by verified recovery (mean 60.6827 min); 15 backfills (13 accepted, 2 refused
-`BACKFILL_OVERLAP`), coverage 11/15 = 0.733333. `dataset_version` po-20261026-20261026, `dataset_hash` d9f0aa18…
+`BACKFILL_OVERLAP`), coverage 11/15 = 0.733333. `dataset_version` po-20261026-20261026, `dataset_hash` 0a906877…
 over the 16 entity files; `generated_at` = `as_of`.
 * A run starts at hh:15 and publishes the snapshot of the UTC day of the tick minus one hour, rebuilt hourly; accepted
   backfills ride on the first run after their batches commit. The watermark is the earliest, over all sources, of the
   window end of the latest batch committed before the gate (so backfill records are always late). Refused backfills
   keep status `requested` with their ids consumed. Crashed ingests end `aborted` with rows and no checkpoint (the
   cleanup state after D-06's `staged`). Stale batches replay the last accepted rows (all duplicates), cursor unchanged,
-  checkpoint version still +1. Quality results sit on the quality-gate task run (five checks per gate). No
+  checkpoint version still +1. Quality results sit on the quality-gate task run (seven checks per gate since D-09: the five of D-06 plus `scope_complete` and `late_events_included`). No
   `keys_unique` failure occurs in the history (the duplicate-key fault lives in replay event EV-07).
 * Extra entities `source_expectations`, `model_output_totals` (the stored candidate total per run; blocked runs'
   residuals come from it), `batch_summaries`, `fetch_log`; extra fields `model_definitions.layer/depends_on`,
@@ -183,12 +183,67 @@ over the 16 entity files; `generated_at` = `as_of`.
   tasks as ordered steps. Incident diagnosis class comes from the first failed gate check, else the failed task.
   Retry-after slack is derived from the fetch log. The replay events are listed, not replayed (the backend CI runs
   them). The benchmark shows the recorded synthetic measurement and a live browser measurement labelled not-CI.
-* The TypeScript mirror reproduces the Python domain's quirks on purpose and lists them on the evidence page: a repeated
-  `batch_id` passes `validate_import` (primary-key check before batch acceptance); `money_amount` on a non-object
-  payload; a trailing newline accepted by `$` in money strings. **These are review items for the fix round.**
+* The TypeScript mirror reproduced the Python domain's quirks on purpose and listed them on the evidence page: a repeated
+  `batch_id` passed `validate_import`; `money_amount` on a non-object payload; a trailing newline accepted by `$` in
+  money strings. **All three are fixed in D-09 (R8-03, R8-04, R8-08); the mirror and the domain now agree on the fixed behaviour, and the divergence tests prove it.**
 * Five injection checks (INJ-01, INJ-04, INJ-08) describe unsampled batches or publications and are marked "not on
   sample"; the designed late events differ on the sample (141 over the sample against 757 recorded).
 * The Playwright preview port honours `PW_PORT` (another app's suite may hold 4173 on a shared machine).
+
+## D-09 Review fixes (adopted from review R8)
+* **R8-01 Future events.** An `event_ts` later than the batch `started_at` or than the cutoff is quarantined
+  `EVENT_IN_FUTURE` (order MISSING, INVALID, NEGATIVE, FUTURE), in Python, SQL, TypeScript and the reference. Freshness is never
+  negative: a source with no accepted event has freshness null and a `freshness_reason`. One future row is pinned in the golden
+  fixture. Rejected: clamping freshness to 0 (it hides the bad row instead of naming it).
+* **R8-02 The gate cannot be skipped by omission.** Two critical checks: `scope_complete` (every committed batch whose window lies
+  in the run's `scope_from`..start is included) and `late_events_included` (no accepted event that arrived behind the previous
+  watermark is missing). C06 refuses a watermark earlier than the current publication's (`WATERMARK_REGRESSION`, 422, refusal
+  audited). The reviewer's `omit` attack is blocked. The generator world satisfies both checks by construction and was regenerated.
+  Rejected: trusting the caller's `batch_ids`.
+* **R8-03 Duplicate primary keys.** A repeated primary key of any entity is `DUPLICATE_ID` at import (the first occurrence wins; a
+  repeated checkpoint is `DUPLICATE_ID`, never `CHECKPOINT_REGRESSION`), in Python, TypeScript and the reference.
+* **R8-04 One ASCII grammar.** Money, quantity and timestamp use one full-match ASCII-only pattern set: Python `re.fullmatch` with
+  `re.ASCII`; PostgreSQL `\A..\Z`; TypeScript `^..$` with the `u` flag plus an explicit newline refusal. A non-integer JSON number
+  (`3.0`) and an integer above 2^53 are `INVALID_FIELD`; the browser reads JSON with an exact-lexeme parser so it can tell. Divergence
+  tests (`tests/fixtures/divergence/cases.json`, 44 cases: Arabic-Indic digits, trailing newline, `3.0`, big integers) show all
+  three agree. Rejected: `\d` and `$` as the Python and JavaScript defaults.
+* **R8-05 Dates and fractions.** The SQL reference validates the calendar date before casting (no `2026-02-30`). Sub-microsecond
+  fractions are truncated (not rounded) in all three and the reference.
+* **R8-06 Fetch sessions.** `fetch_session` is required on C01 (`FETCH_SESSION_REQUIRED`). A loop is a repeated cursor within one
+  session (A to B to A is refused). A new session may poll the last cursor again; `fetch_log` records it as `refetch`. The generator
+  records stale-source and backfill re-fetches as `refetch` (48 in the world; the designed loop is now two pages of one session).
+  Rejected: a loop as a repeated cursor anywhere in history.
+* **R8-07 The run funnel.** 1,343 runs: 1,328 reached the gate (1,318 allowed, 10 blocked); 15 failed before it. The site says so
+  on landing, overview and gate; the gate list is "every failed run" with the failure kind per row; the manifest carries
+  `reached_gate`, `allowed`, `blocked_at_gate`, `failed_before_gate`, computed by the domain.
+* **R8-08 Non-object payloads.** `money_amount` on a payload that is not an object quarantines the row `INVALID_FIELD` (Python and
+  TypeScript). This corrects the D-08 wording: that quirk is fixed, not kept.
+* **R8-09 Scope tags.** The evidence page and landing tag each figure complete world, 2,000-row sample or recorded; the completeness
+  check is marked "not discriminating on the sample"; refunds freshness carries the same tag everywhere (recorded, because the sample
+  cannot show it).
+* **R8-10 Quarantine scope.** The quarantined count (429) and rejection rate (0.010752) are "in committed batches; the 17 rows of the
+  schema-quarantined batch are listed separately" (446 quarantine rows in all), on the overview, the evidence page and in the manifest.
+* **R8-11 Backfill coverage.** Stated as "11 of 15 partitions of the 13 accepted requests (0.733333); 2 requests for 4 partitions
+  refused for overlap". The metric keeps its D-03 definition.
+* **R8-12 Overlap judged against active requests.** Only `requested` and `running` requests block; a settled (`complete` or
+  `partial`) one does not, so the partition bf-004 left unverified can be backfilled again (recovery test). C08 creates `requested`,
+  C04 sets `running`, verification sets the final status and `settled_at`. The generator's bf-006 and bf-012 are re-timed
+  (requested 120 s after the victim's last commit) so they remain refusals; the manifest says so. Rejected: judging against all history.
+* **R8-13 Sandbox default.** The sandbox is NOT the default: `PIPELINE_ENVIRONMENT` must equal `sandbox` for C07. The tests (autouse
+  fixture), README and the CI workflow's Mode A job set it.
+* **R8-14 Identity.** Identity is asserted by headers; there is no authentication. README, evidence page and case-study route say so
+  wherever 401 or 403 is mentioned.
+* **R8-15 Units.** Freshness, ingestion age and lag are stored and published in seconds; the site shows minutes (4 places) beside them
+  (P08-MET-01, P08-MET-02, P08-MET-08-R03). Money columns are NUMERIC(20,6) by migration `0003_review_fixes.sql` (section 11).
+  Rejected: publishing minutes (the contract's seconds are exact and comparable to the targets).
+* **R8-16 Wording.** The case study says the crash leaves the batch `staged`. The sample is "2,000 rows in 62 whole batches, 50 of
+  which carry rows". The completeness warning fails in most gates and carries little signal, said on the gate page. The golden card
+  says the crash case is vacuous and points to the new-key experiment.
+* **Nits.** `severity` is validated on import (`INVALID_FIELD` unless `critical` or `warning`); the gate page's "Show" buttons have
+  accessible names.
+* **Figures that moved.** Quality results 6,640 to 9,296; dataset hash d9f0aa18.. to 0a906877..; fetch statuses ok 1,263, rate_limited
+  49, refetch 48, cursor_loop 1; runs allowed by the gate unchanged (1,318); migration 0003 adds `scope_from`, `requested_at`,
+  `settled_at` and the `refetch` status.
 
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners, including the crash-before-checkpoint and

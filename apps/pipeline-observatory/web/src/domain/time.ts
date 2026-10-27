@@ -1,7 +1,8 @@
-// Instants: UTC, one accepted form (`YYYY-MM-DDTHH:MM:SS[.f]` with `Z` or an offset). An instant is an exact integer count of microseconds
-// since 1970-01-01T00:00:00Z (a BigInt): no Date object and no floating point in any comparison or difference.
-const TS_FORM = /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(Z|[+-]\d{2}:\d{2})$/;
+// Instants: UTC, one accepted form (`YYYY-MM-DDTHH:MM:SS[.f]` with `Z` or an offset; ASCII digits, full match, see patterns.ts). An instant is an exact
+// integer count of microseconds since 1970-01-01T00:00:00Z (a BigInt): no Date object and no floating point in any comparison or difference.
+import { matchTimestamp } from "./patterns";
 const US = 1_000_000n, DAY_US = 86_400n * US;
+const MIN_US = BigInt(-62135596800) * US, MAX_US = BigInt(253402300799) * US + 999_999n;            // 0001-01-01T00:00:00Z .. 9999-12-31T23:59:59.999999Z
 
 /** Days since 1970-01-01 of a proleptic Gregorian civil date (Howard Hinnant's algorithm, integers only). */
 export function daysFromCivil(y: number, m: number, d: number): number {
@@ -34,7 +35,7 @@ export function parseTs(value: unknown): bigint {
   if (typeof value !== "string") throw new RangeError("timestamp must be an ISO-8601 string");
   const hit = memo.get(value);
   if (hit !== undefined) return hit;
-  const m = TS_FORM.exec(value);
+  const m = matchTimestamp(value);
   if (!m) throw new RangeError("timestamp must be YYYY-MM-DDTHH:MM:SS with a zone");
   const [y, mo, d, h, mi, s] = [1, 2, 3, 4, 5, 6].map((i) => Number(m[i]!)) as [number, number, number, number, number, number];
   if (y < 1) throw new RangeError("year is out of range");
@@ -51,6 +52,7 @@ export function parseTs(value: unknown): bigint {
     off = BigInt((oh * 60 + om) * 60) * US * (m[8]![0] === "-" ? -1n : 1n);
   }
   const t = BigInt(daysFromCivil(y, mo, d)) * DAY_US + BigInt((h * 60 + mi) * 60 + s) * US + frac - off;
+  if (t < MIN_US || t > MAX_US) throw new RangeError("timestamp is out of range (year 1 .. 9999 in UTC)");      // Python: datetime's range
   memo.set(value, t);
   return t;
 }

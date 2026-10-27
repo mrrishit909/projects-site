@@ -6,7 +6,7 @@ import type { GNode } from "../domain/graph";
 import { cmpFr, fr, ratio } from "../domain/num";
 import type { FreshnessRow } from "../domain/world";
 import { runsOf } from "../lib/derive";
-import { dur } from "../lib/format";
+import { dur, minutes } from "../lib/format";
 import { useParam } from "../router";
 
 const NW = 158, NH = 62, GX = 56, GY = 16, PADX = 14, PADY = 14;
@@ -128,7 +128,7 @@ function Graph({ ds }: { ds: Dataset }) {
               <div><dt>Layer</dt><dd>{ni.node.kind}</dd></div>
               <div><dt>Upstream ({g.upstream(ni.node.id).length})</dt><dd data-k="upstream">{g.upstream(ni.node.id).join(", ") || "none: this is a source"}</dd></div>
               <div><dt>Downstream ({g.downstream(ni.node.id).length})</dt><dd data-k="downstream">{g.downstream(ni.node.id).join(", ") || "none: nothing reads it"}</dd></div>
-              <div><dt>Freshness</dt><dd data-k="freshness">{ni.fresh ? `${dur(ni.fresh.freshness_seconds)} (${ni.fresh.freshness_seconds} s)${ni.viaSource !== ni.node.id ? `, inherited from the stalest upstream source ${ni.viaSource}` : ""}${ni.ratioText ? `; ${ni.ratioText} of its target` : ""}` : "not defined for this node"}</dd></div>
+              <div><dt>Freshness</dt><dd data-k="freshness">{ni.fresh ? `${dur(ni.fresh.freshness_seconds)} (${ni.fresh.freshness_seconds} s = ${minutes(ni.fresh.freshness_seconds)} min)${ni.viaSource !== ni.node.id ? `, inherited from the stalest upstream source ${ni.viaSource}` : ""}${ni.ratioText ? `; ${ni.ratioText} of its target` : ""}` : "not defined for this node"}</dd></div>
               <div><dt>Job</dt><dd data-k="job"><Status tone={ni.job.tone === "ok" ? "ok" : ni.job.tone === "bad" ? "bad" : "idle"}>{ni.job.text}</Status></dd></div>
             </dl>
             <p><button type="button" className="quiet" data-testid="dag-clear" onClick={() => setSel("")}>Clear isolation</button> {ni.node.kind === "source" ? <Link to="sources">Open the source contract</Link> : null}</p>
@@ -147,7 +147,7 @@ function Graph({ ds }: { ds: Dataset }) {
                 return (
                   <tr key={n.id} data-table-node={n.id}>
                     <th scope="row"><code>{n.label}</code></th><td>{n.kind}</td><td>{g.edges.filter((e) => e.to === n.id).map((e) => e.from).join(", ") || "—"}</td><td>{g.edges.filter((e) => e.from === n.id).map((e) => e.to).join(", ") || "—"}</td>
-                    <td>{i.fresh?.freshness_seconds ?? "n/a"}{i.fresh?.freshness_seconds != null ? ` s (${dur(i.fresh.freshness_seconds)})` : ""}{i.viaSource && i.viaSource !== n.id ? ` via ${i.viaSource}` : ""}</td>
+                    <td>{i.fresh?.freshness_seconds ?? "n/a"}{i.fresh?.freshness_seconds != null ? ` s (${minutes(i.fresh.freshness_seconds)} min, ${dur(i.fresh.freshness_seconds)})` : ""}{i.viaSource && i.viaSource !== n.id ? ` via ${i.viaSource}` : ""}</td>
                     <td><Status tone={i.job.tone === "ok" ? "ok" : i.job.tone === "bad" ? "bad" : "idle"}>{i.job.text}</Status></td>
                   </tr>
                 );

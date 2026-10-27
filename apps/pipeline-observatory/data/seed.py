@@ -52,7 +52,7 @@ def seed(conn: psycopg.Connection, inputs: dict[str, Any], dataset_version: str 
     dataset_hash = dataset_hash or sha256_hex(canonical_json(inputs))
     version = dataset_version or f"ds-{dataset_hash[:12]}"
     n = {e: 0 for e in (*ENTITIES, "source_expectations", "accepted_records")}
-    facts = derive(acc)
+    facts = derive(acc, cutoff=inputs.get("cutoff"))
     cp_by_batch = {c["batch_id"]: c for c in acc["checkpoints"]}
 
     for r in acc["source_contracts"]:
@@ -63,8 +63,9 @@ def seed(conn: psycopg.Connection, inputs: dict[str, Any], dataset_version: str 
             n["source_expectations"] += _ins(conn, "INSERT INTO source_expectations (source_id, partition, expected_records) VALUES (%s,%s,%s)",
                                              (x["source_id"], x["partition"], x["expected_records"]))
     for r in acc["backfill_requests"]:
-        n["backfill_requests"] += _ins(conn, "INSERT INTO backfill_requests (backfill_id, source_id, start_at, end_at, status, partitions, requested_by) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-                                       (r["backfill_id"], r["source_id"], r["start_at"], r["end_at"], r["status"], Jsonb(r["partitions"]), "seed"))
+        n["backfill_requests"] += _ins(conn, "INSERT INTO backfill_requests (backfill_id, source_id, start_at, end_at, status, partitions, requested_by, requested_at, settled_at) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                                       (r["backfill_id"], r["source_id"], r["start_at"], r["end_at"], r["status"], Jsonb(r["partitions"]), "seed",
+                                        r.get("requested_at"), r.get("settled_at")))
     for r in acc["ingestion_batches"]:
         n["ingestion_batches"] += _ins(conn, "INSERT INTO ingestion_batches (batch_id, source_id, source_cursor, started_at, status, next_cursor, schema_version) VALUES (%s,%s,%s,%s,%s,%s,%s)",
                                        (r["batch_id"], r["source_id"], r["source_cursor"], r["started_at"], r["status"],
@@ -90,9 +91,9 @@ def seed(conn: psycopg.Connection, inputs: dict[str, Any], dataset_version: str 
         n["model_definitions"] += _ins(conn, "INSERT INTO model_definitions (model_id, model_name, grain, version_number, definition, definition_hash) VALUES (%s,%s,%s,%s,%s,%s)",
                                        (r["model_id"], r["model_name"], r["grain"], r["version_number"], r["definition"], r["definition_hash"]))
     for r in acc["pipeline_runs"]:
-        n["pipeline_runs"] += _ins(conn, "INSERT INTO pipeline_runs (run_id, started_at, finished_at, status, code_sha, backfill_id, included_batch_ids) VALUES (%s,%s,%s,%s,%s,%s,%s)",
+        n["pipeline_runs"] += _ins(conn, "INSERT INTO pipeline_runs (run_id, started_at, finished_at, status, code_sha, backfill_id, included_batch_ids, scope_from) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",
                                    (r["run_id"], r["started_at"], r.get("finished_at"), r["status"], r["code_sha"], r.get("backfill_id"),
-                                    next((p["included_batch_ids"] for p in acc["publications"] if p["run_id"] == r["run_id"]), [])))
+                                    next((p["included_batch_ids"] for p in acc["publications"] if p["run_id"] == r["run_id"]), []), r.get("scope_from")))
     for r in acc["task_runs"]:
         n["task_runs"] += _ins(conn, "INSERT INTO task_runs (task_run_id, run_id, task_name, status, attempt) VALUES (%s,%s,%s,%s,%s)",
                                (r["task_run_id"], r["run_id"], r["task_name"], r["status"], int(r["attempt"])))

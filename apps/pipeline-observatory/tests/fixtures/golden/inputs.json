@@ -473,6 +473,19 @@
         "amount": "12.00",
         "event_ts": "2026-10-04T09:10:00Z"
       }
+    },
+    {
+      "raw_record_id": "rr-b-101-02",
+      "batch_id": "b-101",
+      "source_key": "REF-2002",
+      "payload_hash": "d880397f860730292cdf7fcb39fa68de35874edf35bf58429215f970f93ef5c1",
+      "payload_json": {
+        "record_id": "REF-2002",
+        "quantity": 2,
+        "unit_price": "4.00",
+        "amount": "8.00",
+        "event_ts": "2026-10-04T12:00:00Z"
+      }
     }
   ],
   "quarantine_records": [
@@ -489,6 +502,13 @@
       "source_key": "ORD-1009",
       "reason_code": "NEGATIVE_QUANTITY",
       "payload_hash": "5984b9748d4a5220c39dfd105d12cfc50cff400642fab1f53b8aabeb188b13a4"
+    },
+    {
+      "quarantine_id": "q-b-101-01",
+      "batch_id": "b-101",
+      "source_key": "REF-2002",
+      "reason_code": "EVENT_IN_FUTURE",
+      "payload_hash": "d880397f860730292cdf7fcb39fa68de35874edf35bf58429215f970f93ef5c1"
     }
   ],
   "checkpoints": [

@@ -2,7 +2,8 @@
 // `validateImport(data)` takes an inputs.json-shaped object and returns the accepted rows per entity and the rejected rows (each with its reason
 // code and the raw row exactly as sent). Rules, in the order they are applied to a row: duplicate primary key (or repeated run/task/attempt) ->
 // DUPLICATE_ID; foreign key unknown -> UNKNOWN_*; foreign key rejected -> DEPENDENT_REJECTED. Backfills overlapping an earlier accepted request of
-// the same source (backfill_id order, half-open) -> BACKFILL_OVERLAP. A checkpoint whose version is not previous + 1 (commit order) ->
+// the same source (backfill_id order, half-open, still requested or running at the time) -> BACKFILL_OVERLAP. A repeated primary key of ANY entity, batches
+// included, is DUPLICATE_ID before the row is accepted. A quality result whose severity is not critical or warning is INVALID_FIELD. A checkpoint whose version is not previous + 1 (commit order) ->
 // CHECKPOINT_REGRESSION / CHECKPOINT_GAP and its batch, and through it the batch's rows, are DEPENDENT_REJECTED.
 import * as E from "./errors";
 import { DomainError } from "./errors";
@@ -48,6 +49,7 @@ export function validateImport(data: Record<string, unknown>): ImportResult {
     if (rid === null) return E.MISSING_FIELD;
     const r = row as Row;
     if (seenPk[entity].has(rid)) return E.DUPLICATE_ID;
+    if (entity === "quality_results" && r["severity"] !== "critical" && r["severity"] !== "warning") return E.INVALID_FIELD;
     if (entity === "task_runs" && seenAttempt.has(`${r["run_id"]}\u0000${r["task_name"]}\u0000${pyInt(r["attempt"] ?? 0)}`)) return E.DUPLICATE_ID;   // a repeated attempt
     const fk = FK[entity];
     if (fk) {
@@ -70,22 +72,34 @@ export function validateImport(data: Record<string, unknown>): ImportResult {
   plain("source_contracts");
   for (const row of list("backfill_requests")) {                       // in backfill_id order of the input list
     let code = refusal("backfill_requests", row);
-    if (code === null && findOverlap(acc.backfill_requests, row) !== null) code = E.BACKFILL_OVERLAP;
+    if (code === null && findOverlap(acc.backfill_requests, row, true) !== null) code = E.BACKFILL_OVERLAP;
     if (code) reject("backfill_requests", row, code); else accept("backfill_requests", row);
   }
   const batchRows: Row[] = [];
-  for (const row of list("ingestion_batches")) { const code = refusal("ingestion_batches", row); if (code) reject("ingestion_batches", row, code); else batchRows.push(row); }
+  for (const row of list("ingestion_batches")) {
+    const code = refusal("ingestion_batches", row);
+    if (code) reject("ingestion_batches", row, code);
+    else { batchRows.push(row); seenPk.ingestion_batches.add(row["batch_id"]); }       // a repeated batch_id is DUPLICATE_ID before acceptance (D-09, R8-03)
+  }
   const live = new Set<string>(batchRows.map((b) => b["batch_id"]));
   // the atomic commit: every checkpoint of a live batch must be previous + 1 of its source, in commit order
   const cpCode = new Map<string, string>();
   const badBatches = new Set<string>();
   const previous = new Map<string, number>();
-  for (const c of sortedBy(list("checkpoints").filter((c) => live.has(c["batch_id"])), (c) => [c["committed_at"] as string, c["checkpoint_id"] as string])) {
+  const firstCp: Row[] = [], seenCp = new Set<unknown>();
+  for (const c of list("checkpoints")) if (!seenCp.has(c["checkpoint_id"])) { seenCp.add(c["checkpoint_id"]); firstCp.push(c); }          // a repeat takes no part in the ordering
+  for (const c of sortedBy(firstCp.filter((c) => live.has(c["batch_id"])), (c) => [c["committed_at"] as string, c["checkpoint_id"] as string])) {
     try { previous.set(c["source_id"], nextCheckpointVersion(previous.get(c["source_id"]) ?? 0, c["version_number"])); }
     catch (err) { if (!(err instanceof DomainError)) throw err; cpCode.set(c["checkpoint_id"], err.code); badBatches.add(c["batch_id"]); }
   }
   for (const b of batchRows) { if (badBatches.has(b["batch_id"])) reject("ingestion_batches", b, E.DEPENDENT_REJECTED); else accept("ingestion_batches", b); }
-  for (const c of list("checkpoints")) { const code = cpCode.get(c["checkpoint_id"]) || refusal("checkpoints", c); if (code) reject("checkpoints", c, code); else accept("checkpoints", c); }
+  const repeatCp = new Set<unknown>();
+  for (const c of list("checkpoints")) {
+    const repeat = repeatCp.has(c["checkpoint_id"]);
+    repeatCp.add(c["checkpoint_id"]);
+    const code = (repeat ? E.DUPLICATE_ID : null) || cpCode.get(c["checkpoint_id"]) || refusal("checkpoints", c);
+    if (code) reject("checkpoints", c, code); else accept("checkpoints", c);
+  }
   for (const e of ["raw_records", "quarantine_records", "model_definitions", "pipeline_runs", "task_runs", "quality_results", "publications", "incidents"] as const) plain(e);
   rejected.sort((a, b) => a[0] - b[0] || a[1] - b[1]);                 // stable: ties keep the order the rows were rejected in
   const rej = rejected.map((t) => t[2]);

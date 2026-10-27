@@ -5,6 +5,7 @@ import { datasetHash, ENTITY_FILES } from "../data/files";
 import { METRIC_KEYS } from "../domain/contract";
 import { canonicalJson, definitionHash, payloadHash } from "../domain/hashing";
 import { sha256Hex } from "../domain/sha256";
+import { quarantineScope } from "./overview";
 import { n0, short } from "../lib/format";
 import { useGoldenLab } from "../state/golden";
 
@@ -65,7 +66,7 @@ function Hashes({ ds }: { ds: Dataset }) {
 function Provenance({ ds }: { ds: Dataset }) {
   const m = ds.manifest;
   return (
-    <Panel id="provenance" title="Provenance">
+    <Panel id="provenance" title="Provenance" scope="recorded">
       <dl className="facts" data-testid="provenance">
         <div><dt>dataset_version</dt><dd data-k="dataset_version">{ds.provenance.dataset_version}</dd></div>
         <div><dt>dataset_hash</dt><dd data-k="dataset_hash"><code className="wrap">{ds.provenance.dataset_hash}</code></dd></div>
@@ -80,7 +81,7 @@ function Provenance({ ds }: { ds: Dataset }) {
 function Digests({ ds }: { ds: Dataset }) {
   const rows = useMemo(() => METRIC_KEYS.map((k) => [k, sha256Hex(canonicalJson(ds.g.metrics[k]))] as const), [ds]);
   return (
-    <Panel id="digests" title="Metric-block digests">
+    <Panel id="digests" title="Metric-block digests" scope={ds.id === "snapshot" ? "sample" : "complete"}>
       <Meaning>sha-256 of the canonical JSON of each of the eleven metric blocks this page computed. CI compares the same digests with the ones the Python domain produced over the same files (<code>scripts/snapshot-reference.json</code>).{ds.id === "snapshot" ? " Blocks that depend on raw rows describe the 2,000-row sample." : ""}</Meaning>
       <Scroll label="Metric-block digests">
         <table className="data" data-testid="digest-table"><thead><tr><th scope="col">Block</th><th scope="col">sha-256</th></tr></thead>
@@ -92,8 +93,12 @@ function Digests({ ds }: { ds: Dataset }) {
 function Counts({ ds }: { ds: Dataset }) {
   if (!ds.raw || !ds.manifest) return null;
   const m = ds.manifest;
+  const sampledBatches = ds.raw.batch_summaries.filter((b) => b["sampled"]).length;
+  const withRows = new Set(ds.raw.raw_records.map((r) => r["batch_id"])).size;
   return (
     <Panel id="counts" title="Row counts: published and complete world" scope="complete">
+      <p className="meaning" data-testid="sample-sentence">The raw records are a sample: {n0(ds.raw.raw_records.length)} rows in {n0(sampledBatches)} whole batches, {n0(withRows)} of which carry rows ({n0(sampledBatches - withRows)} wrote none). Every other file is published in full.</p>
+      <p className="meaning" data-testid="quarantine-scope">Quarantined rows: {quarantineScope(ds)}. The file <code>quarantine_records</code> therefore holds {n0(ds.raw.quarantine_records.length)} rows, of which {n0(ds.raw.quarantine_records.filter((q) => q["reason_code"] === "SCHEMA_CHANGED").length)} belong to the batch refused whole and {n0(ds.raw.quarantine_records.filter((q) => q["reason_code"] !== "SCHEMA_CHANGED").length)} to committed batches (the headline quarantined count and the rejection rate).</p>
       <Scroll label="Row counts">
         <table className="data" data-testid="count-table"><caption>Rows of each entity file as published, against the manifest&apos;s row counts of the complete world.</caption>
           <thead><tr><th scope="col">File</th><th scope="col">Published</th><th scope="col">Manifest row_counts</th><th scope="col">Complete world</th></tr></thead>
@@ -122,7 +127,7 @@ function Designed({ ds }: { ds: Dataset }) {
                 <tbody>{cs.map((c) => (
                   <tr key={c.key} data-claim={`${c.id}:${c.key}`} data-ok={String(c.ok)}>
                     <th scope="row">{c.label}</th><td className="wrap">{short(JSON.stringify(c.want), 80)}</td><td className="wrap">{c.basis === "recorded" ? "—" : short(JSON.stringify(c.got), 80)}</td><td><ScopeTag basis={c.basis} /></td>
-                    <td>{c.ok === null ? <Status tone="idle">recorded only</Status> : c.ok ? <Status tone="ok">equal</Status> : <Status tone="warn">differs on the sample</Status>}</td>
+                    <td>{c.ok === null ? <Status tone="idle">recorded only</Status> : c.ok ? <Status tone="ok">equal</Status> : <Status tone="warn">differs on the sample</Status>}{c.note ? <><br /><span className="sub" data-k="weak">{c.note}</span></> : null}</td>
                   </tr>))}</tbody>
               </table>
             </Scroll>
@@ -135,8 +140,8 @@ function Designed({ ds }: { ds: Dataset }) {
 function Injections({ ds }: { ds: Dataset }) {
   if (!ds.injections.length) return null;
   return (
-    <Panel id="injections" title="Injected defects INJ-01 to INJ-12">
-      <Meaning>One defect per test P08-TEST-01..12. Each lists machine-checkable claims about the <em>complete</em> world; they are evaluated here over the sample, so some describe batches or publications whose rows are not published and are marked as such, never counted as failures.</Meaning>
+    <Panel id="injections" title="Injected defects INJ-01 to INJ-12" scope="sample">
+      <Meaning>One defect per test P08-TEST-01..12. Each lists machine-checkable claims about the <em>complete</em> world; they are evaluated here over the sample, so some describe batches or publications whose rows are not published and are marked as such, never counted as failures. The completeness check of INJ-06 is <strong>not discriminating on the sample</strong>: accepted ÷ expected over 2,000 of 40,191 rows is small for every source, so a 0.000000 there cannot tell a silent source from a busy one.</Meaning>
       <Scroll label="Injected defects">
         <table className="data" data-testid="injection-table">
           <thead><tr><th scope="col">Defect</th><th scope="col">Test</th><th scope="col">Where proven</th><th scope="col">Checks holding here</th><th scope="col">Expected handling</th></tr></thead>
@@ -156,9 +161,16 @@ function Disclosures({ ds }: { ds: Dataset }) {
   const steps = ds.events.reduce((a, e) => a + (e["steps"] as unknown[]).length, 0);
   if (!d.length) return null;
   return (
-    <Panel id="disclosures" title="What the generator discloses about itself">
+    <Panel id="disclosures" title="What the generator discloses about itself" scope="recorded">
       <ol className="plain">{d.map((t) => <li key={t.slice(0, 40)}>{t}</li>)}</ol>
       <p className="meaning">{ds.events.length} replay events ({ds.events.map((e) => e["event_id"]).join(", ")}; {steps} steps) run after the as-of on a fresh database seeded from these files; they are executed by the backend CI (Mode A) and are not replayed in the browser.</p>
+    </Panel>
+  );
+}
+function Identity() {
+  return (
+    <Panel id="identity" title="Who is acting in Mode A" scope="recorded">
+      <p className="meaning" data-testid="identity-note">The backend (Mode A) takes the actor from the <code>X-Actor-Id</code> and <code>X-Actor-Role</code> request headers. They are <strong>asserted by the caller: there is no authentication</strong> (no password, token or signature is checked). A request with no actor id is answered 401, an unknown role or a role the command does not allow 403, both before the body is read; that enforces the role matrix of the commands, not who the caller really is. Mode B (this site) has no actor at all.</p>
     </Panel>
   );
 }
@@ -176,6 +188,7 @@ export function EvidenceView() {
           <Digests ds={ds} />
           <Designed ds={ds} />
           <Injections ds={ds} />
+          <Identity />
           <Disclosures ds={ds} />
         </>
       )}
