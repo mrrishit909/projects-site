@@ -688,6 +688,13 @@
       "status": "done",
       "assignment": "A-069",
       "result": "a856f7c: artifacts P07-ART-01..10, 175-row reconciliation, 38 tests; CI pending"
+    },
+    {
+      "id": "T-08-06",
+      "project": "08-pipeline-observatory",
+      "title": "Independent disproof review of the published site and case study",
+      "status": "in_progress",
+      "assignment": "A-073"
     }
   ]
 }
