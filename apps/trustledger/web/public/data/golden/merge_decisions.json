@@ -1,0 +1,7 @@
+{"entity":"merge_decisions","dataset_version":"golden-v1","rows":[
+{"candidate_id":"cand-001","decided_at":"2026-09-29T10:00:00Z","decision":"approve","merge_id":"md-1","reason":null,"reverses_merge_id":null,"reviewer_id":"own-02"},
+{"candidate_id":"cand-002","decided_at":"2026-09-29T11:00:00Z","decision":"approve","merge_id":"md-2","reason":null,"reverses_merge_id":null,"reviewer_id":"own-03"},
+{"candidate_id":"cand-003","decided_at":"2026-09-30T09:00:00Z","decision":"approve","merge_id":"md-3","reason":null,"reverses_merge_id":null,"reviewer_id":"own-02"},
+{"candidate_id":"cand-004","decided_at":"2026-09-30T10:00:00Z","decision":"reject","merge_id":"md-4","reason":null,"reverses_merge_id":null,"reviewer_id":"own-03"},
+{"candidate_id":"cand-003","decided_at":"2026-10-01T09:00:00Z","decision":"reverse","merge_id":"md-5","reason":"Different people in one household","reverses_merge_id":"md-3","reviewer_id":"own-03"}
+]}

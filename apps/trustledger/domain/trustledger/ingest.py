@@ -179,7 +179,9 @@ def validate_batch(raw: Row) -> IngestResult:
         if e is None:
             continue
         ends = (e.source_dataset_id, e.target_dataset_id)
-        if all(x in ds_ok for x in ends):
+        if (e.evidence_type == "observed") != (e.observed_at is not None):   # D-08: observed edges carry an instant, others none
+            reject("lineage_edges", r, MALFORMED_RECORD)
+        elif all(x in ds_ok for x in ends):
             pop.lineage_edges.append(e)
         elif any(x in ds_bad for x in ends):
             reject("lineage_edges", r, DEPENDENT_REJECTED)

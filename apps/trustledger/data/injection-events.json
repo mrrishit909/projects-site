@@ -1,0 +1,817 @@
+{
+  "dataset_version": "tl-20261026-20261026",
+  "events": [
+    {
+      "event_id": "EV-01",
+      "injection": "INJ-01",
+      "requires": [
+        "iss-0461"
+      ],
+      "steps": [
+        {
+          "command": "run-rule",
+          "expected_result": {
+            "result": {
+              "eligible_count": 120,
+              "failure_count": 2,
+              "severity": "critical"
+            },
+            "status": "measured"
+          },
+          "expected_status": 200,
+          "expected_warning_codes": [
+            "CRITICAL_FAILURE"
+          ],
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-01-a",
+            "input": {
+              "rule_id": "r-customers-unique-customer_key"
+            },
+            "request_id": "req-ev-01-a"
+          },
+          "kind": "command"
+        },
+        {
+          "expect": [
+            {
+              "equals": true,
+              "path": "metrics.weighted_score.datasets.ds-customers.critical_override"
+            },
+            {
+              "equals": "0.990175",
+              "path": "metrics.weighted_score.datasets.ds-customers.value"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "as_of": "2026-10-05T00:00:00Z"
+          },
+          "path": "/metrics"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-02",
+      "injection": "INJ-02",
+      "requires": [
+        "r-opportunities-fk-account_key"
+      ],
+      "steps": [
+        {
+          "command": "disable-rule",
+          "expected_result": {
+            "result": {
+              "runs_retained": 96,
+              "status": "disabled",
+              "unresolved_issues": 13
+            },
+            "status": "disabled"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-steward01",
+            "X-Actor-Role": "steward"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-02-a",
+            "input": {
+              "reason": "Replay: the rule is retired; its history must stay readable",
+              "rule_id": "r-opportunities-fk-account_key"
+            },
+            "request_id": "req-ev-02-a"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "run-rule",
+          "expected_reason": "RULE_DISABLED",
+          "expected_status": 409,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-02-b",
+            "input": {
+              "rule_id": "r-opportunities-fk-account_key"
+            },
+            "request_id": "req-ev-02-b"
+          },
+          "kind": "command"
+        },
+        {
+          "expect": [
+            {
+              "equals": 96,
+              "path": "rules.disabled.r-opportunities-fk-account_key.runs_retained"
+            },
+            {
+              "equals": 22,
+              "path": "rules.disabled.r-opportunities-fk-account_key.issues_retained"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "as_of": "2026-10-27T00:00:00Z"
+          },
+          "path": "/metrics"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-03",
+      "injection": "INJ-03",
+      "requires": [
+        "rec-1066",
+        "rec-1840"
+      ],
+      "steps": [
+        {
+          "command": "suggest-match",
+          "expected_result": {
+            "result": {
+              "merged": false,
+              "uncertainty": "Shared name and address; possible household"
+            },
+            "status": "proposed"
+          },
+          "expected_status": 200,
+          "expected_warning_codes": [
+            "SHARED_NAME_AND_ADDRESS"
+          ],
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-03-a",
+            "input": {
+              "explanation": "Same name and address in two systems",
+              "features": {
+                "address_match": "1.000000",
+                "name_similarity": "1.000000"
+              },
+              "left_record_id": "rec-1066",
+              "right_record_id": "rec-1840",
+              "score": "0.930000"
+            },
+            "request_id": "req-ev-03-a"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-04",
+      "injection": "INJ-04",
+      "requires": [
+        "r-orders-fk-customer_key"
+      ],
+      "steps": [
+        {
+          "command": "run-rule",
+          "expected_result": {
+            "result": {
+              "eligible_count": 61,
+              "failure_count": 0,
+              "null_fk_count": 5
+            },
+            "status": "measured"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-04-a",
+            "input": {
+              "rule_id": "r-orders-fk-customer_key"
+            },
+            "request_id": "req-ev-04-a"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-05",
+      "injection": "INJ-05",
+      "requires": [
+        "w2"
+      ],
+      "steps": [
+        {
+          "command": "run-rule",
+          "expected_reason": "WEIGHT_CHANGE_REQUIRES_VERSION",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-05-a",
+            "input": {
+              "rule_id": "r-customers-complete-email",
+              "weight_version": "w2",
+              "weights": {
+                "completeness": "0.300000",
+                "relationship": "0.150000",
+                "timeliness": "0.100000",
+                "uniqueness": "0.200000",
+                "validity": "0.250000"
+              }
+            },
+            "request_id": "req-ev-05-a"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "run-rule",
+          "expected_result": {
+            "result": {
+              "weight_version": "w2"
+            },
+            "status": "measured"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-05-b",
+            "input": {
+              "rule_id": "r-customers-complete-email",
+              "weight_version": "w2",
+              "weights": {
+                "completeness": "0.250000",
+                "relationship": "0.150000",
+                "timeliness": "0.100000",
+                "uniqueness": "0.250000",
+                "validity": "0.250000"
+              }
+            },
+            "request_id": "req-ev-05-b"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-06",
+      "injection": "INJ-06",
+      "requires": [
+        "cand-0005"
+      ],
+      "steps": [
+        {
+          "command": "approve-merge",
+          "expected_reason": "REVIEWER_IS_PROPOSER",
+          "expected_status": 403,
+          "headers": {
+            "X-Actor-Id": "own-02",
+            "X-Actor-Role": "steward"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-06-a",
+            "input": {
+              "candidate_id": "cand-0005",
+              "decision": "approve"
+            },
+            "request_id": "req-ev-06-a"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "approve-merge",
+          "expected_result": {
+            "result": {
+              "maps": {
+                "from_record_id": "rec-1202",
+                "to_record_id": "rec-0121"
+              },
+              "state": "linked"
+            },
+            "status": "linked"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "own-01",
+            "X-Actor-Role": "steward"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-06-b",
+            "input": {
+              "candidate_id": "cand-0005",
+              "decision": "approve"
+            },
+            "request_id": "req-ev-06-b"
+          },
+          "kind": "command"
+        },
+        {
+          "bind": [
+            {
+              "from_step": 1,
+              "into": "merge_id",
+              "path": "result.merge_id"
+            }
+          ],
+          "command": "reverse-merge",
+          "expected_reason": "REASON_REQUIRED",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "own-01",
+            "X-Actor-Role": "steward"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-06-c",
+            "input": {
+              "merge_id": "$merge_id",
+              "reason": "  "
+            },
+            "request_id": "req-ev-06-c"
+          },
+          "kind": "command"
+        },
+        {
+          "bind": [
+            {
+              "from_step": 1,
+              "into": "merge_id",
+              "path": "result.merge_id"
+            }
+          ],
+          "command": "reverse-merge",
+          "expected_result": {
+            "result": {
+              "restored": {
+                "rec-0121": "rec-0121",
+                "rec-1202": "rec-1202"
+              }
+            },
+            "status": "reversed"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "own-01",
+            "X-Actor-Role": "steward"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-06-d",
+            "input": {
+              "merge_id": "$merge_id",
+              "reason": "Different people in one household"
+            },
+            "request_id": "req-ev-06-d"
+          },
+          "kind": "command"
+        },
+        {
+          "bind": [
+            {
+              "from_step": 1,
+              "into": "merge_id",
+              "path": "result.merge_id"
+            }
+          ],
+          "command": "reverse-merge",
+          "expected_reason": "ALREADY_REVERSED",
+          "expected_status": 409,
+          "headers": {
+            "X-Actor-Id": "own-01",
+            "X-Actor-Role": "steward"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-06-e",
+            "input": {
+              "merge_id": "$merge_id",
+              "reason": "Again"
+            },
+            "request_id": "req-ev-06-e"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-07",
+      "injection": "INJ-07",
+      "requires": [
+        "own-12"
+      ],
+      "steps": [
+        {
+          "command": "register-dataset",
+          "expected_reason": "OWNER_INACTIVE",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-07-a",
+            "input": {
+              "classification": "internal",
+              "dataset_id": "ds-replay-orphaned",
+              "dataset_name": "Replay dataset",
+              "owner_id": "own-12",
+              "source_system": "crm"
+            },
+            "request_id": "req-ev-07-a"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "register-dataset",
+          "expected_result": {
+            "status": "cataloged"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-07-b",
+            "input": {
+              "classification": "internal",
+              "dataset_id": "ds-replay-owned",
+              "dataset_name": "Replay dataset",
+              "owner_id": "own-02",
+              "source_system": "crm"
+            },
+            "request_id": "req-ev-07-b"
+          },
+          "kind": "command"
+        },
+        {
+          "expect": [
+            {
+              "equals": [
+                "ds-contacts",
+                "ds-invoices",
+                "ds-ledger-entries",
+                "ds-returns",
+                "ds-suppliers"
+              ],
+              "path": "metrics.ownership_coverage.uncovered"
+            },
+            {
+              "equals": 35,
+              "path": "metrics.ownership_coverage.covered"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "as_of": "2026-10-05T00:00:00Z"
+          },
+          "path": "/metrics"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-08",
+      "injection": "INJ-08",
+      "requires": [
+        "ds-payments->ds-refunds"
+      ],
+      "steps": [
+        {
+          "expected_error": "edges_evidence_ck",
+          "kind": "database",
+          "row": {
+            "edge_id": "ex-observed-without-time",
+            "evidence_type": "observed",
+            "observed_at": null,
+            "source_dataset_id": "ds-payments",
+            "target_dataset_id": "ds-refunds"
+          },
+          "table": "lineage_edges"
+        },
+        {
+          "expected": "inserted",
+          "kind": "database",
+          "row": {
+            "edge_id": "ex-inferred-extra",
+            "evidence_type": "inferred",
+            "observed_at": null,
+            "source_dataset_id": "ds-leads",
+            "target_dataset_id": "ds-segments"
+          },
+          "table": "lineage_edges"
+        },
+        {
+          "expect": [
+            {
+              "equals": "0.725000",
+              "path": "metrics.lineage_coverage.value"
+            },
+            {
+              "equals": 70,
+              "path": "metrics.lineage_coverage.observed_distinct"
+            },
+            {
+              "length": 11,
+              "path": "metrics.lineage_coverage.inferred_edges"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "as_of": "2026-10-05T00:00:00Z"
+          },
+          "path": "/metrics"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-09",
+      "injection": "INJ-09",
+      "requires": [
+        "iss-0461"
+      ],
+      "steps": [
+        {
+          "command": "triage-issue",
+          "expected_result": {
+            "result": {
+              "class": "claimed"
+            },
+            "status": "claimed"
+          },
+          "expected_status": 200,
+          "expected_warning_codes": [
+            "CLAIMED_NOT_RESOLVED"
+          ],
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-09-a",
+            "input": {
+              "action": "claim",
+              "issue_id": "iss-0461",
+              "note": "Replay: closed without a rerun"
+            },
+            "request_id": "req-ev-09-a"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "verify-remediation",
+          "expected_result": {
+            "result": {
+              "reasons": [
+                "RERUN_STILL_FAILING"
+              ],
+              "verified": false
+            },
+            "status": "claimed"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-steward01",
+            "X-Actor-Role": "steward"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-09-b",
+            "input": {
+              "issue_id": "iss-0461"
+            },
+            "request_id": "req-ev-09-b"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-10",
+      "injection": "INJ-10",
+      "requires": [
+        "cand-0001"
+      ],
+      "steps": [
+        {
+          "command": "suggest-match",
+          "expected_reason": "DUPLICATE_PAIR",
+          "expected_status": 409,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-10-a",
+            "input": {
+              "explanation": "The same pair, the other way round",
+              "features": {
+                "address_match": "0.000000",
+                "name_similarity": "0.500000"
+              },
+              "left_record_id": "rec-0529",
+              "right_record_id": "rec-0394",
+              "score": "0.900000"
+            },
+            "request_id": "req-ev-10-a"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "suggest-match",
+          "expected_reason": "NON_CANONICAL_ORDER",
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-10-b",
+            "input": {
+              "explanation": "A new pair in reverse order",
+              "features": {
+                "address_match": "0.000000",
+                "name_similarity": "0.500000"
+              },
+              "left_record_id": "rec-0004",
+              "right_record_id": "rec-0003",
+              "score": "0.300000"
+            },
+            "request_id": "req-ev-10-b"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "suggest-match",
+          "expected_result": {
+            "result": {
+              "merged": false
+            },
+            "status": "proposed"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-10-c",
+            "input": {
+              "explanation": "A new pair in canonical order",
+              "features": {
+                "address_match": "0.000000",
+                "name_similarity": "0.500000"
+              },
+              "left_record_id": "rec-0003",
+              "right_record_id": "rec-0004",
+              "score": "0.300000"
+            },
+            "request_id": "req-ev-10-c"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-11",
+      "injection": "INJ-11",
+      "requires": [
+        "mv-active-customers-1"
+      ],
+      "steps": [
+        {
+          "command": "publish-definition",
+          "expected_reason": "DEFINITION_IMMUTABLE",
+          "expected_status": 409,
+          "headers": {
+            "X-Actor-Id": "usr-steward01",
+            "X-Actor-Role": "steward"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-11-a",
+            "input": {
+              "definition": "Rewritten in place",
+              "grain": "shipment",
+              "metric_id": "m-active-customers",
+              "metric_name": "Active customers",
+              "metric_version_id": "mv-active-customers-1",
+              "owner_id": "own-14",
+              "reason": "Rewrite",
+              "refresh": "daily",
+              "source_fields": [
+                "delivery-events.shipment_key",
+                "accounts.status",
+                "customers.email"
+              ]
+            },
+            "request_id": "req-ev-11-a"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "publish-definition",
+          "expected_result": {
+            "result": {
+              "previous_metric_version_id": "mv-active-customers-1",
+              "version_number": 2
+            },
+            "status": "published"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-steward01",
+            "X-Actor-Role": "steward"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-11-b",
+            "input": {
+              "definition": "Revised definition as a new version",
+              "grain": "shipment",
+              "metric_id": "m-active-customers",
+              "metric_name": "Active customers",
+              "owner_id": "own-14",
+              "reason": "Replay: revised in a new version",
+              "refresh": "daily",
+              "source_fields": [
+                "delivery-events.shipment_key",
+                "accounts.status",
+                "customers.email"
+              ]
+            },
+            "request_id": "req-ev-11-b"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-12",
+      "injection": "INJ-12",
+      "requires": [
+        "r-contacts-fk-customer_key"
+      ],
+      "steps": [
+        {
+          "command": "run-rule",
+          "expected_result": {
+            "result": {
+              "comparison": {
+                "comparable": false,
+                "previous_eligible_count": 65,
+                "reason": "RULE_VERSION_DIFFERS"
+              },
+              "eligible_count": 54
+            },
+            "status": "measured"
+          },
+          "expected_status": 200,
+          "expected_warning_codes": [
+            "RULE_VERSION_DIFFERS"
+          ],
+          "headers": {
+            "X-Actor-Id": "usr-analyst01",
+            "X-Actor-Role": "analyst"
+          },
+          "input": {
+            "dataset_version": "tl-20261026-20261026",
+            "idempotency_key": "ev-12-a",
+            "input": {
+              "rule_id": "r-contacts-fk-customer_key"
+            },
+            "request_id": "req-ev-12-a"
+          },
+          "kind": "command"
+        }
+      ]
+    }
+  ]
+}

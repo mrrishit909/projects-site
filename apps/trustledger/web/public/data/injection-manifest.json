@@ -1,0 +1,802 @@
+{
+  "contract_version": "v1",
+  "dataset_hash": "c0dca32f7982f7cc6480feec90795edc76259801307fe59fb4012795c5f0697b",
+  "dataset_version": "tl-20261026-20261026",
+  "designed_relationships": [
+    {
+      "id": "DR-01",
+      "name": "a near-perfect score and an open critical key failure",
+      "realised": {
+        "critical_failures": 2,
+        "critical_open_issues": 1,
+        "critical_override": true,
+        "dataset_id": "ds-customers",
+        "datasets_overridden": 1,
+        "issue_id": "iss-0461",
+        "rule_id": "r-customers-unique-customer_key",
+        "weighted_score_w1": "0.990329",
+        "weighted_score_w2": "0.990175"
+      },
+      "statement": "ds-customers scores above 0.95 under both weight versions while its critical key rule fails."
+    },
+    {
+      "id": "DR-02",
+      "name": "inactive owners leave five datasets uncovered",
+      "realised": {
+        "covered": 35,
+        "inactive_owners": [
+          "own-09",
+          "own-12",
+          "own-15"
+        ],
+        "uncovered": [
+          "ds-contacts",
+          "ds-invoices",
+          "ds-ledger-entries",
+          "ds-returns",
+          "ds-suppliers"
+        ],
+        "value": "0.875000"
+      },
+      "statement": "Three inactive owners own five datasets."
+    },
+    {
+      "id": "DR-03",
+      "name": "the weight change moves scores without any rule change",
+      "realised": {
+        "datasets_moved_at_least_0.005": 7,
+        "datasets_scored": 29,
+        "datasets_with_different_score": 13,
+        "largest_move": "-0.167477",
+        "mean_score_w1": "0.950980",
+        "mean_score_w2": "0.943118",
+        "rule_version_changes_days": [
+          22,
+          25,
+          26,
+          28,
+          29,
+          30,
+          33,
+          35,
+          65,
+          65,
+          65,
+          68,
+          69,
+          71
+        ],
+        "rule_version_changes_within_14_days_of_the_weight_change": 0,
+        "runs_under_w1": 2568,
+        "runs_under_w2": 2041,
+        "weight_change": "2026-09-01T00:00:00Z"
+      },
+      "statement": "Identical rows and rules score differently under w1 and w2."
+    },
+    {
+      "id": "DR-04",
+      "name": "one team resolves twice as fast",
+      "realised": {
+        "fast_datasets": [
+          "ds-carriers",
+          "ds-inventory",
+          "ds-opportunities",
+          "ds-orders",
+          "ds-payments",
+          "ds-purchase-orders",
+          "ds-subscriptions",
+          "ds-tickets",
+          "ds-web-users"
+        ],
+        "fast_mean_hours": "34.4202",
+        "fast_resolved": 109,
+        "fast_team": "Data Platform",
+        "other_mean_hours": "86.1833",
+        "other_resolved": 206,
+        "ratio": "0.399384"
+      },
+      "statement": "Issues owned by the Data Platform team resolve in less than half the mean time of the others."
+    },
+    {
+      "id": "DR-05",
+      "name": "the oldest unresolved issues are all claimed-not-verified",
+      "realised": {
+        "all_of_the_oldest_25_claimed": true,
+        "claimed_before_2026-08-25": 64,
+        "first_not_claimed": "iss-0252",
+        "first_not_claimed_detected_at": "2026-08-25T02:20:00Z",
+        "leading_claimed_run": 64,
+        "oldest_detected_at": "2026-07-14T02:13:00Z",
+        "oldest_issue": "iss-0004",
+        "unresolved": 259
+      },
+      "statement": "The oldest unresolved issues were closed without a verifying rerun."
+    },
+    {
+      "id": "DR-06",
+      "name": "matching: precision from the synthetic truth",
+      "realised": {
+        "approved": 174,
+        "approved_correct": 172,
+        "candidates": 400,
+        "entities": 1646,
+        "households_candidates": 25,
+        "households_wrongly_approved": 1,
+        "near_name_candidates": 33,
+        "precision": "0.988506",
+        "rejected": 46,
+        "reversals": 15,
+        "reversed_wrong_approvals": 2,
+        "reviewed": 220,
+        "reviewed_correct_share": "0.840909",
+        "shared_name_address_candidates": 207
+      },
+      "statement": "Precision is approved decisions confirmed by the truth over approved decisions (the truth is in the manifest only)."
+    }
+  ],
+  "events_file": "data/injection-events.json",
+  "injections": [
+    {
+      "checks": [
+        {
+          "equals": true,
+          "path": "metrics.weighted_score.datasets.ds-customers.critical_override"
+        },
+        {
+          "equals": 2,
+          "path": "metrics.weighted_score.datasets.ds-customers.critical_failures"
+        },
+        {
+          "equals": 1,
+          "path": "metrics.weighted_score.datasets.ds-customers.critical_open_issues"
+        },
+        {
+          "equals": "0.990175",
+          "path": "metrics.weighted_score.datasets.ds-customers.value"
+        },
+        {
+          "equals": "0.990329",
+          "path": "metrics.weighted_score.by_weight_version.w1.ds-customers"
+        }
+      ],
+      "defect": "ds-customers scores near 1 on every dimension while its critical key rule fails and a critical issue is open.",
+      "events": [
+        "EV-01"
+      ],
+      "expected_handling": "critical_override is true beside the score; the score is shown, never used to hide the failure; critical_failures 2 and one open critical issue.",
+      "expected_rejections": [],
+      "id": "INJ-01",
+      "location": "both",
+      "name": "critical failure under a high weighted score",
+      "records": [
+        {
+          "entity": "datasets",
+          "id": "ds-customers"
+        },
+        {
+          "entity": "quality_rules",
+          "id": "r-customers-unique-customer_key"
+        },
+        {
+          "entity": "issues",
+          "id": "iss-0461"
+        }
+      ],
+      "test": "P07-TEST-01"
+    },
+    {
+      "checks": [
+        {
+          "equals": 77,
+          "path": "rules.disabled.r-leads-valid-email.runs_retained"
+        },
+        {
+          "equals": 17,
+          "path": "rules.disabled.r-leads-valid-email.issues_retained"
+        },
+        {
+          "equals": 40,
+          "path": "rules.disabled.r-purchase-orders-fresh.runs_retained"
+        },
+        {
+          "equals": 3,
+          "path": "rules.disabled.r-purchase-orders-fresh.issues_retained"
+        },
+        {
+          "equals": 90,
+          "path": "rules.disabled.r-cost-centres-complete-owner_ref.runs_retained"
+        },
+        {
+          "equals": 18,
+          "path": "rules.disabled.r-cost-centres-complete-owner_ref.issues_retained"
+        },
+        {
+          "equals": 74,
+          "path": "rules.disabled.r-tickets-fk-customer_key.runs_retained"
+        },
+        {
+          "equals": 14,
+          "path": "rules.disabled.r-tickets-fk-customer_key.issues_retained"
+        },
+        {
+          "equals": 48,
+          "path": "rules.disabled.r-shipments-fresh.runs_retained"
+        },
+        {
+          "equals": 0,
+          "path": "rules.disabled.r-shipments-fresh.issues_retained"
+        }
+      ],
+      "defect": "Five rules are disabled with a reason and a date; their runs and issues must stay readable and the issues stay unresolved.",
+      "disabled_rules": [
+        {
+          "disabled_at": "2026-09-20T01:05:00Z",
+          "issues_retained": 17,
+          "rule_id": "r-leads-valid-email",
+          "runs_retained": 77
+        },
+        {
+          "disabled_at": "2026-08-20T05:35:00Z",
+          "issues_retained": 3,
+          "rule_id": "r-purchase-orders-fresh",
+          "runs_retained": 40
+        },
+        {
+          "disabled_at": "2026-09-29T16:55:00Z",
+          "issues_retained": 18,
+          "rule_id": "r-cost-centres-complete-owner_ref",
+          "runs_retained": 90
+        },
+        {
+          "disabled_at": "2026-09-16T04:07:00Z",
+          "issues_retained": 14,
+          "rule_id": "r-tickets-fk-customer_key",
+          "runs_retained": 74
+        },
+        {
+          "disabled_at": "2026-08-30T07:47:00Z",
+          "issues_retained": 0,
+          "rule_id": "r-shipments-fresh",
+          "runs_retained": 48
+        }
+      ],
+      "events": [
+        "EV-02"
+      ],
+      "expected_handling": "rules.disabled lists each rule with runs_retained and issues_retained; no current run; disabling is not repair.",
+      "expected_rejections": [],
+      "id": "INJ-02",
+      "location": "both",
+      "name": "a disabled rule's history vanishes",
+      "records": [
+        {
+          "entity": "quality_rules",
+          "id": "r-leads-valid-email"
+        },
+        {
+          "entity": "quality_rules",
+          "id": "r-purchase-orders-fresh"
+        },
+        {
+          "entity": "quality_rules",
+          "id": "r-cost-centres-complete-owner_ref"
+        },
+        {
+          "entity": "quality_rules",
+          "id": "r-tickets-fk-customer_key"
+        },
+        {
+          "entity": "quality_rules",
+          "id": "r-shipments-fresh"
+        }
+      ],
+      "test": "P07-TEST-02"
+    },
+    {
+      "checks": [
+        {
+          "equals": 400,
+          "path": "matching.candidates"
+        }
+      ],
+      "defect": "25 candidates are two different people who share a name and an address (a household); six more such pairs are not yet candidates.",
+      "events": [
+        "EV-03"
+      ],
+      "expected_handling": "Each is stored once with the uncertainty 'Shared name and address; possible household' and waits for a human decision; none is merged automatically.",
+      "expected_rejections": [],
+      "id": "INJ-03",
+      "location": "both",
+      "name": "a shared name-and-address pair",
+      "records": [
+        {
+          "entity": "match_candidates",
+          "id": "cand-0020"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0029"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0040"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0042"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0043"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0046"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0051"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0059"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0063"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0073"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0102"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0105"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0122"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0163"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0195"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0206"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0214"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0271"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0273"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0275"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0281"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0282"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0318"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0369"
+        },
+        {
+          "entity": "match_candidates",
+          "id": "cand-0381"
+        }
+      ],
+      "test": "P07-TEST-03"
+    },
+    {
+      "checks": [
+        {
+          "equals": 5,
+          "path": "metrics.relationship_integrity.r-orders-fk-customer_key.null_fk_count"
+        },
+        {
+          "equals": 61,
+          "path": "metrics.relationship_integrity.r-orders-fk-customer_key.eligible_count"
+        },
+        {
+          "equals": 0,
+          "path": "metrics.relationship_integrity.r-orders-fk-customer_key.unmatched_count"
+        }
+      ],
+      "defect": "ds-orders has 5 null customer_key values among 66 (eligible by the rule 61).",
+      "events": [
+        "EV-04"
+      ],
+      "expected_handling": "Excluded from the denominator and counted separately as null_fk_count; never matched, never failed.",
+      "expected_rejections": [],
+      "id": "INJ-04",
+      "location": "both",
+      "name": "null foreign keys silently excluded",
+      "records": [
+        {
+          "entity": "quality_rules",
+          "id": "r-orders-fk-customer_key"
+        }
+      ],
+      "test": "P07-TEST-04"
+    },
+    {
+      "checks": [
+        {
+          "equals": "0.936207",
+          "path": "metrics.weighted_score.by_weight_version.w1.ds-orders"
+        },
+        {
+          "equals": "0.891379",
+          "path": "metrics.weighted_score.by_weight_version.w2.ds-orders"
+        }
+      ],
+      "defect": "The weights change on 2026-09-01 as a new version w2; a request to run a rule with other weights under the name w2 is the defect.",
+      "events": [
+        "EV-05"
+      ],
+      "expected_handling": "Scores differ between w1 and w2 on identical rows and are labelled with the version; C03 refuses changed weights (422 WEIGHT_CHANGE_REQUIRES_VERSION).",
+      "expected_rejections": [],
+      "id": "INJ-05",
+      "location": "both",
+      "name": "a weight change without a version",
+      "records": [
+        {
+          "entity": "weight_versions",
+          "id": "w1"
+        },
+        {
+          "entity": "weight_versions",
+          "id": "w2"
+        }
+      ],
+      "test": "P07-TEST-05"
+    },
+    {
+      "checks": [
+        {
+          "equals": 15,
+          "path": "matching.merges_reversed"
+        },
+        {
+          "equals": "rec-1275",
+          "path": "matching.identity_map.rec-1275"
+        },
+        {
+          "equals": "rec-0102",
+          "path": "matching.identity_map.rec-0102"
+        }
+      ],
+      "defect": "15 approved merges are reversed; a merge by its own proposer must be refused and every merge must stay reversible.",
+      "events": [
+        "EV-06"
+      ],
+      "expected_handling": "A reversal restores both identities and keeps the mapping history; reviewer = proposer is refused (403 REVIEWER_IS_PROPOSER).",
+      "expected_rejections": [],
+      "id": "INJ-06",
+      "location": "both",
+      "name": "an irreversible merge",
+      "records": [
+        {
+          "entity": "merge_decisions",
+          "id": "md-0095"
+        },
+        {
+          "entity": "merge_decisions",
+          "id": "md-0046"
+        }
+      ],
+      "test": "P07-TEST-06"
+    },
+    {
+      "checks": [
+        {
+          "equals": [
+            "ds-contacts",
+            "ds-invoices",
+            "ds-ledger-entries",
+            "ds-returns",
+            "ds-suppliers"
+          ],
+          "path": "metrics.ownership_coverage.uncovered"
+        },
+        {
+          "equals": "0.875000",
+          "path": "metrics.ownership_coverage.value"
+        }
+      ],
+      "defect": "Three owners are inactive and still own five datasets.",
+      "events": [
+        "EV-07"
+      ],
+      "expected_handling": "Ownership coverage counts only datasets whose owner is active: 35/40; the five are listed as uncovered; registering a dataset with an inactive owner is refused.",
+      "expected_rejections": [],
+      "id": "INJ-07",
+      "location": "both",
+      "name": "an inactive owner counted as covered",
+      "records": [
+        {
+          "entity": "datasets",
+          "id": "ds-contacts"
+        },
+        {
+          "entity": "datasets",
+          "id": "ds-invoices"
+        },
+        {
+          "entity": "datasets",
+          "id": "ds-ledger-entries"
+        },
+        {
+          "entity": "datasets",
+          "id": "ds-returns"
+        },
+        {
+          "entity": "datasets",
+          "id": "ds-suppliers"
+        }
+      ],
+      "test": "P07-TEST-07"
+    },
+    {
+      "checks": [
+        {
+          "equals": "0.725000",
+          "path": "metrics.lineage_coverage.value"
+        },
+        {
+          "equals": 70,
+          "path": "metrics.lineage_coverage.observed_distinct"
+        },
+        {
+          "equals": 58,
+          "path": "metrics.lineage_coverage.observed_matching_declared"
+        },
+        {
+          "length": 12,
+          "path": "metrics.lineage_coverage.undeclared_observed"
+        },
+        {
+          "length": 10,
+          "path": "metrics.lineage_coverage.inferred_edges"
+        }
+      ],
+      "defect": "Ten inferred edges (four on declared edges that were never observed) and an observed edge without an observation time.",
+      "events": [
+        "EV-08"
+      ],
+      "expected_handling": "Inferred edges are listed apart and never enter the observed numerator: coverage 58/80; the database refuses an observed edge without observed_at.",
+      "expected_rejections": [],
+      "id": "INJ-08",
+      "location": "both",
+      "name": "inferred lineage shown as observed",
+      "records": [
+        {
+          "entity": "lineage_edges",
+          "id": "ei-001"
+        },
+        {
+          "entity": "lineage_edges",
+          "id": "ei-002"
+        },
+        {
+          "entity": "lineage_edges",
+          "id": "ei-003"
+        },
+        {
+          "entity": "lineage_edges",
+          "id": "ei-004"
+        },
+        {
+          "entity": "lineage_edges",
+          "id": "ei-005"
+        },
+        {
+          "entity": "lineage_edges",
+          "id": "ei-006"
+        },
+        {
+          "entity": "lineage_edges",
+          "id": "ei-007"
+        },
+        {
+          "entity": "lineage_edges",
+          "id": "ei-008"
+        },
+        {
+          "entity": "lineage_edges",
+          "id": "ei-009"
+        },
+        {
+          "entity": "lineage_edges",
+          "id": "ei-010"
+        }
+      ],
+      "test": "P07-TEST-08"
+    },
+    {
+      "checks": [
+        {
+          "equals": 99,
+          "path": "metrics.resolution_time.claimed_count"
+        },
+        {
+          "equals": "claimed",
+          "path": "metrics.resolution_time.issues.iss-0004.class"
+        }
+      ],
+      "defect": "99 issues are closed without a verifying rerun (the oldest unresolved issues are all among them).",
+      "events": [
+        "EV-09"
+      ],
+      "expected_handling": "Listed as claimed, never counted as resolved; C10 verify-remediation leaves it claimed unless a rerun of the same rule version passes.",
+      "expected_rejections": [],
+      "id": "INJ-09",
+      "location": "both",
+      "name": "an issue closed without a rerun",
+      "records": [
+        {
+          "entity": "issues",
+          "id": "iss-0004"
+        },
+        {
+          "entity": "issues",
+          "id": "iss-0008"
+        },
+        {
+          "entity": "issues",
+          "id": "iss-0016"
+        },
+        {
+          "entity": "issues",
+          "id": "iss-0020"
+        },
+        {
+          "entity": "issues",
+          "id": "iss-0028"
+        },
+        {
+          "entity": "issues",
+          "id": "iss-0031"
+        },
+        {
+          "entity": "issues",
+          "id": "iss-0035"
+        },
+        {
+          "entity": "issues",
+          "id": "iss-0043"
+        },
+        {
+          "entity": "issues",
+          "id": "iss-0046"
+        },
+        {
+          "entity": "issues",
+          "id": "iss-0050"
+        }
+      ],
+      "test": "P07-TEST-09"
+    },
+    {
+      "checks": [
+        {
+          "equals": 400,
+          "path": "matching.candidates"
+        }
+      ],
+      "defect": "A pair submitted in both orientations, and a first-seen pair with the larger id on the left.",
+      "events": [
+        "EV-10"
+      ],
+      "expected_handling": "A pair is stored once with left < right; the reverse is 409 DUPLICATE_PAIR and a first-seen reverse-order pair is 422 NON_CANONICAL_ORDER. The clean file holds 400 distinct canonical pairs.",
+      "expected_rejections": [],
+      "id": "INJ-10",
+      "location": "replay",
+      "name": "a duplicate pair stored both ways",
+      "records": [],
+      "test": "P07-TEST-10"
+    },
+    {
+      "checks": [
+        {
+          "equals": 15,
+          "path": "definitions.change_records"
+        },
+        {
+          "length": 0,
+          "path": "definitions.versions_without_change_record"
+        },
+        {
+          "length": 0,
+          "path": "definitions.changes_with_mismatched_valid_from"
+        },
+        {
+          "equals": 2,
+          "path": "definitions.version_counts.m-consent-coverage"
+        }
+      ],
+      "defect": "15 metrics have a second version created by a change record; rewriting a published version in place is the defect.",
+      "events": [
+        "EV-11"
+      ],
+      "expected_handling": "A change is a new metric_versions row with valid_from and a definition_changes row; an existing metric_version_id is refused (409 DEFINITION_IMMUTABLE).",
+      "expected_rejections": [],
+      "id": "INJ-11",
+      "location": "both",
+      "name": "a published definition rewritten in place",
+      "records": [
+        {
+          "entity": "metric_versions",
+          "id": "mv-consent-coverage-2"
+        },
+        {
+          "entity": "definition_changes",
+          "id": "dc-consent-coverage-2"
+        }
+      ],
+      "test": "P07-TEST-11"
+    },
+    {
+      "checks": [
+        {
+          "equals": false,
+          "path": "rules.comparisons.r-contacts-fk-customer_key.comparable"
+        },
+        {
+          "equals": "RULE_VERSION_DIFFERS",
+          "path": "rules.comparisons.r-contacts-fk-customer_key.reason"
+        },
+        {
+          "equals": 65,
+          "path": "rules.comparisons.r-contacts-fk-customer_key.previous_eligible_count"
+        },
+        {
+          "equals": 54,
+          "path": "rules.comparisons.r-contacts-fk-customer_key.current_eligible_count"
+        }
+      ],
+      "defect": "r-contacts-fk-customer_key gained an eligibility filter in version 2 after its last stored run (version 1); 13 other rules changed version earlier.",
+      "events": [
+        "EV-12"
+      ],
+      "expected_handling": "The two runs are not comparable (RULE_VERSION_DIFFERS) and no rates are compared; the other changed rules compare version 2 with version 2.",
+      "expected_rejections": [],
+      "id": "INJ-12",
+      "location": "both",
+      "name": "a denominator change between compared runs",
+      "records": [
+        {
+          "entity": "quality_rules",
+          "id": "r-contacts-fk-customer_key"
+        }
+      ],
+      "test": "P07-TEST-12"
+    }
+  ],
+  "seed": 20261026
+}

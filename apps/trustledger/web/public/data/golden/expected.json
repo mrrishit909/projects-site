@@ -1,0 +1,595 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-10-05T00:00:00Z",
+  "weight_version": "w2",
+  "checklist_version": "cl-1",
+  "empty_population": false,
+  "ingest": {
+    "counts": {
+      "owners": {
+        "accepted": 5,
+        "rejected": 0
+      },
+      "datasets": {
+        "accepted": 5,
+        "rejected": 0
+      },
+      "fields": {
+        "accepted": 7,
+        "rejected": 0
+      },
+      "quality_rules": {
+        "accepted": 9,
+        "rejected": 0
+      },
+      "rule_runs": {
+        "accepted": 13,
+        "rejected": 0
+      },
+      "issues": {
+        "accepted": 6,
+        "rejected": 0
+      },
+      "lineage_edges": {
+        "accepted": 14,
+        "rejected": 0
+      },
+      "metric_versions": {
+        "accepted": 6,
+        "rejected": 0
+      },
+      "definition_changes": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "customer_records": {
+        "accepted": 10,
+        "rejected": 0
+      },
+      "match_candidates": {
+        "accepted": 5,
+        "rejected": 0
+      },
+      "merge_decisions": {
+        "accepted": 5,
+        "rejected": 0
+      },
+      "dataset_rows": {
+        "accepted": 140,
+        "rejected": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "rules": {
+    "active_count": 8,
+    "runs": {
+      "r-cust-complete-email": {
+        "dataset_id": "ds-customers",
+        "rule_type": "completeness",
+        "severity": "high",
+        "rule_version": 1,
+        "weight_version": "w2",
+        "run_at": "2026-10-05T00:00:00Z",
+        "eligible_count": 100,
+        "failure_count": 5
+      },
+      "r-cust-fresh": {
+        "dataset_id": "ds-customers",
+        "rule_type": "timeliness",
+        "severity": "medium",
+        "rule_version": 1,
+        "weight_version": "w2",
+        "run_at": "2026-10-05T00:00:00Z",
+        "eligible_count": 1,
+        "failure_count": 0
+      },
+      "r-cust-key-unique": {
+        "dataset_id": "ds-customers",
+        "rule_type": "uniqueness",
+        "severity": "critical",
+        "rule_version": 1,
+        "weight_version": "w2",
+        "run_at": "2026-10-05T00:00:00Z",
+        "eligible_count": 100,
+        "failure_count": 2
+      },
+      "r-cust-valid-email": {
+        "dataset_id": "ds-customers",
+        "rule_type": "validity",
+        "severity": "medium",
+        "rule_version": 2,
+        "weight_version": "w2",
+        "run_at": "2026-10-05T00:00:00Z",
+        "eligible_count": 100,
+        "failure_count": 10,
+        "populated_count": 95
+      },
+      "r-ord-cust-fk": {
+        "dataset_id": "ds-orders",
+        "rule_type": "relationship",
+        "severity": "high",
+        "rule_version": 1,
+        "weight_version": "w2",
+        "run_at": "2026-10-05T00:00:00Z",
+        "eligible_count": 38,
+        "failure_count": 2,
+        "null_fk_count": 2
+      },
+      "r-ord-fresh": {
+        "dataset_id": "ds-orders",
+        "rule_type": "timeliness",
+        "severity": "medium",
+        "rule_version": 1,
+        "weight_version": "w2",
+        "run_at": "2026-10-05T00:00:00Z",
+        "eligible_count": 1,
+        "failure_count": 0
+      },
+      "r-pay-fresh": {
+        "dataset_id": "ds-payments",
+        "rule_type": "timeliness",
+        "severity": "medium",
+        "rule_version": 1,
+        "weight_version": "w2",
+        "run_at": "2026-10-05T00:00:00Z",
+        "eligible_count": 1,
+        "failure_count": 0
+      },
+      "r-ship-fresh": {
+        "dataset_id": "ds-shipments",
+        "rule_type": "timeliness",
+        "severity": "medium",
+        "rule_version": 1,
+        "weight_version": "w2",
+        "run_at": "2026-10-05T00:00:00Z",
+        "eligible_count": 1,
+        "failure_count": 1
+      }
+    },
+    "comparisons": {
+      "r-cust-complete-email": {
+        "previous_run_id": "rr-001",
+        "previous_rule_version": 1,
+        "current_rule_version": 1,
+        "comparable": true,
+        "reason": null,
+        "previous_eligible_count": 100,
+        "current_eligible_count": 100,
+        "failure_rate_previous": "0.080000",
+        "failure_rate_current": "0.050000"
+      },
+      "r-cust-key-unique": {
+        "previous_run_id": "rr-003",
+        "previous_rule_version": 1,
+        "current_rule_version": 1,
+        "comparable": true,
+        "reason": null,
+        "previous_eligible_count": 100,
+        "current_eligible_count": 100,
+        "failure_rate_previous": "0.020000",
+        "failure_rate_current": "0.020000"
+      },
+      "r-cust-valid-email": {
+        "previous_run_id": "rr-002",
+        "previous_rule_version": 1,
+        "current_rule_version": 2,
+        "comparable": false,
+        "reason": "RULE_VERSION_DIFFERS",
+        "previous_eligible_count": 92,
+        "current_eligible_count": 100,
+        "failure_rate_previous": null,
+        "failure_rate_current": null
+      },
+      "r-ord-cust-fk": {
+        "previous_run_id": "rr-006",
+        "previous_rule_version": 1,
+        "current_rule_version": 1,
+        "comparable": true,
+        "reason": null,
+        "previous_eligible_count": 36,
+        "current_eligible_count": 38,
+        "failure_rate_previous": "0.083333",
+        "failure_rate_current": "0.052632"
+      }
+    },
+    "disabled": {
+      "r-ord-amount-range": {
+        "disabled_at": "2026-09-20T00:00:00Z",
+        "disabled_reason": "Superseded by the finance contract review; disabling is not a repair",
+        "runs_retained": 2,
+        "issues_retained": 1
+      }
+    }
+  },
+  "metrics": {
+    "completeness": {
+      "r-cust-complete-email": {
+        "dataset_id": "ds-customers",
+        "eligible_count": 100,
+        "missing_count": 5,
+        "whitespace_only_count": 2,
+        "populated_count": 95,
+        "value": "0.950000"
+      }
+    },
+    "validity": {
+      "r-cust-valid-email": {
+        "dataset_id": "ds-customers",
+        "eligible_count": 100,
+        "populated_count": 95,
+        "passing_count": 90,
+        "all_eligible": {
+          "label": "validity_all_eligible",
+          "value": "0.900000"
+        },
+        "populated_only": {
+          "label": "validity_populated_only",
+          "value": "0.947368"
+        }
+      }
+    },
+    "uniqueness": {
+      "r-cust-key-unique": {
+        "dataset_id": "ds-customers",
+        "eligible_count": 100,
+        "null_key_count": 0,
+        "distinct_keys": 98,
+        "duplicate_groups": 1,
+        "duplicate_rows": 2,
+        "group_share": {
+          "label": "duplicate_group_share",
+          "value": "0.010204"
+        },
+        "row_share": {
+          "label": "duplicate_row_share",
+          "value": "0.020000"
+        }
+      }
+    },
+    "relationship_integrity": {
+      "r-ord-cust-fk": {
+        "dataset_id": "ds-orders",
+        "total_fk_count": 40,
+        "null_fk_count": 2,
+        "eligible_count": 38,
+        "matched_count": 36,
+        "unmatched_count": 2,
+        "value": "0.947368"
+      }
+    },
+    "timeliness": {
+      "monitored_datasets": 4,
+      "on_time_count": 3,
+      "value": "0.750000",
+      "datasets": {
+        "ds-customers": {
+          "timezone": "America/New_York",
+          "scheduled_local": "06:00",
+          "grace_minutes": 60,
+          "evaluated_occurrence_utc": "2026-10-04T10:00:00Z",
+          "deadline_utc": "2026-10-04T11:00:00Z",
+          "last_refreshed_at": "2026-10-04T10:20:00Z",
+          "on_time": true
+        },
+        "ds-orders": {
+          "timezone": "Europe/London",
+          "scheduled_local": "07:00",
+          "grace_minutes": 30,
+          "evaluated_occurrence_utc": "2026-10-04T06:00:00Z",
+          "deadline_utc": "2026-10-04T06:30:00Z",
+          "last_refreshed_at": "2026-10-04T06:10:00Z",
+          "on_time": true
+        },
+        "ds-payments": {
+          "timezone": "America/New_York",
+          "scheduled_local": "02:00",
+          "grace_minutes": 120,
+          "evaluated_occurrence_utc": "2026-10-04T06:00:00Z",
+          "deadline_utc": "2026-10-04T08:00:00Z",
+          "last_refreshed_at": "2026-10-04T07:59:00Z",
+          "on_time": true
+        },
+        "ds-shipments": {
+          "timezone": "Europe/London",
+          "scheduled_local": "05:00",
+          "grace_minutes": 60,
+          "evaluated_occurrence_utc": "2026-10-04T04:00:00Z",
+          "deadline_utc": "2026-10-04T05:00:00Z",
+          "last_refreshed_at": "2026-10-04T05:00:00Z",
+          "on_time": false
+        }
+      }
+    },
+    "weighted_score": {
+      "datasets": {
+        "ds-customers": {
+          "weight_version": "w2",
+          "dimension_scores": {
+            "completeness": "0.950000",
+            "validity": "0.947368",
+            "uniqueness": "0.980000",
+            "timeliness": "1.000000"
+          },
+          "measured_dimensions": [
+            "completeness",
+            "validity",
+            "uniqueness",
+            "timeliness"
+          ],
+          "weight_sum": "0.850000",
+          "value": "0.963932",
+          "critical_failures": 2,
+          "critical_open_issues": 1,
+          "critical_override": true
+        },
+        "ds-orders": {
+          "weight_version": "w2",
+          "dimension_scores": {
+            "relationship": "0.947368",
+            "timeliness": "1.000000"
+          },
+          "measured_dimensions": [
+            "relationship",
+            "timeliness"
+          ],
+          "weight_sum": "0.250000",
+          "value": "0.968421",
+          "critical_failures": 0,
+          "critical_open_issues": 0,
+          "critical_override": false
+        },
+        "ds-payments": {
+          "weight_version": "w2",
+          "dimension_scores": {
+            "timeliness": "1.000000"
+          },
+          "measured_dimensions": [
+            "timeliness"
+          ],
+          "weight_sum": "0.100000",
+          "value": "1.000000",
+          "critical_failures": 0,
+          "critical_open_issues": 0,
+          "critical_override": false
+        },
+        "ds-products": {
+          "weight_version": "w2",
+          "dimension_scores": {},
+          "measured_dimensions": [],
+          "weight_sum": "0.000000",
+          "value": null,
+          "critical_failures": 0,
+          "critical_open_issues": 0,
+          "critical_override": false
+        },
+        "ds-shipments": {
+          "weight_version": "w2",
+          "dimension_scores": {
+            "timeliness": "0.000000"
+          },
+          "measured_dimensions": [
+            "timeliness"
+          ],
+          "weight_sum": "0.100000",
+          "value": "0.000000",
+          "critical_failures": 0,
+          "critical_open_issues": 0,
+          "critical_override": false
+        }
+      },
+      "by_weight_version": {
+        "w1": {
+          "ds-customers": "0.958116",
+          "ds-orders": "0.973684",
+          "ds-payments": "1.000000",
+          "ds-products": null,
+          "ds-shipments": "0.000000"
+        },
+        "w2": {
+          "ds-customers": "0.963932",
+          "ds-orders": "0.968421",
+          "ds-payments": "1.000000",
+          "ds-products": null,
+          "ds-shipments": "0.000000"
+        }
+      }
+    },
+    "critical_failures": {
+      "failures": 2,
+      "open_issues": 1,
+      "datasets_overridden": 1
+    },
+    "resolution_time": {
+      "resolved_count": 3,
+      "claimed_count": 1,
+      "open_count": 2,
+      "reopened_count": 1,
+      "reopen_cycles_total": 1,
+      "mean_hours": "38.4444",
+      "issues": {
+        "iss-001": {
+          "rule_id": "r-ord-cust-fk",
+          "severity": "high",
+          "class": "resolved",
+          "resolution_hours": "30.5000",
+          "claimed_hours": null,
+          "age_hours": null,
+          "reopen_cycles": 0
+        },
+        "iss-002": {
+          "rule_id": "r-cust-valid-email",
+          "severity": "medium",
+          "class": "resolved",
+          "resolution_hours": "12.5000",
+          "claimed_hours": null,
+          "age_hours": null,
+          "reopen_cycles": 0
+        },
+        "iss-003": {
+          "rule_id": "r-cust-complete-email",
+          "severity": "high",
+          "class": "resolved",
+          "resolution_hours": "72.3333",
+          "claimed_hours": null,
+          "age_hours": null,
+          "reopen_cycles": 0
+        },
+        "iss-004": {
+          "rule_id": "r-ord-amount-range",
+          "severity": "medium",
+          "class": "claimed",
+          "resolution_hours": null,
+          "claimed_hours": "81.0000",
+          "age_hours": null,
+          "reopen_cycles": 0
+        },
+        "iss-005": {
+          "rule_id": "r-cust-complete-email",
+          "severity": "high",
+          "class": "open",
+          "resolution_hours": null,
+          "claimed_hours": null,
+          "age_hours": "594.0000",
+          "reopen_cycles": 1
+        },
+        "iss-006": {
+          "rule_id": "r-cust-key-unique",
+          "severity": "critical",
+          "class": "open",
+          "resolution_hours": null,
+          "claimed_hours": null,
+          "age_hours": "118.0000",
+          "reopen_cycles": 0
+        }
+      }
+    },
+    "ownership_coverage": {
+      "datasets": 5,
+      "covered": 4,
+      "value": "0.800000",
+      "uncovered": [
+        "ds-shipments"
+      ]
+    },
+    "definition_coverage": {
+      "checklist_version": "cl-1",
+      "published_metrics": 4,
+      "complete_metrics": 3,
+      "value": "0.750000",
+      "incomplete": {
+        "m-ltv": [
+          "grain",
+          "refresh"
+        ]
+      }
+    },
+    "match_precision": {
+      "approved_decisions": 3,
+      "approved_correct": 2,
+      "precision": "0.666667",
+      "reviewed": 4,
+      "reviewed_correct": 2,
+      "reviewed_correct_share": "0.500000"
+    },
+    "lineage_coverage": {
+      "declared_edges": 6,
+      "observed_rows": 7,
+      "observed_distinct": 6,
+      "observed_matching_declared": 5,
+      "value": "0.833333",
+      "undeclared_observed": [
+        {
+          "source_dataset_id": "ds-payments",
+          "target_dataset_id": "ds-shipments"
+        }
+      ],
+      "declared_not_observed": [
+        {
+          "source_dataset_id": "ds-products",
+          "target_dataset_id": "ds-shipments"
+        }
+      ],
+      "inferred_edges": [
+        {
+          "source_dataset_id": "ds-products",
+          "target_dataset_id": "ds-shipments"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "version_counts": {
+      "m-aov": 1,
+      "m-churn": 1,
+      "m-ltv": 1,
+      "m-nps": 1,
+      "m-revenue": 2
+    },
+    "change_records": 1,
+    "versions_without_change_record": [],
+    "changes_with_mismatched_valid_from": [],
+    "effective_at_as_of": {
+      "m-aov": "mv-aov-1",
+      "m-churn": "mv-churn-1",
+      "m-ltv": "mv-ltv-1",
+      "m-nps": null,
+      "m-revenue": "mv-rev-2"
+    },
+    "probe_at": "2026-08-01T00:00:00Z",
+    "effective_at_probe": {
+      "m-aov": "mv-aov-1",
+      "m-churn": "mv-churn-1",
+      "m-ltv": "mv-ltv-1",
+      "m-nps": null,
+      "m-revenue": "mv-rev-1"
+    }
+  },
+  "matching": {
+    "candidates": 5,
+    "reviewed": 4,
+    "approved": 3,
+    "rejected": 1,
+    "unreviewed": 1,
+    "merges_reversed": 1,
+    "active_merges": 2,
+    "identity_map": {
+      "rec-001": "rec-001",
+      "rec-002": "rec-001",
+      "rec-003": "rec-003",
+      "rec-004": "rec-003",
+      "rec-005": "rec-005",
+      "rec-006": "rec-006",
+      "rec-007": "rec-007",
+      "rec-008": "rec-008",
+      "rec-009": "rec-009",
+      "rec-010": "rec-010"
+    },
+    "mapping_history": [
+      {
+        "merge_id": "md-1",
+        "candidate_id": "cand-001",
+        "from_record_id": "rec-002",
+        "to_record_id": "rec-001",
+        "state": "active",
+        "reversed_by": null
+      },
+      {
+        "merge_id": "md-2",
+        "candidate_id": "cand-002",
+        "from_record_id": "rec-004",
+        "to_record_id": "rec-003",
+        "state": "active",
+        "reversed_by": null
+      },
+      {
+        "merge_id": "md-3",
+        "candidate_id": "cand-003",
+        "from_record_id": "rec-006",
+        "to_record_id": "rec-005",
+        "state": "reversed",
+        "reversed_by": "md-5"
+      }
+    ]
+  }
+}

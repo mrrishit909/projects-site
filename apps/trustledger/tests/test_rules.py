@@ -525,3 +525,22 @@ def test_the_pipeline_is_deterministic_and_does_not_mutate_its_input():
     before = deepcopy(inputs)
     a, b = run_pipeline(inputs).golden(), run_pipeline(inputs).golden()
     assert a == b and inputs == before
+
+
+def test_observed_lineage_edge_without_an_instant_is_malformed():
+    """D-08 (A-055 finding): an observed edge needs observed_at and a declared or inferred edge must not carry one;
+    the domain now agrees with the database check edges_evidence_ck."""
+    from support_db import golden_inputs
+    from trustledger import run_pipeline
+    base = golden_inputs()
+    ds = [d["dataset_id"] for d in base["datasets"]][:2]
+    bad = dict(base)
+    bad["lineage_edges"] = list(base["lineage_edges"]) + [
+        {"edge_id": "edge-x1", "source_dataset_id": ds[0], "target_dataset_id": ds[1], "evidence_type": "observed", "observed_at": None},
+        {"edge_id": "edge-x2", "source_dataset_id": ds[0], "target_dataset_id": ds[1], "evidence_type": "declared", "observed_at": "2026-10-01T00:00:00Z"},
+    ]
+    res = run_pipeline(bad)
+    codes = {(r["entity"], r["id"]): r["reason_code"] for r in res.golden()["ingest"]["rejected"]} if "rejected" in res.golden()["ingest"] else {}
+    rejected = [r for r in res.ingest.rejected if r.entity == "lineage_edges"] if hasattr(res.ingest, "rejected") else []
+    ids = {getattr(r, "id", None) or getattr(r, "record_id", None) for r in rejected} | {k[1] for k in codes if k[0] == "lineage_edges"}
+    assert {"edge-x1", "edge-x2"} <= ids

@@ -148,7 +148,9 @@ def validate(data):
     acc["lineage_edges"] = []
     for e in data["lineage_edges"]:
         ends = (e["source_dataset_id"], e["target_dataset_id"])
-        if all(x in ds_ok for x in ends):
+        if (e["evidence_type"] == "observed") != (e.get("observed_at") is not None):   # D-08
+            rej("lineage_edges", e, "MALFORMED_RECORD")
+        elif all(x in ds_ok for x in ends):
             acc["lineage_edges"].append(e)
         elif any(x in ds_bad for x in ends):
             rej("lineage_edges", e, "DEPENDENT_REJECTED")

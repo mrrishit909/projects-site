@@ -1,0 +1,7 @@
+{"entity":"owners","dataset_version":"golden-v1","rows":[
+{"active":true,"deactivated_at":null,"owner_id":"own-01","owner_name":"Synthetic Owner 01","role":"analyst","team":"Data Governance"},
+{"active":true,"deactivated_at":null,"owner_id":"own-02","owner_name":"Synthetic Owner 02","role":"steward","team":"Data Platform"},
+{"active":true,"deactivated_at":null,"owner_id":"own-03","owner_name":"Synthetic Owner 03","role":"steward","team":"Sales Operations"},
+{"active":true,"deactivated_at":null,"owner_id":"own-04","owner_name":"Synthetic Owner 04","role":"admin","team":"Finance Data"},
+{"active":false,"deactivated_at":"2026-09-15T00:00:00Z","owner_id":"own-05","owner_name":"Synthetic Owner 05","role":"steward","team":"Logistics"}
+]}

@@ -1,0 +1,20 @@
+{"entity":"owners","dataset_version":"tl-20261026-20261026","rows":[
+{"active":true,"deactivated_at":null,"owner_id":"own-01","owner_name":"Ansel Whitcombe","role":"admin","team":"Data Governance"},
+{"active":true,"deactivated_at":null,"owner_id":"own-02","owner_name":"Briar Delacroix","role":"steward","team":"Data Governance"},
+{"active":true,"deactivated_at":null,"owner_id":"own-03","owner_name":"Corvin Ashdown","role":"analyst","team":"Data Governance"},
+{"active":true,"deactivated_at":null,"owner_id":"own-04","owner_name":"Delphine Marrow","role":"steward","team":"Data Platform"},
+{"active":true,"deactivated_at":null,"owner_id":"own-05","owner_name":"Eamon Fairweather","role":"analyst","team":"Data Platform"},
+{"active":true,"deactivated_at":null,"owner_id":"own-06","owner_name":"Fenna Lindqvist","role":"admin","team":"Data Platform"},
+{"active":true,"deactivated_at":null,"owner_id":"own-07","owner_name":"Garrick Tolland","role":"steward","team":"Customer Data"},
+{"active":true,"deactivated_at":null,"owner_id":"own-08","owner_name":"Hesper Valdane","role":"analyst","team":"Customer Data"},
+{"active":false,"deactivated_at":"2026-08-18T09:00:00Z","owner_id":"own-09","owner_name":"Ione Kestrel","role":"steward","team":"Customer Data"},
+{"active":true,"deactivated_at":null,"owner_id":"own-10","owner_name":"Jorin Blackwater","role":"steward","team":"Finance Systems"},
+{"active":true,"deactivated_at":null,"owner_id":"own-11","owner_name":"Kestra Maddox","role":"analyst","team":"Finance Systems"},
+{"active":false,"deactivated_at":"2026-09-04T09:00:00Z","owner_id":"own-12","owner_name":"Linden Thorpe","role":"admin","team":"Finance Systems"},
+{"active":true,"deactivated_at":null,"owner_id":"own-13","owner_name":"Marisol Venn","role":"steward","team":"Supply Chain"},
+{"active":true,"deactivated_at":null,"owner_id":"own-14","owner_name":"Nikolai Pryce","role":"analyst","team":"Supply Chain"},
+{"active":false,"deactivated_at":"2026-09-22T09:00:00Z","owner_id":"own-15","owner_name":"Odessa Quillfeather","role":"analyst","team":"Supply Chain"},
+{"active":true,"deactivated_at":null,"owner_id":"own-16","owner_name":"Perrin Haldane","role":"steward","team":"Support Operations"},
+{"active":true,"deactivated_at":null,"owner_id":"own-17","owner_name":"Quentin Brightwell","role":"analyst","team":"Support Operations"},
+{"active":true,"deactivated_at":null,"owner_id":"own-18","owner_name":"Rowena Stray","role":"admin","team":"Support Operations"}
+]}

@@ -129,3 +129,23 @@ VERIFICATION_RUN_INVALID, UNKNOWN_OWNER. group_by returns the 10 scoped metrics 
 precision are portfolio-wide. `quality_rules` holds one current row per rule; no command creates or versions rules.
 Known: SQL uses PostgreSQL regexes and tz data while the domain uses Python `re` and system tzdata (patterns stay in the
 common subset); reads load the whole population per request.
+
+## D-08 Synthetic world and the observed-edge rule (2026-10-27, adopted from A-055)
+Seed 20261026, daily runs 2026-07-13..2026-10-04, `as_of` 2026-10-05T00:00:00Z; 40 datasets across 6 source
+systems, 420 fields, 18 owners (3 inactive), 15 monitored datasets, 2,554 rows on 30 datasets; 60 rules (14 at version
+2 or more, 5 disabled), 4,609 runs (4,257 scheduled, 352 reruns); 574 issues (315 resolved, 99 claimed, 160 open, 9
+reopened); lineage 80 declared, 70 observed (58 on declared edges, 12 undeclared), 10 inferred; 30 metrics with 45
+versions and 15 changes; 2,000 customer records, 400 candidates, 220 reviewed (174 approved, 46 rejected), 15
+reversals; synthetic match truth only in the manifest. "220 reviewed merges and 15 reversals" = 220 candidates with an
+approve or reject decision plus 15 reverse decisions; "70 observed edges" are distinct pairs; "oldest open issues all
+claimed" holds by construction before 2026-08-25; "one team twice as fast" is by the owner's team on mean resolution
+hours (Data Platform 34.4202 h vs 86.1833 h); "near-perfect" means above 0.95 under both weight versions
+(ds-customers 0.990175 under w2 with the override true). Row-level measurement is authoritative at the as-of and the
+last scheduled run of every active rule stores the same counts, except the INJ-12 rule whose current version adds a
+filter (not comparable). Entity files are wrapped; the config lives in the manifest; the seeder's directory mode
+cannot read the wrapped files (tests build the inputs object). Seeded issues carry no `record_ids`, so C10 reruns the
+whole rule. Outcome-informed choices, disclosed: a stray draw removed and the rule-version-free window around
+2026-09-01 widened from 7 to 14 days before the final run; nothing re-drawn on its value. Precision 172/174 = 0.988506
+is reported as drawn. **Observed-edge rule (coordinator fix after the generator's finding):** an edge is accepted only
+when (`evidence_type` = observed) ⇔ (`observed_at` is present); otherwise MALFORMED_RECORD, in the domain, the
+reference script and the database check `edges_evidence_ck`.
