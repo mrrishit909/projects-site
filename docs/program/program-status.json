@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T00:30:34Z",
+  "updated_at": "2026-10-27T00:32:14Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -122,16 +122,16 @@
     },
     "06-productsignal": {
       "slug": "productsignal",
-      "stage": "built, verified (CI green both modes on d7111f1), published 6e381bf (live check pending), integrated (case study pushed; link check pending); reviewer A-048 running",
+      "stage": "built, verified (CI green both modes on d7111f1), published and live-verified (run 40426869172), integrated (case study live, links verified both ways); reviewer A-048 running",
       "built": true,
       "verified": true,
       "published": true,
-      "integrated": false,
+      "integrated": true,
       "last_verified_sha": "d7111f1",
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40426536267",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/productsignal/",
       "blockers": [],
-      "next_task": "live check -> A-048 review -> fixes -> artifacts",
+      "next_task": "A-048 review -> fixes -> artifacts",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/productsignal/"
     },
     "07-trustledger": {

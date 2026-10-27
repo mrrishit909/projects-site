@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T00:30:34Z",
+  "updated_at": "2026-10-27T00:32:14Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1155,6 +1155,17 @@
       "code_sha": "ccf70f5",
       "evidence": "docs/program/release-manifest.json",
       "ts": "2026-10-27T00:30:34Z"
+    },
+    {
+      "requirement": "P06-REL-09/17/18: live site on github-hosted runner (deploy-wait matched code_sha ccf70f5, 12 routes 200, manifest served, case study links to the site and the site links back, 360/1280 browser journey with no console errors); all six sites green",
+      "project": "06-productsignal",
+      "status": "verified",
+      "command": "live-check.yml run 40426869172 (matrix)",
+      "exit_code": 0,
+      "actual": "all jobs success",
+      "code_sha": "ccf70f5 / portfolio 6e381bf",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40426869172",
+      "ts": "2026-10-27T00:32:14Z"
     }
   ]
 }

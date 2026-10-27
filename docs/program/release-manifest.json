@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T00:30:34Z",
+  "updated_at": "2026-10-27T00:32:14Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -14,8 +14,8 @@
       "dataset_hash": "40f541fcd8681eb056f408b40d03ad941e4ef797fc4ea5283e1412a02bc6f444",
       "publication_status": "published and verified live from a GitHub-hosted runner (release f2605bb; case study text updated at f03b26f)",
       "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40418131237",
-        "verified_at": "2026-10-26T23:15:18Z",
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40426869172",
+        "verified_at": "2026-10-27T00:32:14Z",
         "live_code_sha_matched": "50e72e15ae1ea350f4fe5c7d3a7e54efc9baf427"
       },
       "previous_release_commit": "92b9c66",
@@ -35,8 +35,8 @@
       "contract_version": "v1",
       "publication_status": "published and verified live from a GitHub-hosted runner (release 239950e after reviewer fixes); integrated, links verified both ways",
       "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40418131237",
-        "verified_at": "2026-10-26T23:15:18Z",
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40426869172",
+        "verified_at": "2026-10-27T00:32:14Z",
         "live_code_sha_matched": "1a27a0e44a610adfd1139a0e01c0bbc9f2c82d73"
       },
       "previous_release_commit": "a614136"
@@ -55,8 +55,8 @@
       "contract_version": "v1",
       "publication_status": "republished after T-03-07 reviewer fixes (13af835; CI 40357396048 green on ca3e626); live-verified with the release commit on the live manifest (run 40358131147); integrated",
       "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40418131237",
-        "verified_at": "2026-10-26T23:15:18Z",
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40426869172",
+        "verified_at": "2026-10-27T00:32:14Z",
         "live_code_sha_matched": "ca3e626ae395592987dfb2cc647fd177f95adc8c"
       }
     },
@@ -74,8 +74,8 @@
       "contract_version": "v1",
       "publication_status": "republished with the artifacts commit (fec6758, code 2a6578e); live-verified (run 40387041943); artifacts P04-ART-01..10 verified; CI on 2a6578e: success (run 40386915863)",
       "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40418131237",
-        "verified_at": "2026-10-26T23:15:18Z",
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40426869172",
+        "verified_at": "2026-10-27T00:32:14Z",
         "live_code_sha_matched": "2a6578e684362b9e5b54039619df927fe4f30757"
       }
     },
@@ -93,8 +93,8 @@
       "contract_version": "v1",
       "publication_status": "republished after T-05-07 reviewer fixes (188e409; CI 40418007851 green both modes on 2dcc460); live-verified with the release commit on the live manifest (run 40418131237); integrated",
       "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40418131237",
-        "verified_at": "2026-10-26T23:15:18Z",
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40426869172",
+        "verified_at": "2026-10-27T00:32:14Z",
         "live_code_sha_matched": "2dcc460d2d5d1528151fda8bc2d22ef2f1e58d2a"
       }
     },
@@ -110,10 +110,11 @@
       "dataset_version": "ps-20261026-20261026",
       "dataset_hash": "12672f9c39402517083bbbbe9164cbefe3435361dff086eb0d9e16e60f9b66f8",
       "contract_version": "v1",
-      "publication_status": "published with the case study (6e381bf; CI 40426536267 green both modes on d7111f1; stamped code_sha ccf70f5 differs from d7111f1 only in docs/program); live check pending",
+      "publication_status": "published, live-verified (12 routes 200, live code_sha matched, case study links both ways, browser journey clean; run 40426869172) and integrated (6e381bf)",
       "live_verification": {
-        "run_url": null,
-        "verified_at": null
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40426869172",
+        "verified_at": "2026-10-27T00:32:14Z",
+        "live_code_sha_matched": "ccf70f52fc2af7c9c15f4d0ffb1d82df449a8990"
       }
     }
   ]
