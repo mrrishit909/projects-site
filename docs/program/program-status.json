@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T06:05:00Z",
+  "updated_at": "2026-10-27T06:07:20Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -293,6 +293,13 @@
       "web": {
         "commit": "9a71687",
         "status": "done; CI green both modes (run 40455742325)"
+      },
+      "review": {
+        "assignment": "A-074",
+        "defects": 14,
+        "documentation": 8,
+        "status": "fixes in progress (A-078)",
+        "case_study_wording_fixed": "28d974b"
       }
     },
     "10-retentionlab": {
@@ -355,7 +362,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Projects 08/10: fix hand-backs (A-076, A-077) -> verify -> commit -> CI -> republish -> live check -> case study 'then fixed' -> artifacts workers. Project 09: A-074 review hand-back -> fix worker -> same chain. Then the final report with all ten URLs.",
+    "next_concrete_task": "Fix hand-backs A-076 (P08), A-077 (P10), A-078 (P09) -> verify each (reference, pytest no skips, generator identical, npm check/build/e2e, reviewer probes) -> commit -> CI -> republish -> live check -> case study 'then fixed' with the moved figures -> artifacts workers -> verify -> commit -> CI. Then the final report with all ten URLs.",
     "acceptance": "see task-queue.json"
   }
 }
