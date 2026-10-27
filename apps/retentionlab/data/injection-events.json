@@ -1,0 +1,1024 @@
+{
+  "dataset_version": "rl-20261026-20261026",
+  "events": [
+    {
+      "event_id": "EV-01",
+      "injection": "INJ-01",
+      "requires": [
+        "seed:published-cohort"
+      ],
+      "steps": [
+        {
+          "command": "build-point-in-time-features",
+          "expected_offending": [
+            {
+              "code": "POST_OUTCOME_FIELD",
+              "item": "cancellation_reason"
+            }
+          ],
+          "expected_rules": [
+            "POST_OUTCOME_FIELD"
+          ],
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-01-1",
+            "input": {
+              "fields": [
+                "usage_events_30d",
+                "days_since_last_usage",
+                "high_severity_support_90d",
+                "billing_total_90d",
+                "cancellation_reason"
+              ],
+              "prediction_at": "2026-03-01T00:00:00Z"
+            },
+            "request_id": "req-ev-01-1"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "build-point-in-time-features",
+          "expected_result": {
+            "built": 0,
+            "eligible": 32,
+            "unchanged": 32
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-01-2",
+            "input": {
+              "fields": [
+                "usage_events_30d",
+                "days_since_last_usage",
+                "high_severity_support_90d",
+                "billing_total_90d"
+              ],
+              "prediction_at": "2026-03-01T00:00:00Z"
+            },
+            "request_id": "req-ev-01-2"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-02",
+      "injection": "INJ-02",
+      "requires": [
+        "seed:published-cohort"
+      ],
+      "steps": [
+        {
+          "command": "build-point-in-time-features",
+          "expected_result": {
+            "arrived_late.usage_events": 1,
+            "availability_proof.all_before_cutoff": true,
+            "built": 0,
+            "unchanged": 1
+          },
+          "expected_status": 200,
+          "expected_warning_codes": [
+            "LATE_EVENTS_EXCLUDED"
+          ],
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-02-3",
+            "input": {
+              "account_ids": [
+                43
+              ],
+              "prediction_at": "2026-06-01T00:00:00Z"
+            },
+            "request_id": "req-ev-02-3"
+          },
+          "kind": "command"
+        },
+        {
+          "expect": [
+            {
+              "equals": 0,
+              "path": "data[0].features_json.usage_events_30d"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "cutoff_id": "co-0043-20260601"
+          },
+          "path": "/data/feature_rows"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-03",
+      "injection": "INJ-03",
+      "requires": [
+        "seed:published-cohort"
+      ],
+      "steps": [
+        {
+          "command": "split-evaluation",
+          "expected_result": {
+            "created": true
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-03-4",
+            "input": {
+              "test_end": "2026-06-01T00:00:00Z",
+              "train_end": "2025-10-01T00:00:00Z",
+              "training_run_id": "tr-replay-03",
+              "validation_end": "2026-02-01T00:00:00Z"
+            },
+            "request_id": "req-ev-03-4"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "fit-preprocessing",
+          "expected_offending": [
+            {
+              "code": "NOT_TRAINING_ROW",
+              "item": "co-0011-20251001"
+            }
+          ],
+          "expected_rules": [
+            "LEAKAGE"
+          ],
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-03-5",
+            "input": {
+              "fit_rows": [
+                "co-0011-20251001"
+              ],
+              "training_run_id": "tr-replay-03"
+            },
+            "request_id": "req-ev-03-5"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "fit-preprocessing",
+          "expected_result": {
+            "fit_rows": 60,
+            "fitted_on": "retained training rows only"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-03-6",
+            "input": {
+              "training_run_id": "tr-replay-03"
+            },
+            "request_id": "req-ev-03-6"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-04",
+      "injection": "INJ-04",
+      "requires": [
+        "seed:published-cohort"
+      ],
+      "steps": [
+        {
+          "command": "split-evaluation",
+          "expected_result": {
+            "created": true
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-04-7",
+            "input": {
+              "test_end": "2026-06-01T00:00:00Z",
+              "train_end": "2025-10-01T00:00:00Z",
+              "training_run_id": "tr-replay-04",
+              "validation_end": "2026-02-01T00:00:00Z"
+            },
+            "request_id": "req-ev-04-7"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "fit-preprocessing",
+          "expected_offending": [
+            {
+              "code": "NOT_TRAINING_ROW",
+              "item": "co-0011-20251101"
+            }
+          ],
+          "expected_rules": [
+            "LEAKAGE"
+          ],
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-04-8",
+            "input": {
+              "fit_rows": [
+                "co-0011-20251101"
+              ],
+              "training_run_id": "tr-replay-04"
+            },
+            "request_id": "req-ev-04-8"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "fit-preprocessing",
+          "expected_result": {
+            "fit_rows": 60,
+            "fitted_on": "retained training rows only"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-04-9",
+            "input": {
+              "training_run_id": "tr-replay-04"
+            },
+            "request_id": "req-ev-04-9"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-05",
+      "injection": "INJ-05",
+      "requires": [
+        "seed:published-cohort"
+      ],
+      "steps": [
+        {
+          "command": "split-evaluation",
+          "expected_result": {
+            "created": true
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-05-10",
+            "input": {
+              "test_end": "2026-06-01T00:00:00Z",
+              "train_end": "2025-10-01T00:00:00Z",
+              "training_run_id": "tr-replay-05",
+              "validation_end": "2026-02-01T00:00:00Z"
+            },
+            "request_id": "req-ev-05-10"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "fit-preprocessing",
+          "expected_offending": [
+            {
+              "code": "NOT_TRAINING_ROW",
+              "item": "co-0161-20251001"
+            },
+            {
+              "code": "NOT_TRAINING_ROW",
+              "item": "co-0011-20260201"
+            }
+          ],
+          "expected_rules": [
+            "LEAKAGE"
+          ],
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-05-11",
+            "input": {
+              "fit_rows": [
+                "co-0043-20250101",
+                "co-0161-20251001",
+                "co-0011-20260201"
+              ],
+              "training_run_id": "tr-replay-05"
+            },
+            "request_id": "req-ev-05-11"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "fit-preprocessing",
+          "expected_result": {
+            "fit_rows": 60,
+            "fitted_on": "retained training rows only"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-05-12",
+            "input": {
+              "training_run_id": "tr-replay-05"
+            },
+            "request_id": "req-ev-05-12"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-06",
+      "injection": "INJ-06",
+      "requires": [
+        "seed:published-cohort"
+      ],
+      "steps": [
+        {
+          "command": "simulate-economics",
+          "expected_offending": [
+            {
+              "code": "SELECTED_ON_TEST",
+              "item": "capacity"
+            }
+          ],
+          "expected_rules": [
+            "THRESHOLD_ON_TEST"
+          ],
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-06-13",
+            "input": {
+              "prediction_at": "2026-09-01T00:00:00Z",
+              "scenario": {
+                "assumed_effect": "0.200000",
+                "capacity": 5,
+                "contact_cost": "8.00",
+                "margin_value": "150.00",
+                "scenario_id": "sc-replay-06",
+                "selected_on": "test"
+              },
+              "training_run_id": "tr-001"
+            },
+            "request_id": "req-ev-06-13"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "simulate-economics",
+          "expected_result": {
+            "label": "hypothetical",
+            "population": 97,
+            "treatment_effect_estimate": null
+          },
+          "expected_status": 200,
+          "expected_warning_codes": [
+            "HYPOTHETICAL"
+          ],
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-06-14",
+            "input": {
+              "prediction_at": "2026-09-01T00:00:00Z",
+              "scenario": {
+                "assumed_effect": "0.200000",
+                "capacity": 5,
+                "contact_cost": "8.00",
+                "margin_value": "150.00",
+                "scenario_id": "sc-replay-06",
+                "selected_on": "validation"
+              },
+              "training_run_id": "tr-001"
+            },
+            "request_id": "req-ev-06-14"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-07",
+      "injection": "INJ-07",
+      "requires": [
+        "seed:published-cohort"
+      ],
+      "steps": [
+        {
+          "command": "define-label",
+          "expected_result": {
+            "censored": 94,
+            "churn_rate": null,
+            "created": 0,
+            "mature": 0,
+            "unchanged": 94
+          },
+          "expected_status": 200,
+          "expected_warning_codes": [
+            "CENSORED_ROWS"
+          ],
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-07-15",
+            "input": {
+              "prediction_at": "2026-07-01T00:00:00Z"
+            },
+            "request_id": "req-ev-07-15"
+          },
+          "kind": "command"
+        },
+        {
+          "expect": [
+            {
+              "equals": 94,
+              "path": "data.cutoff_sets.2026-07-01T00:00:00Z.population.censored"
+            },
+            {
+              "equals": null,
+              "path": "data.cutoff_sets.2026-07-01T00:00:00Z.churn_rate.value"
+            },
+            {
+              "equals": 0,
+              "path": "data.cutoff_sets.2026-07-01T00:00:00Z.population.evaluated"
+            }
+          ],
+          "expected_status": 200,
+          "kind": "read",
+          "params": {
+            "model": "logistic_regression",
+            "prediction_at": "2026-07-01T00:00:00Z",
+            "training_run_id": "tr-001"
+          },
+          "path": "/metrics"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-08",
+      "injection": "INJ-08",
+      "requires": [
+        "seed:published-cohort"
+      ],
+      "steps": [
+        {
+          "command": "build-point-in-time-features",
+          "expected_offending": [
+            {
+              "code": "LATENT_TRUTH",
+              "item": "latent_churn_propensity"
+            }
+          ],
+          "expected_rules": [
+            "LATENT_TRUTH"
+          ],
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-08-16",
+            "input": {
+              "fields": [
+                "latent_churn_propensity"
+              ],
+              "prediction_at": "2026-03-01T00:00:00Z"
+            },
+            "request_id": "req-ev-08-16"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "build-point-in-time-features",
+          "expected_offending": [
+            {
+              "code": "LATENT_TRUTH",
+              "item": "latent_made_up"
+            }
+          ],
+          "expected_rules": [
+            "LATENT_TRUTH"
+          ],
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-08-17",
+            "input": {
+              "fields": [
+                "usage_events_30d",
+                "latent_made_up"
+              ],
+              "prediction_at": "2026-03-01T00:00:00Z"
+            },
+            "request_id": "req-ev-08-17"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "build-point-in-time-features",
+          "expected_result": {
+            "built": 0,
+            "unchanged": 32
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-08-18",
+            "input": {
+              "fields": [
+                "usage_events_30d",
+                "days_since_last_usage",
+                "high_severity_support_90d",
+                "billing_total_90d"
+              ],
+              "prediction_at": "2026-03-01T00:00:00Z"
+            },
+            "request_id": "req-ev-08-18"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-09",
+      "injection": "INJ-09",
+      "requires": [
+        "seed:published-cohort"
+      ],
+      "steps": [
+        {
+          "command": "prioritize-outreach",
+          "expected_offending": [
+            {
+              "code": "BASIS_NOT_RISK_RANKING",
+              "item": "responsiveness"
+            }
+          ],
+          "expected_rules": [
+            "RISK_NOT_RESPONSIVENESS"
+          ],
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-09-19",
+            "input": {
+              "basis": "responsiveness",
+              "prediction_at": "2026-09-01T00:00:00Z",
+              "scenario": {
+                "assumed_effect": "0.200000",
+                "capacity": 5,
+                "contact_cost": "8.00",
+                "margin_value": "150.00",
+                "scenario_id": "sc-replay-09"
+              },
+              "training_run_id": "tr-001"
+            },
+            "request_id": "req-ev-09-19"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "prioritize-outreach",
+          "expected_rules": [
+            "RISK_NOT_RESPONSIVENESS"
+          ],
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-09-20",
+            "input": {
+              "basis": "uplift",
+              "prediction_at": "2026-09-01T00:00:00Z",
+              "scenario": {
+                "assumed_effect": "0.200000",
+                "capacity": 5,
+                "contact_cost": "8.00",
+                "margin_value": "150.00",
+                "scenario_id": "sc-replay-09"
+              },
+              "training_run_id": "tr-001"
+            },
+            "request_id": "req-ev-09-20"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "prioritize-outreach",
+          "expected_result": {
+            "capacity": 5,
+            "population": 97,
+            "queue_status": "draft",
+            "sent": 0,
+            "treatment_effect_estimate": null
+          },
+          "expected_status": 200,
+          "expected_warning_codes": [
+            "RISK_IS_NOT_RESPONSIVENESS",
+            "DRAFT_ONLY"
+          ],
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-09-21",
+            "input": {
+              "basis": "risk_ranking",
+              "prediction_at": "2026-09-01T00:00:00Z",
+              "scenario": {
+                "assumed_effect": "0.200000",
+                "capacity": 5,
+                "contact_cost": "8.00",
+                "margin_value": "150.00",
+                "scenario_id": "sc-replay-09"
+              },
+              "training_run_id": "tr-001"
+            },
+            "request_id": "req-ev-09-21"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-10",
+      "injection": "INJ-10",
+      "requires": [
+        "seed:published-cohort"
+      ],
+      "steps": [
+        {
+          "command": "prioritize-outreach",
+          "expected_offending": [
+            {
+              "code": "CAPACITY_98_GT_97",
+              "item": "sc-replay-10"
+            }
+          ],
+          "expected_rules": [
+            "CAPACITY_EXCEEDS_POPULATION"
+          ],
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-10-22",
+            "input": {
+              "prediction_at": "2026-09-01T00:00:00Z",
+              "scenario": {
+                "assumed_effect": "0.200000",
+                "capacity": 98,
+                "contact_cost": "8.00",
+                "margin_value": "150.00",
+                "scenario_id": "sc-replay-10"
+              },
+              "training_run_id": "tr-001"
+            },
+            "request_id": "req-ev-10-22"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "prioritize-outreach",
+          "expected_result": {
+            "capacity": 97,
+            "population": 97,
+            "queue_status": "draft"
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-10-23",
+            "input": {
+              "prediction_at": "2026-09-01T00:00:00Z",
+              "scenario": {
+                "assumed_effect": "0.200000",
+                "capacity": 97,
+                "contact_cost": "8.00",
+                "margin_value": "150.00",
+                "scenario_id": "sc-replay-10b"
+              },
+              "training_run_id": "tr-001"
+            },
+            "request_id": "req-ev-10-23"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-11",
+      "injection": "INJ-11",
+      "requires": [
+        "seed:published-cohort"
+      ],
+      "steps": [
+        {
+          "command": "split-evaluation",
+          "expected_result": {
+            "created": true
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-11-24",
+            "input": {
+              "test_end": "2026-06-01T00:00:00Z",
+              "train_end": "2025-10-01T00:00:00Z",
+              "training_run_id": "tr-replay-11",
+              "validation_end": "2026-02-01T00:00:00Z"
+            },
+            "request_id": "req-ev-11-24"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "fit-preprocessing",
+          "expected_result": {
+            "fit_rows": 60
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-11-25",
+            "input": {
+              "training_run_id": "tr-replay-11"
+            },
+            "request_id": "req-ev-11-25"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "train-baseline",
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-11-26",
+            "input": {
+              "training_run_id": "tr-replay-11"
+            },
+            "request_id": "req-ev-11-26"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "calibrate-model",
+          "expected_offending": [
+            {
+              "code": "IN_FIT_ROWS",
+              "item": "co-0161-20251001"
+            }
+          ],
+          "expected_rules": [
+            "CALIBRATION_ON_FIT_ROWS"
+          ],
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-11-27",
+            "input": {
+              "evaluation_rows": [
+                "co-0161-20251001",
+                "co-0011-20260201"
+              ],
+              "fit_rows": [
+                "co-0161-20251001",
+                "co-0185-20251001",
+                "co-0247-20251001"
+              ],
+              "training_run_id": "tr-replay-11"
+            },
+            "request_id": "req-ev-11-27"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "calibrate-model",
+          "expected_result": {
+            "evaluation_rows": 161,
+            "evaluation_rows_overlap_fit_rows": 0,
+            "fit_rows": 21,
+            "method": "platt",
+            "test_rows_read": 0
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-11-28",
+            "input": {
+              "training_run_id": "tr-replay-11"
+            },
+            "request_id": "req-ev-11-28"
+          },
+          "kind": "command"
+        }
+      ]
+    },
+    {
+      "event_id": "EV-12",
+      "injection": "INJ-12",
+      "requires": [
+        "seed:published-cohort"
+      ],
+      "steps": [
+        {
+          "command": "build-point-in-time-features",
+          "expected_offending": [
+            {
+              "code": "LATENT_TRUTH",
+              "item": "generator_seed_bucket"
+            },
+            {
+              "code": "ID_FEATURE",
+              "item": "creation_sequence"
+            }
+          ],
+          "expected_rules": [
+            "LATENT_TRUTH"
+          ],
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-12-29",
+            "input": {
+              "fields": [
+                "usage_events_30d",
+                "generator_seed_bucket",
+                "creation_sequence"
+              ],
+              "prediction_at": "2026-03-01T00:00:00Z"
+            },
+            "request_id": "req-ev-12-29"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "build-point-in-time-features",
+          "expected_offending": [
+            {
+              "code": "ID_FEATURE",
+              "item": "creation_sequence"
+            }
+          ],
+          "expected_rules": [
+            "ID_FEATURE"
+          ],
+          "expected_status": 422,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-12-30",
+            "input": {
+              "fields": [
+                "creation_sequence"
+              ],
+              "prediction_at": "2026-03-01T00:00:00Z"
+            },
+            "request_id": "req-ev-12-30"
+          },
+          "kind": "command"
+        },
+        {
+          "command": "build-point-in-time-features",
+          "expected_result": {
+            "built": 0,
+            "unchanged": 32
+          },
+          "expected_status": 200,
+          "headers": {
+            "X-Actor-Id": "usr-scientist01",
+            "X-Actor-Role": "scientist"
+          },
+          "input": {
+            "dataset_version": "rl-20261026-20261026",
+            "idempotency_key": "ev-12-31",
+            "input": {
+              "fields": [
+                "usage_events_30d",
+                "days_since_last_usage",
+                "high_severity_support_90d",
+                "billing_total_90d"
+              ],
+              "prediction_at": "2026-03-01T00:00:00Z"
+            },
+            "request_id": "req-ev-12-31"
+          },
+          "kind": "command"
+        }
+      ]
+    }
+  ],
+  "server_clock": "2026-10-05T12:00:00Z"
+}

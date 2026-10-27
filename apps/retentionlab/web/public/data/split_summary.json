@@ -1,0 +1,80 @@
+{
+  "boundaries": {
+    "test_end": "2026-06-01T00:00:00Z",
+    "train_end": "2025-10-01T00:00:00Z",
+    "validation_end": "2026-02-01T00:00:00Z"
+  },
+  "dataset_version": "rl-20261026-20261026",
+  "embargo_days": 104,
+  "injected_violators": {
+    "train_test": 36,
+    "train_validation": 12,
+    "validation_test": 14
+  },
+  "population": {
+    "outside": {
+      "group_test": 0,
+      "group_validation": 0,
+      "label_window": 0,
+      "retained": 5550,
+      "total": 5550
+    },
+    "test": {
+      "group_test": 0,
+      "group_validation": 0,
+      "label_window": 0,
+      "retained": 1862,
+      "total": 1862
+    },
+    "train": {
+      "group_test": 124,
+      "group_validation": 52,
+      "label_window": 879,
+      "retained": 1088,
+      "total": 2143
+    },
+    "validation": {
+      "group_test": 13,
+      "group_validation": 0,
+      "label_window": 1291,
+      "retained": 384,
+      "total": 1688
+    }
+  },
+  "published_cohort": {
+    "outside": {
+      "group_test": 0,
+      "group_validation": 0,
+      "label_window": 0,
+      "retained": 448,
+      "total": 448
+    },
+    "test": {
+      "group_test": 0,
+      "group_validation": 0,
+      "label_window": 0,
+      "retained": 161,
+      "total": 161
+    },
+    "train": {
+      "group_test": 32,
+      "group_validation": 5,
+      "label_window": 97,
+      "retained": 86,
+      "total": 220
+    },
+    "validation": {
+      "group_test": 3,
+      "group_validation": 0,
+      "label_window": 107,
+      "retained": 31,
+      "total": 141
+    }
+  },
+  "reasons": {
+    "GROUP_TEST": "the account has a row in the test range; its earlier train and validation rows are dropped",
+    "GROUP_VALIDATION": "the account has a row in the validation range; its earlier train rows are dropped",
+    "LABEL_WINDOW": "label window [prediction_at, label_end) crosses the boundary of its range (label_end > boundary); dropped from the earlier side"
+  },
+  "training_run_id": "tr-001"
+}

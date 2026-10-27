@@ -1,0 +1,5 @@
+{"entity":"intervention_scenarios","dataset_version":"rl-20261026-20261026","rows":[
+{"assumed_effect":"0.300000","capacity":5,"contact_cost":"8.00","margin_value":"200.00","scenario_id":"sc-001"},
+{"assumed_effect":"0.200000","capacity":10,"contact_cost":"8.00","margin_value":"200.00","scenario_id":"sc-002"},
+{"assumed_effect":"0.100000","capacity":20,"contact_cost":"8.00","margin_value":"200.00","scenario_id":"sc-003"}
+]}

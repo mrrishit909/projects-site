@@ -156,6 +156,48 @@ are the binding form. The points that sharpen D-01..D-04:
   reference is the independent check); no hyper-parameter search, monitoring history or non-UTC zones; not
   benchmarked at 10,000 accounts.
 
+## D-07 Synthetic world (adopted from the generator hand-back; the 14 numbered assumptions are in generate.py and the manifest)
+Seed 20261026; 2,400 accounts over 4 segments and 5 regions, monthly cutoffs 2025-01-01 .. 2026-09-01 (90-day horizon,
+14-day grace), `as_of` 2026-10-05T00:00:00Z; one training run (train to 2025-10-01, validation to 2026-02-01, test to
+2026-06-01) fitted by the domain; `dataset_version` rl-20261026-20261026, `dataset_hash` 11d2975c…, `generated_at` =
+`as_of`; 4,346,284 bytes published.
+* **The published files are the complete records of a uniform 200-account cohort** (13,329 usage, 1,646 subscription,
+  1,567 billing and 322 support events; 970 cutoffs; 765 feature rows; 769 labels; 1,842 predictions; 36 publications;
+  3 scenarios; 35 draft queue rows) plus `test_cohort.json` (all 1,513 mature eligible test-range rows of the full world
+  with features, outcome and the four probabilities), `cutoff_aggregates.json` (per-cutoff counts and metrics for all
+  2,400 accounts and the drift series), `calibration.json`, `split_summary.json`. The domain evaluates the full world in
+  memory; the manifest's numbers come from it. Cohort predictions start at the 2025-10-01 cutoff.
+* Account-level split roles by hash of the id (train 32 %, validation 36 %, test 32 %); an account has cutoff rows only
+  in its role's range plus every cutoff from 2026-06-01 (otherwise the group purge would remove almost every earlier
+  row). Cutoff rows exist while an account exists and has not cancelled. Events not yet available at `as_of` are not in
+  the world; cancellations arriving after the grace are not churn. Latent propensity (a stylised 90-day probability
+  from a weekly hazard) is kept for all 9,039 eligible cutoffs in `synthetic_truth` only; registry v1 has 12 rows, the
+  11 golden rows plus `generator_seed_bucket` (latent, refused). Predictions carry `model_name`; metrics are computed
+  per model. Scoring instants are generator choices. The test range is evaluated as the union of its four cutoffs (the
+  per-cutoff metrics are also published). Scenario capacities 5, 10, 20 fixed before any outcome, `selected_on`
+  validation.
+* Designed relationships, realised by the domain on the 1,513-row test population (prevalence about 0.134): logistic
+  (Platt) AP 0.2386 and Brier 0.1050 against the rule 0.1367 / 0.1093 and random 0.1268 / 0.3265 (DR-01; the latent
+  propensity scores AP 0.310, in `synthetic_truth` only); DR-02 starter segment calibration gap −8.07 pp (overall
+  −2.86) from an unobserved repricing on 2026-02-01; DR-03 apac `usage_events_30d` PSI 0.491–0.765 from 2026-05-01
+  (60 % of logins unrecorded from 2026-03-31) while the whole population stays below 0.03; DR-04 ignoring
+  `available_at` would change a feature on 11.57 % of test rows (three of four features flip); DR-05 3,594 of 9,039
+  eligible rows (39.8 %) censored, mature churn 0.108. Training 744 rows (79 churners), validation 289 (27), purge
+  counts published (train loses 879 LABEL_WINDOW, 124 GROUP_TEST, 52 GROUP_VALIDATION; validation 1,291 and 13).
+  Economics at the 2026-09-01 cutoff: capacity 5 → +21.38, 10 → −6.87, 20 → −95.46, all hypothetical. Scoring freshness
+  812 h, data freshness 0 h.
+* Injections INJ-01..12 map to P10-TEST-01..12 (INJ-02/03/04/07 present in the data, the rest request-level), with 12
+  replay events of 33 steps through the API at server clock 2026-10-05T12:00Z.
+* **Outcome-informed choices, disclosed in the manifest (D-G02) and to be stated on the site and the case study:** the
+  hazard intercepts were lowered after a first simulation; **the engagement signal was strengthened (coefficient 1100 →
+  2200 plus a per-account offset) until the model's margins over the baselines were met**, so the margin is by
+  construction; the drift change moved to 2026-03-31 with 40 % of logins kept and the target narrowed to cutoffs from
+  2026-05-01; late cancellations 2 % → 4 %; the late-arrival target relaxed to three features; scenario assumptions
+  changed once after all three showed negative value; the cohort grew from 140 to 200 accounts for the size cap.
+* Gaps: four domain features only (eight other registered fields are refused); the validation set is small (289 rows)
+  so the Platt fit is noisy; the published sample is not the population (the tests rebuild the world in memory);
+  determinism depends on CPython 3.11's `random`; `high_severity_support_90d` is weak.
+
 ## Mode disclosure
 Mode A: Python domain (features, labels, splits, fitting, calibration, scoring, metrics) + PostgreSQL + FastAPI
 verified on hosted runners. Mode B: TypeScript mirror over the published snapshot (frozen predictions and rows);

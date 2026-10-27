@@ -1,0 +1,1790 @@
+{
+  "cutoffs": [
+    {
+      "churn_rate": "0.106195",
+      "late_events": {
+        "billing_events": 4,
+        "subscription_events": 1,
+        "support_events": 0,
+        "total": 11,
+        "usage_events": 6
+      },
+      "missingness": {
+        "billing_total_90d": "0.345133",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.086283",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.103755",
+          "brier_score": "0.096415",
+          "mean_probability": "0.102664",
+          "n": 113,
+          "positives": 12,
+          "prevalence": "0.106195"
+        },
+        "logistic_regression": {
+          "average_precision": "0.179113",
+          "brier_score": "0.093965",
+          "mean_probability": "0.099800",
+          "n": 113,
+          "positives": 12,
+          "prevalence": "0.106195"
+        },
+        "random_baseline": {
+          "average_precision": "0.131682",
+          "brier_score": "0.337071",
+          "mean_probability": "0.511752",
+          "n": 113,
+          "positives": 12,
+          "prevalence": "0.106195"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 12,
+        "cutoff_rows": 168,
+        "eligible": 113,
+        "evaluated": 113,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 55
+        },
+        "mature": 113,
+        "scored": 113,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2025-01-01T00:00:00Z",
+      "range": "train"
+    },
+    {
+      "churn_rate": "0.103175",
+      "late_events": {
+        "billing_events": 4,
+        "subscription_events": 0,
+        "support_events": 0,
+        "total": 23,
+        "usage_events": 19
+      },
+      "missingness": {
+        "billing_total_90d": "0.333333",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.083333",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.209402",
+          "brier_score": "0.087514",
+          "mean_probability": "0.105227",
+          "n": 126,
+          "positives": 13,
+          "prevalence": "0.103175"
+        },
+        "logistic_regression": {
+          "average_precision": "0.443624",
+          "brier_score": "0.081489",
+          "mean_probability": "0.100875",
+          "n": 126,
+          "positives": 13,
+          "prevalence": "0.103175"
+        },
+        "random_baseline": {
+          "average_precision": "0.101522",
+          "brier_score": "0.384269",
+          "mean_probability": "0.519613",
+          "n": 126,
+          "positives": 13,
+          "prevalence": "0.103175"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 13,
+        "cutoff_rows": 184,
+        "eligible": 126,
+        "evaluated": 126,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 58
+        },
+        "mature": 126,
+        "scored": 126,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2025-02-01T00:00:00Z",
+      "range": "train"
+    },
+    {
+      "churn_rate": "0.091603",
+      "late_events": {
+        "billing_events": 3,
+        "subscription_events": 1,
+        "support_events": 0,
+        "total": 16,
+        "usage_events": 12
+      },
+      "missingness": {
+        "billing_total_90d": "0.320611",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.080153",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.157602",
+          "brier_score": "0.080065",
+          "mean_probability": "0.106131",
+          "n": 131,
+          "positives": 12,
+          "prevalence": "0.091603"
+        },
+        "logistic_regression": {
+          "average_precision": "0.264650",
+          "brier_score": "0.078988",
+          "mean_probability": "0.098984",
+          "n": 131,
+          "positives": 12,
+          "prevalence": "0.091603"
+        },
+        "random_baseline": {
+          "average_precision": "0.087462",
+          "brier_score": "0.327745",
+          "mean_probability": "0.488414",
+          "n": 131,
+          "positives": 12,
+          "prevalence": "0.091603"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 12,
+        "cutoff_rows": 200,
+        "eligible": 131,
+        "evaluated": 131,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 69
+        },
+        "mature": 131,
+        "scored": 131,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2025-03-01T00:00:00Z",
+      "range": "train"
+    },
+    {
+      "churn_rate": "0.080000",
+      "late_events": {
+        "billing_events": 4,
+        "subscription_events": 1,
+        "support_events": 0,
+        "total": 21,
+        "usage_events": 16
+      },
+      "missingness": {
+        "billing_total_90d": "0.293333",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.073333",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.078235",
+          "brier_score": "0.075402",
+          "mean_probability": "0.102506",
+          "n": 150,
+          "positives": 12,
+          "prevalence": "0.080000"
+        },
+        "logistic_regression": {
+          "average_precision": "0.146009",
+          "brier_score": "0.072342",
+          "mean_probability": "0.100371",
+          "n": 150,
+          "positives": 12,
+          "prevalence": "0.080000"
+        },
+        "random_baseline": {
+          "average_precision": "0.067507",
+          "brier_score": "0.359723",
+          "mean_probability": "0.514166",
+          "n": 150,
+          "positives": 12,
+          "prevalence": "0.080000"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 12,
+        "cutoff_rows": 218,
+        "eligible": 150,
+        "evaluated": 150,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 68
+        },
+        "mature": 150,
+        "scored": 150,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2025-04-01T00:00:00Z",
+      "range": "train"
+    },
+    {
+      "churn_rate": "0.078788",
+      "late_events": {
+        "billing_events": 3,
+        "subscription_events": 1,
+        "support_events": 0,
+        "total": 24,
+        "usage_events": 20
+      },
+      "missingness": {
+        "billing_total_90d": "0.296970",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.074242",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.086247",
+          "brier_score": "0.073572",
+          "mean_probability": "0.107142",
+          "n": 165,
+          "positives": 13,
+          "prevalence": "0.078788"
+        },
+        "logistic_regression": {
+          "average_precision": "0.253833",
+          "brier_score": "0.068953",
+          "mean_probability": "0.101244",
+          "n": 165,
+          "positives": 13,
+          "prevalence": "0.078788"
+        },
+        "random_baseline": {
+          "average_precision": "0.130650",
+          "brier_score": "0.304647",
+          "mean_probability": "0.490619",
+          "n": 165,
+          "positives": 13,
+          "prevalence": "0.078788"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 13,
+        "cutoff_rows": 239,
+        "eligible": 165,
+        "evaluated": 165,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 74
+        },
+        "mature": 165,
+        "scored": 165,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2025-05-01T00:00:00Z",
+      "range": "train"
+    },
+    {
+      "churn_rate": "0.092896",
+      "late_events": {
+        "billing_events": 5,
+        "subscription_events": 0,
+        "support_events": 0,
+        "total": 24,
+        "usage_events": 19
+      },
+      "missingness": {
+        "billing_total_90d": "0.300546",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.075137",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.120040",
+          "brier_score": "0.082988",
+          "mean_probability": "0.105659",
+          "n": 183,
+          "positives": 17,
+          "prevalence": "0.092896"
+        },
+        "logistic_regression": {
+          "average_precision": "0.237688",
+          "brier_score": "0.080562",
+          "mean_probability": "0.099089",
+          "n": 183,
+          "positives": 17,
+          "prevalence": "0.092896"
+        },
+        "random_baseline": {
+          "average_precision": "0.081825",
+          "brier_score": "0.364464",
+          "mean_probability": "0.500236",
+          "n": 183,
+          "positives": 17,
+          "prevalence": "0.092896"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 17,
+        "cutoff_rows": 255,
+        "eligible": 183,
+        "evaluated": 183,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 72
+        },
+        "mature": 183,
+        "scored": 183,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2025-06-01T00:00:00Z",
+      "range": "train"
+    },
+    {
+      "churn_rate": "0.101010",
+      "late_events": {
+        "billing_events": 2,
+        "subscription_events": 1,
+        "support_events": 0,
+        "total": 23,
+        "usage_events": 20
+      },
+      "missingness": {
+        "billing_total_90d": "0.313131",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.078283",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.109380",
+          "brier_score": "0.090764",
+          "mean_probability": "0.105094",
+          "n": 198,
+          "positives": 20,
+          "prevalence": "0.101010"
+        },
+        "logistic_regression": {
+          "average_precision": "0.207149",
+          "brier_score": "0.088774",
+          "mean_probability": "0.101169",
+          "n": 198,
+          "positives": 20,
+          "prevalence": "0.101010"
+        },
+        "random_baseline": {
+          "average_precision": "0.131854",
+          "brier_score": "0.310091",
+          "mean_probability": "0.479515",
+          "n": 198,
+          "positives": 20,
+          "prevalence": "0.101010"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 20,
+        "cutoff_rows": 271,
+        "eligible": 198,
+        "evaluated": 198,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 73
+        },
+        "mature": 198,
+        "scored": 198,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2025-07-01T00:00:00Z",
+      "range": "train"
+    },
+    {
+      "churn_rate": "0.126168",
+      "late_events": {
+        "billing_events": 5,
+        "subscription_events": 0,
+        "support_events": 0,
+        "total": 30,
+        "usage_events": 25
+      },
+      "missingness": {
+        "billing_total_90d": "0.336449",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.084112",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.121931",
+          "brier_score": "0.113141",
+          "mean_probability": "0.104550",
+          "n": 214,
+          "positives": 27,
+          "prevalence": "0.126168"
+        },
+        "logistic_regression": {
+          "average_precision": "0.166690",
+          "brier_score": "0.111273",
+          "mean_probability": "0.100012",
+          "n": 214,
+          "positives": 27,
+          "prevalence": "0.126168"
+        },
+        "random_baseline": {
+          "average_precision": "0.117954",
+          "brier_score": "0.340386",
+          "mean_probability": "0.489155",
+          "n": 214,
+          "positives": 27,
+          "prevalence": "0.126168"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 27,
+        "cutoff_rows": 298,
+        "eligible": 214,
+        "evaluated": 214,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 84
+        },
+        "mature": 214,
+        "scored": 214,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2025-08-01T00:00:00Z",
+      "range": "train"
+    },
+    {
+      "churn_rate": "0.100877",
+      "late_events": {
+        "billing_events": 7,
+        "subscription_events": 0,
+        "support_events": 1,
+        "total": 25,
+        "usage_events": 17
+      },
+      "missingness": {
+        "billing_total_90d": "0.377193",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.094298",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.101694",
+          "brier_score": "0.091480",
+          "mean_probability": "0.103379",
+          "n": 228,
+          "positives": 23,
+          "prevalence": "0.100877"
+        },
+        "logistic_regression": {
+          "average_precision": "0.164623",
+          "brier_score": "0.089496",
+          "mean_probability": "0.096556",
+          "n": 228,
+          "positives": 23,
+          "prevalence": "0.100877"
+        },
+        "random_baseline": {
+          "average_precision": "0.140537",
+          "brier_score": "0.319697",
+          "mean_probability": "0.502075",
+          "n": 228,
+          "positives": 23,
+          "prevalence": "0.100877"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 23,
+        "cutoff_rows": 310,
+        "eligible": 228,
+        "evaluated": 228,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 82
+        },
+        "mature": 228,
+        "scored": 228,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2025-09-01T00:00:00Z",
+      "range": "train"
+    },
+    {
+      "churn_rate": "0.090000",
+      "late_events": {
+        "billing_events": 4,
+        "subscription_events": 0,
+        "support_events": 0,
+        "total": 34,
+        "usage_events": 30
+      },
+      "missingness": {
+        "billing_total_90d": "0.293333",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.073333",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.087566",
+          "brier_score": "0.083646",
+          "mean_probability": "0.102814",
+          "n": 300,
+          "positives": 27,
+          "prevalence": "0.090000"
+        },
+        "logistic_regression": {
+          "average_precision": "0.133978",
+          "brier_score": "0.081082",
+          "mean_probability": "0.095614",
+          "n": 300,
+          "positives": 27,
+          "prevalence": "0.090000"
+        },
+        "random_baseline": {
+          "average_precision": "0.101731",
+          "brier_score": "0.345727",
+          "mean_probability": "0.504200",
+          "n": 300,
+          "positives": 27,
+          "prevalence": "0.090000"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 27,
+        "cutoff_rows": 397,
+        "eligible": 300,
+        "evaluated": 300,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 97
+        },
+        "mature": 300,
+        "scored": 300,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2025-10-01T00:00:00Z",
+      "range": "validation"
+    },
+    {
+      "churn_rate": "0.078616",
+      "late_events": {
+        "billing_events": 7,
+        "subscription_events": 1,
+        "support_events": 0,
+        "total": 42,
+        "usage_events": 34
+      },
+      "missingness": {
+        "billing_total_90d": "0.301887",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.075472",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.090671",
+          "brier_score": "0.072601",
+          "mean_probability": "0.102495",
+          "n": 318,
+          "positives": 25,
+          "prevalence": "0.078616"
+        },
+        "logistic_regression": {
+          "average_precision": "0.154179",
+          "brier_score": "0.070484",
+          "mean_probability": "0.096060",
+          "n": 318,
+          "positives": 25,
+          "prevalence": "0.078616"
+        },
+        "random_baseline": {
+          "average_precision": "0.078339",
+          "brier_score": "0.316302",
+          "mean_probability": "0.476871",
+          "n": 318,
+          "positives": 25,
+          "prevalence": "0.078616"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 25,
+        "cutoff_rows": 414,
+        "eligible": 318,
+        "evaluated": 318,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 96
+        },
+        "mature": 318,
+        "scored": 318,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2025-11-01T00:00:00Z",
+      "range": "validation"
+    },
+    {
+      "churn_rate": "0.079027",
+      "late_events": {
+        "billing_events": 8,
+        "subscription_events": 2,
+        "support_events": 0,
+        "total": 48,
+        "usage_events": 38
+      },
+      "missingness": {
+        "billing_total_90d": "0.313070",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.078267",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.088485",
+          "brier_score": "0.073169",
+          "mean_probability": "0.102986",
+          "n": 329,
+          "positives": 26,
+          "prevalence": "0.079027"
+        },
+        "logistic_regression": {
+          "average_precision": "0.122959",
+          "brier_score": "0.072878",
+          "mean_probability": "0.096663",
+          "n": 329,
+          "positives": 26,
+          "prevalence": "0.079027"
+        },
+        "random_baseline": {
+          "average_precision": "0.067530",
+          "brier_score": "0.336174",
+          "mean_probability": "0.484130",
+          "n": 329,
+          "positives": 26,
+          "prevalence": "0.079027"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 26,
+        "cutoff_rows": 425,
+        "eligible": 329,
+        "evaluated": 329,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 96
+        },
+        "mature": 329,
+        "scored": 329,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2025-12-01T00:00:00Z",
+      "range": "validation"
+    },
+    {
+      "churn_rate": "0.101983",
+      "late_events": {
+        "billing_events": 9,
+        "subscription_events": 1,
+        "support_events": 2,
+        "total": 39,
+        "usage_events": 27
+      },
+      "missingness": {
+        "billing_total_90d": "0.320113",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.080028",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.143099",
+          "brier_score": "0.089345",
+          "mean_probability": "0.102505",
+          "n": 353,
+          "positives": 36,
+          "prevalence": "0.101983"
+        },
+        "logistic_regression": {
+          "average_precision": "0.206598",
+          "brier_score": "0.087773",
+          "mean_probability": "0.095535",
+          "n": 353,
+          "positives": 36,
+          "prevalence": "0.101983"
+        },
+        "random_baseline": {
+          "average_precision": "0.121528",
+          "brier_score": "0.340214",
+          "mean_probability": "0.511675",
+          "n": 353,
+          "positives": 36,
+          "prevalence": "0.101983"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 36,
+        "cutoff_rows": 452,
+        "eligible": 353,
+        "evaluated": 353,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 99
+        },
+        "mature": 353,
+        "scored": 353,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2026-01-01T00:00:00Z",
+      "range": "validation"
+    },
+    {
+      "churn_rate": "0.129121",
+      "late_events": {
+        "billing_events": 5,
+        "subscription_events": 6,
+        "support_events": 0,
+        "total": 44,
+        "usage_events": 33
+      },
+      "missingness": {
+        "billing_total_90d": "0.326923",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.081731",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.140300",
+          "brier_score": "0.112622",
+          "mean_probability": "0.104214",
+          "n": 364,
+          "positives": 47,
+          "prevalence": "0.129121"
+        },
+        "logistic_regression": {
+          "average_precision": "0.271982",
+          "brier_score": "0.107872",
+          "mean_probability": "0.096410",
+          "n": 364,
+          "positives": 47,
+          "prevalence": "0.129121"
+        },
+        "random_baseline": {
+          "average_precision": "0.131099",
+          "brier_score": "0.333327",
+          "mean_probability": "0.496305",
+          "n": 364,
+          "positives": 47,
+          "prevalence": "0.129121"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 47,
+        "cutoff_rows": 453,
+        "eligible": 364,
+        "evaluated": 364,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 89
+        },
+        "mature": 364,
+        "scored": 364,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2026-02-01T00:00:00Z",
+      "range": "test"
+    },
+    {
+      "churn_rate": "0.123656",
+      "late_events": {
+        "billing_events": 8,
+        "subscription_events": 2,
+        "support_events": 0,
+        "total": 46,
+        "usage_events": 36
+      },
+      "missingness": {
+        "billing_total_90d": "0.319892",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.079973",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.133771",
+          "brier_score": "0.108411",
+          "mean_probability": "0.102962",
+          "n": 372,
+          "positives": 46,
+          "prevalence": "0.123656"
+        },
+        "logistic_regression": {
+          "average_precision": "0.304144",
+          "brier_score": "0.102224",
+          "mean_probability": "0.093990",
+          "n": 372,
+          "positives": 46,
+          "prevalence": "0.123656"
+        },
+        "random_baseline": {
+          "average_precision": "0.158610",
+          "brier_score": "0.321959",
+          "mean_probability": "0.490266",
+          "n": 372,
+          "positives": 46,
+          "prevalence": "0.123656"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 46,
+        "cutoff_rows": 459,
+        "eligible": 372,
+        "evaluated": 372,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 87
+        },
+        "mature": 372,
+        "scored": 372,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2026-03-01T00:00:00Z",
+      "range": "test"
+    },
+    {
+      "churn_rate": "0.132468",
+      "late_events": {
+        "billing_events": 13,
+        "subscription_events": 2,
+        "support_events": 0,
+        "total": 56,
+        "usage_events": 41
+      },
+      "missingness": {
+        "billing_total_90d": "0.314286",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.078571",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.163676",
+          "brier_score": "0.113702",
+          "mean_probability": "0.104270",
+          "n": 385,
+          "positives": 51,
+          "prevalence": "0.132468"
+        },
+        "logistic_regression": {
+          "average_precision": "0.284081",
+          "brier_score": "0.109707",
+          "mean_probability": "0.095011",
+          "n": 385,
+          "positives": 51,
+          "prevalence": "0.132468"
+        },
+        "random_baseline": {
+          "average_precision": "0.146875",
+          "brier_score": "0.326237",
+          "mean_probability": "0.496328",
+          "n": 385,
+          "positives": 51,
+          "prevalence": "0.132468"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 51,
+        "cutoff_rows": 472,
+        "eligible": 385,
+        "evaluated": 385,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 87
+        },
+        "mature": 385,
+        "scored": 385,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2026-04-01T00:00:00Z",
+      "range": "test"
+    },
+    {
+      "churn_rate": "0.114796",
+      "late_events": {
+        "billing_events": 12,
+        "subscription_events": 2,
+        "support_events": 0,
+        "total": 62,
+        "usage_events": 48
+      },
+      "missingness": {
+        "billing_total_90d": "0.313776",
+        "days_since_last_usage": "0.005102",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.079719",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.115490",
+          "brier_score": "0.102561",
+          "mean_probability": "0.103817",
+          "n": 392,
+          "positives": 45,
+          "prevalence": "0.114796"
+        },
+        "logistic_regression": {
+          "average_precision": "0.171933",
+          "brier_score": "0.100418",
+          "mean_probability": "0.099710",
+          "n": 392,
+          "positives": 45,
+          "prevalence": "0.114796"
+        },
+        "random_baseline": {
+          "average_precision": "0.113863",
+          "brier_score": "0.324894",
+          "mean_probability": "0.484636",
+          "n": 392,
+          "positives": 45,
+          "prevalence": "0.114796"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 45,
+        "cutoff_rows": 478,
+        "eligible": 392,
+        "evaluated": 392,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 86
+        },
+        "mature": 392,
+        "scored": 392,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2026-05-01T00:00:00Z",
+      "range": "test"
+    },
+    {
+      "churn_rate": "0.104093",
+      "late_events": {
+        "billing_events": 25,
+        "subscription_events": 3,
+        "support_events": 1,
+        "total": 139,
+        "usage_events": 110
+      },
+      "missingness": {
+        "billing_total_90d": "0.312278",
+        "days_since_last_usage": "0.001779",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.078514",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": "0.103190",
+          "brier_score": "0.094391",
+          "mean_probability": "0.103950",
+          "n": 1124,
+          "positives": 117,
+          "prevalence": "0.104093"
+        },
+        "logistic_regression": {
+          "average_precision": "0.157351",
+          "brier_score": "0.091471",
+          "mean_probability": "0.100310",
+          "n": 1124,
+          "positives": 117,
+          "prevalence": "0.104093"
+        },
+        "random_baseline": {
+          "average_precision": "0.097155",
+          "brier_score": "0.336668",
+          "mean_probability": "0.497818",
+          "n": 1124,
+          "positives": 117,
+          "prevalence": "0.104093"
+        }
+      },
+      "population": {
+        "censored": 0,
+        "churned": 117,
+        "cutoff_rows": 1404,
+        "eligible": 1124,
+        "evaluated": 1124,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 280
+        },
+        "mature": 1124,
+        "scored": 1124,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2026-06-01T00:00:00Z",
+      "range": "outside"
+    },
+    {
+      "churn_rate": null,
+      "late_events": {
+        "billing_events": 31,
+        "subscription_events": 2,
+        "support_events": 4,
+        "total": 147,
+        "usage_events": 110
+      },
+      "missingness": {
+        "billing_total_90d": "0.312825",
+        "days_since_last_usage": "0.000000",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.078206",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": null,
+          "brier_score": null,
+          "mean_probability": null,
+          "n": 0,
+          "positives": 0,
+          "prevalence": null
+        },
+        "logistic_regression": {
+          "average_precision": null,
+          "brier_score": null,
+          "mean_probability": null,
+          "n": 0,
+          "positives": 0,
+          "prevalence": null
+        },
+        "random_baseline": {
+          "average_precision": null,
+          "brier_score": null,
+          "mean_probability": null,
+          "n": 0,
+          "positives": 0,
+          "prevalence": null
+        }
+      },
+      "population": {
+        "censored": 1154,
+        "churned": 0,
+        "cutoff_rows": 1439,
+        "eligible": 1154,
+        "evaluated": 0,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 285
+        },
+        "mature": 0,
+        "scored": 1154,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2026-07-01T00:00:00Z",
+      "range": "outside"
+    },
+    {
+      "churn_rate": null,
+      "late_events": {
+        "billing_events": 30,
+        "subscription_events": 5,
+        "support_events": 3,
+        "total": 153,
+        "usage_events": 115
+      },
+      "missingness": {
+        "billing_total_90d": "0.313595",
+        "days_since_last_usage": "0.001668",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.078816",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": null,
+          "brier_score": null,
+          "mean_probability": null,
+          "n": 0,
+          "positives": 0,
+          "prevalence": null
+        },
+        "logistic_regression": {
+          "average_precision": null,
+          "brier_score": null,
+          "mean_probability": null,
+          "n": 0,
+          "positives": 0,
+          "prevalence": null
+        },
+        "random_baseline": {
+          "average_precision": null,
+          "brier_score": null,
+          "mean_probability": null,
+          "n": 0,
+          "positives": 0,
+          "prevalence": null
+        }
+      },
+      "population": {
+        "censored": 1199,
+        "churned": 0,
+        "cutoff_rows": 1378,
+        "eligible": 1199,
+        "evaluated": 0,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 179
+        },
+        "mature": 0,
+        "scored": 1199,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2026-08-01T00:00:00Z",
+      "range": "outside"
+    },
+    {
+      "churn_rate": null,
+      "late_events": {
+        "billing_events": 29,
+        "subscription_events": 2,
+        "support_events": 1,
+        "total": 167,
+        "usage_events": 135
+      },
+      "missingness": {
+        "billing_total_90d": "0.319903",
+        "days_since_last_usage": "0.004029",
+        "high_severity_support_90d": "0.000000",
+        "overall": "0.080983",
+        "usage_events_30d": "0.000000"
+      },
+      "models": {
+        "business_rule": {
+          "average_precision": null,
+          "brier_score": null,
+          "mean_probability": null,
+          "n": 0,
+          "positives": 0,
+          "prevalence": null
+        },
+        "logistic_regression": {
+          "average_precision": null,
+          "brier_score": null,
+          "mean_probability": null,
+          "n": 0,
+          "positives": 0,
+          "prevalence": null
+        },
+        "random_baseline": {
+          "average_precision": null,
+          "brier_score": null,
+          "mean_probability": null,
+          "n": 0,
+          "positives": 0,
+          "prevalence": null
+        }
+      },
+      "population": {
+        "censored": 1241,
+        "churned": 0,
+        "cutoff_rows": 1329,
+        "eligible": 1241,
+        "evaluated": 0,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 88
+        },
+        "mature": 0,
+        "scored": 1241,
+        "unscored_excluded": 0
+      },
+      "prediction_at": "2026-09-01T00:00:00Z",
+      "range": "outside"
+    }
+  ],
+  "dataset_version": "rl-20261026-20261026",
+  "drift": {
+    "after_change_psi": [
+      "0.513545",
+      "0.551353",
+      "0.579740",
+      "0.765053",
+      "0.491035"
+    ],
+    "before_change_psi": [
+      "0.000000",
+      "0.142972"
+    ],
+    "bins": [
+      {
+        "label": "0",
+        "lower": 0,
+        "upper": 1
+      },
+      {
+        "label": "1-2",
+        "lower": 1,
+        "upper": 3
+      },
+      {
+        "label": "3+",
+        "lower": 3,
+        "upper": null
+      }
+    ],
+    "by_cutoff": [
+      {
+        "all_accounts": {
+          "current_rows": 113,
+          "exceeds_threshold": false,
+          "psi": "0.016721",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 21,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "7.14",
+          "psi": "0.108350",
+          "reference_rows": 57
+        },
+        "eligible": 113,
+        "other_regions": {
+          "current_rows": 92,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "5.75",
+          "psi": "0.023959",
+          "reference_rows": 307
+        },
+        "prediction_at": "2025-01-01T00:00:00Z",
+        "range": "train"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 126,
+          "exceeds_threshold": false,
+          "psi": "0.022450",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 24,
+          "exceeds_threshold": true,
+          "mean_usage_events_30d": "7.13",
+          "psi": "0.638981",
+          "reference_rows": 57
+        },
+        "eligible": 126,
+        "other_regions": {
+          "current_rows": 102,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "5.99",
+          "psi": "0.051631",
+          "reference_rows": 307
+        },
+        "prediction_at": "2025-02-01T00:00:00Z",
+        "range": "train"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 131,
+          "exceeds_threshold": false,
+          "psi": "0.009982",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 28,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "8.32",
+          "psi": "0.051031",
+          "reference_rows": 57
+        },
+        "eligible": 131,
+        "other_regions": {
+          "current_rows": 103,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "5.96",
+          "psi": "0.007233",
+          "reference_rows": 307
+        },
+        "prediction_at": "2025-03-01T00:00:00Z",
+        "range": "train"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 150,
+          "exceeds_threshold": false,
+          "psi": "0.006141",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 30,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.70",
+          "psi": "0.006783",
+          "reference_rows": 57
+        },
+        "eligible": 150,
+        "other_regions": {
+          "current_rows": 120,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "5.63",
+          "psi": "0.009378",
+          "reference_rows": 307
+        },
+        "prediction_at": "2025-04-01T00:00:00Z",
+        "range": "train"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 165,
+          "exceeds_threshold": false,
+          "psi": "0.012696",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 33,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "7.24",
+          "psi": "0.111157",
+          "reference_rows": 57
+        },
+        "eligible": 165,
+        "other_regions": {
+          "current_rows": 132,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "5.85",
+          "psi": "0.007907",
+          "reference_rows": 307
+        },
+        "prediction_at": "2025-05-01T00:00:00Z",
+        "range": "train"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 183,
+          "exceeds_threshold": false,
+          "psi": "0.043730",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 38,
+          "exceeds_threshold": true,
+          "mean_usage_events_30d": "7.18",
+          "psi": "0.641052",
+          "reference_rows": 57
+        },
+        "eligible": 183,
+        "other_regions": {
+          "current_rows": 145,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.32",
+          "psi": "0.018169",
+          "reference_rows": 307
+        },
+        "prediction_at": "2025-06-01T00:00:00Z",
+        "range": "train"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 198,
+          "exceeds_threshold": false,
+          "psi": "0.002029",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 38,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.82",
+          "psi": "0.026742",
+          "reference_rows": 57
+        },
+        "eligible": 198,
+        "other_regions": {
+          "current_rows": 160,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.03",
+          "psi": "0.000923",
+          "reference_rows": 307
+        },
+        "prediction_at": "2025-07-01T00:00:00Z",
+        "range": "train"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 214,
+          "exceeds_threshold": false,
+          "psi": "0.001181",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 37,
+          "exceeds_threshold": true,
+          "mean_usage_events_30d": "6.65",
+          "psi": "0.623027",
+          "reference_rows": 57
+        },
+        "eligible": 214,
+        "other_regions": {
+          "current_rows": 177,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.15",
+          "psi": "0.004830",
+          "reference_rows": 307
+        },
+        "prediction_at": "2025-08-01T00:00:00Z",
+        "range": "train"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 228,
+          "exceeds_threshold": false,
+          "psi": "0.018325",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 39,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.23",
+          "psi": "0.181500",
+          "reference_rows": 57
+        },
+        "eligible": 228,
+        "other_regions": {
+          "current_rows": 189,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.22",
+          "psi": "0.008635",
+          "reference_rows": 307
+        },
+        "prediction_at": "2025-09-01T00:00:00Z",
+        "range": "train"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 300,
+          "exceeds_threshold": false,
+          "psi": "0.011837",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 49,
+          "exceeds_threshold": true,
+          "mean_usage_events_30d": "5.20",
+          "psi": "0.679573",
+          "reference_rows": 57
+        },
+        "eligible": 300,
+        "other_regions": {
+          "current_rows": 251,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.93",
+          "psi": "0.025216",
+          "reference_rows": 307
+        },
+        "prediction_at": "2025-10-01T00:00:00Z",
+        "range": "validation"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 318,
+          "exceeds_threshold": false,
+          "psi": "0.003782",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 54,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.37",
+          "psi": "0.085816",
+          "reference_rows": 57
+        },
+        "eligible": 318,
+        "other_regions": {
+          "current_rows": 264,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.47",
+          "psi": "0.000323",
+          "reference_rows": 307
+        },
+        "prediction_at": "2025-11-01T00:00:00Z",
+        "range": "validation"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 329,
+          "exceeds_threshold": false,
+          "psi": "0.010498",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 57,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "5.88",
+          "psi": "0.139882",
+          "reference_rows": 57
+        },
+        "eligible": 329,
+        "other_regions": {
+          "current_rows": 272,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.65",
+          "psi": "0.009134",
+          "reference_rows": 307
+        },
+        "prediction_at": "2025-12-01T00:00:00Z",
+        "range": "validation"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 353,
+          "exceeds_threshold": false,
+          "psi": "0.004366",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 62,
+          "exceeds_threshold": true,
+          "mean_usage_events_30d": "5.85",
+          "psi": "0.251339",
+          "reference_rows": 57
+        },
+        "eligible": 353,
+        "other_regions": {
+          "current_rows": 291,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.74",
+          "psi": "0.013403",
+          "reference_rows": 307
+        },
+        "prediction_at": "2026-01-01T00:00:00Z",
+        "range": "validation"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 364,
+          "exceeds_threshold": false,
+          "psi": "0.000000",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 57,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "7.44",
+          "psi": "0.000000",
+          "reference_rows": 57
+        },
+        "eligible": 364,
+        "other_regions": {
+          "current_rows": 307,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.26",
+          "psi": "0.000000",
+          "reference_rows": 307
+        },
+        "prediction_at": "2026-02-01T00:00:00Z",
+        "range": "test"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 372,
+          "exceeds_threshold": false,
+          "psi": "0.028286",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 59,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "7.03",
+          "psi": "0.142972",
+          "reference_rows": 57
+        },
+        "eligible": 372,
+        "other_regions": {
+          "current_rows": 313,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.57",
+          "psi": "0.018526",
+          "reference_rows": 307
+        },
+        "prediction_at": "2026-03-01T00:00:00Z",
+        "range": "test"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 385,
+          "exceeds_threshold": false,
+          "psi": "0.009458",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 61,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.56",
+          "psi": "0.058749",
+          "reference_rows": 57
+        },
+        "eligible": 385,
+        "other_regions": {
+          "current_rows": 324,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.62",
+          "psi": "0.017150",
+          "reference_rows": 307
+        },
+        "prediction_at": "2026-04-01T00:00:00Z",
+        "range": "test"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 392,
+          "exceeds_threshold": false,
+          "psi": "0.017043",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 56,
+          "exceeds_threshold": true,
+          "mean_usage_events_30d": "3.00",
+          "psi": "0.513545",
+          "reference_rows": 57
+        },
+        "eligible": 392,
+        "other_regions": {
+          "current_rows": 336,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.62",
+          "psi": "0.010967",
+          "reference_rows": 307
+        },
+        "prediction_at": "2026-05-01T00:00:00Z",
+        "range": "test"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 1124,
+          "exceeds_threshold": false,
+          "psi": "0.000867",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 184,
+          "exceeds_threshold": true,
+          "mean_usage_events_30d": "2.76",
+          "psi": "0.551353",
+          "reference_rows": 57
+        },
+        "eligible": 1124,
+        "other_regions": {
+          "current_rows": 940,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.65",
+          "psi": "0.016833",
+          "reference_rows": 307
+        },
+        "prediction_at": "2026-06-01T00:00:00Z",
+        "range": "outside"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 1154,
+          "exceeds_threshold": false,
+          "psi": "0.000647",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 188,
+          "exceeds_threshold": true,
+          "mean_usage_events_30d": "2.89",
+          "psi": "0.579740",
+          "reference_rows": 57
+        },
+        "eligible": 1154,
+        "other_regions": {
+          "current_rows": 966,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.61",
+          "psi": "0.020612",
+          "reference_rows": 307
+        },
+        "prediction_at": "2026-07-01T00:00:00Z",
+        "range": "outside"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 1199,
+          "exceeds_threshold": false,
+          "psi": "0.003020",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 190,
+          "exceeds_threshold": true,
+          "mean_usage_events_30d": "2.59",
+          "psi": "0.765053",
+          "reference_rows": 57
+        },
+        "eligible": 1199,
+        "other_regions": {
+          "current_rows": 1009,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.64",
+          "psi": "0.014031",
+          "reference_rows": 307
+        },
+        "prediction_at": "2026-08-01T00:00:00Z",
+        "range": "outside"
+      },
+      {
+        "all_accounts": {
+          "current_rows": 1241,
+          "exceeds_threshold": false,
+          "psi": "0.002069",
+          "reference_rows": 364
+        },
+        "apac": {
+          "current_rows": 199,
+          "exceeds_threshold": true,
+          "mean_usage_events_30d": "2.88",
+          "psi": "0.491035",
+          "reference_rows": 57
+        },
+        "eligible": 1241,
+        "other_regions": {
+          "current_rows": 1042,
+          "exceeds_threshold": false,
+          "mean_usage_events_30d": "6.73",
+          "psi": "0.022153",
+          "reference_rows": 307
+        },
+        "prediction_at": "2026-09-01T00:00:00Z",
+        "range": "outside"
+      }
+    ],
+    "change_at": "2026-03-31T00:00:00Z",
+    "feature": "usage_events_30d",
+    "floor": "0.000100",
+    "met": true,
+    "reference_prediction_at": "2026-02-01T00:00:00Z",
+    "region": "apac",
+    "target_psi": "0.200000",
+    "threshold": "0.200000"
+  },
+  "population": "all 2,400 accounts as built by the domain; a cutoff before 2026-06-01 holds the accounts of the matching role only",
+  "training_run_id": "tr-001"
+}

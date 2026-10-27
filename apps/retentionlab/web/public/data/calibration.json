@@ -1,0 +1,296 @@
+{
+  "a": "0.954588",
+  "b": "-0.161286",
+  "by_region": {
+    "amer": {
+      "gap_pp": "-0.59",
+      "mean_predicted": "0.091238",
+      "n": 597,
+      "observed_rate": "0.097152",
+      "positives": 58
+    },
+    "anz": {
+      "gap_pp": "-3.33",
+      "mean_predicted": "0.092662",
+      "n": 135,
+      "observed_rate": "0.125926",
+      "positives": 17
+    },
+    "apac": {
+      "gap_pp": "-10.68",
+      "mean_predicted": "0.103481",
+      "n": 233,
+      "observed_rate": "0.210300",
+      "positives": 49
+    },
+    "emea": {
+      "gap_pp": "-1.05",
+      "mean_predicted": "0.102085",
+      "n": 373,
+      "observed_rate": "0.112601",
+      "positives": 42
+    },
+    "latam": {
+      "gap_pp": "-3.68",
+      "mean_predicted": "0.094605",
+      "n": 175,
+      "observed_rate": "0.131429",
+      "positives": 23
+    }
+  },
+  "by_segment": {
+    "enterprise": {
+      "gap_pp": "-1.28",
+      "mean_predicted": "0.038807",
+      "n": 213,
+      "observed_rate": "0.051643",
+      "positives": 11
+    },
+    "mid": {
+      "gap_pp": "-1.99",
+      "mean_predicted": "0.069537",
+      "n": 380,
+      "observed_rate": "0.089474",
+      "positives": 34
+    },
+    "smb": {
+      "gap_pp": "0.22",
+      "mean_predicted": "0.106581",
+      "n": 498,
+      "observed_rate": "0.104418",
+      "positives": 52
+    },
+    "starter": {
+      "gap_pp": "-8.07",
+      "mean_predicted": "0.137336",
+      "n": 422,
+      "observed_rate": "0.218009",
+      "positives": 92
+    }
+  },
+  "dataset_version": "rl-20261026-20261026",
+  "evaluation_range": "test",
+  "evaluation_rows": 1513,
+  "fit_range": "validation (retained, mature rows only)",
+  "fit_rows": 289,
+  "method": "platt",
+  "overall": {
+    "gap_pp": "-2.86",
+    "mean_predicted": "0.096314",
+    "n": 1513,
+    "observed_rate": "0.124917",
+    "positives": 189
+  },
+  "reliability_calibrated": [
+    {
+      "closed_upper": false,
+      "count": 815,
+      "gap_pp": "-1.21",
+      "index": 0,
+      "lower": "0.000000",
+      "mean_predicted": "0.056654",
+      "observed_rate": "0.068712",
+      "upper": "0.100000"
+    },
+    {
+      "closed_upper": false,
+      "count": 640,
+      "gap_pp": "-4.96",
+      "index": 1,
+      "lower": "0.100000",
+      "mean_predicted": "0.133245",
+      "observed_rate": "0.182813",
+      "upper": "0.200000"
+    },
+    {
+      "closed_upper": false,
+      "count": 50,
+      "gap_pp": "-6.99",
+      "index": 2,
+      "lower": "0.200000",
+      "mean_predicted": "0.230107",
+      "observed_rate": "0.300000",
+      "upper": "0.300000"
+    },
+    {
+      "closed_upper": false,
+      "count": 8,
+      "gap_pp": "22.10",
+      "index": 3,
+      "lower": "0.300000",
+      "mean_predicted": "0.345991",
+      "observed_rate": "0.125000",
+      "upper": "0.400000"
+    },
+    {
+      "closed_upper": false,
+      "count": 0,
+      "gap_pp": null,
+      "index": 4,
+      "lower": "0.400000",
+      "mean_predicted": null,
+      "observed_rate": null,
+      "upper": "0.500000"
+    },
+    {
+      "closed_upper": false,
+      "count": 0,
+      "gap_pp": null,
+      "index": 5,
+      "lower": "0.500000",
+      "mean_predicted": null,
+      "observed_rate": null,
+      "upper": "0.600000"
+    },
+    {
+      "closed_upper": false,
+      "count": 0,
+      "gap_pp": null,
+      "index": 6,
+      "lower": "0.600000",
+      "mean_predicted": null,
+      "observed_rate": null,
+      "upper": "0.700000"
+    },
+    {
+      "closed_upper": false,
+      "count": 0,
+      "gap_pp": null,
+      "index": 7,
+      "lower": "0.700000",
+      "mean_predicted": null,
+      "observed_rate": null,
+      "upper": "0.800000"
+    },
+    {
+      "closed_upper": false,
+      "count": 0,
+      "gap_pp": null,
+      "index": 8,
+      "lower": "0.800000",
+      "mean_predicted": null,
+      "observed_rate": null,
+      "upper": "0.900000"
+    },
+    {
+      "closed_upper": true,
+      "count": 0,
+      "gap_pp": null,
+      "index": 9,
+      "lower": "0.900000",
+      "mean_predicted": null,
+      "observed_rate": null,
+      "upper": "1.000000"
+    }
+  ],
+  "reliability_uncalibrated": [
+    {
+      "closed_upper": false,
+      "count": 778,
+      "gap_pp": "-0.88",
+      "index": 0,
+      "lower": "0.000000",
+      "mean_predicted": "0.056720",
+      "observed_rate": "0.065553",
+      "upper": "0.100000"
+    },
+    {
+      "closed_upper": false,
+      "count": 653,
+      "gap_pp": "-3.50",
+      "index": 1,
+      "lower": "0.100000",
+      "mean_predicted": "0.138021",
+      "observed_rate": "0.173047",
+      "upper": "0.200000"
+    },
+    {
+      "closed_upper": false,
+      "count": 72,
+      "gap_pp": "-8.37",
+      "index": 2,
+      "lower": "0.200000",
+      "mean_predicted": "0.235707",
+      "observed_rate": "0.319444",
+      "upper": "0.300000"
+    },
+    {
+      "closed_upper": false,
+      "count": 7,
+      "gap_pp": "5.50",
+      "index": 3,
+      "lower": "0.300000",
+      "mean_predicted": "0.340665",
+      "observed_rate": "0.285714",
+      "upper": "0.400000"
+    },
+    {
+      "closed_upper": false,
+      "count": 3,
+      "gap_pp": "41.88",
+      "index": 4,
+      "lower": "0.400000",
+      "mean_predicted": "0.418756",
+      "observed_rate": "0.000000",
+      "upper": "0.500000"
+    },
+    {
+      "closed_upper": false,
+      "count": 0,
+      "gap_pp": null,
+      "index": 5,
+      "lower": "0.500000",
+      "mean_predicted": null,
+      "observed_rate": null,
+      "upper": "0.600000"
+    },
+    {
+      "closed_upper": false,
+      "count": 0,
+      "gap_pp": null,
+      "index": 6,
+      "lower": "0.600000",
+      "mean_predicted": null,
+      "observed_rate": null,
+      "upper": "0.700000"
+    },
+    {
+      "closed_upper": false,
+      "count": 0,
+      "gap_pp": null,
+      "index": 7,
+      "lower": "0.700000",
+      "mean_predicted": null,
+      "observed_rate": null,
+      "upper": "0.800000"
+    },
+    {
+      "closed_upper": false,
+      "count": 0,
+      "gap_pp": null,
+      "index": 8,
+      "lower": "0.800000",
+      "mean_predicted": null,
+      "observed_rate": null,
+      "upper": "0.900000"
+    },
+    {
+      "closed_upper": true,
+      "count": 0,
+      "gap_pp": null,
+      "index": 9,
+      "lower": "0.900000",
+      "mean_predicted": null,
+      "observed_rate": null,
+      "upper": "1.000000"
+    }
+  ],
+  "training_run_id": "tr-001",
+  "uncalibrated_overall": {
+    "gap_pp": "-2.26",
+    "mean_predicted": "0.102358",
+    "n": 1513,
+    "observed_rate": "0.124917",
+    "positives": 189
+  }
+}
