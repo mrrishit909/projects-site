@@ -780,7 +780,8 @@ def test_public_case_study_figures_agree_with_the_stored_results():
     assert f"{pr['approved_correct']} of the {pr['approved']} approvals are right" in text
     assert pr["precision"] in text
     # the two wording points reported to the coordinator: the decision-agreement count is quoted as such, and a stale golden relationship figure
-    assert f"{pr['decisions_agreeing_with_truth']} of the {pr['reviewed']} reviews" in text and pr["reviewed_correct_share"] not in text
+    # the public case study quotes the contract's reviewed-correct share and names the decision-agreement count beside it (corrected on the portfolio at eecd593)
+    assert f"{pr['reviewed_correct']} of {pr['reviewed']} = {pr['reviewed_correct_share']}" in text and f"{pr['decisions_agreeing_with_truth']} of {pr['reviewed']}" in text
     rel = read("release-package.md")
     assert "true but ambiguous" in rel
     if "relationship integrity 0.947368 with two null foreign keys" in text:

@@ -59,8 +59,8 @@ The record was read, not changed. It is consistent with the stored results excep
 | 80 declared edges, 58 observed (0.725000), 12 undeclared observed, 10 inferred never counted | investigation 05 | equal |
 | 23 of 30 definitions pass (0.766667); fifteen carry more than one version | investigation 06 | equal |
 | 220 of 400 reviewed, 174 approved, 46 rejected, 15 reversed; 172 of 174 right: precision 0.988506 | investigation 07 | equal |
-| "205 of the 220 reviews, approvals and rejections together, agree with the truth" | investigation 07 | **true but ambiguous**: 205 is the decision-agreement count (172 + 33 = 0.931818); the contract's `reviewed_correct_share` (manifest, reference SQL, domain) is 185 of 220 = 0.840909. The sentence should say which it quotes |
-| Built section: "relationship integrity 0.947368 with two null foreign keys counted apart" for the known-answer fixture | investigation 09 | **stale**: after the empty-string key was pinned as missing (D-10 R7-11) the golden relationship figure is 35 of 37 = 0.945946 with three null or empty keys counted apart; the same record's review paragraph already says it moved from 36 of 38 to 35 of 37. The known-answer, uniqueness (0.010204 and 0.020000), timeliness (3 of 4), weighted scores (0.963932 and 0.958116), resolution (38.4444 h), ownership, definitions, lineage and precision (2 of 3) figures are equal |
+| "205 of the 220 reviews, approvals and rejections together, agree with the truth" | investigation 07 | **true but ambiguous**: 205 is the decision-agreement count (172 + 33 = 0.931818); the contract's `reviewed_correct_share` (manifest, reference SQL, domain) is 185 of 220 = 0.840909. The sentence should say which it quotes Corrected on the portfolio at `eecd593`: the page now quotes 185 of 220 = 0.840909 as the reviewed-correct share and names the 205 of 220 decision-agreement count beside it. |
+| Built section: "relationship integrity 0.947368 with two null foreign keys counted apart" for the known-answer fixture | investigation 09 | **stale**: after the empty-string key was pinned as missing (D-10 R7-11) the golden relationship figure is 35 of 37 = 0.945946 with three null or empty keys counted apart; the same record's review paragraph already says it moved from 36 of 38 to 35 of 37. The known-answer, uniqueness (0.010204 and 0.020000), timeliness (3 of 4), weighted scores (0.963932 and 0.958116), resolution (38.4444 h), ownership, definitions, lineage and precision (2 of 3) figures are equal Corrected on the portfolio at `eecd593`: the page now says 35 of 37 = 0.945946 with three null or empty keys. |
 | 40 datasets, 420 fields, 18 owners, 60 rules, 4,609 runs, 574 issues, 160 edges, 45 metric versions, 2,000 records, 400 candidates | `manifest.json` `row_counts`, `run_all.py` row E | equal |
 Both wording points are reported to the coordinator; the file lives on `unified-portfolio` and was not touched.
 
@@ -108,7 +108,7 @@ This document carries the checksums of every other artifact, so it cannot contai
 | `data/sql/analysis/01_ds_customers_override_both_weights.sql` | `7358fc163bd44eba88d5d28d045038a096dc61de653950f1bb0a1d14a630a89a` |
 | `data/sql/analysis/02_ownership_coverage.sql` | `a33a4c7628b57b730a0eff4087e7cccb2d9a70cdc5197b9de6ab1160c52658de` |
 | `data/sql/analysis/03_weight_shift_dr03.sql` | `708d0dfcf9a6dd34cc7f91f135ee8420bcb1f072a4da5231d09ca33e6b348001` |
-| `data/sql/analysis/04_issue_classes_and_resolution.sql` | `466f096c5ad953dcf8bd99450c1c633f370a83b724664fa2412bccecd9823dbf` |
+| `data/sql/analysis/04_issue_classes_and_resolution.sql` | `5ae11c31d7ec18c420820227bd8966df002d69e7d3109fc3f10bd70dbb39abbf` |
 | `data/sql/analysis/05_lineage_coverage_evidence.sql` | `71505bf2a908ccfa74d75c05c40db07611dd2feaba93f2d155e0a2ae5aa00d23` |
 | `data/sql/analysis/06_definition_coverage.sql` | `b57789e5ce6b07842a086ae808d9feebff571e3d6d3d248cf4d7d519b08b89f3` |
 | `data/sql/analysis/07_match_precision.sql` | `7cba618002efc8e2940a464af195c19efe77ee1e3a701f155d40188904ca0c6b` |
@@ -141,7 +141,7 @@ This document carries the checksums of every other artifact, so it cannot contai
 | `docs/web-brief.md` | `c1a51b02000959c469fb2f1d9cd71edf1813825c086276ab8ccbb967b0e0639b` |
 | `docs/workbook.md` | `ae5e4623b28f449751295210e50261c5af35111f7a21243da1751801e5a48bd4` |
 | `requirements-artifacts.txt` | `06d28d69e958deafb09f0a44fcae9b548f15e4debc14ebc39aad5f0934856fbf` |
-| `tests/test_artifacts.py` | `d1925a47f640d1c62d8df45130d52e019edfb0c9ceaa9395fe26a9af7d6eaabf` |
+| `tests/test_artifacts.py` | `4d744cf0504b0a583ecb67d3179f1da9c64f14f8a6c08ca67d03df1251c7789e` |
 <!-- END:checksums -->
 
 ## Verification status of this package (stated plainly)

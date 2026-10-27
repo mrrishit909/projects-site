@@ -33,7 +33,7 @@ FROM tl_issue i JOIN owners o ON o.owner_id = i.owner_id WHERE i.class = 'resolv
 
 -- @@ fast_team_vs_others
 SELECT CASE WHEN o.team = 'Data Platform' THEN 'Data Platform' ELSE 'all other teams' END AS group_name, count(*) AS resolved, round(avg(i.hours), 4) AS mean_hours
-FROM tl_issue i JOIN owners o ON o.owner_id = i.owner_id WHERE i.class = 'resolved' GROUP BY 1 ORDER BY 1 COLLATE "C"
+FROM tl_issue i JOIN owners o ON o.owner_id = i.owner_id WHERE i.class = 'resolved' GROUP BY 1 ORDER BY (min(o.team) = 'Data Platform') DESC
 
 -- @@ resolution_overall
 SELECT count(*) AS resolved, round(avg(hours), 4) AS mean_hours,
