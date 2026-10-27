@@ -198,6 +198,28 @@ Seed 20261026; 2,400 accounts over 4 segments and 5 regions, monthly cutoffs 202
   so the Platt fit is noisy; the published sample is not the population (the tests rebuild the world in memory);
   determinism depends on CPython 3.11's `random`; `high_severity_support_90d` is weak.
 
+## D-08 Site decisions (adopted from the web hand-back; the 14 numbered assumptions are in the web README / evidence page)
+* The TypeScript mirror evaluates frozen predictions only (fitting is not mirrored); the natural log is deterministic
+  fixed-point BigInt at 10^90 and a static guard keeps Math functions out of every figure (chart geometry only). The
+  test-table tie rule is probability descending, then account id (code-point order), then the earlier cutoff for the
+  union; per-cutoff test populations are also offered and equal `cutoff_aggregates.json`. The cohort is evaluated per
+  model with predictions filtered by `model_name`; the test table's calibrated column stands for the logistic model.
+* **The model's margin over the baselines is labelled "met, by construction" on the models page, with the D-G02
+  disclosure above the charts and on every route's honesty block**; the latent ceiling and the unobserved designs
+  appear only on the evidence page as disclosures, and the per-row propensities are dropped at load.
+* The golden copy lives in `public/golden/` (byte-identical, hash-checked). A PSI term prints as Python prints a quantized
+  Decimal; a negative amount that rounds to zero prints "-0.00". `config_hash` is checked with Web Crypto over the
+  canonical JSON. A JSON-number probability is accepted as the exact value it denotes and frozen to 6 places (Python
+  keeps the raw float; published data uses strings). Tenure is computed on the cohort sample only. Account factors are
+  exact log-odds contributions shown as associations, never causes. The planner validates K against the chosen
+  population and reuses `CAPACITY_EXCEEDS_POPULATION`; `ASSUMED_EFFECT_OUT_OF_RANGE` is a UI message only. Simulation
+  state is module memory; nothing uses browser storage. System font stacks only.
+* Edge cases pinned by the check scripts: a cancellation at the cutoff instant counts as churn; `available_at` equal to
+  the cutoff counts as arrived late; a label window ending exactly on a boundary does not cross it; two predictions for
+  one (run, cutoff) keep the later row. Fifteen of the 104 designed-relationship figures need the full event history
+  and are shown as "published, full world", not recomputed. apac PSI also spikes in some small pre-change months and
+  the page says so. The scaffold's `postbuild-routes.mjs` route list and `node-shim.d.ts` were corrected for this app.
+
 ## Mode disclosure
 Mode A: Python domain (features, labels, splits, fitting, calibration, scoring, metrics) + PostgreSQL + FastAPI
 verified on hosted runners. Mode B: TypeScript mirror over the published snapshot (frozen predictions and rows);

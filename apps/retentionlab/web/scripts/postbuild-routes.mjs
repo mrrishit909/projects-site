@@ -4,8 +4,8 @@ import { mkdirSync, copyFileSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 export const ROUTES = [
-  "overview", "dag", "runs", "sources", "quarantine", "gate",
-  "backfill", "incidents", "benchmark", "evidence", "case-study",
+  "overview", "cohorts", "features", "models", "calibration", "capacity",
+  "account", "queue", "monitoring", "evidence", "case-study",
 ];
 const dist = new URL("../dist/", import.meta.url).pathname;
 for (const r of ROUTES) {

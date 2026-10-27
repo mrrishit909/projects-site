@@ -9,3 +9,7 @@ declare module "node:crypto" {
   export function createHash(alg: string): { update(data: string | Uint8Array): { digest(enc: "hex"): string } };
 }
 declare const process: { exitCode: number | undefined; env: Record<string, string | undefined> };
+declare module "node:fs" {
+  export function readdirSync(path: string | URL): string[];
+  export function statSync(path: string | URL): { isDirectory(): boolean };
+}
