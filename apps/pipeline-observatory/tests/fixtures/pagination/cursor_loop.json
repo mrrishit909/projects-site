@@ -1,0 +1,56 @@
+{
+  "note": "Synthetic source whose pagination token repeats: c0 -> c1 -> c2 -> c1 -> ... forever.",
+  "source_id": "src-orders",
+  "start": "c0",
+  "responses": {
+    "c0": [
+      {
+        "status": 200,
+        "records": [
+          {
+            "record_id": "PG-1",
+            "quantity": 1,
+            "unit_price": "10.00",
+            "amount": "10.00",
+            "event_ts": "2026-10-04T01:00:00Z"
+          }
+        ],
+        "next_cursor": "c1"
+      }
+    ],
+    "c1": [
+      {
+        "status": 200,
+        "records": [
+          {
+            "record_id": "PG-2",
+            "quantity": 1,
+            "unit_price": "10.00",
+            "amount": "10.00",
+            "event_ts": "2026-10-04T02:00:00Z"
+          }
+        ],
+        "next_cursor": "c2"
+      }
+    ],
+    "c2": [
+      {
+        "status": 200,
+        "records": [
+          {
+            "record_id": "PG-3",
+            "quantity": 1,
+            "unit_price": "10.00",
+            "amount": "10.00",
+            "event_ts": "2026-10-04T03:00:00Z"
+          }
+        ],
+        "next_cursor": "c1"
+      }
+    ]
+  },
+  "expected": {
+    "code": "CURSOR_LOOP",
+    "pages_before_stop": 3
+  }
+}

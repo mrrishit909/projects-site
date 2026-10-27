@@ -1,0 +1,81 @@
+{
+  "note": "Synthetic paginated source. The second page is rate-limited twice (retry-after 30 s); the transport records every request.",
+  "source_id": "src-orders",
+  "start": "c0",
+  "retry_after_seconds": 30,
+  "responses": {
+    "c0": [
+      {
+        "status": 200,
+        "records": [
+          {
+            "record_id": "PG-1",
+            "quantity": 1,
+            "unit_price": "10.00",
+            "amount": "10.00",
+            "event_ts": "2026-10-04T01:00:00Z"
+          },
+          {
+            "record_id": "PG-2",
+            "quantity": 1,
+            "unit_price": "10.00",
+            "amount": "10.00",
+            "event_ts": "2026-10-04T02:00:00Z"
+          }
+        ],
+        "next_cursor": "c1"
+      }
+    ],
+    "c1": [
+      {
+        "status": 429,
+        "retry_after_seconds": 30
+      },
+      {
+        "status": 429,
+        "retry_after_seconds": 30
+      },
+      {
+        "status": 200,
+        "records": [
+          {
+            "record_id": "PG-3",
+            "quantity": 1,
+            "unit_price": "10.00",
+            "amount": "10.00",
+            "event_ts": "2026-10-04T03:00:00Z"
+          }
+        ],
+        "next_cursor": "c2"
+      }
+    ],
+    "c2": [
+      {
+        "status": 200,
+        "records": [
+          {
+            "record_id": "PG-4",
+            "quantity": 1,
+            "unit_price": "10.00",
+            "amount": "10.00",
+            "event_ts": "2026-10-04T04:00:00Z"
+          }
+        ],
+        "next_cursor": null
+      }
+    ]
+  },
+  "expected": {
+    "records": 4,
+    "cursors": [
+      "c0",
+      "c1",
+      "c2"
+    ],
+    "waits": [
+      30,
+      30
+    ],
+    "requests": 5
+  }
+}

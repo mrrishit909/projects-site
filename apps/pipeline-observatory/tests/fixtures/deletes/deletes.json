@@ -1,0 +1,213 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-10-05T00:00:00Z",
+  "cutoff": "2026-10-05T00:00:00Z",
+  "business_total_field": "amount",
+  "freshness_timestamp_field": "event_ts",
+  "source_expectations": [
+    {
+      "source_id": "src-orders",
+      "partition": "2026-10-04",
+      "expected_records": 3
+    }
+  ],
+  "processing_measurement": null,
+  "source_contracts": [
+    {
+      "source_id": "src-orders",
+      "source_name": "Synthetic orders feed",
+      "schema_version": "1",
+      "expected_frequency": "hourly",
+      "owner_id": "own-01"
+    }
+  ],
+  "ingestion_batches": [
+    {
+      "batch_id": "b-1",
+      "source_id": "src-orders",
+      "source_cursor": "cur-000",
+      "started_at": "2026-10-04T08:30:00Z",
+      "status": "committed"
+    },
+    {
+      "batch_id": "b-2",
+      "source_id": "src-orders",
+      "source_cursor": "cur-003",
+      "started_at": "2026-10-04T09:10:00Z",
+      "status": "committed"
+    }
+  ],
+  "raw_records": [
+    {
+      "raw_record_id": "rr-b-1-01",
+      "batch_id": "b-1",
+      "source_key": "D-1",
+      "payload_hash": "8102660423b64d7eee85fb89d6ac00dcb3da99832e3ebc59bdab074df5c3631f",
+      "payload_json": {
+        "record_id": "D-1",
+        "quantity": 1,
+        "unit_price": "10.00",
+        "amount": "10.00",
+        "event_ts": "2026-10-04T08:00:00Z"
+      }
+    },
+    {
+      "raw_record_id": "rr-b-1-02",
+      "batch_id": "b-1",
+      "source_key": "D-2",
+      "payload_hash": "43d40b5dfc7eaa4fcff22ec32f924fa3dd24fd55183c496bc7cc6d088a182721",
+      "payload_json": {
+        "record_id": "D-2",
+        "quantity": 2,
+        "unit_price": "10.00",
+        "amount": "20.00",
+        "event_ts": "2026-10-04T08:10:00Z"
+      }
+    },
+    {
+      "raw_record_id": "rr-b-1-03",
+      "batch_id": "b-1",
+      "source_key": "D-3",
+      "payload_hash": "f4595bbc474be9182375cf5cc6acdef29451df2c35f6d9e81faf0e60acb39b08",
+      "payload_json": {
+        "record_id": "D-3",
+        "quantity": 1,
+        "unit_price": "5.00",
+        "amount": "5.00",
+        "event_ts": "2026-10-04T08:20:00Z"
+      }
+    },
+    {
+      "raw_record_id": "rr-b-2-01",
+      "batch_id": "b-2",
+      "source_key": "D-2",
+      "payload_hash": "a45f26da165a4f0d32d67dac2d79d075f130893a652ce03c39aed005de757858",
+      "payload_json": {
+        "record_id": "D-2",
+        "op": "delete",
+        "amount": "0.00",
+        "event_ts": "2026-10-04T09:00:00Z"
+      }
+    },
+    {
+      "raw_record_id": "rr-b-2-02",
+      "batch_id": "b-2",
+      "source_key": "D-9",
+      "payload_hash": "84e034b8c7accb7268a58eb353369af7f7b8bb3ce66854ca180500ea01f65854",
+      "payload_json": {
+        "record_id": "D-9",
+        "op": "delete",
+        "amount": "0.00",
+        "event_ts": "2026-10-04T09:01:00Z"
+      }
+    },
+    {
+      "raw_record_id": "rr-b-2-03",
+      "batch_id": "b-2",
+      "source_key": "D-2",
+      "payload_hash": "6c37855fdc1fd34f1bfbdd71245b7057acc731bd251fa0cf69b7d2638769e22b",
+      "payload_json": {
+        "record_id": "D-2",
+        "op": "delete",
+        "amount": "0.00",
+        "event_ts": "2026-10-04T09:02:00Z"
+      }
+    }
+  ],
+  "quarantine_records": [
+    {
+      "quarantine_id": "q-b-2-01",
+      "batch_id": "b-2",
+      "source_key": "D-9",
+      "reason_code": "DELETE_TARGET_UNKNOWN",
+      "payload_hash": "84e034b8c7accb7268a58eb353369af7f7b8bb3ce66854ca180500ea01f65854"
+    }
+  ],
+  "checkpoints": [
+    {
+      "checkpoint_id": "cp-1",
+      "source_id": "src-orders",
+      "batch_id": "b-1",
+      "committed_cursor": "cur-003",
+      "committed_at": "2026-10-04T08:35:00Z",
+      "version_number": 1
+    },
+    {
+      "checkpoint_id": "cp-2",
+      "source_id": "src-orders",
+      "batch_id": "b-2",
+      "committed_cursor": "cur-006",
+      "committed_at": "2026-10-04T09:15:00Z",
+      "version_number": 2
+    }
+  ],
+  "model_definitions": [],
+  "pipeline_runs": [
+    {
+      "run_id": "run-1",
+      "started_at": "2026-10-04T09:20:00Z",
+      "finished_at": "2026-10-04T09:30:00Z",
+      "status": "success",
+      "code_sha": "a1b2c3d",
+      "backfill_id": null
+    }
+  ],
+  "task_runs": [
+    {
+      "task_run_id": "tr-1-1",
+      "run_id": "run-1",
+      "task_name": "quality_gate",
+      "status": "success",
+      "attempt": "1"
+    }
+  ],
+  "quality_results": [
+    {
+      "quality_result_id": "qr-1-1",
+      "task_run_id": "tr-1-1",
+      "rule_name": "keys_unique",
+      "severity": "critical",
+      "eligible_count": 2,
+      "failure_count": 0
+    }
+  ],
+  "publications": [
+    {
+      "publication_id": "pub-1",
+      "run_id": "run-1",
+      "dataset_name": "sales_daily",
+      "published_at": "2026-10-04T09:30:00Z",
+      "watermark": "2026-10-04T09:10:00Z",
+      "source_ids": [
+        "src-orders"
+      ],
+      "included_batch_ids": [
+        "b-1",
+        "b-2"
+      ],
+      "content_hash": "398a7b4ebb0aea5259ef3819616edc61056c0d7f61b4db71958b46b2b178143c"
+    }
+  ],
+  "incidents": [],
+  "backfill_requests": [],
+  "expected": {
+    "note": "D-2 (amount 20.00) is deleted by a delete event in b-2: it leaves the published snapshot as an exclusion with its reason; D-9 deletes a key never accepted (quarantined); the repeated delete of D-2 is a duplicate.",
+    "b-2": {
+      "received": 3,
+      "accepted_unique": 0,
+      "duplicate": 1,
+      "quarantined": 1
+    },
+    "publication": {
+      "published_records": 2,
+      "published_total": "15.00",
+      "source_total": "35.00",
+      "exclusions": {
+        "quarantined": "0.00",
+        "duplicates": "0.00",
+        "deletes": "20.00"
+      },
+      "residual": "0.00"
+    }
+  }
+}

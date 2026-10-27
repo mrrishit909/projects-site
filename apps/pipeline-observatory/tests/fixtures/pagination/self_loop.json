@@ -1,0 +1,26 @@
+{
+  "note": "A source that answers every request with the same next_cursor as the one requested (the minimal loop).",
+  "source_id": "src-orders",
+  "start": "c0",
+  "responses": {
+    "c0": [
+      {
+        "status": 200,
+        "records": [
+          {
+            "record_id": "PG-1",
+            "quantity": 1,
+            "unit_price": "10.00",
+            "amount": "10.00",
+            "event_ts": "2026-10-04T01:00:00Z"
+          }
+        ],
+        "next_cursor": "c0"
+      }
+    ]
+  },
+  "expected": {
+    "code": "CURSOR_LOOP",
+    "pages_before_stop": 1
+  }
+}

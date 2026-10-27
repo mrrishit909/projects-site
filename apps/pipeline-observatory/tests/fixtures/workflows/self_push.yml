@@ -1,0 +1,17 @@
+name: self-push
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  regenerate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python build.py
+      - run: |
+          git config user.name bot
+          git add -A
+          git commit -m "regenerate"
+          git push origin main

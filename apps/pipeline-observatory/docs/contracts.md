@@ -101,6 +101,34 @@ are the binding form. In short:
 * **Not proven by the fixture.** Cursor pagination with retry-after and CURSOR_LOOP, SCHEMA_CHANGED, delete events, redaction and
   the self-trigger check have no golden inputs; the backend tests must carry their own fixtures for them (P08-TEST-03/04/08/10/11/12).
 
+## D-06 Backend clarifications (adopted from the backend hand-back; the 19 numbered assumptions are in README.md)
+* Batch statuses add `staged` (fetched, uncounted) and `quarantined` (refused whole); a crashed commit leaves the batch
+  `staged` since a dying transaction cannot write `aborted`; batches apply per source in checkpoint-version order.
+* C01 stages a page the fetcher received (the app calls no external source; retry-after enforced per source and cursor;
+  cursor loops detected within a fetch session), C02 validates and persists verdicts without counting (and is the only
+  way to bump a source's expected `schema_version`, operator or admin), C03 re-classifies under the source lock and
+  refuses an unvalidated batch; C03 takes an optional processing measurement.
+* Delete events: a delete of a live accepted key is classed `deleted`, a repeated delete `duplicate`, a delete of an
+  unknown key quarantined `DELETE_TARGET_UNKNOWN`, an unknown `op` quarantined `UNKNOWN_OP`; a delete removes the record
+  from publications that include the deleting batch and enters reconciliation as an exclusion; `received` may exceed
+  accepted + duplicate + quarantined by the deleted rows. Extra quarantine reason `INVALID_FIELD`; a row with no key is
+  `MISSING_FIELD`.
+* Gate: the latest result per rule name counts; C05 computes `keys_unique`, `relationships_intact`,
+  `reconciliation_residual_zero` (critical), `freshness_within_target` (critical where the source declares a target)
+  and `completeness_vs_expectation` (warning); allowed sets the run `success`, blocked sets it `failed` and opens an
+  incident. Publication: `source_ids` is every source contract, the watermark is operator-supplied and never in the
+  future, `published_at` is the server's time; the published total is the stored model output where one exists.
+* C04 creates a run for a new `run_id`; attempt numbers must be consecutive (409 `DUPLICATE_ID`, 422 `ATTEMPT_GAP`).
+  Faults `duplicate_key`, `task_failure`, `crash_before_checkpoint`; sandbox = `PIPELINE_ENVIRONMENT == sandbox`.
+  Backfill ranges aligned to UTC midnight; a refused request consumes its id. C09 closes at the verified instant.
+* Status codes: 409 for checkpoint regression and gap, `CURSOR_LOOP`, `BACKFILL_OVERLAP`, `DUPLICATE_ID`; 429
+  `RETRY_TOO_SOON` with `Retry-After`; 403 `NOT_SANDBOX`; 500 `INJECTED_CRASH`; 422 with the rule id otherwise.
+  `/metrics`: `from`/`to` on each entity's primary instant, `cutoff` drops facts not yet known, `group_by` none|source.
+  Rows are locked `FOR NO KEY UPDATE`. Database guards: unique (source_id, source_key) on accepted records, checkpoint
+  order and commit pairing by trigger, append-only evidence, no publication or pointer for a failed run or blocked gate.
+* Known gaps: the SQL reference does not model delete events (domain and API tests do); no real fetcher, scheduler or
+  retention job; the workflow guard reads workflow text (no YAML parser in the pinned requirements).
+
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners, including the crash-before-checkpoint and
 overlap experiments. Mode B: TypeScript mirror over the published snapshot; the quarantine desk, backfill console and

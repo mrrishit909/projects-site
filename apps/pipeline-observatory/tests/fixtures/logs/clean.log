@@ -1,0 +1,3 @@
+ts=2026-10-04T10:00:00Z level=INFO msg="batch committed" batch_id=b-001 accepted=8 duplicate=1 quarantined=1
+{"event":"command","name":"commit-batch","request_id":"req-1","status":"committed"}
+amount=289.97 residual=0.00 source=src-orders cursor=cur-010

@@ -1,0 +1,8 @@
+name: self-dispatch-api
+on:
+  workflow_dispatch:
+jobs:
+  again:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: curl -X POST https://api.github.com/repos/o/r/actions/workflows/self_dispatch_api.yml/dispatches -d '{"ref":"main"}'

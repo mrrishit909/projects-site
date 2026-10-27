@@ -1,0 +1,10 @@
+name: nightly
+on:
+  workflow_run:
+    workflows: ["nightly"]
+    types: [completed]
+jobs:
+  go:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo go

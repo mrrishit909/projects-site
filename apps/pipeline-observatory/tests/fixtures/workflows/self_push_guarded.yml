@@ -1,0 +1,15 @@
+name: self-push-guarded
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  regenerate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python build.py
+      - run: |
+          git commit -am "regenerate [skip ci]"
+          git push origin main

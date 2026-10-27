@@ -1,0 +1,46 @@
+{
+  "note": "src-orders expects schema_version 1. Version 2 adds the required field `currency`; the page declares it unexpectedly.",
+  "source_id": "src-orders",
+  "expected_schema_version": "1",
+  "declared_schema_version": "2",
+  "cursor": "cur-000",
+  "next_cursor": "cur-003",
+  "records": [
+    {
+      "payload": {
+        "record_id": "PG-1",
+        "quantity": 1,
+        "unit_price": "10.00",
+        "amount": "10.00",
+        "event_ts": "2026-10-04T01:00:00Z",
+        "currency": "EUR"
+      }
+    },
+    {
+      "payload": {
+        "record_id": "PG-2",
+        "quantity": 1,
+        "unit_price": "10.00",
+        "amount": "10.00",
+        "event_ts": "2026-10-04T02:00:00Z",
+        "currency": "EUR"
+      }
+    },
+    {
+      "payload": {
+        "record_id": "PG-3",
+        "quantity": 1,
+        "unit_price": "10.00",
+        "amount": "10.00",
+        "event_ts": "2026-10-04T03:00:00Z",
+        "currency": "EUR"
+      }
+    }
+  ],
+  "expected": {
+    "batch_status": "quarantined",
+    "reason": "SCHEMA_CHANGED",
+    "quarantined": 3,
+    "accepted_after_bump": 3
+  }
+}

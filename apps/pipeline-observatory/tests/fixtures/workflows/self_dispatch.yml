@@ -1,0 +1,10 @@
+name: self-dispatch
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+jobs:
+  again:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: gh workflow run self_dispatch.yml
