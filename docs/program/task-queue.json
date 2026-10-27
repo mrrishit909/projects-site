@@ -503,12 +503,13 @@
       "id": "T-07-04",
       "project": "07-trustledger",
       "title": "Generator + web + e2e + publish + integrate",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-07-03"
       ],
       "retries": 0,
-      "acceptance": "see T-06 equivalents"
+      "acceptance": "see T-06 equivalents",
+      "result": "78a4390 web; CI 40439001518; published 77665db; case study integrated"
     },
     {
       "id": "T-06-07",

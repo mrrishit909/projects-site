@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T01:56:15Z",
+  "updated_at": "2026-10-27T02:41:06Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -116,6 +116,21 @@
         "verified_at": "2026-10-27T01:56:15Z",
         "live_code_sha_matched": "fdf911a1eb1977d5d6c3c55f467a2a1223befc75"
       }
+    },
+    {
+      "slug": "trustledger",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/trustledger/",
+      "site_path": "labs/trustledger/ on unified-portfolio",
+      "release_commit_unified_portfolio": "77665db",
+      "rollback_commit_unified_portfolio": "e360bf1",
+      "source_commit_business_data_lab": "78a43900c191530ca66448c53a3982efab988d67",
+      "published_tree_sha256": "3684182c8e8bb758709a7e80abefc642e5a5a2adcc454479f7c2cebc22c1c806",
+      "files": 47,
+      "dataset_version": "tl-20261026-20261026",
+      "dataset_hash": "c0dca32f7982f7cc6480feec90795edc76259801307fe59fb4012795c5f0697b",
+      "contract_version": "v1",
+      "publication_status": "published 77665db (CI 40439001518 green both modes on 78a4390); live check pending; case study integrated in the same commit",
+      "live_verification": null
     }
   ]
 }
