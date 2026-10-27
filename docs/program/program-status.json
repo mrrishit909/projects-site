@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T09:27:28Z",
+  "updated_at": "2026-10-27T09:37:57Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -192,7 +192,7 @@
     },
     "08-pipeline-observatory": {
       "slug": "pipeline-observatory",
-      "stage": "artifacts committed; CI pending",
+      "stage": "complete",
       "built": true,
       "verified": {
         "live_check_run": 40469671918,
@@ -218,7 +218,8 @@
         "status": "done"
       },
       "notes": [
-        "D-05 adopted from the fixture (D-P8-01..13); backend worker A-059 dispatched 2026-10-27T02:18:21Z"
+        "D-05 adopted from the fixture (D-P8-01..13); backend worker A-059 dispatched 2026-10-27T02:18:21Z",
+        "complete 2026-10-27: built, verified (live run 40469671918 on b326690), published d58209f, integrated (case study 977c091), reviewed (A-073, fixes ed7eb5a), artifacts (A-080, e56c0ad, CI 40480929146)"
       ],
       "backend": {
         "commit": "3f3fc11",
@@ -247,7 +248,8 @@
       },
       "artifacts": {
         "assignment": "A-080",
-        "status": "committed; CI pending (no-skip gate)",
+        "commit": "e56c0ad",
+        "status": "done; CI run 40480929146 green both modes under the no-skip gate",
         "tests": "568 = 529 + 39",
         "reconciliation": "204/204"
       }
@@ -389,7 +391,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 08: artifacts committed -> CI poll -> complete. Project 09: A-081 artifacts hand-back -> verify (artifacts09_*) -> commit -> CI -> complete. Then the final report with all ten URLs. Project 10 is complete.",
+    "next_concrete_task": "Project 09: A-081 artifacts hand-back -> verify (artifacts09_*) -> commit -> CI -> complete. Then the final report with all ten URLs. Projects 01-08 and 10 are complete.",
     "acceptance": "see task-queue.json"
   }
 }

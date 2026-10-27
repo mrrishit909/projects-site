@@ -709,8 +709,9 @@
       "id": "T-08-07",
       "project": "08-pipeline-observatory",
       "title": "Fix R8-01..R8-16, republish, live check, update case study",
-      "status": "in_progress",
-      "assignment": "A-080 accepted; committed; CI pending"
+      "status": "done",
+      "assignment": "A-080 accepted; committed e56c0ad; CI run 40480929146 green both modes, no-skip gate passed",
+      "result": "artifact package P08-ART-01..10 on the branch; 568 tests on the hosted runner"
     }
   ]
 }

@@ -167,7 +167,12 @@
           "source": "a2ef4f4130e04f5d70795ba8d83b97f02d962583",
           "live_check_run": 40456053215
         }
-      ]
+      ],
+      "artifact_package": {
+        "commit": "e56c0ad",
+        "ci_run": "https://github.com/mrrishit909/projects-site/actions/runs/40480929146",
+        "verification": "39 artifact tests on the hosted runner against artifacts08_* scratch databases with LibreOffice recalculation; workbook built on hosted compute in CI, not attached to a GitHub release; Excel and Power BI not run"
+      }
     },
     {
       "slug": "changeworks",
