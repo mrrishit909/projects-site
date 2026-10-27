@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T01:56:15Z",
+  "updated_at": "2026-10-27T02:02:28Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1243,6 +1243,17 @@
       "code_sha": "9e0adb0",
       "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40433219610",
       "ts": "2026-10-27T01:56:15Z"
+    },
+    {
+      "requirement": "P07-WORK-03 generator: determinism (3 PYTHONHASHSEED), size, designed relationships (near-perfect dataset with override; 5 uncovered; weight change moves 13 of 29 scores; fast team 0.399 ratio; oldest unresolved all claimed), twelve injections with 12 replay events through the API, SQL reference equals the domain at three as-of instants",
+      "project": "07-trustledger",
+      "status": "verified",
+      "command": "python data/generate.py (x2); reference_check.py; DATABASE_URL=... pytest -q",
+      "exit_code": 0,
+      "actual": "byte-identical; 2,239,386 bytes; ALL OK (736); 300 passed (301 with the observed-edge test)",
+      "code_sha": "0d1b3e4",
+      "evidence": "apps/trustledger/data/README-generator.md; tests/test_generator.py",
+      "ts": "2026-10-27T02:02:28Z"
     }
   ]
 }

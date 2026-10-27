@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T01:56:15Z",
+  "updated_at": "2026-10-27T02:02:28Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -149,7 +149,7 @@
     },
     "07-trustledger": {
       "slug": "trustledger",
-      "stage": "gate-A passed; backend CI-green Mode A (9e0adb0, run 40433219610); generator A-055 running",
+      "stage": "gate-A passed; backend CI-green Mode A; generator committed 0d1b3e4 (301 tests); web A-057 running",
       "built": false,
       "verified": false,
       "published": false,
@@ -158,7 +158,7 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40433219610",
       "site_url": null,
       "blockers": [],
-      "next_task": "T-07-04 (A-055 generator -> web -> publish -> integrate)"
+      "next_task": "T-07-04 (A-057 web -> CI Mode B -> publish -> integrate)"
     },
     "08-pipeline-observatory": {
       "slug": "pipeline-observatory",
