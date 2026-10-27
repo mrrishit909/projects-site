@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T05:43:46Z",
+  "updated_at": "2026-10-27T05:44:58Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -290,7 +290,10 @@
       "slug": "retentionlab",
       "stage": "queued",
       "built": true,
-      "verified": "pending live check",
+      "verified": {
+        "live_check_run": 40456970303,
+        "at": "2026-10-27T05:44:58Z"
+      },
       "published": {
         "release": "b5168a2",
         "rollback": "7c6e357",
