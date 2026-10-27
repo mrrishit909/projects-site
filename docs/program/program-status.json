@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T05:34:06Z",
+  "updated_at": "2026-10-27T05:35:46Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -235,10 +235,15 @@
     "09-changeworks": {
       "slug": "changeworks",
       "stage": "queued",
-      "built": false,
-      "verified": false,
-      "published": false,
-      "integrated": false,
+      "built": true,
+      "verified": "pending live check",
+      "published": {
+        "release": "7c6e357",
+        "rollback": "7f31179",
+        "source": "d9e76fa",
+        "at": "2026-10-27T05:35:46Z"
+      },
+      "integrated": true,
       "last_verified_sha": null,
       "latest_run_url": null,
       "site_url": null,
@@ -272,7 +277,7 @@
       },
       "web": {
         "commit": "9a71687",
-        "status": "done; CI pending"
+        "status": "done; CI green both modes (run 40455742325)"
       }
     },
     "10-retentionlab": {

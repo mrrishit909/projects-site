@@ -616,8 +616,9 @@
       "id": "T-09-04",
       "project": "09-changeworks",
       "title": "Generator, Mode B site, Playwright evidence, publish, integrate",
-      "status": "in_progress",
-      "assignment": "A-067 generator done (f77a589); A-071 web"
+      "status": "done",
+      "assignment": "A-067 generator done (f77a589); A-071 web",
+      "result": "generator f77a589, web 9a71687, CI 40455742325, published 7c6e357, case study integrated"
     },
     {
       "id": "T-09-05",

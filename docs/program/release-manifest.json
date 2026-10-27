@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T05:34:06Z",
+  "updated_at": "2026-10-27T05:35:46Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -156,6 +156,21 @@
       "dataset_hash": "d9f0aa18ec6c54d3f09cf16cce3c159960411e36de59b4d7831220547fcbf12e",
       "contract_version": "v1",
       "publication_status": "published 83b6a60 (CI 40455458608 green both modes on 1d2d55b; a2ef4f4 adds ledgers only); live check pending; case study integrated in the same commit",
+      "live_verification": null
+    },
+    {
+      "slug": "changeworks",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/changeworks/",
+      "site_path": "labs/changeworks/ on unified-portfolio",
+      "release_commit_unified_portfolio": "7c6e357",
+      "rollback_commit_unified_portfolio": "7f31179",
+      "source_commit_business_data_lab": "d9e76fa9c3ee49043044be9d2d191ba902baeb65",
+      "published_tree_sha256": "527313e7d6e357ecdf7fa770a87a223c555118cc58f9498969daaeb7b307e2b3",
+      "files": 36,
+      "dataset_version": "cw-20261026-20261026",
+      "dataset_hash": "6bf7ebaad6bf75084c82c41de1031d6d585af730c8a22979ed7c77df2a38e3a9",
+      "contract_version": "v1",
+      "publication_status": "published 7c6e357 (CI 40455742325 green both modes on 9a71687; d9e76fa adds ledgers only); live check pending; case study integrated in the same commit",
       "live_verification": null
     }
   ],
