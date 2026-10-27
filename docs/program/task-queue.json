@@ -677,8 +677,9 @@
       "id": "T-10-06",
       "project": "10-retentionlab",
       "title": "Artifacts P10-ART-01..10",
-      "status": "in_progress",
-      "assignment": "A-079 accepted; committed d5416dd; CI pending"
+      "status": "done",
+      "assignment": "A-079 accepted; committed d5416dd/ebb8496; CI run 40476210083 green both modes, no-skip gate passed",
+      "result": "artifact package P10-ART-01..10 on the branch; 383 tests on the hosted runner"
     },
     {
       "id": "T-07-07",

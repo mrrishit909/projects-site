@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T08:49:22Z",
+  "updated_at": "2026-10-27T08:55:39Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -315,7 +315,7 @@
     },
     "10-retentionlab": {
       "slug": "retentionlab",
-      "stage": "artifacts committed; CI pending",
+      "stage": "complete",
       "built": true,
       "verified": {
         "live_check_run": 40464668157,
@@ -340,7 +340,8 @@
         "at": "2026-10-27T02:49:00Z"
       },
       "notes": [
-        "spec 10-retentionlab.md hash 6784f44e… verified at pack commit fe5f7981; contracts D-01..D-04 written by the coordinator"
+        "spec 10-retentionlab.md hash 6784f44e… verified at pack commit fe5f7981; contracts D-01..D-04 written by the coordinator",
+        "complete 2026-10-27: built, verified (live run 40464668157 on c17fa32), published cf04a0e, integrated (case study d9a9ce2), reviewed (A-075, fixes ce96e65), artifacts (A-079, ebb8496, CI 40476210083)"
       ],
       "fixture": {
         "commit": "f736858",
@@ -373,8 +374,8 @@
       },
       "artifacts": {
         "assignment": "A-079",
-        "commit": "d5416dd",
-        "status": "committed; CI pending (no-skip gate)",
+        "commit": "ebb8496",
+        "status": "done; CI run 40476210083 green both modes under the no-skip gate",
         "tests": "383 = 342 + 41",
         "reconciliation": "393/393"
       }
@@ -382,7 +383,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 10: A-079 artifacts hand-back verified by the coordinator (run_all RESULT OK 393/393, BI identical, checksums 61 OK; full suite running) -> commit -> CI (no-skip gate now on all four workflows) -> case-study counts -> complete. Project 08: A-080 artifacts hand-back -> verify -> commit -> CI -> complete. Project 09: A-081 artifacts hand-back -> verify -> commit -> CI -> complete. Then the final report with all ten URLs.",
+    "next_concrete_task": "Project 08: A-080 artifacts hand-back -> verify (artifacts08_*, PIPELINE_ENVIRONMENT=sandbox) -> commit -> CI -> complete. Project 09: A-081 artifacts hand-back -> verify (artifacts09_*) -> commit -> CI -> complete. Then the final report with all ten URLs. Project 10 is complete.",
     "acceptance": "see task-queue.json"
   }
 }
