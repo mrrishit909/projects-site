@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T07:04:14Z",
+  "updated_at": "2026-10-27T07:51:33Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -147,20 +147,23 @@
       "slug": "pipeline-observatory",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/pipeline-observatory/",
       "site_path": "labs/pipeline-observatory/ on unified-portfolio",
-      "release_commit_unified_portfolio": "83b6a60",
-      "rollback_commit_unified_portfolio": "eecd593",
-      "source_commit_business_data_lab": "a2ef4f4130e04f5d70795ba8d83b97f02d962583",
-      "published_tree_sha256": "be18a9ca9fe935d5ba75d87c764c5bcfe546bd05e6190e38428b9e6663ea6409",
+      "release_commit_unified_portfolio": "d58209f",
+      "rollback_commit_unified_portfolio": "cf04a0e",
+      "source_commit_business_data_lab": "b326690a791ca440e6c616dea361383cb8f7e665",
+      "published_tree_sha256": "12f59fe2f3a5533b27dcd3e9189ab034c5bf9d6d42fa62e8dc66343d60a95370",
       "files": 41,
       "dataset_version": "po-20261026-20261026",
-      "dataset_hash": "d9f0aa18ec6c54d3f09cf16cce3c159960411e36de59b4d7831220547fcbf12e",
+      "dataset_hash": "0a90687778634365c402c5431661b56625de20785e28d9b2388d36c0cad19aab",
       "contract_version": "v1",
-      "publication_status": "published 83b6a60 (CI 40455458608 green both modes on 1d2d55b); live-verified with the release commit on the live manifest (run 40456053215); case study integrated",
-      "live_verification": {
-        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40456053215",
-        "verified_at": "2026-10-27T05:38:02Z",
-        "live_code_sha_matched": "a2ef4f4130e04f5d70795ba8d83b97f02d962583"
-      }
+      "publication_status": "republished after review R8 fixes (d58209f; CI 40468689563 green both modes on b326690); live check pending; case study updated in the same commit",
+      "live_verification": null,
+      "previous_releases": [
+        {
+          "release": "83b6a60",
+          "source": "a2ef4f4130e04f5d70795ba8d83b97f02d962583",
+          "live_check_run": 40456053215
+        }
+      ]
     },
     {
       "slug": "changeworks",

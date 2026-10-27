@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T07:41:58Z",
+  "updated_at": "2026-10-27T07:51:33Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -194,15 +194,13 @@
       "slug": "pipeline-observatory",
       "stage": "contracts v1 and tooling committed (3a0fae2; spec hash 1ffbfbe7 verified against the source pack); golden fixture A-058 running",
       "built": true,
-      "verified": {
-        "live_check_run": 40456053215,
-        "at": "2026-10-27T05:38:02Z"
-      },
+      "verified": "pending live check on d58209f",
       "published": {
-        "release": "83b6a60",
-        "rollback": "eecd593",
-        "source": "a2ef4f4",
-        "at": "2026-10-27T05:34:06Z"
+        "release": "d58209f",
+        "rollback": "cf04a0e",
+        "source": "b326690",
+        "at": "2026-10-27T07:51:33Z",
+        "note": "republish after review fixes"
       },
       "integrated": true,
       "last_verified_sha": null,
@@ -240,7 +238,7 @@
         "assignment": "A-073",
         "defects": 8,
         "documentation": 8,
-        "status": "fixed ed7eb5a; CI pending; republish next",
+        "status": "fixed and republished (ed7eb5a, d58209f)",
         "case_study_wording_fixed": "3558f84"
       }
     },
@@ -364,7 +362,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Fix hand-backs A-076 (P08), A-077 (P10), A-078 (P09) -> verify each (reference, pytest no skips, generator identical, npm check/build/e2e, reviewer probes) -> commit -> CI -> republish -> live check -> case study 'then fixed' with the moved figures -> artifacts workers -> verify -> commit -> CI. Then the final report with all ten URLs.",
+    "next_concrete_task": "Project 08: live check on d58209f; A-080 artifacts hand-back -> verify -> commit -> CI -> complete. Project 09: A-078 fix hand-back -> verify -> commit -> CI -> republish -> live check -> case study 'then fixed' -> artifacts worker. Project 10: A-079 artifacts hand-back -> verify -> commit -> CI -> complete. Then the final report with all ten URLs.",
     "acceptance": "see task-queue.json"
   }
 }
