@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T05:40:23Z",
+  "updated_at": "2026-10-27T05:43:46Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -180,6 +180,21 @@
         "verified_at": "2026-10-27T05:40:23Z",
         "live_code_sha_matched": "d9e76fa9c3ee49043044be9d2d191ba902baeb65"
       }
+    },
+    {
+      "slug": "retentionlab",
+      "site_url": "https://mrrishit909.github.io/projects-site/labs/retentionlab/",
+      "site_path": "labs/retentionlab/ on unified-portfolio",
+      "release_commit_unified_portfolio": "b5168a2",
+      "rollback_commit_unified_portfolio": "7c6e357",
+      "source_commit_business_data_lab": "3c6550efe301e23d53c21bf147d7ea6d1a5506cd",
+      "published_tree_sha256": "57acd37b7335d3f8fb5bc9bd7e879a75623f7137fb0af3c7f9625d04af93563a",
+      "files": 39,
+      "dataset_version": "rl-20261026-20261026",
+      "dataset_hash": "11d2975c3c640a989793b4bcb4b33bb4d505c5741505dfaa7bdd359db178b468",
+      "contract_version": "v1",
+      "publication_status": "published b5168a2 (CI 40456539440 green both modes on 7b47757; 3c6550e adds ledgers only); live check pending; case study integrated in the same commit",
+      "live_verification": null
     }
   ],
   "last_all_sites_live_check": {

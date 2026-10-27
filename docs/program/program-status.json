@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T05:40:23Z",
+  "updated_at": "2026-10-27T05:43:46Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -289,10 +289,15 @@
     "10-retentionlab": {
       "slug": "retentionlab",
       "stage": "queued",
-      "built": false,
-      "verified": false,
-      "published": false,
-      "integrated": false,
+      "built": true,
+      "verified": "pending live check",
+      "published": {
+        "release": "b5168a2",
+        "rollback": "7c6e357",
+        "source": "3c6550e",
+        "at": "2026-10-27T05:43:46Z"
+      },
+      "integrated": true,
       "last_verified_sha": null,
       "latest_run_url": null,
       "site_url": null,
@@ -324,14 +329,14 @@
         "status": "done; Mode A green on hosted runner (run 40451829378)"
       },
       "web": {
-        "commit": "see git log (RetentionLab Mode B)",
-        "status": "done; CI pending"
+        "commit": "7b47757",
+        "status": "done; CI green both modes (run 40456539440)"
       }
     }
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 07: CI on eb83f43 -> complete. Project 08: live-verified; A-073 review hand-back -> fix worker -> republish -> live check -> artifacts. Project 09: live check on 7c6e357 (running); A-074 review hand-back -> fix worker (incl. payback rule, PARTIAL_TREND_COVERAGE) -> republish -> live check -> artifacts. Project 10: CI on the web commit -> publish labs/retentionlab -> manifest -> live check -> case study (draft scratchpad/p10) -> review -> fixes -> artifacts.",
+    "next_concrete_task": "Project 07: CI on eb83f43 -> complete. Project 08: A-073 review -> fixes -> republish -> live check -> artifacts. Project 09: A-074 review -> fixes -> republish -> live check -> artifacts. Project 10: live check on b5168a2; A-075 review -> fixes -> republish -> live check -> artifacts. Then the final report with all ten URLs.",
     "acceptance": "see task-queue.json"
   }
 }

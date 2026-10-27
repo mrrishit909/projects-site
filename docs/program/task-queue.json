@@ -660,14 +660,16 @@
       "id": "T-10-04",
       "project": "10-retentionlab",
       "title": "Generator, Mode B site, Playwright evidence, publish, integrate",
-      "status": "in_progress",
-      "assignment": "A-068 generator done (e81c2b4); A-072 web"
+      "status": "done",
+      "assignment": "A-068 generator done (e81c2b4); A-072 web",
+      "result": "generator e81c2b4, web 7b47757, CI 40456539440, published b5168a2, case study integrated"
     },
     {
       "id": "T-10-05",
       "project": "10-retentionlab",
       "title": "Independent disproof review, fixes, republish",
-      "status": "pending"
+      "status": "in_progress",
+      "assignment": "A-075 (review); fix worker next"
     },
     {
       "id": "T-10-06",
