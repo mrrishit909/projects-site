@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T00:32:14Z",
+  "updated_at": "2026-10-27T00:36:52Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -107,7 +107,7 @@
     },
     "05-invoicebridge": {
       "slug": "invoicebridge",
-      "stage": "built, verified (reviewer findings fixed; CI green on 2dcc460), published and live-verified (run 40418131237), integrated (case study live); artifacts A-045 running",
+      "stage": "built, verified (reviewer findings fixed; CI green on 2dcc460), published and live-verified (run 40418131237), integrated, artifacts verified",
       "built": true,
       "verified": true,
       "published": true,
@@ -116,7 +116,7 @@
       "latest_run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40418007851",
       "site_url": "https://mrrishit909.github.io/projects-site/labs/invoicebridge/",
       "blockers": [],
-      "next_task": "A-045 artifacts -> then nothing open",
+      "next_task": "none open; deferred: C06 (501), a command to resolve needs_review, test_artifacts in CI",
       "portfolio_case_study": "https://mrrishit909.github.io/projects-site/invoicebridge/",
       "verified_note": "Entry journey + reviewer disproof pass; all 22 findings fixed in T-05-07 with tests in Python, SQL, TypeScript and the API"
     },
@@ -136,7 +136,7 @@
     },
     "07-trustledger": {
       "slug": "trustledger",
-      "stage": "queued",
+      "stage": "contracts v1 and tooling committed (e1f9a84; spec hash 3a4ec15b verified against the source pack); golden fixture A-049 running",
       "built": false,
       "verified": false,
       "published": false,
@@ -145,7 +145,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": null
+      "next_task": "T-07-02 (A-049)"
     },
     "08-pipeline-observatory": {
       "slug": "pipeline-observatory",
@@ -189,7 +189,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 05: A-045 artifacts hand-back -> verify -> commit. Project 06: confirm live-check on the manifest commit; A-048 reviewer hand-back -> fix worker -> republish -> artifacts. Then project 07 trustledger (contracts first).",
+    "next_concrete_task": "Project 06: A-048 reviewer hand-back -> fix worker -> republish -> artifacts. Project 07: A-049 fixture hand-back -> D-06 -> backend -> generator -> web -> publish -> integrate -> review -> artifacts. Then project 08 pipeline-observatory (contracts first).",
     "acceptance": "see task-queue.json"
   }
 }

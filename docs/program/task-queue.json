@@ -450,7 +450,7 @@
       "id": "T-05-05",
       "project": "05-invoicebridge",
       "title": "Artifacts P05-ART-*",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-05-07"
       ],
@@ -467,6 +467,48 @@
       ],
       "retries": 0,
       "acceptance": "interim cutoff counts only facts at or before it in Python, SQL and API; golden unchanged"
+    },
+    {
+      "id": "T-07-01",
+      "project": "07-trustledger",
+      "title": "Contract decisions v1",
+      "status": "done",
+      "prereqs": [],
+      "retries": 0,
+      "acceptance": "see T-06 equivalents"
+    },
+    {
+      "id": "T-07-02",
+      "project": "07-trustledger",
+      "title": "Golden fixture + reference check",
+      "status": "in_progress",
+      "prereqs": [
+        "T-07-01"
+      ],
+      "retries": 0,
+      "acceptance": "see T-06 equivalents"
+    },
+    {
+      "id": "T-07-03",
+      "project": "07-trustledger",
+      "title": "Domain + Postgres + FastAPI slice + CI",
+      "status": "pending",
+      "prereqs": [
+        "T-07-02"
+      ],
+      "retries": 0,
+      "acceptance": "see T-06 equivalents"
+    },
+    {
+      "id": "T-07-04",
+      "project": "07-trustledger",
+      "title": "Generator + web + e2e + publish + integrate",
+      "status": "pending",
+      "prereqs": [
+        "T-07-03"
+      ],
+      "retries": 0,
+      "acceptance": "see T-06 equivalents"
     }
   ]
 }
