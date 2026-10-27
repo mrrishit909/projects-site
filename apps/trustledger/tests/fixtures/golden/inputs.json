@@ -1,0 +1,1674 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-10-05T00:00:00Z",
+  "whitespace_policy": {
+    "name": "trim_empty_is_missing",
+    "trim_characters": " \t\r\n"
+  },
+  "weight_version": "w2",
+  "weight_versions": [
+    {
+      "weight_version": "w1",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "weights": {
+        "completeness": "0.400000",
+        "validity": "0.300000",
+        "uniqueness": "0.200000",
+        "relationship": "0.050000",
+        "timeliness": "0.050000"
+      }
+    },
+    {
+      "weight_version": "w2",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "weights": {
+        "completeness": "0.250000",
+        "validity": "0.250000",
+        "uniqueness": "0.250000",
+        "relationship": "0.150000",
+        "timeliness": "0.100000"
+      }
+    }
+  ],
+  "checklist_version": "cl-1",
+  "checklist_versions": [
+    {
+      "checklist_version": "cl-1",
+      "items": [
+        "definition",
+        "grain",
+        "source_fields",
+        "owner",
+        "refresh"
+      ]
+    }
+  ],
+  "probes": {
+    "definition_at": "2026-08-01T00:00:00Z"
+  },
+  "owners": [
+    {
+      "owner_id": "own-01",
+      "owner_name": "Synthetic Owner 01",
+      "team": "Data Governance",
+      "role": "analyst",
+      "active": true,
+      "deactivated_at": null
+    },
+    {
+      "owner_id": "own-02",
+      "owner_name": "Synthetic Owner 02",
+      "team": "Data Platform",
+      "role": "steward",
+      "active": true,
+      "deactivated_at": null
+    },
+    {
+      "owner_id": "own-03",
+      "owner_name": "Synthetic Owner 03",
+      "team": "Sales Operations",
+      "role": "steward",
+      "active": true,
+      "deactivated_at": null
+    },
+    {
+      "owner_id": "own-04",
+      "owner_name": "Synthetic Owner 04",
+      "team": "Finance Data",
+      "role": "admin",
+      "active": true,
+      "deactivated_at": null
+    },
+    {
+      "owner_id": "own-05",
+      "owner_name": "Synthetic Owner 05",
+      "team": "Logistics",
+      "role": "steward",
+      "active": false,
+      "deactivated_at": "2026-09-15T00:00:00Z"
+    }
+  ],
+  "datasets": [
+    {
+      "dataset_id": "ds-customers",
+      "dataset_name": "Customers",
+      "source_system": "crm",
+      "owner_id": "own-01",
+      "classification": "confidential",
+      "registered_at": "2026-06-01T00:00:00Z",
+      "monitored": true,
+      "refresh_timezone": "America/New_York",
+      "refresh_local_time": "06:00",
+      "refresh_grace_minutes": 60,
+      "last_refreshed_at": "2026-10-04T10:20:00Z"
+    },
+    {
+      "dataset_id": "ds-orders",
+      "dataset_name": "Orders",
+      "source_system": "erp",
+      "owner_id": "own-02",
+      "classification": "internal",
+      "registered_at": "2026-06-01T00:00:00Z",
+      "monitored": true,
+      "refresh_timezone": "Europe/London",
+      "refresh_local_time": "07:00",
+      "refresh_grace_minutes": 30,
+      "last_refreshed_at": "2026-10-04T06:10:00Z"
+    },
+    {
+      "dataset_id": "ds-products",
+      "dataset_name": "Products",
+      "source_system": "erp",
+      "owner_id": "own-03",
+      "classification": "internal",
+      "registered_at": "2026-06-01T00:00:00Z",
+      "monitored": false,
+      "refresh_timezone": null,
+      "refresh_local_time": null,
+      "refresh_grace_minutes": null,
+      "last_refreshed_at": "2026-10-03T12:00:00Z"
+    },
+    {
+      "dataset_id": "ds-payments",
+      "dataset_name": "Payments",
+      "source_system": "billing",
+      "owner_id": "own-04",
+      "classification": "restricted",
+      "registered_at": "2026-06-01T00:00:00Z",
+      "monitored": true,
+      "refresh_timezone": "America/New_York",
+      "refresh_local_time": "02:00",
+      "refresh_grace_minutes": 120,
+      "last_refreshed_at": "2026-10-04T07:59:00Z"
+    },
+    {
+      "dataset_id": "ds-shipments",
+      "dataset_name": "Shipments",
+      "source_system": "logistics",
+      "owner_id": "own-05",
+      "classification": "internal",
+      "registered_at": "2026-06-01T00:00:00Z",
+      "monitored": true,
+      "refresh_timezone": "Europe/London",
+      "refresh_local_time": "05:00",
+      "refresh_grace_minutes": 60,
+      "last_refreshed_at": "2026-10-04T05:00:00Z"
+    }
+  ],
+  "fields": [
+    {
+      "field_id": "fld-001",
+      "dataset_id": "ds-customers",
+      "field_name": "customer_key",
+      "data_type": "text",
+      "nullable": false
+    },
+    {
+      "field_id": "fld-002",
+      "dataset_id": "ds-customers",
+      "field_name": "email",
+      "data_type": "text",
+      "nullable": false
+    },
+    {
+      "field_id": "fld-003",
+      "dataset_id": "ds-orders",
+      "field_name": "order_id",
+      "data_type": "text",
+      "nullable": false
+    },
+    {
+      "field_id": "fld-004",
+      "dataset_id": "ds-orders",
+      "field_name": "customer_key",
+      "data_type": "text",
+      "nullable": true
+    },
+    {
+      "field_id": "fld-005",
+      "dataset_id": "ds-products",
+      "field_name": "product_id",
+      "data_type": "text",
+      "nullable": false
+    },
+    {
+      "field_id": "fld-006",
+      "dataset_id": "ds-payments",
+      "field_name": "payment_id",
+      "data_type": "text",
+      "nullable": false
+    },
+    {
+      "field_id": "fld-007",
+      "dataset_id": "ds-shipments",
+      "field_name": "shipment_id",
+      "data_type": "text",
+      "nullable": false
+    }
+  ],
+  "quality_rules": [
+    {
+      "rule_id": "r-cust-complete-email",
+      "dataset_id": "ds-customers",
+      "field_id": "fld-002",
+      "rule_type": "completeness",
+      "severity": "high",
+      "version_number": 1,
+      "status": "active",
+      "disabled_at": null,
+      "disabled_reason": null,
+      "definition": {
+        "field": "email"
+      }
+    },
+    {
+      "rule_id": "r-cust-valid-email",
+      "dataset_id": "ds-customers",
+      "field_id": "fld-002",
+      "rule_type": "validity",
+      "severity": "medium",
+      "version_number": 2,
+      "status": "active",
+      "disabled_at": null,
+      "disabled_reason": null,
+      "definition": {
+        "field": "email",
+        "pattern": "^[^@\\s]+@[^@\\s]+\\.[A-Za-z]{2,}$",
+        "eligibility": "all_rows"
+      }
+    },
+    {
+      "rule_id": "r-cust-key-unique",
+      "dataset_id": "ds-customers",
+      "field_id": "fld-001",
+      "rule_type": "uniqueness",
+      "severity": "critical",
+      "version_number": 1,
+      "status": "active",
+      "disabled_at": null,
+      "disabled_reason": null,
+      "definition": {
+        "field": "customer_key",
+        "not_null": true,
+        "unique": true,
+        "keep": "first_in_row_order"
+      }
+    },
+    {
+      "rule_id": "r-ord-cust-fk",
+      "dataset_id": "ds-orders",
+      "field_id": "fld-004",
+      "rule_type": "relationship",
+      "severity": "high",
+      "version_number": 1,
+      "status": "active",
+      "disabled_at": null,
+      "disabled_reason": null,
+      "definition": {
+        "field": "customer_key",
+        "parent_dataset_id": "ds-customers",
+        "parent_field": "customer_key"
+      }
+    },
+    {
+      "rule_id": "r-ord-amount-range",
+      "dataset_id": "ds-orders",
+      "field_id": "fld-003",
+      "rule_type": "validity",
+      "severity": "medium",
+      "version_number": 1,
+      "status": "disabled",
+      "disabled_at": "2026-09-20T00:00:00Z",
+      "disabled_reason": "Superseded by the finance contract review; disabling is not a repair",
+      "definition": {
+        "field": "order_id",
+        "note": "disabled: no measurable pattern in this fixture"
+      }
+    },
+    {
+      "rule_id": "r-cust-fresh",
+      "dataset_id": "ds-customers",
+      "field_id": null,
+      "rule_type": "timeliness",
+      "severity": "medium",
+      "version_number": 1,
+      "status": "active",
+      "disabled_at": null,
+      "disabled_reason": null,
+      "definition": {
+        "target": "dataset_schedule"
+      }
+    },
+    {
+      "rule_id": "r-ord-fresh",
+      "dataset_id": "ds-orders",
+      "field_id": null,
+      "rule_type": "timeliness",
+      "severity": "medium",
+      "version_number": 1,
+      "status": "active",
+      "disabled_at": null,
+      "disabled_reason": null,
+      "definition": {
+        "target": "dataset_schedule"
+      }
+    },
+    {
+      "rule_id": "r-pay-fresh",
+      "dataset_id": "ds-payments",
+      "field_id": null,
+      "rule_type": "timeliness",
+      "severity": "medium",
+      "version_number": 1,
+      "status": "active",
+      "disabled_at": null,
+      "disabled_reason": null,
+      "definition": {
+        "target": "dataset_schedule"
+      }
+    },
+    {
+      "rule_id": "r-ship-fresh",
+      "dataset_id": "ds-shipments",
+      "field_id": null,
+      "rule_type": "timeliness",
+      "severity": "medium",
+      "version_number": 1,
+      "status": "active",
+      "disabled_at": null,
+      "disabled_reason": null,
+      "definition": {
+        "target": "dataset_schedule"
+      }
+    }
+  ],
+  "rule_runs": [
+    {
+      "rule_run_id": "rr-001",
+      "rule_id": "r-cust-complete-email",
+      "rule_version": 1,
+      "weight_version": "w2",
+      "kind": "scheduled",
+      "run_at": "2026-09-29T02:00:00Z",
+      "eligible_count": 100,
+      "failure_count": 8,
+      "rerun_for_issue": null
+    },
+    {
+      "rule_run_id": "rr-002",
+      "rule_id": "r-cust-valid-email",
+      "rule_version": 1,
+      "weight_version": "w2",
+      "kind": "scheduled",
+      "run_at": "2026-09-28T02:00:00Z",
+      "eligible_count": 92,
+      "failure_count": 4,
+      "rerun_for_issue": null
+    },
+    {
+      "rule_run_id": "rr-003",
+      "rule_id": "r-cust-key-unique",
+      "rule_version": 1,
+      "weight_version": "w2",
+      "kind": "scheduled",
+      "run_at": "2026-09-30T02:00:00Z",
+      "eligible_count": 100,
+      "failure_count": 2,
+      "rerun_for_issue": null
+    },
+    {
+      "rule_run_id": "rr-004",
+      "rule_id": "r-ord-amount-range",
+      "rule_version": 1,
+      "weight_version": "w1",
+      "kind": "scheduled",
+      "run_at": "2026-08-25T03:00:00Z",
+      "eligible_count": 40,
+      "failure_count": 3,
+      "rerun_for_issue": null
+    },
+    {
+      "rule_run_id": "rr-005",
+      "rule_id": "r-ord-amount-range",
+      "rule_version": 1,
+      "weight_version": "w2",
+      "kind": "scheduled",
+      "run_at": "2026-09-18T03:00:00Z",
+      "eligible_count": 40,
+      "failure_count": 1,
+      "rerun_for_issue": null
+    },
+    {
+      "rule_run_id": "rr-006",
+      "rule_id": "r-ord-cust-fk",
+      "rule_version": 1,
+      "weight_version": "w2",
+      "kind": "scheduled",
+      "run_at": "2026-09-20T08:00:00Z",
+      "eligible_count": 36,
+      "failure_count": 3,
+      "rerun_for_issue": null
+    },
+    {
+      "rule_run_id": "rr-007",
+      "rule_id": "r-ord-cust-fk",
+      "rule_version": 1,
+      "weight_version": "w2",
+      "kind": "rerun",
+      "run_at": "2026-09-21T14:30:00Z",
+      "eligible_count": 3,
+      "failure_count": 0,
+      "rerun_for_issue": "iss-001"
+    },
+    {
+      "rule_run_id": "rr-008",
+      "rule_id": "r-cust-valid-email",
+      "rule_version": 1,
+      "weight_version": "w2",
+      "kind": "scheduled",
+      "run_at": "2026-09-22T09:15:00Z",
+      "eligible_count": 90,
+      "failure_count": 6,
+      "rerun_for_issue": null
+    },
+    {
+      "rule_run_id": "rr-009",
+      "rule_id": "r-cust-valid-email",
+      "rule_version": 1,
+      "weight_version": "w2",
+      "kind": "rerun",
+      "run_at": "2026-09-22T21:45:00Z",
+      "eligible_count": 6,
+      "failure_count": 0,
+      "rerun_for_issue": "iss-002"
+    },
+    {
+      "rule_run_id": "rr-010",
+      "rule_id": "r-cust-complete-email",
+      "rule_version": 1,
+      "weight_version": "w2",
+      "kind": "scheduled",
+      "run_at": "2026-09-25T10:00:00Z",
+      "eligible_count": 100,
+      "failure_count": 9,
+      "rerun_for_issue": null
+    },
+    {
+      "rule_run_id": "rr-011",
+      "rule_id": "r-cust-complete-email",
+      "rule_version": 1,
+      "weight_version": "w2",
+      "kind": "rerun",
+      "run_at": "2026-09-28T10:20:00Z",
+      "eligible_count": 9,
+      "failure_count": 0,
+      "rerun_for_issue": "iss-003"
+    },
+    {
+      "rule_run_id": "rr-012",
+      "rule_id": "r-cust-complete-email",
+      "rule_version": 1,
+      "weight_version": "w2",
+      "kind": "scheduled",
+      "run_at": "2026-09-10T06:00:00Z",
+      "eligible_count": 100,
+      "failure_count": 10,
+      "rerun_for_issue": null
+    },
+    {
+      "rule_run_id": "rr-013",
+      "rule_id": "r-cust-complete-email",
+      "rule_version": 1,
+      "weight_version": "w2",
+      "kind": "rerun",
+      "run_at": "2026-09-11T08:00:00Z",
+      "eligible_count": 10,
+      "failure_count": 0,
+      "rerun_for_issue": "iss-005"
+    }
+  ],
+  "issues": [
+    {
+      "issue_id": "iss-001",
+      "rule_run_id": "rr-006",
+      "owner_id": "own-02",
+      "status": "closed",
+      "detected_at": "2026-09-20T08:00:00Z",
+      "due_at": "2026-09-23T00:00:00Z",
+      "closed_at": "2026-09-21T14:30:00Z",
+      "verification_run_id": "rr-007",
+      "reopened_at": []
+    },
+    {
+      "issue_id": "iss-002",
+      "rule_run_id": "rr-008",
+      "owner_id": "own-01",
+      "status": "closed",
+      "detected_at": "2026-09-22T09:15:00Z",
+      "due_at": "2026-09-25T00:00:00Z",
+      "closed_at": "2026-09-22T21:45:00Z",
+      "verification_run_id": "rr-009",
+      "reopened_at": []
+    },
+    {
+      "issue_id": "iss-003",
+      "rule_run_id": "rr-010",
+      "owner_id": "own-01",
+      "status": "closed",
+      "detected_at": "2026-09-25T10:00:00Z",
+      "due_at": "2026-09-30T00:00:00Z",
+      "closed_at": "2026-09-27T16:00:00Z",
+      "verification_run_id": "rr-011",
+      "reopened_at": []
+    },
+    {
+      "issue_id": "iss-004",
+      "rule_run_id": "rr-004",
+      "owner_id": "own-02",
+      "status": "closed",
+      "detected_at": "2026-08-25T03:00:00Z",
+      "due_at": "2026-08-30T00:00:00Z",
+      "closed_at": "2026-08-28T12:00:00Z",
+      "verification_run_id": null,
+      "reopened_at": []
+    },
+    {
+      "issue_id": "iss-005",
+      "rule_run_id": "rr-012",
+      "owner_id": "own-01",
+      "status": "open",
+      "detected_at": "2026-09-10T06:00:00Z",
+      "due_at": "2026-09-14T00:00:00Z",
+      "closed_at": "2026-09-11T08:00:00Z",
+      "verification_run_id": "rr-013",
+      "reopened_at": [
+        "2026-09-20T05:00:00Z"
+      ]
+    },
+    {
+      "issue_id": "iss-006",
+      "rule_run_id": "rr-003",
+      "owner_id": "own-01",
+      "status": "investigating",
+      "detected_at": "2026-09-30T02:00:00Z",
+      "due_at": "2026-10-07T00:00:00Z",
+      "closed_at": null,
+      "verification_run_id": null,
+      "reopened_at": []
+    }
+  ],
+  "lineage_edges": [
+    {
+      "edge_id": "ed-1",
+      "source_dataset_id": "ds-customers",
+      "target_dataset_id": "ds-orders",
+      "evidence_type": "declared",
+      "observed_at": null
+    },
+    {
+      "edge_id": "ed-2",
+      "source_dataset_id": "ds-products",
+      "target_dataset_id": "ds-orders",
+      "evidence_type": "declared",
+      "observed_at": null
+    },
+    {
+      "edge_id": "ed-3",
+      "source_dataset_id": "ds-orders",
+      "target_dataset_id": "ds-payments",
+      "evidence_type": "declared",
+      "observed_at": null
+    },
+    {
+      "edge_id": "ed-4",
+      "source_dataset_id": "ds-orders",
+      "target_dataset_id": "ds-shipments",
+      "evidence_type": "declared",
+      "observed_at": null
+    },
+    {
+      "edge_id": "ed-5",
+      "source_dataset_id": "ds-customers",
+      "target_dataset_id": "ds-payments",
+      "evidence_type": "declared",
+      "observed_at": null
+    },
+    {
+      "edge_id": "ed-6",
+      "source_dataset_id": "ds-products",
+      "target_dataset_id": "ds-shipments",
+      "evidence_type": "declared",
+      "observed_at": null
+    },
+    {
+      "edge_id": "eo-1",
+      "source_dataset_id": "ds-customers",
+      "target_dataset_id": "ds-orders",
+      "evidence_type": "observed",
+      "observed_at": "2026-10-03T00:00:00Z"
+    },
+    {
+      "edge_id": "eo-2",
+      "source_dataset_id": "ds-products",
+      "target_dataset_id": "ds-orders",
+      "evidence_type": "observed",
+      "observed_at": "2026-10-03T00:00:00Z"
+    },
+    {
+      "edge_id": "eo-3",
+      "source_dataset_id": "ds-orders",
+      "target_dataset_id": "ds-payments",
+      "evidence_type": "observed",
+      "observed_at": "2026-10-03T00:00:00Z"
+    },
+    {
+      "edge_id": "eo-4",
+      "source_dataset_id": "ds-orders",
+      "target_dataset_id": "ds-shipments",
+      "evidence_type": "observed",
+      "observed_at": "2026-10-03T00:00:00Z"
+    },
+    {
+      "edge_id": "eo-5",
+      "source_dataset_id": "ds-customers",
+      "target_dataset_id": "ds-payments",
+      "evidence_type": "observed",
+      "observed_at": "2026-10-03T00:00:00Z"
+    },
+    {
+      "edge_id": "eo-6",
+      "source_dataset_id": "ds-customers",
+      "target_dataset_id": "ds-orders",
+      "evidence_type": "observed",
+      "observed_at": "2026-10-04T00:00:00Z"
+    },
+    {
+      "edge_id": "eo-7",
+      "source_dataset_id": "ds-payments",
+      "target_dataset_id": "ds-shipments",
+      "evidence_type": "observed",
+      "observed_at": "2026-10-03T00:00:00Z"
+    },
+    {
+      "edge_id": "ei-1",
+      "source_dataset_id": "ds-products",
+      "target_dataset_id": "ds-shipments",
+      "evidence_type": "inferred",
+      "observed_at": null
+    }
+  ],
+  "metric_versions": [
+    {
+      "metric_version_id": "mv-rev-1",
+      "metric_id": "m-revenue",
+      "metric_name": "Net revenue",
+      "version_number": 1,
+      "definition": "Order amount before refunds",
+      "grain": "order",
+      "source_fields": [
+        "orders.amount"
+      ],
+      "owner_id": "own-04",
+      "refresh": "daily",
+      "valid_from": "2026-03-01T00:00:00Z",
+      "status": "superseded"
+    },
+    {
+      "metric_version_id": "mv-rev-2",
+      "metric_id": "m-revenue",
+      "metric_name": "Net revenue",
+      "version_number": 2,
+      "definition": "Order amount net of refunds",
+      "grain": "order",
+      "source_fields": [
+        "orders.amount",
+        "payments.refund"
+      ],
+      "owner_id": "own-04",
+      "refresh": "daily",
+      "valid_from": "2026-08-15T09:00:00Z",
+      "status": "published"
+    },
+    {
+      "metric_version_id": "mv-churn-1",
+      "metric_id": "m-churn",
+      "metric_name": "Customer churn",
+      "version_number": 1,
+      "definition": "Customers with no order in 90 days over active customers",
+      "grain": "customer-month",
+      "source_fields": [
+        "customers.customer_key",
+        "orders.customer_key"
+      ],
+      "owner_id": "own-01",
+      "refresh": "monthly",
+      "valid_from": "2026-04-01T00:00:00Z",
+      "status": "published"
+    },
+    {
+      "metric_version_id": "mv-aov-1",
+      "metric_id": "m-aov",
+      "metric_name": "Average order value",
+      "version_number": 1,
+      "definition": "Net revenue over order count",
+      "grain": "order",
+      "source_fields": [
+        "orders.amount"
+      ],
+      "owner_id": "own-03",
+      "refresh": "daily",
+      "valid_from": "2026-05-01T00:00:00Z",
+      "status": "published"
+    },
+    {
+      "metric_version_id": "mv-ltv-1",
+      "metric_id": "m-ltv",
+      "metric_name": "Customer lifetime value",
+      "version_number": 1,
+      "definition": "Cumulative net revenue per customer",
+      "grain": "",
+      "source_fields": [
+        "orders.amount"
+      ],
+      "owner_id": "own-03",
+      "refresh": null,
+      "valid_from": "2026-06-01T00:00:00Z",
+      "status": "published"
+    },
+    {
+      "metric_version_id": "mv-nps-1",
+      "metric_id": "m-nps",
+      "metric_name": "Net promoter score",
+      "version_number": 1,
+      "definition": "Promoters minus detractors",
+      "grain": "",
+      "source_fields": [],
+      "owner_id": "own-01",
+      "refresh": null,
+      "valid_from": "2026-09-01T00:00:00Z",
+      "status": "draft"
+    }
+  ],
+  "definition_changes": [
+    {
+      "change_id": "dc-001",
+      "metric_version_id": "mv-rev-2",
+      "previous_metric_version_id": "mv-rev-1",
+      "reason": "Refunds are netted from revenue",
+      "approved_by": "own-02",
+      "changed_at": "2026-08-15T09:00:00Z"
+    }
+  ],
+  "customer_records": [
+    {
+      "record_id": "rec-001",
+      "source_system": "crm",
+      "source_customer_id": "C-1001",
+      "normalized_name": "maria lopez",
+      "address_key": "addr-0101"
+    },
+    {
+      "record_id": "rec-002",
+      "source_system": "billing",
+      "source_customer_id": "B-2001",
+      "normalized_name": "maria lopez",
+      "address_key": "addr-0101"
+    },
+    {
+      "record_id": "rec-003",
+      "source_system": "crm",
+      "source_customer_id": "C-1002",
+      "normalized_name": "john a smith",
+      "address_key": "addr-0202"
+    },
+    {
+      "record_id": "rec-004",
+      "source_system": "billing",
+      "source_customer_id": "B-2002",
+      "normalized_name": "jon smith",
+      "address_key": "addr-0202"
+    },
+    {
+      "record_id": "rec-005",
+      "source_system": "crm",
+      "source_customer_id": "C-1003",
+      "normalized_name": "chen wei",
+      "address_key": "addr-0303"
+    },
+    {
+      "record_id": "rec-006",
+      "source_system": "web",
+      "source_customer_id": "W-3001",
+      "normalized_name": "chen wei",
+      "address_key": "addr-0303"
+    },
+    {
+      "record_id": "rec-007",
+      "source_system": "billing",
+      "source_customer_id": "B-2003",
+      "normalized_name": "priya nair",
+      "address_key": "addr-0404"
+    },
+    {
+      "record_id": "rec-008",
+      "source_system": "web",
+      "source_customer_id": "W-3002",
+      "normalized_name": "p nair",
+      "address_key": "addr-0405"
+    },
+    {
+      "record_id": "rec-009",
+      "source_system": "crm",
+      "source_customer_id": "C-1004",
+      "normalized_name": "omar haddad",
+      "address_key": "addr-0505"
+    },
+    {
+      "record_id": "rec-010",
+      "source_system": "web",
+      "source_customer_id": "W-3003",
+      "normalized_name": "omar haddad",
+      "address_key": "addr-0505"
+    }
+  ],
+  "match_candidates": [
+    {
+      "candidate_id": "cand-001",
+      "left_record_id": "rec-001",
+      "right_record_id": "rec-002",
+      "score": "0.970000",
+      "features": {
+        "name_similarity": "1.000000",
+        "address_match": "1.000000"
+      },
+      "explanation": "Same name and address in two systems",
+      "uncertainty": "Shared name and address; possible household",
+      "proposed_by": "own-01",
+      "proposed_at": "2026-09-29T08:00:00Z"
+    },
+    {
+      "candidate_id": "cand-002",
+      "left_record_id": "rec-003",
+      "right_record_id": "rec-004",
+      "score": "0.910000",
+      "features": {
+        "name_similarity": "0.880000",
+        "address_match": "1.000000"
+      },
+      "explanation": "Near-identical name, same address",
+      "uncertainty": null,
+      "proposed_by": "own-01",
+      "proposed_at": "2026-09-29T08:05:00Z"
+    },
+    {
+      "candidate_id": "cand-003",
+      "left_record_id": "rec-005",
+      "right_record_id": "rec-006",
+      "score": "0.880000",
+      "features": {
+        "name_similarity": "1.000000",
+        "address_match": "1.000000"
+      },
+      "explanation": "Same name and address in two systems",
+      "uncertainty": "Shared name and address; possible household",
+      "proposed_by": "own-01",
+      "proposed_at": "2026-09-29T08:10:00Z"
+    },
+    {
+      "candidate_id": "cand-004",
+      "left_record_id": "rec-007",
+      "right_record_id": "rec-008",
+      "score": "0.620000",
+      "features": {
+        "name_similarity": "0.600000",
+        "address_match": "0.000000"
+      },
+      "explanation": "Abbreviated name, different address key",
+      "uncertainty": "Low similarity",
+      "proposed_by": "own-01",
+      "proposed_at": "2026-09-29T08:15:00Z"
+    },
+    {
+      "candidate_id": "cand-005",
+      "left_record_id": "rec-009",
+      "right_record_id": "rec-010",
+      "score": "0.950000",
+      "features": {
+        "name_similarity": "1.000000",
+        "address_match": "1.000000"
+      },
+      "explanation": "Same name and address in two systems",
+      "uncertainty": "Shared name and address; possible household",
+      "proposed_by": "own-01",
+      "proposed_at": "2026-10-01T08:00:00Z"
+    }
+  ],
+  "merge_decisions": [
+    {
+      "merge_id": "md-1",
+      "candidate_id": "cand-001",
+      "reviewer_id": "own-02",
+      "decision": "approve",
+      "decided_at": "2026-09-29T10:00:00Z",
+      "reverses_merge_id": null,
+      "reason": null
+    },
+    {
+      "merge_id": "md-2",
+      "candidate_id": "cand-002",
+      "reviewer_id": "own-03",
+      "decision": "approve",
+      "decided_at": "2026-09-29T11:00:00Z",
+      "reverses_merge_id": null,
+      "reason": null
+    },
+    {
+      "merge_id": "md-3",
+      "candidate_id": "cand-003",
+      "reviewer_id": "own-02",
+      "decision": "approve",
+      "decided_at": "2026-09-30T09:00:00Z",
+      "reverses_merge_id": null,
+      "reason": null
+    },
+    {
+      "merge_id": "md-4",
+      "candidate_id": "cand-004",
+      "reviewer_id": "own-03",
+      "decision": "reject",
+      "decided_at": "2026-09-30T10:00:00Z",
+      "reverses_merge_id": null,
+      "reason": null
+    },
+    {
+      "merge_id": "md-5",
+      "candidate_id": "cand-003",
+      "reviewer_id": "own-03",
+      "decision": "reverse",
+      "decided_at": "2026-10-01T09:00:00Z",
+      "reverses_merge_id": "md-3",
+      "reason": "Different people in one household"
+    }
+  ],
+  "dataset_rows": {
+    "ds-customers": [
+      {
+        "row_id": "cust-001",
+        "customer_key": "CK-0001",
+        "email": "customer001@example.test"
+      },
+      {
+        "row_id": "cust-002",
+        "customer_key": "CK-0002",
+        "email": "customer002@example.test"
+      },
+      {
+        "row_id": "cust-003",
+        "customer_key": "CK-0003",
+        "email": "customer003@example.test"
+      },
+      {
+        "row_id": "cust-004",
+        "customer_key": "CK-0004",
+        "email": "customer004@example.test"
+      },
+      {
+        "row_id": "cust-005",
+        "customer_key": "CK-0005",
+        "email": "customer005.example.test"
+      },
+      {
+        "row_id": "cust-006",
+        "customer_key": "CK-0006",
+        "email": "customer006@example.test"
+      },
+      {
+        "row_id": "cust-007",
+        "customer_key": "CK-0007",
+        "email": "customer007@example.test"
+      },
+      {
+        "row_id": "cust-008",
+        "customer_key": "CK-0008",
+        "email": "customer008@example.test"
+      },
+      {
+        "row_id": "cust-009",
+        "customer_key": "CK-0009",
+        "email": "customer009@example.test"
+      },
+      {
+        "row_id": "cust-010",
+        "customer_key": "CK-0010",
+        "email": "customer010@example.test"
+      },
+      {
+        "row_id": "cust-011",
+        "customer_key": "CK-0011",
+        "email": null
+      },
+      {
+        "row_id": "cust-012",
+        "customer_key": "CK-0012",
+        "email": "customer012@example.test"
+      },
+      {
+        "row_id": "cust-013",
+        "customer_key": "CK-0013",
+        "email": "customer013@example.test"
+      },
+      {
+        "row_id": "cust-014",
+        "customer_key": "CK-0014",
+        "email": "customer014@example.test"
+      },
+      {
+        "row_id": "cust-015",
+        "customer_key": "CK-0015",
+        "email": "customer015@example.test"
+      },
+      {
+        "row_id": "cust-016",
+        "customer_key": "CK-0016",
+        "email": "customer016@example.test"
+      },
+      {
+        "row_id": "cust-017",
+        "customer_key": "CK-0017",
+        "email": "customer017@example.test"
+      },
+      {
+        "row_id": "cust-018",
+        "customer_key": "CK-0018",
+        "email": "customer018@example.test"
+      },
+      {
+        "row_id": "cust-019",
+        "customer_key": "CK-0019",
+        "email": "customer019@example"
+      },
+      {
+        "row_id": "cust-020",
+        "customer_key": "CK-0020",
+        "email": "customer020@example.test"
+      },
+      {
+        "row_id": "cust-021",
+        "customer_key": "CK-0021",
+        "email": "customer021@example.test"
+      },
+      {
+        "row_id": "cust-022",
+        "customer_key": "CK-0022",
+        "email": "customer022@example.test"
+      },
+      {
+        "row_id": "cust-023",
+        "customer_key": "CK-0023",
+        "email": "customer023@example.test"
+      },
+      {
+        "row_id": "cust-024",
+        "customer_key": "CK-0024",
+        "email": "customer024@example.test"
+      },
+      {
+        "row_id": "cust-025",
+        "customer_key": "CK-0025",
+        "email": "customer025@example.test"
+      },
+      {
+        "row_id": "cust-026",
+        "customer_key": "CK-0026",
+        "email": "customer026@example.test"
+      },
+      {
+        "row_id": "cust-027",
+        "customer_key": "CK-0027",
+        "email": "customer027@example.test"
+      },
+      {
+        "row_id": "cust-028",
+        "customer_key": "CK-0028",
+        "email": "customer028@example.test"
+      },
+      {
+        "row_id": "cust-029",
+        "customer_key": "CK-0029",
+        "email": null
+      },
+      {
+        "row_id": "cust-030",
+        "customer_key": "CK-0030",
+        "email": "customer030@example.test"
+      },
+      {
+        "row_id": "cust-031",
+        "customer_key": "CK-0031",
+        "email": "customer031@example.test"
+      },
+      {
+        "row_id": "cust-032",
+        "customer_key": "CK-0032",
+        "email": "customer032@example.test"
+      },
+      {
+        "row_id": "cust-033",
+        "customer_key": "CK-0033",
+        "email": "customer033@@example.test"
+      },
+      {
+        "row_id": "cust-034",
+        "customer_key": "CK-0034",
+        "email": "customer034@example.test"
+      },
+      {
+        "row_id": "cust-035",
+        "customer_key": "CK-0035",
+        "email": "customer035@example.test"
+      },
+      {
+        "row_id": "cust-036",
+        "customer_key": "CK-0036",
+        "email": "customer036@example.test"
+      },
+      {
+        "row_id": "cust-037",
+        "customer_key": "CK-0037",
+        "email": "customer037@example.test"
+      },
+      {
+        "row_id": "cust-038",
+        "customer_key": "CK-0038",
+        "email": "customer038@example.test"
+      },
+      {
+        "row_id": "cust-039",
+        "customer_key": "CK-0039",
+        "email": "customer039@example.test"
+      },
+      {
+        "row_id": "cust-040",
+        "customer_key": "CK-0040",
+        "email": "customer040@example.test"
+      },
+      {
+        "row_id": "cust-041",
+        "customer_key": "CK-0041",
+        "email": "customer041@example.test"
+      },
+      {
+        "row_id": "cust-042",
+        "customer_key": "CK-0042",
+        "email": "customer042@example.test"
+      },
+      {
+        "row_id": "cust-043",
+        "customer_key": "CK-0043",
+        "email": "customer043@example.test"
+      },
+      {
+        "row_id": "cust-044",
+        "customer_key": "CK-0044",
+        "email": "customer044@example.test"
+      },
+      {
+        "row_id": "cust-045",
+        "customer_key": "CK-0045",
+        "email": "customer045@example.test"
+      },
+      {
+        "row_id": "cust-046",
+        "customer_key": "CK-0046",
+        "email": "customer046@example.test"
+      },
+      {
+        "row_id": "cust-047",
+        "customer_key": "CK-0047",
+        "email": ""
+      },
+      {
+        "row_id": "cust-048",
+        "customer_key": "CK-0048",
+        "email": "customer048@example.test"
+      },
+      {
+        "row_id": "cust-049",
+        "customer_key": "CK-0049",
+        "email": "customer049@example.test"
+      },
+      {
+        "row_id": "cust-050",
+        "customer_key": "CK-0050",
+        "email": "customer050@example.test"
+      },
+      {
+        "row_id": "cust-051",
+        "customer_key": "CK-0051",
+        "email": "customer051@example.test"
+      },
+      {
+        "row_id": "cust-052",
+        "customer_key": "CK-0052",
+        "email": "customer 052@example.test"
+      },
+      {
+        "row_id": "cust-053",
+        "customer_key": "CK-0053",
+        "email": "customer053@example.test"
+      },
+      {
+        "row_id": "cust-054",
+        "customer_key": "CK-0054",
+        "email": "customer054@example.test"
+      },
+      {
+        "row_id": "cust-055",
+        "customer_key": "CK-0055",
+        "email": "customer055@example.test"
+      },
+      {
+        "row_id": "cust-056",
+        "customer_key": "CK-0056",
+        "email": "customer056@example.test"
+      },
+      {
+        "row_id": "cust-057",
+        "customer_key": "CK-0057",
+        "email": "customer057@example.test"
+      },
+      {
+        "row_id": "cust-058",
+        "customer_key": "CK-0058",
+        "email": "customer058@example.test"
+      },
+      {
+        "row_id": "cust-059",
+        "customer_key": "CK-0059",
+        "email": "customer059@example.test"
+      },
+      {
+        "row_id": "cust-060",
+        "customer_key": "CK-0060",
+        "email": "customer060@example.test"
+      },
+      {
+        "row_id": "cust-061",
+        "customer_key": "CK-0060",
+        "email": "customer061@example.test"
+      },
+      {
+        "row_id": "cust-062",
+        "customer_key": "CK-0060",
+        "email": "customer062@example.test"
+      },
+      {
+        "row_id": "cust-063",
+        "customer_key": "CK-0063",
+        "email": "   "
+      },
+      {
+        "row_id": "cust-064",
+        "customer_key": "CK-0064",
+        "email": "customer064@example.test"
+      },
+      {
+        "row_id": "cust-065",
+        "customer_key": "CK-0065",
+        "email": "customer065@example.test"
+      },
+      {
+        "row_id": "cust-066",
+        "customer_key": "CK-0066",
+        "email": "customer066@example.test"
+      },
+      {
+        "row_id": "cust-067",
+        "customer_key": "CK-0067",
+        "email": "customer067@example.test"
+      },
+      {
+        "row_id": "cust-068",
+        "customer_key": "CK-0068",
+        "email": "customer068@example.test"
+      },
+      {
+        "row_id": "cust-069",
+        "customer_key": "CK-0069",
+        "email": "customer069@example.test"
+      },
+      {
+        "row_id": "cust-070",
+        "customer_key": "CK-0070",
+        "email": "customer070@example.test"
+      },
+      {
+        "row_id": "cust-071",
+        "customer_key": "CK-0071",
+        "email": "customer071@example.test"
+      },
+      {
+        "row_id": "cust-072",
+        "customer_key": "CK-0072",
+        "email": "customer072@example.test"
+      },
+      {
+        "row_id": "cust-073",
+        "customer_key": "CK-0073",
+        "email": "customer073@example.test"
+      },
+      {
+        "row_id": "cust-074",
+        "customer_key": "CK-0074",
+        "email": "customer074@example.test"
+      },
+      {
+        "row_id": "cust-075",
+        "customer_key": "CK-0075",
+        "email": "customer075@example.test"
+      },
+      {
+        "row_id": "cust-076",
+        "customer_key": "CK-0076",
+        "email": "customer076@example.test"
+      },
+      {
+        "row_id": "cust-077",
+        "customer_key": "CK-0077",
+        "email": "customer077@example.t"
+      },
+      {
+        "row_id": "cust-078",
+        "customer_key": "CK-0078",
+        "email": "customer078@example.test"
+      },
+      {
+        "row_id": "cust-079",
+        "customer_key": "CK-0079",
+        "email": "customer079@example.test"
+      },
+      {
+        "row_id": "cust-080",
+        "customer_key": "CK-0080",
+        "email": "customer080@example.test"
+      },
+      {
+        "row_id": "cust-081",
+        "customer_key": "CK-0081",
+        "email": "customer081@example.test"
+      },
+      {
+        "row_id": "cust-082",
+        "customer_key": "CK-0082",
+        "email": "customer082@example.test"
+      },
+      {
+        "row_id": "cust-083",
+        "customer_key": "CK-0083",
+        "email": "customer083@example.test"
+      },
+      {
+        "row_id": "cust-084",
+        "customer_key": "CK-0084",
+        "email": "customer084@example.test"
+      },
+      {
+        "row_id": "cust-085",
+        "customer_key": "CK-0085",
+        "email": "customer085@example.test"
+      },
+      {
+        "row_id": "cust-086",
+        "customer_key": "CK-0086",
+        "email": "customer086@example.test"
+      },
+      {
+        "row_id": "cust-087",
+        "customer_key": "CK-0087",
+        "email": "customer087@example.test"
+      },
+      {
+        "row_id": "cust-088",
+        "customer_key": "CK-0088",
+        "email": "\t \t"
+      },
+      {
+        "row_id": "cust-089",
+        "customer_key": "CK-0089",
+        "email": "customer089@example.test"
+      },
+      {
+        "row_id": "cust-090",
+        "customer_key": "CK-0090",
+        "email": "customer090@example.test"
+      },
+      {
+        "row_id": "cust-091",
+        "customer_key": "CK-0091",
+        "email": "customer091@example.test"
+      },
+      {
+        "row_id": "cust-092",
+        "customer_key": "CK-0092",
+        "email": "customer092@example.test"
+      },
+      {
+        "row_id": "cust-093",
+        "customer_key": "CK-0093",
+        "email": "customer093@example.test"
+      },
+      {
+        "row_id": "cust-094",
+        "customer_key": "CK-0094",
+        "email": "customer094@example.test"
+      },
+      {
+        "row_id": "cust-095",
+        "customer_key": "CK-0095",
+        "email": "customer095@example.test"
+      },
+      {
+        "row_id": "cust-096",
+        "customer_key": "CK-0096",
+        "email": "customer096@example.test"
+      },
+      {
+        "row_id": "cust-097",
+        "customer_key": "CK-0097",
+        "email": "customer097@example.test"
+      },
+      {
+        "row_id": "cust-098",
+        "customer_key": "CK-0098",
+        "email": "customer098@example.test"
+      },
+      {
+        "row_id": "cust-099",
+        "customer_key": "CK-0099",
+        "email": "customer099@example.test"
+      },
+      {
+        "row_id": "cust-100",
+        "customer_key": "CK-0100",
+        "email": "customer100@example.test"
+      }
+    ],
+    "ds-orders": [
+      {
+        "row_id": "ord-001",
+        "order_id": "O-0001",
+        "customer_key": "CK-0001"
+      },
+      {
+        "row_id": "ord-002",
+        "order_id": "O-0002",
+        "customer_key": "CK-0002"
+      },
+      {
+        "row_id": "ord-003",
+        "order_id": "O-0003",
+        "customer_key": "CK-0003"
+      },
+      {
+        "row_id": "ord-004",
+        "order_id": "O-0004",
+        "customer_key": "CK-0004"
+      },
+      {
+        "row_id": "ord-005",
+        "order_id": "O-0005",
+        "customer_key": "CK-0005"
+      },
+      {
+        "row_id": "ord-006",
+        "order_id": "O-0006",
+        "customer_key": "CK-0006"
+      },
+      {
+        "row_id": "ord-007",
+        "order_id": "O-0007",
+        "customer_key": "CK-0007"
+      },
+      {
+        "row_id": "ord-008",
+        "order_id": "O-0008",
+        "customer_key": "CK-0999"
+      },
+      {
+        "row_id": "ord-009",
+        "order_id": "O-0009",
+        "customer_key": "CK-0009"
+      },
+      {
+        "row_id": "ord-010",
+        "order_id": "O-0010",
+        "customer_key": "CK-0010"
+      },
+      {
+        "row_id": "ord-011",
+        "order_id": "O-0011",
+        "customer_key": "CK-0011"
+      },
+      {
+        "row_id": "ord-012",
+        "order_id": "O-0012",
+        "customer_key": "CK-0012"
+      },
+      {
+        "row_id": "ord-013",
+        "order_id": "O-0013",
+        "customer_key": "CK-0013"
+      },
+      {
+        "row_id": "ord-014",
+        "order_id": "O-0014",
+        "customer_key": "CK-0014"
+      },
+      {
+        "row_id": "ord-015",
+        "order_id": "O-0015",
+        "customer_key": "CK-0015"
+      },
+      {
+        "row_id": "ord-016",
+        "order_id": "O-0016",
+        "customer_key": "CK-0016"
+      },
+      {
+        "row_id": "ord-017",
+        "order_id": "O-0017",
+        "customer_key": null
+      },
+      {
+        "row_id": "ord-018",
+        "order_id": "O-0018",
+        "customer_key": "CK-0018"
+      },
+      {
+        "row_id": "ord-019",
+        "order_id": "O-0019",
+        "customer_key": "CK-0019"
+      },
+      {
+        "row_id": "ord-020",
+        "order_id": "O-0020",
+        "customer_key": "CK-0020"
+      },
+      {
+        "row_id": "ord-021",
+        "order_id": "O-0021",
+        "customer_key": "CK-0021"
+      },
+      {
+        "row_id": "ord-022",
+        "order_id": "O-0022",
+        "customer_key": "CK-0022"
+      },
+      {
+        "row_id": "ord-023",
+        "order_id": "O-0023",
+        "customer_key": "CK-0023"
+      },
+      {
+        "row_id": "ord-024",
+        "order_id": "O-0024",
+        "customer_key": "CK-0024"
+      },
+      {
+        "row_id": "ord-025",
+        "order_id": "O-0025",
+        "customer_key": "CK-0777"
+      },
+      {
+        "row_id": "ord-026",
+        "order_id": "O-0026",
+        "customer_key": "CK-0026"
+      },
+      {
+        "row_id": "ord-027",
+        "order_id": "O-0027",
+        "customer_key": "CK-0027"
+      },
+      {
+        "row_id": "ord-028",
+        "order_id": "O-0028",
+        "customer_key": "CK-0028"
+      },
+      {
+        "row_id": "ord-029",
+        "order_id": "O-0029",
+        "customer_key": "CK-0029"
+      },
+      {
+        "row_id": "ord-030",
+        "order_id": "O-0030",
+        "customer_key": "CK-0030"
+      },
+      {
+        "row_id": "ord-031",
+        "order_id": "O-0031",
+        "customer_key": "CK-0031"
+      },
+      {
+        "row_id": "ord-032",
+        "order_id": "O-0032",
+        "customer_key": "CK-0032"
+      },
+      {
+        "row_id": "ord-033",
+        "order_id": "O-0033",
+        "customer_key": null
+      },
+      {
+        "row_id": "ord-034",
+        "order_id": "O-0034",
+        "customer_key": "CK-0034"
+      },
+      {
+        "row_id": "ord-035",
+        "order_id": "O-0035",
+        "customer_key": "CK-0035"
+      },
+      {
+        "row_id": "ord-036",
+        "order_id": "O-0036",
+        "customer_key": "CK-0036"
+      },
+      {
+        "row_id": "ord-037",
+        "order_id": "O-0037",
+        "customer_key": "CK-0037"
+      },
+      {
+        "row_id": "ord-038",
+        "order_id": "O-0038",
+        "customer_key": "CK-0038"
+      },
+      {
+        "row_id": "ord-039",
+        "order_id": "O-0039",
+        "customer_key": "CK-0039"
+      },
+      {
+        "row_id": "ord-040",
+        "order_id": "O-0040",
+        "customer_key": "CK-0060"
+      }
+    ]
+  },
+  "synthetic_truth": {
+    "note": "Verification only; the matcher never reads this block.",
+    "true_entity": {
+      "rec-001": "E1",
+      "rec-002": "E1",
+      "rec-003": "E2",
+      "rec-004": "E2",
+      "rec-005": "E3",
+      "rec-006": "E4",
+      "rec-007": "E5",
+      "rec-008": "E6",
+      "rec-009": "E7",
+      "rec-010": "E7"
+    }
+  }
+}

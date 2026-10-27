@@ -1,0 +1,154 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-10-05T00:00:00Z",
+  "weight_version": "w2",
+  "checklist_version": "cl-1",
+  "empty_population": true,
+  "ingest": {
+    "counts": {
+      "owners": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "datasets": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "fields": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "quality_rules": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "rule_runs": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "issues": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "lineage_edges": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "metric_versions": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "definition_changes": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "customer_records": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "match_candidates": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "merge_decisions": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "dataset_rows": {
+        "accepted": 0,
+        "rejected": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "rules": {
+    "active_count": 0,
+    "runs": {},
+    "comparisons": {},
+    "disabled": {}
+  },
+  "metrics": {
+    "completeness": {},
+    "validity": {},
+    "uniqueness": {},
+    "relationship_integrity": {},
+    "timeliness": {
+      "monitored_datasets": 0,
+      "on_time_count": 0,
+      "value": null,
+      "datasets": {}
+    },
+    "critical_failures": {
+      "failures": 0,
+      "open_issues": 0,
+      "datasets_overridden": 0
+    },
+    "resolution_time": {
+      "resolved_count": 0,
+      "claimed_count": 0,
+      "open_count": 0,
+      "reopened_count": 0,
+      "reopen_cycles_total": 0,
+      "mean_hours": null,
+      "issues": {}
+    },
+    "definition_coverage": {
+      "checklist_version": "cl-1",
+      "published_metrics": 0,
+      "complete_metrics": 0,
+      "value": null,
+      "incomplete": {}
+    },
+    "lineage_coverage": {
+      "declared_edges": 0,
+      "observed_rows": 0,
+      "observed_distinct": 0,
+      "observed_matching_declared": 0,
+      "value": null,
+      "undeclared_observed": [],
+      "declared_not_observed": [],
+      "inferred_edges": []
+    },
+    "weighted_score": {
+      "datasets": {},
+      "by_weight_version": {
+        "w1": {},
+        "w2": {}
+      }
+    },
+    "ownership_coverage": {
+      "datasets": 0,
+      "covered": 0,
+      "value": null,
+      "uncovered": []
+    },
+    "match_precision": {
+      "approved_decisions": 0,
+      "approved_correct": 0,
+      "precision": null,
+      "reviewed": 0,
+      "reviewed_correct": 0,
+      "reviewed_correct_share": null
+    }
+  },
+  "definitions": {
+    "version_counts": {},
+    "change_records": 0,
+    "versions_without_change_record": [],
+    "changes_with_mismatched_valid_from": [],
+    "effective_at_as_of": {},
+    "probe_at": "2026-08-01T00:00:00Z",
+    "effective_at_probe": {}
+  },
+  "matching": {
+    "candidates": 0,
+    "reviewed": 0,
+    "approved": 0,
+    "rejected": 0,
+    "unreviewed": 0,
+    "merges_reversed": 0,
+    "active_merges": 0,
+    "identity_map": {},
+    "mapping_history": []
+  }
+}

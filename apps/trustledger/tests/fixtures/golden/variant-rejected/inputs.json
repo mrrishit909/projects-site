@@ -1,0 +1,313 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-10-05T00:00:00Z",
+  "whitespace_policy": {
+    "name": "trim_empty_is_missing",
+    "trim_characters": " \t\r\n"
+  },
+  "weight_version": "w2",
+  "weight_versions": [
+    {
+      "weight_version": "w1",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "weights": {
+        "completeness": "0.400000",
+        "validity": "0.300000",
+        "uniqueness": "0.200000",
+        "relationship": "0.050000",
+        "timeliness": "0.050000"
+      }
+    },
+    {
+      "weight_version": "w2",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "weights": {
+        "completeness": "0.250000",
+        "validity": "0.250000",
+        "uniqueness": "0.250000",
+        "relationship": "0.150000",
+        "timeliness": "0.100000"
+      }
+    }
+  ],
+  "checklist_version": "cl-1",
+  "checklist_versions": [
+    {
+      "checklist_version": "cl-1",
+      "items": [
+        "definition",
+        "grain",
+        "source_fields",
+        "owner",
+        "refresh"
+      ]
+    }
+  ],
+  "probes": {
+    "definition_at": "2026-08-01T00:00:00Z"
+  },
+  "owners": [
+    {
+      "owner_id": "own-01",
+      "owner_name": "Synthetic Owner 01",
+      "team": "Data Governance",
+      "role": "analyst",
+      "active": true,
+      "deactivated_at": null
+    },
+    {
+      "owner_id": "own-02",
+      "owner_name": "Synthetic Owner 02",
+      "team": "Data Platform",
+      "role": "steward",
+      "active": true,
+      "deactivated_at": null
+    }
+  ],
+  "datasets": [
+    {
+      "dataset_id": "ds-customers",
+      "dataset_name": "Customers",
+      "source_system": "crm",
+      "owner_id": "own-01",
+      "classification": "confidential",
+      "registered_at": "2026-06-01T00:00:00Z",
+      "monitored": false,
+      "refresh_timezone": null,
+      "refresh_local_time": null,
+      "refresh_grace_minutes": null,
+      "last_refreshed_at": null
+    },
+    {
+      "dataset_id": "ds-orphan",
+      "dataset_name": "Orphan feed",
+      "source_system": "legacy",
+      "owner_id": null,
+      "classification": "internal",
+      "registered_at": "2026-06-01T00:00:00Z",
+      "monitored": false,
+      "refresh_timezone": null,
+      "refresh_local_time": null,
+      "refresh_grace_minutes": null,
+      "last_refreshed_at": null
+    }
+  ],
+  "fields": [
+    {
+      "field_id": "fld-001",
+      "dataset_id": "ds-customers",
+      "field_name": "email",
+      "data_type": "text",
+      "nullable": false
+    },
+    {
+      "field_id": "fld-009",
+      "dataset_id": "ds-orphan",
+      "field_name": "feed_id",
+      "data_type": "text",
+      "nullable": false
+    }
+  ],
+  "quality_rules": [
+    {
+      "rule_id": "r-cust-complete-email",
+      "dataset_id": "ds-customers",
+      "field_id": "fld-001",
+      "rule_type": "completeness",
+      "severity": "high",
+      "version_number": 1,
+      "status": "active",
+      "disabled_at": null,
+      "disabled_reason": null,
+      "definition": {
+        "field": "email"
+      }
+    },
+    {
+      "rule_id": "r-orphan-complete",
+      "dataset_id": "ds-orphan",
+      "field_id": "fld-009",
+      "rule_type": "completeness",
+      "severity": "high",
+      "version_number": 1,
+      "status": "active",
+      "disabled_at": null,
+      "disabled_reason": null,
+      "definition": {
+        "field": "feed_id"
+      }
+    }
+  ],
+  "rule_runs": [
+    {
+      "rule_run_id": "rr-001",
+      "rule_id": "r-orphan-complete",
+      "rule_version": 1,
+      "weight_version": "w2",
+      "kind": "scheduled",
+      "run_at": "2026-09-28T02:00:00Z",
+      "eligible_count": 3,
+      "failure_count": 1,
+      "rerun_for_issue": null
+    }
+  ],
+  "issues": [],
+  "lineage_edges": [],
+  "metric_versions": [],
+  "definition_changes": [],
+  "customer_records": [
+    {
+      "record_id": "rec-001",
+      "source_system": "crm",
+      "source_customer_id": "C-1001",
+      "normalized_name": "maria lopez",
+      "address_key": "addr-0101"
+    },
+    {
+      "record_id": "rec-002",
+      "source_system": "billing",
+      "source_customer_id": "B-2001",
+      "normalized_name": "maria lopez",
+      "address_key": "addr-0101"
+    },
+    {
+      "record_id": "rec-003",
+      "source_system": "crm",
+      "source_customer_id": "C-1002",
+      "normalized_name": "chen wei",
+      "address_key": "addr-0303"
+    },
+    {
+      "record_id": "rec-004",
+      "source_system": "web",
+      "source_customer_id": "W-3001",
+      "normalized_name": "chen wei",
+      "address_key": "addr-0303"
+    }
+  ],
+  "match_candidates": [
+    {
+      "candidate_id": "cand-001",
+      "left_record_id": "rec-001",
+      "right_record_id": "rec-002",
+      "score": "0.970000",
+      "features": {
+        "name_similarity": "1.000000",
+        "address_match": "1.000000"
+      },
+      "explanation": "Same name and address in two systems",
+      "uncertainty": "Shared name and address; possible household",
+      "proposed_by": "own-01",
+      "proposed_at": "2026-09-29T08:00:00Z"
+    },
+    {
+      "candidate_id": "cand-002",
+      "left_record_id": "rec-002",
+      "right_record_id": "rec-001",
+      "score": "0.970000",
+      "features": {
+        "name_similarity": "1.000000",
+        "address_match": "1.000000"
+      },
+      "explanation": "Same pair stored in reverse order",
+      "uncertainty": "Shared name and address; possible household",
+      "proposed_by": "own-01",
+      "proposed_at": "2026-09-29T08:01:00Z"
+    },
+    {
+      "candidate_id": "cand-003",
+      "left_record_id": "rec-003",
+      "right_record_id": "rec-004",
+      "score": "0.880000",
+      "features": {
+        "name_similarity": "1.000000",
+        "address_match": "1.000000"
+      },
+      "explanation": "Same name and address in two systems",
+      "uncertainty": "Shared name and address; possible household",
+      "proposed_by": "own-02",
+      "proposed_at": "2026-09-29T08:10:00Z"
+    }
+  ],
+  "merge_decisions": [
+    {
+      "merge_id": "md-1",
+      "candidate_id": "cand-001",
+      "reviewer_id": "own-02",
+      "decision": "approve",
+      "decided_at": "2026-09-29T10:00:00Z",
+      "reverses_merge_id": null,
+      "reason": null
+    },
+    {
+      "merge_id": "md-2",
+      "candidate_id": "cand-002",
+      "reviewer_id": "own-02",
+      "decision": "approve",
+      "decided_at": "2026-09-29T10:05:00Z",
+      "reverses_merge_id": null,
+      "reason": null
+    },
+    {
+      "merge_id": "md-3",
+      "candidate_id": "cand-003",
+      "reviewer_id": "own-02",
+      "decision": "approve",
+      "decided_at": "2026-09-30T09:00:00Z",
+      "reverses_merge_id": null,
+      "reason": null
+    },
+    {
+      "merge_id": "md-4",
+      "candidate_id": "cand-003",
+      "reviewer_id": "own-02",
+      "decision": "reverse",
+      "decided_at": "2026-10-01T09:00:00Z",
+      "reverses_merge_id": "md-3",
+      "reason": "Reversal of a merge that was never accepted"
+    }
+  ],
+  "dataset_rows": {
+    "ds-customers": [
+      {
+        "row_id": "cust-001",
+        "email": "customer001@example.test"
+      },
+      {
+        "row_id": "cust-002",
+        "email": "customer002@example.test"
+      },
+      {
+        "row_id": "cust-003",
+        "email": null
+      },
+      {
+        "row_id": "cust-004",
+        "email": "customer004@example.test"
+      }
+    ],
+    "ds-orphan": [
+      {
+        "row_id": "feed-001",
+        "feed_id": "F-1"
+      },
+      {
+        "row_id": "feed-002",
+        "feed_id": "F-2"
+      },
+      {
+        "row_id": "feed-003",
+        "feed_id": null
+      }
+    ]
+  },
+  "synthetic_truth": {
+    "note": "Verification only; the matcher never reads this block.",
+    "true_entity": {
+      "rec-001": "E1",
+      "rec-002": "E1",
+      "rec-003": "E2",
+      "rec-004": "E3"
+    }
+  }
+}

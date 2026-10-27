@@ -74,3 +74,25 @@ zero denominator, never 0. Instants are UTC with `Z`; schedules use the dataset'
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners. Mode B: TypeScript mirror over the published
 snapshot; the issue workbench's and duplicate review's actions are browser-memory simulations and say so.
+
+## D-06 Fixture-driven clarifications (2026-10-27, adopted from A-049/A-050; full text D-T7-1..11 in tests/fixtures/golden/CALCULATION.md)
+Eligible rows are all rows unless a rule declares a filter; the whitespace policy trims " \t\r\n" and an empty string is
+missing. Critical failures = Σ `failure_count` of active critical rules on the current run; open critical issues are
+counted separately; `critical_override` is true if either is above 0. Uniqueness key = the rule's field as exact text;
+null keys are failures counted separately; the first row is kept; the dimension score is 1 − duplicate-row share.
+Timeliness target = the dataset's daily local time in its IANA zone plus a grace in minutes; the window is [occurrence,
+deadline), so a refresh at the deadline is late; only monitored datasets count; datasets gain `refresh_local_time`,
+`refresh_grace_minutes`, `monitored` and `last_refreshed_at` (added to the data model). Weighted score: unmeasured
+dimensions are dropped from both sums, null if none is measured, validity enters as populated-only. Match precision =
+approved merge decisions confirmed by the synthetic truth ÷ approved merge decisions (a reversal does not remove the
+approval); the wider reviewed share is `reviewed_correct_share`. Checklist cl-1 = definition, grain, source_fields,
+owner, refresh (non-blank text, non-empty field list, existing owner); only published metrics count. Resolution time
+ends at the verifying rerun's `run_at`; a reopened issue is open and keeps its first `detected_at`. Metric keys:
+`metrics.{completeness, validity, uniqueness, relationship_integrity, timeliness, weighted_score, critical_failures,
+resolution_time, ownership_coverage, definition_coverage, match_precision, lineage_coverage}`, the first four keyed by
+rule id, labelled pairs as {label, value}. Rejection is atomic per record; a child of a rejected parent is
+DEPENDENT_REJECTED; a reverse-order twin is DUPLICATE_PAIR; a first-seen pair with left > right is NON_CANONICAL_ORDER;
+a dataset without an owner is OWNER_REQUIRED; a merge by its proposer is REVIEWER_IS_PROPOSER. Observed lineage counts
+distinct (source, target) pairs; inferred edges never enter the observed numerator. Golden: weighted score 0.963932
+under w2 and 0.958116 under w1 with the override true; uniqueness 1/98 groups and 2/100 rows; relationship 36/38 with 2
+nulls; timeliness 3/4; ownership 4/5; definitions 3/4; lineage 5/6; precision 2/3; resolution mean 38.4444 h.

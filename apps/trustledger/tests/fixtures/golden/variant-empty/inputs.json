@@ -1,0 +1,66 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-10-05T00:00:00Z",
+  "whitespace_policy": {
+    "name": "trim_empty_is_missing",
+    "trim_characters": " \t\r\n"
+  },
+  "weight_version": "w2",
+  "weight_versions": [
+    {
+      "weight_version": "w1",
+      "valid_from": "2026-01-01T00:00:00Z",
+      "weights": {
+        "completeness": "0.400000",
+        "validity": "0.300000",
+        "uniqueness": "0.200000",
+        "relationship": "0.050000",
+        "timeliness": "0.050000"
+      }
+    },
+    {
+      "weight_version": "w2",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "weights": {
+        "completeness": "0.250000",
+        "validity": "0.250000",
+        "uniqueness": "0.250000",
+        "relationship": "0.150000",
+        "timeliness": "0.100000"
+      }
+    }
+  ],
+  "checklist_version": "cl-1",
+  "checklist_versions": [
+    {
+      "checklist_version": "cl-1",
+      "items": [
+        "definition",
+        "grain",
+        "source_fields",
+        "owner",
+        "refresh"
+      ]
+    }
+  ],
+  "probes": {
+    "definition_at": "2026-08-01T00:00:00Z"
+  },
+  "owners": [],
+  "datasets": [],
+  "fields": [],
+  "quality_rules": [],
+  "rule_runs": [],
+  "issues": [],
+  "lineage_edges": [],
+  "metric_versions": [],
+  "definition_changes": [],
+  "customer_records": [],
+  "match_candidates": [],
+  "merge_decisions": [],
+  "dataset_rows": {},
+  "synthetic_truth": {
+    "note": "Verification only; the matcher never reads this block.",
+    "true_entity": {}
+  }
+}

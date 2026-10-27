@@ -1,0 +1,365 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-10-05T00:00:00Z",
+  "weight_version": "w2",
+  "checklist_version": "cl-1",
+  "empty_population": false,
+  "ingest": {
+    "counts": {
+      "owners": {
+        "accepted": 2,
+        "rejected": 0
+      },
+      "datasets": {
+        "accepted": 1,
+        "rejected": 1
+      },
+      "fields": {
+        "accepted": 1,
+        "rejected": 1
+      },
+      "quality_rules": {
+        "accepted": 1,
+        "rejected": 1
+      },
+      "rule_runs": {
+        "accepted": 0,
+        "rejected": 1
+      },
+      "issues": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "lineage_edges": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "metric_versions": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "definition_changes": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "customer_records": {
+        "accepted": 4,
+        "rejected": 0
+      },
+      "match_candidates": {
+        "accepted": 2,
+        "rejected": 1
+      },
+      "merge_decisions": {
+        "accepted": 1,
+        "rejected": 3
+      },
+      "dataset_rows": {
+        "accepted": 4,
+        "rejected": 3
+      }
+    },
+    "rejected_records": [
+      {
+        "entity": "dataset_rows",
+        "id": "ds-orphan",
+        "status": "rejected",
+        "reason_code": "DEPENDENT_REJECTED",
+        "raw_row": {
+          "dataset_id": "ds-orphan",
+          "rows": [
+            {
+              "row_id": "feed-001",
+              "feed_id": "F-1"
+            },
+            {
+              "row_id": "feed-002",
+              "feed_id": "F-2"
+            },
+            {
+              "row_id": "feed-003",
+              "feed_id": null
+            }
+          ]
+        }
+      },
+      {
+        "entity": "datasets",
+        "id": "ds-orphan",
+        "status": "rejected",
+        "reason_code": "OWNER_REQUIRED",
+        "raw_row": {
+          "dataset_id": "ds-orphan",
+          "dataset_name": "Orphan feed",
+          "source_system": "legacy",
+          "owner_id": null,
+          "classification": "internal",
+          "registered_at": "2026-06-01T00:00:00Z",
+          "monitored": false,
+          "refresh_timezone": null,
+          "refresh_local_time": null,
+          "refresh_grace_minutes": null,
+          "last_refreshed_at": null
+        }
+      },
+      {
+        "entity": "fields",
+        "id": "fld-009",
+        "status": "rejected",
+        "reason_code": "DEPENDENT_REJECTED",
+        "raw_row": {
+          "field_id": "fld-009",
+          "dataset_id": "ds-orphan",
+          "field_name": "feed_id",
+          "data_type": "text",
+          "nullable": false
+        }
+      },
+      {
+        "entity": "match_candidates",
+        "id": "cand-002",
+        "status": "rejected",
+        "reason_code": "DUPLICATE_PAIR",
+        "raw_row": {
+          "candidate_id": "cand-002",
+          "left_record_id": "rec-002",
+          "right_record_id": "rec-001",
+          "score": "0.970000",
+          "features": {
+            "name_similarity": "1.000000",
+            "address_match": "1.000000"
+          },
+          "explanation": "Same pair stored in reverse order",
+          "uncertainty": "Shared name and address; possible household",
+          "proposed_by": "own-01",
+          "proposed_at": "2026-09-29T08:01:00Z"
+        }
+      },
+      {
+        "entity": "merge_decisions",
+        "id": "md-2",
+        "status": "rejected",
+        "reason_code": "DEPENDENT_REJECTED",
+        "raw_row": {
+          "merge_id": "md-2",
+          "candidate_id": "cand-002",
+          "reviewer_id": "own-02",
+          "decision": "approve",
+          "decided_at": "2026-09-29T10:05:00Z",
+          "reverses_merge_id": null,
+          "reason": null
+        }
+      },
+      {
+        "entity": "merge_decisions",
+        "id": "md-3",
+        "status": "rejected",
+        "reason_code": "REVIEWER_IS_PROPOSER",
+        "raw_row": {
+          "merge_id": "md-3",
+          "candidate_id": "cand-003",
+          "reviewer_id": "own-02",
+          "decision": "approve",
+          "decided_at": "2026-09-30T09:00:00Z",
+          "reverses_merge_id": null,
+          "reason": null
+        }
+      },
+      {
+        "entity": "merge_decisions",
+        "id": "md-4",
+        "status": "rejected",
+        "reason_code": "DEPENDENT_REJECTED",
+        "raw_row": {
+          "merge_id": "md-4",
+          "candidate_id": "cand-003",
+          "reviewer_id": "own-02",
+          "decision": "reverse",
+          "decided_at": "2026-10-01T09:00:00Z",
+          "reverses_merge_id": "md-3",
+          "reason": "Reversal of a merge that was never accepted"
+        }
+      },
+      {
+        "entity": "quality_rules",
+        "id": "r-orphan-complete",
+        "status": "rejected",
+        "reason_code": "DEPENDENT_REJECTED",
+        "raw_row": {
+          "rule_id": "r-orphan-complete",
+          "dataset_id": "ds-orphan",
+          "field_id": "fld-009",
+          "rule_type": "completeness",
+          "severity": "high",
+          "version_number": 1,
+          "status": "active",
+          "disabled_at": null,
+          "disabled_reason": null,
+          "definition": {
+            "field": "feed_id"
+          }
+        }
+      },
+      {
+        "entity": "rule_runs",
+        "id": "rr-001",
+        "status": "rejected",
+        "reason_code": "DEPENDENT_REJECTED",
+        "raw_row": {
+          "rule_run_id": "rr-001",
+          "rule_id": "r-orphan-complete",
+          "rule_version": 1,
+          "weight_version": "w2",
+          "kind": "scheduled",
+          "run_at": "2026-09-28T02:00:00Z",
+          "eligible_count": 3,
+          "failure_count": 1,
+          "rerun_for_issue": null
+        }
+      }
+    ]
+  },
+  "rules": {
+    "active_count": 1,
+    "runs": {
+      "r-cust-complete-email": {
+        "dataset_id": "ds-customers",
+        "rule_type": "completeness",
+        "severity": "high",
+        "rule_version": 1,
+        "weight_version": "w2",
+        "run_at": "2026-10-05T00:00:00Z",
+        "eligible_count": 4,
+        "failure_count": 1
+      }
+    },
+    "comparisons": {},
+    "disabled": {}
+  },
+  "metrics": {
+    "completeness": {
+      "r-cust-complete-email": {
+        "dataset_id": "ds-customers",
+        "eligible_count": 4,
+        "missing_count": 1,
+        "whitespace_only_count": 0,
+        "populated_count": 3,
+        "value": "0.750000"
+      }
+    },
+    "validity": {},
+    "uniqueness": {},
+    "relationship_integrity": {},
+    "timeliness": {
+      "monitored_datasets": 0,
+      "on_time_count": 0,
+      "value": null,
+      "datasets": {}
+    },
+    "critical_failures": {
+      "failures": 0,
+      "open_issues": 0,
+      "datasets_overridden": 0
+    },
+    "resolution_time": {
+      "resolved_count": 0,
+      "claimed_count": 0,
+      "open_count": 0,
+      "reopened_count": 0,
+      "reopen_cycles_total": 0,
+      "mean_hours": null,
+      "issues": {}
+    },
+    "definition_coverage": {
+      "checklist_version": "cl-1",
+      "published_metrics": 0,
+      "complete_metrics": 0,
+      "value": null,
+      "incomplete": {}
+    },
+    "lineage_coverage": {
+      "declared_edges": 0,
+      "observed_rows": 0,
+      "observed_distinct": 0,
+      "observed_matching_declared": 0,
+      "value": null,
+      "undeclared_observed": [],
+      "declared_not_observed": [],
+      "inferred_edges": []
+    },
+    "weighted_score": {
+      "datasets": {
+        "ds-customers": {
+          "weight_version": "w2",
+          "dimension_scores": {
+            "completeness": "0.750000"
+          },
+          "measured_dimensions": [
+            "completeness"
+          ],
+          "weight_sum": "0.250000",
+          "value": "0.750000",
+          "critical_failures": 0,
+          "critical_open_issues": 0,
+          "critical_override": false
+        }
+      },
+      "by_weight_version": {
+        "w1": {
+          "ds-customers": "0.750000"
+        },
+        "w2": {
+          "ds-customers": "0.750000"
+        }
+      }
+    },
+    "ownership_coverage": {
+      "datasets": 1,
+      "covered": 1,
+      "value": "1.000000",
+      "uncovered": []
+    },
+    "match_precision": {
+      "approved_decisions": 1,
+      "approved_correct": 1,
+      "precision": "1.000000",
+      "reviewed": 1,
+      "reviewed_correct": 1,
+      "reviewed_correct_share": "1.000000"
+    }
+  },
+  "definitions": {
+    "version_counts": {},
+    "change_records": 0,
+    "versions_without_change_record": [],
+    "changes_with_mismatched_valid_from": [],
+    "effective_at_as_of": {},
+    "probe_at": "2026-08-01T00:00:00Z",
+    "effective_at_probe": {}
+  },
+  "matching": {
+    "candidates": 2,
+    "reviewed": 1,
+    "approved": 1,
+    "rejected": 0,
+    "unreviewed": 1,
+    "merges_reversed": 0,
+    "active_merges": 1,
+    "identity_map": {
+      "rec-001": "rec-001",
+      "rec-002": "rec-001",
+      "rec-003": "rec-003",
+      "rec-004": "rec-004"
+    },
+    "mapping_history": [
+      {
+        "merge_id": "md-1",
+        "candidate_id": "cand-001",
+        "from_record_id": "rec-002",
+        "to_record_id": "rec-001",
+        "state": "active",
+        "reversed_by": null
+      }
+    ]
+  }
+}
