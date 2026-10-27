@@ -177,3 +177,17 @@ found by `cutoff_at` and its prior runs by `created_at`; a plan frozen after C d
 assignments. (3) A later cutoff includes the rows (they are facts that arrived in time), as a disclosed revision like late
 events. (4) Nothing generated changes: the golden cutoff and the published as-of are after every fact, so the golden
 fixtures, both variants and the 706 reference checks are unchanged. Regression tests: `tests/test_review_findings.py`.
+
+## D-09 Static site (2026-10-26, adopted from A-047)
+At a cutoff other than the as-of, windowed metrics use `default_windows(cutoff)` and the funnel window is [cutoff − 7 d,
+cutoff); at the as-of they use the manifest's windows (asserted equal to the defaults). The browser builds both plans
+from `manifest.analysis_plans` and passes experiment_version_id and run_id explicitly. The cohort page groups accounts
+by the Monday of their local signup date; a cell is blank when no account of the week is mature, "partial" when only
+some are (counting the mature ones), filled otherwise; the weekly grid is restated independently in the Python snapshot
+reference and the two agree. The decision page applies C10 as written plus "one decision per run"; a refused attempt
+writes an in-memory audit row; everything is gone on reload. Fonts are system stacks (nothing fetched from a third
+party). `code_sha` is absent from the generator manifest ("not recorded" until publish stamps it). `/result/` and
+`/evidence/` always load the golden fixture; `?dataset=golden` switches the primary dataset elsewhere. The registry's
+"freeze a plan" is a simulated draft computing a config_hash in memory. Local dates use Intl, checked against
+zoneinfo for every half hour from 2026-03-01 to 2026-11-12 in the three zones (both DST transitions). The Playwright
+evidence is not hosted on the site (the evidence page says so).
