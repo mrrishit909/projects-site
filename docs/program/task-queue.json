@@ -684,8 +684,9 @@
       "id": "T-07-05",
       "project": "07-trustledger",
       "title": "Artifacts P07-ART-01..10",
-      "status": "in_progress",
-      "assignment": "A-069"
+      "status": "done",
+      "assignment": "A-069",
+      "result": "a856f7c: artifacts P07-ART-01..10, 175-row reconciliation, 38 tests; CI pending"
     }
   ]
 }

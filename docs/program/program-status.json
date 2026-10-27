@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T04:52:14Z",
+  "updated_at": "2026-10-27T05:11:55Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -182,6 +182,10 @@
         "documentation": 12,
         "status": "fixed and republished (1e0283f, e205202)",
         "case_study_wording_fixed": "031705d"
+      },
+      "artifacts": {
+        "commit": "a856f7c",
+        "status": "done; CI pending (no-skip gate now covers the artifact tests)"
       }
     },
     "08-pipeline-observatory": {
@@ -299,7 +303,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 07: A-069 artifacts hand-back -> verify -> commit -> complete. Projects 08/09/10: web hand-backs (A-070, A-071, A-072) -> verify -> D-08 -> commit -> CI -> publish labs/<slug> -> manifest -> live check -> case study (drafts in scratchpad/p08, p09, p10; tiles exist) -> review -> fixes (P09: payback rule + PARTIAL_TREND_COVERAGE) -> artifacts.",
+    "next_concrete_task": "Project 07: CI on a856f7c -> mark complete. Projects 08/09/10: web hand-backs (A-070, A-071, A-072) -> verify -> D-08 -> commit -> CI -> publish -> manifest -> live check -> case study (drafts in scratchpad) -> review -> fixes -> artifacts.",
     "acceptance": "see task-queue.json"
   }
 }
