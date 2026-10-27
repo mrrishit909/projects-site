@@ -559,24 +559,26 @@
       "id": "T-08-03",
       "project": "08-pipeline-observatory",
       "title": "Domain + Postgres + FastAPI slice + CI",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-08-02"
       ],
       "retries": 0,
       "acceptance": "see T-07 equivalents",
-      "assignment": "A-059"
+      "assignment": "A-059",
+      "result": "3f3fc11: Mode A slice, 381 tests; D-06"
     },
     {
       "id": "T-08-04",
       "project": "08-pipeline-observatory",
       "title": "Generator + web + e2e + publish + integrate",
-      "status": "pending",
+      "status": "in_progress",
       "prereqs": [
         "T-08-03"
       ],
       "retries": 0,
-      "acceptance": "see T-07 equivalents"
+      "acceptance": "see T-07 equivalents",
+      "assignment": "A-065"
     },
     {
       "id": "T-07-06",

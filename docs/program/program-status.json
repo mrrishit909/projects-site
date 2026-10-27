@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T03:04:43Z",
+  "updated_at": "2026-10-27T03:08:57Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -200,7 +200,12 @@
       },
       "notes": [
         "D-05 adopted from the fixture (D-P8-01..13); backend worker A-059 dispatched 2026-10-27T02:18:21Z"
-      ]
+      ],
+      "backend": {
+        "commit": "3f3fc11",
+        "tests": 381,
+        "status": "done; CI pending"
+      }
     },
     "09-changeworks": {
       "slug": "changeworks",
@@ -250,7 +255,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 07: A-063 fix hand-back -> verify (reference, pytest no skips, npm check/build/e2e, reviewer probes) -> commit -> CI -> republish labs/trustledger -> manifest -> live check -> case study 'Found by review, then fixed' -> artifacts. Project 08: A-059 backend hand-back -> verify -> D-06 -> commit -> CI Mode A -> generator -> web -> publish -> integrate -> review -> artifacts. Project 09: A-064 backend hand-back -> verify -> D-06 -> commit -> CI -> generator -> web -> publish -> integrate (tile + case study) -> review -> artifacts. Project 10: A-062 fixture hand-back -> D-05 -> backend -> ...",
+    "next_concrete_task": "Project 07: A-063 fix hand-back -> verify -> commit -> CI -> republish -> live check -> case study -> artifacts. Project 08: backend 3f3fc11 (CI poll running); A-065 generator hand-back -> verify -> D-07 -> commit -> web worker -> publish -> integrate (tile + case study) -> review -> artifacts. Project 09: A-064 backend hand-back -> verify -> D-06 -> commit -> CI -> generator -> web -> ... Project 10: A-062 fixture hand-back -> D-05 -> backend -> ...",
     "acceptance": "see task-queue.json"
   }
 }
