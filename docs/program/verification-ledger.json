@@ -1405,6 +1405,13 @@
       "check": "CI on the workflow provisioning commit 7a748ac (LibreOffice Calc, artifact scratch databases, full history, portfolio case study; no artifact tests yet)",
       "run": "https://github.com/mrrishit909/projects-site/actions/runs/40464667982",
       "result": "success on both modes"
+    },
+    {
+      "ts": "2026-10-27T07:53:13Z",
+      "project": "08-pipeline-observatory",
+      "check": "live URL verification from GitHub Actions after the review republish (deploy-wait on code_sha, route 200s, case-study links both ways, browser journey) for all ten sites",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40469671918",
+      "result": "success; pipeline-observatory live code_sha b326690a791ca440e6c616dea361383cb8f7e665"
     }
   ]
 }

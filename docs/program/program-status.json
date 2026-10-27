@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T07:51:33Z",
+  "updated_at": "2026-10-27T07:53:13Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -194,7 +194,11 @@
       "slug": "pipeline-observatory",
       "stage": "contracts v1 and tooling committed (3a0fae2; spec hash 1ffbfbe7 verified against the source pack); golden fixture A-058 running",
       "built": true,
-      "verified": "pending live check on d58209f",
+      "verified": {
+        "live_check_run": 40469671918,
+        "at": "2026-10-27T07:53:13Z",
+        "release": "d58209f"
+      },
       "published": {
         "release": "d58209f",
         "rollback": "cf04a0e",
