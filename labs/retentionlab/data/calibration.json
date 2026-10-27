@@ -73,6 +73,15 @@
   "evaluation_rows": 1513,
   "fit_range": "validation (retained, mature rows only)",
   "fit_rows": 289,
+  "fit_rows_by_cutoff": {
+    "2025-10-01T00:00:00Z": 289
+  },
+  "largest_region_gap": {
+    "designed": false,
+    "gap_pp": "-10.68",
+    "note": "the largest regional calibration gap is a one-draw realisation of this seed's world, not a designed relationship: the instrumentation change was designed to move the apac usage distribution (DR-03), and no effect on its calibration was designed",
+    "region": "apac"
+  },
   "method": "platt",
   "overall": {
     "gap_pp": "-2.86",
@@ -80,6 +89,15 @@
     "n": 1513,
     "observed_rate": "0.124917",
     "positives": 189
+  },
+  "platt_effect": {
+    "brier_calibrated": "0.105019",
+    "brier_uncalibrated": "0.104515",
+    "fit_rows": 289,
+    "gap_pp_calibrated": "-2.86",
+    "gap_pp_uncalibrated": "-2.26",
+    "why": "the mapping has two parameters and was fitted on the retained validation rows, all of which come from the first validation cutoff (the label-window purge removes the later ones); a small fit set from one month does not transfer to the next four",
+    "worse_on_test": true
   },
   "reliability_calibrated": [
     {

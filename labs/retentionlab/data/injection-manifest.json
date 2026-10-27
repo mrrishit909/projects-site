@@ -1,6 +1,6 @@
 {
   "contract_version": "v1",
-  "dataset_hash": "11d2975c3c640a989793b4bcb4b33bb4d505c5741505dfaa7bdd359db178b468",
+  "dataset_hash": "9ebaaadab8a2f70e5f25820616391ee0aec55fbf0b121dee25460de469821b1c",
   "dataset_version": "rl-20261026-20261026",
   "designed_relationships": [
     {
@@ -34,6 +34,13 @@
           "brier_under_random": true,
           "brier_under_rule": true
         },
+        "prevalence_baseline": {
+          "average_precision": "0.124917",
+          "brier_score": "0.109664",
+          "n": 1513,
+          "positives": 189,
+          "prevalence": "0.124917"
+        },
         "random_baseline": {
           "average_precision": "0.126793",
           "brier_score": "0.326543",
@@ -41,11 +48,21 @@
           "positives": 189,
           "prevalence": "0.124917"
         },
+        "reference_margins": {
+          "ap_over_prevalence_constant": "0.113635",
+          "brier_under_prevalence_constant": "0.004645"
+        },
         "stated_margins": {
           "ap_over_random": "0.050000",
           "ap_over_rule": "0.030000",
           "brier_under_random": "0.050000",
           "brier_under_rule": "0.002000"
+        },
+        "uninformative_margin": {
+          "key": "brier_under_random",
+          "prevalence_constant_brier": "0.109664",
+          "random_brier": "0.326543",
+          "why": "a uniform random score has a Brier near one third on a population that is 12 % positive, so any model that is not absurd clears a margin over it; the honest reference is the prevalence constant"
         }
       },
       "statement": "On the test range (the cutoffs 2026-02-01 .. 2026-05-01, mature eligible rows with a prediction, as one evaluation population) the logistic regression's average precision exceeds the rule's by at least 0.030000 and the random baseline's by at least 0.050000, and its Brier score is lower than the rule's by at least 0.002000 and the random baseline's by at least 0.050000."
@@ -123,12 +140,27 @@
           }
         },
         "largest_other_segment_abs_gap_pp": "1.99",
+        "largest_region_gap": {
+          "designed": false,
+          "gap_pp": "-10.68",
+          "note": "the largest regional calibration gap is a one-draw realisation of this seed's world, not a designed relationship: the instrumentation change was designed to move the apac usage distribution (DR-03), and no effect on its calibration was designed",
+          "region": "apac"
+        },
         "overall": {
           "gap_pp": "-2.86",
           "mean_predicted": "0.096314",
           "n": 1513,
           "observed_rate": "0.124917",
           "positives": 189
+        },
+        "platt_effect": {
+          "brier_calibrated": "0.105019",
+          "brier_uncalibrated": "0.104515",
+          "fit_rows": 289,
+          "gap_pp_calibrated": "-2.86",
+          "gap_pp_uncalibrated": "-2.26",
+          "why": "the mapping has two parameters and was fitted on the retained validation rows, all of which come from the first validation cutoff (the label-window purge removes the later ones); a small fit set from one month does not transfer to the next four",
+          "worse_on_test": true
         },
         "segment": "starter",
         "uncalibrated_overall": {
