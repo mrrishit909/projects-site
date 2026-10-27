@@ -165,6 +165,7 @@ test("tracking: the counts equal Python and the injected problems are listed", a
   for (const k of Object.keys(tq)) await expect(page.locator(`[data-tq=${k}] [data-k=n]`)).toHaveText(Number(tq[k]).toLocaleString("en-US"));
   await expect(page.locator("[data-testid=injections] tbody tr")).toHaveCount(12);
   await expect(page.getByTestId("injection-summary")).toContainText("not replayed here");
+  await expect(page.getByTestId("linked-share")).toContainText("Real users (not bots) with a link");    // R6-10
   expect(errors).toEqual([]);
 });
 
@@ -208,6 +209,11 @@ test("result on the snapshot: v1 final conclusive by a hair with the disclosure;
   await expect(s.locator("[data-figure=interval]")).toHaveText("[0.000812, 0.186863]");
   await expect(s.getByTestId("verdict")).toContainText("conclusive");
   await expect(s.getByTestId("by-a-hair")).toBeVisible();
+  // R6-08: the instrumentation gap is disclosed beside "conclusive by a hair": 11 v1 accounts, drawn +11.50 pp, published +9.50, +9.96 without them
+  await expect(s.getByTestId("gap-note")).toContainText("INJ-10");
+  await expect(s.getByTestId("gap-note")).toContainText("11 ");
+  await expect(s.getByTestId("gap-note")).toContainText("11.50");
+  await expect(s.getByTestId("gap-note")).toContainText("9.96");
   await expect(s.getByTestId("srm")).toHaveAttribute("data-verdict", "OK");
   await expect(s.getByTestId("guardrail")).toHaveAttribute("data-verdict", "OK");
   const rv = ref.runs["an-004"].experiment.revenue_per_assigned_account.by_variant;
@@ -251,7 +257,9 @@ test("population, segments: denominators, exploratory label, Bonferroni threshol
   await ready(page);
   await expect(page.getByTestId("exploratory-label")).toContainText("exploratory");
   await expect(page.getByTestId("exploratory-label")).toContainText("3 segments tested");
-  await expect(page.getByTestId("exploratory-label").locator("[data-k=threshold]")).toHaveText(ref.segments["an-004/segment"].bonferroni_threshold);
+  // D-10 (R6-13): k counts every segment tested in every split the page offers (plan, segment, timezone), so the threshold is alpha / 9
+  await expect(page.getByTestId("exploratory-label").locator("[data-k=threshold]")).toHaveText(ref.segments_family["an-004/segment"].bonferroni_threshold);
+  await expect(page.getByTestId("exploratory-label")).toContainText(`${ref.segments_family["an-004/segment"].family_size} comparisons`);
   await expect(page.locator("[data-testid=segment-table] tbody tr")).toHaveCount(3);
   expect(await page.locator("[data-testid=segment-table] [data-chip=exploratory]").count()).toBe(3);
   await page.goto("segments/?run=an-005");
@@ -319,6 +327,13 @@ test("evidence and case study: live golden check, provenance, the disclosures an
   await expect(page.getByTestId("cs-v1")).toContainText("63/200");
   await expect(page.getByTestId("cs-v1")).toContainText("[0.000812, 0.186863]");
   await expect(page.getByTestId("cs-v2")).toContainText("MISMATCH");
+  await expect(page.getByTestId("cs-p")).toHaveText("p < 0.000001");                                  // R6-12: never "p 0.000001"
+  await expect(page.getByTestId("gap-note")).toContainText("INJ-10");                                 // R6-08
+  const sec = page.getByTestId("secondary-figures");                                                  // R6-10: intervals computed on the site
+  await expect(sec.locator("[data-k='week4.interval']")).toContainText("includes 0");
+  await expect(sec.locator("[data-k='guardrail.interval']")).toContainText("includes 0");
+  await expect(sec.locator("[data-k='revenue.interval']")).toContainText("Welch");
+  await expect(sec.locator("[data-k='week4.difference']")).toContainText("4.50");
   await expect(page.getByTestId("disclosure")).toContainText("223 control / 177 treatment");
   await expect(page.getByTestId("cs-modes")).toContainText("Mode B");
   await expect(page.getByTestId("cs-notbuilt")).toBeVisible();

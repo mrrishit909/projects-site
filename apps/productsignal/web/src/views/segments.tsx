@@ -12,7 +12,8 @@ function Segments({ ds }: { ds: Dataset }) {
   const [byRaw, setBy] = useParam("by", "plan");
   const by = (SEGMENT_FIELDS as readonly string[]).includes(byRaw) ? byRaw : "plan";
   const ex = ds.at(run.cutoff_at, run.experiment_version_id, run.analysis_id).metrics.experiment!;
-  const seg = ds.segments(run.cutoff_at, run.experiment_version_id, by);
+  const seg = ds.segmentsFamily(run.cutoff_at, run.experiment_version_id, by);
+  const family = seg.family_size ?? seg.segments_tested;
   const withheld = ex.srm.verdict === "MISMATCH";
   return (
     <>
@@ -23,7 +24,7 @@ function Segments({ ds }: { ds: Dataset }) {
         <Choice name="run" legend="Analysis run" value={run.analysis_id} onChange={setRun} testid="run-picker" options={ds.runs.map((r) => ({ value: r.analysis_id, label: runLabel(ds, r) }))} />
         <Choice name="by" legend="Split by" value={by} onChange={setBy} testid="by-picker" options={SEGMENT_FIELDS.map((f) => ({ value: f, label: f }))} />
       </div>
-      <p className="callout callout--warn" data-testid="exploratory-label"><Chip v="exploratory">exploratory</Chip> <strong>{seg.segments_tested} segments tested</strong> by {by} at {isoZ(run.cutoff_at)}; Bonferroni threshold <span className="mono" data-k="threshold">{seg.bonferroni_threshold}</span> (alpha {seg.alpha} ÷ {seg.segments_tested}). Not a decision basis.</p>
+      <p className="callout callout--warn" data-testid="exploratory-label"><Chip v="exploratory">exploratory</Chip> <strong>{seg.segments_tested} segments tested</strong> by {by} at {isoZ(run.cutoff_at)}, {family} comparisons across the {SEGMENT_FIELDS.length} splits offered on this page; Bonferroni threshold <span className="mono" data-k="threshold">{seg.bonferroni_threshold}</span> (alpha {seg.alpha} ÷ <span data-k="family">{family}</span>). Not a decision basis.</p>
       {withheld ? <p className="callout callout--bad" data-testid="segments-withheld">Withheld for this run: the sample ratio check failed ({ex.srm.verdict}), so no comparison of arms, by segment or overall, is shown.</p> : (
         <Scroll label="Segment results">
           <table data-testid="segment-table">
@@ -43,7 +44,7 @@ function Segments({ ds }: { ds: Dataset }) {
           </table>
         </Scroll>
       )}
-      <p className="muted"><Def term="how the threshold works">With k segments tested, a segment is called "below the threshold" only if its p-value is under alpha ÷ k (alpha = 1 − confidence). The interval uses the matching adjusted level, from the normal critical value found by bisection. A segment counts as tested only when both arms have assigned accounts in it.</Def> Segments are read from the account's plan, segment or timezone attribute, all fixed before assignment. {" "}
+      <p className="muted"><Def term="how the threshold works">With k comparisons, a segment is called "below the threshold" only if its p-value is under alpha ÷ k (alpha = 1 − confidence). k counts every segment tested in every split this page offers (plan, segment and timezone together, not only the split on screen), because a reader who switches the split is making those comparisons too; the API's segment analysis of one split corrects within that split. The interval uses the matching adjusted level, from the normal critical value found by bisection. A segment counts as tested only when both arms have assigned accounts in it.</Def> Segments are read from the account's plan, segment or timezone attribute, all fixed before assignment. {" "}
         <Link to="population">Assigned and exposed</Link>.</p>
       <NotBuilt>Interaction tests, effect-heterogeneity models, and any segment-based targeting. A segment that looks different is a hypothesis for the next experiment, never a decision basis.</NotBuilt>
     </>

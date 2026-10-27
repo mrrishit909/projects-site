@@ -45,6 +45,10 @@ function Tracking({ ds }: { ds: Dataset }) {
   const [cut, options, setCut] = useCutoff(ds);
   const c = ds.at(cut.at);
   const tq = c.tracking_quality, id = c.identity;
+  const links = ds.population.identity_links, users = ds.population.users;
+  const real = users.filter((u) => !u.bot_flag);
+  const linkedIds = new Set(links.map((l) => l.user_id));
+  const linkedReal = real.filter((u) => linkedIds.has(u.user_id)).length;
   const share = (n: number, d: number): string => q6(ratio(n, d) ?? fr(0)) ?? "n/a";
   const rows: { key: string; label: string; n: number; note: string }[] = [
     { key: "rows_total", label: "Rows in the event log", n: tq.rows_total, note: "every well-formed row; the log is append-only" },
@@ -74,6 +78,7 @@ function Tracking({ ds }: { ds: Dataset }) {
       </section>
       <section className="block" data-testid="identity-block">
         <h2>Identity resolution</h2>
+        <p data-testid="linked-share">Identity links in the log: <Fig k="links">{n0(links.length)}</Fig>. Real users (not bots) with a link: <Fig k="linked_real">{n0(linkedReal)}</Fig> of <Fig k="real_users">{n0(real.length)}</Fig> = <Fig k="linked_share">{q6(ratio(linkedReal, real.length) ?? fr(0)) ?? "n/a"}</Fig>; the other {n0(links.length - linkedReal)} links belong to bot users, whose events are excluded. This is a property of the whole log, not of the cutoff above.</p>
         <p>Anonymous events analysed: <Fig k="anonymous_events">{n0(id.anonymous_events)}</Fig>; attributed to a user by a link, only for events at or after the link: <Fig k="attributed">{n0(id.attributed_by_link)}</Fig>; still anonymous: <Fig k="remain">{n0(id.remain_anonymous)}</Fig>. <Def term="time-aware identity">A link attributes an anonymous id's events to a user only from linked_at onward; events before the link stay anonymous. The earliest link of an anonymous id fixes its user.</Def></p>
       </section>
       <section className="block" aria-labelledby="inj">

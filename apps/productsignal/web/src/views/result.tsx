@@ -1,5 +1,5 @@
 import { ArmFunnel } from "../components/charts";
-import { Disclosures, GuardrailBlock, PrimaryBlock, RevenueBlock, RunHead, SrmBlock, WithheldBlock } from "../components/experiment";
+import { Disclosures, GapNote, GuardrailBlock, PrimaryBlock, RevenueBlock, RunHead, SrmBlock, WithheldBlock } from "../components/experiment";
 import { Link } from "../components/link";
 import { Choice, ViewHead, WithDataset } from "../components/ui";
 import type { Dataset } from "../data/dataset";
@@ -15,7 +15,7 @@ function Report({ ds, run }: { ds: Dataset; run: AnalysisRun }) {
     <div data-run={run.analysis_id} data-withheld={withheld ? "true" : "false"}>
       <RunHead ds={ds} run={run} ex={ex} />
       <SrmBlock ex={ex} />
-      {withheld ? <WithheldBlock ex={ex} /> : <><PrimaryBlock ex={ex} /><ArmFunnel ex={ex} /></>}
+      {withheld ? <WithheldBlock ex={ex} /> : <><PrimaryBlock ex={ex} note={ds.id === "snapshot" && run.experiment_version_id === "xv-001" ? <GapNote ds={ds} /> : null} /><ArmFunnel ex={ex} /></>}
       <GuardrailBlock ds={ds} ex={ex} />
       <RevenueBlock ex={ex} />
     </div>

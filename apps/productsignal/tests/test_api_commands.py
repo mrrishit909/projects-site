@@ -9,7 +9,7 @@ from api import commands as cmds
 from productsignal.models import plan_hash
 
 from support_db import (ADMIN, ANALYST, EXPERIMENTER, PLAN_BODY, Lab, World, client, command, conn, count, db_url, drive, get,
-                        golden_expected, golden_inputs, iso, load, plan_input, rule_ids, small_experiment, table_digest, ts)  # noqa: F401
+                        golden_expected, golden_inputs, iso, load, plan_input, rule_ids, set_clock, small_experiment, table_digest, ts)  # noqa: F401
 
 NOW = lambda: datetime(2026, 10, 26, 22, 0, 0, tzinfo=timezone.utc)  # noqa: E731  (the fixed API clock, tests/conftest.py)
 
@@ -134,8 +134,7 @@ def test_a_command_and_its_audit_row_commit_together_or_not_at_all(client, conn,
     from fastapi.testclient import TestClient
     with TestClient(create_app(), raise_server_exceptions=False) as c2:      # the handler is bound at app creation: build it after patching
         before = (count(conn, "exposures"), count(conn, "audit_events"), count(conn, "command_results"))
-        r = command(c2, "record-exposure", {"assignment_id": L.w.d["assignments"][-1]["assignment_id"], "surface": "s",
-                                            "exposed_at": "2026-10-20T00:00:00Z"})
+        r = command(c2, "record-exposure", {"assignment_id": L.w.d["assignments"][-1]["assignment_id"], "surface": "s"})
         assert r.status_code == 500 and r.json()["error"]["code"] == "INTERNAL_ERROR" and "after the write" not in r.text
         assert (count(conn, "exposures"), count(conn, "audit_events"), count(conn, "command_results")) == before
 
@@ -328,7 +327,8 @@ def test_c03_the_funnel_defined_here_is_the_one_the_metrics_use(client, conn):
 # ---------------------------------------------------------------------------------------------------- C04 assign-experiment
 def test_c04_assigns_once_and_the_first_variant_is_fixed(client, conn):
     L = lab(client, conn, facts=False)
-    r = L.post("assign-experiment", {"experiment_version_id": "xv-001", "unit_id": "acc-c-001", "variant": "control", "assigned_at": "2026-10-01T09:01:00Z"})
+    r = L.post("assign-experiment", {"experiment_version_id": "xv-001", "unit_id": "acc-c-001", "variant": "control", "assigned_at": "2026-10-01T09:01:00Z",
+                                     "backfill": True}, ADMIN)                       # D-10: an explicit instant is an admin backfill
     assert r.status_code == 200 and r.json()["status"] == "assigned" and r.json()["result"]["assigned_at"] == "2026-10-01T09:01:00Z"
     aid = r.json()["result"]["assignment_id"]
     same = L.post("assign-experiment", {"experiment_version_id": "xv-001", "unit_id": "acc-c-001", "variant": "control"}, ADMIN)        # a new key
@@ -358,15 +358,16 @@ def test_c04_refusals(client, conn):
 def test_c05_exposure_cannot_precede_its_assignment_and_the_raw_row_is_kept(client, conn):
     L = lab(client, conn, facts=False)
     a = L.post("assign-experiment", {"experiment_version_id": "xv-001", "unit_id": "acc-c-001", "variant": "control",
-                                     "assigned_at": "2026-10-01T09:01:00Z", "assignment_id": "as-1"}).json()["result"]
-    early = L.post("record-exposure", {"assignment_id": a["assignment_id"], "surface": "checklist", "exposed_at": "2026-10-01T09:00:59Z", "exposure_id": "ex-early"})
+                                     "assigned_at": "2026-10-01T09:01:00Z", "assignment_id": "as-1", "backfill": True}, ADMIN).json()["result"]
+    early = L.post("record-exposure", {"assignment_id": a["assignment_id"], "surface": "checklist", "exposed_at": "2026-10-01T09:00:59Z", "exposure_id": "ex-early",
+                                       "backfill": True}, ADMIN)
     assert early.status_code == 422 and rule_ids(early) == ["EXPOSURE_BEFORE_ASSIGNMENT"] and count(conn, "exposures") == 0
     assert early.json()["error"]["details"][0]["context"]["assigned_at"] == "2026-10-01T09:01:00Z"
     kept = conn.execute("SELECT reason_code, raw_row FROM rejected_records WHERE entity = 'exposures'").fetchone()
     assert kept["reason_code"] == "EXPOSURE_BEFORE_ASSIGNMENT" and kept["raw_row"]["exposed_at"] == "2026-10-01T09:00:59Z"
-    ok = L.post("record-exposure", {"assignment_id": "as-1", "surface": "checklist", "exposed_at": "2026-10-01T09:01:00Z"})      # at the same instant: allowed
+    ok = L.post("record-exposure", {"assignment_id": "as-1", "surface": "checklist", "exposed_at": "2026-10-01T09:01:00Z", "backfill": True}, ADMIN)  # same instant: allowed
     assert ok.status_code == 200 and ok.json()["status"] == "exposed" and ok.json()["result"]["variant"] == "control"
-    second = L.post("record-exposure", {"assignment_id": "as-1", "surface": "checklist", "exposed_at": "2026-10-05T00:00:00Z"})
+    second = L.post("record-exposure", {"assignment_id": "as-1", "surface": "checklist", "exposed_at": "2026-10-05T00:00:00Z", "backfill": True}, ADMIN)
     assert second.json()["status"] == "already_exposed" and second.json()["result"]["exposed_at"] == "2026-10-01T09:01:00Z"
     assert count(conn, "exposures") == 1
     assert L.post("record-exposure", {"assignment_id": "as-zzz", "surface": "s"}).status_code == 404
@@ -410,7 +411,9 @@ def test_c06_is_refused_once_an_outcome_has_been_read_and_for_inconsistent_plans
     for patch, status, rule in [({"unit_type": "user"}, 422, "UNIT_MISMATCH"), ({"planned_end": "2026-10-16T00:00:00Z"}, 422, "PLAN_VERSION_MISMATCH"),
                                 ({"primary_metric": "retention_d7"}, 422, "PLAN_VERSION_MISMATCH"),
                                 ({"allocation": {"control": "0.7", "treatment": "0.7"}}, 422, "MALFORMED_RECORD"),
-                                ({"allocation": {"a": "0.5", "b": "0.5"}}, 422, "MALFORMED_RECORD"),
+                                ({"allocation": {"a": "0.5", "b": "0.5"}}, 422, "VARIANTS_NOT_TWO"),            # D-10: exactly control and treatment
+                                    ({"allocation": {"control": "0.5", "treatment": "0.25", "holdout": "0.25"}}, 422, "VARIANTS_NOT_TWO"),
+                                    ({"allocation": {"control": "1.0"}}, 422, "VARIANTS_NOT_TWO"),
                                 ({"frozen_at": "2027-01-01T00:00:00Z"}, 422, "FROZEN_AT_IN_FUTURE"),
                                 ({"frozen_at": "2026-10-20T00:00:00Z"}, 422, "INVALID_WINDOW"),
                                 ({"experiment_version_id": "xv-zzz"}, 404, "EXPERIMENT_VERSION_UNKNOWN"),
@@ -529,6 +532,7 @@ def test_c08_late_events_change_only_a_later_run_with_a_disclosed_revision(clien
     assert late.status_code == 200 and late.json()["result"]["events"][0]["delayed"] is True
     again = L.analyze("2026-10-26T00:00:00Z").json()["result"]                          # the same cutoff: the event was received after it
     assert again["primary"]["variants"]["control"]["activated"] == 4 and again["revision"] is None
+    set_clock("2026-10-27T12:00:00Z")                                                    # a cutoff cannot be after the server clock (D-10)
     later = L.analyze("2026-10-27T00:00:00Z")
     res = later.json()["result"]
     assert res["primary"]["variants"]["control"]["activated"] == 5
@@ -627,6 +631,7 @@ def test_c10_a_sample_ratio_mismatch_blocks_ship_and_stop(client, conn):
 def test_c10_needs_a_frozen_plan_a_matching_review_and_one_decision_per_run(client, conn):
     L = lab(client, conn, world=small_experiment((100, 20), (100, 40)))
     aid, rid = L.final()
+    set_clock("2026-10-29T12:00:00Z")                                                    # a cutoff cannot be after the server clock (D-10)
     other = L.analyze("2026-10-27T00:00:00Z").json()["result"]["analysis_id"]
     other_review = L.review(other).json()["result"]["review_id"]
     assert (L.decide(aid, other_review).status_code, rule_ids(L.decide(aid, other_review))) == (422, ["REVIEW_MISMATCH"])

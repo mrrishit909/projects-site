@@ -296,8 +296,8 @@
        "exposed_units": 53
       },
       "treatment": {
-       "activated": 36,
-       "conversion": "0.473684",
+       "activated": 35,
+       "conversion": "0.460526",
        "exposed_units": 76
       }
      },
@@ -344,24 +344,24 @@
     "mature_units": 144,
     "observations": {
      "rows_accepted": 144,
-     "rows_matching_events": 144
+     "rows_matching_events": 143
     },
     "primary": {
-     "absolute_lift_pp": "14.40",
+     "absolute_lift_pp": "13.25",
      "analysis": "intention_to_treat",
      "conclusive": false,
      "interval": {
       "confidence": "0.95",
-      "high": "0.292440",
-      "high_pp": "29.24",
+      "high": "0.281141",
+      "high_pp": "28.11",
       "includes_zero": true,
-      "low": "-0.019737",
-      "low_pp": "-1.97",
+      "low": "-0.030805",
+      "low_pp": "-3.08",
       "method": "newcombe_hybrid_score",
       "z": "1.959964"
      },
      "metric": "activation_7d",
-     "relative_lift": "0.455939",
+     "relative_lift": "0.419540",
      "variants": {
       "control": {
        "activated": 18,
@@ -374,13 +374,13 @@
        }
       },
       "treatment": {
-       "activated": 40,
+       "activated": 39,
        "assigned": 92,
-       "conversion": "0.459770",
+       "conversion": "0.448276",
        "mature_units": 87,
        "wilson_95": {
-        "high": "0.563972",
-        "low": "0.358971"
+        "high": "0.552755",
+        "low": "0.348172"
        }
       }
      }
@@ -643,7 +643,7 @@
    },
    "experiment": {
     "xv-001": "4a6fba1daf9607b9cd1338a57e6fe0860f744393822e4712fd923cf03729553a",
-    "xv-002": "7543c553107b962f8958ca6148d8bd55813f768d46f18824357cd6ad01e3b362"
+    "xv-002": "0d1b0dff3430ac39b2868b8278e6c1e3d0373c6b4f0c7d6d6f8ae6cd849bed6d"
    },
    "warning_codes": [
     "BOT_EVENTS_EXCLUDED",
@@ -665,7 +665,7 @@
    },
    "experiment": {
     "xv-001": "e4059a72f86cfc25807fd089b242737d813245e183bf854227fe871632017bf6",
-    "xv-002": "ee60a1b7ca26cc7174425878b0d4de040d3f056f393fb3f966a11e0adacc65af"
+    "xv-002": "aaf6bd26eab801e8751e1d4ed14c706703219524bcbbddd20bbc15557f202548"
    },
    "warning_codes": [
     "BOT_EVENTS_EXCLUDED",
@@ -1567,8 +1567,8 @@
        "exposed_units": 52
       },
       "treatment": {
-       "activated": 36,
-       "conversion": "0.473684",
+       "activated": 35,
+       "conversion": "0.460526",
        "exposed_units": 76
       }
      },
@@ -1615,24 +1615,24 @@
     "mature_units": 143,
     "observations": {
      "rows_accepted": 143,
-     "rows_matching_events": 143
+     "rows_matching_events": 142
     },
     "primary": {
-     "absolute_lift_pp": "13.83",
+     "absolute_lift_pp": "12.68",
      "analysis": "intention_to_treat",
      "conclusive": false,
      "interval": {
       "confidence": "0.95",
-      "high": "0.287997",
-      "high_pp": "28.80",
+      "high": "0.276696",
+      "high_pp": "27.67",
       "includes_zero": true,
-      "low": "-0.026432",
-      "low_pp": "-2.64",
+      "low": "-0.037502",
+      "low_pp": "-3.75",
       "method": "newcombe_hybrid_score",
       "z": "1.959964"
      },
      "metric": "activation_7d",
-     "relative_lift": "0.430396",
+     "relative_lift": "0.394636",
      "variants": {
       "control": {
        "activated": 18,
@@ -1645,13 +1645,13 @@
        }
       },
       "treatment": {
-       "activated": 40,
+       "activated": 39,
        "assigned": 92,
-       "conversion": "0.459770",
+       "conversion": "0.448276",
        "mature_units": 87,
        "wilson_95": {
-        "high": "0.563972",
-        "low": "0.358971"
+        "high": "0.552755",
+        "low": "0.348172"
        }
       }
      }
@@ -1713,7 +1713,7 @@
     },
     "unit_type": "account"
    },
-   "experiment_digest": "7543c553107b962f8958ca6148d8bd55813f768d46f18824357cd6ad01e3b362",
+   "experiment_digest": "0d1b0dff3430ac39b2868b8278e6c1e3d0373c6b4f0c7d6d6f8ae6cd849bed6d",
    "experiment_version_id": "xv-002",
    "guardrail_review": {
     "by_variant": {
@@ -1750,6 +1750,46 @@
     "SRM_MISMATCH",
     "UNKNOWN_IDENTITY_EXCLUDED"
    ]
+  }
+ },
+ "secondary": {
+  "xv-001@as_of": {
+   "revenue": {
+    "by_variant": {
+     "control": {
+      "mean": "97.83",
+      "units": 200
+     },
+     "treatment": {
+      "mean": "130.95",
+      "units": 200
+     }
+    },
+    "df": 391,
+    "difference": "33.12",
+    "high": "91.83",
+    "includes_zero": true,
+    "low": "-25.59",
+    "t": "1.966050"
+   },
+   "week4": {
+    "by_variant": {
+     "control": {
+      "mature_units": 200,
+      "rate": "0.355000",
+      "retained": 71
+     },
+     "treatment": {
+      "mature_units": 200,
+      "rate": "0.310000",
+      "retained": 62
+     }
+    },
+    "difference_pp": "-4.50",
+    "high": "0.047102",
+    "includes_zero": true,
+    "low": "-0.136053"
+   }
   }
  },
  "segments": {
@@ -1908,12 +1948,12 @@
   },
   "an-005/plan": {
    "bonferroni_threshold": "0.016667",
-   "digest": "c3705e541a113eb656fda965f2e2ee7b15a7b2a5ac03c8359b4689380950bd29",
+   "digest": "fa1fd0cd6c7c5d492126d7df4eff88dbe8c4776b5f7e0dd5af1692b0322d1480",
    "segments_tested": 3
   },
   "an-005/segment": {
    "bonferroni_threshold": "0.016667",
-   "digest": "772b5b4c34713f935c2b1d232cae763b0cdb5513d2255598bed6717cabcc6c28",
+   "digest": "5c2b1e965bdf29f4287bc1c721a2f867067c7de3f3b24aa78f018f595de6d6d3",
    "full": {
     "alpha": "0.050000",
     "bonferroni_threshold": "0.016667",
@@ -1978,18 +2018,18 @@
       }
      },
      {
-      "absolute_lift_pp": "13.61",
+      "absolute_lift_pp": "11.82",
       "adjusted_interval": {
        "confidence": "0.983333",
-       "high": "0.359361",
+       "high": "0.342231",
        "includes_zero": true,
-       "low": "-0.129787",
+       "low": "-0.146394",
        "z": "2.393972"
       },
       "below_bonferroni_threshold": false,
       "decision_basis": false,
       "label": "exploratory",
-      "p_value": "0.224678",
+      "p_value": "0.288975",
       "value": "smb",
       "variants": {
        "control": {
@@ -1998,8 +2038,8 @@
         "mature_units": 29
        },
        "treatment": {
-        "activated": 25,
-        "conversion": "0.446429",
+        "activated": 24,
+        "conversion": "0.428571",
         "mature_units": 56
        }
       }
@@ -2011,7 +2051,45 @@
   },
   "an-005/timezone": {
    "bonferroni_threshold": "0.016667",
-   "digest": "4d3a05be8552025b7e4e4c5a3195b9ee2ff03db0f1bc4d252967d06025d8b30e",
+   "digest": "3c96d0403b5a14e9e0105e5fd57f71ba8803cc5556b26fbf567a6c7707270e95",
+   "segments_tested": 3
+  }
+ },
+ "segments_family": {
+  "an-004/plan": {
+   "bonferroni_threshold": "0.005556",
+   "digest": "50f877a81533607bd0c488ce10497dfc6d5dce6f728615d92e0814f7f6714e56",
+   "family_size": 9,
+   "segments_tested": 3
+  },
+  "an-004/segment": {
+   "bonferroni_threshold": "0.005556",
+   "digest": "d9e645a1854de9685627d9e0939103149f472cfd674260be273b6f631590550b",
+   "family_size": 9,
+   "segments_tested": 3
+  },
+  "an-004/timezone": {
+   "bonferroni_threshold": "0.005556",
+   "digest": "eef56732395180ac7ec7bbf0697e02240eb1bf52327fcc91929cd36046b2fe07",
+   "family_size": 9,
+   "segments_tested": 3
+  },
+  "an-005/plan": {
+   "bonferroni_threshold": "0.005556",
+   "digest": "fd61d9563d0f52f3d86a787ef069ed1db0cea6cdecda1512728c08a0c54ed065",
+   "family_size": 9,
+   "segments_tested": 3
+  },
+  "an-005/segment": {
+   "bonferroni_threshold": "0.005556",
+   "digest": "96caae73114274b806185cb5eadfd41b868794edba7053dfa29048731e991a30",
+   "family_size": 9,
+   "segments_tested": 3
+  },
+  "an-005/timezone": {
+   "bonferroni_threshold": "0.005556",
+   "digest": "ea9be025e2c2327c965d6f17068bafe9c792bba91b7c9eb3b4e1bb7b64c98299",
+   "family_size": 9,
    "segments_tested": 3
   }
  },

@@ -313,9 +313,11 @@ def compute(data):
         if a["name"] == "activated" and a["acct"]:
             act_events[a["acct"]].append(a["at"])
 
-    def activated_within(acct, days):
+    def activated_within(acct, days, since=None):
+        # D-10: an experiment unit's activation counts only at or after its assignment
         s = signup_at[acct]
-        return any(s <= t < s + timedelta(days=days) for t in act_events[acct])
+        lo = s if since is None or since < s else since
+        return any(lo <= t < s + timedelta(days=days) for t in act_events[acct])
 
     def mature7d(acct):
         return signup_at[acct] + timedelta(days=7) <= cutoff
@@ -441,7 +443,7 @@ def compute(data):
                "p_value": q(pv, 6), "df": len(variants) - 1, "verdict": verdict}
     # primary outcome
     win = plan["activation_window_days"]
-    act = {v: sum(1 for a in mat[v] if activated_within(a["unit_id"], win)) for v in variants}
+    act = {v: sum(1 for a in mat[v] if activated_within(a["unit_id"], win, ts(a["assigned_at"]))) for v in variants}
     n_m = {v: len(mat[v]) for v in variants}
     conv = {v: ratio(act[v], n_m[v]) for v in variants}
     per_variant = {}
@@ -465,14 +467,16 @@ def compute(data):
         includes0 = lo <= 0 <= hi
         interval = {"method": "newcombe_hybrid_score", "confidence": plan["confidence"], "z": plan["z"], "low": q(lo, 6), "high": q(hi, 6),
                     "low_pp": q(lo * 100, 2), "high_pp": q(hi * 100, 2), "includes_zero": includes0}
-        conclusive = (not includes0) and (not interim) and hash_ok
     else:
-        interval, conclusive = None, False
+        interval, includes0 = None, True
     prior = None if run_row is None else sum(1 for r in data["analysis_runs"] if r["experiment_version_id"] == xv and r["created_at"] < run_row["created_at"])
     runs = sorted(r["created_at"] for r in data["analysis_runs"] if r["experiment_version_id"] == xv)
+    plan_frozen = bool(runs) and ts(plan["frozen_at"]) <= ts(runs[0])
+    # D-10: conclusive needs the interval to exclude 0, a final run, a valid hash, a plan frozen before the first run and an OK sample ratio
+    conclusive = both and (not includes0) and (not interim) and hash_ok and plan_frozen and srm["verdict"] == "OK"
     run_block = {"analysis_id": run_row["analysis_id"] if run_row else None, "cutoff_at": data["cutoff"], "planned_end": plan["planned_end"],
                  "interim": interim, "prior_runs": prior,
-                 "plan_frozen": bool(runs) and ts(plan["frozen_at"]) <= ts(runs[0]),
+                 "plan_frozen": plan_frozen,
                  "config_hash": plan["config_hash"], "config_hash_matches_plan": hash_ok and bool(run_row) and run_row["config_hash"] == plan["config_hash"]}
     # exposure
     exposed = {v: sum(1 for a in mat[v] if a["assignment_id"] in exposures_ok) for v in variants}
@@ -483,7 +487,7 @@ def compute(data):
     exploratory = {"label": "exploratory", "decision_basis": False, "by_variant": {}}
     for v in variants:
         ex = [a for a in mat[v] if a["assignment_id"] in exposures_ok]
-        k = sum(1 for a in ex if activated_within(a["unit_id"], win))
+        k = sum(1 for a in ex if activated_within(a["unit_id"], win, ts(a["assigned_at"])))
         exploratory["by_variant"][v] = {"exposed_units": len(ex), "activated": k, "conversion": q6(ratio(k, len(ex)))}
     # guardrail
     gdays = timedelta(days=plan["guardrail"]["window_days"])
@@ -493,8 +497,9 @@ def compute(data):
             errs[a["acct"]].append(a["at"])
     guard = {}
     for v in variants:
-        hit = sum(1 for a in mat[v] if any(ts(a["assigned_at"]) <= e < ts(a["assigned_at"]) + gdays for e in errs[a["unit_id"]]))
-        guard[v] = {"eligible_units": n_m[v], "units_with_error": hit, "error_rate": q6(ratio(hit, n_m[v]))}
+        elig = [a for a in mat[v] if ts(a["assigned_at"]) + gdays <= cutoff]            # D-10: the guardrail window is complete
+        hit = sum(1 for a in elig if any(ts(a["assigned_at"]) <= e < ts(a["assigned_at"]) + gdays for e in errs[a["unit_id"]]))
+        guard[v] = {"eligible_units": len(elig), "units_with_error": hit, "error_rate": q6(ratio(hit, len(elig)))}
     # revenue per assigned account with a t-interval
     rw_from, rw_to = ts(plan["revenue_window"]["from"]), ts(plan["revenue_window"]["to"])
     rev_by = defaultdict(lambda: D(0))
@@ -524,7 +529,7 @@ def compute(data):
         a = asg_by_id[o["assignment_id"]]
         u = a["unit_id"]
         if u in signup_at:
-            want = "1" if activated_within(u, win) else "0"
+            want = "1" if activated_within(u, win, ts(a["assigned_at"])) else "0"
             if o["value"] == want and ts(o["window_end"]) == signup_at[u] + timedelta(days=win):
                 obs_match += 1
     experiment_block = {

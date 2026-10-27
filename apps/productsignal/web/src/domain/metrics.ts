@@ -80,9 +80,12 @@ export class Ctx {
   }
   ok(account: string): boolean { return this.allowed === null || this.allowed.has(account); }
   local(account: string, t: number): number { return localDay(t, this.accounts.get(account)!.timezone); }
-  activatedWithin(account: string, days: number): boolean {
+  /** An activation in [signup, signup + days). With `since` (an experiment unit's assigned_at, D-10) only an activation at or
+   *  after it counts: an outcome that happened before the assignment is not an effect of the treatment. */
+  activatedWithin(account: string, days: number, since: number | null = null): boolean {
     const s = this.signupAt.get(account)!;
-    return (this.actEvents.get(account) ?? []).some((t) => s <= t && t < s + days * DAY);
+    const lo = since === null || since < s ? s : since;
+    return (this.actEvents.get(account) ?? []).some((t) => lo <= t && t < s + days * DAY);
   }
   mature(account: string, days: number): boolean { return this.signupAt.get(account)! + days * DAY <= this.cutoff; }
   /** Day indices (local calendar, day 0 = signup day) of the account's sessions. */
@@ -250,7 +253,7 @@ export function experiment(ctx: Ctx, plan: Plan, runId: string | null = null): E
   const srm = srmBlock(plan, nAssigned);
 
   const act: Record<string, number> = {}, nM: Record<string, number> = {}, conv: Record<string, Frac | null> = {};
-  for (const v of variants) { act[v] = mat[v]!.filter((a) => ctx.activatedWithin(a.unit_id, win_)).length; nM[v] = mat[v]!.length; conv[v] = ratio(act[v]!, nM[v]!); }
+  for (const v of variants) { act[v] = mat[v]!.filter((a) => ctx.activatedWithin(a.unit_id, win_, a.assigned_at)).length; nM[v] = mat[v]!.length; conv[v] = ratio(act[v]!, nM[v]!); }
   const perVariant: Record<string, VariantOut> = {};
   for (const v of variants) {
     let w: VariantOut["wilson_95"] = null;
@@ -267,17 +270,19 @@ export function experiment(ctx: Ctx, plan: Plan, runId: string | null = null): E
   const runRow = cand.length ? cand.reduce((m, r) => (r.created_at < m.created_at || (r.created_at === m.created_at && r.analysis_id < m.analysis_id) ? r : m)) : null;
   const hashOk = plan.hash_valid;
   const interim = cutoff < plan.planned_end;
-  let interval: IntervalOut | null = null, conclusive = false;
+  let interval: IntervalOut | null = null, includes0 = true;
   if (both) {
     const [, lo, hi] = newcombe(act[t]!, nM[t]!, act[c]!, nM[c]!, z);
-    const includes0 = le(lo, ZERO) && le(ZERO, hi);
+    includes0 = le(lo, ZERO) && le(ZERO, hi);
     interval = { method: "newcombe_hybrid_score", confidence: plan.confidence, z: plan.z, low: q(lo, 6), high: q(hi, 6), low_pp: q(mul(lo, fr(100)), 2), high_pp: q(mul(hi, fr(100)), 2), includes_zero: includes0 };
-    conclusive = !includes0 && !interim && hashOk;
   }
   const prior = runRow === null ? null : runs.filter((r) => r.created_at < runRow.created_at).length;
+  const planFrozen = runs.length > 0 && plan.frozen_at <= Math.min(...runs.map((r) => r.created_at));
+  // D-10 (R6-01, R6-14): conclusive = the interval excludes 0, a final run, a valid plan hash, a plan frozen before the first run and an OK sample ratio
+  const conclusive = both && !includes0 && !interim && hashOk && planFrozen && srm.verdict === "OK";
   const runBlock: RunOut = {
     analysis_id: runRow ? runRow.analysis_id : null, cutoff_at: isoZ(cutoff), planned_end: isoZ(plan.planned_end), interim, prior_runs: prior,
-    plan_frozen: runs.length > 0 && plan.frozen_at <= Math.min(...runs.map((r) => r.created_at)), config_hash: plan.config_hash,
+    plan_frozen: planFrozen, config_hash: plan.config_hash,
     config_hash_matches_plan: hashOk && runRow !== null && runRow.config_hash === plan.config_hash,
   };
 
@@ -294,15 +299,16 @@ export function experiment(ctx: Ctx, plan: Plan, runId: string | null = null): E
   const exploratory: ExperimentOut["exploratory_exposed_only"] = { label: "exploratory", decision_basis: false, by_variant: {} };
   for (const v of variants) {
     const ex = mat[v]!.filter((a) => exposedIds.has(a.assignment_id));
-    const k = ex.filter((a) => ctx.activatedWithin(a.unit_id, win_)).length;
+    const k = ex.filter((a) => ctx.activatedWithin(a.unit_id, win_, a.assigned_at)).length;
     exploratory.by_variant[v] = { exposed_units: ex.length, activated: k, conversion: q6(ratio(k, ex.length)) };
   }
 
   const gdays = plan.guardrail_window_days * DAY;
   const guard: ExperimentOut["guardrail"]["by_variant"] = {};
   for (const v of variants) {
-    const hit = mat[v]!.filter((a) => (ctx.errors.get(a.unit_id) ?? []).some((e) => a.assigned_at <= e && e < a.assigned_at + gdays)).length;
-    guard[v] = { eligible_units: nM[v]!, units_with_error: hit, error_rate: q6(ratio(hit, nM[v]!)) };
+    const elig = mat[v]!.filter((a) => a.assigned_at + gdays <= cutoff); // D-10 (R6-09): the guardrail window is complete
+    const hit = elig.filter((a) => (ctx.errors.get(a.unit_id) ?? []).some((e) => a.assigned_at <= e && e < a.assigned_at + gdays)).length;
+    guard[v] = { eligible_units: elig.length, units_with_error: hit, error_rate: q6(ratio(hit, elig.length)) };
   }
 
   const revBy = new Map<string, bigint>();
@@ -333,7 +339,7 @@ export function experiment(ctx: Ctx, plan: Plan, runId: string | null = null): E
   for (const o of obsOk) {
     const u = obsIds.get(o.assignment_id)!.unit_id;
     if (ctx.signupAt.has(u)) {
-      const want = ctx.activatedWithin(u, win_) ? "1" : "0";
+      const want = ctx.activatedWithin(u, win_, obsIds.get(o.assignment_id)!.assigned_at) ? "1" : "0";
       if (o.value === want && o.window_end === ctx.signupAt.get(u)! + win_ * DAY) obsMatch++;
     }
   }
@@ -344,6 +350,82 @@ export function experiment(ctx: Ctx, plan: Plan, runId: string | null = null): E
     exposure, exploratory_exposed_only: exploratory, guardrail: { metric: plan.guardrail_metric, window_days: plan.guardrail_window_days, by_variant: guard },
     revenue_per_assigned_account: { currency: "USD", window: win(plan.revenue_from, plan.revenue_to), by_variant: revenue }, observations: { rows_accepted: obsOk.length, rows_matching_events: obsMatch },
   };
+}
+
+// ---------------------------------------------------------------------------------------------------- secondary differences (D-10, R6-10)
+export interface ProportionDiff {
+  definition: string;
+  by_variant: Record<string, { retained: number; mature_units: number; rate: string | null }>;
+  difference_pp: string | null;
+  interval: { method: string; confidence: string; z: string; low: string; high: string; low_pp: string; high_pp: string; includes_zero: boolean } | null;
+}
+/** Week-4 retention (a session on one of the calendar days 28-34 of the account's timezone) of the assigned accounts whose day 35 has
+ *  begun, per arm, with the Newcombe interval of treatment minus control at the plan's z. Intention to treat; a figure of the site's
+ *  case study, not of the API (the generator's DR-02 is its independent check). */
+export function week4Difference(ctx: Ctx, plan: Plan): ProportionDiff {
+  const accepted = [...acceptedAssignments(ctx.pop, plan.experiment_version_id, ctx.allowed, ctx.cutoff).values()];
+  const by: ProportionDiff["by_variant"] = {};
+  const cells: Record<string, [number, number]> = {};
+  for (const v of plan.variants) {
+    const mat = accepted.filter((a) => a.variant === v && ctx.signupAt.has(a.unit_id) && ctx.matured(a.unit_id, WEEK4[1]));
+    const hit = mat.filter((a) => ctx.dayIndices(a.unit_id).some((d) => WEEK4[0] <= d && d <= WEEK4[1])).length;
+    cells[v] = [hit, mat.length];
+    by[v] = { retained: hit, mature_units: mat.length, rate: q6(ratio(hit, mat.length)) };
+  }
+  const out: ProportionDiff = { definition: "assigned accounts with a session on a calendar day 28-34 of their own timezone / assigned accounts whose day 35 has begun", by_variant: by, difference_pp: null, interval: null };
+  const [xc, nc] = cells["control"]!, [xt, nt] = cells["treatment"]!;
+  if (nc > 0 && nt > 0) {
+    const [d, lo, hi] = newcombe(xt, nt, xc, nc, fracOf(plan.z));
+    out.difference_pp = q(mul(d, fr(100)), 2);
+    out.interval = { method: "newcombe_hybrid_score", confidence: plan.confidence, z: plan.z, low: q(lo, 6), high: q(hi, 6), low_pp: q(mul(lo, fr(100)), 2), high_pp: q(mul(hi, fr(100)), 2), includes_zero: le(lo, ZERO) && le(ZERO, hi) };
+  }
+  return out;
+}
+
+export interface RevenueDiff {
+  method: string;
+  by_variant: Record<string, { units: number; mean: string | null }>;
+  difference: string | null;
+  interval: { confidence: string; df: number; t: string; low: string; high: string; includes_zero: boolean } | null;
+}
+/** Revenue per assigned account (the plan's definition: mature assigned accounts, zeros included, eligible subscriptions of the
+ *  plan's window that started by the cutoff): treatment mean minus control mean with a Welch interval, t at the Welch-Satterthwaite
+ *  degrees of freedom rounded DOWN (never narrower than the exact t). */
+export function revenueDifference(ctx: Ctx, plan: Plan): RevenueDiff {
+  const { pop, cutoff } = ctx;
+  const win_ = plan.activation_window_days;
+  const revBy = new Map<string, bigint>();
+  for (const s of pop.subscriptions) {
+    if ((s.status === "active" || s.status === "ended") && plan.revenue_from <= s.starts_at && s.starts_at < plan.revenue_to && s.starts_at <= cutoff) {
+      revBy.set(s.account_id, (revBy.get(s.account_id) ?? 0n) + s.amount_cents);
+    }
+  }
+  const accepted = [...acceptedAssignments(pop, plan.experiment_version_id, ctx.allowed, cutoff).values()];
+  const st: Record<string, { n: number; mean: Frac; v: Frac }> = {};
+  const by: RevenueDiff["by_variant"] = {};
+  for (const v of ["control", "treatment"]) {
+    const vals = accepted.filter((a) => a.variant === v && ctx.signupAt.has(a.unit_id) && ctx.mature(a.unit_id, win_)).map((a) => revBy.get(a.unit_id) ?? 0n);
+    const n = vals.length;
+    const tot = vals.reduce((x, y) => x + y, 0n), sumSq = vals.reduce((x, y) => x + y * y, 0n);
+    const mean = n === 0 ? ZERO : fr(tot, 100n * BigInt(n));
+    by[v] = { units: n, mean: n === 0 ? null : q(mean, 2) };
+    st[v] = { n, mean, v: n < 2 ? ZERO : fr(BigInt(n) * sumSq - tot * tot, BigInt(n) * BigInt(n - 1) * 10_000n) };
+  }
+  const out: RevenueDiff = { method: "welch", by_variant: by, difference: null, interval: null };
+  const c = st["control"]!, t = st["treatment"]!;
+  if (c.n < 2 || t.n < 2) return out;
+  const a = div(t.v, fr(t.n)), b = div(c.v, fr(c.n));
+  const se2 = add(a, b);
+  const d = sub(t.mean, c.mean);
+  out.difference = q(d, 2);
+  if (se2.n === 0n) return out;
+  const dfF = div(mul(se2, se2), add(div(mul(a, a), fr(t.n - 1)), div(mul(b, b), fr(c.n - 1))));
+  const df = Math.max(1, Number(dfF.n / dfF.d));
+  const tc = tCrit(df, plan.confidence);
+  const half = fxMul(tc, fxSqrt(fxOf(se2)));
+  const dFx = fxOf(d);
+  out.interval = { confidence: plan.confidence, df, t: fxQ(tc, 6), low: fxQ(dFx - half, 2), high: fxQ(dFx + half, 2), includes_zero: dFx - half <= 0n && 0n <= dFx + half };
+  return out;
 }
 
 // ---------------------------------------------------------------------------------------------------- the whole set
@@ -405,7 +487,7 @@ export interface SegmentItem {
   adjusted_interval: { confidence: string; z: string; low: string; high: string; includes_zero: boolean } | null; below_bonferroni_threshold: boolean;
 }
 export interface SegmentOut {
-  label: string; decision_basis: boolean; by: string; segments_tested: number; alpha: string; bonferroni_threshold: string; correction: string; note: string; segments: SegmentItem[];
+  label: string; decision_basis: boolean; by: string; segments_tested: number; alpha: string; bonferroni_threshold: string; correction: string; note: string; segments: SegmentItem[]; family_size?: number;
 }
 const hasBothArms = (pop: Population, plan: Plan, accounts: ReadonlySet<string>, cutoff: number): boolean => {
   const vs = new Set([...acceptedAssignments(pop, plan.experiment_version_id, accounts, cutoff).values()].map((a) => a.variant));
@@ -414,13 +496,14 @@ const hasBothArms = (pop: Population, plan: Plan, accounts: ReadonlySet<string>,
 
 /** Exploratory segment results (D-03, P06-UI-08): every segment carries the label, the number of segments tested and the
  *  Bonferroni-adjusted threshold alpha / k. No decision may cite a segment. */
-export function segmentAnalysis(pop: Population, cutoff: number, plan: Plan, by: string, canon: Canon | null = null): SegmentOut {
+export function segmentAnalysis(pop: Population, cutoff: number, plan: Plan, by: string, canon: Canon | null = null, family: number | null = null): SegmentOut {
   if (!(SEGMENT_FIELDS as readonly string[]).includes(by)) throw new DomainError(INVALID_GROUP, `a segment analysis is by ${SEGMENT_FIELDS.join(", ")}`, "group_by");
   const cn = canon ?? canonicalise(pop, cutoff);
   const alpha = sub(ONE, fracOf(plan.confidence));
   const groups = groupValues(pop, by, null);
   const tested = [...groups.keys()].filter((k) => hasBothArms(pop, plan, groups.get(k)!, cutoff));
-  const thr = div(alpha, fr(Math.max(tested.length, 1)));
+  const kN = Math.max(family === null ? tested.length : family, 1); // D-10: `family` corrects the comparisons of several splits together
+  const thr = div(alpha, fr(kN));
   const zadj = tested.length > 0 ? zCrit(q(sub(ONE, thr), 6)) : null;
   const win_ = plan.activation_window_days;
   const segs: SegmentItem[] = [];
@@ -430,7 +513,7 @@ export function segmentAnalysis(pop: Population, cutoff: number, plan: Plan, by:
     const cells: Record<string, [number, number]> = {};
     for (const v of plan.variants) {
       const m = [...acc.values()].filter((a) => a.variant === v && ctx.signupAt.has(a.unit_id) && ctx.mature(a.unit_id, win_));
-      cells[v] = [m.filter((a) => ctx.activatedWithin(a.unit_id, win_)).length, m.length];
+      cells[v] = [m.filter((a) => ctx.activatedWithin(a.unit_id, win_, a.assigned_at)).length, m.length];
     }
     const [xc, nc] = cells["control"]!, [xt, nt] = cells["treatment"]!;
     const item: SegmentItem = {
@@ -454,10 +537,12 @@ export function segmentAnalysis(pop: Population, cutoff: number, plan: Plan, by:
     }
     segs.push(item);
   }
-  return {
+  const out: SegmentOut = {
     label: "exploratory", decision_basis: false, by, segments_tested: tested.length, alpha: q(alpha, 6), bonferroni_threshold: q(thr, 6), correction: "bonferroni",
     note: "segment results are exploratory: a segment that looks different is a hypothesis for the next experiment, never a decision basis", segments: segs,
   };
+  if (family !== null) out.family_size = kN;
+  return out;
 }
 
 // ---------------------------------------------------------------------------------------------------- guardrail review

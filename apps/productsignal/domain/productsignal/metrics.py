@@ -17,7 +17,7 @@ from .contract import GROUPS, METRIC_KEYS, WEEK4
 from .errors import INVALID_GROUP, DomainError
 from .events import AEvent, Canon, canonicalise
 from .models import FunnelDef, Plan, Population, Windows
-from .stats import chi2_sf_df1, dsqrt, newcombe, normal_two_sided_p, q, q6, ratio, sqrt_frac, t_crit, wilson, z_crit
+from .stats import chi2_sf_df1, dec, dsqrt, newcombe, normal_two_sided_p, q, q6, ratio, sqrt_frac, t_crit, wilson, z_crit
 from .timeutil import UTC, iso_z, local_date
 
 SEGMENT_FIELDS = ("plan", "segment", "timezone")
@@ -70,9 +70,12 @@ class Ctx:
     def local(self, account: str, t: datetime) -> date:
         return local_date(t, self.accounts[account].timezone)
 
-    def activated_within(self, account: str, days: int) -> bool:
+    def activated_within(self, account: str, days: int, since: datetime | None = None) -> bool:
+        """An activation in [signup_at, signup_at + days). With ``since`` (an experiment unit's ``assigned_at``, D-10) only an
+        activation at or after it counts: an outcome that happened before the assignment is not an effect of the treatment."""
         s = self.signup_at[account]
-        return any(s <= t < s + timedelta(days=days) for t in self.act_events[account])
+        lo = s if since is None or since < s else since
+        return any(lo <= t < s + timedelta(days=days) for t in self.act_events[account])
 
     def mature(self, account: str, days: int) -> bool:
         return self.signup_at[account] + timedelta(days=days) <= self.cutoff
@@ -243,7 +246,7 @@ def experiment(ctx: Ctx, plan: Plan, run_id: str | None = None) -> dict[str, Any
     n_total = sum(n_assigned.values())
     srm = srm_block(plan, n_assigned)
 
-    act = {v: sum(1 for a in mat[v] if ctx.activated_within(a.unit_id, win)) for v in variants}
+    act = {v: sum(1 for a in mat[v] if ctx.activated_within(a.unit_id, win, a.assigned_at)) for v in variants}   # D-10
     n_m = {v: len(mat[v]) for v in variants}
     conv = {v: ratio(act[v], n_m[v]) for v in variants}
     per_variant = {}
@@ -269,13 +272,16 @@ def experiment(ctx: Ctx, plan: Plan, run_id: str | None = None) -> dict[str, Any
         includes0 = lo <= 0 <= hi
         interval = {"method": "newcombe_hybrid_score", "confidence": plan.confidence, "z": plan.z, "low": q(lo, 6),
                     "high": q(hi, 6), "low_pp": q(lo * 100, 2), "high_pp": q(hi * 100, 2), "includes_zero": includes0}
-        conclusive = (not includes0) and (not interim) and hash_ok
     else:
-        interval, conclusive = None, False
+        interval, includes0 = None, True
     prior = None if run_row is None else sum(1 for r in runs if r.created_at < run_row.created_at)
+    plan_frozen = bool(runs) and plan.frozen_at <= min(r.created_at for r in runs)
+    # D-10 (R6-01, R6-14): conclusive = the interval excludes 0, a final run, a valid plan hash, a plan frozen before the first
+    # run, and a sample ratio that is OK.
+    conclusive = both and (not includes0) and (not interim) and hash_ok and plan_frozen and srm["verdict"] == "OK"
     run_block = {"analysis_id": run_row.analysis_id if run_row else None, "cutoff_at": iso_z(cutoff),
                  "planned_end": iso_z(plan.planned_end), "interim": interim, "prior_runs": prior,
-                 "plan_frozen": bool(runs) and plan.frozen_at <= min(r.created_at for r in runs),
+                 "plan_frozen": plan_frozen,
                  "config_hash": plan.config_hash,
                  "config_hash_matches_plan": hash_ok and run_row is not None and run_row.config_hash == plan.config_hash}
 
@@ -288,14 +294,15 @@ def experiment(ctx: Ctx, plan: Plan, run_id: str | None = None) -> dict[str, Any
     exploratory: dict[str, Any] = {"label": "exploratory", "decision_basis": False, "by_variant": {}}
     for v in variants:
         ex = [a for a in mat[v] if a.assignment_id in exposed_ids]
-        k = sum(1 for a in ex if ctx.activated_within(a.unit_id, win))
+        k = sum(1 for a in ex if ctx.activated_within(a.unit_id, win, a.assigned_at))
         exploratory["by_variant"][v] = {"exposed_units": len(ex), "activated": k, "conversion": q6(ratio(k, len(ex)))}
 
     gdays = timedelta(days=plan.guardrail_window_days)
     guard = {}
     for v in variants:
-        hit = sum(1 for a in mat[v] if any(a.assigned_at <= e < a.assigned_at + gdays for e in ctx.errors[a.unit_id]))
-        guard[v] = {"eligible_units": n_m[v], "units_with_error": hit, "error_rate": q6(ratio(hit, n_m[v]))}
+        elig = [a for a in mat[v] if a.assigned_at + gdays <= cutoff]            # D-10 (R6-09): the guardrail window is complete
+        hit = sum(1 for a in elig if any(a.assigned_at <= e < a.assigned_at + gdays for e in ctx.errors[a.unit_id]))
+        guard[v] = {"eligible_units": len(elig), "units_with_error": hit, "error_rate": q6(ratio(hit, len(elig)))}
 
     rev_by: dict[str, D] = defaultdict(lambda: D(0))
     for s in pop.subscriptions:
@@ -325,7 +332,7 @@ def experiment(ctx: Ctx, plan: Plan, run_id: str | None = None) -> dict[str, Any
     for o in obs_ok:
         u = obs_ids[o.assignment_id].unit_id
         if u in ctx.signup_at:
-            want = "1" if ctx.activated_within(u, win) else "0"
+            want = "1" if ctx.activated_within(u, win, obs_ids[o.assignment_id].assigned_at) else "0"
             if o.value == want and o.window_end == ctx.signup_at[u] + timedelta(days=win):
                 obs_match += 1
     return {
@@ -340,6 +347,64 @@ def experiment(ctx: Ctx, plan: Plan, run_id: str | None = None) -> dict[str, Any
         "revenue_per_assigned_account": {"currency": "USD", "window": {"from": iso_z(plan.revenue_from), "to": iso_z(plan.revenue_to)},
                                          "by_variant": revenue},
         "observations": {"rows_accepted": len(obs_ok), "rows_matching_events": obs_match}}
+
+
+# ---------------------------------------------------------------------------------------------------- secondary differences (D-10)
+def week4_difference(ctx: Ctx, plan: Plan) -> dict[str, Any]:
+    """Week-4 retention (a session on one of the calendar days 28-34 of the account's timezone) of the assigned accounts whose day
+    35 has begun, per arm, with the Newcombe interval of treatment minus control at the plan's z (D-10, R6-10; intention to treat)."""
+    accepted = list(accepted_assignments(ctx.pop, plan.experiment_version_id, ctx.allowed, ctx.cutoff).values())
+    by: dict[str, Any] = {}
+    cells: dict[str, tuple[int, int]] = {}
+    for v in plan.variants:
+        mat = [a for a in accepted if a.variant == v and a.unit_id in ctx.signup_at and _matured(ctx, a.unit_id, WEEK4[1])]
+        hit = sum(1 for a in mat if any(WEEK4[0] <= d <= WEEK4[1] for d in _day_indices(ctx, a.unit_id)))
+        cells[v] = (hit, len(mat))
+        by[v] = {"retained": hit, "mature_units": len(mat), "rate": q6(ratio(hit, len(mat)))}
+    out: dict[str, Any] = {"by_variant": by, "difference_pp": None, "interval": None}
+    (xc, nc), (xt, nt) = cells["control"], cells["treatment"]
+    if nc and nt:
+        d, lo, hi = newcombe(xt, nt, xc, nc, F(plan.z))
+        out["difference_pp"] = q(d * 100, 2)
+        out["interval"] = {"method": "newcombe_hybrid_score", "confidence": plan.confidence, "z": plan.z, "low": q(lo, 6), "high": q(hi, 6),
+                           "low_pp": q(lo * 100, 2), "high_pp": q(hi * 100, 2), "includes_zero": lo <= 0 <= hi}
+    return out
+
+
+def revenue_difference(ctx: Ctx, plan: Plan) -> dict[str, Any]:
+    """Revenue per assigned account (mature assigned accounts, zeros included): treatment mean minus control mean with a Welch
+    interval, t at the Welch-Satterthwaite degrees of freedom rounded DOWN (never narrower than the exact t) (D-10, R6-10)."""
+    rev_by: dict[str, F] = defaultdict(lambda: F(0))
+    for s in ctx.pop.subscriptions:
+        if s.status in ("active", "ended") and plan.revenue_from <= s.starts_at < plan.revenue_to and s.starts_at <= ctx.cutoff:
+            rev_by[s.account_id] += F(s.amount_usd)
+    accepted = list(accepted_assignments(ctx.pop, plan.experiment_version_id, ctx.allowed, ctx.cutoff).values())
+    st: dict[str, tuple[int, F, F]] = {}
+    by: dict[str, Any] = {}
+    for v in ("control", "treatment"):
+        vals = [rev_by[a.unit_id] for a in accepted if a.variant == v and a.unit_id in ctx.signup_at
+                and ctx.mature(a.unit_id, plan.activation_window_days)]
+        n = len(vals)
+        mean = sum(vals, F(0)) / n if n else F(0)
+        var = sum(((x - mean) ** 2 for x in vals), F(0)) / (n - 1) if n > 1 else F(0)
+        st[v] = (n, mean, var)
+        by[v] = {"units": n, "mean": q(mean, 2) if n else None}
+    out: dict[str, Any] = {"method": "welch", "by_variant": by, "difference": None, "interval": None}
+    (nc, mc, vc), (nt, mt, vt) = st["control"], st["treatment"]
+    if nc < 2 or nt < 2:
+        return out
+    a, b = vt / nt, vc / nc
+    se2 = a + b
+    diff = mt - mc
+    out["difference"] = q(diff, 2)
+    if se2 == 0:
+        return out
+    df = max(1, int(se2 * se2 / (a * a / (nt - 1) + b * b / (nc - 1))))
+    tc = t_crit(df, plan.confidence)
+    half = tc * dsqrt(dec(se2))
+    lo, hi = dec(diff) - half, dec(diff) + half
+    out["interval"] = {"confidence": plan.confidence, "df": df, "t": q(tc, 6), "low": q(lo, 2), "high": q(hi, 2), "includes_zero": lo <= 0 <= hi}
+    return out
 
 
 # ---------------------------------------------------------------------------------------------------- the whole set
@@ -425,9 +490,12 @@ def group_values(pop: Population, by: str, xv: str | None, cutoff: datetime | No
     return {k: out[k] for k in sorted(out)}
 
 
-def segment_analysis(pop: Population, cutoff: datetime, plan: Plan, by: str, canon: Canon | None = None) -> dict[str, Any]:
+def segment_analysis(pop: Population, cutoff: datetime, plan: Plan, by: str, canon: Canon | None = None,
+                     family: int | None = None) -> dict[str, Any]:
     """Exploratory segment results (D-03, P06-UI-08): every segment carries the label, the number of segments tested and the
-    Bonferroni-adjusted threshold alpha / k. No decision may cite a segment."""
+    Bonferroni-adjusted threshold alpha / k. No decision may cite a segment. ``family`` (D-10, R6-13) is k when the comparisons
+    of several splits are corrected together (the segments page passes the tested segments of every split it offers); omitted,
+    k is the number of segments tested in this split and the block carries no ``family_size``."""
     if by not in SEGMENT_FIELDS:
         raise DomainError(INVALID_GROUP, f"a segment analysis is by {', '.join(SEGMENT_FIELDS)}", "group_by")
     canon = canon or canonicalise(pop, cutoff)
@@ -435,7 +503,7 @@ def segment_analysis(pop: Population, cutoff: datetime, plan: Plan, by: str, can
     alpha = 1 - F(plan.confidence)
     groups = {k: v for k, v in group_values(pop, by, None).items()}
     tested = [k for k in groups if _has_both_arms(pop, plan, groups[k], cutoff)]
-    k_n = max(len(tested), 1)
+    k_n = max(len(tested) if family is None else family, 1)
     thr = alpha / k_n
     zadj = z_crit(q(1 - thr, 6)) if len(tested) > 0 else None
     win = plan.activation_window_days
@@ -446,7 +514,7 @@ def segment_analysis(pop: Population, cutoff: datetime, plan: Plan, by: str, can
         cells: dict[str, tuple[int, int]] = {}
         for v in plan.variants:
             m = [a for a in acc.values() if a.variant == v and a.unit_id in ctx.signup_at and ctx.mature(a.unit_id, win)]
-            cells[v] = (sum(1 for a in m if ctx.activated_within(a.unit_id, win)), len(m))
+            cells[v] = (sum(1 for a in m if ctx.activated_within(a.unit_id, win, a.assigned_at)), len(m))
         (xc, nc), (xt, nt) = cells["control"], cells["treatment"]
         item: dict[str, Any] = {
             "value": val, "label": "exploratory", "decision_basis": False,
@@ -467,11 +535,14 @@ def segment_analysis(pop: Population, cutoff: datetime, plan: Plan, by: str, can
             item["adjusted_interval"] = {"confidence": q(1 - thr, 6), "z": q(zadj, 6), "low": q(lo, 6), "high": q(hi, 6),
                                          "includes_zero": lo <= 0 <= hi}
         segs.append(item)
-    return {"label": "exploratory", "decision_basis": False, "by": by, "segments_tested": len(tested),
-            "alpha": q(alpha, 6), "bonferroni_threshold": q(thr, 6), "correction": "bonferroni",
-            "note": "segment results are exploratory: a segment that looks different is a hypothesis for the next experiment, "
-                    "never a decision basis",
-            "segments": segs}
+    out = {"label": "exploratory", "decision_basis": False, "by": by, "segments_tested": len(tested),
+           "alpha": q(alpha, 6), "bonferroni_threshold": q(thr, 6), "correction": "bonferroni",
+           "note": "segment results are exploratory: a segment that looks different is a hypothesis for the next experiment, "
+                   "never a decision basis",
+           "segments": segs}
+    if family is not None:
+        out["family_size"] = k_n
+    return out
 
 
 def _has_both_arms(pop: Population, plan: Plan, accounts: set[str], cutoff: datetime | None = None) -> bool:

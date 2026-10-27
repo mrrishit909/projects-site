@@ -651,7 +651,7 @@ def test_replay_events_refer_to_rows_that_exist(built):
         for rid in ev["requires"]:
             assert rid in runs
         for s in ev["steps"]:
-            assert s["input"]["dataset_version"] == VERSION and s["headers"]["X-Actor-Id"] and s["headers"]["X-Actor-Role"] in ("analyst", "experimenter")
+            assert s["input"]["dataset_version"] == VERSION and s["headers"]["X-Actor-Id"] and s["headers"]["X-Actor-Role"] in ("analyst", "experimenter", "admin")
             assert re.fullmatch(r"[A-Za-z0-9._:\-]{1,128}", s["input"]["idempotency_key"])
             for b in s.get("bind", []):
                 assert 0 <= b["from_step"] < ev["steps"].index(s)

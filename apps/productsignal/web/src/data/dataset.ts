@@ -6,6 +6,7 @@ import { defaultWindows, type AnalysisRun, type ExperimentVersion, type FunnelDe
 import { goldenOf, ingestInputs, type PipelineInputs } from "../domain/pipeline";
 import type { IngestResult } from "../domain/ingest";
 import { DAY, parseTs } from "../domain/time";
+import { SEGMENT_FIELDS } from "../domain/contract";
 import type { Manifest } from "./inputs";
 
 export interface Dataset {
@@ -14,6 +15,8 @@ export interface Dataset {
   canonAt(cutoff: number): Canon;
   at(cutoff: number, xv?: string | null, runId?: string | null): Computation;
   segments(cutoff: number, xv: string, by: string): SegmentOut;
+  /** D-10 (R6-13): the same split corrected together with every split the segments page offers (plan, segment, timezone). */
+  segmentsFamily(cutoff: number, xv: string, by: string): SegmentOut;
 }
 
 export function makeDataset(id: Dataset["id"], manifest: Manifest, inputs: PipelineInputs, expected: unknown = null): Dataset {
@@ -42,6 +45,16 @@ export function makeDataset(id: Dataset["id"], manifest: Manifest, inputs: Pipel
       const key = `${c}|${xv}|${by}`;
       let r = segs.get(key);
       if (!r) { r = segmentAnalysis(population, c, plans.get(xv)!, by, canonAt(c)); segs.set(key, r); }
+      return r;
+    },
+    segmentsFamily(c, xv, by) {
+      const key = `${c}|${xv}|${by}|family`;
+      let r = segs.get(key);
+      if (!r) {
+        const k = SEGMENT_FIELDS.reduce((t, f) => t + segmentAnalysis(population, c, plans.get(xv)!, f, canonAt(c)).segments_tested, 0);
+        r = segmentAnalysis(population, c, plans.get(xv)!, by, canonAt(c), k);
+        segs.set(key, r);
+      }
       return r;
     },
   };

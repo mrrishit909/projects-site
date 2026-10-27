@@ -191,3 +191,60 @@ party). `code_sha` is absent from the generator manifest ("not recorded" until p
 "freeze a plan" is a simulated draft computing a config_hash in memory. Local dates use Intl, checked against
 zoneinfo for every half hour from 2026-03-01 to 2026-11-12 in the three zones (both DST transitions). The Playwright
 evidence is not hosted on the site (the evidence page says so).
+
+## D-10 Second review corrections (2026-10-27, A-051 findings R6-01..R6-14, fixed under A-053/A-054)
+The independent review A-051 ran a hand / Python / SQL / TypeScript harness over 13 hand-built worlds and four API scripts.
+Decisions (the golden values and the published metric keys do not change; entity files are byte-identical):
+* **R6-01 / R6-14 `conclusive`.** `conclusive` = the Newcombe interval excludes 0 **and** a final run (cutoff at or after
+  planned_end) **and** a valid plan hash **and** `plan_frozen` (the plan was frozen at or before the first logged run of the
+  version; a read with no logged run is a preview and is never conclusive) **and** the sample ratio verdict is `OK` (a
+  MISMATCH or INSUFFICIENT sample cannot be called conclusive). Same rule in Python, SQL (`reference_metrics.sql`), TypeScript and
+  `tests/reference_check.py`. The NOT_CONCLUSIVE warning text lists the five reasons.
+* **R6-02 two arms.** The sample-ratio chi-square has df = 1 and the lift is treatment minus control, so a plan must name exactly
+  `control` and `treatment`: `parse_plan` (Python and TypeScript), C06 and the seed refuse anything else with `VARIANTS_NOT_TWO`
+  (422). A three-variant input is a rejection in every layer (case H_three).
+* **R6-03 session time zone.** Every interval added to a timestamptz in `reference_metrics.sql` is hour-based (`hours => 24 * n`),
+  never `days`, so the SQL gives the same answer under any session TimeZone (tested under UTC, America/New_York, Europe/London and
+  Pacific/Kiritimati; cases K_dst_sql, B_maturity).
+* **R6-04 future cutoff.** A cutoff after the API clock is 422 `CUTOFF_IN_FUTURE` in C07, C08 and GET /metrics (no run, observation
+  or audit row is written); the default cutoff is the clock, so `created_at >= cutoff_at` always holds for a run.
+* **R6-05 server-stamped instants.** `assigned_at` (C04), `exposed_at` (C05) and `decided_at` (C10) are stamped with the API clock.
+  A client-stated instant needs the role admin **and** `backfill: true` together (403 `BACKFILL_ADMIN_ONLY` for another role, 422
+  `BACKFILL_FLAG_REQUIRED` for one without the other, 422 `<FIELD>_IN_FUTURE` after the clock); a backfill is recorded in the audit
+  row (`backfill: true`, the instant). Audit `occurred_at` is the API clock. C01 refuses an `event_at` after the clock (row
+  rejection `EVENT_IN_FUTURE`) and an admin-stated `received_at` before `event_at` (`RECEIVED_BEFORE_EVENT`). A new assignment or
+  exposure dated at or before the latest `cutoff_at` of a logged run of the version is refused (422
+  `ASSIGNMENT_BEFORE_PUBLISHED_RUN`, `EXPOSURE_BEFORE_PUBLISHED_RUN`), so a published run is never silently changed by a later write;
+  a second C08 at the same cutoff gives the same answer (tested). A backfilled decision cannot precede the run it cites
+  (`DECIDED_BEFORE_RUN`).
+* **R6-06 outcomes before the freeze.** `GET /metrics?group_by=variant&experiment_version_id=X` for a version without a frozen plan
+  is 409 `PLAN_NOT_FROZEN` (no per-arm figure in the body); the plain read returns `metrics.experiment = null` with the warning
+  `EXPERIMENT_WITHHELD_PLAN_NOT_FROZEN`. A `frozen_at` earlier than the latest audit instant of the version is 422
+  `FROZEN_AT_BACKDATED`; later than the clock is `FROZEN_AT_IN_FUTURE`.
+* **R6-07 audited refusals.** Every refusal raised by C10 (invalid decision, non-admin backfill, unknown run or review, plan not
+  frozen, segment basis, review mismatch, second decision, SRM, interim, plan deviation, hash, guardrail harm) leaves one
+  `record-decision-refused` audit row in its own transaction (rule id, role, message). Refusals before the handler (role
+  forbidden, schema, idempotency) are not decisions and keep no row.
+* **R6-09 outcome before treatment.** For an experiment unit an activation counts only at or after `assigned_at` (and inside
+  [signup, signup + window)); the metric-observation check uses the same rule. The guardrail denominator is the units whose
+  `assigned_at + window <= cutoff` (an incomplete window is not a clean zero). C04 refuses a unit that already has an `activated`
+  event (422 `OUTCOME_BEFORE_ASSIGNMENT`) unless an admin backfills. The golden fixtures are unchanged (every golden unit is assigned before its first activation). On the published snapshot v1
+is unchanged (activation 63/200 vs 82/200, +9.50 pp, guardrail eligibility 200/200, digest equal); **v2 changes by one account**:
+a v2 treatment account had activated before its v2 assignment, so v2 at the as-of reads 39 of 87 mature treatment accounts (was 40;
++13.25 pp, was +14.40) and one observation row no longer matches. v2's sample ratio is MISMATCH, so no lift of v2 is shown on the
+site or decided on; its SRM counts are unchanged.
+* **R6-13 Bonferroni family.** The segments page corrects k across every segment tested in every split it offers (plan, segment,
+  timezone); `segment_analysis(..., family=k)` reports `family_size`. The API's single-split read keeps k = segments tested in
+  that split (documented, `family_size` absent).
+* **R6-08 instrumentation gap.** INJ-10 (no `activated` event before 2026-04-08, both arms) reaches 11 v1 accounts mature at the as-of
+  (control 5 with 0 drawn activations, treatment 6 with 4): the published +9.50 pp is below the drawn +11.50 pp, and +9.96 pp when the
+  gap accounts are excluded from both arms. Disclosed in `data/README-generator.md`, `manifest.json` DR-01 and INJ-10
+  (`instrumentation_gap_disclosure`), and on the result and case-study pages beside "conclusive by a hair". Not corrected: the domain
+  cannot see the gap.
+* **R6-10 secondary intervals.** The case study computes week-4 retention and the guardrail with Newcombe intervals of treatment minus
+  control and revenue per assigned account with a Welch interval (df rounded down) in the browser; Python restates them
+  (`week4_difference`, `revenue_difference`) and the independent snapshot reference agrees. The tracking page shows the linked share.
+* **R6-11 / R6-12 wording.** Identity links apply forward only; retention is "exact day 7" and "on or after day 7"; the SRM p-value
+  reads "p < 0.000001" when it is below the six decimals published, never "p 0.000001".
+* **Not fixed:** the DB suite still takes minutes; the deadlock retry is tested by injection; the API's segment read keeps its
+  per-split k.

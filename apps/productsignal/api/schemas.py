@@ -11,7 +11,7 @@ import re
 from typing import Annotated, Any
 
 from productsignal.timeutil import parse_ts
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from pydantic_core import PydanticCustomError
 
 _TOKEN = re.compile(r"^[A-Za-z0-9._:\-]{1,128}$")
@@ -97,7 +97,8 @@ class AssignInput(At):
     unit_id: Id
     variant: Id
     assignment_id: Id | None = None
-    assigned_at: StrictStr | None = None
+    assigned_at: StrictStr | None = None      # server clock unless an admin backfills (D-10): needs ``backfill: true``
+    backfill: StrictBool = False
 
 
 class ExposureInput(At):
@@ -105,7 +106,8 @@ class ExposureInput(At):
     surface: Id
     exposure_id: Id | None = None
     event_id: Id | None = None
-    exposed_at: StrictStr | None = None
+    exposed_at: StrictStr | None = None       # server clock unless an admin backfills (D-10): needs ``backfill: true``
+    backfill: StrictBool = False
 
 
 class Guardrail(Strict):
@@ -190,7 +192,8 @@ class DecisionInput(At):
     decision: StrictStr
     rationale: StrictStr = Field(min_length=1, max_length=2000)
     basis: StrictStr = "primary"
-    decided_at: StrictStr | None = None
+    decided_at: StrictStr | None = None       # server clock unless an admin backfills (D-10): needs ``backfill: true``
+    backfill: StrictBool = False
 
 
 def _request(input_model: type[BaseModel], name: str) -> type[Envelope]:

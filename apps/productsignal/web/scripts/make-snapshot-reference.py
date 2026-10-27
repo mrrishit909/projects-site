@@ -21,9 +21,10 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "domain"))
 from productsignal.contract import ENTITIES, METRIC_KEYS  # noqa: E402
 from productsignal.ingest import validate_batch  # noqa: E402
-from productsignal.metrics import Ctx, compute, guardrail_review, segment_analysis, retention_grid, _matured, _day_indices  # noqa: E402
+from productsignal.metrics import Ctx, accepted_assignments, compute, guardrail_review, segment_analysis, retention_grid, _matured, _day_indices  # noqa: E402
 from productsignal.events import canonicalise  # noqa: E402
-from productsignal.stats import q6  # noqa: E402
+from productsignal.stats import dec, dsqrt, newcombe, q, q6, t_crit  # noqa: E402
+from decimal import Decimal as D  # noqa: E402
 from productsignal.models import default_windows, parse_funnel, parse_plan, parse_windows  # noqa: E402
 from productsignal.timeutil import local_date, parse_ts  # noqa: E402
 
@@ -94,6 +95,55 @@ for aid, r in sorted(run_ids.items()):
         out["segments"][f"{aid}/{by}"] = {"digest": digest(seg), "segments_tested": seg["segments_tested"], "bonferroni_threshold": seg["bonferroni_threshold"]}
         if aid in ("an-004", "an-005") and by == "segment":
             out["segments"][f"{aid}/{by}"]["full"] = seg
+
+# D-10 (R6-13): the segments page corrects the comparisons of every split it offers together (k = tested segments of plan + segment + timezone)
+out["segments_family"] = {}
+for aid in ("an-004", "an-005"):
+    r = run_ids[aid]
+    canon_c = canonicalise(pop, r.cutoff_at)
+    k = sum(segment_analysis(pop, r.cutoff_at, plans[r.experiment_version_id], b, canon_c)["segments_tested"] for b in ("plan", "segment", "timezone"))
+    for by in ("plan", "segment", "timezone"):
+        seg = segment_analysis(pop, r.cutoff_at, plans[r.experiment_version_id], by, canon_c, family=k)
+        out["segments_family"][f"{aid}/{by}"] = {"family_size": seg["family_size"], "segments_tested": seg["segments_tested"],
+                                                 "bonferroni_threshold": seg["bonferroni_threshold"], "digest": digest(seg)}
+
+
+# D-10 (R6-10): the secondary figures of the case study, computed here independently of the TypeScript (Newcombe for the proportions, Welch for revenue)
+def secondary(cut, xv):
+    plan = plans[xv]
+    ctx = Ctx(pop, cut, canonicalise(pop, cut), None)
+    acc = list(accepted_assignments(pop, plan.experiment_version_id, None, cut).values())
+    w4 = {}
+    for v in ("control", "treatment"):
+        mat = [a for a in acc if a.variant == v and a.unit_id in ctx.signup_at and _matured(ctx, a.unit_id, 34)]
+        w4[v] = (sum(1 for a in mat if any(28 <= d <= 34 for d in _day_indices(ctx, a.unit_id))), len(mat))
+    d, lo, hi = newcombe(w4["treatment"][0], w4["treatment"][1], w4["control"][0], w4["control"][1], Fraction(plan.z))
+    week4 = {"by_variant": {v: {"retained": w4[v][0], "mature_units": w4[v][1], "rate": q6(Fraction(*w4[v]))} for v in w4},
+             "difference_pp": q(d * 100, 2), "low": q(lo, 6), "high": q(hi, 6), "includes_zero": lo <= 0 <= hi}
+    rev_by = defaultdict(lambda: D(0))
+    for sub in pop.subscriptions:
+        if sub.status in ("active", "ended") and plan.revenue_from <= sub.starts_at < plan.revenue_to and sub.starts_at <= cut:
+            rev_by[sub.account_id] += sub.amount_usd
+    st = {}
+    for v in ("control", "treatment"):
+        vals = [Fraction(rev_by[a.unit_id]) for a in acc if a.variant == v and a.unit_id in ctx.signup_at and ctx.mature(a.unit_id, plan.activation_window_days)]
+        n = len(vals)
+        mean = sum(vals, Fraction(0)) / n
+        var = sum(((x - mean) ** 2 for x in vals), Fraction(0)) / (n - 1)
+        st[v] = (n, mean, var)
+    a_, b_ = st["treatment"][2] / st["treatment"][0], st["control"][2] / st["control"][0]
+    se2 = a_ + b_
+    df = int((se2 * se2) / (a_ * a_ / (st["treatment"][0] - 1) + b_ * b_ / (st["control"][0] - 1)))     # rounded down
+    tc = t_crit(df, plan.confidence)
+    half = tc * dsqrt(dec(se2))
+    diff = st["treatment"][1] - st["control"][1]
+    lo_r, hi_r = dec(diff) - half, dec(diff) + half
+    revenue = {"by_variant": {v: {"units": st[v][0], "mean": q(st[v][1], 2)} for v in st}, "difference": q(diff, 2),
+               "df": df, "t": q(tc, 6), "low": q(lo_r, 2), "high": q(hi_r, 2), "includes_zero": lo_r <= 0 <= hi_r}
+    return {"week4": week4, "revenue": revenue}
+
+
+out["secondary"] = {"xv-001@as_of": secondary(as_of, "xv-001")}
 
 # the cohort grid by local signup week over every account (the cohorts page): at the as-of and at an interim cutoff
 def weekly(cut):

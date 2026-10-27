@@ -9,7 +9,7 @@ import { readFileSync } from "node:fs";
 import { buildInputs, isManifest } from "../src/data/inputs";
 import { makeDataset, type Dataset } from "../src/data/dataset";
 import { ENTITIES, METRIC_KEYS } from "../src/domain/contract";
-import { retentionGrid, guardrailReview, retentionGridWindow, Ctx, type GridRow } from "../src/domain/metrics";
+import { retentionGrid, guardrailReview, retentionGridWindow, revenueDifference, week4Difference, Ctx, type GridRow } from "../src/domain/metrics";
 import { canonicalJson, planHash } from "../src/domain/models";
 import { fmt, fr, fracOf, fxQ, q, roundDiv } from "../src/domain/num";
 import { goldenOf, runPipeline } from "../src/domain/pipeline";
@@ -163,6 +163,28 @@ for (const [aid, want] of Object.entries<any>(ref.runs)) {
   }
 }
 console.log("OK       five runs: experiment blocks, guardrail reviews and segment analyses equal the Python domain's");
+
+// D-10: the segments page corrects the comparisons of every split it offers together (R6-13); the case study's secondary figures (R6-10)
+for (const [key, want] of Object.entries<any>(ref.segments_family)) {
+  const [aid, by] = key.split("/") as [string, string];
+  const run = ds.runs.find((r) => r.analysis_id === aid)!;
+  const seg = ds.segmentsFamily(run.cutoff_at, run.experiment_version_id, by);
+  eq(`run ${aid} segments by ${by} with the family correction: k, tested, threshold, digest`, [seg.family_size, seg.segments_tested, seg.bonferroni_threshold, digest(seg)], [want.family_size, want.segments_tested, want.bonferroni_threshold, want.digest], true);
+}
+console.log("OK       segment analyses with the family-wide Bonferroni k equal the Python domain's");
+{
+  const want = ref.secondary["xv-001@as_of"];
+  const plan = ds.plans.get("xv-001")!;
+  const ctx = new Ctx(ds.population, ds.asOf, ds.canonAt(ds.asOf), null);
+  const w4 = week4Difference(ctx, plan), rv = revenueDifference(ctx, plan);
+  eq("secondary: week-4 retention by arm, difference and Newcombe interval equal Python's", [w4.by_variant["control"], w4.by_variant["treatment"], w4.difference_pp, w4.interval!.low, w4.interval!.high, w4.interval!.includes_zero],
+    [want.week4.by_variant.control, want.week4.by_variant.treatment, want.week4.difference_pp, want.week4.low, want.week4.high, want.week4.includes_zero]);
+  eq("secondary: revenue difference with the Welch interval equals Python's", [rv.by_variant["control"], rv.by_variant["treatment"], rv.difference, rv.interval!.df, rv.interval!.t, rv.interval!.low, rv.interval!.high, rv.interval!.includes_zero],
+    [want.revenue.by_variant.control, want.revenue.by_variant.treatment, want.revenue.difference, want.revenue.df, want.revenue.t, want.revenue.low, want.revenue.high, want.revenue.includes_zero]);
+  const man = ds.manifest.designed_relationships!;
+  const dr2 = man.find((d) => d.id === "DR-02")!.realised as any;
+  eq("secondary: week-4 retention equals the generator's DR-02 (71 of 200 vs 62 of 200, -4.50 pp, [-0.136053, 0.047102])", [w4.by_variant["control"]!.retained, w4.by_variant["treatment"]!.retained, w4.difference_pp], [dr2.week4.control.retained, dr2.week4.treatment.retained, "-4.50"]);
+}
 
 // D-08, in words: the interim cutoff of 2026-05-18 sees only the facts that existed by then
 {

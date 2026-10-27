@@ -61,12 +61,12 @@ replay events (they carry the published name and a stale name is 409).
 
 | | Realised |
 |---|---|
-| DR-01 treatment lifts activation | v1 mature 200 / 200: control 63 (0.315000), treatment 82 (0.410000): +9.50 pp (true +8.00), relative 0.301587, Newcombe [0.000812, 0.186863]: excludes 0 (barely), final run: conclusive. The same at planned_end and at the as-of. |
+| DR-01 treatment lifts activation | v1 mature 200 / 200: control 63 (0.315000), treatment 82 (0.410000): +9.50 pp (true +8.00), relative 0.301587, Newcombe [0.000812, 0.186863]: excludes 0 (barely), final run: conclusive. The same at planned_end and at the as-of. **Instrumentation gap (R6-08, `instrumentation_gap_disclosure` in DR-01 and INJ-10 `reaches_the_as_of_read`):** INJ-10 is not confined to the early read: it reaches 11 v1 accounts that are mature at the as-of (control 5 with no drawn activation, treatment 6 of which 4 had drawn an activation within 7 days). In the drawn truth control is 63 / 200 and treatment 86 / 200 = **+11.50 pp**; the published figures count the 4 as not activated (82 / 200, **+9.50 pp**); excluding the 11 gap accounts from both arms gives 63 / 195 vs 82 / 194 = **+9.96 pp**. The gap is disclosed, not corrected: the domain cannot see it. |
 | DR-02 no week-4 retention effect | 71 of 200 control (0.355000), 62 of 200 treatment (0.310000): -4.50 pp, Newcombe [-0.136053, 0.047102] includes 0. |
 | DR-03 business activates faster | by plan (control and unassigned accounts, mature): business 19 / 36 = 0.527778 (median 9.62 h), team 47 / 131 = 0.358779 (22.12 h), free 26 / 117 = 0.222222 (19.27 h); by segment: enterprise 0.435897, mid 0.385714, smb 0.274286 (the segment medians are noisy: mid 5.53 h, enterprise 11.85 h, smb 22.22 h). |
 | DR-04 guardrail equal | units with a `product_error` in the 7-day window: control 31 / 200 (0.155000), treatment 30 / 200 (0.150000): -0.50 pp, Newcombe [-0.076005, 0.066018] includes 0. |
 | DR-05 revenue noisy | mean per assigned account USD 97.83 (control) vs 130.95 (treatment); difference +33.12, approx. 95 % [-25.40, 91.64] includes 0. |
-| DR-06 sample ratio | v1 200 / 200, chi-square 0.000000, p 1.000000, OK; v2 62 / 92 against expected 92.40 / 61.60, chi-square 25.004329, p 0.000001, MISMATCH. |
+| DR-06 sample ratio | v1 200 / 200, chi-square 0.000000, p 1.000000, OK; v2 62 / 92 against expected 92.40 / 61.60, chi-square 25.004329, p < 0.000001 (exact 5.7e-7; six decimals publish 0.000001), MISMATCH. |
 | DR-07 exposure | control 175 / 200, treatment 174 / 200: 0.872500. |
 
 ## Defects: where each lives
@@ -113,7 +113,7 @@ The sample sizes are what they are: v1's interval just excludes 0 and v2's lift 
 * Unknown identities (30), bots (18, extra users of team and business accounts, 5 linked to anonymous ids) and internal accounts (12, with events and sessions, never assigned) are generated although the specification gives only the share; the counts are in `stats`.
 * Subscriptions: 33 % of accounts, a little under "about 35 %"; amount = unit price (12.00 team, 39.00 business) x seats; the revenue window of a plan is its horizon (v1 2026-04-06 .. 2026-08-02).
 * The size cap (5 MB) did not bind: every count of the specification is met at 3.92 MB; the events file is 2.04 MB.
-* INJ-10 is an instrumentation gap (no `activated` for signups before 2026-04-08, both arms, 11 accounts) so that a run at 2026-04-15, when only those accounts are mature, has 0 control conversions.
+* INJ-10 is an instrumentation gap (no `activated` for signups before 2026-04-08, both arms, 11 accounts) so that a run at 2026-04-15, when only those accounts are mature, has 0 control conversions. **It also reaches the as-of read** (D-10, R6-08): those 11 accounts are mature at the as-of and count as not activated, which lowers the published lift from the drawn +11.50 pp to +9.50 pp (+9.96 pp with the 11 excluded from both arms); see DR-01 above.
 
 ## Domain behaviours noted (not patched)
 

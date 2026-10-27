@@ -324,10 +324,16 @@ def test_srm_statistic_and_p_value_for_a_130_70_split():
     assert s["p_value"] == "0.000022" and s["verdict"] == "MISMATCH"                      # erfc(sqrt(9)) = 2.2090e-5
 
 
+def logged(w):
+    """The world with its final run logged (D-10: `conclusive` needs a plan frozen before the first logged run)."""
+    w.run(w.cutoff, iso(ts(w.cutoff) + timedelta(minutes=5)))
+    return w
+
+
 def test_lift_signs_nulls_and_conclusive_needs_an_interval_that_excludes_zero():
-    better = run(small_experiment((100, 20), (100, 40))).metrics["experiment"]["primary"]
+    better = run(logged(small_experiment((100, 20), (100, 40)))).metrics["experiment"]["primary"]
     assert (better["absolute_lift_pp"], better["relative_lift"], better["interval"]["includes_zero"], better["conclusive"]) == ("20.00", "1.000000", False, True)
-    worse = run(small_experiment((100, 40), (100, 20))).metrics["experiment"]["primary"]
+    worse = run(logged(small_experiment((100, 40), (100, 20)))).metrics["experiment"]["primary"]
     assert (worse["absolute_lift_pp"], worse["relative_lift"]) == ("-20.00", "-0.500000") and worse["conclusive"] is True
     flat_ = run(small_experiment((100, 20), (100, 30))).metrics["experiment"]["primary"]
     assert flat_["interval"]["includes_zero"] is True and flat_["conclusive"] is False   # the golden shape
@@ -339,7 +345,7 @@ def test_lift_signs_nulls_and_conclusive_needs_an_interval_that_excludes_zero():
 
 def test_a_run_before_planned_end_is_interim_and_never_conclusive():
     """P06-TEST-03 (domain side): the same data, a cutoff before planned_end: interim, so not conclusive."""
-    w = small_experiment((100, 20), (100, 60), cutoff="2026-10-26T00:00:00Z")
+    w = logged(small_experiment((100, 20), (100, 60), cutoff="2026-10-26T00:00:00Z"))
     final = run(w).metrics["experiment"]
     assert final["run"]["interim"] is False and final["primary"]["conclusive"] is True
     w2 = small_experiment((100, 20), (100, 60), planned_end="2026-10-27T00:00:00Z")

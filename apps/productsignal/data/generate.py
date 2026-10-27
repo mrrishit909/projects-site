@@ -919,7 +919,8 @@ class World:
         n_t = sum(1 for a in gap if a.xv and a.variant == "treatment" and a.signup + timedelta(days=7) <= EARLY_CUTOFF)
         lst.append({"id": "INJ-10", "test": "P06-TEST-10", "entity": "events", "location": "entity_files+events", "record_ids": [a.id for a in gap],
                     "description": "`activated` was not instrumented for signups before 2026-04-08 (both arms alike): an early read of v1 finds zero control conversions.",
-                    "detail": {"gap_ends": ts(GAP_END), "early_cutoff": ts(EARLY_CUTOFF), "mature_control": n_c, "mature_treatment": n_t},
+                    "detail": {"gap_ends": ts(GAP_END), "early_cutoff": ts(EARLY_CUTOFF), "mature_control": n_c, "mature_treatment": n_t,
+                               "reaches_the_as_of_read": self.gap_disclosure()},
                     "handling_kind": "replay_only",
                     "expected_handling": "at the early cutoff the control conversion is 0/n: the relative lift is null (never infinity or 0), the absolute lift is reported, nothing is divided by zero.",
                     "expected_merges": [], "expected_rejections": [], "replay": ["EV-10"],
@@ -929,7 +930,7 @@ class World:
                     "description": "An exposure recorded one hour before the assignment it belongs to.",
                     "detail": {"assignment_id": unexp.assignment_id, "assigned_at": ts(unexp.assigned_at),
                                "exposed_at": ts(unexp.assigned_at - timedelta(hours=1))}, "handling_kind": "replay_only",
-                    "expected_handling": "C05 record-exposure refuses it: 422 EXPOSURE_BEFORE_ASSIGNMENT; the raw row is kept in rejected_records and no exposure is written.",
+                    "expected_handling": "C05 record-exposure refuses it: 422 EXPOSURE_BEFORE_ASSIGNMENT; the raw row is kept in rejected_records and no exposure is written. (D-10: the server stamps exposed_at, so the early instant is an admin backfill with backfill: true; any other caller gets 403.)",
                     "expected_merges": [], "expected_rejections": [], "replay": ["EV-11"]})
         late_r = sorted((a for a in self.accounts if a.inj12 == "late_returner"), key=lambda a: a.id)
         edge = sorted((a for a in self.accounts if a.inj12 == "timezone_edge"), key=lambda a: a.id)
@@ -971,7 +972,8 @@ class World:
     def build_replay_events(self) -> list[dict[str, Any]]:
         ver = f"ps-{self.seed}-{DATE_TAG}"
         H = {"analyst": {"X-Actor-Id": "usr-analyst01", "X-Actor-Role": "analyst"},
-             "experimenter": {"X-Actor-Id": "usr-exp01", "X-Actor-Role": "experimenter"}}
+             "experimenter": {"X-Actor-Id": "usr-exp01", "X-Actor-Role": "experimenter"},
+             "admin": {"X-Actor-Id": "usr-adm01", "X-Actor-Role": "admin"}}
 
         def step(cmd: str, who: str, key: str, inp: dict[str, Any], status: int, reason: str | None = None, bind: list | None = None,
                  expect: dict | None = None) -> dict[str, Any]:
@@ -1029,9 +1031,9 @@ class World:
                                             "cutoff": ts(EARLY_CUTOFF)}, 200)],
                {"relative_lift": None, "absolute_lift_pp": "0.00", "control_conversion": "0.000000", "interim": True,
                 "mature_control": self.inj_n("control"), "mature_treatment": self.inj_n("treatment")}),
-            ev("EV-11", "INJ-11", [], [step("record-exposure", "experimenter", "ev-11-a", {"assignment_id": un.assignment_id,
+            ev("EV-11", "INJ-11", [], [step("record-exposure", "admin", "ev-11-a", {"assignment_id": un.assignment_id,
                                              "exposure_id": "ex-ev11", "exposed_at": ts(un.assigned_at - timedelta(hours=1)),
-                                             "surface": "onboarding_checklist"}, 422, "EXPOSURE_BEFORE_ASSIGNMENT")],
+                                             "backfill": True, "surface": "onboarding_checklist"}, 422, "EXPOSURE_BEFORE_ASSIGNMENT")],
                {"exposures_written": 0, "rejected_records_kept": 1}),
         ]
         return out
@@ -1058,6 +1060,32 @@ class World:
     def inj_n(self, var: str) -> int:
         return sum(1 for a in self.accounts if a.gap and a.xv and a.variant == var and a.signup + timedelta(days=7) <= EARLY_CUTOFF)
 
+    def gap_disclosure(self) -> dict[str, Any]:
+        """R6-08 (A-053): INJ-10 suppresses `activated` for signups before GAP_END in both arms, and it does not stop at the early
+        cutoff: it reaches the v1 accounts that are mature at the as-of too, so the published lift is lower than the drawn one.
+        'Drawn' = the activation the generator drew for the account (act_delay inside 7 days), before the gap removed its event."""
+        def arm(var: str) -> dict[str, Any]:
+            mat = [a for a in self.accounts if a.xv == XV1 and a.variant == var and not a.internal and a.signup + timedelta(days=7) <= AS_OF]
+            gap = [a for a in mat if a.gap]
+            drawn = lambda a: a.act_delay is not None and a.act_delay < 7 * 86400  # noqa: E731
+            return {"mature": len(mat), "gap_accounts": len(gap), "gap_drawn_activations": sum(1 for a in gap if drawn(a)),
+                    "published_activated": sum(1 for a in mat if self.activated_7d(a, AS_OF)),
+                    "drawn_activated": sum(1 for a in mat if drawn(a)), "mature_excluding_gap": len(mat) - len(gap),
+                    "drawn_activated_excluding_gap": sum(1 for a in mat if drawn(a) and not a.gap)}
+        c, t = arm("control"), arm("treatment")
+        pub = Fraction(t["published_activated"], t["mature"]) - Fraction(c["published_activated"], c["mature"])
+        drawn = Fraction(t["drawn_activated"], t["mature"]) - Fraction(c["drawn_activated"], c["mature"])
+        excl = (Fraction(t["published_activated"] - 0, t["mature_excluding_gap"]) - Fraction(c["published_activated"], c["mature_excluding_gap"]))
+        return {"gap_ends": ts(GAP_END), "v1_gap_accounts": c["gap_accounts"] + t["gap_accounts"],
+                "by_arm": {"control": c, "treatment": t},
+                "published_lift_pp": rhu(pub * 100, 2), "drawn_lift_pp": rhu(drawn * 100, 2), "lift_excluding_gap_accounts_pp": rhu(excl * 100, 2),
+                "note": "The instrumentation gap (INJ-10, no `activated` event for signups before 2026-04-08, both arms) is not confined to the "
+                        "early read it was planted for: it reaches the v1 accounts that are mature at the as-of too. Those accounts count as "
+                        "not activated in the published figures, so the published lift understates the lift as drawn (the gap removed "
+                        "activations in the treatment arm and none in the control arm, by chance). The domain cannot see the gap: it is a "
+                        "known limitation of the data, disclosed here, not corrected. Excluding the gap accounts from both arms gives the "
+                        "third figure."}
+
     # ---- designed relationships ---------------------------------------------------------------------------------------------
     def designed_relationships(self) -> list[dict[str, Any]]:
         out = []
@@ -1076,7 +1104,8 @@ class World:
         out.append({"id": "DR-01", "name": "the treatment lifts activation",
                     "statement": f"v1's true activation effect is +{EFFECT // 10000} percentage points (every account's 7-day activation probability is raised by 0.08, exposed or not). The realised lift is what one draw gave: it is reported, not selected.",
                     "realised": {"true_effect_pp": "8.00", "at_planned_end": {"cutoff": ts(V1_PLANNED_END), "arms": arm_block(v1_end), **lift(v1_end)},
-                                 "at_as_of": {"cutoff": ts(AS_OF), "arms": arm_block(v1_asof), **lift(v1_asof)}}})
+                                 "at_as_of": {"cutoff": ts(AS_OF), "arms": arm_block(v1_asof), **lift(v1_asof)},
+                                 "instrumentation_gap_disclosure": self.gap_disclosure()}})
         # retention by arm (week 4: any session on local days 28..34; mature when day 35 has begun)
         def week4(xv: str) -> dict:
             res = {}

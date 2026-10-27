@@ -1,10 +1,12 @@
 // One analysis run of the experiment, in the order the contract requires: the sample ratio first, then (only when it can be trusted)
 // the lift with its interval, then the guardrail and revenue.
 import type { Dataset } from "../data/dataset";
+import type { ReactNode } from "react";
 import { guardrailReview, type ExperimentOut } from "../domain/metrics";
 import type { AnalysisRun } from "../domain/models";
 import { isoZ } from "../domain/time";
 import { minus, n0, pct, pp } from "../lib/format";
+import { pReading } from "../lib/p";
 import { IntervalStrip } from "./charts";
 import { Chip, Def, Fig, Scroll } from "./ui";
 
@@ -24,7 +26,7 @@ export function SrmBlock({ ex }: { ex: ExperimentOut }) {
           </tbody>
         </table>
       </Scroll>
-      <p className="mono figs">chi-square <Fig k="srm.statistic">{s.statistic ?? "n/a"}</Fig> · p <Fig k="srm.p_value">{s.p_value ?? "n/a"}</Fig> · df {s.df ?? "n/a"} · {n0(ex.assigned_units)} accounts assigned by the cutoff</p>
+      <p className="mono figs">chi-square <Fig k="srm.statistic">{s.statistic ?? "n/a"}</Fig> · p <Fig k="srm.p_value">{s.p_value ?? "n/a"}</Fig>{pReading(s.statistic, s.p_value) === "p < 0.000001" && <span className="muted" data-testid="p-reading"> (rounded to six places: read it as p &lt; 0.000001)</span>} · df {s.df ?? "n/a"} · {n0(ex.assigned_units)} accounts assigned by the cutoff</p>
       {s.verdict === "MISMATCH" && <p className="callout callout--bad" data-testid="srm-mismatch">The assignment counts do not match the planned allocation (p &lt; 0.001). No lift is shown for this run, and a ship decision is blocked: if assignment is broken, the arms may differ in more than the treatment.</p>}
       {s.verdict === "OK" && <p className="callout">The counts are consistent with the planned allocation (p ≥ 0.001), so the arms can be compared.</p>}
     </section>
@@ -37,10 +39,33 @@ function verdictReasons(ex: ExperimentOut): string {
   if (ex.run.interim) out.push("the run is interim (before planned_end)");
   if (!ex.run.config_hash_matches_plan && ex.run.analysis_id !== null) out.push("the run does not cite the plan's hash");
   if (ex.run.analysis_id === null) out.push("no analysis run is logged at this cutoff");
+  if (!ex.run.plan_frozen) out.push("the plan was not frozen before the first logged run");
+  if (ex.srm.verdict !== "OK") out.push(`the sample ratio is ${ex.srm.verdict}`);
   return out.join("; ");
 }
 
-export function PrimaryBlock({ ex }: { ex: ExperimentOut }) {
+/** The INJ-10 instrumentation gap as the generator's manifest discloses it (DR-01); null when the dataset carries none (the golden fixture). */
+export interface GapDisclosure {
+  gap_ends: string; v1_gap_accounts: number; published_lift_pp: string; drawn_lift_pp: string; lift_excluding_gap_accounts_pp: string;
+  by_arm: Record<"control" | "treatment", { gap_accounts: number; gap_drawn_activations: number }>;
+}
+export function gapDisclosure(ds: Dataset): GapDisclosure | null {
+  const dr = ds.manifest.designed_relationships?.find((d) => d.id === "DR-01");
+  return ((dr?.realised as { instrumentation_gap_disclosure?: GapDisclosure } | undefined)?.instrumentation_gap_disclosure) ?? null;
+}
+/** Beside "conclusive by a hair": the gap reaches the published lift (R6-08). The figures are the manifest's, read at run time. */
+export function GapNote({ ds }: { ds: Dataset }) {
+  const g = gapDisclosure(ds);
+  if (!g) return null;
+  const c = g.by_arm.control, t = g.by_arm.treatment;
+  return (
+    <p className="callout callout--warn" data-testid="gap-note">
+      <strong>Instrumentation gap (INJ-10).</strong> No <span className="mono">activated</span> event was recorded for signups before {g.gap_ends.slice(0, 10)}, in either arm, and the gap is not confined to the early read it was planted for: it reaches {g.v1_gap_accounts} accounts of this experiment ({c.gap_accounts} control, {t.gap_accounts} treatment). In the data as drawn, {c.gap_drawn_activations} of the {c.gap_accounts} control and {t.gap_drawn_activations} of the {t.gap_accounts} treatment gap accounts would have activated; they count as not activated here, so the published lift (<span data-k="gap.published">{pp(g.published_lift_pp)}</span>) is lower than the lift as drawn (<span data-k="gap.drawn">{pp(g.drawn_lift_pp)}</span>); with the gap accounts left out of both arms it is <span data-k="gap.excluded">{pp(g.lift_excluding_gap_accounts_pp)}</span>. The domain cannot see the gap and nothing on this page corrects it.
+    </p>
+  );
+}
+
+export function PrimaryBlock({ ex, note }: { ex: ExperimentOut; note?: ReactNode }) {
   const p = ex.primary, c = p.variants["control"]!, t = p.variants["treatment"]!, iv = p.interval;
   return (
     <section className="block" data-testid="primary">
@@ -56,10 +81,11 @@ export function PrimaryBlock({ ex }: { ex: ExperimentOut }) {
         <div><dt>Relative lift (absolute ÷ control)</dt><dd><Fig k="relative_lift">{p.relative_lift ?? "n/a"}</Fig>{p.relative_lift === null && <span className="muted"> (null: the control rate is 0)</span>}</dd></div>
         <div><dt><Def term="Newcombe 95 % interval">Hybrid score interval for the difference of two proportions at z = {ex.primary.interval?.z ?? "1.959964"}, built from the two Wilson intervals; square roots exact to 1e-8. Treatment minus control; "includes 0" is a closed test.</Def></dt>
           <dd>{iv ? <><span className="mono" data-figure="interval">[<span data-k="low">{minus(iv.low)}</span>, <span data-k="high">{minus(iv.high)}</span>]</span> <span className="muted mono">({pp(iv.low_pp)} to {pp(iv.high_pp)})</span></> : "n/a"}</dd></div>
-        <div><dt>Verdict</dt><dd data-testid="verdict">{p.conclusive ? <Chip v="conclusive">conclusive</Chip> : <Chip v="not conclusive">not conclusive</Chip>} <span className="muted">{p.conclusive ? "the interval excludes 0 on a final run with a valid plan hash" : verdictReasons(ex)}</span></dd></div>
+        <div><dt>Verdict</dt><dd data-testid="verdict">{p.conclusive ? <Chip v="conclusive">conclusive</Chip> : <Chip v="not conclusive">not conclusive</Chip>} <span className="muted">{p.conclusive ? "the interval excludes 0 on a final run with a valid plan hash, a plan frozen before the first run and an OK sample ratio" : verdictReasons(ex)}</span></dd></div>
       </dl>
       {iv && <IntervalStrip low={iv.low} high={iv.high} point={p.absolute_lift_pp === null ? null : String(Number(p.absolute_lift_pp) / 100)} label="Newcombe interval of the absolute difference" />}
       {p.conclusive && iv && Number(iv.low_pp) < 1 && <p className="callout callout--warn" data-testid="by-a-hair">Conclusive by a hair: the interval's lower bound is {minus(iv.low)} ({pp(iv.low_pp)}), so it clears zero by less than a tenth of a percentage point. Read it with the disclosure below.</p>}
+      {note}
       <Scroll label="Per-arm Wilson intervals">
         <table>
           <thead><tr><th scope="col">Arm</th><th scope="col" className="num">Assigned</th><th scope="col" className="num">Mature</th><th scope="col" className="num">Activated</th><th scope="col" className="num">Conversion</th><th scope="col" className="num">Wilson 95 %</th></tr></thead>

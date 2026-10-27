@@ -126,6 +126,37 @@ def _domain(err: DomainError, path: str) -> ApiError:
     return _invalid(err.code, err.message, err.path or path, err.details or None)
 
 
+def _stamp(actor: Actor, inp: Any, field: str, now: datetime) -> tuple[datetime, bool]:
+    """D-10 (R6-05): a fact's instant (``assigned_at``, ``exposed_at``, ``decided_at``) is stamped with the server clock. Only an
+    admin may state it, and only with an explicit ``backfill: true`` (audited by the caller); it may not be in the future.
+    Returns ``(instant, backfilled)``."""
+    given = getattr(inp, field, None)
+    flag = bool(getattr(inp, "backfill", False))
+    if given is None and not flag:
+        return now, False
+    if actor.role != "admin":
+        raise _forbidden("BACKFILL_ADMIN_ONLY", f"{field} is stamped by the server clock; only an admin may backfill it "
+                         f"(backfill: true with an explicit {field})", f"input.{field}")
+    if given is None or not flag:
+        raise _invalid("BACKFILL_FLAG_REQUIRED", f"an explicit {field} needs backfill: true, and backfill: true needs an explicit {field}",
+                       f"input.{field}")
+    at = parse_ts(given)
+    if at > now:
+        raise _invalid(f"{field.upper()}_IN_FUTURE", f"{field} cannot be after the server clock", f"input.{field}", {"now": iso_z(now)})
+    return at, True
+
+
+def _latest_cutoff(conn: Conn, xv: str) -> datetime | None:
+    return conn.execute("SELECT max(cutoff_at) AS c FROM analysis_runs WHERE experiment_version_id = %s", (xv,)).fetchone()["c"]
+
+
+def _not_in_future(cutoff: datetime, now: datetime) -> None:
+    """D-10 (R6-04): a cutoff after the API clock names facts that do not exist yet; a run's created_at never precedes its cutoff."""
+    if cutoff > now:
+        raise _invalid("CUTOFF_IN_FUTURE", "the cutoff is after the server clock: a run cannot read facts that have not happened",
+                       "input.cutoff", {"now": iso_z(now)})
+
+
 # --- idempotent execution ---------------------------------------------------------------------------------------
 
 def _normalise(value: Any, key: str = "") -> Any:
@@ -226,9 +257,9 @@ def _execute_once(name: str, req: Envelope, actor: Actor, handler: Handler, payl
         for a in ([] if out.audit is None else out.audit if isinstance(out.audit, list) else [out.audit]):
             conn.execute(
                 "INSERT INTO audit_events (event_id, entity_type, entity_id, experiment_version_id, action, actor_id, before_version, "
-                "after_version, reason, request_id, details) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                "after_version, reason, request_id, details, occurred_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                 (f"evt-{uuid.uuid4().hex[:16]}", a.entity_type, a.entity_id, a.experiment_version_id, a.action, actor.actor_id,
-                 a.before_version, a.after_version, a.reason, req.request_id, Jsonb(a.details)))
+                 a.before_version, a.after_version, a.reason, req.request_id, Jsonb(a.details), _now()))   # the API clock (D-10)
         body = {"command_id": command_id, "status": out.status, "result": out.result, "warnings": out.warnings, "version": out.version}
         conn.execute("INSERT INTO command_results (idempotency_key, payload_hash, actor_id, actor_role, command_id, status, result) "
                      "VALUES (%s, %s, %s, %s, %s, %s, %s)",
@@ -240,9 +271,9 @@ def _refusal(actor: Actor, req: Envelope, action: str, entity_id: str, xv: str |
     """Keep a refused decision in the audit trail (its own transaction: the command's is about to roll back)."""
     with db.autocommit() as c:
         c.execute("INSERT INTO audit_events (event_id, entity_type, entity_id, experiment_version_id, action, actor_id, reason, "
-                  "request_id, details) VALUES (%s, 'experiment', %s, %s, %s, %s, %s, %s, %s)",
+                  "request_id, details, occurred_at) VALUES (%s, 'experiment', %s, %s, %s, %s, %s, %s, %s, %s)",
                   (f"evt-{uuid.uuid4().hex[:16]}", entity_id, xv, f"{action}-refused", actor.actor_id, message, req.request_id,
-                   Jsonb({"rule_id": rule_id, "actor_role": actor.role})))
+                   Jsonb({"rule_id": rule_id, "actor_role": actor.role}), _now()))
 
 
 # --- shared lookups and locks -----------------------------------------------------------------------------------
@@ -291,15 +322,20 @@ def validate_tracking(conn: Conn, req: Any, actor: Actor) -> Outcome:
     """raw -> canonical events: schema, identity (unknown identity flagged), delayed, duplicates (re-sent events are logged and
     dropped from every figure, counted here). The log is immutable: a re-sent event_id with the same content is merged, with
     different content it is rejected."""
+    from productsignal.ingest import Rejection  # noqa: PLC0415
     inp = req.input
     now = _now()
     events: list[dict[str, Any]] = []
+    early: list[Any] = []                                      # D-10 (R6-05): rows refused against the server clock
+    backfilled = 0
     for r in inp.events:
         r = dict(r)
-        if r.get("received_at") is not None:
+        given_recv = r.get("received_at") is not None
+        if given_recv:
             if actor.role != "admin":
                 raise _forbidden("RECEIVED_AT_ADMIN_ONLY", "received_at is the log's own clock; only an admin may backfill it",
                                  "input.events.received_at")
+            backfilled += 1
             try:
                 if parse_ts(r["received_at"]) > now:
                     raise _invalid("RECEIVED_IN_FUTURE", "an event cannot have been received in the future", "input.events.received_at")
@@ -307,9 +343,26 @@ def validate_tracking(conn: Conn, req: Any, actor: Actor) -> Outcome:
                 pass                                          # malformed: the domain rejects the row with MALFORMED_RECORD
         else:
             r["received_at"] = iso_z(now)
+        try:
+            happened = parse_ts(r.get("event_at"))
+        except ValueError:
+            happened = None                                   # malformed: the domain rejects the row with MALFORMED_RECORD
+        if happened is not None:
+            if happened > now:
+                early.append(Rejection("events", str(r.get("event_id") or ""), "EVENT_IN_FUTURE", r,
+                                       "event_at is after the server clock: an event cannot have happened in the future"))
+                continue
+            try:
+                if given_recv and parse_ts(r["received_at"]) < happened:
+                    early.append(Rejection("events", str(r.get("event_id") or ""), "RECEIVED_BEFORE_EVENT", r,
+                                           "received_at is before event_at: an event cannot be received before it happened"))
+                    continue
+            except ValueError:
+                pass
         events.append(r)
-    batch = validate_batch({"events": events, "event_properties": [dict(p) for p in inp.properties]})
-    rejected = list(batch.rejected)
+    early_ids = {x.id for x in early}
+    batch = validate_batch({"events": events, "event_properties": [dict(p) for p in inp.properties if p.get("event_id") not in early_ids]})
+    rejected = [*early, *batch.rejected]
     accepted = batch.accepted["events"]
     props: dict[str, dict[str, str]] = {}
     for p in batch.accepted["event_properties"]:
@@ -399,8 +452,9 @@ def validate_tracking(conn: Conn, req: Any, actor: Actor) -> Outcome:
     if counts["delayed"]:
         warns.append(_warning("DELAYED_EVENTS", f"{counts['delayed']} event(s) were received more than 24 h after they happened", "input.events"))
     return Outcome("partial" if rejected else "accepted", result, 1, warns,
-                   Audit("tracking_batch", bid, "validate-tracking", details={k: result[k] for k in
-                         ("accepted", "merged", "rejected", "canonical", "duplicates", "unknown_identity")}))
+                   Audit("tracking_batch", bid, "validate-tracking", details={**{k: result[k] for k in
+                         ("accepted", "merged", "rejected", "canonical", "duplicates", "unknown_identity")},
+                         "received_at_backfilled": backfilled}))
 
 
 # --- C02 resolve-identity ---------------------------------------------------------------------------------------
@@ -468,6 +522,8 @@ def assign_experiment(conn: Conn, req: Any, actor: Actor) -> Outcome:
     """eligible unit -> fixed variant, idempotent per (experiment_version_id, unit_id): the first assignment fixes the variant;
     the same variant again returns it, another variant is 409 ASSIGNMENT_CONFLICT."""
     inp = req.input
+    now = _now()
+    at, backfilled = _stamp(actor, inp, "assigned_at", now)                             # D-10: the server clock unless an admin backfills
     _lock_version(conn, inp.experiment_version_id, exclusive=False)                    # lock order: the version row ...
     unit = _lock_accounts(conn, [inp.unit_id]).get(inp.unit_id)                         # ... then the unit row
     if unit is None:
@@ -490,7 +546,20 @@ def assign_experiment(conn: Conn, req: Any, actor: Actor) -> Outcome:
                        [_warning("ALREADY_ASSIGNED", "the unit already has this variant; nothing changed", "input.unit_id")],
                        Audit("assignment", prior["assignment_id"], "assign-experiment", experiment_version_id=inp.experiment_version_id,
                              details={"status": "already_assigned"}))
-    at = _at(inp.assigned_at)
+    last = _latest_cutoff(conn, inp.experiment_version_id)
+    if last is not None and at <= last:                  # a run at that cutoff already read this version without the unit
+        raise _invalid("ASSIGNMENT_BEFORE_PUBLISHED_RUN", "an assignment cannot be dated at or before the cutoff of a logged run of "
+                       "its version: that run is published without it", "input.assigned_at", {"latest_cutoff_at": iso_z(last)})
+    if not backfilled:                                   # D-10 (R6-09): the outcome must not precede the treatment
+        first = conn.execute(
+            "SELECT min(e.event_at) AS at FROM events e WHERE e.event_name = 'activated' AND ("
+            " e.user_id IN (SELECT user_id FROM users WHERE account_id = %s AND NOT bot_flag) OR (e.user_id IS NULL AND EXISTS ("
+            "  SELECT 1 FROM identity_links l JOIN users u ON u.user_id = l.user_id WHERE l.anonymous_id = e.anonymous_id "
+            "  AND u.account_id = %s AND NOT u.bot_flag AND l.linked_at <= e.event_at)))", (inp.unit_id, inp.unit_id)).fetchone()["at"]
+        if first is not None:
+            raise _invalid("OUTCOME_BEFORE_ASSIGNMENT", "the unit already has the primary outcome (an activated event): assigning it now "
+                           "would count an outcome that precedes the treatment (an admin may backfill explicitly)", "input.unit_id",
+                           {"first_activated_at": iso_z(first)})
     aid = inp.assignment_id or f"as-{uuid.uuid4().hex[:12]}"
     if conn.execute("SELECT 1 FROM assignments WHERE assignment_id = %s", (aid,)).fetchone():
         raise _conflict(DUPLICATE_ID, "an assignment with this id exists for another unit", "input.assignment_id")
@@ -500,7 +569,8 @@ def assign_experiment(conn: Conn, req: Any, actor: Actor) -> Outcome:
               "assigned_at": iso_z(at), "status": "assigned"}
     return Outcome("assigned", result, 1, audit=Audit("assignment", aid, "assign-experiment", None, 1,
                                                       experiment_version_id=inp.experiment_version_id,
-                                                      details={"unit_id": inp.unit_id, "variant": inp.variant}))
+                                                      details={"unit_id": inp.unit_id, "variant": inp.variant, "assigned_at": iso_z(at),
+                                                               "backfill": backfilled}))
 
 
 # --- C05 record-exposure ----------------------------------------------------------------------------------------
@@ -514,7 +584,7 @@ def record_exposure(conn: Conn, req: Any, actor: Actor) -> Outcome:
         raise _not_found("input.assignment_id", UNKNOWN_ASSIGNMENT, "assignment")
     _lock_version(conn, a["experiment_version_id"], exclusive=False)
     _lock_accounts(conn, [a["unit_id"]])
-    at = _at(inp.exposed_at)
+    at, backfilled = _stamp(actor, inp, "exposed_at", _now())                          # D-10: the server clock unless an admin backfills
     if at < a["assigned_at"]:
         from productsignal.ingest import Rejection  # noqa: PLC0415
         raw = {"exposure_id": inp.exposure_id or "", "assignment_id": inp.assignment_id, "exposed_at": iso_z(at), "surface": inp.surface,
@@ -531,13 +601,18 @@ def record_exposure(conn: Conn, req: Any, actor: Actor) -> Outcome:
                                                               "input.assignment_id")],
                        Audit("exposure", prior["exposure_id"], "record-exposure", experiment_version_id=a["experiment_version_id"],
                              details={"status": "already_exposed"}))
+    last = _latest_cutoff(conn, a["experiment_version_id"])
+    if last is not None and at <= last:
+        raise _invalid("EXPOSURE_BEFORE_PUBLISHED_RUN", "an exposure cannot be dated at or before the cutoff of a logged run of its "
+                       "version: that run is published without it", "input.exposed_at", {"latest_cutoff_at": iso_z(last)})
     eid = inp.exposure_id or f"ex-{uuid.uuid4().hex[:12]}"
     conn.execute("INSERT INTO exposures (exposure_id, assignment_id, exposed_at, surface, event_id, created_by) VALUES (%s,%s,%s,%s,%s,%s)",
                  (eid, inp.assignment_id, at, inp.surface, inp.event_id, actor.actor_id))
     result = {"exposure_id": eid, "assignment_id": inp.assignment_id, "experiment_version_id": a["experiment_version_id"],
               "unit_id": a["unit_id"], "variant": a["variant"], "exposed_at": iso_z(at), "surface": inp.surface, "status": "exposed"}
     return Outcome("exposed", result, 1, audit=Audit("exposure", eid, "record-exposure", None, 1,
-                                                    experiment_version_id=a["experiment_version_id"], details={"assignment_id": inp.assignment_id}))
+                                                    experiment_version_id=a["experiment_version_id"],
+                                                    details={"assignment_id": inp.assignment_id, "exposed_at": iso_z(at), "backfill": backfilled}))
 
 
 # --- C06 freeze-analysis-plan -----------------------------------------------------------------------------------
@@ -549,9 +624,10 @@ def freeze_analysis_plan(conn: Conn, req: Any, actor: Actor) -> Outcome:
     inp = req.input
     ver = _lock_version(conn, inp.experiment_version_id, exclusive=True)
     now = _now()
-    frozen_at = parse_ts(inp.frozen_at) if inp.frozen_at else now.replace(microsecond=0)
-    if frozen_at > now + timedelta(seconds=1):
+    frozen_at = parse_ts(inp.frozen_at) if inp.frozen_at else now
+    if frozen_at > now:
         raise _invalid("FROZEN_AT_IN_FUTURE", "a plan cannot be frozen in the future", "input.frozen_at")
+
     body = {"experiment_version_id": inp.experiment_version_id, "primary_metric": inp.primary_metric, "unit_type": inp.unit_type,
             "allocation": dict(inp.allocation), "planned_end": iso_z(parse_ts(inp.planned_end)),
             "activation_window_days": inp.activation_window_days,
@@ -578,6 +654,11 @@ def freeze_analysis_plan(conn: Conn, req: Any, actor: Actor) -> Outcome:
     if runs:
         raise _conflict("OUTCOME_ALREADY_READ", "an analysis run already read outcomes of this version: the plan can no longer be frozen "
                         "before them", "input.experiment_version_id", {"runs": runs})
+    seen = conn.execute("SELECT max(occurred_at) AS at FROM audit_events WHERE experiment_version_id = %s",
+                        (inp.experiment_version_id,)).fetchone()["at"]
+    if seen is not None and frozen_at < seen:             # D-10 (R6-06): a plan cannot be dated before something already recorded
+        raise _invalid("FROZEN_AT_BACKDATED", "frozen_at is before the latest recorded activity of this version: a plan cannot be "
+                       "dated before outcomes could have been read", "input.frozen_at", {"latest_audit_at": iso_z(seen)})
     conn.execute("INSERT INTO analysis_plans (experiment_version_id, plan, config_hash, frozen_at, frozen_by) VALUES (%s,%s,%s,%s,%s)",
                  (plan.experiment_version_id, Jsonb(body), plan.config_hash, frozen_at, actor.actor_id))
     result = {"experiment_version_id": plan.experiment_version_id, "config_hash": plan.config_hash, "frozen_at": iso_z(frozen_at),
@@ -597,7 +678,9 @@ def check_maturity(conn: Conn, req: Any, actor: Actor) -> Outcome:
     inp = req.input
     ver = _lock_version(conn, inp.experiment_version_id, exclusive=False)
     plan = _plan(conn, inp.experiment_version_id)
-    cutoff = _at(inp.cutoff)
+    now = _now()
+    cutoff = parse_ts(inp.cutoff) if inp.cutoff else now.replace(microsecond=0)
+    _not_in_future(cutoff, now)                                                       # D-10 (R6-04)
     units = sorted({r["unit_id"] for r in conn.execute(           # D-08: assigned by the cutoff only
         "SELECT unit_id FROM assignments WHERE experiment_version_id = %s AND assigned_at <= %s", (inp.experiment_version_id, cutoff)).fetchall()})
     _lock_accounts(conn, units)                                                       # lock order: unit rows by id
@@ -625,7 +708,7 @@ def check_maturity(conn: Conn, req: Any, actor: Actor) -> Outcome:
             else:
                 conn.execute("INSERT INTO metric_observations (observation_id, assignment_id, metric_name, value, window_end) "
                              "VALUES (%s,%s,'activation_7d',%s,%s) ON CONFLICT DO NOTHING",
-                             (f"ob-{uuid.uuid4().hex[:12]}", a.assignment_id, "1" if ctx.activated_within(u, win) else "0",
+                             (f"ob-{uuid.uuid4().hex[:12]}", a.assignment_id, "1" if ctx.activated_within(u, win, a.assigned_at) else "0",
                               ctx.signup_at[u] + timedelta(days=win)))
                 stats["observations_written"] += 1
         d0 = ctx.local(u, ctx.signup_at[u])
@@ -687,6 +770,7 @@ def analyze_experiment(conn: Conn, req: Any, actor: Actor) -> Outcome:
     plan = _plan(conn, inp.experiment_version_id)                                     # refused before the freeze
     now = _now()
     cutoff = parse_ts(inp.cutoff) if inp.cutoff else now.replace(microsecond=0)
+    _not_in_future(cutoff, now)                                                       # D-10 (R6-04): created_at never precedes the cutoff
     analysis_id = f"an-{uuid.uuid4().hex[:12]}"
     pop = db.load_population(conn)
     pop.analysis_runs.append(AnalysisRun(analysis_id, plan.experiment_version_id, cutoff, plan.config_hash, now))
@@ -729,7 +813,8 @@ def analyze_experiment(conn: Conn, req: Any, actor: Actor) -> Outcome:
         warns.append(_warning("REVISION_DISCLOSED", f"{revision['late_events']['count']} late event(s) changed this run against "
                               f"{revision['of_analysis_id']}", "result.revision"))
     if not block["primary"]["conclusive"]:
-        warns.append(_warning("NOT_CONCLUSIVE", "the result is not conclusive (interval includes 0, interim run or no comparison)",
+        warns.append(_warning("NOT_CONCLUSIVE", "the result is not conclusive (interval includes 0, interim run, no comparison, a plan not "
+                              "frozen before the first run, an invalid plan hash or a sample ratio that is not OK)",
                               "result.primary.conclusive"))
     n_prior = block["run"]["prior_runs"] or 0
     return Outcome("interim" if block["run"]["interim"] else "final", result, n_prior + 1, warns,
@@ -781,6 +866,19 @@ def review_guardrails(conn: Conn, req: Any, actor: Actor) -> Outcome:
 # --- C10 record-decision ----------------------------------------------------------------------------------------
 
 def record_decision(conn: Conn, req: Any, actor: Actor) -> Outcome:
+    """C10 with its refusals audited (D-10, R6-07): every refusal the decision raises, whatever its rule (an invalid decision, a
+    backfill by a non-admin, an unknown run or review, a plan not frozen, a segment basis, a mismatched review, a second decision, a
+    blocked ship or stop), leaves one ``record-decision-refused`` row of its own (the command's transaction rolls back)."""
+    try:
+        return _record_decision(conn, req, actor)
+    except ApiError as err:
+        xv = getattr(req.input, "experiment_version_id", None)
+        rule = err.details[0].get("rule_id") if err.details else err.code
+        _refusal(actor, req, "record-decision", xv or "", xv, str(rule or err.code), err.message)
+        raise
+
+
+def _record_decision(conn: Conn, req: Any, actor: Actor) -> Outcome:
     """evidence -> ship | stop | inconclusive. Cites one analysis run and its guardrail review. Needs a frozen plan. ``ship``
     needs a non-interim run, a sample ratio that is not MISMATCH, no plan deviation and no guardrail harm; ``stop`` needs a
     sample ratio that is not MISMATCH; ``inconclusive`` is always an honest outcome. A decision never changes product state."""
@@ -788,6 +886,7 @@ def record_decision(conn: Conn, req: Any, actor: Actor) -> Outcome:
     xv = inp.experiment_version_id
     if inp.decision not in DECISIONS:
         raise _invalid("DECISION_INVALID", f"decision must be one of {', '.join(DECISIONS)}", "input.decision")
+    at, backfilled = _stamp(actor, inp, "decided_at", _now())                          # D-10: the server clock unless an admin backfills
     if inp.basis != "primary":
         raise _invalid(SEGMENT_NOT_A_DECISION_BASIS, "a decision rests on the primary intention-to-treat result; a segment result is "
                        "exploratory and cannot be cited", "input.basis")
@@ -803,15 +902,16 @@ def record_decision(conn: Conn, req: Any, actor: Actor) -> Outcome:
         raise _invalid("REVIEW_MISMATCH", "the guardrail review belongs to another analysis run", "input.review_id")
     if conn.execute("SELECT 1 FROM decisions WHERE analysis_id = %s", (inp.analysis_id,)).fetchone():
         raise _conflict("DECISION_ALREADY_RECORDED", "this analysis run already has a decision", "input.analysis_id")
+    if backfilled and at < run["created_at"]:
+        raise _invalid("DECIDED_BEFORE_RUN", "a decision cannot be dated before the run it cites was logged", "input.decided_at",
+                       {"run_created_at": iso_z(run["created_at"])})
     ev = _run_evidence(conn, run, plan)
     srm, interim = ev["srm"]["verdict"], ev["run"]["interim"]
     if inp.decision in ("ship", "stop") and srm == "MISMATCH":
-        _refusal(actor, req, "record-decision", xv, xv, SRM_MISMATCH_BLOCKS_DECISION, "sample ratio mismatch")
         raise _conflict(SRM_MISMATCH_BLOCKS_DECISION, "the sample ratio mismatches the allocation: randomisation cannot be trusted, so "
                         f"no {inp.decision} decision can rest on this run (record inconclusive)", "input.analysis_id", {"srm": ev["srm"]})
     if inp.decision == "ship":
         if interim:
-            _refusal(actor, req, "record-decision", xv, xv, INTERIM_RUN_CANNOT_SHIP, "interim run presented as final")
             raise _conflict(INTERIM_RUN_CANNOT_SHIP, "the run is interim (its cutoff is before planned_end): an interim run cannot "
                             "support ship", "input.analysis_id", {"cutoff_at": ev["run"]["cutoff_at"], "planned_end": ev["run"]["planned_end"]})
         if ev.get("exclusions"):
@@ -820,7 +920,6 @@ def record_decision(conn: Conn, req: Any, actor: Actor) -> Outcome:
             raise _conflict("PLAN_HASH_INVALID_BLOCKS_SHIP", "the run does not cite the frozen plan's hash", "input.analysis_id")
         if review["verdict"] == "HARMFUL":
             raise _conflict("GUARDRAIL_HARM_BLOCKS_SHIP", "the guardrail review found more errors under treatment", "input.review_id")
-    at = _at(inp.decided_at)
     did = f"dc-{uuid.uuid4().hex[:12]}"
     evidence = {"analysis_id": inp.analysis_id, "review_id": inp.review_id, "config_hash": plan.config_hash, "srm_verdict": srm,
                 "interim": interim, "conclusive": ev["primary"]["conclusive"], "guardrail_verdict": review["verdict"],
@@ -836,7 +935,7 @@ def record_decision(conn: Conn, req: Any, actor: Actor) -> Outcome:
         warns.append(_warning("NOT_CONCLUSIVE", "the cited result is not conclusive: ship rests on more than the primary interval",
                               "result.evidence.conclusive"))
     return Outcome(inp.decision, result, 1, warns, Audit("decision", did, "record-decision", None, 1, reason=inp.rationale.strip(),
-                                                         experiment_version_id=xv, details=evidence))
+                                                         experiment_version_id=xv, details={**evidence, "decided_at": iso_z(at), "backfill": backfilled}))
 
 
 __all__ = ["Actor", "ROLES", "DESIGN_ROLES", "ALL_ROLES", "execute", "validate_tracking", "resolve_identity", "define_funnel",

@@ -33,7 +33,7 @@ function Decision({ ds }: { ds: Dataset }) {
     { key: "run", item: "Run", value: <>{ex.run.interim ? "interim" : "final"}; {ex.run.prior_runs} prior run{ex.run.prior_runs === 1 ? "" : "s"}; cutoff {isoZ(run.cutoff_at)}; planned end {isoZ(plan.planned_end)}</>, ok: !ex.run.interim },
     { key: "srm", item: "Sample ratio (before any lift)", value: <>{ex.srm.verdict}: chi-square {ex.srm.statistic ?? "n/a"}, p {ex.srm.p_value ?? "n/a"}</>, ok: ex.srm.verdict !== "MISMATCH" },
     { key: "lift", item: "Absolute effect on 7-day activation", value: withheld ? "withheld (SRM MISMATCH)" : iv ? <>{pp(ex.primary.absolute_lift_pp)}; Newcombe [{minus(iv.low)}, {minus(iv.high)}], {iv.includes_zero ? "includes 0" : "excludes 0"}</> : "n/a", ok: withheld ? false : iv ? !iv.includes_zero : null },
-    { key: "conclusive", item: "Conclusive (interval excludes 0, final run, valid plan hash)", value: withheld ? "not assessed" : ex.primary.conclusive ? "yes" : "no", ok: withheld ? false : ex.primary.conclusive },
+    { key: "conclusive", item: "Conclusive (interval excludes 0, final run, valid plan hash, plan frozen before the first run, sample ratio OK)", value: withheld ? "not assessed" : ex.primary.conclusive ? "yes" : "no", ok: withheld ? false : ex.primary.conclusive },
     { key: "guardrail", item: "Guardrail: error rate", value: <>{guard.verdict}{guard.difference_pp !== null && <>; difference {pp(guard.difference_pp)}</>}</>, ok: guard.verdict === "OK" },
     { key: "exposure", item: "Exposure rate (ITT counts the unexposed too)", value: ex.exposure.overall.rate ?? "n/a", ok: null },
     { key: "segments", item: "Segments", value: "not cited: exploratory, never a decision basis", ok: null },

@@ -15,7 +15,7 @@ from fractions import Fraction
 from typing import Any
 
 from .contract import DEFAULT_FEATURE, MAX_ABS
-from .errors import MALFORMED_RECORD, DomainError
+from .errors import MALFORMED_RECORD, VARIANTS_NOT_TWO, DomainError
 from .timeutil import UTC, iso_z, parse_date, parse_ts, zone
 
 Row = dict[str, Any]
@@ -335,10 +335,12 @@ def parse_plan(raw: Row, config_hash: str | None = None) -> Plan:
     if not isinstance(h, str) or not _SHA.match(h):
         raise _bad("config_hash", "must be 64 lower-case hex digits")
     alloc = raw.get("allocation")
-    if not isinstance(alloc, dict) or len(alloc) < 2 or not all(isinstance(k, str) and k for k in alloc):
-        raise _bad("allocation", "must name at least two variants")
-    if "control" not in alloc or "treatment" not in alloc:
-        raise _bad("allocation", "must name control and treatment (lift is treatment minus control)")
+    if not isinstance(alloc, dict) or not all(isinstance(k, str) and k for k in alloc):
+        raise _bad("allocation", "must name the variants control and treatment")
+    if set(alloc) != {"control", "treatment"}:       # D-10: the chi-square is df = 1 and the lift is treatment minus control
+        raise DomainError(VARIANTS_NOT_TWO, "allocation must name exactly control and treatment (two arms: the sample-ratio test "
+                          "has one degree of freedom and the lift is treatment minus control)", "allocation",
+                          {"variants": sorted(str(k) for k in alloc)})
     shares = {k: proportion(v, f"allocation.{k}") for k, v in alloc.items()}
     if sum(shares.values()) != 1 or any(s == 0 for s in shares.values()):
         raise _bad("allocation", "shares must be positive and sum to 1")

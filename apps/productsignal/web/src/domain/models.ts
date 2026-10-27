@@ -1,5 +1,5 @@
 // Typed records, parsers, the frozen plan and the metric windows (mirror of domain/productsignal/models.py).
-import { ID_KEYS, type Entity, DEFAULT_FEATURE } from "./contract";
+import { ID_KEYS, type Entity, DEFAULT_FEATURE, VARIANTS_NOT_TWO } from "./contract";
 import { DomainError, ZERO, fracOf, malformed, add, cmp, ONE } from "./num";
 import { sha256 } from "./sha256";
 import { DAY, isZone, parseDay, parseTs, utcDay } from "./time";
@@ -120,8 +120,12 @@ export function parsePlan(raw: unknown): Plan {
   const h = raw["config_hash"];
   if (typeof h !== "string" || !SHA.test(h)) throw malformed("config_hash", "must be 64 lower-case hex digits");
   const alloc = raw["allocation"];
-  if (!isObj(alloc) || Object.keys(alloc).length < 2) throw malformed("allocation", "must name at least two variants");
-  if (!("control" in alloc) || !("treatment" in alloc)) throw malformed("allocation", "must name control and treatment (lift is treatment minus control)");
+  if (!isObj(alloc)) throw malformed("allocation", "must name the variants control and treatment");
+  // D-10: exactly two arms (the sample-ratio test has one degree of freedom and the lift is treatment minus control)
+  const names = Object.keys(alloc).sort();
+  if (names.length !== 2 || names[0] !== "control" || names[1] !== "treatment") {
+    throw new DomainError(VARIANTS_NOT_TWO, "allocation must name exactly control and treatment (two arms: the sample-ratio test has one degree of freedom and the lift is treatment minus control)", "allocation");
+  }
   let total = ZERO;
   for (const [k, v] of Object.entries(alloc)) {
     if (typeof v !== "string" || !PROPORTION.test(v)) throw malformed(`allocation.${k}`, "must be a decimal string with at most 6 places in [0, 1]");

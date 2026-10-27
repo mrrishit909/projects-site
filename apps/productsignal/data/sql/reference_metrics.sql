@@ -5,6 +5,9 @@
 -- sessions, subscriptions, assignments, exposures, observations, analysis runs, the stored plan and metric windows, the funnel
 -- definition) and no stored status, result or derived column. One statement, one row, one jsonb column per metric.
 --
+-- Session independence (D-10, R6-03): every interval added to a timestamptz is hour-based (24 h per day), never days, so the result
+-- is the same under any session TimeZone (a days interval follows the zone's calendar across a DST change).
+--
 -- Parameters (psycopg): %(cutoff)s timestamptz; %(xv)s experiment version id or NULL (the plan frozen last); %(run_id)s analysis
 -- id or NULL (the run whose cutoff_at equals the cutoff).
 --
@@ -131,9 +134,9 @@ sess AS (
 
 -- ---- MET-02 activation ---------------------------------------------------------------------------------------------------
 ac_pop AS (
-    SELECT s.acct, s.at, (s.at + make_interval(days => w.ac_days) <= p.cutoff) AS mature,
+    SELECT s.acct, s.at, (s.at + make_interval(hours => 24 * w.ac_days) <= p.cutoff) AS mature,
            EXISTS (SELECT 1 FROM ev WHERE ev.acct = s.acct AND ev.name = 'activated' AND ev.at >= s.at
-                   AND ev.at < s.at + make_interval(days => w.ac_days)) AS activated
+                   AND ev.at < s.at + make_interval(hours => 24 * w.ac_days)) AS activated
     FROM signup s, w, p WHERE s.at >= w.ac_from AND s.at < w.ac_to
 ),
 
@@ -173,12 +176,15 @@ fa_uses AS (
 vs AS (SELECT k AS v, (pl.alloc ->> k)::numeric AS share FROM pl, jsonb_object_keys(pl.alloc) AS k),
 asg AS (
     SELECT a.assignment_id, a.unit_id, a.variant, a.assigned_at, sg.at AS signup_at,
-           (sg.at IS NOT NULL AND sg.at + make_interval(days => pl.win) <= p.cutoff) AS mature,
-           (sg.at IS NOT NULL AND EXISTS (SELECT 1 FROM ev WHERE ev.acct = a.unit_id AND ev.name = 'activated' AND ev.at >= sg.at
-                                           AND ev.at < sg.at + make_interval(days => pl.win))) AS activated,
+           (sg.at IS NOT NULL AND sg.at + make_interval(hours => 24 * pl.win) <= p.cutoff) AS mature,
+           -- D-10: an activation counts only at or after the assignment (and inside [signup, signup + window))
+           (sg.at IS NOT NULL AND EXISTS (SELECT 1 FROM ev WHERE ev.acct = a.unit_id AND ev.name = 'activated'
+                                           AND ev.at >= greatest(sg.at, a.assigned_at)
+                                           AND ev.at < sg.at + make_interval(hours => 24 * pl.win))) AS activated,
            EXISTS (SELECT 1 FROM exposures x WHERE x.assignment_id = a.assignment_id AND x.exposed_at <= p.cutoff) AS exposed,
+           (a.assigned_at + make_interval(hours => 24 * pl.g_days) <= p.cutoff) AS g_elig,        -- D-10: the guardrail window is complete
            EXISTS (SELECT 1 FROM ev WHERE ev.acct = a.unit_id AND ev.name = 'product_error' AND ev.at >= a.assigned_at
-                   AND ev.at < a.assigned_at + make_interval(days => pl.g_days)) AS errored,
+                   AND ev.at < a.assigned_at + make_interval(hours => 24 * pl.g_days)) AS errored,
            coalesce((SELECT sum(s.amount_usd) FROM subscriptions s WHERE s.account_id = a.unit_id AND s.status IN ('active', 'ended')
                      AND s.starts_at >= pl.rev_from AND s.starts_at < pl.rev_to AND s.starts_at <= p.cutoff), 0) AS revenue
     FROM assignments a JOIN pl ON a.experiment_version_id = pl.xv LEFT JOIN signup sg ON sg.acct = a.unit_id, p
@@ -191,7 +197,8 @@ cnt AS (
            (SELECT count(*) FROM asg WHERE asg.variant = vs.v AND asg.mature AND asg.activated) AS act,
            (SELECT count(*) FROM asg WHERE asg.variant = vs.v AND asg.mature AND asg.exposed) AS exposed,
            (SELECT count(*) FROM asg WHERE asg.variant = vs.v AND asg.mature AND asg.exposed AND asg.activated) AS exp_act,
-           (SELECT count(*) FROM asg WHERE asg.variant = vs.v AND asg.mature AND asg.errored) AS errs,
+           (SELECT count(*) FROM asg WHERE asg.variant = vs.v AND asg.mature AND asg.g_elig) AS g_n,
+           (SELECT count(*) FROM asg WHERE asg.variant = vs.v AND asg.mature AND asg.g_elig AND asg.errored) AS errs,
            (SELECT coalesce(sum(asg.revenue), 0) FROM asg WHERE asg.variant = vs.v AND asg.mature) AS rev_total
     FROM vs
 ),
@@ -378,7 +385,9 @@ SELECT
                                                    'low', round(nc.lo, 6)::text, 'high', round(nc.hi, 6)::text,
                                                    'low_pp', round(nc.lo * 100, 2)::text, 'high_pp', round(nc.hi * 100, 2)::text,
                                                    'includes_zero', (nc.lo <= 0 AND nc.hi >= 0)) FROM nc),
-            'conclusive', coalesce((SELECT NOT (nc.lo <= 0 AND nc.hi >= 0) AND NOT exp.interim AND exp.hash_ok FROM nc), false)),
+            -- D-10: the interval excludes 0, a final run, a valid hash, a plan frozen before the first run, sample ratio OK
+            'conclusive', coalesce((SELECT NOT (nc.lo <= 0 AND nc.hi >= 0) AND NOT exp.interim AND exp.hash_ok AND exp.plan_frozen
+                                           AND srm_json.j ->> 'verdict' = 'OK' FROM nc), false)),
         'exposure', jsonb_build_object('definition', 'exposed mature assigned accounts / mature assigned accounts',
             'by_variant', (SELECT jsonb_object_agg(c.v, jsonb_build_object('exposed', c.exposed, 'units', c.n,
                               'rate', CASE WHEN c.n > 0 THEN round(c.exposed::numeric / c.n, 6)::text END)) FROM cnt c),
@@ -388,8 +397,8 @@ SELECT
             'by_variant', (SELECT jsonb_object_agg(c.v, jsonb_build_object('exposed_units', c.exposed, 'activated', c.exp_act,
                               'conversion', CASE WHEN c.exposed > 0 THEN round(c.exp_act::numeric / c.exposed, 6)::text END)) FROM cnt c)),
         'guardrail', jsonb_build_object('metric', pl.g_metric, 'window_days', pl.g_days,
-            'by_variant', (SELECT jsonb_object_agg(c.v, jsonb_build_object('eligible_units', c.n, 'units_with_error', c.errs,
-                              'error_rate', CASE WHEN c.n > 0 THEN round(c.errs::numeric / c.n, 6)::text END)) FROM cnt c)),
+            'by_variant', (SELECT jsonb_object_agg(c.v, jsonb_build_object('eligible_units', c.g_n, 'units_with_error', c.errs,
+                              'error_rate', CASE WHEN c.g_n > 0 THEN round(c.errs::numeric / c.g_n, 6)::text END)) FROM cnt c)),
         'revenue_per_assigned_account', jsonb_build_object('currency', 'USD',
             'window', jsonb_build_object('from', to_char(pl.rev_from AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
                                          'to', to_char(pl.rev_to AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"')),
@@ -400,7 +409,7 @@ SELECT
                            FROM rev2 r)),
         'observations', jsonb_build_object('rows_accepted', (SELECT count(*) FROM obs),
             'rows_matching_events', (SELECT count(*) FROM obs WHERE signup_at IS NOT NULL
-                 AND obs.value = CASE WHEN activated THEN '1' ELSE '0' END AND obs.window_end = signup_at + make_interval(days => pl.win))))
+                 AND obs.value = CASE WHEN activated THEN '1' ELSE '0' END AND obs.window_end = signup_at + make_interval(hours => 24 * pl.win))))
      FROM exp, tot, srm_json, pl) AS experiment,
 
     (SELECT to_jsonb(tq) FROM tq) AS tracking_quality,

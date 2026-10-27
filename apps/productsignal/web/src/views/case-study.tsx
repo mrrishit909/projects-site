@@ -1,9 +1,51 @@
-import { Disclosures } from "../components/experiment";
+import { Disclosures, GapNote } from "../components/experiment";
 import { Link } from "../components/link";
-import { Chip, Def, ViewHead, WithDataset } from "../components/ui";
+import { Chip, Def, Scroll, ViewHead, WithDataset } from "../components/ui";
 import type { Dataset } from "../data/dataset";
 import { minus, n0, pp } from "../lib/format";
+import { isoZ } from "../domain/time";
 import { isFinal } from "../lib/pick";
+import { pReading } from "../lib/p";
+import { Ctx, guardrailReview, revenueDifference, week4Difference } from "../domain/metrics";
+
+/** Secondary figures of the final run, computed in this browser (R6-10): week-4 retention and the guardrail with Newcombe intervals of
+ *  treatment minus control, revenue per assigned account with a Welch interval. Not the manifest's figures (those are cross-checks). */
+function SecondaryFigures({ ds, xv }: { ds: Dataset; xv: string }) {
+  const plan = ds.plans.get(xv)!;
+  const cutoff = ds.asOf;                                           // every v1 account is mature at the as-of, week 4 included
+  const ex = ds.at(cutoff, xv).metrics.experiment!;
+  const ctx = new Ctx(ds.population, cutoff, ds.canonAt(cutoff), null);
+  const w4 = week4Difference(ctx, plan), g = guardrailReview(ex, plan), rv = revenueDifference(ctx, plan);
+  const c = (v: string): string => (v === "control" ? "control" : "treatment");
+  return (
+    <div data-testid="secondary-figures">
+      <p className="muted">Beside the headline, three more figures of version 1 at the as-of ({isoZ(cutoff)}, when every account is mature for week 4 too), computed in this browser from the snapshot (intention to treat, mature assigned accounts; Newcombe intervals at the plan's z for the two proportions, a Welch interval for revenue with t at the Welch degrees of freedom rounded down):</p>
+      <Scroll label="Secondary figures of version 1 at the as-of">
+        <table>
+          <thead><tr><th scope="col">Figure</th><th scope="col" className="num">{c("control")}</th><th scope="col" className="num">{c("treatment")}</th><th scope="col" className="num">Treatment − control</th><th scope="col">95 % interval</th></tr></thead>
+          <tbody>
+            <tr data-figure="week4"><th scope="row">Week-4 retention (a session on days 28 to 34; day 35 has begun)</th>
+              <td className="num mono">{w4.by_variant["control"]!.retained} of {w4.by_variant["control"]!.mature_units} = {w4.by_variant["control"]!.rate}</td>
+              <td className="num mono">{w4.by_variant["treatment"]!.retained} of {w4.by_variant["treatment"]!.mature_units} = {w4.by_variant["treatment"]!.rate}</td>
+              <td className="num mono" data-k="week4.difference">{pp(w4.difference_pp)}</td>
+              <td className="mono" data-k="week4.interval">{w4.interval ? `[${minus(w4.interval.low)}, ${minus(w4.interval.high)}] ${w4.interval.includes_zero ? "includes 0" : "excludes 0"}` : "n/a"}</td></tr>
+            <tr data-figure="guardrail"><th scope="row">Guardrail: accounts with a product error in the 7 days after assignment</th>
+              <td className="num mono">{g.by_variant["control"]!.units_with_error} of {g.by_variant["control"]!.eligible_units} = {g.by_variant["control"]!.error_rate}</td>
+              <td className="num mono">{g.by_variant["treatment"]!.units_with_error} of {g.by_variant["treatment"]!.eligible_units} = {g.by_variant["treatment"]!.error_rate}</td>
+              <td className="num mono" data-k="guardrail.difference">{pp(g.difference_pp)}</td>
+              <td className="mono" data-k="guardrail.interval">{g.interval ? `[${minus(g.interval.low)}, ${minus(g.interval.high)}] ${g.interval.includes_zero ? "includes 0" : "excludes 0"} (${g.verdict})` : "n/a"}</td></tr>
+            <tr data-figure="revenue"><th scope="row">Revenue per assigned account (USD)</th>
+              <td className="num mono">{rv.by_variant["control"]!.mean ?? "n/a"}</td>
+              <td className="num mono">{rv.by_variant["treatment"]!.mean ?? "n/a"}</td>
+              <td className="num mono" data-k="revenue.difference">{rv.difference === null ? "n/a" : minus(rv.difference)}</td>
+              <td className="mono" data-k="revenue.interval">{rv.interval ? `[${minus(rv.interval.low)}, ${minus(rv.interval.high)}] ${rv.interval.includes_zero ? "includes 0" : "excludes 0"} (Welch, df ${rv.interval.df}, t ${rv.interval.t})` : "n/a"}</td></tr>
+          </tbody>
+        </table>
+      </Scroll>
+      <p className="muted">The generator's manifest records the same quantities as designed relationships (DR-02, DR-04 and DR-05; its revenue interval is a normal approximation). They are cross-checks of these figures, not their source.</p>
+    </div>
+  );
+}
 
 function Study({ ds }: { ds: Dataset }) {
   const m = ds.manifest, rc = m.row_counts;
@@ -23,9 +65,11 @@ function Study({ ds }: { ds: Dataset }) {
         <h2 id="a2">The approach</h2>
         <ul>
           <li><strong>The unit is the account.</strong> User events roll up to the account before any ratio, so a metric over accounts never counts users.</li>
-          <li><strong>Maturity.</strong> A signup counts for 7-day activation only when its 7 days are complete at the cutoff; immature signups are excluded and counted. Retention days are local calendar days in the account's timezone, and a cell is blank until its day has passed.</li>
+          <li><strong>Maturity.</strong> A signup counts for 7-day activation only when its 7 days are complete at the cutoff; immature signups are excluded and counted. In an experiment an activation counts only if it happened at or after the account's assignment, so an outcome that precedes the treatment is never credited to it. Retention days are local calendar days in the account's timezone, and a cell is blank until its day has passed.</li>
+          <li><strong>Retention is two figures.</strong> Exact day 7 counts an account with a session on the seventh calendar day after signup; "on or after day 7" counts an account with a session on day 7 or any later day, so it includes every exact-day-7 account plus the accounts that return only later. The two are never mixed in one number.</li>
+          <li><strong>Identity links apply forward only.</strong> A link attributes an anonymous id's events to a user from the moment of the link onward; earlier events stay anonymous and the earliest link of an id fixes its user.</li>
           <li><strong>The sample ratio comes first.</strong> A chi-square check of the observed assignment against the frozen allocation; on a mismatch the lift is withheld and a ship decision is blocked.</li>
-          <li><strong>A lift is an interval.</strong> The absolute difference with a Newcombe hybrid score interval; "conclusive" needs the interval to exclude 0, a final run, and a plan whose hash still matches.</li>
+          <li><strong>A lift is an interval.</strong> The absolute difference with a Newcombe hybrid score interval; "conclusive" needs the interval to exclude 0, a final run, a plan whose hash still matches, a plan frozen before the first logged run, and a sample ratio that is OK.</li>
           <li><strong>The plan is frozen before any outcome is read</strong>, and every run is logged: an interim run cannot support a ship decision, and the count of prior runs is shown with every result.</li>
           <li><strong>A run sees only what existed by its cutoff</strong> (D-08): assignments, exposures, subscriptions, observations and events dated after it are not counted.</li>
           <li><strong>Exact arithmetic.</strong> Every published figure comes from integer and rational arithmetic: no floating point. A TypeScript mirror of the Python domain computes them in the browser and is compared with the Python results in CI.</li>
@@ -33,14 +77,16 @@ function Study({ ds }: { ds: Dataset }) {
       </section>
       <section className="block" data-testid="cs-data" aria-labelledby="a3">
         <h2 id="a3">The data</h2>
-        <p>A synthetic world from one seed ({String(m.generator?.seed ?? m.seed)}): {n0(rc["accounts"] ?? 0)} accounts, {n0(rc["users"] ?? 0)} users, {n0(rc["events"] ?? 0)} events and {n0(rc["sessions"] ?? 0)} sessions over 26 weeks (2026-04-06 to 2026-10-04), as of {m.as_of}. Timezones are America/New_York, America/Los_Angeles and Europe/London with no daylight-saving transition in the window. Planted on purpose: re-sent duplicates, late events, bots, internal accounts, unknown identities, a sample ratio mismatch and others (see <Link to="tracking">tracking quality</Link>). Roughly a third of accounts subscribe; "the business segment activates faster" is read as the business plan with the correlated enterprise segment.</p>
+        <p>A synthetic world from one seed ({String(m.generator?.seed ?? m.seed)}): {n0(rc["accounts"] ?? 0)} accounts, {n0(rc["users"] ?? 0)} users, {n0(rc["events"] ?? 0)} events and {n0(rc["sessions"] ?? 0)} sessions over 26 weeks (2026-04-06 to 2026-10-04), as of {m.as_of}. Timezones are America/New_York, America/Los_Angeles and Europe/London with no daylight-saving transition in the window. {n0(rc["identity_links"] ?? 0)} identity links connect anonymous visitors to users (the share of real users with a link is on the <Link to="tracking">tracking quality</Link> page). Planted on purpose: re-sent duplicates, late events, bots, internal accounts, unknown identities, a sample ratio mismatch and others (see <Link to="tracking">tracking quality</Link>). Roughly a third of accounts subscribe; "the business segment activates faster" is read as the business plan with the correlated enterprise segment.</p>
         <p>The designed effect of the treatment on 7-day activation is +{m.generator?.parameters?.true_activation_effect_pp ?? "n/a"} percentage points. What one draw gave is reported, not selected.</p>
       </section>
       <section className="block" data-testid="cs-result" aria-labelledby="a4">
         <h2 id="a4">What the experiment says</h2>
         <p data-testid="cs-v1">Version 1, final run ({fin.analysis_id}, {a.run.prior_runs} prior runs): control {a.primary.variants["control"]!.activated}/{a.primary.variants["control"]!.mature_units} = {a.primary.variants["control"]!.conversion}, treatment {a.primary.variants["treatment"]!.activated}/{a.primary.variants["treatment"]!.mature_units} = {a.primary.variants["treatment"]!.conversion}; {pp(a.primary.absolute_lift_pp)}, Newcombe [{minus(a.primary.interval!.low)}, {minus(a.primary.interval!.high)}]. The sample ratio is {a.srm.verdict}. The result is {a.primary.conclusive ? <Chip v="conclusive">conclusive</Chip> : <Chip v="not conclusive">not conclusive</Chip>}, but only by a hair: the lower bound is {a.primary.interval!.low_pp} percentage points.</p>
-        <p data-testid="cs-v2">Version 2 ({v2.analysis_id}): the sample ratio is <Chip v={b.srm.verdict}>{b.srm.verdict}</Chip> (chi-square {b.srm.statistic}, p {b.srm.p_value}; observed {Object.values(b.srm.observed).join(" / ")} against an expected {b.srm.expected ? Object.values(b.srm.expected).join(" / ") : "n/a"}). Its lift is withheld: the randomiser was sending 3 of every 5 accounts to treatment while the plan said 0.40.</p>
-        <p>Beside the headline, week-4 retention is not lifted (the designed relationship DR-02 reads −4.50 pp with an interval that includes 0), the error-rate guardrail shows no harm, and revenue per account is noisy. Segment results are exploratory and are never cited. In the as-of read, day-7 retention for the cohort window is {w4.retention.day7.rate} ({w4.retention.day7.retained} of {w4.retention.day7.mature_accounts}).</p>
+        <GapNote ds={ds} />
+        <p data-testid="cs-v2">Version 2 ({v2.analysis_id}): the sample ratio is <Chip v={b.srm.verdict}>{b.srm.verdict}</Chip> (chi-square {b.srm.statistic}, <span data-testid="cs-p">{pReading(b.srm.statistic, b.srm.p_value)}</span>; observed {Object.values(b.srm.observed).join(" / ")} against an expected {b.srm.expected ? Object.values(b.srm.expected).join(" / ") : "n/a"}). Its lift is withheld: the randomiser was sending 3 of every 5 accounts to treatment while the plan said 0.40.</p>
+        <SecondaryFigures ds={ds} xv={fin.experiment_version_id} />
+        <p>Segment results are exploratory and are never cited. In the as-of read, day-7 retention for the cohort window is {w4.retention.day7.rate} ({w4.retention.day7.retained} of {w4.retention.day7.mature_accounts}).</p>
         <p className="muted"><Def term="what the site does not decide">It lists what the evidence supports and what the contract allows (<Link to="decision">the decision memo</Link>). Whether to ship a change that is conclusive by a hair, with disclosed outcome-informed choices in how the data was made, is a human decision; "inconclusive" stays a valid option.</Def></p>
       </section>
       <Disclosures ds={ds} />

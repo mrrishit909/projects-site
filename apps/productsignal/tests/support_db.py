@@ -245,6 +245,12 @@ def count(conn, table: str, where: str = "true") -> int:
 _seq = {"n": 0}
 
 
+def set_clock(at: str) -> None:
+    """Move the (frozen) API clock: a cutoff, a fact or a decision cannot be dated after it (D-10). The autouse fixture restores it."""
+    from api import clock  # noqa: PLC0415
+    clock.freeze(ts(at))
+
+
 def current_dataset_version() -> str:
     """The dataset_version the database names now ("ds-test" when none): commands carry the current version, as a client that
     has just read the data would (a stale version is 409)."""
@@ -283,7 +289,7 @@ def plan_input(plan: dict[str, Any]) -> dict[str, Any]:
 
 def drive(client, conn, inputs: dict[str, Any]) -> dict[str, Any]:
     """Replay ``inputs`` through the API commands: reference data by the data load, then C06 (plan), C03 (funnel), C01 (events with
-    their properties, as an admin backfill), C02 (links), C04 (assignments), C05 (exposures) and C07 (observations at the cutoff);
+    their properties, as an admin backfill), C02 (links), C04 (assignments) and C05 (exposures), both as an admin backfill (D-10), and C07 (observations at the cutoff);
     the logged runs are loaded as history. Returns the HTTP status of every call by name."""
     load(conn, inputs, reference_only=True)
     log: dict[str, Any] = {}
@@ -307,11 +313,11 @@ def drive(client, conn, inputs: dict[str, Any]) -> dict[str, Any]:
         log[f"link:{l['identity_link_id']}"] = r.status_code
     for a in sorted(inputs["assignments"], key=lambda a: (a["assigned_at"], a["assignment_id"])):
         r = command(client, "assign-experiment", {"experiment_version_id": a["experiment_version_id"], "unit_id": a["unit_id"], "variant": a["variant"],
-                                                   "assignment_id": a["assignment_id"], "assigned_at": a["assigned_at"]})
+                                                   "assignment_id": a["assignment_id"], "assigned_at": a["assigned_at"], "backfill": True}, headers=ADMIN)
         log[f"assign:{a['assignment_id']}"] = r.status_code
     for x in sorted(inputs["exposures"], key=lambda x: (x["exposed_at"], x["exposure_id"])):
         r = command(client, "record-exposure", {"assignment_id": x["assignment_id"], "exposed_at": x["exposed_at"], "surface": x["surface"],
-                                                "exposure_id": x["exposure_id"], "event_id": x["event_id"]})
+                                                "exposure_id": x["exposure_id"], "event_id": x["event_id"], "backfill": True}, headers=ADMIN)
         log[f"expose:{x['exposure_id']}"] = r.status_code
     if inputs["experiment_versions"]:
         log["maturity"] = command(client, "check-maturity", {"experiment_version_id": plan["experiment_version_id"], "cutoff": inputs["cutoff"]},

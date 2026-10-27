@@ -230,7 +230,11 @@ def read_metrics(lo: str | None, hi: str | None, cutoff: str | None, xv: str | N
         raise ApiError(422, "VALIDATION_FAILED", "unsupported group_by",
                        [detail("group_by", "INVALID_GROUP_BY", f"use one of {', '.join(GROUPS)}")])
     start, end = parse_window(lo, hi)
-    cut = parse_instant(cutoff, "cutoff") if cutoff else clock.now().replace(microsecond=0)
+    now = clock.now()
+    cut = parse_instant(cutoff, "cutoff") if cutoff else now.replace(microsecond=0)
+    if cut > now:                       # D-10 (R6-04): a cutoff after the API clock names facts that do not exist yet
+        raise ApiError(422, "VALIDATION_FAILED", "the cutoff is after the server clock",
+                       [detail("cutoff", "CUTOFF_IN_FUTURE", "a read cannot be taken at a cutoff in the future")])
     with db.transaction() as conn:
         if xv is not None and conn.execute("SELECT 1 FROM experiment_versions WHERE experiment_version_id = %s", (xv,)).fetchone() is None \
                 and conn.execute("SELECT 1 FROM analysis_plans WHERE experiment_version_id = %s", (xv,)).fetchone() is None:
@@ -255,6 +259,13 @@ def read_metrics(lo: str | None, hi: str | None, cutoff: str | None, xv: str | N
                                 "empty_population": comp.empty_population,
                                 "retention_grid": retention_grid(Ctx(pop, cut, canon, None), windows)}
         plan = select_plan(pop, xv)
+        if plan is None and xv is not None:                                # D-10 (R6-06): the experiment block is withheld, and said to be
+            warnings.append({"code": "EXPERIMENT_WITHHELD_PLAN_NOT_FROZEN", "message": "the experiment block (outcomes by arm) is withheld "
+                             "until this experiment version has a frozen analysis plan (C06 freeze-analysis-plan)", "path": "data.metrics.experiment"})
+        if group_by == "variant" and plan is None and xv is not None:     # D-10 (R6-06): per-arm outcomes are not readable before the plan is frozen
+            raise ApiError(409, "PLAN_NOT_FROZEN", "per-variant outcomes are withheld until the experiment version has a frozen "
+                           "analysis plan (C06 freeze-analysis-plan first)",
+                           [detail("group_by", "PLAN_NOT_FROZEN", "freeze the plan before reading outcomes by arm")])
         if group_by != "none":
             try:
                 groups = group_values(pop, group_by, plan.experiment_version_id if plan else xv, cut)
