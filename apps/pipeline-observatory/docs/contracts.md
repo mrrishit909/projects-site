@@ -169,6 +169,27 @@ over the 16 entity files; `generated_at` = `as_of`.
   processing measurement); late events are dominated by backfills; no replay event exercises C09 or C10; the domain
   over 40,000 rows takes about a minute.
 
+## D-08 Site decisions (adopted from the web hand-back; the 15 numbered assumptions are in the web README / evidence page)
+* The golden fixture is bundled from `tests/fixtures/golden` (hashed in the browser against `HASHES.json`), not served from
+  `public/data`. Every figure carries one of three scopes: **complete world** (files published in full), **2,000-row
+  sample**, or **recorded** (the manifest's statement about the complete world); the sample's freshness is meaningless,
+  so freshness uses the generator's recorded latest-event instants while ingestion age is recomputed from checkpoints;
+  verified recovery over the complete world takes the recorded residuals, and the sample shows 0 of 25 verified and says so.
+* "Silent" (freshness above two declared cadences) is a display rule, not a contract rule. The page verdict follows a
+  printed rule: a blocked latest gate or a source past its target means do not publish; a silent source means publish
+  with a stated exception. Per-source job colour is the latest batch's status; a model's is its latest transform task;
+  the publication's is the publish task; a model's or the publication's freshness is its stalest upstream source.
+  Task attempts carry no timestamps, so the run timeline places batches, publication, watermark and incident and lists
+  tasks as ordered steps. Incident diagnosis class comes from the first failed gate check, else the failed task.
+  Retry-after slack is derived from the fetch log. The replay events are listed, not replayed (the backend CI runs
+  them). The benchmark shows the recorded synthetic measurement and a live browser measurement labelled not-CI.
+* The TypeScript mirror reproduces the Python domain's quirks on purpose and lists them on the evidence page: a repeated
+  `batch_id` passes `validate_import` (primary-key check before batch acceptance); `money_amount` on a non-object
+  payload; a trailing newline accepted by `$` in money strings. **These are review items for the fix round.**
+* Five injection checks (INJ-01, INJ-04, INJ-08) describe unsampled batches or publications and are marked "not on
+  sample"; the designed late events differ on the sample (141 over the sample against 757 recorded).
+* The Playwright preview port honours `PW_PORT` (another app's suite may hold 4173 on a shared machine).
+
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners, including the crash-before-checkpoint and
 overlap experiments. Mode B: TypeScript mirror over the published snapshot; the quarantine desk, backfill console and
