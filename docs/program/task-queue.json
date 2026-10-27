@@ -634,7 +634,8 @@
       "id": "T-10-02",
       "project": "10-retentionlab",
       "title": "Golden fixture (precision/recall .5 at K=2, Brier .1925, AP .833333) + variants + stdlib reference check",
-      "status": "pending"
+      "status": "in_progress",
+      "assignment": "A-062"
     },
     {
       "id": "T-10-03",
