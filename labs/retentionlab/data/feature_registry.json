@@ -1,0 +1,14 @@
+{"entity":"feature_registry","dataset_version":"rl-20261026-20261026","rows":[
+{"feature_name":"usage_events_30d","feature_version":"fv-1","id_derived":false,"latent":false,"lineage":"events","post_outcome":false,"source_entity":"usage_events","window_days":30},
+{"feature_name":"days_since_last_usage","feature_version":"fv-1","id_derived":false,"latent":false,"lineage":"events","post_outcome":false,"source_entity":"usage_events","window_days":90},
+{"feature_name":"high_severity_support_90d","feature_version":"fv-1","id_derived":false,"latent":false,"lineage":"events","post_outcome":false,"source_entity":"support_events","window_days":90},
+{"feature_name":"billing_total_90d","feature_version":"fv-1","id_derived":false,"latent":false,"lineage":"events","post_outcome":false,"source_entity":"billing_events","window_days":90},
+{"feature_name":"cancellation_reason","feature_version":"fv-1","id_derived":false,"latent":false,"lineage":"events","post_outcome":true,"source_entity":"subscription_events","window_days":null},
+{"feature_name":"cancellation_survey_score","feature_version":"fv-1","id_derived":false,"latent":false,"lineage":"events","post_outcome":true,"source_entity":"support_events","window_days":null},
+{"feature_name":"refund_after_cancel","feature_version":"fv-1","id_derived":false,"latent":false,"lineage":"events","post_outcome":true,"source_entity":"billing_events","window_days":null},
+{"feature_name":"latent_churn_propensity","feature_version":"fv-1","id_derived":false,"latent":true,"lineage":"generator_manifest","post_outcome":false,"source_entity":"generator_manifest","window_days":null},
+{"feature_name":"generator_seed_bucket","feature_version":"fv-1","id_derived":false,"latent":true,"lineage":"generator_manifest","post_outcome":false,"source_entity":"generator_manifest","window_days":null},
+{"feature_name":"account_id","feature_version":"fv-1","id_derived":true,"latent":false,"lineage":"identifier","post_outcome":false,"source_entity":"accounts","window_days":null},
+{"feature_name":"account_id_hash","feature_version":"fv-1","id_derived":true,"latent":false,"lineage":"identifier","post_outcome":false,"source_entity":"accounts","window_days":null},
+{"feature_name":"creation_sequence","feature_version":"fv-1","id_derived":true,"latent":false,"lineage":"identifier","post_outcome":false,"source_entity":"accounts","window_days":null}
+]}

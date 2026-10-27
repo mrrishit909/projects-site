@@ -1,0 +1,17 @@
+{
+  "routes": [
+    "",
+    "overview/",
+    "cohorts/",
+    "features/",
+    "models/",
+    "calibration/",
+    "capacity/",
+    "account/",
+    "queue/",
+    "monitoring/",
+    "evidence/",
+    "case-study/"
+  ],
+  "generated_at": "2026-10-27T05:36:00.241Z"
+}
