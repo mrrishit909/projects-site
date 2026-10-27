@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T03:12:09Z",
+  "updated_at": "2026-10-27T03:14:12Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -251,12 +251,17 @@
       },
       "notes": [
         "spec 10-retentionlab.md hash 6784f44e\u2026 verified at pack commit fe5f7981; contracts D-01..D-04 written by the coordinator"
-      ]
+      ],
+      "fixture": {
+        "commit": "f736858",
+        "checks": 1823,
+        "status": "done"
+      }
     }
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 07: A-063 fix hand-back -> verify -> commit -> CI -> republish -> live check -> case study -> artifacts. Project 08: backend 3f3fc11 (CI poll running); A-065 generator hand-back -> verify -> D-07 -> commit -> web worker -> publish -> integrate (tile + case study) -> review -> artifacts. Project 09: A-064 backend hand-back -> verify -> D-06 -> commit -> CI -> generator -> web -> ... Project 10: A-062 fixture hand-back -> D-05 -> backend -> ...",
+    "next_concrete_task": "Project 07: A-063 fix hand-back -> verify -> commit -> CI -> republish -> live check -> case study -> artifacts. Project 08: A-065 generator hand-back -> verify -> D-07 -> commit -> web -> publish -> integrate -> review -> artifacts. Project 09: A-064 backend hand-back -> verify -> D-06 -> commit -> CI -> generator -> web -> ... Project 10: A-066 backend hand-back -> verify -> D-06 -> commit -> CI -> generator -> web -> ...",
     "acceptance": "see task-queue.json"
   }
 }

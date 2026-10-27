@@ -639,14 +639,16 @@
       "id": "T-10-02",
       "project": "10-retentionlab",
       "title": "Golden fixture (precision/recall .5 at K=2, Brier .1925, AP .833333) + variants + stdlib reference check",
-      "status": "in_progress",
-      "assignment": "A-062"
+      "status": "done",
+      "assignment": "A-062",
+      "result": "f736858: fixture + variants + reference_check (1823 checks); D-05"
     },
     {
       "id": "T-10-03",
       "project": "10-retentionlab",
       "title": "Mode A slice: domain (features, labels, splits, fitting, calibration, scoring), migrations, SQL reference, FastAPI C01..C10, tests incl. P10-TEST-01..12",
-      "status": "pending"
+      "status": "in_progress",
+      "assignment": "A-066"
     },
     {
       "id": "T-10-04",
