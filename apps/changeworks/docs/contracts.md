@@ -216,6 +216,26 @@ cw-20261026-20261026, `dataset_hash` 6bf7ebaa…, `generated_at` = `as_of`; 978,
 * Gaps: `data/seed.py` cannot load a `proposed` scenario; no generator README beyond the module docstring and the
   manifest disclosures.
 
+## D-08 Site decisions (adopted from the web hand-back; the 14 numbered assumptions are in the web README / evidence page)
+* The mirror follows the Python domain exactly, including the D-P9-07 payback-at-zero behaviour (pinned by a review
+  world and stated on the evidence page) and without the `PARTIAL_TREND_COVERAGE` warning (a display-only flag on the
+  benefits page stands in); both change together with the Python domain in the fix round T-09-05, after which
+  `scripts/snapshot-reference.json` is regenerated.
+* The golden copy lives in `public/golden/` (byte-identical to the fixture, checked by the golden check). The default
+  scenario is `scn-025`, the one carrying the designed relationships; every page has a scenario picker.
+* **Confidence** (portfolio page) is a printed four-point assessment (approved baseline; matured benefits with an
+  observation; an adoption rate; actual cost reported): strong 3–4, partial 2, thin 0–1; labelled an assessment, not a
+  probability. The portfolio chart compares costs with the benefits that enter the cash flow (D-01), never a sum across
+  the four classes; sums across initiatives are exact rational sums rounded once.
+* The sensitivity lab runs the domain with three overrides (rate, ramp preset, cost scale); the twelfth-root monthly
+  conversion uses exact integer search and equals a 60-digit Decimal calculation on 61 rates; a rate on the wrong basis
+  is refused `RATE_PERIOD_MISMATCH`. Roadmap edits and the "propose" action replay the domain's validator and C07
+  (`DOUBLE_COUNT_UNEXPLAINED` without an explanation; a proposal is final in the session).
+* The synthetic attributable share appears only as a disclosure (benefits and evidence pages) and the golden check
+  asserts it is absent from the domain inputs. A JSON number such as `1.0` cannot be told from `1` in JavaScript, so
+  only fractional floats are rejected; a numeric `amount` is `MALFORMED_RECORD`. Python `strip()` and code-point
+  ordering are mirrored explicitly; instants are BigInt microseconds. The Playwright preview port honours `PW_PORT`.
+
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners. Mode B: TypeScript mirror over the published
 snapshot; the sensitivity lab, roadmap edits and scenario selection are browser-memory simulations and say so.

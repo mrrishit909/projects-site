@@ -1,11 +1,11 @@
 // Copy dist/index.html into every route directory so that direct entry and reload work on
-// GitHub Pages under a nested base path without a 404 fallback (P01-UI-*-R03, master 21).
+// GitHub Pages under a nested base path without a 404 fallback (P09-UI-*-R03, master 21).
 import { mkdirSync, copyFileSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 export const ROUTES = [
-  "overview", "dag", "runs", "sources", "quarantine", "gate",
-  "backfill", "incidents", "benchmark", "evidence", "case-study",
+  "portfolio", "baseline", "business-case", "sensitivity", "roadmap", "impact",
+  "readiness", "benefits", "forecast", "evidence", "case-study",
 ];
 const dist = new URL("../dist/", import.meta.url).pathname;
 for (const r of ROUTES) {
