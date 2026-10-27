@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T02:05:29Z",
+  "updated_at": "2026-10-27T02:18:21Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -171,7 +171,15 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": "T-08-02 (A-058)"
+      "next_task": "T-08-02 (A-058)",
+      "fixture": {
+        "commit": "b5b4729",
+        "checks": 706,
+        "status": "done"
+      },
+      "notes": [
+        "D-05 adopted from the fixture (D-P8-01..13); backend worker A-059 dispatched 2026-10-27T02:18:21Z"
+      ]
     },
     "09-changeworks": {
       "slug": "changeworks",
@@ -202,7 +210,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 06: A-056 artifacts hand-back -> verify -> commit. Project 07: A-057 web hand-back -> verify -> commit -> CI Mode B -> publish labs/trustledger -> manifest -> live check -> portfolio case study (draft in scratchpad/p07/project.json; tile exists) -> review -> fixes -> artifacts. Project 08: A-058 fixture hand-back -> D-05 -> backend -> generator -> web -> publish -> integrate -> review -> artifacts. Then projects 09 changeworks and 10 retentionlab (contracts first).",
+    "next_concrete_task": "Project 06: A-056 artifacts hand-back -> verify -> commit. Project 07: A-057 web hand-back -> verify -> commit -> CI Mode B -> publish labs/trustledger -> manifest -> live check -> portfolio case study (draft in scratchpad/p07/project.json; tile exists) -> review -> fixes -> artifacts. Project 08: fixture done (b5b4729, D-05); A-059 backend hand-back -> verify (pytest, reference, SQL reference) -> D-06 -> commit -> CI Mode A -> generator -> web -> publish -> integrate -> review -> artifacts. Then projects 09 changeworks and 10 retentionlab (contracts first).",
     "acceptance": "see task-queue.json"
   }
 }
