@@ -71,6 +71,25 @@ Proportions are decimal strings with 6 places in [0,1]; counts nonnegative integ
 zero denominator, never 0. Instants are UTC with `Z`; schedules use the dataset's IANA timezone. Windows are half-open
 [from, to) on the stated timestamp. Empty population: every count 0, every ratio null, `empty_population` true.
 
+## D-09 Site decisions (adopted from the web hand-back)
+1. Small muted text uses `#5a5e57` (AA on `#f4efe4`); the brief's `#6b6f68` stays a token only. Vermilion marks only critical
+   severity and the critical override; claimed, inactive and late use hatched or outlined chips. System font stacks, nothing fetched.
+2. Rule patterns are JavaScript RegExp in the browser and Python `re` in the reference; both refuse a trailing newline under `$`.
+   A pattern outside the common subset could differ and the evidence page says so.
+3. Time zones use the browser's Intl database (`hourCycle` h23): a local time that occurs twice resolves to the later instant, a
+   time that does not exist uses the offset before the change. The golden check probes UTC instants in the seven zones over all of
+   2026 and every 30 minutes around both DST transitions against Python digests.
+4. JSON cannot distinguish `1.0` from `1`; the published data carries no such float, and the reference rejects one.
+5. The manifest carries no `code_sha`; the strip shows "not recorded" until publish stamps it.
+6. The manifest's `synthetic_truth` enters only the precision step (verification layer), never the inputs; precision appears on
+   `/merges/` and `/evidence/` labelled as such.
+7. The simulated rerun on the issue workbench re-measures the whole rule over the published rows (seeded issues carry no record ids);
+   not-verified outcomes carry RULE_DISABLED, RULE_VERSION_DIFFERS, NO_RECORDS_TO_CHECK or RERUN_STILL_FAILING.
+8. Impact: a metric's source field `orders.amount` reads dataset `ds-orders`; downstream follows declared edges only; the page lists
+   what a change reaches and says it does not predict movement. The glossary holds successive versions, not rival concurrent definitions.
+9. The weight-shift column and the DR-03 figures use exact fractions (last version minus first). Paging and filters live in the URL.
+10. `scripts/review-check.ts` holds 25 hand-worked adversarial worlds and runs inside `npm run check`.
+
 ## Mode disclosure
 Mode A: Python domain + PostgreSQL + FastAPI verified on hosted runners. Mode B: TypeScript mirror over the published
 snapshot; the issue workbench's and duplicate review's actions are browser-memory simulations and say so.

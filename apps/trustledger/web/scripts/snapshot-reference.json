@@ -1,0 +1,6105 @@
+{
+ "as_of": "2026-10-05T00:00:00Z",
+ "as_ofs": {
+  "2026-08-17T00:00:00Z": {
+   "default": {
+    "digests": {
+     "completeness": "38b9b8c9a6633c9e672107ceb6548bed493b0e5feeab181b8873568109072c8c",
+     "critical_failures": "09749a684ee9bd5a1c3c5753839ef283c30620e34af8431341c3816658ff1896",
+     "definition_coverage": "5ceecc4c6aa199e7fb525886d75be3feba30a070ea3a5cb35f5d9a673866a0d9",
+     "definitions": "82727d5a30f7558ed820573c98b8ae45b9cb6f3bc039b93ed5a974bc9896295d",
+     "lineage_coverage": "07d9331901782508687cf9236da37bfdacad4cea80f894cce9795874c3757e8e",
+     "match_precision": "dd6d3b10cd3b8966709cb576e75cdde769786f9ed5609718fb7ba607c90be546",
+     "matching": "d4622874d2f3155a9acc8de89b84bbae66a5067bafaa4e54104f7f0e17658b1d",
+     "ownership_coverage": "e6fed48ff0605b8cbbf1ea1e7f38ba553e9da8d080bfff9696a953933372d58f",
+     "relationship_integrity": "3d11b36251b63100bb080d0bc606cbb574fc371abd8d493ce70ac52aa778d3fb",
+     "resolution_time": "c9bbf9720e697e9c597b1ef8b48e90136ba6c8d75191ec5436f2aaafa60035d3",
+     "rules": "5f221a4c248961258527eec33683ee3758163dd55a2579310d460b2b916603d7",
+     "timeliness": "45d0ca7debae24078d49f8c5fb4e24ca459b28f257ad021ba844aff4c1a8fb96",
+     "uniqueness": "a76167cc4644a5e275bba016e327a19f006510fc63dc67065aa003cb41780fe9",
+     "validity": "ffe179558525f189e1fc996ce216efe6f23a6a5aee27c30be94d54e55f1fa370",
+     "weighted_score": "105219c714c6c883b90e863cce38a451db88b0f20403f5f49a3c52ec5c3d9dd5"
+    },
+    "empty_population": false,
+    "issue_class_digest": "d97c18c76825ba5f156f1c5b28ae77b7cab45c52da16ed0420504e16bfc17448",
+    "issue_classes": {
+     "claimed": 49,
+     "open": 18,
+     "resolved": 137
+    },
+    "warning_codes": [
+     "CRITICAL_OVERRIDE"
+    ],
+    "weight_version": "w1"
+   },
+   "w1": {
+    "digests": {
+     "completeness": "38b9b8c9a6633c9e672107ceb6548bed493b0e5feeab181b8873568109072c8c",
+     "critical_failures": "09749a684ee9bd5a1c3c5753839ef283c30620e34af8431341c3816658ff1896",
+     "definition_coverage": "5ceecc4c6aa199e7fb525886d75be3feba30a070ea3a5cb35f5d9a673866a0d9",
+     "definitions": "82727d5a30f7558ed820573c98b8ae45b9cb6f3bc039b93ed5a974bc9896295d",
+     "lineage_coverage": "07d9331901782508687cf9236da37bfdacad4cea80f894cce9795874c3757e8e",
+     "match_precision": "dd6d3b10cd3b8966709cb576e75cdde769786f9ed5609718fb7ba607c90be546",
+     "matching": "d4622874d2f3155a9acc8de89b84bbae66a5067bafaa4e54104f7f0e17658b1d",
+     "ownership_coverage": "e6fed48ff0605b8cbbf1ea1e7f38ba553e9da8d080bfff9696a953933372d58f",
+     "relationship_integrity": "3d11b36251b63100bb080d0bc606cbb574fc371abd8d493ce70ac52aa778d3fb",
+     "resolution_time": "c9bbf9720e697e9c597b1ef8b48e90136ba6c8d75191ec5436f2aaafa60035d3",
+     "rules": "5f221a4c248961258527eec33683ee3758163dd55a2579310d460b2b916603d7",
+     "timeliness": "45d0ca7debae24078d49f8c5fb4e24ca459b28f257ad021ba844aff4c1a8fb96",
+     "uniqueness": "a76167cc4644a5e275bba016e327a19f006510fc63dc67065aa003cb41780fe9",
+     "validity": "ffe179558525f189e1fc996ce216efe6f23a6a5aee27c30be94d54e55f1fa370",
+     "weighted_score": "105219c714c6c883b90e863cce38a451db88b0f20403f5f49a3c52ec5c3d9dd5"
+    },
+    "empty_population": false,
+    "issue_class_digest": "d97c18c76825ba5f156f1c5b28ae77b7cab45c52da16ed0420504e16bfc17448",
+    "issue_classes": {
+     "claimed": 49,
+     "open": 18,
+     "resolved": 137
+    },
+    "warning_codes": [
+     "CRITICAL_OVERRIDE"
+    ],
+    "weight_version": "w1"
+   },
+   "w2": {
+    "digests": {
+     "completeness": "38b9b8c9a6633c9e672107ceb6548bed493b0e5feeab181b8873568109072c8c",
+     "critical_failures": "09749a684ee9bd5a1c3c5753839ef283c30620e34af8431341c3816658ff1896",
+     "definition_coverage": "5ceecc4c6aa199e7fb525886d75be3feba30a070ea3a5cb35f5d9a673866a0d9",
+     "definitions": "82727d5a30f7558ed820573c98b8ae45b9cb6f3bc039b93ed5a974bc9896295d",
+     "lineage_coverage": "07d9331901782508687cf9236da37bfdacad4cea80f894cce9795874c3757e8e",
+     "match_precision": "dd6d3b10cd3b8966709cb576e75cdde769786f9ed5609718fb7ba607c90be546",
+     "matching": "d4622874d2f3155a9acc8de89b84bbae66a5067bafaa4e54104f7f0e17658b1d",
+     "ownership_coverage": "e6fed48ff0605b8cbbf1ea1e7f38ba553e9da8d080bfff9696a953933372d58f",
+     "relationship_integrity": "3d11b36251b63100bb080d0bc606cbb574fc371abd8d493ce70ac52aa778d3fb",
+     "resolution_time": "c9bbf9720e697e9c597b1ef8b48e90136ba6c8d75191ec5436f2aaafa60035d3",
+     "rules": "79ef3f88aacc9b9c6697414bebdb1ba109a5df7887afa09c34ca7c56ded8ca62",
+     "timeliness": "45d0ca7debae24078d49f8c5fb4e24ca459b28f257ad021ba844aff4c1a8fb96",
+     "uniqueness": "a76167cc4644a5e275bba016e327a19f006510fc63dc67065aa003cb41780fe9",
+     "validity": "ffe179558525f189e1fc996ce216efe6f23a6a5aee27c30be94d54e55f1fa370",
+     "weighted_score": "ca9e704de2731dc8bdc966827d6907870cbce08fdaecc0dc9ec71e93efc2697e"
+    },
+    "empty_population": false,
+    "issue_class_digest": "d97c18c76825ba5f156f1c5b28ae77b7cab45c52da16ed0420504e16bfc17448",
+    "issue_classes": {
+     "claimed": 49,
+     "open": 18,
+     "resolved": 137
+    },
+    "warning_codes": [
+     "CRITICAL_OVERRIDE"
+    ],
+    "weight_version": "w2"
+   }
+  },
+  "2026-09-14T00:00:00Z": {
+   "default": {
+    "digests": {
+     "completeness": "3413e092b370052af9995338c68a34af09db6580da98707b98d9670b34478061",
+     "critical_failures": "09749a684ee9bd5a1c3c5753839ef283c30620e34af8431341c3816658ff1896",
+     "definition_coverage": "2aa51868bf6079bb0692c27e1a1d89fff7807095d58773965811250ce53128cc",
+     "definitions": "8d5e0802854f612ecad95462783eacd27f54cd8e6c866606b5d3d8edcda8dc92",
+     "lineage_coverage": "0c80f910a7ebedcd124c1c5dbebef3c10c7e9319dc24a92b640b501267cda202",
+     "match_precision": "6fa6dfffd56fe5746a2c7b12e4ba2903a037985e38a8d31ba26b4743508e5d51",
+     "matching": "192ba6c9a76a4bd1475718ddbabb7ab2da33313df4eb4689eaa0abbdf5337cb3",
+     "ownership_coverage": "85eee8746642237bfebf7084fa00d48345a745738e08348f03cf2b15b0274a6c",
+     "relationship_integrity": "3d11b36251b63100bb080d0bc606cbb574fc371abd8d493ce70ac52aa778d3fb",
+     "resolution_time": "30bc3c22861943ac3fb98aabb6dea402dd865dcdda32d1a5b7556f12e47d37c2",
+     "rules": "7d940f78cdd01278385dc3e061d4acffb7f044aa3aba754332638084f19be3ba",
+     "timeliness": "5f15ed91ea45817ad8b2db2ceb795d1130b330a669d9301b321a79671de30863",
+     "uniqueness": "a76167cc4644a5e275bba016e327a19f006510fc63dc67065aa003cb41780fe9",
+     "validity": "ffe179558525f189e1fc996ce216efe6f23a6a5aee27c30be94d54e55f1fa370",
+     "weighted_score": "c8318d2e569f20ad5f8c81e3b83fb894ac2f5971b79a309470fb227c5a3888be"
+    },
+    "empty_population": false,
+    "issue_class_digest": "ee1b8253b3c3c4356867778820b82e9622f7037fbcb5275044373f5feb72633f",
+    "issue_classes": {
+     "claimed": 79,
+     "open": 74,
+     "resolved": 247
+    },
+    "warning_codes": [
+     "CRITICAL_OVERRIDE"
+    ],
+    "weight_version": "w2"
+   },
+   "w1": {
+    "digests": {
+     "completeness": "3413e092b370052af9995338c68a34af09db6580da98707b98d9670b34478061",
+     "critical_failures": "09749a684ee9bd5a1c3c5753839ef283c30620e34af8431341c3816658ff1896",
+     "definition_coverage": "2aa51868bf6079bb0692c27e1a1d89fff7807095d58773965811250ce53128cc",
+     "definitions": "8d5e0802854f612ecad95462783eacd27f54cd8e6c866606b5d3d8edcda8dc92",
+     "lineage_coverage": "0c80f910a7ebedcd124c1c5dbebef3c10c7e9319dc24a92b640b501267cda202",
+     "match_precision": "6fa6dfffd56fe5746a2c7b12e4ba2903a037985e38a8d31ba26b4743508e5d51",
+     "matching": "192ba6c9a76a4bd1475718ddbabb7ab2da33313df4eb4689eaa0abbdf5337cb3",
+     "ownership_coverage": "85eee8746642237bfebf7084fa00d48345a745738e08348f03cf2b15b0274a6c",
+     "relationship_integrity": "3d11b36251b63100bb080d0bc606cbb574fc371abd8d493ce70ac52aa778d3fb",
+     "resolution_time": "30bc3c22861943ac3fb98aabb6dea402dd865dcdda32d1a5b7556f12e47d37c2",
+     "rules": "a4d9d27d824b156e3b0f21f37aec89b23bd41af5bbaea53e2ac8b451221e5d78",
+     "timeliness": "5f15ed91ea45817ad8b2db2ceb795d1130b330a669d9301b321a79671de30863",
+     "uniqueness": "a76167cc4644a5e275bba016e327a19f006510fc63dc67065aa003cb41780fe9",
+     "validity": "ffe179558525f189e1fc996ce216efe6f23a6a5aee27c30be94d54e55f1fa370",
+     "weighted_score": "50202f2fbd9e5a87a271cca8b6fc2201db790dc02a47e4335ea05821726390fa"
+    },
+    "empty_population": false,
+    "issue_class_digest": "ee1b8253b3c3c4356867778820b82e9622f7037fbcb5275044373f5feb72633f",
+    "issue_classes": {
+     "claimed": 79,
+     "open": 74,
+     "resolved": 247
+    },
+    "warning_codes": [
+     "CRITICAL_OVERRIDE"
+    ],
+    "weight_version": "w1"
+   },
+   "w2": {
+    "digests": {
+     "completeness": "3413e092b370052af9995338c68a34af09db6580da98707b98d9670b34478061",
+     "critical_failures": "09749a684ee9bd5a1c3c5753839ef283c30620e34af8431341c3816658ff1896",
+     "definition_coverage": "2aa51868bf6079bb0692c27e1a1d89fff7807095d58773965811250ce53128cc",
+     "definitions": "8d5e0802854f612ecad95462783eacd27f54cd8e6c866606b5d3d8edcda8dc92",
+     "lineage_coverage": "0c80f910a7ebedcd124c1c5dbebef3c10c7e9319dc24a92b640b501267cda202",
+     "match_precision": "6fa6dfffd56fe5746a2c7b12e4ba2903a037985e38a8d31ba26b4743508e5d51",
+     "matching": "192ba6c9a76a4bd1475718ddbabb7ab2da33313df4eb4689eaa0abbdf5337cb3",
+     "ownership_coverage": "85eee8746642237bfebf7084fa00d48345a745738e08348f03cf2b15b0274a6c",
+     "relationship_integrity": "3d11b36251b63100bb080d0bc606cbb574fc371abd8d493ce70ac52aa778d3fb",
+     "resolution_time": "30bc3c22861943ac3fb98aabb6dea402dd865dcdda32d1a5b7556f12e47d37c2",
+     "rules": "7d940f78cdd01278385dc3e061d4acffb7f044aa3aba754332638084f19be3ba",
+     "timeliness": "5f15ed91ea45817ad8b2db2ceb795d1130b330a669d9301b321a79671de30863",
+     "uniqueness": "a76167cc4644a5e275bba016e327a19f006510fc63dc67065aa003cb41780fe9",
+     "validity": "ffe179558525f189e1fc996ce216efe6f23a6a5aee27c30be94d54e55f1fa370",
+     "weighted_score": "c8318d2e569f20ad5f8c81e3b83fb894ac2f5971b79a309470fb227c5a3888be"
+    },
+    "empty_population": false,
+    "issue_class_digest": "ee1b8253b3c3c4356867778820b82e9622f7037fbcb5275044373f5feb72633f",
+    "issue_classes": {
+     "claimed": 79,
+     "open": 74,
+     "resolved": 247
+    },
+    "warning_codes": [
+     "CRITICAL_OVERRIDE"
+    ],
+    "weight_version": "w2"
+   }
+  },
+  "2026-10-05T00:00:00Z": {
+   "default": {
+    "digests": {
+     "completeness": "0f93e608f13d6b0e21f2bb104c81ea06b67e0a2b4063e5bec8c15b6bfea5b205",
+     "critical_failures": "6a3eb724ebbc30b1e7b87e4565bd446ea9a2976b21e784f3ba122fd800ca8807",
+     "definition_coverage": "a1fe5673758d2c56d32dccab3b170d13f6872ff3991a57de416def6637794aa5",
+     "definitions": "4722fc13cf2daea2147bf3e16eb2c23c31b76986d48d02ca3eaefe0ccc4b2d99",
+     "lineage_coverage": "98a7e0f50e6d041abcd1c4cf1a25990e8c89097141a8af8a70b593572eaf4ec4",
+     "match_precision": "c8ae1b2c24b6e51cc8fb04e0fbb9ff75ef21c121cb7f5fbaf9cc087dae25fd60",
+     "matching": "d28cfe0b80593bae2e120a6956cba2578ab27bf82b739f41c22d99f6c168a72f",
+     "ownership_coverage": "c15d2c8b1254d09d9e4c38201209d7f2bb1c429a36293cacde03ad4abd4d7438",
+     "relationship_integrity": "28882eda5486e714214ee79aca3b8dd33fe3b9022fb4a0590d21076786821caf",
+     "resolution_time": "16969145064f7f56f9a6128587f6638cd974c08a842d85dbdfaff2ba34d1880b",
+     "rules": "d271e4fb6c660b40f8ef2412fa419092891181da1dc919f5efa0640edb67a1aa",
+     "timeliness": "5c6518404b24a2c11f5ae9fbcae478c0ffd99943209283f0c8bf23f9244e38ef",
+     "uniqueness": "9cc7a27b5bcaca238bcefefff4a768d0ead5c882c93bcb170431cb4441b12d3f",
+     "validity": "53bf1e76c8a0565f0b1f8525ab82fb6e3ab4f35e50f6c236d1fbe55e33bfb078",
+     "weighted_score": "24133000d3998fda36f8d82b3b28ecec7a95248cea9a6321249c429f174b748e"
+    },
+    "empty_population": false,
+    "issue_class_digest": "ffe95e62b96b2b51c938f3107d7ce348f74c1f2f4543400cae879fc67a656023",
+    "issue_classes": {
+     "claimed": 99,
+     "open": 160,
+     "resolved": 315
+    },
+    "warning_codes": [
+     "CRITICAL_OVERRIDE"
+    ],
+    "weight_version": "w2"
+   },
+   "w1": {
+    "digests": {
+     "completeness": "0f93e608f13d6b0e21f2bb104c81ea06b67e0a2b4063e5bec8c15b6bfea5b205",
+     "critical_failures": "6a3eb724ebbc30b1e7b87e4565bd446ea9a2976b21e784f3ba122fd800ca8807",
+     "definition_coverage": "a1fe5673758d2c56d32dccab3b170d13f6872ff3991a57de416def6637794aa5",
+     "definitions": "4722fc13cf2daea2147bf3e16eb2c23c31b76986d48d02ca3eaefe0ccc4b2d99",
+     "lineage_coverage": "98a7e0f50e6d041abcd1c4cf1a25990e8c89097141a8af8a70b593572eaf4ec4",
+     "match_precision": "c8ae1b2c24b6e51cc8fb04e0fbb9ff75ef21c121cb7f5fbaf9cc087dae25fd60",
+     "matching": "d28cfe0b80593bae2e120a6956cba2578ab27bf82b739f41c22d99f6c168a72f",
+     "ownership_coverage": "c15d2c8b1254d09d9e4c38201209d7f2bb1c429a36293cacde03ad4abd4d7438",
+     "relationship_integrity": "28882eda5486e714214ee79aca3b8dd33fe3b9022fb4a0590d21076786821caf",
+     "resolution_time": "16969145064f7f56f9a6128587f6638cd974c08a842d85dbdfaff2ba34d1880b",
+     "rules": "220c40961ca748813122d04ddbc46f24b4ec33180f9b10c197323be8a57bbe49",
+     "timeliness": "5c6518404b24a2c11f5ae9fbcae478c0ffd99943209283f0c8bf23f9244e38ef",
+     "uniqueness": "9cc7a27b5bcaca238bcefefff4a768d0ead5c882c93bcb170431cb4441b12d3f",
+     "validity": "53bf1e76c8a0565f0b1f8525ab82fb6e3ab4f35e50f6c236d1fbe55e33bfb078",
+     "weighted_score": "cbf58510a63e0c54870eecabe6cd1177836ad6dae861ea090a22bb429be4f882"
+    },
+    "empty_population": false,
+    "issue_class_digest": "ffe95e62b96b2b51c938f3107d7ce348f74c1f2f4543400cae879fc67a656023",
+    "issue_classes": {
+     "claimed": 99,
+     "open": 160,
+     "resolved": 315
+    },
+    "warning_codes": [
+     "CRITICAL_OVERRIDE"
+    ],
+    "weight_version": "w1"
+   },
+   "w2": {
+    "digests": {
+     "completeness": "0f93e608f13d6b0e21f2bb104c81ea06b67e0a2b4063e5bec8c15b6bfea5b205",
+     "critical_failures": "6a3eb724ebbc30b1e7b87e4565bd446ea9a2976b21e784f3ba122fd800ca8807",
+     "definition_coverage": "a1fe5673758d2c56d32dccab3b170d13f6872ff3991a57de416def6637794aa5",
+     "definitions": "4722fc13cf2daea2147bf3e16eb2c23c31b76986d48d02ca3eaefe0ccc4b2d99",
+     "lineage_coverage": "98a7e0f50e6d041abcd1c4cf1a25990e8c89097141a8af8a70b593572eaf4ec4",
+     "match_precision": "c8ae1b2c24b6e51cc8fb04e0fbb9ff75ef21c121cb7f5fbaf9cc087dae25fd60",
+     "matching": "d28cfe0b80593bae2e120a6956cba2578ab27bf82b739f41c22d99f6c168a72f",
+     "ownership_coverage": "c15d2c8b1254d09d9e4c38201209d7f2bb1c429a36293cacde03ad4abd4d7438",
+     "relationship_integrity": "28882eda5486e714214ee79aca3b8dd33fe3b9022fb4a0590d21076786821caf",
+     "resolution_time": "16969145064f7f56f9a6128587f6638cd974c08a842d85dbdfaff2ba34d1880b",
+     "rules": "d271e4fb6c660b40f8ef2412fa419092891181da1dc919f5efa0640edb67a1aa",
+     "timeliness": "5c6518404b24a2c11f5ae9fbcae478c0ffd99943209283f0c8bf23f9244e38ef",
+     "uniqueness": "9cc7a27b5bcaca238bcefefff4a768d0ead5c882c93bcb170431cb4441b12d3f",
+     "validity": "53bf1e76c8a0565f0b1f8525ab82fb6e3ab4f35e50f6c236d1fbe55e33bfb078",
+     "weighted_score": "24133000d3998fda36f8d82b3b28ecec7a95248cea9a6321249c429f174b748e"
+    },
+    "empty_population": false,
+    "issue_class_digest": "ffe95e62b96b2b51c938f3107d7ce348f74c1f2f4543400cae879fc67a656023",
+    "issue_classes": {
+     "claimed": 99,
+     "open": 160,
+     "resolved": 315
+    },
+    "warning_codes": [
+     "CRITICAL_OVERRIDE"
+    ],
+    "weight_version": "w2"
+   }
+  }
+ },
+ "dataset_hash": "c0dca32f7982f7cc6480feec90795edc76259801307fe59fb4012795c5f0697b",
+ "dataset_hash_check": {
+  "sha256_of_14_entity_files": "c0dca32f7982f7cc6480feec90795edc76259801307fe59fb4012795c5f0697b"
+ },
+ "dataset_version": "tl-20261026-20261026",
+ "full_at_as_of": {
+  "completeness": {
+   "r-consent-records-complete-consent_flag": {
+    "dataset_id": "ds-consent-records",
+    "eligible_count": 85,
+    "missing_count": 8,
+    "populated_count": 77,
+    "value": "0.905882",
+    "whitespace_only_count": 3
+   },
+   "r-contacts-complete-email": {
+    "dataset_id": "ds-contacts",
+    "eligible_count": 56,
+    "missing_count": 1,
+    "populated_count": 55,
+    "value": "0.982143",
+    "whitespace_only_count": 0
+   },
+   "r-csat-surveys-complete-score": {
+    "dataset_id": "ds-csat-surveys",
+    "eligible_count": 124,
+    "missing_count": 8,
+    "populated_count": 116,
+    "value": "0.935484",
+    "whitespace_only_count": 2
+   },
+   "r-customers-complete-email": {
+    "dataset_id": "ds-customers",
+    "eligible_count": 120,
+    "missing_count": 1,
+    "populated_count": 119,
+    "value": "0.991667",
+    "whitespace_only_count": 0
+   },
+   "r-inventory-complete-warehouse_code": {
+    "dataset_id": "ds-inventory",
+    "eligible_count": 71,
+    "missing_count": 0,
+    "populated_count": 71,
+    "value": "1.000000",
+    "whitespace_only_count": 0
+   },
+   "r-ledger-entries-complete-amount": {
+    "dataset_id": "ds-ledger-entries",
+    "eligible_count": 54,
+    "missing_count": 4,
+    "populated_count": 50,
+    "value": "0.925926",
+    "whitespace_only_count": 2
+   },
+   "r-orders-complete-order_date": {
+    "dataset_id": "ds-orders",
+    "eligible_count": 58,
+    "missing_count": 2,
+    "populated_count": 56,
+    "value": "0.965517",
+    "whitespace_only_count": 1
+   },
+   "r-products-complete-category": {
+    "dataset_id": "ds-products",
+    "eligible_count": 116,
+    "missing_count": 2,
+    "populated_count": 114,
+    "value": "0.982759",
+    "whitespace_only_count": 0
+   },
+   "r-returns-complete-reason_code": {
+    "dataset_id": "ds-returns",
+    "eligible_count": 100,
+    "missing_count": 7,
+    "populated_count": 93,
+    "value": "0.930000",
+    "whitespace_only_count": 0
+   },
+   "r-subscriptions-complete-plan_code": {
+    "dataset_id": "ds-subscriptions",
+    "eligible_count": 114,
+    "missing_count": 4,
+    "populated_count": 110,
+    "value": "0.964912",
+    "whitespace_only_count": 1
+   },
+   "r-suppliers-complete-contact_email": {
+    "dataset_id": "ds-suppliers",
+    "eligible_count": 89,
+    "missing_count": 5,
+    "populated_count": 84,
+    "value": "0.943820",
+    "whitespace_only_count": 1
+   },
+   "r-tickets-complete-priority": {
+    "dataset_id": "ds-tickets",
+    "eligible_count": 49,
+    "missing_count": 2,
+    "populated_count": 47,
+    "value": "0.959184",
+    "whitespace_only_count": 0
+   },
+   "r-web-users-complete-email": {
+    "dataset_id": "ds-web-users",
+    "eligible_count": 66,
+    "missing_count": 1,
+    "populated_count": 65,
+    "value": "0.984848",
+    "whitespace_only_count": 0
+   }
+  },
+  "critical_failures": {
+   "datasets_overridden": 1,
+   "failures": 2,
+   "open_issues": 1
+  },
+  "definition_coverage": {
+   "checklist_version": "cl-1",
+   "complete_metrics": 23,
+   "incomplete": {
+    "m-average-order-value": [
+     "grain"
+    ],
+    "m-csat-score": [
+     "source_fields"
+    ],
+    "m-customer-lifetime-value": [
+     "definition"
+    ],
+    "m-gross-margin": [
+     "refresh"
+    ],
+    "m-net-revenue": [
+     "grain"
+    ],
+    "m-session-conversion-rate": [
+     "owner"
+    ],
+    "m-ticket-resolution-time": [
+     "refresh"
+    ]
+   },
+   "published_metrics": 30,
+   "value": "0.766667"
+  },
+  "lineage_coverage": {
+   "declared_edges": 80,
+   "declared_not_observed": [
+    {
+     "source_dataset_id": "ds-accounts",
+     "target_dataset_id": "ds-carriers"
+    },
+    {
+     "source_dataset_id": "ds-billing-accounts",
+     "target_dataset_id": "ds-page-events"
+    },
+    {
+     "source_dataset_id": "ds-billing-accounts",
+     "target_dataset_id": "ds-warehouses"
+    },
+    {
+     "source_dataset_id": "ds-contacts",
+     "target_dataset_id": "ds-page-events"
+    },
+    {
+     "source_dataset_id": "ds-cost-centres",
+     "target_dataset_id": "ds-consent-records"
+    },
+    {
+     "source_dataset_id": "ds-cost-centres",
+     "target_dataset_id": "ds-warehouses"
+    },
+    {
+     "source_dataset_id": "ds-credit-notes",
+     "target_dataset_id": "ds-consent-records"
+    },
+    {
+     "source_dataset_id": "ds-credit-notes",
+     "target_dataset_id": "ds-csat-surveys"
+    },
+    {
+     "source_dataset_id": "ds-customers",
+     "target_dataset_id": "ds-sla-policies"
+    },
+    {
+     "source_dataset_id": "ds-leads",
+     "target_dataset_id": "ds-carriers"
+    },
+    {
+     "source_dataset_id": "ds-leads",
+     "target_dataset_id": "ds-cost-centres"
+    },
+    {
+     "source_dataset_id": "ds-leads",
+     "target_dataset_id": "ds-suppliers"
+    },
+    {
+     "source_dataset_id": "ds-payments",
+     "target_dataset_id": "ds-refunds"
+    },
+    {
+     "source_dataset_id": "ds-price-books",
+     "target_dataset_id": "ds-cost-centres"
+    },
+    {
+     "source_dataset_id": "ds-products",
+     "target_dataset_id": "ds-web-sessions"
+    },
+    {
+     "source_dataset_id": "ds-shipments",
+     "target_dataset_id": "ds-carriers"
+    },
+    {
+     "source_dataset_id": "ds-sla-policies",
+     "target_dataset_id": "ds-shipments"
+    },
+    {
+     "source_dataset_id": "ds-subscriptions",
+     "target_dataset_id": "ds-products"
+    },
+    {
+     "source_dataset_id": "ds-subscriptions",
+     "target_dataset_id": "ds-purchase-orders"
+    },
+    {
+     "source_dataset_id": "ds-ticket-events",
+     "target_dataset_id": "ds-support-agents"
+    },
+    {
+     "source_dataset_id": "ds-tickets",
+     "target_dataset_id": "ds-warehouses"
+    },
+    {
+     "source_dataset_id": "ds-warehouses",
+     "target_dataset_id": "ds-delivery-events"
+    }
+   ],
+   "inferred_edges": [
+    {
+     "source_dataset_id": "ds-accounts",
+     "target_dataset_id": "ds-invoices"
+    },
+    {
+     "source_dataset_id": "ds-credit-notes",
+     "target_dataset_id": "ds-consent-records"
+    },
+    {
+     "source_dataset_id": "ds-credit-notes",
+     "target_dataset_id": "ds-csat-surveys"
+    },
+    {
+     "source_dataset_id": "ds-crm-activities",
+     "target_dataset_id": "ds-segments"
+    },
+    {
+     "source_dataset_id": "ds-csat-surveys",
+     "target_dataset_id": "ds-shipments"
+    },
+    {
+     "source_dataset_id": "ds-payments",
+     "target_dataset_id": "ds-order-lines"
+    },
+    {
+     "source_dataset_id": "ds-payments",
+     "target_dataset_id": "ds-refunds"
+    },
+    {
+     "source_dataset_id": "ds-purchase-orders",
+     "target_dataset_id": "ds-experiments"
+    },
+    {
+     "source_dataset_id": "ds-shipments",
+     "target_dataset_id": "ds-carriers"
+    },
+    {
+     "source_dataset_id": "ds-ticket-events",
+     "target_dataset_id": "ds-payments"
+    }
+   ],
+   "observed_distinct": 70,
+   "observed_matching_declared": 58,
+   "observed_rows": 70,
+   "undeclared_observed": [
+    {
+     "source_dataset_id": "ds-csat-surveys",
+     "target_dataset_id": "ds-cost-centres"
+    },
+    {
+     "source_dataset_id": "ds-employees",
+     "target_dataset_id": "ds-ledger-entries"
+    },
+    {
+     "source_dataset_id": "ds-invoices",
+     "target_dataset_id": "ds-web-sessions"
+    },
+    {
+     "source_dataset_id": "ds-kb-articles",
+     "target_dataset_id": "ds-shipments"
+    },
+    {
+     "source_dataset_id": "ds-leads",
+     "target_dataset_id": "ds-csat-surveys"
+    },
+    {
+     "source_dataset_id": "ds-ledger-entries",
+     "target_dataset_id": "ds-web-users"
+    },
+    {
+     "source_dataset_id": "ds-price-books",
+     "target_dataset_id": "ds-inventory"
+    },
+    {
+     "source_dataset_id": "ds-price-books",
+     "target_dataset_id": "ds-warehouses"
+    },
+    {
+     "source_dataset_id": "ds-refunds",
+     "target_dataset_id": "ds-support-agents"
+    },
+    {
+     "source_dataset_id": "ds-sla-policies",
+     "target_dataset_id": "ds-employees"
+    },
+    {
+     "source_dataset_id": "ds-tickets",
+     "target_dataset_id": "ds-order-lines"
+    },
+    {
+     "source_dataset_id": "ds-web-sessions",
+     "target_dataset_id": "ds-accounts"
+    }
+   ],
+   "value": "0.725000"
+  },
+  "match_precision": {
+   "approved_correct": 172,
+   "approved_decisions": 174,
+   "precision": "0.988506",
+   "reviewed": 220,
+   "reviewed_correct": 185,
+   "reviewed_correct_share": "0.840909"
+  },
+  "ownership_coverage": {
+   "covered": 35,
+   "datasets": 40,
+   "uncovered": [
+    "ds-contacts",
+    "ds-invoices",
+    "ds-ledger-entries",
+    "ds-returns",
+    "ds-suppliers"
+   ],
+   "value": "0.875000"
+  },
+  "relationship_integrity": {
+   "r-accounts-fk-customer_key": {
+    "dataset_id": "ds-accounts",
+    "eligible_count": 100,
+    "matched_count": 95,
+    "null_fk_count": 1,
+    "total_fk_count": 101,
+    "unmatched_count": 5,
+    "value": "0.950000"
+   },
+   "r-contacts-fk-customer_key": {
+    "dataset_id": "ds-contacts",
+    "eligible_count": 54,
+    "matched_count": 54,
+    "null_fk_count": 2,
+    "total_fk_count": 56,
+    "unmatched_count": 0,
+    "value": "1.000000"
+   },
+   "r-invoices-fk-customer_key": {
+    "dataset_id": "ds-invoices",
+    "eligible_count": 81,
+    "matched_count": 79,
+    "null_fk_count": 1,
+    "total_fk_count": 82,
+    "unmatched_count": 2,
+    "value": "0.975309"
+   },
+   "r-opportunities-fk-account_key": {
+    "dataset_id": "ds-opportunities",
+    "eligible_count": 79,
+    "matched_count": 70,
+    "null_fk_count": 1,
+    "total_fk_count": 80,
+    "unmatched_count": 9,
+    "value": "0.886076"
+   },
+   "r-order-lines-fk-order_key": {
+    "dataset_id": "ds-order-lines",
+    "eligible_count": 108,
+    "matched_count": 108,
+    "null_fk_count": 0,
+    "total_fk_count": 108,
+    "unmatched_count": 0,
+    "value": "1.000000"
+   },
+   "r-order-lines-fk-product_code": {
+    "dataset_id": "ds-order-lines",
+    "eligible_count": 106,
+    "matched_count": 99,
+    "null_fk_count": 2,
+    "total_fk_count": 108,
+    "unmatched_count": 7,
+    "value": "0.933962"
+   },
+   "r-orders-fk-customer_key": {
+    "dataset_id": "ds-orders",
+    "eligible_count": 61,
+    "matched_count": 61,
+    "null_fk_count": 5,
+    "total_fk_count": 66,
+    "unmatched_count": 0,
+    "value": "1.000000"
+   },
+   "r-payments-fk-invoice_key": {
+    "dataset_id": "ds-payments",
+    "eligible_count": 82,
+    "matched_count": 81,
+    "null_fk_count": 2,
+    "total_fk_count": 84,
+    "unmatched_count": 1,
+    "value": "0.987805"
+   },
+   "r-purchase-orders-fk-supplier_key": {
+    "dataset_id": "ds-purchase-orders",
+    "eligible_count": 45,
+    "matched_count": 44,
+    "null_fk_count": 2,
+    "total_fk_count": 47,
+    "unmatched_count": 1,
+    "value": "0.977778"
+   },
+   "r-refunds-fk-payment_key": {
+    "dataset_id": "ds-refunds",
+    "eligible_count": 49,
+    "matched_count": 46,
+    "null_fk_count": 3,
+    "total_fk_count": 52,
+    "unmatched_count": 3,
+    "value": "0.938776"
+   },
+   "r-shipments-fk-order_key": {
+    "dataset_id": "ds-shipments",
+    "eligible_count": 83,
+    "matched_count": 71,
+    "null_fk_count": 1,
+    "total_fk_count": 84,
+    "unmatched_count": 12,
+    "value": "0.855422"
+   },
+   "r-subscriptions-fk-customer_key": {
+    "dataset_id": "ds-subscriptions",
+    "eligible_count": 114,
+    "matched_count": 107,
+    "null_fk_count": 0,
+    "total_fk_count": 114,
+    "unmatched_count": 7,
+    "value": "0.938596"
+   }
+  },
+  "timeliness": {
+   "datasets": {
+    "ds-campaigns": {
+     "deadline_utc": "2026-10-04T18:00:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T17:00:00Z",
+     "grace_minutes": 60,
+     "last_refreshed_at": "2026-10-04T20:03:25Z",
+     "on_time": false,
+     "scheduled_local": "01:00",
+     "timezone": "Asia/Singapore"
+    },
+    "ds-consent-records": {
+     "deadline_utc": "2026-10-04T21:00:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T20:00:00Z",
+     "grace_minutes": 60,
+     "last_refreshed_at": "2026-10-04T20:05:40Z",
+     "on_time": true,
+     "scheduled_local": "15:00",
+     "timezone": "America/Chicago"
+    },
+    "ds-contacts": {
+     "deadline_utc": "2026-10-04T16:00:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T15:30:00Z",
+     "grace_minutes": 30,
+     "last_refreshed_at": "2026-10-04T15:43:25Z",
+     "on_time": true,
+     "scheduled_local": "11:30",
+     "timezone": "America/New_York"
+    },
+    "ds-customers": {
+     "deadline_utc": "2026-10-04T11:00:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T10:00:00Z",
+     "grace_minutes": 60,
+     "last_refreshed_at": "2026-10-04T10:58:22Z",
+     "on_time": true,
+     "scheduled_local": "06:00",
+     "timezone": "America/New_York"
+    },
+    "ds-inventory": {
+     "deadline_utc": "2026-10-04T13:45:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T13:15:00Z",
+     "grace_minutes": 30,
+     "last_refreshed_at": "2026-10-04T13:18:39Z",
+     "on_time": true,
+     "scheduled_local": "18:45",
+     "timezone": "Asia/Kolkata"
+    },
+    "ds-invoices": {
+     "deadline_utc": "2026-10-04T05:45:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T04:45:00Z",
+     "grace_minutes": 60,
+     "last_refreshed_at": "2026-10-04T05:05:44Z",
+     "on_time": true,
+     "scheduled_local": "12:45",
+     "timezone": "Asia/Singapore"
+    },
+    "ds-orders": {
+     "deadline_utc": "2026-10-04T15:15:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T14:45:00Z",
+     "grace_minutes": 30,
+     "last_refreshed_at": "2026-10-04T17:00:02Z",
+     "on_time": false,
+     "scheduled_local": "15:45",
+     "timezone": "Europe/London"
+    },
+    "ds-payments": {
+     "deadline_utc": "2026-10-04T08:00:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T06:00:00Z",
+     "grace_minutes": 120,
+     "last_refreshed_at": "2026-10-04T11:54:24Z",
+     "on_time": false,
+     "scheduled_local": "06:00",
+     "timezone": "UTC"
+    },
+    "ds-price-books": {
+     "deadline_utc": "2026-10-04T19:15:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T17:15:00Z",
+     "grace_minutes": 120,
+     "last_refreshed_at": "2026-10-04T17:28:12Z",
+     "on_time": true,
+     "scheduled_local": "19:15",
+     "timezone": "Europe/Berlin"
+    },
+    "ds-purchase-orders": {
+     "deadline_utc": "2026-10-04T23:00:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T22:30:00Z",
+     "grace_minutes": 30,
+     "last_refreshed_at": "2026-10-04T22:37:46Z",
+     "on_time": true,
+     "scheduled_local": "18:30",
+     "timezone": "America/New_York"
+    },
+    "ds-shipments": {
+     "deadline_utc": "2026-10-04T08:15:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T07:45:00Z",
+     "grace_minutes": 30,
+     "last_refreshed_at": "2026-10-04T08:14:21Z",
+     "on_time": true,
+     "scheduled_local": "03:45",
+     "timezone": "America/New_York"
+    },
+    "ds-sla-policies": {
+     "deadline_utc": "2026-10-04T11:00:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T09:00:00Z",
+     "grace_minutes": 120,
+     "last_refreshed_at": "2026-10-04T10:11:35Z",
+     "on_time": true,
+     "scheduled_local": "14:30",
+     "timezone": "Asia/Kolkata"
+    },
+    "ds-subscriptions": {
+     "deadline_utc": "2026-10-04T16:30:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T15:30:00Z",
+     "grace_minutes": 60,
+     "last_refreshed_at": "2026-10-04T17:23:38Z",
+     "on_time": false,
+     "scheduled_local": "16:30",
+     "timezone": "Europe/London"
+    },
+    "ds-tickets": {
+     "deadline_utc": "2026-10-04T12:45:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T10:45:00Z",
+     "grace_minutes": 120,
+     "last_refreshed_at": "2026-10-04T15:17:33Z",
+     "on_time": false,
+     "scheduled_local": "05:45",
+     "timezone": "America/Chicago"
+    },
+    "ds-web-users": {
+     "deadline_utc": "2026-10-04T11:00:00Z",
+     "evaluated_occurrence_utc": "2026-10-04T10:30:00Z",
+     "grace_minutes": 30,
+     "last_refreshed_at": "2026-10-04T10:49:04Z",
+     "on_time": true,
+     "scheduled_local": "12:30",
+     "timezone": "Europe/Berlin"
+    }
+   },
+   "monitored_datasets": 15,
+   "on_time_count": 10,
+   "value": "0.666667"
+  },
+  "uniqueness": {
+   "r-accounts-unique-account_key": {
+    "dataset_id": "ds-accounts",
+    "distinct_keys": 101,
+    "duplicate_groups": 0,
+    "duplicate_rows": 0,
+    "eligible_count": 101,
+    "group_share": {
+     "label": "duplicate_group_share",
+     "value": "0.000000"
+    },
+    "null_key_count": 0,
+    "row_share": {
+     "label": "duplicate_row_share",
+     "value": "0.000000"
+    }
+   },
+   "r-cost-centres-unique-cost_centre_code": {
+    "dataset_id": "ds-cost-centres",
+    "distinct_keys": 76,
+    "duplicate_groups": 2,
+    "duplicate_rows": 2,
+    "eligible_count": 78,
+    "group_share": {
+     "label": "duplicate_group_share",
+     "value": "0.026316"
+    },
+    "null_key_count": 0,
+    "row_share": {
+     "label": "duplicate_row_share",
+     "value": "0.025641"
+    }
+   },
+   "r-customers-unique-customer_key": {
+    "dataset_id": "ds-customers",
+    "distinct_keys": 118,
+    "duplicate_groups": 2,
+    "duplicate_rows": 2,
+    "eligible_count": 120,
+    "group_share": {
+     "label": "duplicate_group_share",
+     "value": "0.016949"
+    },
+    "null_key_count": 0,
+    "row_share": {
+     "label": "duplicate_row_share",
+     "value": "0.016667"
+    }
+   },
+   "r-kb-articles-unique-article_key": {
+    "dataset_id": "ds-kb-articles",
+    "distinct_keys": 65,
+    "duplicate_groups": 1,
+    "duplicate_rows": 1,
+    "eligible_count": 66,
+    "group_share": {
+     "label": "duplicate_group_share",
+     "value": "0.015385"
+    },
+    "null_key_count": 0,
+    "row_share": {
+     "label": "duplicate_row_share",
+     "value": "0.015152"
+    }
+   },
+   "r-ledger-entries-unique-entry_key": {
+    "dataset_id": "ds-ledger-entries",
+    "distinct_keys": 62,
+    "duplicate_groups": 0,
+    "duplicate_rows": 0,
+    "eligible_count": 62,
+    "group_share": {
+     "label": "duplicate_group_share",
+     "value": "0.000000"
+    },
+    "null_key_count": 0,
+    "row_share": {
+     "label": "duplicate_row_share",
+     "value": "0.000000"
+    }
+   },
+   "r-orders-unique-order_key": {
+    "dataset_id": "ds-orders",
+    "distinct_keys": 66,
+    "duplicate_groups": 0,
+    "duplicate_rows": 0,
+    "eligible_count": 66,
+    "group_share": {
+     "label": "duplicate_group_share",
+     "value": "0.000000"
+    },
+    "null_key_count": 0,
+    "row_share": {
+     "label": "duplicate_row_share",
+     "value": "0.000000"
+    }
+   },
+   "r-payments-unique-payment_key": {
+    "dataset_id": "ds-payments",
+    "distinct_keys": 84,
+    "duplicate_groups": 0,
+    "duplicate_rows": 0,
+    "eligible_count": 84,
+    "group_share": {
+     "label": "duplicate_group_share",
+     "value": "0.000000"
+    },
+    "null_key_count": 0,
+    "row_share": {
+     "label": "duplicate_row_share",
+     "value": "0.000000"
+    }
+   },
+   "r-products-unique-product_code": {
+    "dataset_id": "ds-products",
+    "distinct_keys": 114,
+    "duplicate_groups": 2,
+    "duplicate_rows": 2,
+    "eligible_count": 116,
+    "group_share": {
+     "label": "duplicate_group_share",
+     "value": "0.017544"
+    },
+    "null_key_count": 0,
+    "row_share": {
+     "label": "duplicate_row_share",
+     "value": "0.017241"
+    }
+   },
+   "r-suppliers-unique-supplier_key": {
+    "dataset_id": "ds-suppliers",
+    "distinct_keys": 87,
+    "duplicate_groups": 2,
+    "duplicate_rows": 2,
+    "eligible_count": 89,
+    "group_share": {
+     "label": "duplicate_group_share",
+     "value": "0.022989"
+    },
+    "null_key_count": 0,
+    "row_share": {
+     "label": "duplicate_row_share",
+     "value": "0.022472"
+    }
+   },
+   "r-web-sessions-unique-session_key": {
+    "dataset_id": "ds-web-sessions",
+    "distinct_keys": 69,
+    "duplicate_groups": 1,
+    "duplicate_rows": 1,
+    "eligible_count": 70,
+    "group_share": {
+     "label": "duplicate_group_share",
+     "value": "0.014493"
+    },
+    "null_key_count": 0,
+    "row_share": {
+     "label": "duplicate_row_share",
+     "value": "0.014286"
+    }
+   },
+   "r-web-users-unique-user_key": {
+    "dataset_id": "ds-web-users",
+    "distinct_keys": 65,
+    "duplicate_groups": 1,
+    "duplicate_rows": 1,
+    "eligible_count": 66,
+    "group_share": {
+     "label": "duplicate_group_share",
+     "value": "0.015385"
+    },
+    "null_key_count": 0,
+    "row_share": {
+     "label": "duplicate_row_share",
+     "value": "0.015152"
+    }
+   }
+  },
+  "validity": {
+   "r-carriers-valid-carrier_code": {
+    "all_eligible": {
+     "label": "validity_all_eligible",
+     "value": "0.966387"
+    },
+    "dataset_id": "ds-carriers",
+    "eligible_count": 119,
+    "passing_count": 115,
+    "populated_count": 119,
+    "populated_only": {
+     "label": "validity_populated_only",
+     "value": "0.966387"
+    }
+   },
+   "r-customers-valid-email": {
+    "all_eligible": {
+     "label": "validity_all_eligible",
+     "value": "0.983333"
+    },
+    "dataset_id": "ds-customers",
+    "eligible_count": 120,
+    "passing_count": 118,
+    "populated_count": 119,
+    "populated_only": {
+     "label": "validity_populated_only",
+     "value": "0.991597"
+    }
+   },
+   "r-delivery-events-valid-event_ref": {
+    "all_eligible": {
+     "label": "validity_all_eligible",
+     "value": "0.955882"
+    },
+    "dataset_id": "ds-delivery-events",
+    "eligible_count": 68,
+    "passing_count": 65,
+    "populated_count": 68,
+    "populated_only": {
+     "label": "validity_populated_only",
+     "value": "0.955882"
+    }
+   },
+   "r-employees-valid-work_email": {
+    "all_eligible": {
+     "label": "validity_all_eligible",
+     "value": "1.000000"
+    },
+    "dataset_id": "ds-employees",
+    "eligible_count": 39,
+    "passing_count": 39,
+    "populated_count": 39,
+    "populated_only": {
+     "label": "validity_populated_only",
+     "value": "1.000000"
+    }
+   },
+   "r-invoices-valid-currency": {
+    "all_eligible": {
+     "label": "validity_all_eligible",
+     "value": "0.987805"
+    },
+    "dataset_id": "ds-invoices",
+    "eligible_count": 82,
+    "passing_count": 81,
+    "populated_count": 82,
+    "populated_only": {
+     "label": "validity_populated_only",
+     "value": "0.987805"
+    }
+   },
+   "r-ledger-entries-valid-currency": {
+    "all_eligible": {
+     "label": "validity_all_eligible",
+     "value": "0.925926"
+    },
+    "dataset_id": "ds-ledger-entries",
+    "eligible_count": 54,
+    "passing_count": 50,
+    "populated_count": 54,
+    "populated_only": {
+     "label": "validity_populated_only",
+     "value": "0.925926"
+    }
+   },
+   "r-orders-valid-currency": {
+    "all_eligible": {
+     "label": "validity_all_eligible",
+     "value": "1.000000"
+    },
+    "dataset_id": "ds-orders",
+    "eligible_count": 66,
+    "passing_count": 66,
+    "populated_count": 66,
+    "populated_only": {
+     "label": "validity_populated_only",
+     "value": "1.000000"
+    }
+   },
+   "r-shipments-valid-tracking_ref": {
+    "all_eligible": {
+     "label": "validity_all_eligible",
+     "value": "0.847222"
+    },
+    "dataset_id": "ds-shipments",
+    "eligible_count": 72,
+    "passing_count": 61,
+    "populated_count": 72,
+    "populated_only": {
+     "label": "validity_populated_only",
+     "value": "0.847222"
+    }
+   },
+   "r-suppliers-valid-contact_email": {
+    "all_eligible": {
+     "label": "validity_all_eligible",
+     "value": "0.935897"
+    },
+    "dataset_id": "ds-suppliers",
+    "eligible_count": 78,
+    "passing_count": 73,
+    "populated_count": 75,
+    "populated_only": {
+     "label": "validity_populated_only",
+     "value": "0.973333"
+    }
+   },
+   "r-ticket-events-valid-ticket_key": {
+    "all_eligible": {
+     "label": "validity_all_eligible",
+     "value": "0.971429"
+    },
+    "dataset_id": "ds-ticket-events",
+    "eligible_count": 70,
+    "passing_count": 68,
+    "populated_count": 70,
+    "populated_only": {
+     "label": "validity_populated_only",
+     "value": "0.971429"
+    }
+   },
+   "r-warehouses-valid-postal_code": {
+    "all_eligible": {
+     "label": "validity_all_eligible",
+     "value": "0.933333"
+    },
+    "dataset_id": "ds-warehouses",
+    "eligible_count": 120,
+    "passing_count": 112,
+    "populated_count": 120,
+    "populated_only": {
+     "label": "validity_populated_only",
+     "value": "0.933333"
+    }
+   }
+  },
+  "weighted_score": {
+   "by_weight_version": {
+    "w1": {
+     "ds-accounts": "0.990000",
+     "ds-billing-accounts": null,
+     "ds-campaigns": null,
+     "ds-carriers": "0.966387",
+     "ds-consent-records": "0.916340",
+     "ds-contacts": "0.984127",
+     "ds-cost-centres": "0.974359",
+     "ds-credit-notes": null,
+     "ds-crm-activities": null,
+     "ds-csat-surveys": "0.935484",
+     "ds-customers": "0.990329",
+     "ds-delivery-events": "0.955882",
+     "ds-employees": "1.000000",
+     "ds-experiments": null,
+     "ds-inventory": "1.000000",
+     "ds-invoices": "0.987767",
+     "ds-kb-articles": "0.984848",
+     "ds-leads": null,
+     "ds-ledger-entries": "0.942387",
+     "ds-opportunities": "0.886076",
+     "ds-order-lines": "0.966981",
+     "ds-orders": "0.936207",
+     "ds-page-events": null,
+     "ds-payments": "0.831301",
+     "ds-price-books": null,
+     "ds-products": "0.982759",
+     "ds-purchase-orders": "0.977778",
+     "ds-refunds": "0.938776",
+     "ds-returns": "0.930000",
+     "ds-segments": null,
+     "ds-shipments": "0.848394",
+     "ds-sla-policies": null,
+     "ds-subscriptions": "0.961988",
+     "ds-suppliers": "0.961149",
+     "ds-support-agents": null,
+     "ds-ticket-events": "0.971429",
+     "ds-tickets": "0.852608",
+     "ds-warehouses": "0.933333",
+     "ds-web-sessions": "0.985714",
+     "ds-web-users": "0.986014"
+    },
+    "w2": {
+     "ds-accounts": "0.981250",
+     "ds-billing-accounts": null,
+     "ds-campaigns": null,
+     "ds-carriers": "0.966387",
+     "ds-consent-records": "0.932773",
+     "ds-contacts": "0.988839",
+     "ds-cost-centres": "0.974359",
+     "ds-credit-notes": null,
+     "ds-crm-activities": null,
+     "ds-csat-surveys": "0.935484",
+     "ds-customers": "0.990175",
+     "ds-delivery-events": "0.955882",
+     "ds-employees": "1.000000",
+     "ds-experiments": null,
+     "ds-inventory": "1.000000",
+     "ds-invoices": "0.986495",
+     "ds-kb-articles": "0.984848",
+     "ds-leads": null,
+     "ds-ledger-entries": "0.950617",
+     "ds-opportunities": "0.886076",
+     "ds-order-lines": "0.966981",
+     "ds-orders": "0.891379",
+     "ds-page-events": null,
+     "ds-payments": "0.796341",
+     "ds-price-books": null,
+     "ds-products": "0.982759",
+     "ds-purchase-orders": "0.977778",
+     "ds-refunds": "0.938776",
+     "ds-returns": "0.930000",
+     "ds-segments": null,
+     "ds-shipments": "0.850297",
+     "ds-sla-policies": null,
+     "ds-subscriptions": "0.955044",
+     "ds-suppliers": "0.964894",
+     "ds-support-agents": null,
+     "ds-ticket-events": "0.971429",
+     "ds-tickets": "0.685131",
+     "ds-warehouses": "0.933333",
+     "ds-web-sessions": "0.985714",
+     "ds-web-users": "0.987374"
+    }
+   },
+   "datasets": {
+    "ds-accounts": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "relationship": "0.950000",
+      "uniqueness": "1.000000"
+     },
+     "measured_dimensions": [
+      "uniqueness",
+      "relationship"
+     ],
+     "value": "0.981250",
+     "weight_sum": "0.400000",
+     "weight_version": "w2"
+    },
+    "ds-billing-accounts": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {},
+     "measured_dimensions": [],
+     "value": null,
+     "weight_sum": "0.000000",
+     "weight_version": "w2"
+    },
+    "ds-campaigns": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {},
+     "measured_dimensions": [],
+     "value": null,
+     "weight_sum": "0.000000",
+     "weight_version": "w2"
+    },
+    "ds-carriers": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "validity": "0.966387"
+     },
+     "measured_dimensions": [
+      "validity"
+     ],
+     "value": "0.966387",
+     "weight_sum": "0.250000",
+     "weight_version": "w2"
+    },
+    "ds-consent-records": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "completeness": "0.905882",
+      "timeliness": "1.000000"
+     },
+     "measured_dimensions": [
+      "completeness",
+      "timeliness"
+     ],
+     "value": "0.932773",
+     "weight_sum": "0.350000",
+     "weight_version": "w2"
+    },
+    "ds-contacts": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "completeness": "0.982143",
+      "relationship": "1.000000"
+     },
+     "measured_dimensions": [
+      "completeness",
+      "relationship"
+     ],
+     "value": "0.988839",
+     "weight_sum": "0.400000",
+     "weight_version": "w2"
+    },
+    "ds-cost-centres": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "uniqueness": "0.974359"
+     },
+     "measured_dimensions": [
+      "uniqueness"
+     ],
+     "value": "0.974359",
+     "weight_sum": "0.250000",
+     "weight_version": "w2"
+    },
+    "ds-credit-notes": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {},
+     "measured_dimensions": [],
+     "value": null,
+     "weight_sum": "0.000000",
+     "weight_version": "w2"
+    },
+    "ds-crm-activities": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {},
+     "measured_dimensions": [],
+     "value": null,
+     "weight_sum": "0.000000",
+     "weight_version": "w2"
+    },
+    "ds-csat-surveys": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "completeness": "0.935484"
+     },
+     "measured_dimensions": [
+      "completeness"
+     ],
+     "value": "0.935484",
+     "weight_sum": "0.250000",
+     "weight_version": "w2"
+    },
+    "ds-customers": {
+     "critical_failures": 2,
+     "critical_open_issues": 1,
+     "critical_override": true,
+     "dimension_scores": {
+      "completeness": "0.991667",
+      "timeliness": "1.000000",
+      "uniqueness": "0.983333",
+      "validity": "0.991597"
+     },
+     "measured_dimensions": [
+      "completeness",
+      "validity",
+      "uniqueness",
+      "timeliness"
+     ],
+     "value": "0.990175",
+     "weight_sum": "0.850000",
+     "weight_version": "w2"
+    },
+    "ds-delivery-events": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "validity": "0.955882"
+     },
+     "measured_dimensions": [
+      "validity"
+     ],
+     "value": "0.955882",
+     "weight_sum": "0.250000",
+     "weight_version": "w2"
+    },
+    "ds-employees": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "validity": "1.000000"
+     },
+     "measured_dimensions": [
+      "validity"
+     ],
+     "value": "1.000000",
+     "weight_sum": "0.250000",
+     "weight_version": "w2"
+    },
+    "ds-experiments": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {},
+     "measured_dimensions": [],
+     "value": null,
+     "weight_sum": "0.000000",
+     "weight_version": "w2"
+    },
+    "ds-inventory": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "completeness": "1.000000",
+      "timeliness": "1.000000"
+     },
+     "measured_dimensions": [
+      "completeness",
+      "timeliness"
+     ],
+     "value": "1.000000",
+     "weight_sum": "0.350000",
+     "weight_version": "w2"
+    },
+    "ds-invoices": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "relationship": "0.975309",
+      "timeliness": "1.000000",
+      "validity": "0.987805"
+     },
+     "measured_dimensions": [
+      "validity",
+      "relationship",
+      "timeliness"
+     ],
+     "value": "0.986495",
+     "weight_sum": "0.500000",
+     "weight_version": "w2"
+    },
+    "ds-kb-articles": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "uniqueness": "0.984848"
+     },
+     "measured_dimensions": [
+      "uniqueness"
+     ],
+     "value": "0.984848",
+     "weight_sum": "0.250000",
+     "weight_version": "w2"
+    },
+    "ds-leads": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {},
+     "measured_dimensions": [],
+     "value": null,
+     "weight_sum": "0.000000",
+     "weight_version": "w2"
+    },
+    "ds-ledger-entries": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "completeness": "0.925926",
+      "uniqueness": "1.000000",
+      "validity": "0.925926"
+     },
+     "measured_dimensions": [
+      "completeness",
+      "validity",
+      "uniqueness"
+     ],
+     "value": "0.950617",
+     "weight_sum": "0.750000",
+     "weight_version": "w2"
+    },
+    "ds-opportunities": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "relationship": "0.886076"
+     },
+     "measured_dimensions": [
+      "relationship"
+     ],
+     "value": "0.886076",
+     "weight_sum": "0.150000",
+     "weight_version": "w2"
+    },
+    "ds-order-lines": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "relationship": "0.966981"
+     },
+     "measured_dimensions": [
+      "relationship"
+     ],
+     "value": "0.966981",
+     "weight_sum": "0.150000",
+     "weight_version": "w2"
+    },
+    "ds-orders": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "completeness": "0.965517",
+      "relationship": "1.000000",
+      "timeliness": "0.000000",
+      "uniqueness": "1.000000",
+      "validity": "1.000000"
+     },
+     "measured_dimensions": [
+      "completeness",
+      "validity",
+      "uniqueness",
+      "relationship",
+      "timeliness"
+     ],
+     "value": "0.891379",
+     "weight_sum": "1.000000",
+     "weight_version": "w2"
+    },
+    "ds-page-events": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {},
+     "measured_dimensions": [],
+     "value": null,
+     "weight_sum": "0.000000",
+     "weight_version": "w2"
+    },
+    "ds-payments": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "relationship": "0.987805",
+      "timeliness": "0.000000",
+      "uniqueness": "1.000000"
+     },
+     "measured_dimensions": [
+      "uniqueness",
+      "relationship",
+      "timeliness"
+     ],
+     "value": "0.796341",
+     "weight_sum": "0.500000",
+     "weight_version": "w2"
+    },
+    "ds-price-books": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {},
+     "measured_dimensions": [],
+     "value": null,
+     "weight_sum": "0.000000",
+     "weight_version": "w2"
+    },
+    "ds-products": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "completeness": "0.982759",
+      "uniqueness": "0.982759"
+     },
+     "measured_dimensions": [
+      "completeness",
+      "uniqueness"
+     ],
+     "value": "0.982759",
+     "weight_sum": "0.500000",
+     "weight_version": "w2"
+    },
+    "ds-purchase-orders": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "relationship": "0.977778"
+     },
+     "measured_dimensions": [
+      "relationship"
+     ],
+     "value": "0.977778",
+     "weight_sum": "0.150000",
+     "weight_version": "w2"
+    },
+    "ds-refunds": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "relationship": "0.938776"
+     },
+     "measured_dimensions": [
+      "relationship"
+     ],
+     "value": "0.938776",
+     "weight_sum": "0.150000",
+     "weight_version": "w2"
+    },
+    "ds-returns": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "completeness": "0.930000"
+     },
+     "measured_dimensions": [
+      "completeness"
+     ],
+     "value": "0.930000",
+     "weight_sum": "0.250000",
+     "weight_version": "w2"
+    },
+    "ds-segments": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {},
+     "measured_dimensions": [],
+     "value": null,
+     "weight_sum": "0.000000",
+     "weight_version": "w2"
+    },
+    "ds-shipments": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "relationship": "0.855422",
+      "validity": "0.847222"
+     },
+     "measured_dimensions": [
+      "validity",
+      "relationship"
+     ],
+     "value": "0.850297",
+     "weight_sum": "0.400000",
+     "weight_version": "w2"
+    },
+    "ds-sla-policies": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {},
+     "measured_dimensions": [],
+     "value": null,
+     "weight_sum": "0.000000",
+     "weight_version": "w2"
+    },
+    "ds-subscriptions": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "completeness": "0.964912",
+      "relationship": "0.938596"
+     },
+     "measured_dimensions": [
+      "completeness",
+      "relationship"
+     ],
+     "value": "0.955044",
+     "weight_sum": "0.400000",
+     "weight_version": "w2"
+    },
+    "ds-suppliers": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "completeness": "0.943820",
+      "uniqueness": "0.977528",
+      "validity": "0.973333"
+     },
+     "measured_dimensions": [
+      "completeness",
+      "validity",
+      "uniqueness"
+     ],
+     "value": "0.964894",
+     "weight_sum": "0.750000",
+     "weight_version": "w2"
+    },
+    "ds-support-agents": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {},
+     "measured_dimensions": [],
+     "value": null,
+     "weight_sum": "0.000000",
+     "weight_version": "w2"
+    },
+    "ds-ticket-events": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "validity": "0.971429"
+     },
+     "measured_dimensions": [
+      "validity"
+     ],
+     "value": "0.971429",
+     "weight_sum": "0.250000",
+     "weight_version": "w2"
+    },
+    "ds-tickets": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "completeness": "0.959184",
+      "timeliness": "0.000000"
+     },
+     "measured_dimensions": [
+      "completeness",
+      "timeliness"
+     ],
+     "value": "0.685131",
+     "weight_sum": "0.350000",
+     "weight_version": "w2"
+    },
+    "ds-warehouses": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "validity": "0.933333"
+     },
+     "measured_dimensions": [
+      "validity"
+     ],
+     "value": "0.933333",
+     "weight_sum": "0.250000",
+     "weight_version": "w2"
+    },
+    "ds-web-sessions": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "uniqueness": "0.985714"
+     },
+     "measured_dimensions": [
+      "uniqueness"
+     ],
+     "value": "0.985714",
+     "weight_sum": "0.250000",
+     "weight_version": "w2"
+    },
+    "ds-web-users": {
+     "critical_failures": 0,
+     "critical_open_issues": 0,
+     "critical_override": false,
+     "dimension_scores": {
+      "completeness": "0.984848",
+      "timeliness": "1.000000",
+      "uniqueness": "0.984848"
+     },
+     "measured_dimensions": [
+      "completeness",
+      "uniqueness",
+      "timeliness"
+     ],
+     "value": "0.987374",
+     "weight_sum": "0.600000",
+     "weight_version": "w2"
+    }
+   }
+  }
+ },
+ "generated_by": "scripts/make-snapshot-reference.py (the Python domain, domain/trustledger)",
+ "identity_map_digest": "ac359966d9e129fb75c2559488e51e6efd2111f716d71a87f3a8de09636c0ec8",
+ "ingest_counts": {
+  "customer_records": {
+   "accepted": 2000,
+   "rejected": 0
+  },
+  "dataset_rows": {
+   "accepted": 2554,
+   "rejected": 0
+  },
+  "datasets": {
+   "accepted": 40,
+   "rejected": 0
+  },
+  "definition_changes": {
+   "accepted": 15,
+   "rejected": 0
+  },
+  "fields": {
+   "accepted": 420,
+   "rejected": 0
+  },
+  "issues": {
+   "accepted": 574,
+   "rejected": 0
+  },
+  "lineage_edges": {
+   "accepted": 160,
+   "rejected": 0
+  },
+  "match_candidates": {
+   "accepted": 400,
+   "rejected": 0
+  },
+  "merge_decisions": {
+   "accepted": 235,
+   "rejected": 0
+  },
+  "metric_versions": {
+   "accepted": 45,
+   "rejected": 0
+  },
+  "owners": {
+   "accepted": 18,
+   "rejected": 0
+  },
+  "quality_rules": {
+   "accepted": 60,
+   "rejected": 0
+  },
+  "rule_runs": {
+   "accepted": 4609,
+   "rejected": 0
+  }
+ },
+ "issues_at_as_of": {
+  "iss-0001": [
+   "resolved",
+   "96.9167",
+   null,
+   null,
+   0
+  ],
+  "iss-0002": [
+   "resolved",
+   "81.5667",
+   null,
+   null,
+   0
+  ],
+  "iss-0003": [
+   "resolved",
+   "60.7167",
+   null,
+   null,
+   0
+  ],
+  "iss-0004": [
+   "claimed",
+   null,
+   "15.1333",
+   null,
+   0
+  ],
+  "iss-0005": [
+   "resolved",
+   "53.4167",
+   null,
+   null,
+   0
+  ],
+  "iss-0006": [
+   "resolved",
+   "54.5333",
+   null,
+   null,
+   0
+  ],
+  "iss-0007": [
+   "resolved",
+   "51.2000",
+   null,
+   null,
+   0
+  ],
+  "iss-0008": [
+   "claimed",
+   null,
+   "16.9333",
+   null,
+   0
+  ],
+  "iss-0009": [
+   "resolved",
+   "22.5667",
+   null,
+   null,
+   0
+  ],
+  "iss-0010": [
+   "resolved",
+   "122.3000",
+   null,
+   null,
+   0
+  ],
+  "iss-0011": [
+   "resolved",
+   "52.6000",
+   null,
+   null,
+   0
+  ],
+  "iss-0012": [
+   "resolved",
+   "11.7500",
+   null,
+   null,
+   0
+  ],
+  "iss-0013": [
+   "resolved",
+   "14.8333",
+   null,
+   null,
+   0
+  ],
+  "iss-0014": [
+   "resolved",
+   "36.5333",
+   null,
+   null,
+   0
+  ],
+  "iss-0015": [
+   "resolved",
+   "16.5500",
+   null,
+   null,
+   0
+  ],
+  "iss-0016": [
+   "claimed",
+   null,
+   "24.7333",
+   null,
+   0
+  ],
+  "iss-0017": [
+   "resolved",
+   "167.0500",
+   null,
+   null,
+   0
+  ],
+  "iss-0018": [
+   "resolved",
+   "16.9167",
+   null,
+   null,
+   0
+  ],
+  "iss-0019": [
+   "resolved",
+   "53.1333",
+   null,
+   null,
+   0
+  ],
+  "iss-0020": [
+   "claimed",
+   null,
+   "70.7333",
+   null,
+   0
+  ],
+  "iss-0021": [
+   "resolved",
+   "52.9500",
+   null,
+   null,
+   0
+  ],
+  "iss-0022": [
+   "resolved",
+   "42.6667",
+   null,
+   null,
+   0
+  ],
+  "iss-0023": [
+   "resolved",
+   "37.1500",
+   null,
+   null,
+   0
+  ],
+  "iss-0024": [
+   "resolved",
+   "120.5167",
+   null,
+   null,
+   0
+  ],
+  "iss-0025": [
+   "resolved",
+   "81.8333",
+   null,
+   null,
+   0
+  ],
+  "iss-0026": [
+   "resolved",
+   "24.7000",
+   null,
+   null,
+   0
+  ],
+  "iss-0027": [
+   "resolved",
+   "12.3333",
+   null,
+   null,
+   0
+  ],
+  "iss-0028": [
+   "claimed",
+   null,
+   "60.4333",
+   null,
+   0
+  ],
+  "iss-0029": [
+   "resolved",
+   "38.6500",
+   null,
+   null,
+   0
+  ],
+  "iss-0030": [
+   "resolved",
+   "170.5000",
+   null,
+   null,
+   0
+  ],
+  "iss-0031": [
+   "claimed",
+   null,
+   "35.0167",
+   null,
+   0
+  ],
+  "iss-0032": [
+   "resolved",
+   "23.6333",
+   null,
+   null,
+   0
+  ],
+  "iss-0033": [
+   "resolved",
+   "44.6833",
+   null,
+   null,
+   0
+  ],
+  "iss-0034": [
+   "resolved",
+   "56.6333",
+   null,
+   null,
+   0
+  ],
+  "iss-0035": [
+   "claimed",
+   null,
+   "61.7500",
+   null,
+   0
+  ],
+  "iss-0036": [
+   "resolved",
+   "73.9333",
+   null,
+   null,
+   0
+  ],
+  "iss-0037": [
+   "resolved",
+   "234.3167",
+   null,
+   null,
+   0
+  ],
+  "iss-0038": [
+   "resolved",
+   "53.4667",
+   null,
+   null,
+   0
+  ],
+  "iss-0039": [
+   "resolved",
+   "146.0333",
+   null,
+   null,
+   0
+  ],
+  "iss-0040": [
+   "resolved",
+   "60.7000",
+   null,
+   null,
+   0
+  ],
+  "iss-0041": [
+   "resolved",
+   "87.4500",
+   null,
+   null,
+   0
+  ],
+  "iss-0042": [
+   "resolved",
+   "39.6500",
+   null,
+   null,
+   0
+  ],
+  "iss-0043": [
+   "claimed",
+   null,
+   "16.5500",
+   null,
+   0
+  ],
+  "iss-0044": [
+   "resolved",
+   "55.8000",
+   null,
+   null,
+   0
+  ],
+  "iss-0045": [
+   "resolved",
+   "27.6833",
+   null,
+   null,
+   0
+  ],
+  "iss-0046": [
+   "claimed",
+   null,
+   "43.1000",
+   null,
+   0
+  ],
+  "iss-0047": [
+   "resolved",
+   "138.6333",
+   null,
+   null,
+   0
+  ],
+  "iss-0048": [
+   "resolved",
+   "44.9833",
+   null,
+   null,
+   0
+  ],
+  "iss-0049": [
+   "resolved",
+   "45.0000",
+   null,
+   null,
+   0
+  ],
+  "iss-0050": [
+   "claimed",
+   null,
+   "31.9167",
+   null,
+   0
+  ],
+  "iss-0051": [
+   "resolved",
+   "222.8667",
+   null,
+   null,
+   0
+  ],
+  "iss-0052": [
+   "resolved",
+   "61.6167",
+   null,
+   null,
+   0
+  ],
+  "iss-0053": [
+   "resolved",
+   "213.2833",
+   null,
+   null,
+   0
+  ],
+  "iss-0054": [
+   "resolved",
+   "32.3833",
+   null,
+   null,
+   0
+  ],
+  "iss-0055": [
+   "claimed",
+   null,
+   "17.6167",
+   null,
+   0
+  ],
+  "iss-0056": [
+   "resolved",
+   "14.8500",
+   null,
+   null,
+   0
+  ],
+  "iss-0057": [
+   "claimed",
+   null,
+   "16.0000",
+   null,
+   0
+  ],
+  "iss-0058": [
+   "claimed",
+   null,
+   "77.9167",
+   null,
+   0
+  ],
+  "iss-0059": [
+   "resolved",
+   "63.8000",
+   null,
+   null,
+   0
+  ],
+  "iss-0060": [
+   "resolved",
+   "83.0167",
+   null,
+   null,
+   0
+  ],
+  "iss-0061": [
+   "resolved",
+   "39.0167",
+   null,
+   null,
+   0
+  ],
+  "iss-0062": [
+   "resolved",
+   "12.5333",
+   null,
+   null,
+   0
+  ],
+  "iss-0063": [
+   "resolved",
+   "187.5167",
+   null,
+   null,
+   0
+  ],
+  "iss-0064": [
+   "resolved",
+   "21.9500",
+   null,
+   null,
+   0
+  ],
+  "iss-0065": [
+   "resolved",
+   "33.3500",
+   null,
+   null,
+   0
+  ],
+  "iss-0066": [
+   "claimed",
+   null,
+   "219.6000",
+   null,
+   0
+  ],
+  "iss-0067": [
+   "resolved",
+   "183.8167",
+   null,
+   null,
+   0
+  ],
+  "iss-0068": [
+   "resolved",
+   "142.2000",
+   null,
+   null,
+   0
+  ],
+  "iss-0069": [
+   "claimed",
+   null,
+   "23.9667",
+   null,
+   0
+  ],
+  "iss-0070": [
+   "resolved",
+   "135.0500",
+   null,
+   null,
+   0
+  ],
+  "iss-0071": [
+   "resolved",
+   "100.2000",
+   null,
+   null,
+   0
+  ],
+  "iss-0072": [
+   "resolved",
+   "60.9333",
+   null,
+   null,
+   0
+  ],
+  "iss-0073": [
+   "claimed",
+   null,
+   "26.6000",
+   null,
+   0
+  ],
+  "iss-0074": [
+   "resolved",
+   "27.0333",
+   null,
+   null,
+   0
+  ],
+  "iss-0075": [
+   "resolved",
+   "36.7333",
+   null,
+   null,
+   0
+  ],
+  "iss-0076": [
+   "claimed",
+   null,
+   "23.9333",
+   null,
+   0
+  ],
+  "iss-0077": [
+   "resolved",
+   "24.7667",
+   null,
+   null,
+   0
+  ],
+  "iss-0078": [
+   "resolved",
+   "49.8333",
+   null,
+   null,
+   0
+  ],
+  "iss-0079": [
+   "resolved",
+   "24.1000",
+   null,
+   null,
+   0
+  ],
+  "iss-0080": [
+   "claimed",
+   null,
+   "72.5333",
+   null,
+   0
+  ],
+  "iss-0081": [
+   "resolved",
+   "60.3833",
+   null,
+   null,
+   0
+  ],
+  "iss-0082": [
+   "claimed",
+   null,
+   "31.1500",
+   null,
+   0
+  ],
+  "iss-0083": [
+   "resolved",
+   "120.3500",
+   null,
+   null,
+   0
+  ],
+  "iss-0084": [
+   "resolved",
+   "37.9667",
+   null,
+   null,
+   0
+  ],
+  "iss-0085": [
+   "claimed",
+   null,
+   "24.1667",
+   null,
+   0
+  ],
+  "iss-0086": [
+   "resolved",
+   "84.9333",
+   null,
+   null,
+   0
+  ],
+  "iss-0087": [
+   "resolved",
+   "141.9500",
+   null,
+   null,
+   0
+  ],
+  "iss-0088": [
+   "resolved",
+   "71.3500",
+   null,
+   null,
+   0
+  ],
+  "iss-0089": [
+   "resolved",
+   "46.3333",
+   null,
+   null,
+   0
+  ],
+  "iss-0090": [
+   "resolved",
+   "74.3167",
+   null,
+   null,
+   0
+  ],
+  "iss-0091": [
+   "claimed",
+   null,
+   "15.2333",
+   null,
+   0
+  ],
+  "iss-0092": [
+   "resolved",
+   "52.8167",
+   null,
+   null,
+   0
+  ],
+  "iss-0093": [
+   "resolved",
+   "15.3333",
+   null,
+   null,
+   0
+  ],
+  "iss-0094": [
+   "resolved",
+   "54.1667",
+   null,
+   null,
+   0
+  ],
+  "iss-0095": [
+   "resolved",
+   "60.4833",
+   null,
+   null,
+   0
+  ],
+  "iss-0096": [
+   "resolved",
+   "52.2167",
+   null,
+   null,
+   0
+  ],
+  "iss-0097": [
+   "resolved",
+   "15.9500",
+   null,
+   null,
+   0
+  ],
+  "iss-0098": [
+   "resolved",
+   "14.7333",
+   null,
+   null,
+   0
+  ],
+  "iss-0099": [
+   "claimed",
+   null,
+   "75.6500",
+   null,
+   0
+  ],
+  "iss-0100": [
+   "resolved",
+   "49.2500",
+   null,
+   null,
+   0
+  ],
+  "iss-0101": [
+   "resolved",
+   "49.4833",
+   null,
+   null,
+   0
+  ],
+  "iss-0102": [
+   "resolved",
+   "24.3667",
+   null,
+   null,
+   0
+  ],
+  "iss-0103": [
+   "claimed",
+   null,
+   "27.9000",
+   null,
+   0
+  ],
+  "iss-0104": [
+   "resolved",
+   "45.3000",
+   null,
+   null,
+   0
+  ],
+  "iss-0105": [
+   "claimed",
+   null,
+   "29.9333",
+   null,
+   0
+  ],
+  "iss-0106": [
+   "resolved",
+   "48.2667",
+   null,
+   null,
+   0
+  ],
+  "iss-0107": [
+   "resolved",
+   "13.8667",
+   null,
+   null,
+   0
+  ],
+  "iss-0108": [
+   "resolved",
+   "180.7167",
+   null,
+   null,
+   0
+  ],
+  "iss-0109": [
+   "resolved",
+   "47.5833",
+   null,
+   null,
+   0
+  ],
+  "iss-0110": [
+   "claimed",
+   null,
+   "45.4333",
+   null,
+   0
+  ],
+  "iss-0111": [
+   "resolved",
+   "48.4333",
+   null,
+   null,
+   0
+  ],
+  "iss-0112": [
+   "claimed",
+   null,
+   "14.4167",
+   null,
+   0
+  ],
+  "iss-0113": [
+   "resolved",
+   "23.2500",
+   null,
+   null,
+   0
+  ],
+  "iss-0114": [
+   "resolved",
+   "78.3000",
+   null,
+   null,
+   0
+  ],
+  "iss-0115": [
+   "claimed",
+   null,
+   "17.9333",
+   null,
+   0
+  ],
+  "iss-0116": [
+   "resolved",
+   "41.9000",
+   null,
+   null,
+   0
+  ],
+  "iss-0117": [
+   "resolved",
+   "32.6167",
+   null,
+   null,
+   0
+  ],
+  "iss-0118": [
+   "claimed",
+   null,
+   "32.6167",
+   null,
+   0
+  ],
+  "iss-0119": [
+   "claimed",
+   null,
+   "70.1000",
+   null,
+   0
+  ],
+  "iss-0120": [
+   "claimed",
+   null,
+   "51.9333",
+   null,
+   0
+  ],
+  "iss-0121": [
+   "claimed",
+   null,
+   "42.3333",
+   null,
+   0
+  ],
+  "iss-0122": [
+   "resolved",
+   "41.5000",
+   null,
+   null,
+   0
+  ],
+  "iss-0123": [
+   "resolved",
+   "113.9667",
+   null,
+   null,
+   0
+  ],
+  "iss-0124": [
+   "resolved",
+   "23.2167",
+   null,
+   null,
+   0
+  ],
+  "iss-0125": [
+   "resolved",
+   "45.1667",
+   null,
+   null,
+   0
+  ],
+  "iss-0126": [
+   "resolved",
+   "58.7333",
+   null,
+   null,
+   0
+  ],
+  "iss-0127": [
+   "resolved",
+   "68.6000",
+   null,
+   null,
+   0
+  ],
+  "iss-0128": [
+   "resolved",
+   "43.9833",
+   null,
+   null,
+   0
+  ],
+  "iss-0129": [
+   "resolved",
+   "14.6667",
+   null,
+   null,
+   0
+  ],
+  "iss-0130": [
+   "claimed",
+   null,
+   "15.5000",
+   null,
+   0
+  ],
+  "iss-0131": [
+   "resolved",
+   "22.6833",
+   null,
+   null,
+   0
+  ],
+  "iss-0132": [
+   "resolved",
+   "18.7167",
+   null,
+   null,
+   0
+  ],
+  "iss-0133": [
+   "resolved",
+   "117.0833",
+   null,
+   null,
+   0
+  ],
+  "iss-0134": [
+   "claimed",
+   null,
+   "13.9500",
+   null,
+   0
+  ],
+  "iss-0135": [
+   "resolved",
+   "365.3833",
+   null,
+   null,
+   0
+  ],
+  "iss-0136": [
+   "claimed",
+   null,
+   "20.0167",
+   null,
+   0
+  ],
+  "iss-0137": [
+   "resolved",
+   "54.6167",
+   null,
+   null,
+   0
+  ],
+  "iss-0138": [
+   "claimed",
+   null,
+   "44.0000",
+   null,
+   0
+  ],
+  "iss-0139": [
+   "resolved",
+   "71.5167",
+   null,
+   null,
+   0
+  ],
+  "iss-0140": [
+   "resolved",
+   "55.4167",
+   null,
+   null,
+   0
+  ],
+  "iss-0141": [
+   "resolved",
+   "133.6667",
+   null,
+   null,
+   0
+  ],
+  "iss-0142": [
+   "claimed",
+   null,
+   "38.7667",
+   null,
+   0
+  ],
+  "iss-0143": [
+   "resolved",
+   "70.8000",
+   null,
+   null,
+   0
+  ],
+  "iss-0144": [
+   "claimed",
+   null,
+   "49.2667",
+   null,
+   0
+  ],
+  "iss-0145": [
+   "resolved",
+   "64.1167",
+   null,
+   null,
+   0
+  ],
+  "iss-0146": [
+   "resolved",
+   "197.0000",
+   null,
+   null,
+   0
+  ],
+  "iss-0147": [
+   "resolved",
+   "41.7333",
+   null,
+   null,
+   0
+  ],
+  "iss-0148": [
+   "resolved",
+   "67.4167",
+   null,
+   null,
+   0
+  ],
+  "iss-0149": [
+   "resolved",
+   "52.6000",
+   null,
+   null,
+   0
+  ],
+  "iss-0150": [
+   "resolved",
+   "19.8167",
+   null,
+   null,
+   0
+  ],
+  "iss-0151": [
+   "resolved",
+   "39.3000",
+   null,
+   null,
+   0
+  ],
+  "iss-0152": [
+   "resolved",
+   "38.9333",
+   null,
+   null,
+   0
+  ],
+  "iss-0153": [
+   "claimed",
+   null,
+   "32.1500",
+   null,
+   0
+  ],
+  "iss-0154": [
+   "resolved",
+   "16.4333",
+   null,
+   null,
+   0
+  ],
+  "iss-0155": [
+   "claimed",
+   null,
+   "71.2667",
+   null,
+   0
+  ],
+  "iss-0156": [
+   "resolved",
+   "25.2333",
+   null,
+   null,
+   0
+  ],
+  "iss-0157": [
+   "resolved",
+   "65.7167",
+   null,
+   null,
+   0
+  ],
+  "iss-0158": [
+   "resolved",
+   "14.8167",
+   null,
+   null,
+   0
+  ],
+  "iss-0159": [
+   "resolved",
+   "173.3333",
+   null,
+   null,
+   0
+  ],
+  "iss-0160": [
+   "resolved",
+   "21.7167",
+   null,
+   null,
+   0
+  ],
+  "iss-0161": [
+   "resolved",
+   "18.5500",
+   null,
+   null,
+   0
+  ],
+  "iss-0162": [
+   "resolved",
+   "107.7167",
+   null,
+   null,
+   0
+  ],
+  "iss-0163": [
+   "resolved",
+   "42.8500",
+   null,
+   null,
+   0
+  ],
+  "iss-0164": [
+   "resolved",
+   "12.6333",
+   null,
+   null,
+   0
+  ],
+  "iss-0165": [
+   "claimed",
+   null,
+   "59.2000",
+   null,
+   0
+  ],
+  "iss-0166": [
+   "claimed",
+   null,
+   "110.4500",
+   null,
+   0
+  ],
+  "iss-0167": [
+   "claimed",
+   null,
+   "68.2000",
+   null,
+   0
+  ],
+  "iss-0168": [
+   "resolved",
+   "106.4667",
+   null,
+   null,
+   0
+  ],
+  "iss-0169": [
+   "resolved",
+   "11.4667",
+   null,
+   null,
+   0
+  ],
+  "iss-0170": [
+   "resolved",
+   "24.0167",
+   null,
+   null,
+   0
+  ],
+  "iss-0171": [
+   "claimed",
+   null,
+   "76.1500",
+   null,
+   0
+  ],
+  "iss-0172": [
+   "resolved",
+   "64.4000",
+   null,
+   null,
+   0
+  ],
+  "iss-0173": [
+   "resolved",
+   "39.2833",
+   null,
+   null,
+   0
+  ],
+  "iss-0174": [
+   "resolved",
+   "53.1667",
+   null,
+   null,
+   0
+  ],
+  "iss-0175": [
+   "resolved",
+   "66.4833",
+   null,
+   null,
+   0
+  ],
+  "iss-0176": [
+   "resolved",
+   "57.3333",
+   null,
+   null,
+   0
+  ],
+  "iss-0177": [
+   "resolved",
+   "45.3833",
+   null,
+   null,
+   0
+  ],
+  "iss-0178": [
+   "claimed",
+   null,
+   "34.2667",
+   null,
+   0
+  ],
+  "iss-0179": [
+   "claimed",
+   null,
+   "25.5167",
+   null,
+   0
+  ],
+  "iss-0180": [
+   "claimed",
+   null,
+   "77.6500",
+   null,
+   0
+  ],
+  "iss-0181": [
+   "resolved",
+   "124.8000",
+   null,
+   null,
+   0
+  ],
+  "iss-0182": [
+   "claimed",
+   null,
+   "12.9333",
+   null,
+   0
+  ],
+  "iss-0183": [
+   "resolved",
+   "190.6833",
+   null,
+   null,
+   0
+  ],
+  "iss-0184": [
+   "claimed",
+   null,
+   "40.5667",
+   null,
+   0
+  ],
+  "iss-0185": [
+   "resolved",
+   "31.6000",
+   null,
+   null,
+   0
+  ],
+  "iss-0186": [
+   "resolved",
+   "108.4833",
+   null,
+   null,
+   0
+  ],
+  "iss-0187": [
+   "resolved",
+   "18.8000",
+   null,
+   null,
+   0
+  ],
+  "iss-0188": [
+   "resolved",
+   "63.6333",
+   null,
+   null,
+   0
+  ],
+  "iss-0189": [
+   "resolved",
+   "58.9500",
+   null,
+   null,
+   0
+  ],
+  "iss-0190": [
+   "claimed",
+   null,
+   "14.8167",
+   null,
+   0
+  ],
+  "iss-0191": [
+   "resolved",
+   "177.8167",
+   null,
+   null,
+   0
+  ],
+  "iss-0192": [
+   "resolved",
+   "101.8500",
+   null,
+   null,
+   0
+  ],
+  "iss-0193": [
+   "claimed",
+   null,
+   "54.9333",
+   null,
+   0
+  ],
+  "iss-0194": [
+   "resolved",
+   "38.9667",
+   null,
+   null,
+   0
+  ],
+  "iss-0195": [
+   "resolved",
+   "66.2500",
+   null,
+   null,
+   0
+  ],
+  "iss-0196": [
+   "resolved",
+   "113.4667",
+   null,
+   null,
+   0
+  ],
+  "iss-0197": [
+   "resolved",
+   "86.8333",
+   null,
+   null,
+   0
+  ],
+  "iss-0198": [
+   "resolved",
+   "42.5500",
+   null,
+   null,
+   0
+  ],
+  "iss-0199": [
+   "resolved",
+   "105.2833",
+   null,
+   null,
+   0
+  ],
+  "iss-0200": [
+   "resolved",
+   "34.2833",
+   null,
+   null,
+   0
+  ],
+  "iss-0201": [
+   "resolved",
+   "121.6333",
+   null,
+   null,
+   0
+  ],
+  "iss-0202": [
+   "claimed",
+   null,
+   "80.9500",
+   null,
+   0
+  ],
+  "iss-0203": [
+   "resolved",
+   "46.8000",
+   null,
+   null,
+   0
+  ],
+  "iss-0204": [
+   "resolved",
+   "149.9000",
+   null,
+   null,
+   0
+  ],
+  "iss-0205": [
+   "resolved",
+   "92.4833",
+   null,
+   null,
+   0
+  ],
+  "iss-0206": [
+   "resolved",
+   "43.9667",
+   null,
+   null,
+   0
+  ],
+  "iss-0207": [
+   "claimed",
+   null,
+   "55.5000",
+   null,
+   0
+  ],
+  "iss-0208": [
+   "claimed",
+   null,
+   "66.5500",
+   null,
+   0
+  ],
+  "iss-0209": [
+   "resolved",
+   "18.5000",
+   null,
+   null,
+   0
+  ],
+  "iss-0210": [
+   "claimed",
+   null,
+   "71.8333",
+   null,
+   0
+  ],
+  "iss-0211": [
+   "resolved",
+   "71.7167",
+   null,
+   null,
+   0
+  ],
+  "iss-0212": [
+   "claimed",
+   null,
+   "59.0500",
+   null,
+   0
+  ],
+  "iss-0213": [
+   "resolved",
+   "182.7500",
+   null,
+   null,
+   0
+  ],
+  "iss-0214": [
+   "resolved",
+   "294.4000",
+   null,
+   null,
+   0
+  ],
+  "iss-0215": [
+   "resolved",
+   "61.3833",
+   null,
+   null,
+   0
+  ],
+  "iss-0216": [
+   "claimed",
+   null,
+   "57.0667",
+   null,
+   0
+  ],
+  "iss-0217": [
+   "claimed",
+   null,
+   "50.8500",
+   null,
+   0
+  ],
+  "iss-0218": [
+   "resolved",
+   "40.7000",
+   null,
+   null,
+   0
+  ],
+  "iss-0219": [
+   "resolved",
+   "84.4833",
+   null,
+   null,
+   0
+  ],
+  "iss-0220": [
+   "resolved",
+   "17.4167",
+   null,
+   null,
+   0
+  ],
+  "iss-0221": [
+   "claimed",
+   null,
+   "65.7000",
+   null,
+   0
+  ],
+  "iss-0222": [
+   "claimed",
+   null,
+   "13.5000",
+   null,
+   0
+  ],
+  "iss-0223": [
+   "resolved",
+   "167.6000",
+   null,
+   null,
+   0
+  ],
+  "iss-0224": [
+   "resolved",
+   "50.1667",
+   null,
+   null,
+   0
+  ],
+  "iss-0225": [
+   "resolved",
+   "29.5500",
+   null,
+   null,
+   0
+  ],
+  "iss-0226": [
+   "claimed",
+   null,
+   "34.6000",
+   null,
+   0
+  ],
+  "iss-0227": [
+   "resolved",
+   "78.1000",
+   null,
+   null,
+   0
+  ],
+  "iss-0228": [
+   "claimed",
+   null,
+   "18.1500",
+   null,
+   0
+  ],
+  "iss-0229": [
+   "resolved",
+   "178.8667",
+   null,
+   null,
+   0
+  ],
+  "iss-0230": [
+   "resolved",
+   "157.8167",
+   null,
+   null,
+   0
+  ],
+  "iss-0231": [
+   "resolved",
+   "97.0667",
+   null,
+   null,
+   0
+  ],
+  "iss-0232": [
+   "resolved",
+   "68.9833",
+   null,
+   null,
+   0
+  ],
+  "iss-0233": [
+   "claimed",
+   null,
+   "68.2000",
+   null,
+   0
+  ],
+  "iss-0234": [
+   "resolved",
+   "16.3833",
+   null,
+   null,
+   0
+  ],
+  "iss-0235": [
+   "resolved",
+   "106.4667",
+   null,
+   null,
+   0
+  ],
+  "iss-0236": [
+   "resolved",
+   "266.9333",
+   null,
+   null,
+   0
+  ],
+  "iss-0237": [
+   "resolved",
+   "45.0000",
+   null,
+   null,
+   0
+  ],
+  "iss-0238": [
+   "resolved",
+   "57.7333",
+   null,
+   null,
+   0
+  ],
+  "iss-0239": [
+   "resolved",
+   "48.3000",
+   null,
+   null,
+   0
+  ],
+  "iss-0240": [
+   "resolved",
+   "79.7333",
+   null,
+   null,
+   0
+  ],
+  "iss-0241": [
+   "resolved",
+   "15.9500",
+   null,
+   null,
+   0
+  ],
+  "iss-0242": [
+   "resolved",
+   "43.5333",
+   null,
+   null,
+   0
+  ],
+  "iss-0243": [
+   "resolved",
+   "46.1167",
+   null,
+   null,
+   0
+  ],
+  "iss-0244": [
+   "resolved",
+   "122.6667",
+   null,
+   null,
+   0
+  ],
+  "iss-0245": [
+   "resolved",
+   "48.7833",
+   null,
+   null,
+   0
+  ],
+  "iss-0246": [
+   "resolved",
+   "52.0833",
+   null,
+   null,
+   0
+  ],
+  "iss-0247": [
+   "resolved",
+   "46.7500",
+   null,
+   null,
+   0
+  ],
+  "iss-0248": [
+   "claimed",
+   null,
+   "58.8667",
+   null,
+   0
+  ],
+  "iss-0249": [
+   "resolved",
+   "51.1167",
+   null,
+   null,
+   0
+  ],
+  "iss-0250": [
+   "resolved",
+   "22.1667",
+   null,
+   null,
+   0
+  ],
+  "iss-0251": [
+   "claimed",
+   null,
+   "16.6667",
+   null,
+   0
+  ],
+  "iss-0252": [
+   "open",
+   null,
+   null,
+   "981.6667",
+   0
+  ],
+  "iss-0253": [
+   "resolved",
+   "173.3333",
+   null,
+   null,
+   0
+  ],
+  "iss-0254": [
+   "open",
+   null,
+   null,
+   "980.9000",
+   0
+  ],
+  "iss-0255": [
+   "resolved",
+   "12.7000",
+   null,
+   null,
+   0
+  ],
+  "iss-0256": [
+   "open",
+   null,
+   null,
+   "980.3667",
+   0
+  ],
+  "iss-0257": [
+   "open",
+   null,
+   null,
+   "980.2667",
+   1
+  ],
+  "iss-0258": [
+   "resolved",
+   "183.2667",
+   null,
+   null,
+   0
+  ],
+  "iss-0259": [
+   "resolved",
+   "39.4833",
+   null,
+   null,
+   0
+  ],
+  "iss-0260": [
+   "resolved",
+   "16.7833",
+   null,
+   null,
+   0
+  ],
+  "iss-0261": [
+   "open",
+   null,
+   null,
+   "955.3833",
+   0
+  ],
+  "iss-0262": [
+   "resolved",
+   "38.9333",
+   null,
+   null,
+   0
+  ],
+  "iss-0263": [
+   "resolved",
+   "74.3000",
+   null,
+   null,
+   0
+  ],
+  "iss-0264": [
+   "resolved",
+   "53.3833",
+   null,
+   null,
+   0
+  ],
+  "iss-0265": [
+   "resolved",
+   "63.0167",
+   null,
+   null,
+   0
+  ],
+  "iss-0266": [
+   "open",
+   null,
+   null,
+   "933.6500",
+   0
+  ],
+  "iss-0267": [
+   "resolved",
+   "19.8167",
+   null,
+   null,
+   0
+  ],
+  "iss-0268": [
+   "open",
+   null,
+   null,
+   "933.3333",
+   0
+  ],
+  "iss-0269": [
+   "resolved",
+   "56.0667",
+   null,
+   null,
+   0
+  ],
+  "iss-0270": [
+   "resolved",
+   "52.8000",
+   null,
+   null,
+   0
+  ],
+  "iss-0271": [
+   "resolved",
+   "16.2667",
+   null,
+   null,
+   0
+  ],
+  "iss-0272": [
+   "resolved",
+   "45.3500",
+   null,
+   null,
+   0
+  ],
+  "iss-0273": [
+   "resolved",
+   "25.0500",
+   null,
+   null,
+   0
+  ],
+  "iss-0274": [
+   "open",
+   null,
+   null,
+   "930.7333",
+   0
+  ],
+  "iss-0275": [
+   "open",
+   null,
+   null,
+   "909.6667",
+   0
+  ],
+  "iss-0276": [
+   "open",
+   null,
+   null,
+   "909.4333",
+   0
+  ],
+  "iss-0277": [
+   "resolved",
+   "69.9833",
+   null,
+   null,
+   0
+  ],
+  "iss-0278": [
+   "open",
+   null,
+   null,
+   "908.1500",
+   0
+  ],
+  "iss-0279": [
+   "resolved",
+   "59.6333",
+   null,
+   null,
+   0
+  ],
+  "iss-0280": [
+   "resolved",
+   "25.5000",
+   null,
+   null,
+   0
+  ],
+  "iss-0281": [
+   "open",
+   null,
+   null,
+   "906.3000",
+   0
+  ],
+  "iss-0282": [
+   "open",
+   null,
+   null,
+   "888.1667",
+   0
+  ],
+  "iss-0283": [
+   "resolved",
+   "158.6667",
+   null,
+   null,
+   0
+  ],
+  "iss-0284": [
+   "open",
+   null,
+   null,
+   "885.3333",
+   0
+  ],
+  "iss-0285": [
+   "open",
+   null,
+   null,
+   "884.6833",
+   0
+  ],
+  "iss-0286": [
+   "open",
+   null,
+   null,
+   "884.2667",
+   0
+  ],
+  "iss-0287": [
+   "resolved",
+   "49.7667",
+   null,
+   null,
+   0
+  ],
+  "iss-0288": [
+   "open",
+   null,
+   null,
+   "884.0500",
+   0
+  ],
+  "iss-0289": [
+   "claimed",
+   null,
+   "85.7500",
+   null,
+   0
+  ],
+  "iss-0290": [
+   "resolved",
+   "31.7833",
+   null,
+   null,
+   0
+  ],
+  "iss-0291": [
+   "resolved",
+   "27.2000",
+   null,
+   null,
+   0
+  ],
+  "iss-0292": [
+   "resolved",
+   "70.7167",
+   null,
+   null,
+   0
+  ],
+  "iss-0293": [
+   "open",
+   null,
+   null,
+   "882.3000",
+   0
+  ],
+  "iss-0294": [
+   "resolved",
+   "219.1500",
+   null,
+   null,
+   0
+  ],
+  "iss-0295": [
+   "open",
+   null,
+   null,
+   "861.4333",
+   0
+  ],
+  "iss-0296": [
+   "resolved",
+   "21.6667",
+   null,
+   null,
+   0
+  ],
+  "iss-0297": [
+   "claimed",
+   null,
+   "144.0667",
+   null,
+   0
+  ],
+  "iss-0298": [
+   "claimed",
+   null,
+   "66.1333",
+   null,
+   0
+  ],
+  "iss-0299": [
+   "resolved",
+   "124.0000",
+   null,
+   null,
+   0
+  ],
+  "iss-0300": [
+   "open",
+   null,
+   null,
+   "859.6000",
+   0
+  ],
+  "iss-0301": [
+   "open",
+   null,
+   null,
+   "859.5000",
+   0
+  ],
+  "iss-0302": [
+   "claimed",
+   null,
+   "18.9500",
+   null,
+   0
+  ],
+  "iss-0303": [
+   "claimed",
+   null,
+   "27.3500",
+   null,
+   0
+  ],
+  "iss-0304": [
+   "open",
+   null,
+   null,
+   "858.3167",
+   0
+  ],
+  "iss-0305": [
+   "claimed",
+   null,
+   "33.2833",
+   null,
+   0
+  ],
+  "iss-0306": [
+   "resolved",
+   "82.9667",
+   null,
+   null,
+   0
+  ],
+  "iss-0307": [
+   "open",
+   null,
+   null,
+   "837.6500",
+   0
+  ],
+  "iss-0308": [
+   "resolved",
+   "68.2667",
+   null,
+   null,
+   0
+  ],
+  "iss-0309": [
+   "resolved",
+   "184.6000",
+   null,
+   null,
+   0
+  ],
+  "iss-0310": [
+   "resolved",
+   "56.1167",
+   null,
+   null,
+   0
+  ],
+  "iss-0311": [
+   "claimed",
+   null,
+   "16.7167",
+   null,
+   0
+  ],
+  "iss-0312": [
+   "open",
+   null,
+   null,
+   "813.2333",
+   0
+  ],
+  "iss-0313": [
+   "open",
+   null,
+   null,
+   "812.3667",
+   0
+  ],
+  "iss-0314": [
+   "resolved",
+   "43.9500",
+   null,
+   null,
+   0
+  ],
+  "iss-0315": [
+   "open",
+   null,
+   null,
+   "811.6000",
+   0
+  ],
+  "iss-0316": [
+   "claimed",
+   null,
+   "47.6000",
+   null,
+   0
+  ],
+  "iss-0317": [
+   "resolved",
+   "100.7667",
+   null,
+   null,
+   0
+  ],
+  "iss-0318": [
+   "resolved",
+   "108.6333",
+   null,
+   null,
+   0
+  ],
+  "iss-0319": [
+   "open",
+   null,
+   null,
+   "789.6500",
+   0
+  ],
+  "iss-0320": [
+   "resolved",
+   "9.3500",
+   null,
+   null,
+   0
+  ],
+  "iss-0321": [
+   "open",
+   null,
+   null,
+   "788.0500",
+   0
+  ],
+  "iss-0322": [
+   "claimed",
+   null,
+   "17.8000",
+   null,
+   0
+  ],
+  "iss-0323": [
+   "resolved",
+   "42.3000",
+   null,
+   null,
+   0
+  ],
+  "iss-0324": [
+   "open",
+   null,
+   null,
+   "786.5333",
+   0
+  ],
+  "iss-0325": [
+   "open",
+   null,
+   null,
+   "786.3167",
+   0
+  ],
+  "iss-0326": [
+   "claimed",
+   null,
+   "82.9500",
+   null,
+   0
+  ],
+  "iss-0327": [
+   "open",
+   null,
+   null,
+   "765.1333",
+   0
+  ],
+  "iss-0328": [
+   "open",
+   null,
+   null,
+   "764.9000",
+   0
+  ],
+  "iss-0329": [
+   "resolved",
+   "137.7500",
+   null,
+   null,
+   0
+  ],
+  "iss-0330": [
+   "open",
+   null,
+   null,
+   "744.1667",
+   0
+  ],
+  "iss-0331": [
+   "open",
+   null,
+   null,
+   "741.8667",
+   0
+  ],
+  "iss-0332": [
+   "open",
+   null,
+   null,
+   "741.7833",
+   0
+  ],
+  "iss-0333": [
+   "open",
+   null,
+   null,
+   "740.5833",
+   0
+  ],
+  "iss-0334": [
+   "resolved",
+   "25.9000",
+   null,
+   null,
+   0
+  ],
+  "iss-0335": [
+   "resolved",
+   "57.1333",
+   null,
+   null,
+   0
+  ],
+  "iss-0336": [
+   "claimed",
+   null,
+   "13.2500",
+   null,
+   0
+  ],
+  "iss-0337": [
+   "resolved",
+   "13.8333",
+   null,
+   null,
+   0
+  ],
+  "iss-0338": [
+   "resolved",
+   "59.7333",
+   null,
+   null,
+   0
+  ],
+  "iss-0339": [
+   "claimed",
+   null,
+   "14.8167",
+   null,
+   0
+  ],
+  "iss-0340": [
+   "resolved",
+   "6.0833",
+   null,
+   null,
+   0
+  ],
+  "iss-0341": [
+   "open",
+   null,
+   null,
+   "716.5833",
+   0
+  ],
+  "iss-0342": [
+   "resolved",
+   "64.2500",
+   null,
+   null,
+   0
+  ],
+  "iss-0343": [
+   "resolved",
+   "73.2667",
+   null,
+   null,
+   0
+  ],
+  "iss-0344": [
+   "resolved",
+   "55.4167",
+   null,
+   null,
+   0
+  ],
+  "iss-0345": [
+   "resolved",
+   "22.9333",
+   null,
+   null,
+   0
+  ],
+  "iss-0346": [
+   "open",
+   null,
+   null,
+   "690.7333",
+   0
+  ],
+  "iss-0347": [
+   "open",
+   null,
+   null,
+   "690.4167",
+   0
+  ],
+  "iss-0348": [
+   "open",
+   null,
+   null,
+   "690.3000",
+   0
+  ],
+  "iss-0349": [
+   "resolved",
+   "196.3000",
+   null,
+   null,
+   1
+  ],
+  "iss-0350": [
+   "resolved",
+   "32.5333",
+   null,
+   null,
+   0
+  ],
+  "iss-0351": [
+   "open",
+   null,
+   null,
+   "669.8667",
+   0
+  ],
+  "iss-0352": [
+   "resolved",
+   "20.7000",
+   null,
+   null,
+   0
+  ],
+  "iss-0353": [
+   "open",
+   null,
+   null,
+   "667.5000",
+   0
+  ],
+  "iss-0354": [
+   "open",
+   null,
+   null,
+   "666.8500",
+   0
+  ],
+  "iss-0355": [
+   "open",
+   null,
+   null,
+   "666.7333",
+   0
+  ],
+  "iss-0356": [
+   "open",
+   null,
+   null,
+   "666.4167",
+   0
+  ],
+  "iss-0357": [
+   "open",
+   null,
+   null,
+   "645.9833",
+   0
+  ],
+  "iss-0358": [
+   "open",
+   null,
+   null,
+   "645.5500",
+   0
+  ],
+  "iss-0359": [
+   "open",
+   null,
+   null,
+   "645.1333",
+   0
+  ],
+  "iss-0360": [
+   "open",
+   null,
+   null,
+   "644.5833",
+   0
+  ],
+  "iss-0361": [
+   "claimed",
+   null,
+   "105.1167",
+   null,
+   0
+  ],
+  "iss-0362": [
+   "open",
+   null,
+   null,
+   "642.8500",
+   0
+  ],
+  "iss-0363": [
+   "resolved",
+   "51.3000",
+   null,
+   null,
+   0
+  ],
+  "iss-0364": [
+   "open",
+   null,
+   null,
+   "642.3000",
+   0
+  ],
+  "iss-0365": [
+   "resolved",
+   "33.9333",
+   null,
+   null,
+   0
+  ],
+  "iss-0366": [
+   "resolved",
+   "169.7333",
+   null,
+   null,
+   0
+  ],
+  "iss-0367": [
+   "resolved",
+   "87.6500",
+   null,
+   null,
+   0
+  ],
+  "iss-0368": [
+   "open",
+   null,
+   null,
+   "620.4833",
+   0
+  ],
+  "iss-0369": [
+   "open",
+   null,
+   null,
+   "620.0500",
+   0
+  ],
+  "iss-0370": [
+   "resolved",
+   "140.1500",
+   null,
+   null,
+   0
+  ],
+  "iss-0371": [
+   "open",
+   null,
+   null,
+   "619.3833",
+   0
+  ],
+  "iss-0372": [
+   "open",
+   null,
+   null,
+   "619.1667",
+   1
+  ],
+  "iss-0373": [
+   "resolved",
+   "60.5167",
+   null,
+   null,
+   0
+  ],
+  "iss-0374": [
+   "claimed",
+   null,
+   "26.5833",
+   null,
+   0
+  ],
+  "iss-0375": [
+   "resolved",
+   "41.9167",
+   null,
+   null,
+   0
+  ],
+  "iss-0376": [
+   "claimed",
+   null,
+   "47.8333",
+   null,
+   0
+  ],
+  "iss-0377": [
+   "resolved",
+   "51.3000",
+   null,
+   null,
+   0
+  ],
+  "iss-0378": [
+   "resolved",
+   "15.6333",
+   null,
+   null,
+   0
+  ],
+  "iss-0379": [
+   "open",
+   null,
+   null,
+   "594.7333",
+   0
+  ],
+  "iss-0380": [
+   "open",
+   null,
+   null,
+   "594.3000",
+   0
+  ],
+  "iss-0381": [
+   "resolved",
+   "50.7167",
+   null,
+   null,
+   0
+  ],
+  "iss-0382": [
+   "resolved",
+   "69.3000",
+   null,
+   null,
+   0
+  ],
+  "iss-0383": [
+   "open",
+   null,
+   null,
+   "573.5500",
+   0
+  ],
+  "iss-0384": [
+   "open",
+   null,
+   null,
+   "573.1333",
+   0
+  ],
+  "iss-0385": [
+   "resolved",
+   "30.5167",
+   null,
+   null,
+   0
+  ],
+  "iss-0386": [
+   "resolved",
+   "16.6500",
+   null,
+   null,
+   0
+  ],
+  "iss-0387": [
+   "open",
+   null,
+   null,
+   "570.4167",
+   0
+  ],
+  "iss-0388": [
+   "open",
+   null,
+   null,
+   "549.9833",
+   0
+  ],
+  "iss-0389": [
+   "resolved",
+   "22.8000",
+   null,
+   null,
+   0
+  ],
+  "iss-0390": [
+   "resolved",
+   "70.0833",
+   null,
+   null,
+   0
+  ],
+  "iss-0391": [
+   "resolved",
+   "34.5167",
+   null,
+   null,
+   0
+  ],
+  "iss-0392": [
+   "open",
+   null,
+   null,
+   "547.2833",
+   0
+  ],
+  "iss-0393": [
+   "resolved",
+   "50.9167",
+   null,
+   null,
+   0
+  ],
+  "iss-0394": [
+   "claimed",
+   null,
+   "37.2000",
+   null,
+   0
+  ],
+  "iss-0395": [
+   "resolved",
+   "46.3167",
+   null,
+   null,
+   0
+  ],
+  "iss-0396": [
+   "open",
+   null,
+   null,
+   "525.5500",
+   0
+  ],
+  "iss-0397": [
+   "resolved",
+   "23.5500",
+   null,
+   null,
+   0
+  ],
+  "iss-0398": [
+   "open",
+   null,
+   null,
+   "523.8167",
+   0
+  ],
+  "iss-0399": [
+   "open",
+   null,
+   null,
+   "523.3833",
+   0
+  ],
+  "iss-0400": [
+   "open",
+   null,
+   null,
+   "522.7333",
+   0
+  ],
+  "iss-0401": [
+   "open",
+   null,
+   null,
+   "502.0000",
+   0
+  ],
+  "iss-0402": [
+   "resolved",
+   "101.4333",
+   null,
+   null,
+   0
+  ],
+  "iss-0403": [
+   "open",
+   null,
+   null,
+   "501.5500",
+   0
+  ],
+  "iss-0404": [
+   "open",
+   null,
+   null,
+   "501.4333",
+   0
+  ],
+  "iss-0405": [
+   "claimed",
+   null,
+   "17.2500",
+   null,
+   0
+  ],
+  "iss-0406": [
+   "resolved",
+   "175.3333",
+   null,
+   null,
+   0
+  ],
+  "iss-0407": [
+   "open",
+   null,
+   null,
+   "500.2667",
+   0
+  ],
+  "iss-0408": [
+   "resolved",
+   "19.7333",
+   null,
+   null,
+   0
+  ],
+  "iss-0409": [
+   "open",
+   null,
+   null,
+   "498.4167",
+   0
+  ],
+  "iss-0410": [
+   "open",
+   null,
+   null,
+   "478.0000",
+   1
+  ],
+  "iss-0411": [
+   "open",
+   null,
+   null,
+   "477.8833",
+   0
+  ],
+  "iss-0412": [
+   "resolved",
+   "52.0167",
+   null,
+   null,
+   0
+  ],
+  "iss-0413": [
+   "resolved",
+   "20.0167",
+   null,
+   null,
+   0
+  ],
+  "iss-0414": [
+   "open",
+   null,
+   null,
+   "474.8500",
+   0
+  ],
+  "iss-0415": [
+   "open",
+   null,
+   null,
+   "474.4167",
+   0
+  ],
+  "iss-0416": [
+   "claimed",
+   null,
+   "21.0667",
+   null,
+   0
+  ],
+  "iss-0417": [
+   "open",
+   null,
+   null,
+   "451.6167",
+   1
+  ],
+  "iss-0418": [
+   "resolved",
+   "19.0833",
+   null,
+   null,
+   0
+  ],
+  "iss-0419": [
+   "claimed",
+   null,
+   "40.2667",
+   null,
+   0
+  ],
+  "iss-0420": [
+   "open",
+   null,
+   null,
+   "429.9833",
+   0
+  ],
+  "iss-0421": [
+   "resolved",
+   "35.9167",
+   null,
+   null,
+   0
+  ],
+  "iss-0422": [
+   "open",
+   null,
+   null,
+   "428.5833",
+   0
+  ],
+  "iss-0423": [
+   "claimed",
+   null,
+   "27.1333",
+   null,
+   0
+  ],
+  "iss-0424": [
+   "resolved",
+   "81.3333",
+   null,
+   null,
+   0
+  ],
+  "iss-0425": [
+   "open",
+   null,
+   null,
+   "427.1667",
+   0
+  ],
+  "iss-0426": [
+   "open",
+   null,
+   null,
+   "405.9833",
+   0
+  ],
+  "iss-0427": [
+   "resolved",
+   "114.4167",
+   null,
+   null,
+   0
+  ],
+  "iss-0428": [
+   "open",
+   null,
+   null,
+   "405.6500",
+   0
+  ],
+  "iss-0429": [
+   "claimed",
+   null,
+   "37.0667",
+   null,
+   0
+  ],
+  "iss-0430": [
+   "open",
+   null,
+   null,
+   "404.1500",
+   0
+  ],
+  "iss-0431": [
+   "open",
+   null,
+   null,
+   "403.6167",
+   0
+  ],
+  "iss-0432": [
+   "open",
+   null,
+   null,
+   "402.5333",
+   0
+  ],
+  "iss-0433": [
+   "open",
+   null,
+   null,
+   "381.6667",
+   0
+  ],
+  "iss-0434": [
+   "claimed",
+   null,
+   "35.1833",
+   null,
+   0
+  ],
+  "iss-0435": [
+   "open",
+   null,
+   null,
+   "380.5833",
+   0
+  ],
+  "iss-0436": [
+   "resolved",
+   "40.6833",
+   null,
+   null,
+   0
+  ],
+  "iss-0437": [
+   "resolved",
+   "45.0000",
+   null,
+   null,
+   0
+  ],
+  "iss-0438": [
+   "open",
+   null,
+   null,
+   "378.8500",
+   0
+  ],
+  "iss-0439": [
+   "open",
+   null,
+   null,
+   "378.7333",
+   0
+  ],
+  "iss-0440": [
+   "resolved",
+   "250.2833",
+   null,
+   null,
+   0
+  ],
+  "iss-0441": [
+   "open",
+   null,
+   null,
+   "378.2000",
+   0
+  ],
+  "iss-0442": [
+   "resolved",
+   "30.2000",
+   null,
+   null,
+   0
+  ],
+  "iss-0443": [
+   "open",
+   null,
+   null,
+   "357.6667",
+   0
+  ],
+  "iss-0444": [
+   "open",
+   null,
+   null,
+   "357.3333",
+   0
+  ],
+  "iss-0445": [
+   "open",
+   null,
+   null,
+   "356.1500",
+   0
+  ],
+  "iss-0446": [
+   "open",
+   null,
+   null,
+   "356.0500",
+   0
+  ],
+  "iss-0447": [
+   "open",
+   null,
+   null,
+   "355.6000",
+   0
+  ],
+  "iss-0448": [
+   "claimed",
+   null,
+   "46.7667",
+   null,
+   0
+  ],
+  "iss-0449": [
+   "open",
+   null,
+   null,
+   "336.1667",
+   0
+  ],
+  "iss-0450": [
+   "claimed",
+   null,
+   "18.9167",
+   null,
+   0
+  ],
+  "iss-0451": [
+   "open",
+   null,
+   null,
+   "333.6667",
+   0
+  ],
+  "iss-0452": [
+   "resolved",
+   "20.0667",
+   null,
+   null,
+   0
+  ],
+  "iss-0453": [
+   "open",
+   null,
+   null,
+   "333.3333",
+   0
+  ],
+  "iss-0454": [
+   "resolved",
+   "31.8500",
+   null,
+   null,
+   0
+  ],
+  "iss-0455": [
+   "open",
+   null,
+   null,
+   "333.2167",
+   1
+  ],
+  "iss-0456": [
+   "resolved",
+   "126.2833",
+   null,
+   null,
+   0
+  ],
+  "iss-0457": [
+   "open",
+   null,
+   null,
+   "331.6167",
+   0
+  ],
+  "iss-0458": [
+   "open",
+   null,
+   null,
+   "330.8500",
+   0
+  ],
+  "iss-0459": [
+   "open",
+   null,
+   null,
+   "330.5333",
+   0
+  ],
+  "iss-0460": [
+   "open",
+   null,
+   null,
+   "312.1667",
+   0
+  ],
+  "iss-0461": [
+   "open",
+   null,
+   null,
+   "309.5667",
+   0
+  ],
+  "iss-0462": [
+   "open",
+   null,
+   null,
+   "309.3333",
+   0
+  ],
+  "iss-0463": [
+   "open",
+   null,
+   null,
+   "309.1333",
+   0
+  ],
+  "iss-0464": [
+   "claimed",
+   null,
+   "36.1667",
+   null,
+   0
+  ],
+  "iss-0465": [
+   "resolved",
+   "79.1333",
+   null,
+   null,
+   0
+  ],
+  "iss-0466": [
+   "resolved",
+   "62.0500",
+   null,
+   null,
+   0
+  ],
+  "iss-0467": [
+   "resolved",
+   "10.7000",
+   null,
+   null,
+   0
+  ],
+  "iss-0468": [
+   "resolved",
+   "214.7833",
+   null,
+   null,
+   0
+  ],
+  "iss-0469": [
+   "resolved",
+   "54.3833",
+   null,
+   null,
+   0
+  ],
+  "iss-0470": [
+   "resolved",
+   "95.0667",
+   null,
+   null,
+   0
+  ],
+  "iss-0471": [
+   "open",
+   null,
+   null,
+   "288.1667",
+   0
+  ],
+  "iss-0472": [
+   "open",
+   null,
+   null,
+   "285.8833",
+   0
+  ],
+  "iss-0473": [
+   "resolved",
+   "30.2167",
+   null,
+   null,
+   0
+  ],
+  "iss-0474": [
+   "open",
+   null,
+   null,
+   "285.2167",
+   0
+  ],
+  "iss-0475": [
+   "resolved",
+   "94.0333",
+   null,
+   null,
+   0
+  ],
+  "iss-0476": [
+   "open",
+   null,
+   null,
+   "284.3667",
+   0
+  ],
+  "iss-0477": [
+   "open",
+   null,
+   null,
+   "283.9333",
+   0
+  ],
+  "iss-0478": [
+   "claimed",
+   null,
+   "196.9333",
+   null,
+   0
+  ],
+  "iss-0479": [
+   "open",
+   null,
+   null,
+   "283.3833",
+   0
+  ],
+  "iss-0480": [
+   "resolved",
+   "22.4667",
+   null,
+   null,
+   0
+  ],
+  "iss-0481": [
+   "resolved",
+   "70.1500",
+   null,
+   null,
+   0
+  ],
+  "iss-0482": [
+   "resolved",
+   "126.5667",
+   null,
+   null,
+   0
+  ],
+  "iss-0483": [
+   "open",
+   null,
+   null,
+   "282.3000",
+   0
+  ],
+  "iss-0484": [
+   "open",
+   null,
+   null,
+   "261.7833",
+   0
+  ],
+  "iss-0485": [
+   "resolved",
+   "23.3000",
+   null,
+   null,
+   0
+  ],
+  "iss-0486": [
+   "resolved",
+   "62.9167",
+   null,
+   null,
+   0
+  ],
+  "iss-0487": [
+   "open",
+   null,
+   null,
+   "261.1333",
+   0
+  ],
+  "iss-0488": [
+   "resolved",
+   "47.9833",
+   null,
+   null,
+   0
+  ],
+  "iss-0489": [
+   "open",
+   null,
+   null,
+   "259.9333",
+   0
+  ],
+  "iss-0490": [
+   "open",
+   null,
+   null,
+   "259.6000",
+   0
+  ],
+  "iss-0491": [
+   "resolved",
+   "12.5167",
+   null,
+   null,
+   0
+  ],
+  "iss-0492": [
+   "open",
+   null,
+   null,
+   "258.8500",
+   0
+  ],
+  "iss-0493": [
+   "claimed",
+   null,
+   "60.7333",
+   null,
+   0
+  ],
+  "iss-0494": [
+   "open",
+   null,
+   null,
+   "258.5333",
+   1
+  ],
+  "iss-0495": [
+   "open",
+   null,
+   null,
+   "258.3000",
+   0
+  ],
+  "iss-0496": [
+   "resolved",
+   "60.3667",
+   null,
+   null,
+   0
+  ],
+  "iss-0497": [
+   "resolved",
+   "63.0167",
+   null,
+   null,
+   0
+  ],
+  "iss-0498": [
+   "open",
+   null,
+   null,
+   "237.8667",
+   0
+  ],
+  "iss-0499": [
+   "open",
+   null,
+   null,
+   "236.4833",
+   0
+  ],
+  "iss-0500": [
+   "resolved",
+   "11.3833",
+   null,
+   null,
+   0
+  ],
+  "iss-0501": [
+   "open",
+   null,
+   null,
+   "213.9833",
+   0
+  ],
+  "iss-0502": [
+   "claimed",
+   null,
+   "51.8667",
+   null,
+   0
+  ],
+  "iss-0503": [
+   "claimed",
+   null,
+   "98.7500",
+   null,
+   0
+  ],
+  "iss-0504": [
+   "resolved",
+   "30.3500",
+   null,
+   null,
+   0
+  ],
+  "iss-0505": [
+   "resolved",
+   "46.3333",
+   null,
+   null,
+   0
+  ],
+  "iss-0506": [
+   "resolved",
+   "22.2167",
+   null,
+   null,
+   0
+  ],
+  "iss-0507": [
+   "open",
+   null,
+   null,
+   "211.6167",
+   0
+  ],
+  "iss-0508": [
+   "open",
+   null,
+   null,
+   "211.2833",
+   0
+  ],
+  "iss-0509": [
+   "resolved",
+   "77.7667",
+   null,
+   null,
+   0
+  ],
+  "iss-0510": [
+   "open",
+   null,
+   null,
+   "210.1000",
+   0
+  ],
+  "iss-0511": [
+   "resolved",
+   "58.6000",
+   null,
+   null,
+   0
+  ],
+  "iss-0512": [
+   "resolved",
+   "18.4333",
+   null,
+   null,
+   0
+  ],
+  "iss-0513": [
+   "open",
+   null,
+   null,
+   "189.2333",
+   0
+  ],
+  "iss-0514": [
+   "resolved",
+   "125.5500",
+   null,
+   null,
+   0
+  ],
+  "iss-0515": [
+   "open",
+   null,
+   null,
+   "186.3000",
+   0
+  ],
+  "iss-0516": [
+   "resolved",
+   "159.9167",
+   null,
+   null,
+   0
+  ],
+  "iss-0517": [
+   "open",
+   null,
+   null,
+   "168.1667",
+   1
+  ],
+  "iss-0518": [
+   "open",
+   null,
+   null,
+   "166.0000",
+   0
+  ],
+  "iss-0519": [
+   "open",
+   null,
+   null,
+   "165.8833",
+   0
+  ],
+  "iss-0520": [
+   "resolved",
+   "38.4500",
+   null,
+   null,
+   0
+  ],
+  "iss-0521": [
+   "claimed",
+   null,
+   "66.3333",
+   null,
+   0
+  ],
+  "iss-0522": [
+   "resolved",
+   "55.3167",
+   null,
+   null,
+   0
+  ],
+  "iss-0523": [
+   "resolved",
+   "43.9333",
+   null,
+   null,
+   0
+  ],
+  "iss-0524": [
+   "claimed",
+   null,
+   "31.6500",
+   null,
+   0
+  ],
+  "iss-0525": [
+   "open",
+   null,
+   null,
+   "162.4167",
+   0
+  ],
+  "iss-0526": [
+   "resolved",
+   "87.0333",
+   null,
+   null,
+   0
+  ],
+  "iss-0527": [
+   "open",
+   null,
+   null,
+   "142.0000",
+   1
+  ],
+  "iss-0528": [
+   "resolved",
+   "44.8333",
+   null,
+   null,
+   0
+  ],
+  "iss-0529": [
+   "resolved",
+   "52.8333",
+   null,
+   null,
+   0
+  ],
+  "iss-0530": [
+   "open",
+   null,
+   null,
+   "140.4833",
+   0
+  ],
+  "iss-0531": [
+   "open",
+   null,
+   null,
+   "139.8167",
+   0
+  ],
+  "iss-0532": [
+   "open",
+   null,
+   null,
+   "138.7333",
+   0
+  ],
+  "iss-0533": [
+   "open",
+   null,
+   null,
+   "138.4167",
+   0
+  ],
+  "iss-0534": [
+   "resolved",
+   "47.2500",
+   null,
+   null,
+   0
+  ],
+  "iss-0535": [
+   "open",
+   null,
+   null,
+   "117.6667",
+   0
+  ],
+  "iss-0536": [
+   "resolved",
+   "115.1333",
+   null,
+   null,
+   0
+  ],
+  "iss-0537": [
+   "resolved",
+   "37.6500",
+   null,
+   null,
+   0
+  ],
+  "iss-0538": [
+   "claimed",
+   null,
+   "31.3500",
+   null,
+   0
+  ],
+  "iss-0539": [
+   "resolved",
+   "71.8167",
+   null,
+   null,
+   0
+  ],
+  "iss-0540": [
+   "resolved",
+   "62.7333",
+   null,
+   null,
+   0
+  ],
+  "iss-0541": [
+   "open",
+   null,
+   null,
+   "115.5000",
+   0
+  ],
+  "iss-0542": [
+   "open",
+   null,
+   null,
+   "115.3833",
+   0
+  ],
+  "iss-0543": [
+   "claimed",
+   null,
+   "30.2667",
+   null,
+   0
+  ],
+  "iss-0544": [
+   "open",
+   null,
+   null,
+   "114.8500",
+   0
+  ],
+  "iss-0545": [
+   "resolved",
+   "85.6000",
+   null,
+   null,
+   0
+  ],
+  "iss-0546": [
+   "resolved",
+   "62.7667",
+   null,
+   null,
+   0
+  ],
+  "iss-0547": [
+   "resolved",
+   "70.2167",
+   null,
+   null,
+   0
+  ],
+  "iss-0548": [
+   "resolved",
+   "52.0167",
+   null,
+   null,
+   0
+  ],
+  "iss-0549": [
+   "resolved",
+   "31.0833",
+   null,
+   null,
+   0
+  ],
+  "iss-0550": [
+   "open",
+   null,
+   null,
+   "90.8500",
+   0
+  ],
+  "iss-0551": [
+   "open",
+   null,
+   null,
+   "90.3167",
+   0
+  ],
+  "iss-0552": [
+   "open",
+   null,
+   null,
+   "70.0000",
+   0
+  ],
+  "iss-0553": [
+   "resolved",
+   "64.3500",
+   null,
+   null,
+   0
+  ],
+  "iss-0554": [
+   "claimed",
+   null,
+   "34.5167",
+   null,
+   0
+  ],
+  "iss-0555": [
+   "open",
+   null,
+   null,
+   "68.5833",
+   0
+  ],
+  "iss-0556": [
+   "open",
+   null,
+   null,
+   "67.5000",
+   0
+  ],
+  "iss-0557": [
+   "resolved",
+   "58.0500",
+   null,
+   null,
+   0
+  ],
+  "iss-0558": [
+   "open",
+   null,
+   null,
+   "48.1667",
+   0
+  ],
+  "iss-0559": [
+   "open",
+   null,
+   null,
+   "48.1667",
+   0
+  ],
+  "iss-0560": [
+   "resolved",
+   "41.9000",
+   null,
+   null,
+   0
+  ],
+  "iss-0561": [
+   "open",
+   null,
+   null,
+   "45.1333",
+   0
+  ],
+  "iss-0562": [
+   "open",
+   null,
+   null,
+   "43.3833",
+   0
+  ],
+  "iss-0563": [
+   "open",
+   null,
+   null,
+   "42.8500",
+   0
+  ],
+  "iss-0564": [
+   "open",
+   null,
+   null,
+   "42.3000",
+   0
+  ],
+  "iss-0565": [
+   "open",
+   null,
+   null,
+   "42.0833",
+   0
+  ],
+  "iss-0566": [
+   "open",
+   null,
+   null,
+   "22.0000",
+   0
+  ],
+  "iss-0567": [
+   "claimed",
+   null,
+   "18.7833",
+   null,
+   0
+  ],
+  "iss-0568": [
+   "open",
+   null,
+   null,
+   "19.6000",
+   0
+  ],
+  "iss-0569": [
+   "open",
+   null,
+   null,
+   "19.3833",
+   0
+  ],
+  "iss-0570": [
+   "open",
+   null,
+   null,
+   "18.7333",
+   0
+  ],
+  "iss-0571": [
+   "open",
+   null,
+   null,
+   "18.4167",
+   0
+  ],
+  "iss-0572": [
+   "open",
+   null,
+   null,
+   "18.3000",
+   0
+  ],
+  "iss-0573": [
+   "open",
+   null,
+   null,
+   "18.2000",
+   0
+  ],
+  "iss-0574": [
+   "open",
+   null,
+   null,
+   "18.1000",
+   0
+  ]
+ },
+ "mapping_history_digest": "20536c47ee3d556632dd6374304bb2ad99d51b95e0495d63fa0f4fc55beda603",
+ "matching_summary": {
+  "active_merges": 159,
+  "approved": 174,
+  "candidates": 400,
+  "merges_reversed": 15,
+  "rejected": 46,
+  "reviewed": 220,
+  "unreviewed": 180
+ },
+ "rejected_count": 0,
+ "resolution_summary": {
+  "claimed_count": 99,
+  "mean_hours": "68.2716",
+  "open_count": 160,
+  "reopen_cycles_total": 9,
+  "reopened_count": 9,
+  "resolved_count": 315
+ },
+ "rule_runs_at_as_of_digest": "d271e4fb6c660b40f8ef2412fa419092891181da1dc919f5efa0640edb67a1aa",
+ "window_case": {
+  "digests": {
+   "completeness": "0f93e608f13d6b0e21f2bb104c81ea06b67e0a2b4063e5bec8c15b6bfea5b205",
+   "critical_failures": "09749a684ee9bd5a1c3c5753839ef283c30620e34af8431341c3816658ff1896",
+   "definition_coverage": "a1fe5673758d2c56d32dccab3b170d13f6872ff3991a57de416def6637794aa5",
+   "definitions": "4722fc13cf2daea2147bf3e16eb2c23c31b76986d48d02ca3eaefe0ccc4b2d99",
+   "lineage_coverage": "ae68d41c74903863e3d9a2c0c68086008c2053c9f4197fcb04e394a1b30543eb",
+   "match_precision": "3b6f04e5912a5b59734e6f2629d7da0adcddf30b15161054e0ed8f7ae2e5e7c8",
+   "matching": "e5dcb83fd874f7f070b7f63f339b57af38c7755c1c96cf7d2fe95e3ecb7dc6e5",
+   "ownership_coverage": "c15d2c8b1254d09d9e4c38201209d7f2bb1c429a36293cacde03ad4abd4d7438",
+   "relationship_integrity": "28882eda5486e714214ee79aca3b8dd33fe3b9022fb4a0590d21076786821caf",
+   "resolution_time": "b38db578992fbdd3c4cc0de37d1ed352748ec9f9c271e7188ad3a2eba34ebf8a",
+   "rules": "61dc4dc16bf383167470feef833abeef07a4c057e9f7cf85ca5b0db144a3ee6f",
+   "timeliness": "5c6518404b24a2c11f5ae9fbcae478c0ffd99943209283f0c8bf23f9244e38ef",
+   "uniqueness": "9cc7a27b5bcaca238bcefefff4a768d0ead5c882c93bcb170431cb4441b12d3f",
+   "validity": "53bf1e76c8a0565f0b1f8525ab82fb6e3ab4f35e50f6c236d1fbe55e33bfb078",
+   "weighted_score": "04526b631a48a725c456a7e3db31f9bd9efaac0a9abbc2ebeeaa2b1b3dfb6e6c"
+  },
+  "empty_population": false,
+  "from": "2026-09-01T00:00:00Z",
+  "issue_class_digest": "8ce1a9133561aedb981888c2a302a789946e3c618af220534daaba096b13b3f7",
+  "issue_classes": {
+   "claimed": 15,
+   "open": 66,
+   "resolved": 49
+  },
+  "to": "2026-09-20T00:00:00Z",
+  "warning_codes": [
+   "CRITICAL_OVERRIDE"
+  ],
+  "weight_version": "w2"
+ },
+ "zone_probe": {
+  "local_times": [
+   "00:00",
+   "01:00",
+   "01:30",
+   "02:00",
+   "02:30",
+   "03:00",
+   "06:00"
+  ],
+  "local_to_utc": {
+   "America/Chicago": {
+    "count": 2555,
+    "digest": "dc4f10823b64307b40b4e71c3155523015d481bddffe018864619c6090ec9b63"
+   },
+   "America/New_York": {
+    "count": 2555,
+    "digest": "a9085c42db097e51963db368d7fa984d90fd249badb522c22122c97024d3c316"
+   },
+   "Asia/Kolkata": {
+    "count": 2555,
+    "digest": "89640f887669f1fb33fd77abbc8d173332f38454e549d5a22856c3c377a95f72"
+   },
+   "Asia/Singapore": {
+    "count": 2555,
+    "digest": "3e754256c1523e9d52702d4e9144367827020c6418eded1b51906e5bc02eb0df"
+   },
+   "Europe/Berlin": {
+    "count": 2555,
+    "digest": "954ed3a6b199a65e2732890718ef706d9d0ebbafae4d4d0e7f9f992f634e5c51"
+   },
+   "Europe/London": {
+    "count": 2555,
+    "digest": "64ca6744069a75ba2a6bd10948b9a4db60defe76190017c8ead1118c1a43943e"
+   },
+   "UTC": {
+    "count": 2555,
+    "digest": "7d9e1c9d69a54e3a8cafdaa3bb6b27b52d8f161b8ab63e8f6b82566bdfffb155"
+   }
+  },
+  "occurrence_windows": [
+   [
+    "2026-03-07T00:00:00Z",
+    "2026-03-10T00:00:00Z"
+   ],
+   [
+    "2026-03-28T00:00:00Z",
+    "2026-03-31T00:00:00Z"
+   ],
+   [
+    "2026-10-24T00:00:00Z",
+    "2026-10-27T00:00:00Z"
+   ],
+   [
+    "2026-10-31T00:00:00Z",
+    "2026-11-03T00:00:00Z"
+   ]
+  ],
+  "occurrences": {
+   "America/Chicago": {
+    "count": 2304,
+    "digest": "b119f823521f58a6490c00dba8ae05efcb646c45c4420a34dc96ffb0341d273a"
+   },
+   "America/New_York": {
+    "count": 2304,
+    "digest": "9f36a63506ad3d30f1a1639a8df37dd7e65a48d7aa4eaf499cdd23d3b394147d"
+   },
+   "Asia/Kolkata": {
+    "count": 2304,
+    "digest": "070f6584f369c6d9a865fe0c19639ecbea858f75dc1f5528174996f476e8eaf9"
+   },
+   "Asia/Singapore": {
+    "count": 2304,
+    "digest": "3f4844e3e1947c8f690cc70bc7b67f688c7f88c7a883df579efd8a83452852f1"
+   },
+   "Europe/Berlin": {
+    "count": 2304,
+    "digest": "afb45b5d7464ea541df816ecc85e99377cd4bc9a656e13519bf39e384df25c03"
+   },
+   "Europe/London": {
+    "count": 2304,
+    "digest": "64d737a69b273359dae0e5ee2d38d9981f56611a61d7cd5c3503b0b8fdc3bb7e"
+   },
+   "UTC": {
+    "count": 2304,
+    "digest": "4ca8658872edd67992fd1783db7ae5f978dee1f2a8ce24761b903414bd3987fd"
+   }
+  },
+  "zones": [
+   "America/Chicago",
+   "America/New_York",
+   "Asia/Kolkata",
+   "Asia/Singapore",
+   "Europe/Berlin",
+   "Europe/London",
+   "UTC"
+  ]
+ }
+}
