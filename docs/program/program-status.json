@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T00:36:52Z",
+  "updated_at": "2026-10-27T00:45:54Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -42,6 +42,12 @@
       "ts": "2026-10-26T22:45:05Z",
       "what": "cloud container restarted mid-run; two background workers (A-040 InvoiceBridge fixes, A-041 ProductSignal backend) were lost before hand-back; the worktree, databases and tools survived; resume workers A-042/A-043 dispatched",
       "status": "recovered (A-042 and A-043 accepted)"
+    },
+    {
+      "id": "BLK-004",
+      "ts": "2026-10-27T00:45:54Z",
+      "what": "second cloud container restart; PostgreSQL cluster was down afterwards (restarted with pg_ctlcluster); workers A-048 (P06 reviewer) and A-049 (P07 fixture) lost before hand-back; resumed as A-051/A-050",
+      "status": "recovering"
     }
   ],
   "projects": {
