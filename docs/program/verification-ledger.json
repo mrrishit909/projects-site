@@ -1307,6 +1307,20 @@
       "check": "live URL verification from GitHub Actions after the review republish (deploy-wait on code_sha, route 200s, case-study links both ways, browser journey) for all seven sites",
       "run": "https://github.com/mrrishit909/projects-site/actions/runs/40448466520",
       "result": "success; trustledger live code_sha 0b5d686869f289681a795b022e185a1eb614c1d0"
+    },
+    {
+      "ts": "2026-10-27T04:41:20Z",
+      "project": "08-pipeline-observatory",
+      "check": "CI Mode A on GitHub-hosted runner with transient postgres:16 on the generator push (reference check, hash count, 422 pytest incl. 41 generator tests)",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40449388766",
+      "result": "Mode A success on 97188de (generator 9743a33); Mode B failure expected (web not yet built)"
+    },
+    {
+      "ts": "2026-10-27T04:41:20Z",
+      "project": "09-changeworks",
+      "check": "CI Mode A on GitHub-hosted runner with transient postgres:16 on the generator commit (reference check, hash count, 399 pytest incl. 53 generator tests)",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40450783026",
+      "result": "Mode A success on f77a589; Mode B failure expected (web not yet built)"
     }
   ]
 }

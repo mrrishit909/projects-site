@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T04:38:06Z",
+  "updated_at": "2026-10-27T04:41:20Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -211,7 +211,8 @@
       },
       "generator": {
         "commit": "9743a33",
-        "status": "done"
+        "status": "done",
+        "ci": "Mode A green on hosted runner (run 40449388766)"
       },
       "portfolio_prep": {
         "motion_tile": "pipeline-observatory/loop.mp4+webm on unified-portfolio (a1ee8fe)",
@@ -253,7 +254,8 @@
       },
       "generator": {
         "commit": "f77a589",
-        "status": "done"
+        "status": "done",
+        "ci": "Mode A green on hosted runner (run 40450783026)"
       }
     },
     "10-retentionlab": {
