@@ -668,8 +668,9 @@
       "id": "T-10-05",
       "project": "10-retentionlab",
       "title": "Independent disproof review, fixes, republish",
-      "status": "in_progress",
-      "assignment": "A-075 (review); fix worker next"
+      "status": "done",
+      "assignment": "A-075 (review); fix worker next",
+      "result": "A-075: 1 defect + 2 a11y defects + 12 documentation findings; wording fixed on the portfolio (356be88)"
     },
     {
       "id": "T-10-06",

@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T06:01:12Z",
+  "updated_at": "2026-10-27T06:05:00Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -343,12 +343,19 @@
       "web": {
         "commit": "7b47757",
         "status": "done; CI green both modes (run 40456539440)"
+      },
+      "review": {
+        "assignment": "A-075",
+        "defects": 3,
+        "documentation": 12,
+        "status": "fixes in progress (A-077)",
+        "case_study_wording_fixed": "356be88"
       }
     }
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 07 complete. Projects 08/09/10: reviewer hand-backs (A-073, A-074, A-075) -> fix workers -> verify -> commit -> CI -> republish -> live check -> case study 'Found by review, then fixed' -> artifacts workers -> verify -> commit -> CI. Then the final report with all ten URLs and per-project status.",
+    "next_concrete_task": "Projects 08/10: fix hand-backs (A-076, A-077) -> verify -> commit -> CI -> republish -> live check -> case study 'then fixed' -> artifacts workers. Project 09: A-074 review hand-back -> fix worker -> same chain. Then the final report with all ten URLs.",
     "acceptance": "see task-queue.json"
   }
 }
