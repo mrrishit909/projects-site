@@ -96,3 +96,36 @@ a dataset without an owner is OWNER_REQUIRED; a merge by its proposer is REVIEWE
 distinct (source, target) pairs; inferred edges never enter the observed numerator. Golden: weighted score 0.963932
 under w2 and 0.958116 under w1 with the override true; uniqueness 1/98 groups and 2/100 rows; relationship 36/38 with 2
 nulls; timeliness 3/4; ownership 4/5; definitions 3/4; lineage 5/6; precision 2/3; resolution mean 38.4444 h.
+
+## D-07 Backend clarifications (2026-10-27, adopted from A-052; the 23 numbered assumptions are in README.md)
+`metrics` is exactly the 12 keys; `rules`, `definitions` and `matching` travel beside it. Facts after `as_of` do not
+exist yet (a rule disabled after `as_of` is still active at it; issue lifecycle fields clipped). The half-open window
+narrows issues by `detected_at`, observed lineage by `observed_at`, candidates by `proposed_at`, decisions by
+`decided_at`; row measurements, timeliness, ownership and definitions are snapshots. Weight version in force = latest
+`valid_from` not after `as_of`; C03 refuses weights differing from the named version (422
+WEIGHT_CHANGE_REQUIRES_VERSION); weight versions are append-only and sum to 1 over the five dimensions. Several rules
+of one dimension on one dataset contribute their mean; an unmonitored dataset's timeliness rule and a validity rule
+without a pattern are not measured; a relationship rule whose parent has no rows matches nothing. Cells compare as
+exact text; floats and nested values in rows are rejected; rules may declare an eligibility filter {field, equals}.
+Timeliness grace is 0..1439 minutes; a monitored dataset declares zone, local time and grace; never refreshed is late;
+a repeated local time is the later instant (as PostgreSQL AT TIME ZONE). Issue statuses are open, investigating,
+closed; resolved and claimed are derived; `detected_at` = the failing run's `run_at`; a verification must not predate
+the latest reopen; an issue whose verification run is not a successful rerun of the same rule and version is rejected
+at ingest (VERIFICATION_RUN_INVALID). **Coordinator decision:** C05 gains `action=claim` and `action=reopen` (the
+contract had no close/reopen command and P07-TEST-09 needs "closed without rerun = claimed"). C04 opens one issue per
+failing scheduled run; owner defaults to the dataset owner and must be active. C10 performs and stores the rerun over
+the issue's recorded records; not verified is 200 with status claimed and a reason (RERUN_STILL_FAILING, RULE_DISABLED,
+RULE_VERSION_DIFFERS, NO_RECORDS_TO_CHECK). C06: score is a decimal string of at most 6 places; a pair in either
+orientation is 409 DUPLICATE_PAIR; a first-seen left > right pair is 422 NON_CANONICAL_ORDER; a shared name and address
+gets the uncertainty note and a warning; a candidate never produces a decision. C07/C08: the reviewer is the actor;
+reviewer = proposer is 403 REVIEWER_IS_PROPOSER (audited); one decision per candidate also under a race; 409
+RECORD_ALREADY_MERGED guards chains; a reversal needs a reason, targets an approval, happens once. C09: disabled stays
+disabled; reason required. C02: valid_from and approver server-stamped; statuses draft and published; v2+ needs a
+reason; an incomplete checklist is allowed with a warning. C01: registered_at server-stamped; up to 1,000 rows per
+load. Precision reads `verification_truth` only when a test or reviewer created it (otherwise null with
+MATCH_TRUTH_UNAVAILABLE); any decided record without a truth row gives null, never 0. Extra ingest codes:
+MALFORMED_RECORD, DUPLICATE_ID, SCHEDULE_REQUIRED, INVALID_COUNTS, ALREADY_REVIEWED, INVALID_REVERSAL, ALREADY_REVERSED,
+VERIFICATION_RUN_INVALID, UNKNOWN_OWNER. group_by returns the 10 scoped metrics per group; definition coverage and
+precision are portfolio-wide. `quality_rules` holds one current row per rule; no command creates or versions rules.
+Known: SQL uses PostgreSQL regexes and tz data while the domain uses Python `re` and system tzdata (patterns stay in the
+common subset); reads load the whole population per request.

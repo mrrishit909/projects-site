@@ -1,0 +1,50 @@
+"""Domain errors and reason codes (docs/contracts.md D-01..D-06, tests/fixtures/golden/CALCULATION.md D-T7-10)."""
+from __future__ import annotations
+
+from typing import Any
+
+# Ingest rejection codes of the fixture (D-06).
+OWNER_REQUIRED = "OWNER_REQUIRED"
+DUPLICATE_PAIR = "DUPLICATE_PAIR"
+NON_CANONICAL_ORDER = "NON_CANONICAL_ORDER"
+REVIEWER_IS_PROPOSER = "REVIEWER_IS_PROPOSER"
+DEPENDENT_REJECTED = "DEPENDENT_REJECTED"
+UNKNOWN_OWNER = "UNKNOWN_OWNER"
+OWNER_INACTIVE = "OWNER_INACTIVE"
+CLASSIFICATION_REQUIRED = "CLASSIFICATION_REQUIRED"
+UNKNOWN_DATASET = "UNKNOWN_DATASET"
+UNKNOWN_RULE = "UNKNOWN_RULE"
+UNKNOWN_RULE_RUN = "UNKNOWN_RULE_RUN"
+UNKNOWN_METRIC_VERSION = "UNKNOWN_METRIC_VERSION"
+UNKNOWN_RECORD = "UNKNOWN_RECORD"
+UNKNOWN_CANDIDATE = "UNKNOWN_CANDIDATE"
+UNKNOWN_MERGE = "UNKNOWN_MERGE"
+SAME_RECORD = "SAME_RECORD"
+INVALID_CANDIDATE = "INVALID_CANDIDATE"
+ROLE_NOT_PERMITTED = "ROLE_NOT_PERMITTED"
+# Codes the contract and the fixture do not list (README.md assumptions).
+MALFORMED_RECORD = "MALFORMED_RECORD"
+DUPLICATE_ID = "DUPLICATE_ID"
+SCHEDULE_REQUIRED = "SCHEDULE_REQUIRED"
+INVALID_COUNTS = "INVALID_COUNTS"
+ALREADY_REVIEWED = "ALREADY_REVIEWED"
+INVALID_REVERSAL = "INVALID_REVERSAL"
+ALREADY_REVERSED = "ALREADY_REVERSED"
+VERIFICATION_RUN_INVALID = "VERIFICATION_RUN_INVALID"
+# Command and read reasons.
+INVALID_WINDOW = "INVALID_WINDOW"
+INVALID_GROUP = "INVALID_GROUP"
+UNKNOWN_WEIGHT_VERSION = "UNKNOWN_WEIGHT_VERSION"
+WEIGHT_CHANGE_REQUIRES_VERSION = "WEIGHT_CHANGE_REQUIRES_VERSION"
+RULE_VERSION_DIFFERS = "RULE_VERSION_DIFFERS"
+
+
+class DomainError(Exception):
+    """A business-rule violation with a stable machine-readable code."""
+
+    def __init__(self, code: str, message: str, path: str | None = None, details: dict[str, Any] | None = None) -> None:
+        super().__init__(f"{code}: {message}")
+        self.code = code
+        self.message = message
+        self.path = path
+        self.details: dict[str, Any] = dict(details or {})
