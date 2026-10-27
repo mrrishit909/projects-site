@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T23:57:02Z",
+  "updated_at": "2026-10-27T00:00:05Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1119,9 +1119,20 @@
       "command": "reference_check.py; DATABASE_URL=... pytest -q",
       "exit_code": 0,
       "actual": "ALL OK (706); full suite passed (see commit)",
-      "code_sha": "pending-commit",
+      "code_sha": "8fcb252",
       "evidence": "apps/productsignal/tests/test_review_findings.py; docs/contracts.md D-08",
       "ts": "2026-10-26T23:57:02Z"
+    },
+    {
+      "requirement": "P06 Mode A on the cutoff-fix commit (319 tests incl. D-08 regression tests, postgres:16 service, github-hosted)",
+      "project": "06-productsignal",
+      "status": "verified",
+      "command": "productsignal-ci.yml run 40423197317 job 'Mode A'",
+      "exit_code": 0,
+      "actual": "Mode A success; Mode B failing until the site source exists (A-047 running)",
+      "code_sha": "8fcb252",
+      "evidence": "https://github.com/mrrishit909/projects-site/actions/runs/40423197317",
+      "ts": "2026-10-27T00:00:05Z"
     }
   ]
 }
