@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T05:47:43Z",
+  "updated_at": "2026-10-27T06:01:12Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -235,6 +235,13 @@
       "web": {
         "commit": "1d2d55b",
         "status": "done; CI green both modes (run 40455458608)"
+      },
+      "review": {
+        "assignment": "A-073",
+        "defects": 8,
+        "documentation": 8,
+        "status": "fixes in progress (A-076)",
+        "case_study_wording_fixed": "3558f84"
       }
     },
     "09-changeworks": {
