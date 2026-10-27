@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T03:08:57Z",
+  "updated_at": "2026-10-27T03:10:35Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -204,7 +204,7 @@
       "backend": {
         "commit": "3f3fc11",
         "tests": 381,
-        "status": "done; CI pending"
+        "status": "done; Mode A green on hosted runner (run 40442468507); Mode B pending the web"
       }
     },
     "09-changeworks": {
