@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T03:10:35Z",
+  "updated_at": "2026-10-27T03:12:09Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -148,7 +148,8 @@
       "verified_note": "Entry journey + reviewer disproof pass; all 14 findings fixed in T-06-07 with tests in Python, SQL, TypeScript and the API; the INJ-10 gap inside the published lift disclosed",
       "artifacts": {
         "commit": "ac32f8f",
-        "status": "done"
+        "status": "done",
+        "ci": "run 40441332040 green after one re-run of a Mode B timing flake"
       },
       "status": "complete",
       "completed_at": "2026-10-27T02:56:27Z"

@@ -9,7 +9,8 @@ export function watch(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (m) => { if (m.type() === "error") errors.push(`console: ${m.text()}`); });
   page.on("pageerror", (e) => errors.push(`pageerror: ${e.message}`));
-  page.on("requestfailed", (r) => errors.push(`requestfailed: ${r.url()}`));
+  // A request aborted by our own navigation or reload (net::ERR_ABORTED) is not a failure of the page.
+  page.on("requestfailed", (r) => { if (r.failure()?.errorText !== "net::ERR_ABORTED") errors.push(`requestfailed: ${r.url()}`); });
   return errors;
 }
 

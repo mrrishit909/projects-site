@@ -6,7 +6,8 @@ const watch = (page: Page): string[] => {
   const problems: string[] = [];
   page.on("console", (m) => { if (m.type() === "error") problems.push(`console: ${m.text()}`); });
   page.on("pageerror", (e) => problems.push(`pageerror: ${e.message}`));
-  page.on("requestfailed", (r) => problems.push(`requestfailed: ${r.url()}`));
+  // A request aborted by our own navigation or reload (net::ERR_ABORTED) is not a failure of the page.
+  page.on("requestfailed", (r) => { if (r.failure()?.errorText !== "net::ERR_ABORTED") problems.push(`requestfailed: ${r.url()}`); });
   return problems;
 };
 const noOverflow = async (page: Page): Promise<void> => {

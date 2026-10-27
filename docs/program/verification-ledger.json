@@ -1279,6 +1279,13 @@
       "check": "CI Mode A on GitHub-hosted runner with transient postgres:16 (reference check, hash count, 381 pytest)",
       "run": "https://github.com/mrrishit909/projects-site/actions/runs/40442468507",
       "result": "Mode A success on 3f3fc11; Mode B failure expected (web scaffold only)"
+    },
+    {
+      "ts": "2026-10-27T03:12:09Z",
+      "project": "06-productsignal",
+      "check": "CI on the artifacts push (be538fc): Mode A green; Mode B failed once on a navigation-aborted data fetch counted as a failed request (web byte-identical to the green run on fdf911a), re-run once per the flake rule and green",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40441332040",
+      "result": "success after one re-run; e2e watcher hardened in every app to ignore net::ERR_ABORTED"
     }
   ]
 }
