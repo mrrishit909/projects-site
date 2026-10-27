@@ -481,7 +481,7 @@
       "id": "T-07-02",
       "project": "07-trustledger",
       "title": "Golden fixture + reference check",
-      "status": "in_progress",
+      "status": "done",
       "prereqs": [
         "T-07-01"
       ],
@@ -492,7 +492,7 @@
       "id": "T-07-03",
       "project": "07-trustledger",
       "title": "Domain + Postgres + FastAPI slice + CI",
-      "status": "pending",
+      "status": "in_progress",
       "prereqs": [
         "T-07-02"
       ],

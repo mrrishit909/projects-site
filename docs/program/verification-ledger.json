@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T00:36:52Z",
+  "updated_at": "2026-10-27T00:49:51Z",
   "legend": "status: verified | failed | blocked | not_checked. Every entry records command, exit code, code_sha and evidence location when run.",
   "entries": [
     {
@@ -1177,6 +1177,17 @@
       "code_sha": "2dcc460 (code) / artifacts commit",
       "evidence": "apps/invoicebridge/docs/*.md; artifacts/CHECKSUMS.txt",
       "ts": "2026-10-27T00:36:52Z"
+    },
+    {
+      "requirement": "P07-GOLD-01..11: completeness 95/100 = 0.950000; validity 90/95 = 0.947368 populated-only and 90/100 = 0.900000 all-eligible, labelled; critical override true under weighted score 0.963932; uniqueness 1/98 and 2/100; relationship 36/38 with 2 nulls counted; timeliness 3/4; ownership 4/5; definitions 3/4; lineage 5/6; precision 2/3; variants rejected/empty",
+      "project": "07-trustledger",
+      "status": "verified",
+      "command": "python3 -I apps/trustledger/tests/reference_check.py",
+      "exit_code": 0,
+      "actual": "ALL OK (736 checks)",
+      "code_sha": "596b127",
+      "evidence": "apps/trustledger/tests/fixtures/golden/",
+      "ts": "2026-10-27T00:49:51Z"
     }
   ]
 }

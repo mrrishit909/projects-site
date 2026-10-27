@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T00:45:54Z",
+  "updated_at": "2026-10-27T00:49:51Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -47,7 +47,7 @@
       "id": "BLK-004",
       "ts": "2026-10-27T00:45:54Z",
       "what": "second cloud container restart; PostgreSQL cluster was down afterwards (restarted with pg_ctlcluster); workers A-048 (P06 reviewer) and A-049 (P07 fixture) lost before hand-back; resumed as A-051/A-050",
-      "status": "recovering"
+      "status": "recovering (A-050 accepted; A-051 reviewer running)"
     }
   ],
   "projects": {
@@ -142,7 +142,7 @@
     },
     "07-trustledger": {
       "slug": "trustledger",
-      "stage": "contracts v1 and tooling committed (e1f9a84; spec hash 3a4ec15b verified against the source pack); golden fixture A-049 running",
+      "stage": "gate-A passed (fixture 596b127, 736 checks); backend A-052 running",
       "built": false,
       "verified": false,
       "published": false,
@@ -151,7 +151,7 @@
       "latest_run_url": null,
       "site_url": null,
       "blockers": [],
-      "next_task": "T-07-02 (A-049)"
+      "next_task": "T-07-03 (A-052)"
     },
     "08-pipeline-observatory": {
       "slug": "pipeline-observatory",
@@ -195,7 +195,7 @@
   },
   "RESUME": {
     "how": "git fetch origin business-data-lab; read docs/program/program-status.json and task-queue.json; check the remote SHA before trusting any chat summary.",
-    "next_concrete_task": "Project 06: A-048 reviewer hand-back -> fix worker -> republish -> artifacts. Project 07: A-049 fixture hand-back -> D-06 -> backend -> generator -> web -> publish -> integrate -> review -> artifacts. Then project 08 pipeline-observatory (contracts first).",
+    "next_concrete_task": "Project 06: A-051 reviewer hand-back -> fix worker -> republish -> artifacts. Project 07: A-052 backend hand-back -> verify -> D-07 -> commit -> CI Mode A -> generator -> web -> publish -> integrate -> review -> artifacts. Then project 08 pipeline-observatory (contracts first).",
     "acceptance": "see task-queue.json"
   }
 }
