@@ -41,6 +41,6 @@ scene({
     // completeness and the residual
     const rs = ease.out3(seg(u, 0.84, 0.94));
     txt(g, "COMPLETENESS 8 / 9 · RECONCILIATION RESIDUAL 0.00", lx, ty + H * 0.12, { size: H * 0.026, color: CYAN_T, spacing: 1.5, mono: true, alpha: rs });
-    line(g, lx, H * 0.945, W * 0.94, H * 0.945, { color: RULE, width: 1 });
+    line(g, lx, H * 0.945, W * 0.94, H * 0.945, RULE, 1);
   },
 });
