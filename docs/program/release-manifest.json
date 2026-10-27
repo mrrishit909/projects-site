@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T02:41:06Z",
+  "updated_at": "2026-10-27T02:42:44Z",
   "sites": [
     {
       "slug": "revenue-atlas",
@@ -129,8 +129,18 @@
       "dataset_version": "tl-20261026-20261026",
       "dataset_hash": "c0dca32f7982f7cc6480feec90795edc76259801307fe59fb4012795c5f0697b",
       "contract_version": "v1",
-      "publication_status": "published 77665db (CI 40439001518 green both modes on 78a4390); live check pending; case study integrated in the same commit",
-      "live_verification": null
+      "publication_status": "published 77665db (CI 40439001518 green both modes on 78a4390); live-verified with the release commit on the live manifest (run 40439868137); case study integrated",
+      "live_verification": {
+        "run_url": "https://github.com/mrrishit909/projects-site/actions/runs/40439868137",
+        "verified_at": "2026-10-27T02:42:44Z",
+        "live_code_sha_matched": "78a43900c191530ca66448c53a3982efab988d67"
+      }
     }
-  ]
+  ],
+  "last_all_sites_live_check": {
+    "run_id": 40439868137,
+    "sites": 7,
+    "result": "all green",
+    "at": "2026-10-27T02:42:44Z"
+  }
 }
