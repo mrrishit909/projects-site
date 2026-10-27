@@ -1,0 +1,482 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-05-01T00:00:00Z",
+  "ingest": {
+    "counts": {
+      "accounts": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "subscription_events": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "billing_events": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "usage_events": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "support_events": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "prediction_cutoffs": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "feature_rows": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "labels": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "training_runs": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "predictions": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "intervention_scenarios": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "outreach_events": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "feature_registry": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "split_assignments": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "scoring_publications": {
+        "accepted": 0,
+        "rejected": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "consistency": {
+    "cutoff_windows_mismatched": [],
+    "feature_rows_mismatched": [],
+    "labels_mismatched": [],
+    "split_assignments_mismatched": [],
+    "scoring_publications_mismatched": [],
+    "config_hash_mismatched": [],
+    "outreach_queue_mismatched": [],
+    "predictions_citation_mismatched": []
+  },
+  "commands": [],
+  "split": {},
+  "point_in_time": {
+    "rows": []
+  },
+  "scoring_publications": [],
+  "freshness": {
+    "as_of": "2026-05-01T00:00:00Z",
+    "scoring_hours": null,
+    "latest_completed_publication_id": null,
+    "latest_completed_published_at": null,
+    "data_hours": null,
+    "latest_available_at": null
+  },
+  "cutoff_sets": {
+    "2026-01-01T00:00:00Z": {
+      "prediction_at": "2026-01-01T00:00:00Z",
+      "population": {
+        "cutoff_rows": 0,
+        "eligible": 0,
+        "ineligible": {},
+        "mature": 0,
+        "censored": 0,
+        "scored": 0,
+        "evaluated": 0,
+        "unscored_excluded": 0,
+        "churned": 0
+      },
+      "empty_population": true,
+      "empty_evaluation": true,
+      "churn_rate": {
+        "value": null,
+        "churned": 0,
+        "mature_eligible": 0
+      },
+      "late_events": {
+        "subscription_events": 0,
+        "billing_events": 0,
+        "usage_events": 0,
+        "support_events": 0,
+        "total": 0
+      },
+      "ranking": [],
+      "capacity": null,
+      "precision_at_k": null,
+      "recall_at_k": null,
+      "risk_lift_at_k": null,
+      "average_precision": {
+        "value": null,
+        "prevalence": null,
+        "positives": 0,
+        "n": 0,
+        "terms": []
+      },
+      "brier_score": {
+        "value": null,
+        "n": 0,
+        "terms": []
+      },
+      "calibration": {
+        "bin_width": "0.100000",
+        "bins": [
+          {
+            "index": 0,
+            "lower": "0.000000",
+            "upper": "0.100000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 1,
+            "lower": "0.100000",
+            "upper": "0.200000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 2,
+            "lower": "0.200000",
+            "upper": "0.300000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 3,
+            "lower": "0.300000",
+            "upper": "0.400000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 4,
+            "lower": "0.400000",
+            "upper": "0.500000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 5,
+            "lower": "0.500000",
+            "upper": "0.600000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 6,
+            "lower": "0.600000",
+            "upper": "0.700000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 7,
+            "lower": "0.700000",
+            "upper": "0.800000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 8,
+            "lower": "0.800000",
+            "upper": "0.900000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 9,
+            "lower": "0.900000",
+            "upper": "1.000000",
+            "closed_upper": true,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          }
+        ]
+      },
+      "economics": null,
+      "outreach_queue": null,
+      "feature_missingness": {
+        "period": "2026-01",
+        "by_feature": {
+          "usage_events_30d": {
+            "missing": 0,
+            "total": 0,
+            "value": null
+          },
+          "days_since_last_usage": {
+            "missing": 0,
+            "total": 0,
+            "value": null
+          },
+          "high_severity_support_90d": {
+            "missing": 0,
+            "total": 0,
+            "value": null
+          },
+          "billing_total_90d": {
+            "missing": 0,
+            "total": 0,
+            "value": null
+          }
+        },
+        "overall": {
+          "missing": 0,
+          "total": 0,
+          "value": null
+        }
+      },
+      "population_drift": {
+        "feature": "usage_events_30d",
+        "reference_prediction_at": "2025-03-01T00:00:00Z",
+        "reference_rows": 0,
+        "current_rows": 0,
+        "psi": null,
+        "threshold": "0.200000",
+        "diagnostic_only": true,
+        "exceeds_threshold": null,
+        "bins": []
+      }
+    },
+    "2026-02-01T00:00:00Z": {
+      "prediction_at": "2026-02-01T00:00:00Z",
+      "population": {
+        "cutoff_rows": 0,
+        "eligible": 0,
+        "ineligible": {},
+        "mature": 0,
+        "censored": 0,
+        "scored": 0,
+        "evaluated": 0,
+        "unscored_excluded": 0,
+        "churned": 0
+      },
+      "empty_population": true,
+      "empty_evaluation": true,
+      "churn_rate": {
+        "value": null,
+        "churned": 0,
+        "mature_eligible": 0
+      },
+      "late_events": {
+        "subscription_events": 0,
+        "billing_events": 0,
+        "usage_events": 0,
+        "support_events": 0,
+        "total": 0
+      },
+      "ranking": [],
+      "capacity": null,
+      "precision_at_k": null,
+      "recall_at_k": null,
+      "risk_lift_at_k": null,
+      "average_precision": {
+        "value": null,
+        "prevalence": null,
+        "positives": 0,
+        "n": 0,
+        "terms": []
+      },
+      "brier_score": {
+        "value": null,
+        "n": 0,
+        "terms": []
+      },
+      "calibration": {
+        "bin_width": "0.100000",
+        "bins": [
+          {
+            "index": 0,
+            "lower": "0.000000",
+            "upper": "0.100000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 1,
+            "lower": "0.100000",
+            "upper": "0.200000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 2,
+            "lower": "0.200000",
+            "upper": "0.300000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 3,
+            "lower": "0.300000",
+            "upper": "0.400000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 4,
+            "lower": "0.400000",
+            "upper": "0.500000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 5,
+            "lower": "0.500000",
+            "upper": "0.600000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 6,
+            "lower": "0.600000",
+            "upper": "0.700000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 7,
+            "lower": "0.700000",
+            "upper": "0.800000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 8,
+            "lower": "0.800000",
+            "upper": "0.900000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 9,
+            "lower": "0.900000",
+            "upper": "1.000000",
+            "closed_upper": true,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          }
+        ]
+      },
+      "economics": null,
+      "outreach_queue": null,
+      "feature_missingness": {
+        "period": "2026-02",
+        "by_feature": {
+          "usage_events_30d": {
+            "missing": 0,
+            "total": 0,
+            "value": null
+          },
+          "days_since_last_usage": {
+            "missing": 0,
+            "total": 0,
+            "value": null
+          },
+          "high_severity_support_90d": {
+            "missing": 0,
+            "total": 0,
+            "value": null
+          },
+          "billing_total_90d": {
+            "missing": 0,
+            "total": 0,
+            "value": null
+          }
+        },
+        "overall": {
+          "missing": 0,
+          "total": 0,
+          "value": null
+        }
+      },
+      "population_drift": {
+        "feature": "usage_events_30d",
+        "reference_prediction_at": "2025-03-01T00:00:00Z",
+        "reference_rows": 0,
+        "current_rows": 0,
+        "psi": null,
+        "threshold": "0.200000",
+        "diagnostic_only": true,
+        "exceeds_threshold": null,
+        "bins": []
+      }
+    }
+  },
+  "empty_population": true
+}

@@ -76,8 +76,9 @@ simulated as evidence (P10-DOMAIN-06). High risk is not treatment responsiveness
 * **Feature missingness** = missing eligible feature values ÷ eligible values, by observation period and feature
   (P10-MET-10). **Population drift** = the population stability index of each declared feature against the
   reference cohort on the declared bins, with the threshold 0.2 shown as a diagnostic, not proof (P10-MET-11).
-* An **intervention scenario** declares `capacity`, `contact_cost`, `assumed_effect` (an assumed absolute
-  reduction of churn probability in [0, 1]) and `margin_value` (USD retained per retained account). The outreach
+* An **intervention scenario** declares `capacity`, `contact_cost`, `assumed_effect` (the assumed share of an
+  account's churn risk that an intervention removes, in [0, 1], so the assumed retained probability is probability ×
+  `assumed_effect`; a coordinator correction of the earlier "absolute reduction" wording, which contradicted the formula) and `margin_value` (USD retained per retained account). The outreach
   queue is the top-K by risk, capacity-limited, with status `draft` only; nothing is sent (P10-FLOW-08).
   **Contact budget** = selected accounts × `contact_cost` (P10-MET-07). **Expected intervention value** =
   Σ_selected (probability × `assumed_effect` × `margin_value` − `contact_cost`), labelled hypothetical and
@@ -89,6 +90,43 @@ Proportions and scores as decimal strings with 6 places; percentage points with 
 and NUMERIC(20,6) in the database; hours as integers; probabilities in [0, 1]. Instants UTC with `Z`,
 server-stamped; ranges half-open. Null means unknown, censored or a zero denominator, never 0. Empty population:
 every count 0, every ratio and score null, `empty_population` true. `accounts.synthetic` is always true.
+
+## D-05 Fixture decisions (adopted from the golden fixture, P10-GOLD-11)
+Adopted verbatim from `tests/fixtures/golden/CALCULATION.md` section 9, D-P10-01..19; the fixture and `reference_check.py`
+are the binding form. The points that sharpen D-01..D-04:
+* **Scope (D-P10-01/02):** a cutoff set is the rows sharing one `prediction_at`; outcome metrics use mature eligible rows
+  with an accepted prediction (`unscored_excluded` published); churn rate uses all mature eligible rows; missingness, drift
+  and the outreach queue use all eligible rows including censored ones (the monitor needs them).
+* **Ties and K (D-P10-03/04):** ties break by `account_id` ascending for precision, recall, lift and the queue; AP groups
+  tied probabilities as scikit-learn does; `tie_split_at_k` flags a tie across rank K; evaluation needs 1 ≤ K ≤ evaluated
+  population and the queue K ≤ scored eligible population, else `CAPACITY_EXCEEDS_POPULATION`; an empty evaluated
+  population gives null K metrics, not a refusal.
+* **Visibility (D-P10-05/06/07):** eligibility uses point-in-time visibility (both instants before the cutoff); "created
+  before observation_start" is strict; no visible subscription event is `NOT_ACTIVE`; window start inclusive, cutoff
+  exclusive; `days_since` floored; a feature with no source events is null; `arrived_late` counts events in the window
+  whose `available_at` is at or after the cutoff.
+* **Labels and splits (D-P10-08/09):** `churned` is null while immature; a cancel arriving at or after `label_end` is not
+  churn; a label window crosses a boundary only if `label_end` > boundary; label purge first, then group purge counting
+  membership by range; test rows are never purged; drop reasons LABEL_WINDOW, GROUP_TEST, GROUP_VALIDATION; rows at or
+  after `test_end` are `outside`.
+* **Drift and calibration (D-P10-10/11):** PSI = Σ (actual − expected) × ln(actual ÷ expected) on declared half-open bins
+  against the eligible rows of a declared reference set, zero proportions floored to 0.0001 without renormalising,
+  `Decimal.ln` at 60 digits rounded half-up to 6 places, `exceeds_threshold` on the unrounded value; calibration bin =
+  floor(10p) with p = 1 in the last bin, gap = (mean − observed) × 100 at 2 places; Platt fit rows must be retained
+  validation rows and never overlap the evaluation rows.
+* **Freshness and economics (D-P10-12/13):** publication status is derived (completed iff every eligible account has a
+  prediction); P10-MET-12's "cutoff" is read as the report `as_of`; hours floored; economics follow the D-03 formula with
+  unrounded 6-place per-account terms and one rounding at the total.
+* **Refusals and import (D-P10-14/15):** feature requests refused with the first code in the order POST_OUTCOME_FIELD,
+  LATENT_TRUTH, ID_FEATURE, UNKNOWN_FEATURE, listing every offending field; new codes THRESHOLD_ON_TEST, SYNTHETIC_REQUIRED,
+  OUTREACH_NOT_DRAFT, UNKNOWN_CUTOFF, UNKNOWN_TRAINING_RUN, UNKNOWN_SCENARIO, DUPLICATE_ID, PROBABILITY_OUT_OF_RANGE,
+  CENSORED_LABEL; import order per row DUPLICATE_ID, then foreign keys, then the domain rule.
+* **Formats (D-P10-16/17/18/19):** churn rate is a proportion string; `config_hash` is the SHA-256 of the canonical JSON of
+  the training run's `config` and a prediction's citations must equal the run's; the missingness period is the UTC calendar
+  month of `prediction_at`; derived entities are stored in `inputs.json` with `expected.json.consistency`.
+* **Not proven by the fixture:** model fitting (predictions are frozen inputs), the union of test sets as one evaluation,
+  threshold rules, experiment design, multi-refresh monitoring, the metrics-endpoint K refusal, non-UTC zones, HTTP
+  envelopes; the backend tests carry them.
 
 ## Mode disclosure
 Mode A: Python domain (features, labels, splits, fitting, calibration, scoring, metrics) + PostgreSQL + FastAPI

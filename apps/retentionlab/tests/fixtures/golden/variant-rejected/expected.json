@@ -1,0 +1,768 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-05-01T00:00:00Z",
+  "ingest": {
+    "counts": {
+      "accounts": {
+        "accepted": 6,
+        "rejected": 2
+      },
+      "subscription_events": {
+        "accepted": 7,
+        "rejected": 3
+      },
+      "billing_events": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "usage_events": {
+        "accepted": 1,
+        "rejected": 1
+      },
+      "support_events": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "prediction_cutoffs": {
+        "accepted": 7,
+        "rejected": 2
+      },
+      "feature_rows": {
+        "accepted": 4,
+        "rejected": 2
+      },
+      "labels": {
+        "accepted": 4,
+        "rejected": 2
+      },
+      "training_runs": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "predictions": {
+        "accepted": 3,
+        "rejected": 3
+      },
+      "intervention_scenarios": {
+        "accepted": 2,
+        "rejected": 0
+      },
+      "outreach_events": {
+        "accepted": 1,
+        "rejected": 3
+      },
+      "feature_registry": {
+        "accepted": 11,
+        "rejected": 0
+      },
+      "split_assignments": {
+        "accepted": 7,
+        "rejected": 0
+      },
+      "scoring_publications": {
+        "accepted": 1,
+        "rejected": 0
+      }
+    },
+    "rejected_records": [
+      {
+        "entity": "accounts",
+        "id": 97,
+        "reason_code": "SYNTHETIC_REQUIRED"
+      },
+      {
+        "entity": "accounts",
+        "id": 3,
+        "reason_code": "DUPLICATE_ID"
+      },
+      {
+        "entity": "subscription_events",
+        "id": "se-008",
+        "reason_code": "AVAILABILITY_BEFORE_EVENT"
+      },
+      {
+        "entity": "subscription_events",
+        "id": "se-009",
+        "reason_code": "UNKNOWN_ACCOUNT"
+      },
+      {
+        "entity": "subscription_events",
+        "id": "se-010",
+        "reason_code": "DEPENDENT_REJECTED"
+      },
+      {
+        "entity": "usage_events",
+        "id": "ue-002",
+        "reason_code": "AVAILABILITY_BEFORE_EVENT"
+      },
+      {
+        "entity": "prediction_cutoffs",
+        "id": "co-98-20260101",
+        "reason_code": "UNKNOWN_ACCOUNT"
+      },
+      {
+        "entity": "prediction_cutoffs",
+        "id": "co-97-20260101",
+        "reason_code": "DEPENDENT_REJECTED"
+      },
+      {
+        "entity": "feature_rows",
+        "id": "fr-co-98",
+        "reason_code": "DEPENDENT_REJECTED"
+      },
+      {
+        "entity": "feature_rows",
+        "id": "fr-co-77",
+        "reason_code": "UNKNOWN_CUTOFF"
+      },
+      {
+        "entity": "labels",
+        "id": "lb-co-01-20260201",
+        "reason_code": "CENSORED_LABEL"
+      },
+      {
+        "entity": "labels",
+        "id": "lb-co-98",
+        "reason_code": "DEPENDENT_REJECTED"
+      },
+      {
+        "entity": "predictions",
+        "id": "pr-co-04-20260101",
+        "reason_code": "PROBABILITY_OUT_OF_RANGE"
+      },
+      {
+        "entity": "predictions",
+        "id": "pr-x1",
+        "reason_code": "UNKNOWN_TRAINING_RUN"
+      },
+      {
+        "entity": "predictions",
+        "id": "pr-co-98-20260101",
+        "reason_code": "DEPENDENT_REJECTED"
+      },
+      {
+        "entity": "outreach_events",
+        "id": "oe-002",
+        "reason_code": "UNKNOWN_SCENARIO"
+      },
+      {
+        "entity": "outreach_events",
+        "id": "oe-003",
+        "reason_code": "UNKNOWN_ACCOUNT"
+      },
+      {
+        "entity": "outreach_events",
+        "id": "oe-004",
+        "reason_code": "OUTREACH_NOT_DRAFT"
+      }
+    ]
+  },
+  "consistency": {
+    "cutoff_windows_mismatched": [],
+    "feature_rows_mismatched": [],
+    "labels_mismatched": [],
+    "split_assignments_mismatched": [],
+    "scoring_publications_mismatched": [],
+    "config_hash_mismatched": [],
+    "outreach_queue_mismatched": [],
+    "predictions_citation_mismatched": []
+  },
+  "commands": [
+    {
+      "request_id": "rq-101",
+      "command": "build-point-in-time-features",
+      "status": "refused",
+      "reason_code": "POST_OUTCOME_FIELD",
+      "offending": [
+        {
+          "item": "cancellation_reason",
+          "code": "POST_OUTCOME_FIELD"
+        }
+      ],
+      "result": null
+    },
+    {
+      "request_id": "rq-102",
+      "command": "build-point-in-time-features",
+      "status": "refused",
+      "reason_code": "LATENT_TRUTH",
+      "offending": [
+        {
+          "item": "latent_churn_propensity",
+          "code": "LATENT_TRUTH"
+        }
+      ],
+      "result": null
+    },
+    {
+      "request_id": "rq-103",
+      "command": "build-point-in-time-features",
+      "status": "refused",
+      "reason_code": "ID_FEATURE",
+      "offending": [
+        {
+          "item": "account_id_hash",
+          "code": "ID_FEATURE"
+        }
+      ],
+      "result": null
+    },
+    {
+      "request_id": "rq-104",
+      "command": "build-point-in-time-features",
+      "status": "refused",
+      "reason_code": "POST_OUTCOME_FIELD",
+      "offending": [
+        {
+          "item": "cancellation_reason",
+          "code": "POST_OUTCOME_FIELD"
+        },
+        {
+          "item": "account_id",
+          "code": "ID_FEATURE"
+        }
+      ],
+      "result": null
+    },
+    {
+      "request_id": "rq-105",
+      "command": "build-point-in-time-features",
+      "status": "refused",
+      "reason_code": "UNKNOWN_FEATURE",
+      "offending": [
+        {
+          "item": "days_since_signup_magic",
+          "code": "UNKNOWN_FEATURE"
+        }
+      ],
+      "result": null
+    },
+    {
+      "request_id": "rq-106",
+      "command": "fit-preprocessing",
+      "status": "refused",
+      "reason_code": "LEAKAGE",
+      "offending": [
+        {
+          "item": "co-08-20250701",
+          "code": "NOT_TRAINING_ROW"
+        }
+      ],
+      "result": null
+    },
+    {
+      "request_id": "rq-107",
+      "command": "calibrate-model",
+      "status": "refused",
+      "reason_code": "CALIBRATION_ON_FIT_ROWS",
+      "offending": [
+        {
+          "item": "co-08-20250701",
+          "code": "IN_FIT_ROWS"
+        }
+      ],
+      "result": null
+    },
+    {
+      "request_id": "rq-108",
+      "command": "select-threshold",
+      "status": "refused",
+      "reason_code": "THRESHOLD_ON_TEST",
+      "offending": [
+        {
+          "item": "threshold",
+          "code": "SELECTED_ON_TEST"
+        }
+      ],
+      "result": null
+    },
+    {
+      "request_id": "rq-109",
+      "command": "prioritize-outreach",
+      "status": "refused",
+      "reason_code": "CAPACITY_EXCEEDS_POPULATION",
+      "offending": [
+        {
+          "item": "sc-2",
+          "code": "CAPACITY_5_GT_3"
+        }
+      ],
+      "result": null
+    }
+  ],
+  "split": {
+    "tr-001": {
+      "train_end": "2025-07-01T00:00:00Z",
+      "validation_end": "2025-12-01T00:00:00Z",
+      "test_end": "2026-06-01T00:00:00Z",
+      "embargo_days": 104,
+      "counts": {
+        "train": {
+          "total": 1,
+          "retained": 1,
+          "label_window": 0,
+          "group_test": 0,
+          "group_validation": 0
+        },
+        "validation": {
+          "total": 1,
+          "retained": 1,
+          "label_window": 0,
+          "group_test": 0,
+          "group_validation": 0
+        },
+        "test": {
+          "total": 5,
+          "retained": 5,
+          "label_window": 0,
+          "group_test": 0,
+          "group_validation": 0
+        },
+        "outside": {
+          "total": 0,
+          "retained": 0,
+          "label_window": 0,
+          "group_test": 0,
+          "group_validation": 0
+        }
+      },
+      "assignments": [
+        {
+          "cutoff_id": "co-01-20260101",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-02-20260101",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-03-20260101",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-04-20260101",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-01-20260201",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-07-20250301",
+          "split": "train",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-08-20250701",
+          "split": "validation",
+          "status": "retained",
+          "drop_reason": null
+        }
+      ]
+    }
+  },
+  "point_in_time": {
+    "rows": [
+      {
+        "cutoff_id": "co-01-20260101",
+        "account_id": 1,
+        "prediction_at": "2026-01-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2026-04-15T00:00:00Z",
+        "mature": true,
+        "churned": true,
+        "features": {
+          "usage_events_30d": 1,
+          "days_since_last_usage": 27,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": null
+        },
+        "max_available_at": "2025-12-05T00:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-02-20260101",
+        "account_id": 2,
+        "prediction_at": "2026-01-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2026-04-15T00:00:00Z",
+        "mature": true,
+        "churned": false,
+        "features": {
+          "usage_events_30d": 0,
+          "days_since_last_usage": null,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": null
+        },
+        "max_available_at": null,
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-03-20260101",
+        "account_id": 3,
+        "prediction_at": "2026-01-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2026-04-15T00:00:00Z",
+        "mature": true,
+        "churned": false,
+        "features": {
+          "usage_events_30d": 0,
+          "days_since_last_usage": null,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": null
+        },
+        "max_available_at": null,
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-04-20260101",
+        "account_id": 4,
+        "prediction_at": "2026-01-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2026-04-15T00:00:00Z",
+        "mature": true,
+        "churned": false,
+        "features": {
+          "usage_events_30d": 0,
+          "days_since_last_usage": null,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": null
+        },
+        "max_available_at": null,
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      }
+    ]
+  },
+  "scoring_publications": [
+    {
+      "publication_id": "sp-001",
+      "training_run_id": "tr-001",
+      "prediction_at": "2026-01-01T00:00:00Z",
+      "published_at": "2026-01-01T02:00:00Z",
+      "eligible": 4,
+      "scored": 3,
+      "status": "incomplete"
+    }
+  ],
+  "freshness": {
+    "as_of": "2026-05-01T00:00:00Z",
+    "scoring_hours": null,
+    "latest_completed_publication_id": null,
+    "latest_completed_published_at": null,
+    "data_hours": 1920,
+    "latest_available_at": "2026-02-10T00:00:00Z"
+  },
+  "cutoff_sets": {
+    "2026-01-01T00:00:00Z": {
+      "prediction_at": "2026-01-01T00:00:00Z",
+      "population": {
+        "cutoff_rows": 4,
+        "eligible": 4,
+        "ineligible": {},
+        "mature": 4,
+        "censored": 0,
+        "scored": 3,
+        "evaluated": 3,
+        "unscored_excluded": 1,
+        "churned": 1
+      },
+      "empty_population": false,
+      "empty_evaluation": false,
+      "churn_rate": {
+        "value": "0.250000",
+        "churned": 1,
+        "mature_eligible": 4
+      },
+      "late_events": {
+        "subscription_events": 0,
+        "billing_events": 0,
+        "usage_events": 0,
+        "support_events": 0,
+        "total": 0
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "cutoff_id": "co-01-20260101",
+          "account_id": 1,
+          "probability": "0.500000",
+          "outcome": 1
+        },
+        {
+          "rank": 2,
+          "cutoff_id": "co-02-20260101",
+          "account_id": 2,
+          "probability": "0.500000",
+          "outcome": 0
+        },
+        {
+          "rank": 3,
+          "cutoff_id": "co-03-20260101",
+          "account_id": 3,
+          "probability": "0.200000",
+          "outcome": 0
+        }
+      ],
+      "capacity": {
+        "scenario_id": "sc-1",
+        "k": 1,
+        "population": 3,
+        "ok": true,
+        "refusal": null
+      },
+      "precision_at_k": {
+        "value": "1.000000",
+        "hits": 1,
+        "k": 1
+      },
+      "recall_at_k": {
+        "value": "1.000000",
+        "hits": 1,
+        "positives": 1
+      },
+      "risk_lift_at_k": {
+        "value": "3.000000",
+        "top_k_rate": "1.000000",
+        "overall_rate": "0.333333",
+        "tie_split_at_k": true
+      },
+      "average_precision": {
+        "value": "0.500000",
+        "prevalence": "0.333333",
+        "positives": 1,
+        "n": 3,
+        "terms": [
+          {
+            "threshold": "0.500000",
+            "tp": 1,
+            "fp": 1,
+            "precision": "0.500000",
+            "recall": "1.000000",
+            "delta_recall": "1.000000",
+            "contribution": "0.500000"
+          },
+          {
+            "threshold": "0.200000",
+            "tp": 1,
+            "fp": 2,
+            "precision": "0.333333",
+            "recall": "1.000000",
+            "delta_recall": "0.000000",
+            "contribution": "0.000000"
+          }
+        ]
+      },
+      "brier_score": {
+        "value": "0.180000",
+        "n": 3,
+        "terms": [
+          "0.250000",
+          "0.250000",
+          "0.040000"
+        ]
+      },
+      "calibration": {
+        "bin_width": "0.100000",
+        "bins": [
+          {
+            "index": 0,
+            "lower": "0.000000",
+            "upper": "0.100000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 1,
+            "lower": "0.100000",
+            "upper": "0.200000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 2,
+            "lower": "0.200000",
+            "upper": "0.300000",
+            "closed_upper": false,
+            "count": 1,
+            "mean_predicted": "0.200000",
+            "observed_rate": "0.000000",
+            "gap_pp": "20.00"
+          },
+          {
+            "index": 3,
+            "lower": "0.300000",
+            "upper": "0.400000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 4,
+            "lower": "0.400000",
+            "upper": "0.500000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 5,
+            "lower": "0.500000",
+            "upper": "0.600000",
+            "closed_upper": false,
+            "count": 2,
+            "mean_predicted": "0.500000",
+            "observed_rate": "0.500000",
+            "gap_pp": "0.00"
+          },
+          {
+            "index": 6,
+            "lower": "0.600000",
+            "upper": "0.700000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 7,
+            "lower": "0.700000",
+            "upper": "0.800000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 8,
+            "lower": "0.800000",
+            "upper": "0.900000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 9,
+            "lower": "0.900000",
+            "upper": "1.000000",
+            "closed_upper": true,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          }
+        ]
+      },
+      "economics": {
+        "label": "hypothetical",
+        "assumption_based": true,
+        "scenario_id": "sc-1",
+        "selected_account_ids": [
+          1
+        ],
+        "assumptions": {
+          "contact_cost": "8.00",
+          "assumed_effect": "0.200000",
+          "margin_value": "100.00"
+        },
+        "contact_budget": "8.00",
+        "terms": [
+          {
+            "account_id": 1,
+            "probability": "0.500000",
+            "value_exact": "2.000000"
+          }
+        ],
+        "expected_value": "2.00",
+        "treatment_effect_estimate": null
+      },
+      "outreach_queue": {
+        "status": "draft",
+        "account_ids": [
+          1
+        ],
+        "population": 3
+      },
+      "feature_missingness": {
+        "period": "2026-01",
+        "by_feature": {
+          "usage_events_30d": {
+            "missing": 0,
+            "total": 4,
+            "value": "0.000000"
+          },
+          "days_since_last_usage": {
+            "missing": 3,
+            "total": 4,
+            "value": "0.750000"
+          },
+          "high_severity_support_90d": {
+            "missing": 0,
+            "total": 4,
+            "value": "0.000000"
+          },
+          "billing_total_90d": {
+            "missing": 4,
+            "total": 4,
+            "value": "1.000000"
+          }
+        },
+        "overall": {
+          "missing": 7,
+          "total": 16,
+          "value": "0.437500"
+        }
+      },
+      "population_drift": null
+    }
+  },
+  "empty_population": false
+}

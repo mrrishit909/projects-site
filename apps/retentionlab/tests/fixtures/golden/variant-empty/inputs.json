@@ -1,0 +1,65 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-05-01T00:00:00Z",
+  "label_version": {
+    "label_version_id": "lv-1",
+    "horizon_days": 90,
+    "grace_days": 14
+  },
+  "feature_version_spec": {
+    "feature_version": "fv-1",
+    "observation_days": 90
+  },
+  "scope": {
+    "training_run_id": "tr-001",
+    "sets": [
+      {
+        "prediction_at": "2026-01-01T00:00:00Z",
+        "scenario_id": "sc-001"
+      },
+      {
+        "prediction_at": "2026-02-01T00:00:00Z",
+        "scenario_id": null
+      }
+    ],
+    "drift": {
+      "feature": "usage_events_30d",
+      "reference_prediction_at": "2025-03-01T00:00:00Z",
+      "bins": [
+        {
+          "label": "0",
+          "lower": 0,
+          "upper": 1
+        },
+        {
+          "label": "1-2",
+          "lower": 1,
+          "upper": 3
+        },
+        {
+          "label": "3+",
+          "lower": 3,
+          "upper": null
+        }
+      ],
+      "floor": "0.000100",
+      "threshold": "0.200000"
+    }
+  },
+  "accounts": [],
+  "subscription_events": [],
+  "billing_events": [],
+  "usage_events": [],
+  "support_events": [],
+  "prediction_cutoffs": [],
+  "feature_rows": [],
+  "labels": [],
+  "training_runs": [],
+  "predictions": [],
+  "intervention_scenarios": [],
+  "outreach_events": [],
+  "feature_registry": [],
+  "split_assignments": [],
+  "scoring_publications": [],
+  "requests": []
+}

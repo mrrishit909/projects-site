@@ -1,0 +1,1322 @@
+{
+  "contract_version": 1,
+  "as_of": "2026-05-01T00:00:00Z",
+  "ingest": {
+    "counts": {
+      "accounts": {
+        "accepted": 14,
+        "rejected": 0
+      },
+      "subscription_events": {
+        "accepted": 20,
+        "rejected": 0
+      },
+      "billing_events": {
+        "accepted": 7,
+        "rejected": 0
+      },
+      "usage_events": {
+        "accepted": 26,
+        "rejected": 0
+      },
+      "support_events": {
+        "accepted": 5,
+        "rejected": 0
+      },
+      "prediction_cutoffs": {
+        "accepted": 27,
+        "rejected": 0
+      },
+      "feature_rows": {
+        "accepted": 15,
+        "rejected": 0
+      },
+      "labels": {
+        "accepted": 15,
+        "rejected": 0
+      },
+      "training_runs": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "predictions": {
+        "accepted": 7,
+        "rejected": 0
+      },
+      "intervention_scenarios": {
+        "accepted": 1,
+        "rejected": 0
+      },
+      "outreach_events": {
+        "accepted": 2,
+        "rejected": 0
+      },
+      "feature_registry": {
+        "accepted": 11,
+        "rejected": 0
+      },
+      "split_assignments": {
+        "accepted": 27,
+        "rejected": 0
+      },
+      "scoring_publications": {
+        "accepted": 2,
+        "rejected": 0
+      }
+    },
+    "rejected_records": []
+  },
+  "consistency": {
+    "cutoff_windows_mismatched": [],
+    "feature_rows_mismatched": [],
+    "labels_mismatched": [],
+    "split_assignments_mismatched": [],
+    "scoring_publications_mismatched": [],
+    "config_hash_mismatched": [],
+    "outreach_queue_mismatched": [],
+    "predictions_citation_mismatched": []
+  },
+  "commands": [
+    {
+      "request_id": "rq-001",
+      "command": "build-point-in-time-features",
+      "status": "accepted",
+      "reason_code": null,
+      "offending": [],
+      "result": {
+        "fields": [
+          "usage_events_30d",
+          "days_since_last_usage",
+          "high_severity_support_90d",
+          "billing_total_90d"
+        ]
+      }
+    },
+    {
+      "request_id": "rq-002",
+      "command": "fit-preprocessing",
+      "status": "accepted",
+      "reason_code": null,
+      "offending": [],
+      "result": {
+        "fit_rows": 4
+      }
+    },
+    {
+      "request_id": "rq-003",
+      "command": "calibrate-model",
+      "status": "accepted",
+      "reason_code": null,
+      "offending": [],
+      "result": {
+        "fit_rows": 3,
+        "evaluation_rows": 4
+      }
+    },
+    {
+      "request_id": "rq-004",
+      "command": "select-threshold",
+      "status": "accepted",
+      "reason_code": null,
+      "offending": [],
+      "result": {
+        "parameter": "capacity",
+        "selected_on": "validation"
+      }
+    },
+    {
+      "request_id": "rq-005",
+      "command": "prioritize-outreach",
+      "status": "accepted",
+      "reason_code": null,
+      "offending": [],
+      "result": {
+        "capacity": 2,
+        "population": 4,
+        "status": "draft",
+        "queue_account_ids": [
+          1,
+          2
+        ]
+      }
+    }
+  ],
+  "split": {
+    "tr-001": {
+      "train_end": "2025-07-01T00:00:00Z",
+      "validation_end": "2025-12-01T00:00:00Z",
+      "test_end": "2026-06-01T00:00:00Z",
+      "embargo_days": 104,
+      "counts": {
+        "train": {
+          "total": 10,
+          "retained": 4,
+          "label_window": 2,
+          "group_test": 2,
+          "group_validation": 2
+        },
+        "validation": {
+          "total": 6,
+          "retained": 3,
+          "label_window": 2,
+          "group_test": 1,
+          "group_validation": 0
+        },
+        "test": {
+          "total": 11,
+          "retained": 11,
+          "label_window": 0,
+          "group_test": 0,
+          "group_validation": 0
+        },
+        "outside": {
+          "total": 0,
+          "retained": 0,
+          "label_window": 0,
+          "group_test": 0,
+          "group_validation": 0
+        }
+      },
+      "assignments": [
+        {
+          "cutoff_id": "co-01-20250301",
+          "split": "train",
+          "status": "dropped",
+          "drop_reason": "GROUP_TEST"
+        },
+        {
+          "cutoff_id": "co-02-20250301",
+          "split": "train",
+          "status": "dropped",
+          "drop_reason": "GROUP_TEST"
+        },
+        {
+          "cutoff_id": "co-07-20250301",
+          "split": "train",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-08-20250301",
+          "split": "train",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-09-20250301",
+          "split": "train",
+          "status": "dropped",
+          "drop_reason": "GROUP_VALIDATION"
+        },
+        {
+          "cutoff_id": "co-10-20250301",
+          "split": "train",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-12-20250301",
+          "split": "train",
+          "status": "dropped",
+          "drop_reason": "GROUP_VALIDATION"
+        },
+        {
+          "cutoff_id": "co-10-20250319",
+          "split": "train",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-07-20250501",
+          "split": "train",
+          "status": "dropped",
+          "drop_reason": "LABEL_WINDOW"
+        },
+        {
+          "cutoff_id": "co-08-20250501",
+          "split": "train",
+          "status": "dropped",
+          "drop_reason": "LABEL_WINDOW"
+        },
+        {
+          "cutoff_id": "co-03-20250701",
+          "split": "validation",
+          "status": "dropped",
+          "drop_reason": "GROUP_TEST"
+        },
+        {
+          "cutoff_id": "co-09-20250701",
+          "split": "validation",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-11-20250701",
+          "split": "validation",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-13-20250819",
+          "split": "validation",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-11-20250915",
+          "split": "validation",
+          "status": "dropped",
+          "drop_reason": "LABEL_WINDOW"
+        },
+        {
+          "cutoff_id": "co-12-20250915",
+          "split": "validation",
+          "status": "dropped",
+          "drop_reason": "LABEL_WINDOW"
+        },
+        {
+          "cutoff_id": "co-14-20251201",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-01-20260101",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-02-20260101",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-03-20260101",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-04-20260101",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-05-20260101",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-06-20260101",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-01-20260201",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-02-20260201",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-03-20260201",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        },
+        {
+          "cutoff_id": "co-04-20260201",
+          "split": "test",
+          "status": "retained",
+          "drop_reason": null
+        }
+      ]
+    }
+  },
+  "point_in_time": {
+    "rows": [
+      {
+        "cutoff_id": "co-01-20260101",
+        "account_id": 1,
+        "prediction_at": "2026-01-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2026-04-15T00:00:00Z",
+        "mature": true,
+        "churned": true,
+        "features": {
+          "usage_events_30d": 2,
+          "days_since_last_usage": 12,
+          "high_severity_support_90d": 1,
+          "billing_total_90d": "98.00"
+        },
+        "max_available_at": "2025-12-20T00:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 1,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-02-20260101",
+        "account_id": 2,
+        "prediction_at": "2026-01-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2026-04-15T00:00:00Z",
+        "mature": true,
+        "churned": false,
+        "features": {
+          "usage_events_30d": 1,
+          "days_since_last_usage": 4,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": "99.00"
+        },
+        "max_available_at": "2025-12-28T00:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-03-20260101",
+        "account_id": 3,
+        "prediction_at": "2026-01-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2026-04-15T00:00:00Z",
+        "mature": true,
+        "churned": true,
+        "features": {
+          "usage_events_30d": 0,
+          "days_since_last_usage": null,
+          "high_severity_support_90d": 2,
+          "billing_total_90d": null
+        },
+        "max_available_at": "2025-12-29T00:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-04-20260101",
+        "account_id": 4,
+        "prediction_at": "2026-01-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2026-04-15T00:00:00Z",
+        "mature": true,
+        "churned": false,
+        "features": {
+          "usage_events_30d": 3,
+          "days_since_last_usage": 0,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": "20.00"
+        },
+        "max_available_at": "2025-12-31T18:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 1
+        }
+      },
+      {
+        "cutoff_id": "co-05-20260101",
+        "account_id": 5,
+        "prediction_at": "2026-01-01T00:00:00Z",
+        "eligible": false,
+        "ineligible_code": "NOT_ACTIVE",
+        "label_end": "2026-04-15T00:00:00Z",
+        "mature": true,
+        "churned": null,
+        "features": null,
+        "max_available_at": null,
+        "arrived_late": null
+      },
+      {
+        "cutoff_id": "co-06-20260101",
+        "account_id": 6,
+        "prediction_at": "2026-01-01T00:00:00Z",
+        "eligible": false,
+        "ineligible_code": "CREATED_ON_OR_AFTER_OBSERVATION_START",
+        "label_end": "2026-04-15T00:00:00Z",
+        "mature": true,
+        "churned": null,
+        "features": null,
+        "max_available_at": null,
+        "arrived_late": null
+      },
+      {
+        "cutoff_id": "co-01-20260201",
+        "account_id": 1,
+        "prediction_at": "2026-02-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2026-05-16T00:00:00Z",
+        "mature": false,
+        "churned": null,
+        "features": {
+          "usage_events_30d": 3,
+          "days_since_last_usage": 7,
+          "high_severity_support_90d": 1,
+          "billing_total_90d": "98.00"
+        },
+        "max_available_at": "2026-01-25T00:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-02-20260201",
+        "account_id": 2,
+        "prediction_at": "2026-02-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2026-05-16T00:00:00Z",
+        "mature": false,
+        "churned": null,
+        "features": {
+          "usage_events_30d": 1,
+          "days_since_last_usage": 27,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": "198.00"
+        },
+        "max_available_at": "2026-01-05T00:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-03-20260201",
+        "account_id": 3,
+        "prediction_at": "2026-02-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2026-05-16T00:00:00Z",
+        "mature": false,
+        "churned": null,
+        "features": {
+          "usage_events_30d": 1,
+          "days_since_last_usage": 14,
+          "high_severity_support_90d": 1,
+          "billing_total_90d": null
+        },
+        "max_available_at": "2026-01-18T00:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-04-20260201",
+        "account_id": 4,
+        "prediction_at": "2026-02-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2026-05-16T00:00:00Z",
+        "mature": false,
+        "churned": null,
+        "features": {
+          "usage_events_30d": 2,
+          "days_since_last_usage": 3,
+          "high_severity_support_90d": 1,
+          "billing_total_90d": "20.00"
+        },
+        "max_available_at": "2026-01-29T00:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-01-20250301",
+        "account_id": 1,
+        "prediction_at": "2025-03-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2025-06-13T00:00:00Z",
+        "mature": true,
+        "churned": false,
+        "features": {
+          "usage_events_30d": 0,
+          "days_since_last_usage": null,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": null
+        },
+        "max_available_at": null,
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-02-20250301",
+        "account_id": 2,
+        "prediction_at": "2025-03-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2025-06-13T00:00:00Z",
+        "mature": true,
+        "churned": false,
+        "features": {
+          "usage_events_30d": 1,
+          "days_since_last_usage": 19,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": null
+        },
+        "max_available_at": "2025-02-10T00:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-07-20250301",
+        "account_id": 7,
+        "prediction_at": "2025-03-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2025-06-13T00:00:00Z",
+        "mature": true,
+        "churned": false,
+        "features": {
+          "usage_events_30d": 2,
+          "days_since_last_usage": 9,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": null
+        },
+        "max_available_at": "2025-02-20T00:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-08-20250301",
+        "account_id": 8,
+        "prediction_at": "2025-03-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2025-06-13T00:00:00Z",
+        "mature": true,
+        "churned": false,
+        "features": {
+          "usage_events_30d": 4,
+          "days_since_last_usage": 2,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": null
+        },
+        "max_available_at": "2025-02-27T00:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-09-20250301",
+        "account_id": 9,
+        "prediction_at": "2025-03-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2025-06-13T00:00:00Z",
+        "mature": true,
+        "churned": false,
+        "features": {
+          "usage_events_30d": 0,
+          "days_since_last_usage": null,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": null
+        },
+        "max_available_at": null,
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-10-20250301",
+        "account_id": 10,
+        "prediction_at": "2025-03-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2025-06-13T00:00:00Z",
+        "mature": true,
+        "churned": false,
+        "features": {
+          "usage_events_30d": 1,
+          "days_since_last_usage": 15,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": null
+        },
+        "max_available_at": "2025-02-14T00:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      },
+      {
+        "cutoff_id": "co-12-20250301",
+        "account_id": 12,
+        "prediction_at": "2025-03-01T00:00:00Z",
+        "eligible": true,
+        "ineligible_code": null,
+        "label_end": "2025-06-13T00:00:00Z",
+        "mature": true,
+        "churned": false,
+        "features": {
+          "usage_events_30d": 2,
+          "days_since_last_usage": 4,
+          "high_severity_support_90d": 0,
+          "billing_total_90d": null
+        },
+        "max_available_at": "2025-02-25T00:00:00Z",
+        "arrived_late": {
+          "subscription_events": 0,
+          "billing_events": 0,
+          "usage_events": 0,
+          "support_events": 0
+        }
+      }
+    ]
+  },
+  "scoring_publications": [
+    {
+      "publication_id": "sp-001",
+      "training_run_id": "tr-001",
+      "prediction_at": "2026-01-01T00:00:00Z",
+      "published_at": "2026-01-01T02:00:00Z",
+      "eligible": 4,
+      "scored": 4,
+      "status": "completed"
+    },
+    {
+      "publication_id": "sp-002",
+      "training_run_id": "tr-001",
+      "prediction_at": "2026-02-01T00:00:00Z",
+      "published_at": "2026-02-01T02:00:00Z",
+      "eligible": 4,
+      "scored": 3,
+      "status": "incomplete"
+    }
+  ],
+  "freshness": {
+    "as_of": "2026-05-01T00:00:00Z",
+    "scoring_hours": 2878,
+    "latest_completed_publication_id": "sp-001",
+    "latest_completed_published_at": "2026-01-01T02:00:00Z",
+    "data_hours": 264,
+    "latest_available_at": "2026-04-20T00:00:00Z"
+  },
+  "cutoff_sets": {
+    "2026-01-01T00:00:00Z": {
+      "prediction_at": "2026-01-01T00:00:00Z",
+      "population": {
+        "cutoff_rows": 6,
+        "eligible": 4,
+        "ineligible": {
+          "CREATED_ON_OR_AFTER_OBSERVATION_START": 1,
+          "NOT_ACTIVE": 1
+        },
+        "mature": 4,
+        "censored": 0,
+        "scored": 4,
+        "evaluated": 4,
+        "unscored_excluded": 0,
+        "churned": 2
+      },
+      "empty_population": false,
+      "empty_evaluation": false,
+      "churn_rate": {
+        "value": "0.500000",
+        "churned": 2,
+        "mature_eligible": 4
+      },
+      "late_events": {
+        "subscription_events": 0,
+        "billing_events": 0,
+        "usage_events": 1,
+        "support_events": 1,
+        "total": 2
+      },
+      "ranking": [
+        {
+          "rank": 1,
+          "cutoff_id": "co-01-20260101",
+          "account_id": 1,
+          "probability": "0.800000",
+          "outcome": 1
+        },
+        {
+          "rank": 2,
+          "cutoff_id": "co-02-20260101",
+          "account_id": 2,
+          "probability": "0.600000",
+          "outcome": 0
+        },
+        {
+          "rank": 3,
+          "cutoff_id": "co-03-20260101",
+          "account_id": 3,
+          "probability": "0.400000",
+          "outcome": 1
+        },
+        {
+          "rank": 4,
+          "cutoff_id": "co-04-20260101",
+          "account_id": 4,
+          "probability": "0.100000",
+          "outcome": 0
+        }
+      ],
+      "capacity": {
+        "scenario_id": "sc-001",
+        "k": 2,
+        "population": 4,
+        "ok": true,
+        "refusal": null
+      },
+      "precision_at_k": {
+        "value": "0.500000",
+        "hits": 1,
+        "k": 2
+      },
+      "recall_at_k": {
+        "value": "0.500000",
+        "hits": 1,
+        "positives": 2
+      },
+      "risk_lift_at_k": {
+        "value": "1.000000",
+        "top_k_rate": "0.500000",
+        "overall_rate": "0.500000",
+        "tie_split_at_k": false
+      },
+      "average_precision": {
+        "value": "0.833333",
+        "prevalence": "0.500000",
+        "positives": 2,
+        "n": 4,
+        "terms": [
+          {
+            "threshold": "0.800000",
+            "tp": 1,
+            "fp": 0,
+            "precision": "1.000000",
+            "recall": "0.500000",
+            "delta_recall": "0.500000",
+            "contribution": "0.500000"
+          },
+          {
+            "threshold": "0.600000",
+            "tp": 1,
+            "fp": 1,
+            "precision": "0.500000",
+            "recall": "0.500000",
+            "delta_recall": "0.000000",
+            "contribution": "0.000000"
+          },
+          {
+            "threshold": "0.400000",
+            "tp": 2,
+            "fp": 1,
+            "precision": "0.666667",
+            "recall": "1.000000",
+            "delta_recall": "0.500000",
+            "contribution": "0.333333"
+          },
+          {
+            "threshold": "0.100000",
+            "tp": 2,
+            "fp": 2,
+            "precision": "0.500000",
+            "recall": "1.000000",
+            "delta_recall": "0.000000",
+            "contribution": "0.000000"
+          }
+        ]
+      },
+      "brier_score": {
+        "value": "0.192500",
+        "n": 4,
+        "terms": [
+          "0.040000",
+          "0.360000",
+          "0.360000",
+          "0.010000"
+        ]
+      },
+      "calibration": {
+        "bin_width": "0.100000",
+        "bins": [
+          {
+            "index": 0,
+            "lower": "0.000000",
+            "upper": "0.100000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 1,
+            "lower": "0.100000",
+            "upper": "0.200000",
+            "closed_upper": false,
+            "count": 1,
+            "mean_predicted": "0.100000",
+            "observed_rate": "0.000000",
+            "gap_pp": "10.00"
+          },
+          {
+            "index": 2,
+            "lower": "0.200000",
+            "upper": "0.300000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 3,
+            "lower": "0.300000",
+            "upper": "0.400000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 4,
+            "lower": "0.400000",
+            "upper": "0.500000",
+            "closed_upper": false,
+            "count": 1,
+            "mean_predicted": "0.400000",
+            "observed_rate": "1.000000",
+            "gap_pp": "-60.00"
+          },
+          {
+            "index": 5,
+            "lower": "0.500000",
+            "upper": "0.600000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 6,
+            "lower": "0.600000",
+            "upper": "0.700000",
+            "closed_upper": false,
+            "count": 1,
+            "mean_predicted": "0.600000",
+            "observed_rate": "0.000000",
+            "gap_pp": "60.00"
+          },
+          {
+            "index": 7,
+            "lower": "0.700000",
+            "upper": "0.800000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 8,
+            "lower": "0.800000",
+            "upper": "0.900000",
+            "closed_upper": false,
+            "count": 1,
+            "mean_predicted": "0.800000",
+            "observed_rate": "1.000000",
+            "gap_pp": "-20.00"
+          },
+          {
+            "index": 9,
+            "lower": "0.900000",
+            "upper": "1.000000",
+            "closed_upper": true,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          }
+        ]
+      },
+      "economics": {
+        "label": "hypothetical",
+        "assumption_based": true,
+        "scenario_id": "sc-001",
+        "selected_account_ids": [
+          1,
+          2
+        ],
+        "assumptions": {
+          "contact_cost": "5.00",
+          "assumed_effect": "0.100000",
+          "margin_value": "131.75"
+        },
+        "contact_budget": "10.00",
+        "terms": [
+          {
+            "account_id": 1,
+            "probability": "0.800000",
+            "value_exact": "5.540000"
+          },
+          {
+            "account_id": 2,
+            "probability": "0.600000",
+            "value_exact": "2.905000"
+          }
+        ],
+        "expected_value": "8.45",
+        "treatment_effect_estimate": null
+      },
+      "outreach_queue": {
+        "status": "draft",
+        "account_ids": [
+          1,
+          2
+        ],
+        "population": 4
+      },
+      "feature_missingness": {
+        "period": "2026-01",
+        "by_feature": {
+          "usage_events_30d": {
+            "missing": 0,
+            "total": 4,
+            "value": "0.000000"
+          },
+          "days_since_last_usage": {
+            "missing": 1,
+            "total": 4,
+            "value": "0.250000"
+          },
+          "high_severity_support_90d": {
+            "missing": 0,
+            "total": 4,
+            "value": "0.000000"
+          },
+          "billing_total_90d": {
+            "missing": 1,
+            "total": 4,
+            "value": "0.250000"
+          }
+        },
+        "overall": {
+          "missing": 2,
+          "total": 16,
+          "value": "0.125000"
+        }
+      },
+      "population_drift": {
+        "feature": "usage_events_30d",
+        "reference_prediction_at": "2025-03-01T00:00:00Z",
+        "reference_rows": 7,
+        "current_rows": 4,
+        "psi": "0.074266",
+        "threshold": "0.200000",
+        "diagnostic_only": true,
+        "exceeds_threshold": false,
+        "bins": [
+          {
+            "label": "0",
+            "reference_count": 2,
+            "current_count": 1,
+            "reference_proportion": "0.285714",
+            "current_proportion": "0.250000",
+            "floored": false,
+            "term": "0.0047689783"
+          },
+          {
+            "label": "1-2",
+            "reference_count": 4,
+            "current_count": 2,
+            "reference_proportion": "0.571429",
+            "current_proportion": "0.500000",
+            "floored": false,
+            "term": "0.0095379566"
+          },
+          {
+            "label": "3+",
+            "reference_count": 1,
+            "current_count": 1,
+            "reference_proportion": "0.142857",
+            "current_proportion": "0.250000",
+            "floored": false,
+            "term": "0.0599588344"
+          }
+        ]
+      }
+    },
+    "2026-02-01T00:00:00Z": {
+      "prediction_at": "2026-02-01T00:00:00Z",
+      "population": {
+        "cutoff_rows": 4,
+        "eligible": 4,
+        "ineligible": {},
+        "mature": 0,
+        "censored": 4,
+        "scored": 3,
+        "evaluated": 0,
+        "unscored_excluded": 0,
+        "churned": 0
+      },
+      "empty_population": false,
+      "empty_evaluation": true,
+      "churn_rate": {
+        "value": null,
+        "churned": 0,
+        "mature_eligible": 0
+      },
+      "late_events": {
+        "subscription_events": 0,
+        "billing_events": 0,
+        "usage_events": 0,
+        "support_events": 0,
+        "total": 0
+      },
+      "ranking": [],
+      "capacity": null,
+      "precision_at_k": null,
+      "recall_at_k": null,
+      "risk_lift_at_k": null,
+      "average_precision": {
+        "value": null,
+        "prevalence": null,
+        "positives": 0,
+        "n": 0,
+        "terms": []
+      },
+      "brier_score": {
+        "value": null,
+        "n": 0,
+        "terms": []
+      },
+      "calibration": {
+        "bin_width": "0.100000",
+        "bins": [
+          {
+            "index": 0,
+            "lower": "0.000000",
+            "upper": "0.100000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 1,
+            "lower": "0.100000",
+            "upper": "0.200000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 2,
+            "lower": "0.200000",
+            "upper": "0.300000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 3,
+            "lower": "0.300000",
+            "upper": "0.400000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 4,
+            "lower": "0.400000",
+            "upper": "0.500000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 5,
+            "lower": "0.500000",
+            "upper": "0.600000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 6,
+            "lower": "0.600000",
+            "upper": "0.700000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 7,
+            "lower": "0.700000",
+            "upper": "0.800000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 8,
+            "lower": "0.800000",
+            "upper": "0.900000",
+            "closed_upper": false,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          },
+          {
+            "index": 9,
+            "lower": "0.900000",
+            "upper": "1.000000",
+            "closed_upper": true,
+            "count": 0,
+            "mean_predicted": null,
+            "observed_rate": null,
+            "gap_pp": null
+          }
+        ]
+      },
+      "economics": null,
+      "outreach_queue": null,
+      "feature_missingness": {
+        "period": "2026-02",
+        "by_feature": {
+          "usage_events_30d": {
+            "missing": 0,
+            "total": 4,
+            "value": "0.000000"
+          },
+          "days_since_last_usage": {
+            "missing": 0,
+            "total": 4,
+            "value": "0.000000"
+          },
+          "high_severity_support_90d": {
+            "missing": 0,
+            "total": 4,
+            "value": "0.000000"
+          },
+          "billing_total_90d": {
+            "missing": 1,
+            "total": 4,
+            "value": "0.250000"
+          }
+        },
+        "overall": {
+          "missing": 1,
+          "total": 16,
+          "value": "0.062500"
+        }
+      },
+      "population_drift": {
+        "feature": "usage_events_30d",
+        "reference_prediction_at": "2025-03-01T00:00:00Z",
+        "reference_rows": 7,
+        "current_rows": 4,
+        "psi": "2.381316",
+        "threshold": "0.200000",
+        "diagnostic_only": true,
+        "exceeds_threshold": true,
+        "bins": [
+          {
+            "label": "0",
+            "reference_count": 2,
+            "current_count": 0,
+            "reference_proportion": "0.285714",
+            "current_proportion": "0.000000",
+            "floored": true,
+            "term": "2.2727977861"
+          },
+          {
+            "label": "1-2",
+            "reference_count": 4,
+            "current_count": 3,
+            "reference_proportion": "0.571429",
+            "current_proportion": "0.750000",
+            "floored": false,
+            "term": "0.0485595921"
+          },
+          {
+            "label": "3+",
+            "reference_count": 1,
+            "current_count": 1,
+            "reference_proportion": "0.142857",
+            "current_proportion": "0.250000",
+            "floored": false,
+            "term": "0.0599588344"
+          }
+        ]
+      }
+    }
+  },
+  "empty_population": false
+}
