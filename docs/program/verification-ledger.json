@@ -1328,6 +1328,13 @@
       "check": "CI Mode A on GitHub-hosted runner with transient postgres:16 on the generator push (reference check, hash count, 323 pytest incl. 24 generator tests)",
       "run": "https://github.com/mrrishit909/projects-site/actions/runs/40451829378",
       "result": "Mode A success on e81c2b4; Mode B failure expected (web not yet built)"
+    },
+    {
+      "ts": "2026-10-27T05:20:52Z",
+      "project": "07-trustledger",
+      "check": "CI on the artifacts commit a856f7c",
+      "run": "https://github.com/mrrishit909/projects-site/actions/runs/40453910821",
+      "result": "Mode A failed: one SQL result set ordered by a locale-dependent collation on the runner (Data Platform vs all other teams), and three artifact tests skipped (release commits and the public case study live on unified-portfolio; shallow clone). Fixes: boolean ordering, full-history checkout plus a fetch of unified-portfolio and its case study in the workflow. An intermediate commit 7261a2f carried an invalid ORDER BY (positional column with COLLATE) and was superseded by eb83f43 within minutes; both are recorded here."
     }
   ]
 }

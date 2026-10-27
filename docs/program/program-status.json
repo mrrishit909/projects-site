@@ -1,6 +1,6 @@
 {
   "program": "business-data-lab",
-  "updated_at": "2026-10-27T05:11:55Z",
+  "updated_at": "2026-10-27T05:20:52Z",
   "coordinator": {
     "session": "session_018qazUm6EuWcx7grXhz8gRg",
     "environment_kind": "anthropic_cloud",
@@ -184,8 +184,8 @@
         "case_study_wording_fixed": "031705d"
       },
       "artifacts": {
-        "commit": "a856f7c",
-        "status": "done; CI pending (no-skip gate now covers the artifact tests)"
+        "commit": "eb83f43",
+        "status": "done; CI pending (a856f7c failed on collation ordering and three skips; fixed)"
       }
     },
     "08-pipeline-observatory": {
