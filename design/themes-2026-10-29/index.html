@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en" data-theme="board">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio themes</title>
+<style>
+@font-face { font-family: "Archivo"; src: url(../../vendor/fonts/Archivo-latin.woff2) format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+@font-face { font-family: "Bricolage Grotesque"; src: url(../../vendor/fonts/Bricolage-display.woff2) format("woff2"); font-weight: 600 800; font-stretch: 75% 85%; font-display: swap; }
+@font-face { font-family: "Fraunces"; src: url(../../vendor/fonts/Fraunces-Roman-latin.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Geist"; font-weight: 400; src: url(../../vendor/fonts/Geist-Regular.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Geist"; font-weight: 500; src: url(../../vendor/fonts/Geist-Medium.woff2) format("woff2"); font-display: swap; }
+
+/* Design system: every theme sets the same nine tokens; components only read tokens. */
+:root, [data-theme="board"] {          /* Departure board: cobalt field, lemon, white */
+  --f1: #1238ff; --f2: #f6ff4a; --f3: #ffffff; --f4: #0b1a8c;
+  --ink: #0a1240; --on1: #ffffff; --on2: #0a1240; --on4: #f6ff4a; --name: 15.5vw;
+  --display: "Archivo", sans-serif; --d-stretch: 125%; --d-weight: 900; --d-case: uppercase; --d-track: -0.02em;
+  --radius: 0px;
+}
+[data-theme="marker"] {               /* Highlighter: lime field, violet, pink */
+  --f1: #c6f432; --f2: #5b2bff; --f3: #ff8fc7; --f4: #16123a;
+  --ink: #16123a; --on1: #16123a; --on2: #ffffff; --on4: #c6f432; --name: 27vw;
+  --display: "Bricolage Grotesque", sans-serif; --d-stretch: 75%; --d-weight: 800; --d-case: none; --d-track: -0.035em;
+  --radius: 28px;
+}
+[data-theme="lab"] {                  /* Lab orange: orange field, ice, deep blue, a serif display */
+  --f1: #ff5a1f; --f2: #e9f1ff; --f3: #ffc93c; --f4: #10257a;
+  --ink: #10257a; --on1: #10257a; --on2: #10257a; --on4: #ff8a5c; --name: 21vw;
+  --display: "Fraunces", serif; --d-stretch: 100%; --d-weight: 700; --d-case: none; --d-track: -0.03em;
+  --radius: 999px;
+}
+[data-theme="night"] {                /* After hours: plum field, hot pink, mint (the one darker option) */
+  --f1: #24103a; --f2: #ff4fa3; --f3: #7ff2c8; --f4: #160926;
+  --ink: #24103a; --on1: #ffffff; --on2: #24103a; --on4: #7ff2c8; --name: 19vw;
+  --display: "Archivo", sans-serif; --d-stretch: 100%; --d-weight: 800; --d-case: uppercase; --d-track: -0.01em;
+  --radius: 12px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--f1); }
+body { margin: 0; font: 400 1.0625rem/1.55 "Geist", system-ui, sans-serif; color: var(--on1); background: var(--f1); }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--f2); outline-offset: 3px; }
+.d { font-family: var(--display); font-stretch: var(--d-stretch); font-weight: var(--d-weight); text-transform: var(--d-case);
+     letter-spacing: var(--d-track); line-height: .86; margin: 0; }
+
+/* Theme switcher: fixed, the swatch is the theme's own two fields */
+.switch { position: fixed; z-index: 10; right: 16px; bottom: 16px; display: flex; gap: 8px; padding: 8px;
+          background: var(--f3); border-radius: 999px; box-shadow: 0 0 0 2px var(--ink); }
+.switch button { all: unset; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px;
+                 border-radius: 999px; font: 500 .875rem "Geist", sans-serif; color: var(--ink); }
+.switch button[aria-pressed="true"] { background: var(--ink); color: var(--f3); }
+.switch i { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, var(--a) 50%, var(--b) 50%); }
+.switch button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* Hero: the name is the object; the curve under it is real data you can scrub */
+.hero { min-height: 100svh; padding: 24px clamp(16px, 4vw, 56px) 96px; display: grid; grid-template-rows: auto 1fr auto; }
+.top { display: flex; justify-content: space-between; gap: 16px; font-weight: 500; }
+.top nav { display: flex; gap: 20px; }
+.top nav a { text-decoration: none; }
+.top nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.name { align-self: center; overflow-wrap: normal; font-size: min(var(--name), 26rem, 27svh); }
+.name span { display: block; }
+.name span:nth-child(2) { color: var(--f2); }
+.plot { position: relative; }
+.curve svg { display: block; width: 100%; height: clamp(120px, 22vh, 220px); overflow: visible; }
+.curve path { vector-effect: non-scaling-stroke; fill: none; stroke: var(--f2); stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
+.dot { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: var(--on1); box-shadow: 0 0 0 5px var(--f1); pointer-events: none; transition: left .25s cubic-bezier(.2,.7,.2,1), top .25s cubic-bezier(.2,.7,.2,1); }
+.readout { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; margin-top: 12px; }
+.readout b { font-family: var(--display); font-stretch: var(--d-stretch); font-weight: var(--d-weight); font-size: clamp(2rem, 5vw, 4rem); line-height: 1; }
+.readout input { width: min(360px, 100%); accent-color: var(--f2); }
+
+/* Flagships: one colour block per project, one number, one line */
+.band { min-height: 86svh; padding: clamp(48px, 8vw, 112px) clamp(16px, 4vw, 56px); display: grid; align-content: end; gap: 24px; }
+.band:nth-of-type(1) { background: var(--f2); color: var(--on2); }
+.band:nth-of-type(2) { background: var(--f3); color: var(--ink); }
+.band:nth-of-type(3) { background: var(--f4); color: var(--on4); }
+.band:nth-of-type(4) { background: var(--f1); color: var(--on1); }
+.band .d { font-size: clamp(4.5rem, 22vw, 22rem); }
+.band p { margin: 0; max-width: 34ch; font-size: clamp(1.125rem, 2vw, 1.5rem); line-height: 1.35; }
+.band a { display: inline-block; width: fit-content; padding: 14px 22px; border: 2px solid currentColor; border-radius: var(--radius);
+          font-weight: 500; text-decoration: none; transition: background .2s, color .2s; }
+.band a:hover { background: currentColor; }
+.band a:hover span { filter: invert(1); mix-blend-mode: difference; }
+
+/* Catalogue: sharp covers at full resolution, no thumbnail wall (six only) */
+.cat { padding: clamp(48px, 8vw, 112px) clamp(16px, 4vw, 56px); background: var(--f3); color: var(--ink); }
+.cat h2 { font-size: clamp(3rem, 10vw, 9rem); margin-bottom: 40px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 32px 24px; list-style: none; margin: 0; padding: 0; }
+.grid a { text-decoration: none; display: grid; gap: 12px; }
+.grid img { width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: var(--radius); display: block; height: auto;
+            transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+[data-theme="lab"] .grid img { border-radius: 24px; }
+.grid a:hover img { transform: translateY(-6px) rotate(-1deg); }
+.grid strong { font-size: 1.25rem; }
+.grid small { display: block; font-size: .95rem; opacity: .75; }
+
+footer { padding: 48px clamp(16px, 4vw, 56px) 112px; background: var(--f4); color: var(--on4); }
+footer .d { font-size: clamp(2.5rem, 8vw, 7rem); }
+
+/* The one orchestrated moment: name rises, curve draws */
+@media (prefers-reduced-motion: no-preference) {
+  .name span { animation: rise .9s cubic-bezier(.2,.8,.2,1) both; }
+  .name span:nth-child(2) { animation-delay: .12s; }
+  .curve path { stroke-dasharray: 3000; animation: draw 1.6s .4s cubic-bezier(.4,0,.2,1) both; }
+  ::view-transition-new(root) { animation: wipe .7s cubic-bezier(.7,0,.2,1); }
+  ::view-transition-old(root) { animation: none; }
+}
+@keyframes rise { from { transform: translateY(40%); opacity: 0; } }
+@keyframes draw { from { stroke-dashoffset: 3000; } to { stroke-dashoffset: 0; } }
+@keyframes wipe { from { clip-path: circle(0 at var(--x, 100%) var(--y, 100%)); } to { clip-path: circle(150% at var(--x, 100%) var(--y, 100%)); } }
+
+@media (max-width: 640px) {
+  .top nav { display: none; }
+  .switch { left: 16px; right: 16px; justify-content: space-between; }
+  .switch button { padding: 6px; }
+  .switch button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+}
+</style>
+</head>
+<body>
+<div class="switch" role="group" aria-label="Theme">
+  <button data-t="board" aria-pressed="true"><i style="--a:#1238ff;--b:#f6ff4a"></i><span>Departure board</span></button>
+  <button data-t="marker" aria-pressed="false"><i style="--a:#c6f432;--b:#5b2bff"></i><span>Highlighter</span></button>
+  <button data-t="lab" aria-pressed="false"><i style="--a:#ff5a1f;--b:#10257a"></i><span>Lab orange</span></button>
+  <button data-t="night" aria-pressed="false"><i style="--a:#24103a;--b:#ff4fa3"></i><span>After hours</span></button>
+</div>
+
+<header class="hero">
+  <div class="top"><span>Rishit Mathur, data analyst</span>
+    <nav><a href="#work">Work</a><a href="#all">All 224 projects</a><a href="mailto:mathur1@usf.edu">Contact</a></nav></div>
+  <h1 class="d name"><span>Rishit</span><span>Mathur</span></h1>
+  <div class="curve">
+    <div class="plot"><svg viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true"><path id="p"/></svg><span class="dot" id="dot"></span></div>
+    <div class="readout">
+      <label for="hour">Florida flights leaving at</label>
+      <b id="out">8 a.m.</b><b id="v">88.7%</b><span>on time</span>
+      <input type="range" id="hour" min="5" max="23" value="8" aria-describedby="v">
+    </div>
+  </div>
+</header>
+
+<main id="work">
+  <section class="band">
+    <h2 class="d">75.5%</h2>
+    <p>of 635,459 Florida flights arrived on time. A Power BI report on who runs late, when, and why.</p>
+    <a href="../../florida-flight-delays/"><span>Read Florida Flight Delays</span></a>
+  </section>
+  <section class="band">
+    <h2 class="d">31 tests</h2>
+    <p>guard a dbt star schema over 1.07 million invoice lines.</p>
+    <a href="../../retail-dbt/"><span>Read the retail dbt project</span></a>
+  </section>
+  <section class="band">
+    <h2 class="d">1.81%</h2>
+    <p>MAPE forecasting US retail sales, measured in rolling-origin backtests.</p>
+    <a href="../../us-retail-forecast/"><span>Read the retail forecast</span></a>
+  </section>
+  <section class="band">
+    <h2 class="d">20 of 20</h2>
+    <p>10-K figures answered within 0.5% of XBRL, and 5 of 5 out-of-scope questions refused.</p>
+    <a href="../../sec-10k-rag/"><span>Read the 10-K RAG project</span></a>
+  </section>
+</main>
+
+<section class="cat" id="all">
+  <h2 class="d">More work</h2>
+  <ul class="grid" id="grid"></ul>
+</section>
+
+<footer><p class="d">Say hello</p><p><a href="mailto:mathur1@usf.edu">mathur1@usf.edu</a></p></footer>
+
+<script>
+const H = [[5,9580,.92547],[6,46533,.920444],[7,53478,.906317],[8,38946,.887357],[9,34210,.857615],[10,30503,.829754],[11,41152,.803728],[12,37526,.75417],[13,32481,.74071],[14,34412,.71045],[15,37723,.684702],[16,37707,.658843],[17,41097,.642626],[18,38514,.636937],[19,42604,.635527],[20,33337,.625971],[21,20619,.632184],[22,10418,.657036],[23,1267,.740331]];
+// source: florida-flight-delays/preview/data.json slices.ALL.hours (on-time rate by departure hour)
+const X = h => (h - 5) / 18 * 1000, Y = r => 200 - (r - .6) / .35 * 200;
+document.getElementById("p").setAttribute("d", H.map(([h,,r], i) => (i ? "L" : "M") + X(h) + " " + Y(r)).join(""));
+const dot = document.getElementById("dot"), hour = document.getElementById("hour");
+const fmt = h => h === 12 ? "12 p.m." : h < 12 ? h + " a.m." : (h - 12) + " p.m.";
+function show() {
+  const [h,, r] = H[hour.value - 5];
+  dot.style.left = X(h) / 10 + "%"; dot.style.top = Y(r) / 2 + "%";
+  document.getElementById("out").textContent = fmt(h);
+  document.getElementById("v").textContent = (r * 100).toFixed(1) + "%";
+}
+hour.addEventListener("input", show); show();
+
+const picks = [["predictive-ml-lab","Predictive ML Lab"],["querymind-text-to-sql","QueryMind text-to-SQL"],["signalroom","SignalRoom"],["citibike-demand","Citi Bike demand"],["hr-analytics","HR analytics"],["movie-recommender","Movie recommender"]];
+document.getElementById("grid").innerHTML = picks.map(([s, t]) =>
+  `<li><a href="../../${s}/"><img src="../../${s}/cover.jpg" alt="" loading="lazy" width="1400" height="875"><strong>${t}</strong></a></li>`).join("");
+
+const root = document.documentElement;
+function setTheme(t, e) {
+  const go = () => { root.dataset.theme = t;
+    document.querySelectorAll(".switch button").forEach(b => b.setAttribute("aria-pressed", b.dataset.t === t)); };
+  if (e) { root.style.setProperty("--x", e.clientX + "px"); root.style.setProperty("--y", e.clientY + "px"); }
+  document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches ? document.startViewTransition(go) : go();
+  try { localStorage.setItem("theme-demo", t); } catch {}
+}
+document.querySelectorAll(".switch button").forEach(b => b.addEventListener("click", e => setTheme(b.dataset.t, e)));
+try { const t = new URLSearchParams(location.search).get("t") || localStorage.getItem("theme-demo"); if (t) setTheme(t); } catch {}
+</script>
+</body>
+</html>
