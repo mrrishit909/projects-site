@@ -1,0 +1,15 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SpendPrism: CI run summary</title><style>body{font:16px/1.55 system-ui,sans-serif;max-width:60rem;margin:2rem auto;padding:0 1rem;color:#1b1b1b;background:#fff}table{border-collapse:collapse;width:100%}th,td{border:1px solid #888;padding:.35rem .5rem;text-align:left;vertical-align:top}code,pre{font:14px ui-monospace,monospace}pre{overflow:auto;border:1px solid #888;padding:.6rem}a{color:#0b4ea2}</style></head><body><p><a href="../../">Back to the SpendPrism demo</a> | <a href="../ci-run/">CI run</a> | <a href="../golden/">Golden outputs</a> | <a href="../workbook/">Workbook</a> | <a href="../source/">Source</a></p><h1>SpendPrism: CI run summary</h1>
+<p>Every run below was started by hand against exactly commit <code>1610419c825bda4785738578ea6ea0633f658a74</code> on GitHub-hosted runners. The repository is private, so runs are
+listed by id and conclusion, not linked.</p>
+<table><tr><th>Workflow job</th><th>Run id</th><th>Conclusion</th></tr><tr><td>verify-project, job verify (profile full: SQL, API, unit, golden)</td><td>run 41688813177</td><td>success</td></tr><tr><td>verify-project, job web (lint, typecheck, unit tests, build)</td><td>run 41688817272</td><td>success</td></tr><tr><td>e2e (browser tests, axe, Lighthouse, agent-browser)</td><td>run 41688821233</td><td>success</td></tr></table>
+<p>The web bundle served by this demo was built from the same commit with the commit stamped in (<code>VITE_CODE_SHA</code>), so every export names it.</p>
+<h2>Earlier measured evidence (a different commit)</h2>
+<p>The Lighthouse scores, the workbook verification and the files below come from the private release named <b>SpendPrism evidence at RC1 7731285</b>
+(commit <code>7731285</code>), not from the commit above. They were not regenerated for this commit.</p><h2>Lighthouse summary</h2><pre>| run | perf | a11y | best-practices | SEO | LCP ms | CLS | TBT ms | form factor | throttling (rtt ms, kbps, cpu x) |
+|---|---|---|---|---|---|---|---|---|---|
+| landing-desktop | 99 | 100 | 96 | 100 | 519 | 0.0749 | 0 | desktop | simulate: 40, 10240, 1 |
+| landing-mobile | 97 | 100 | 96 | 100 | 2361 | 0.0583 | 21 | mobile | simulate: 150, 1638.4, 4 |
+| workspace-desktop | 100 | 100 | 96 | 100 | 516 | 0.0472 | 0 | desktop | simulate: 40, 10240, 1 |
+| workspace-mobile | 97 | 100 | 96 | 100 | 2333 | 0.0583 | 64 | mobile | simulate: 150, 1638.4, 4 |
+</pre>
+<h2>Files from that release</h2><ul><li><a href="fixture-result.json">fixture-result.json</a> (2,930 bytes)</li><li><a href="golden-summary.txt">golden-summary.txt</a> (1,814 bytes)</li><li><a href="lighthouse-summary.md">lighthouse-summary.md</a> (553 bytes)</li><li><a href="lighthouse-summary.json">lighthouse-summary.json</a> (4,409 bytes)</li></ul><p>All data is synthetic. Release candidate RC3, commit <code>1610419c825bda4785738578ea6ea0633f658a74</code>.</p></body></html>

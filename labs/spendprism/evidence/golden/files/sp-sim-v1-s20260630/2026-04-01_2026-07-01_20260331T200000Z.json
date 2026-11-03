@@ -1,0 +1,48 @@
+{
+ "concentration": [],
+ "cutoff": "2026-03-31T20:00:00Z",
+ "cycle_time": {
+  "count": 0,
+  "mean_days": null,
+  "pos": [],
+  "sum_days": 0
+ },
+ "dataset_version": "sp-sim-v1-s20260630",
+ "exclusions": [],
+ "lines": [],
+ "ppv_summary": {
+  "billed_line_count": 0,
+  "compared_count": 0,
+  "ppv_invoiced_total": "0.00",
+  "ppv_total": "0.00"
+ },
+ "spend_summary": {
+  "addressable": "0.00",
+  "addressed": "0.00",
+  "cancelled_spend": {},
+  "coverage": null,
+  "excluded_count": 0,
+  "freight_total": "0.00",
+  "i0": {},
+  "line_count": 0,
+  "n_cancelled": 0,
+  "n_non_addressable": 0,
+  "n_off_contract": 0,
+  "n_on_contract": 0,
+  "n_unclassified": 0,
+  "n_unconverted": 0,
+  "n_unresolved": 0,
+  "non_addressable": "0.00",
+  "off_contract": "0.00",
+  "tax_total": "0.00",
+  "total_spend": "0.00",
+  "unclassified": "0.00",
+  "unconverted_spend": {},
+  "unresolved": "0.00"
+ },
+ "warnings": [],
+ "window": {
+  "from": "2026-04-01",
+  "to": "2026-07-01"
+ }
+}

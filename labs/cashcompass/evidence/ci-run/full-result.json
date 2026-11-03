@@ -1,0 +1,14 @@
+{
+  "exit_code": 0,
+  "steps": {
+    "ci2_selftest": "pass",
+    "sql_fixture": "pass",
+    "python_reference": "pass",
+    "generator_check": "pass",
+    "sql_golden": "pass",
+    "committed_golden_diff": "pass",
+    "ts_golden_byte_diff": "pass",
+    "api_pytest": "pass",
+    "manifest_check": "pass"
+  }
+}

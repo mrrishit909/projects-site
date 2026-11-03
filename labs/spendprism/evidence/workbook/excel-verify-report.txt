@@ -1,0 +1,25 @@
+PASS formula cells in generated workbook: 27045
+PASS input sheet FX holds values only (formulas=0)
+PASS input sheet Specs holds values only (formulas=0)
+PASS input sheet UOM holds values only (formulas=0)
+PASS input sheet Mappings holds values only (formulas=0)
+PASS input sheet Categories holds values only (formulas=0)
+PASS input sheet CPV holds values only (formulas=0)
+PASS input sheet Contracts holds values only (formulas=0)
+PASS input sheet Quotes holds values only (formulas=0)
+PASS input sheet Parameters holds values only (formulas=0)
+PASS Lines input columns hold values only (formulas=0)
+PASS Lines: every cell in formula columns 36 is a formula (non-formula: [])
+PASS InvLines: every cell in formula columns 3 is a formula (non-formula: [])
+PASS Actions: every cell in formula columns 2 is a formula (non-formula: [])
+PASS Scenario: every cell in formula columns 11 is a formula (non-formula: [])
+PASS Reconciliation: every cell in formula columns 3 is a formula (non-formula: [])
+PASS ReconDetail: every cell in formula columns 6 is a formula (non-formula: [])
+PASS no error cells after recalculation ([])
+PASS Reconciliation: 79/79 differences exactly 0
+PASS ReconDetail: 3612 line-level differences all exactly 0
+PASS non-trivial: total_spend > 1,000,000 and 283 compared lines
+PASS SA-S001 rounding_component is the real 0.01 residual and still sums exactly
+PASS Scenario: compliance + contract_to_quote + uncontracted + rounding = potential_saving exactly for all three actions
+formula_cells=27045
+result=PASS

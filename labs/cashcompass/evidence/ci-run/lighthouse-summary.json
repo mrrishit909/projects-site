@@ -1,0 +1,138 @@
+[
+  {
+    "run": "landing-desktop",
+    "url": "http://127.0.0.1:4173/projects-site/labs/cashcompass/",
+    "lighthouse": "13.5.0",
+    "chrome": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "performance": 100,
+    "accessibility": 100,
+    "best_practices": 96,
+    "seo": 100,
+    "lcp_ms": 398,
+    "cls": 0.036,
+    "tbt_ms": 0,
+    "settings": {
+      "formFactor": "desktop",
+      "throttlingMethod": "simulate",
+      "throttling": {
+        "rttMs": 40,
+        "throughputKbps": 10240,
+        "requestLatencyMs": 0,
+        "downloadThroughputKbps": 0,
+        "uploadThroughputKbps": 0,
+        "cpuSlowdownMultiplier": 1
+      },
+      "screenEmulation": {
+        "mobile": false,
+        "width": 1350,
+        "height": 940,
+        "deviceScaleFactor": 1,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+    },
+    "gate": "pass accessibility >= 95"
+  },
+  {
+    "run": "landing-mobile",
+    "url": "http://127.0.0.1:4173/projects-site/labs/cashcompass/",
+    "lighthouse": "13.5.0",
+    "chrome": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "performance": 99,
+    "accessibility": 100,
+    "best_practices": 96,
+    "seo": 100,
+    "lcp_ms": 1573,
+    "cls": 0.0583,
+    "tbt_ms": 13,
+    "settings": {
+      "formFactor": "mobile",
+      "throttlingMethod": "simulate",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36"
+    },
+    "gate": "pass accessibility >= 95"
+  },
+  {
+    "run": "workspace-desktop",
+    "url": "http://127.0.0.1:4173/projects-site/labs/cashcompass/#/workspace?ccy=USD",
+    "lighthouse": "13.5.0",
+    "chrome": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "performance": 100,
+    "accessibility": 100,
+    "best_practices": 96,
+    "seo": 100,
+    "lcp_ms": 471,
+    "cls": 0.0356,
+    "tbt_ms": 0,
+    "settings": {
+      "formFactor": "desktop",
+      "throttlingMethod": "simulate",
+      "throttling": {
+        "rttMs": 40,
+        "throughputKbps": 10240,
+        "requestLatencyMs": 0,
+        "downloadThroughputKbps": 0,
+        "uploadThroughputKbps": 0,
+        "cpuSlowdownMultiplier": 1
+      },
+      "screenEmulation": {
+        "mobile": false,
+        "width": 1350,
+        "height": 940,
+        "deviceScaleFactor": 1,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
+    },
+    "gate": "pass accessibility >= 95"
+  },
+  {
+    "run": "workspace-mobile",
+    "url": "http://127.0.0.1:4173/projects-site/labs/cashcompass/#/workspace?ccy=USD",
+    "lighthouse": "13.5.0",
+    "chrome": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "performance": 98,
+    "accessibility": 100,
+    "best_practices": 96,
+    "seo": 100,
+    "lcp_ms": 1889,
+    "cls": 0.0583,
+    "tbt_ms": 71,
+    "settings": {
+      "formFactor": "mobile",
+      "throttlingMethod": "simulate",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36"
+    },
+    "gate": "pass accessibility >= 95"
+  }
+]

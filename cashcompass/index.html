@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" class="case">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="CashCompass: a synthetic accounts-receivable workbench. An independent SQL reference and a browser engine each compute open balances, exact aging buckets, disputed and undisputed amounts, and a cash forecast from explicit promises-to-pay, and their outputs are compared byte for byte on seven golden cutoffs. The Python API is checked against a hand-calculated fixture only. Nothing here is real data and nothing measures a real saving.">
+<title>Which Customers Should a Collections Lead Contact Today, and How Much Cash Is Expected? · Rishit Raj Mathur</title>
+<meta name="theme-color" content="#071d16">
+<meta property="og:title" content="Which Customers Should a Collections Lead Contact Today, and How Much Cash Is Expected? · Rishit Raj Mathur">
+<meta property="og:description" content="CashCompass: a synthetic accounts-receivable workbench. An independent SQL reference and a browser engine each compute open balances, exact aging buckets, disputed and undisputed amounts, and a cash forecast from explicit promises-to-pay, and their outputs are compared byte for byte on seven golden cutoffs. The Python API is checked against a hand-calculated fixture only. Nothing here is real data and nothing measures a real saving.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mrrishit909.github.io/projects/cashcompass/">
+<meta property="og:image" content="https://mrrishit909.github.io/projects/cashcompass/cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://mrrishit909.github.io/projects/cashcompass/">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Bricolage-display.woff2" crossorigin>
+<link rel="stylesheet" href="../atelier.css?v=3434bd444f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23071d16'/%3E%3Crect x='7' y='7' width='18' height='4' fill='%23c4ab7d'/%3E%3Crect x='9' y='13' width='14' height='6' fill='%23c4ab7d'/%3E%3Crect x='7' y='21' width='18' height='4' fill='%23c4ab7d'/%3E%3C/svg%3E">
+<script type="importmap">{ "imports": { "three": "../vendor/three/three.module.min.js" } }</script>
+<script>document.documentElement.classList.add("js")</script>
+<script src="../case.js?v=2bb0a8a7f7" defer></script>
+</head>
+<body>
+<a class="skip" href="#reading">Skip to the case study</a>
+<header class="top on-green"><a class="brand" href="https://mrrishit909.github.io/projects/">Rishit Raj Mathur</a><nav aria-label="Site"><a href="../#work">Home</a><a href="../all.html">Archive</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="../#contact">Contact</a></nav></header>
+<main>
+<section class="case-hero on-green" aria-labelledby="title">
+  <p class="kicker label"><span>Dashboard · Accounts receivable · Collections · FastAPI · React &middot; 2026-11</span></p>
+  <h1 class="display long" id="title">Which Customers Should a Collections Lead Contact Today, and How Much Cash Is Expected?</h1>
+  <p class="tagline lead">CashCompass: a synthetic accounts-receivable workbench. An independent SQL reference and a browser engine each compute open balances, exact aging buckets, disputed and undisputed amounts, and a cash forecast from explicit promises-to-pay, and their outputs are compared byte for byte on seven golden cutoffs. The Python API is checked against a hand-calculated fixture only. Nothing here is real data and nothing measures a real saving.</p>
+  <div class="object" aria-hidden="true"><canvas class="case-canvas" data-config="network" data-words="[&quot;Facts&quot;, &quot;Dimensions&quot;, &quot;Measures&quot;, &quot;Report&quot;]"></canvas><img class="object-still" src="../assets/config-network.webp" alt="" width="900" height="640" fetchpriority="high" decoding="async"><p class="marks label"><span>Facts</span><span>Dimensions</span><span>Measures</span><span>Report</span></p></div>
+  <dl class="summary">
+    <div><dt>Problem</dt><dd>A collections lead needs to know which customers to contact today and why, and how much cash to expect in which week. Aging reports can hide disputed amounts, unapplied cash and promise…</dd></div>
+    <div><dt>Role</dt><dd>Built and written by Rishit Raj Mathur; the case study names its sources and checks.</dd></div>
+    <div><dt>Tools</dt><dd>Python 3.12 (stdlib-only seeded generator, Decimal money), PostgreSQL (guarded cc_* write functions, role grants, SQL reference oracle), FastAPI, TypeScript + React + Vite (engine replayed in a Web Worker), Playwright, axe-core, Lighthouse, Vitest, GitHub Actions only; no local build, HyperFrames and Remotion renders, openpyxl and LibreOffice workbook</dd></div>
+    <div><dt>Status</dt><dd>Case study with a live demo</dd></div>
+    <div><dt>Evidence</dt><dd><a href="https://mrrishit909.github.io/projects-site/labs/cashcompass/">Open CashCompass</a> &middot; <a href="https://mrrishit909.github.io/projects-site/labs/cashcompass/evidence/source/" target="_blank" rel="noopener">Code on GitHub</a></dd></div>
+  </dl>
+</section>
+<div class="handoff" aria-hidden="true"></div>
+<div class="reading on-ivory" id="reading">
+<div class="wrap">
+  <figure class="cover"><img src="cover.jpg" srcset="cover-800.webp 800w, cover.jpg 1400w" sizes="(max-width: 900px) calc(100vw - 40px), 1068px" alt="Screenshot of Which Customers Should a Collections Lead Contact Today, and How Much Cash Is Expected?" width="1400" height="800" fetchpriority="high" decoding="async"><figcaption>The project as it runs: CashCompass: a synthetic accounts-receivable workbench. An independent SQL reference and a browser engine each compute open balances, exact aging buckets, disputed and undisputed amounts, and a cash forecast from explicit promises-to-pay, and their outputs are compared byte for byte on seven golden cutoffs. The Python API is checked against a hand-calculated fixture only. Nothing here is real data and nothing measures a real saving.</figcaption></figure>
+  
+  <p class="note"><b>Everything is synthetic</b>: 40 invented customers, 405 invoices and every figure come from a seeded generator (dataset cc-sim-v1-s20260630) with 49 declared defects kept in a separate file. The public site is a static demo; allocations, disputes, promises and tasks run in browser memory and are lost on reload. Forecast probabilities are assumptions. The API role header is a stand-in for authentication and the API is not hosted. The independent visual review at the release candidate did not give a final acceptance.</p>
+  <section class="s" id="problem"><h2><span class="n">01</span>The problem</h2><div class="body"><p>A collections lead needs to know which customers to contact today and why, and how much cash to expect in which week. Aging reports can hide disputed amounts, unapplied cash and promise dates that passed without payment.</p></div></section><section class="s" id="built"><h2><span class="n">02</span>What I built</h2><div class="body"><p>A reconciled aging view, an account drilldown, a ranked collections queue, many-to-many allocations with reversal history, disputes, promises-to-pay, a forecast-versus-actual calibration screen and a reviewed export. Rules live in one written contract; the SQL reference and the browser engine produce the same numbers and are compared byte for byte on seven cutoffs, and the Python API is checked against the hand fixture.</p></div></section><section class="s" id="how"><h2><span class="n">03</span>How it was built</h2><div class="body"><ol class="steps"><li><span class="n">01</span><div><h3>The decision and the contract</h3><p>One written contract fixes the ranking (oldest aging bucket, then undisputed collectible, then customer id), the bucket boundaries and what is out of scope: sending messages, payments, interest, FX and a predictive credit model.</p></div></li><li><span class="n">02</span><div><h3>A hand-calculated fixture before any volume</h3><p>Known-answer cases (an open balance, a partial payment, an overpayment, a credit after cutoff, a duplicate receipt, a reopened dispute, a receipt reversal and allocation races) are asserted in SQL first. The manifest requires 96 of 96 cases.</p></div></li><li><span class="n">03</span><div><h3>Synthetic ledger with declared defects</h3><p>A seeded generator writes the ledger, a defect manifest and a hash. Hidden payer behaviour never leaves the generator.</p></div></li><li><span class="n">04</span><div><h3>Two engines, one answer</h3><p>The SQL reference and the browser engine are compared on seven golden files; the API is tested against the fixture. Excel recalculates 15,556 formula cells with zero differences.</p></div></li><li><span class="n">05</span><div><h3>Evidence, not assertion</h3><p>Playwright runs 265 tests, axe finds no violations on ten routes, Lighthouse accessibility is 100. A reviewer read the renders; the last review said the release candidate was not yet visually release-ready.</p></div></li></ol></div></section><section class="s" id="results"><h2><span class="n">04</span>Results</h2><div class="body"><p><b>Measured on the synthetic release candidate</b> (commit 05ac3b5): 96 of 96 SQL cases, 61 API tests, 162 unit tests, 265 browser tests, 7 of 7 golden files byte-identical, workbook differences 0.00. USD open receivables on the latest cutoff are 959,400.93 across 102 invoices. These are properties of generated data and of this code; they say nothing about a real collections team.</p></div></section><section class="s" id="next-steps"><h2><span class="n">05</span>What I&#x27;d do next</h2><div class="body"><ul><li>Fix the ribbon caption link contrast and re-read the landing renders.</li><li>Publish the four evidence pages and the static site.</li><li>Publish the edited executive memo and case study.</li><li>Real authentication before any hosting.</li></ul></div></section>
+  <nav class="neighbours" aria-label="Neighbouring case studies">
+    <a class="prev-link" href="../trading-bot/"><span class="label">Previous</span><span class="t">Trading Bot</span></a>
+    <a class="next-link" href="../spendprism/"><span class="label">Next</span><span class="t">Which Purchases Carry Addressable Price Leakage, and Which Sourcing Action Is Worth Reviewing?</span><video muted loop playsinline preload="none" aria-hidden="true" poster="../spendprism/cover-800.webp"><source src="../spendprism/loop.webm" type="video/webm"><source src="../spendprism/loop.mp4" type="video/mp4"></video></a>
+  </nav>
+</div>
+<footer class="foot case-foot"><span>&copy; 2026 Rishit Raj Mathur</span><nav aria-label="Footer"><a href="../#work">Home</a><a href="../all.html">Archive</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="../#contact">Contact</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
+</div>
+</main>
+</body>
+</html>

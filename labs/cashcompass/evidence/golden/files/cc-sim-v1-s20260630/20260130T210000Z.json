@@ -1,0 +1,3998 @@
+{
+ "customers": [
+  {
+   "aging": {
+    "1-30": "848.00",
+    "31-60": "3362.30",
+    "61-90": "0.00",
+    "91+": "1156.00",
+    "current": "0.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C001",
+   "disputed": "2198.94",
+   "open": "5366.30",
+   "overdue": "5366.30",
+   "overdue_undisputed": "3167.36",
+   "reconciliation": {
+    "allocations": "4905.00",
+    "buckets_less_excess": "5366.30",
+    "cash_received": "5415.95",
+    "invoice_side": "5366.30",
+    "open_less_excess": "5366.30",
+    "reversed": "0.00",
+    "unapplied": "510.95"
+   },
+   "unapplied": "510.95",
+   "undisputed": "3167.36"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "29868.17"
+   },
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C002",
+   "disputed": "0.00",
+   "open": "29868.17",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "47803.97",
+    "buckets_less_excess": "29868.17",
+    "cash_received": "47803.97",
+    "invoice_side": "29868.17",
+    "open_less_excess": "29868.17",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "29868.17"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "46613.96"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C002",
+   "disputed": "0.00",
+   "open": "46613.96",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "46537.00",
+    "buckets_less_excess": "46613.96",
+    "cash_received": "72749.10",
+    "invoice_side": "46613.96",
+    "open_less_excess": "46613.96",
+    "reversed": "0.00",
+    "unapplied": "26212.10"
+   },
+   "unapplied": "26212.10",
+   "undisputed": "46613.96"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "40670.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C003",
+   "disputed": "0.00",
+   "open": "40670.00",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "40471.00",
+    "buckets_less_excess": "40670.00",
+    "cash_received": "40471.00",
+    "invoice_side": "40670.00",
+    "open_less_excess": "40670.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "40670.00"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "149489.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C003",
+   "disputed": "0.00",
+   "open": "149489.00",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "67188.02",
+    "buckets_less_excess": "149489.00",
+    "cash_received": "67188.02",
+    "invoice_side": "149489.00",
+    "open_less_excess": "149489.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "149489.00"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "0.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C004",
+   "disputed": "0.00",
+   "open": "0.00",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "3583.09",
+    "buckets_less_excess": "0.00",
+    "cash_received": "3583.09",
+    "invoice_side": "0.00",
+    "open_less_excess": "0.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "0.00"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "1525.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "1993.29"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C004",
+   "disputed": "568.83",
+   "open": "3518.29",
+   "overdue": "1525.00",
+   "overdue_undisputed": "956.17",
+   "reconciliation": {
+    "allocations": "834.59",
+    "buckets_less_excess": "3518.29",
+    "cash_received": "834.59",
+    "invoice_side": "3518.29",
+    "open_less_excess": "3518.29",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "2949.46"
+  },
+  {
+   "aging": {
+    "1-30": "9926.18",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "5711.78"
+   },
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C005",
+   "disputed": "0.00",
+   "open": "15637.96",
+   "overdue": "9926.18",
+   "overdue_undisputed": "9926.18",
+   "reconciliation": {
+    "allocations": "4501.41",
+    "buckets_less_excess": "15637.96",
+    "cash_received": "4501.41",
+    "invoice_side": "15637.96",
+    "open_less_excess": "15637.96",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "15637.96"
+  },
+  {
+   "aging": {
+    "1-30": "23712.00",
+    "31-60": "0.00",
+    "61-90": "6596.39",
+    "91+": "0.00",
+    "current": "32288.88"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C006",
+   "disputed": "0.00",
+   "open": "62597.27",
+   "overdue": "30308.39",
+   "overdue_undisputed": "30308.39",
+   "reconciliation": {
+    "allocations": "32674.25",
+    "buckets_less_excess": "62597.27",
+    "cash_received": "39433.24",
+    "invoice_side": "62597.27",
+    "open_less_excess": "62597.27",
+    "reversed": "0.00",
+    "unapplied": "6758.99"
+   },
+   "unapplied": "6758.99",
+   "undisputed": "62597.27"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "1467.00",
+    "91+": "0.00",
+    "current": "1101.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C007",
+   "disputed": "0.00",
+   "open": "2568.00",
+   "overdue": "1467.00",
+   "overdue_undisputed": "1467.00",
+   "reconciliation": {
+    "allocations": "5085.00",
+    "buckets_less_excess": "2568.00",
+    "cash_received": "5085.00",
+    "invoice_side": "2568.00",
+    "open_less_excess": "2568.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "2568.00"
+  },
+  {
+   "aging": {
+    "1-30": "3452.86",
+    "31-60": "1819.98",
+    "61-90": "223.72",
+    "91+": "0.00",
+    "current": "0.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C008",
+   "disputed": "0.00",
+   "open": "5496.56",
+   "overdue": "5496.56",
+   "overdue_undisputed": "5496.56",
+   "reconciliation": {
+    "allocations": "5989.94",
+    "buckets_less_excess": "5496.56",
+    "cash_received": "6213.66",
+    "invoice_side": "5496.56",
+    "open_less_excess": "5496.56",
+    "reversed": "0.00",
+    "unapplied": "223.72"
+   },
+   "unapplied": "223.72",
+   "undisputed": "5496.56"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "215.08",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "1210.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C009",
+   "disputed": "215.08",
+   "open": "1425.08",
+   "overdue": "215.08",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "2098.80",
+    "buckets_less_excess": "1425.08",
+    "cash_received": "2098.80",
+    "invoice_side": "1425.08",
+    "open_less_excess": "1425.08",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "1210.00"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "38922.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C010",
+   "disputed": "3276.42",
+   "open": "38922.00",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "0.00",
+    "buckets_less_excess": "38922.00",
+    "cash_received": "0.00",
+    "invoice_side": "38922.00",
+    "open_less_excess": "38922.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "35645.58"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "65785.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "38558.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C011",
+   "disputed": "0.00",
+   "open": "104343.00",
+   "overdue": "65785.00",
+   "overdue_undisputed": "65785.00",
+   "reconciliation": {
+    "allocations": "19639.00",
+    "buckets_less_excess": "104343.00",
+    "cash_received": "85579.10",
+    "invoice_side": "104343.00",
+    "open_less_excess": "104343.00",
+    "reversed": "0.00",
+    "unapplied": "65940.10"
+   },
+   "unapplied": "65940.10",
+   "undisputed": "104343.00"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "2523.00",
+    "91+": "0.00",
+    "current": "4192.04"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C012",
+   "disputed": "1743.39",
+   "open": "6715.04",
+   "overdue": "2523.00",
+   "overdue_undisputed": "779.61",
+   "reconciliation": {
+    "allocations": "0.00",
+    "buckets_less_excess": "6715.04",
+    "cash_received": "0.00",
+    "invoice_side": "6715.04",
+    "open_less_excess": "6715.04",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "4971.65"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "2114.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "0.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C013",
+   "disputed": "0.00",
+   "open": "2114.00",
+   "overdue": "2114.00",
+   "overdue_undisputed": "2114.00",
+   "reconciliation": {
+    "allocations": "6343.37",
+    "buckets_less_excess": "2114.00",
+    "cash_received": "6343.37",
+    "invoice_side": "2114.00",
+    "open_less_excess": "2114.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "2114.00"
+  },
+  {
+   "aging": {
+    "1-30": "11793.43",
+    "31-60": "5604.61",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "0.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C014",
+   "disputed": "4115.91",
+   "open": "17398.04",
+   "overdue": "17398.04",
+   "overdue_undisputed": "13282.13",
+   "reconciliation": {
+    "allocations": "21710.02",
+    "buckets_less_excess": "17398.04",
+    "cash_received": "29455.11",
+    "invoice_side": "17398.04",
+    "open_less_excess": "17398.04",
+    "reversed": "0.00",
+    "unapplied": "7745.09"
+   },
+   "unapplied": "7745.09",
+   "undisputed": "13282.13"
+  },
+  {
+   "aging": {
+    "1-30": "2737.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "873.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C015",
+   "disputed": "0.00",
+   "open": "3610.00",
+   "overdue": "2737.00",
+   "overdue_undisputed": "2737.00",
+   "reconciliation": {
+    "allocations": "1144.57",
+    "buckets_less_excess": "3610.00",
+    "cash_received": "1144.57",
+    "invoice_side": "3610.00",
+    "open_less_excess": "3610.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "3610.00"
+  },
+  {
+   "aging": {
+    "1-30": "42301.00",
+    "31-60": "20281.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "71769.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C016",
+   "disputed": "10566.40",
+   "open": "134351.00",
+   "overdue": "62582.00",
+   "overdue_undisputed": "52015.60",
+   "reconciliation": {
+    "allocations": "0.00",
+    "buckets_less_excess": "134351.00",
+    "cash_received": "0.00",
+    "invoice_side": "134351.00",
+    "open_less_excess": "134351.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "123784.60"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "1065.50",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "0.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C017",
+   "disputed": "1065.50",
+   "open": "1065.50",
+   "overdue": "1065.50",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "5987.50",
+    "buckets_less_excess": "1065.50",
+    "cash_received": "5987.50",
+    "invoice_side": "1065.50",
+    "open_less_excess": "1065.50",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "0.00"
+  },
+  {
+   "aging": {
+    "1-30": "1616.03",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "18928.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C018",
+   "disputed": "0.00",
+   "open": "20544.03",
+   "overdue": "1616.03",
+   "overdue_undisputed": "1616.03",
+   "reconciliation": {
+    "allocations": "60559.81",
+    "buckets_less_excess": "20544.03",
+    "cash_received": "60559.81",
+    "invoice_side": "20544.03",
+    "open_less_excess": "20544.03",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "20544.03"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "2874.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C019",
+   "disputed": "1311.33",
+   "open": "2874.00",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "0.00",
+    "buckets_less_excess": "2874.00",
+    "cash_received": "0.00",
+    "invoice_side": "2874.00",
+    "open_less_excess": "2874.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "1562.67"
+  },
+  {
+   "aging": {
+    "1-30": "347.52",
+    "31-60": "1114.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "0.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C020",
+   "disputed": "0.00",
+   "open": "1461.52",
+   "overdue": "1461.52",
+   "overdue_undisputed": "1461.52",
+   "reconciliation": {
+    "allocations": "4113.82",
+    "buckets_less_excess": "1461.52",
+    "cash_received": "5343.23",
+    "invoice_side": "1461.52",
+    "open_less_excess": "1461.52",
+    "reversed": "0.00",
+    "unapplied": "1229.41"
+   },
+   "unapplied": "1229.41",
+   "undisputed": "1461.52"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "27871.62"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C021",
+   "disputed": "0.00",
+   "open": "27871.62",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "17828.00",
+    "buckets_less_excess": "27871.62",
+    "cash_received": "17854.53",
+    "invoice_side": "27871.62",
+    "open_less_excess": "27871.62",
+    "reversed": "0.00",
+    "unapplied": "26.53"
+   },
+   "unapplied": "26.53",
+   "undisputed": "27871.62"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "76751.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C023",
+   "disputed": "0.00",
+   "open": "76751.00",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "114271.52",
+    "buckets_less_excess": "76751.00",
+    "cash_received": "114271.52",
+    "invoice_side": "76751.00",
+    "open_less_excess": "76751.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "76751.00"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "5125.29"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C024",
+   "disputed": "0.00",
+   "open": "5125.29",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "5520.00",
+    "buckets_less_excess": "5125.29",
+    "cash_received": "5520.00",
+    "invoice_side": "5125.29",
+    "open_less_excess": "5125.29",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "5125.29"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "18275.60"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C025",
+   "disputed": "8137.58",
+   "open": "18275.60",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "0.00",
+    "buckets_less_excess": "18275.60",
+    "cash_received": "0.00",
+    "invoice_side": "18275.60",
+    "open_less_excess": "18275.60",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "10138.02"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "15756.23",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "0.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C026",
+   "disputed": "0.00",
+   "open": "15756.23",
+   "overdue": "15756.23",
+   "overdue_undisputed": "15756.23",
+   "reconciliation": {
+    "allocations": "4813.96",
+    "buckets_less_excess": "15756.23",
+    "cash_received": "25384.15",
+    "invoice_side": "15756.23",
+    "open_less_excess": "15756.23",
+    "reversed": "0.00",
+    "unapplied": "20570.19"
+   },
+   "unapplied": "20570.19",
+   "undisputed": "15756.23"
+  },
+  {
+   "aging": {
+    "1-30": "14813.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "10360.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C027",
+   "disputed": "2019.62",
+   "open": "25173.00",
+   "overdue": "14813.00",
+   "overdue_undisputed": "12793.38",
+   "reconciliation": {
+    "allocations": "0.00",
+    "buckets_less_excess": "25173.00",
+    "cash_received": "0.00",
+    "invoice_side": "25173.00",
+    "open_less_excess": "25173.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "23153.38"
+  },
+  {
+   "aging": {
+    "1-30": "10148.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "44021.74"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C028",
+   "disputed": "0.00",
+   "open": "54169.74",
+   "overdue": "10148.00",
+   "overdue_undisputed": "10148.00",
+   "reconciliation": {
+    "allocations": "21168.74",
+    "buckets_less_excess": "54169.74",
+    "cash_received": "21168.74",
+    "invoice_side": "54169.74",
+    "open_less_excess": "54169.74",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "54169.74"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "0.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C029",
+   "disputed": "0.00",
+   "open": "0.00",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "7235.92",
+    "buckets_less_excess": "0.00",
+    "cash_received": "7235.92",
+    "invoice_side": "0.00",
+    "open_less_excess": "0.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "0.00"
+  },
+  {
+   "aging": {
+    "1-30": "20245.68",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "40752.82"
+   },
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C030",
+   "disputed": "0.00",
+   "open": "60998.50",
+   "overdue": "20245.68",
+   "overdue_undisputed": "20245.68",
+   "reconciliation": {
+    "allocations": "12514.32",
+    "buckets_less_excess": "60998.50",
+    "cash_received": "12514.32",
+    "invoice_side": "60998.50",
+    "open_less_excess": "60998.50",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "60998.50"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "3623.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C031",
+   "disputed": "0.00",
+   "open": "3623.00",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "3700.00",
+    "buckets_less_excess": "3623.00",
+    "cash_received": "3700.00",
+    "invoice_side": "3623.00",
+    "open_less_excess": "3623.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "3623.00"
+  },
+  {
+   "aging": {
+    "1-30": "4887.80",
+    "31-60": "0.00",
+    "61-90": "19417.00",
+    "91+": "0.00",
+    "current": "19618.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C032",
+   "disputed": "0.00",
+   "open": "43922.80",
+   "overdue": "24304.80",
+   "overdue_undisputed": "24304.80",
+   "reconciliation": {
+    "allocations": "13254.73",
+    "buckets_less_excess": "43922.80",
+    "cash_received": "32671.73",
+    "invoice_side": "43922.80",
+    "open_less_excess": "43922.80",
+    "reversed": "0.00",
+    "unapplied": "19417.00"
+   },
+   "unapplied": "19417.00",
+   "undisputed": "43922.80"
+  },
+  {
+   "aging": {
+    "1-30": "57891.41",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "32176.81"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C033",
+   "disputed": "12788.49",
+   "open": "90068.22",
+   "overdue": "57891.41",
+   "overdue_undisputed": "45102.92",
+   "reconciliation": {
+    "allocations": "30559.05",
+    "buckets_less_excess": "90068.22",
+    "cash_received": "52045.48",
+    "invoice_side": "90068.22",
+    "open_less_excess": "90068.22",
+    "reversed": "0.00",
+    "unapplied": "21486.43"
+   },
+   "unapplied": "21486.43",
+   "undisputed": "77279.73"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "2204.27"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C034",
+   "disputed": "124.01",
+   "open": "2204.27",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "0.00",
+    "buckets_less_excess": "2204.27",
+    "cash_received": "0.00",
+    "invoice_side": "2204.27",
+    "open_less_excess": "2204.27",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "2080.26"
+  },
+  {
+   "aging": {
+    "1-30": "8806.00",
+    "31-60": "33283.39",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "11397.51"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C035",
+   "disputed": "0.00",
+   "open": "53486.90",
+   "overdue": "42089.39",
+   "overdue_undisputed": "42089.39",
+   "reconciliation": {
+    "allocations": "49205.57",
+    "buckets_less_excess": "53486.90",
+    "cash_received": "78767.96",
+    "invoice_side": "53486.90",
+    "open_less_excess": "53486.90",
+    "reversed": "0.00",
+    "unapplied": "29562.39"
+   },
+   "unapplied": "29562.39",
+   "undisputed": "53486.90"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "0.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C036",
+   "disputed": "0.00",
+   "open": "0.00",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "33984.00",
+    "buckets_less_excess": "0.00",
+    "cash_received": "33989.17",
+    "invoice_side": "0.00",
+    "open_less_excess": "0.00",
+    "reversed": "0.00",
+    "unapplied": "5.17"
+   },
+   "unapplied": "5.17",
+   "undisputed": "0.00"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "3645.00",
+    "91+": "0.00",
+    "current": "0.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C037",
+   "disputed": "1137.24",
+   "open": "3645.00",
+   "overdue": "3645.00",
+   "overdue_undisputed": "2507.76",
+   "reconciliation": {
+    "allocations": "0.00",
+    "buckets_less_excess": "3645.00",
+    "cash_received": "0.00",
+    "invoice_side": "3645.00",
+    "open_less_excess": "3645.00",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "2507.76"
+  },
+  {
+   "aging": {
+    "1-30": "4960.00",
+    "31-60": "8129.27",
+    "61-90": "6260.60",
+    "91+": "0.00",
+    "current": "12193.00"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C038",
+   "disputed": "0.00",
+   "open": "31542.87",
+   "overdue": "19349.87",
+   "overdue_undisputed": "19349.87",
+   "reconciliation": {
+    "allocations": "25086.13",
+    "buckets_less_excess": "31542.87",
+    "cash_received": "31346.73",
+    "invoice_side": "31542.87",
+    "open_less_excess": "31542.87",
+    "reversed": "0.00",
+    "unapplied": "6260.60"
+   },
+   "unapplied": "6260.60",
+   "undisputed": "31542.87"
+  },
+  {
+   "aging": {
+    "1-30": "0.00",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "144384.36"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C039",
+   "disputed": "18258.37",
+   "open": "144384.36",
+   "overdue": "0.00",
+   "overdue_undisputed": "0.00",
+   "reconciliation": {
+    "allocations": "0.00",
+    "buckets_less_excess": "144384.36",
+    "cash_received": "0.00",
+    "invoice_side": "144384.36",
+    "open_less_excess": "144384.36",
+    "reversed": "0.00",
+    "unapplied": "0.00"
+   },
+   "unapplied": "0.00",
+   "undisputed": "126125.99"
+  },
+  {
+   "aging": {
+    "1-30": "15912.46",
+    "31-60": "0.00",
+    "61-90": "0.00",
+    "91+": "0.00",
+    "current": "34205.97"
+   },
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C040",
+   "disputed": "0.00",
+   "open": "50118.43",
+   "overdue": "15912.46",
+   "overdue_undisputed": "15912.46",
+   "reconciliation": {
+    "allocations": "0.00",
+    "buckets_less_excess": "50118.43",
+    "cash_received": "15912.46",
+    "invoice_side": "50118.43",
+    "open_less_excess": "50118.43",
+    "reversed": "0.00",
+    "unapplied": "15912.46"
+   },
+   "unapplied": "15912.46",
+   "undisputed": "50118.43"
+  }
+ ],
+ "cutoff": "2026-01-30T21:00:00Z",
+ "dataset_version": "cc-sim-v1-s20260630",
+ "forecast": [
+  {
+   "actual": "5415.95",
+   "currency": "GBP",
+   "customer_id": "C001",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "5415.95",
+   "week_start": "2025-10-20"
+  },
+  {
+   "actual": "40471.00",
+   "currency": "EUR",
+   "customer_id": "C003",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "40471.00",
+   "week_start": "2025-12-29"
+  },
+  {
+   "actual": "3352.92",
+   "currency": "USD",
+   "customer_id": "C006",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "3352.92",
+   "week_start": "2025-12-01"
+  },
+  {
+   "actual": "818.00",
+   "currency": "USD",
+   "customer_id": "C007",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "818.00",
+   "week_start": "2026-01-05"
+  },
+  {
+   "actual": "223.72",
+   "currency": "GBP",
+   "customer_id": "C008",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "223.72",
+   "week_start": "2025-12-08"
+  },
+  {
+   "actual": "983.00",
+   "currency": "GBP",
+   "customer_id": "C008",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "983.00",
+   "week_start": "2025-12-15"
+  },
+  {
+   "actual": "2600.82",
+   "currency": "GBP",
+   "customer_id": "C008",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "2600.82",
+   "week_start": "2025-12-22"
+  },
+  {
+   "actual": "2905.00",
+   "currency": "USD",
+   "customer_id": "C013",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "2905.00",
+   "week_start": "2026-01-12"
+  },
+  {
+   "actual": "1404.00",
+   "currency": "USD",
+   "customer_id": "C013",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "1404.00",
+   "week_start": "2026-01-19"
+  },
+  {
+   "actual": "4698.00",
+   "currency": "EUR",
+   "customer_id": "C014",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "4698.00",
+   "week_start": "2025-12-01"
+  },
+  {
+   "actual": "1481.00",
+   "currency": "GBP",
+   "customer_id": "C017",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "1481.00",
+   "week_start": "2025-11-24"
+  },
+  {
+   "actual": "17217.10",
+   "currency": "USD",
+   "customer_id": "C018",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "17217.10",
+   "week_start": "2025-12-15"
+  },
+  {
+   "actual": "8809.97",
+   "currency": "USD",
+   "customer_id": "C018",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "8809.97",
+   "week_start": "2026-01-19"
+  },
+  {
+   "actual": "8193.53",
+   "currency": "USD",
+   "customer_id": "C021",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "8193.53",
+   "week_start": "2025-11-10"
+  },
+  {
+   "actual": "44297.41",
+   "currency": "EUR",
+   "customer_id": "C023",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "44297.41",
+   "week_start": "2025-11-10"
+  },
+  {
+   "actual": "4557.00",
+   "currency": "USD",
+   "customer_id": "C024",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "4557.00",
+   "week_start": "2025-12-22"
+  },
+  {
+   "actual": "7067.47",
+   "currency": "USD",
+   "customer_id": "C028",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "7067.47",
+   "week_start": "2025-11-17"
+  },
+  {
+   "actual": "5650.27",
+   "currency": "USD",
+   "customer_id": "C028",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "5650.27",
+   "week_start": "2026-01-12"
+  },
+  {
+   "actual": "8451.00",
+   "currency": "USD",
+   "customer_id": "C028",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "8451.00",
+   "week_start": "2026-01-19"
+  },
+  {
+   "actual": "12514.32",
+   "currency": "EUR",
+   "customer_id": "C030",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "12514.32",
+   "week_start": "2026-01-05"
+  },
+  {
+   "actual": "23032.00",
+   "currency": "USD",
+   "customer_id": "C033",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "23032.00",
+   "week_start": "2025-11-10"
+  },
+  {
+   "actual": "21486.43",
+   "currency": "USD",
+   "customer_id": "C033",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "21486.43",
+   "week_start": "2026-01-26"
+  },
+  {
+   "actual": "9819.00",
+   "currency": "USD",
+   "customer_id": "C036",
+   "forecast": "0.00",
+   "probability": "1.0000",
+   "probability_label": "assumption",
+   "variance": "9819.00",
+   "week_start": "2026-01-05"
+  }
+ ],
+ "invoices": [
+  {
+   "bucket": "61-90",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C038",
+   "days_overdue": 76,
+   "disputed": "0.00",
+   "invoice_id": "INV-0001",
+   "open": "6260.60",
+   "overdue": true,
+   "undisputed": "6260.60"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C014",
+   "days_overdue": 76,
+   "disputed": "0.00",
+   "invoice_id": "INV-0002",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "61-90",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C037",
+   "days_overdue": 90,
+   "disputed": "1137.24",
+   "invoice_id": "INV-0003",
+   "open": "3645.00",
+   "overdue": true,
+   "undisputed": "2507.76"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C023",
+   "days_overdue": 75,
+   "disputed": "0.00",
+   "invoice_id": "INV-0004",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "61-90",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C012",
+   "days_overdue": 90,
+   "disputed": "1743.39",
+   "invoice_id": "INV-0005",
+   "open": "2523.00",
+   "overdue": true,
+   "undisputed": "779.61"
+  },
+  {
+   "bucket": "61-90",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C006",
+   "days_overdue": 90,
+   "disputed": "0.00",
+   "invoice_id": "INV-0006",
+   "open": "6596.39",
+   "overdue": true,
+   "undisputed": "6596.39"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C023",
+   "days_overdue": 75,
+   "disputed": "0.00",
+   "invoice_id": "INV-0007",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "61-90",
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C008",
+   "days_overdue": 89,
+   "disputed": "0.00",
+   "invoice_id": "INV-0008",
+   "open": "223.72",
+   "overdue": true,
+   "undisputed": "223.72"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C021",
+   "days_overdue": 71,
+   "disputed": "0.00",
+   "invoice_id": "INV-0009",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "91+",
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C001",
+   "days_overdue": 101,
+   "disputed": "0.00",
+   "invoice_id": "INV-0010",
+   "open": "1156.00",
+   "overdue": true,
+   "undisputed": "1156.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C035",
+   "days_overdue": 86,
+   "disputed": "0.00",
+   "invoice_id": "INV-0011",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C001",
+   "days_overdue": 100,
+   "disputed": "0.00",
+   "invoice_id": "INV-0012",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C028",
+   "days_overdue": 85,
+   "disputed": "0.00",
+   "invoice_id": "INV-0013",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C033",
+   "days_overdue": 84,
+   "disputed": "0.00",
+   "invoice_id": "INV-0014",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C002",
+   "days_overdue": 68,
+   "disputed": "0.00",
+   "invoice_id": "INV-0015",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C024",
+   "days_overdue": 97,
+   "disputed": "0.00",
+   "invoice_id": "INV-0016",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C013",
+   "days_overdue": 97,
+   "disputed": "0.00",
+   "invoice_id": "INV-0017",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C006",
+   "days_overdue": 79,
+   "disputed": "0.00",
+   "invoice_id": "INV-0018",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C004",
+   "days_overdue": 79,
+   "disputed": "0.00",
+   "invoice_id": "INV-0019",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C001",
+   "days_overdue": 93,
+   "disputed": "0.00",
+   "invoice_id": "INV-0020",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C001",
+   "days_overdue": 93,
+   "disputed": "0.00",
+   "invoice_id": "INV-0021",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C003",
+   "days_overdue": 46,
+   "disputed": "0.00",
+   "invoice_id": "INV-0022",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C038",
+   "days_overdue": 61,
+   "disputed": "0.00",
+   "invoice_id": "INV-0023",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C035",
+   "days_overdue": 72,
+   "disputed": "0.00",
+   "invoice_id": "INV-0024",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C003",
+   "days_overdue": 42,
+   "disputed": "0.00",
+   "invoice_id": "INV-0025",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C014",
+   "days_overdue": 57,
+   "disputed": "0.00",
+   "invoice_id": "INV-0026",
+   "open": "3649.43",
+   "overdue": true,
+   "undisputed": "3649.43"
+  },
+  {
+   "bucket": "61-90",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C007",
+   "days_overdue": 72,
+   "disputed": "0.00",
+   "invoice_id": "INV-0027",
+   "open": "1467.00",
+   "overdue": true,
+   "undisputed": "1467.00"
+  },
+  {
+   "bucket": "61-90",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C032",
+   "days_overdue": 71,
+   "disputed": "0.00",
+   "invoice_id": "INV-0028",
+   "open": "14001.00",
+   "overdue": true,
+   "undisputed": "14001.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C031",
+   "days_overdue": 71,
+   "disputed": "0.00",
+   "invoice_id": "INV-0029",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C011",
+   "days_overdue": 55,
+   "disputed": "0.00",
+   "invoice_id": "INV-0030",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C023",
+   "days_overdue": 54,
+   "disputed": "0.00",
+   "invoice_id": "INV-0031",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C011",
+   "days_overdue": 53,
+   "disputed": "0.00",
+   "invoice_id": "INV-0032",
+   "open": "65785.00",
+   "overdue": true,
+   "undisputed": "65785.00"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C038",
+   "days_overdue": 53,
+   "disputed": "0.00",
+   "invoice_id": "INV-0033",
+   "open": "8129.27",
+   "overdue": true,
+   "undisputed": "8129.27"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C017",
+   "days_overdue": 65,
+   "disputed": "0.00",
+   "invoice_id": "INV-0034",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C029",
+   "days_overdue": 65,
+   "disputed": "0.00",
+   "invoice_id": "INV-0035",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C003",
+   "days_overdue": 35,
+   "disputed": "0.00",
+   "invoice_id": "INV-0036",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "61-90",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C032",
+   "days_overdue": 65,
+   "disputed": "0.00",
+   "invoice_id": "INV-0037",
+   "open": "5416.00",
+   "overdue": true,
+   "undisputed": "5416.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C007",
+   "days_overdue": 63,
+   "disputed": "0.00",
+   "invoice_id": "INV-0038",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C018",
+   "days_overdue": 47,
+   "disputed": "0.00",
+   "invoice_id": "INV-0039",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C032",
+   "days_overdue": 62,
+   "disputed": "0.00",
+   "invoice_id": "INV-0040",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C002",
+   "days_overdue": 47,
+   "disputed": "0.00",
+   "invoice_id": "INV-0041",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C032",
+   "days_overdue": 62,
+   "disputed": "0.00",
+   "invoice_id": "INV-0042",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C006",
+   "days_overdue": 61,
+   "disputed": "0.00",
+   "invoice_id": "INV-0043",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C021",
+   "days_overdue": 46,
+   "disputed": "0.00",
+   "invoice_id": "INV-0044",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C009",
+   "days_overdue": 58,
+   "disputed": "0.00",
+   "invoice_id": "INV-0045",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C030",
+   "days_overdue": 28,
+   "disputed": "0.00",
+   "invoice_id": "INV-0046",
+   "open": "20245.68",
+   "overdue": true,
+   "undisputed": "20245.68"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C017",
+   "days_overdue": 57,
+   "disputed": "0.00",
+   "invoice_id": "INV-0047",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C038",
+   "days_overdue": 39,
+   "disputed": "0.00",
+   "invoice_id": "INV-0048",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C035",
+   "days_overdue": 51,
+   "disputed": "0.00",
+   "invoice_id": "INV-0049",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C009",
+   "days_overdue": 51,
+   "disputed": "215.08",
+   "invoice_id": "INV-0050",
+   "open": "215.08",
+   "overdue": true,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C014",
+   "days_overdue": 36,
+   "disputed": "0.00",
+   "invoice_id": "INV-0051",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C014",
+   "days_overdue": 36,
+   "disputed": "0.00",
+   "invoice_id": "INV-0052",
+   "open": "1955.18",
+   "overdue": true,
+   "undisputed": "1955.18"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C017",
+   "days_overdue": 51,
+   "disputed": "1065.50",
+   "invoice_id": "INV-0053",
+   "open": "1065.50",
+   "overdue": true,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C031",
+   "days_overdue": 51,
+   "disputed": "0.00",
+   "invoice_id": "INV-0054",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C016",
+   "days_overdue": 33,
+   "disputed": "10566.40",
+   "invoice_id": "INV-0055",
+   "open": "20281.00",
+   "overdue": true,
+   "undisputed": "9714.60"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C035",
+   "days_overdue": 48,
+   "disputed": "0.00",
+   "invoice_id": "INV-0056",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C035",
+   "days_overdue": 47,
+   "disputed": "0.00",
+   "invoice_id": "INV-0057",
+   "open": "29562.39",
+   "overdue": true,
+   "undisputed": "29562.39"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C033",
+   "days_overdue": 47,
+   "disputed": "0.00",
+   "invoice_id": "INV-0058",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C018",
+   "days_overdue": 29,
+   "disputed": "0.00",
+   "invoice_id": "INV-0059",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C038",
+   "days_overdue": 29,
+   "disputed": "0.00",
+   "invoice_id": "INV-0060",
+   "open": "4960.00",
+   "overdue": true,
+   "undisputed": "4960.00"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C026",
+   "days_overdue": 44,
+   "disputed": "0.00",
+   "invoice_id": "INV-0061",
+   "open": "15756.23",
+   "overdue": true,
+   "undisputed": "15756.23"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C014",
+   "days_overdue": 28,
+   "disputed": "0.00",
+   "invoice_id": "INV-0062",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C008",
+   "days_overdue": 43,
+   "disputed": "0.00",
+   "invoice_id": "INV-0063",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C015",
+   "days_overdue": 57,
+   "disputed": "0.00",
+   "invoice_id": "INV-0064",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C007",
+   "days_overdue": 42,
+   "disputed": "0.00",
+   "invoice_id": "INV-0065",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C017",
+   "days_overdue": 42,
+   "disputed": "0.00",
+   "invoice_id": "INV-0066",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C035",
+   "days_overdue": 42,
+   "disputed": "0.00",
+   "invoice_id": "INV-0067",
+   "open": "3721.00",
+   "overdue": true,
+   "undisputed": "3721.00"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C013",
+   "days_overdue": 56,
+   "disputed": "0.00",
+   "invoice_id": "INV-0068",
+   "open": "2114.00",
+   "overdue": true,
+   "undisputed": "2114.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C023",
+   "days_overdue": 26,
+   "disputed": "0.00",
+   "invoice_id": "INV-0069",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C020",
+   "days_overdue": 40,
+   "disputed": "0.00",
+   "invoice_id": "INV-0070",
+   "open": "1114.00",
+   "overdue": true,
+   "undisputed": "1114.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C014",
+   "days_overdue": 22,
+   "disputed": "4115.91",
+   "invoice_id": "INV-0071",
+   "open": "11793.43",
+   "overdue": true,
+   "undisputed": "7677.52"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C004",
+   "days_overdue": 36,
+   "disputed": "568.83",
+   "invoice_id": "INV-0072",
+   "open": "1525.00",
+   "overdue": true,
+   "undisputed": "956.17"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C001",
+   "days_overdue": 51,
+   "disputed": "2198.94",
+   "invoice_id": "INV-0073",
+   "open": "3362.30",
+   "overdue": true,
+   "undisputed": "1163.36"
+  },
+  {
+   "bucket": "31-60",
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C008",
+   "days_overdue": 35,
+   "disputed": "0.00",
+   "invoice_id": "INV-0074",
+   "open": "1819.98",
+   "overdue": true,
+   "undisputed": "1819.98"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C028",
+   "days_overdue": 34,
+   "disputed": "0.00",
+   "invoice_id": "INV-0075",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C027",
+   "days_overdue": 18,
+   "disputed": "2019.62",
+   "invoice_id": "INV-0076",
+   "open": "9222.00",
+   "overdue": true,
+   "undisputed": "7202.38"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C006",
+   "days_overdue": 33,
+   "disputed": "0.00",
+   "invoice_id": "INV-0077",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C002",
+   "days_overdue": 15,
+   "disputed": "0.00",
+   "invoice_id": "INV-0078",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C006",
+   "days_overdue": 30,
+   "disputed": "0.00",
+   "invoice_id": "INV-0079",
+   "open": "5746.00",
+   "overdue": true,
+   "undisputed": "5746.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C040",
+   "days_overdue": 30,
+   "disputed": "0.00",
+   "invoice_id": "INV-0080",
+   "open": "7532.00",
+   "overdue": true,
+   "undisputed": "7532.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C016",
+   "days_overdue": 14,
+   "disputed": "0.00",
+   "invoice_id": "INV-0081",
+   "open": "15523.00",
+   "overdue": true,
+   "undisputed": "15523.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C027",
+   "days_overdue": 13,
+   "disputed": "0.00",
+   "invoice_id": "INV-0082",
+   "open": "5591.00",
+   "overdue": true,
+   "undisputed": "5591.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C020",
+   "days_overdue": 28,
+   "disputed": "0.00",
+   "invoice_id": "INV-0083",
+   "open": "347.52",
+   "overdue": true,
+   "undisputed": "347.52"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C016",
+   "days_overdue": 14,
+   "disputed": "0.00",
+   "invoice_id": "INV-0084",
+   "open": "26778.00",
+   "overdue": true,
+   "undisputed": "26778.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C008",
+   "days_overdue": 27,
+   "disputed": "0.00",
+   "invoice_id": "INV-0085",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C008",
+   "days_overdue": 26,
+   "disputed": "0.00",
+   "invoice_id": "INV-0086",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C006",
+   "days_overdue": 26,
+   "disputed": "0.00",
+   "invoice_id": "INV-0087",
+   "open": "17966.00",
+   "overdue": true,
+   "undisputed": "17966.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C030",
+   "days_overdue": -4,
+   "disputed": "0.00",
+   "invoice_id": "INV-0088",
+   "open": "11532.82",
+   "overdue": false,
+   "undisputed": "11532.82"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C002",
+   "days_overdue": 8,
+   "disputed": "0.00",
+   "invoice_id": "INV-0089",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C036",
+   "days_overdue": 23,
+   "disputed": "0.00",
+   "invoice_id": "INV-0090",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C007",
+   "days_overdue": 23,
+   "disputed": "0.00",
+   "invoice_id": "INV-0091",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C003",
+   "days_overdue": -8,
+   "disputed": "0.00",
+   "invoice_id": "INV-0092",
+   "open": "34249.00",
+   "overdue": false,
+   "undisputed": "34249.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C005",
+   "days_overdue": 5,
+   "disputed": "0.00",
+   "invoice_id": "INV-0093",
+   "open": "9926.18",
+   "overdue": true,
+   "undisputed": "9926.18"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C018",
+   "days_overdue": 4,
+   "disputed": "0.00",
+   "invoice_id": "INV-0094",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C018",
+   "days_overdue": 1,
+   "disputed": "0.00",
+   "invoice_id": "INV-0095",
+   "open": "1616.03",
+   "overdue": true,
+   "undisputed": "1616.03"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C004",
+   "days_overdue": 16,
+   "disputed": "0.00",
+   "invoice_id": "INV-0096",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C018",
+   "days_overdue": 1,
+   "disputed": "0.00",
+   "invoice_id": "INV-0097",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C033",
+   "days_overdue": 16,
+   "disputed": "12788.49",
+   "invoice_id": "INV-0098",
+   "open": "27740.77",
+   "overdue": true,
+   "undisputed": "14952.28"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C026",
+   "days_overdue": 15,
+   "disputed": "0.00",
+   "invoice_id": "INV-0099",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C003",
+   "days_overdue": -15,
+   "disputed": "0.00",
+   "invoice_id": "INV-0100",
+   "open": "40670.00",
+   "overdue": false,
+   "undisputed": "40670.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C028",
+   "days_overdue": 14,
+   "disputed": "0.00",
+   "invoice_id": "INV-0101",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C040",
+   "days_overdue": 14,
+   "disputed": "0.00",
+   "invoice_id": "INV-0102",
+   "open": "8380.46",
+   "overdue": true,
+   "undisputed": "8380.46"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C017",
+   "days_overdue": 13,
+   "disputed": "0.00",
+   "invoice_id": "INV-0103",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C010",
+   "days_overdue": -6,
+   "disputed": "3276.42",
+   "invoice_id": "INV-0104",
+   "open": "9415.00",
+   "overdue": false,
+   "undisputed": "6138.58"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C035",
+   "days_overdue": 9,
+   "disputed": "0.00",
+   "invoice_id": "INV-0105",
+   "open": "4226.00",
+   "overdue": true,
+   "undisputed": "4226.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C005",
+   "days_overdue": -6,
+   "disputed": "0.00",
+   "invoice_id": "INV-0106",
+   "open": "5711.78",
+   "overdue": false,
+   "undisputed": "5711.78"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C002",
+   "days_overdue": -6,
+   "disputed": "0.00",
+   "invoice_id": "INV-0107",
+   "open": "26140.00",
+   "overdue": false,
+   "undisputed": "26140.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C021",
+   "days_overdue": -6,
+   "disputed": "0.00",
+   "invoice_id": "INV-0108",
+   "open": "4945.62",
+   "overdue": false,
+   "undisputed": "4945.62"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C024",
+   "days_overdue": 23,
+   "disputed": "0.00",
+   "invoice_id": "INV-0109",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C039",
+   "days_overdue": -7,
+   "disputed": "0.00",
+   "invoice_id": "INV-0110",
+   "open": "29566.85",
+   "overdue": false,
+   "undisputed": "29566.85"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C036",
+   "days_overdue": 6,
+   "disputed": "0.00",
+   "invoice_id": "INV-0111",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C032",
+   "days_overdue": 5,
+   "disputed": "0.00",
+   "invoice_id": "INV-0112",
+   "open": "4887.80",
+   "overdue": true,
+   "undisputed": "4887.80"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C002",
+   "days_overdue": -10,
+   "disputed": "0.00",
+   "invoice_id": "INV-0113",
+   "open": "29868.17",
+   "overdue": false,
+   "undisputed": "29868.17"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C002",
+   "days_overdue": -10,
+   "disputed": "0.00",
+   "invoice_id": "INV-0114",
+   "open": "20473.96",
+   "overdue": false,
+   "undisputed": "20473.96"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C008",
+   "days_overdue": 2,
+   "disputed": "0.00",
+   "invoice_id": "INV-0115",
+   "open": "3452.86",
+   "overdue": true,
+   "undisputed": "3452.86"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C033",
+   "days_overdue": 2,
+   "disputed": "0.00",
+   "invoice_id": "INV-0116",
+   "open": "23422.64",
+   "overdue": true,
+   "undisputed": "23422.64"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C025",
+   "days_overdue": -28,
+   "disputed": "0.00",
+   "invoice_id": "INV-0117",
+   "open": "6482.00",
+   "overdue": false,
+   "undisputed": "6482.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C033",
+   "days_overdue": 2,
+   "disputed": "0.00",
+   "invoice_id": "INV-0118",
+   "open": "6728.00",
+   "overdue": true,
+   "undisputed": "6728.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C007",
+   "days_overdue": 2,
+   "disputed": "0.00",
+   "invoice_id": "INV-0119",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C023",
+   "days_overdue": -14,
+   "disputed": "0.00",
+   "invoice_id": "INV-0120",
+   "open": "14302.00",
+   "overdue": false,
+   "undisputed": "14302.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C020",
+   "days_overdue": 1,
+   "disputed": "0.00",
+   "invoice_id": "INV-0121",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C035",
+   "days_overdue": 1,
+   "disputed": "0.00",
+   "invoice_id": "INV-0122",
+   "open": "4580.00",
+   "overdue": true,
+   "undisputed": "4580.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C028",
+   "days_overdue": 1,
+   "disputed": "0.00",
+   "invoice_id": "INV-0123",
+   "open": "10148.00",
+   "overdue": true,
+   "undisputed": "10148.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C027",
+   "days_overdue": -15,
+   "disputed": "0.00",
+   "invoice_id": "INV-0124",
+   "open": "10360.00",
+   "overdue": false,
+   "undisputed": "10360.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C040",
+   "days_overdue": 0,
+   "disputed": "0.00",
+   "invoice_id": "INV-0125",
+   "open": "22950.00",
+   "overdue": false,
+   "undisputed": "22950.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C040",
+   "days_overdue": -1,
+   "disputed": "0.00",
+   "invoice_id": "INV-0126",
+   "open": "2790.00",
+   "overdue": false,
+   "undisputed": "2790.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C039",
+   "days_overdue": -16,
+   "disputed": "0.00",
+   "invoice_id": "INV-0127",
+   "open": "27165.66",
+   "overdue": false,
+   "undisputed": "27165.66"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C006",
+   "days_overdue": -1,
+   "disputed": "0.00",
+   "invoice_id": "INV-0128",
+   "open": "12955.00",
+   "overdue": false,
+   "undisputed": "12955.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C028",
+   "days_overdue": -1,
+   "disputed": "0.00",
+   "invoice_id": "INV-0129",
+   "open": "4378.00",
+   "overdue": false,
+   "undisputed": "4378.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C016",
+   "days_overdue": -16,
+   "disputed": "0.00",
+   "invoice_id": "INV-0130",
+   "open": "39825.00",
+   "overdue": false,
+   "undisputed": "39825.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "GBP",
+   "customer_id": "C001",
+   "days_overdue": 14,
+   "disputed": "0.00",
+   "invoice_id": "INV-0131",
+   "open": "848.00",
+   "overdue": true,
+   "undisputed": "848.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C023",
+   "days_overdue": -16,
+   "disputed": "0.00",
+   "invoice_id": "INV-0132",
+   "open": "45268.00",
+   "overdue": false,
+   "undisputed": "45268.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C021",
+   "days_overdue": -20,
+   "disputed": "0.00",
+   "invoice_id": "INV-0133",
+   "open": "9552.00",
+   "overdue": false,
+   "undisputed": "9552.00"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C013",
+   "days_overdue": 10,
+   "disputed": "0.00",
+   "invoice_id": "INV-0134",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C010",
+   "days_overdue": -20,
+   "disputed": "0.00",
+   "invoice_id": "INV-0135",
+   "open": "9626.00",
+   "overdue": false,
+   "undisputed": "9626.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C011",
+   "days_overdue": -20,
+   "disputed": "0.00",
+   "invoice_id": "INV-0136",
+   "open": "19502.00",
+   "overdue": false,
+   "undisputed": "19502.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C039",
+   "days_overdue": -20,
+   "disputed": "0.00",
+   "invoice_id": "INV-0137",
+   "open": "4912.85",
+   "overdue": false,
+   "undisputed": "4912.85"
+  },
+  {
+   "bucket": null,
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C013",
+   "days_overdue": 10,
+   "disputed": "0.00",
+   "invoice_id": "INV-0138",
+   "open": "0.00",
+   "overdue": false,
+   "undisputed": "0.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C011",
+   "days_overdue": -20,
+   "disputed": "0.00",
+   "invoice_id": "INV-0139",
+   "open": "19056.00",
+   "overdue": false,
+   "undisputed": "19056.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C025",
+   "days_overdue": -37,
+   "disputed": "8137.58",
+   "invoice_id": "INV-0140",
+   "open": "11793.60",
+   "overdue": false,
+   "undisputed": "3656.02"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C018",
+   "days_overdue": -22,
+   "disputed": "0.00",
+   "invoice_id": "INV-0141",
+   "open": "6257.00",
+   "overdue": false,
+   "undisputed": "6257.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C031",
+   "days_overdue": -8,
+   "disputed": "0.00",
+   "invoice_id": "INV-0142",
+   "open": "1965.00",
+   "overdue": false,
+   "undisputed": "1965.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C028",
+   "days_overdue": -8,
+   "disputed": "0.00",
+   "invoice_id": "INV-0143",
+   "open": "10795.00",
+   "overdue": false,
+   "undisputed": "10795.00"
+  },
+  {
+   "bucket": "1-30",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C015",
+   "days_overdue": 7,
+   "disputed": "0.00",
+   "invoice_id": "INV-0144",
+   "open": "2737.00",
+   "overdue": true,
+   "undisputed": "2737.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C033",
+   "days_overdue": -9,
+   "disputed": "0.00",
+   "invoice_id": "INV-0145",
+   "open": "7008.36",
+   "overdue": false,
+   "undisputed": "7008.36"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C007",
+   "days_overdue": -9,
+   "disputed": "0.00",
+   "invoice_id": "INV-0146",
+   "open": "1101.00",
+   "overdue": false,
+   "undisputed": "1101.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C039",
+   "days_overdue": -24,
+   "disputed": "18258.37",
+   "invoice_id": "INV-0147",
+   "open": "37802.00",
+   "overdue": false,
+   "undisputed": "19543.63"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C040",
+   "days_overdue": -9,
+   "disputed": "0.00",
+   "invoice_id": "INV-0148",
+   "open": "5596.00",
+   "overdue": false,
+   "undisputed": "5596.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C021",
+   "days_overdue": -26,
+   "disputed": "0.00",
+   "invoice_id": "INV-0149",
+   "open": "13374.00",
+   "overdue": false,
+   "undisputed": "13374.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C028",
+   "days_overdue": -12,
+   "disputed": "0.00",
+   "invoice_id": "INV-0150",
+   "open": "11833.00",
+   "overdue": false,
+   "undisputed": "11833.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C006",
+   "days_overdue": -12,
+   "disputed": "0.00",
+   "invoice_id": "INV-0151",
+   "open": "10640.88",
+   "overdue": false,
+   "undisputed": "10640.88"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C023",
+   "days_overdue": -27,
+   "disputed": "0.00",
+   "invoice_id": "INV-0152",
+   "open": "17181.00",
+   "overdue": false,
+   "undisputed": "17181.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C039",
+   "days_overdue": -27,
+   "disputed": "0.00",
+   "invoice_id": "INV-0153",
+   "open": "44937.00",
+   "overdue": false,
+   "undisputed": "44937.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C030",
+   "days_overdue": -43,
+   "disputed": "0.00",
+   "invoice_id": "INV-0154",
+   "open": "21162.00",
+   "overdue": false,
+   "undisputed": "21162.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C034",
+   "days_overdue": -13,
+   "disputed": "124.01",
+   "invoice_id": "INV-0155",
+   "open": "405.27",
+   "overdue": false,
+   "undisputed": "281.26"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C032",
+   "days_overdue": -14,
+   "disputed": "0.00",
+   "invoice_id": "INV-0156",
+   "open": "8853.00",
+   "overdue": false,
+   "undisputed": "8853.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C033",
+   "days_overdue": -15,
+   "disputed": "0.00",
+   "invoice_id": "INV-0157",
+   "open": "6098.00",
+   "overdue": false,
+   "undisputed": "6098.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C033",
+   "days_overdue": -15,
+   "disputed": "0.00",
+   "invoice_id": "INV-0158",
+   "open": "16214.45",
+   "overdue": false,
+   "undisputed": "16214.45"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C019",
+   "days_overdue": -16,
+   "disputed": "0.00",
+   "invoice_id": "INV-0159",
+   "open": "1498.00",
+   "overdue": false,
+   "undisputed": "1498.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C009",
+   "days_overdue": -16,
+   "disputed": "0.00",
+   "invoice_id": "INV-0160",
+   "open": "1210.00",
+   "overdue": false,
+   "undisputed": "1210.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C018",
+   "days_overdue": -34,
+   "disputed": "0.00",
+   "invoice_id": "INV-0161",
+   "open": "12671.00",
+   "overdue": false,
+   "undisputed": "12671.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C040",
+   "days_overdue": -19,
+   "disputed": "0.00",
+   "invoice_id": "INV-0162",
+   "open": "2869.97",
+   "overdue": false,
+   "undisputed": "2869.97"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C006",
+   "days_overdue": -19,
+   "disputed": "0.00",
+   "invoice_id": "INV-0163",
+   "open": "8693.00",
+   "overdue": false,
+   "undisputed": "8693.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C038",
+   "days_overdue": -34,
+   "disputed": "0.00",
+   "invoice_id": "INV-0164",
+   "open": "12193.00",
+   "overdue": false,
+   "undisputed": "12193.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C010",
+   "days_overdue": -34,
+   "disputed": "0.00",
+   "invoice_id": "INV-0165",
+   "open": "14980.00",
+   "overdue": false,
+   "undisputed": "14980.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C012",
+   "days_overdue": -19,
+   "disputed": "0.00",
+   "invoice_id": "INV-0166",
+   "open": "4192.04",
+   "overdue": false,
+   "undisputed": "4192.04"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C019",
+   "days_overdue": -20,
+   "disputed": "1311.33",
+   "invoice_id": "INV-0167",
+   "open": "1376.00",
+   "overdue": false,
+   "undisputed": "64.67"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C035",
+   "days_overdue": -20,
+   "disputed": "0.00",
+   "invoice_id": "INV-0168",
+   "open": "4957.51",
+   "overdue": false,
+   "undisputed": "4957.51"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C010",
+   "days_overdue": -36,
+   "disputed": "0.00",
+   "invoice_id": "INV-0169",
+   "open": "4901.00",
+   "overdue": false,
+   "undisputed": "4901.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C032",
+   "days_overdue": -21,
+   "disputed": "0.00",
+   "invoice_id": "INV-0170",
+   "open": "10765.00",
+   "overdue": false,
+   "undisputed": "10765.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C031",
+   "days_overdue": -21,
+   "disputed": "0.00",
+   "invoice_id": "INV-0171",
+   "open": "1658.00",
+   "overdue": false,
+   "undisputed": "1658.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C015",
+   "days_overdue": -7,
+   "disputed": "0.00",
+   "invoice_id": "INV-0172",
+   "open": "873.00",
+   "overdue": false,
+   "undisputed": "873.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C034",
+   "days_overdue": -23,
+   "disputed": "0.00",
+   "invoice_id": "INV-0173",
+   "open": "1799.00",
+   "overdue": false,
+   "undisputed": "1799.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C016",
+   "days_overdue": -38,
+   "disputed": "0.00",
+   "invoice_id": "INV-0174",
+   "open": "31944.00",
+   "overdue": false,
+   "undisputed": "31944.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C024",
+   "days_overdue": -11,
+   "disputed": "0.00",
+   "invoice_id": "INV-0175",
+   "open": "5125.29",
+   "overdue": false,
+   "undisputed": "5125.29"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C003",
+   "days_overdue": -56,
+   "disputed": "0.00",
+   "invoice_id": "INV-0176",
+   "open": "70679.00",
+   "overdue": false,
+   "undisputed": "70679.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C028",
+   "days_overdue": -26,
+   "disputed": "0.00",
+   "invoice_id": "INV-0177",
+   "open": "6227.00",
+   "overdue": false,
+   "undisputed": "6227.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C033",
+   "days_overdue": -26,
+   "disputed": "0.00",
+   "invoice_id": "INV-0178",
+   "open": "2856.00",
+   "overdue": false,
+   "undisputed": "2856.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C028",
+   "days_overdue": -28,
+   "disputed": "0.00",
+   "invoice_id": "INV-0179",
+   "open": "10788.74",
+   "overdue": false,
+   "undisputed": "10788.74"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C003",
+   "days_overdue": -58,
+   "disputed": "0.00",
+   "invoice_id": "INV-0180",
+   "open": "44561.00",
+   "overdue": false,
+   "undisputed": "44561.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C035",
+   "days_overdue": -28,
+   "disputed": "0.00",
+   "invoice_id": "INV-0181",
+   "open": "6440.00",
+   "overdue": false,
+   "undisputed": "6440.00"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "USD",
+   "customer_id": "C004",
+   "days_overdue": -30,
+   "disputed": "0.00",
+   "invoice_id": "INV-0182",
+   "open": "1993.29",
+   "overdue": false,
+   "undisputed": "1993.29"
+  },
+  {
+   "bucket": "current",
+   "credit_excess": "0.00",
+   "currency": "EUR",
+   "customer_id": "C030",
+   "days_overdue": -60,
+   "disputed": "0.00",
+   "invoice_id": "INV-0183",
+   "open": "8058.00",
+   "overdue": false,
+   "undisputed": "8058.00"
+  }
+ ],
+ "priority": {
+  "EUR": [
+   {
+    "customer_id": "C032",
+    "has_open_promise": false,
+    "oldest_bucket": "61-90",
+    "undisputed": "43922.80"
+   },
+   {
+    "customer_id": "C016",
+    "has_open_promise": false,
+    "oldest_bucket": "31-60",
+    "undisputed": "123784.60"
+   },
+   {
+    "customer_id": "C011",
+    "has_open_promise": false,
+    "oldest_bucket": "31-60",
+    "undisputed": "104343.00"
+   },
+   {
+    "customer_id": "C014",
+    "has_open_promise": false,
+    "oldest_bucket": "31-60",
+    "undisputed": "13282.13"
+   },
+   {
+    "customer_id": "C030",
+    "has_open_promise": false,
+    "oldest_bucket": "1-30",
+    "undisputed": "60998.50"
+   },
+   {
+    "customer_id": "C027",
+    "has_open_promise": false,
+    "oldest_bucket": "1-30",
+    "undisputed": "23153.38"
+   },
+   {
+    "customer_id": "C005",
+    "has_open_promise": false,
+    "oldest_bucket": "1-30",
+    "undisputed": "15637.96"
+   },
+   {
+    "customer_id": "C015",
+    "has_open_promise": false,
+    "oldest_bucket": "1-30",
+    "undisputed": "3610.00"
+   },
+   {
+    "customer_id": "C023",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "76751.00"
+   },
+   {
+    "customer_id": "C003",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "40670.00"
+   },
+   {
+    "customer_id": "C002",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "29868.17"
+   }
+  ],
+  "GBP": [
+   {
+    "customer_id": "C001",
+    "has_open_promise": false,
+    "oldest_bucket": "91+",
+    "undisputed": "3167.36"
+   },
+   {
+    "customer_id": "C008",
+    "has_open_promise": false,
+    "oldest_bucket": "61-90",
+    "undisputed": "5496.56"
+   },
+   {
+    "customer_id": "C026",
+    "has_open_promise": false,
+    "oldest_bucket": "31-60",
+    "undisputed": "15756.23"
+   }
+  ],
+  "USD": [
+   {
+    "customer_id": "C006",
+    "has_open_promise": false,
+    "oldest_bucket": "61-90",
+    "undisputed": "62597.27"
+   },
+   {
+    "customer_id": "C038",
+    "has_open_promise": false,
+    "oldest_bucket": "61-90",
+    "undisputed": "31542.87"
+   },
+   {
+    "customer_id": "C012",
+    "has_open_promise": false,
+    "oldest_bucket": "61-90",
+    "undisputed": "4971.65"
+   },
+   {
+    "customer_id": "C007",
+    "has_open_promise": false,
+    "oldest_bucket": "61-90",
+    "undisputed": "2568.00"
+   },
+   {
+    "customer_id": "C037",
+    "has_open_promise": false,
+    "oldest_bucket": "61-90",
+    "undisputed": "2507.76"
+   },
+   {
+    "customer_id": "C035",
+    "has_open_promise": false,
+    "oldest_bucket": "31-60",
+    "undisputed": "53486.90"
+   },
+   {
+    "customer_id": "C004",
+    "has_open_promise": false,
+    "oldest_bucket": "31-60",
+    "undisputed": "2949.46"
+   },
+   {
+    "customer_id": "C013",
+    "has_open_promise": false,
+    "oldest_bucket": "31-60",
+    "undisputed": "2114.00"
+   },
+   {
+    "customer_id": "C020",
+    "has_open_promise": false,
+    "oldest_bucket": "31-60",
+    "undisputed": "1461.52"
+   },
+   {
+    "customer_id": "C033",
+    "has_open_promise": false,
+    "oldest_bucket": "1-30",
+    "undisputed": "77279.73"
+   },
+   {
+    "customer_id": "C028",
+    "has_open_promise": false,
+    "oldest_bucket": "1-30",
+    "undisputed": "54169.74"
+   },
+   {
+    "customer_id": "C040",
+    "has_open_promise": false,
+    "oldest_bucket": "1-30",
+    "undisputed": "50118.43"
+   },
+   {
+    "customer_id": "C018",
+    "has_open_promise": false,
+    "oldest_bucket": "1-30",
+    "undisputed": "20544.03"
+   },
+   {
+    "customer_id": "C003",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "149489.00"
+   },
+   {
+    "customer_id": "C039",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "126125.99"
+   },
+   {
+    "customer_id": "C002",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "46613.96"
+   },
+   {
+    "customer_id": "C010",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "35645.58"
+   },
+   {
+    "customer_id": "C021",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "27871.62"
+   },
+   {
+    "customer_id": "C025",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "10138.02"
+   },
+   {
+    "customer_id": "C024",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "5125.29"
+   },
+   {
+    "customer_id": "C031",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "3623.00"
+   },
+   {
+    "customer_id": "C034",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "2080.26"
+   },
+   {
+    "customer_id": "C019",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "1562.67"
+   },
+   {
+    "customer_id": "C009",
+    "has_open_promise": false,
+    "oldest_bucket": "current",
+    "undisputed": "1210.00"
+   }
+  ]
+ },
+ "promises": [
+  {
+   "consumed": "1534.00",
+   "currency": "GBP",
+   "customer_id": "C001",
+   "promise_id": "P-001",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "2182.00",
+   "currency": "GBP",
+   "customer_id": "C001",
+   "promise_id": "P-002",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "44297.41",
+   "currency": "EUR",
+   "customer_id": "C023",
+   "promise_id": "P-003",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "8193.53",
+   "currency": "USD",
+   "customer_id": "C021",
+   "promise_id": "P-004",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "23032.00",
+   "currency": "USD",
+   "customer_id": "C033",
+   "promise_id": "P-005",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "0.00",
+   "currency": "USD",
+   "customer_id": "C035",
+   "promise_id": "P-006",
+   "status_at_cutoff": "broken"
+  },
+  {
+   "consumed": "1481.00",
+   "currency": "GBP",
+   "customer_id": "C017",
+   "promise_id": "P-007",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "7067.47",
+   "currency": "USD",
+   "customer_id": "C028",
+   "promise_id": "P-008",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "4698.00",
+   "currency": "EUR",
+   "customer_id": "C014",
+   "promise_id": "P-009",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "0.00",
+   "currency": "GBP",
+   "customer_id": "C017",
+   "promise_id": "P-010",
+   "status_at_cutoff": "cancelled"
+  },
+  {
+   "consumed": "3352.92",
+   "currency": "USD",
+   "customer_id": "C006",
+   "promise_id": "P-011",
+   "status_at_cutoff": "broken"
+  },
+  {
+   "consumed": "983.00",
+   "currency": "GBP",
+   "customer_id": "C008",
+   "promise_id": "P-012",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "0.00",
+   "currency": "USD",
+   "customer_id": "C021",
+   "promise_id": "P-013",
+   "status_at_cutoff": "broken"
+  },
+  {
+   "consumed": "17217.10",
+   "currency": "USD",
+   "customer_id": "C018",
+   "promise_id": "P-014",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "4557.00",
+   "currency": "USD",
+   "customer_id": "C024",
+   "promise_id": "P-015",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "2600.82",
+   "currency": "GBP",
+   "customer_id": "C008",
+   "promise_id": "P-016",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "40471.00",
+   "currency": "EUR",
+   "customer_id": "C003",
+   "promise_id": "P-017",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "12514.32",
+   "currency": "EUR",
+   "customer_id": "C030",
+   "promise_id": "P-018",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "818.00",
+   "currency": "USD",
+   "customer_id": "C007",
+   "promise_id": "P-019",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "9819.00",
+   "currency": "USD",
+   "customer_id": "C036",
+   "promise_id": "P-020",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "5650.27",
+   "currency": "USD",
+   "customer_id": "C028",
+   "promise_id": "P-021",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "1404.00",
+   "currency": "USD",
+   "customer_id": "C013",
+   "promise_id": "P-022",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "8451.00",
+   "currency": "USD",
+   "customer_id": "C028",
+   "promise_id": "P-023",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "8809.97",
+   "currency": "USD",
+   "customer_id": "C018",
+   "promise_id": "P-024",
+   "status_at_cutoff": "kept"
+  },
+  {
+   "consumed": "21486.43",
+   "currency": "USD",
+   "customer_id": "C033",
+   "promise_id": "P-025",
+   "status_at_cutoff": "kept"
+  }
+ ],
+ "summary": [
+  {
+   "currency": "EUR",
+   "reconciled": true
+  },
+  {
+   "currency": "GBP",
+   "reconciled": true
+  },
+  {
+   "currency": "USD",
+   "reconciled": true
+  }
+ ],
+ "warnings": []
+}

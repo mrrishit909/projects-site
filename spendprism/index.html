@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" class="case">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="SpendPrism: a synthetic procurement price-leakage workbench. It compares what was paid with the effective contract price by item, supplier and business unit, keeps tax, freight, volume and FX beside the price figure instead of inside it, and shows the baseline, scope, exclusions and assumptions for every potential saving. Potential is never realized. Nothing here is real data.">
+<title>Which Purchases Carry Addressable Price Leakage, and Which Sourcing Action Is Worth Reviewing? · Rishit Raj Mathur</title>
+<meta name="theme-color" content="#071d16">
+<meta property="og:title" content="Which Purchases Carry Addressable Price Leakage, and Which Sourcing Action Is Worth Reviewing? · Rishit Raj Mathur">
+<meta property="og:description" content="SpendPrism: a synthetic procurement price-leakage workbench. It compares what was paid with the effective contract price by item, supplier and business unit, keeps tax, freight, volume and FX beside the price figure instead of inside it, and shows the baseline, scope, exclusions and assumptions for every potential saving. Potential is never realized. Nothing here is real data.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mrrishit909.github.io/projects/spendprism/">
+<meta property="og:image" content="https://mrrishit909.github.io/projects/spendprism/cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://mrrishit909.github.io/projects/spendprism/">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Bricolage-display.woff2" crossorigin>
+<link rel="stylesheet" href="../atelier.css?v=3434bd444f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23071d16'/%3E%3Crect x='7' y='7' width='18' height='4' fill='%23c4ab7d'/%3E%3Crect x='9' y='13' width='14' height='6' fill='%23c4ab7d'/%3E%3Crect x='7' y='21' width='18' height='4' fill='%23c4ab7d'/%3E%3C/svg%3E">
+<script type="importmap">{ "imports": { "three": "../vendor/three/three.module.min.js" } }</script>
+<script>document.documentElement.classList.add("js")</script>
+<script src="../case.js?v=2bb0a8a7f7" defer></script>
+</head>
+<body>
+<a class="skip" href="#reading">Skip to the case study</a>
+<header class="top on-green"><a class="brand" href="https://mrrishit909.github.io/projects/">Rishit Raj Mathur</a><nav aria-label="Site"><a href="../#work">Home</a><a href="../all.html">Archive</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="../#contact">Contact</a></nav></header>
+<main>
+<section class="case-hero on-green" aria-labelledby="title">
+  <p class="kicker label"><span>Dashboard · Procurement · Spend analytics · FastAPI · React &middot; 2026-11</span></p>
+  <h1 class="display long" id="title">Which Purchases Carry Addressable Price Leakage, and Which Sourcing Action Is Worth Reviewing?</h1>
+  <p class="tagline lead">SpendPrism: a synthetic procurement price-leakage workbench. It compares what was paid with the effective contract price by item, supplier and business unit, keeps tax, freight, volume and FX beside the price figure instead of inside it, and shows the baseline, scope, exclusions and assumptions for every potential saving. Potential is never realized. Nothing here is real data.</p>
+  <div class="object" aria-hidden="true"><canvas class="case-canvas" data-config="network" data-words="[&quot;Facts&quot;, &quot;Dimensions&quot;, &quot;Measures&quot;, &quot;Report&quot;]"></canvas><img class="object-still" src="../assets/config-network.webp" alt="" width="900" height="640" fetchpriority="high" decoding="async"><p class="marks label"><span>Facts</span><span>Dimensions</span><span>Measures</span><span>Report</span></p></div>
+  <dl class="summary">
+    <div><dt>Problem</dt><dd>Category managers see purchase-price variance, but it mixes price with tax, freight, volume, currency and lines that are not comparable. A number that looks like a saving may be none of…</dd></div>
+    <div><dt>Role</dt><dd>Built and written by Rishit Raj Mathur; the case study names its sources and checks.</dd></div>
+    <div><dt>Tools</dt><dd>Python 3.12 (stdlib-only seeded generator, Decimal money), PostgreSQL (17 immutable evidence tables, guarded sp_* write functions, SQL reference twin), FastAPI, TypeScript + React + Vite (engine in the browser), Playwright, axe-core, Lighthouse, Vitest, GitHub Actions only; no local build, HyperFrames and Remotion renders, openpyxl and LibreOffice workbook</dd></div>
+    <div><dt>Status</dt><dd>Case study with a live demo</dd></div>
+    <div><dt>Evidence</dt><dd><a href="https://mrrishit909.github.io/projects-site/labs/spendprism/">Open SpendPrism</a> &middot; <a href="https://mrrishit909.github.io/projects-site/labs/spendprism/evidence/source/" target="_blank" rel="noopener">Code on GitHub</a></dd></div>
+  </dl>
+</section>
+<div class="handoff" aria-hidden="true"></div>
+<div class="reading on-ivory" id="reading">
+<div class="wrap">
+  <figure class="cover"><img src="cover.jpg" srcset="cover-800.webp 800w, cover.jpg 1400w" sizes="(max-width: 900px) calc(100vw - 40px), 1068px" alt="Screenshot of Which Purchases Carry Addressable Price Leakage, and Which Sourcing Action Is Worth Reviewing?" width="1400" height="800" fetchpriority="high" decoding="async"><figcaption>The project as it runs: SpendPrism: a synthetic procurement price-leakage workbench. It compares what was paid with the effective contract price by item, supplier and business unit, keeps tax, freight, volume and FX beside the price figure instead of inside it, and shows the baseline, scope, exclusions and assumptions for every potential saving. Potential is never realized. Nothing here is real data.</figcaption></figure>
+  
+  <p class="note"><b>Everything is synthetic</b>: 25 invented suppliers and every figure come from a seeded generator (dataset sp-sim-v1-s20260630); declared defects and hidden truth sit in files the app never loads. A potential saving is a modelled quantity, never booked. Four screens render committed SQL-reference results and do not recompute after an edit; four run the engine in the browser and keep edits in memory only. The workbook's classification inputs are copied from the golden output. The actor header is a stand-in for authentication and the API is not hosted. The last independent QC accepted the UI for final audit with two low items open.</p>
+  <section class="s" id="problem"><h2><span class="n">01</span>The problem</h2><div class="body"><p>Category managers see purchase-price variance, but it mixes price with tax, freight, volume, currency and lines that are not comparable. A number that looks like a saving may be none of those.</p></div></section><section class="s" id="built"><h2><span class="n">02</span>What I built</h2><div class="body"><p>A spend landscape with inline reconciliation, category detail, a comparable-price evidence table with exclusion reasons, a leakage queue, alias review, sourcing comparison and draft actions with outcome tracking. PPV on the ordered basis and on the invoiced basis are separate labelled figures, never added. Rules live in one written contract and are checked in SQL, in an independent Decimal recomputation and in the browser engine.</p></div></section><section class="s" id="how"><h2><span class="n">03</span>How it was built</h2><div class="body"><ol class="steps"><li><span class="n">01</span><div><h3>The decision and the contract</h3><p>One contract defines the effective contract price, what is comparable and what is excluded, and what is out of scope: switching suppliers, creating POs, payment and realized-savings accounting.</p></div></li><li><span class="n">02</span><div><h3>A hand fixture first</h3><p>Known-answer, negative and adversarial cases are asserted in SQL and recomputed independently in Python (120 checks). The case manifest requires 191 passing cases.</p></div></li><li><span class="n">03</span><div><h3>Synthetic procurement ledger with declared defects</h3><p>A seeded generator writes suppliers, POs, receipts and invoices, with name variants, FX gaps, duplicate billings and split invoices declared in a separate defect file.</p></div></li><li><span class="n">04</span><div><h3>Golden outputs and a flow scene</h3><p>The SQL reference writes eight golden files; the browser engine reproduces them byte for byte. The landing flow scene draws real USD amounts from the golden.</p></div></li><li><span class="n">05</span><div><h3>Evidence</h3><p>214 browser tests pass, axe finds no violations on every route at two widths, Lighthouse accessibility is 100. Excel recalculates 27,045 formula cells with zero reconciliation differences, given classification inputs copied from the golden.</p></div></li></ol></div></section><section class="s" id="results"><h2><span class="n">04</span>Results</h2><div class="body"><p><b>Measured on the synthetic release candidate</b> (commit 7731285): 191 of 191 manifest cases, 61 API tests, 167 unit tests, 214 browser tests, 8 of 8 golden files byte-identical in SQL and in the browser engine. These describe generated data and this code; they say nothing about any real procurement team or saving.</p></div></section><section class="s" id="next-steps"><h2><span class="n">05</span>What I&#x27;d do next</h2><div class="body"><ul><li>Publish the static site and re-read the mobile leakage and evidence compositions.</li><li>Independent line logic for the reference twin and a classification check in Excel.</li><li>Real authentication before any hosting.</li></ul></div></section>
+  <nav class="neighbours" aria-label="Neighbouring case studies">
+    <a class="prev-link" href="../cashcompass/"><span class="label">Previous</span><span class="t">Which Customers Should a Collections Lead Contact Today, and How Much Cash Is Expected?</span></a>
+    <a class="next-link" href="../sec-10k-rag/"><span class="label">Next</span><span class="t">Ask the 10-K</span><video muted loop playsinline preload="none" aria-hidden="true" poster="../sec-10k-rag/cover-800.webp"><source src="../sec-10k-rag/loop.webm" type="video/webm"><source src="../sec-10k-rag/loop.mp4" type="video/mp4"></video></a>
+  </nav>
+</div>
+<footer class="foot case-foot"><span>&copy; 2026 Rishit Raj Mathur</span><nav aria-label="Footer"><a href="../#work">Home</a><a href="../all.html">Archive</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="../#contact">Contact</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
+</div>
+</main>
+</body>
+</html>
