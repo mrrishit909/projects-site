@@ -68,3 +68,14 @@ https://github.com/mrrishit909/projects-site/blob/unified-portfolio/CLAUDE.md
 
 ## Verification limits
 verify_spec.py checks the twenty project IDs, expected sections, unique slugs, structured prompt boundaries and arithmetic in the twenty worked examples. VERIFICATION.json records the exact prompt SHA-256. It does NOT validate unbuilt software, external integrations, visual quality or live deployment. Those are required later build gates.
+
+## Follow-up: 22 required upstream projects
+The user changed the policy from zero local project-related writes to minimum necessary local writes and explicitly authorized installation/use of all 22 named tools. Their short links were tested. Seven LinkedIn interstitials exposed exact GitHub destinations; the remainder were not resolved by the browsing tool. Canonical upstreams were corroborated separately, and all 22 upstream README.md files were retrieved through GitHub. The authoring README blob hashes and link status are recorded in SKILLS-REGISTRY.json. These are README observations, not full security audits, installation tests or executable commit pins.
+
+The original list mixes skills, plugins, CLI tools and frameworks. Ponytail is a minimal-code/reuse workflow, not a requirement to suppress all output. Codex's official plugin uses an existing local Codex runtime/authentication; it does not automatically move work to GitHub. The plugin documents a potentially expensive repeated Stop/review gate, so the prompt chooses bounded explicit reviews. HUD has actual Node/Claude version requirements. HyperFrames and Remotion need distinct rendering runtimes. Their heavy work is assigned to remote runners; necessary native terminal integration remains within the new limited local-write permission.
+
+Remotion's agent skill pack is remotion-dev/skills and its framework is remotion-dev/remotion; both READMEs were retrieved. The social-media-skills canonical candidate is charlie947/social-media-skills, not a random similarly named pack. Exact original short-link checks remain a setup task where resolution was unavailable. No quoted popularity/star counts were relied on.
+
+Primary sources: every https://github.com/<owner/repo> address in SKILLS-REGISTRY.json, plus https://github.com/remotion-dev/remotion . A secondary matching list helped identify labels but was not used as executable installation authority: https://programmier-workshops.de/blog/22-claude-code-skills-build-design-research-marketing/ . Claude must inspect actual current installation docs, manifests and scripts before setup, resolve actual repository commits and test actual invocation.
+
+This amendment assigns installation, smoke checks, real per-purpose use and evidence; it does not claim the 22 tools are installed or operational on the user's machine yet. Public posting is not authorized by creating marketing/social drafts.

@@ -1,9 +1,11 @@
 {
   "status": "PASS",
   "project_count": 20,
-  "word_count": 11001,
-  "line_count": 530,
-  "sha256": "b71f6cd336070a52df3e898e5b4c8aa30e3964daddab0aff7a86c78f56dd73c7",
+  "required_tool_count": 22,
+  "tool_installation_scope": "assigned to Claude; no installation claimed by this spec check",
+  "word_count": 13409,
+  "line_count": 617,
+  "sha256": "6c10d3b6bbbdfdae9d6613ca5781204011850e608510f0e92a76a1236efb77f6",
   "fixture_arithmetic": {
     "P11": "PASS",
     "P12": "PASS",

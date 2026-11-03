@@ -16,9 +16,9 @@ Claude Code TERMINAL is the orchestrator and visible control surface. Fable 5.1 
 
 Do not automatically move this work into Claude Code Cloud. This current user request supersedes earlier cloud-only rules for this NEW program.
 
-No local project checkout, installation, database, generated file, screenshot or downloaded artifact is permitted. Existing terminal/Claude clients may still retain application metadata and session logs; that cannot be eliminated by a prompt. The directive states this limitation honestly and does not authorize local project files.
+Latest user amendment: minimal necessary local writes are allowed for all 22 required tool/skill/plugin installations, native configuration, unavoidable client metadata and narrowly scoped review scratch. Full application checkouts, application builds/databases and bulk generated outputs remain on GitHub-hosted compute. Reuse shared runtimes and inventory actual paths/sizes. Preserve durable non-secret project/tool records in GitHub.
 
-The master contains approximately 11,000 words of operational and project instructions. It uses concrete fixtures and acceptance rules, not a padded line-count target. Read RESEARCH.md for sources, access limitations and why the problems were selected. Run verify_spec.py only on a remote runner if executing it from your laptop would violate the storage arrangement.
+The master contains the full operating contract, all twenty project specifications, and the mandatory 22-tool installation/use amendment. It uses concrete fixtures and acceptance rules, not a padded line-count target. Read RESEARCH.md for sources, access limitations and why the problems were selected. Run verify_spec.py only on a remote runner if executing it from your laptop would violate the storage arrangement.
 
 ## Project catalogue
 | ID | Product | Primary decision |
@@ -46,3 +46,8 @@ The master contains approximately 11,000 words of operational and project instru
 
 ## What has and has not been done
 This package has been researched, authored and checked for structural consistency and worked arithmetic. The twenty applications have not been implemented or deployed by this authoring task. No Claude Code session or paid model worker was started from ChatGPT. Claude is assigned all implementation and release work.
+
+## Mandatory tools amendment
+The user explicitly requires all 22 named upstream projects to be installed and genuinely used for their specific purposes. MASTER-PROMPT.md embeds the full matrix; SKILLS-SETUP-AND-USAGE.md is a convenient extracted copy and SKILLS-REGISTRY.json records canonical upstream candidates, verified README blob hashes, short-link resolution status, required tasks and evidence. Installation has been assigned to Claude Code; this authoring update did not install anything on the user's Mac.
+
+Do not reuse a cached pre-amendment master or launcher. Retrieve the current head of the named branch. The root BUSINESS-OPERATIONS-20-START-HERE.md entry point carries the same updated launch instruction.

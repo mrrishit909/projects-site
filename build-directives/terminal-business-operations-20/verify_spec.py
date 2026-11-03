@@ -14,6 +14,14 @@ for pid,slug,name,body in projects:
  assert len(body.split())>=180,(pid,'insufficient specification')
 for tag in ['mission','terminal_and_storage_contract','authorization_and_continuation','initial_discovery','model_body_architecture','visible_terminal_protocol','remote_bootstrap_and_ci','business_accuracy_contract','shipped_design_evidence','artifacts_and_portfolio','durable_state_and_token_economy','project_catalog','execution_algorithm','predeclared_acceptance_cases','official_reference_index','final_instruction']:
  assert s.count('<'+tag+'>')==1 and s.count('</'+tag+'>')==1,tag
+registry=json.loads((r/'SKILLS-REGISTRY.json').read_text())
+assert len(registry)==22
+assert len({x['name'] for x in registry})==22
+assert all(x['required'] and x['readme_verified'] and x['required_use'] and x['required_evidence'] for x in registry)
+assert '<mandatory_22_tools>' in s and '</mandatory_22_tools>' in s
+assert 'minimal essential laptop writes are now explicitly permitted' in s
+assert 'Do not install local skills or fake unavailable features.' not in s
+assert 'Because local project agent files are prohibited' not in s
 checks={}
 def check(id,condition):
  assert condition,id
@@ -38,6 +46,6 @@ check('P27',date(2027,1,1)+timedelta(days=30)==date(2027,1,31))
 check('P28',D('10.10')+D('20.20')+D('30.30')==D('60.60') and D('60.60')-(D('10.10')+D('20.20')+D('30.20'))==D('.10'))
 check('P29',9*60+10+20+15==9*60+45 and 9*60+45>9*60+40)
 check('P30',400-450==-50 and 400-500==-100 and D(400)/500==D('.8') and D(1000)/(D(400)/450)==1125)
-manifest={'status':'PASS','project_count':len(projects),'word_count':len(s.split()),'line_count':len(s.splitlines()),'sha256':hashlib.sha256(s.encode()).hexdigest(),'fixture_arithmetic':checks,'scope':'Spec structure and worked examples only; applications are not built or validated.'}
+manifest={'status':'PASS','project_count':len(projects),'required_tool_count':len(registry),'tool_installation_scope':'assigned to Claude; no installation claimed by this spec check','word_count':len(s.split()),'line_count':len(s.splitlines()),'sha256':hashlib.sha256(s.encode()).hexdigest(),'fixture_arithmetic':checks,'scope':'Spec structure and worked examples only; applications are not built or validated.'}
 (r/'VERIFICATION.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print(json.dumps(manifest,indent=2))
