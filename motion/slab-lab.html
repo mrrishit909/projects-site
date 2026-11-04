@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" data-field="cadmium">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE SLAB, proof</title>
+<!-- ATELIER X concept 2 proof (docs/creative-direction.md, intro A in docs/intro-storyboards.md). Lab page only:
+     intro, crane up the face to one live aperture (the real Florida drawing), push into it. Not the site. -->
+<style>
+@font-face { font-family: "Archivo"; src: url("../vendor/fonts/Archivo-latin.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+@font-face { font-family: "JBM"; src: url("../vendor/fonts/JetBrainsMono-latin.woff2") format("woff2"); font-display: swap; }
+:root { --ink: #0b0b0d; --paper: #f4f4f0; --cadmium: #ffd400; --red: #ff2e1f; }
+html { background: var(--cadmium); transition: background-color 400ms cubic-bezier(.2,.7,.2,1); color: var(--ink); }
+html[data-field="red"] { background: var(--red); }
+html[data-field="ink"] { background: var(--ink); color: var(--paper); }
+html:not([data-field="cadmium"]) .hud { color: var(--paper); }
+body { margin: 0; font-family: "Archivo", "Arial Black", sans-serif; }
+#stage { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+.film { height: 420vh; position: relative; }
+.hud { position: fixed; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; padding: 18px 24px; font: 12px/1 "JBM", ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; z-index: 3; }
+.hud button { font: inherit; color: inherit; background: none; border: 1.5px solid currentColor; border-radius: 99px; padding: 8px 14px; cursor: pointer; }
+.hud button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.title { position: fixed; left: 3vw; bottom: 4vh; margin: 0; z-index: 2; font-weight: 900; font-stretch: 125%; font-size: clamp(64px, 19vw, 360px); line-height: .8; letter-spacing: -.04em; text-transform: uppercase; }
+.title span { display: inline-block; }
+.sub { position: fixed; left: 3.4vw; bottom: calc(4vh + clamp(64px, 19vw, 360px) * .82); margin: 0; z-index: 2; font: 500 clamp(13px, 1.1vw, 17px)/1.3 "JBM", ui-monospace, monospace; letter-spacing: .04em; text-transform: uppercase; max-width: 36ch; }
+.chap { position: fixed; right: 4vw; top: 50%; transform: translateY(-50%); z-index: 2; max-width: 30ch; opacity: 0; font: 500 clamp(13px, 1.05vw, 16px)/1.35 "JBM", ui-monospace, monospace; text-transform: uppercase; letter-spacing: .03em; }
+.chap b { display: block; font: 900 clamp(34px, 4.6vw, 80px)/.9 "Archivo", sans-serif; font-stretch: 125%; letter-spacing: -.03em; margin-bottom: 14px; }
+@media (max-width: 700px) { .chap { right: auto; left: 5vw; top: auto; bottom: 6vh; transform: none; color: var(--paper); } .sub { max-width: 28ch; } .title, .sub { color: var(--paper); } }
+@media (prefers-reduced-motion: reduce) { html { transition: none; } }
+</style>
+<script type="importmap">{ "imports": { "three": "../vendor/three/three.module.min.js" } }</script>
+<script src="toolkit.js"></script>
+<script src="scenes/florida-flight-delays.js"></script>
+</head>
+<body>
+<header class="hud"><span>Rishit Mathur / Work</span><button id="skip" type="button">Skip intro</button></header>
+<p class="sub">219 public repositories. 30 live demos. Every number recomputed a second way.</p>
+<h1 class="title" aria-label="Built."><span>B</span><span>U</span><span>I</span><span>L</span><span>T</span><span>.</span></h1>
+<aside class="chap" id="chap1"><b>01 Flights</b>635,459 Florida departures. On time falls from 92% at 6 a.m. to 63% at 8 p.m.</aside>
+<canvas id="stage" aria-hidden="true"></canvas>
+<main class="film" aria-label="Scroll film"></main>
+<script src="../vendor/gsap/gsap.min.js"></script>
+<script src="../vendor/gsap/ScrollTrigger.min.js"></script>
+<script type="module">
+import * as THREE from "three";
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const canvas = document.getElementById("stage");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setClearColor(0x000000, 0); // the CSS field shows through: one render, no second background
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(38, 1, 0.1, 200);
+
+// The slab: 6 x 18 x 1.4, built from four blocks around a real cut so the aperture has depth (no fake decal).
+const W = 6, H = 18, D = 1.4, AY = 4, AW = 3.3, AH = AW / 1.614;
+const mat = new THREE.MeshStandardMaterial({ color: 0x0d0d10, roughness: 0.55, metalness: 0.1 });
+{ // mica: a fine noise roughness map so the raking sun sparkles on the face
+  const c = document.createElement("canvas"); c.width = c.height = 256; const g = c.getContext("2d"), im = g.createImageData(256, 256);
+  for (let i = 0; i < im.data.length; i += 4) { const v = 120 + Math.random() * 120; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; }
+  g.putImageData(im, 0, 0); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 9); mat.roughnessMap = t;
+}
+const slab = new THREE.Group();
+const block = (w, h, x, y) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, D), mat); m.position.set(x, y, 0); m.castShadow = m.receiveShadow = true; slab.add(m); };
+const bot = AY - AH / 2 + H / 2, top = H / 2 - (AY + AH / 2), side = (W - AW) / 2;
+block(W, bot, 0, -H / 2 + bot / 2); block(W, top, 0, H / 2 - top / 2);
+block(side, AH, -W / 2 + side / 2, AY); block(side, AH, W / 2 - side / 2, AY);
+const back = new THREE.Mesh(new THREE.BoxGeometry(AW, AH, 0.2), mat); back.position.set(0, AY, -D / 2 + 0.1); slab.add(back);
+slab.position.y = H / 2 - 2; scene.add(slab);
+
+// The aperture screen: the project's own drawing (motion/scenes/florida-flight-delays.js), painted live.
+const def = window.SCENES["florida-flight-delays"], S = def.init ? def.init() : {};
+const sc = document.createElement("canvas"); sc.width = 1240; sc.height = Math.round(1240 / 1.614); const sg = sc.getContext("2d");
+const tex = new THREE.CanvasTexture(sc); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+const screen = new THREE.Mesh(new THREE.PlaneGeometry(AW, AH), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false }));
+screen.position.set(0, AY, -D / 2 + 0.21); slab.add(screen);
+let screenU = 0, lit = 0;
+function paint() {
+  const w = sc.width, h = sc.height, gr = sg.createLinearGradient(0, 0, 0, h);
+  gr.addColorStop(0, def.bg[0]); gr.addColorStop(1, def.bg[1]); sg.globalAlpha = 1; sg.fillStyle = gr; sg.fillRect(0, 0, w, h);
+  sg.save(); sg.globalAlpha = lit; def.draw(sg, screenU, w, h, S, window.T); sg.restore(); tex.needsUpdate = true;
+}
+
+// Light: one low raking sun; the ground only catches the shadow, the colour is CSS.
+scene.add(new THREE.HemisphereLight(0xfff6d8, 0x222222, 0.55));
+const sun = new THREE.DirectionalLight(0xfff2cc, 3.2); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.03;
+Object.assign(sun.shadow.camera, { left: -20, right: 20, top: 30, bottom: -10, far: 80 }); scene.add(sun, sun.target); sun.target.position.set(0, 4, 0);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.ShadowMaterial({ opacity: 0.28 }));
+ground.rotation.x = -Math.PI / 2; ground.position.y = -2; ground.receiveShadow = true; scene.add(ground);
+
+// Camera keyframes [pos, look]: worm's-eye hero, crane square to the aperture, push into it.
+const SY = slab.position.y + AY;
+const K = [
+  [[3.2, -1.2, 11], [0, 9, 0]],
+  [[1.6, SY - 1, 9.5], [0, SY, 0]],
+  [[2.6, SY, 9.5], [2.6, SY, 0]], // slab left, chapter text on the open field right
+  [[0, SY, 0.9], [0, SY, -1]],
+];
+const v = new THREE.Vector3(), L = new THREE.Vector3(), sm = (t) => t * t * (3 - 2 * t);
+let p = 0, introK = reduce ? 1 : 0;
+function pose(x) { // x in 0..3 across the keyframes
+  const i = Math.min(2, Math.floor(x)), f = sm(x - i);
+  v.fromArray(K[i][0]).lerp(L.fromArray(K[i + 1][0]), f); cam.position.copy(v);
+  v.fromArray(K[i][1]).lerp(L.fromArray(K[i + 1][1]), f);
+  const narrow = innerWidth / innerHeight < 0.8; if (narrow) { cam.position.z += x < 1 ? 6 - 2 * x : 4 * Math.min(1, Math.max(0, 2.6 - x) / 0.6 + (x < 2 ? 1 : 0)); cam.position.x *= 0.12; v.x *= 0.12; } // portrait: step back, keep the aperture centred
+  cam.lookAt(v);
+}
+function resize() { renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setSize(innerWidth, innerHeight, false); cam.aspect = innerWidth / innerHeight; cam.updateProjectionMatrix(); }
+addEventListener("resize", resize); resize();
+
+// Intro A (3.2 s): sun rises behind the slab edge, letters slam, the aperture lights. Skippable at any moment.
+const letters = document.querySelectorAll(".title span"), chap = document.getElementById("chap1"), skipBtn = document.getElementById("skip");
+const intro = { k: 0, sun: 0 };
+const tl = gsap.timeline({ paused: true, onComplete: done });
+tl.to(intro, { sun: 1, duration: 2.2, ease: "power2.out" }, 0)
+  .from(letters, { yPercent: 110, duration: 0.55, stagger: 0.06, ease: "power4.out" }, 0.5)
+  .from(".sub", { opacity: 0, y: 12, duration: 0.5, ease: "power2.out" }, 1.4)
+  .to(intro, { k: 1, duration: 3.2, ease: "power1.inOut" }, 0)
+  .to({}, { duration: 0.01 }, 3.2);
+function done() { intro.sun = 1; intro.k = 1; skipBtn.hidden = true; ScrollTrigger.refresh(); }
+skipBtn.onclick = () => tl.progress(1);
+addEventListener("keydown", (e) => { if (e.key === "Escape" && tl.isActive()) tl.progress(1); });
+addEventListener("wheel", () => { if (tl.isActive()) tl.progress(1); }, { passive: true, once: true });
+addEventListener("touchstart", () => { if (tl.isActive()) tl.progress(1); }, { passive: true, once: true });
+if (reduce || location.hash === "#nointro") { tl.progress(1); } else tl.play();
+
+gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.create({ trigger: ".film", start: "top top", end: "bottom bottom", scrub: 0.7, onUpdate: (s) => { p = s.progress; } });
+
+const t0 = performance.now(); let seenAt = -1;
+renderer.setAnimationLoop(() => {
+  const t = (performance.now() - t0) / 1000, x = p * 3;
+  // sun: below the far edge at first (the edge burns), climbs to rake across the face
+  const a = intro.sun * 0.6 + p * 0.5;
+  sun.position.set(-14 + a * 10, -2 + intro.sun * 18 + p * 6, -10 + intro.sun * 24); sun.intensity = 0.4 + intro.sun * 2.8;
+  // the aperture lights at the end of the intro, then the drawing plays once and holds
+  lit = Math.min(1, Math.max(0, (intro.k - 0.7) / 0.25));
+  if (lit > 0 && seenAt < 0) seenAt = t;
+  screenU = seenAt < 0 ? 0 : reduce ? 0.95 : Math.min(0.95, (t - seenAt) / 5);
+  paint(); pose(x);
+  // field: red once the camera is square on the aperture; ink inside it
+  const field = x > 2.55 ? "ink" : x > 0.9 ? "red" : "cadmium"; if (document.documentElement.dataset.field !== field) document.documentElement.dataset.field = field;
+  const ttl = Math.max(0, 1 - x * 2.2); document.querySelector(".title").style.opacity = ttl; document.querySelector(".sub").style.opacity = intro.k < 1 ? "" : ttl;
+  chap.style.opacity = Math.max(0, Math.min(1, (x - 0.9) * 3)) * Math.max(0, Math.min(1, (2.6 - x) * 4));
+  renderer.render(scene, cam);
+});
+</script>
+</body>
+</html>

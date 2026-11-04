@@ -2,20 +2,12 @@
 
 Written 2026-11-03 21:50 EST. The owner asked to "run everything at once till 10:00pm today", so the first window is 21:44 to 22:00 EST. Everything below the first section is the standing plan for the next windows.
 
-## Right now (this window, 21:44 to 22:00)
+## Right now (updated 2026-11-03, after the 22:00 window)
 
-Running concurrently (each with a hard stop at 21:56 so results are on disk by 22:00):
-
-| Lane | Role | Deliverable | State at 21:50 |
-|---|---|---|---|
-| 1 | B Repository Investigator | `docs/verified-project-inventory.md`, `data/atelier-inventory.json` | running |
-| 2 | C Design Researcher | `docs/design-reference-atlas.md` | running |
-| 3 | D Creative Director + E Motion Director | `docs/creative-direction.md`, `docs/intro-storyboards.md` | running |
-| 4 | F Frontend Architect | `docs/architecture.md`, `docs/motion-system.md` | running |
-| 5 | L Independent Auditor (Codex, second model) | `codex-architecture-review.md` (scratchpad, copied into docs if it lands) | running, read-only sandbox |
-| 6 | A Orchestrator (this session) | `docs/environment-audit.md`, `docs/skill-execution-matrix.md`, this file, three missing tool installs | in progress |
-
-Not started in this window on purpose: any code, any design implementation, any publishing. Phase 0 to 4 outputs come first per the directive.
+- Phases 0 to 5 documents: done (one squashed commit, private repo names removed).
+- Phase 7 proof of concept 2 (THE SLAB, intro A): `motion/slab-lab.html`, a lab page only (not wired into build.py or the home). Intro 3.2 s with Skip/Esc/scroll/touch skip, reduced-motion and `#nointro` skip, crane up the face to one real aperture with the Florida drawing painted live from `motion/scenes/florida-flight-delays.js`, red field chapter, push into the aperture. Evidence (real GPU Chrome, DPR 2, 1440x900 and 390x844, intro frames t=0.3..3.4): `~/projects-site-evidence/atelier-x-2026-11-03/slab-proof/`. No console errors.
+- Known proof defects: faint horizontal shading seams where the slab blocks meet (one-mesh slab needs BufferGeometryUtils, not in the vendored subset); the push-in end state (p 0.92) is the screen only; no poster/LCP work, no pacing measurement yet.
+- WAITING ON THE OWNER: verdict on the slab proof and the pick among the five concepts. Do not start Phase 6 (foundation) or prototype intro C before that.
 
 ## Decisions only the owner can make (none block the current window)
 
