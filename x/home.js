@@ -43,7 +43,8 @@ composer.addPass(new OutputPass());
 canvas.addEventListener("webglcontextlost", (e) => { e.preventDefault(); document.documentElement.classList.add("nogl"); });
 
 // ---------- shared helpers ----------
-function canvasTex(w, h, draw, srgb = true) { const c = document.createElement("canvas"); c.width = w; c.height = h; draw(c.getContext("2d"), w, h); const t = new THREE.CanvasTexture(c); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t; }
+const Q = phone ? 2 : 3, ANI = renderer.capabilities.getMaxAnisotropy();
+function canvasTex(w, h, draw, srgb = true, q = Q) { const c = document.createElement("canvas"); c.width = Math.round(w * q); c.height = Math.round(h * q); const g = c.getContext("2d"); g.scale(q, q); draw(g, w, h); const t = new THREE.CanvasTexture(c); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = ANI; return t; }
 const glowTex = canvasTex(256, 256, (g) => { const r = g.createRadialGradient(128, 128, 0, 128, 128, 128); r.addColorStop(0, "rgba(255,255,255,1)"); r.addColorStop(0.18, "rgba(190,225,255,.75)"); r.addColorStop(0.5, "rgba(60,140,255,.22)"); r.addColorStop(1, "rgba(30,90,255,0)"); g.fillStyle = r; g.fillRect(0, 0, 256, 256); });
 const sprite = (scale, color = 0xffffff, opacity = 1) => { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color, transparent: true, opacity, depthWrite: false, blending: THREE.AdditiveBlending, fog: false, toneMapped: false })); s.scale.setScalar(scale); return s; };
 
@@ -134,14 +135,18 @@ const tunnel = new THREE.Group(); scene.add(tunnel);
 // ---------- 3. the exploded cube (real code on the slabs) ----------
 const snips = await (await fetch("snips.json")).json();
 await Promise.race([document.fonts.load("400 20px 'Geist Mono'"), new Promise((r) => setTimeout(r, 2500))]);
+// each snippet is drawn once per style and shared; 2x on desktop keeps the code crisp without filling the GPU
+const codeCache = new Map();
 function codeTex(sn, { w = 512, h = 300, panel = true } = {}) {
-  return canvasTex(w, h, (g) => {
+  const key = sn.f + sn.l[0] + panel; if (codeCache.has(key)) return codeCache.get(key);
+  const t = canvasTex(w, h, (g) => {
     g.fillStyle = panel ? "rgba(6,14,42,.92)" : "#04102e"; g.fillRect(0, 0, w, h);
     if (panel) { g.strokeStyle = "rgba(140,190,255,.85)"; g.lineWidth = 3; g.strokeRect(1.5, 1.5, w - 3, h - 3); }
     g.font = "500 15px 'Geist Mono', monospace"; g.fillStyle = "#ff8f7a"; g.fillText("// " + sn.f, 22, 34);
     g.font = "400 16px 'Geist Mono', monospace";
     sn.l.forEach((l, i) => { g.fillStyle = i % 3 === 0 ? "#e8f3ff" : "#8fbaff"; g.fillText(l, 22, 64 + i * 22); });
-  });
+  }, true, phone ? 1.5 : 2);
+  codeCache.set(key, t); return t;
 }
 const shards = new THREE.Group(); const SHZ = -200; shards.position.z = SHZ; scene.add(shards);
 const slabs = [];
@@ -186,12 +191,12 @@ const manifest = await (await fetch("home.json")).json();
 const NC = 64, covers = new Map();
 function coverTex(slug) {
   if (covers.has(slug)) return covers.get(slug);
-  const c = document.createElement("canvas"); c.width = 640; c.height = Math.round(640 / A);
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+  const W = phone ? 720 : 1024, c = document.createElement("canvas"); c.width = W; c.height = Math.round(W / A);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = ANI;
   t.userData.load = () => t.userData.ready || (t.userData.ready = new Promise((res) => {
     const img = new Image(); img.decoding = "async";
     img.onload = () => { const g = c.getContext("2d"); const s = Math.max(c.width / img.width, c.height / img.height); g.drawImage(img, (c.width - img.width * s) / 2, (c.height - img.height * s) / 2, img.width * s, img.height * s); t.needsUpdate = true; res(true); };
-    img.onerror = () => res(false); img.src = `c/${slug}.jpg`;
+    img.onerror = () => res(false); img.src = `../${slug}/cover.jpg`;
   }));
   covers.set(slug, t); return t;
 }
@@ -241,7 +246,7 @@ const eyeMat = new THREE.ShaderMaterial({
       #include <colorspace_fragment>
     }`,
 });
-const eye = new THREE.Mesh(new THREE.SphereGeometry(ER, 96, 64), eyeMat); eye.position.z = EZ; scene.add(eye);
+const eye = new THREE.Mesh(new THREE.SphereGeometry(ER, 192, 128), eyeMat); eye.position.z = EZ; scene.add(eye);
 const eyeHalo = sprite(ER * 3.2, 0x2f6dff, 0.18); eyeHalo.position.z = EZ - 1; scene.add(eyeHalo);
 
 // ---------- stars ----------
@@ -299,10 +304,11 @@ function placeTags(o) {
 }
 
 // ---------- scroll ----------
-let lenis = null, prog = 0, vel = 0;
-if (!reduce && window.Lenis) { lenis = new Lenis({ autoRaf: true, lerp: 0.08, wheelMultiplier: 0.85 }); window.__lenis = lenis; lenis.on("scroll", (e) => { prog = e.progress || 0; vel = e.velocity || 0; }); }
-else addEventListener("scroll", () => { prog = scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight); }, { passive: true });
-document.addEventListener("focusin", (e) => { const el = e.target.closest(".beat"); if (!el || reduce) return; const f = unwarp((+el.dataset.from + Math.min(1, +el.dataset.to)) / 2), h = document.documentElement.scrollHeight - innerHeight; lenis ? lenis.scrollTo(f * h, { immediate: true }) : scrollTo(0, f * h); });
+let lenis = null, prog = 0, vel = 0, ps = 0, snap = false;
+const filmEl = $(".film"), filmEnd = () => Math.max(1, filmEl.offsetHeight - innerHeight);
+if (!reduce && window.Lenis) { lenis = new Lenis({ autoRaf: true, lerp: 0.065, wheelMultiplier: 0.8, touchMultiplier: 1.4 }); window.__lenis = lenis; lenis.on("scroll", (e) => { prog = clamp(e.scroll / filmEnd()); vel = e.velocity || 0; }); }
+else addEventListener("scroll", () => { prog = clamp(scrollY / filmEnd()); }, { passive: true });
+document.addEventListener("focusin", (e) => { const el = e.target.closest(".beat"); if (!el || reduce) return; const f = unwarp((+el.dataset.from + Math.min(1, +el.dataset.to)) / 2), h = filmEnd(); lenis ? lenis.scrollTo(f * h, { immediate: true }) : scrollTo(0, f * h); snap = true; });
 addEventListener("keydown", (e) => { if (!lenis) return; const h = document.documentElement.scrollHeight - innerHeight; if (e.key === "End") lenis.scrollTo(h); if (e.key === "Home") lenis.scrollTo(0); });
 
 const unwarp = (q) => { if (!WARP) return q; for (let i = 1; i < WARP.length; i++) if (q <= WARP[i][1]) { const [a, x] = WARP[i - 1], [b, y] = WARP[i]; return a + (b - a) * (q - x) / (y - x); } return 1; };
@@ -310,7 +316,7 @@ const beats = [...document.querySelectorAll(".beat")], queue = $(".queue"), qIte
 function resize() {
   const dpr = Math.min(devicePixelRatio, 2);
   renderer.setPixelRatio(dpr); renderer.setSize(innerWidth, innerHeight, false);
-  composer.setPixelRatio(Math.min(dpr, phone ? 1.5 : 1.6)); composer.setSize(innerWidth, innerHeight);
+  composer.setPixelRatio(dpr); composer.setSize(innerWidth, innerHeight);
   cam.aspect = innerWidth / innerHeight; cam.updateProjectionMatrix();
   // the sky plate always covers the frame, mountains low
   const D = 90, hh = 2 * D * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)) * 1.12, ia = phone ? 1024 / 1536 : 1536 / 1024;
@@ -318,7 +324,7 @@ function resize() {
   leader.setAttribute("viewBox", `0 0 ${innerWidth} ${innerHeight}`);
 }
 addEventListener("resize", resize); resize();
-const ptr = { x: 0, y: 0 }; addEventListener("pointermove", (e) => { ptr.x = e.clientX / innerWidth - 0.5; ptr.y = e.clientY / innerHeight - 0.5; }, { passive: true });
+const ptr = { x: 0, y: 0 }, ptrT = { x: 0, y: 0 }; addEventListener("pointermove", (e) => { ptrT.x = e.clientX / innerWidth - 0.5; ptrT.y = e.clientY / innerHeight - 0.5; }, { passive: true });
 
 // hero framing: the cube fills the frame on every screen shape
 const heroD = () => { const vh = 2 * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)); return Math.max(3.6 / vh, (phone ? 2.8 : 3.3) / (vh * cam.aspect)) + 1.7; };
@@ -334,10 +340,12 @@ const t0 = performance.now(), look = new THREE.Vector3(), lamp = tunnel.getObjec
 function loop() {
   if (hidden) return;
   const now = performance.now(), dt = now - lastT; lastT = now;
-  if (frame < 90) { if (dt > 24) slow++; if (frame === 89 && slow > 40) composer.setPixelRatio(1); }
+  if (frame < 90) { if (dt > 24) slow++; if (frame === 89 && slow > 40) composer.setPixelRatio(Math.max(1, Math.min(devicePixelRatio, 2) * 0.7)); }
   const t = (now - t0) / 1000;
   if (introStart && introK < 1) introK = reduce ? 1 : clamp((now - introStart) / 3200);
-  const p = warp(prog), ik = 1 - Math.pow(1 - introK, 3);
+  const ease = 1 - Math.exp(-Math.min(dt, 64) / 110); ps += (prog - ps) * (reduce || snap ? 1 : ease); snap = false; if (Math.abs(prog - ps) < 1e-5) ps = prog;
+  ptr.x += (ptrT.x - ptr.x) * ease * 0.6; ptr.y += (ptrT.y - ptr.y) * ease * 0.6;
+  const p = warp(ps), ik = 1 - Math.pow(1 - introK, 3);
   const hd = heroD();
   let x = 0, y = 0, z = 0; look.set(0, 0, 0);
   // shot 1: the cube; the intro pulls in from far and turns it to face you, scroll pushes into the core
@@ -390,7 +398,7 @@ function loop() {
   $("#fade").style.opacity = smooth(0.945, 0.975, p).toFixed(3);
   bloom.strength = 0.6 + fl * 1.2 + inT * 0.25 + (s1 ? near * 0.1 : 0) - (s6 ? 0.35 : 0);
   zoom.uniforms.strength.value = reduce ? 0 : clamp(inT * 0.1 + Math.abs(vel) * 0.0016 + 0, 0, 0.22);
-  shift.uniforms.amount.value = reduce ? 0 : 0.0009 + inT * 0.002 + Math.min(0.004, Math.abs(vel) * 0.00006);
+  shift.uniforms.amount.value = reduce ? 0 : 0.0004 + inT * 0.0018 + Math.min(0.003, Math.abs(vel) * 0.00004);
 
   // DOM: hero, beats, queue, tags
   const hero = $(".hero"); hero.style.opacity = 1 - smooth(0.1, 0.13, p); hero.style.visibility = p > 0.135 ? "hidden" : "visible";
@@ -400,7 +408,8 @@ function loop() {
   if (q !== lastQ) { qItems.forEach((li, i) => li.classList.toggle("on", i === q)); if (lastQ >= 0 && window.xSound) window.xSound.blip(660 + q * 110); lastQ = q; }
   placeTags(smooth(0.275, 0.3, p) * (1 - smooth(0.335, 0.35, p)));
   if (frame++ % 12 === 0 && videoOn) schedule();
-  composer.render();
+  document.body.classList.toggle("past", prog >= 0.999);
+  if (p < 0.985 || frame % 30 === 0) composer.render(); // past the fade the film is black: keep the GPU idle under the résumé
   if (!reduce) requestAnimationFrame(loop);
 }
 const ready = Promise.race([Promise.all([skyReady, phone ? document.fonts.ready : Promise.all(first)]), new Promise((r) => setTimeout(r, 6000))]);
