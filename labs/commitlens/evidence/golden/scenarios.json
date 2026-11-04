@@ -1,0 +1,184 @@
+{
+  "k12c": {"tables": {"evidence_records": [
+    {"evidence_id": "EV-7", "contract_id": "AG-1", "obligation_id": "OB-4", "kind": "report", "received_on": "2027-04-01", "reference": "cl-k12c", "dataset_version": "cl-k12c"}]}},
+
+  "k19b": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-36", "contract_id": "AG-1", "version_no": 3, "kind": "amendment", "priority": 1, "effective_at": "2027-04-09T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-k19b", "fields": {"timezone": "Pacific/Kiritimati"}}],
+    "contract_version_events": [{"contract_version_id": "CV-36", "event": "signed", "effective_at": "2027-04-09T12:00:00Z", "dataset_version": "cl-k19b"}]}},
+
+  "k21a": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-31", "contract_id": "AG-8", "version_no": 2, "kind": "amendment", "priority": 1, "effective_at": "2027-04-09T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-k21a", "fields": {"review_lead_days": null}}],
+    "contract_version_events": [{"contract_version_id": "CV-31", "event": "signed", "effective_at": "2027-04-09T12:00:00Z", "dataset_version": "cl-k21a"}]}},
+  "k21b": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-31", "contract_id": "AG-8", "version_no": 2, "kind": "amendment", "priority": 1, "effective_at": "2027-04-09T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-k21b", "fields": {"review_lead_days": null, "notice_days": 50}}],
+    "contract_version_events": [{"contract_version_id": "CV-31", "event": "signed", "effective_at": "2027-04-09T12:00:00Z", "dataset_version": "cl-k21b"}]}},
+  "k21c": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-31", "contract_id": "AG-8", "version_no": 2, "kind": "amendment", "priority": 1, "effective_at": "2027-04-09T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-k21c", "fields": {"notice_days": null}}],
+    "contract_version_events": [{"contract_version_id": "CV-31", "event": "signed", "effective_at": "2027-04-09T12:00:00Z", "dataset_version": "cl-k21c"}]}},
+  "k21c_re": {"workflow": {
+    "patch": {"RA-S1": {"cancelled_at": "2027-04-10T12:00:00Z"}},
+    "assignments": [{"assignment_id": "RA-S1b", "contract_id": "AG-8", "reviewer_id": "U-REV", "assigned_by": "U-ANA", "assigned_at": "2027-04-10T12:00:00Z", "period_end": "auto"}]}},
+
+  "k22": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-33", "contract_id": "AG-8", "version_no": 2, "kind": "amendment", "priority": 1, "effective_at": "2027-04-09T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-k22", "fields": {"expiry_date": "2027-09-30"}}],
+    "contract_version_events": [{"contract_version_id": "CV-33", "event": "signed", "effective_at": "2027-04-09T12:00:00Z", "dataset_version": "cl-k22"}]}},
+  "k22b": {"workflow": {
+    "patch": {"RA-S1": {"cancelled_at": "2027-04-10T12:00:00Z"}},
+    "assignments": [{"assignment_id": "RA-S1b", "contract_id": "AG-8", "reviewer_id": "U-REV", "assigned_by": "U-ANA", "assigned_at": "2027-04-10T12:00:00Z", "period_end": "auto"}]}},
+
+  "k23": {"tables": {
+    "contracts": [{"contract_id": "AG-13", "counterparty_id": "CP-1", "title": "Anchor timezone probe", "dataset_version": "cl-k23"}],
+    "contract_versions": [
+      {"contract_version_id": "CV-34", "contract_id": "AG-13", "version_no": 1, "kind": "base", "priority": 0, "effective_at": "2026-01-01T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-k23", "fields": {"timezone": null, "expiry_date": null, "notice_days": 30, "review_lead_days": 14, "owner_id": "U-SVC2", "date_policy_ref": null}},
+      {"contract_version_id": "CV-35", "contract_id": "AG-13", "version_no": 2, "kind": "amendment", "priority": 1, "effective_at": "2026-06-01T12:00:00Z", "source_clause_reference": "s.2", "dataset_version": "cl-k23", "fields": {"timezone": "Europe/London"}}],
+    "renewal_terms": [{"contract_version_id": "CV-34", "renewal_type": "auto_renew", "term_months": 12, "dataset_version": "cl-k23"}],
+    "contract_version_events": [
+      {"contract_version_id": "CV-34", "event": "signed", "effective_at": "2025-12-20T12:00:00Z", "dataset_version": "cl-k23"},
+      {"contract_version_id": "CV-35", "event": "signed", "effective_at": "2026-06-01T12:00:00Z", "dataset_version": "cl-k23"}]}},
+
+  "k24": {"tables": {
+    "contracts": [{"contract_id": "AG-14", "counterparty_id": "CP-1", "title": "Base timezone null probe", "dataset_version": "cl-k24"}],
+    "contract_versions": [
+      {"contract_version_id": "CV-37", "contract_id": "AG-14", "version_no": 1, "kind": "base", "priority": 0, "effective_at": "2026-01-01T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-k24", "fields": {"timezone": null, "expiry_date": "2027-12-31", "notice_days": 30, "review_lead_days": 14, "owner_id": "U-SVC1", "date_policy_ref": null}},
+      {"contract_version_id": "CV-38", "contract_id": "AG-14", "version_no": 2, "kind": "amendment", "priority": 1, "effective_at": "2026-06-01T12:00:00Z", "source_clause_reference": "s.2", "dataset_version": "cl-k24", "fields": {"timezone": "Europe/London"}}],
+    "renewal_terms": [{"contract_version_id": "CV-37", "renewal_type": "fixed_term", "term_months": null, "dataset_version": "cl-k24"}],
+    "contract_version_events": [
+      {"contract_version_id": "CV-37", "event": "signed", "effective_at": "2025-12-20T12:00:00Z", "dataset_version": "cl-k24"},
+      {"contract_version_id": "CV-38", "event": "signed", "effective_at": "2026-06-01T12:00:00Z", "dataset_version": "cl-k24"}]}},
+  "k24_early": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-39", "contract_id": "AG-14", "version_no": 3, "kind": "amendment", "priority": 1, "effective_at": "2027-04-09T12:00:00Z", "source_clause_reference": "s.3", "dataset_version": "cl-k24b", "fields": {"expiry_date": "2025-06-01"}}],
+    "contract_version_events": [{"contract_version_id": "CV-39", "event": "signed", "effective_at": "2027-04-09T12:00:00Z", "dataset_version": "cl-k24b"}]}},
+  "k24_band": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-39", "contract_id": "AG-14", "version_no": 3, "kind": "amendment", "priority": 1, "effective_at": "2027-04-09T12:00:00Z", "source_clause_reference": "s.3", "dataset_version": "cl-k24b", "fields": {"expiry_date": "2026-01-01"}}],
+    "contract_version_events": [{"contract_version_id": "CV-39", "event": "signed", "effective_at": "2027-04-09T12:00:00Z", "dataset_version": "cl-k24b"}]}},
+  "k24_late": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-39", "contract_id": "AG-14", "version_no": 3, "kind": "amendment", "priority": 1, "effective_at": "2027-04-09T12:00:00Z", "source_clause_reference": "s.3", "dataset_version": "cl-k24b", "fields": {"expiry_date": "2026-01-02"}}],
+    "contract_version_events": [{"contract_version_id": "CV-39", "event": "signed", "effective_at": "2027-04-09T12:00:00Z", "dataset_version": "cl-k24b"}]}},
+
+  "t1c": {"tables": {
+    "contracts": [{"contract_id": "AG-11", "counterparty_id": "CP-1", "title": "Monthly clamp probe", "dataset_version": "cl-t1"}],
+    "contract_versions": [{"contract_version_id": "CV-30", "contract_id": "AG-11", "version_no": 1, "kind": "base", "priority": 0, "effective_at": "2026-01-31T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-t1", "fields": {"timezone": "Europe/London", "expiry_date": null, "notice_days": 10, "review_lead_days": 5, "owner_id": "U-SVC2", "date_policy_ref": null}}],
+    "renewal_terms": [{"contract_version_id": "CV-30", "renewal_type": "auto_renew", "term_months": 1, "dataset_version": "cl-t1"}],
+    "contract_version_events": [{"contract_version_id": "CV-30", "event": "signed", "effective_at": "2026-01-30T12:00:00Z", "dataset_version": "cl-t1"}]}},
+  "t1e": {"tables": {
+    "contracts": [{"contract_id": "AG-12", "counterparty_id": "CP-1", "title": "Leap anchor probe", "dataset_version": "cl-t1e"}],
+    "contract_versions": [{"contract_version_id": "CV-32", "contract_id": "AG-12", "version_no": 1, "kind": "base", "priority": 0, "effective_at": "2024-02-29T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-t1e", "fields": {"timezone": "Europe/London", "expiry_date": null, "notice_days": 10, "review_lead_days": 5, "owner_id": "U-SVC2", "date_policy_ref": null}}],
+    "renewal_terms": [{"contract_version_id": "CV-32", "renewal_type": "auto_renew", "term_months": 12, "dataset_version": "cl-t1e"}],
+    "contract_version_events": [{"contract_version_id": "CV-32", "event": "signed", "effective_at": "2024-02-28T12:00:00Z", "dataset_version": "cl-t1e"}]}},
+
+  "t2c": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-20", "contract_id": "AG-3", "version_no": 2, "kind": "amendment", "priority": 1, "effective_at": "2027-04-05T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-t2", "fields": {"timezone": "Europe/London"}}],
+    "contract_version_events": [{"contract_version_id": "CV-20", "event": "signed", "effective_at": "2027-04-05T12:00:00Z", "dataset_version": "cl-t2"}]}},
+  "t2c_rev": {"workflow": {"assignments": [{"assignment_id": "RA-3", "contract_id": "AG-3", "reviewer_id": "U-REV2", "assigned_by": "U-ANA", "assigned_at": "2027-04-10T12:00:00Z", "completed_at": "2027-04-10T12:00:00Z", "period_end": "auto"}]}},
+
+  "t3pre": {"tables": {"evidence_records": [
+      {"evidence_id": "EV-5", "contract_id": "AG-5", "obligation_id": null, "kind": "notice_proof", "received_on": "2027-04-10", "reference": "cl-t3", "dataset_version": "cl-t3"}]},
+    "workflow": {
+      "assignments": [{"assignment_id": "RA-5", "contract_id": "AG-5", "reviewer_id": "U-REV", "assigned_by": "U-ANA", "assigned_at": "2027-04-10T12:00:00Z", "completed_at": "2027-04-10T12:00:00Z", "period_end": "auto"}],
+      "decisions": [{"decision_id": "DC-5", "contract_id": "AG-5", "assignment_id": "RA-5", "outcome": "not_renew", "created_at": "2027-04-10T12:00:00Z", "recorded_at": "2027-04-10T12:00:00Z", "freeze": {"at": "2027-04-10T12:00:00Z", "data": []}}]}},
+  "t3": {"tables": {"evidence_records": [
+      {"evidence_id": "EV-5", "contract_id": "AG-5", "obligation_id": null, "kind": "notice_proof", "received_on": "2027-01-20", "reference": "cl-t3", "dataset_version": "cl-t3"}]},
+    "workflow": {
+      "assignments": [{"assignment_id": "RA-5", "contract_id": "AG-5", "reviewer_id": "U-REV", "assigned_by": "U-ANA", "assigned_at": "2027-01-20T12:00:00Z", "completed_at": "2027-01-20T12:00:00Z", "period_end": "auto"}],
+      "decisions": [{"decision_id": "DC-5", "contract_id": "AG-5", "assignment_id": "RA-5", "outcome": "not_renew", "created_at": "2027-01-20T12:00:00Z", "recorded_at": "2027-01-20T12:00:00Z", "freeze": {"at": "2027-01-20T12:00:00Z", "data": []}}],
+      "notices": [{"notice_id": "ND-5", "contract_id": "AG-5", "decision_id": "DC-5", "outcome": "not_renew", "created_at": "2027-01-20T12:00:00Z", "approved_at": "2027-01-20T12:00:00Z", "sent_on": "2027-01-20", "sent_recorded_at": "2027-01-20T12:00:00Z", "freeze": {"at": "2027-01-20T12:00:00Z", "data": []}}]}},
+
+  "t4b": {"tables": {"contract_version_events": [{"contract_version_id": "CV-10", "event": "signed", "effective_at": "2027-04-08T12:00:00Z", "dataset_version": "cl-t4"}]}},
+
+  "t5a": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-21", "contract_id": "AG-1", "version_no": 3, "kind": "amendment", "priority": 1, "effective_at": "2027-04-09T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-t5", "fields": {"owner_id": "U-SVC2"}}],
+    "contract_version_events": [{"contract_version_id": "CV-21", "event": "signed", "effective_at": "2027-04-09T12:00:00Z", "dataset_version": "cl-t5"}]}},
+  "t5b": {"workflow": {"patch": {"RA-S1": {"reviewer_id": "U-REV2"}}}},
+  "t5c": {"users_inactive": ["U-REV2"], "workflow": {"patch": {"RA-S1": {"reviewer_id": "U-REV2"}}}},
+  "t5d": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-26", "contract_id": "AG-1", "version_no": 3, "kind": "amendment", "priority": 1, "effective_at": "2027-04-09T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-t5d", "fields": {"owner_id": null}}],
+    "contract_version_events": [{"contract_version_id": "CV-26", "event": "signed", "effective_at": "2027-04-09T12:00:00Z", "dataset_version": "cl-t5d"}]}},
+  "t5e": {"users_inactive": ["U-SVC2"]},
+
+  "t6a": {"tables": {
+    "contract_versions": [
+      {"contract_version_id": "CV-22", "contract_id": "AG-1", "version_no": 3, "kind": "amendment", "priority": 1, "effective_at": "2027-03-20T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-t6a", "fields": {"notice_days": 45}},
+      {"contract_version_id": "CV-23", "contract_id": "AG-1", "version_no": 4, "kind": "amendment", "priority": 1, "effective_at": "2027-03-20T12:00:00Z", "source_clause_reference": "s.2", "dataset_version": "cl-t6a", "fields": {"notice_days": 100}}],
+    "contract_version_events": [
+      {"contract_version_id": "CV-22", "event": "signed", "effective_at": "2027-03-20T12:00:00Z", "dataset_version": "cl-t6a"},
+      {"contract_version_id": "CV-23", "event": "signed", "effective_at": "2027-03-20T12:00:00Z", "dataset_version": "cl-t6a"}]}},
+  "t6b": {"tables": {
+    "contract_versions": [
+      {"contract_version_id": "CV-22", "contract_id": "AG-1", "version_no": 3, "kind": "amendment", "priority": 2, "effective_at": "2027-03-20T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-t6b", "fields": {"notice_days": 45}},
+      {"contract_version_id": "CV-23", "contract_id": "AG-1", "version_no": 4, "kind": "amendment", "priority": 1, "effective_at": "2027-03-25T12:00:00Z", "source_clause_reference": "s.2", "dataset_version": "cl-t6b", "fields": {"notice_days": 100}}],
+    "contract_version_events": [
+      {"contract_version_id": "CV-22", "event": "signed", "effective_at": "2027-03-20T12:00:00Z", "dataset_version": "cl-t6b"},
+      {"contract_version_id": "CV-23", "event": "signed", "effective_at": "2027-03-25T12:00:00Z", "dataset_version": "cl-t6b"}]}},
+  "t6c": {"tables": {
+    "contract_versions": [
+      {"contract_version_id": "CV-22", "contract_id": "AG-1", "version_no": 3, "kind": "amendment", "priority": 1, "effective_at": "2027-03-20T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-t6c", "fields": {"notice_days": 45}},
+      {"contract_version_id": "CV-23", "contract_id": "AG-1", "version_no": 4, "kind": "amendment", "priority": 1, "effective_at": "2027-03-20T12:00:00Z", "source_clause_reference": "s.2", "dataset_version": "cl-t6c", "fields": {"notice_days": 100}}],
+    "contract_version_events": [
+      {"contract_version_id": "CV-22", "event": "signed", "effective_at": "2027-03-20T12:00:00Z", "dataset_version": "cl-t6c"}]}},
+  "t6d": {"tables": {"contract_version_events": [
+      {"contract_version_id": "CV-23", "event": "signed", "effective_at": "2027-03-26T12:00:00Z", "dataset_version": "cl-t6d"}]}},
+  "t6e": {"tables": {
+    "contract_versions": [
+      {"contract_version_id": "CV-22", "contract_id": "AG-1", "version_no": 3, "kind": "amendment", "priority": 1, "effective_at": "2027-03-20T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-t6e", "fields": {}},
+      {"contract_version_id": "CV-23", "contract_id": "AG-1", "version_no": 4, "kind": "amendment", "priority": 1, "effective_at": "2027-03-20T12:00:00Z", "source_clause_reference": "s.2", "dataset_version": "cl-t6e", "fields": {}}],
+    "renewal_terms": [
+      {"contract_version_id": "CV-22", "renewal_type": "auto_renew", "term_months": 12, "dataset_version": "cl-t6e"},
+      {"contract_version_id": "CV-23", "renewal_type": "fixed_term", "term_months": null, "dataset_version": "cl-t6e"}],
+    "contract_version_events": [
+      {"contract_version_id": "CV-22", "event": "signed", "effective_at": "2027-03-20T12:00:00Z", "dataset_version": "cl-t6e"},
+      {"contract_version_id": "CV-23", "event": "signed", "effective_at": "2027-03-20T12:00:00Z", "dataset_version": "cl-t6e"}]}},
+
+  "t8b": {"tables": {"obligation_versions": [
+    {"obligation_version_id": "OBV-0000000006", "obligation_id": "OB-2", "version_no": 2, "contract_id": "AG-1", "contract_version_id": "CV-1", "deliverable_id": null, "title": "Insurance certificate", "owner_id": "U-SVC2", "due_date": "2027-05-15", "source_clause_reference": "s.9.1", "withdrawn": false, "reason": null, "effective_at": "2027-04-10T12:00:00Z", "created_by": "U-ANA"}]}},
+  "t8c": {"tables": {"obligation_versions": [
+    {"obligation_version_id": "OBV-0000000007", "obligation_id": "OB-3", "version_no": 2, "contract_id": "AG-1", "contract_version_id": "CV-1", "deliverable_id": null, "title": "Data return on exit", "owner_id": "U-SVC1", "due_date": "2027-04-20", "source_clause_reference": "s.14.3", "withdrawn": false, "reason": null, "effective_at": "2027-04-10T12:00:00Z", "created_by": "U-ANA"}]}},
+
+  "t9c": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-24", "contract_id": "AG-9", "version_no": 2, "kind": "amendment", "priority": 1, "effective_at": "2027-04-01T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-t9", "fields": {}}],
+    "renewal_terms": [{"contract_version_id": "CV-24", "renewal_type": "auto_renew", "term_months": 6, "dataset_version": "cl-t9"}],
+    "contract_version_events": [{"contract_version_id": "CV-24", "event": "signed", "effective_at": "2027-04-01T12:00:00Z", "dataset_version": "cl-t9"}]}},
+
+  "a6": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-25", "contract_id": "AG-8", "version_no": 2, "kind": "amendment", "priority": 1, "effective_at": "2027-04-09T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-a6", "fields": {"notice_days": 60}}],
+    "contract_version_events": [{"contract_version_id": "CV-25", "event": "signed", "effective_at": "2027-04-09T12:00:00Z", "dataset_version": "cl-a6"}]},
+    "workflow": {
+      "patch": {"RA-S1": {"completed_at": "2027-04-02T12:00:00Z"}},
+      "decisions": [{"decision_id": "DC-1", "contract_id": "AG-8", "assignment_id": "RA-S1", "outcome": "not_renew", "created_at": "2027-04-03T12:00:00Z", "recorded_at": "2027-04-04T12:00:00Z", "freeze": {"at": "2027-04-03T12:00:00Z", "data": []}}],
+      "notices": [{"notice_id": "ND-1", "contract_id": "AG-8", "decision_id": "DC-1", "outcome": "not_renew", "created_at": "2027-04-05T12:00:00Z", "freeze": {"at": "2027-04-05T12:00:00Z", "data": []}}]}},
+
+  "a7b": {"tables": {"obligation_versions": [
+    {"obligation_version_id": "OBV-0000000006", "obligation_id": "OB-5", "version_no": 2, "contract_id": "AG-5", "contract_version_id": "CV-6", "deliverable_id": null, "title": "Final invoice reconciliation", "owner_id": "U-SVC1", "due_date": "2027-02-28", "source_clause_reference": "s.8.4", "withdrawn": true, "reason": "contract ended", "effective_at": "2027-04-10T12:00:00Z", "created_by": "U-ANA"}]}},
+
+  "a8a": {"workflow": {"patch": {"RA-S1": {"completed_at": "2027-04-02T12:00:00Z"}}}},
+  "a8d": {"workflow": {
+    "patch": {"RA-S1": {"completed_at": "2027-04-02T12:00:00Z"}},
+    "decisions": [{"decision_id": "DC-1", "contract_id": "AG-8", "assignment_id": "RA-S1", "outcome": "not_renew", "created_at": "2027-04-03T12:00:00Z", "recorded_at": "2027-04-04T12:00:00Z", "freeze": {"at": "2027-04-03T12:00:00Z", "data": []}}],
+    "notices": [{"notice_id": "ND-1", "contract_id": "AG-8", "decision_id": "DC-1", "outcome": "not_renew", "created_at": "2027-04-05T12:00:00Z", "approved_at": "2027-04-05T12:00:00Z", "freeze": {"at": "2027-04-05T12:00:00Z", "data": []}}]}},
+  "a8": {"workflow": {
+    "patch": {"RA-S1": {"completed_at": "2027-04-02T12:00:00Z"}},
+    "decisions": [{"decision_id": "DC-1", "contract_id": "AG-8", "assignment_id": "RA-S1", "outcome": "not_renew", "created_at": "2027-04-03T12:00:00Z", "recorded_at": "2027-04-04T12:00:00Z", "freeze": {"at": "2027-04-03T12:00:00Z", "data": []}}],
+    "notices": [{"notice_id": "ND-1", "contract_id": "AG-8", "decision_id": "DC-1", "outcome": "not_renew", "created_at": "2027-04-05T12:00:00Z", "approved_at": "2027-04-05T12:00:00Z", "sent_on": "2027-04-09", "sent_recorded_at": "2027-04-10T12:00:00Z", "freeze": {"at": "2027-04-05T12:00:00Z", "data": []}}]}},
+
+  "a10a": {"workflow": {
+    "assignments": [{"assignment_id": "RA-2", "contract_id": "AG-2", "reviewer_id": "U-REV", "assigned_by": "U-ANA", "assigned_at": "2027-04-10T12:00:00Z", "completed_at": "2027-04-10T12:00:00Z", "period_end": "auto"}],
+    "decisions": [{"decision_id": "DC-2", "contract_id": "AG-2", "assignment_id": "RA-2", "outcome": "renew", "created_at": "2027-04-10T12:00:00Z", "recorded_at": "2027-04-10T12:00:00Z", "freeze": {"at": "2027-04-10T12:00:00Z", "data": []}}]}},
+  "a10c": {"workflow": {
+    "assignments": [{"assignment_id": "RA-2b", "contract_id": "AG-2", "reviewer_id": "U-REV", "assigned_by": "U-ANA", "assigned_at": "2027-10-05T12:00:00Z", "completed_at": "2027-10-05T12:00:00Z", "period_end": "auto"}],
+    "decisions": [{"decision_id": "DC-2b", "contract_id": "AG-2", "assignment_id": "RA-2b", "outcome": "renew", "created_at": "2027-10-05T12:00:00Z", "recorded_at": "2027-10-05T12:00:00Z", "freeze": {"at": "2027-10-05T12:00:00Z", "data": []}}]}},
+  "a10dpre": {"tables": {"evidence_records": [
+      {"evidence_id": "EV-6", "contract_id": "AG-2", "obligation_id": null, "kind": "notice_proof", "received_on": "2027-08-30", "reference": "cl-a10d", "dataset_version": "cl-a10d"}]},
+    "workflow": {
+      "assignments": [{"assignment_id": "RA-2c", "contract_id": "AG-2", "reviewer_id": "U-REV", "assigned_by": "U-ANA", "assigned_at": "2027-08-20T12:00:00Z", "completed_at": "2027-08-20T12:00:00Z", "period_end": "auto"}],
+      "decisions": [{"decision_id": "DC-2c", "contract_id": "AG-2", "assignment_id": "RA-2c", "outcome": "not_renew", "created_at": "2027-08-20T12:00:00Z", "recorded_at": "2027-08-20T12:00:00Z", "freeze": {"at": "2027-08-20T12:00:00Z", "data": []}}],
+      "notices": [{"notice_id": "ND-2", "contract_id": "AG-2", "decision_id": "DC-2c", "outcome": "not_renew", "created_at": "2027-08-20T12:00:00Z", "approved_at": "2027-08-20T12:00:00Z", "freeze": {"at": "2027-08-20T12:00:00Z", "data": []}}]}},
+  "a10d": {"tables": {"evidence_records": [
+      {"evidence_id": "EV-6", "contract_id": "AG-2", "obligation_id": null, "kind": "notice_proof", "received_on": "2027-08-30", "reference": "cl-a10d", "dataset_version": "cl-a10d"}]},
+    "workflow": {
+      "assignments": [{"assignment_id": "RA-2c", "contract_id": "AG-2", "reviewer_id": "U-REV", "assigned_by": "U-ANA", "assigned_at": "2027-08-20T12:00:00Z", "completed_at": "2027-08-20T12:00:00Z", "period_end": "auto"}],
+      "decisions": [{"decision_id": "DC-2c", "contract_id": "AG-2", "assignment_id": "RA-2c", "outcome": "not_renew", "created_at": "2027-08-20T12:00:00Z", "recorded_at": "2027-08-20T12:00:00Z", "freeze": {"at": "2027-08-20T12:00:00Z", "data": []}}],
+      "notices": [{"notice_id": "ND-2", "contract_id": "AG-2", "decision_id": "DC-2c", "outcome": "not_renew", "created_at": "2027-08-20T12:00:00Z", "approved_at": "2027-08-20T12:00:00Z", "sent_on": "2027-08-30", "sent_recorded_at": "2027-10-02T12:00:00Z", "freeze": {"at": "2027-08-20T12:00:00Z", "data": []}}]}},
+
+  "n15": {"tables": {
+    "contract_versions": [{"contract_version_id": "CV-29", "contract_id": "AG-8", "version_no": 2, "kind": "amendment", "priority": 1, "effective_at": "2027-04-06T12:00:00Z", "source_clause_reference": "s.1", "dataset_version": "cl-n15", "fields": {"timezone": null}}],
+    "contract_version_events": [{"contract_version_id": "CV-29", "event": "signed", "effective_at": "2027-04-06T12:00:00Z", "dataset_version": "cl-n15"}]}}
+}

@@ -1,0 +1,109 @@
+{
+  "meta": {"dataset_version": "cl-base-1", "as_of": "2027-04-10T12:00:00Z", "source": "apps/commitlens/docs/fixture-plan.md sections 1 to 3 (contract_version 9)"},
+  "instants": {
+    "T0": "2027-02-01T12:00:00Z", "TS": "2027-02-25T12:00:00Z", "TB": "2027-03-01T12:00:00Z",
+    "T1": "2027-04-10T12:00:00Z", "TZ": "2027-04-10T02:00:00Z", "TL": "2028-03-01T12:00:00Z",
+    "NOW2": "2027-10-05T12:00:00Z", "NOW3": "2027-10-02T12:00:00Z"
+  },
+  "app_users": [
+    {"actor_id": "U-ANA", "role": "analyst", "active": true},
+    {"actor_id": "U-ANA2", "role": "analyst", "active": true},
+    {"actor_id": "U-PRO", "role": "procurement", "active": true},
+    {"actor_id": "U-PRO2", "role": "procurement", "active": true},
+    {"actor_id": "U-SVC1", "role": "service", "active": true},
+    {"actor_id": "U-SVC2", "role": "service", "active": true},
+    {"actor_id": "U-REV", "role": "reviewer", "active": true},
+    {"actor_id": "U-REV2", "role": "reviewer", "active": true},
+    {"actor_id": "U-REVX", "role": "reviewer", "active": false},
+    {"actor_id": "U-IMP", "role": "importer", "active": true},
+    {"actor_id": "U-OLD", "role": "analyst", "active": false}
+  ],
+  "counterparties": [
+    {"counterparty_id": "CP-1", "legal_name": "Northfield Print Services Ltd", "country": "GB", "dataset_version": "cl-base-1"},
+    {"counterparty_id": "CP-2", "legal_name": "Harbour Facilities Group", "country": "GB", "dataset_version": "cl-base-1"},
+    {"counterparty_id": "CP-3", "legal_name": "Kestrel Software Support Inc", "country": "US", "dataset_version": "cl-base-1"},
+    {"counterparty_id": "CP-4", "legal_name": "Granite Guarding LLC", "country": "US", "dataset_version": "cl-base-1"},
+    {"counterparty_id": "CP-5", "legal_name": "Oldline Hosting Co", "country": "US", "dataset_version": "cl-base-1"},
+    {"counterparty_id": "CP-6", "legal_name": "Sakura Logistics KK", "country": "JP", "dataset_version": "cl-base-1"}
+  ],
+  "contracts": [
+    {"contract_id": "AG-1", "counterparty_id": "CP-1", "title": "Managed print services", "dataset_version": "cl-base-1"},
+    {"contract_id": "AG-2", "counterparty_id": "CP-2", "title": "Facilities cleaning", "dataset_version": "cl-base-1"},
+    {"contract_id": "AG-3", "counterparty_id": "CP-3", "title": "Software support", "dataset_version": "cl-base-1"},
+    {"contract_id": "AG-4", "counterparty_id": "CP-4", "title": "Security guarding", "dataset_version": "cl-base-1"},
+    {"contract_id": "AG-5", "counterparty_id": "CP-5", "title": "Legacy hosting", "dataset_version": "cl-base-1"},
+    {"contract_id": "AG-6", "counterparty_id": "CP-6", "title": "Cross-dock logistics", "dataset_version": "cl-base-1"},
+    {"contract_id": "AG-7", "counterparty_id": "CP-1", "title": "Print consumables", "dataset_version": "cl-base-1"},
+    {"contract_id": "AG-8", "counterparty_id": "CP-6", "title": "Fleet telematics", "dataset_version": "cl-base-1"},
+    {"contract_id": "AG-9", "counterparty_id": "CP-3", "title": "Licence maintenance", "dataset_version": "cl-base-1"}
+  ],
+  "contract_versions": [
+    {"contract_version_id": "CV-1", "contract_id": "AG-1", "version_no": 1, "kind": "base", "priority": 0, "effective_at": "2026-07-01T12:00:00Z", "source_clause_reference": "s.12.1", "dataset_version": "cl-base-1",
+     "fields": {"timezone": "America/New_York", "expiry_date": "2027-06-30", "notice_days": 60, "review_lead_days": 14, "owner_id": "U-SVC1", "date_policy_ref": null}},
+    {"contract_version_id": "CV-2", "contract_id": "AG-1", "version_no": 2, "kind": "amendment", "priority": 1, "effective_at": "2027-03-01T12:00:00Z", "source_clause_reference": "Amendment 1, s.2", "dataset_version": "cl-base-1",
+     "fields": {"notice_days": 90}},
+    {"contract_version_id": "CV-3", "contract_id": "AG-2", "version_no": 1, "kind": "base", "priority": 0, "effective_at": "2025-10-01T12:00:00Z", "source_clause_reference": "s.4", "dataset_version": "cl-base-1",
+     "fields": {"timezone": "Europe/London", "expiry_date": null, "notice_days": 30, "review_lead_days": 14, "owner_id": "U-SVC2", "date_policy_ref": null}},
+    {"contract_version_id": "CV-4", "contract_id": "AG-3", "version_no": 1, "kind": "base", "priority": 0, "effective_at": "2026-06-01T12:00:00Z", "source_clause_reference": "s.2.2", "dataset_version": "cl-base-1",
+     "fields": {"timezone": null, "expiry_date": "2027-05-31", "notice_days": 30, "review_lead_days": 14, "owner_id": "U-SVC1", "date_policy_ref": null}},
+    {"contract_version_id": "CV-5", "contract_id": "AG-4", "version_no": 1, "kind": "base", "priority": 0, "effective_at": "2026-08-02T12:00:00Z", "source_clause_reference": "s.11", "dataset_version": "cl-base-1",
+     "fields": {"timezone": "America/New_York", "expiry_date": "2027-08-02", "notice_days": 30, "review_lead_days": 14, "owner_id": "U-SVC2", "date_policy_ref": "POL-BIZ/1"}},
+    {"contract_version_id": "CV-6", "contract_id": "AG-5", "version_no": 1, "kind": "base", "priority": 0, "effective_at": "2026-02-01T12:00:00Z", "source_clause_reference": "s.7", "dataset_version": "cl-base-1",
+     "fields": {"timezone": "America/New_York", "expiry_date": "2027-01-31", "notice_days": 30, "review_lead_days": 14, "owner_id": "U-SVC1", "date_policy_ref": null}},
+    {"contract_version_id": "CV-7", "contract_id": "AG-6", "version_no": 1, "kind": "base", "priority": 0, "effective_at": "2026-04-01T12:00:00Z", "source_clause_reference": "s.15.1", "dataset_version": "cl-base-1",
+     "fields": {"timezone": "Asia/Tokyo", "expiry_date": "2028-03-30", "notice_days": 30, "review_lead_days": 14, "owner_id": "U-SVC2", "date_policy_ref": null}},
+    {"contract_version_id": "CV-8", "contract_id": "AG-8", "version_no": 1, "kind": "base", "priority": 0, "effective_at": "2026-06-15T12:00:00Z", "source_clause_reference": "s.6", "dataset_version": "cl-base-1",
+     "fields": {"timezone": "America/New_York", "expiry_date": "2027-06-15", "notice_days": 30, "review_lead_days": 14, "owner_id": "U-SVC2", "date_policy_ref": null}},
+    {"contract_version_id": "CV-9", "contract_id": "AG-7", "version_no": 1, "kind": "base", "priority": 0, "effective_at": "2026-10-01T12:00:00Z", "source_clause_reference": "s.12", "dataset_version": "cl-base-1",
+     "fields": {"timezone": "Europe/London", "expiry_date": "2027-09-30", "notice_days": 60, "review_lead_days": 14, "owner_id": "U-SVC1", "date_policy_ref": null}},
+    {"contract_version_id": "CV-10", "contract_id": "AG-7", "version_no": 2, "kind": "amendment", "priority": 1, "effective_at": "2027-03-15T12:00:00Z", "source_clause_reference": "Amendment A, s.1", "dataset_version": "cl-base-1",
+     "fields": {"notice_days": 120}},
+    {"contract_version_id": "CV-11", "contract_id": "AG-9", "version_no": 1, "kind": "base", "priority": 0, "effective_at": "2026-05-15T12:00:00Z", "source_clause_reference": "s.3", "dataset_version": "cl-base-1",
+     "fields": {"timezone": "Europe/London", "expiry_date": null, "notice_days": 30, "review_lead_days": 14, "owner_id": "U-SVC1", "date_policy_ref": null}}
+  ],
+  "contract_version_events": [
+    {"contract_version_id": "CV-1", "event": "signed", "effective_at": "2026-06-25T12:00:00Z", "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-2", "event": "signed", "effective_at": "2027-02-20T12:00:00Z", "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-3", "event": "signed", "effective_at": "2025-09-20T12:00:00Z", "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-4", "event": "signed", "effective_at": "2026-05-28T12:00:00Z", "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-5", "event": "signed", "effective_at": "2026-07-30T12:00:00Z", "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-6", "event": "signed", "effective_at": "2026-01-28T12:00:00Z", "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-7", "event": "signed", "effective_at": "2026-03-25T12:00:00Z", "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-8", "event": "signed", "effective_at": "2026-06-10T12:00:00Z", "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-9", "event": "signed", "effective_at": "2026-09-25T12:00:00Z", "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-11", "event": "signed", "effective_at": "2026-05-10T12:00:00Z", "dataset_version": "cl-base-1"}
+  ],
+  "renewal_terms": [
+    {"contract_version_id": "CV-1", "renewal_type": "fixed_term", "term_months": null, "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-3", "renewal_type": "auto_renew", "term_months": 12, "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-4", "renewal_type": "fixed_term", "term_months": null, "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-5", "renewal_type": "fixed_term", "term_months": null, "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-6", "renewal_type": "fixed_term", "term_months": null, "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-7", "renewal_type": "fixed_term", "term_months": null, "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-8", "renewal_type": "fixed_term", "term_months": null, "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-9", "renewal_type": "fixed_term", "term_months": null, "dataset_version": "cl-base-1"},
+    {"contract_version_id": "CV-11", "renewal_type": "fixed_term", "term_months": null, "dataset_version": "cl-base-1"}
+  ],
+  "date_policies": [
+    {"policy_id": "POL-BIZ", "version_no": 1, "weekend_rule": "prior_business_day", "title": "Fictional business-day notice policy", "dataset_version": "cl-base-1"}
+  ],
+  "service_deliverables": [
+    {"deliverable_id": "SD-1", "contract_id": "AG-1", "title": "Quarterly service report", "source_clause_reference": "s.5.2", "dataset_version": "cl-base-1"}
+  ],
+  "evidence_records": [
+    {"evidence_id": "EV-1", "contract_id": "AG-1", "obligation_id": "OB-1", "kind": "report", "received_on": "2027-04-05", "reference": "Q1 2027 service report", "dataset_version": "cl-base-1"},
+    {"evidence_id": "EV-2", "contract_id": "AG-5", "obligation_id": "OB-5", "kind": "document", "received_on": "2027-03-02", "reference": "final reconciliation statement", "dataset_version": "cl-base-1"},
+    {"evidence_id": "EV-3", "contract_id": "AG-8", "obligation_id": null, "kind": "notice_proof", "received_on": "2027-04-09", "reference": "courier receipt 8841 (fictional)", "dataset_version": "cl-base-1"},
+    {"evidence_id": "EV-4", "contract_id": "AG-2", "obligation_id": "OB-404", "kind": "document", "received_on": "2027-01-15", "reference": "site plan (links to no obligation)", "dataset_version": "cl-base-1"}
+  ],
+  "obligation_versions": [
+    {"obligation_version_id": "OBV-0000000001", "obligation_id": "OB-1", "version_no": 1, "contract_id": "AG-1", "contract_version_id": "CV-1", "deliverable_id": "SD-1", "title": "Quarterly service report", "owner_id": "U-SVC1", "due_date": "2027-04-30", "source_clause_reference": "s.5.2", "withdrawn": false, "reason": null, "effective_at": "2026-07-02T12:00:00Z", "created_by": "U-IMP"},
+    {"obligation_version_id": "OBV-0000000002", "obligation_id": "OB-2", "version_no": 1, "contract_id": "AG-1", "contract_version_id": "CV-1", "deliverable_id": null, "title": "Insurance certificate", "owner_id": null, "due_date": "2027-05-15", "source_clause_reference": "s.9.1", "withdrawn": false, "reason": null, "effective_at": "2026-07-02T12:00:00Z", "created_by": "U-IMP"},
+    {"obligation_version_id": "OBV-0000000003", "obligation_id": "OB-3", "version_no": 1, "contract_id": "AG-1", "contract_version_id": "CV-1", "deliverable_id": null, "title": "Data return on exit", "owner_id": "U-SVC1", "due_date": null, "source_clause_reference": "s.14.3", "withdrawn": false, "reason": null, "effective_at": "2026-07-02T12:00:00Z", "created_by": "U-IMP"},
+    {"obligation_version_id": "OBV-0000000004", "obligation_id": "OB-4", "version_no": 1, "contract_id": "AG-2", "contract_version_id": "CV-3", "deliverable_id": null, "title": "Monthly site inspection", "owner_id": "U-SVC2", "due_date": "2027-04-30", "source_clause_reference": "s.3.1", "withdrawn": false, "reason": null, "effective_at": "2025-10-02T12:00:00Z", "created_by": "U-IMP"},
+    {"obligation_version_id": "OBV-0000000005", "obligation_id": "OB-5", "version_no": 1, "contract_id": "AG-5", "contract_version_id": "CV-6", "deliverable_id": null, "title": "Final invoice reconciliation", "owner_id": "U-SVC1", "due_date": "2027-02-28", "source_clause_reference": "s.8.4", "withdrawn": false, "reason": null, "effective_at": "2026-02-02T12:00:00Z", "created_by": "U-IMP"}
+  ],
+  "review_assignments": [
+    {"assignment_id": "RA-S1", "contract_id": "AG-8", "reviewer_id": "U-REV", "status": "assigned", "assigned_at": "2027-04-01T12:00:00Z", "version": 1, "assigned_by": "U-IMP", "period_end": "auto"}
+  ]
+}

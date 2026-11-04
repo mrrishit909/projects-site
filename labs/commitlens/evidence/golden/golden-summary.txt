@@ -1,0 +1,61 @@
+SIMULATED data. Reference outputs emitted on the runner by tests/reference_calc.py (base fixture, no scenario cases), as written by artifacts/excel/gen_golden.py.
+
+== T0 2027-02-01T12:00:00Z  schedule_completeness 0.7778
+class_counts {"ended": 0, "expired": 1, "incomplete": 2, "notice_overdue": 0, "notice_sent": 0, "on_track": 6, "renewal_recorded": 0, "review_completed": 0, "review_due_soon": 0, "review_overdue": 0}
+AG-1	period_end 2027-06-30	notice 2027-05-01	review 2027-04-17	days 89/75	on_track
+AG-2	period_end 2027-09-30	notice 2027-08-31	review 2027-08-17	days 211/197	on_track
+AG-3	period_end None	notice None	review None	days None/None	incomplete
+AG-4	period_end 2027-08-02	notice 2027-07-02	review 2027-06-18	days 151/137	on_track
+AG-5	period_end 2027-01-31	notice 2027-01-01	review 2026-12-18	days -31/-45	expired
+AG-6	period_end 2028-03-30	notice 2028-02-29	review 2028-02-15	days 393/379	on_track
+AG-7	period_end 2027-09-30	notice 2027-08-01	review 2027-07-18	days 181/167	on_track
+AG-8	period_end 2027-06-15	notice 2027-05-16	review 2027-05-02	days 104/90	on_track
+AG-9	period_end None	notice None	review None	days None/None	incomplete
+
+== TB 2027-03-01T12:00:00Z  schedule_completeness 0.7778
+class_counts {"ended": 0, "expired": 1, "incomplete": 2, "notice_overdue": 0, "notice_sent": 0, "on_track": 5, "renewal_recorded": 0, "review_completed": 0, "review_due_soon": 1, "review_overdue": 0}
+AG-1	period_end 2027-06-30	notice 2027-04-01	review 2027-03-18	days 31/17	review_due_soon
+AG-2	period_end 2027-09-30	notice 2027-08-31	review 2027-08-17	days 183/169	on_track
+AG-3	period_end None	notice None	review None	days None/None	incomplete
+AG-4	period_end 2027-08-02	notice 2027-07-02	review 2027-06-18	days 123/109	on_track
+AG-5	period_end 2027-01-31	notice 2027-01-01	review 2026-12-18	days -59/-73	expired
+AG-6	period_end 2028-03-30	notice 2028-02-29	review 2028-02-15	days 365/351	on_track
+AG-7	period_end 2027-09-30	notice 2027-08-01	review 2027-07-18	days 153/139	on_track
+AG-8	period_end 2027-06-15	notice 2027-05-16	review 2027-05-02	days 76/62	on_track
+AG-9	period_end None	notice None	review None	days None/None	incomplete
+
+== T1 2027-04-10T12:00:00Z  schedule_completeness 0.7778
+class_counts {"ended": 0, "expired": 1, "incomplete": 2, "notice_overdue": 1, "notice_sent": 0, "on_track": 4, "renewal_recorded": 0, "review_completed": 0, "review_due_soon": 1, "review_overdue": 0}
+AG-1	period_end 2027-06-30	notice 2027-04-01	review 2027-03-18	days -9/-23	notice_overdue
+AG-2	period_end 2027-09-30	notice 2027-08-31	review 2027-08-17	days 143/129	on_track
+AG-3	period_end None	notice None	review None	days None/None	incomplete
+AG-4	period_end 2027-08-02	notice 2027-07-02	review 2027-06-18	days 83/69	on_track
+AG-5	period_end 2027-01-31	notice 2027-01-01	review 2026-12-18	days -99/-113	expired
+AG-6	period_end 2028-03-30	notice 2028-02-29	review 2028-02-15	days 325/311	on_track
+AG-7	period_end 2027-09-30	notice 2027-08-01	review 2027-07-18	days 113/99	on_track
+AG-8	period_end 2027-06-15	notice 2027-05-16	review 2027-05-02	days 36/22	review_due_soon
+AG-9	period_end None	notice None	review None	days None/None	incomplete
+
+== NOW2 2027-10-05T12:00:00Z  schedule_completeness 0.7778
+class_counts {"ended": 0, "expired": 5, "incomplete": 2, "notice_overdue": 0, "notice_sent": 0, "on_track": 2, "renewal_recorded": 0, "review_completed": 0, "review_due_soon": 0, "review_overdue": 0}
+AG-1	period_end 2027-06-30	notice 2027-04-01	review 2027-03-18	days -187/-201	expired
+AG-2	period_end 2028-09-30	notice 2028-08-31	review 2028-08-17	days 331/317	on_track
+AG-3	period_end None	notice None	review None	days None/None	incomplete
+AG-4	period_end 2027-08-02	notice 2027-07-02	review 2027-06-18	days -95/-109	expired
+AG-5	period_end 2027-01-31	notice 2027-01-01	review 2026-12-18	days -277/-291	expired
+AG-6	period_end 2028-03-30	notice 2028-02-29	review 2028-02-15	days 147/133	on_track
+AG-7	period_end 2027-09-30	notice 2027-08-01	review 2027-07-18	days -65/-79	expired
+AG-8	period_end 2027-06-15	notice 2027-05-16	review 2027-05-02	days -142/-156	expired
+AG-9	period_end None	notice None	review None	days None/None	incomplete
+
+== TL 2028-03-01T12:00:00Z  schedule_completeness 0.7778
+class_counts {"ended": 0, "expired": 5, "incomplete": 2, "notice_overdue": 1, "notice_sent": 0, "on_track": 1, "renewal_recorded": 0, "review_completed": 0, "review_due_soon": 0, "review_overdue": 0}
+AG-1	period_end 2027-06-30	notice 2027-04-01	review 2027-03-18	days -335/-349	expired
+AG-2	period_end 2028-09-30	notice 2028-08-31	review 2028-08-17	days 183/169	on_track
+AG-3	period_end None	notice None	review None	days None/None	incomplete
+AG-4	period_end 2027-08-02	notice 2027-07-02	review 2027-06-18	days -243/-257	expired
+AG-5	period_end 2027-01-31	notice 2027-01-01	review 2026-12-18	days -425/-439	expired
+AG-6	period_end 2028-03-30	notice 2028-02-29	review 2028-02-15	days -1/-15	notice_overdue
+AG-7	period_end 2027-09-30	notice 2027-08-01	review 2027-07-18	days -213/-227	expired
+AG-8	period_end 2027-06-15	notice 2027-05-16	review 2027-05-02	days -290/-304	expired
+AG-9	period_end None	notice None	review None	days None/None	incomplete
