@@ -61,44 +61,54 @@ const moon = new THREE.DirectionalLight(0xbcd2ff, 1.4); moon.position.set(-6, 10
 
 // ---------- 1. the server cube ----------
 const rackTex = canvasTex(256, 256, (g, w, h) => {
-  g.fillStyle = "#0a1220"; g.fillRect(0, 0, w, h);
-  g.strokeStyle = "#5d7ea8"; g.lineWidth = 10; g.strokeRect(5, 5, w - 10, h - 10);
-  g.fillStyle = "#121d31"; g.fillRect(18, 18, w - 36, h - 36);
+  g.fillStyle = "#59636f"; g.fillRect(0, 0, w, h);
+  g.strokeStyle = "#a9b4c2"; g.lineWidth = 10; g.strokeRect(5, 5, w - 10, h - 10);
+  g.fillStyle = "#3a434f"; g.fillRect(18, 18, w - 36, h - 36);
   for (let i = 0; i < 4; i++) {
     const y = 30 + i * 52;
-    g.fillStyle = "#060b14"; g.fillRect(28, y, w - 56, 40);
+    g.fillStyle = "#1a2029"; g.fillRect(28, y, w - 56, 40);
     g.fillStyle = "#cfe8ff"; g.fillRect(28, y, w - 56, 3);
     g.fillStyle = "#3d5f8c"; g.fillRect(28, y + 37, w - 56, 2);
   }
-  g.fillStyle = "#8fe1ff"; g.fillRect(14, 22, 4, h - 44); g.fillStyle = "#ff8a9a"; g.fillRect(w - 18, 22, 4, h - 44);
+  g.fillStyle = "#8fe1ff"; g.fillRect(14, 22, 4, h - 44); g.fillRect(w - 18, 22, 4, h - 44);
 });
 const rackGlow = canvasTex(256, 256, (g, w, h) => {
   g.fillStyle = "#000"; g.fillRect(0, 0, w, h);
   for (let i = 0; i < 4; i++) { g.fillStyle = "#9fd4ff"; g.fillRect(28, 30 + i * 52, w - 56, 3); }
-  g.fillStyle = "#6fd0ff"; g.fillRect(14, 22, 4, h - 44); g.fillStyle = "#ff6f8a"; g.fillRect(w - 18, 22, 4, h - 44);
+  g.fillStyle = "#6fd0ff"; g.fillRect(14, 22, 4, h - 44); g.fillRect(w - 18, 22, 4, h - 44);
 });
 const cube = new THREE.Group(); scene.add(cube);
-const rackMat = new THREE.MeshStandardMaterial({ map: rackTex, emissiveMap: rackGlow, emissive: 0x7fb8ff, emissiveIntensity: 0.9, metalness: 0.85, roughness: 0.32, color: 0xb8c6dc });
+const rackMat = new THREE.MeshStandardMaterial({ map: rackTex, emissiveMap: rackGlow, emissive: 0x7fb8ff, emissiveIntensity: 0.7, metalness: 0.8, roughness: 0.4, color: 0xd8e0ea });
 metals.push(rackMat);
 const modGeo = new THREE.BoxGeometry(1, 1, 1);
 for (let x = -1; x <= 1; x++) for (let y = -1; y <= 1; y++) for (let z = -1; z <= 1; z++) {
-  if (!x && !y && !z) continue;
+  if (!x && !y && (!z || z === 1)) continue;
   const m = new THREE.Mesh(modGeo, rackMat); m.position.set(x * 1.24, y * 1.24, z * 1.24); m.userData.home = m.position.clone(); cube.add(m);
 }
 const coreMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(3, 3.3, 3.6), toneMapped: false });
 const core = new THREE.Mesh(modGeo, coreMat); core.scale.setScalar(0.9); cube.add(core);
 const coreLight = new THREE.PointLight(0x8fd0ff, 30, 9, 1.6); cube.add(coreLight);
-const coreGlow = sprite(4, 0x9fd8ff, 0.7); cube.add(coreGlow);
+const coreGlow = sprite(2.2, 0x9fd8ff, 0.5); cube.add(coreGlow);
 const beam = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 30), new THREE.MeshBasicMaterial({ map: canvasTex(64, 512, (g, w, h) => { const r = g.createLinearGradient(0, 0, w, 0); r.addColorStop(0, "rgba(120,190,255,0)"); r.addColorStop(0.5, "rgba(230,245,255,.9)"); r.addColorStop(1, "rgba(120,190,255,0)"); g.fillStyle = r; g.fillRect(0, 0, w, h); const f = g.createLinearGradient(0, 0, 0, h); f.addColorStop(0, "rgba(0,0,0,1)"); f.addColorStop(1, "rgba(0,0,0,0)"); g.globalCompositeOperation = "destination-out"; g.fillStyle = f; g.fillRect(0, 0, w, h); }), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false, toneMapped: false }));
 beam.position.set(0, 16.5, 0); cube.add(beam);
+const beamLow = beam.clone(); beamLow.rotation.z = Math.PI; beamLow.position.set(0, -16.5, 0); cube.add(beamLow);
+cube.position.y = 0.55;
+
+{
+  const rock = new THREE.MeshStandardMaterial({ color: 0xa3b0c4, roughness: 0.8, metalness: 0.15, flatShading: true });
+  const crag = () => { const g = new THREE.IcosahedronGeometry(1, 2), p = g.attributes.position; for (let i = 0; i < p.count; i++) { const k = 0.72 + rand() * 0.5; p.setXYZ(i, p.getX(i) * k, p.getY(i) * k * (p.getY(i) > 0 ? 1.4 : 1), p.getZ(i) * k); } g.computeVertexNormals(); return g; };
+  [[-8.5, -5, -3, 5, 3.6, 3.5], [-11.5, -4.4, -9, 6, 5, 4], [8.8, -5.2, -2, 5, 3.4, 3.5], [12, -4, -9, 6, 5.5, 4], [0, -7.4, -5, 8, 2.2, 3]].forEach(([x, y, z, sx, sy, sz], i) => {
+    const m = new THREE.Mesh(crag(), rock); metals.push(rock); m.position.set(phone ? x * 0.6 : x, y, z); m.scale.set(sx, sy, sz); m.rotation.set(i * 0.7, i * 1.3, i * 0.4); cube.add(m);
+  });
+}
 
 // ---------- 2. the glass tunnel ----------
 const TZ0 = -12, TZ1 = -140, TW = phone ? 2.4 : 3.3;
 const tunnel = new THREE.Group(); scene.add(tunnel);
 {
-  const face = canvasTex(128, 128, (g, w, h) => { g.fillStyle = "#0c2f7a"; g.fillRect(0, 0, w, h); const r = g.createLinearGradient(0, 0, w, h); r.addColorStop(0, "rgba(120,190,255,.35)"); r.addColorStop(1, "rgba(10,30,90,.2)"); g.fillStyle = r; g.fillRect(0, 0, w, h); g.strokeStyle = "#bfe6ff"; g.lineWidth = 5; g.strokeRect(2, 2, w - 4, h - 4); });
-  const edge = canvasTex(128, 128, (g, w, h) => { g.fillStyle = "#081a44"; g.fillRect(0, 0, w, h); g.strokeStyle = "#9fdcff"; g.lineWidth = 5; g.strokeRect(2, 2, w - 4, h - 4); });
-  const mat = new THREE.MeshStandardMaterial({ map: face, emissiveMap: edge, emissive: 0xffffff, emissiveIntensity: 0.75, metalness: 0.5, roughness: 0.18, transparent: true, opacity: 0.92 });
+  const face = canvasTex(128, 128, (g, w, h) => { g.fillStyle = "#081c4a"; g.fillRect(0, 0, w, h); const r = g.createLinearGradient(0, 0, w, h); r.addColorStop(0, "rgba(90,150,255,.18)"); r.addColorStop(1, "rgba(4,12,40,.3)"); g.fillStyle = r; g.fillRect(0, 0, w, h); g.strokeStyle = "#bfe6ff"; g.lineWidth = 5; g.strokeRect(2, 2, w - 4, h - 4); });
+  const edge = canvasTex(128, 128, (g, w, h) => { g.fillStyle = "#000"; g.fillRect(0, 0, w, h); g.strokeStyle = "#7fe0ff"; g.lineWidth = 4; g.strokeRect(2, 2, w - 4, h - 4); });
+  const mat = new THREE.MeshStandardMaterial({ map: face, emissiveMap: edge, emissive: 0xffffff, emissiveIntensity: 0.6, metalness: 0.5, roughness: 0.18, transparent: true, opacity: 0.92 });
   metals.push(mat);
   const per = phone ? 7 : 9, n = Math.round(((TZ0 - TZ1) / 1.1) * per * 4);
   const inst = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), mat, n);
@@ -108,7 +118,7 @@ const tunnel = new THREE.Group(); scene.add(tunnel);
     const inward = TW + 0.5 - depth / 2;
     o.position.set(side < 2 ? along : (side === 2 ? -inward : inward), side < 2 ? (side === 0 ? inward : -inward) : along, z - rand() * 0.6);
     o.scale.set(side < 2 ? sz : depth, side < 2 ? depth : sz, 0.4 + rand() * 1.1); o.rotation.set(0, 0, 0); o.updateMatrix(); inst.setMatrixAt(k, o.matrix);
-    col.setHSL(0.6 + rand() * 0.03, 0.95, 0.1 + rand() * 0.26); inst.setColorAt(k++, col);
+    col.setHSL(0.6 + rand() * 0.03, 0.95, 0.07 + rand() * 0.18); inst.setColorAt(k++, col);
   }
   inst.count = k; tunnel.add(inst);
   const frameMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.4, 1.5, 1.9), toneMapped: false, fog: false });
@@ -118,7 +128,7 @@ const tunnel = new THREE.Group(); scene.add(tunnel);
     f.position.z = z; tunnel.add(f);
   }
   const end = sprite(phone ? 9 : 12, 0xcfeaff, 1); end.position.z = TZ1 - 4; tunnel.add(end);
-  const lamp = new THREE.PointLight(0x7fc4ff, 40, 26, 1.2); lamp.name = "lamp"; tunnel.add(lamp);
+  const lamp = new THREE.PointLight(0x3f7fff, 14, 22, 1.4); lamp.name = "lamp"; tunnel.add(lamp);
 }
 
 // ---------- 3. the exploded cube (real code on the slabs) ----------
@@ -126,7 +136,7 @@ const snips = await (await fetch("snips.json")).json();
 await Promise.race([document.fonts.load("400 20px 'Geist Mono'"), new Promise((r) => setTimeout(r, 2500))]);
 function codeTex(sn, { w = 512, h = 300, panel = true } = {}) {
   return canvasTex(w, h, (g) => {
-    g.fillStyle = panel ? "rgba(8,22,70,.9)" : "#04102e"; g.fillRect(0, 0, w, h);
+    g.fillStyle = panel ? "rgba(6,14,42,.92)" : "#04102e"; g.fillRect(0, 0, w, h);
     if (panel) { g.strokeStyle = "rgba(140,190,255,.85)"; g.lineWidth = 3; g.strokeRect(1.5, 1.5, w - 3, h - 3); }
     g.font = "500 15px 'Geist Mono', monospace"; g.fillStyle = "#ff8f7a"; g.fillText("// " + sn.f, 22, 34);
     g.font = "400 16px 'Geist Mono', monospace";
@@ -152,7 +162,7 @@ const slabs = [];
     shards.add(mesh); k++;
   }));
   // debris: thin glowing sticks drifting around the cube
-  const stick = new THREE.MeshBasicMaterial({ color: 0x8fb0ff, transparent: true, opacity: 0.22 });
+  const stick = new THREE.MeshBasicMaterial({ color: 0x24305a, transparent: true, opacity: 0.8 });
   for (let i = 0; i < (phone ? 14 : 26); i++) { const d = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.14, 0.5 + rand() * 0.8), stick); const a = rand() * 6.28, r = 4 + rand() * 7; d.position.set(Math.cos(a) * r, (rand() - 0.5) * 7, Math.sin(a) * r); d.rotation.set(rand() * 3, rand() * 3, 0); shards.add(d); }
 }
 
@@ -160,13 +170,13 @@ const slabs = [];
 const CZ0 = -212, CZ1 = -318;
 const panels = new THREE.Group(); scene.add(panels);
 {
-  const n = phone ? 40 : 76;
+  const n = phone ? 40 : 64;
   for (let i = 0; i < n; i++) {
     const t = codeTex(snips[(i * 5 + 3) % snips.length]);
     const m = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 1), new THREE.MeshBasicMaterial({ map: t, transparent: true, toneMapped: false, side: THREE.DoubleSide, opacity: 0.95 }));
     const a = rand() * 6.28, r = (phone ? 2.2 : 2.6) + rand() * (phone ? 2.4 : 4.6);
-    m.position.set(Math.cos(a) * r * 1.3, Math.sin(a) * r * 0.75, lerp(CZ0, CZ1, Math.pow(i / n, 1.5)) - rand() * 3);
-    m.scale.setScalar(phone ? 0.7 + rand() * 0.8 : 0.9 + rand() * 1.3); m.rotation.set((rand() - 0.5) * 0.3, (rand() - 0.5) * 0.7, (rand() - 0.5) * 0.15);
+    m.position.set(Math.cos(a) * r * 1.3, Math.sin(a) * r * 0.75, lerp(CZ0, CZ1, Math.pow(i / n, 2.4)) - rand() * 3);
+    m.scale.setScalar((phone ? 0.6 + rand() * 0.6 : 0.6 + rand() * 0.7) * (i < n / 3 ? 1.5 : 1)); m.rotation.set((rand() - 0.5) * 0.3, (rand() - 0.5) * 0.7, (rand() - 0.5) * 0.15);
     m.userData.bob = rand() * 6.28; panels.add(m);
   }
 }
@@ -189,12 +199,13 @@ const PZ0 = -322, PZ1 = -408;
 const cards = new THREE.Group(); scene.add(cards);
 const panelGeo = new THREE.PlaneGeometry(A, 1), frameGeo = new THREE.PlaneGeometry(A + 0.04, 1.04);
 const frameMat = new THREE.MeshBasicMaterial({ color: 0xb8ccff, transparent: true, opacity: 0.55 });
-const live = manifest.slice(0, phone ? 24 : 40).map((m, i, all) => {
-  const g = new THREE.Group(), mat = new THREE.MeshBasicMaterial({ map: coverTex(m.slug), color: new THREE.Color(1.3, 1.3, 1.35), toneMapped: false });
+const bright = await (await fetch("bright.json")).json(), bySlug = new Map(manifest.map((m) => [m.slug, m]));
+const live = bright.map((s) => bySlug.get(s)).filter(Boolean).slice(0, phone ? 24 : 40).map((m, i, all) => {
+  const g = new THREE.Group(), mat = new THREE.MeshBasicMaterial({ map: coverTex(m.slug), color: new THREE.Color(0.9, 0.9, 0.95), toneMapped: true });
   const mesh = new THREE.Mesh(panelGeo, mat); mesh.position.z = 0.01; g.add(mesh); g.add(new THREE.Mesh(frameGeo, frameMat));
   const a = rand() * 6.28, r = (phone ? 1.5 : 2.4) + rand() * (phone ? 2.2 : 4.2);
   g.position.set(Math.cos(a) * r * 1.3, Math.sin(a) * r * 0.75, lerp(PZ0, PZ1, i / all.length) - rand() * 3);
-  g.scale.setScalar(0.6 + rand() * 0.7); g.rotation.y = (rand() - 0.5) * 0.5; g.userData.bob = rand() * 6.28; cards.add(g);
+  g.scale.setScalar(0.9 + rand() * 0.8); g.rotation.y = (rand() - 0.5) * 0.5; g.userData.bob = rand() * 6.28; cards.add(g);
   return { g, mat, slug: m.slug, cover: mat.map, video: null };
 });
 
@@ -215,7 +226,7 @@ const eyeMat = new THREE.ShaderMaterial({
       // sclera: pale blue-white, shaded from the upper left, blue rim
       vec3 L = normalize(vec3(-0.5, 0.6, 0.65));
       vec3 col = vec3(0.82, 0.87, 1.0) * (0.55 + 0.5 * max(dot(N, L), 0.0));
-      col += vec3(0.25, 0.5, 1.1) * pow(1.0 - max(dot(N, V), 0.0), 3.0) * 0.6;
+      float ndv = max(dot(N, V), 0.0); col *= 0.55 + 0.45 * smoothstep(0.0, 0.7, ndv); col += vec3(0.3, 0.5, 1.1) * pow(1.0 - ndv, 3.0) * 0.8 + vec3(0.6, 0.3, 0.7) * pow(1.0 - ndv, 6.0) * 0.4;
       // iris: radial fibres, a bright zigzag collarette, a dark limbal ring
       float a = ph * 9.0, f = fbm(vec2(a, r * 4.0 - t * 0.03)) * 0.6 + n(vec2(ph * 70.0, r * 3.0)) * 0.4;
       float zig = smoothstep(0.08, 0.0, abs(r - 0.52 - 0.06 * sin(ph * 24.0 + fbm(vec2(a, 3.0)) * 4.0)));
@@ -235,10 +246,10 @@ const eyeHalo = sprite(ER * 3.2, 0x2f6dff, 0.18); eyeHalo.position.z = EZ - 1; s
 
 // ---------- stars ----------
 {
-  const n = phone ? 2200 : 4000, pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
+  const n = phone ? 1600 : 2800, pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
   for (let i = 0; i < n; i++) {
     pos[i * 3] = (rand() - 0.5) * 120; pos[i * 3 + 1] = (rand() - 0.5) * 80; pos[i * 3 + 2] = -150 - rand() * 420;
-    const k = 0.5 + rand() * 0.5, tint = rand(); col[i * 3] = tint < 0.12 ? k : k * (tint < 0.24 ? 0.6 : 1); col[i * 3 + 1] = k * (tint < 0.24 ? 0.75 : 1); col[i * 3 + 2] = tint < 0.12 ? k * 0.7 : k;
+    const k = 0.5 + rand() * 0.5, tint = rand(); col[i * 3] = k * (tint < 0.06 ? 1 : tint < 0.12 ? 0.7 : 0.95); col[i * 3 + 1] = k * (tint < 0.06 ? 0.75 : 0.95); col[i * 3 + 2] = k * (tint < 0.06 ? 0.75 : 1);
   }
   const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(pos, 3)); g.setAttribute("color", new THREE.BufferAttribute(col, 3));
   scene.add(new THREE.Points(g, new THREE.PointsMaterial({ size: phone ? 3.2 : 3.4, sizeAttenuation: false, map: glowTex, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false, toneMapped: false })));
@@ -279,7 +290,7 @@ function placeTags(o) {
   tagEls.forEach((t, i) => {
     slabs[TAG_SLAB[i]].mesh.getWorldPosition(tv); tv.project(cam);
     const x = (tv.x * 0.5 + 0.5) * innerWidth, y = (-tv.y * 0.5 + 0.5) * innerHeight, left = i !== 1;
-    const tw = t.offsetWidth, tx = left ? x - (phone ? 70 : 190) - tw : x + (phone ? 60 : 150), ty = y - (i === 2 ? -60 : 80);
+    const tw = t.offsetWidth, tx = left ? x - (phone ? 90 : 280) - tw : x + (phone ? 70 : 230), ty = y - (i === 2 ? -110 : 130);
     t.style.transform = `translate(${Math.round(tx)}px, ${Math.round(ty)}px)`; t.style.opacity = o;
     const ux = left ? tx + tw : tx, uy = ty + t.offsetHeight + 6;
     d += `M${left ? tx : tx + tw},${uy}H${ux}L${x},${y}`;
@@ -357,12 +368,12 @@ function loop() {
   // the cube breathes; the core swells as the camera nears it
   cube.rotation.y = lerp(0.62, 0, smooth(0, 0.065, p)) + Math.sin(t * 0.15) * 0.05 + ptr.x * 0.05; cube.rotation.x = -0.05 + ptr.y * 0.03;
   const near = smooth(0.0, 0.14, p);
-  coreGlow.material.opacity = 0.5 + near * 0.4 + Math.sin(t * 2) * 0.04; coreGlow.scale.setScalar(2.4 + near * 1.2); coreLight.intensity = 26 + near * 60;
+  coreGlow.material.opacity = 0.4 + near * 0.2 + Math.sin(t * 2) * 0.04; coreGlow.scale.setScalar(2.2 + near * 0.6); coreLight.intensity = 14 + near * 16;
   sky.material.opacity = 1 - smooth(0.11, 0.14, p);
   // the tunnel light travels ahead of the camera; far blocks fade into blue, not black
   const inT = smooth(0.135, 0.15, p) * (1 - smooth(0.24, 0.26, p));
   lamp.position.set(0, 0, cam.position.z - 6);
-  scene.fog.color.copy(fogBlack).lerp(fogBlue, inT); scene.fog.density = lerp(0.02, 0.03, inT); bloom.threshold = lerp(0.82, 0.9, inT);
+  scene.fog.color.copy(fogBlack).lerp(fogBlue, inT); scene.fog.density = lerp(0.02, 0.03, inT); bloom.threshold = lerp(0.82, 0.95, inT);
   renderer.setClearColor(scene.fog.color);
   // the cube opens
   const ex = smooth(0.262, 0.335, p);
@@ -378,7 +389,7 @@ function loop() {
   $("#flash").style.opacity = reduce ? 0 : (fl * fl).toFixed(3);
   $("#fade").style.opacity = smooth(0.945, 0.975, p).toFixed(3);
   bloom.strength = 0.6 + fl * 1.2 + inT * 0.25 + (s1 ? near * 0.1 : 0) - (s6 ? 0.35 : 0);
-  zoom.uniforms.strength.value = reduce ? 0 : clamp(inT * 0.14 + Math.abs(vel) * 0.0016 + (s4 || s5 ? 0.025 : 0), 0, 0.22);
+  zoom.uniforms.strength.value = reduce ? 0 : clamp(inT * 0.1 + Math.abs(vel) * 0.0016 + 0, 0, 0.22);
   shift.uniforms.amount.value = reduce ? 0 : 0.0009 + inT * 0.002 + Math.min(0.004, Math.abs(vel) * 0.00006);
 
   // DOM: hero, beats, queue, tags

@@ -11,9 +11,9 @@ document.querySelectorAll(".rv").forEach((el) => io.observe(el));
 
 // cursor ring with a label from data-cursor
 if (fine && !reduce) {
-  const c = document.createElement("div"); c.className = "cur"; c.innerHTML = "<span></span>"; document.body.appendChild(c);
+  const c = document.createElement("div"); c.className = "cur"; c.innerHTML = "<span></span>"; document.body.appendChild(c); c.style.opacity = 0;
   let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y;
-  addEventListener("pointermove", (e) => { x = e.clientX; y = e.clientY; }, { passive: true });
+  addEventListener("pointermove", (e) => { x = e.clientX; y = e.clientY; c.style.opacity = ""; }, { passive: true });
   (function f() { cx += (x - cx) * 0.2; cy += (y - cy) * 0.2; c.style.transform = `translate(${cx}px, ${cy}px)`; requestAnimationFrame(f); })();
   document.addEventListener("pointerover", (e) => { const t = e.target.closest("a, button, [data-cursor]"); c.classList.toggle("on", !!t); c.firstChild.textContent = t ? (t.dataset.cursor || "") : ""; });
 }
