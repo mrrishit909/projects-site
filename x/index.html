@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rishit Mathur: analytics, machine learning and data systems</title>
+<meta name="description" content="Rishit Mathur builds analytics, machine learning and data systems, and checks every number a second way. 219 public repositories, 30 live demos.">
+<meta property="og:title" content="Rishit Mathur: built on real data, checked a second way">
+<meta property="og:description" content="Analytics, machine learning and data systems. 219 public repositories, 30 live demos.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="../florida-flight-delays/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" href="../vendor/fonts/InterTight-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../vendor/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="x.css">
+<style>
+#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; }
+.film { height: 1500vh; position: relative; z-index: 1; pointer-events: none; }
+.film > * { pointer-events: auto; }
+
+/* preloader */
+#pre { position: fixed; inset: 0; z-index: 45; background: #000; display: grid; place-items: center; transition: opacity .7s var(--ease-io), visibility 0s .7s; }
+#pre.done { opacity: 0; visibility: hidden; }
+#pre svg { width: min(46vw, 300px); height: auto; overflow: visible; }
+#pre circle { fill: none; stroke: var(--w60); stroke-width: .5; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset .35s var(--ease-out); }
+#pre .name { position: absolute; font: 500 13px/1 var(--mono); letter-spacing: .3em; }
+#pre .name::before { content: ""; display: inline-block; width: 9px; height: 9px; margin-right: 10px; background: #fff; transform: rotate(45deg) translateY(-1px); }
+#pre .stat { position: absolute; bottom: 7vh; text-align: center; font: 400 11px/1.6 var(--mono); color: var(--w40); letter-spacing: .12em; text-transform: uppercase; }
+#pre .stat b { display: block; color: #fff; font-weight: 400; }
+
+/* hero */
+.hero { position: fixed; left: var(--pad); right: var(--pad); bottom: calc(var(--pad) + 6px); z-index: 4; display: grid; grid-template-columns: 1fr minmax(0, 330px); align-items: end; gap: 24px; }
+.hero h1 .ln { display: block; overflow: hidden; padding-bottom: .06em; }
+.hero h1 .ln > span { display: inline-block; transform: translateY(105%); transition: transform 1.1s var(--ease-out); }
+body.in .hero h1 .ln > span { transform: none; }
+body.in .hero h1 .ln:nth-child(2) > span { transition-delay: .09s; }
+.hero p { margin: 0 0 .5em; font: 400 13px/1.55 var(--mono); color: var(--w60); letter-spacing: .02em; opacity: 0; transition: opacity .8s .5s; }
+.hero .facts { grid-column: 1 / -1; display: flex; gap: 26px; flex-wrap: wrap; padding-top: 18px; border-top: 1px solid var(--w10); font: 400 11px/1 var(--mono); color: var(--w60); letter-spacing: .08em; text-transform: uppercase; opacity: 0; transition: opacity .8s .7s; }
+.hero .facts span::before { content: "\2022  "; color: var(--blue); }
+body.in .hero p, body.in .hero .facts { opacity: 1; }
+
+/* HUD */
+.index { position: fixed; left: var(--pad); top: 50%; transform: translateY(-50%); z-index: 5; font: 400 11px/1.9 var(--mono); letter-spacing: .14em; color: var(--w40); opacity: 0; }
+.index b { display: block; color: var(--w60); font-weight: 400; margin-bottom: 6px; }
+.index span { display: block; transition: color .3s; }
+.index span.on { color: #fff; }
+.index span.on::before { content: "\25AA  "; color: var(--blue); }
+.foot { position: fixed; left: var(--pad); right: var(--pad); bottom: var(--pad); z-index: 5; display: grid; grid-template-columns: repeat(3, auto) 1fr auto; gap: 28px; align-items: end; font: 400 10px/1.5 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--w40); opacity: 0; }
+.foot b { display: block; color: #fff; font-weight: 400; font-size: 13px; letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+.foot .mod { justify-self: center; text-align: center; }
+.foot .mod b { font-size: 11px; letter-spacing: .2em; }
+.counter { position: fixed; left: 50%; top: 50%; z-index: 4; transform: translate(-50%, -50%); text-align: center; font: 300 clamp(48px, 9vw, 140px)/1 var(--mono); letter-spacing: -.04em; opacity: 0; font-variant-numeric: tabular-nums; }
+.counter small { display: block; margin-top: 16px; font: 400 11px/1.6 var(--mono); letter-spacing: .2em; color: var(--w60); text-transform: uppercase; }
+
+/* depth lines: one per chapter */
+.line { position: fixed; left: 50%; top: 50%; z-index: 4; width: min(92vw, 15ch); transform: translate(-50%, -50%); text-align: center; margin: 0; opacity: 0; }
+.line small { display: block; margin-top: 18px; font: 400 11px/1.6 var(--mono); letter-spacing: .14em; text-transform: uppercase; -webkit-text-fill-color: var(--w60); }
+.line a { -webkit-text-fill-color: var(--w60); text-decoration: none; }
+.cta { position: fixed; left: 50%; top: 50%; z-index: 6; transform: translate(-50%, -50%); text-align: center; opacity: 0; pointer-events: none; }
+.cta::before { content: ""; position: absolute; left: 50%; top: 50%; z-index: -1; width: 160vmax; height: 160vmax; transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(0,0,0,.82) 0%, rgba(0,0,0,.55) 22%, rgba(0,0,0,0) 45%); pointer-events: none; }
+.cta .h1 { margin-bottom: 28px; }
+.line::before { content: ""; position: absolute; left: 50%; top: 50%; z-index: -1; width: 70vmax; height: 40vmax; transform: translate(-50%, -50%); background: radial-gradient(ellipse, rgba(0,0,0,.7) 0%, rgba(0,0,0,0) 62%); pointer-events: none; }
+.cta .row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+.tag { position: fixed; left: 0; top: 0; z-index: 3; font: 400 10px/1.45 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--w60); white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .25s; }
+.tag b { display: block; color: #fff; font-weight: 400; }
+.tag::before { content: ""; position: absolute; left: -14px; top: 5px; width: 9px; height: 1px; background: var(--w40); }
+#flash { position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0; background: radial-gradient(circle at 50% 50%, #fff 0%, #d9ecff 22%, #5aa9f0 52%, rgba(0,20,60,0) 78%); }
+.scrollcue { position: fixed; right: var(--pad); bottom: var(--pad); z-index: 5; font: 400 10px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--w60); }
+
+/* no-JS / no-WebGL: a plain, complete page */
+.static { display: none; position: relative; z-index: 2; padding: 22vh var(--pad) 10vh; }
+.nogl .static, .nojs .static { display: block; }
+.nogl .film, .nogl #pre, .nogl .hero, .nogl .foot, .nogl .line, .nogl .cta, .nogl .counter, .nogl .index { display: none !important; }
+.static ul { list-style: none; padding: 0; margin: 40px 0; display: grid; gap: 12px; }
+
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; bottom: calc(var(--pad) + 2px); }
+  .hero .facts { gap: 14px; font-size: 10px; }
+  .index { top: 70px; transform: none; display: flex; gap: 12px; align-items: baseline; font-size: 10px; }
+  .index b { margin: 0; }
+  .foot { grid-template-columns: repeat(3, auto); gap: 18px; }
+  .foot .mod, .scrollcue { display: none; }
+  .line { width: 88vw; }
+}
+</style>
+<script>document.documentElement.classList.add("js"); try { const c = document.createElement("canvas"); if (!(c.getContext("webgl2") || c.getContext("webgl"))) document.documentElement.classList.add("nogl"); } catch (e) { document.documentElement.classList.add("nogl"); }</script>
+<noscript><style>.film,#pre,.hero,.foot,.line,.cta,.counter,.index,.scrollcue{display:none!important}.static{display:block!important}</style></noscript>
+<script type="importmap">{ "imports": { "three": "../vendor/three-full/three.module.min.js", "three/addons/": "../vendor/three-full/addons/" } }</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div id="pre" role="status" aria-live="polite">
+  <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="49.5" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/></svg>
+  <span class="name">RISHIT MATHUR</span>
+  <span class="stat">[loading the work]<b id="pct">0%</b></span>
+</div>
+
+<header class="top"><a class="logo" href="./">Rishit Mathur</a><nav aria-label="Primary"><a href="work/">Work</a><a href="about/">About</a><a href="contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+
+<main id="main">
+<section class="hero" aria-labelledby="h1">
+  <h1 id="h1" class="h1"><span class="ln"><span class="grad">Built on real data.</span></span><span class="ln"><span class="grad">Checked a second way.</span></span></h1>
+  <p>Analytics, machine learning and data systems by Rishit Mathur. Every screen around you is a project, running.</p>
+  <div class="facts"><span>219 public repositories</span><span>30 live demos</span><span>184 of 184 Power BI values matched in pandas</span></div>
+</section>
+
+<div class="counter" aria-hidden="true"><span id="cnt">000</span><small>Screens passed, of 219</small></div>
+
+<p class="line h2" data-from=".33" data-to=".45"><span class="grad">Reports people can read.</span><small>Florida flight delays: 635,459 flights, 184 of 184 Power BI values matched in pandas. <a href="p/florida-flight-delays/">Open</a></small></p>
+<p class="line h2" data-from=".47" data-to=".59"><span class="grad">Pipelines that test themselves.</span><small>Retail pipeline in dbt: 1.07 million invoice lines, 31 data tests. <a href="p/retail-dbt/">Open</a></small></p>
+<p class="line h2" data-from=".61" data-to=".73"><span class="grad">Forecasts that show their error.</span><small>US retail sales: five methods, 168 backtests each, best average error 1.81%. <a href="p/us-retail-forecast/">Open</a></small></p>
+<p class="line h2" data-from=".75" data-to=".87"><span class="grad">Answers that refuse to guess.</span><small>Ask the 10-K: 20 of 20 money answers within 0.5% of XBRL. <a href="p/sec-10k-rag/">Open</a></small></p>
+<div class="cta" data-from=".93" data-to="1.2"><h2 class="h1"><span class="grad">219 projects.</span><br><span class="grad">All of them open.</span></h2><div class="row"><a class="btn" href="work/" data-cursor="Index">Open the index</a><a class="btn ghost" href="about/">About</a><a class="btn ghost" href="contact/">Contact</a></div></div>
+
+<section class="static" aria-label="Selected work">
+  <h2 class="h2 grad">Selected work</h2>
+  <ul>
+    <li><a class="btn ghost" href="p/florida-flight-delays/">Florida flight delays</a></li>
+    <li><a class="btn ghost" href="p/retail-dbt/">Retail pipeline in dbt</a></li>
+    <li><a class="btn ghost" href="p/us-retail-forecast/">US retail sales forecast</a></li>
+    <li><a class="btn ghost" href="p/sec-10k-rag/">Ask the 10-K</a></li>
+  </ul>
+  <a class="btn" href="work/">All 219 projects</a>
+</section>
+</main>
+
+<aside class="index" aria-hidden="true"><b>INDEX:</b><span>REPORTS</span><span>PIPELINES</span><span>FORECASTS</span><span>LANGUAGE</span></aside>
+<footer class="foot" aria-hidden="true">
+  <span>Projects<b>219</b></span><span>Live demos<b>30</b></span><span>Screens running<b id="running">00</b></span>
+  <span class="mod">MODULE <span id="modn">00</span><b id="modt">THE WORK, STACKED</b></span>
+</footer>
+<span class="scrollcue" aria-hidden="true">Scroll to dive</span>
+<div id="flash"></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="film" aria-hidden="true"></div>
+
+<script src="../vendor/lenis/lenis.min.js"></script>
+<script type="module" src="x.js"></script>
+<script type="module">
+if (document.documentElement.classList.contains("nogl")) throw new Error("no webgl: static page shown");
+import("./home.js");
+</script>
+</body>
+</html>
