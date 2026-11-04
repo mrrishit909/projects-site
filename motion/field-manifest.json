@@ -1,0 +1,386 @@
+[
+{
+"slug": "florida-flight-delays",
+"title": "Florida Flight Delays",
+"kind": "Power BI \u00b7 DAX",
+"year": "2026"
+},
+{
+"slug": "us-retail-forecast",
+"title": "US Retail Sales Forecast",
+"kind": "Python \u00b7 Forecasting",
+"year": "2026"
+},
+{
+"slug": "retail-dbt",
+"title": "Retail Pipeline in dbt",
+"kind": "Analytics engineering \u00b7 dbt",
+"year": "2026"
+},
+{
+"slug": "sec-10k-rag",
+"title": "Ask the 10-K",
+"kind": "LLM \u00b7 RAG",
+"year": "2026"
+},
+{
+"slug": "spendprism",
+"title": "Which Purchases Carry Addressable Price Leakage, and Which Sourcing Action Is Worth Reviewing?",
+"kind": "Dashboard \u00b7 Procurement \u00b7 Spend analytics \u00b7 FastAPI \u00b7 React",
+"year": "2026"
+},
+{
+"slug": "cashcompass",
+"title": "Which Customers Should a Collections Lead Contact Today, and How Much Cash Is Expected?",
+"kind": "Dashboard \u00b7 Accounts receivable \u00b7 Collections \u00b7 FastAPI \u00b7 React",
+"year": "2026"
+},
+{
+"slug": "workforce-scheduler",
+"title": "Who Works When? A Week's Schedule That Obeys Every Rule, and Survives Two Sick Calls",
+"kind": "Python \u00b7 Operations research",
+"year": "2026"
+},
+{
+"slug": "drug-discovery-workspace",
+"title": "Which 96 Compounds Go on the Next Plate?",
+"kind": "Python \u00b7 RDKit \u00b7 Cheminformatics",
+"year": "2026"
+},
+{
+"slug": "la-crime",
+"title": "When and Where Does Crime Happen in Los Angeles?",
+"kind": "Python \u00b7 Exploratory analysis",
+"year": "2026"
+},
+{
+"slug": "retail-intelligence-studio",
+"title": "The Hidden Patterns Behind Every Purchase",
+"kind": "Data story \u00b7 dbt star schema \u00b7 Forecasting and CLV",
+"year": "2026"
+},
+{
+"slug": "uber-nyc-pickups",
+"title": "When and Where Does New York Take an Uber?",
+"kind": "Python \u00b7 Exploratory analysis",
+"year": "2026"
+},
+{
+"slug": "citibike-demand",
+"title": "How Much Does Weather Add To Bike Demand Forecasts?",
+"kind": "Python \u00b7 Forecasting",
+"year": "2026"
+},
+{
+"slug": "food-inspections",
+"title": "Which Kitchens to Inspect First?",
+"kind": "Python \u00b7 Predictive modeling",
+"year": "2026"
+},
+{
+"slug": "food-waste-exchange",
+"title": "Where Should 183 Tonnes of Surplus Food Go?",
+"kind": "Python \u00b7 Optimization \u00b7 Sustainability",
+"year": "2026"
+},
+{
+"slug": "ames-housing",
+"title": "Ames House Prices",
+"kind": "Python \u00b7 Regression",
+"year": "2026"
+},
+{
+"slug": "dst-crashes-stats",
+"title": "Clock Change and Fatal Crashes",
+"kind": "Statistics \u00b7 Causal inference",
+"year": "2026"
+},
+{
+"slug": "synapse-tribunal",
+"title": "SYNAPSE TRIBUNAL",
+"kind": "React \u00b7 Three.js \u00b7 Explainable ML \u00b7 Linear SHAP",
+"year": "2026"
+},
+{
+"slug": "dolibarr-crm",
+"title": "Rackhouse: modules that really switch off",
+"kind": "CRM \u00b7 Module system",
+"year": "2026"
+},
+{
+"slug": "drug-events-mongo-postgres",
+"title": "Drug Safety Signals in MongoDB and PostgreSQL",
+"kind": "SQL & NoSQL \u00b7 Data engineering",
+"year": "2026"
+},
+{
+"slug": "hr-analytics",
+"title": "Who Leaves the Federal Workforce, and When?",
+"kind": "Python \u00b7 People analytics",
+"year": "2026"
+},
+{
+"slug": "huly-crm",
+"title": "Hearth: a studio's rooms, boards and live documents",
+"kind": "CRM \u00b7 Realtime collaboration",
+"year": "2026"
+},
+{
+"slug": "forge-twin-builder",
+"title": "Would a Second CNC Machine Pay Off?",
+"kind": "TypeScript \u00b7 three.js \u00b7 discrete-event simulation",
+"year": "2026"
+},
+{
+"slug": "us-jobs-dashboard",
+"title": "Where America's Jobs Grew",
+"kind": "Dashboard \u00b7 Data visualization",
+"year": "2026"
+},
+{
+"slug": "invoicebridge",
+"title": "Which Invoices Can Be Paid, Which Are Blocked, and Why?",
+"kind": "Dashboard \u00b7 Finance operations \u00b7 FastAPI \u00b7 React",
+"year": "2026"
+},
+{
+"slug": "enterprise-knowledge-graph",
+"title": "Who Can Know What, and Since When?",
+"kind": "Python \u00b7 Entity resolution \u00b7 Permission-aware retrieval",
+"year": "2026"
+},
+{
+"slug": "trial-site-optimizer",
+"title": "Which 20 Sites Will Actually Enrol This Trial?",
+"kind": "Python \u00b7 Temporal rules engine \u00b7 Mixed-integer programming",
+"year": "2026"
+},
+{
+"slug": "csv-quality-checker",
+"title": "CSV Data-Quality Checker",
+"kind": "Java \u00b7 Data quality",
+"year": "2026"
+},
+{
+"slug": "renewable-grid-twin",
+"title": "What Does It Cost to Keep the Lines Within Their Limits?",
+"kind": "Python \u00b7 DC power flow \u00b7 MILP",
+"year": "2026"
+},
+{
+"slug": "food-price-forecast",
+"title": "How Far Ahead Can World Food Prices Be Forecast?",
+"kind": "Python \u00b7 Forecasting",
+"year": "2026"
+},
+{
+"slug": "building-energy-optimizer",
+"title": "Can a Building Cut Its Power Bill Without Anyone Feeling Warmer?",
+"kind": "Python \u00b7 IoT, forecasting and control",
+"year": "2026"
+},
+{
+"slug": "claims-intelligence",
+"title": "Who Is Really Behind This Insurance Claim?",
+"kind": "Python \u00b7 Computer vision and graph ML",
+"year": "2026"
+},
+{
+"slug": "genesis-evolution-explorer",
+"title": "How Did a Dinosaur Line End Up as a Sparrow?",
+"kind": "TypeScript \u00b7 three.js \u00b7 data visualisation",
+"year": "2026"
+},
+{
+"slug": "orbital-space-traffic",
+"title": "Which Burn Actually Makes the Satellite Safe?",
+"kind": "TypeScript \u00b7 three.js \u00b7 orbital mechanics",
+"year": "2026"
+},
+{
+"slug": "requiem-heritage-archive",
+"title": "Can a Date Slider Build and Destroy a Building Honestly?",
+"kind": "Blender \u00b7 three.js \u00b7 heritage archive",
+"year": "2026"
+},
+{
+"slug": "delay-graph",
+"title": "How One Late Plane Delays Its Day",
+"kind": "NoSQL \u00b7 Graph database",
+"year": "2026"
+},
+{
+"slug": "wukong-crm",
+"title": "Canopy: an org chart that decides who sees which lead",
+"kind": "CRM \u00b7 Org chart and campaigns",
+"year": "2026"
+},
+{
+"slug": "data-reliability-control-plane",
+"title": "The Dashboard Is Wrong and No Job Failed. Where Did It Break?",
+"kind": "Python \u00b7 Data engineering",
+"year": "2026"
+},
+{
+"slug": "jira-flow-analytics",
+"title": "Jira Flow Analytics",
+"kind": "Python \u00b7 Jira & Confluence",
+"year": "2026"
+},
+{
+"slug": "jira-feature-votes",
+"title": "Do Customer Votes Decide What Gets Built?",
+"kind": "Jira \u00b7 Confluence \u00b7 Product analytics",
+"year": "2026"
+},
+{
+"slug": "excel-model",
+"title": "Costco Model in Excel",
+"kind": "Excel \u00b7 Financial modelling",
+"year": "2026"
+},
+{
+"slug": "iowa-liquor-forecast",
+"title": "Can Prophet Forecast What Iowa Liquor Stores Will Order?",
+"kind": "Python \u00b7 Forecasting",
+"year": "2026"
+},
+{
+"slug": "flight-delay-model",
+"title": "Will My Flight Be Disrupted?",
+"kind": "Python \u00b7 Machine learning",
+"year": "2026"
+},
+{
+"slug": "nocobase-crm",
+"title": "Loom: build your own data model in the browser",
+"kind": "CRM \u00b7 Data-model builder",
+"year": "2026"
+},
+{
+"slug": "attack-path-platform",
+"title": "Which Two Fixes Cut Off the Route to the Database?",
+"kind": "Python \u00b7 Security graph analytics",
+"year": "2026"
+},
+{
+"slug": "atlas-development-intel",
+"title": "Who Challenges the Pro Forma?",
+"kind": "TypeScript \u00b7 multi-agent \u00b7 three.js",
+"year": "2026"
+},
+{
+"slug": "supply-chain-twin",
+"title": "What Does a Three-Week Port Slowdown Cost, and What Is the Cheapest Way Out?",
+"kind": "Python \u00b7 Supply-chain optimization",
+"year": "2026"
+},
+{
+"slug": "sf311-requirements",
+"title": "SF 311 Intake Requirements",
+"kind": "Requirements analysis \u00b7 SQL",
+"year": "2026"
+},
+{
+"slug": "signalroom",
+"title": "SIGNALROOM",
+"kind": "React \u00b7 D3 \u00b7 Motion \u00b7 Retail Analytics",
+"year": "2026"
+},
+{
+"slug": "moby-dick-words",
+"title": "What Is Moby-Dick Made Of?",
+"kind": "Python \u00b7 Text analysis",
+"year": "2026"
+},
+{
+"slug": "rift",
+"title": "What Does a Six-Second Rupture Look Like From Bedrock to Street?",
+"kind": "Blender \u00b7 three.js \u00b7 motion design",
+"year": "2026"
+},
+{
+"slug": "helix-research-workspace",
+"title": "Which Claim Can Show Its Source?",
+"kind": "TypeScript \u00b7 multi-agent \u00b7 three.js",
+"year": "2026"
+},
+{
+"slug": "mortgage-denials",
+"title": "Who Gets Denied a Mortgage?",
+"kind": "Python \u00b7 Predictive modeling",
+"year": "2026"
+},
+{
+"slug": "international-debt",
+"title": "Who Do Developing Countries Owe?",
+"kind": "SQL \u00b7 Debt statistics",
+"year": "2026"
+},
+{
+"slug": "chicago-crime-r",
+"title": "Is Chicago's Crime Drop Real? (R)",
+"kind": "R \u00b7 Time-series forecasting",
+"year": "2026"
+},
+{
+"slug": "trustledger",
+"title": "Which Data Issues Should Be Fixed First, and Who Is Accountable?",
+"kind": "Dashboard \u00b7 Data governance \u00b7 FastAPI \u00b7 React",
+"year": "2026"
+},
+{
+"slug": "productsignal",
+"title": "Should the Onboarding Change Ship, Stop, or Get More Investigation?",
+"kind": "Dashboard \u00b7 Product analytics \u00b7 Experimentation \u00b7 FastAPI \u00b7 React",
+"year": "2026"
+},
+{
+"slug": "arbor-urban-canopy",
+"title": "Where Do the Next 157 Trees Go to Cool the Hottest Blocks the Most?",
+"kind": "Blender \u00b7 three.js \u00b7 urban forestry",
+"year": "2026"
+},
+{
+"slug": "covid-first-100-days",
+"title": "How Fast Did COVID-19 Spread in Its First 100 Days?",
+"kind": "R \u00b7 Data visualization",
+"year": "2026"
+},
+{
+"slug": "predictive-maintenance-rul",
+"title": "How Many Hours Does This Bearing Have Left?",
+"kind": "Python \u00b7 Signal processing and predictive ML",
+"year": "2026"
+},
+{
+"slug": "aether-airport-recovery",
+"title": "Which Plan Gets the Passengers Home?",
+"kind": "TypeScript \u00b7 multi-agent \u00b7 three.js",
+"year": "2026"
+},
+{
+"slug": "grocery-perishables-optimizer",
+"title": "When Should the Strawberries Go on Sale?",
+"kind": "Python \u00b7 censored regression \u00b7 dynamic programming",
+"year": "2026"
+},
+{
+"slug": "m5-sales-sql",
+"title": "Where Does Walmart's Revenue Actually Come From?",
+"kind": "SQL \u00b7 Retail sales",
+"year": "2026"
+},
+{
+"slug": "vitra-watch-atelier",
+"title": "What Does Each Complication Cost the Movement, Not Just the Price?",
+"kind": "Blender \u00b7 three.js \u00b7 product configurator",
+"year": "2026"
+},
+{
+"slug": "water-leak-intelligence",
+"title": "Is It a Leak, a Bad Sensor, or Just a Busy Night?",
+"kind": "Python \u00b7 Anomaly detection \u00b7 Water networks",
+"year": "2026"
+}
+]
