@@ -3,3 +3,10 @@ __pycache__/
 motion/.sheets/
 .impeccable/
 .taste-skill/inspect/
+
+# ATELIER X security review 2026-11-03: never track secrets, local env or dependency trees
+.env
+.env.*
+*.pem
+*.key
+node_modules/
