@@ -23,7 +23,7 @@
 .corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
 .frame { position: relative; }
 .hero { padding-top: 4vh; }
-.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w60); margin-bottom: 7vh; }
 .hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
 .hero .crumb .n { color: var(--white); }
 .hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
@@ -47,24 +47,25 @@ a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
 .prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
 .prose em { color: var(--white); font-style: italic; }
 .prose table { margin: 20px 0; }
+.prose th { color: var(--w60); }
 pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
 .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
 .steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
 .steps li:first-child { border-top: 0; padding-top: 0; }
-.steps .k { color: var(--w40); padding-top: 6px; }
+.steps .k { color: var(--w60); padding-top: 6px; }
 .steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
 .note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
-.note .mono { color: var(--w40); }
+.note .mono { color: var(--w60); }
 .note p { margin: 0; color: var(--w60); max-width: 68ch; }
 .next { margin-top: 20vh; }
 .next a { display: block; text-decoration: none; }
-.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w60); margin-bottom: 26px; }
 .next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
 .next a:hover .h2 { letter-spacing: -.045em; }
 .next .screen { transition: transform var(--t-slow) var(--ease-out); }
 .next a:hover .screen { transform: scale(.985); }
-.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
-.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w60); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w60); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
 .readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
 .readhud.on { opacity: 1; }
 @media (max-width: 900px) {
@@ -111,19 +112,19 @@ pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070
   <div class="stack" aria-label="Tools"><span class="brk">SAS 9.4</span><span class="brk">SAS Enterprise Guide</span><span class="brk">CDISC ADaM</span><span class="brk">PROC GLM (ANCOVA)</span><span class="brk">PROC LIFETEST</span><span class="brk">PROC PHREG</span><span class="brk">PROC SQL</span><span class="brk">Python (check)</span></div>
 </section>
 <div class="chapters wrap">
-<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>A drug has to do two things: work, and be something patients can stay on. This trial tested a xanomeline skin patch for mild-to-moderate Alzheimer's disease against placebo, at two doses, for 24 weeks.</p><p><em>Did memory and thinking decline less on the patch? How many patients finished? And what made the others stop?</em></p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>One SAS program, run in <b>SAS Enterprise Guide (SAS 9.4M9)</b> on USF's virtual desktop, over the five public ADaM datasets of study CDISCPILOT01. ADaM is the CDISC standard for analysis data in drug submissions.</p><ul><li><b>Demographics and disposition:</b> PROC MEANS, PROC FREQ, and Fisher's exact test.</li><li><b>Primary endpoint:</b> ADAS-Cog(11) change at week 24 (last observation carried forward), with a PROC GLM ANCOVA, a dose-response test, and LS means.</li><li><b>Safety:</b> time to the first skin reaction (PROC LIFETEST, PROC PHREG), adverse events (PROC SQL), and a glucose ANCOVA.</li><li><b>The log is the evidence:</b> 0 errors, 0 warnings, and 233 <code>CSV|</code> result lines. <code>check.py</code> recomputes all 399 numbers in Python and compares them with the R Consortium's FDA submission pilot for the same study.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Read the ADaM datasets straight from the source</h3><div class="prose"><p>PhUSE publishes the pilot's ADaM data as SAS transport files. The program downloads each one with <code>PROC HTTP</code> from a pinned commit, and reads it through an <code>XPORT</code> library. The first run failed: SAS filerefs and librefs can be at most 8 characters, and <code>f_adqsadas</code> has 10. The fix reuses one short name per file.</p></div><pre><code>%macro get(ds);          /* filerefs and librefs are 8 characters at most */
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>A drug has to do two things: work, and be something patients can stay on. This trial tested a xanomeline skin patch for mild-to-moderate Alzheimer's disease against placebo, at two doses, for 24 weeks.</p><p><em>Did memory and thinking decline less on the patch? How many patients finished? And what made the others stop?</em></p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>One SAS program, run in <b>SAS Enterprise Guide (SAS 9.4M9)</b> on USF's virtual desktop, over the five public ADaM datasets of study CDISCPILOT01. ADaM is the CDISC standard for analysis data in drug submissions.</p><ul><li><b>Demographics and disposition:</b> PROC MEANS, PROC FREQ, and Fisher's exact test.</li><li><b>Primary endpoint:</b> ADAS-Cog(11) change at week 24 (last observation carried forward), with a PROC GLM ANCOVA, a dose-response test, and LS means.</li><li><b>Safety:</b> time to the first skin reaction (PROC LIFETEST, PROC PHREG), adverse events (PROC SQL), and a glucose ANCOVA.</li><li><b>The log is the evidence:</b> 0 errors, 0 warnings, and 233 <code>CSV|</code> result lines. <code>check.py</code> recomputes all 399 numbers in Python and compares them with the R Consortium's FDA submission pilot for the same study.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Read the ADaM datasets straight from the source</h3><div class="prose"><p>PhUSE publishes the pilot's ADaM data as SAS transport files. The program downloads each one with <code>PROC HTTP</code> from a pinned commit, and reads it through an <code>XPORT</code> library. The first run failed: SAS filerefs and librefs can be at most 8 characters, and <code>f_adqsadas</code> has 10. The fix reuses one short name per file.</p></div><pre tabindex="0"><code>%macro get(ds);          /* filerefs and librefs are 8 characters at most */
   filename f temp;
   proc http url=&quot;&amp;src/&amp;ds..xpt&quot; out=f; run;
   libname x xport &quot;%sysfunc(pathname(f))&quot;;
   data &amp;ds; set x.&amp;ds; run;
   libname x clear; filename f clear;
 %mend;
-%get(adsl) %get(adqsadas) %get(adtte) %get(adae) %get(adlbc)</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Who was in it, and who finished</h3><div class="prose"><p>Demographics come from the intent-to-treat population: age, height, weight, BMI, MMSE, age groups and race. Disposition is why each patient left the study. Fisher's exact test then asks whether stopping because of an adverse event depended on the arm.</p></div></div></li><li><span class="k mono">Step 03</span><div><h3>Did it work: the primary endpoint</h3><div class="prose"><p>ADAS-Cog(11) is a cognitive test score; higher means worse. The analysis is its change from baseline to week 24, with the last observation carried forward for patients who left early. The ANCOVA adjusts for site group and the baseline score. It runs twice: once with dose as a number (0, 54, 81 mg) for the dose-response test, and once with treatment as a factor for LS means and the three pairwise comparisons.</p></div><pre><code>proc glm data=adas;
+%get(adsl) %get(adqsadas) %get(adtte) %get(adae) %get(adlbc)</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Who was in it, and who finished</h3><div class="prose"><p>Demographics come from the intent-to-treat population: age, height, weight, BMI, MMSE, age groups and race. Disposition is why each patient left the study. Fisher's exact test then asks whether stopping because of an adverse event depended on the arm.</p></div></div></li><li><span class="k mono">Step 03</span><div><h3>Did it work: the primary endpoint</h3><div class="prose"><p>ADAS-Cog(11) is a cognitive test score; higher means worse. The analysis is its change from baseline to week 24, with the last observation carried forward for patients who left early. The ANCOVA adjusts for site group and the baseline score. It runs twice: once with dose as a number (0, 54, 81 mg) for the dose-response test, and once with treatment as a factor for LS means and the three pairwise comparisons.</p></div><pre tabindex="0"><code>proc glm data=adas;
   class trtpn sitegr1;
   model chg = trtpn sitegr1 base / clparm;
   lsmeans trtpn / stderr cl;
   estimate &#x27;High - Placebo&#x27; trtpn -1 0 1;
-run; quit;</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Was it safe: skin reactions over time</h3><div class="prose"><p>A skin patch can irritate the skin, so the key safety question is how soon a dermatologic event happens. <code>PROC LIFETEST</code> draws Kaplan-Meier curves with the numbers at risk every 20 days and runs a log-rank test. <code>PROC PHREG</code> gives hazard ratios against placebo. Patients without an event are censored at their last day on study.</p></div><pre><code>proc lifetest data=tte plots=survival(atrisk=0 to 200 by 20);
+run; quit;</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Was it safe: skin reactions over time</h3><div class="prose"><p>A skin patch can irritate the skin, so the key safety question is how soon a dermatologic event happens. <code>PROC LIFETEST</code> draws Kaplan-Meier curves with the numbers at risk every 20 days and runs a log-rank test. <code>PROC PHREG</code> gives hazard ratios against placebo. Patients without an event are censored at their last day on study.</p></div><pre tabindex="0"><code>proc lifetest data=tte plots=survival(atrisk=0 to 200 by 20);
   time aval * cnsr(1);
   strata trtan;
 run;
@@ -163,7 +164,7 @@ function upd() {
   pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
   let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
   chn.textContent = String(k).padStart(2, "0");
-  hud.classList.toggle("on", y > innerHeight * 0.4);
+  hud.classList.toggle("on", y > innerHeight * 0.4 && document.querySelector(".next").getBoundingClientRect().top > innerHeight * 0.7);
 }
 addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
 upd();

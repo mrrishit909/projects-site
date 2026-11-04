@@ -23,7 +23,7 @@
 .corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
 .frame { position: relative; }
 .hero { padding-top: 4vh; }
-.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w60); margin-bottom: 7vh; }
 .hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
 .hero .crumb .n { color: var(--white); }
 .hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
@@ -47,24 +47,25 @@ a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
 .prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
 .prose em { color: var(--white); font-style: italic; }
 .prose table { margin: 20px 0; }
+.prose th { color: var(--w60); }
 pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
 .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
 .steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
 .steps li:first-child { border-top: 0; padding-top: 0; }
-.steps .k { color: var(--w40); padding-top: 6px; }
+.steps .k { color: var(--w60); padding-top: 6px; }
 .steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
 .note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
-.note .mono { color: var(--w40); }
+.note .mono { color: var(--w60); }
 .note p { margin: 0; color: var(--w60); max-width: 68ch; }
 .next { margin-top: 20vh; }
 .next a { display: block; text-decoration: none; }
-.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w60); margin-bottom: 26px; }
 .next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
 .next a:hover .h2 { letter-spacing: -.045em; }
 .next .screen { transition: transform var(--t-slow) var(--ease-out); }
 .next a:hover .screen { transform: scale(.985); }
-.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
-.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w60); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w60); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
 .readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
 .readhud.on { opacity: 1; }
 @media (max-width: 900px) {
@@ -103,7 +104,7 @@ pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070
   <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">CRM · Data-model builder</span><span>Case <span class="n">212</span> / 236</span></p>
   <h1 class="h1 grad" id="title">Loom: build your own data model in the browser</h1>
   <p class="lead">Define your own data model in the browser and use it a second later.</p>
-  <div class="meta"><div class="hud-row"><span>Kind<b>CRM</b></span><span>Year<b>2026</b></span><span>Tools<b>10</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="https://mrrishit909.github.io/crm-showcases/nocobase/" target="_blank" rel="noopener" data-cursor="Open">[ View the showcase site ]</a><a class="brk" href="https://github.com/mrrishit909/crm-showcases" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="meta"><div class="hud-row"><span>Kind<b>CRM</b></span><span>Year<b>2026</b></span><span>Tools<b>10</b></span><span>Status<b>Has demo</b></span></div><div class="links"><a class="brk go" href="https://mrrishit909.github.io/crm-showcases/nocobase/" target="_blank" rel="noopener" data-cursor="Open">[ View the showcase site ]</a><a class="brk" href="https://github.com/mrrishit909/crm-showcases" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
   <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../nocobase-crm/cover.jpg" width="1162" height="720" aria-label="Loom: build your own data model in the browser: the project&#x27;s animated loop"><source src="../../../nocobase-crm/loop.webm" type="video/webm"><source src="../../../nocobase-crm/loop.mp4" type="video/mp4"></video>
     <div class="hud t"><span class="live">Running</span><span class="x">nocobase-crm/loop.webm</span></div>
     <div class="hud b"><span>[212]</span><span class="x">1162 x 720</span></div></div>
@@ -144,7 +145,7 @@ function upd() {
   pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
   let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
   chn.textContent = String(k).padStart(2, "0");
-  hud.classList.toggle("on", y > innerHeight * 0.4);
+  hud.classList.toggle("on", y > innerHeight * 0.4 && document.querySelector(".next").getBoundingClientRect().top > innerHeight * 0.7);
 }
 addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
 upd();

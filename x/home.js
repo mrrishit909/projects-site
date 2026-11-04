@@ -238,7 +238,7 @@ function loop() {
   $(".scrollcue").style.opacity = introK >= 1 ? 1 - smooth(0.01, 0.05, p) : 0;
   $(".foot").style.opacity = smooth(0.05, 0.1, p) * (1 - smooth(0.9, 0.93, p));
   $(".index").style.opacity = smooth(0.32, 0.36, p) * (1 - smooth(0.87, 0.9, p));
-  const c = $(".counter"); c.style.opacity = smooth(0.21, 0.23, p) * (1 - smooth(0.3, 0.32, p)); $("#cnt").textContent = String(Math.round(smooth(0.2, 0.32, p) * 219)).padStart(3, "0");
+  const c = $(".counter"); c.style.opacity = smooth(0.21, 0.23, p) * (1 - smooth(0.3, 0.32, p)); $("#cnt").textContent = String(Math.round(smooth(0.2, 0.32, p) * 236)).padStart(3, "0");
   lines.forEach((el) => { const a = +el.dataset.from, b = +el.dataset.to, o = smooth(a, a + 0.025, p) * (1 - smooth(b - 0.025, b, p)); el.style.opacity = o.toFixed(3); el.style.visibility = o > 0.01 ? "visible" : "hidden"; el.style.transform = `translate(-50%, calc(-50% + ${((1 - smooth(a, a + 0.035, p)) * 18).toFixed(1)}px))`; if (el.classList.contains("cta")) el.style.pointerEvents = o > 0.5 ? "auto" : "none"; });
   const m = p < 0.19 ? 0 : p < 0.33 ? 1 : p < 0.46 ? 2 : p < 0.6 ? 3 : p < 0.74 ? 4 : p < 0.9 ? 5 : 6;
   idx.forEach((s, k) => s.classList.toggle("on", k === m - 2));

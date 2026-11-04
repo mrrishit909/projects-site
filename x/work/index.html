@@ -23,20 +23,20 @@
 .bar { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px; align-items: center; }
 .search { position: relative; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--w20); transition: border-color var(--t-med); }
 .search:focus-within { border-color: var(--blue-hi); }
-.search label { color: var(--w40); white-space: nowrap; }
+.search label { color: var(--w60); white-space: nowrap; }
 .search input { flex: 1; min-width: 0; background: none; border: 0; color: var(--white); font: 300 clamp(1.2rem, 1rem + .8vw, 1.7rem)/1 var(--sans); padding: 14px 0; outline: none; }
-.search input::placeholder { color: var(--w20); }
+.search input::placeholder { color: var(--w40); }
 .search input::-webkit-search-cancel-button { display: none; }
 .views { display: flex; border: 1px solid var(--w20); }
-.views button { background: none; border: 0; color: var(--w40); font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; padding: 10px 14px; cursor: pointer; }
+.views button { background: none; border: 0; color: var(--w60); font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; padding: 10px 14px; cursor: pointer; }
 .views button[aria-pressed="true"] { background: var(--white); color: #000; }
 .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
 .chips button { background: none; border: 1px solid var(--w20); color: var(--w60); font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; padding: 8px 10px; cursor: pointer; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
-.chips button sup { color: var(--w40); margin-left: 6px; font-size: 9px; vertical-align: 0; }
+.chips button sup { color: var(--w60); margin-left: 6px; font-size: 9px; vertical-align: 0; }
 .chips button:hover { border-color: var(--w60); color: var(--white); }
 .chips button[aria-pressed="true"] { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.16); }
 .chips button[aria-pressed="true"] sup { color: var(--blue-hi); }
-.status { display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; color: var(--w40); }
+.status { display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; color: var(--w60); }
 .status b { color: var(--white); font-weight: 400; }
 .nojs .tools-js { display: none; }
 #items { list-style: none; margin: 34px 0 0; padding: 0; }
@@ -49,7 +49,7 @@
 .list a:hover, .list a:focus-visible { background: rgba(47,143,230,.08); padding-left: 10px; outline: none; }
 .list .t { font-size: 1.2rem; font-weight: 300; letter-spacing: -.01em; }
 .list a:hover .t { color: var(--white); }
-.list .n, .list .k, .list .y { font: 400 var(--fs-hud)/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--w40); }
+.list .n, .list .k, .list .y { font: 400 var(--fs-hud)/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--w60); }
 .list .y { text-align: right; font-variant-numeric: tabular-nums; }
 .list .screen, .list .badge { display: none; }
 .list .n { grid-column: 1; grid-row: 1; } .list .t { grid-column: 2; grid-row: 1; } .list .k { grid-column: 3; grid-row: 1; } .list .y { grid-column: 4; grid-row: 1; }
@@ -73,10 +73,10 @@
 .screens .n { font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .12em; color: var(--blue-hi); }
 .screens .t { font-size: 1.05rem; line-height: 1.25; font-weight: 300; letter-spacing: -.01em; }
 .screens li.big .t { font-size: clamp(1.15rem, .9rem + .7vw, 1.6rem); }
-.screens .y { font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .12em; color: var(--w40); }
-.screens .k { grid-column: 2 / -1; font: 400 var(--fs-hud)/1.5 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--w40); }
+.screens .y { font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .12em; color: var(--w60); }
+.screens .k { grid-column: 2 / -1; font: 400 var(--fs-hud)/1.5 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--w60); }
 .empty { padding: 14vh 0 10vh; text-align: center; }
-.empty .mono { color: var(--w40); display: block; margin-bottom: 22px; }
+.empty .mono { color: var(--w60); display: block; margin-bottom: 22px; }
 .empty .h2 { max-width: 18ch; margin: 0 auto 32px; text-wrap: balance; }
 @media (max-width: 1100px) { .screens { grid-template-columns: repeat(2, minmax(0, 1fr)); } .screens li.big { grid-row: auto; } .screens li.big a { height: auto; grid-template-rows: none; } .screens li.big .screen { aspect-ratio: 1.614; height: auto; } }
 @media (max-width: 760px) {
@@ -105,7 +105,7 @@
 <section class="head" aria-labelledby="work-title">
   <h1 class="h1 grad" id="work-title">Work<sup><span id="count">236</span></sup></h1>
   <p class="lead">Every project, each one running its own loop. Search it, filter it, open the case study.</p>
-  <div class="hud-row"><span>Projects<b>236</b></span><span>Live demos<b>154</b></span><span>Loops<b>227</b></span><span>Tools<b>839</b></span><span>Showing<b id="shown">236</b></span></div>
+  <div class="hud-row"><span>Projects<b>236</b></span><span>Demo links<b>154</b></span><span>Loops<b>227</b></span><span>Tools<b>839</b></span><span>Showing<b id="shown">236</b></span></div>
 </section>
 <div class="tools nojs">
   <div class="tools-js">
