@@ -24,8 +24,8 @@
  },
  "profile": "full",
  "pytest": "35 passed",
- "run_id": 41814760166,
- "sha": "4f852dbadb33c1cdb2aceee25568e91c7d113508",
+ "run_id": 41935807245,
+ "sha": "67e4dc561549bdf26587448f9cbc7757c96acec2",
  "slug": "seatsignal",
  "source": "runner log lines 'manifest:', 'manifest-sql:', 'manifest-api:' and the pytest summary",
  "workflow": "verify-project"

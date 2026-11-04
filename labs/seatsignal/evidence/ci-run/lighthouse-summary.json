@@ -8,7 +8,7 @@
     "accessibility": 100,
     "best_practices": 96,
     "seo": 100,
-    "lcp_ms": 355,
+    "lcp_ms": 350,
     "cls": 0.036,
     "tbt_ms": 0,
     "settings": {
@@ -42,9 +42,9 @@
     "accessibility": 100,
     "best_practices": 96,
     "seo": 100,
-    "lcp_ms": 1442,
+    "lcp_ms": 1425,
     "cls": 0.0583,
-    "tbt_ms": 15,
+    "tbt_ms": 7,
     "settings": {
       "formFactor": "mobile",
       "throttlingMethod": "simulate",
@@ -76,7 +76,7 @@
     "accessibility": 100,
     "best_practices": 96,
     "seo": 100,
-    "lcp_ms": 406,
+    "lcp_ms": 403,
     "cls": 0.036,
     "tbt_ms": 0,
     "settings": {
@@ -110,9 +110,9 @@
     "accessibility": 100,
     "best_practices": 96,
     "seo": 100,
-    "lcp_ms": 1759,
+    "lcp_ms": 1747,
     "cls": 0.0583,
-    "tbt_ms": 38,
+    "tbt_ms": 36,
     "settings": {
       "formFactor": "mobile",
       "throttlingMethod": "simulate",
