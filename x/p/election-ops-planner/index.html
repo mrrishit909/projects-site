@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Long Is the Line at the Polling Place?, Rishit Mathur</title>
+<meta name="description" content="Election-day operations for an invented county of 25 polling places, strictly operational: arrivals forecast from past turnout timing, every place&#x27;s line simulated, spares moved with a reserve kept, two check-in devices failing (projected wait 97 → 254 minutes), a dispatch that brings it to 58, and…">
+<meta property="og:type" content="website">
+<meta property="og:title" content="How Long Is the Line at the Polling Place?, Rishit Mathur">
+<meta property="og:description" content="Election-day operations for an invented county of 25 polling places, strictly operational: arrivals forecast from past turnout timing, every place&#x27;s line simulated, spares moved with a reserve kept, two check-in devices failing (projected wait 97 → 254 minutes), a dispatch that brings it to 58, and…">
+<meta property="og:image" content="../../../election-ops-planner/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Queue simulation · CP-SAT</span><span>Case <span class="n">137</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">How Long Is the Line at the Polling Place?</h1>
+  <p class="lead">Election-day operations for an invented county of 25 polling places, strictly operational: arrivals forecast from past turnout timing, every place&#x27;s line simulated, spares moved with a reserve kept, two check-in devices failing (projected wait 97 → 254 minutes), a dispatch that brings it to 58, and a public view that shows wait buckets and nothing else.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>08</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../election-ops-planner/demo/" data-cursor="Open">[ Run the six-step demo ]</a><a class="brk" href="https://github.com/mrrishit909/election-ops-planner" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../election-ops-planner/cover.jpg" width="1162" height="720" aria-label="How Long Is the Line at the Polling Place?: the project&#x27;s animated loop"><source src="../../../election-ops-planner/loop.webm" type="video/webm"><source src="../../../election-ops-planner/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">election-ops-planner/loop.webm</span></div>
+    <div class="hud b"><span>[137]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">FastAPI</span><span class="brk">PostgreSQL 16 (row-level security)</span><span class="brk">Discrete-event queue simulation</span><span class="brk">Monte Carlo arrival forecasts</span><span class="brk">OR-Tools CP-SAT</span><span class="brk">Docker Compose</span><span class="brk">11 tests</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>On election day an election office has a fixed number of check-in devices, booths and poll workers, a few spares at the depot, and a hundred thousand people who will arrive when they arrive: before work, at lunch, after work. Lines form where the equipment was allocated for an average day, a device fails somewhere at the worst moment, and the public wants to know how long the wait is without being told anything else. <em>Can software forecast the arrivals, show where the lines will form, move spares to where they help most, react to a failure, and publish only what the public should see, without ever touching how anyone votes?</em></p><p>Blueprint 14 of fifteen in a third build book, built as its demo scenario end to end.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A Python service on PostgreSQL with a background worker and a web page, started by one <code>docker compose up</code>.</p><ul><li><b>Forecasts</b> of each place's arrivals by hour from three past elections' turnout and timing, with a band.</li><li><b>A queue simulation</b>: check-in, booth and tabulator as three stations minute by minute, twenty simulated days per place, using the equipment actually in service.</li><li><b>A planner</b> (CP-SAT) that moves spares to bring the most places under a 30-minute standard, keeps a reserve, and assigns workers by skill.</li><li><b>Incidents, supplies and dispatch</b>, each audited, each reflected in the next simulation.</li><li><b>A public view</b> built from a field whitelist, behind a role that can read nothing else.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>A county with peaks</h3><div class="prose"><p>Twenty-five places, urban, suburban and rural, each with its own morning, lunch and evening peaks; sixty precincts and 126,823 registered voters; equipment allocated last time for an average day, generous at some places and short at others; three past elections of turnout rates and hourly timing. The demo starts at 10:30, with the morning peak already reported. Left alone, nine places go over 30 minutes and 2,731 people are still in line at close.</p></div><pre><code>pl[&quot;checkin_devices&quot;] = max(2, ceil(peak_hour / (60 / CHECKIN_MIN) * r.uniform(0.85, 1.3)))</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>A line is three queues</h3><div class="prose"><p>A voter waits for a check-in device, then for a booth, then feeds the tabulator; the wait that matters is from arriving to entering a booth. The simulation runs that minute by minute, twenty times for the rest of the day: hours already reported keep their counts, later hours draw from the forecast, and the equipment is whatever is in service in the database now, so a failure or a dispatch shows up in the next run. The standard is the worst hour's 90th-percentile wait under 30 minutes.</p></div><pre><code>while booth_wait and booth_wait[0][0] &lt;= t and len(booth_busy) &lt; booths:
+    _, t0, h0 = booth_wait.pop(0)
+    joined_wait[h0].append(t - t0)</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Spares to where they help, with a reserve</h3><div class="prose"><p>For each place, the fewest devices and booths that meet the standard, found by adding to whichever station is binding until the simulation agrees. CP-SAT then moves the depot's spares (never taking equipment from a place) to bring as many places to standard as possible, then to reduce the voter-weighted shortfall, while three devices, four booths and six workers stay at the depot. By its own simulation the plan takes places meeting the standard from 6 to 16; on the evaluation's real days it moves one place per county under the standard and cuts the people in line at close by 11-35%. The page reports the second number.</p></div><pre><code>mdl.Minimize(10_000 * sum(flag.values()) + sum(weights[i] * (3 * short_d[i] + short_b[i]) for i in needs))</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Two devices down, three sent</h3><div class="prose"><p>At 10:30 a poll worker reports two check-in devices down at Cedar Elementary. They come out of service, the place is marked disrupted, and its projected worst-hour wait goes from 97 to 254 minutes with 579 still in line at close. Three devices and two workers go out from the reserve, 35 minutes away; the rerun says 58 minutes, better than before the failure and still over the standard, because this place was short of booths too and the planner had left it short. Across three other counties the projection made at 10:30 had the failure's size right, with its high case covering the real outcome every time.</p></div><pre><code>c.execute(&quot;UPDATE equipment SET status = &#x27;failed&#x27; WHERE id = %s&quot;, [r[&quot;id&quot;]])</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>What the public sees, and what nothing sees</h3><div class="prose"><p>The public view is name, hours, accessibility, status and a wait bucket, built from a whitelist; the public role has one permission and one endpoint, and a test checks its response for operational words. Below that, nothing in the schema or the code knows who anyone is or how they vote: there is no voter table, incident types are fixed and operational, and the only thing counted is people in a line.</p></div><pre><code>PUBLIC_FIELDS = (&quot;name&quot;, &quot;accessible&quot;, &quot;status&quot;, &quot;open&quot;, &quot;close&quot;, &quot;wait_bucket&quot;, &quot;last_updated&quot;)</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The demo.</b> Two check-in devices fail at the county's worst place, and the projected wait for the rest of the day:</p><img loading="lazy" decoding="async" src="../../../election-ops-planner/shots/failure.jpg" alt="Incident card: Cedar Elementary #21 disrupted, devices CH-017-20000 and CH-017-20001 out of service, 5 left; projected wait: worst-hour 90th-percentile wait 97 minutes before, 254 after (up to 339), in line at 20:00 from 9 to 579; a chart from 10:00 to 19:00 of the wait before and after the failure against the 30-minute standard."><p>After the dispatch from the reserve:</p><img loading="lazy" decoding="async" src="../../../election-ops-planner/shots/dispatch.jpg" alt="Dispatch card: three check-in devices and two workers, ETA 11:05, eight devices in service, incident resolved, depot left with no devices and four booths; after the dispatch: 97 minutes before the failure, 254 after, 58 after the dispatch, 6 in line at 20:00, still over 30; a chart with the three curves."><p><b>On three other simulated counties:</b></p><table><tr><th></th><th class="num">System</th><th class="num">Baseline</th></tr><tr><td>Place total voters, error</td><td class="num">7-9%</td><td class="num">9-10% last election's rate</td></tr><tr><td>Hourly arrivals, error</td><td class="num">59-62</td><td class="num">70-73 even pace, true total</td></tr><tr><td>Places really over 30 min, found beforehand</td><td class="num">8-11 of 12-14</td><td class="num">-</td></tr><tr><td>Places really over 30 min after the plan</td><td class="num">one fewer</td><td class="num">the plan's own view: 8-9 fewer</td></tr><tr><td>In line at close after the plan</td><td class="num">11-35% fewer</td><td class="num">-</td></tr></table><p>The forecast's gain is in the timing, not the total. The plan's own simulation is much rosier than the real day, and the page reports the real day. The failure projection gets the size of the problem right, which is what the dispatch needs.</p><p><b>Honest limits.</b> The queue model shares its service rates with the generator; real lines have provisional ballots, language assistance and people who leave. Dispatch times are stated, not routed.</p><p><b>Checks.</b> 11 tests, including: a place with spare capacity has no line and one with failed devices has a longer one, the forecast's total is within 12% and its band holds, the planner never exceeds the depot or takes equipment from a place and never assigns a worker twice, an accessible place always gets an accessibility-trained worker, a dispatch beyond the depot is refused, the public response carries only its fields, and one county cannot see another's operations.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Plan on the forecast's high case and measure what it costs in spares against what it catches.</li><li>A second objective, worst place first, shown beside the current one so the office can choose.</li><li>Live queue reports from a phone at every place, feeding the same simulation.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Built from a written blueprint as one vertical slice. <b>Strictly operational, and simulated</b>: the system counts people arriving and waiting and holds no voter identities, preferences or anything about how anyone votes. The county, its places, precincts, equipment, poll workers and arrivals come from a generator in the repository, which is what lets every forecast and plan be checked against the day. No language model is used. Not built: a road network, live reporting from every place, provisional ballots or language assistance in the queue model, shift scheduling, Kafka, Terraform, single sign-on.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../renewable-grid-twin/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 138 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">What Does It Cost to Keep the Lines Within Their Limits?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../renewable-grid-twin/cover.jpg" width="1162" height="720" aria-label="What Does It Cost to Keep the Lines Within Their Limits?: the project&#x27;s animated loop"><source src="../../../renewable-grid-twin/loop.webm" type="video/webm"><source src="../../../renewable-grid-twin/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · DC power flow · MILP</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>137</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

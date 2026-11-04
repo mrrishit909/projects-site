@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Do Customer Votes Decide What Gets Built?, Rishit Mathur</title>
+<meta name="description" content="Every customer suggestion Atlassian has received for five cloud products (70,257, from its public Jira), analysed for whether voting works, and written up as a Confluence page with a live Jira macro.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Do Customer Votes Decide What Gets Built?, Rishit Mathur">
+<meta property="og:description" content="Every customer suggestion Atlassian has received for five cloud products (70,257, from its public Jira), analysed for whether voting works, and written up as a Confluence page with a live Jira macro.">
+<meta property="og:image" content="../../../jira-feature-votes/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Jira · Confluence · Product analytics</span><span>Case <span class="n">045</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Do Customer Votes Decide What Gets Built?</h1>
+  <p class="lead">Every customer suggestion Atlassian has received for five cloud products (70,257, from its public Jira), analysed for whether voting works, and written up as a Confluence page with a live Jira macro.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Jira</b></span><span>Year<b>2026</b></span><span>Tools<b>07</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../jira-feature-votes/confluence/" data-cursor="Open">[ Confluence page preview ]</a><a class="brk" href="https://github.com/mrrishit909/jira-feature-votes" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../jira-feature-votes/cover.jpg" width="1162" height="720" aria-label="Do Customer Votes Decide What Gets Built?: the project&#x27;s animated loop"><source src="../../../jira-feature-votes/loop.webm" type="video/webm"><source src="../../../jira-feature-votes/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">jira-feature-votes/loop.webm</span></div>
+    <div class="hud b"><span>[045]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Jira REST API</span><span class="brk">JQL</span><span class="brk">Confluence storage format</span><span class="brk">Python</span><span class="brk">pandas</span><span class="brk">statsmodels</span><span class="brk">DuckDB</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Many software companies run a voting portal: customers file ideas, other customers vote, and the company says votes guide the roadmap. Atlassian runs its own in public, in Jira.</p><p><em>Do the most-voted ideas actually get built? How long do they wait? And what happens to the thousands of ideas almost nobody votes for?</em></p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A pipeline from Atlassian's public Jira (jira.atlassian.com) to a Confluence page:</p><ul><li><b>Download</b> 70,257 suggestions for Jira, Jira Software, Jira Service Management, Confluence and Bitbucket Cloud through the REST API with JQL, plus the server's own counts to check against.</li><li><b>Outcomes:</b> each Jira resolution becomes built, declined, closed for low interest, other or open.</li><li><b>Analysis</b> that compares suggestions that waited about as long before their decision, and a logistic model on top.</li><li><b>Confluence page</b> in storage format, with an info panel, tables, chart attachments and a live Jira issues macro, plus an HTML preview.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Download the whole backlog</h3><div class="prose"><p>JQL pages through every suggestion, 1,000 at a time, with a fixed creation cutoff so the set doesn't move while it downloads. Only product-feedback fields are kept; no names. Straight afterwards, the server is asked how many suggestions each product has with each resolution, and for its own top 20 by votes. Those answers are what the check compares against.</p></div><pre><code>project = JRACLOUD AND issuetype = Suggestion AND created &lt; &quot;2026-10-01&quot; ORDER BY key ASC</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Turn resolutions into outcomes</h3><div class="prose"><p>Jira has 21 different resolutions here. They fold into five groups: built (Fixed, Done, Deployed), declined (Won't Fix, Won't Do), closed for low interest (Timed out, Low Engagement), other (duplicates, answered questions, invalid) and open.</p><p>One trap: low-interest closures are closed <em>because</em> they have few votes. Comparing them with built suggestions would make votes look predictive by definition, so they're left out of every votes-versus-building comparison.</p></div></div></li><li><span class="k mono">Step 03</span><div><h3>Compare like with like</h3><div class="prose"><p>Votes pile up while a suggestion waits, so a raw comparison mixes up popular with old. Suggestions are therefore compared within bands of how long they waited for a decision, and a logistic model (built ~ log₂ votes + log wait + product + era) puts a number on the link. Without the wait the odds ratio is 1.63 per doubling of votes; with it, 2.11. The longest-waiting suggestions have plenty of votes but are mostly declined, and that hid part of the effect.</p></div></div></li><li><span class="k mono">Step 04</span><div><h3>Write it as a Confluence page</h3><div class="prose"><p>The report is generated in Confluence storage format, the XHTML that Confluence's REST API accepts as a page body. It has an info panel for the data note, tables, charts as attachments, and a Jira issues macro whose JQL lists the most-voted open suggestions live on every view. The preview linked above is the same page as plain HTML, with the macro's rows filled in from the download.</p></div><pre><code>&lt;ac:structured-macro ac:name=&quot;jira&quot;&gt;
+  &lt;ac:parameter ac:name=&quot;jqlQuery&quot;&gt;project in (JRACLOUD, ...) AND issuetype = Suggestion
+    AND resolution is EMPTY ORDER BY votes DESC&lt;/ac:parameter&gt;
+&lt;/ac:structured-macro&gt;</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Check against Jira itself</h3><div class="prose"><p><code>check.py</code> compares the local count for every product and resolution with the server's own count; all match exactly. The 20 most-voted suggestions per product match the server's own sort. DuckDB then recomputes the outcome table, build rates, the wait bands, vote concentration and the top open list straight from the raw JSON: 316 checks.</p><p>One bug was caught on the way. DuckDB read the timestamps without a time zone, so daylight-saving shifts moved some waits across a band boundary; fixed by running in UTC.</p></div></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>Votes are concentrated.</b> The top 1% of suggestions hold 43% of all 961,121 votes, the top 10% hold 87%, and 40% of suggestions have no votes at all.</p><img loading="lazy" decoding="async" src="../../../jira-feature-votes/charts/03_concentration.png" alt="Curve of the cumulative share of votes against the share of suggestions, most voted first: the top 1% hold 43% of votes and the top 10% hold 87%"><p><b>Votes go with building, even at the same wait.</b> Among suggestions decided after one to three years:</p><table><tr><th>Votes</th><th class="num">Built</th><th class="num">Decided</th></tr><tr><td>0</td><td class="num">10%</td><td class="num">6,676</td></tr><tr><td>1-9</td><td class="num">13%</td><td class="num">5,735</td></tr><tr><td>10-49</td><td class="num">84%</td><td class="num">420</td></tr><tr><td>50-199</td><td class="num">97%</td><td class="num">173</td></tr></table><p>Each doubling of votes goes with 2.11 times the odds of being built (95% CI 2.06-2.16), allowing for the wait, product and era.</p><img loading="lazy" decoding="async" src="../../../jira-feature-votes/charts/01_build_rate.png" alt="Line chart of the share of decided suggestions that were built by vote band, for suggestions decided after 1-3, 3-6 and 6+ years: about 10% with 0-9 votes, 55-84% with 10-49, 75-97% with 50-199 and higher above"><p><b>Popular ideas are rarely declined, but they wait.</b> Of the 200 most-voted suggestions, 89 were built, 2 declined and 102 are still open. The 100 most-voted open ones have a median of 889 votes and have been open a median of 10.7 years. The top one, "Default values of system fields" (2,799 votes), was filed 22 years ago.</p><img loading="lazy" decoding="async" src="../../../jira-feature-votes/charts/04_top_open.png" alt="Bars of the ten most-voted open Jira suggestions, from 2,799 votes (open 22 years) to 1,739"><p><b>The backlog is mostly waiting for interest.</b> 96% of the 16,178 open suggestions sit in Gathering Interest. Those closed for low engagement had a median of 3 votes. And zero votes isn't zero demand: 4,144 suggestions were built with no votes, half within 60 days of being filed.</p><img loading="lazy" decoding="async" src="../../../jira-feature-votes/charts/02_outcomes.png" alt="Stacked bars of outcomes by product: Jira 8% built, 42% declined, 17% closed for low interest, 20% open; Jira Service Management 51% open"></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Record vote counts weekly, to see whether votes come before a decision or after an announcement.</li><li>Run the same analysis on another public portal, such as Microsoft's or a GitHub project's issue reactions.</li><li>Publish the page to a real Confluence space through the REST API, with the charts uploaded as attachments.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Votes are today's counts (Jira keeps no history of votes), and the link between votes and building is an association: a feature already planned can also attract votes. One vendor's public backlog.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../nobel-prizes/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 046 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Who Wins the Nobel Prize?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../nobel-prizes/cover.jpg" width="1162" height="720" aria-label="Who Wins the Nobel Prize?: the project&#x27;s animated loop"><source src="../../../nobel-prizes/loop.webm" type="video/webm"><source src="../../../nobel-prizes/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Exploratory analysis</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>045</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

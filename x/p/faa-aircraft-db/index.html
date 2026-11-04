@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FAA Aircraft Registry Database, Rishit Mathur</title>
+<meta name="description" content="All 317,166 US-registered aircraft in PostgreSQL, built like a database administrator would: a constraint-checked schema, a load that logs every change, indexes timed before and after, least-privilege roles, and a backup that is actually restored.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FAA Aircraft Registry Database, Rishit Mathur">
+<meta property="og:description" content="All 317,166 US-registered aircraft in PostgreSQL, built like a database administrator would: a constraint-checked schema, a load that logs every change, indexes timed before and after, least-privilege roles, and a backup that is actually restored.">
+<meta property="og:image" content="../../../faa-aircraft-db/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">SQL · Database management</span><span>Case <span class="n">027</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">FAA Aircraft Registry Database</h1>
+  <p class="lead">All 317,166 US-registered aircraft in PostgreSQL, built like a database administrator would: a constraint-checked schema, a load that logs every change, indexes timed before and after, least-privilege roles, and a backup that is actually restored.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>SQL</b></span><span>Year<b>2026</b></span><span>Tools<b>07</b></span><span>Status<b>Code only</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/faa-aircraft-db" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../faa-aircraft-db/cover.jpg" width="1162" height="720" aria-label="FAA Aircraft Registry Database: the project&#x27;s animated loop"><source src="../../../faa-aircraft-db/loop.webm" type="video/webm"><source src="../../../faa-aircraft-db/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">faa-aircraft-db/loop.webm</span></div>
+    <div class="hud b"><span>[027]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">PostgreSQL 18</span><span class="brk">SQL</span><span class="brk">Constraints &amp; keys</span><span class="brk">Indexing (B-tree, partial, GIN)</span><span class="brk">EXPLAIN ANALYZE</span><span class="brk">Roles &amp; privileges</span><span class="brk">pg_dump</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>The FAA publishes its whole aircraft registry every day as fixed-width text files: every N-number, model, engine, owner type, status and expiration date. Airports, insurers, aviation analysts and plane-spotting apps all build databases from it. <em>How do you turn those files into a database that rejects bad data, answers questions fast, shows only what each user should see, and can be restored after a failure?</em></p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A PostgreSQL 18 database of the FAA Releasable Aircraft Database (30 September 2026):</p><ul><li><b>A normalised schema</b> whose lookup tables come straight from the FAA's data dictionary.</li><li><b>A staged load</b> that logs every value it had to change.</li><li><b>Six real questions</b> timed with <code>EXPLAIN ANALYZE</code> before and after indexing.</li><li><b>Views, a materialized summary and analyst/loader roles.</b></li><li><b>A backup</b> restored into a fresh database and compared row for row.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Read the files, leave personal data behind</h3><div class="prose"><p>The registry ships as space-padded, comma-separated text. <code>prepare.py</code> trims it and drops every name, street address, ZIP and county code before anything reaches the database; only city, state and country stay. One of 383,530 deregistration rows had a comma typed inside a name, which split a fixed-width field in two. Because every field has a fixed width, the reader repairs it by merging the two pieces whose widths add up to the field's width.</p></div><pre><code>i = next(i for i in range(len(r) - 1) if len(r[i]) != widths[i] and len(r[i]) + 1 + len(r[i + 1]) == widths[i])</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Design a schema that rejects bad data</h3><div class="prose"><p>Seven lookup tables hold the FAA data dictionary's codes, so foreign keys reject any code the FAA never defined. CHECK constraints enforce the N-number format (no letters I or O), 6-hex-digit transponder codes, years built from 1903, and expiration on or after issue. N-numbers are reused over the decades (82,373 repeats in the history file), so the deregistration table gets its own surrogate key.</p><p>One constraint caught my own mistake. I'd capped engines per model at 20, and the load failed on the Velocitor X-1, an eVTOL design with 80 electric motors. The rule was wrong, not the data.</p><img loading="lazy" decoding="async" src="../../../faa-aircraft-db/charts/01_er_diagram.jpg" alt="Entity-relationship diagram drawn from the database catalog: aircraft, aircraft_model, engine_model and deregistration tables linked by foreign keys to seven lookup tables"></div><pre><code>n_number            varchar(5) PRIMARY KEY CHECK (n_number ~ &#x27;^[1-9][0-9A-HJ-NP-Z]{0,4}$&#x27;),   -- no letters I or O</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Load through staging, and log every change</h3><div class="prose"><p>Raw text goes into a staging schema first. Typed rows then go into the real tables, and every value that has to change is written to a <code>load_issue</code> table first. A safe date-cast function turns a bad date into NULL instead of aborting the whole load. All rows load in about 15 seconds.</p><table><tr><th>Logged issue</th><th class="num">Rows</th></tr><tr><td>Old status codes B/C</td><td class="num">1,484</td></tr><tr><td>Year built "0000"</td><td class="num">150</td></tr><tr><td>History year invalid</td><td class="num">146</td></tr><tr><td>Unknown model code</td><td class="num">42</td></tr><tr><td>Unknown airworthiness class</td><td class="num">7</td></tr><tr><td>Type differs from model</td><td class="num">4</td></tr><tr><td>Engine type blank</td><td class="num">1</td></tr></table><p>A gotcha: <code>COPY</code> reads an empty CSV field as NULL, so tests like <code>x = ''</code> silently match nothing.</p></div><pre><code>EXCEPTION WHEN others THEN RETURN NULL;</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Index for real questions, and measure</h3><div class="prose"><p>Each question is timed in milliseconds with <code>EXPLAIN ANALYZE</code> (median of 5 runs) before and after the indexes. PostgreSQL indexes primary keys and UNIQUE columns automatically, so the transponder lookup was already fast. It does not index foreign-key columns. The Cessna 172 join gains least because it returns tens of thousands of rows: indexes help selective questions, not big result sets.</p><table><tr><th>Question</th><th class="num">Before</th><th class="num">After</th></tr><tr><td>Expiring in 90 days</td><td class="num">12.37</td><td class="num"><b>0.03</b></td></tr><tr><td>Aircraft in Tampa</td><td class="num">9.69</td><td class="num"><b>0.50</b></td></tr><tr><td>Name contains 172</td><td class="num">12.89</td><td class="num"><b>0.08</b></td></tr><tr><td>All Cessna 172s</td><td class="num">13.79</td><td class="num">8.00</td></tr><tr><td>N-number history</td><td class="num">7.34</td><td class="num"><b>0.02</b></td></tr></table><img loading="lazy" decoding="async" src="../../../faa-aircraft-db/charts/02_performance.jpg" alt="Bar chart on a log scale comparing query times before and after indexes for six questions; most drop from about 10 ms to under 1 ms, the Cessna 172 join drops from 14 to 8 ms"></div><pre><code>CREATE INDEX aircraft_expiring_idx     ON faa.aircraft (expiration_date) WHERE status_code = &#x27;V&#x27;;     -- partial: valid registrations only</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Grant least privilege, and prove the backup</h3><div class="prose"><p>An analyst role reads tables and views. A loader role writes. <code>PUBLIC</code> gets nothing, and the raw staging data stays with the owner. <code>check.py</code> switches to the analyst role, confirms reads work and that a DELETE is refused, and tries five bad inserts that must each be rejected by the right constraint, all inside rolled-back transactions. A <code>pg_dump</code> backup (21 MB) is restored into a fresh database, and row counts plus an MD5 checksum of every aircraft row match.</p></div><pre><code>rejected(&quot;DELETE FROM faa.aircraft WHERE n_number = &#x27;100&#x27;&quot;, &quot;permission denied&quot;, role=&quot;registry_analyst&quot;)</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p>What the registry says, from the views:</p><ul><li><b>An old fleet:</b> the median single-engine airplane was built in 1976, and most piston singles date from the 1960s and 1970s.</li><li><b>Drones have arrived:</b> Zipline's P2 Zip delivery drone (3,355) and DJI's Agras T40 crop sprayer (1,841) are among the 15 most-registered models, and 17,734 aircraft are electric.</li><li><b>Exports</b> since 2016 go mostly to Brazil (2,302) and Canada (2,266).</li><li><b>Deregistrations</b> spiked in 2013 (35,293) and 2018 (19,482).</li></ul><img loading="lazy" decoding="async" src="../../../faa-aircraft-db/charts/05_top_models.jpg" alt="Bar chart of the 15 most-registered aircraft models, led by the Piper PA-28-140 and Cirrus SR22, with the Zipline P2 Zip and DJI Agras T40 drones highlighted"><img loading="lazy" decoding="async" src="../../../faa-aircraft-db/charts/03_fleet_age.jpg" alt="Bar chart of single-engine piston airplanes by decade built, peaking in the 1960s and 1970s"><img loading="lazy" decoding="async" src="../../../faa-aircraft-db/charts/04_deregistrations.jpg" alt="Stacked bar chart of deregistrations by year 2006-2025, split into exports and other cancellations, with peaks in 2013 and 2018"></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>A daily incremental load that keeps history with valid-from and valid-to dates.</li><li>Join live ADS-B traffic to the registry by transponder code.</li><li>Row-level security, so a regional analyst sees only their region.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Registrant names, street addresses and ZIP codes are never loaded, and only aggregates are published. A check fails if a personal-data column appears in the database.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../parking-tickets-db/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 028 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">15 Million Parking Tickets in PostgreSQL</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../parking-tickets-db/cover.jpg" width="1162" height="720" aria-label="15 Million Parking Tickets in PostgreSQL: the project&#x27;s animated loop"><source src="../../../parking-tickets-db/loop.webm" type="video/webm"><source src="../../../parking-tickets-db/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>SQL · Database management</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>027</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

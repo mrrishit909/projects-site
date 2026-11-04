@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Predicts a Car Insurance Claim?, Rishit Mathur</title>
+<meta name="description" content="On 678,013 real French policies, out of fold, vehicle age and bonus-malus carry most of what predicts a claim (40% and 35% of the model&#x27;s gain), the riskiest tenth of exposure claims 2.7 times the average, and a logistic model that ignores how long a policy was in force cannot see that claims rise…">
+<meta property="og:type" content="website">
+<meta property="og:title" content="What Predicts a Car Insurance Claim?, Rishit Mathur">
+<meta property="og:description" content="On 678,013 real French policies, out of fold, vehicle age and bonus-malus carry most of what predicts a claim (40% and 35% of the model&#x27;s gain), the riskiest tenth of exposure claims 2.7 times the average, and a logistic model that ignores how long a policy was in force cannot see that claims rise…">
+<meta property="og:image" content="../../../car-insurance-claims/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Regression</span><span>Case <span class="n">069</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">What Predicts a Car Insurance Claim?</h1>
+  <p class="lead">On 678,013 real French policies, out of fold, vehicle age and bonus-malus carry most of what predicts a claim (40% and 35% of the model&#x27;s gain), the riskiest tenth of exposure claims 2.7 times the average, and a logistic model that ignores how long a policy was in force cannot see that claims rise with it.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>08</b></span><span>Status<b>Code only</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/car-insurance-claims" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../car-insurance-claims/cover.jpg" width="1162" height="720" aria-label="What Predicts a Car Insurance Claim?: the project&#x27;s animated loop"><source src="../../../car-insurance-claims/loop.webm" type="video/webm"><source src="../../../car-insurance-claims/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">car-insurance-claims/loop.webm</span></div>
+    <div class="hud b"><span>[069]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">pandas</span><span class="brk">Poisson regression</span><span class="brk">Logistic regression</span><span class="brk">Cross-validation by profile</span><span class="brk">Score-equation check</span><span class="brk">OpenML freMTPL2freq (CC0)</span><span class="brk">Hand-written recompute</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>The usual first model of car insurance claims is a logistic regression of whether a customer claimed. <em>On real policies, many of them in force for only part of a year, what does that miss, and which features really matter?</em></p><p>The task follows DataCamp's "Modeling Car Insurance Claim Outcomes". The data is a real French motor third-party liability portfolio of 678,013 policies (OpenML, CC0), not a course file.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>Two models of the same policies, tested on policies they have not seen:</p><ul><li><b>The audit:</b> counts, blanks, caps on claims and exposure, and how many policies share every risk feature.</li><li><b>The models:</b> a Poisson model with exposure as an offset, and the naive logistic model of "any claim".</li><li><b>The tests:</b> deviance, Gini, lift, calibration and the importance of each variable, all out of fold.</li><li><b>Check:</b> <code>check.py</code> proves each of 60 fits solves its score equations and rebuilds the rest in plain Python: 657 numbers.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Download the policies</h3><div class="prose"><p>OpenML's <code>freMTPL2freq</code> (about 36 MB; licence CC0 as OpenML lists it), from the CASdatasets R package: one row per policy with its risk features, claim count and exposure. It is not committed; the script keeps the checksum and the count OpenML states.</p></div><pre><code>URL = &quot;https://openml.org/data/v1/download/20649148/freMTPL2freq.arff&quot;</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Audit and cap</h3><div class="prose"><p>No blanks or repeated ids. As in Noll, Salzmann and Wuthrich (2018), claim counts are capped at 4 and exposure at 1 year; vehicles and drivers of any age are kept; the covariate profiles are counted.</p></div><pre><code>claims = np.minimum(df[&quot;ClaimNb&quot;].to_numpy(), 4).astype(float); expo = np.minimum(df[&quot;Exposure&quot;].to_numpy(), 1.0)</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Fit with exposure as an offset</h3><div class="prose"><p>The claim count is Poisson with the log of the exposure as an offset, so the coefficients are relative claim frequencies per year; the naive model is a logistic regression of any claim, with no exposure. Both are fitted by iteratively reweighted least squares, and the score equations are asserted to hold.</p></div><pre><code>            mu = np.exp(eta); w = mu; z = eta - offset + (y - mu) / mu</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Score out of sample, by profile</h3><div class="prose"><p>Five folds made of covariate profiles, because 38% of the policies share their risk features with another (a split contract) and twins must not be split between training and test. Deviance, Gini, lift and calibration come from out-of-fold predictions only.</p></div><pre><code>fold = prof.map(lambda s: zlib.crc32(s.encode()) % 5).to_numpy()</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Prove the fits and recount the rest</h3><div class="prose"><p><code>check.py</code> rebuilds the 52 columns in plain Python and checks that every stored fit (60 of them) solves X'(y - mu) = 0 on the rows it was fitted to; the likelihoods are strictly concave, so that proves the maximum-likelihood fit. Then it rebuilds every prediction, deviance, Gini coefficient, calibration and standard error.</p></div><pre><code>assert m &lt; 5e-5, (s, k, &quot;score equations not met&quot;, m)</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The policies and the cleaning.</b> 678,013 policies with 358,499 years of exposure, 34,060 with a claim (5.0%), 36,102 claims, 0.101 claims per year in force. 1,224 policies have an exposure above one year (the longest is 2.01), capped at 1; 9 have more than 4 claims (up to 16), capped at 4. 257,911 policies (38%) share every risk feature with another policy, which is why the folds are made of covariate profiles.</p><table><tr><th>In force</th><th class="num">Actual</th><th class="num">Logistic</th><th class="num">Poisson</th></tr><tr><td>up to 0.1</td><td class="num">2.6%</td><td class="num">5.2%</td><td class="num">0.8%</td></tr><tr><td>0.1-0.25</td><td class="num">3.7%</td><td class="num">5.2%</td><td class="num">2.3%</td></tr><tr><td>0.25-0.5</td><td class="num">4.6%</td><td class="num">5.1%</td><td class="num">4.5%</td></tr><tr><td>0.5-0.75</td><td class="num">6.1%</td><td class="num">5.0%</td><td class="num">7.0%</td></tr><tr><td>0.75-<1</td><td class="num">7.0%</td><td class="num">4.9%</td><td class="num">8.8%</td></tr><tr><td>exactly 1</td><td class="num">6.7%</td><td class="num">4.8%</td><td class="num">7.8%</td></tr><tr><td>over 1</td><td class="num">4.2%</td><td class="num">4.6%</td><td class="num">10.3%</td></tr></table><img loading="lazy" decoding="async" src="../../../car-insurance-claims/charts/01_exposure.jpg" alt="Left: bars of the share of policies with a claim by time in force, rising from 2.6% to 7.0%, with a flat line for the logistic model at about 5% and a rising line for the Poisson model. Right: claims per year in force, 0.46 for policies in force up to 0.1 year against 0.07 for a full year"><p><b>Exposure is not a detail.</b> The table is the share of policies with a claim by the time the policy was in force, in years. It rises from 2.6% for policies in force up to 0.1 year to 7.0% for 0.75 to under 1 year. The logistic model has no exposure and predicts 5.2% for the shortest and 4.6% for the longest; the Poisson model, with the offset, follows the rise. But claims are not proportional to exposure here: policies in force up to 0.1 year had 0.457 claims per year, 6.5 times the 0.070 of full-year policies, and the Poisson model predicts 0.136 for them; it also over-predicts policies with an exposure above 1 (0.111 against 0.044). The data does not say why.</p><img loading="lazy" decoding="async" src="../../../car-insurance-claims/charts/05_calibration.jpg" alt="Ten dots of actual against predicted claims per year in force, one per tenth of exposure ranked by predicted risk, lying on the diagonal from 0.048 predicted against 0.046 actual in the lowest tenth to 0.266 against 0.270 in the highest"><p><b>How good the ranking is.</b> Out of fold, the Poisson model's mean deviance is 0.3132 against 0.3303 for one frequency for everyone (5.2% lower). Its Gini coefficient is 0.288, against 0.251 for the logistic model, and the riskiest tenth of exposure claims 2.68 times the average frequency (logistic 2.48). Predicted and actual frequencies agree to a few per cent across ten equal slices of exposure.</p><table><tr><th>Variable dropped</th><th class="num">Columns</th><th class="num">Gain lost</th></tr><tr><td>Vehicle age</td><td class="num">4</td><td class="num">40.2%</td></tr><tr><td>Bonus-malus</td><td class="num">4</td><td class="num">35.2%</td></tr><tr><td>Driver age</td><td class="num">6</td><td class="num">7.3%</td></tr><tr><td>Vehicle power</td><td class="num">5</td><td class="num">2.3%</td></tr><tr><td>Region</td><td class="num">21</td><td class="num">1.3%</td></tr><tr><td>Density</td><td class="num">1</td><td class="num">1.2%</td></tr><tr><td>Vehicle brand</td><td class="num">10</td><td class="num">0.6%</td></tr><tr><td>Fuel</td><td class="num">1</td><td class="num">0.3%</td></tr></table><img loading="lazy" decoding="async" src="../../../car-insurance-claims/charts/04_importance.jpg" alt="Horizontal bars of the share of the model's out-of-sample gain lost when a variable is dropped: vehicle age 40.2%, bonus-malus 35.2%, driver age 7.3%, then vehicle power, region, density, brand and fuel each under 3%"><p><b>What matters.</b> Dropping vehicle age loses 40.2% of the model's out-of-sample gain in deviance and dropping bonus-malus 35.2%; driver age loses 7.3%, vehicle power 2.3%, region 1.3%, density 1.2%, brand 0.6% and fuel 0.3%.</p><img loading="lazy" decoding="async" src="../../../car-insurance-claims/charts/02_effects.jpg" alt="Dots with 95% intervals of the relative claim frequency: bonus-malus 51-59 1.34 times, 60-79 1.89, 80-99 2.14, 100 and over 4.33; vehicle age 0 3.24, 6-10 1.06, 11-15 0.90, 16 and over 0.70"><p><b>The effects.</b> From the full Poisson fit, with quasi-Poisson 95% intervals (dispersion 2.27) and the other variables held fixed. Against bonus-malus 50: 51-59 1.34× (1.27 to 1.42), 60-79 1.89× (1.81 to 1.98), 80-99 2.14× (2.02 to 2.27), 100 and over 4.33× (4.05 to 4.64). Against a vehicle aged 1 to 5 years: a vehicle in its first year 3.24× (3.08 to 3.40), 16 or more years 0.70× (0.65 to 0.75). Each doubling of the density goes with a 2.9% higher frequency, and diesel with 0.93× (0.90 to 0.96).</p><img loading="lazy" decoding="async" src="../../../car-insurance-claims/charts/03_age.jpg" alt="Paired bars of relative claim frequency by driver age: the raw ratio to ages 41 to 50 falls from 2.39 for ages 18 to 20 to about 0.9 for older drivers, while the adjusted ratio is 1.08 for ages 18 to 20"><p><b>Driver age, raw and adjusted.</b> The raw claim frequency of drivers aged 18 to 20 is 2.39 times that of drivers aged 41 to 50; with the other variables held fixed it is 1.08× (0.95 to 1.23). Ages 21 to 25: 1.55 raw, 0.76× (0.70 to 0.82) adjusted. Bonus-malus, which carries the claims history, takes most of the age signal.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Add a claim-severity model (amounts) to get the cost of a policy, not only its frequency.</li><li>Model the short policies differently, or add the exposure as a feature, to see how much of the miss at the short end can be repaired.</li><li>Fit a gradient-boosted model on the same folds and see how much of the gap to the best published models a GLM leaves.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Claim frequency only (no claim amounts), for one insurer over an unstated period. The Poisson model assumes claims are proportional to exposure, which fails for policies in force a short time. The effects are associations, not causes, and not a pricing recommendation. OpenML's description says 677,991 policies and the file has 678,013. Licence: OpenML lists CC0; the CASdatasets package it comes from is GPL (>= 2).</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../fraud-model-monitoring/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 070 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Would You Notice When a Fraud Model Breaks?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../fraud-model-monitoring/cover.jpg" width="1162" height="720" aria-label="Would You Notice When a Fraud Model Breaks?: the project&#x27;s animated loop"><source src="../../../fraud-model-monitoring/loop.webm" type="video/webm"><source src="../../../fraud-model-monitoring/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Model monitoring</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>069</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Gets Denied a Mortgage?, Rishit Mathur</title>
+<meta name="description" content="Predicting which Tampa Bay home-purchase applications lenders deny, from public HMDA data: a leakage trap that fakes 0.975 AUC, an honest 0.80 model tested on the following year, and an audit by race and ethnicity.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Who Gets Denied a Mortgage?, Rishit Mathur">
+<meta property="og:description" content="Predicting which Tampa Bay home-purchase applications lenders deny, from public HMDA data: a leakage trap that fakes 0.975 AUC, an honest 0.80 model tested on the following year, and an audit by race and ethnicity.">
+<meta property="og:image" content="../../../mortgage-denials/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Predictive modeling</span><span>Case <span class="n">022</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Who Gets Denied a Mortgage?</h1>
+  <p class="lead">Predicting which Tampa Bay home-purchase applications lenders deny, from public HMDA data: a leakage trap that fakes 0.975 AUC, an honest 0.80 model tested on the following year, and an audit by race and ethnicity.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>07</b></span><span>Status<b>Code only</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/mortgage-denials" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../mortgage-denials/cover.jpg" width="1162" height="720" aria-label="Who Gets Denied a Mortgage?: the project&#x27;s animated loop"><source src="../../../mortgage-denials/loop.webm" type="video/webm"><source src="../../../mortgage-denials/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">mortgage-denials/loop.webm</span></div>
+    <div class="hud b"><span>[022]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">scikit-learn</span><span class="brk">Gradient boosting</span><span class="brk">Logistic regression</span><span class="brk">Calibration</span><span class="brk">Fairness audit</span><span class="brk">HMDA</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>In Tampa Bay, about one in ten applications to buy a home to live in is denied, often after the applicant has paid application and appraisal fees. Housing counsellors can help people fix a debt-to-income or down-payment problem first, but only if they know whom to help. <em>Can public data flag the applications most likely to be denied, and does such a model treat groups differently?</em></p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A predictive model on the CFPB's public mortgage data (HMDA) for Hillsborough, Pinellas, Pasco and Hernando counties:</p><ul><li><b>A cleaning funnel</b> that tracks the denial rate at every step.</li><li><b>A leakage demo:</b> fields filled in after the decision push AUC to 0.975.</li><li><b>An allowlist</b> of facts known when someone applies; race, ethnicity, sex, age and neighbourhood proxies are excluded.</li><li><b>Logistic regression vs gradient boosting</b>, trained on 2022-23 and tested on 2024.</li><li><b>An audit by group</b>: recall, calibration, the gap at the same score, and lenders' stated reasons.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Get the decisions</h3><div class="prose"><p>HMDA requires lenders to report every mortgage application and its outcome. <code>download.py</code> pulls the 2022-2024 home-purchase decisions for the four Tampa Bay counties from the CFPB's API: 177,971 approved or denied applications. It queries by county, because the metro-area code returned nothing for 2024 after the metro definitions changed.</p></div><pre><code>URL = &quot;https://ffiec.cfpb.gov/v2/data-browser-api/view/csv?counties={c}&amp;years={y}&amp;actions_taken=1,2,3&amp;loan_purposes=1&quot;</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Clean, and watch the base rate</h3><div class="prose"><p>Dropping rows can quietly change the answer, so the funnel records the denial rate at each step. Fields like debt-to-income are missing more often for denials. Manufactured homes, denied far more often, are a separate market and are left out. "Standard loan" means not for business, not a reverse mortgage and not a line of credit.</p><table><tr><th>Rule</th><th class="num">Left</th><th class="num">Denied</th></tr><tr><td>All decisions</td><td class="num">177,971</td><td class="num">14.8%</td></tr><tr><td>Main home, 1st lien</td><td class="num">148,621</td><td class="num">14.2%</td></tr><tr><td>Site-built 1-4 units</td><td class="num">138,225</td><td class="num">11.6%</td></tr><tr><td>Standard loan</td><td class="num">136,615</td><td class="num">11.2%</td></tr><tr><td>DTI reported</td><td class="num">135,345</td><td class="num">11.1%</td></tr><tr><td>Income $10k-$2M</td><td class="num">133,252</td><td class="num">10.9%</td></tr><tr><td>Value $50k-$5M</td><td class="num">132,647</td><td class="num">10.6%</td></tr><tr><td>Term reported</td><td class="num">132,397</td><td class="num">10.6%</td></tr></table></div></div></li><li><span class="k mono">Step 03</span><div><h3>Catch the leak</h3><div class="prose"><p>Many HMDA fields are filled in <em>after</em> the decision, and their mere presence gives the answer away:</p><ul><li>purchaser type: denied loans are never sold;</li><li>preapproval: denied preapprovals are filed under a different code;</li><li>interest rate and costs: missing for every denial;</li><li>underwriting codes and whether the lender reported LTV.</li></ul><p>Add them and the model scores 0.975, which looks almost perfect but is useless before a decision exists.</p><img loading="lazy" decoding="async" src="../../../mortgage-denials/charts/01_leakage.jpg" alt="Bar chart of 2024 AUC: logistic regression 0.761, gradient boosting 0.804, gradient boosting with lender 0.825, and a hatched bar at 0.975 for the model with fields filled in after the decision"></div><pre><code>f[&quot;price_missing&quot;] = d[&quot;interest_rate&quot;].isin([&quot;NA&quot;, &quot;Exempt&quot;]).astype(str)</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Build from an allowlist and test on the next year</h3><div class="prose"><p>The allowlist names the inputs a counsellor could know before someone applies: income, loan amount, loan-to-value, debt-to-income, loan type, term, conforming limit, channel, units, county, and lender in one variant. Excluded:</p><ul><li>race, ethnicity, sex and age, which are protected by the Equal Credit Opportunity Act;</li><li>census-tract fields such as minority population share, which proxy for race.</li></ul><p><code>check.py</code> fails if anything else sneaks in. The models train on 2022-23 and are scored on 2024, as if predicting the future. Gradient boosting is well calibrated: in the riskiest tenth it predicted 49% and 53% were denied.</p><img loading="lazy" decoding="async" src="../../../mortgage-denials/charts/02_calibration.jpg" alt="Calibration chart: predicted vs actual denial rate for ten groups of 2024 applicants; gradient boosting follows the diagonal closely, logistic regression under-predicts at the low end"></div><pre><code>tr, te = yr.isin(TRAIN).values, (yr == TEST).values</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>See what drives it</h3><div class="prose"><p>Shuffling one input at a time and measuring the drop in AUC shows what the model relies on. Debt-to-income dominates (0.193), then loan type (FHA loans were denied 14.8% of the time, against 9.4% for conventional and 9.2% for VA), loan-to-value and loan amount. Income adds little once debt-to-income is known.</p><img loading="lazy" decoding="async" src="../../../mortgage-denials/charts/03_importance.jpg" alt="Bar chart of permutation importance: debt-to-income 0.193, loan type 0.050, loan-to-value 0.037, loan amount 0.036, channel 0.013, income 0.009, others near zero"></div></div></li><li><span class="k mono">Step 06</span><div><h3>Audit it by group</h3><div class="prose"><p>Race and ethnicity are used only here, after prediction. The use case decides the metric. Being flagged means getting help, so the question is whether the model <em>misses</em> one group's denials more than another's. It doesn't: it catches 66% of Black and 65% of Hispanic applicants' denials, against 57% of White applicants'.</p><p>Calibration tells a different story. Black and Hispanic applicants were denied more often than the model's inputs predict. At the same score, their odds of denial are 1.54× and 1.31× those of White applicants, and adding the lender doesn't shrink the gap. Every group cell has at least 30 applications.</p><img loading="lazy" decoding="async" src="../../../mortgage-denials/charts/04_audit.jpg" alt="Two panels by group: actual vs model-predicted denial rate, where Black (15.5% vs 13.4%) and Hispanic (13.7% vs 13.0%) applicants are denied more than predicted and White (8.4% vs 9.6%) less; and share of each group's denials flagged, 57% White to 66% Black"></div><pre><code>m = sm.Logit(y, sm.add_constant(X)).fit(disp=0)</code></pre></div></li><li><span class="k mono">Step 07</span><div><h3>Check it independently</h3><div class="prose"><p><code>check.py</code> re-applies the cleaning and refits all four models. It then recomputes every AUC with a separate rank-based formula, recomputes group denial rates and Wilson intervals against statsmodels, and confirms no published cell is under 30 and no file is row-level.</p><img loading="lazy" decoding="async" src="../../../mortgage-denials/charts/05_reasons.jpg" alt="Small multiples of lenders' main denial reason by group: debt-to-income 38% of White vs 48% of Black denials, collateral 23% vs 10%, credit history 9% vs 14%"></div><pre><code>return (r[y == 1].sum() - n1 * (n1 + 1) / 2) / (n1 * (len(y) - n1))</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><table><tr><th>Model (2024)</th><th class="num">AUC</th><th class="num">Caught</th></tr><tr><td>Logistic regression</td><td class="num">0.761</td><td class="num">57.5%</td></tr><tr><td>Gradient boosting</td><td class="num"><b>0.802</b></td><td class="num"><b>61.6%</b></td></tr><tr><td>+ lender</td><td class="num">0.825</td><td class="num">63.9%</td></tr><tr><td>Leaky (wrong)</td><td class="num">0.975</td><td class="num">94.4%</td></tr></table><p>"Caught" is the share of 2024 denials among the 20% of applicants flagged as riskiest, a counsellor's realistic capacity. Flagged applicants were denied 32% of the time, against 10.4% overall.</p><table><tr><th>Group</th><th class="num">Denied</th><th class="num">Predicted</th><th class="num">Caught</th></tr><tr><td>White</td><td class="num">8.4%</td><td class="num">9.6%</td><td class="num">57%</td></tr><tr><td>Hispanic</td><td class="num">13.7%</td><td class="num">13.0%</td><td class="num">65%</td></tr><tr><td>Black</td><td class="num">15.5%</td><td class="num">13.4%</td><td class="num">66%</td></tr><tr><td>Asian</td><td class="num">7.7%</td><td class="num">8.9%</td><td class="num">58%</td></tr><tr><td>Other/joint</td><td class="num">8.9%</td><td class="num">10.7%</td><td class="num">69%</td></tr><tr><td>Not reported</td><td class="num">11.3%</td><td class="num">11.2%</td><td class="num">63%</td></tr></table><table><tr><th>At the same score</th><th class="num">Odds vs White</th></tr><tr><td>Black</td><td class="num">1.54 (1.34-1.77)</td></tr><tr><td>Hispanic</td><td class="num">1.31 (1.19-1.44)</td></tr><tr><td>Not reported</td><td class="num">1.25 (1.10-1.41)</td></tr><tr><td>Asian</td><td class="num">0.97 (0.80-1.18)</td></tr></table><p>When groups have different base rates, calibration and equal error rates can't all hold at once, so no single number makes a model "fair". The gap at the same score is what a fair-lending review would investigate with the full lender file. That file includes credit scores, which public HMDA lacks: lenders cite credit history for 14% of Black applicants' denials vs 9% of White applicants'.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Add withdrawn and incomplete applications as a third outcome, since some may be quiet denials.</li><li>Repeat for refinances and for other Florida metros.</li><li>A counsellor-facing page that turns the top drivers into concrete advice (lower debt-to-income, a larger down payment).</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>The target is lenders' past decisions, not whether anyone would repay, and public HMDA has no credit scores. So this is a triage aid for housing counsellors, never an underwriting tool, and the group gaps it finds are not proof of discrimination.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../food-inspections/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 023 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Which Kitchens to Inspect First?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../food-inspections/cover.jpg" width="1162" height="720" aria-label="Which Kitchens to Inspect First?: the project&#x27;s animated loop"><source src="../../../food-inspections/loop.webm" type="video/webm"><source src="../../../food-inspections/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Predictive modeling</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>022</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

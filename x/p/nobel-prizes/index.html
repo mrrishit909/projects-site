@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Wins the Nobel Prize?, Rishit Mathur</title>
+<meta name="description" content="All 1,026 Nobel Prizes from 1901 to 2025, counted: where laureates were born and where they worked, how few are women, how much older they have become, and how the lone laureate has nearly vanished from the science prizes.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Who Wins the Nobel Prize?, Rishit Mathur">
+<meta property="og:description" content="All 1,026 Nobel Prizes from 1901 to 2025, counted: where laureates were born and where they worked, how few are women, how much older they have become, and how the lone laureate has nearly vanished from the science prizes.">
+<meta property="og:image" content="../../../nobel-prizes/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Exploratory analysis</span><span>Case <span class="n">046</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Who Wins the Nobel Prize?</h1>
+  <p class="lead">All 1,026 Nobel Prizes from 1901 to 2025, counted: where laureates were born and where they worked, how few are women, how much older they have become, and how the lone laureate has nearly vanished from the science prizes.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>06</b></span><span>Status<b>Code only</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/nobel-prizes" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../nobel-prizes/cover.jpg" width="1162" height="720" aria-label="Who Wins the Nobel Prize?: the project&#x27;s animated loop"><source src="../../../nobel-prizes/loop.webm" type="video/webm"><source src="../../../nobel-prizes/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">nobel-prizes/loop.webm</span></div>
+    <div class="hud b"><span>[046]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">pandas</span><span class="brk">matplotlib</span><span class="brk">Nobel Prize API</span><span class="brk">CC0 data</span><span class="brk">Independent recount</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Everyone has a picture of who wins a Nobel Prize: older scientists in famous American labs, almost all of them men. <em>How much of that is true, and what has changed since 1901?</em></p><p>The Nobel Foundation publishes every laureate in a free API, so the answers can be counted instead of remembered. The questions follow DataCamp's "Visualizing the History of Nobel Prize Winners" project; the data here is the official API through 2025.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A table with one row for every prize received (1,026 rows, for 1,018 laureates: 990 people and 28 organisations), and five questions answered from it:</p><ul><li><b>Who:</b> gender and country of birth.</li><li><b>Where:</b> the US share by decade, by where laureates were born and by where science laureates worked.</li><li><b>Women:</b> their share by decade and category, and the first.</li><li><b>Age and teamwork:</b> median age at the award, and how many people share a science prize.</li><li><b>Check:</b> <code>check.py</code> recounts 255 numbers from the raw file in plain Python, without pandas.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Download every laureate</h3><div class="prose"><p>The Nobel Prize API returns all laureates in one call: name, gender, birthplace and, for each prize, the year, category, share and the institution where the laureate worked. The script keeps the raw file out of the repository and records the pull date and counts, so every number on this page traces to one snapshot (3 October 2026, prizes 1901 to 2025). The data is free to use under CC0.</p></div></div></li><li><span class="k mono">Step 02</span><div><h3>One row per prize, with today's country names</h3><div class="prose"><p>A person who won twice is two rows. Countries use the API's <em>now</em> names, so a laureate born in Prussia or Austria-Hungary is counted under the country that place is in today, and one country's count isn't split across old names. Organisations have no birthplace or gender, so those figures use the 995 prizes to people.</p></div><pre><code>        place = (l.get(&quot;birth&quot;) or l.get(&quot;founded&quot;) or {}).get(&quot;place&quot;, {})
+        ...
+        &quot;birth_country&quot;: place.get(&quot;countryNow&quot;, {}).get(&quot;en&quot;) if person else None,</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Born in the US, or working there</h3><div class="prose"><p>"How American is the Nobel?" hides two questions. Birthplace says where laureates came from; the institution says where the work was done. The institution is listed only for the science prizes (662 rows, 657 with one), so that half of the comparison uses physics, chemistry and medicine. Among laureates who worked in the US, the script also counts how many were born somewhere else.</p></div><pre><code>    by[&quot;based_us_pct&quot;] = (100 * by[&quot;sci_based_us&quot;] / by[&quot;sci_with_affiliation&quot;]).round(1)
+    by[&quot;foreign_born_pct_of_us_based&quot;] = (100 * by[&quot;sci_based_us_foreign_born&quot;] / by[&quot;sci_based_us&quot;].where(by[&quot;sci_based_us&quot;] &gt; 0)).round(1)</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Women, by decade and category</h3><div class="prose"><p>The share of women is counted in every decade and category. Small cells are noisy: 3 of 5 Peace laureates in 2020-25 is 60% but means three women, so only cells with at least 5 laureates are ranked.</p></div></div></li><li><span class="k mono">Step 05</span><div><h3>Age, and how many share a prize</h3><div class="prose"><p>Age is the award year minus the birth year. For the three science prizes the script counts laureates per prize, by decade: one, two or three (no science prize in the data has more).</p></div></div></li><li><span class="k mono">Step 06</span><div><h3>Check it from the raw file</h3><div class="prose"><p><code>check.py</code> rereads the raw JSON with plain Python (json, csv and statistics; no pandas and no <code>analyze.py</code>) and recounts the totals, men and women, every birth-country count, the US numbers for each decade, every decade-and-category cell for women, the multiple winners, every median age and the laureates per science prize. 255 numbers, all equal to what the analysis wrote.</p></div><pre><code>    for r in table(&quot;women.csv&quot;):
+        same(f&quot;women {r[&#x27;decade&#x27;]} {r[&#x27;category&#x27;]}&quot;, cell[(int(r[&quot;decade&quot;]), r[&quot;category&quot;])], [int(r[&quot;laureates&quot;]), int(r[&quot;women&quot;])])</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><img loading="lazy" decoding="async" src="../../../nobel-prizes/charts/01_women.jpg" alt="Bars of the share of laureates who are women, by decade: 5% in the 1900s, none in the 1950s (0 of 71), rising to 19% (14 of 72) in 2020-25"><p><b>Women are 6.8% of the people honoured, but 19% since 2020.</b> They won 68 of the 995 prizes to people. The first was Marie Curie (physics, 1903), and in the 1950s none won. Among decade-and-category cells with at least 5 laureates, the highest are Peace in 2020-25 (3 of 5), Peace in the 2010s (5 of 10) and Literature in 2020-25 (3 of 6).</p><img loading="lazy" decoding="async" src="../../../nobel-prizes/charts/02_us.jpg" alt="Two lines by decade: the share of laureates born in the US rises from 2% in the 1900s to 44% in the 2000s, and the share of science laureates working at US institutions rises from 3% to 74% in the 1990s, then falls to 52% in the 2010s"><table><tr><th>Born in</th><th class="num">Prizes</th><th class="num">Share</th></tr><tr><td>USA</td><td class="num">299</td><td class="num">30.1%</td></tr><tr><td>United Kingdom</td><td class="num">95</td><td class="num">9.5%</td></tr><tr><td>Germany</td><td class="num">84</td><td class="num">8.4%</td></tr><tr><td>France</td><td class="num">63</td><td class="num">6.3%</td></tr><tr><td>Japan</td><td class="num">30</td><td class="num">3.0%</td></tr></table><p><b>The US wins more by workplace than by birth.</b> The 2000s have the highest share of US-born laureates (43.7%). But 74% of the 1990s science laureates worked at a US institution, and 30% of those had been born elsewhere (42.5% in the 2010s).</p><img loading="lazy" decoding="async" src="../../../nobel-prizes/charts/03_age.jpg" alt="Lines of median age at the award by decade for physics, chemistry, medicine, literature and peace: physics rises from 42 in the 1930s to 70 in the 2010s and 77 in 2020-25"><p><b>Laureates are getting older.</b> The median age of physics laureates went from 42 in the 1930s to 70 in the 2010s (77 in 2020-25, six years), chemistry from 48 to 72, and medicine from 52.5 to 69.</p><img loading="lazy" decoding="async" src="../../../nobel-prizes/charts/04_team.jpg" alt="Stacked bars of the share of physics, chemistry and medicine prizes won by one, two or three laureates, by decade: one laureate falls from 82% in the 1900s to 10% in the 2010s, and three laureates rises to 67%"><p><b>The lone laureate has nearly gone from the science prizes.</b> In the 1900s 22 of 27 prizes (81.5%) went to one person. In the 2010s 3 of 30 (10.0%) did, and 20 (66.7%) were shared by three. The average prize had 1.22 laureates, then 2.57.</p><p><b>Who won more than once.</b> Marie Curie (physics 1903, chemistry 1911), Linus Pauling (chemistry 1954, peace 1962), John Bardeen (physics 1956 and 1972), Frederick Sanger (chemistry 1958 and 1980) and K. Barry Sharpless (chemistry 2001 and 2022), and two organisations: the Red Cross (1917, 1944, 1963) and the UN refugee agency (1954, 1981).</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Add the 2026 prizes once they are announced in October: <code>download.py</code>, <code>analyze.py</code> and <code>check.py</code> rerun in seconds.</li><li>Rank the institutions where science laureates worked, to see how concentrated the prizes are in a few universities.</li><li>Compare the rise in shared prizes with the rise in co-authors per paper, to see whether teamwork explains it.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Age is the award year minus the birth year, so it can be off by one. "Worked in" is the first institution listed for a prize, which exists only for the science prizes. The 2020s are six prize years (2020-25), so their points are noisy. Countries are today's names for the places.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../soccer-goals-test/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 047 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Do Women&#x27;s Matches Have More Goals?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../soccer-goals-test/cover.jpg" width="1162" height="720" aria-label="Do Women&#x27;s Matches Have More Goals?: the project&#x27;s animated loop"><source src="../../../soccer-goals-test/loop.webm" type="video/webm"><source src="../../../soccer-goals-test/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Statistics · Hypothesis testing</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>046</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not found, Rishit Mathur</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="./x.css">
+<style>
+.lost { min-height: calc(100svh - 140px); display: grid; place-items: center; text-align: center; padding: 4vh 0; }
+.scope { position: relative; width: min(64vw, 290px, 34svh); aspect-ratio: 1; margin: 0 auto clamp(24px, 4.5vh, 44px); }
+.scope i { position: absolute; inset: 0; border: 1px solid var(--w20); border-radius: 50%; }
+.scope i:nth-child(2) { inset: 18%; border-color: var(--w10); }
+.scope i:nth-child(3) { inset: 36%; border-color: var(--w10); }
+.scope::before, .scope::after { content: ""; position: absolute; background: var(--w10); }
+.scope::before { left: 50%; top: -6%; bottom: -6%; width: 1px; }
+.scope::after { top: 50%; left: -6%; right: -6%; height: 1px; }
+.scope .sweep { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, rgba(47,143,230,0) 0%, rgba(47,143,230,0) 78%, rgba(47,143,230,.32) 100%, transparent); animation: sweep 4.5s linear infinite; }
+.scope .code { position: absolute; inset: 0; display: grid; place-items: center; font: 200 clamp(3.4rem, 2rem + 6vw, 6rem)/1 var(--sans); letter-spacing: -.04em; }
+.scope .blip { position: absolute; left: 71%; top: 27%; width: 7px; height: 7px; border-radius: 50%; background: var(--blue-hi); box-shadow: 0 0 12px var(--blue); animation: blip 4.5s linear infinite; }
+.scope .tick { position: absolute; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; color: var(--w60); }
+.scope .n { top: -26px; left: 50%; transform: translateX(-50%); } .scope .e { right: -30px; top: 50%; transform: translateY(-50%); }
+@keyframes sweep { to { transform: rotate(360deg); } }
+@keyframes blip { 0%, 8% { opacity: 1; } 40%, 100% { opacity: .1; } }
+.lost .brk { margin-bottom: 22px; }
+.lost .h1 { font-size: clamp(2.8rem, 1.2rem + 5vw, 6rem); }
+.lost .lead { max-width: 34ch; margin: 22px auto 0; }
+.path { display: inline-block; max-width: 100%; margin-top: 18px; padding: 8px 12px; border: 1px solid var(--w10); font: 400 12px/1.4 var(--mono); color: var(--blue-hi); overflow-wrap: anywhere; }
+.acts { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 36px; }
+@media (prefers-reduced-motion: reduce) { .scope .sweep, .scope .blip { animation: none; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="./">Rishit Mathur</a><nav aria-label="Primary"><a href="./work/">Work</a><a href="./about/">About</a><a href="./contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+
+<main id="main" class="page">
+  <section class="wrap lost" aria-labelledby="h1">
+    <div>
+      <div class="scope rv" aria-hidden="true"><i></i><i></i><i></i><span class="sweep"></span><span class="blip"></span><span class="code grad">404</span><span class="tick n">N</span><span class="tick e">E</span></div>
+      <span class="brk rv">[ Error 404 ] Signal lost</span>
+      <h1 id="h1" class="h1 grad rv">Lost in the field.</h1>
+      <p class="lead rv">Nothing is running at this address. It may have moved when the site was rebuilt.</p>
+      <code class="path rv" id="path" hidden></code>
+      <div class="acts rv"><a class="btn" href="./work/">Back to the work</a><a class="btn ghost" href="./">Home</a></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="./work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="./x.js"></script>
+<script>
+const p = document.getElementById("path"); p.textContent = location.pathname; p.hidden = false;
+</script>
+</body>
+</html>

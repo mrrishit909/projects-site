@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About, Rishit Mathur</title>
+<meta name="description" content="Rishit Raj Mathur, data analyst in Tampa, FL. Power BI, SQL, Python and dbt, with every number checked a second way.">
+<link rel="preload" href="../../vendor/fonts/InterTight-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../x.css">
+<style>
+.ab-hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(28px, 5vw, 80px); align-items: end; min-height: calc(100svh - 160px); padding-bottom: 6vh; }
+.ab-hero .brk { margin-bottom: 28px; }
+.ab-hero .h1 { font-size: clamp(2.9rem, 1.2rem + 5.2vw, 6.4rem); }
+.ab-hero .h1 .ln { display: block; }
+.ab-hero .lead { max-width: 38ch; margin: 28px 0 0; }
+.ab-shot { position: relative; }
+.ab-shot .cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; font: 400 var(--fs-hud)/1.5 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--w60); }
+.ab-shot .cap b { color: var(--white); font-weight: 400; }
+.cap .rec::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.ab-stats { margin-top: 0; padding: 22px 0; border-top: 1px solid var(--w10); border-bottom: 1px solid var(--w10); color: var(--w60); }
+.ab-stats b { font-size: clamp(18px, 1.4vw, 22px); margin-top: 6px; }
+
+.sec { padding-top: clamp(96px, 16vh, 180px); }
+.sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: clamp(32px, 6vh, 56px); }
+.sec-head .mono { color: var(--w60); }
+
+.story { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: clamp(24px, 6vw, 96px); }
+.story .prose { font-size: var(--fs-lead); line-height: 1.6; color: var(--w60); }
+.story .prose p { margin: 0 0 1.1em; }
+.story .prose b { color: var(--white); font-weight: 400; }
+
+.caps { list-style: none; margin: 0; padding: 0; counter-reset: cap; }
+.cap-row { display: grid; grid-template-columns: 64px minmax(0, 1fr) minmax(0, 1.25fr); gap: 24px; align-items: baseline; padding: 26px 0; border-top: 1px solid var(--w10); position: relative; }
+.cap-row:last-child { border-bottom: 1px solid var(--w10); }
+.cap-row::after { content: ""; position: absolute; left: 0; top: -1px; height: 1px; width: 0; background: var(--blue); transition: width .7s var(--ease-out); }
+.cap-row:hover::after { width: 100%; }
+.cap-row .n { font: 400 var(--fs-label)/1 var(--mono); letter-spacing: .12em; color: var(--blue-hi); font-variant-numeric: tabular-nums; }
+.cap-row .h3 { transition: transform .5s var(--ease-out); }
+.cap-row:hover .h3 { transform: translateX(8px); }
+.cap-row ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.cap-row li { font: 400 12px/1.5 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--w60); }
+.cap-row li a { color: var(--white); text-decoration: none; border-bottom: 1px solid var(--w20); transition: border-color var(--t-fast); }
+.cap-row li a::after { content: " \2197"; color: var(--blue-hi); }
+.cap-row li a:hover { border-color: var(--white); }
+.cap-row li span { color: var(--w60); text-transform: none; letter-spacing: .02em; }
+
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); }
+.tl { list-style: none; margin: 0; padding: 0 0 0 22px; border-left: 1px solid var(--w20); }
+.tl li { position: relative; padding: 0 0 30px; }
+.tl li::before { content: ""; position: absolute; left: -26.5px; top: 4px; width: 8px; height: 8px; background: #000; border: 1px solid var(--blue-hi); transform: rotate(45deg); }
+.tl li.now::before { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 10px var(--blue); }
+.tl .when { display: block; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--blue-hi); margin-bottom: 10px; }
+.tl .what { display: block; font-size: 1.15rem; line-height: 1.3; }
+.tl .where { display: block; margin-top: 6px; font: 400 12px/1.5 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--w60); }
+
+.how { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
+.how .h2 { max-width: 14ch; }
+.how p { margin: 28px 0 0; max-width: 46ch; }
+.how code { font-family: var(--mono); font-size: .86em; color: var(--blue-hi); }
+
+.next { text-align: center; padding-top: clamp(120px, 20vh, 220px); }
+.next .h2 { margin: 0 auto 32px; }
+
+@media (max-width: 900px) {
+  .ab-hero, .story, .split, .how { grid-template-columns: 1fr; }
+  .ab-hero { min-height: 0; padding-top: 4vh; }
+  .cap-row { grid-template-columns: 32px minmax(0, 1fr); gap: 14px 12px; }
+  .ab-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .cap-row ul { grid-column: 2; }
+}
+@media (prefers-reduced-motion: reduce) { .cap .rec::before { animation: none; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../">Rishit Mathur</a><nav aria-label="Primary"><a href="../work/">Work</a><a href="../about/" aria-current="page">About</a><a href="../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+
+<main id="main" class="page">
+  <section class="wrap ab-hero" aria-labelledby="h1">
+    <div>
+      <span class="brk rv">[ 02 ] About</span>
+      <h1 id="h1" class="h1 rv"><span class="ln grad">Numbers that</span><span class="ln grad">survive a</span><span class="ln grad">second script.</span></h1>
+      <p class="lead rv">Rishit Raj Mathur. Data analyst in Tampa, Florida. Power BI, SQL, Python and dbt, on public data, with the check left in the repo.</p>
+    </div>
+    <figure class="ab-shot rv" style="margin:0">
+      <div class="screen"><video autoplay muted loop playsinline preload="metadata" poster="../../florida-flight-delays/cover-800.webp" aria-label="Florida Flight Delays, the project's animated loop"><source src="../../florida-flight-delays/loop.webm" type="video/webm"><source src="../../florida-flight-delays/loop.mp4" type="video/mp4"></video></div>
+      <figcaption class="cap"><span class="rec"><b>Florida Flight Delays</b></span><span>635,459 flights</span></figcaption>
+    </figure>
+  </section>
+
+  <div class="wrap">
+    <div class="hud-row ab-stats rv">
+      <span>Based<b>Tampa, FL</b></span>
+      <span>B.S. BAIS<b>USF, 2026</b></span>
+      <span>M.S. candidate<b>USF, 2028</b></span>
+      <span>Public repositories<b data-count="219">219</b></span>
+      <span>Live demos<b data-count="30">30</b></span>
+    </div>
+  </div>
+
+  <section class="wrap sec story" aria-labelledby="s-story">
+    <div><h2 id="s-story" class="mono" style="margin:0;color:var(--w60)">[ Story ]</h2></div>
+    <div class="prose rv">
+      <p>I finished a <b>B.S. in Business Analytics and Information Systems</b> at the University of South Florida's Muma College of Business in May 2026, made the Dean's List in Fall 2024, and am now an <b>M.S. candidate in Business and Enterprise Integration</b> at USF.</p>
+      <p>Since September 2025 I have been a research assistant at the USF REACH Lab, running data workflows and building dashboards for experimental findings. Since May 2025 I have worked in USF Athletics ticketing operations, querying ticket sales, attendance and entry data. In summer 2025, as a business analyst at TraceRT, I redesigned data structures and built Power BI dashboards that cut report turnaround time by <b>22%</b>.</p>
+      <p>I also build in public: forecasts, pipelines, dashboards and retrieval systems on US DOT, Census, UCI and SEC data, each written up with its method and its limits.</p>
+    </div>
+  </section>
+
+  <section class="wrap sec" aria-labelledby="s-caps">
+    <div class="sec-head"><h2 id="s-caps" class="h2 grad">Capabilities</h2><span class="mono" aria-hidden="true">07 areas</span></div>
+    <ol class="caps">
+      <li class="cap-row rv"><span class="n">01</span><h3 class="h3">Data analytics</h3><ul>
+        <li><a href="../p/florida-flight-delays/">Florida Flight Delays</a> <span>22 DAX measures, delay causes</span></li>
+        <li><a href="../p/retail-dbt/">Retail Pipeline in dbt</a> <span>RFM segments and cohorts</span></li>
+        <li><a href="../p/us-retail-forecast/">US Retail Sales Forecast</a> <span>seasonal index, trend</span></li></ul></li>
+      <li class="cap-row rv"><span class="n">02</span><h3 class="h3">Business intelligence</h3><ul>
+        <li><a href="../p/florida-flight-delays/">Florida Flight Delays</a> <span>star schema, Power BI report</span></li>
+        <li>TraceRT <span>Power BI dashboards, 22% faster reporting</span></li>
+        <li>USF REACH Lab <span>dashboards for research findings</span></li></ul></li>
+      <li class="cap-row rv"><span class="n">03</span><h3 class="h3">Forecasting and ML</h3><ul>
+        <li><a href="../p/us-retail-forecast/">US Retail Sales Forecast</a> <span>five methods, rolling-origin backtest</span></li>
+        <li><a href="../p/predictive-maintenance-rul/">How Many Hours Does This Bearing Have Left?</a> <span>quantile boosting, conformal ranges</span></li></ul></li>
+      <li class="cap-row rv"><span class="n">04</span><h3 class="h3">AI systems</h3><ul>
+        <li><a href="../p/sec-10k-rag/">Ask the 10-K</a> <span>hybrid retrieval, cited answers, refusals</span></li>
+        <li><a href="../p/querymind-text-to-sql/">QUERYMIND</a> <span>text to SQL with a security validator</span></li></ul></li>
+      <li class="cap-row rv"><span class="n">05</span><h3 class="h3">Data engineering</h3><ul>
+        <li><a href="../p/retail-dbt/">Retail Pipeline in dbt</a> <span>staging to marts, 31 data tests</span></li>
+        <li><a href="../p/florida-flight-delays/">Florida Flight Delays</a> <span>109 columns down to 23</span></li>
+        <li><a href="../p/business-finder/">Business Finder</a> <span>city name to a clean business table</span></li></ul></li>
+      <li class="cap-row rv"><span class="n">06</span><h3 class="h3">Full-stack</h3><ul>
+        <li><a href="../p/business-finder/">Business Finder</a> <span>FastAPI and SQLite web app</span></li>
+        <li><a href="../p/querymind-text-to-sql/">QUERYMIND</a> <span>React, TypeScript, Web Workers</span></li>
+        <li><a href="../p/predictive-maintenance-rul/">How Many Hours Does This Bearing Have Left?</a> <span>FastAPI, PostgreSQL, Docker Compose</span></li></ul></li>
+      <li class="cap-row rv"><span class="n">07</span><h3 class="h3">Interactive visualisation</h3><ul>
+        <li><a href="../p/florida-flight-delays/">Florida Flight Delays</a> <span>web preview with an airport filter</span></li>
+        <li><a href="../p/querymind-text-to-sql/">QUERYMIND</a> <span>browser demo checked with axe-core</span></li></ul></li>
+    </ol>
+  </section>
+
+  <section class="wrap sec split" aria-labelledby="s-edu">
+    <div>
+      <div class="sec-head"><h2 id="s-edu" class="h2 grad">Education</h2></div>
+      <ol class="tl rv">
+        <li class="now"><span class="when">Expected May 2028</span><span class="what">M.S. Business and Enterprise Integration</span><span class="where">University of South Florida</span></li>
+        <li><span class="when">May 2026</span><span class="what">B.S. Business Analytics and Information Systems</span><span class="where">USF Muma College of Business</span></li>
+        <li><span class="when">Fall 2024</span><span class="what">Dean's List</span><span class="where">USF Muma College of Business</span></li>
+      </ol>
+    </div>
+    <div>
+      <div class="sec-head"><h2 id="s-cert" class="h2 grad">Certifications</h2></div>
+      <ol class="tl rv" aria-labelledby="s-cert">
+        <li><span class="when">Held</span><span class="what">Microsoft Power BI Data Analyst Associate</span><span class="where">Microsoft</span></li>
+        <li><span class="when">Member</span><span class="what">PMI Student Member</span><span class="where">Project Management Institute</span></li>
+        <li class="now"><span class="when">In progress</span><span class="what">PMI-CAPM</span><span class="where">Project Management Institute</span></li>
+        <li class="now"><span class="when">In progress</span><span class="what">AWS Certified Cloud Practitioner</span><span class="where">Amazon Web Services, CLF-C02</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="wrap sec how" aria-labelledby="s-how">
+    <div class="rv">
+      <span class="brk">[ How I work ]</span>
+      <h2 id="s-how" class="h2 grad" style="margin-top:24px">Every number gets checked a second way.</h2>
+      <p class="lead">In Florida Flight Delays, <code>check_powerbi.py</code> compares the Power BI values with pandas: all 184 match. In the dbt pipeline, <code>check.py</code> ignores dbt and redoes the key logic from the raw CSV.</p>
+    </div>
+    <figure class="ab-shot rv" style="margin:0">
+      <div class="screen"><video autoplay muted loop playsinline preload="metadata" poster="../../retail-dbt/cover-800.webp" aria-label="Retail Pipeline in dbt, the project's animated loop"><source src="../../retail-dbt/loop.webm" type="video/webm"><source src="../../retail-dbt/loop.mp4" type="video/mp4"></video></div>
+      <figcaption class="cap"><span class="rec"><b>Retail Pipeline in dbt</b></span><span>31 data tests</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="wrap next" aria-labelledby="s-next">
+    <h2 id="s-next" class="h2 grad rv">Have data that needs checking?</h2>
+    <div class="rv" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><a class="btn" href="../contact/">Get in touch</a><a class="btn ghost" href="../work/">See the work</a></div>
+  </section>
+</main>
+
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../x.js"></script>
+<script type="module">
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (reduce) document.querySelectorAll("video").forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+// HUD counters: count up from 0 once visible; the final value is already in the markup
+if (!reduce) {
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return; io.unobserve(e.target);
+    const el = e.target, n = +el.dataset.count, t0 = performance.now();
+    (function f(t) { const k = Math.min(1, (t - t0) / 1400); el.textContent = Math.round(n * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0);
+  }));
+  document.querySelectorAll("[data-count]").forEach((el) => { el.textContent = "0"; io.observe(el); });
+}
+</script>
+</body>
+</html>

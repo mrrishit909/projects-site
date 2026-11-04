@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retail Pipeline in dbt, Rishit Mathur</title>
+<meta name="description" content="A real online retailer&#x27;s 1.07 million invoice lines turned into tested, documented tables (sales, customers, products, cohorts) with dbt and DuckDB.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Retail Pipeline in dbt, Rishit Mathur">
+<meta property="og:description" content="A real online retailer&#x27;s 1.07 million invoice lines turned into tested, documented tables (sales, customers, products, cohorts) with dbt and DuckDB.">
+<meta property="og:image" content="../../../retail-dbt/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Analytics engineering · dbt</span><span>Case <span class="n">010</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Retail Pipeline in dbt</h1>
+  <p class="lead">A real online retailer&#x27;s 1.07 million invoice lines turned into tested, documented tables (sales, customers, products, cohorts) with dbt and DuckDB.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Analytics engineering</b></span><span>Year<b>2026</b></span><span>Tools<b>06</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../retail-dbt/docs/" data-cursor="Open">[ Open the dbt docs and lineage ]</a><a class="brk" href="https://github.com/mrrishit909/retail-dbt" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../retail-dbt/cover.jpg" width="1162" height="720" aria-label="Retail Pipeline in dbt: the project&#x27;s animated loop"><source src="../../../retail-dbt/loop.webm" type="video/webm"><source src="../../../retail-dbt/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">retail-dbt/loop.webm</span></div>
+    <div class="hud b"><span>[010]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">dbt</span><span class="brk">DuckDB</span><span class="brk">SQL</span><span class="brk">Data tests</span><span class="brk">Python</span><span class="brk">pandas</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Raw sales exports are never analysis-ready. The same rows appear twice, postage and bank fees are mixed in with products, and cancellations hide inside the sales. Every analyst who touches the file has to clean it again, and they won't all clean it the same way. <em>Can the cleaning be written once, as tested and documented SQL, so that every report starts from the same trusted tables?</em> That's the job dbt does on analytics teams.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A dbt project on DuckDB (a database that runs inside the laptop, no server) over UCI's <em>Online Retail II</em>: every invoice line of a UK online gift shop, Dec 2009 - Dec 2011.</p><ul><li><b>Layers:</b> staging (clean and type), intermediate (classify each line), marts (facts, dimensions and the tables reports read).</li><li><b>A seed file</b> for business rules: which of 28 odd stock codes are postage, fees, vouchers or test items.</li><li><b>31 data tests</b>, including five written for this data: sheet overlap, unclassified codes, positive sales, revenue reconciliation and cohort sanity.</li><li><b>Generated docs</b>: every model, column and test, plus the lineage graph (the image above).</li><li><b>An outside check</b> in pandas that recounts the headline numbers without dbt.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Profile the raw file before modeling it</h3><div class="prose"><p>The data ships as an Excel file with two sheets, flattened here into one 1,067,371-line CSV. A few DuckDB queries turned up the problems. Both sheets contain 1-9 December 2010 (22,523 lines each). 11,812 lines repeat exactly within a sheet. 19,494 lines are cancellations. A fifth of lines have no customer ID, and 28 stock codes aren't products at all: postage, Amazon fees, bank charges, "This is a test product".</p></div></div></li><li><span class="k mono">Step 02</span><div><h3>Staging: one clean, typed line per sale</h3><div class="prose"><p>The CSV is declared as a dbt source and read straight from disk by DuckDB. The staging model types each column, keeps only the newer sheet's copy of the overlapping days, and drops exact repeats. A singular test proves the overlap is safe to drop: it compares the two sheets' copies of those nine days line for line and returns any difference. It returns none.</p></div><pre><code>one_copy as (
+    select * from source
+    where not (sheet = &#x27;Year 2009-2010&#x27; and invoice_date &gt;= &#x27;2010-12-01&#x27;)
+),</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Business rules as data: a seed file</h3><div class="prose"><p>Which stock codes are postage, fees, manual corrections, vouchers or tests is a business rule, so it lives in a small CSV that dbt loads as a table (a seed) rather than in a <code>CASE</code> statement. The intermediate model gives every line exactly one type: sale, cancellation, non-product, bad-debt adjustment or stock adjustment. A test fails if a new, unclassified code ever appears. Without it, that code would quietly be counted as a sale.</p></div></div></li><li><span class="k mono">Step 04</span><div><h3>Marts: the tables reports read</h3><div class="prose"><p><code>fct_sales</code> holds product sales only. <code>dim_customers</code> has first purchase, orders and RFM scores. <code>dim_products</code>, <code>mart_monthly_revenue</code> (gross, cancelled, net, new customers) and <code>mart_cohort_retention</code> complete the set. Tests check unique keys, that every sale's customer and product exist in the dimensions, that sales are positive, and that revenue reconciles to the penny across the fact, the monthly mart, the classified lines and the customer table.</p></div></div></li><li><span class="k mono">Step 05</span><div><h3>Catch what the tests didn't</h3><div class="prose"><p>On gross sales, a paper-craft bird came out as the 4th-best product of the two years. One order of 80,995 units (£168,469.60) had been cancelled 12 minutes after it was placed. Gross revenue was "correct" and still misleading. So products and customers are now ranked on net revenue, after their own cancellations, and RFM scores use it too. Net of cancellations, the top product is a three-tier cake stand.</p></div></div></li><li><span class="k mono">Step 06</span><div><h3>Check from the outside</h3><div class="prose"><p><code>check.py</code> ignores dbt and redoes the key logic in pandas from the raw CSV. It checks the line counts after the overlap and repeats, sales and revenue month by month, cancellations, order counts, the 5,852 customers, new customers per month, and one cohort (January 2010: 368 customers, 79 back in February). Everything matches.</p></div></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><table><tr><th>Dec 2009 - 9 Dec 2011</th><th class="num">Value</th></tr><tr><td>Gross product sales</td><td class="num">£19.64M</td></tr><tr><td>Cancelled</td><td class="num">£1.46M (7.4%)</td></tr><tr><td>Net sales</td><td class="num">£18.18M</td></tr><tr><td>Orders · known customers</td><td class="num">39,516 · 5,852</td></tr><tr><td>Net sales, Dec 2010 - Nov 2011 vs a year earlier</td><td class="num">£8.94M vs £8.83M (+1.3%)</td></tr></table><img loading="lazy" decoding="async" src="../../../retail-dbt/charts/01_monthly.jpg" alt="Stacked monthly bars of net sales and cancelled value, December 2009 to December 2011, peaking each November near 1.4 million pounds"><ul><li><b>Barely growing, very seasonal:</b> both years peak in November (£1.43M and £1.45M gross).</li><li><b>About 20% of new customers buy again the next month</b> (Jan-Nov 2010 cohorts), with a bump at month 12, the next Christmas.</li><li><b>Champions</b> (top two-fifths of customers for both recency and frequency) are 25.1% of customers and 70.8% of net revenue.</li></ul><img loading="lazy" decoding="async" src="../../../retail-dbt/charts/02_cohorts.jpg" alt="Heatmap of cohort retention: each month's new customers from January 2010 to June 2011 against months 1 to 12 after first purchase, mostly between 10 and 30 percent"><img loading="lazy" decoding="async" src="../../../retail-dbt/charts/03_segments.jpg" alt="Bars comparing share of customers and share of net revenue by RFM segment; Champions are 25 percent of customers and 71 percent of revenue"></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Run it on a schedule with CI (GitHub Actions running <code>dbt build</code> on every change).</li><li>Add incremental models and snapshots, the patterns a live, growing source needs.</li><li>Put a BI layer on the marts (Power BI or a semantic layer) instead of static charts.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Built and tested on demand on a laptop: there is no scheduler, CI or warehouse. The data is a fixed public file from 2009-2011, so there are no incremental models either.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../customer-clv/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 011 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Who Will Buy Again?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../customer-clv/cover.jpg" width="1162" height="720" aria-label="Who Will Buy Again?: the project&#x27;s animated loop"><source src="../../../customer-clv/loop.webm" type="video/webm"><source src="../../../customer-clv/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Customer analytics</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>010</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

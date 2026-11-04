@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>When and Where Does Crime Happen in Los Angeles?, Rishit Mathur</title>
+<meta name="description" content="913,647 LAPD crime reports from 2020 to February 2024, audited before they were analysed: noon is a default time of day, a change of records system makes 2024 look like a crime collapse, and the real peak hour, the busiest divisions at night and the victims&#x27; ages come out differently.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="When and Where Does Crime Happen in Los Angeles?, Rishit Mathur">
+<meta property="og:description" content="913,647 LAPD crime reports from 2020 to February 2024, audited before they were analysed: noon is a default time of day, a change of records system makes 2024 look like a crime collapse, and the real peak hour, the busiest divisions at night and the victims&#x27; ages come out differently.">
+<meta property="og:image" content="../../../la-crime/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Exploratory analysis</span><span>Case <span class="n">054</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">When and Where Does Crime Happen in Los Angeles?</h1>
+  <p class="lead">913,647 LAPD crime reports from 2020 to February 2024, audited before they were analysed: noon is a default time of day, a change of records system makes 2024 look like a crime collapse, and the real peak hour, the busiest divisions at night and the victims&#x27; ages come out differently.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>06</b></span><span>Status<b>Code only</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/la-crime" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../la-crime/cover.jpg" width="1162" height="720" aria-label="When and Where Does Crime Happen in Los Angeles?: the project&#x27;s animated loop"><source src="../../../la-crime/loop.webm" type="video/webm"><source src="../../../la-crime/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">la-crime/loop.webm</span></div>
+    <div class="hud b"><span>[054]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">pandas</span><span class="brk">Data auditing</span><span class="brk">Open data (LAPD, CC0)</span><span class="brk">matplotlib</span><span class="brk">Plain-Python recount</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Los Angeles publishes every crime report the LAPD takes. The obvious questions are simple: <em>which hour is the busiest, which divisions have the most night-time crime, and who are the victims?</em> But the table has traps that would quietly spoil the answers, so the first job is to find them.</p><p>The questions follow DataCamp's "Analyzing Crime in Los Angeles" project; this version audits the table first.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>The LAPD's 2020 to 2024 table (1,004,894 reports), audited and cut to the 913,647 reports that are complete, and:</p><ul><li><b>The audit:</b> a change of records system, a default time of day, and invalid ages and coordinates.</li><li><b>When:</b> crimes by hour, and by weekday and hour.</li><li><b>Where and who:</b> night-time crime by division, and victims by age group.</li><li><b>What and how fast:</b> the most common crimes, and how quickly each is reported.</li><li><b>Check:</b> <code>check.py</code> streams the raw CSV and recomputes every table in plain Python: 774 numbers agree.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Download the bulk CSV</h3><div class="prose"><p>The City of Los Angeles open data portal offers the whole table as one CSV: 1,004,894 reports in 28 columns, 50 MB compressed, public domain (CC0). The script records the row count and a checksum; the file itself isn't committed.</p></div></div></li><li><span class="k mono">Step 02</span><div><h3>Look for a break before anything else</h3><div class="prose"><p>Crimes per month, from each report's occurrence date: between 15,440 and 20,467 a month until early 2024, then a slide to about 8,000 by June and under 5,000 in December. The portal explains why: on 7 March 2024 the LAPD moved to a new records system and this feed stopped. In those months the share of the more serious (Part 1) crimes jumps from about 60% to over 80%, and some crime types vanish. So every question below uses only crimes that occurred before 1 March 2024: 913,647 reports.</p></div><pre><code>    d = d[d[&quot;occurred&quot;] &lt; &quot;2024-03-01&quot;].copy()                                                  # every question below uses the complete period only</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Audit the rows that are left</h3><div class="prose"><p>No duplicate case numbers, no impossible times, nothing reported before it happened. Then the real problems: 3.6% of crimes logged at exactly 12:00, 39.3% exactly on the hour, a victim age of 0 on 25.1% of reports, some negative ages, and 2,240 reports with coordinates (0, 0).</p></div><pre><code>         (&quot;incidents at exactly 12:00&quot;, int(noon.sum())), (&quot;share at exactly 12:00 (%)&quot;, round(100 * noon.mean(), 2)),</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Find the real busiest hour</h3><div class="prose"><p>Crimes are counted by hour with and without the 12:00 default. With it, noon looks like the peak. Without it, the hour from 12:00 to 12:59 has fewer crimes (29,503) than the hours either side of it (39,764 and 41,344), and the busiest hour is 6 pm.</p></div></div></li><li><span class="k mono">Step 05</span><div><h3>Count night-time crime and victims</h3><div class="prose"><p>Night is 10 pm to 3:59 am, as in the brief, counted by LAPD division. Victim ages are used only if they are between 1 and 100, because 0 is a placeholder: that leaves 683,741 reports.</p></div></div></li><li><span class="k mono">Step 06</span><div><h3>Measure how long reports take</h3><div class="prose"><p>The days from each crime to its report, for all crimes together and for the twelve most common types.</p></div></div></li><li><span class="k mono">Step 07</span><div><h3>Recount it from the raw file</h3><div class="prose"><p><code>check.py</code> streams the raw CSV with plain Python (the csv module, counters and statistics; no pandas) and recomputes every table: the monthly series, the audit, the hours, the weekday-by-hour grid, the divisions, the age groups, the yearly counts, the crime types and the reporting times. All 774 numbers agree.</p></div><pre><code>    wh = Counter((x[1].weekday(), x[3] // 100) for x in rows if x[3] != 1200)</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><img loading="lazy" decoding="async" src="../../../la-crime/charts/02_monthly.jpg" alt="Left: crimes per month, steady at 15,000 to 20,000 until early 2024 and then falling to about 8,000 and 4,700 after the LAPD changed records systems on 7 March 2024. Right: monthly simple assaults, burglaries and stolen vehicles: assaults and burglaries drop to almost zero after the change while stolen vehicles carry on near 2,000"><p><b>The 2024 'collapse' is a records system.</b> Crimes per month were 19,321 in September 2023 and 16,293 in March 2024, then 8,170 in July and 4,697 in December. Over the same months the Part 1 share goes from 60% to 75% and 81%, simple-assault reports fall from 1,343 (February) to 38 (July), and stolen vehicles stay between 1,800 and 2,000 until October. This is the new system, not the city. The 91,247 reports that occurred from 1 March 2024 are left out.</p><table><tr><th>Audit</th><th class="num">Result</th></tr><tr><td>Logged at exactly 12:00</td><td class="num"><b>3.6%</b></td></tr><tr><td>Logged exactly on the hour</td><td class="num">39.3%</td></tr><tr><td>Victim age recorded as 0</td><td class="num">25.1%</td></tr><tr><td>Coordinates (0, 0)</td><td class="num">2,240</td></tr></table><img loading="lazy" decoding="async" src="../../../la-crime/charts/01_hours.jpg" alt="Bars of crimes by hour of the day with a tall orange cap at 12:00 for the 32,715 crimes logged at exactly 12:00, and a real peak at 6 pm"><p><b>Noon is a default.</b> 32,715 crimes (3.6%) are logged at exactly 12:00, 52 times what an evenly used minute would get. With them counted, the busiest hour is noon (62,218); without them, hour 12 has 29,503 and the busiest hour is 6 pm (54,327). Times are rounded too: 39.3% fall exactly on the hour, against 1.7% if minutes were used evenly. Other defaults: 229,768 reports (25.1%) have victim age 0, which is no age; 137 are negative; 2,240 have coordinates (0, 0).</p><img loading="lazy" decoding="async" src="../../../la-crime/charts/06_weekday_hour.jpg" alt="Heat-map of crimes by weekday and hour with the 12:00 defaults left out: brightest on Friday late afternoon and evening, darkest in the early hours of every day"><p>With the 12:00 default left out, Friday is the busiest day (134,279 crimes) and Tuesday the quietest (120,961). The busiest hour of the week is Friday at 5 pm (8,739 crimes) and the quietest is Tuesday at 5 am (2,098).</p><img loading="lazy" decoding="async" src="../../../la-crime/charts/03_night_areas.jpg" alt="Bars of crimes between 10 pm and 4 am for the ten busiest LAPD divisions: Central 13,755, 77th Street 12,566, Hollywood 12,043, Pacific 10,762, Southwest 10,544, Southeast 10,504"><p><b>Night-time crime by division:</b> Central 13,755 (22.1% of its crime), 77th Street 12,566 (22.1%), Hollywood 12,043 (25.0%, the highest share), Pacific 10,762, Southwest 10,544 and Southeast 10,504.</p><img loading="lazy" decoding="async" src="../../../la-crime/charts/04_ages.jpg" alt="Bars of the share of crimes by victim age group: 26 to 34 is the largest at 25.2%, then 35 to 44 at 22.0%, 45 to 54 at 15.4%, 18 to 25 at 15.3%, 55 to 64 at 10.9%, 65 and over at 7.6% and 0 to 17 at 3.6%"><p><b>Victims,</b> among the 683,741 reports with a valid age: 26 to 34 is the biggest group (25.2%), then 35 to 44 (22.0%), 45 to 54 (15.4%), 18 to 25 (15.3%), 55 to 64 (10.9%), 65 and over (7.6%) and 0 to 17 (3.6%).</p><p><b>Over time.</b> 199,847 crimes in 2020, 209,876 in 2021 (+5.0%), 235,259 in 2022 (+12.1%) and 232,345 in 2023 (−1.2%). The most common type is stolen vehicles (97,701, 10.7%), then simple battery (72,211) and identity theft (57,770), which rose from 9,040 in 2020 to 13,617 in 2023.</p><img loading="lazy" decoding="async" src="../../../la-crime/charts/05_reporting.jpg" alt="Horizontal bars of the share of each of the twelve most common crimes reported within a day: aggravated assault and robbery 93%, simple assault 90%, stolen vehicles 74%, down to identity theft 30%, highlighted"><p><b>Reporting.</b> The median report is filed 1 day after the crime: 49.0% the same day, 70.6% within a day, 86.8% within a week, and 6.1% after more than a month, the slowest after 1,862 days. Aggravated assault and robbery are reported within a day 93% of the time; identity theft only 30% (median 7 days).</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Add the LAPD's new NIBRS offence and victim datasets, which began in October 2024, to continue the series past the change of system.</li><li>Divide by population or by area to turn counts into rates, so divisions can be compared fairly.</li><li>Map the reports below division level, after dropping the (0, 0) coordinates.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>These are crimes reported to the police, not all crimes, and counts are not rates: divisions differ in population and in how people report. Times are heavily rounded and 12:00 stands in for "unknown", so the hourly shape is trustworthy only in outline. A zero victim age often means no individual victim or an unknown age. Reports from 1 March 2024 (after the LAPD changed records systems) were left out and not analysed.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../online-shoppers-purchase/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 055 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Who Buys Online?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../online-shoppers-purchase/cover.jpg" width="1162" height="720" aria-label="Who Buys Online?: the project&#x27;s animated loop"><source src="../../../online-shoppers-purchase/loop.webm" type="video/webm"><source src="../../../online-shoppers-purchase/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Predictive modeling</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>054</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

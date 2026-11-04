@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Does Entanglement Look Like Gate by Gate?, Rishit Mathur</title>
+<meta name="description" content="A browser quantum circuit lab where every step of a gate is drawn as the real state partway through it: Bloch spheres that shrink as qubits entangle, pairwise entanglement drawn from the state, shots with exact noise, and a mock 5-qubit backend that needs 10 SWAPs for Grover search and drops it…">
+<meta property="og:type" content="website">
+<meta property="og:title" content="What Does Entanglement Look Like Gate by Gate?, Rishit Mathur">
+<meta property="og:description" content="A browser quantum circuit lab where every step of a gate is drawn as the real state partway through it: Bloch spheres that shrink as qubits entangle, pairwise entanglement drawn from the state, shots with exact noise, and a mock 5-qubit backend that needs 10 SWAPs for Grover search and drops it…">
+<meta property="og:image" content="../../../quantum-circuit-lab/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">TypeScript · Rust/WASM · quantum simulation</span><span>Case <span class="n">167</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">What Does Entanglement Look Like Gate by Gate?</h1>
+  <p class="lead">A browser quantum circuit lab where every step of a gate is drawn as the real state partway through it: Bloch spheres that shrink as qubits entangle, pairwise entanglement drawn from the state, shots with exact noise, and a mock 5-qubit backend that needs 10 SWAPs for Grover search and drops it from 94.5% to 39.9%. The simulator is Rust compiled to WebAssembly, 2.5-2.8× faster than TypeScript.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>TypeScript</b></span><span>Year<b>2026</b></span><span>Tools<b>13</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../quantum-circuit-lab/demo/" data-cursor="Open">[ Open the live lab ]</a><a class="brk" href="https://github.com/mrrishit909/quantum-circuit-lab" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../quantum-circuit-lab/cover.jpg" width="1162" height="720" aria-label="What Does Entanglement Look Like Gate by Gate?: the project&#x27;s animated loop"><source src="../../../quantum-circuit-lab/loop.webm" type="video/webm"><source src="../../../quantum-circuit-lab/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">quantum-circuit-lab/loop.webm</span></div>
+    <div class="hud b"><span>[167]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">TypeScript</span><span class="brk">Rust → WebAssembly</span><span class="brk">Next.js 16 (static export)</span><span class="brk">React 19</span><span class="brk">three.js / React Three Fiber</span><span class="brk">Web Worker</span><span class="brk">Fastify</span><span class="brk">PostgreSQL 16 (row-level security)</span><span class="brk">OpenAPI 3.1</span><span class="brk">OpenTelemetry</span><span class="brk">Docker Compose</span><span class="brk">Playwright</span><span class="brk">41 unit + API tests, 7 e2e journeys</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Quantum states are hard to teach because they are long lists of complex numbers. A circuit diagram shows what was done, and a histogram shows what came out, but not what happened in between. <em>Can a browser lab show the state itself, at every moment of every gate, and stay honest about what is real?</em></p><p>The build book's rule for this volume is that motion has to carry meaning: here every animated position is the actual state partway through a gate. Blueprint 9 of ten, built as its demo scenario end to end.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A Next.js lab that runs entirely in the browser, and a Fastify API on PostgreSQL behind the same interface, started by one <code>docker compose up</code>.</p><ul><li><b>A state-vector simulator</b> with two kernels, written in Rust compiled to WebAssembly and run in a Web Worker, checked against an identical TypeScript kernel.</li><li><b>Fractional gates</b> (U<sup>t</sup> from each gate's eigen-decomposition), so stepping animates real intermediate states.</li><li><b>Bloch vectors</b> from each qubit's reduced state and <b>pairwise entanglement</b> (negativity of the partial transpose).</li><li><b>A stabilizer simulator</b> for large Clifford circuits and an <b>exact density-matrix noise model</b>.</li><li><b>A hardware-adapter interface</b> with a mock 5-qubit backend: Toffoli decomposition, SWAP routing, a queued job, and an outage it survives.</li><li><b>A circuit editor</b> with drag and drop and a full keyboard path, deep links, reduced motion and a list view.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Interpolation that is physics, not tweening</h3><div class="prose"><p>Stepping through a circuit tweens the drawn position, but what is drawn at position 1.5 is the state after the first gate and half of the second: CNOT<sup>0.5</sup>, computed from the gate's eigenvalues. Halfway through the CNOT the Bell pair's negativity is already 0.354; at the end both Bloch vectors have length 0 and the negativity is 0.50. A linear blend of start and end states would leave the sphere and is not a state at all. (The one blend in the lab is the measurement-collapse animation, which moves the arrows to the measured poles.)</p></div><pre><code>// U^t = sum_k lambda_k^t v_k v_k^dagger (principal branch)
+const mt = t &gt;= 1 ? m : power(m, t);
+k.apply1(s, target, controls, mt);</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Entanglement you can see, and when you can't</h3><div class="prose"><p>Each arrow is one qubit's reduced state: on the surface when pure, at the centre when maximally entangled. The arcs between spheres are the negativity of each pair's reduced density matrix. A four-qubit GHZ state is the useful surprise: every arrow sits at the centre, yet all six pairs have negativity 0, so no arcs are drawn. The entanglement is real, but it belongs to all four qubits together, not to any pair. The scroll intro ends on exactly that picture.</p></div></div></li><li><span class="k mono">Step 03</span><div><h3>Rust in the worker, checked against TypeScript</h3><div class="prose"><p>The two kernels (a 2×2 gate under a control mask, and the SWAP family) are 20 KB of WebAssembly exported without wasm-bindgen; states can live in WASM memory so gates run in place. On 100 random circuits of 1-10 qubits the two kernels agree to 10<sup>−12</sup>. With the same loop structure, WASM is 2.5-2.8× faster from 12 qubits up (24 qubits: 1.78 s vs 0.67 s per layer). A SIMD build was no faster, so it is not shipped.</p></div></div></li><li><span class="k mono">Step 04</span><div><h3>Simulators that check each other</h3><div class="prose"><p>Seven reference circuits match their textbook distributions within 10<sup>−12</sup>, and Grover's two iterations on three qubits give 94.5% (0.9453125) on the marked item. The stabilizer simulator agrees with the state vector on 60 random Clifford circuits and runs a 500-qubit GHZ in about 3 ms; a full 500-qubit measurement takes about 0.3 s, because measurement is quadratic, so the first comment claiming milliseconds was corrected.</p></div></div></li><li><span class="k mono">Step 05</span><div><h3>Noise, exactly</h3><div class="prose"><p>Noise is simulated with a density matrix stored as a 2n-qubit vector, so the same kernel applies the gate and its conjugate. Each channel is checked against its textbook effect, traces stay at 1, and noisy shots pass a chi-square test against the exact noisy distribution. At the lab's default noise (1% and 3% depolarizing, 2% damping per step, 2% readout) the Bell distribution moves 9.2%, while Grover's marked item falls from 94.5% to 30.2%.</p></div></div></li><li><span class="k mono">Step 06</span><div><h3>A mock backend that behaves like hardware</h3><div class="prose"><p>Linden-5 has five qubits in a line. Submitting Grover-3 decomposes its Toffolis into CNOT and T gates, then routes it: a greedy router with lookahead needs 10 SWAPs, 34 two-qubit gates and depth 64, and the marked item comes out 39.9% of the time. The first, naive router needed 15 SWAPs and got 37.7%. Jobs go through a queue shared by every organization; with the backend offline the job is held and retried, not lost, and completes when it returns.</p></div><pre><code>const mover = cost(moved(layout, la, lb), idx + 1) &lt;= cost(moved(layout, lb, la), idx + 1) ? la : lb;</code></pre></div></li><li><span class="k mono">Step 07</span><div><h3>The same lab behind an API</h3><div class="prose"><p>In Docker the lab saves versioned circuits, runs shots on the server (on the same Rust kernel) and submits hardware jobs through the API: bearer tokens with roles, row-level security per organization, idempotency keys, an hourly hardware quota, read-only share links, a hash-chained audit log, OpenTelemetry spans, and completion e-mails to a local mail sink. Testing it found a pagination bug: the cursor carried a millisecond timestamp while Postgres stores microseconds, so page 2 repeated page 1.</p></div></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The demo.</b> A Bell pair after H and CNOT: both arrows at the centre, the pair's entanglement arc, and 1,000 shots that only ever read 00 or 11:</p><img loading="lazy" decoding="async" src="../../../quantum-circuit-lab/shots/bell.jpg" alt="Lab with two Bloch spheres whose arrows sit at the centre and a violet entanglement arc, the circuit grid with H on q0 and a CNOT, the state panel listing both Bloch vectors with length 0 and 'Entangled pairs: q0-q1 0.50', and a histogram with only 00 and 11."><p>The scroll intro's last chapter: four qubits in a GHZ state, every arrow at the centre, no pair entangled on its own:</p><img loading="lazy" decoding="async" src="../../../quantum-circuit-lab/shots/ghz.jpg" alt="Four Bloch spheres with all arrows at the centre and no arcs between them, beside the chapter text 'Every qubit doubles the work' and a table of state-vector memory from 4 KiB at 8 qubits to 256 MiB at 24."><p>Noise on the Bell pair: ideal probabilities, ideal shots, the exact noisy distribution and noisy shots:</p><img loading="lazy" decoding="async" src="../../../quantum-circuit-lab/shots/noise.jpg" alt="Measure panel with noise sliders at 1% one-qubit depolarizing, 3% two-qubit, 2% damping, 2% readout, and a histogram where 01 and 10 appear under noise; the caption reports the total variation distance."><p>Grover-3 on the mock backend after routing:</p><img loading="lazy" decoding="async" src="../../../quantum-circuit-lab/shots/hardware.jpg" alt="Linden-5 panel: job completed, transpiled with 10 SWAPs inserted, 34 two-qubit gates, depth 64; histogram of the ideal 101 bar against the device's shots, which spread over all eight outcomes."><table><tr><th>Grover-3, item 101</th><th class="num">P(101)</th></tr><tr><td>Ideal</td><td class="num">94.5%</td></tr><tr><td>Mock device, lookahead router</td><td class="num">39.9%</td></tr><tr><td>Mock device, naive router</td><td class="num">37.7%</td></tr><tr><td>Lab default noise</td><td class="num">30.2%</td></tr></table><p><b>Checks.</b> WASM and TypeScript kernels agree to 10<sup>−12</sup> on 100 random circuits. 200 random circuits stay normalized at every fractional position. Coverage of the domain and motion code: 99.2% of statements. Every API response is validated against the published OpenAPI document; another organization gets 404 on this one's circuits and runs, and row-level security also holds on a pooled connection whose tenant setting came back empty.</p><p><b>Performance.</b> 60 FPS with a real GPU. In the browser's own worker, 20 qubits take 40 ms per layer on WASM against 73 ms on TypeScript. The API on one process: 1,195 requests a second with 0 errors; full 1,000-shot simulations at p95 54.6 ms.</p><p><a href="../../../quantum-circuit-lab/demo/recording.mp4">Watch the 2 min 16 s captioned recording of the whole scenario</a>.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Trajectory (Monte Carlo wavefunction) noise to go past 10 noisy qubits, checked against the density matrix where both run.</li><li>A correlated two-qubit depolarizing channel instead of independent one-qubit channels on each qubit a gate touches.</li><li>Mid-circuit measurement with classical feed-forward, so teleportation needs no deferred-measurement trick.</li><li>A routing search better than greedy lookahead (Grover-3 still needs 10 SWAPs on a line of five).</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Built from blueprint 09 of a written build book (Volume V, motion-first products) as one vertical slice. <b>Everything is simulated</b>: there is no quantum hardware; the backend Linden-5 is invented, with made-up calibration numbers, and runs on the same density-matrix simulator. Tenants and tokens are demo data. Not built: real hardware or provider SDKs, tensor networks, trajectory noise, mid-circuit measurement, real-time collaboration, lessons, billing, single sign-on, Kafka, Redis, object storage, Terraform and cloud deployment.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../forge-twin-builder/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 168 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Would a Second CNC Machine Pay Off?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../forge-twin-builder/cover.jpg" width="1162" height="720" aria-label="Would a Second CNC Machine Pay Off?: the project&#x27;s animated loop"><source src="../../../forge-twin-builder/loop.webm" type="video/webm"><source src="../../../forge-twin-builder/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>TypeScript · three.js · discrete-event simulation</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>167</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

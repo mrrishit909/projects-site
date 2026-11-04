@@ -10,6 +10,7 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="../florida-flight-delays/cover.jpg">
 <meta name="theme-color" content="#000000">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../vendor/fonts/InterTight-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../vendor/fonts/GeistMono-Variable.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="x.css">
@@ -31,7 +32,7 @@
 /* hero */
 .hero { position: fixed; left: var(--pad); right: var(--pad); bottom: calc(var(--pad) + 6px); z-index: 4; display: grid; grid-template-columns: 1fr minmax(0, 330px); align-items: end; gap: 24px; }
 .hero h1 .ln { display: block; overflow: hidden; padding-bottom: .06em; }
-.hero h1 .ln > span { display: inline-block; transform: translateY(105%); transition: transform 1.1s var(--ease-out); }
+.hero h1 .ln > span { display: inline-block; transform: translateY(55%); transition: transform 1.1s var(--ease-out); }
 body.in .hero h1 .ln > span { transform: none; }
 body.in .hero h1 .ln:nth-child(2) > span { transition-delay: .09s; }
 .hero p { margin: 0 0 .5em; font: 400 13px/1.55 var(--mono); color: var(--w60); letter-spacing: .02em; opacity: 0; transition: opacity .8s .5s; }
@@ -75,6 +76,7 @@ body.in .hero p, body.in .hero .facts { opacity: 1; }
 .static ul { list-style: none; padding: 0; margin: 40px 0; display: grid; gap: 12px; }
 
 @media (max-width: 760px) {
+  .hero h1 .ln > span { transform: none; transition: none; }
   .hero { grid-template-columns: 1fr; bottom: calc(var(--pad) + 2px); }
   .hero .facts { gap: 14px; font-size: 10px; }
   .index { top: 70px; transform: none; display: flex; gap: 12px; align-items: baseline; font-size: 10px; }

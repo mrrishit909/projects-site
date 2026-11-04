@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where a Loan Process Loses Time, Rishit Mathur</title>
+<meta name="description" content="Process mining a Dutch bank&#x27;s event log of 31,509 loan applications: the real process map, where the 18 days go, how much rework costs, and what to automate first.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Where a Loan Process Loses Time, Rishit Mathur">
+<meta property="og:description" content="Process mining a Dutch bank&#x27;s event log of 31,509 loan applications: the real process map, where the 18 days go, how much rework costs, and what to automate first.">
+<meta property="og:image" content="../../../process-mining/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Process mining</span><span>Case <span class="n">024</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Where a Loan Process Loses Time</h1>
+  <p class="lead">Process mining a Dutch bank&#x27;s event log of 31,509 loan applications: the real process map, where the 18 days go, how much rework costs, and what to automate first.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>07</b></span><span>Status<b>Code only</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/process-mining" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../process-mining/cover.jpg" width="1162" height="720" aria-label="Where a Loan Process Loses Time: the project&#x27;s animated loop"><source src="../../../process-mining/loop.webm" type="video/webm"><source src="../../../process-mining/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">process-mining/loop.webm</span></div>
+    <div class="hud b"><span>[024]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">pandas</span><span class="brk">Process mining</span><span class="brk">Event logs (XES)</span><span class="brk">Graphviz</span><span class="brk">statsmodels</span><span class="brk">Digital transformation</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Digital transformation projects often start by automating whatever looks slow, without measuring where the time actually goes. A bank's loan system already records every step of every application. <em>What does the process really look like, where do applications wait, and which changes would cut the most days?</em></p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A process-mining analysis of the BPI Challenge 2017 event log (2016, 1.2 million events), written from scratch in Python:</p><ul><li><b>A process map</b> (directly-follows graph) with how often each step follows another and the median wait.</li><li><b>Stage timing</b>, and hands-on work separated from waiting.</li><li><b>Where staff time goes</b> and how much of it is rework.</li><li><b>A channel comparison:</b> do offers sent online only come back faster, after adjusting for the loan?</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Read the event log</h3><div class="prose"><p>The log comes in XES, the XML standard for event logs: each application is a trace and each step an event, with a timestamp, the staff member and a lifecycle status. <code>download.py</code> streams the 30 MB file into a flat table, one row per event. <code>check.py</code> confirms it matches the published statistics: 31,509 applications, 1,202,267 events and 26 activities.</p></div><pre><code>for kind, el in ET.iterparse(gzip.open(path), events=(&quot;start&quot;, &quot;end&quot;)):</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Draw the real process</h3><div class="prose"><p>A directly-follows graph counts how often step B comes right after step A, and the median time between them. Orange arrows mark waits of a day or more. Both are visible: the long wait for customers to return signed offers, and the loop between "validating documents" and "documents missing". Paths used by under 3% of applications are hidden.</p><img loading="lazy" decoding="async" src="../../../process-mining/charts/01_process_map.jpg" alt="Process map of the loan process from application created to approved, denied or cancelled, with arrow counts and median times; orange arrows mark 7-day waits for returned offers and a loop between validating documents and documents missing"></div><pre><code>edges = e.groupby([&quot;activity&quot;, &quot;nxt&quot;]).agg(count=(&quot;case&quot;, &quot;size&quot;), cases=(&quot;case&quot;, &quot;nunique&quot;), median_hours=(&quot;dt&quot;, &quot;median&quot;)).reset_index()</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Separate work from waiting</h3><div class="prose"><p>Work items log start, suspend, resume and complete. Pairing each start or resume with the next suspend or complete gives hands-on time. Stretches over 4 hours are treated as items left open, which drops 649 of 254,370. The median approved application gets <b>33 minutes</b> of logged work in 14.8 days, 0.15% of the elapsed time. The process is almost all waiting.</p></div><pre><code>open_ = w[&quot;lifecycle&quot;].isin([&quot;start&quot;, &quot;resume&quot;]) &amp; nxt_life.isin([&quot;suspend&quot;, &quot;complete&quot;, &quot;ate_abort&quot;])</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Measure rework</h3><div class="prose"><p>Two-thirds of decided applications loop back at least once because documents are missing. Holding loan goal, type, amount and outcome equal, one loop means 29% longer. Each loop adds roughly 4-6 days of validation.</p><img loading="lazy" decoding="async" src="../../../process-mining/charts/02_stages.jpg" alt="Stacked bars of average days per stage for approved applications by number of missing-documents loops: 13 days with none, 17 with one, 22 with two, 29 with three or more, with the validation stage growing each time"><img loading="lazy" decoding="async" src="../../../process-mining/charts/03_staff_time.jpg" alt="Bar chart of logged hands-on staff time: validate application 40%, complete application 27%, calls about missing documents 17%, calls chasing signed offers 15%"></div></div></li><li><span class="k mono">Step 05</span><div><h3>Compare the digital channel</h3><div class="prose"><p>About 5% of offers went out online only. Adjusting for loan goal, type, amount and month, they came back 82% faster (median 1.8 vs 7.2 days), but were returned slightly less often. Customers chose the channel, so this is a strong lead to test, not proof.</p><img loading="lazy" decoding="async" src="../../../process-mining/charts/04_channel.jpg" alt="Three small bar charts comparing mail-and-online with online-only offers: median days to return 7.2 vs 1.8, share returned 56% vs 51%, share accepted 41% vs 46%"></div><pre><code>lm_days = smf.ols(f&quot;np.log(days_to_return + 0.01) ~ online_only + {ctl}&quot;, back).fit(cov_type=&quot;HC3&quot;)</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><table><tr><th>Approved: stage</th><th class="num">Days</th><th class="num">Share</th></tr><tr><td>Bank prepares offer</td><td class="num">1.4</td><td class="num">8%</td></tr><tr><td><b>Customer returns offer</b></td><td class="num"><b>9.9</b></td><td class="num"><b>54%</b></td></tr><tr><td>Bank validates</td><td class="num">6.8</td><td class="num">38%</td></tr><tr><td>Total (average)</td><td class="num">18.1</td><td class="num"></td></tr></table><p>Of 31,509 applications, 55% were approved, 33% cancelled and 12% denied. The most common path of all (22%) ends with an offer sent and never returned; such offers are cancelled after about a month.</p><p><b>What to automate first</b>, and what each targets:</p><ul><li><b>Online upload with a completeness check</b>: the document loops in two-thirds of cases.</li><li><b>E-signed online offers</b>: the customer wait, 54% of the time.</li><li><b>Automated reminders</b>: 34,656 chase-call work items.</li><li><b>An earlier nudge for silent offers</b>: the 31-day timeouts.</li></ul><p>The lesson: measure before automating. Staff work is a sliver of the elapsed time. The days are lost waiting for customers and in document loops, so the biggest wins are digital self-service steps, not faster back-office clicks.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Conformance checking against the bank's intended process model.</li><li>Predict, at offer time, which applications will go silent, and nudge those first.</li><li>Repeat on a later BPI log to compare before and after a system change.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Data: van Dongen (2017), BPI Challenge 2017, 4TU.ResearchData, doi:10.4121/uuid:5f3067df-f10b-45da-b98b-86ae4c7a310b. Used under the 4TU General Terms of Use (non-commercial, with attribution). The automation ideas are what the data supports, not tested changes.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../digital-divide/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 025 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Who Is Still Offline?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../digital-divide/cover.jpg" width="1162" height="720" aria-label="Who Is Still Offline?: the project&#x27;s animated loop"><source src="../../../digital-divide/loop.webm" type="video/webm"><source src="../../../digital-divide/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Digital transformation</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>024</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Chicago Rides, Rishit Mathur</title>
+<meta name="description" content="A year of Chicago bike-share trips (6.1 million rides) in SQL: how members and casual riders differ, and where a membership campaign should go.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="How Chicago Rides, Rishit Mathur">
+<meta property="og:description" content="A year of Chicago bike-share trips (6.1 million rides) in SQL: how members and casual riders differ, and where a membership campaign should go.">
+<meta property="og:image" content="../../../chicago-bike-share/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">SQL · Analysis</span><span>Case <span class="n">004</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">How Chicago Rides</h1>
+  <p class="lead">A year of Chicago bike-share trips (6.1 million rides) in SQL: how members and casual riders differ, and where a membership campaign should go.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>SQL</b></span><span>Year<b>2026</b></span><span>Tools<b>06</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../chicago-bike-share/report.html" data-cursor="Open">[ Read the SQL report ]</a><a class="brk" href="https://github.com/mrrishit909/chicago-bike-share" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../chicago-bike-share/cover.jpg" width="1162" height="720" aria-label="How Chicago Rides: the project&#x27;s animated loop"><source src="../../../chicago-bike-share/loop.webm" type="video/webm"><source src="../../../chicago-bike-share/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">chicago-bike-share/loop.webm</span></div>
+    <div class="hud b"><span>[004]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">SQL</span><span class="brk">SQLite</span><span class="brk">Window functions</span><span class="brk">CTEs</span><span class="brk">Python</span><span class="brk">SVG charts</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Chicago's Divvy bike-share has two kinds of riders: <b>members</b> with an annual pass and <b>casual</b> riders who pay per ride or per day. A classic question for a bike-share analyst: <em>how do the two groups use the bikes differently, and where would a campaign to turn casual riders into members reach the most of them?</em> Divvy publishes every trip, so the answer can come straight from the data.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A SQLite database of every Divvy trip from September 2025 to August 2026, a set of SQL files that each answer one question, and a one-page report that shows each answer with the SQL behind it.</p><ul><li><b>Data:</b> 6,115,982 raw rides, 5,951,516 after four documented cleaning rules.</li><li><b>SQL:</b> CTEs, window functions (<code>ROW_NUMBER</code> for medians, <code>RANK</code>, <code>LAG</code> for month-over-month change, windowed <code>SUM</code> for shares), <code>CASE</code>, date functions and indexes.</li><li><b>A second opinion:</b> a plain-Python script that recounts the answers from the raw files without SQL and must agree exactly.</li><li><b>Report:</b> question, answer in plain words, SQL, result table and chart, built from the saved results.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Download a year of trips</h3><div class="prose"><p>Divvy publishes one zip per month on a public server. Twelve months (September 2025 to August 2026, about 230 MB) download in parallel in under a minute. The raw files stay out of the repo; the script can always fetch them again.</p></div></div></li><li><span class="k mono">Step 02</span><div><h3>Load it into SQLite and clean it</h3><div class="prose"><p>Python's built-in <code>sqlite3</code> and <code>csv</code> modules load all 6,115,982 rows in about a minute. The clean <code>trips</code> table is built in SQL with four rules: one row per ride ID, rides between 1 minute and 24 hours, a known rider type, and a start date inside the year studied. Rides with no station, mostly e-bikes parked outside a dock, are kept; only the station questions leave them out.</p></div><pre><code>WHERE copy_no = 1
+  AND ROUND((julianday(ended_at) - julianday(started_at)) * 86400000) BETWEEN 60000 AND 86400000
+  AND member_casual IN (&#x27;member&#x27;, &#x27;casual&#x27;)
+  AND started_at &gt;= &#x27;2025-09-01&#x27; AND started_at &lt; &#x27;2026-09-01&#x27;</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Profile the data before trusting it</h3><div class="prose"><p>One SQL query counts what each rule removed: 35 duplicate IDs, 158,904 rides under a minute, 5,302 over a day, and 225 rides that started on August 31 but sat in the September file (caught when the month query showed a stray August). The counts add up exactly to the 5,951,516 rides kept.</p></div></div></li><li><span class="k mono">Step 04</span><div><h3>Answer six questions in SQL</h3><div class="prose"><p>Each question is its own <code>.sql</code> file: rider types, hour of day, day of week, month, where casual riders start, their routes, and ride length. SQLite has no <code>MEDIAN</code>, so the median comes from numbering each group's rides by duration and averaging the middle one or two.</p></div><pre><code>WITH ranked AS (
+  SELECT member_casual, duration_min,
+         ROW_NUMBER() OVER (PARTITION BY member_casual ORDER BY duration_min) AS rn,
+         COUNT(*)     OVER (PARTITION BY member_casual)                       AS n
+  FROM trips)
+SELECT member_casual, AVG(duration_min) AS median_min
+FROM ranked WHERE rn IN ((n + 1) / 2, (n + 2) / 2)
+GROUP BY member_casual;</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Recount everything without SQL</h3><div class="prose"><p><code>check.py</code> re-reads the raw zips in plain Python, applies the same rules, and asserts its counts equal the SQL results: totals, both rider types, all 12 months, all 24 hours and the top stations. On its first run it disagreed by <b>one ride</b>. A trip lasting exactly 60.000 seconds came out as 0.99999994 minutes in SQL's floating-point date math, so SQL dropped it as "under a minute". Durations now use whole milliseconds, and the two agree exactly.</p></div></div></li><li><span class="k mono">Step 06</span><div><h3>Build the report</h3><div class="prose"><p><code>report.py</code> turns the saved results into one page: for each question, the answer in plain words (every number filled in from the results), the SQL, the table, and a chart drawn as plain SVG with no charting library. Member and casual colors were checked for color-blind separation.</p></div></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><table><tr><th></th><th class="num">Members</th><th class="num">Casual</th></tr><tr><td>Share of rides</td><td class="num">65.0%</td><td class="num">35.0%</td></tr><tr><td>Median ride</td><td class="num">8.7 min</td><td class="num">11.3 min</td></tr><tr><td>Rides on weekends</td><td class="num">23.3%</td><td class="num">37.1%</td></tr><tr><td>Round trips</td><td class="num">2.2%</td><td class="num">7.5%</td></tr></table><ul><li><b>Commuters vs leisure:</b> members peak at 8:00 and 17:00; casual riders have no morning peak, and Saturday holds 21.1% of their rides.</li><li><b>Summer business:</b> the casual share runs from 17.9% in January to 40.8% in July.</li><li><b>Where:</b> the lakefront and museums. Navy Pier alone had 50,768 casual rides (75.9% of its rides).</li><li><b>Recommendation:</b> a membership push at lakefront stations on summer weekends, pitched on long leisure rides. That's a recommendation from the patterns, not a tested result.</li></ul></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Join daily weather to explain the day-to-day swings.</li><li>Add pricing to estimate what converting casual riders is worth.</li><li>Compare against the previous year once station IDs are matched.</li></ul></div></div></section>
+
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../us-retail-forecast/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 005 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">US Retail Sales Forecast</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../us-retail-forecast/cover.jpg" width="1162" height="720" aria-label="US Retail Sales Forecast: the project&#x27;s animated loop"><source src="../../../us-retail-forecast/loop.webm" type="video/webm"><source src="../../../us-retail-forecast/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Forecasting</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>004</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

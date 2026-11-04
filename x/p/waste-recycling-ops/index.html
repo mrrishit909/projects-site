@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which Bins Overflow This Weekend?, Rishit Mathur</title>
+<meta name="description" content="Waste operations over an invented district of 500 smart containers on a festival Saturday: overflow risk from each container&#x27;s own fill rates, dynamic routes that drive 125 km against the fixed schedule&#x27;s 202 and leave 4 overflows instead of 12, a conveyor classifier that calls itself a toy, and…">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Which Bins Overflow This Weekend?, Rishit Mathur">
+<meta property="og:description" content="Waste operations over an invented district of 500 smart containers on a festival Saturday: overflow risk from each container&#x27;s own fill rates, dynamic routes that drive 125 km against the fixed schedule&#x27;s 202 and leave 4 overflows instead of 12, a conveyor classifier that calls itself a toy, and…">
+<meta property="og:image" content="../../../waste-recycling-ops/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · OR-Tools VRP · Linear programming</span><span>Case <span class="n">134</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Which Bins Overflow This Weekend?</h1>
+  <p class="lead">Waste operations over an invented district of 500 smart containers on a festival Saturday: overflow risk from each container&#x27;s own fill rates, dynamic routes that drive 125 km against the fixed schedule&#x27;s 202 and leave 4 overflows instead of 12, a conveyor classifier that calls itself a toy, and loads placed where they are worth most within what each plant can take.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>09</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../waste-recycling-ops/demo/" data-cursor="Open">[ Run the seven-step demo ]</a><a class="brk" href="https://github.com/mrrishit909/waste-recycling-ops" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../waste-recycling-ops/cover.jpg" width="1162" height="720" aria-label="Which Bins Overflow This Weekend?: the project&#x27;s animated loop"><source src="../../../waste-recycling-ops/loop.webm" type="video/webm"><source src="../../../waste-recycling-ops/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">waste-recycling-ops/loop.webm</span></div>
+    <div class="hud b"><span>[134]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">FastAPI</span><span class="brk">PostgreSQL 16 (row-level security)</span><span class="brk">OR-Tools routing (VRP)</span><span class="brk">scipy linear programming</span><span class="brk">scikit-learn gradient boosting</span><span class="brk">Pillow</span><span class="brk">Docker Compose</span><span class="brk">10 tests</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>A city empties its bins on a schedule written years ago: some are collected a third full, some overflow on a Saturday because a park filled up or a festival came to town. Smart sensors say how full each bin is now; the questions are which will overflow before the next truck, where the trucks should actually go, what is coming down the recycling line, and where a full truck should tip when the nearest plant is full. <em>Can software forecast overflow from each bin's own history, route to need instead of schedule, and send material where it is worth most, while being honest about what a toy classifier is?</em></p><p>Blueprint 11 of fifteen in a third build book, built as its demo scenario end to end.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A Python service on PostgreSQL with a background worker and a web page, started by one <code>docker compose up</code>.</p><ul><li><b>A gateway</b> that validates each reading on its own, and a poll that stands in for the feed.</li><li><b>Fill rates by weekday</b> per container and an overflow risk list at 8, 24 and 48 hours, scored against the truth.</li><li><b>A capacitated VRP</b> (OR-Tools) with one stream per trip, against the fixed schedule run nearest-first, both scored on overflows left behind.</li><li><b>A toy conveyor classifier</b> with a contamination alert, labelled a toy wherever it appears.</li><li><b>A destination linear programme</b>: value less haul within each facility's remaining capacity, against the nearest-plant rule.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>A district whose schedule fits its bins, until the weekend</h3><div class="prose"><p>500 containers on a 6 km grid: residential, commercial, park and venue sites across residual, recycling, organics and glass, each with a fill rate the fixed weekly schedule was designed for (about two-thirds full between collections on an ordinary week), a weekday pattern (parks and the venue fill at weekends, shops on weekdays), six-hourly readings with sensor noise and weak batteries, and pickups at 08:00 on scheduled weekdays. Over eight weeks, 3.9% of pickups find an overflowing bin. Then a festival triples the rates near the venue from Friday evening.</p></div><pre><code>base = 65.0 * r.uniform(0.7, 1.15) / steps / np.mean(DOW[t])   # the schedule was designed for the bin</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Risk from each bin's own history, and where that fails</h3><div class="prose"><p>For each container and weekday, the median six-hour increment between consecutive readings with no pickup between them, projected from the last reading with the spread as noise. Saturday 06:00: 52 containers at 50% or more, the venue's mean risk 55% against 5% on residential streets. The truth is shown beside the list: 54 would overflow if nothing were collected; 41 caught, 11 false, 13 missed. The misses are the festival's bins, filling faster than anything in their history, and the page says so instead of hiding them.</p></div><pre><code>p = 0.5 * (1 - erf((100 - f) / (sqrt(2) * s)))</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Route to need, not to schedule</h3><div class="prose"><p>The policy collects any container with a 30% chance of overflowing in 24 hours or an expected fill of 80%: 155 of them. OR-Tools routes them over six trucks, one stream per trip, four hours a trip, each truck only its streams, grid distances at 22 km/h. The result: 5 trips, 125 km, 52 litres. The fixed Saturday schedule run nearest-first: 217 containers, 7 trips, 202 km, 85 litres, one truck over its shift. On the truth, the dynamic plan leaves 4 containers to overflow by Sunday morning; the schedule leaves 12, because it empties bins a third full and skips the ones the weekend filled.</p></div><pre><code>routing.VehicleVar(mgr.NodeToIndex(k)).SetValues([-1] + allowed)   # only trips built for this stream
+routing.AddDisjunction([mgr.NodeToIndex(k)], 200_000)               # dropping a bin costs 200 km</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>A classifier that knows it is a toy</h3><div class="prose"><p>Conveyor frames are coloured rectangles on a dark belt: paper, plastic, metal, organics, glass, and contamination as black film with red specks. Colour histograms into gradient-boosted trees score 100% on held-out frames, and every place that number appears says it means the frames are easy. Twelve frames from the recycling line: three contamination, 25% of the batch, and the alert fires at 10%.</p></div><pre><code>&quot;method&quot;: &quot;colour histograms of a schematic conveyor frame into gradient-boosted trees; a toy on synthetic images, not a vision model for real cameras&quot;</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Where a full truck tips</h3><div class="prose"><p>Each planned trip's material is a load with a stream, a weight and a position. A linear programme places every load, splits allowed, so that no facility takes more than it has left today and haul cost less material value (price times recovery yield; the transfer station charges a gate fee) is lowest. Northgate MRF reaches its daily capacity and the rest of the recycling goes on to Riverbend MRF; organics go to the compost plant though the transfer station is closer. The nearest-accepting-facility rule would have sent every load to the transfer station: −$2,244 of material value against −$1,209, nothing recovered against 9.4 tonnes.</p></div><pre><code>res = linprog(cost, A_ub=capacity_rows, b_ub=remaining_kg, A_eq=one_per_load, b_eq=ones, bounds=(0, 1), method=&quot;highs&quot;)</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The demo.</b> Dynamic routes against the fixed schedule, scored on the truth:</p><img loading="lazy" decoding="async" src="../../../waste-recycling-ops/shots/routes.jpg" alt="Routes card: 155 containers due, 125 km against 202.3 for the fixed schedule, 52.5 litres against 85, 23.6 tonnes against 32.2, 5 trips against 7; a table of plans side by side and of the five trips by truck and stream; the simulation truth: dynamic leaves 4 overflows for tomorrow, the fixed schedule 12."><p>Today's routes drawn on the district, with overflow risk as red circles and the facilities marked:</p><img loading="lazy" decoding="async" src="../../../waste-recycling-ops/shots/map.jpg" alt="A 6 km grid with coloured polylines for each truck's trip from the depot, dots for stops by stream, red circles sized by overflow risk around the venue, and five facilities marked."><p><b>On three other simulated districts, five weekdays each:</b></p><table><tr><th></th><th class="num">System</th><th class="num">Baseline</th></tr><tr><td>Fill 24 h ahead, error (points)</td><td class="num">3.6-4.0</td><td class="num">3.3-3.7 constant rate</td></tr><tr><td>Overflow list, recall / precision</td><td class="num">94-97% / 96-99%</td><td class="num">-</td></tr><tr><td>Kilometres a day</td><td class="num">135-137</td><td class="num">205-221 fixed schedule</td></tr><tr><td>Overflows left for tomorrow</td><td class="num">1.8-3.4</td><td class="num">6.8-8.6 fixed schedule</td></tr><tr><td>Toy classifier accuracy</td><td class="num">100%</td><td class="num">20-22% majority class</td></tr><tr><td>Destination value less haul, per six loads</td><td class="num">+$445-640</td><td class="num">nearest-plant rule</td></tr></table><p>Weekday fill rates were no better than a constant rate on weekdays, and only earn their place where weekends differ; the demo's own back-test, with a weekend in it, has them ahead (3.0 against 5.3 points). Dynamic routing's gain is real and comes from not visiting bins a third full. The classifier's perfect score is a property of the pictures.</p><p><b>Honest limits.</b> A grid at constant speed is the whole road model; trips are not chained in time; the festival is the case the risk model handles worst, and the page shows the 13 bins it missed.</p><p><b>Checks.</b> 10 tests, including: the festival raises fill only where and when it should and there are no Sunday collections, the risk list is ordered and its horizons nest, every VRP trip respects capacity, stream and the four-hour cap and the plan beats the schedule on overflows, the destination LP never exceeds a facility's remaining capacity, an unknown sensor, a 140% reading and a future timestamp are refused, and one operator cannot see another's district.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>A shared fill model across containers with site features and an event calendar, so a festival moves the venue's forecast before its bins are full.</li><li>Trips chained in time within a shift, and a second depot.</li><li>A real public image set for the classifier, with the honest number that follows.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Built from a written blueprint as one vertical slice. <b>The district is simulated</b>: containers, readings, trucks, facilities, prices and conveyor frames come from a generator in the repository, streets are a grid, and the festival is injected by telling the generator, which is what lets every risk list and route be scored against the truth. The classifier works on coloured rectangles and says so. No language model is used. Not built: real sensors, a road network, real images, time windows, an event calendar, a crew app, Kafka, Terraform, single sign-on.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../aircraft-health-ops/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 135 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">How Many Cycles Does This Engine Have Left?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../aircraft-health-ops/cover.jpg" width="1162" height="720" aria-label="How Many Cycles Does This Engine Have Left?: the project&#x27;s animated loop"><source src="../../../aircraft-health-ops/loop.webm" type="video/webm"><source src="../../../aircraft-health-ops/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Degradation modelling · CP-SAT</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>134</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

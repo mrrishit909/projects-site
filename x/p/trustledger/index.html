@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which Data Issues Should Be Fixed First, and Who Is Accountable?, Rishit Mathur</title>
+<meta name="description" content="TrustLedger: a data-governance evidence library where every quality figure keeps its denominator. Completeness, validity, uniqueness, relationship integrity and timeliness are measured separately and never averaged into silence: a weighted score carries its weight version, and an open critical key…">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Which Data Issues Should Be Fixed First, and Who Is Accountable?, Rishit Mathur">
+<meta property="og:description" content="TrustLedger: a data-governance evidence library where every quality figure keeps its denominator. Completeness, validity, uniqueness, relationship integrity and timeliness are measured separately and never averaged into silence: a weighted score carries its weight version, and an open critical key…">
+<meta property="og:image" content="../../../trustledger/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Dashboard · Data governance · FastAPI · React</span><span>Case <span class="n">230</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Which Data Issues Should Be Fixed First, and Who Is Accountable?</h1>
+  <p class="lead">TrustLedger: a data-governance evidence library where every quality figure keeps its denominator. Completeness, validity, uniqueness, relationship integrity and timeliness are measured separately and never averaged into silence: a weighted score carries its weight version, and an open critical key failure stays visible however high the score. Definitions and rule weights are versioned rather than rewritten, an issue counts as resolved only after a successful rerun, lineage keeps declared, observed and inferred edges apart, and identity matches are proposed with their uncertainty and merged only by a person, reversibly. The known answer: 100 customer rows with 5 missing e-mails give 95% completeness; of the 95 populated, 90 pass, so validity is 90 of 95 populated-only and 90 of 100 overall, both labelled. Synthetic data; project 07 of the Business Data Lab.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Dashboard</b></span><span>Year<b>2026</b></span><span>Tools<b>08</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="https://mrrishit909.github.io/projects-site/labs/trustledger/" target="_blank" rel="noopener" data-cursor="Open">[ Open TrustLedger ]</a><a class="brk" href="https://github.com/mrrishit909/projects-site/tree/business-data-lab/apps/trustledger" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../trustledger/cover.jpg" width="1162" height="720" aria-label="Which Data Issues Should Be Fixed First, and Who Is Accountable?: the project&#x27;s animated loop"><source src="../../../trustledger/loop.webm" type="video/webm"><source src="../../../trustledger/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">trustledger/loop.webm</span></div>
+    <div class="hud b"><span>[230]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python 3.11 (exact rationals; no floating point in a published figure)</span><span class="brk">PostgreSQL 16 (versioned definitions, rules and weights; append-only runs, decisions and merges)</span><span class="brk">FastAPI 0.162 (commands with idempotency keys, 401/403/409/422 contracts; merges need a reviewer other than the proposer)</span><span class="brk">SQL reference recomputation of every metric</span><span class="brk">TypeScript + React 18 + Vite</span><span class="brk">Playwright 1.55 (journey, 4 widths, 200% zoom)</span><span class="brk">GitHub Actions (postgres:16 service, hosted runners only)</span><span class="brk">405 Python tests, 2,539 TypeScript golden and snapshot checks plus 58 review checks, 80 browser tests</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>The data-quality dashboard reports one green number. Behind it a critical customer key is missing on hundreds of rows; validity is quoted as 90% without saying whether the blanks were counted; a rule's weight was changed last month so the score moved without anything in the data changing; an issue was closed by switching the rule off; a lineage diagram shows edges that were guessed; and two customers with the same name and address were merged by a script. Nobody can say which issue to fix first or who owns it.</p><p>TrustLedger fixes the measurement first: each dimension on its own denominator, both validity denominators labelled, null foreign keys counted rather than dropped, weights and definitions versioned with reasons, a critical override that no average can hide, resolution that requires a rerun, lineage styled by its evidence, and identity merges that a person approves and can reverse.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>Two implementations of one contract, checked against a hand calculation and each other.</p><ul><li><b>The contract</b>: five quality dimensions each on its own documented denominator, with validity reported populated-only and over all eligible rows under both labels and a whitespace policy under which a trimmed-empty string is missing; null foreign keys counted separately from mismatches; a weighted score that names its weight version and leaves unmeasured dimensions out of both sums; a critical override that stays beside the score whenever an active critical rule fails or a critical issue is open; weights and definitions that are versioned with a reason and an approver and never rewritten in place; an issue that is resolved only after a successful rerun of the same rule version, otherwise claimed, with a disabled rule's history kept readable; lineage with declared, observed and inferred edges kept apart, an observed edge requiring an observation instant, and coverage counted over distinct declared pairs; identity candidates stored once in canonical order with their uncertainty, approved only by a reviewer other than the proposer and reversible; and timeliness judged on local schedules with daylight-saving transitions in seven zones.</li><li><b>A known-answer fixture</b> written first: 100 customer rows with 5 missing e-mails (two of them whitespace-only) give completeness 0.950000; 90 of the 95 populated pass the format rule, so validity is 0.947368 populated-only and 0.900000 over all eligible rows; uniqueness 0.010204 by group and 0.020000 by row; relationship integrity 0.945946 (35 of 37) with three null or empty foreign keys counted apart under the whitespace policy; timeliness 0.750000; the dataset scores 0.963932 under the weight version in force and 0.958116 under the earlier one, with the critical override beside both; ten customer records with five candidates give a match precision of 0.666667 against a truth that only the verification layer reads; plus a rejected variant and an empty variant. A standard-library script reproduces all 805 checks from the records, including seven pinned timeliness cases (a refresh made on time for today, a pending window, the hour that repeats when clocks go back).</li><li><b>The Python domain, PostgreSQL schema and FastAPI commands</b>: register a dataset, run a rule, open, claim, reopen and resolve issues, correct rows and record a refresh as append-only versions, move a definition from draft to reviewed to published as new versions, propose, approve and reverse a merge with the actor resolved against the owners register (owners, rules, weights and lineage observations enter through the versioned seed, not through a command); 405 tests on a GitHub-hosted runner against PostgreSQL 16, including the adversarial scenarios the specification names, and an independent SQL recomputation that agrees with the domain on the fixtures and the snapshot.</li><li><b>The static site</b>: the same contract in TypeScript with rational arithmetic only, a catalogue, a glossary of versioned definitions, the scorecard with its weight-version switch and the override, rule detail with comparable runs, the issue workbench, the lineage explorer, the duplicate review, merge history, an impact preview over declared edges, an evidence page and the case study; 2,539 golden and snapshot checks against the Python domain at three as-of instants under both weight versions, including time-zone probes around every 2026 daylight-saving transition in seven zones, 58 review-finding checks and 80 Playwright tests at four widths and 200% zoom.</li><li><b>A deterministic synthetic world</b>: 84 daily runs from 2026-07-13, six source systems, two weight versions with the change on 2026-09-01, three inactive owners, and twelve injected defects (a critical failure under a high score, a disabled rule's vanishing history, a shared name-and-address pair, null foreign keys silently excluded, a weight change without a version, an irreversible merge, an inactive owner counted as covered, inferred lineage shown as observed, an issue closed without a rerun, a duplicate pair stored both ways, a definition rewritten in place, a denominator change between compared runs) published with how each must be handled.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>The known answer before any volume</h3><div class="prose"><p>One hundred eligible customer rows, five without an e-mail: completeness 0.950000. Of the ninety-five populated, ninety pass the format rule: validity 0.947368 populated-only and 0.900000 over all eligible rows, both on the page with their labels. A critical key rule fails on two rows, so the dataset's weighted score, above 0.95, is shown with the override beside it. A standard-library script reproduces every figure from the records before the application exists.</p></div></div></li><li><span class="k mono">Step 02</span><div><h3>A score carries its weights</h3><div class="prose"><p>The weighted quality score names the weight version it was computed with. Changing a weight creates a new version with a reason and an approver; two runs are compared only when their eligibility definition is the same, and the page says when it is not.</p></div></div></li><li><span class="k mono">Step 03</span><div><h3>Resolved means re-run</h3><div class="prose"><p>An issue closed without a successful rerun of the same rule version is listed as claimed, never resolved, and disabling the rule is not repair: the rule's history stays readable and its open issues stay open.</p></div></div></li><li><span class="k mono">Step 04</span><div><h3>Two modes, disclosed</h3><div class="prose"><p>Mode A is the backend on a GitHub-hosted runner with a transient PostgreSQL. Mode B is the public site over a published snapshot; the issue workbench and the duplicate review simulate their actions in browser memory, and nothing is merged or closed from them.</p></div></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The scorecard on the synthetic snapshot</b> (as of 2026-10-05 under weight version w2; the dataset with the open critical key failure is first, with both weight versions and the shift beside the score):</p><img loading="lazy" decoding="async" src="../../../trustledger/shots/scorecard.png" alt="Quality scorecard: the weight-version switch with w2 in force, the critical failures counted independently (2 failing rows, 1 critical issue not resolved, 1 dataset carrying the override), then a table of every dataset with the dimensions measured, the weight sum, the score under w2 with a vermilion critical-override chip on ds-customers, the w1 and w2 scores side by side, the shift, critical rows and open critical issues."><p><b>The issue workbench on a phone</b>:</p><img loading="lazy" decoding="async" src="../../../trustledger/shots/issues-mobile.png" alt="Issue workbench at 360 px: the demo-mode banner, 315 resolved against 99 claimed with 160 open, the aging grid of open issues by severity, ownership by team, and the first rows of the workbench with the simulation notice."><p><b>What the data supports.</b> Under the weight version in force, ds-customers scores 0.990175 (0.990329 under the earlier one) while its critical key rule fails on two rows and one critical issue is open, so the override sits beside the near-perfect score. Three inactive owners leave five of the forty datasets without an accountable owner: coverage 0.875000. The same rows and rules score differently under the two weight versions: 13 of the 29 scored datasets differ, seven by 0.005 or more and the largest by −0.167477; no rule version changed within fourteen days of the weight change on 2026-09-01, though two rules were disabled in that window. Of 574 issues, 315 are resolved by a verifying rerun, 99 were closed without one and are listed as claimed, and 160 are open; the 64 oldest unresolved issues are all claims, which the generator designed and the site reports. Issues owned by the Data Platform team resolve in a mean of 34.4202 hours against 86.1833 for the others. Of 80 declared lineage edges 58 were observed (coverage 0.725000), 12 observed edges are undeclared, and 10 inferred edges are drawn dashed and never counted. Twenty-three of thirty published metrics pass the definition checklist (0.766667) and fifteen carry more than one version. Of 400 match candidates 220 were reviewed by a person, 174 approved and 46 rejected, with 15 approvals reversed; against the truth that only the manifest holds, 172 of the 174 approvals are right, a precision over approvals of 0.988506 reported as drawn (the contract's reviewed-correct share, true matches among the 220 reviewed candidates, is 185 of 220 = 0.840909; the analysis also reports a decision-agreement share of 205 of 220, counting correct rejections too). These are the generator's designed relationships and the one-draw realisation, published in its manifest and found by the site; they are not findings about any real organisation.</p><p><b>Found by review, then fixed.</b> An independent reviewer, briefed to disprove the page, confirmed eight defects: a refresh made on time for today counted as late until the day's deadline passed; disabling a failing critical rule before an issue was opened made the override disappear; the backend trusted the actor headers without checking the owners register, so a proposer could approve their own merge; the three implementations disagreed on non-ASCII whitespace in e-mail patterns; the uniqueness score ignored null keys; a self-loop lineage edge passed the domain and failed the database; no application command could correct rows, so only timeliness issues could be resolved; and this page named commands that do not exist. All of it is fixed on the branch and live: timeliness has an on-time, pending and late state pinned in the fixture; a disabled rule's live failure is carried until a passing rerun; actors are resolved against the register and self-review is refused; patterns that depend on a regex dialect are refused and the data uses explicit classes; uniqueness counts null keys; self-edges are malformed; rows and refreshes are corrected through append-only commands; and the regression tests run in Python, SQL, TypeScript and through the API, with the reviewer's own probes agreeing across all three. The golden relationship figure moved from 36 of 38 to 35 of 37 when an empty-string foreign key was pinned as missing; no snapshot figure moved.</p><p><b>Not built yet:</b> the impact preview follows declared edges only and does not predict movement, the simulated rerun re-measures a whole rule because seeded issues carry no record identifiers, and multi-system identity chains are unpinned by the fixture.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Add the screens listed as not built on the site and an impact preview driven by the observed lineage graph.</li><li>Pin daylight-saving timeliness edges and multi-system identity chains in the fixture.</li><li>Projects 08 to 10 of the lab follow the same gates.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p><b>Everything is synthetic</b>: the 40 datasets, 420 fields, 18 owners, 60 rules, 4,609 rule runs, 574 issues, 160 lineage edges, 45 metric versions, 2,000 customer records, 400 match candidates and every figure come from a seeded generator whose designed relationships and twelve injected defects are published in an injection manifest, together with the two code changes its author made after seeing earlier draws (a stray draw removed, the window kept free of rule changes around the weight change widened from 7 to 14 days); nothing was re-drawn on its value and the match truth lives only in the manifest. The public site is a static demo over a published snapshot; the issue workbench and the duplicate review simulate their actions in browser memory, and nothing is merged, closed or disabled from them. The transactional behaviour (registering datasets, running rules, opening, claiming and resolving issues, versioning definitions, proposing, approving and reversing merges) is verified separately on GitHub-hosted runners against a transient PostgreSQL. Built from a written specification by a coordinating session delegating bounded work to implementation subagents; not a measurement of any real organisation.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../pipeline-observatory/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 231 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Is This Dataset Safe, Complete and Fresh Enough to Publish?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../pipeline-observatory/cover.jpg" width="1162" height="720" aria-label="Is This Dataset Safe, Complete and Fresh Enough to Publish?: the project&#x27;s animated loop"><source src="../../../pipeline-observatory/loop.webm" type="video/webm"><source src="../../../pipeline-observatory/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Dashboard · Data engineering · Reliability · FastAPI · React</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>230</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

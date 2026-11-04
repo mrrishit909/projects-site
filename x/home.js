@@ -58,11 +58,14 @@ const NC = 64, covers = new Map();
 function coverTex(slug) {
   if (covers.has(slug)) return covers.get(slug);
   const c = document.createElement("canvas"); c.width = 640; c.height = Math.round(640 / A);
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; t.userData.ready = new Promise((res) => {
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+  let go; const started = new Promise((r) => (go = r));
+  t.userData.load = () => { go(); return t.userData.ready; };
+  t.userData.ready = started.then(() => new Promise((res) => {
     const img = new Image(); img.decoding = "async";
     img.onload = () => { const g = c.getContext("2d"); const s = Math.max(c.width / img.width, c.height / img.height); g.drawImage(img, (c.width - img.width * s) / 2, (c.height - img.height * s) / 2, img.width * s, img.height * s); t.needsUpdate = true; res(true); };
-    img.onerror = () => res(false); img.src = `../${slug}/cover.jpg`;
-  });
+    img.onerror = () => res(false); img.src = `c/${slug}.jpg`;
+  }));
   covers.set(slug, t); return t;
 }
 const slugs = manifest.slice(0, NC).map((m) => m.slug);
@@ -138,7 +141,8 @@ const SPH_Z = -224, SPH_R = phone ? 6 : 8.2;
 }
 
 // ---------- preload: fonts + the wall's covers (real progress) ----------
-const first = wall.map((s) => s.cover.userData.ready);
+const first = wall.slice(0, phone ? 8 : 16).map((s) => s.cover.userData.load());
+wall.slice(phone ? 8 : 16).forEach((s) => s.cover.userData.load());
 let loaded = 0; const total = first.length + 2;
 const tick = () => { loaded++; const k = Math.round((loaded / total) * 100); $("#pct").textContent = k + "%"; $("#pre circle").style.strokeDashoffset = 100 - k; };
 document.fonts.load("300 40px 'Inter Tight'").then(tick); document.fonts.load("400 12px 'Geist Mono'").then(tick);
@@ -239,13 +243,15 @@ function loop() {
   const m = p < 0.19 ? 0 : p < 0.33 ? 1 : p < 0.46 ? 2 : p < 0.6 ? 3 : p < 0.74 ? 4 : p < 0.9 ? 5 : 6;
   idx.forEach((s, k) => s.classList.toggle("on", k === m - 2));
   if ($("#modt").textContent !== mods[m][1]) { $("#modn").textContent = mods[m][0]; $("#modt").textContent = mods[m][1]; if (window.xSound) window.xSound.blip(660 + m * 70); }
-  if (frame++ % 12 === 0) schedule();
+  if (frame++ % 12 === 0 && videoOn) schedule();
   placeTags(p > 0.34 && p < 0.9 && !lines.some((el) => +el.style.opacity > 0.05));
   composer.render();
   requestAnimationFrame(loop);
 }
-await Promise.race([Promise.all(first), new Promise((r) => setTimeout(r, 6000))]);
+await Promise.race([phone ? document.fonts.ready.then(() => new Promise((r) => setTimeout(r, 1200))) : Promise.all(first), new Promise((r) => setTimeout(r, 6000))]);
 $("#pct").textContent = "100%"; $("#pre circle").style.strokeDashoffset = 0;
-slugs.slice(WALL).forEach((s) => coverTex(s));
+let videoOn = false;
+const later = () => { slugs.slice(WALL).forEach((s) => coverTex(s).userData.load()); setTimeout(() => (videoOn = true), 1200); };
+(window.requestIdleCallback || setTimeout)(later, { timeout: 2500 });
 setTimeout(() => { $("#pre").classList.add("done"); introStart = performance.now(); document.body.classList.add("in"); }, reduce ? 0 : 450);
 requestAnimationFrame(loop);

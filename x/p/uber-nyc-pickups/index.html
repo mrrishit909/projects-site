@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>When and Where Does New York Take an Uber?, Rishit Mathur</title>
+<meta name="description" content="All 18.8 million pickups in FiveThirtyEight&#x27;s New York Uber files, counted twice: the busiest hour is a Thursday at 5 pm (2,181 pickups an hour), 72.7% of 2015 pickups were in Manhattan (75.9% in February, 70.9% in June), and pickups a day grew 82% from April to September 2014 and 49% from January…">
+<meta property="og:type" content="website">
+<meta property="og:title" content="When and Where Does New York Take an Uber?, Rishit Mathur">
+<meta property="og:description" content="All 18.8 million pickups in FiveThirtyEight&#x27;s New York Uber files, counted twice: the busiest hour is a Thursday at 5 pm (2,181 pickups an hour), 72.7% of 2015 pickups were in Manhattan (75.9% in February, 70.9% in June), and pickups a day grew 82% from April to September 2014 and 49% from January…">
+<meta property="og:image" content="../../../uber-nyc-pickups/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Exploratory analysis</span><span>Case <span class="n">067</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">When and Where Does New York Take an Uber?</h1>
+  <p class="lead">All 18.8 million pickups in FiveThirtyEight&#x27;s New York Uber files, counted twice: the busiest hour is a Thursday at 5 pm (2,181 pickups an hour), 72.7% of 2015 pickups were in Manhattan (75.9% in February, 70.9% in June), and pickups a day grew 82% from April to September 2014 and 49% from January to June 2015.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>06</b></span><span>Status<b>Code only</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/uber-nyc-pickups" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../uber-nyc-pickups/cover.jpg" width="1162" height="720" aria-label="When and Where Does New York Take an Uber?: the project&#x27;s animated loop"><source src="../../../uber-nyc-pickups/loop.webm" type="video/webm"><source src="../../../uber-nyc-pickups/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">uber-nyc-pickups/loop.webm</span></div>
+    <div class="hud b"><span>[067]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">pandas</span><span class="brk">Counting 18.8 million rows</span><span class="brk">Heatmaps and density maps</span><span class="brk">NYC TLC public records (via FiveThirtyEight)</span><span class="brk">Hand-written recount</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>The classic first look at ride-hailing data plots pickups by hour and shades a map. <em>Do the files really say what they seem to, and are the patterns as clean as the charts suggest?</em></p><p>The task follows GeeksforGeeks' "Uber Trips Data Analysis" (pickups by hour, day and month, and on a map). The data is the real set of New York pickups that FiveThirtyEight obtained from the Taxi & Limousine Commission, not a course file.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>Every row counted, and then counted again:</p><ul><li><b>The audit:</b> months, times, duplicates, places outside the city, bases and zones.</li><li><b>When:</b> pickups by weekday and hour, by day and by month.</li><li><b>Where:</b> a density map of 2014, and 2015 pickups by borough and taxi zone.</li><li><b>Check:</b> <code>check.py</code> reads all 18.8 million rows in plain Python and recounts every number: 2,111.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Download the files</h3><div class="prose"><p>FiveThirtyEight's <code>uber-tlc-foil-response</code>, pinned to one commit: six 2014 files (4.5 million pickups, April to September), one zipped 2015 file (14.3 million, January to June) and the taxi zone lookup. None is committed (about 280 MB); the script keeps their checksums.</p></div><pre><code>BASE = &quot;https://raw.githubusercontent.com/fivethirtyeight/uber-tlc-foil-response/c875c79a275179591eef062050faf77db1020563/uber-trip-data/&quot;</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Audit the files</h3><div class="prose"><p>Each 2014 row is in its own month's file and on the minute; 82,581 rows are exact duplicates and are kept; 29,749 pickups fall outside a box around the five boroughs and are kept in the counts. In 2015 every zone id is in the lookup (which uses bare carriage returns as line endings).</p></div><pre><code>outside = (U[&quot;Lat&quot;] &lt; BOX[0]) | (U[&quot;Lat&quot;] &gt; BOX[1]) | (U[&quot;Lon&quot;] &lt; BOX[2]) | (U[&quot;Lon&quot;] &gt; BOX[3]); add(&quot;2014 pickups outside the city box&quot;, int(outside.sum()))</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Count by weekday and hour</h3><div class="prose"><p>Pickups by weekday and hour of day, divided by the number of such weekdays in April to September 2014, so that "per day" is comparable across weekdays that occur 26 or 27 times.</p></div><pre><code>hw = U.groupby([&quot;wd&quot;, &quot;hour&quot;]).size().rename(&quot;pickups&quot;).reset_index(); hw[&quot;weekday&quot;] = hw[&quot;wd&quot;].map(dict(enumerate(WEEKDAYS))); hw[&quot;days&quot;] = hw[&quot;wd&quot;].map(days); hw[&quot;per_day&quot;] = hw[&quot;pickups&quot;] / hw[&quot;days&quot;]</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Count by month, borough and zone</h3><div class="prose"><p>Pickups a day by month for each file, and for 2015 the borough and zone of every pickup through the lookup, as shares of the month's pickups.</p></div><pre><code>m = V[[&quot;t&quot;, &quot;locationID&quot;]].merge(Lk, left_on=&quot;locationID&quot;, right_on=&quot;LocationID&quot;, how=&quot;left&quot;)</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Recount it by hand</h3><div class="prose"><p><code>check.py</code> reads every row of all seven files in plain Python, cuts the date and hour out of the text without a date parser, takes the weekday from the calendar, and recounts every number in the results.</p></div><pre><code>                dpart, tpart = dt.split(&quot; &quot;); mo, dy, yr = (int(x) for x in dpart.split(&quot;/&quot;)); hh, mi, ss = (int(x) for x in tpart.split(&quot;:&quot;))</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><img loading="lazy" decoding="async" src="../../../uber-nyc-pickups/charts/01_growth.jpg" alt="Bars of pickups a day by month: from 18,817 in April 2014 to 34,271 in September, then from 63,026 in January 2015 to 93,897 in June, with a gap for October to December 2014"><p><b>A growing service, and a gap.</b> Pickups a day rose from 18,817 in April 2014 to 34,271 in September (+82.1%), and from 63,026 in January 2015 to 93,897 in June (+49.0%). There is nothing for October to December 2014, and the 2014 files have 5 base codes against 8 in 2015, so the two years are not compared.</p><img loading="lazy" decoding="async" src="../../../uber-nyc-pickups/charts/02_days.jpg" alt="Line of pickups a day from April to September 2014 with a weekly rhythm and a rising level; the busiest day, 13 September, had 43,205 pickups and the quietest, 26 May (Memorial Day), 10,202"><p><b>The files, and three oddities.</b> 4,534,327 pickups in 2014 (April 564,516, May 652,435, June 663,844, July 796,121, August 829,275, September 1,028,136), each inside its own month's file and on the minute, and 14,270,479 in 2015, all with a zone in the lookup. Oddities: 82,581 exact duplicate rows in 2014 (1.8%), kept because many rides can start at one curb in one minute; 29,749 pickups outside a box around the five boroughs (0.66%), kept in the counts; and 6,264 2015 pickups in zones the lookup calls Unknown, with 162,195 having no affiliated base.</p><table><tr><th>Weekday, 2014</th><th class="num">A day</th><th class="num">5 pm</th><th class="num">Midnight</th></tr><tr><td>Monday</td><td class="num">20,826</td><td class="num">1,616</td><td class="num">248</td></tr><tr><td>Tuesday</td><td class="num">24,585</td><td class="num">2,056</td><td class="num">231</td></tr><tr><td>Wednesday</td><td class="num">26,788</td><td class="num">2,140</td><td class="num">294</td></tr><tr><td>Thursday</td><td class="num">29,044</td><td class="num">2,181</td><td class="num">357</td></tr><tr><td>Friday</td><td class="num">28,505</td><td class="num">1,999</td><td class="num">528</td></tr><tr><td>Saturday</td><td class="num">24,851</td><td class="num">1,648</td><td class="num">1,063</td></tr><tr><td>Sunday</td><td class="num">18,853</td><td class="num">1,212</td><td class="num">1,265</td></tr></table><img loading="lazy" decoding="async" src="../../../uber-nyc-pickups/charts/03_heatmap.jpg" alt="A grid of pickups per hour for each weekday and hour of the day: dark overnight, a bright band from 5 to 7 pm on weekdays peaking on Thursday at 5 pm with 2,181, and a second glow after midnight on Saturday and Sunday mornings"><p><b>When.</b> Averaged over April to September 2014, Thursday is the busiest weekday (29,044 pickups a day) and Sunday the quietest (18,853). On weekdays the busiest hour is 17:00 to 18:00 with 1,999 pickups an hour, 6.2 times the 321 at 4 am; the busiest hour of the week is Thursday at 5 pm (2,181). The first hour of a Saturday and a Sunday, which is late Friday and Saturday night, has 1,063 and 1,265 pickups, against 294 on a Wednesday. The busiest single day was 13 September (Saturday, 43,205 pickups) and the quietest 26 May (Monday, Memorial Day, 10,202).</p><img loading="lazy" decoding="async" src="../../../uber-nyc-pickups/charts/04_map.jpg" alt="Two density maps of the 4,534,327 pickups of 2014, one of the five boroughs and one zoomed on lower and Midtown Manhattan: brightest in Manhattan, then western Brooklyn and Queens, with the airports as isolated bright spots"><p>On the map Manhattan is the brightest, western Brooklyn and Queens next, and JFK and LaGuardia show as isolated bright spots; the grid of Manhattan's streets is visible.</p><img loading="lazy" decoding="async" src="../../../uber-nyc-pickups/charts/05_where.jpg" alt="Left: stacked bars of the share of 2015 pickups by borough for each month, Manhattan from 74.7% in January to 70.9% in June. Right: bars of the twelve busiest zones, led by Midtown Center at 3.2%"><p><b>Where, 2015.</b> 72.7% of pickups were in Manhattan. Its share was 74.7% in January, 75.9% in February and 70.9% in June (lowest in May, 70.0%); Brooklyn went from 15.9% to 17.1%, Queens from 8.2% to 10.2%, the Bronx from 1.2% to 1.7%. The busiest zone is Midtown Center (3.2%); the ten busiest zones hold 24.7% of pickups, out of 262 zones with any. JFK Airport has 2.0% and LaGuardia 1.9%.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Add the Lyft and other for-hire trips from the TLC's current open data, to see whether the weekday and hour pattern is Uber's or the city's.</li><li>Join the daily counts to weather, to explain the busiest and quietest days instead of only reporting them.</li><li>Draw the 2014 pickups on taxi-zone outlines, to put 2014 and 2015 on the same borough footing.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Pickups only (no destinations or fares), and the files do not say whether they hold every Uber pickup. The two years cover different months and 5 bases against 8, so growth is measured within each file. Times are presumably local. Duplicate rows and pickups outside the city are kept. Source: FiveThirtyEight's uber-tlc-foil-response (data from the NYC TLC by public-records request); the repository states no licence, so only counts are published.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../movie-recommender/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 068 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Does Any Recommender Beat &#x27;Most Popular&#x27;?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../movie-recommender/cover.jpg" width="1162" height="720" aria-label="Does Any Recommender Beat &#x27;Most Popular&#x27;?: the project&#x27;s animated loop"><source src="../../../movie-recommender/loop.webm" type="video/webm"><source src="../../../movie-recommender/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Recommender systems</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>067</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

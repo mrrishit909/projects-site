@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact, Rishit Mathur</title>
+<meta name="description" content="Contact Rishit Raj Mathur, data analyst in Tampa, FL: e-mail, LinkedIn, GitHub and resume.">
+<link rel="preload" href="../../vendor/fonts/InterTight-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../x.css">
+<style>
+.ct { min-height: calc(100svh - 120px); display: flex; flex-direction: column; justify-content: center; padding: 6vh 0 4vh; }
+.ct .brk { align-self: flex-start; margin-bottom: 32px; }
+.ct .h1 { font-size: clamp(3rem, 1rem + 6.4vw, 7.6rem); max-width: 13ch; }
+.ct .h1 .ln { display: block; }
+.mail { margin-top: clamp(40px, 8vh, 80px); padding-top: 28px; border-top: 1px solid var(--w10); display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.mail .lab { display: block; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w60); margin-bottom: 14px; }
+.mail a.addr { position: relative; display: inline-block; font-size: clamp(1.6rem, .7rem + 3.6vw, 3.8rem); font-weight: 300; letter-spacing: -.025em; line-height: 1.1; color: var(--white); text-decoration: none; overflow-wrap: anywhere; }
+.mail a.addr::after { content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: var(--blue-hi); transform: scaleX(0); transform-origin: left; transition: transform .6s var(--ease-out); }
+.mail a.addr:hover::after, .mail a.addr:focus-visible::after { transform: scaleX(1); }
+.copy { min-width: 132px; justify-content: center; }
+.copy[data-done] { border-color: var(--blue-hi); color: var(--blue-hi); }
+.status { min-height: 1.5em; margin-top: 10px; font: 400 var(--fs-hud)/1.5 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--blue-hi); }
+.links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 36px; }
+.links .btn::after { content: "\2197"; color: var(--blue-hi); transition: color var(--t-med); }
+.links .btn:hover::after, .links .btn:focus-visible::after { color: #000; }
+.hud { margin-top: clamp(48px, 10vh, 96px); padding-top: 22px; border-top: 1px solid var(--w10); color: var(--w60); }
+.hud b { font-size: clamp(16px, 1.3vw, 20px); margin-top: 6px; }
+.hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); vertical-align: 1px; animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .hud .live::before { animation: none; } }
+@media (max-width: 760px) { .copy { width: 100%; } .links .btn { flex: 1 1 auto; justify-content: center; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../">Rishit Mathur</a><nav aria-label="Primary"><a href="../work/">Work</a><a href="../about/">About</a><a href="../contact/" aria-current="page">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+
+<main id="main" class="page">
+  <section class="wrap ct" aria-labelledby="h1">
+    <span class="brk rv">[ 03 ] Contact</span>
+    <h1 id="h1" class="h1 rv"><span class="ln grad">Let's build</span><span class="ln grad">something</span><span class="ln grad">you can check.</span></h1>
+
+    <div class="mail rv">
+      <div><span class="lab">E-mail</span><a class="addr" href="mailto:rishit.mathur@yahoo.com" data-cursor="Write">rishit.mathur@yahoo.com</a></div>
+      <div><button class="btn copy" type="button" data-copy="rishit.mathur@yahoo.com">Copy</button><p class="status" role="status" aria-live="polite"></p></div>
+    </div>
+
+    <nav class="links rv" aria-label="Elsewhere">
+      <a class="btn" href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a>
+      <a class="btn" href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a>
+      <a class="btn" href="https://mrrishit909.github.io/resume.pdf" rel="noopener" target="_blank">Resume (PDF)</a>
+    </nav>
+
+    <div class="hud-row hud rv">
+      <span>Location<b>Tampa, FL</b></span>
+      <span class="live">Local time<b><time id="clock">--:--:--</time></b></span>
+      <span>Time zone<b id="tz">America/New_York</b></span>
+      <span>Public repositories<b>219</b></span>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../x.js"></script>
+<script type="module">
+// Tampa clock, America/New_York; the zone label shows EST or EDT
+const clock = document.getElementById("clock"), tz = document.getElementById("tz");
+const fmt = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23", timeZoneName: "short" });
+const tick = () => {
+  const p = Object.fromEntries(fmt.formatToParts(new Date()).map((x) => [x.type, x.value]));
+  clock.textContent = `${p.hour}:${p.minute}:${p.second}`; clock.dateTime = `${p.hour}:${p.minute}:${p.second}`; tz.textContent = p.timeZoneName;
+};
+tick(); setInterval(tick, 1000);
+
+// copy e-mail with an announced status; falls back to a selection prompt when the clipboard is blocked
+const btn = document.querySelector(".copy"), status = document.querySelector(".status");
+let t;
+btn.addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(btn.dataset.copy); status.textContent = "E-mail copied to clipboard"; btn.textContent = "Copied"; btn.dataset.done = ""; window.xSound?.blip(1320); }
+  catch { status.textContent = "Copy blocked, select the address above"; }
+  clearTimeout(t); t = setTimeout(() => { btn.textContent = "Copy"; delete btn.dataset.done; status.textContent = ""; }, 2600);
+});
+</script>
+</body>
+</html>

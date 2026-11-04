@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hospital Data Warehouse, Rishit Mathur</title>
+<meta name="description" content="Seven years of quarterly CMS hospital releases rebuilt into a star schema with full history: ownership changes, hospitals that turned into a new kind of rural ER, and a durable key that survives ID changes.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hospital Data Warehouse, Rishit Mathur">
+<meta property="og:description" content="Seven years of quarterly CMS hospital releases rebuilt into a star schema with full history: ownership changes, hospitals that turned into a new kind of rural ER, and a durable key that survives ID changes.">
+<meta property="og:image" content="../../../hospital-warehouse/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">SQL · Data warehousing</span><span>Case <span class="n">029</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Hospital Data Warehouse</h1>
+  <p class="lead">Seven years of quarterly CMS hospital releases rebuilt into a star schema with full history: ownership changes, hospitals that turned into a new kind of rural ER, and a durable key that survives ID changes.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>SQL</b></span><span>Year<b>2026</b></span><span>Tools<b>06</b></span><span>Status<b>Code only</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/hospital-warehouse" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../hospital-warehouse/cover.jpg" width="1162" height="720" aria-label="Hospital Data Warehouse: the project&#x27;s animated loop"><source src="../../../hospital-warehouse/loop.webm" type="video/webm"><source src="../../../hospital-warehouse/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">hospital-warehouse/loop.webm</span></div>
+    <div class="hud b"><span>[029]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">DuckDB</span><span class="brk">SQL</span><span class="brk">Kimball star schema</span><span class="brk">Slowly changing dimensions (Type 1 &amp; 2)</span><span class="brk">Idempotent ETL</span><span class="brk">CMS data</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Every quarter CMS publishes a fresh file of every US hospital: name, type, ownership, emergency services and overall star rating. Each file replaces the last, so the questions that matter for health-system analysts disappear. <em>Which hospitals changed ownership, and when? Which became a new kind of hospital? What did the ratings look like for hospitals as they were at the time?</em></p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A Kimball star schema in DuckDB, loaded from 33 quarterly CMS releases (March 2019 - August 2026):</p><ul><li><b>A slowly changing hospital dimension:</b> Type 2 history for ownership, type and emergency services; Type 1 for name and address.</li><li><b>A durable hospital key</b> and a lineage table, for hospitals that change their CMS ID.</li><li><b>A periodic snapshot fact</b> of star ratings.</li><li><b>An idempotent, release-by-release ETL</b> with an audit table, checked against the raw files.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Collect seven years of snapshots</h3><div class="prose"><p>CMS's catalog has an archive API listing every quarterly zip. <code>download.py</code> pulls 34 of them and keeps the General Information file from each. That needs care:</p><ul><li><b>File names changed:</b> in 2020 the files were named only by dataset ID.</li><li><b>Columns were renamed:</b> "Provider ID" became "Facility ID", for example, so one mapping gives every year the same names.</li><li><b>One partial update</b> (September 2026) doesn't include this dataset, leaving 33 releases.</li></ul></div><pre><code>names = [n for n in zf.namelist() if (&quot;general&quot; in n.lower() or &quot;xubh&quot; in n.lower())</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Decide what deserves history</h3><div class="prose"><p>I measured how often each attribute changes between releases before designing the dimension. Ownership changed 860 times, emergency services 411 and names 2,081, but many name changes are cosmetic ("ST VINCENT'S" → "ST. VINCENT'S"). So ownership, type and emergency services get Type 2 history (a new dated row), while name and address are Type 1 (overwritten).</p><img loading="lazy" decoding="async" src="../../../hospital-warehouse/charts/01_star_schema.jpg" alt="Star schema: dim_date and dim_hospital around fact_rating, with dim_hospital columns labelled surrogate key, durable key, business key, Type 1, Type 2 and SCD dates, and a dashed link to hospital_lineage for ID changes"></div><pre><code>hospital_key       integer NOT NULL,             -- durable key: same hospital across versions and ID changes</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Keep one hospital one hospital</h3><div class="prose"><p>When a rural hospital becomes a Rural Emergency Hospital, or an acute hospital becomes a critical access hospital, CMS gives it a new ID. Keyed on the ID alone, it would look like a closure plus an opening. A lineage rule links them: the old ID left the data in the same city before the new one appeared, and either the names share at least half their distinctive words, or the new one is a Rural Emergency Hospital with a single candidate in its city. That gives 104 links, including Fannin Regional Hospital becoming Blue Ridge Medical Center.</p><img loading="lazy" decoding="async" src="../../../hospital-warehouse/charts/02_one_hospital.jpg" alt="Timeline of one hospital, Ira Davenport Memorial in New York: four versions under ID 330144 as emergency services and ownership change, then a fifth under ID 330800 after converting to a Rural Emergency Hospital"></div><pre><code>WHERE name_overlap &gt;= 0.5 OR (new_type = &#x27;Rural Emergency Hospital&#x27; AND candidates = 1)</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Load release by release, safely</h3><div class="prose"><p>For each release in order, <code>warehouse.py</code>:</p><ul><li>stages and normalises the file;</li><li>overwrites Type 1 attributes;</li><li>closes changed versions and opens new ones;</li><li>closes hospitals that left the data and reopens returners;</li><li>adds new hospitals, carrying the durable key across ID changes;</li><li>appends the ratings.</li></ul><p>A release that's already loaded is skipped, so running the job again changes nothing. The audit table also exposes the source: 581 "new" hospitals in July 2019 are CMS adding psychiatric hospitals, 139 in July 2023 are VA hospitals, and three releases repeated the previous one exactly.</p><img loading="lazy" decoding="async" src="../../../hospital-warehouse/charts/03_releases.jpg" alt="ETL audit bar chart by release: new hospitals, new Type 2 versions and hospitals leaving the data, with spikes labelled psychiatric hospitals added (July 2019) and VA hospitals added (July 2023)"></div><pre><code>UPDATE dim_hospital SET valid_to = DATE &#x27;{snap}&#x27;, is_current = false WHERE hospital_sk IN (SELECT hospital_sk FROM changed);</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Check it against the raw files</h3><div class="prose"><p><code>check.py</code> re-runs the job and confirms nothing changes. It also confirms:</p><ul><li>no hospital has two current versions or overlapping dates;</li><li>every one of 175,908 facts points at the version valid on its date;</li><li>for 500 random hospital-release pairs, ownership, type and emergency services as stored match the raw snapshot file exactly.</li></ul></div><pre><code>return False                                                   # already loaded: idempotent</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><table><tr><th>Recorded ownership changes</th><th class="num">Count</th></tr><tr><td>Total versions</td><td class="num">859</td></tr><tr><td>Relabel within a group</td><td class="num">378</td></tr><tr><td>Undone next release</td><td class="num">79</td></tr><tr><td>Real moves that stuck</td><td class="num">431</td></tr></table><ul><li><b>Ownership moves both ways.</b> Of hospitals in both the first and last releases, 63 non-profits became for-profit and 75 for-profits became non-profit. 93 government hospitals became non-profit.</li><li><b>A new kind of hospital:</b> 45 Rural Emergency Hospitals (rural hospitals that stop inpatient care but keep the ER), listed by CMS only from November 2025. Lineage traces 42 to an earlier hospital: 23 acute-care and 19 critical access.</li><li><b>As-was vs as-is:</b> the 4-5-star share by ownership in 2019 moves by under a point whether hospitals are grouped by their ownership then or now (non-profit 40.8% vs 40.5%). For that question a simpler design would do; for "who converted, and when" only Type 2 works.</li></ul><img loading="lazy" decoding="async" src="../../../hospital-warehouse/charts/04_ownership.jpg" alt="Three by three matrix of hospitals by ownership group in March 2019 and August 2026: 2,580 stayed non-profit, 656 for-profit, 907 government, with off-diagonal counts such as 63 non-profit to for-profit and 93 government to non-profit"><img loading="lazy" decoding="async" src="../../../hospital-warehouse/charts/05_reh.jpg" alt="Two panels: Rural Emergency Hospitals listed by CMS rising from 0 to 43 after November 2025, and their previous types, 23 acute care, 19 critical access and 3 with no earlier ID found"></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Confirm lineage links with CMS's Provider of Services file, which records related provider numbers.</li><li>Add readmission and patient-experience facts on the same dimensions.</li><li>Follow star ratings before and after ownership changes.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>The links between old and new facility IDs come from a matching rule, not from CMS's own records; all 104 are published for review. Star-rating methods changed in 2021, so ratings across years aren't strictly comparable.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../college-scorecard-warehouse/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 030 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">College Scorecard Warehouse</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../college-scorecard-warehouse/cover.jpg" width="1162" height="720" aria-label="College Scorecard Warehouse: the project&#x27;s animated loop"><source src="../../../college-scorecard-warehouse/loop.webm" type="video/webm"><source src="../../../college-scorecard-warehouse/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>SQL · Data warehousing</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>029</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

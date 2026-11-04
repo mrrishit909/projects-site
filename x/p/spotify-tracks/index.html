@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spotify: What Makes a Hit?, Rishit Mathur</title>
+<meta name="description" content="Exploring 114,000 Spotify tracks across 114 genres: why so many score zero, whether a track&#x27;s sound predicts its popularity, and an interactive map of how genres sound.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Spotify: What Makes a Hit?, Rishit Mathur">
+<meta property="og:description" content="Exploring 114,000 Spotify tracks across 114 genres: why so many score zero, whether a track&#x27;s sound predicts its popularity, and an interactive map of how genres sound.">
+<meta property="og:image" content="../../../spotify-tracks/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Exploratory analysis</span><span>Case <span class="n">019</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Spotify: What Makes a Hit?</h1>
+  <p class="lead">Exploring 114,000 Spotify tracks across 114 genres: why so many score zero, whether a track&#x27;s sound predicts its popularity, and an interactive map of how genres sound.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>06</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../spotify-tracks/explorer/" data-cursor="Open">[ Open the genre explorer ]</a><a class="brk" href="https://github.com/mrrishit909/spotify-tracks" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../spotify-tracks/cover.jpg" width="1162" height="720" aria-label="Spotify: What Makes a Hit?: the project&#x27;s animated loop"><source src="../../../spotify-tracks/loop.webm" type="video/webm"><source src="../../../spotify-tracks/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">spotify-tracks/loop.webm</span></div>
+    <div class="hud b"><span>[019]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">pandas</span><span class="brk">Spearman correlation</span><span class="brk">Data quality</span><span class="brk">JavaScript</span><span class="brk">SVG</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>A popular beginner project: take Spotify's audio features (danceability, energy, positivity...) and find what makes a song popular. <em>Before modelling anything: what is this dataset, really, and does a track's sound actually say anything about its popularity?</em></p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A descriptive analysis of the Spotify Tracks Dataset (114,000 rows from Spotify's Web API):</p><ul><li><b>A data-quality audit:</b> how it was sampled, duplicates, and why 1 in 10 tracks has popularity 0.</li><li><b>Popularity by genre</b>, with and without compilation copies.</li><li><b>Audio features vs popularity</b>, pooled and within genres.</li><li><b>Genre fingerprints</b> and an interactive explorer of all 114 genres.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Find out what the data really is</h3><div class="prose"><p>It isn't a sample of Spotify. It's 114 genre searches with exactly 1,000 tracks each (the dataset card says 125 genres). Its 114,000 rows hold 89,741 unique tracks, because 16,299 are listed under 2-9 genres, and 450 rows are exact duplicates. So counting tracks per genre measures the collection method, not listening.</p></div></div></li><li><span class="k mono">Step 02</span><div><h3>Solve the zero-popularity mystery</h3><div class="prose"><p>Over 10% of unique tracks have popularity 0, and seven genres (rock, country, jazz, soul, latin among them) have a <em>median</em> of 0. The zeros turn out to be compilation copies. Spotify credits plays to a song's original release, so "Thunder" on "Halloween Party 2022" scores 0. 41.8% of songs that exist under another track ID score 0, against 5.2% of songs that appear once.</p><img loading="lazy" decoding="async" src="../../../spotify-tracks/charts/01_zero.jpg" alt="Dumbbell chart of median popularity by genre with all rows versus each song's most popular release; dance jumps from 1 to 67, jazz from 0 to 38, while rock and country stay near zero"></div></div></li><li><span class="k mono">Step 03</span><div><h3>Fix what can be fixed, and say what can't</h3><div class="prose"><p>Keeping only each song's most popular release cuts the zero-median genres from seven to three and lifts dance from 1 to 67. Rock (5) and country (2) stay low because the sample often has only compilation copies, not the originals. So popularity by genre here mostly reflects how the data was gathered, and the page says so.</p></div></div></li><li><span class="k mono">Step 04</span><div><h3>Ask whether sound predicts popularity</h3><div class="prose"><p>Rank correlations between each audio feature and popularity, across all tracks and within each genre. All are small: between −0.19 and +0.10 overall, and under 0.05 on average within genres. Instrumentalness looks strongest overall, but that's mostly because instrumental genres are less popular.</p><img loading="lazy" decoding="async" src="../../../spotify-tracks/charts/02_features.jpg" alt="Dot plot of Spearman correlations between ten audio features and popularity, pooled and within genre; all lie close to zero"></div></div></li><li><span class="k mono">Step 05</span><div><h3>Map how genres sound</h3><div class="prose"><p>Median audio features per genre give clear fingerprints. The explorer plots all 114 genres on any two features, coloured by popularity. <code>check.py</code> recomputes every one of its 1,254 medians from the raw file and confirms no track IDs are published.</p><img loading="lazy" decoding="async" src="../../../spotify-tracks/charts/03_fingerprints.jpg" alt="Heatmap of median danceability, energy, valence, acousticness, instrumentalness and speechiness for 14 genres; classical and ambient are acoustic and instrumental, death metal is high energy, comedy is high speechiness"></div></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><ul><li><b>Most "zero popularity" is duplication, not unpopularity:</b> compilation copies score 0 because plays go to the original.</li><li><b>A track's sound barely relates to its popularity</b> (all correlations within ±0.2, and near zero within genres). Hits are about artist, timing and promotion, which audio features don't capture.</li><li><b>Explicit tracks are about as popular as clean ones</b> (median 37 vs 33; +1 point within genres).</li><li><b>Genres do sound distinct:</b> classical and ambient are about 0.9 acoustic and instrumental, death metal and grindcore have energy 0.96, comedy has speechiness 0.92, and kids' music and Chicago house are the most danceable.</li></ul><p>The lesson: understand how a dataset was collected before asking it questions it can't answer.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Run the same analysis on your own Spotify history (Spotify lets you download your data).</li><li>A machine-learning version on an openly licensed music dataset, which Spotify's terms don't cover.</li><li>Fetch original release dates to separate re-releases properly.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>No machine-learning model is trained here: the data comes from Spotify's Web API, and Spotify's developer terms forbid training ML or AI models on its content. Only genre-level medians are published, never the track list.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../nyc-building-energy/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 020 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">NYC Building Energy</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../nyc-building-energy/cover.jpg" width="1162" height="720" aria-label="NYC Building Energy: the project&#x27;s animated loop"><source src="../../../nyc-building-energy/loop.webm" type="video/webm"><source src="../../../nyc-building-energy/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Regression</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>019</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

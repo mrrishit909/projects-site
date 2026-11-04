@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Should the Onboarding Change Ship, Stop, or Get More Investigation?, Rishit Mathur</title>
+<meta name="description" content="ProductSignal: a product-journey laboratory where the experiment read is built before the dashboard. Accounts are the randomisation unit, the primary analysis is intention to treat, the sample ratio is checked before any lift is shown, the plan is frozen before any outcome is read, interim runs are…">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Should the Onboarding Change Ship, Stop, or Get More Investigation?, Rishit Mathur">
+<meta property="og:description" content="ProductSignal: a product-journey laboratory where the experiment read is built before the dashboard. Accounts are the randomisation unit, the primary analysis is intention to treat, the sample ratio is checked before any lift is shown, the plan is frozen before any outcome is read, interim runs are…">
+<meta property="og:image" content="../../../productsignal/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Dashboard · Product analytics · Experimentation · FastAPI · React</span><span>Case <span class="n">229</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Should the Onboarding Change Ship, Stop, or Get More Investigation?</h1>
+  <p class="lead">ProductSignal: a product-journey laboratory where the experiment read is built before the dashboard. Accounts are the randomisation unit, the primary analysis is intention to treat, the sample ratio is checked before any lift is shown, the plan is frozen before any outcome is read, interim runs are labelled interim, and retention is measured on exact calendar days in the account&#x27;s timezone. The known answer: 20 of 100 control accounts and 30 of 100 treatment accounts activate within seven days, a 10-point lift whose 95% interval runs from −2.0 to +21.7 points, so the result is not conclusive. Synthetic data; project 06 of the Business Data Lab.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Dashboard</b></span><span>Year<b>2026</b></span><span>Tools<b>08</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="https://mrrishit909.github.io/projects-site/labs/productsignal/" target="_blank" rel="noopener" data-cursor="Open">[ Open ProductSignal ]</a><a class="brk" href="https://github.com/mrrishit909/projects-site/tree/business-data-lab/apps/productsignal" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../productsignal/cover.jpg" width="1162" height="720" aria-label="Should the Onboarding Change Ship, Stop, or Get More Investigation?: the project&#x27;s animated loop"><source src="../../../productsignal/loop.webm" type="video/webm"><source src="../../../productsignal/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">productsignal/loop.webm</span></div>
+    <div class="hud b"><span>[229]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python 3.11 (exact rationals; Newcombe and Wilson intervals, chi-square and t quantiles without floats)</span><span class="brk">PostgreSQL 16 (append-only events, assignments unique per unit, frozen analysis plans)</span><span class="brk">FastAPI 0.162 (commands with idempotency keys, 401/403/409/422 contracts; decisions never write product state)</span><span class="brk">SQL reference recomputation of every metric</span><span class="brk">TypeScript + React 18 + Vite</span><span class="brk">Playwright 1.55 (journey, 4 widths, 200% zoom)</span><span class="brk">GitHub Actions (postgres:16 service, hosted runners only)</span><span class="brk">357 Python tests, 2,519 TypeScript golden and snapshot checks plus 36 review checks, 77 browser tests</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>The onboarding experiment review argues about a dashboard. Users are counted where accounts were randomised; the result is read on day 10 of a 28-day plan and called final; a sample-ratio mismatch nobody checked sits under the lift; a cohort that signed up three days ago shows a seven-day activation rate; a segment that happened to look good is reported as the finding; and retention is one number that means exact day 7 on one page and "any time after" on another.</p><p>ProductSignal fixes the measurement first: one account-level unit, intention to treat with exposure reported beside it, the sample ratio checked before any effect is shown, a plan frozen before outcomes are read with every analysis run logged as interim or final, cohorts that only mature when their window is complete, retention measured on exact calendar days in the account's timezone, segments labelled exploratory with their multiplicity, and a decision that is ship, stop or inconclusive and never a product release.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>Two implementations of one contract, checked against a hand calculation and each other.</p><ul><li><b>The contract</b>: canonical events received by the cutoff and deduplicated, with bots, internal accounts and unknown identities excluded and counted; identity links that apply forward in time only; the account as the unit of randomisation and retention, with user events rolled up before any ratio; activation within seven days of signup on a half-open window with inclusive maturity; day-7 retention on the exact local calendar day in the account's timezone, with on-or-after-day-7 and week-4 kept separate; a versioned funnel in strict order with a maximum gap; intention to treat with the exposure rate beside it; a chi-square sample-ratio check with a verdict for too few assignments; Wilson and Newcombe intervals computed without floating point; relative lift null when the control is zero; a frozen plan whose hash every run cites; interim runs that can never support a ship; and a cutoff rule under which no assignment, exposure or subscription dated after the cutoff counts.</li><li><b>A known-answer fixture</b> written first: 20 of 100 control and 30 of 100 treatment accounts activate, giving 0.200000 and 0.300000, +10.00 points, relative 0.500000, a Newcombe interval of −0.020249 to 0.216734 and a sample-ratio statistic of 0; a retention cohort of 20 with 5 returning on exact day 7 (two of them only because of their timezone; seven more accounts count in on-or-after-day-7 only, four of them returning on day 8); a funnel of 15, 10, 8 and 5; eleven identity links of which one attributes an event, one duplicate, one delayed event, one bot and one internal account; plus a rejected variant (an exposure before its assignment and a conflicting second assignment) and an empty variant. A standard-library script reproduces all 706 checks, including the intervals and the chi-square p-value, from the records.</li><li><b>The Python domain, PostgreSQL schema and FastAPI commands</b>: validate tracking, resolve identity, define a funnel, assign, record exposure, freeze a plan, check maturity, analyse (sample ratio first, run logged as interim or final), review guardrails and record a decision that never changes product state; 357 tests on a GitHub-hosted runner against PostgreSQL 16, including the twelve adversarial scenarios the specification names and the cutoff rule, and an independent SQL recomputation that agrees with the domain on the fixtures and the snapshot.</li><li><b>The static site</b>: the same contract in TypeScript with rational arithmetic only (erfc and the Student t quantile in fixed point), a journey overview with a cutoff picker, a funnel with its exclusions, a maturity-aware cohort grid in each account's timezone, an experiment result that shows the sample ratio before any lift and the generator's disclosures beside the figure, a population view of assigned versus exposed, an exploratory segment page with its multiplicity caveat and a decision memo; 2,519 golden and snapshot checks against the Python domain at six cutoffs, 36 review-finding checks and 77 Playwright tests at four widths and 200% zoom.</li><li><b>A deterministic synthetic world</b>: 26 weeks, one experiment in two versions (the first with 400 accounts in permuted blocks and a true effect of eight points, the second with a designed sample-ratio mismatch), every outcome drawn once, and twelve injected defects (user-level analysis of an account-randomised test, a treatment-dependent exclusion, an interim run presented as final, an immature cohort, duplicate activations, a late event, a backward identity link, an ignored sample-ratio mismatch, cherry-picked segments, zero control conversions, exposure before assignment, mixed retention definitions) published with how each must be handled.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>The known answer before any volume</h3><div class="prose"><p>Two cohorts of one hundred mature accounts: twenty control and thirty treatment accounts activate within seven days. Conversions 0.200000 and 0.300000, an absolute lift of 10.00 percentage points, a relative lift of 0.500000, and a Newcombe 95% interval from −2.02 to +21.67 points that crosses zero: the counts alone do not make the result conclusive, and the page says so. A standard-library script reproduces every figure, including the Wilson intervals and the chi-square sample-ratio statistic, from the records.</p></div></div></li><li><span class="k mono">Step 02</span><div><h3>Sample ratio first, then the lift</h3><div class="prose"><p>The observed assignment counts are tested against the prespecified allocation before any effect is displayed. A mismatch is shown in place of the lift and blocks a ship decision; too few assignments to test is its own verdict rather than a pass.</p></div></div></li><li><span class="k mono">Step 03</span><div><h3>Frozen plan, labelled runs</h3><div class="prose"><p>The primary outcome, guardrails, allocation and horizon are hashed into a frozen plan before the first analysis run. Every run cites the hash and the number of earlier runs; a run before the planned end is interim and cannot support a ship decision.</p></div></div></li><li><span class="k mono">Step 04</span><div><h3>Two modes, disclosed</h3><div class="prose"><p>Mode A is the backend on a GitHub-hosted runner with a transient PostgreSQL. Mode B is the public site over a published snapshot; the registry and decision screens simulate their actions in browser memory and nothing ships from them.</p></div></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The cohort grid on the synthetic snapshot</b> (signup weeks from 2026-04-06, each account in its own timezone, at the as-of cutoff of 2026-10-05; the week of 2026-04-13 keeps 7 of 25 accounts on exact day 7 and 16 of 25 on day 7 or later; cells whose day has not passed at the cutoff stay blank):</p><img loading="lazy" decoding="async" src="../../../productsignal/shots/cohort-grid.png" alt="Cohort laboratory: a cutoff picker with the five analysis runs and the as-of, a calendar picker for all accounts or one timezone, and a retention grid by signup week with columns day 1, day 7, day 14, day 28, day 7 or later and days 28 to 34, each cell showing the rate and the fraction, with later weeks blank where the day has not passed."><p><b>The experiment result on a phone</b>:</p><img loading="lazy" decoding="async" src="../../../productsignal/shots/result-mobile.png" alt="Experiment result at 360 px: the honesty banner, the golden case recomputed in the browser with 205 of 205 values equal to the fixture, the sample-ratio check shown first with its verdict, then control 0.200000 against treatment 0.300000, +10.00 points, relative lift 0.500000 and the Newcombe interval that includes zero, marked not conclusive."><p><b>What the data supports.</b> The first version of the onboarding experiment assigned 400 accounts in permuted blocks of four; at its planned end 63 of 200 control and 82 of 200 treatment accounts had activated within seven days, +9.50 points (relative 0.301587) with a 95% interval from +0.08 to +18.69 points, so the final run is conclusive by a hair and the page says so beside the generator's own disclosure that the true designed effect was eight points. Eleven of those 400 accounts fall inside an injected instrumentation gap that suppresses activation events for signups before 2026-04-08 (0 of 5 control and 4 of 6 treatment activated in the drawn truth), so the published lift is lower than the drawn one (+11.50 points, interval +2.02 to +20.69, or +9.96 with the gap accounts excluded); the gap is an injected defect that an independent reviewer found carried into the final result, and it is disclosed here, in the manifest and on the result page beside the figure. At the as-of, week-4 retention is 71 of 200 against 62 of 200 (−4.50 points), the guardrail error rate 31 against 30 of 200, and revenue per assigned account 97.83 against 130.95 USD per arm; the site now computes the difference intervals in the browser (Newcombe for the proportions, Welch for revenue), and all three include zero. At the first interim cutoff only 155 accounts had been assigned (77 and 78), and the page counts only those. The second version, planned at 60/40, observed 62 control and 92 treatment assignments: a chi-square of 25.004329 with p below 0.000001, so the sample ratio is a mismatch and the result is withheld in place of a lift, blocking both ship and stop. Over the window the tracking-quality page counts 124 duplicate events dropped, 237 delayed by more than a day and 30 with an unknown identity; 69.7% of real users are linked to an anonymous visit (now shown on the tracking page). These are the generator's designed relationships and the one-draw realisation, published in its manifest and found by the site; they are not findings about any real product.</p><p><b>Found by review, then fixed.</b> An independent reviewer, briefed to disprove the page, confirmed that "conclusive" ignored whether the plan was frozen; that the sample-ratio p-value always used one degree of freedom while the API accepted three-variant plans; that the SQL reference depended on the session timezone; that an analysis cutoff later than the clock was accepted, so a ship decision could be recorded before the planned end; that assignment, exposure and decision instants were client-controlled, which defeats the cutoff rule; that per-variant outcomes could be read before the plan was frozen; that most refused decisions left no audit row; and that an outcome recorded before assignment counted as a treatment outcome. All of it is fixed on the branch: a result is conclusive only on a final run of a frozen plan with a clean sample ratio and an interval excluding zero, plans have exactly two arms, the server stamps every fact instant with an audited admin backfill, outcomes are withheld until the freeze, every refusal is audited, and only outcomes after assignment count; the regression tests run in Python, SQL, TypeScript and through the API, and the reviewer's thirteen hand-calculated cases agree across all three implementations. The one-account change the pre-assignment rule makes to the second experiment version is disclosed in the contract; the first version's published figures did not move.</p><p><b>Not built yet:</b> the segment page is exploratory only, three-variant plans are refused rather than analysed, and daylight-saving edge cases are unpinned by the fixture.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Add the screens listed as not built on the site and sequential-testing boundaries for interim reads.</li><li>Pin daylight-saving edge cases and three-variant experiments in the fixture.</li><li>Projects 07 to 10 of the lab follow the same gates.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p><b>Everything is synthetic</b>: the 600 accounts, 1,824 users, 12,552 events, the onboarding experiment and every figure come from a seeded generator whose designed relationships and twelve injected defects are published in an injection manifest, together with the four choices its author made after looking at earlier drafts of the data (the randomisation scheme, the error model, two count tunings); everything else was drawn once and is reported as drawn. The public site is a static demo over a published snapshot; the registry and the decision screen simulate their actions in browser memory and nothing ships from them. The transactional behaviour (validating tracking, resolving identity, assigning, recording exposure, freezing a plan, analysing, reviewing guardrails, recording a decision) is verified separately on GitHub-hosted runners against a transient PostgreSQL. Built from a written specification by a coordinating session delegating bounded work to implementation subagents; not a measurement of any real product.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../trustledger/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 230 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Which Data Issues Should Be Fixed First, and Who Is Accountable?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../trustledger/cover.jpg" width="1162" height="720" aria-label="Which Data Issues Should Be Fixed First, and Who Is Accountable?: the project&#x27;s animated loop"><source src="../../../trustledger/loop.webm" type="video/webm"><source src="../../../trustledger/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Dashboard · Data governance · FastAPI · React</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>229</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Does One Mesh Look Like Across Seven Garment Stages?, Rishit Mathur</title>
+<meta name="description" content="A digital couture and material physics atelier: a single plane mesh carries a garment through Thread, Pattern, Panel, Seam, Drape, Silhouette and Runway with one vertex shader, and switching fabric swatches changes both color and drape physics, not just a tint.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="What Does One Mesh Look Like Across Seven Garment Stages?, Rishit Mathur">
+<meta property="og:description" content="A digital couture and material physics atelier: a single plane mesh carries a garment through Thread, Pattern, Panel, Seam, Drape, Silhouette and Runway with one vertex shader, and switching fabric swatches changes both color and drape physics, not just a tint.">
+<meta property="og:image" content="../../../eidolon/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Blender · three.js · motion design</span><span>Case <span class="n">187</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">What Does One Mesh Look Like Across Seven Garment Stages?</h1>
+  <p class="lead">A digital couture and material physics atelier: a single plane mesh carries a garment through Thread, Pattern, Panel, Seam, Drape, Silhouette and Runway with one vertex shader, and switching fabric swatches changes both color and drape physics, not just a tint.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Blender</b></span><span>Year<b>2026</b></span><span>Tools<b>11</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../eidolon/demo/" data-cursor="Open">[ Open the live atelier ]</a><a class="brk" href="https://github.com/mrrishit909/eidolon" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../eidolon/cover.jpg" width="1162" height="720" aria-label="What Does One Mesh Look Like Across Seven Garment Stages?: the project&#x27;s animated loop"><source src="../../../eidolon/loop.webm" type="video/webm"><source src="../../../eidolon/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">eidolon/loop.webm</span></div>
+    <div class="hud b"><span>[187]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Blender 4.5 (Python, headless)</span><span class="brk">glTF / GLB</span><span class="brk">TypeScript</span><span class="brk">Next.js 16 (static export)</span><span class="brk">React Three Fiber / three.js</span><span class="brk">GLSL garment deformation shader</span><span class="brk">GSAP</span><span class="brk">Node (http + ws)</span><span class="brk">OpenAPI 3.1</span><span class="brk">Playwright</span><span class="brk">10 unit/API tests, 19 e2e tests</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>The book's rule for this blueprint is that every stage has to transform the <em>same</em> garment representation, and a fabric swatch change has to alter drape, not just color. The obvious shortcut, swapping in a different model per stage, fails the brief outright.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>One repository with the whole pipeline.</p><ul><li><b>A scripted asset</b>: <code>model/build.py</code> builds a dress-form mannequin and a thread spool, exports GLBs, renders a poster.</li><li><b>A domain model</b>: wrap amount, drape amount (fabric-stiffness-aware) and runway walk phase, all pure functions of one timeline value, unit-tested.</li><li><b>A browser runtime</b> where the garment is one <code>PlaneGeometry</code> whose vertex shader mixes between a flat pattern layout and a body-wrapped layout, adds a stiffness-aware sag, and pulls the panel halves together as the seam approaches - entirely via shader uniforms, no geometry swap.</li><li><b>An intro</b> that sews a thread into a seam, grows the fabric, drapes it around an invisible body, turns the model once, and explodes it back into pattern pieces before handing off to the atelier.</li><li><b>Fallbacks</b>: poster for no WebGL, static keyframes for reduced motion.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>One mesh, not seven</h3><div class="prose"><p>The entire Thread-to-Runway sequence is one <code>PlaneGeometry</code>. <code>uWrap</code> mixes between a flat pattern position and a cylindrical body-wrapped position; <code>uDrape</code> adds a sag term that grows from the seam stage onward; <code>uSew</code> pulls the two panel halves together early in the sequence. Nothing is swapped, only uniforms change.</p></div><pre><code>vec3 flatP = vec3(cx * 1.3, (0.5 - uv.y) * 1.7 + 1.0, 0.0);
+vec3 wrapP = vec3(sin(angle) * radius, flatP.y, cos(angle) * radius - radius * 0.3);
+vec3 p = mix(flatP, wrapP, uWrap);</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Fabric changes physics, not just a tint</h3><div class="prose"><p><code>drapeAmountAt(t, stiffness)</code> reduces the sag amplitude as stiffness rises, so switching from Silk Charmeuse (stiffness 0.08) to Raw Denim (0.78) visibly flattens the drape at the same sequence position. A pixel-sampling e2e test (not just a DOM readout) asserts the rendered garment actually changes shape when the swatch changes.</p></div></div></li><li><span class="k mono">Step 03</span><div><h3>A test-flake found and fixed</h3><div class="prose"><p>A keyboard-activation test focused a nav button immediately after <code>page.goto()</code>, before React's first real render replaced the DOM node the focus had landed on. Fixed by waiting for the HUD to be visible first. Documented in <code>docs/qa-report.md</code> in case the earlier blueprints' equivalent tests start showing the same flake under load.</p></div></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The silhouette stage, Silk Charmeuse</b>:</p><img loading="lazy" decoding="async" src="../../../eidolon/shots/silhouette.jpg" alt="EIDOLON panel at the Silhouette stage, wrap 100%, drape 62%, a tan garment wrapped around an invisible body with a blue seam line down the center."><p><b>The runway stage, Raw Denim</b>:</p><img loading="lazy" decoding="async" src="../../../eidolon/shots/runway.jpg" alt="EIDOLON panel at the Runway stage with Raw Denim selected, the garment turned mid-rotation, flatter drape than the silk version."><p><b>Checks.</b> 10 unit and API tests, 19 Playwright tests including the fabric pixel-sample check, clean typecheck.</p><p><b>Performance, SwiftShader (no GPU claim).</b> 5 draw calls, 2,204 triangles (the garment's 24x32 subdivision for a smooth drape curve); 565 KB gzipped JS. Median 16.7 ms per frame.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Measure on a physical GPU and a mid-range phone.</li><li>Replace the closed-form drape shader with a real constraint-based cloth solver (the book's Rapier suggestion) for a physically accurate fall.</li><li>Add a second camera angle for the runway turn instead of a single fixed viewpoint.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Built from blueprint 05 of a written build book (Advanced Engineering Build Book, Volume VIII) as one vertical slice, using the five-tool-design-pipeline skill: an Awesome Design file for type/spacing scale (serif/italic, unlike the volume's other blueprints), the Taste/Impeccable checklist, Playwright including a rendered-pixel-color check for the fabric-swatch feature, Three.js as the product. <b>Everything is synthetic</b>: the four fabric swatches and atelier notes come from a seeded generator, and the drape is a closed-form shader function, not a real cloth solver. Not built: a real physics-based cloth simulation (Rapier or otherwise), Houdini, Marvelous Designer, auth.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../citadel/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 188 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">What Happens to 1,000 People When One Exit Closes?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../citadel/cover.jpg" width="1162" height="720" aria-label="What Happens to 1,000 People When One Exit Closes?: the project&#x27;s animated loop"><source src="../../../citadel/loop.webm" type="video/webm"><source src="../../../citadel/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Blender · three.js · motion design</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>187</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

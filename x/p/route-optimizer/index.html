@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can 50 Deliveries Be Re-Planned While Driving?, Rishit Mathur</title>
+<meta name="description" content="A routing engine that plans 50 stops for a van fleet on real Tampa roads in 3 seconds (time windows, weight and volume limits, shifts), then follows the vans live: 15 minutes behind triggers a re-plan pushed to the driver, and customers are texted at 3 stops and 10 minutes away.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Can 50 Deliveries Be Re-Planned While Driving?, Rishit Mathur">
+<meta property="og:description" content="A routing engine that plans 50 stops for a van fleet on real Tampa roads in 3 seconds (time windows, weight and volume limits, shifts), then follows the vans live: 15 minutes behind triggers a re-plan pushed to the driver, and customers are texted at 3 stops and 10 minutes away.">
+<meta property="og:image" content="../../../route-optimizer/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Operations research</span><span>Case <span class="n">102</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Can 50 Deliveries Be Re-Planned While Driving?</h1>
+  <p class="lead">A routing engine that plans 50 stops for a van fleet on real Tampa roads in 3 seconds (time windows, weight and volume limits, shifts), then follows the vans live: 15 minutes behind triggers a re-plan pushed to the driver, and customers are texted at 3 stops and 10 minutes away.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>08</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../route-optimizer/demo/" data-cursor="Open">[ Replay the simulated day ]</a><a class="brk" href="https://github.com/mrrishit909/route-optimizer" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../route-optimizer/cover.jpg" width="1162" height="720" aria-label="Can 50 Deliveries Be Re-Planned While Driving?: the project&#x27;s animated loop"><source src="../../../route-optimizer/loop.webm" type="video/webm"><source src="../../../route-optimizer/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">route-optimizer/loop.webm</span></div>
+    <div class="hud b"><span>[102]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python (typed)</span><span class="brk">Google OR-Tools (VRPTW)</span><span class="brk">OSRM / OpenStreetMap</span><span class="brk">FastAPI WebSockets</span><span class="brk">SQLite cache + history</span><span class="brk">Twilio API</span><span class="brk">React + Leaflet</span><span class="brk">20 tests, 97% coverage</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>A dispatcher has 50 parcels, 5 vans and a day. Each van holds only so much, each driver works a shift, some customers were promised a two-hour window. Deciding who goes where in what order is the vehicle routing problem, and the number of possible plans is far beyond trying them all. Then the day starts and a van gets stuck. <em>Can software produce a good plan in seconds, notice when reality drifts from it, and fix the rest of the route while the van is on the road?</em></p><p>Third of four product blueprints built as a minimum version.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A Python service with a live map dashboard.</p><ul><li><b>Travel times:</b> a 51 &times; 51 matrix of driving times from OSRM, cached per pair of places so repeated requests cost nothing.</li><li><b>Solver:</b> Google OR-Tools with time windows, two capacities (weight, volume), shifts and service times; a separate checker re-verifies every plan.</li><li><b>Live gateway:</b> drivers' phones send positions over WebSockets; dashboards receive every event.</li><li><b>Re-planning:</b> a van more than 15 minutes behind gets its remaining stops re-ordered from where it is now.</li><li><b>Texts and history:</b> Twilio messages at &ldquo;3 stops away&rdquo; and &ldquo;10 minutes away&rdquo;; planned and actual times per stop stored for fleet metrics.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Ask the road network once, remember the answer</h3><div class="prose"><p>The solver needs the driving time between every pair of places. One request to OSRM's table service returns all 2,601 pairs for the depot and 50 stops. Every pair is stored in SQLite under its coordinates rounded to about 11 metres, so tomorrow's plan for the same customers, or a van re-planning among stops already seen, asks for nothing. A re-plan from a new position requests only that one missing row. If the routing server is down the code falls back to straight-line estimates and labels them as such.</p></div><pre><code>dur, dist, source = h.matrix.table(pts, pts)</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>State the rules; let the solver search</h3><div class="prose"><p>OR-Tools is told the constraints, not the method: a time dimension (driving plus service time, arrival inside each window, back before the shift ends) and two load dimensions. The cost is seconds driven plus seconds each van is out, plus a fixed amount per van used. A stop can be left out only at a large penalty, ten times larger for a priority stop. An early version costed only driving, and produced a van that left at 8:00 and waited five hours at its first stop: counting waiting time fixed that.</p></div><pre><code>routing.AddDisjunction([index], PRIORITY_DROP_PENALTY if stop.priority else DROP_PENALTY)</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Profile it, and find the slow part was Python</h3><div class="prose"><p>A profile of a one-second solve showed three million calls from the solver back into small Python functions to look up a travel time. Handing OR-Tools the whole matrix instead removed them. Same time limit, better plan: the one-second result went from 210.6 km to 196.2 km, and the three-second plan now equals the thirty-second one.</p></div><pre><code>routing.SetArcCostEvaluatorOfAllVehicles(routing.RegisterTransitMatrix(durations))</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Notice a late van and re-plan its remaining stops</h3><div class="prose"><p>Each position message updates the van's projected arrival at its next stop. More than 15 minutes behind plan, the dispatcher re-solves that van's remaining stops from its current position and time. Windows become soft here: every parcel on board must still be delivered, so the answer is the least-late order, never &ldquo;no answer&rdquo;. The new route is pushed to the driver's socket and to every dashboard, and the plan is rebased so the next trigger needs another 15 minutes. All of this takes the time from the driver's message, so tests run a whole day in seconds with no clock.</p></div><pre><code>if van.delay_s &gt; DELAY_TRIGGER_S:</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Tell the customer, show the dispatcher</h3><div class="prose"><p>When a customer becomes the third stop ahead, and again when the van is within 10 minutes, a text goes out once (even if a re-plan reshuffles the order). The dashboard draws each van's road path in its own colour with a moving marker, and a timeline per driver: shift, stops, load meters for weight and volume, an amber or red bar for minutes behind, and a mark at each re-plan.</p></div><pre><code>ahead = van.next + STOPS_AWAY - 1                    # the customer who is now exactly 3 stops away</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>Planning 50 stops.</b> 5 vans available (450 kg, 4,500 litres each), 12 stops with a promised two-hour window. The solver uses 4 vans, drops nothing, and a separate checker finds no rule broken at any time limit.</p><table><tr><th>Time limit</th><th class="num">Distance</th><th class="num">Van-hours</th></tr><tr><td>0.5 s</td><td class="num">196.2 km</td><td class="num">11.13</td></tr><tr><td>1 s</td><td class="num">196.2 km</td><td class="num">11.13</td></tr><tr><td>3 s (default)</td><td class="num">193.5 km</td><td class="num">11.08</td></tr><tr><td>30 s</td><td class="num">193.5 km</td><td class="num">11.08</td></tr></table><p>Thirty seconds of search finds nothing better than three. That is not a proof that 193.5 km is the best possible.</p><p><b>A simulated day with a traffic jam.</b> Van 1 is held still for 40 minutes from 10:23.</p><table><tr><th>Measure</th><th class="num">Value</th></tr><tr><td>Stops delivered</td><td class="num">50 of 50</td></tr><tr><td>On time</td><td class="num">49 of 50</td></tr><tr><td>Re-plans of van 1</td><td class="num">3</td></tr><tr><td>Customer texts generated</td><td class="num">93</td></tr><tr><td>Calls to the routing server</td><td class="num">9</td></tr></table><p>The second re-plan changed the stop order to bring a priority stop forward. It was still reached 8 minutes after its window closed, because the jam outlasted the re-plan: re-planning reduces lateness, it cannot always remove it. The same scenario run over real WebSockets against the running server gave the same outcome.</p><img loading="lazy" decoding="async" src="../../../route-optimizer/shots/afternoon.jpg" alt="Dispatch dashboard at 15:36 in the replay: four coloured routes on a map of Tampa, vans 3 and 5 on the road, van 1 finished with three re-plan marks and one late stop in red on its timeline."><p><b>Checks.</b> 20 automated tests (solver constraints, cache behaviour, the re-plan rules message by message, the sockets, and a full simulated day) cover 97% of the code and pass inside the Docker image.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>A traffic-aware travel-time source and a self-hosted routing server instead of the public demo one.</li><li>Move stops between vans when one falls badly behind (only possible before loading, or with a hand-over point).</li><li>Keep live state in a database so a restart does not lose the day; real Twilio delivery with opt-out handling.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>The 50 stops are <b>invented</b> (random points over Tampa); the roads and travel times are real (OpenStreetMap via the public OSRM server). The live day is a <b>simulation</b>: scripted drivers, one of them held in a jam. There is no live traffic feed, and Twilio was never called for real: with no credentials the texts are recorded as &ldquo;not sent&rdquo;. The solver is a heuristic with a time limit; its plans are the best found, not proven optimal.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../synthetic-data-generator/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 103 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">How Private Can Useful Synthetic Data Be?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../synthetic-data-generator/cover.jpg" width="1162" height="720" aria-label="How Private Can Useful Synthetic Data Be?: the project&#x27;s animated loop"><source src="../../../synthetic-data-generator/loop.webm" type="video/webm"><source src="../../../synthetic-data-generator/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · ML privacy</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>102</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

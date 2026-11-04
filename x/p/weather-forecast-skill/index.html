@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Far Ahead Does Today&#x27;s Weather Beat the Calendar?, Rishit Mathur</title>
+<meta name="description" content="At twelve US airport stations, a forecast of the daily high from today&#x27;s departure beats the calendar by 42% tomorrow, 7% in three days and 1% in two weeks; simply repeating today is worse than the calendar from day two, and tomorrow&#x27;s rain probability improves on the seasonal one by only 4.5%.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="How Far Ahead Does Today&#x27;s Weather Beat the Calendar?, Rishit Mathur">
+<meta property="og:description" content="At twelve US airport stations, a forecast of the daily high from today&#x27;s departure beats the calendar by 42% tomorrow, 7% in three days and 1% in two weeks; simply repeating today is worse than the calendar from day two, and tomorrow&#x27;s rain probability improves on the seasonal one by only 4.5%.">
+<meta property="og:image" content="../../../weather-forecast-skill/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Forecasting</span><span>Case <span class="n">073</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">How Far Ahead Does Today&#x27;s Weather Beat the Calendar?</h1>
+  <p class="lead">At twelve US airport stations, a forecast of the daily high from today&#x27;s departure beats the calendar by 42% tomorrow, 7% in three days and 1% in two weeks; simply repeating today is worse than the calendar from day two, and tomorrow&#x27;s rain probability improves on the seasonal one by only 4.5%.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>08</b></span><span>Status<b>Code only</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/weather-forecast-skill" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../weather-forecast-skill/cover.jpg" width="1162" height="720" aria-label="How Far Ahead Does Today&#x27;s Weather Beat the Calendar?: the project&#x27;s animated loop"><source src="../../../weather-forecast-skill/loop.webm" type="video/webm"><source src="../../../weather-forecast-skill/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">weather-forecast-skill/loop.webm</span></div>
+    <div class="hud b"><span>[073]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">pandas</span><span class="brk">NumPy</span><span class="brk">Walk-forward forecasting</span><span class="brk">Harmonic regression</span><span class="brk">Brier score</span><span class="brk">NOAA GHCN-Daily</span><span class="brk">Hand-written recompute</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>The weather you will get tomorrow is mostly the time of year. <em>How much better than the calendar can a station's own recent weather forecast it, and how many days ahead does that last?</em></p><p>The task follows GeeksforGeeks' "Weather Data Analysis" (time series of station weather), answered as a forecasting test: twelve US airport stations, 1991 to 2025, with every model fitted only on the years before the ones it forecasts.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>Four forecasts against the calendar, scored out of sample:</p><ul><li><b>The audit:</b> days observed and values dropped by a quality flag at each of the twelve stations.</li><li><b>The calendar:</b> seasonal cycle and trend, refitted on the previous 20 years for each test year from 2011 to 2025.</li><li><b>The forecasts:</b> repeat today, damped persistence, and today plus last week, 1 to 14 days ahead, for the high and the low.</li><li><b>The extras:</b> skill by station and season, the bias of a stale calendar in a warming climate, and tomorrow's rain.</li><li><b>Check:</b> <code>check.py</code> recounts all 4,227 numbers in plain Python, solving every fit by Gaussian elimination.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Download twelve stations</h3><div class="prose"><p>NOAA's GHCN-Daily by-station files for twelve airports, daily high, low and rain from 1991 to 2025 (about 19 MB, fetched and never committed, with their checksums). Values with a quality flag are dropped. NOAA rebuilds the files every day, so the checksums identify the pull the results come from.</p></div><pre><code>FILES = {f&quot;{s}.csv.gz&quot;: BASE + f&quot;by_station/{s}.csv.gz&quot; for s in STATIONS}</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Fit damped persistence on the past only</h3><div class="prose"><p>For each test year the calendar (mean, three harmonics and a trend) is fitted on the 20 years before it, and the damping factor for each horizon is the least-squares slope of the future departure on today's, estimated on the same window; the test year is never seen.</p></div><pre><code>phi = float((a[s][ok] * a[s + h][ok]).sum() / (a[s][ok] ** 2).sum())</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Score against the calendar</h3><div class="prose"><p>All four forecasts are scored on the same days by mean squared error, and skill is one minus the ratio to the calendar's, so zero means no better than the calendar and -100% means error variance doubled.</p></div><pre><code>&quot;skill_damped&quot;: 1 - m[2] / m[0]</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Leave a calendar to go stale</h3><div class="prose"><p>A calendar fitted once on 1991 to 2010 is run unchanged over 2011 to 2025, with and without a trend, and its mean error is compared with the rolling calendar's, to show what warming does to a forecast that is not kept up to date.</p></div><pre><code>bst = fit(X[(YEAR &gt;= 1991) &amp; (YEAR &lt;= 2010)], y[(YEAR &gt;= 1991) &amp; (YEAR &lt;= 2010)])</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Recount it all without the libraries</h3><div class="prose"><p><code>check.py</code> reads the station files with the csv module and recomputes every fit, anomaly, forecast, score, bias and Brier score, solving the least-squares problems by Gaussian elimination: 4,227 numbers to a relative tolerance of 1e-8.</p></div><pre><code>phi = sxy / sxx; det = m11 * m22 - m12 * m12</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The data.</b> 12 stations, 12,784 days each (1991 to 2025), 99.8% or more with a high and a low observed and 4 values dropped by a quality flag. Each forecast is scored on about 5,444 days per station and horizon, 2011 to 2025, with models fitted only on the 20 years before each test year. The seasonal cycle and trend alone (the calendar) explain 29% to 89% of the variance of the next day's temperature, so what is left to forecast is the departure from it.</p><p><b>Today's weather beats the calendar for about three days.</b> The table is the mean skill over the twelve stations for the daily high, one minus the ratio of mean squared errors to the calendar's: Repeat is "tomorrow will be like today", Damped adds a fitted share of today's departure from the calendar, and Week adds the last seven days' mean departure. The damped forecast is 42% better than the calendar tomorrow, 7% in three days and 1% in fourteen; the week adds almost nothing.</p><table><tr><th>Days</th><th class="num">Repeat</th><th class="num">Damped</th><th class="num">Week</th></tr><tr><td>1</td><td class="num">29%</td><td class="num">42%</td><td class="num">42%</td></tr><tr><td>2</td><td class="num">-24%</td><td class="num">15%</td><td class="num">16%</td></tr><tr><td>3</td><td class="num">-50%</td><td class="num">7%</td><td class="num">8%</td></tr><tr><td>5</td><td class="num">-70%</td><td class="num">3%</td><td class="num">3%</td></tr><tr><td>7</td><td class="num">-81%</td><td class="num">2%</td><td class="num">2%</td></tr><tr><td>14</td><td class="num">-100%</td><td class="num">1%</td><td class="num">1%</td></tr></table><img loading="lazy" decoding="async" src="../../../weather-forecast-skill/charts/02_methods.jpg" alt="Left: mean skill of the daily high by days ahead for repeating today (orange dashed, falling to -100%), damped persistence (blue) and today plus last week (green), the last two almost identical. Right: horizontal bars of tomorrow's damped skill for the daily high and low at each station, from 29% for the Boston high to 58% for the Phoenix high."><p><b>Repeating today is worse than the calendar from day two.</b> Its skill is 29% tomorrow and -24% at two days, heading for -100% once the weather has forgotten today (repeating it then doubles the error variance). At 19 of the 24 station-and-element combinations it is already worse at two days, and at the other 5 at three.</p><img loading="lazy" decoding="async" src="../../../weather-forecast-skill/charts/01_horizon.jpg" alt="Left: lines of skill against the calendar for the daily high by days ahead, one grey line per station and the mean in blue, all falling from about 42% tomorrow to nearly zero by day five, and the orange dashed mean of simply repeating today falling from 29% below zero within two days to -100% at fourteen. Right: for each station the first day on which skill is under 5%, from 2 for the Boston high to 13 for the Los Angeles low."><p><b>Some stations hold on longer.</b> The table gives tomorrow's damped skill for the high and the low, and Days the number of days for which it stays above 5% (high / low). Phoenix, where the weather changes least, has the most skill tomorrow (58% for the high) and Boston the least (29%); the longest memory is the ocean's, 12 days for the Los Angeles low and 9 for the Honolulu high.</p><table><tr><th>Station</th><th class="num">High</th><th class="num">Low</th><th class="num">Days</th></tr><tr><td>Phoenix</td><td class="num">58%</td><td class="num">54%</td><td class="num">4 / 4</td></tr><tr><td>Los Angeles</td><td class="num">53%</td><td class="num">55%</td><td class="num">3 / 12</td></tr><tr><td>Minneapolis</td><td class="num">48%</td><td class="num">56%</td><td class="num">4 / 5</td></tr><tr><td>Seattle</td><td class="num">46%</td><td class="num">53%</td><td class="num">3 / 5</td></tr><tr><td>Albuquerque</td><td class="num">44%</td><td class="num">39%</td><td class="num">3 / 3</td></tr><tr><td>Atlanta</td><td class="num">43%</td><td class="num">53%</td><td class="num">3 / 3</td></tr><tr><td>Chicago</td><td class="num">43%</td><td class="num">51%</td><td class="num">3 / 5</td></tr><tr><td>Dallas-Fort Worth</td><td class="num">42%</td><td class="num">46%</td><td class="num">2 / 2</td></tr><tr><td>Miami</td><td class="num">35%</td><td class="num">51%</td><td class="num">2 / 3</td></tr><tr><td>Honolulu</td><td class="num">34%</td><td class="num">41%</td><td class="num">9 / 4</td></tr><tr><td>New York</td><td class="num">33%</td><td class="num">47%</td><td class="num">2 / 2</td></tr><tr><td>Boston</td><td class="num">29%</td><td class="num">43%</td><td class="num">1 / 2</td></tr></table><p><b>The seasons matter less than the station.</b> Tomorrow's skill for the high runs from 27% to 61% across all station-seasons; at Minneapolis it is 50% in winter and 32% in summer. Three days ahead the skill is 6% at the median station-season and at most 19% (Honolulu in summer).</p><img loading="lazy" decoding="async" src="../../../weather-forecast-skill/charts/03_seasons.jpg" alt="Two heat maps of the damped skill for the daily high by station and season, one day ahead (left, 27% to 61%) and three days ahead (right, with a different colour scale)."><p><b>An old calendar runs cold.</b> The table is the mean error in degrees C of tomorrow's forecast over 2011 to 2025, observed minus calendar, over the twelve highs and twelve lows; Fixed means fitted once on 1991 to 2010 and never updated, Refitted yearly means fitted on the 20 years before each test year. A seasonal cycle fitted once on 1991 to 2010 under-forecasts by 0.72 °C on average; adding a trend fitted on the same years extrapolates badly (from -0.65 to 1.50 °C); refitting on the last 20 years each year keeps it between -0.05 and 0.27 °C. In root-mean-square error the stale calendars cost a median 1% (trend) and 2% (no trend), at worst 22% and 5%.</p><table><tr><th>Calendar</th><th class="num">Mean</th><th class="num">Range</th></tr><tr><td>Fixed, no trend</td><td class="num">0.72</td><td class="num">0.09 to 1.22</td></tr><tr><td>Fixed, trend</td><td class="num">0.49</td><td class="num">-0.65 to 1.50</td></tr><tr><td>Refitted yearly</td><td class="num">0.10</td><td class="num">-0.05 to 0.27</td></tr></table><img loading="lazy" decoding="async" src="../../../weather-forecast-skill/charts/04_bias.jpg" alt="Two panels of bars of the mean error of tomorrow's forecast (observed minus calendar, in degrees C) by station, for the daily high and low, for a seasonal cycle fitted on 1991 to 2010 (grey, mostly +0.5 to +1.2), the same with a trend (orange, from -0.7 to 1.5) and a calendar refitted on the last 20 years (blue, between -0.05 and 0.27)."><p><b>Rain is hardly forecastable from the station's own history.</b> It rains (1 mm or more) on 7% (Phoenix) to 34% (Seattle) of days. A two-state model, with a separate seasonal curve after a wet and after a dry day, improves on the seasonal probability of rain tomorrow by 4.5% on average (1.4% to 10.8%), by 0.5% in two days and by nothing after that. "Wet if wet today" is worse than the seasonal probability (Brier score 0.24 against 0.15).</p><img loading="lazy" decoding="async" src="../../../weather-forecast-skill/charts/05_rain.jpg" alt="Left: lines of the Brier skill of the two-state rain model against the seasonal probability by days ahead, one per station, highest at Los Angeles and Seattle on day 1 and zero by day 3, with the mean 4.5% on day 1. Right: bars of the mean Brier score for tomorrow: seasonal probability 0.150, two-state model 0.144, wet if wet today 0.242."></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Compare these baselines with the forecasts of a weather service for the same days, to see how much more than a station's own history physical models add.</li><li>Add neighbouring stations as predictors, since weather arrives from upwind, and see how far skill extends.</li><li>Score the extremes (heat waves, freezes, heavy rain) rather than the mean squared error, which is where forecasts earn their keep.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Forecasts from each station's own past only, not weather forecasts: a weather service uses a whole region's observations and physical models, and none of that or any published verification was used. Twelve airport stations, 2011 to 2025, one climatology (three harmonics, a linear trend, a 20-year window), mean squared error only. NOAA rebuilds the files daily, so a later download can differ slightly; the checksums are in the repository. Source: NOAA NCEI, GHCN-Daily (US government data; Menne et al. 2012).</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../gold-price-drivers/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 074 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">What Moves the Price of Gold?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../gold-price-drivers/cover.jpg" width="1162" height="720" aria-label="What Moves the Price of Gold?: the project&#x27;s animated loop"><source src="../../../gold-price-drivers/loop.webm" type="video/webm"><source src="../../../gold-price-drivers/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Time series</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>073</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

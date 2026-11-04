@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Would You Notice When a Fraud Model Breaks?, Rishit Mathur</title>
+<meta name="description" content="On 203,769 real Bitcoin transactions, a fraud model&#x27;s F1 fell from 0.88 to 0.04 when the market broke, its own score monitor never rang, drifting inputs raised false alarms before the break, and the one rule that caught it needed labels, which only 23% of transactions have.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Would You Notice When a Fraud Model Breaks?, Rishit Mathur">
+<meta property="og:description" content="On 203,769 real Bitcoin transactions, a fraud model&#x27;s F1 fell from 0.88 to 0.04 when the market broke, its own score monitor never rang, drifting inputs raised false alarms before the break, and the one rule that caught it needed labels, which only 23% of transactions have.">
+<meta property="og:image" content="../../../fraud-model-monitoring/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Model monitoring</span><span>Case <span class="n">070</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Would You Notice When a Fraud Model Breaks?</h1>
+  <p class="lead">On 203,769 real Bitcoin transactions, a fraud model&#x27;s F1 fell from 0.88 to 0.04 when the market broke, its own score monitor never rang, drifting inputs raised false alarms before the break, and the one rule that caught it needed labels, which only 23% of transactions have.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>09</b></span><span>Status<b>Code only</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/fraud-model-monitoring" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../fraud-model-monitoring/cover.jpg" width="1162" height="720" aria-label="Would You Notice When a Fraud Model Breaks?: the project&#x27;s animated loop"><source src="../../../fraud-model-monitoring/loop.webm" type="video/webm"><source src="../../../fraud-model-monitoring/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">fraud-model-monitoring/loop.webm</span></div>
+    <div class="hud b"><span>[070]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">pandas</span><span class="brk">scikit-learn</span><span class="brk">Random forest</span><span class="brk">Logistic regression</span><span class="brk">Population stability index</span><span class="brk">Drift alarms</span><span class="brk">Elliptic transactions (CC BY-NC-ND)</span><span class="brk">Hand-written recompute</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>A fraud model is only useful while it still works, and the usual way to watch one is its output: the score it gives, how many transactions it flags, whether its inputs drift. <em>If a fraud model stops working one day, which of those monitors tells you, and how many false alarms do they raise before it does?</em></p><p>The task follows DataCamp's "Monitoring a Financial Fraud Detection Model". The list names no data set, and the best-known public fraud file (the ULB credit-card transactions) covers only two days, too short to show drift, so the data here is the Elliptic Bitcoin set instead: 203,769 real transactions over 49 two-week steps, with a break at step 43 that the papers using it report defeating trained models (data from Weber et al., 2019).</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>Two models trained once on the first 29 steps, then watched step by step:</p><ul><li><b>The audit:</b> counts, blanks, and how few transactions carry a label.</li><li><b>The models:</b> a random forest and a regularised logistic regression, frozen after step 29.</li><li><b>The monitors:</b> score drift, flag rate, drifting inputs and falling F1, with four alarm rules fixed in advance and five validation steps to learn what normal looks like.</li><li><b>Retraining:</b> four policies, including labels that arrive late.</li><li><b>Check:</b> <code>check.py</code> parses the whole file in plain Python, proves the logistic fit is optimal, refits the 46 forests and recomputes the rest by hand: 1,457 numbers.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Download the transactions</h3><div class="prose"><p>The Elliptic data set from the PyTorch Geometric mirror: one row per transaction with its time step and 165 anonymised features, and a file of labels (illicit, licit or unknown). About 690 MB, so it is fetched, never committed, with its checksums. The licence is CC BY-NC-ND 4.0, so only aggregates are published.</p></div><pre><code>BASE = &quot;https://data.pyg.org/datasets/elliptic/&quot;</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Train once on the first 29 steps</h3><div class="prose"><p>A random forest (100 trees, flag at 0.5) and an L2 logistic regression, both fitted on the 26,381 labelled transactions of steps 1 to 29 and never refitted. Steps 30 to 34 are the validation steps, where the monitors learn what normal looks like; steps 35 to 49 are deployment.</p></div><pre><code>rf = RandomForestClassifier(n_estimators=100, random_state=0, n_jobs=-1).fit(X[tr], y[tr].astype(int))</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Watch four things, step by step</h3><div class="prose"><p>For each step: the population stability index (PSI) of the model's score against the validation steps (ten bins from the validation deciles; 0.25 or more is the usual alarm), the share of transactions flagged, how many of the 165 inputs have their own index above 0.25, and F1 on the step's labelled transactions. The four alarm rules were fixed in advance.</p></div><pre><code>pa = np.maximum(np.histogram(a, bins=edges)[0] / len(a), FLOOR); pe = np.maximum(np.histogram(e, bins=edges)[0] / len(e), FLOOR); return float(np.sum((pa - pe) * np.log(pa / pe)))</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Retrain four ways</h3><div class="prose"><p>From step 35 the forest is refitted never, every step on all labels so far, every step on labels that arrive two steps late, or every step on the last ten steps only, and scored on each next step.</p></div><pre><code>for pol, delay in ((&quot;never&quot;, 0), (&quot;every step, all labelled so far&quot;, 0), (&quot;every step, labels two steps late&quot;, 2), (&quot;every step, last ten steps only&quot;, 0)):</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Prove the fit and recount the rest</h3><div class="prose"><p><code>check.py</code> parses the 203,769 x 167 file in plain Python and checks that the stored logistic coefficients make the gradient of the penalised likelihood zero on the training rows (the objective is strictly convex, so only the optimum does). It refits the 46 forests with scikit-learn and recomputes every score, precision, recall, interval, F1, average precision, AUC, flag rate, index, alarm and retraining result by hand.</p></div><pre><code>assert gmax &lt; 1e-6, (&quot;logistic coefficients are not the optimum&quot;, gmax)</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The data and its labels.</b> 203,769 transactions in 49 steps. Only 22.9% have a label: 4,545 illicit and 42,019 licit; 77.1% are unknown, and a step's labelled share runs from 11.2% to 42.9%. The deployment steps hold 16,670 labelled transactions, 1,083 of them illicit, and after the break only 24, 24, 5, 2, 22, 36 and 56 per step, so one step's F1 rests on few cases (the Wilson interval of each recall is in <code>results/performance.csv</code>).</p><img loading="lazy" decoding="async" src="../../../fraud-model-monitoring/charts/05_labels.jpg" alt="Left: bars of the share of each time step's transactions that have a label, between 11% and 43% in every one of the 49 steps. Right: bars of the labelled illicit transactions in each deployment step, 182, 33, 40, 111, 81, 112, 116 and 239 before the break at step 43 and 24, 24, 5, 2, 22, 36 and 56 after it."><p><b>Before the break.</b> The random forest holds up: mean F1 0.938 on the validation steps and 0.879 on steps 35 to 42 (lowest 0.730, at step 37), mean average precision 0.902, mean AUC 0.963. The logistic regression is a weak baseline: mean F1 0.394 on steps 35 to 42, because it flags 48% to 67% of all transactions.</p><p><b>The break.</b> At step 43 the forest's F1 falls to 0.00: of the step's 1,370 labelled transactions, 24 illicit, it flags 4 and catches 0 of the illicit ones. Over steps 43 to 49 its mean F1 is 0.036 and its mean AUC 0.712 (against 0.963), so the ranking degrades too, not only the cut-off. The logistic regression's mean F1 goes from 0.394 to 0.134; it had less to lose.</p><table><tr><th>Step</th><th class="num">Illicit</th><th class="num">Caught</th><th class="num">F1</th></tr><tr><td>41</td><td class="num">116</td><td class="num">107</td><td class="num">0.95</td></tr><tr><td>42</td><td class="num">239</td><td class="num">189</td><td class="num">0.86</td></tr><tr><td>43 (break)</td><td class="num">24</td><td class="num">0</td><td class="num">0.00</td></tr><tr><td>44</td><td class="num">24</td><td class="num">1</td><td class="num">0.04</td></tr><tr><td>45</td><td class="num">5</td><td class="num">0</td><td class="num">0.00</td></tr><tr><td>46</td><td class="num">2</td><td class="num">1</td><td class="num">0.18</td></tr><tr><td>47</td><td class="num">22</td><td class="num">0</td><td class="num">0.00</td></tr><tr><td>48</td><td class="num">36</td><td class="num">0</td><td class="num">0.00</td></tr><tr><td>49</td><td class="num">56</td><td class="num">1</td><td class="num">0.03</td></tr></table><img loading="lazy" decoding="async" src="../../../fraud-model-monitoring/charts/01_performance.jpg" alt="Two lines of F1 by time step from 30 to 49 with the break at step 43 marked. The random forest in blue stays between 0.73 and 0.96 until step 42, then drops to 0.00 at step 43 and stays below 0.19. The logistic regression in orange is lower throughout, around 0.4, and also falls below 0.09 from step 43 to step 47."><p><b>The score monitor did not notice the forest breaking.</b> Its score index stays at or below 0.207 in every deployment step, never reaches 0.25, and is 0.148 at step 43; its flag rate after the break (5.1% to 9.5%) lies inside the range seen in validation (3.8% to 19.6%). The model's output looked normal while it was missing the fraud. The logistic regression's score index did cross 0.25 (from step 44 on), one step after its F1 had collapsed, and once before the break, at step 40.</p><img loading="lazy" decoding="async" src="../../../fraud-model-monitoring/charts/02_monitors.jpg" alt="Left: population stability index of the model's score by step against the 0.25 alarm line. The forest in blue peaks at 0.21 and is 0.15 at the break; the logistic regression in orange crosses 0.25 at step 40 and again from step 44, reaching 0.50. Right: the number of the 165 inputs with an index above 0.25 per step, peaking at 48 at step 37 and 44 at step 39, both before the break, against a validation maximum of 34."><p><b>Input drift is not model decay.</b> The number of the 165 inputs with an index above 0.25 was 48 at step 37 and 44 at step 39, both before the break, and 24 at step 43, against a validation maximum of 34. Many inputs move from one fortnight to the next without the model breaking, and the break does not stand out in the count; whether the inputs changed or the link between inputs and label did cannot be told from the inputs' own distributions.</p><p><b>Which alarms rang.</b> False is the number of steps from 35 to 42 (of 8) on which a rule rang, Rang the number of steps from 43 to 49 (of 7), and First the first of those. Score is the score index above 0.25, flag rate is a flag rate outside the validation range, F1 is an F1 under half the validation mean (which needs the labels), and input drift is more drifting inputs than any validation step. Only the F1 rules rang at the break, and the forest's own two output monitors never rang.</p><table><tr><th>Rule</th><th class="num">False</th><th class="num">Rang</th><th class="num">First</th></tr><tr><td>Forest: score</td><td class="num">0</td><td class="num">0</td><td class="num">never</td></tr><tr><td>Forest: flag rate</td><td class="num">0</td><td class="num">0</td><td class="num">never</td></tr><tr><td>Forest: F1</td><td class="num">0</td><td class="num">7</td><td class="num">43</td></tr><tr><td>Logistic: score</td><td class="num">1</td><td class="num">6</td><td class="num">44</td></tr><tr><td>Logistic: flag rate</td><td class="num">1</td><td class="num">2</td><td class="num">44</td></tr><tr><td>Logistic: F1</td><td class="num">1</td><td class="num">5</td><td class="num">43</td></tr><tr><td>Input drift</td><td class="num">2</td><td class="num">1</td><td class="num">45</td></tr></table><img loading="lazy" decoding="async" src="../../../fraud-model-monitoring/charts/03_alarms.jpg" alt="A grid of seven alarm rules by time step from 35 to 49. The forest's score and flag-rate rules never ring. The forest's F1 rule rings at every step from 43. The logistic regression's rules and the input-drift rule ring at a few steps, with orange squares for false alarms before the break at steps 36, 37, 39, 40 and 41."><p><b>Retraining.</b> Refitting the forest every step from step 35 on lifts the mean F1 over steps 43 to 49 from 0.036 to 0.157 with all labels so far, 0.113 with only the last ten steps and 0.087 if the labels arrive two steps late. It helps, but it does not restore the F1 of before the break: the F1 is still zero at steps 43, 45, 47, 48 under every policy, and the gains come from steps 44, 46, 49, three steps with 24, 2 and 56 labelled illicit transactions. (AP is average precision.)</p><table><tr><th>Policy</th><th class="num">Mean F1</th><th class="num">Mean AP</th></tr><tr><td>Never retrained</td><td class="num">0.04</td><td class="num">0.13</td></tr><tr><td>All labels so far</td><td class="num">0.16</td><td class="num">0.42</td></tr><tr><td>Labels two steps late</td><td class="num">0.09</td><td class="num">0.29</td></tr><tr><td>Last ten steps only</td><td class="num">0.11</td><td class="num">0.36</td></tr></table><img loading="lazy" decoding="async" src="../../../fraud-model-monitoring/charts/04_retraining.jpg" alt="Left: F1 of the forest by step under four retraining policies, all about the same up to step 42 and near zero after it, with peaks at steps 46 and 49. Right: bars of the mean F1 over steps 43 to 49: 0.04 never retrained, 0.16 with all labels so far, 0.09 with labels two steps late and 0.11 with the last ten steps."></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Delay the labels in the alarm too, not only in retraining, to see how many steps pass before the F1 rule can ring in practice.</li><li>Use the transaction graph, which Elliptic also provides, and test whether graph features drift less than the 165 used here.</li><li>Try a drift-aware method, or a monitor on the model's confidence, and see whether any output monitor can catch the break.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>One data set and one break (step 43; the dark-market shutdown behind it is how the data set's literature describes it, and is not tested here). The thresholds were fixed in advance, not tuned. The F1 rule needs labels, used as soon as a step ends, and only 23% of transactions have one. Untuned models on the 165 features, not the transaction graph. Licence: CC BY-NC-ND 4.0 as stated on the data set's Kaggle page, so nothing from the data is published, only counts, scores and summaries. Source: Weber et al. (2019), Elliptic.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../twitter-network/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 071 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Who Are the Influencers in a Twitter Network?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../twitter-network/cover.jpg" width="1162" height="720" aria-label="Who Are the Influencers in a Twitter Network?: the project&#x27;s animated loop"><source src="../../../twitter-network/loop.webm" type="video/webm"><source src="../../../twitter-network/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Network analysis</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>070</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

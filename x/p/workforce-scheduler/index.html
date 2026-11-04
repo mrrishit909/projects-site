@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Works When? A Week&#x27;s Schedule That Obeys Every Rule, and Survives Two Sick Calls, Rishit Mathur</title>
+<meta name="description" content="A scheduling system for hourly staff. For one invented store it forecast next week&#x27;s demand, built a legal schedule for 61 people that cost 14% less than a careful first-fit schedule while covering 99.9% of demand against 92.8%, and when two people called in sick on the busiest evening it closed…">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Who Works When? A Week&#x27;s Schedule That Obeys Every Rule, and Survives Two Sick Calls, Rishit Mathur">
+<meta property="og:description" content="A scheduling system for hourly staff. For one invented store it forecast next week&#x27;s demand, built a legal schedule for 61 people that cost 14% less than a careful first-fit schedule while covering 99.9% of demand against 92.8%, and when two people called in sick on the busiest evening it closed…">
+<meta property="og:image" content="../../../workforce-scheduler/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Operations research</span><span>Case <span class="n">112</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Who Works When? A Week&#x27;s Schedule That Obeys Every Rule, and Survives Two Sick Calls</h1>
+  <p class="lead">A scheduling system for hourly staff. For one invented store it forecast next week&#x27;s demand, built a legal schedule for 61 people that cost 14% less than a careful first-fit schedule while covering 99.9% of demand against 92.8%, and when two people called in sick on the busiest evening it closed the gap in under half a second by changing 3 of 45 assignments.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>09</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../workforce-scheduler/demo/" data-cursor="Open">[ Run the seven-step demo ]</a><a class="brk" href="https://github.com/mrrishit909/workforce-scheduler" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../workforce-scheduler/cover.jpg" width="1162" height="720" aria-label="Who Works When? A Week&#x27;s Schedule That Obeys Every Rule, and Survives Two Sick Calls: the project&#x27;s animated loop"><source src="../../../workforce-scheduler/loop.webm" type="video/webm"><source src="../../../workforce-scheduler/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">workforce-scheduler/loop.webm</span></div>
+    <div class="hud b"><span>[112]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">FastAPI</span><span class="brk">PostgreSQL 16 (row-level security)</span><span class="brk">OR-Tools CP-SAT</span><span class="brk">Constraint programming</span><span class="brk">Demand forecasting</span><span class="brk">Postgres job queue</span><span class="brk">Docker Compose</span><span class="brk">34 tests</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>A store manager with 61 hourly staff has to decide who works when next week. Each person has skills, some with certificates that expire, hours they cannot work, hours they would rather not, a contract, and a legal right to rest. Demand changes every half hour and jumps when there is a promotion. Then on Saturday afternoon two people call in sick. <em>Can software forecast the demand, build a schedule that breaks no rule at the lowest cost, and fix it with the least disruption when people drop out?</em></p><p>Blueprint 9 of ten in an enterprise build book, built as the demo scenario end to end.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A Python service on PostgreSQL with a background worker and a web page, started by one <code>docker compose up</code>.</p><ul><li><b>Forecast:</b> transactions per half hour for the coming week, turned into people needed per skill.</li><li><b>Rule pack:</b> one file that answers "is this legal?" for everything else.</li><li><b>Schedule solver:</b> picks every shift for the week at once, at the lowest cost that breaks no rule.</li><li><b>Call-out repair:</b> covers a gap while changing as few published shifts as possible.</li><li><b>Shift marketplace:</b> a worker offers a shift; a colleague's claim is checked against every rule before it moves.</li><li><b>Fairness report:</b> overtime, weekend load and contracted hours, before and after.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Forecast the half hours, not the day</h3><div class="prose"><p>The store's own history shows how much a promotion lifts sales (21%) and how much rain lowers them (11%). Those effects are removed from the past, the last six same-weekdays are averaged slot by slot, and the coming day's promotion or rain is put back in. Next Saturday has a promotion and last Saturday did not: the forecast is 3,805 transactions where copying last week says 3,025. That is 33 people at the peak, not 28.</p></div><pre><code>same = clean[weekday == d][-WEEKS:]
+out.append(same.mean(axis=0) * trend * (up if p else 1.0) * (damp if r else 1.0))</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>One checker for every question of legality</h3><div class="prose"><p>Qualification, a valid certificate, availability, one shift a day, 11 hours of rest, a weekly maximum, a day off, a break in long shifts. These live in one file. The solver turns them into constraints, and then the same file re-checks the solver's answer from scratch, ranks who can replace a sick colleague, and decides whether a shift swap is allowed.</p></div><pre><code>if nxt and (SLOTS_PER_DAY - (s[&quot;start&quot;] + s[&quot;length&quot;])) + nxt[&quot;start&quot;] &lt; REST_SLOTS:
+    out.append((&quot;REST_11H&quot;, {...}))</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>21,182 yes or no decisions</h3><div class="prose"><p>Each decision is "does this person work this shape of shift, in this skill, on this day". The rules are hard limits. Everything else is a cost in dollars: wages and overtime, a person-half-hour short of demand ($60), hours at times someone asked to avoid, contracted hours not given, weekend shifts for people who have just worked several. The solver stops after 20 seconds, within 0.3% of the best possible answer.</p></div><pre><code>u = m.NewIntVar(0, need, &quot;&quot;)
+m.Add(sum(cover.get(key, [])) + u &gt;= need)
+cost_terms.append(u * W_SHORT)</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Repair by changing as little as possible</h3><div class="prose"><p>When two people call out, solving the day again from nothing would cover the gap and also move 34 other people's shifts. So the repair freezes the rest of the week and charges $30 for every assignment it changes. In 25 trials it closed the gap by changing a median of 2.</p></div><pre><code>m.Minimize(W_SHORT * sum(shorts) + change_weight * sum(changed) + sum(terms))</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>The saving had a cost, so it is reported</h3><div class="prose"><p>The store needs about 1,250 staff-hours and its people are contracted for about 1,600. The solver stops paying for hours nobody needs, and those were somebody's expected hours. The first version piled that shortfall onto a few people: 8 of 61 got less than half their contract. Making the penalty three times steeper below half spread it out (2 of 61) for about 1% more cost. The report shows the shortfall beside the saving.</p></div><pre><code>m.Add(deep &gt;= int(w[&quot;target_hours&quot;]) - total)      # half-hours below 50% of contract
+cost_terms += [short * W_TARGET, deep * 2 * W_TARGET]</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>One store, one week, 61 people, against a careful first-fit schedule under the same rules:</b></p><table><tr><th>Measure</th><th class="num">Solver</th><th class="num">First-fit</th></tr><tr><td>Labor cost</td><td class="num">$29,121</td><td class="num">$33,908</td></tr><tr><td>Demand covered</td><td class="num">99.9%</td><td class="num">92.8%</td></tr><tr><td>Hours beyond demand</td><td class="num">122.5</td><td class="num">400</td></tr><tr><td>Hours at times people asked to avoid</td><td class="num">99</td><td class="num">403</td></tr><tr><td>Rule violations</td><td class="num">0</td><td class="num">0</td></tr><tr><td>Hours below contract (worse)</td><td class="num">264</td><td class="num">128</td></tr></table><img loading="lazy" decoding="async" src="../../../workforce-scheduler/shots/schedule.jpg" alt="Saturday: a line of people scheduled tracking the line of people required through a lunch peak and a larger evening peak, and a chart of 45 shifts as horizontal bars from 06:00 to 22:00, coloured by skill (cashier, sales floor, stockroom, service desk), with a gap in each long shift for the unpaid break."><p><b>Two sick calls in the Saturday evening peak.</b> Hours short went from 1.0 to 11.5. Four people could legally take the cashier shift. Nobody could take the service desk shift: of 59 others, 34 were already working and 7 had a lapsed certificate. The repair moved one certified person from a morning stockroom shift, called two people in, and was back to 1.0 hours short in 0.4 seconds with 3 of 45 assignments changed.</p><img loading="lazy" decoding="async" src="../../../workforce-scheduler/shots/repair.jpg" alt="Ranked list of four legal replacements for a cashier shift with added pay, week hours and whether they asked to avoid the time; a bar chart of why nobody can take the service desk shift (34 already working, 7 certificate lapsed, 6 unavailable, 5 over weekly maximum, 5 without the skill, 2 under-rested); and the repair: 3 assignments changed, hours short 11.5 to 1.0, 381 ms, 0 rule violations."><p><b>A shift swap.</b> The first colleague to claim an offered service desk shift was refused automatically (certificate lapsed). The second passed all 8 rules and the shift moved.</p><p><b>Across more stores and weeks:</b></p><ul><li>Forecast error on daily totals, 50 stores over 12 weeks: 4.4%, against 10.3% for copying last week. Better in all 50 stores.</li><li>Six stores scheduled: labor cost 15.2% below first-fit, 5.5 hours short of demand against 428.5.</li><li>A schedule built on the forecast was 8.5 hours short against the demand that actually arrived; one built on a copy of last week was 22.5 hours short, 16 of them on the promotion Saturday.</li></ul><p><b>Checks.</b> 34 tests, including: every rule firing on a case built to break it, the stored schedule re-checked from database rows with no help from the solver, a refused claim moving nothing, a repeated call-out request recorded once, and one company unable to see another's workers or schedules.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Real labor law for one place: break timing windows, rules for minors, premiums for late schedule changes.</li><li>Larger stores, which need the week split into smaller problems.</li><li>Compare against schedules real managers wrote, since first-fit is easier to beat.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Built from a written blueprint as one vertical slice, on a <b>synthetic retailer</b>: 50 stores, 5,000 workers and two years of sales are generated. The labor rules are a generic pack (rest hours, weekly maximum, breaks), <b>not any real jurisdiction's law</b>. The 14% saving is against a simple first-fit schedule that an experienced manager would beat, so read it as an upper estimate. Only stores of 61 to 69 workers were solved. Not built: time zones, timeclock data, a worker app, Kafka, Terraform, single sign-on.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../city-capital-planner/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 113 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">100,000 Pipes, Roads and Drains, and Money to Fix One in Ten. Which Ones?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../city-capital-planner/cover.jpg" width="1162" height="720" aria-label="100,000 Pipes, Roads and Drains, and Money to Fix One in Ten. Which Ones?: the project&#x27;s animated loop"><source src="../../../city-capital-planner/loop.webm" type="video/webm"><source src="../../../city-capital-planner/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Risk and optimization</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>112</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

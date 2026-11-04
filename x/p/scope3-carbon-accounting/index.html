@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can Two Million Invoices Become a Carbon Number You Can Audit?, Rishit Mathur</title>
+<meta name="description" content="Scope 1-3 carbon accounting for an invented multinational: two million invoice lines imported in 108 s, 914 vendor records resolved into 468 suppliers, every one of 1,699,899 CO2e figures traced to its invoice and frozen factor and reproduced bit for bit, and moving non-urgent air freight to ocean…">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Can Two Million Invoices Become a Carbon Number You Can Audit?, Rishit Mathur">
+<meta property="og:description" content="Scope 1-3 carbon accounting for an invented multinational: two million invoice lines imported in 108 s, 914 vendor records resolved into 468 suppliers, every one of 1,699,899 CO2e figures traced to its invoice and frozen factor and reproduced bit for bit, and moving non-urgent air freight to ocean…">
+<meta property="og:image" content="../../../scope3-carbon-accounting/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Entity resolution · Carbon accounting</span><span>Case <span class="n">141</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Can Two Million Invoices Become a Carbon Number You Can Audit?</h1>
+  <p class="lead">Scope 1-3 carbon accounting for an invented multinational: two million invoice lines imported in 108 s, 914 vendor records resolved into 468 suppliers, every one of 1,699,899 CO2e figures traced to its invoice and frozen factor and reproduced bit for bit, and moving non-urgent air freight to ocean plus 20 suppliers decarbonising cutting 191.1 kt (95% interval 161-233).</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>09</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../scope3-carbon-accounting/demo/" data-cursor="Open">[ Run the seven-step demo ]</a><a class="brk" href="https://github.com/mrrishit909/scope3-carbon-accounting" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../scope3-carbon-accounting/cover.jpg" width="1162" height="720" aria-label="Can Two Million Invoices Become a Carbon Number You Can Audit?: the project&#x27;s animated loop"><source src="../../../scope3-carbon-accounting/loop.webm" type="video/webm"><source src="../../../scope3-carbon-accounting/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">scope3-carbon-accounting/loop.webm</span></div>
+    <div class="hud b"><span>[141]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">FastAPI</span><span class="brk">PostgreSQL 16 (row-level security)</span><span class="brk">scikit-learn (character n-gram TF-IDF, logistic regression)</span><span class="brk">Monte Carlo uncertainty</span><span class="brk">SciPy</span><span class="brk">Multinational simulator with ERPs, shipments and disclosures</span><span class="brk">Docker Compose</span><span class="brk">15 tests</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>A manufacturer's Scope 3 inventory is mostly arithmetic on its purchase ledger, and that is exactly why it is hard to trust. The same supplier sits in six ERPs under six spellings, an invoice line says "PO 4402630 Misc", currencies and units differ by subsidiary, the factor catalogue changes every year, and the final number goes to an annual report and an assurer who will ask where one figure came from. <em>Can software turn two million invoice lines into an inventory where every CO2e figure traces back to its invoice and factor, comes out identical when recalculated, carries an honest uncertainty, tells procurement which suppliers matter, and changes its factors or gets published only when a second person agrees?</em></p><p>Blueprint 3 of twenty in a fourth build book, built as its demo scenario end to end.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A Python service on PostgreSQL with a background worker and a web page, started by one <code>docker compose up</code>.</p><ul><li><b>A simulated multinational</b>: six subsidiaries, 460 suppliers keyed into vendor masters with clerks' variations and near-namesakes that are different companies, two million invoice lines, 40,000 shipments, a year of utility bills and the larger suppliers' disclosures.</li><li><b>A normaliser</b> for currencies, units, double postings and bad lines, and a <b>category classifier</b> that abstains to rules and a review task.</li><li><b>Supplier resolution</b> by blocking, a learned matcher and a tax-id veto, and a <b>disclosure reader</b> that turns supplier reports into supplier-specific factors.</li><li><b>Frozen factor versions</b>, a <b>lineage row for every figure</b>, Monte Carlo bands, hash-checked reproduction, and publication behind policy checks and a second person.</li><li><b>Supplier engagement ranking</b> on the network the disclosures reveal, and <b>scenarios</b> recalculated from every stored line.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>A company whose truth is known</h3><div class="prose"><p>Each supplier has a true category, a tax id, a company domain and a true carbon intensity: the catalogue's sector average, times a per-company error on that average, times the supplier's own offset. Each subsidiary's clerk keys it differently, one ERP truncates names at 24 characters, and one in ten suppliers has a near-namesake that is a different company. The generator injects double postings, odd currency spellings, unknown vendors and wrong years and counts them: the import dropped 8,046 double postings, exactly the number injected.</p></div><pre><code>keep, usd, rate, rejected, dups = engine.normalize_ap(L, names, year)
+# rejected: (line, &quot;unknown_currency&quot; | &quot;unknown_vendor&quot; | &quot;outside_reporting_year&quot;, reason)</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>One supplier, six spellings, and a namesake kept apart</h3><div class="prose"><p>Candidate pairs come from character n-gram neighbours and shared tax ids or domains (7,079 of 417,241 pairs); a logistic matcher weighs name similarity, tax id, domain and country; merges never join two tax ids. On three held-out companies it scored pairwise F1 0.976-0.980 against 0.887-0.923 for fuzzy names alone and 0.245-0.340 for exact names. The fuzzy rule's failure is the instructive one: <em>Lindqvist Circuits</em> in Vietnam and <em>Lindqvist Circuits Ltd</em> in India have identical names after clean-up and are different companies.</p></div><pre><code>if self.tax[a] and self.tax[b] and not (self.tax[a] &amp; self.tax[b]):
+    return False                        # never join two legal entities with different tax ids</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Mapping lines it is unsure of to a person, not a guess</h3><div class="prose"><p>Description (digits masked), account and vendor name go through character n-gram TF-IDF into logistic regression trained on 6,000 lines the team labelled last year; each distinct input is classified once and logged with its model version and hash. Below 0.55 confidence it hands the line to keyword and account rules and a review task. Held out, it put 98.0-98.8% of spend in the right category against 91.1-91.4% for the rules, and left 0.49-0.63% of lines as orphans against 1.92-1.94% (the blueprint's bar is 1%).</p></div><pre><code>def mask(desc):
+    return _DIGITS.sub(&quot;#&quot;, (desc or &quot;&quot;).lower()).strip()</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Factors that cannot change behind your back</h3><div class="prose"><p>A factor version is a draft until a second person approves it; then database triggers refuse any insert, edit, delete or unfreezing. The demo's 29 accepted supplier disclosures became EF-2025.1-S1 that way: the analyst's own approval was refused and the lead's froze it. The extractor read all 132 figures in the demo's disclosures within 1%, and the planted unit slip, revenue in thousands labelled millions, was read as written and refused as implausible.</p></div><pre><code>CREATE TRIGGER factor_frozen BEFORE INSERT OR UPDATE OR DELETE ON emission_factor
+  FOR EACH ROW EXECUTE FUNCTION factor_frozen_guard();</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>A lineage row for every figure, and a hash over all of them</h3><div class="prose"><p>The engine runs on the 4,246 distinct combinations of kind, category, country, supplier, mode and fuel, then multiplies out over every line; freight and energy invoices are left to the shipments and bills so nothing is counted twice. Every line keeps a lineage row, and a SQL check confirms each figure re-derives from its invoice, mapping and factor: 1,699,899 of 1,699,899. Recalculating from the stored activities and hashing the stored rows gave the same SHA-256.</p></div><pre><code>kg = L[&quot;q&quot;] * cval[L[&quot;k&quot;]]
+out[&quot;identical&quot;] = out[&quot;version_hash_at_freeze&quot;] == out[&quot;version_hash_now&quot;] and again == calc[&quot;result_hash&quot;] == stored_lines</code></pre></div></li><li><span class="k mono">Step 06</span><div><h3>Who to engage, and what the levers are worth</h3><div class="prose"><p>A supplier's priority is its estimated emissions plus what flows through it on the network the disclosures reveal (who sells materials to whom). Scenarios recalculate from every stored line with the same Monte Carlo draws before and after, so the reduction carries its own interval: moving non-urgent intercontinental air to ocean saved 15.4 kt and added 28.6 days in transit; the top 20 suppliers cutting intensity 30% saved 170.7 kt in purchased goods.</p></div><pre><code>cut_upstream[t] = sum(x for s, x in zip(ups, w) if s in chosen) * r</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The demo.</b> Two million invoice lines in, Scope 1 16.0 kt, Scope 2 60.2 kt, Scope 3 1,244.8 kt (95% interval 1,122-1,400), with 100% lineage and a reproduction that matched hash for hash:</p><img loading="lazy" decoding="async" src="../../../scope3-carbon-accounting/shots/inventory.jpg" alt="Inventory: Scope 1 16.0 kt, Scope 2 60.2 kt, Scope 3 1,245 kt, lineage coverage 100.0% (1,699,899 of 1,699,899 lines carrying CO2e), orphans 0.62%, calculated in 74.6 s; a point-and-interval chart of the total (1,321.0 kt, 1,198-1,474) and scope 3 categories; below, five identical hashes for the reproduction and a bridge chart showing the supplier-specific factors moving steel down 42.2 kt and electronic components up 14.4 kt against the catalogue."><p>One figure traced back to its invoice:</p><img loading="lazy" decoding="async" src="../../../scope3-carbon-accounting/shots/lineage.jpg" alt="Lineage chain: invoice line MDG-BR:BR2511-2243643:3, Steel tube, 153,029.79 BRL; import batch; times the month's rate 0.182894 = $27,988.23; category steel and metals, confidence 0.960, with the logged model call; vendor record resolved with two other records to Ridgeway Steel Trading Ltd.; factor SPEND:steel_metals:IN 1.785 kgCO2e/USD in the frozen version EF-2025.1-S1; result 49,959.0 kgCO2e, re-derived exactly."><p>Supplier resolution in the demo:</p><img loading="lazy" decoding="async" src="../../../scope3-carbon-accounting/shots/suppliers.jpg" alt="914 vendor records resolved into 468 suppliers, 7,079 of 417,241 pairs scored, 52 sent for review, 18 merges refused for two tax ids; one supplier's six vendor records across six ERPs with different spellings; against the generator's truth, pairwise F1 0.979 for the matcher, 0.905 for fuzzy names, 0.288 for exact names."><p><b>On three held-out companies</b>:</p><table><tr><th></th><th class="num">System</th><th class="num">Baseline</th></tr><tr><td>Supplier resolution, pairwise F1</td><td class="num">0.976-0.980</td><td class="num">0.887-0.923 fuzzy names</td></tr><tr><td>Spend mapped to the right category</td><td class="num">98.0-98.8%</td><td class="num">91.1-91.4% rules</td></tr><tr><td>Orphan lines after mapping</td><td class="num">0.49-0.63%</td><td class="num">1.92-1.94%</td></tr><tr><td>Disclosure figures read within 1%</td><td class="num">409 of 409</td><td class="num">167 of 409 naive</td></tr><tr><td>Inventory buckets inside the 95% interval</td><td class="num">50 of 54</td><td class="num">47 of 54 catalogue alone</td></tr><tr><td>True supplier emissions in reach of the top 20</td><td class="num">44.0-49.9%</td><td class="num">28.9-33.3% by spend</td></tr></table><p>In the demo company the top 20 by emissions plus network reached 50.5% of true supplier emissions against 38.7% ranked by spend. Recalculating a scenario over 10.2 million lines took 39.6-41.5 s (the blueprint's bar is 60 s).</p><p><b>Honest limits.</b> The biggest error is the factor catalogue's: with it alone the 95% intervals held the truth in 47 of 54 buckets, too few, and supplier-specific factors only cover the 17% of spend whose suppliers disclosed in full. The network centrality was no better than ranking by estimated emissions alone (+0.5, -0.5 and 0.0 points); the gain is ranking by emissions instead of spend. The classifier's accuracy comes from templated descriptions where vendor names carry much of the signal, so real ledgers will score lower. The Monte Carlo leaves out the chance a line was mapped to the wrong category. Storing a lineage row per line costs 43.5 of the calculation's 74.6 s.</p><p><b>Checks.</b> 15 tests, including: the normaliser refuses each bad line with its reason, the matcher beats both baselines and never joins two tax ids, the classifier abstains instead of guessing, energy and freight invoices carry no emissions of their own, a frozen factor cannot be edited in the database, the same version gives the same hash and another version a different one, the Monte Carlo is centred and its paired change is tighter than either total, publication without a matching reproduction is refused, a proposer cannot approve, and one company cannot see another's data. The Docker stack was run end to end.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Real AP ledgers and supplier names, where a learned embedding or a language model would have to earn its place against character n-grams and tax ids.</li><li>Classification uncertainty in the Monte Carlo, and a drift monitor on the classifier's inputs as suppliers and descriptions change.</li><li>The lineage rows in a columnar store, so scenario recalculation stays under a minute well past 15 million lines.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Built from a written blueprint as one vertical slice. <b>The company is simulated</b>: its six ERPs' vendor masters and invoice lines, the shipments, the utility bills and the suppliers' disclosures come from a generator in the repository, and so does the emission-factor catalogue, whose values are illustrative rather than an official dataset. The generator knows the true supplier behind every vendor record, the true category of every line and every supplier's true intensity, which is what lets every figure be checked; the service never reads it. Not built: Kafka, a data warehouse, Neo4j, pgvector, a learned embedding model or an LLM, market-based Scope 2, Scope 3 categories beyond 1, 2, 4 and 6, single sign-on.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../telecom-self-healing/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 142 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Which Link Is Behind Four Hundred Alarms?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../telecom-self-healing/cover.jpg" width="1162" height="720" aria-label="Which Link Is Behind Four Hundred Alarms?: the project&#x27;s animated loop"><source src="../../../telecom-self-healing/loop.webm" type="video/webm"><source src="../../../telecom-self-healing/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Alarm correlation · Digital twin</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>141</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

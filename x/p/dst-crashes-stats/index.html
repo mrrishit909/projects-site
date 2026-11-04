@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clock Change and Fatal Crashes, Rishit Mathur</title>
+<meta name="description" content="Does the spring clock change raise fatal crashes? Fifteen years of every fatal crash in the US, Arizona and Hawaii as a no-change comparison, a placebo test on 207 ordinary Sundays, and every model refitted in R.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Clock Change and Fatal Crashes, Rishit Mathur">
+<meta property="og:description" content="Does the spring clock change raise fatal crashes? Fifteen years of every fatal crash in the US, Arizona and Hawaii as a no-change comparison, a placebo test on 207 ordinary Sundays, and every model refitted in R.">
+<meta property="og:image" content="../../../dst-crashes-stats/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Statistics · Causal inference</span><span>Case <span class="n">035</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Clock Change and Fatal Crashes</h1>
+  <p class="lead">Does the spring clock change raise fatal crashes? Fifteen years of every fatal crash in the US, Arizona and Hawaii as a no-change comparison, a placebo test on 207 ordinary Sundays, and every model refitted in R.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Statistics</b></span><span>Year<b>2026</b></span><span>Tools<b>06</b></span><span>Status<b>Code only</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/dst-crashes-stats" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../dst-crashes-stats/cover.jpg" width="1162" height="720" aria-label="Clock Change and Fatal Crashes: the project&#x27;s animated loop"><source src="../../../dst-crashes-stats/loop.webm" type="video/webm"><source src="../../../dst-crashes-stats/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">dst-crashes-stats/loop.webm</span></div>
+    <div class="hud b"><span>[035]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Poisson / quasi-Poisson regression</span><span class="brk">Event study</span><span class="brk">Placebo (permutation) test</span><span class="brk">Robustness checks</span><span class="brk">Python (statsmodels)</span><span class="brk">R</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Each March most of the US moves its clocks forward an hour. Everyone loses sleep, and mornings are dark again for weeks. States keep debating whether to stop changing clocks, and road safety comes up every time.</p><p><em>Does the week after the spring change really have more fatal crashes than it should, and how sure can we be that it isn't just the season, a holiday, or chance?</em></p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A statistical test on NHTSA's census of fatal crashes (FARS, 2010-2024, about 510,000 crashes):</p><ul><li><b>Daily counts</b> by date, for states that change clocks and for Arizona plus Hawaii, which don't, split by time of day.</li><li><b>An event-window model:</b> quasi-Poisson regression of daily crashes around each clock change, with year, day-of-week and trend terms.</li><li><b>A placebo test:</b> the same model around 207 ordinary Sundays.</li><li><b>Robustness checks:</b> St. Patrick's Day, the 2020 lockdown, window length, workdays.</li><li><b>Every model refitted in R</b> to confirm the numbers.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Count every fatal crash by day</h3><div class="prose"><p>FARS records every crash on a public road in which someone died within 30 days. Fifteen years of files become one table of daily counts, split by group and by time of day. Every crash has a known day; a few hundred a year have an unknown hour.</p><p>Arizona and Hawaii never change their clocks, so they show what late March looks like with no change.</p></div><pre><code>NO_DST = {4: &quot;AZ&quot;, 15: &quot;HI&quot;}                                           # FIPS state codes</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Model the weeks around each change</h3><div class="prose"><p>For each year the model takes the four weeks either side of the change. It estimates how much higher daily crashes are in the 7 days starting on the change Sunday, holding the year and the day of the week fixed. A trend term matters here: crashes rise anyway as spring arrives. The counts are overdispersed (dispersion 1.5), so the errors are quasi-Poisson.</p><img loading="lazy" decoding="async" src="../../../dst-crashes-stats/charts/01_event.jpg" alt="Bars of fatal crashes per day by week around the spring change: in clock-changing states the change week is about 6% above the other weeks and sits above a rising seasonal trend line; Arizona and Hawaii show noisy weeks and no rise in the change week"></div><pre><code>FORMULA = &quot;{y} ~ week_after + C(year) + C(dow) + t&quot;</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Test it against ordinary Sundays</h3><div class="prose"><p>A significant coefficient can still be a fluke of the method. So the identical model runs around every Sunday at least five weeks from either clock change, giving 207 estimates from weeks with no change at all. They centre on −0.2%, and the largest is +4.0%. The spring change, at +5.8%, is beyond all of them.</p><img loading="lazy" decoding="async" src="../../../dst-crashes-stats/charts/02_placebo.jpg" alt="Histogram of 207 placebo estimates between about -6.7% and +4.0%, centred near zero, with the spring clock change marked at +5.8%, outside the whole distribution"></div><pre><code>    sundays = sundays[(sundays[&quot;days_from_spring&quot;].abs() &gt; 35) &amp; (sundays[&quot;days_from_fall&quot;].abs() &gt; 35)</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Look for what else is in that week</h3><div class="prose"><p>St. Patrick's Day falls inside the week after the change in 9 of the 15 years, and it is a known drink-driving night. Handled as its own term, or left out, it accounts for about a fifth of the estimate: +4.8% remains (95% CI +1.8% to +8.0%). The effect also holds without 2020, when lockdown began the following week (+5.6%); with a 3-week window (+5.9%); and on workdays only (+7.2%).</p><img loading="lazy" decoding="async" src="../../../dst-crashes-stats/charts/04_robustness.jpg" alt="Robustness chart: main model +5.8%, without 2020 +5.6%, St Patrick's Day as a term +5.0%, without St Patrick's Day +4.8%, 3-week window +5.9%, workdays only +7.2%, every interval above zero"></div><pre><code>    w0[&quot;st_patricks&quot;] = ((w0[&quot;date&quot;].dt.month == 3) &amp; (w0[&quot;date&quot;].dt.day.isin([17, 18]))).astype(int)   # the night of the 17th runs past midnight</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Refit everything in R</h3><div class="prose"><p><code>check.R</code> refits all 14 models with R's own <code>glm</code> from the same daily table. Every coefficient and standard error matches statsmodels to 1e-6, and the spring estimate is confirmed above every placebo.</p></div><pre><code>  m &lt;- glm(f, family = quasipoisson, data = w)</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><table><tr><th>Week after the change</th><th class="num">Crashes</th><th class="num">p</th></tr><tr><td>Spring, changing states</td><td class="num">+5.8%</td><td class="num">0.0001</td></tr><tr><td>Fall back</td><td class="num">+0.3%</td><td class="num">0.80</td></tr><tr><td>Spring, AZ + HI</td><td class="num">−5.4%</td><td class="num">0.39</td></tr></table><ul><li><b>Spring forward:</b> 5.8% more fatal crashes in the week after (95% CI +2.9% to +8.7%), and 5.6% more deaths.</li><li><b>Fall back:</b> no detectable change.</li><li><b>No clock change, no rise:</b> Arizona and Hawaii show none.</li><li><b>When in the day:</b> the largest rises are in the dark morning hours, 5-9 am (+8.5%), and late evening, 9-11 pm (+10.4%). Both stay after St. Patrick's Day is removed (+6.9% and +11.6%).</li></ul><img loading="lazy" decoding="async" src="../../../dst-crashes-stats/charts/03_time_of_day.jpg" alt="Change in fatal crashes by hour of day in the week after spring forward, with 95% intervals: night +5.5%, morning 5-9 +8.5%, midday +4.5%, evening 3-8 pm +3.4%, late 9-11 pm +10.4%; orange dots show the same without St Patrick's Day"></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Turn counts into rates with weekly traffic volumes.</li><li>Use county-level timing to compare the eastern and western edges of each time zone, where the clock change moves sunrise differently.</li><li>Look past the first week, at the darker mornings through early April.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Counts, not rates: miles driven by week aren't available. Arizona and Hawaii are small (2.3 fatal crashes a day), so that comparison is noisy.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../federal-contracts-cleaning/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 036 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Federal IT Contracts, Cleaned</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../federal-contracts-cleaning/cover.jpg" width="1162" height="720" aria-label="Federal IT Contracts, Cleaned: the project&#x27;s animated loop"><source src="../../../federal-contracts-cleaning/loop.webm" type="video/webm"><source src="../../../federal-contracts-cleaning/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Data wrangling · SQL</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>035</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

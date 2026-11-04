@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Buys Online?, Rishit Mathur</title>
+<meta name="description" content="12,330 shopping sessions from one online shop: new visitors buy almost twice as often as returning ones, even after adjusting for season and browsing, and a purchase model&#x27;s score falls from an AUC of 0.93 to 0.78 once its leakiest feature is removed.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Who Buys Online?, Rishit Mathur">
+<meta property="og:description" content="12,330 shopping sessions from one online shop: new visitors buy almost twice as often as returning ones, even after adjusting for season and browsing, and a purchase model&#x27;s score falls from an AUC of 0.93 to 0.78 once its leakiest feature is removed.">
+<meta property="og:image" content="../../../online-shoppers-purchase/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Predictive modeling</span><span>Case <span class="n">055</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Who Buys Online?</h1>
+  <p class="lead">12,330 shopping sessions from one online shop: new visitors buy almost twice as often as returning ones, even after adjusting for season and browsing, and a purchase model&#x27;s score falls from an AUC of 0.93 to 0.78 once its leakiest feature is removed.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>07</b></span><span>Status<b>Code only</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/online-shoppers-purchase" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../online-shoppers-purchase/cover.jpg" width="1162" height="720" aria-label="Who Buys Online?: the project&#x27;s animated loop"><source src="../../../online-shoppers-purchase/loop.webm" type="video/webm"><source src="../../../online-shoppers-purchase/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">online-shoppers-purchase/loop.webm</span></div>
+    <div class="hud b"><span>[055]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">scikit-learn</span><span class="brk">Gradient boosting</span><span class="brk">Logistic regression</span><span class="brk">statsmodels</span><span class="brk">UCI data (CC BY 4.0)</span><span class="brk">Hand-fitted recompute</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>An online shop logs every visit: which pages, for how long, whether the visitor had been before, and whether the visit ended in a purchase. <em>Do first-time visitors buy differently from returning ones, and how well can a model tell which visits will end in a sale?</em></p><p>The questions follow DataCamp's "Will This Customer Purchase Your Product?" project. The data is the UCI Online Shoppers Purchasing Intention dataset: real sessions from one shop over a year.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>12,330 sessions, audited and analysed three ways:</p><ul><li><b>Who buys:</b> purchase rates by visitor type, month and weekend, with intervals and a z-test.</li><li><b>Does the gap survive?</b> Four logistic regressions, adding season, browsing behaviour and PageValues step by step.</li><li><b>Prediction:</b> logistic regression and gradient boosting, with and without a feature computed from purchases, scored two ways.</li><li><b>Check:</b> <code>check.py</code> recomputes all 136 numbers: the tests by formula, the regressions by hand-written Newton-Raphson, the model scores from saved predictions.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Download the sessions</h3><div class="prose"><p>UCI's dataset 468 (CC BY 4.0), one row per session: pages visited and time spent by page type, bounce and exit rates, PageValues, month, weekend, visitor type and whether it ended in a purchase. It is 1 MB, so the file is committed with its checksum.</p></div></div></li><li><span class="k mono">Step 02</span><div><h3>Audit before analysing</h3><div class="prose"><p>125 sessions are exact duplicates (kept; the purchase rate is 15.5% with them and 15.6% without). No values are missing, only ten months are present, and 38 sessions have no product pages. One column stands out: sessions with a positive PageValues buy 56.3% of the time, against 3.9% when it is zero.</p></div></div></li><li><span class="k mono">Step 03</span><div><h3>Compare new and returning visitors</h3><div class="prose"><p>Purchase rates with Wilson intervals, and a two-proportion z-test of new against returning visitors, with the difference and its interval.</p></div><pre><code>    z = (p1 - p2) / math.sqrt(pp * (1 - pp) * (1 / n1 + 1 / n2)); se = math.sqrt(p1 * (1 - p1) / n1 + p2 * (1 - p2) / n2)</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Adjust step by step</h3><div class="prose"><p>Four logistic regressions for the odds of a purchase, each adding to the last: nothing, then month, weekend and special day, then browsing behaviour, then PageValues. If the new-visitor odds ratio fell to 1, the gap would be explained away.</p></div><pre><code>        r = sm.Logit(d[&quot;Revenue&quot;], design(d, level)).fit(disp=0, method=&quot;newton&quot;, maxiter=100)</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Predict, with and without PageValues</h3><div class="prose"><p>Logistic regression and gradient boosting, each with and without PageValues. Scored two ways: 5-fold cross-validation, where every session is predicted by a model that never saw it, and a time split, training on February to September and testing on October to December.</p></div></div></li><li><span class="k mono">Step 06</span><div><h3>Score the models honestly</h3><div class="prose"><p>AUC (the chance a random buyer is ranked above a random non-buyer), average precision (which suits the 15% of sessions that buy), and the share of all buyers found in the top tenth of predicted sessions.</p></div><pre><code>            top = np.argsort(-p)[: len(d) // 10]</code></pre></div></li><li><span class="k mono">Step 07</span><div><h3>Recompute it by hand</h3><div class="prose"><p><code>check.py</code> rebuilds the tables and tests from the raw CSV with textbook formulas, refits the four logistic regressions with a hand-written Newton-Raphson on a design matrix built by hand, and recomputes every model score from the saved predictions with rank and sort formulas. The predictions are stored at full precision: stored rounded to six decimals, the recomputed average precision differed in the third decimal because of ties. All 136 numbers agree.</p></div><pre><code>        recall = tp / total
+        ap += (recall - prev_recall) * tp / (tp + fp)</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><img loading="lazy" decoding="async" src="../../../online-shoppers-purchase/charts/01_new_vs_returning.jpg" alt="Left: bars of the purchase rate for new visitors (24.9%), returning visitors (13.9%) and other (18.8%) with intervals. Right: the odds ratio for a new visitor from four models, 2.05, 1.92, 1.58 and 1.93, all above 1"><p><b>New visitors buy more often.</b> 24.9% of the 1,694 new-visitor sessions ended in a purchase (95% interval 22.9 to 27.0), against 13.9% of the 10,551 returning ones (13.3 to 14.6): a gap of 11.0 points (8.8 to 13.1; z = 11.6). Overall 15.5% of sessions purchase.</p><table><tr><th>New-visitor odds</th><th class="num">Ratio</th><th class="num">95% CI</th></tr><tr><td>Crude</td><td class="num"><b>2.05</b></td><td class="num">1.81-2.32</td></tr><tr><td>+ season, weekend</td><td class="num"><b>1.92</b></td><td class="num">1.69-2.18</td></tr><tr><td>+ browsing</td><td class="num"><b>1.58</b></td><td class="num">1.37-1.83</td></tr><tr><td>+ PageValues</td><td class="num"><b>1.93</b></td><td class="num">1.59-2.35</td></tr></table><p><b>The gap survives adjustment.</b> The odds ratio for a new visitor is 2.05 crude and still 1.92 with month, weekend and special day, 1.58 with browsing behaviour and 1.93 with PageValues: new visitors are more likely to buy than returning ones with similar browsing.</p><img loading="lazy" decoding="async" src="../../../online-shoppers-purchase/charts/02_months.jpg" alt="Bars of the purchase rate by month with intervals: 1.6% in February, 10% in March, May and June, rising through July, August, September and October to 25.4% in November, then 12.5% in December"><p><b>Season and weekend.</b> The purchase rate is 10% to 11% in March, May and June, rises to 17.6% in August, 21.0% in October and 25.4% in November (2,998 sessions), then 12.5% in December; February has 3 purchases in 184 sessions. Weekend sessions purchase 17.4% against 14.9% on weekdays.</p><img loading="lazy" decoding="async" src="../../../online-shoppers-purchase/charts/03_pagevalues.jpg" alt="Bars of the purchase rate for sessions with PageValues zero (3.9%) and above zero (56.3% of 2,730 sessions)"><p><b>PageValues does the work.</b> Sessions with a positive PageValues (2,730 of them) buy 56.3% of the time, against 3.9% when it is zero. The dataset defines it as the average value of the pages visited before a transaction, so it is computed from purchases: a model that uses it is partly reading the answer.</p><img loading="lazy" decoding="async" src="../../../online-shoppers-purchase/charts/04_models.jpg" alt="Grouped bars of the AUC for logistic regression and gradient boosting, with and without PageValues, in cross-validation and on a time split: boosting with PageValues scores 0.93 and 0.84, without it 0.78 and 0.66"><table><tr><th>Model</th><th class="num">CV</th><th class="num">Time</th><th class="num">Top 10%</th></tr><tr><td>Boosting + PV</td><td class="num">0.93</td><td class="num">0.84</td><td class="num">50.3%</td></tr><tr><td>Boosting</td><td class="num"><b>0.78</b></td><td class="num"><b>0.66</b></td><td class="num">26.8%</td></tr><tr><td>Logistic + PV</td><td class="num">0.89</td><td class="num">0.82</td><td class="num">46.4%</td></tr><tr><td>Logistic</td><td class="num">0.75</td><td class="num">0.68</td><td class="num">24.5%</td></tr></table><p><b>Prediction, with and without it.</b> The columns are the AUC in cross-validation, the AUC on the time split (train February to September, test October to December), and the share of all buyers found in the top tenth of predicted sessions; "+ PV" means with PageValues. With it, boosting reaches 0.93 and its top tenth captures half of all buyers. Without it, the same model reaches 0.78 and captures 26.8%, and on the time split it falls to 0.66, below logistic regression (0.68).</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Rebuild the model using only what is known before a session ends, and compare it with a simple rule such as "has put something in the basket", if the data had it.</li><li>Find session dates, not just months, so the time split can follow real time.</li><li>Look into why new visitors convert more, using the traffic and campaign codes if their meanings are available.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>One shop for one year; January and April are not in the data. PageValues is treated as leaky because of how it is defined (the average value of the pages visited before a transaction); the data cannot show how it was computed for each session. "New against returning" is an association, not proof that being new makes a visitor more likely to buy. The models use default settings, a fixed seed and no tuning.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../credit-approvals/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 056 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Who Gets a Credit Card?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../credit-approvals/cover.jpg" width="1162" height="720" aria-label="Who Gets a Credit Card?: the project&#x27;s animated loop"><source src="../../../credit-approvals/loop.webm" type="video/webm"><source src="../../../credit-approvals/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Predictive modeling</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>055</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

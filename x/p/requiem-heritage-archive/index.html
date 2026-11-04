@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can a Date Slider Build and Destroy a Building Honestly?, Rishit Mathur</title>
+<meta name="description" content="A museum for a fictional endangered building: one scripted Blender model of 39 named parts under four collections, a date scrubber that physically builds and erodes it from 1790 to 2026 (7 parts lost, mean damage 1% in 1802 and 51% today), an archive that emerges from anchors on its walls, and a…">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Can a Date Slider Build and Destroy a Building Honestly?, Rishit Mathur">
+<meta property="og:description" content="A museum for a fictional endangered building: one scripted Blender model of 39 named parts under four collections, a date scrubber that physically builds and erodes it from 1790 to 2026 (7 parts lost, mean damage 1% in 1802 and 51% today), an archive that emerges from anchors on its walls, and a…">
+<meta property="og:image" content="../../../requiem-heritage-archive/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Blender · three.js · heritage archive</span><span>Case <span class="n">176</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Can a Date Slider Build and Destroy a Building Honestly?</h1>
+  <p class="lead">A museum for a fictional endangered building: one scripted Blender model of 39 named parts under four collections, a date scrubber that physically builds and erodes it from 1790 to 2026 (7 parts lost, mean damage 1% in 1802 and 51% today), an archive that emerges from anchors on its walls, and a conservation plan that picks interventions within a budget. Everything about the place is fictional.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Blender</b></span><span>Year<b>2026</b></span><span>Tools<b>11</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../requiem-heritage-archive/demo/" data-cursor="Open">[ Enter the museum ]</a><a class="brk" href="https://github.com/mrrishit909/requiem-heritage-archive" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../requiem-heritage-archive/cover.jpg" width="1162" height="720" aria-label="Can a Date Slider Build and Destroy a Building Honestly?: the project&#x27;s animated loop"><source src="../../../requiem-heritage-archive/loop.webm" type="video/webm"><source src="../../../requiem-heritage-archive/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">requiem-heritage-archive/loop.webm</span></div>
+    <div class="hud b"><span>[176]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Blender 4.5 (Python, headless)</span><span class="brk">glTF / GLB + bounding-box manifest</span><span class="brk">TypeScript</span><span class="brk">Next.js 16 (static export)</span><span class="brk">React Three Fiber / three.js</span><span class="brk">patched MeshStandardMaterial (GLSL)</span><span class="brk">GSAP</span><span class="brk">Node (http)</span><span class="brk">OpenAPI 3.1</span><span class="brk">Playwright</span><span class="brk">25 unit/API tests, 21 e2e tests</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>A digital record of a building is usually a model you can rotate and a folder of scans. For a building that is being lost, that is the wrong shape: what matters is <em>when</em> each part was built, what happened to it, who recorded it and what could still be saved. <strong>Can one model carry all of that without a second copy of the building for each date?</strong></p><p>The build book's rule for this volume gives the answer to aim for: Blender owns clean, named, separable components, and the browser reconstructs or erodes them independently, driven by data. So the work is the contract between the two and the single function of time that both sides agree on.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>One repository with the pipeline, the rules and the museum.</p><ul><li><b>A contract</b>: <code>model/parts.json</code> lists 39 parts with a collection (Current, Historical, Structural or Missing), a group, built and lost years, the damage they have today, and eight dated events.</li><li><b>A scripted model</b>: <code>build.py</code> builds an original walled caravan house (gatehouse with an arched opening, two towers, a vaulted hall with a colonnade) in 1,384 triangles and 89 KB, and writes a manifest of each part's measured bounding box.</li><li><b>A validator</b> that re-imports the GLB and checks names, collections, the time rules and that the manifest matches the geometry.</li><li><b>One function of time</b>: <code>partState(part, events, year)</code> returns build progress, erosion and damage; the scrubber, the intro, the parts table and the risk table all call it.</li><li><b>An erosion shader</b>: a patched standard material that builds in and crumbles by noise threshold, adds dust and cracks, and has four looks (material, structure, damage, reconstruction).</li><li><b>A museum</b> in the same scene: four plinths, the flagship as a miniature, and an arch-shaped window that closes on one space and opens on the other.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Contract first, then geometry</h3><div class="prose"><p>The validator enforces the rules the browser relies on: a Missing part has a lost year; anything lost has damage 1; nothing is lost before it is built; nothing is built outside 1790 to 2026; every part sits under the collection it claims; and the manifest's boxes agree with the re-imported mesh dimensions. It reports 39 parts, 1,384 triangles and 89 KB.</p></div></div></li><li><span class="k mono">Step 02</span><div><h3>Damage that lands exactly on today</h3><div class="prose"><p>Each part's damage in a year is its peak scaled by how much of the weathering and event damage up to its horizon has happened by then; the peak is the Blender contract's 2026 value. A test asserts that for every surviving part the model's 2026 damage equals the contract, so the Current collection and the browser cannot drift apart. The 1844 plaster repair lowers the plaster's damage and the 1921 fire raises it again; the 1893 earthquake steps the gate arch up by more than ten points.</p></div></div></li><li><span class="k mono">Step 03</span><div><h3>Erosion without extra geometry</h3><div class="prose"><p>A part takes 4 years to go up and 1.5 years to fall after its lost year. In the shader that is a noise threshold: fragments above it are discarded as the part builds in, fragments below it are discarded as the part crumbles, and the vertices fall and scatter a little. Fragments of the lost parts stay behind as debris. The same material draws the damage heat map, the structure layer and the reconstruction.</p></div><pre><code>if (nz &lt; uErode * 1.15 - 0.08) discard;   // crumbling
+if (nz &gt; uBuild * 1.15) discard;           // building in</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>An intro made from the same functions</h3><div class="prose"><p>Up to 420 fragments are sampled inside each part's measured bounding box and fly in to form the building; then the year runs from 1802 to 2026 through the domain function and the building decays; then the pieces go home as the parchment reconstruction. Nothing in the intro is a separate animation of the building: it is the product, run fast.</p></div></div></li><li><span class="k mono">Step 05</span><div><h3>Archive items that belong somewhere</h3><div class="prose"><p>Each of the 14 items is pinned to a part with an offset in fractions of its bounding box, so the anchor stays on the wall if the model changes. Items appear only once their year has come and their part has been built. Choosing one flies the camera to the anchor and a card scales out from the ring on the wall; on a phone the card sits inline at the top instead of floating.</p></div></div></li><li><span class="k mono">Step 06</span><div><h3>A plan that cannot make things worse</h3><div class="prose"><p>Risk blends current damage, exposure to flood, earthquake, conflict and weather, and how much the structure leans on the part. The plan takes proposed interventions by risk removed per dollar while they fit the budget. A test checks that for budgets from 0 to 400,000 the spend never exceeds the budget and the total risk never rises; a first version had the gain's sign flipped and chose nothing, which the large-budget test caught.</p></div></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The intro.</b> Fragments finding each other, then the line, then the reconstruction:</p><img loading="lazy" decoding="async" src="../../../requiem-heritage-archive/shots/fragments.jpg" alt="Dozens of stone, plaster and timber-coloured cubes in the air above a dark ground, some large and some small, drifting toward the centre."><img loading="lazy" decoding="async" src="../../../requiem-heritage-archive/shots/statement.jpg" alt="The weathered caravan house with the words BUILDINGS DISAPPEAR. MEMORY DOESN'T HAVE TO. across it in tracked capitals."><img loading="lazy" decoding="async" src="../../../requiem-heritage-archive/shots/recon.jpg" alt="The building rebuilt as a clean parchment reconstruction, with both towers roofed and a few last fragments still arriving."><p><b>The museum and the structure</b>:</p><img loading="lazy" decoding="async" src="../../../requiem-heritage-archive/shots/museum.jpg" alt="A dark hall with a large arch in the end wall and the caravan house as a pale miniature on a plinth."><img loading="lazy" decoding="async" src="../../../requiem-heritage-archive/shots/asbuilt.jpg" alt="The caravan house as built in 1802: both towers roofed, the vault complete, the colonnade whole; panel showing year 1802, 32 standing parts, 0 lost, mean damage 1 percent."><img loading="lazy" decoding="async" src="../../../requiem-heritage-archive/shots/structure.jpg" alt="The same building in 1996: roofs, columns and vault partly gone, rubble in the courtyard, cracks across the walls; 32 standing, 7 lost, mean damage 39 percent."><img loading="lazy" decoding="async" src="../../../requiem-heritage-archive/shots/damage.jpg" alt="The damage layer: walls shaded from parchment to oxide and archive red, with the vault remnant and tower stubs the reddest."><p><b>The archive and the plan</b>:</p><img loading="lazy" decoding="async" src="../../../requiem-heritage-archive/shots/archive.jpg" alt="Close view of the gate arch with a card for a 1956 photograph rising from a red ring on the arch, and the archive list on the right."><img loading="lazy" decoding="async" src="../../../requiem-heritage-archive/shots/conservation.jpg" alt="Conservation panel with the budget set to 150,000 dollars, the recommended interventions and a generated preservation summary beginning with a reference number."><p><b>The numbers.</b> In 2026, 32 parts stand and 7 are lost; mean damage is 51 percent and structural damage 43 percent. The highest risks are the hall vault remnant (75 of 100), the colonnade beam (64) and the north-east tower (63). With a $150,000 budget the plan picks plaster consolidation, colonnade consolidation and a digital record for $118,000, taking total risk from 1,656 to 1,370. These come from invented hazard weights and costs.</p><p><b>Checks.</b> 25 unit and API tests (97% statement coverage of the domain package), 21 Playwright tests that passed three runs in a row, a clean typecheck. They cover the demo script end to end, walking and flying with the keyboard, orbit by drag, archive items following the scrubber, the budget plan, a deep link, reduced motion, graphics failure, context loss, a phone width and four visual-regression states.</p><p><b>Performance, measured on an Apple M3 Pro with software WebGL, not a GPU.</b> 55 draw calls and 1,502 triangles in the structure view, 567 KB of gzipped JavaScript, an 89 KB model. Software rendering gave a 3.8 s largest contentful paint and a median 33 ms frame; there is no 60 fps claim here.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Run the performance script on a physical GPU and a mid-range phone; merge parts that share a material state to cut draw calls.</li><li>Replace the blocky primitives with a photogrammetry-derived mesh through the adapter the book describes, keeping the contract and the validator.</li><li>Record real audio for the oral histories and deliver the images through IIIF.</li><li>Move the archive and the timeline to the book's PostGIS schema behind the existing API.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Built from blueprint 04 of a written build book (Advanced Engineering Build Book, Volume VII) as one vertical slice. <b>The building, the country, its history, the archive items, the people quoted and every conservation figure are fictional</b>; the drawings and photographs are illustrations generated for the demo, not scans, and the oral histories are transcripts with a waveform drawing (no audio). Not built: PostGIS (JSON files), IIIF or CDN media delivery, photogrammetry and GLB ingestion adapters, tablet and large-desktop checks, touch testing beyond the phone layout, and a measurement on a physical GPU. The twelve agent roles are committed as Claude Code configuration, but this repository was produced by one session playing them in sequence, not by parallel subagents.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../nebula-exoplanet-lab/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 177 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">How Tilted Can an Orbit Be Before the Shadow Disappears?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../nebula-exoplanet-lab/cover.jpg" width="1162" height="720" aria-label="How Tilted Can an Orbit Be Before the Shadow Disappears?: the project&#x27;s animated loop"><source src="../../../nebula-exoplanet-lab/loop.webm" type="video/webm"><source src="../../../nebula-exoplanet-lab/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Blender · three.js · astronomy</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>176</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

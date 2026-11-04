@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Is This Invention New, and Where Has Nobody Filed?, Rishit Mathur</title>
+<meta name="description" content="Prior-art search on an invented field of 4,000 battery-pack patents and 600 papers: a proposed claim split into elements, references re-ranked by how many elements they disclose in any wording (nDCG@10 0.70 → 0.79 over keyword search on 450 held-out inventions), an evidence matrix, the closest…">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Is This Invention New, and Where Has Nobody Filed?, Rishit Mathur">
+<meta property="og:description" content="Prior-art search on an invented field of 4,000 battery-pack patents and 600 papers: a proposed claim split into elements, references re-ranked by how many elements they disclose in any wording (nDCG@10 0.70 → 0.79 over keyword search on 450 held-out inventions), an evidence matrix, the closest…">
+<meta property="og:image" content="../../../patent-landscape-engine/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · information retrieval · citation graph</span><span>Case <span class="n">151</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Is This Invention New, and Where Has Nobody Filed?</h1>
+  <p class="lead">Prior-art search on an invented field of 4,000 battery-pack patents and 600 papers: a proposed claim split into elements, references re-ranked by how many elements they disclose in any wording (nDCG@10 0.70 → 0.79 over keyword search on 450 held-out inventions), an evidence matrix, the closest two-reference combination, and the white space papers have reached and patents have not.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>09</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../patent-landscape-engine/demo/" data-cursor="Open">[ Run the five-step demo ]</a><a class="brk" href="https://github.com/mrrishit909/patent-landscape-engine" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../patent-landscape-engine/cover.jpg" width="1162" height="720" aria-label="Is This Invention New, and Where Has Nobody Filed?: the project&#x27;s animated loop"><source src="../../../patent-landscape-engine/loop.webm" type="video/webm"><source src="../../../patent-landscape-engine/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">patent-landscape-engine/loop.webm</span></div>
+    <div class="hud b"><span>[151]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">FastAPI</span><span class="brk">PostgreSQL 16 (row-level security)</span><span class="brk">BM25 / TF-IDF / LSA (scikit-learn)</span><span class="brk">Element-level re-ranking</span><span class="brk">networkx PageRank</span><span class="brk">k-means landscape</span><span class="brk">Docker Compose</span><span class="brk">9 tests</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Before filing, an IP team needs to know whether anything already discloses the invention: not a document that shares its words, but one that teaches each of its elements, often in different words. Keyword search finds the first kind. A landscape adds the second question: which combinations of ideas are active in research and still empty in patents. <em>Can a search built without a language model find references by element, lay the evidence out claim by claim, and say honestly how much better it is than keywords?</em></p><p>Blueprint 13 of twenty in a fourth build book, built as its demo scenario end to end.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A Python service on PostgreSQL with a background worker and a web page, started by one <code>docker compose up</code>.</p><ul><li><b>A synthetic corpus</b> of battery-pack patents in families, with claims, inventors, classes and citations, and papers, written over 48 hidden concepts with three wordings each.</li><li><b>A claim parser</b> that splits a claim into elements, at ingest and for every query.</li><li><b>Retrieval</b>: BM25, TF-IDF and LSA over documents and 52,523 passages, then <b>element re-ranking</b> by how many elements each candidate's best passage covers.</li><li><b>A claim chart</b> with the disclosing passage per element, the closest two-reference combination, CSV and JSON export, and attorney sign-off.</li><li><b>A landscape</b>: clusters with who files in each, a white-space score from phrase pairs in papers against patents, PageRank and portfolios.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>A field with hidden concepts</h3><div class="prose"><p>48 concepts in six areas (cooling, chemistry, battery management, mechanical, safety, manufacturing), each with three wordings that often share no word: a cold plate is also a coolant channel plate and a liquid heat-exchange panel. Ten assignees with their own focus write 4,000 patents from 2008 to 2025, about a fifth of them continuations; 600 papers; 19,313 citations that favour earlier documents sharing concepts. Papers since 2021 often put sodium-ion cells together with thermal management; patents mostly do not. That is the planted gap.</p></div><pre><code>if GAP[0] in cs and set(cs) &amp; set(GAP[1:]) and r.random() &lt; 0.85:
+    cs = [c for c in cs if c != GAP[0]] + [other_chemistry]   # the white space stays nearly empty</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>A claim, element by element</h3><div class="prose"><p>The parser takes the body after "comprising", splits it on semicolons and cuts each part at its relation ("disposed between", "that", "in which"). The demo's claim, sodium-ion cells submerged in a dielectric fluid bath with an early venting alarm and a burst membrane, becomes four elements. Because the parser reads text the same generator wrote, its 100% here says little about real claims; the evaluation does not rest on it.</p></div><pre><code>body = re.split(r&quot;\bcompris(?:ing|es)\s*:?&quot;, text, maxsplit=1)[-1]
+elements = [STOP_AFTER.sub(&quot;&quot;, LEAD.sub(&quot;&quot;, p.strip())) for p in body.split(&quot;;&quot;)]</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Re-ranking by elements disclosed</h3><div class="prose"><p>BM25 picks 150 candidates and the citations of its top ten are added. Each candidate is then scored by how many of the claim's elements its best passage covers, with similarity taken as 40% TF-IDF and 60% LSA cosine and passed through a soft threshold, so a reference that discloses three elements outranks one that repeats a single element often. In the demo 236 candidates are re-ranked in 36 ms.</p></div><pre><code>covered = 1 / (1 + np.exp(-(sims - threshold) * 25))   # elements x candidates
+score = covered.sum(axis=0) + 0.2 * sims.mean(axis=0)</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Evidence, and the closest combination</h3><div class="prose"><p>For the top references, each element is matched to its best passage and counts as disclosed at similarity 0.30, a threshold set on the demo corpus. The claim chart shows the passage itself. No document discloses all four elements of the demo's claim; the pair among the top ten that covers the most does cover all four, which is a question of obviousness for an attorney, not something the search decides. A search session is signed off by an attorney, never by the analyst who ran it.</p></div><pre><code>cov = int((hit[:, a] | hit[:, b]).sum())   # elements covered by references a and b together</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>White space, and where it is too easy</h3><div class="prose"><p>Phrases of one to three words that never cross a stop word, in at least 15 documents; each pair is scored by how often recent papers combine it against how often recent patents do. On the demo corpus the top four pairs all name the planted gap in different wordings (13 papers to 0 patents, 60 to 4, 20 to 1, 14 to 1), and so did 12 of 12 on three held-out corpora. The gap was planted loud: 18% of recent papers. A subtle gap is untested.</p></div><pre><code>score = ((papers + 1) / n_papers) / ((patents + 1) / n_patents)</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The demo.</b> Ten references for the proposed claim, each with the elements it discloses, and the closest combination:</p><img loading="lazy" decoding="async" src="../../../patent-landscape-engine/shots/search.jpg" alt="Prior art card: 236 candidates re-ranked in 36 ms; ten references, eight patents and one paper among them, with element badges 1 to 4 lit where disclosed; the top reference US10469033 from Granite Labs discloses elements 2, 3 and 4. Closest combination card: 4 of 4 elements, US10469033 plus NPL-2323, with the note that no single reference discloses all four."><p>White space: pairs of ideas recent papers combine and patents do not:</p><img loading="lazy" decoding="async" src="../../../patent-landscape-engine/shots/whitespace.jpg" alt="White space table: heat wax layer with na-ion, 13 papers since 2021, 0 patents; phase change material with sodium-ion, 60 and 4; cold plate with layered oxide chemistry, 20 and 1; liquid heat-exchange panel with sodium layered, 14 and 1; the first four marked planted gap; then coolant channel plate with immersion cooling, 11 and 7, and dielectric fluid bath with latent heat, 10 and 7."><p><b>On three corpora the demo never uses</b> (450 benchmark inventions, relevance graded by hidden concept overlap):</p><table><tr><th></th><th class="num">nDCG@10</th><th class="num">Recall@50</th></tr><tr><td>BM25 keywords</td><td class="num">0.699</td><td class="num">0.426</td></tr><tr><td>LSA alone</td><td class="num">0.591</td><td class="num">0.323</td></tr><tr><td>Fusion of BM25, TF-IDF and LSA</td><td class="num">0.633</td><td class="num">0.360</td></tr><tr><td>Element re-ranking + citations</td><td class="num">0.786</td><td class="num">0.462</td></tr></table><p>The gain comes from scoring each element separately, not from the dense space: LSA alone was worse than keywords and dragged the fusion below them. Paraphrase costs the system as much as it costs BM25 (0.896 → 0.786 against 0.796 → 0.699), so the re-ranker does not solve synonymy. Citation expansion added nothing measurable. Recall of near-anticipations in the top 50 is under half. Evidence cells scored 0.984 precision and 0.961 recall, flattered by template text; the closest combination truly covered every element for 435 of 450 inventions.</p><p><b>Honest limits.</b> Synthetic corpus and synthetic judgments; a rule-based parser reading generator text; no learned embeddings; the planted white space is easy to find.</p><p><b>Checks.</b> 9 tests, including: the parser splits elements and drops relations, phrases never cross a sentence, element re-ranking beats BM25 on held-in inventions, the evidence matrix agrees with the hidden truth and the closest pair truly covers the demo claim, white space names the planted gap, the demo runs end to end, analysts cannot sign off their own search, and one tenant cannot see another's searches.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>A sentence-transformer per passage in place of LSA, measured on the same benchmark, with paraphrase cost as the number to beat.</li><li>A cross-encoder over the top 50 for the evidence matrix.</li><li>A harder benchmark: subtle white space and inventions written far from any template.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Built from a written blueprint as one vertical slice. <b>The corpus is simulated</b>: patents, papers, assignees, inventors, citations and benchmark inventions come from a generator in the repository, and none is a real patent or company. <b>No language model and no downloaded embedding model is used</b>; the dense space is LSA learned from the corpus. The claim parser is rule-based and reads claims the same generator wrote, so its accuracy here is partly circular; retrieval is judged instead against hidden concepts no retriever sees. Not built: bi-encoder and cross-encoder retrieval, LLM summaries, real patent data, obviousness analysis, Kafka, Terraform, single sign-on.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../vision-quality-inspection/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 152 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">What Does an Operator&#x27;s &quot;That Part Was Fine&quot; Teach a Defect Camera?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../vision-quality-inspection/cover.jpg" width="1162" height="720" aria-label="What Does an Operator&#x27;s &quot;That Part Was Fine&quot; Teach a Defect Camera?: the project&#x27;s animated loop"><source src="../../../vision-quality-inspection/loop.webm" type="video/webm"><source src="../../../vision-quality-inspection/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · anomaly detection · edge MLOps</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>151</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

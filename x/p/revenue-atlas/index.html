@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which Customer, Product, Region or Discount Policy Explains a Falling Contribution Margin?, Rishit Mathur</title>
+<meta name="description" content="Revenue Atlas: a margin bridge that reconciles to a shipment-line ledger to the cent. A pure-Python contract (historical cost, dated FX, freight allocated once per line with a zero residual, credits on returns) verified against a hand-calculated fixture, an independent SQL recomputation on…">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Which Customer, Product, Region or Discount Policy Explains a Falling Contribution Margin?, Rishit Mathur">
+<meta property="og:description" content="Revenue Atlas: a margin bridge that reconciles to a shipment-line ledger to the cent. A pure-Python contract (historical cost, dated FX, freight allocated once per line with a zero residual, credits on returns) verified against a hand-calculated fixture, an independent SQL recomputation on…">
+<meta property="og:image" content="../../../revenue-atlas/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Dashboard · Analytics engineering · FastAPI · React</span><span>Case <span class="n">220</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Which Customer, Product, Region or Discount Policy Explains a Falling Contribution Margin?</h1>
+  <p class="lead">Revenue Atlas: a margin bridge that reconciles to a shipment-line ledger to the cent. A pure-Python contract (historical cost, dated FX, freight allocated once per line with a zero residual, credits on returns) verified against a hand-calculated fixture, an independent SQL recomputation on PostgreSQL in GitHub Actions, and the same contract re-implemented in TypeScript for a static demo. Synthetic data; project 01 of the Business Data Lab.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Dashboard</b></span><span>Year<b>2026</b></span><span>Tools<b>08</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="https://mrrishit909.github.io/projects-site/labs/revenue-atlas/" target="_blank" rel="noopener" data-cursor="Open">[ Open Revenue Atlas ]</a><a class="brk" href="https://github.com/mrrishit909/projects-site/tree/business-data-lab/apps/revenue-atlas" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../revenue-atlas/cover.jpg" width="1162" height="720" aria-label="Which Customer, Product, Region or Discount Policy Explains a Falling Contribution Margin?: the project&#x27;s animated loop"><source src="../../../revenue-atlas/loop.webm" type="video/webm"><source src="../../../revenue-atlas/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">revenue-atlas/loop.webm</span></div>
+    <div class="hud b"><span>[220]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python 3.11 (decimal domain, no floats on money)</span><span class="brk">PostgreSQL 16 (migrations, NUMERIC(20,6), append-only returns)</span><span class="brk">FastAPI 0.162 (commands with idempotency keys, 409/422 contracts)</span><span class="brk">SQL reference recomputation (window functions, largest remainder)</span><span class="brk">TypeScript + React 18 + Vite (BigInt fixed-point decimals)</span><span class="brk">Playwright 1.55 (journey, 4 widths, 200% zoom)</span><span class="brk">GitHub Actions (postgres:16 service, hosted runners only)</span><span class="brk">128 Python tests, 235 TypeScript checks, 25 browser tests</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Month-end margin reviews argue from spreadsheets that use different populations: bookings in one, shipments in another, credits netted in the month of the original sale, and order freight joined to line rows so that it is counted once per line. The review cannot say <em>which</em> customer, product, region or discount policy explains a decline, because the totals do not reconcile to anything.</p><p>Revenue Atlas fixes the definitions first. Every metric is a sum over shipment lines in a half-open UTC window; every dollar of discount, cost, credit and freight belongs to exactly one line; and the bridge from gross sales to contribution margin must reconcile to the ledger to the cent before anyone draws a conclusion.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>Three implementations of one contract, checked against each other and against a hand calculation.</p><ul><li><b>The contract</b> (<code>docs/contracts.md</code>): shipment-line grain, shipped-at time basis, half-open windows, dated FX with quarantine for a missing rate, exactly one cost version per line, discounts and freight allocated by largest remainder with a deterministic tie-break, credits on returns at the original cost version.</li><li><b>A known-answer fixture</b> written before any code: two shipped lines, net 225, COGS 140, gross profit 85, freight 12 and 3, contribution 70; one returned unit credits 90 and reverses 60, so contribution becomes 40. A standard-library script reproduces it from the source records independently of the application.</li><li><b>The Python domain and the FastAPI commands</b>: ingest with raw rows preserved and malformed currencies rejected, cost resolution, partial returns that cannot exceed the remaining quantity, freight allocation guarded by a primary key so a many-to-many join cannot allocate twice; idempotency keys, optimistic versions, 409 and 422 contracts; migrations and an independent SQL recomputation on PostgreSQL.</li><li><b>The static site</b>: the same contract in TypeScript on BigInt fixed-point decimals, an executive overview, the margin bridge with drill-through to the transaction ledger, filters in the URL, CSV export with the contract version, dataset hash and filters in its header, and a case study.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Write the answer before the code</h3><div class="prose"><p>The fixture is the oracle. Its expected values are hand-written literals, and the reference script that recomputes them imports nothing from the application. The Python domain, the SQL recomputation and the TypeScript domain are each tested against that file, never only against each other.</p></div></div></li><li><span class="k mono">Step 02</span><div><h3>Allocate once, reconcile to zero</h3><div class="prose"><p>Freight is allocated per shipment over its lines by gross-sales weight: each share is truncated to cents and the leftover cents go to the largest fractional remainders, lowest line id first. The allocation table's primary key is the shipment line, so a second allocation fails with a 409 instead of doubling the cost. The bridge prints the residual; a non-zero residual blocks publication.</p></div><pre><code>def largest_remainder(total, weights):
+    shares = {k: floor_cents(total * w / sum_w) for k, w in weights}
+    left = cents(total) - sum(shares.values())
+    for k, _ in sorted(weights, key=remainder_then_key)[:left_cents]:
+        shares[k] += Decimal(&quot;0.01&quot;)
+    return shares</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Quarantine, never zero</h3><div class="prose"><p>A line with no exchange rate on its shipment date, or with zero or two cost versions, leaves the population with a reason code and is counted on every screen. It is never valued at zero or at a guessed rate, because a silent zero is how a decline gets explained by the wrong cause.</p></div></div></li><li><span class="k mono">Step 04</span><div><h3>Two modes, disclosed</h3><div class="prose"><p>Mode A is the backend run on a GitHub-hosted runner with a transient PostgreSQL: 79 tests including the adversarial cases (double allocation, overlapping cost versions, a return larger than what remains, a reversed credit sign, a cancelled order). Mode B is the public site: the same contract in the browser over a published snapshot. The site says so next to every control that only simulates.</p></div></div></li><li><span class="k mono">Step 05</span><div><h3>Look at it at four widths</h3><div class="prose"><p>Playwright walks the journey (direct entry, reload on a nested path, bridge to ledger drill, filter, clear, export) and photographs five routes at 360, 768, 1280 and 1920 px and the bridge at 200 % zoom, asserting no horizontal overflow and no console errors. On the golden dataset the browser bridge shows 250, −25, −90, 135, −80, 55, −15, 40.</p></div></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The margin bridge on the synthetic snapshot</b> (6,588 eligible shipment lines, 56 quarantined with reasons):</p><img loading="lazy" decoding="async" src="../../../revenue-atlas/shots/bridge.png" alt="Margin bridge: gross sales 9,651,206.89 less discounts and credits to net merchandise sales 9,041,020.42, less COGS to gross profit 3,360,433.36, less shipping cost to contribution margin 3,309,826.22; a note reads Steps reconcile, allocation residual 0.00; a by-region table includes an UNASSIGNED row."><p><b>The overview on a phone</b>, with the designed cost change at 2026-01 marked and attributed to the generator:</p><img loading="lazy" decoding="async" src="../../../revenue-atlas/shots/overview-mobile.png" alt="Executive overview at 360 px: filters, date basis, population, a two-series monthly chart with a dashed marker at the 2026-01 cost change, a data table and the contribution margin rate before and after, labelled as a designed synthetic relationship."><p><b>Checks.</b> The reference script reproduces the fixture exactly; 128 Python tests pass against PostgreSQL 16 on a GitHub-hosted runner; 175 TypeScript golden checks, 60 review-regression checks and 25 Playwright tests pass; the TypeScript pipeline over the full snapshot matches the Python pipeline on every metric, rejected and quarantined record. Evidence: the <a target="_blank" rel="noopener" href="https://github.com/mrrishit909/projects-site/actions/workflows/revenue-atlas-ci.yml">CI runs</a> and the verification ledger in the source tree.</p><p><b>Found by review, then fixed.</b> An independent reviewer tried to disprove the bridge and found seven real issues: credits windowed by shipment date instead of credit date, an over-shipped line accepted and its discount over-allocated, persisted discount splits drifting across partial shipments, unallocated freight missing from grouped sums, freight spread over quarantined lines, a cross-order shipment line, and a signed-zero credit. Each now has a regression test in Python and TypeScript. One known limitation stays: converted (non-USD) grouped sums can differ from the total by cents.</p><p><b>Not built yet.</b> Scenario commands and the six later screens (products, customers, regions, returns, discounts, scenarios) are stubs; the analyst workbook is LibreOffice-recalculated (not Excel); the Power BI package is a documented star schema and DAX pack, not a .pbix.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Build the remaining screens and the scenario commands on a copy of the immutable baseline.</li><li>Bind idempotency replays to the actor and hash payloads by value.</li><li>Verify the workbook in Excel and build the Power BI model from the published snapshot.</li><li>Projects 02 to 10 of the lab follow the same gates.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p><b>Everything is synthetic</b>: the distributor, its 48 customers, 36 products, 2,400 orders and every figure come from a seeded generator whose designed relationships and injected defects are published in an injection manifest. The public site is a static demo: its calculations run in the browser over a published snapshot, scenario edits live in memory and a reload restores the snapshot. The transactional behaviour (ingest, cost resolution, returns, freight allocation, idempotency, conflicts) is verified separately on GitHub-hosted runners against a transient PostgreSQL, not on the public site. Built from a written specification (Business Data Lab, project 01) by a coordinating session delegating bounded work to implementation subagents; not a measurement of any real business.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../data-refinery/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 221 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Data Refinery</h2>
+    <div class="screen chroma"><img src="../../../data-refinery/cover.jpg" alt="Data Refinery: the project&#x27;s animated loop" width="1400" height="868" loading="lazy" decoding="async"></div>
+    <p class="sub mono"><span>Python · Data engineering</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>220</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

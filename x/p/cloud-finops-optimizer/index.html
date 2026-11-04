@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Did the Rightsizing Really Save?, Rishit Mathur</title>
+<meta name="description" content="FinOps for an invented six-account estate on three clouds: an SLO-aware rightsizer opens 72 changes worth $19,825 a month where a 14-day average rule would make 116 with 67 expected SLO breaches, a mixed-integer programme sizes the commitments for the smaller estate, a second person opens the…">
+<meta property="og:type" content="website">
+<meta property="og:title" content="What Did the Rightsizing Really Save?, Rishit Mathur">
+<meta property="og:description" content="FinOps for an invented six-account estate on three clouds: an SLO-aware rightsizer opens 72 changes worth $19,825 a month where a 14-day average rule would make 116 with 67 expected SLO breaches, a mixed-integer programme sizes the commitments for the smaller estate, a second person opens the…">
+<meta property="og:image" content="../../../cloud-finops-optimizer/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Forecasting · Mixed-integer optimisation</span><span>Case <span class="n">143</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">What Did the Rightsizing Really Save?</h1>
+  <p class="lead">FinOps for an invented six-account estate on three clouds: an SLO-aware rightsizer opens 72 changes worth $19,825 a month where a 14-day average rule would make 116 with 67 expected SLO breaches, a mixed-integer programme sizes the commitments for the smaller estate, a second person opens the Terraform pull request, and four weeks later the verifier measures $17,466 saved against $17,698 true, where before/after claims $25,084.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>10</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../cloud-finops-optimizer/demo/" data-cursor="Open">[ Run the seven-step demo ]</a><a class="brk" href="https://github.com/mrrishit909/cloud-finops-optimizer" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../cloud-finops-optimizer/cover.jpg" width="1162" height="720" aria-label="What Did the Rightsizing Really Save?: the project&#x27;s animated loop"><source src="../../../cloud-finops-optimizer/loop.webm" type="video/webm"><source src="../../../cloud-finops-optimizer/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">cloud-finops-optimizer/loop.webm</span></div>
+    <div class="hud b"><span>[143]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">FastAPI</span><span class="brk">PostgreSQL 16 (row-level security, partitioned billing)</span><span class="brk">OR-Tools (SCIP mixed-integer programming)</span><span class="brk">Seasonal-trend forecast with bootstrapped paths</span><span class="brk">scikit-learn logistic regression</span><span class="brk">Terraform diffs (never applied)</span><span class="brk">Multi-cloud estate simulator</span><span class="brk">Docker Compose</span><span class="brk">13 tests</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Cloud cost tools are good at telling a team that a machine averages 7% CPU and bad at saying whether shrinking it will hurt: the average hides the nightly batch, the month-end close and the workload that grows every week. Commitments make it worse, because committing before rightsizing locks the waste in and committing after it to last month's usage over-buys, and when the changes ship in the same month as the savings plan nobody can say which saved what. <em>Can software recommend only the changes the forecast says the SLO will survive, size the commitments for the estate that remains, change nothing without a reviewed pull request, and then prove what was saved in a way that would survive an audit?</em></p><p>Blueprint 5 of twenty in a fourth build book, built as its demo scenario end to end.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A Python service on PostgreSQL with a background worker and a web page, started by one <code>docker compose up</code>.</p><ul><li><b>A simulated multi-cloud estate</b>: six accounts on AWS, Azure and Google Cloud with machines, autoscaled Kubernetes node pools, databases and volumes; hourly demand with daily and weekly shape, growth and spikes; a price catalogue and CUR-style billing with savings plans and reservations.</li><li><b>Connectors</b> that accept only role references, an inventory with a 15-minute freshness policy, and a cost explanation that splits any change into usage, configuration, rate, new and removed resources.</li><li><b>A forecast and an SLO-constrained rightsizer</b> with a change-risk model trained on the estate's own history, against the 14-day average rule.</li><li><b>A commitment portfolio</b> by mixed-integer programming over forecast scenarios, and an <b>SLO-risk simulation</b> of alternative plans.</li><li><b>Terraform pull requests</b> a second person opens, never applied by the service, and a <b>savings verifier</b> scored against the simulator's truth.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Demand belongs to the workload</h3><div class="prose"><p>Each workload's demand is drawn from its own daily and weekly shape, growth and noise, keyed by resource and day; a machine's size only changes how full it looks and what it costs. The generator knows which machines are idle, oversized, bursty, month-end jobs, growing or memory-bound, and which volumes are attached only for a Sunday restore test; the service sees only utilisation, units and bills. That is what lets a period be re-run with and without a change on the same demand.</p></div><pre><code>d = vref * r[&quot;level&quot;] * _shape(r[&quot;trough&quot;]) * week * growth * noise
+...
+cpu_u[i] = np.where(units[i] &gt; 0, np.minimum(cpu_d[i] / v, 1.0), 0)</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Size to the forecast's p99, not the average</h3><div class="prose"><p>Every workload is forecast four weeks ahead (an hour-of-week profile, a weekly trend, whole days of residuals bootstrapped into 100 paths), and a resize is the smallest size whose p99 CPU stays under 80% and memory under 85% in 90% of paths. On three held-out estates the forecast's WAPE was 0.076-0.079 against 0.113-0.127 for last week repeated, and the true p99 fell under its 90% path p99 90.4-91.0% of the time. The 14-day average rule shrinks the nightly batch, the month-end job and the growing service alike.</p></div><pre><code>if np.quantile(p99c / vc, q) &lt;= policy[&quot;cpu_p99_target&quot;] and np.quantile(p99m / (vc * world.GB_PER_VCPU), q) &lt;= policy[&quot;mem_p99_target&quot;]:
+    chosen = s</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Commit to the estate that will remain</h3><div class="prose"><p>Savings plans per cloud in $1-an-hour blocks and reservations per database type are chosen together by a mixed-integer programme over 20 scenarios of the next 13 weeks, after the planned rightsizing. Per pool it is a newsvendor problem; whole blocks and a shared budget make it a packing one. Committing to last month's minimum, the common rule, buys for usage the rightsizing removes.</p></div><pre><code>c = solver.Constraint(float(u), solver.infinity())      # o + block * n &gt;= u
+c.SetCoefficient(o, 1)
+c.SetCoefficient(n, block)</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>A pull request, never an apply</h3><div class="prose"><p>Open recommendations become unified Terraform diffs per account repository and a pull request carrying the evidence, risk and rollback. The service has no write path to any cloud; a request to apply directly is refused by policy, risky or stale recommendations become review tasks, and the engineer who proposed the change cannot approve it.</p></div><pre><code>if body.apply and not pol[&quot;allow_direct_mutation&quot;]:
+    raise Problem(403, &quot;direct_mutation_disabled&quot;, ...)
+...
+if cr[&quot;proposed_by&quot;] == ctx.actor_id:
+    raise Problem(403, &quot;proposer_cannot_approve&quot;, &quot;a change to infrastructure needs a second person&quot;)</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Count the margin, not the average rate</h3><div class="prose"><p>Under a fixed savings plan, usage removed above the commitment saves full on-demand price and usage removed inside an under-used one saves nothing. So the verifier rebuilds hourly spend for every pricing pool, puts the old configurations' cost back, and bills each pool again through the commitments in force. Before/after counts the new commitments' discount as rightsizing; difference-in-differences prices the savings at the average rate.</p></div><pre><code>def pool_bill(E, C, d):
+    return float((C * (1 - d) + np.maximum(E - C, 0)).sum())
+...
+saved[g] = (pool_bill(E + D, C, d) - pool_bill(E, C, d), float(D.sum()))</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>The demo.</b> The customer portal's node pool keeps a floor of 10 nodes all night, when its demand would need 3:</p><img loading="lazy" decoding="async" src="../../../cloud-finops-optimizer/shots/pool.jpg" alt="A Kubernetes node pool over two weeks: demand in vCPU swings daily between about 23 and 135 while capacity, nodes times 16 vCPU, stays flat at 160 and steps up to 208 at peaks because the floor is 10 nodes; the forecast for the next week continues the daily pattern with a narrow band; floor 10 nodes, nights need 3, forecast growth 0.3% a week."><p>The rightsizer opens 72 changes worth $19,825 a month; the 14-day average rule would make 116, claiming $34,653, with 67.2 expected SLO breaches where it goes further. One it would shrink four-fold:</p><img loading="lazy" decoding="async" src="../../../cloud-finops-optimizer/shots/rightsizing.jpg" alt="Key figures: 72 open recommendations, $19,825 a month; 6 review tasks; the average rule 116 changes, $34,653 claimed; 78 where it goes further with 67.2 expected SLO breaches; change-risk AUC 0.992 held out, headroom alone 1.000, environment rule 0.567. Below, etl-01's hourly CPU over three weeks sits near 3% with three nightly spikes to 100% and memory steady near 17%: mean CPU 7.1%, so the average rule would go from n2-standard-8 to n2-standard-2, with an 88% chance of an SLO breach."><p>The commitment portfolio, sized for the estate after rightsizing:</p><img loading="lazy" decoding="async" src="../../../cloud-finops-optimizer/shots/portfolio.jpg" alt="Expected 13-week cost: $300,825 with no commitments, $244,050 committing to last month's minimum with $20,405 of fees unused, $226,440 for the optimised portfolio with $2,026 unused; $65,671 of new fees a month. A duration curve of AWS compute spend forecast after rightsizing falls from about $82 to $59 an hour; the optimised savings plan sits at $61 an hour, last month's minimum at $76, above most of the forecast hours."><p>Four weeks after the pull request was merged and the commitments bought:</p><img loading="lazy" decoding="async" src="../../../cloud-finops-optimizer/shots/verify.jpg" alt="Savings over 27 days by method: counterfactual re-pricing $17,466 (1.3% under), list price $17,354 (1.9% under), difference-in-differences $15,651 (11.6% under), before/after $25,084 (41.7% over), against a simulation truth of $17,698. Below, a waterfall from $28,945 in the week before the change to $19,038 in the fourth week after: usage +$50, configuration −$3,154, rate −$5,864, new resources +$206, removed −$1,146."><p><b>On three held-out estates</b> (eight weeks of history, thirteen after):</p><table><tr><th></th><th class="num">System</th><th class="num">Baseline</th></tr><tr><td>Forecast error, four weeks (WAPE)</td><td class="num">0.076-0.079</td><td class="num">0.113-0.127 seasonal naive</td></tr><tr><td>Rightsizing false positives</td><td class="num">0 of 267</td><td class="num">213 of 420 (50.7%), average rule</td></tr><tr><td>Change-risk AUC</td><td class="num">0.972-0.993</td><td class="num">0.955-0.983 headroom alone</td></tr><tr><td>Commitment regret, 13 weeks</td><td class="num">0.5-1.2%</td><td class="num">2.9-5.5% last month's minimum</td></tr><tr><td>Verified savings error</td><td class="num">0.7-1.5%</td><td class="num">31.8-37.0% before/after; 25.4-56.3% difference-in-differences</td></tr></table><p>The blueprint's bars were a false-positive rate under 10% and an attribution error under 5%; inventory freshness under 15 minutes is enforced (stale accounts become review tasks) and an incremental sync of all six accounts took 72-117 ms.</p><p><b>Honest limits.</b> Zero false positives come from caution: the rightsizer sizes to the 90th percentile of the forecast's p99 and the breach line sits 10 points above its target, and in the demo an aggressive plan takes $22,818 a month instead of $19,825 at 1.83 expected breaches. The change-risk model barely beats the headroom the rightsizer already uses (in the demo, headroom alone scored 1.000). The service's model of the autoscaler is cruder than the simulated one, so the portal pool's floor drops only from 10 to 9. The verifier re-prices with the same catalogue and allocation rule the simulator bills by, so under 2% is a best case; a real bill adds credits, private discounts and amortisation. Commitments are scored on 13 weeks of a one-year term.</p><p><b>Checks.</b> 13 tests, including: demand does not change when a machine is resized, the verifier's pool billing equals the simulated bill, the forecast recovers a 5% weekly trend, the rightsizer leaves a nightly batch, a growing service and a memory-bound machine alone while the average rule shrinks them, the MILP commits at the newsvendor quantile and beats a greedy plan under a budget, a key pasted as a credential is refused and never stored, the proposer cannot approve, an approved pull request changes no inventory, a stale account's recommendations become review tasks, and one company cannot see another's resources. The Docker stack was run end to end.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Real billing exports and cloud APIs behind the same connector interface, with the verifier checked against a real invoice's credits and amortisation.</li><li>A model of the autoscaler learned from each pool's own scaling history, so node-pool floors can come down as far as the demand allows.</li><li>Three-year terms and convertible commitments, scored on a longer horizon with churn and migration risk.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Built from a written blueprint as one vertical slice. <b>The clouds are simulated</b>: six accounts, their workloads, prices and bills come from a generator in the repository, and pull requests and purchases are "shipped" by telling the generator, which is what lets every recommendation and every verified dollar be checked against the truth. No real cloud account or billing data is used and nothing is ever applied to infrastructure. Not built: real cloud connectors, three-year terms and spot, a deep forecaster, Kafka, ClickHouse, single sign-on.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../mine-ore-optimizer/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 144 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Where Should the Trucks Go When the Ore Runs Thin?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../mine-ore-optimizer/cover.jpg" width="1162" height="720" aria-label="Where Should the Trucks Go When the Ore Runs Thin?: the project&#x27;s animated loop"><source src="../../../mine-ore-optimizer/loop.webm" type="video/webm"><source src="../../../mine-ore-optimizer/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Kriging · Mixed-integer optimisation</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>143</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

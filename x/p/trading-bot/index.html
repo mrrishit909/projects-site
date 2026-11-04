@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trading Bot, Rishit Mathur</title>
+<meta name="description" content="A paper-money trading system that scans stocks, options and crypto, checks every order against hard risk rules, and logs every decision for later grading.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Trading Bot, Rishit Mathur">
+<meta property="og:description" content="A paper-money trading system that scans stocks, options and crypto, checks every order against hard risk rules, and logs every decision for later grading.">
+<meta property="og:image" content="../../../trading-bot/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Automation</span><span>Case <span class="n">236</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Trading Bot</h1>
+  <p class="lead">A paper-money trading system that scans stocks, options and crypto, checks every order against hard risk rules, and logs every decision for later grading.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>06</b></span><span>Status<b>Archived</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/trading-bot" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../trading-bot/cover.jpg" width="1162" height="720" aria-label="Trading Bot: the project&#x27;s animated loop"><source src="../../../trading-bot/loop.webm" type="video/webm"><source src="../../../trading-bot/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">trading-bot/loop.webm</span></div>
+    <div class="hud b"><span>[236]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">Alpaca API</span><span class="brk">SQLite</span><span class="brk">Claude API</span><span class="brk">launchd</span><span class="brk">http.server</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>I wanted to understand how an automated trading system is actually put together: data in, a decision rule, risk controls, execution, and a record you can audit afterwards. I also wanted to test a practical question: <em>does an AI advisor make better calls than a simple rule?</em> That needs a clean log of every decision, not just the trades.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A Python system that runs itself on a schedule against Alpaca's paper-trading API:</p><ul><li><b>Strategy:</b> a moving-average crossover (5-day vs 20-day) across about 70 large US stocks, plus options (long calls and puts only) and 24/7 crypto.</li><li><b>Risk engine:</b> a "bouncer" that every order must pass: daily loss limit, trade-count cap, allowed-stock list, max positions, max dollars per stock.</li><li><b>Diary:</b> SQLite tables for every run, decision (with its reasoning) and trade.</li><li><b>AI advisor:</b> Claude reads prices, signals and news and gives an opinion per stock. It never trades; its calls are only logged and graded.</li><li><b>Dashboard:</b> a local multi-page site: overview, holdings, options, crypto, decisions, trades, scoreboard.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Connect to the paper account</h3><div class="prose"><p>Set up the project, stored the API keys in a <code>.env</code> file that is never committed, and printed the pretend account balance to prove the connection works.</p></div></div></li><li><span class="k mono">Step 02</span><div><h3>Look up prices, then buy and sell one share</h3><div class="prose"><p>Fetched live quotes and daily bars, then placed a single market buy and sold it back. This was the smallest possible end-to-end test before any strategy existed.</p></div></div></li><li><span class="k mono">Step 03</span><div><h3>The safety bouncer (risk engine)</h3><div class="prose"><p>Before writing any strategy, every order had to ask one function for permission. It answers YES or NO with a reason, and sells are always allowed so the bot can get out of a position.</p></div><pre><code>MAX_DOLLARS_PER_STOCK = 2000
+MAX_STOCKS_HELD = 5
+MAX_TRADES_PER_DAY = 16
+DAILY_LOSS_LIMIT = 500
+
+ok, why = can_i_trade(client, &quot;AAPL&quot;, shares=3, price_per_share=230, side=&quot;buy&quot;)
+# -&gt; (False, &quot;NO. We already hold 5 different stocks (limit is 5). Sell something first.&quot;)</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>A first rule-based robot</h3><div class="prose"><p>A moving-average crossover: buy when the 5-day average moves above the 20-day, sell when it drops back below. It is deliberately simple, so it works as a baseline.</p></div></div></li><li><span class="k mono">Step 05</span><div><h3>A diary of every move</h3><div class="prose"><p>Three SQLite tables, <code>runs</code>, <code>decisions</code> and <code>trades</code>, record everything, including WAIT decisions and the reason for each one. Without this, there's nothing to grade later.</p></div></div></li><li><span class="k mono">Step 06</span><div><h3>Run by itself, plus a web dashboard</h3><div class="prose"><p><code>auto_run.py</code> loops during market hours; a local dashboard shows account value, holdings, decisions and trades. Later, macOS LaunchAgents replaced the loop so it runs unattended every 30 minutes for weeks.</p></div></div></li><li><span class="k mono">Step 07</span><div><h3>The AI advisor (advisory only)</h3><div class="prose"><p>Claude Haiku reads each stock's recent prices, the crossover signal and news headlines, then answers BUY, SELL or WAIT with a reason. That answer goes into the diary as a separate strategy. It costs about a third of a cent per run.</p></div></div></li><li><span class="k mono">Step 08</span><div><h3>Scoreboard: rule vs AI</h3><div class="prose"><p><code>compare.py</code> lines up every decision against what the price actually did 3 or 5 trading days later, and checks whether either strategy beat simply staying invested.</p></div></div></li><li><span class="k mono">Step 09</span><div><h3>Scan a whole universe of stocks</h3><div class="prose"><p>Instead of a handful of tickers, each run scans about 70 large, liquid US stocks, sells anything no longer trending up, and buys the strongest fresh crossovers, up to 5 positions.</p></div></div></li><li><span class="k mono">Step 10</span><div><h3>Options and crypto</h3><div class="prose"><p>Options: buy a call on a fresh upward cross or a put on a downward one, one contract at a time. The bot closes at +50%, -50% or 5 days before expiry, and never sells options to open, so the worst case is what was paid. Crypto runs 24/7 on the same crossover idea, with its own smaller limits.</p></div></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><ul><li>A working, scheduled system that has paper-traded unattended, logging every run, decision and trade.</li><li>Every order passes through one auditable risk function, and the limits live in one settings file.</li><li>The rule-vs-AI scoreboard is in place; the comparison needs weeks of logged decisions before it means anything, so no win-rate is claimed here.</li></ul></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Once enough history is logged, publish the scoreboard: hit rate and return for each strategy against buy-and-hold.</li><li>Backtest the crossover rule on several years of data before trusting the live numbers.</li><li>Replace fixed dollar sizing with volatility-based position sizing.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Paper trading only: it uses Alpaca's pretend-money account. No real money is involved, and nothing here is investment advice.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../cashcompass/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 001 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Which Customers Should a Collections Lead Contact Today, and How Much Cash Is Expected?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../cashcompass/cover.jpg" width="1162" height="720" aria-label="Which Customers Should a Collections Lead Contact Today, and How Much Cash Is Expected?: the project&#x27;s animated loop"><source src="../../../cashcompass/loop.webm" type="video/webm"><source src="../../../cashcompass/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Dashboard · Accounts receivable · Collections · FastAPI · React</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>236</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

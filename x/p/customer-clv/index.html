@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Will Buy Again?, Rishit Mathur</title>
+<meta name="description" content="Churn and customer lifetime value for a real online retailer: classic BG/NBD and Gamma-Gamma models written from the papers, against machine learning, on six months the models never saw.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Who Will Buy Again?, Rishit Mathur">
+<meta property="og:description" content="Churn and customer lifetime value for a real online retailer: classic BG/NBD and Gamma-Gamma models written from the papers, against machine learning, on six months the models never saw.">
+<meta property="og:image" content="../../../customer-clv/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · Customer analytics</span><span>Case <span class="n">011</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">Who Will Buy Again?</h1>
+  <p class="lead">Churn and customer lifetime value for a real online retailer: classic BG/NBD and Gamma-Gamma models written from the papers, against machine learning, on six months the models never saw.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>06</b></span><span>Status<b>Code only</b></span></div><div class="links"><a class="brk" href="https://github.com/mrrishit909/customer-clv" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../customer-clv/cover.jpg" width="1162" height="720" aria-label="Who Will Buy Again?: the project&#x27;s animated loop"><source src="../../../customer-clv/loop.webm" type="video/webm"><source src="../../../customer-clv/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">customer-clv/loop.webm</span></div>
+    <div class="hud b"><span>[011]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Python</span><span class="brk">SciPy</span><span class="brk">BG/NBD</span><span class="brk">Gamma-Gamma</span><span class="brk">scikit-learn</span><span class="brk">Maximum likelihood</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>A retailer wants to know two things about each customer: <em>will they buy again, and what are they worth?</em> The answers decide who gets a win-back offer and who gets left alone. Simple rules ("hasn't bought in a while") are the usual answer. The question here is whether a proper model does better, and whether it needs labelled churn data to do it.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A Python project on the retail data from the dbt project (5,848 customers, Dec 2009 - Dec 2011):</p><ul><li><b>BG/NBD</b> (how often each customer buys, and the chance they've quietly left) and <b>Gamma-Gamma</b> (how much they spend per order), written from the original papers. They need no churn labels.</li><li><b>Supervised churn models</b> (logistic regression, gradient boosting) trained on an earlier snapshot.</li><li><b>An out-of-time test:</b> predict from 9 June 2011, score on the next six months.</li><li><b>A check</b> that the code reproduces the papers' published numbers, and that the formulas match a 200,000-customer simulation.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Reproduce the papers before using the code</h3><div class="prose"><p>Hand-written statistical models are easy to get subtly wrong. So before touching the retail data, both models were fitted on the CDNOW dataset the papers used. They came out with the published parameters to the third decimal: BG/NBD r = 0.243, α = 4.414, a = 0.793, b = 2.426, and Gamma-Gamma p = 6.25, q = 3.74, γ = 15.44.</p></div><pre><code>a1 = gammaln(r + x) - gammaln(r) + r * np.log(alpha)
+a2 = gammaln(a + b) + gammaln(b + x) - gammaln(b) - gammaln(a + b + x)
+a3 = -(r + x) * np.log(alpha + T)
+a4 = np.where(x &gt; 0, np.log(a) - np.log(np.maximum(b + x - 1, 1e-12)) - (r + x) * np.log(alpha + t_x), -np.inf)
+return a1 + a2 + np.logaddexp(a3, a4)</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Turn sales into purchase days</h3><div class="prose"><p>From the dbt project's tested tables, each customer gets one row per day they bought: 32,597 purchase days in all. Cancellations made the same day are netted out, so an order placed and cancelled within minutes is not a purchase (281 days dropped).</p></div></div></li><li><span class="k mono">Step 03</span><div><h3>Test on the future, not on a shuffle</h3><div class="prose"><p>Every method predicts from 9 June 2011 and is scored on 10 June - 9 December 2011, using only data from before the cutoff. The machine-learning models learn from a snapshot six months earlier, labelled by what happened next. BG/NBD and Gamma-Gamma just fit the purchase history up to the cutoff. A check confirms that deleting every later purchase changes none of the features.</p></div></div></li><li><span class="k mono">Step 04</span><div><h3>Catch an optimiser that gave up</h3><div class="prose"><p>On the retail data, the first Gamma-Gamma fit returned p ≈ 36 million, a sign something was off. Profiling the likelihood showed the optimiser had stopped in a far worse corner (log-likelihood −23,059 against −22,493 at p = 2.41). Both fits now start from several points and keep the best, and the CDNOW replication still matches.</p></div></div></li><li><span class="k mono">Step 05</span><div><h3>Read the results like a manager</h3><div class="prose"><p>Three charts: does the model get purchase counts right for each kind of customer, which method ranks churn best, and where next half-year's revenue comes from. Then a list: valuable customers the model thinks are slipping away.</p><img loading="lazy" decoding="async" src="../../../customer-clv/charts/02_churn.jpg" alt="Bar chart of AUC for predicting churn: BG/NBD 0.782, logistic regression 0.777, gradient boosting 0.760, recency rule 0.731"></div></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><table><tr><th>Jun - Dec 2011 (4,321 customers)</th><th class="num">Churn AUC</th><th class="num">6-month value: rank corr.</th></tr><tr><td>Simple rule (recency · last 6 months' spend)</td><td class="num">0.731</td><td class="num">0.550</td></tr><tr><td><b>BG/NBD (× Gamma-Gamma for value)</b></td><td class="num"><b>0.782</b></td><td class="num"><b>0.612</b></td></tr><tr><td>Logistic regression</td><td class="num">0.777</td><td class="num">-</td></tr><tr><td>Gradient boosting</td><td class="num">0.760</td><td class="num">-</td></tr></table><img loading="lazy" decoding="async" src="../../../customer-clv/charts/03_value.jpg" alt="Bars: share of next half-year's revenue by customer tenth; the top tenth predicted by BG/NBD x Gamma-Gamma brought 62% of revenue, by last six months' spend 60%"><ul><li><b>The model with no labels ranked churn best.</b> The supervised models learned on a December-June window (53% churn) and were tested on June-December, which includes Christmas (43% churn). That shift hurt them more.</li><li><b>Counts right, totals low:</b> 7,428 purchases predicted vs 7,583 actual. Revenue came in 17% above the forecast because pre-Christmas orders averaged £561 against the £477 the models expected.</li><li><b>Win-back list:</b> 21 of the top 865 customers looked like they were slipping away. 62% of them did stop buying, vs 8.6% of the other top customers, with £163,633 of last year's revenue between them. It's a small group, so this is a signal, not a precise rate.</li></ul></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Add seasonality (a Q4 effect) so the totals track Christmas.</li><li>Score on several rolling cutoffs to put error bars on the comparison.</li><li>Bring in margins so value means profit, not revenue.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>Value here means revenue, not profit (no cost data). The models assume steady buying, so they under-predicted the Christmas run-up by 17%. Their ranking of customers held up; the totals didn't.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../excel-model/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 012 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Costco Model in Excel</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../excel-model/cover.jpg" width="1162" height="720" aria-label="Costco Model in Excel: the project&#x27;s animated loop"><source src="../../../excel-model/loop.webm" type="video/webm"><source src="../../../excel-model/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Excel · Financial modelling</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>011</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

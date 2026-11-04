@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Private Can Useful Synthetic Data Be?, Rishit Mathur</title>
+<meta name="description" content="A generator that masks identifiers, learns a private table with a neural network and writes a fake copy with the same statistics. On 32,561 census rows a model trained on the copy scores 0.880 AUC against 0.929 for the real data; with a differential-privacy guarantee of ε = 1, 0.845.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="How Private Can Useful Synthetic Data Be?, Rishit Mathur">
+<meta property="og:description" content="A generator that masks identifiers, learns a private table with a neural network and writes a fake copy with the same statistics. On 32,561 census rows a model trained on the copy scores 0.880 AUC against 0.929 for the real data; with a differential-privacy guarantee of ε = 1, 0.845.">
+<meta property="og:image" content="../../../synthetic-data-generator/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Python · ML privacy</span><span>Case <span class="n">103</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">How Private Can Useful Synthetic Data Be?</h1>
+  <p class="lead">A generator that masks identifiers, learns a private table with a neural network and writes a fake copy with the same statistics. On 32,561 census rows a model trained on the copy scores 0.880 AUC against 0.929 for the real data; with a differential-privacy guarantee of ε = 1, 0.845.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Python</b></span><span>Year<b>2026</b></span><span>Tools<b>08</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../synthetic-data-generator/demo/" data-cursor="Open">[ Open the studio ]</a><a class="brk" href="https://github.com/mrrishit909/synthetic-data-generator" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../synthetic-data-generator/cover.jpg" width="1162" height="720" aria-label="How Private Can Useful Synthetic Data Be?: the project&#x27;s animated loop"><source src="../../../synthetic-data-generator/loop.webm" type="video/webm"><source src="../../../synthetic-data-generator/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">synthetic-data-generator/loop.webm</span></div>
+    <div class="hud b"><span>[103]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">PyTorch (VAE)</span><span class="brk">Opacus DP-SGD</span><span class="brk">pandas, scikit-learn, SciPy</span><span class="brk">spaCy NER + regex</span><span class="brk">FastAPI</span><span class="brk">React studio</span><span class="brk">UCI Adult (CC BY 4.0)</span><span class="brk">19 tests, 96% coverage</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Teams that build machine-learning models want realistic data; the realistic data is customer records they are not supposed to pass around. One answer is a synthetic copy: invented rows that keep the statistical shape of the real table (older people earn more, managers work longer hours) without being anyone's record. Two things can go wrong: the copy is too rough to be useful, or it is so faithful that it memorises real people. <em>How much usefulness is left at each level of privacy protection, and can a report show that honestly?</em></p><p>Fourth of four product blueprints built as a minimum version.</p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A Python pipeline with a web studio.</p><ul><li><b>Profiler:</b> types, missing values, keys, and which columns depend on which.</li><li><b>PII masking:</b> patterns plus named-entity recognition find identifier columns; they are replaced with mock values and never reach the model.</li><li><b>Generative model:</b> a variational autoencoder in PyTorch, optionally trained with differential privacy.</li><li><b>Fidelity and audit report:</b> real against synthetic, column by column and pair by pair, plus measured privacy checks.</li><li><b>Studio:</b> drop a CSV, set each column's role, flag &ldquo;Force DP&rdquo; per column, choose &epsilon;, generate, download.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>Profile the table</h3><div class="prose"><p>For each column: its type, share missing, number of distinct values, range and most common values. Between columns: Pearson correlation for numbers, and mutual information for every pair, which also works for categories (0 means unrelated, 1 means one fixes the other). It found that <code>education</code> fully determines <code>education_num</code>; such a column is looked up after generation instead of sampled, so the rule holds in every synthetic row.</p></div><pre><code>constraints += [{&quot;type&quot;: &quot;functional_dependency&quot;, **fd} for fd in functional_dependencies(df, modeled)]</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Take identifiers out before any model sees them</h3><div class="prose"><p>A column is flagged by its header, by the share of values matching a pattern (SSN, e-mail, phone, card number with checksum), or by spaCy recognising person names. Flagged columns are not trained on. The output gets mock values from a generator that is never shown the real ones, in ranges reserved for fiction: SSNs starting 900, phones 555-01xx, <code>example.com</code>. A test plants distinctive real identifiers and checks none appears in the output.</p></div><pre><code>&quot;ssn&quot;: re.compile(r&quot;\b(?!000|666|9\d\d)\d{3}-(?!00)\d{2}-(?!0000)\d{4}\b&quot;),</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Turn every column into categories, and say what that reveals</h3><div class="prose"><p>Each column becomes one categorical variable: its categories, or for numbers the exact frequent values plus quantile bins. That list of categories and bin edges is read from the data, which a privacy guarantee on the model does not cover: a job title held by one person would appear in the output. So a column can be flagged <b>Force DP</b>: its category list then comes from noisy counts, keeping only categories above a threshold, and a numeric column needs public bounds typed in. A test runs 300 random seeds and checks a one-person category is never released.</p></div><pre><code>threshold = 1 + math.log(1 / (2 * delta)) / epsilon</code></pre></div></li><li><span class="k mono">Step 04</span><div><h3>Train a generator, with a privacy budget</h3><div class="prose"><p>A variational autoencoder squeezes each row into 24 numbers and learns to rebuild it; new rows come from decoding random numbers. With &epsilon; set, training uses DP-SGD through Opacus: each row's influence on a training step is clipped, random noise is added, and an accountant adds up how much any single person could have changed the model. That total is &epsilon;: smaller means more noise and more protection.</p></div><pre><code>net, optimizer, loader = engine.make_private_with_epsilon(</code></pre></div></li><li><span class="k mono">Step 05</span><div><h3>Score the copy against rows the model never saw</h3><div class="prose"><p>20% of rows are held out. The report gives, per column, the Jensen-Shannon and Wasserstein distances between real and synthetic; how well dependencies between columns survive; and a usefulness test: train a classifier on synthetic rows, test it on real held-out rows. Two privacy measurements compare synthetic rows with the held-out real ones: how many are identical to a training row, and how close each sits to its nearest training row.</p></div><pre><code>dcr_s, dcr_h = closest_record(sy, tr, categorical), closest_record(ho, tr, categorical)</code></pre></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><p><b>Three runs on 32,561 census rows</b> (26,051 for training, 6,510 held out). AUC is for predicting income above $50K, tested on real held-out rows; a model trained on the real rows scores 0.929.</p><table><tr><th>Run</th><th class="num">JS dist.</th><th class="num">MI change</th><th class="num">AUC</th></tr><tr><td>No DP</td><td class="num">0.046</td><td class="num">0.014</td><td class="num">0.880</td></tr><tr><td>ε = 8</td><td class="num">0.044</td><td class="num">0.024</td><td class="num">0.870</td></tr><tr><td>ε = 1, strict</td><td class="num">0.228</td><td class="num">0.051</td><td class="num">0.845</td></tr></table><p>JS distance: how far each column's distribution moved (0 = identical). MI change: how much the links between columns changed. Lower is better for both.</p><p><b>Privacy, measured.</b> In all three runs no synthetic row was identical to a training row (0.15% of real held-out rows are), and synthetic rows sit farther from the training data than fresh real rows do (median distance 0.047, 0.071 and 0.170 against 0.025). The four identifier columns were replaced and the key regenerated.</p><p><b>What the guarantee costs.</b> At &epsilon; = 8 the single-column shapes hold and one AUC point is lost, but 15 columns' category lists were read from the data, outside the guarantee, and the report says so. The strict run closes that gap and pays for it: with a tenth of &epsilon; shared by nine private category lists, a category needs roughly 1,500 rows to be kept, so <code>education</code> keeps 3 of its 16 values and <code>native_country</code> only &ldquo;United-States&rdquo;. The classifier still reaches 0.845.</p><img loading="lazy" decoding="async" src="../../../synthetic-data-generator/shots/strict.jpg" alt="Fidelity and audit report for the strict run: JS distance 0.228, Wasserstein 0.152, mutual-information change 0.051, AUC 0.845 against 0.929, epsilon 0.997, 0.0% copied rows; a green box states that nothing is outside the guarantee; histograms show an (other) bar in workclass and education."><img loading="lazy" decoding="async" src="../../../synthetic-data-generator/shots/schema.jpg" alt="Studio schema step: each of the 20 columns with its type, share missing, distinct count, detected PII kind, role, Force DP checkbox and public bounds."><p><b>Checks.</b> 19 automated tests cover 96% of the code and pass inside the Docker image. Training takes 26 seconds without DP and about 100 seconds with it on a laptop CPU.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>Let users declare special values (such as 0) for bounded numeric columns: the strict run blurs the 92% of zeros in capital gains.</li><li>Compare against marginal-based DP methods, which usually beat neural models at small &epsilon;, and average over several seeds.</li><li>Multi-table data with foreign keys, and a text generator for free-text columns (today they are dropped).</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>The blueprint asked for data that &ldquo;bypasses&rdquo; GDPR and HIPAA. <b>This does not claim that.</b> Synthetic data is not automatically outside privacy law; a differential-privacy guarantee is evidence for a legal assessment, not a replacement for one. By default part of each run sits outside the guarantee, and every report says which part. The census columns are real public data (UCI Adult, 1994); the name, SSN, phone and e-mail columns were invented for the demonstration. Results are single runs with one seed.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../prior-auth-platform/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 104 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Can Software Carry a Prior Authorization From Order to Appeal?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../prior-auth-platform/cover.jpg" width="1162" height="720" aria-label="Can Software Carry a Prior Authorization From Order to Appeal?: the project&#x27;s animated loop"><source src="../../../prior-auth-platform/loop.webm" type="video/webm"><source src="../../../prior-auth-platform/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Healthcare workflow</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>103</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>

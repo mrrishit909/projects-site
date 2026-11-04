@@ -62,3 +62,15 @@ if (sf) {
   addEventListener("resize", size); size();
   if (!reduce) (function f(t) { draw(t); requestAnimationFrame(f); })(0);
 }
+
+// phone menu: one toggle injected into the shared header
+const top = document.querySelector(".top"), nav = top && top.querySelector("nav");
+if (nav) {
+  nav.id = nav.id || "primary-nav";
+  const m = document.createElement("button"); m.className = "menu-btn"; m.type = "button"; m.textContent = "Menu"; m.setAttribute("aria-expanded", "false"); m.setAttribute("aria-controls", nav.id);
+  nav.appendChild(m);
+  const close = () => { top.classList.remove("open"); m.setAttribute("aria-expanded", "false"); m.textContent = "Menu"; };
+  m.addEventListener("click", () => { const o = !top.classList.contains("open"); top.classList.toggle("open", o); m.setAttribute("aria-expanded", o); m.textContent = o ? "Close" : "Menu"; if (o) nav.querySelector("a")?.focus(); });
+  addEventListener("keydown", (e) => { if (e.key === "Escape" && top.classList.contains("open")) { close(); m.focus(); } });
+  nav.addEventListener("click", (e) => { if (e.target.closest("a")) close(); });
+}

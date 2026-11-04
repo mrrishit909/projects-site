@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSV Data-Quality Checker, Rishit Mathur</title>
+<meta name="description" content="A Java tool that reads any CSV and reports what&#x27;s wrong with it (empty values, wrong types, broken rows, duplicates, unusual numbers) before anyone analyses it.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CSV Data-Quality Checker, Rishit Mathur">
+<meta property="og:description" content="A Java tool that reads any CSV and reports what&#x27;s wrong with it (empty values, wrong types, broken rows, duplicates, unusual numbers) before anyone analyses it.">
+<meta property="og:image" content="../../../csv-quality-checker/cover.jpg">
+<meta name="theme-color" content="#000000">
+<link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="stylesheet" href="../../x.css">
+<style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
+.screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
+.screen .hud { position: absolute; z-index: 2; left: 14px; right: 14px; display: flex; justify-content: space-between; gap: 12px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.75); text-shadow: 0 0 8px #000; pointer-events: none; }
+.screen .hud.t { top: 14px; } .screen .hud.b { bottom: 14px; }
+.screen .hud .live::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 8px var(--blue); animation: blink 1.6s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.corner { position: absolute; width: 14px; height: 14px; border: 1px solid var(--blue-hi); z-index: 2; pointer-events: none; }
+.corner.a { left: -7px; top: -7px; border-width: 1px 0 0 1px; } .corner.b { right: -7px; top: -7px; border-width: 1px 1px 0 0; }
+.corner.c { left: -7px; bottom: -7px; border-width: 0 0 1px 1px; } .corner.d { right: -7px; bottom: -7px; border-width: 0 1px 1px 0; }
+.frame { position: relative; }
+.hero { padding-top: 4vh; }
+.hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w40); margin-bottom: 7vh; }
+.hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
+.hero .crumb .n { color: var(--white); }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .lead { max-width: 46ch; margin: 28px 0 0; }
+.hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
+.hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+a.brk { text-decoration: none; transition: border-color var(--t-fast), color var(--t-fast), background var(--t-fast); }
+a.brk:hover, a.brk:focus-visible { border-color: var(--blue-hi); color: var(--white); background: rgba(47,143,230,.12); outline: none; }
+a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
+.hero .frame { margin-top: 9vh; }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chapters { margin-top: 18vh; }
+.ch { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; padding: 9vh 0; border-top: 1px solid var(--w10); }
+.ch .side { position: sticky; top: 110px; align-self: start; }
+.ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
+.ch .side .h3 { max-width: 12ch; }
+.ch .body { min-width: 0; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose > :first-child { margin-top: 0; }
+.prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
+.prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
+.prose em { color: var(--white); font-style: italic; }
+.prose table { margin: 20px 0; }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li:first-child { border-top: 0; padding-top: 0; }
+.steps .k { color: var(--w40); padding-top: 6px; }
+.steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
+.note { margin-top: 9vh; padding: 26px 28px; border: 1px solid var(--w10); background: rgba(255,255,255,.02); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 40px; }
+.note .mono { color: var(--w40); }
+.note p { margin: 0; color: var(--w60); max-width: 68ch; }
+.next { margin-top: 20vh; }
+.next a { display: block; text-decoration: none; }
+.next .top-line { display: flex; justify-content: space-between; gap: 16px; color: var(--w40); margin-bottom: 26px; }
+.next .h2 { font-size: clamp(2.4rem, 1rem + 4.4vw, 6rem); line-height: .98; max-width: 16ch; margin-bottom: 6vh; text-wrap: balance; transition: letter-spacing var(--t-slow) var(--ease-out); }
+.next a:hover .h2 { letter-spacing: -.045em; }
+.next .screen { transition: transform var(--t-slow) var(--ease-out); }
+.next a:hover .screen { transform: scale(.985); }
+.next .sub { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--w40); }
+.readhud { position: fixed; left: var(--pad); bottom: var(--pad); z-index: 20; display: flex; gap: 22px; font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--w40); mix-blend-mode: difference; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.readhud b { color: var(--white); font-weight: 400; font-variant-numeric: tabular-nums; }
+.readhud.on { opacity: 1; }
+@media (max-width: 900px) {
+  .ch, .note { grid-template-columns: 1fr; gap: 22px; }
+  .ch .side { position: static; }
+  .ch .side .h3 { max-width: none; }
+  .hero .meta { grid-template-columns: 1fr; gap: 24px; }
+  .hero .links { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .hero .crumb { margin-bottom: 5vh; }
+  .hero .crumb .k { display: none; }
+  .hero .frame { margin-top: 6vh; }
+  .corner { width: 10px; height: 10px; }
+  .corner.a, .corner.c { left: -5px; } .corner.b, .corner.d { right: -5px; } .corner.a, .corner.b { top: -5px; } .corner.c, .corner.d { bottom: -5px; }
+  .screen .hud { font-size: 9px; left: 10px; right: 10px; } .screen .hud.t { top: 10px; } .screen .hud.b { bottom: 10px; }
+  .screen .hud .x { display: none; }
+  .chapters { margin-top: 12vh; }
+  .ch { padding: 7vh 0; }
+  .ch .prose { font-size: 1rem; }
+  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps .k { padding: 0; }
+  .note { padding: 20px; }
+  .next { margin-top: 14vh; }
+  .readhud { gap: 14px; }
+  .readhud .c { display: none; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><a class="logo" href="../../">Rishit Mathur</a><nav aria-label="Primary"><a href="../../work/" aria-current="page">Work</a><a href="../../about/">About</a><a href="../../contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<main id="main" class="page">
+<article>
+<section class="hero wrap" aria-labelledby="title">
+  <p class="crumb mono"><a href="../../work/">[ Work ]</a><span class="k">Java · Data quality</span><span>Case <span class="n">006</span> / 236</span></p>
+  <h1 class="h1 grad" id="title">CSV Data-Quality Checker</h1>
+  <p class="lead">A Java tool that reads any CSV and reports what&#x27;s wrong with it (empty values, wrong types, broken rows, duplicates, unusual numbers) before anyone analyses it.</p>
+  <div class="meta"><div class="hud-row"><span>Kind<b>Java</b></span><span>Year<b>2026</b></span><span>Tools<b>06</b></span><span>Status<b>Live demo</b></span></div><div class="links"><a class="brk go" href="../../../csv-quality-checker/reports/202608-divvy-tripdata.html" data-cursor="Open">[ See a real report ]</a><a class="brk" href="https://github.com/mrrishit909/csv-quality-checker" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../csv-quality-checker/cover.jpg" width="1162" height="720" aria-label="CSV Data-Quality Checker: the project&#x27;s animated loop"><source src="../../../csv-quality-checker/loop.webm" type="video/webm"><source src="../../../csv-quality-checker/loop.mp4" type="video/mp4"></video>
+    <div class="hud t"><span class="live">Running</span><span class="x">csv-quality-checker/loop.webm</span></div>
+    <div class="hud b"><span>[006]</span><span class="x">1162 x 720</span></div></div>
+    <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
+  <div class="stack" aria-label="Tools"><span class="brk">Java 21</span><span class="brk">No dependencies</span><span class="brk">Streaming CSV parser</span><span class="brk">Hashing</span><span class="brk">Statistics</span><span class="brk">Python check</span></div>
+</section>
+<div class="chapters wrap">
+<section class="ch rv" id="problem" aria-labelledby="h-problem"><div class="side"><span class="mono">01 / The problem</span><h2 class="h3 grad" id="h-problem">What needed answering</h2></div><div class="body"><div class="prose"><p>Every analysis starts with a file someone else made, and most bad numbers come from bad data, not bad math: a column that is one-fifth empty, a date typed as text, a row with a missing comma, the same record twice. An analyst usually finds these one at a time, halfway through a report. <em>Can one command look at any CSV, of any size, and list its problems up front in plain language?</em></p></div></div></section><section class="ch rv" id="built" aria-labelledby="h-built"><div class="side"><span class="mono">02 / What was built</span><h2 class="h3 grad" id="h-built">The build</h2></div><div class="body"><div class="prose"><p>A command-line tool in plain Java 21, using only the standard library. <code>java -jar dq.jar data.csv</code> writes a one-page HTML report for people and a JSON file for programs, and prints the findings.</p><ul><li><b>Reads the file once, as a stream:</b> memory stays small, so an 868,000-row file takes about 7 seconds.</li><li><b>Per column:</b> empty values, inferred type with the values that don't fit, distinct count, range, mean and spread, unusual values.</li><li><b>Per file:</b> rows with the wrong number of fields, exact duplicate rows, likely ID columns, columns where every value is the same.</li><li><b>Exit codes</b> 0 / 1 / 2 (clean / warnings / errors), so a data pipeline can refuse a bad file.</li><li><b>Checked twice:</b> 32 Java tests plus a separate Python script that recounts every number.</li></ul></div></div></section><section class="ch rv" id="steps" aria-labelledby="h-steps"><div class="side"><span class="mono">03 / How it was done</span><h2 class="h3 grad" id="h-steps">Step by step</h2></div><div class="body"><ol class="steps"><li><span class="k mono">Step 01</span><div><h3>A CSV reader that doesn't trust the file</h3><div class="prose"><p>Splitting on commas breaks on <code>"gift, wrapped"</code>. The reader follows the CSV standard (RFC 4180) one character at a time. It handles quoted fields, doubled quotes inside them, commas and even line breaks inside quotes, and Windows line endings. A quote that never closes stops the run with an error. Otherwise the rest of the file would silently disappear into one giant field. Nine tests cover these cases.</p></div><pre><code>if (c == &#x27;&quot;&#x27;) {
+    if (peek() == &#x27;&quot;&#x27;) { read(); field.append(&#x27;&quot;&#x27;); }   // &quot;&quot; = one quote
+    else inQuotes = false;
+}</code></pre></div></li><li><span class="k mono">Step 02</span><div><h3>Learn each column in one pass</h3><div class="prose"><p>Every value is tested against integer, decimal, date-time, date and true/false patterns. A column gets the most specific type that at least 98% of its values fit, so one stray <code>oops</code> in 100 numbers is reported as a <em>misfit</em> with the example, not hidden. Distinct values are counted as 64-bit hashes in a plain <code>long[]</code> table: 8 bytes per value, not a full Java string. Mean and spread use Welford's one-pass method. Quartiles come from a fair random sample of up to 100,000 numbers (reservoir sampling).</p></div><pre><code>double d = x - mean;          // Welford: running mean and variance
+mean += d / numbers;
+m2   += d * (x - mean);</code></pre></div></li><li><span class="k mono">Step 03</span><div><h3>Whole-file checks and the report</h3><div class="prose"><p>Rows with the wrong number of fields are counted with their line numbers. Each full row is hashed to catch exact duplicates. A second pass counts numbers outside Tukey's fences, 1.5 × the interquartile range beyond the quartiles. The findings become plain sentences sorted errors, then warnings, then info. They are written as an HTML page and a JSON file, and the exit code tells a pipeline how bad it was. A generated file with exactly one of each problem tests the whole thing.</p></div></div></li><li><span class="k mono">Step 04</span><div><h3>Run it on real data, then check it in Python</h3><div class="prose"><p>Two real files: a month of Chicago bike trips (868,191 rows) and the Florida flights table from my Power BI project (635,459 rows). <code>check.py</code> recounts them independently with Python's <code>csv</code> module and exact sets. Rows, malformed rows, duplicates, and every column's empty count, distinct count, min and max (plus the mean of number columns) all agree: 143 comparisons. The run also caught two bugs in my own code. The JSON was rounding the date key <code>20250801</code> to <code>20250800</code>, and the duplicate message suggested copies where there were none.</p></div></div></li><li><span class="k mono">Step 05</span><div><h3>Read the findings like an analyst</h3><div class="prose"><p>The tool flags; a person decides. The 13 "duplicate" flights looked like copies, so I looked one up in the raw government file. American Airlines flights 2524 and 2823 left Miami for Dallas on the same day, both in the 6 pm hour. They are different flights that look identical because the table keeps only the hour. The duplicate message now says to check exactly that. In the same way, a 98% empty cancel-code column is correct: only cancelled flights have a code.</p></div></div></li></ol></div></section><section class="ch rv" id="results" aria-labelledby="h-results"><div class="side"><span class="mono">04 / What it found</span><h2 class="h3 grad" id="h-results">Results</h2></div><div class="body"><div class="prose"><table><tr><th></th><th class="num">Divvy trips, Aug 2026</th><th class="num">Florida flights</th></tr><tr><td>Rows × columns</td><td class="num">868,191 × 13</td><td class="num">635,459 × 17</td></tr><tr><td>Time (M3 Pro)</td><td class="num">about 7 s</td><td class="num">under 3 s</td></tr><tr><td>Malformed rows</td><td class="num">0</td><td class="num">0</td></tr><tr><td>Exact duplicate rows</td><td class="num">0</td><td class="num">13 (different flights)</td></tr><tr><td>Key column found</td><td class="num">ride_id</td><td class="num">none</td></tr><tr><td>Checks matching the Python recount</td><td class="num">59 / 59</td><td class="num">84 / 84</td></tr></table><ul><li><b>Bike trips:</b> 21.8% of rides have no start station, and every one of them is an e-bike left outside a dock. 173 rides that started on July 30-31 sit in the August file. The SQL project had to handle both: <a href="../chicago-bike-share/">How Chicago Rides</a>.</li><li><b>Flights:</b> 11,371 flights were cancelled and exactly 11,371 have a cancel code. The delay-cause columns are filled for 152,475 of the 152,476 flights that arrived 15+ minutes late, so one late flight has no cause breakdown.</li><li><b>Outliers are approximate</b> when a column has more than 100,000 numbers. They were exact in 15 of 17 such columns and off by 1.6% and 2.1% in the other two.</li></ul><p>Reports: <a href="../../../csv-quality-checker/reports/202608-divvy-tripdata.html">bike trips</a> · <a href="../../../csv-quality-checker/reports/FactFlights.html">flights</a> · <a href="../../../csv-quality-checker/reports/messy.html">an 11-row file with planted problems</a>.</p></div></div></section><section class="ch rv" id="next" aria-labelledby="h-next"><div class="side"><span class="mono">05 / What comes next</span><h2 class="h3 grad" id="h-next">Next</h2></div><div class="body"><div class="prose"><ul><li>A rules file ("price ≥ 0", "state in a list", "date not in the future") so it validates as well as profiles.</li><li>Exact quartiles for big columns with a second sorting pass on disk.</li><li>Check that dates are real calendar dates, and detect file encodings other than UTF-8.</li></ul></div></div></section>
+<aside class="note rv" aria-label="Limitations"><span class="mono">[ Note ]</span><p>This is a profiler, not a validator: it infers what each column should be and flags what doesn't fit. You can't yet give it rules such as "price must be at least 0". Outlier counts are approximate for columns with more than 100,000 numbers.</p></aside>
+</div>
+</article>
+<section class="next wrap rv" aria-labelledby="h-next-project">
+  <a href="../flight-delay-model/" data-cursor="Next">
+    <p class="top-line mono"><span>Next project</span><span>Case 007 / 236</span></p>
+    <h2 class="h2 grad" id="h-next-project">Will My Flight Be Disrupted?</h2>
+    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../flight-delay-model/cover.jpg" width="1162" height="720" aria-label="Will My Flight Be Disrupted?: the project&#x27;s animated loop"><source src="../../../flight-delay-model/loop.webm" type="video/webm"><source src="../../../flight-delay-model/loop.mp4" type="video/mp4"></video></div>
+    <p class="sub mono"><span>Python · Machine learning</span><span>2026</span></p>
+  </a>
+</section>
+</main>
+<div class="readhud" aria-hidden="true"><span>Case <b>006</b></span><span class="c">Chapter <b>00</b> / 05</span><span>Read <b class="p">00%</b></span></div>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="../../work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<canvas class="stars" aria-hidden="true"></canvas>
+<script type="module" src="../../x.js"></script>
+<script type="module">
+const hud = document.querySelector(".readhud"), pct = hud.querySelector(".p"), chn = hud.querySelector(".c b");
+const chs = [...document.querySelectorAll(".ch")];
+const vids = [...document.querySelectorAll("video")];
+if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+else {
+  const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
+  vids.forEach((v) => vo.observe(v));
+}
+let ticking = false;
+function upd() {
+  ticking = false;
+  const max = document.documentElement.scrollHeight - innerHeight, y = scrollY;
+  pct.textContent = String(Math.round(max > 0 ? (y / max) * 100 : 0)).padStart(2, "0") + "%";
+  let k = 0; chs.forEach((c, i) => { if (c.getBoundingClientRect().top < innerHeight * 0.5) k = i + 1; });
+  chn.textContent = String(k).padStart(2, "0");
+  hud.classList.toggle("on", y > innerHeight * 0.4);
+}
+addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+upd();
+</script>
+</body>
+</html>
