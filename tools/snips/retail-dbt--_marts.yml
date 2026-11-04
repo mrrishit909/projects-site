@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: fct_sales
+    description: Product sales lines only. Revenue = quantity x unit price in pounds sterling.
+    columns:
+      - name: line_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: stock_code
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: stock_code
+
+  - name: dim_customers
+    description: One row per known customer with a sale. RFM scores are quintiles (5 = best); segment is a simple rule on R and F.
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: cohort_month
+        data_tests: [not_null]
+      - name: segment
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [Champions, Loyal, New or returning, Needs attention, At risk, Lost]
+
+  - name: dim_products
+    columns:
+      - name: stock_code
+        data_tests: [unique, not_null]
+
+  - name: mart_monthly_revenue
+    description: Revenue, orders, customers, new customers and cancellations by month. December 2011 has only 9 days.
+    columns:
+      - name: month
+        data_tests: [unique, not_null]
+
+  - name: mart_cohort_retention
+    description: Share of each first-purchase cohort that bought again N months later.

@@ -37,7 +37,7 @@ function startSound() {
 }
 function stopSound() { if (master) { master.gain.cancelScheduledValues(ctx.currentTime); master.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.6); } }
 if (btn) {
-  const set = (on) => { btn.setAttribute("aria-pressed", on); btn.querySelector(".lbl").textContent = on ? "Sound on" : "Sound off"; try { localStorage.setItem("x-sound", on ? "1" : "0"); } catch {} };
+  const set = (on) => { btn.setAttribute("aria-pressed", on); btn.querySelector(".lbl").textContent = on ? "Sound [on]" : "Sound [off]"; try { localStorage.setItem("x-sound", on ? "1" : "0"); } catch {} };
   btn.addEventListener("click", () => { const on = btn.getAttribute("aria-pressed") !== "true"; set(on); on ? startSound() : stopSound(); });
   window.xSound = { blip(freq = 880, dur = 0.08) { if (!ctx || btn.getAttribute("aria-pressed") !== "true") return; const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = freq; g.gain.value = 0.04; g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur); o.connect(g); g.connect(ctx.destination); o.start(); o.stop(ctx.currentTime + dur); } };
 }

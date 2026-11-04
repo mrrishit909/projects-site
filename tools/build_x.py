@@ -111,7 +111,7 @@ def header(root, current):
     links = "".join(f'<a href="{root}{h}"{" aria-current=\"page\"" if t == current else ""}>{t}</a>' for h, t in nav)
     return (f'<a class="skip" href="#main">Skip to content</a>\n'
             f'<header class="top"><a class="logo" href="{root}">Rishit Mathur</a><nav aria-label="Primary">{links}'
-            f'<button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>')
+            f'<button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound [off]</span></button></nav></header>')
 
 
 def footer(root):

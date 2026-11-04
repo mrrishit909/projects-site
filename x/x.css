@@ -63,7 +63,10 @@ a { color: inherit; }
 .top nav a { color: var(--w60); transition: color var(--t-fast); }
 .top nav a:hover, .top nav a[aria-current="page"] { color: var(--white); }
 .sound { display: inline-flex; align-items: center; gap: 8px; background: none; border: 0; color: var(--w60); font: inherit; letter-spacing: inherit; cursor: pointer; padding: 0; }
-.sound i { display: inline-flex; gap: 2px; align-items: end; height: 10px; }
+.sound i { display: inline-flex; gap: 2px; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1px solid var(--w60); border-radius: 8px; }
+.top .logo { font: 600 20px/1 var(--sans); letter-spacing: -.01em; }
+.top .logo::before { width: 12px; height: 12px; margin-right: 9px; }
+.sound { font: 500 11px/1 var(--mono); letter-spacing: .02em; color: #fff; }
 .sound i b { width: 2px; height: 3px; background: currentColor; transition: height .2s; }
 .sound[aria-pressed="true"] { color: var(--white); }
 .sound[aria-pressed="true"] i b { animation: eq 1s var(--ease-io) infinite alternate; }
