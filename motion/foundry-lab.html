@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en" data-station="pour">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE FOUNDRY, proof</title>
+<!-- ATELIER X concept 1 proof (docs/creative-direction.md section 1, intro B in docs/intro-storyboards.md). Lab page only:
+     the pour, a dolly along the cast bar chart as it cools, then the engraved Florida plate (the project's real drawing). Not the site. -->
+<style>
+@font-face { font-family: "Bricolage Grotesque"; src: url("../vendor/fonts/Bricolage-display.woff2") format("woff2"); font-weight: 600 800; font-stretch: 75% 85%; font-display: swap; }
+@font-face { font-family: "Geist"; font-weight: 400; src: url("../vendor/fonts/Geist-Regular.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Geist"; font-weight: 500; src: url("../vendor/fonts/Geist-Medium.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "Geist Mono"; font-weight: 400; src: url("../vendor/fonts/GeistMono-Regular.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("../vendor/fonts/JetBrainsMono-latin.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
+:root { --floor: #071d16; --pour: #2a1307; --engrave: #0e1311; --plate: #070603; --hot: #ff7a1a; --white-hot: #ffe9c2; --brass: #c4ab7d; --ivory: #f0ebe1; }
+html { background: var(--floor); color: var(--ivory); transition: background-color 600ms cubic-bezier(.2,.7,.2,1); }
+html[data-station="pour"] { background: var(--pour); }
+html[data-station="flood"] { background: #a8380a; }
+html[data-station="engrave"] { background: var(--engrave); }
+html[data-station="plate"] { background: var(--plate); }
+body { margin: 0; font-family: "Geist", system-ui, sans-serif; }
+#stage { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+.film { height: 420vh; position: relative; }
+.hud { position: fixed; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; font: 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; z-index: 3; }
+.hud button { font: inherit; color: inherit; background: none; border: 1.5px solid currentColor; border-radius: 99px; padding: 8px 14px; cursor: pointer; }
+.hud button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.title { position: fixed; left: 3.2vw; bottom: 5vh; margin: 0; z-index: 2; font: 800 clamp(48px, 9.2vw, 168px)/.84 "Bricolage Grotesque", "Arial Narrow", sans-serif; font-stretch: 75%; letter-spacing: -.01em; text-transform: uppercase; max-width: 11ch; }
+.title .w { display: inline-block; }
+.title .last { transition: color 500ms cubic-bezier(.2,.7,.2,1); }
+.title.cooled .last { color: var(--brass); }
+.kick, .chap { position: fixed; z-index: 2; margin: 0; opacity: 0; font: 500 clamp(13px, 1.05vw, 16px)/1.35 "JetBrains Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: .03em; }
+.kick { left: 3.2vw; bottom: 6vh; max-width: 40ch; }
+.chap { right: 4vw; top: 50%; transform: translateY(-50%); max-width: 30ch; }
+.chap b { display: block; font: 800 clamp(40px, 5.4vw, 96px)/.86 "Bricolage Grotesque", sans-serif; font-stretch: 75%; letter-spacing: -.005em; margin-bottom: 16px; color: var(--ivory); }
+.chap em { font-style: normal; color: var(--brass); }
+@media (max-aspect-ratio: 4/5) {
+  .title { font-size: 13.2vw; left: 5vw; bottom: 4vh; }
+  .kick { left: 5vw; bottom: 5vh; max-width: 30ch; }
+  .chap { right: auto; left: 5vw; top: auto; bottom: 5vh; transform: none; max-width: 34ch; }
+  .chap b { font-size: 15vw; margin-bottom: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { html, .title .last { transition: none; } }
+</style>
+<script type="importmap">{ "imports": { "three": "../vendor/three/three.module.min.js" } }</script>
+<script src="toolkit.js"></script>
+<script src="scenes/florida-flight-delays.js"></script>
+</head>
+<body>
+<header class="hud"><span id="name">Rishit Mathur / Work</span><button id="skip" type="button">Skip intro</button></header>
+<h1 class="title" id="title"><span class="w">I pour raw data</span> <span class="w">into</span> <span class="w last">instruments.</span></h1>
+<p class="kick" id="kick">Eighteen bars, cast at the on-time arrival rate of each departure hour, 6 a.m. to 11 p.m.</p>
+<aside class="chap" id="chap1"><b>01 Florida flights</b>635,459 flights. On-time arrivals fall from <em>92%</em> for 6 a.m. departures to <em>63%</em> at 8 p.m.</aside>
+<canvas id="stage" aria-hidden="true"></canvas>
+<main class="film" aria-label="Scroll film"></main>
+<script src="../vendor/gsap/gsap.min.js"></script>
+<script src="../vendor/gsap/ScrollTrigger.min.js"></script>
+<script type="module">
+import * as THREE from "three";
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const canvas = document.getElementById("stage");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setClearColor(0x000000, 0); // the CSS ground (data-station) shows through
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.15;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(40, 1, 0.1, 200);
+const C = (c) => new THREE.Color(c);
+const cnv = (w, h, fn) => { const c = document.createElement("canvas"); c.width = w; c.height = h; fn(c.getContext("2d"), w, h); return c; };
+
+// Environment for the metal: a dark green hall, one hot band low (the pour), one cold panel high (the work light).
+{
+  const t = new THREE.CanvasTexture(cnv(512, 256, (g, w, h) => {
+    g.fillStyle = "#03100b"; g.fillRect(0, 0, w, h);
+    const o = g.createRadialGradient(w * 0.62, h * 0.66, 4, w * 0.62, h * 0.66, 120); o.addColorStop(0, "#ffb25a"); o.addColorStop(0.4, "#a8400c"); o.addColorStop(1, "rgba(0,0,0,0)");
+    g.fillStyle = o; g.fillRect(0, 0, w, h);
+    g.fillStyle = "#bfeaf4"; g.fillRect(w * 0.12, h * 0.12, w * 0.12, h * 0.07);
+    g.fillStyle = "#f0ebe1"; g.fillRect(w * 0.4, h * 0.05, w * 0.2, h * 0.03);
+  }));
+  t.colorSpace = THREE.SRGBColorSpace;
+  const es = new THREE.Scene(); es.add(new THREE.Mesh(new THREE.SphereGeometry(10, 32, 16), new THREE.MeshBasicMaterial({ map: t, side: THREE.BackSide })));
+  scene.environment = new THREE.PMREMGenerator(renderer).fromScene(es, 0.03).texture;
+}
+
+// Floor: racing green with baked AO under the mould, fading out into the CSS ground (no fog in the subset).
+const floorMat = new THREE.MeshStandardMaterial({ color: 0x0b2a20, roughness: 0.82, metalness: 0.05, transparent: true, envMapIntensity: 0.35 });
+floorMat.alphaMap = new THREE.CanvasTexture(cnv(256, 256, (g, w, h) => { const r = g.createRadialGradient(w / 2, h / 2, 10, w / 2, h / 2, w / 2); r.addColorStop(0, "#fff"); r.addColorStop(0.55, "#fff"); r.addColorStop(1, "#000"); g.fillStyle = r; g.fillRect(0, 0, w, h); }));
+floorMat.map = new THREE.CanvasTexture(cnv(512, 512, (g, w, h) => { // seams of cast floor plates + AO under the mould
+  g.fillStyle = "#fff"; g.fillRect(0, 0, w, h); g.strokeStyle = "rgba(0,0,0,.35)"; g.lineWidth = 1.5;
+  for (let i = 0; i <= 16; i++) { g.beginPath(); g.moveTo(i * w / 16, 0); g.lineTo(i * w / 16, h); g.moveTo(0, i * h / 16); g.lineTo(w, i * h / 16); g.stroke(); }
+  const a = g.createRadialGradient(w / 2, h / 2, 4, w / 2, h / 2, w * 0.09); a.addColorStop(0, "rgba(0,0,0,.6)"); a.addColorStop(1, "rgba(0,0,0,0)"); g.fillStyle = a; g.fillRect(0, 0, w, h);
+}));
+floorMat.map.colorSpace = THREE.SRGBColorSpace;
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(48, 48), floorMat); floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+const pool = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cnv(256, 256, (g, w, h) => { const r = g.createRadialGradient(w / 2, h / 2, 2, w / 2, h / 2, w / 2); r.addColorStop(0, "rgba(255,140,50,.9)"); r.addColorStop(0.35, "rgba(255,110,26,.35)"); r.addColorStop(1, "rgba(255,90,10,0)"); g.fillStyle = r; g.fillRect(0, 0, w, h); })), transparent: true, depthWrite: false, blending: 2, toneMapped: false }));
+pool.rotation.x = -Math.PI / 2; pool.position.set(-0.6, 0.01, 0.2); scene.add(pool);
+
+// Materials. Brass cools from white-hot through pour orange to champagne brass: emissive does the glow (no bloom, type stays crisp).
+const iron = new THREE.MeshStandardMaterial({ color: 0x17181a, roughness: 0.62, metalness: 0.7 });
+const sand = new THREE.MeshStandardMaterial({ color: 0x14120e, roughness: 0.95, metalness: 0.0 });
+const brassMat = () => new THREE.MeshStandardMaterial({ color: 0xc4ab7d, roughness: 0.3, metalness: 0.95, emissive: 0x000000 });
+const WH = C("#ffe9c2"), HOT = C("#ff7a1a"), DEEP = C("#5a1500"), BLACK = C("#000");
+function heatTo(m, h, keep = 0) { // h: 1 white-hot .. 0 cold
+  if (h > 0.6) m.emissive.copy(HOT).lerp(WH, (h - 0.6) / 0.4); else if (h > 0.2) m.emissive.copy(DEEP).lerp(HOT, (h - 0.2) / 0.4); else m.emissive.copy(BLACK).lerp(DEEP, h / 0.2);
+  m.emissiveIntensity = h > 0.01 ? (0.75 + 0.5 * cl((h - 0.8) / 0.2)) * Math.min(1, h * 3) : 0; if (keep) { m.emissive.lerp(HOT, keep); m.emissiveIntensity = Math.max(m.emissiveIntensity, keep); }
+  m.roughness = 0.3 + 0.25 * h;
+}
+const shade = (m) => { m.castShadow = m.receiveShadow = true; return m; };
+
+// The mould: sand frame with a plate cavity (1.614:1, the drawing's own aspect) and a trench behind it for the hour bars.
+const mould = new THREE.Group(); scene.add(mould);
+const box = (w, h, d, x, y, z, mat, parent = mould) => { const m = shade(new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat)); m.position.set(x, y, z); parent.add(m); return m; };
+const MH = 0.34;
+box(0.35, MH, 3.35, -1.975, MH / 2, -0.325, sand); box(0.35, MH, 3.35, 1.975, MH / 2, -0.325, sand);
+box(3.6, MH, 0.235, 0, MH / 2, 1.2325, sand); box(3.6, MH, 0.335, 0, MH / 2, -1.2825, sand); box(3.6, MH, 0.25, 0, MH / 2, -1.875, sand);
+box(3.6, 0.04, 3.35, 0, 0.02, -0.325, sand);
+const plateMat = brassMat();
+const plateGeo = new THREE.BoxGeometry(3.6, 1, 2.23); plateGeo.translate(0, 0.5, 0);
+const plate = shade(new THREE.Mesh(plateGeo, plateMat)); plate.position.y = 0.04; mould.add(plate);
+
+// The hour bars: heights are the scene's own hourly on-time rates (6 a.m. .. 11 p.m.), zero-based.
+const def = window.SCENES["florida-flight-delays"], S = def.init ? def.init() : {};
+const barGeo = new THREE.RoundedBoxGeometry(0.15, 1, 0.15, 2, 0.025); barGeo.translate(0, 0.5, 0);
+const bars = S.hours.map((d, i) => { const m = shade(new THREE.Mesh(barGeo, brassMat())); m.position.set(-1.7 + i * 0.2, 0.04, -1.6); m.userData = { h: (d.v / 100) * 1.9, hi: d.h === 6 || d.h === 20 }; mould.add(m); return m; });
+
+// The engraving: the project's own report page, painted live onto the cooled plate.
+const sc = document.createElement("canvas"); sc.width = 2400; sc.height = Math.round(2400 / 1.614); const sg = sc.getContext("2d");
+const tex = new THREE.CanvasTexture(sc); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+const etch = new THREE.Mesh(new THREE.PlaneGeometry(3.36, 3.36 / 1.614), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false, transparent: true, opacity: 0 }));
+etch.rotation.x = -Math.PI / 2; etch.position.y = 0.303; mould.add(etch);
+let screenU = -1, painted = -2;
+function paint() {
+  if (painted === screenU) return; painted = screenU;
+  const w = sc.width, h = sc.height, gr = sg.createLinearGradient(0, 0, 0, h);
+  gr.addColorStop(0, def.bg[0]); gr.addColorStop(1, def.bg[1]); sg.fillStyle = gr; sg.fillRect(0, 0, w, h);
+  def.draw(sg, Math.max(0, screenU), w, h, S, window.T); tex.needsUpdate = true;
+}
+
+// The crucible on its yoke, hung from a gantry rod; it tilts about its trunnions.
+const PIV = new THREE.Vector3(-2.45, 2.65, 0);
+const yoke = new THREE.Group(); yoke.position.copy(PIV); scene.add(yoke);
+box(0.08, 2.3, 0.08, 0, 1.15, 0.98, iron, yoke); box(0.08, 2.3, 0.08, 0, 1.15, -0.98, iron, yoke); box(0.1, 0.1, 2.06, 0, 2.3, 0, iron, yoke); box(0.07, 12, 0.07, 0, 8.3, 0, iron, yoke);
+const cru = new THREE.Group(); yoke.add(cru);
+const body = shade(new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.62, 1.3, 48, 1, true), new THREE.MeshStandardMaterial({ color: 0x1b1c1e, roughness: 0.55, metalness: 0.75, side: THREE.DoubleSide }))); cru.add(body);
+const bottom = shade(new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.06, 48), iron)); bottom.position.y = -0.65; cru.add(bottom);
+const trun = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 2.0, 16), iron); trun.rotation.x = Math.PI / 2; cru.add(trun);
+const hotBasic = (c) => new THREE.MeshBasicMaterial({ color: c, toneMapped: false });
+const lipMat = hotBasic(0xff7a1a); const lip = new THREE.Mesh(new THREE.CylinderGeometry(0.875, 0.875, 0.05, 48, 1, true), lipMat); lip.position.y = 0.63; cru.add(lip);
+const meltMat = hotBasic(0xffb060); const melt = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.02, 48), meltMat); melt.position.y = 0.48; cru.add(melt);
+const LIP = new THREE.Vector3(0.86, 0.65, 0), lipW = new THREE.Vector3();
+
+// The pour: an open cylinder with a scrolling white-hot flow map.
+const flow = new THREE.CanvasTexture(cnv(64, 256, (g, w, h) => {
+  g.fillStyle = "#ffe9c2"; g.fillRect(0, 0, w, h);
+  for (let i = 0; i < 26; i++) { const y = (i * 97) % h, x = (i * 37) % w; g.fillStyle = i % 3 ? "rgba(255,122,26,.55)" : "rgba(255,255,255,.8)"; g.fillRect(x, y, 6 + (i % 4) * 4, 30 + (i % 5) * 14); }
+}));
+flow.colorSpace = THREE.SRGBColorSpace; flow.wrapS = flow.wrapT = THREE.RepeatWrapping; flow.repeat.set(2, 3);
+const streamGeo = new THREE.CylinderGeometry(0.07, 0.055, 1, 16, 1, true); streamGeo.translate(0, -0.5, 0);
+const stream = new THREE.Mesh(streamGeo, new THREE.MeshBasicMaterial({ map: flow, toneMapped: false })); scene.add(stream);
+
+// Sparks: 24 streaks in one draw call, camera-facing quads rebuilt each frame from a tiny ballistic sim.
+const NS = 24, spPos = new Float32Array(NS * 12), sp = [];
+const spGeo = new THREE.BufferGeometry(); spGeo.setAttribute("position", new THREE.BufferAttribute(spPos, 3));
+{ const idx = []; for (let i = 0; i < NS; i++) idx.push(i * 4, i * 4 + 1, i * 4 + 2, i * 4, i * 4 + 2, i * 4 + 3); spGeo.setIndex(idx); }
+const sparks = new THREE.Mesh(spGeo, new THREE.MeshBasicMaterial({ color: 0xffd9a0, toneMapped: false, side: THREE.DoubleSide, transparent: true, blending: 2, depthWrite: false })); sparks.frustumCulled = false; scene.add(sparks);
+let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+for (let i = 0; i < NS; i++) sp.push({ p: new THREE.Vector3(), v: new THREE.Vector3(), life: -rnd() });
+const ta = new THREE.Vector3(), tb = new THREE.Vector3(), td = new THREE.Vector3(), ts = new THREE.Vector3();
+function stepSparks(dt, on, at) {
+  sp.forEach((s, i) => {
+    s.life -= dt;
+    if (s.life <= 0) { if (on) { s.p.copy(at); s.v.set((rnd() - 0.3) * 3.2, 1.4 + rnd() * 2.6, (rnd() - 0.5) * 2.6); s.life = 0.35 + rnd() * 0.45; } else s.life = 0; }
+    else { s.v.y -= 9.8 * dt; s.p.addScaledVector(s.v, dt); if (s.p.y < 0.3) { s.p.y = 0.3; s.v.y *= -0.3; } }
+    const k = s.life > 0 ? 1 : 0;
+    ta.copy(s.p); tb.copy(s.p).addScaledVector(s.v, -0.045 * k); td.subVectors(tb, ta);
+    ts.subVectors(cam.position, ta).cross(td).normalize().multiplyScalar(0.012 * k);
+    const o = i * 12; spPos.set([ta.x + ts.x, ta.y + ts.y, ta.z + ts.z, ta.x - ts.x, ta.y - ts.y, ta.z - ts.z, tb.x - ts.x, tb.y - ts.y, tb.z - ts.z, tb.x + ts.x, tb.y + ts.y, tb.z + ts.z], o);
+  });
+  spGeo.attributes.position.needsUpdate = true;
+}
+
+// The far wall: plates already made (the work index at the end of the real site), dim, catching the cold light.
+const wallMat = new THREE.MeshStandardMaterial({ color: 0x6a5c40, roughness: 0.5, metalness: 0.9, envMapIntensity: 0.5 });
+for (let r = 0; r < 3; r++) for (let c = 0; c < 9; c++) box(1.5, 0.93, 0.06, -8 + c * 2, 1.4 + r * 1.35, -9, wallMat, scene);
+box(30, 0.5, 0.6, 0, 8.6, 0, iron, scene).castShadow = false;
+
+// Light: one hot pour light that tracks the metal, one cold cyan work light that carries the shadow.
+scene.add(new THREE.HemisphereLight(0x3f7a64, 0x0a0a0a, 0.7));
+const hot = new THREE.DirectionalLight(0xff7a1a, 0); hot.position.set(-1, 5, 4); hot.target.position.set(-0.6, 0, 0); scene.add(hot, hot.target);
+const work = new THREE.DirectionalLight(0x9fd8e6, 2.6); work.position.set(-6, 9, 5); work.castShadow = true; work.shadow.mapSize.set(2048, 2048); work.shadow.bias = -0.0004; work.shadow.normalBias = 0.03;
+Object.assign(work.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, far: 30 }); work.target.position.set(0, 0, 0); scene.add(work, work.target);
+
+// Camera keyframes [pos, look]: hero low on the floor, dolly along the cooling bars, square on the plate, push onto the engraving.
+const KD = [
+  [[2.6, 0.5, 7.6], [-0.4, 1.75, 0]],
+  [[3.8, 0.9, 2.2], [-0.6, 0.85, -1.6]],
+  [[1.7, 4.3, 5.4], [1.7, 0.2, -0.35]],
+  [[0, 3.75, 0.55], [0, 0.3, -0.02]],
+];
+const KP = [ // portrait: one vertical pour, stepped back and centred; the type takes the bottom band
+  [[0.4, 1.7, 12.8], [-0.7, 2.3, 0]],
+  [[2.4, 1.3, 3.6], [-0.4, 0.85, -1.6]],
+  [[0, 6.6, 6.2], [0, 0.6, -0.7]],
+  [[0, 8.6, 1.0], [0, 0.3, 0.55]],
+];
+const v = new THREE.Vector3(), L = new THREE.Vector3(), sm = (t) => t * t * (3 - 2 * t), cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+let portrait = false;
+const intro = { tilt: reduce ? 0 : 0, stream: 0, width: 1, fill: 0, heat: 1, glow: 0, dx: 0, dz: 0 };
+function pose(x) {
+  const K = portrait ? KP : KD, i = Math.min(2, Math.floor(x)), f = sm(x - i);
+  v.fromArray(K[i][0]).lerp(L.fromArray(K[i + 1][0]), f); v.x += intro.dx; v.z += intro.dz; cam.position.copy(v);
+  v.fromArray(K[i][1]).lerp(L.fromArray(K[i + 1][1]), f); v.x += intro.dx * 0.8; cam.lookAt(v);
+}
+function resize() {
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setSize(innerWidth, innerHeight, false);
+  cam.aspect = innerWidth / innerHeight; portrait = cam.aspect < 0.8; cam.fov = portrait ? 52 : 40; cam.updateProjectionMatrix();
+}
+addEventListener("resize", resize); resize();
+
+// Intro B (3.4 s): tilt, pour, cool, pull back. Skippable at any moment; reduced motion and #nointro land on the end state.
+const title = document.getElementById("title"), kick = document.getElementById("kick"), chap = document.getElementById("chap1"), skipBtn = document.getElementById("skip"), nameEl = document.getElementById("name");
+const D = Math.PI / 180;
+const tl = gsap.timeline({ paused: true, onComplete: done });
+tl.to(intro, { glow: 1, duration: 0.4, ease: "power1.out" }, 0)
+  .to(intro, { tilt: 22 * D, duration: 0.8, ease: "power2.in" }, 0.1)
+  .to(intro, { tilt: 52 * D, duration: 0.45, ease: "power2.out" }, 0.9)
+  .to(intro, { stream: 1, duration: 0.3, ease: "power1.in" }, 0.9)
+  .to(intro, { fill: 1, duration: 1.45, ease: "power1.inOut" }, 1.05)
+  .to(intro, { dx: 1.3, dz: -1.2, duration: 1.4, ease: "power2.inOut" }, 1.2)
+  .to(intro, { tilt: 16 * D, duration: 0.8, ease: "power2.inOut" }, 2.35)
+  .to(intro, { width: 0, duration: 0.25, ease: "power2.in" }, 2.35)
+  .to(intro, { heat: 0, glow: 0.35, duration: 0.8, ease: "power1.out" }, 2.6)
+  .to(intro, { dx: 0, dz: 0, duration: 0.8, ease: "power2.inOut" }, 2.6)
+  .call(() => title.classList.add("cooled"), null, 2.6)
+  .fromTo(nameEl, { opacity: 0 }, { opacity: 1, duration: 0.3 }, 3.0)
+  .to({}, { duration: 0.01 }, 3.39);
+function done() { Object.assign(intro, { tilt: 16 * D, stream: 1, width: 0, fill: 1, heat: 0, glow: 0.35, dx: 0, dz: 0 }); title.classList.add("cooled"); nameEl.style.opacity = 1; skipBtn.hidden = true; ScrollTrigger.refresh(); }
+skipBtn.onclick = () => tl.progress(1);
+addEventListener("keydown", (e) => { if (e.key === "Escape" && tl.isActive()) tl.progress(1); });
+addEventListener("wheel", () => { if (tl.isActive()) tl.progress(1); }, { passive: true, once: true });
+addEventListener("touchstart", () => { if (tl.isActive()) tl.progress(1); }, { passive: true, once: true });
+let ptr = 0; addEventListener("pointermove", (e) => { ptr = e.clientX / innerWidth - 0.5; }, { passive: true }); // 1 degree of crucible before the pour
+
+gsap.registerPlugin(ScrollTrigger);
+let p = 0;
+ScrollTrigger.create({ trigger: ".film", start: "top top", end: "bottom bottom", scrub: 0.7, onUpdate: (s) => { p = s.progress; } });
+document.fonts.load('500 20px Geist').then(() => { painted = -2; });
+if (reduce || location.hash === "#nointro") tl.progress(1); else tl.play();
+
+const t0 = performance.now(); let last = t0, seenAt = -1;
+renderer.setAnimationLoop((now) => {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now; const t = (now - t0) / 1000, x = p * 3;
+  // crucible tilt, lip glow, the stream from the real lip position to the metal surface
+  yoke.position.y = PIV.y + 6 * sm(cl(x / 0.9)); // the gantry hoists the empty crucible out of shot as the camera leaves the pour
+  yoke.visible = x < 0.85;
+  cru.rotation.z = -intro.tilt - ptr * D * cl(1 - intro.tilt / (20 * D));
+  const g = intro.glow; lipMat.color.copy(DEEP).lerp(HOT, g).lerp(WH, cl(intro.tilt / (52 * D)) * 0.6); meltMat.color.copy(DEEP).lerp(HOT, g);
+  cru.updateMatrixWorld(true); lipW.copy(LIP).applyMatrix4(cru.matrixWorld);
+  const surf = 0.04 + 0.02 + 0.24 * intro.fill, len = (lipW.y - surf) * intro.stream;
+  stream.position.copy(lipW); stream.scale.set(intro.width + 1e-3, Math.max(1e-3, len), intro.width + 1e-3); stream.visible = intro.stream > 0.01 && intro.width > 0.01;
+  flow.offset.y = (flow.offset.y + dt * 2.4) % 1;
+  // cast: the plate fills and cools in the intro; the hour bars rise hot and cool one by one as the camera passes them
+  plate.scale.y = 0.02 + 0.24 * intro.fill; heatTo(plateMat, intro.heat);
+  const q = (x / 0.95) * (bars.length + 3);
+  bars.forEach((b, i) => { b.scale.y = Math.max(1e-3, b.userData.h * cl(intro.fill * 1.35 - i * 0.018)); heatTo(b.material, cl(1 - (q - i) / 3) * (0.7 + 0.3 * intro.heat), b.userData.hi && q - i > 3 ? 0.18 : 0); });
+  const pouring = intro.stream > 0.5 && intro.width > 0.2;
+  stepSparks(dt, pouring, ta.set(lipW.x, surf, lipW.z));
+  hot.intensity = 0.4 + 5.5 * (pouring ? 1 : 0) * intro.width + 2.2 * cl(1 - q / 8) * intro.fill;
+  pool.material.opacity = cl(0.25 + 0.75 * intro.width * intro.stream + 0.4 * cl(1 - q / 8) * intro.fill - 0.25 * (1 - g));
+  // the engraving reveals once the bars are cold; the drawing plays once when the camera is square on the plate
+  etch.material.opacity = cl((x - 1.0) / 0.35);
+  if (x > 1.25 && seenAt < 0) seenAt = t;
+  screenU = seenAt < 0 ? 0 : reduce ? 0.95 : Math.min(0.95, Math.round(((t - seenAt) / 4.5) * 300) / 300);
+  if (etch.material.opacity > 0) paint();
+  pose(x);
+  // ground tracks the light temperature; one line of type per screen
+  const st = tl.isActive() && intro.fill > 0.03 && intro.heat > 0.5 ? "flood" : x > 2.5 ? "plate" : x > 1.35 ? "engrave" : x > 0.45 ? "floor" : "pour"; if (document.documentElement.dataset.station !== st) document.documentElement.dataset.station = st;
+  title.style.opacity = cl(1 - x * 2.6);
+  kick.style.opacity = cl((x - 0.5) * 5) * cl((1.3 - x) * 5);
+  chap.style.opacity = cl((x - 1.45) * 4) * cl((2.55 - x) * 4);
+  renderer.render(scene, cam);
+});
+</script>
+</body>
+</html>

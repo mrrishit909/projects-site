@@ -211,3 +211,71 @@ grid not in static HTML). 10: not adaptable from what was seen. A browser pass i
 - No individual GetLayers item page opened, so free versus premium per item and prompt visibility are unknown.
 - Mobbin `/explore`, Page Flows recordings, SaaSFrame example pages, Collect UI grid: need a browser or a login.
 - No motion was observed anywhere (curl only).
+
+## Owner-supplied sources (2026-11-04)
+
+Method: curl with a browser user agent on 2026-11-03, text extracted from the returned HTML. No browser, no login, no motion actually watched. References below are named from titles and slugs in the served HTML, so each one still needs a visual check before it informs a decision.
+
+### motionsites.ai
+- URL and status: https://motionsites.ai/ returns 200. /pricing and /3d return 404 (single page app routes not served to curl).
+- Visible without login: hero ("Premium AI Website Prompts"), nav (MCP, Backgrounds, TOP, Academy, 3D, Affiliate), and a card list of prompt titles, for example "NOVA Space Systems Landing Page", "Orbit Engineers Agency", "Digital Epoch Hero Section", "Aetheris Voyage Hero Section", "Glow Features", an "Animated backgrounds" video section. Operated by Viktor Odainyi, sole trader.
+- BLOCKED: prompt text itself, the "800+ 3D websites" library, pricing. Whether any prompt is free could not be confirmed from curl.
+- Licence (https://motionsites.ai/terms, 200, last updated 2026-09-30): paid subscriptions and one-time purchases (lifetime plans, prompt packs) via Stripe. Paying users "may copy prompt text and source code into your own projects, modify them, build with them, and publish or sell the websites and apps you create". Forbidden: reselling, redistributing or sharing the prompt text or code itself, republishing the library, scraping or bulk access. Video backgrounds are owned by MotionSites. Commercial use of the resulting site is allowed for paying users; nothing here was bought, so no prompt may be used.
+- References (titles only, content BLOCKED):
+  1. "NOVA Space Systems Landing Page": a space systems landing page; could inform THE ARRAY hero pacing (dish field plus single headline). Adapt as a plain sky plus array silhouette, not their layout.
+  2. "Animated backgrounds" section: looping video backdrops behind a hero; for THE SLAB, a looping loud colour field behind the monolith, rendered by us (CSS or shader), never their video files.
+  3. "Digital Epoch Hero Section": title suggests a time based hero; REEL could take the idea of a dated, era stamped opening frame.
+
+### studio.motionsites.ai
+- URL and status: https://studio.motionsites.ai/ returns 200.
+- Visible: marketing shell for an AI site builder ("Describe what you want. AI designs it, makes your images and videos, and hands you the code"), a 2:32 how-it-works video link, "Pricing 49% OFF", design gallery tabs (Featured, Popular, Recent; Apps, Sections). Gallery cards are not in the served HTML.
+- BLOCKED: building, gallery items, pricing details (sign-up required). No separate licence page found; motionsites.ai terms presumably apply (not verified).
+- References: none usable without logging in.
+
+### land-book.com
+- URL and status: https://land-book.com/ returns 403 (Cloudflare "Just a moment... Enable JavaScript and cookies").
+- BLOCKED entirely for curl. Needs a real browser. No references.
+
+### recent.design (and godly.website)
+- URL and status: https://recent.design/ returns 200. https://godly.website returns 301 to http://recent.design/?ref=godly, so Godly is now Recent; one entry covers both.
+- Visible: shell with categories (Web, Interface, Branding, Motion, Illustration, Posters, Print), sections Launch Videos, Websites, OG Images, App Screenshots, App Icons, Resources, Tools, Skills, Jobs. Feed items are client rendered and not in the HTML.
+- BLOCKED (for curl): every individual item. An auth dialog bundle exists, so saving is login-gated; browsing is likely open in a browser (not verified).
+- References: none named. Next run: open https://recent.design/ in a browser, filter Motion and Launch Videos, look for scroll films on a solid colour field (THE SLAB) and dark instrument UIs (THE ARRAY).
+
+### landdding.com
+- URL and status: https://landdding.com/ returns 200 (has a "Get PRO" tier; the free gallery is visible).
+- Visible: 2.7k designs, 40 categories (/c/portfolio, /c/movie, /c/technology, /c/ai), daily and weekly feeds, plus a report at https://landdding.com/state-of-landing-pages-2026. PRO contents not inspected.
+- References (from the homepage feed, titles only):
+  1. "premotio: finished design into polished motion": a motion tool site; check how it shows one product shot moving through states, useful for REEL (a single frame advanced reel by reel on scroll).
+  2. "The Raycast Keyboard": a single hardware object as the hero; directly relevant to THE SLAB (one dark object, loud field, data windows set into it) and THE FOUNDRY (one cast object).
+  3. https://landdding.com/c/movie category: film title pages, for REEL's typographic title cards. Browse, do not copy.
+
+### fontinlogo.com
+- URL and status: https://fontinlogo.com/ returns 200, redirects to https://www.fontinlogo.com/.
+- Visible: logo font database, "Famous fonts" list marked "free font". Join for free gates saving and the generator (not tested).
+- Licence note: fontinlogo labels these "free font" but does not state licences. The licences below are from Google Fonts, where all of these are SIL OFL 1.1 and can be self hosted. Verify each OFL.txt at download.
+  - Anton (Thunderbolts): condensed grotesque, huge headline type. THE SLAB, REEL title cards. OFL.
+  - Orbitron (Star Wars, Stranger Things on that site): geometric display. THE ARRAY instrument labels, sparingly. OFL.
+  - Cinzel / Cinzel Decorative (Game of Thrones, Harry Potter): inscribed capitals. THE FOUNDRY, as cast lettering on metal. OFL.
+  - Black Ops One (Jurassic Park): stencil. THE FOUNDRY plate stamps, GROUND TRUTH survey markers. OFL.
+  - Silkscreen and Press Start 2P (Minecraft, Mario): pixel faces. Small counters in THE ARRAY or GROUND TRUTH readouts. OFL.
+  - Bungee (Dragon Ball): vertical and signage capable. REEL marquee or booth signage. OFL.
+  Not usable from that list for this work: Game Of Squids and similar novelty faces (licence unknown).
+
+### 60fps.design
+- URL and status: https://60fps.design/ returns 200; shot pages such as https://60fps.design/shots/runmo-lab-pulse-heart-ecg-interaction return 200.
+- Visible: 2140 shots, 499 apps, 83 motion, 32 snippets, 67 storyboards, filter tags. Video playback was not checked; some snippets or storyboards may be paid (not verified).
+- Mobile patterns relevant to a phone scroll film (filter pages under https://60fps.design/shots/filter/):
+  1. runmo-lab-pulse-heart-ecg-interaction: a live trace drawn as a pulse. THE ARRAY signal trace or THE SLAB data window on a phone, one line drawing across a narrow column.
+  2. runmo-drag-to-adjust-distance-wheel-interaction and runmo-distance-wheel-fill-interaction: a thumb scrubbed wheel. A phone alternative to scroll scrubbing for REEL (a film reel you spin) or the dish azimuth in THE ARRAY.
+  3. cred-printing-tickets-shuffle-interaction: tickets printed and stacked. REEL ticket stubs as chapter markers, or GROUND TRUTH flight strips.
+  4. revolut-single-use-pulse-card-sweep-morph-animation and revolut-card-ready-animation: one card morphing with a light sweep. THE SLAB monolith reveal and THE FOUNDRY pour highlight scaled to a phone card.
+  5. platen-typewriter-intro-how-to-interaction and brick-intro-value-prop-text-flip-interaction: type that prints or flips line by line. Phone captions for any direction, short lines instead of long paragraphs.
+  6. Filters worth a browser pass: /filter/scrub, /filter/parallax, /filter/gyroscope (tilt to look across GROUND TRUTH terrain), /filter/ticker, /filter/stats, /filter/progress.
+
+### Summary
+- Most useful: motionsites.ai terms are explicit. Paid users may build and sell sites from the prompts but may not share or republish the prompt text, so nothing from it may be copied into this repo unless the owner buys a plan.
+- fontinlogo.com gives a quick shortlist of OFL display faces (Anton, Cinzel, Black Ops One, Orbitron, Bungee, Silkscreen) that map onto the five directions; licences come from Google Fonts, since fontinlogo does not state them.
+- 60fps.design is the richest open source for phone motion: ECG trace, thumb wheels, ticket stacks, card sweeps and printed type all translate into a phone scroll film.
+- godly.website now redirects to recent.design; both, plus studio.motionsites.ai, render their galleries client side, so curl saw only the shell. They need a browser pass.
+- BLOCKED: land-book.com (Cloudflare 403), motionsites prompt content and pricing (paywall), studio.motionsites.ai builder (sign-up), recent.design items (client rendered), landdding PRO. No motion was watched anywhere.

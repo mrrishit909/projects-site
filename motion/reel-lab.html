@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en" data-room="dark" data-state="hero">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REEL, proof</title>
+<!-- ATELIER X concept 4 proof (docs/creative-direction.md section 4). Lab page only: a leader countdown, the beam snaps on,
+     the title card holds and cuts to the room; scroll wipes to chapter one and pushes into the screen while the real Florida
+     drawing (motion/scenes/florida-flight-delays.js) is drawn live. Zero WebGL: CSS + GSAP + canvas 2D. Not the site. -->
+<style>
+@font-face { font-family: "Archivo"; src: url("../vendor/fonts/Archivo-latin.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+@font-face { font-family: "Fraunces"; src: url("../vendor/fonts/Fraunces-Italic-latin.woff2") format("woff2"); font-style: italic; font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Geist"; src: url("../vendor/fonts/Geist-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Geist"; src: url("../vendor/fonts/Geist-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "Geist Mono"; src: url("../vendor/fonts/GeistMono-Regular.woff2") format("woff2"); font-display: swap; }
+@font-face { font-family: "JBM"; src: url("../vendor/fonts/JetBrainsMono-latin.woff2") format("woff2"); font-weight: 100 800; font-display: swap; }
+:root { --room: #0e0e10; --beam: #fff4d6; --red: #d7263d; --blue: #2e5bff; --type: #fffdf7; }
+html { background: var(--room); color: var(--type); }
+html[data-room="red"] { background: var(--red); }
+body { margin: 0; font-family: "Geist", system-ui, sans-serif; }
+.film { height: 420vh; }
+#room, #fx, #leader { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; pointer-events: none; }
+#room { z-index: 0; } #fx { z-index: 2; } #leader { z-index: 30; }
+#flash { position: fixed; inset: 0; z-index: 25; background: var(--type); opacity: 0; pointer-events: none; }
+
+/* the screen: a size container, so every title scales with the screen as the camera pushes (layout, never a transform on type) */
+#screen { position: fixed; left: 19vw; top: 13vh; width: 62vw; height: 33.5vw; z-index: 1; container-type: size; overflow: hidden; background: #000; }
+.card { position: absolute; inset: 0; display: none; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
+.card.on { display: flex; }
+/* film grain: its own layer under the type, a crisp 1 px noise tile stepped at 24 fps; never a blur, never on the letters */
+.card::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background-image: var(--grain); background-size: 256px 256px; image-rendering: pixelated; mix-blend-mode: overlay; opacity: .2; animation: grain 1s steps(24) infinite; }
+@keyframes grain { to { background-position: 2470px 1730px; } }
+.card > * { position: relative; z-index: 2; }
+.hero { background: var(--blue); }
+.flights { background: var(--red); }
+.chart { background: linear-gradient(#16140a, #070603); }
+.name { margin: 0; font: 900 15.6cqw/.8 "Archivo", "Arial Narrow", sans-serif; font-stretch: 62%; letter-spacing: -.005em; text-transform: uppercase; white-space: nowrap; display: flex; gap: .2em; }
+.sub { margin: 3.2cqw 0 0; font: italic 400 3.4cqw/1 "Fraunces", Georgia, serif; visibility: hidden; }
+html.subin .sub { visibility: visible; }
+.big { margin: 0; font: 900 31cqw/.76 "Archivo", "Arial Narrow", sans-serif; font-stretch: 62%; letter-spacing: -.01em; display: flex; overflow: hidden; padding-top: .04em; }
+.big span { display: inline-block; }
+.kick { position: absolute !important; z-index: 3 !important; left: 3.6cqw; top: 3.6cqw; margin: 0; font: 500 max(10px, 1.05cqw)/1 "JBM", ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; }
+.kick.r { left: auto; right: 3.6cqw; }
+#chart { display: block; width: min(76cqw, 128cqh); height: auto; aspect-ratio: 1.614; }
+.line { margin: 2.6cqh 0 0; font: italic 400 clamp(15px, 2.5cqw, 40px)/1.15 "Fraunces", Georgia, serif; text-align: center; }
+.line b { font: 500 .8em "JBM", monospace; font-style: normal; color: #f2c811; letter-spacing: -.02em; }
+
+.hud { position: fixed; left: 0; right: 0; z-index: 40; display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; font: 500 11px/1 "JBM", ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--type); pointer-events: none; }
+.hud.top { top: 0; } .hud.bot { bottom: 0; visibility: hidden; }
+html.ready .hud.bot { visibility: visible; }
+html.leader .hud { color: var(--room); }
+.hud button { pointer-events: auto; font: inherit; letter-spacing: inherit; color: inherit; background: none; border: 1.5px solid currentColor; border-radius: 0; padding: 9px 14px; cursor: pointer; }
+.hud button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.cue { opacity: .75; }
+html:not([data-state="hero"]) .cue { visibility: hidden; }
+
+/* phone: the screen is the whole viewport; full-bleed cards, no beam, no room */
+@media (max-width: 760px), (max-aspect-ratio: 4/5) {
+  #room, #fx { display: none; }
+  #screen { left: 0 !important; top: 0 !important; width: 100vw !important; height: 100vh !important; height: 100svh !important; }
+  .name { flex-direction: column; gap: 0; font-size: 30cqw; line-height: .8; align-items: flex-start; margin-left: -1cqw; }
+  .hero { align-items: flex-start; justify-content: flex-end; padding: 0 6cqw 24cqh; box-sizing: border-box; }
+  .sub { font-size: 7cqw; margin-top: 6cqw; line-height: 1.1; }
+  .big { font-size: 30cqw; }
+  .flights { justify-content: flex-end; padding-bottom: 22cqh; }
+  .chart { background: var(--red); justify-content: center; }
+  #chart { width: 100cqw; order: 2; }
+  .line { order: 1; font-size: 11.5cqw; text-align: left; margin: 0 6cqw 9cqw; line-height: 1; align-self: stretch; }
+  .kick { left: 6cqw; top: 15cqw; font-size: 10px; }
+  .kick.r { display: none; }
+  .hud { padding: 16px 18px; font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .card::before { animation: none; } }
+</style>
+<script src="toolkit.js"></script>
+<script src="scenes/florida-flight-delays.js"></script>
+</head>
+<body>
+<header class="hud top"><span>Rishit Mathur / Reel 01</span><button id="skip" type="button">Skip intro</button></header>
+<div class="hud bot" aria-hidden="true"><span id="tc">00:00:00:00</span><span class="cue">Scroll to roll</span><span id="sc">Sc 1 / 3</span></div>
+<canvas id="room" aria-hidden="true"></canvas>
+<div id="screen">
+  <section class="card hero on" aria-label="Title card">
+    <h1 class="name"><span>Rishit</span><span>Mathur</span></h1>
+    <p class="sub">a film about building things with data</p>
+  </section>
+  <section class="card flights" aria-label="Chapter one">
+    <p class="kick">Chapter 01</p><p class="kick r">Kodachrome</p>
+    <h2 class="big" aria-label="Flights"><span>F</span><span>L</span><span>I</span><span>G</span><span>H</span><span>T</span><span>S</span></h2>
+  </section>
+  <section class="card chart" aria-label="Florida flights">
+    <p class="kick">01 / Florida flights</p><p class="kick r">Data wipe</p>
+    <canvas id="chart" role="img" aria-label="Florida flights report: 635,459 scheduled flights, 75.5% on-time arrivals, 1.8% cancelled; on time by hour of departure falls from 92% at 6 a.m. to 63% at 8 p.m."></canvas>
+    <p class="line">On time: <b>92%</b> at 6&nbsp;a.m., <b>63%</b> by 8&nbsp;p.m.</p>
+  </section>
+</div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div id="flash"></div>
+<canvas id="leader" aria-hidden="true"></canvas>
+<main class="film" aria-label="Scroll film"></main>
+<script src="../vendor/gsap/gsap.min.js"></script>
+<script src="../vendor/gsap/ScrollTrigger.min.js"></script>
+<script>
+(async () => {
+const html = document.documentElement, $ = (s) => document.querySelector(s);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const { clamp, lerp, seg, ease } = window.T, sm = ease.smooth;
+const def = window.SCENES["florida-flight-delays"], S = def.init();
+const scr = $("#screen"), room = $("#room"), fx = $("#fx"), lead = $("#leader"), cv = $("#chart");
+const rg = room.getContext("2d"), fg = fx.getContext("2d"), lg = lead.getContext("2d"), cg = cv.getContext("2d");
+const cards = { hero: $(".hero"), flights: $(".flights"), chart: $(".chart") };
+const letters = document.querySelectorAll(".big span"), skipBtn = $("#skip"), tcEl = $("#tc"), scEl = $("#sc");
+
+// one 256 px noise tile: the CSS grain on every card and the leader's grain
+const nz = document.createElement("canvas"); nz.width = nz.height = 256;
+{ const g = nz.getContext("2d"), im = g.createImageData(256, 256);
+  for (let i = 0; i < im.data.length; i += 4) { const v = 128 + (Math.random() - .5) * 200; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; }
+  g.putImageData(im, 0, 0); html.style.setProperty("--grain", `url(${nz.toDataURL()})`); }
+const nzPat = lg.createPattern(nz, "repeat");
+
+// fonts first: the leader numbers and the drawing are canvas text
+await Promise.race([Promise.all(["900 100px Archivo", "400 20px Geist", "500 20px Geist", "20px \"Geist Mono\"", "italic 400 20px Fraunces"].map((f) => document.fonts.load(f))), new Promise((r) => setTimeout(r, 1500))]);
+
+let W, H, dpr, mobile;
+function resize() {
+  W = innerWidth; H = innerHeight; dpr = Math.min(devicePixelRatio || 1, 2);
+  mobile = matchMedia("(max-width: 760px), (max-aspect-ratio: 4/5)").matches;
+  for (const c of [room, fx, lead]) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
+  const cw = mobile ? W : Math.min(W * .9 * .76, H * .82 * 1.28); // the chart's largest CSS width: backing store at that size, only ever scaled down
+  cv.width = Math.round(cw * dpr); cv.height = Math.round(cw / 1.614 * dpr);
+  if (mobile) scr.removeAttribute("style");
+  lastGeo = ""; lastU = -1;
+}
+let lastGeo = "", lastU = -1;
+addEventListener("resize", resize); resize();
+
+// dust in the beam: points between a cross-section near the lens and the screen (z 0..1)
+const R = window.T.rng(7), dust = Array.from({ length: 150 }, () => ({ a: R(), b: R(), z: R(), s: .6 + R() * 1.4, ph: R() * 6.28, sp: .2 + R() * .6 }));
+
+// ---- intro: picture start, 3, 2, one black frame, the beam snaps on; the title card holds, then cuts to the room (3.3 s)
+const intro = { t: 0 }; let introDone = false;
+const tw = gsap.to(intro, { t: 3.3, duration: 3.3, ease: "none", paused: true, onComplete: done });
+function done() { introDone = true; intro.t = 3.3; html.classList.add("ready", "subin"); html.classList.remove("leader"); lead.style.display = "none"; skipBtn.hidden = true; ScrollTrigger.refresh(); }
+const skip = () => { if (!introDone) tw.progress(1); };
+skipBtn.onclick = skip;
+addEventListener("keydown", (e) => { if (["Escape", "Enter", " "].includes(e.key)) skip(); });
+addEventListener("wheel", skip, { passive: true, once: true });
+addEventListener("touchstart", skip, { passive: true, once: true });
+
+function drawLeader(t) {
+  const g = lg; g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (t < .08 || t >= 1.36) { g.fillStyle = "#000"; g.fillRect(0, 0, W, H); return; }
+  const dx = Math.round((Math.random() - .5) * 3), dy = Math.round((Math.random() - .5) * 3); // gate weave in whole pixels: no resampling
+  g.fillStyle = "#fffdf7"; g.fillRect(0, 0, W, H); g.translate(dx, dy);
+  const cx = W / 2, cy = H / 2, Rr = Math.min(W, H) * .36, ink = "#0e0e10";
+  g.fillStyle = ink; g.textAlign = "center"; g.textBaseline = "alphabetic";
+  if (t < .36) {
+    const fs = Math.min(W * .17, H * .3); g.font = `900 ${fs}px Archivo`; g.fontStretch = "extra-condensed"; g.fillText("PICTURE START", cx, cy + fs * .36);
+    g.font = `500 ${Math.max(11, W * .009)}px JBM`; g.fontStretch = "normal"; g.fillText("REEL 01   RISHIT MATHUR   24 FPS   1.85 : 1", cx, cy + fs * .36 + 48);
+  } else {
+    const n = t < .86 ? 3 : 2, sw = ((t - .36) % .5) / .5;
+    g.fillStyle = "rgba(14,14,16,.13)"; g.beginPath(); g.moveTo(cx, cy); g.arc(cx, cy, Math.hypot(W, H), -Math.PI / 2, -Math.PI / 2 + sw * Math.PI * 2); g.closePath(); g.fill();
+    g.strokeStyle = ink; g.lineWidth = 2; g.beginPath(); g.moveTo(0, cy); g.lineTo(W, cy); g.moveTo(cx, 0); g.lineTo(cx, H); g.stroke();
+    g.lineWidth = 6; g.beginPath(); g.arc(cx, cy, Rr, 0, 7); g.stroke(); g.lineWidth = 3; g.beginPath(); g.arc(cx, cy, Rr * .86, 0, 7); g.stroke();
+    g.fillStyle = ink; g.font = `900 ${Rr * 1.5}px Archivo`; g.fontStretch = "extra-condensed"; g.fillText(String(n), cx, cy + Rr * .54);
+  }
+  g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = .12; g.globalCompositeOperation = "multiply"; g.imageSmoothingEnabled = false;
+  nzPat.setTransform(new DOMMatrix().translate(Math.random() * 256, Math.random() * 256).scale(dpr)); g.fillStyle = nzPat; g.fillRect(0, 0, W * dpr, H * dpr);
+  g.globalAlpha = 1; g.globalCompositeOperation = "source-over";
+}
+
+// ---- states: hero (blue stock), flights (red title card, wiped in), chart (hard cut, the room turns red)
+let state = "hero", chartAt = -1;
+function go(s) {
+  if (s === state) return; const from = state; state = s;
+  if (s !== "chart") chartAt = -1; html.dataset.state = s; html.dataset.room = s === "chart" ? "red" : "dark";
+  const inc = cards[s], all = Object.values(cards); gsap.killTweensOf(all); gsap.killTweensOf(letters);
+  all.forEach((c) => (c.style.zIndex = c === inc ? 2 : 1)); inc.classList.add("on");
+  const finish = () => { all.forEach((c) => c !== inc && c.classList.remove("on")); inc.style.clipPath = ""; };
+  const wipe = (from === "hero" && s === "flights") || (from === "flights" && s === "hero");
+  if (reduce) { finish(); gsap.set(letters, { yPercent: 0 }); return; }
+  if (wipe) gsap.fromTo(inc, { clipPath: s === "hero" ? "inset(0% 0% 0% 100%)" : "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: .38, ease: "power4.inOut", onComplete: finish });
+  else { finish(); gsap.set("#flash", { opacity: 1 }); gsap.delayedCall(.05, () => gsap.set("#flash", { opacity: 0 })); }
+  if (s === "flights") gsap.fromTo(letters, { yPercent: 102 }, { yPercent: 0, duration: .5, stagger: .045, ease: "power4.out", delay: wipe ? .16 : 0 });
+}
+
+gsap.registerPlugin(ScrollTrigger);
+let p = 0;
+ScrollTrigger.create({ trigger: ".film", start: "top top", end: "bottom bottom", scrub: reduce ? true : .7, onUpdate: (st) => { p = st.progress; } });
+
+function drawChart(u) {
+  const w = cv.width, h = cv.height, gr = cg.createLinearGradient(0, 0, 0, h);
+  gr.addColorStop(0, def.bg[0]); gr.addColorStop(1, def.bg[1]); cg.clearRect(0, 0, w, h); if (mobile) { cg.fillStyle = gr; cg.fillRect(0, 0, w, h); } // desktop: the card is the film base, no seam
+  cg.save(); def.draw(cg, u, w, h, S, window.T); cg.restore();
+  // the data wipe: one continuous trace across the tops of the scene's own hourly columns (same 18 values, same geometry)
+  const M = w * .05, cw = w * .6, n = S.hours.length, bw = cw / n * .7, cy = h * .9;
+  const pts = S.hours.map((d, i) => [M + (i / n) * cw + bw / 2, cy - (d.v / 100) * h * .43 + h * .004]), pl = seg(u, .55, .95);
+  if (pl > 0) { window.T.path(cg, pts, pl, "#fffdf7", Math.max(2, h * .006)); const [hx, hy] = window.T.pointOn(pts, pl); window.T.dot(cg, hx, hy, h * .012, "#fffdf7"); }
+}
+
+const scol = { hero: "#2e5bff", flights: "#d7263d", chart: "#f2c811" };
+function poly(g, pts) { g.beginPath(); g.moveTo(pts[0][0], pts[0][1]); for (const q of pts.slice(1)) g.lineTo(q[0], q[1]); g.closePath(); }
+function drawRoom(x, y, w, h, t, flick, boost, k) {
+  const g = rg; g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const red = state === "chart"; g.fillStyle = red ? "#d7263d" : "#0e0e10"; g.fillRect(0, 0, W, H);
+  const r = x + w, b = y + h;
+  if (!red) { // the screen's colour bounces onto the walls and the floor
+    const c = window.T.hex, sc = scol[state];
+    let gr = g.createLinearGradient(x, 0, 0, 0); gr.addColorStop(0, c(sc, .34)); gr.addColorStop(1, c(sc, 0)); g.fillStyle = gr; poly(g, [[0, 0], [x, y], [x, b], [0, H]]); g.fill();
+    gr = g.createLinearGradient(r, 0, W, 0); gr.addColorStop(0, c(sc, .34)); gr.addColorStop(1, c(sc, 0)); g.fillStyle = gr; poly(g, [[W, 0], [r, y], [r, b], [W, H]]); g.fill();
+    gr = g.createLinearGradient(0, b, 0, H); gr.addColorStop(0, c(sc, .3)); gr.addColorStop(1, c(sc, 0)); g.fillStyle = gr; poly(g, [[0, H], [x, b], [r, b], [W, H]]); g.fill();
+  }
+  // the beam: the cone between the booth port (above, behind the camera) and the screen's top edge, plus its rays
+  const a = (red ? .2 : .15) * flick * boost;
+  let gr = g.createLinearGradient(0, 0, 0, y); gr.addColorStop(0, `rgba(255,244,214,${a * .25})`); gr.addColorStop(1, `rgba(255,244,214,${a})`);
+  g.fillStyle = gr; poly(g, [[W * .04, 0], [W * .96, 0], [r, y], [x, y]]); g.fill();
+  const ax = W * .5, ay = -H * .55;
+  for (let i = 0; i < 9; i++) {
+    const f0 = i / 9 + .02, f1 = f0 + .035 + (i % 3) * .012, s0 = [x + w * f0, y], s1 = [x + w * f1, y];
+    const e = (q) => [ax + (q[0] - ax) * (-ay / (q[1] - ay)), 0]; // where the ray from the port meets the top edge
+    g.fillStyle = `rgba(255,244,214,${a * (.35 + (i % 4) * .15)})`; poly(g, [e(s0), e(s1), s1, s0]); g.fill();
+  }
+  // masking: the hard black border of a real screen
+  g.fillStyle = "#000"; g.fillRect(x - 6, y - 6, w + 12, h + 12);
+}
+function drawFx(x, y, w, h, t, flick, k) {
+  const g = fg; g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+  // dust: crisp square motes, sharp at every size (no glow, no blur)
+  // dust lives only where the light is: inside the cone above the screen (v 0 at the port side, 1 at the screen's top edge)
+  for (const d of dust) {
+    const a = (d.a + Math.sin(t * .21 * d.sp + d.ph) * .03 + 1) % 1, v = (d.z + t * .012 * d.sp) % 1;
+    const px = lerp(W * .04 + a * W * .92, x + a * w, v), py = v * y + Math.sin(t * .5 * d.sp + d.ph) * 3;
+    const s = d.s > 1.5 ? 2 : 1, al = (.2 + .5 * (.5 + .5 * Math.sin(t * 2 * d.sp + d.ph))) * flick * (1 - v * .4);
+    g.fillStyle = `rgba(255,244,214,${al})`; g.fillRect(Math.round(px), Math.round(py), s, s);
+  }
+  // seats: three rows of backs in front of the screen; the push carries the camera over them
+  const rim = state === "chart" ? "#ff8a96" : scol[state], rows = [[.8, 70, "#121216"], [.9, 104, "#050506"]];
+  rows.forEach(([ry, sw, fill], i) => {
+    const sc = 1 + k * .8, yy = Math.round(H * ry + k * H * (.24 + i * .16)), ww = sw * sc, gap = ww * .12, off = i ? (ww + gap) / 2 : 0;
+    if (yy > H) return;
+    for (let xx = -ww + off; xx < W + ww; xx += ww + gap) {
+      g.fillStyle = rim; g.beginPath(); g.roundRect(xx, yy - 2, ww, H, [ww * .34, ww * .34, 0, 0]); g.fill();
+      g.fillStyle = fill; g.beginPath(); g.roundRect(xx, yy, ww, H, [ww * .34, ww * .34, 0, 0]); g.fill();
+    }
+  });
+  // cue marks: the projectionist's dot, top right of the frame, in the scroll just before each cut
+  if ((p > .155 && p < .2) || (p > .315 && p < .36)) { g.fillStyle = "#fffdf7"; g.beginPath(); g.arc(x + w * .93, y + h * .22, Math.max(6, w * .013), 0, 7); g.fill(); g.strokeStyle = "#0e0e10"; g.lineWidth = 2; g.stroke(); }
+}
+
+const pad = (n) => String(n).padStart(2, "0");
+let flick = 1, lastFl = 0, lastTc = "";
+function frame(now) {
+  const t = now / 1000, it = introDone ? 3.3 : intro.t;
+  if (t - lastFl > 1 / 24) { lastFl = t; flick = reduce ? 1 : .88 + Math.random() * .12; }
+  const leading = !introDone && it < 1.46; html.classList.toggle("leader", leading);
+  if (leading) { lead.style.display = "block"; drawLeader(it); } else if (!introDone) lead.style.display = "none";
+  if (!introDone && it >= 1.95) html.classList.add("subin");
+  if (introDone) go(p < .2 ? "hero" : p < .36 ? "flights" : "chart");
+  // camera: the intro holds tight on the title card, then cuts wide to the room; scroll pushes in
+  const k = !introDone && it < 2.9 ? .86 : sm(clamp((p - .16) / .8));
+  let x = 0, y = 0, w = W, h = H;
+  if (!mobile) {
+    const w0 = Math.min(W * .62, H * .6 * 1.85), h0 = w0 / 1.85, w1 = W * .9, h1 = H * .82;
+    w = Math.round(lerp(w0, w1, k)); h = Math.round(lerp(h0, h1, k)); x = Math.round((W - w) / 2); y = Math.round(lerp(H * .12, H * .07, k));
+    const geo = `${x},${y},${w},${h}`; if (geo !== lastGeo) { lastGeo = geo; Object.assign(scr.style, { left: x + "px", top: y + "px", width: w + "px", height: h + "px" }); }
+    const boost = !introDone && it >= 1.46 && it < 1.54 ? 2.2 : 1; // the snap: two overexposed frames, then steady
+    drawRoom(x, y, w, h, t, flick, boost, k); drawFx(x, y, w, h, t, reduce ? 1 : flick, k);
+  }
+  if (state === "chart") { if (chartAt < 0) chartAt = t; const u = reduce ? .95 : Math.min(.95, (t - chartAt) / 3.4); if (Math.abs(u - lastU) > 1e-4) { lastU = u; drawChart(u); } }
+  const secs = introDone ? 3.3 + p * 96 : it, fr = Math.floor(secs * 24), tc = `${pad(Math.floor(fr / 86400))}:${pad(Math.floor(fr / 1440) % 60)}:${pad(Math.floor(fr / 24) % 60)}:${pad(fr % 24)}`;
+  if (tc !== lastTc) { lastTc = tc; tcEl.textContent = tc; scEl.textContent = `Sc ${state === "hero" ? 1 : state === "flights" ? 2 : 3} / 3`; }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+if (reduce || location.hash === "#nointro") tw.progress(1); else tw.play();
+})();
+</script>
+</body>
+</html>

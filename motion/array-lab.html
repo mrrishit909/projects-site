@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE ARRAY, proof</title>
+<!-- ATELIER X concept 5 proof (docs/creative-direction.md section 5). Lab page only: a drone slide past twelve dishes on a
+     salt flat at blue hour, the nearest dish turns to the camera, night falls, and it shows what it hears: the real Florida
+     drawing (motion/scenes/florida-flight-delays.js), painted live. Not the site. -->
+<style>
+@font-face { font-family: "Archivo"; src: url("../vendor/fonts/Archivo-latin.woff2") format("woff2"); font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; }
+@font-face { font-family: "JBM"; src: url("../vendor/fonts/JetBrainsMono-latin.woff2") format("woff2"); font-display: swap; }
+:root { --zen: #2b2d42; --mid: #6b3f5a; --hor: #ff9f1c; --hz: 62%; --dish: #f7f7f2; --trace: #ff2e63; --phos: #39ff14; --night: #0b0b1a; }
+html { background: var(--zen); color: var(--dish); }
+body { margin: 0; font-family: "Archivo", "Arial Black", sans-serif; }
+#sky { position: fixed; inset: 0; background: linear-gradient(to bottom, var(--zen) 0%, var(--mid) calc(var(--hz) * .62), var(--hor) var(--hz), var(--hor) 100%); }
+#stage { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+.film { height: 420vh; position: relative; }
+.hud { position: fixed; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; font: 500 12px/1 "JBM", ui-monospace, monospace; letter-spacing: .1em; text-transform: uppercase; z-index: 3; }
+.hud button { font: inherit; color: inherit; background: none; border: 1.5px solid currentColor; border-radius: 99px; padding: 8px 14px; cursor: pointer; }
+.hud button:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.title { position: fixed; left: 3.2vw; top: 11vh; margin: 0; z-index: 2; max-width: 92vw; font-weight: 800; font-stretch: 125%; font-size: clamp(40px, 6vw, 116px); line-height: .9; max-width: 14.2em; letter-spacing: -.035em; text-transform: uppercase; }
+.title .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .04em; margin-bottom: -.04em; }
+.title .w > span { display: inline-block; }
+.title .hot { color: var(--hor); }
+.sub { position: fixed; left: 3.4vw; top: calc(11vh + clamp(40px, 6vw, 116px) * 2.95); margin: 0; z-index: 2; font: 500 clamp(12px, 1vw, 15px)/1.4 "JBM", ui-monospace, monospace; letter-spacing: .06em; text-transform: uppercase; }
+.sub i { font-style: normal; color: var(--hor); }
+.chap { position: fixed; right: 4vw; top: 13vh; z-index: 2; width: min(31vw, 520px); opacity: 0; font: 500 clamp(13px, 1.05vw, 16px)/1.45 "JBM", ui-monospace, monospace; text-transform: uppercase; letter-spacing: .04em; }
+.chap small { display: block; color: var(--phos); font-size: 11px; letter-spacing: .14em; margin-bottom: 14px; }
+.chap b { display: block; font: 800 clamp(40px, 5vw, 88px)/.88 "Archivo", sans-serif; font-stretch: 125%; letter-spacing: -.035em; margin-bottom: 18px; }
+@media (max-width: 700px) {
+  .title { left: 16px; right: 16px; top: 72px; font-size: 10.6vw; max-width: none; }
+  .sub { left: 16px; right: 16px; top: calc(72px + 10.6vw * .9 * 5 + 18px); max-width: 30ch; }
+  .chap { right: 0; left: 0; top: auto; bottom: 0; width: auto; padding: 20px 16px 26px; background: var(--night); border-top: 3px solid var(--phos); }
+  .chap b { font-size: 13vw; margin-bottom: 10px; }
+}
+</style>
+<script type="importmap">{ "imports": { "three": "../vendor/three/three.module.min.js" } }</script>
+<script src="toolkit.js"></script>
+<script src="scenes/florida-flight-delays.js"></script>
+</head>
+<body>
+<div id="sky" aria-hidden="true"></div>
+<header class="hud"><span>Rishit Mathur / The Array</span><button id="skip" type="button">Skip intro</button></header>
+<h1 class="title" aria-label="I listen to systems and write down what they say."></h1>
+<p class="sub">Twelve dishes. <i>One per project.</i> 219 public repositories.</p>
+<aside class="chap" id="chap1"><small>Dish 01 / receiving / BTS on-time data</small><b>01 Flights</b>635,459 Florida flights. On time slides from 92% at 6 a.m. to 63% at 8 p.m.</aside>
+<canvas id="stage" aria-hidden="true"></canvas>
+<main class="film" aria-label="Scroll film"></main>
+<script src="../vendor/gsap/gsap.min.js"></script>
+<script src="../vendor/gsap/ScrollTrigger.min.js"></script>
+<script type="module">
+import * as THREE from "three";
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const root = document.documentElement.style;
+const titleEl = document.querySelector(".title");
+titleEl.innerHTML = "I listen to systems and write down what they say.".split(" ").map((w) => `<span class="w" aria-hidden="true"><span${w === "systems" ? ' class="hot"' : ""}>${w}</span></span>`).join(" ");
+
+const canvas = document.getElementById("stage");
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setClearColor(0x000000, 0); // the CSS sky shows through
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(38, 1, 0.1, 1200);
+// The vendored subset has no Fog class; the renderer only needs this shape. Its colour is the CSS horizon colour.
+const fog = { isFog: true, color: new THREE.Color("#ff9f1c"), near: 30, far: 260 }; scene.fog = fog;
+
+// Salt crust: a tiling Voronoi of raised ridges (1.5 m polygons), used as colour and bump.
+const salt = (() => {
+  const N = 512, G = 6, c = document.createElement("canvas"); c.width = c.height = N; const g = c.getContext("2d"), im = g.createImageData(N, N);
+  const seeds = []; for (let j = 0; j < G; j++) for (let i = 0; i < G; i++) seeds.push([(i + 0.15 + Math.random() * 0.7) / G, (j + 0.15 + Math.random() * 0.7) / G]);
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+    const u = x / N, v = y / N, ci = Math.floor(u * G), cj = Math.floor(v * G); let d1 = 9, d2 = 9;
+    for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+      const ii = ci + di, jj = cj + dj, s = seeds[((jj + G) % G) * G + ((ii + G) % G)];
+      const sx = s[0] + Math.floor(ii / G), sy = s[1] + Math.floor(jj / G), d = Math.hypot(u - sx, v - sy);
+      if (d < d1) { d2 = d1; d1 = d; } else if (d < d2) d2 = d;
+    }
+    const e = (d2 - d1) * G, ridge = Math.max(0, 1 - e / 0.09), k = (y * N + x) * 4, n = Math.random() * 10;
+    const val = 214 + ridge * 34 + n - (1 - ridge) * d1 * G * 14;
+    im.data[k] = Math.min(255, val + 5); im.data[k + 1] = Math.min(255, val + 1); im.data[k + 2] = Math.min(255, val - 13); im.data[k + 3] = 255;
+  }
+  g.putImageData(im, 0, 0); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1200 / 9, 1200 / 9); t.anisotropy = 8; t.colorSpace = THREE.SRGBColorSpace; return t;
+})();
+const groundMat = new THREE.MeshStandardMaterial({ color: 0xffffff, map: salt, bumpMap: salt, bumpScale: 2.2, roughness: 0.92 });
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(1200, 1200), groundMat); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+
+// Far range: a ridge silhouette past the fog, coloured by hand between horizon and zenith.
+const mtnMat = new THREE.MeshBasicMaterial({ color: 0x8a4b52, fog: false });
+{
+  const n = 360, pos = [], idx = [];
+  for (let i = 0; i <= n; i++) {
+    const a = (i / n) * Math.PI * 2, r = 420, x = Math.sin(a) * r, z = Math.cos(a) * r;
+    const h = 10 + 9 * Math.sin(i * 0.11) + 6 * Math.sin(i * 0.37 + 1) + 3 * Math.sin(i * 1.3) + 14 * Math.max(0, Math.sin(i * 0.045 - 0.6));
+    pos.push(x, -1, z, x, h, z); if (i) idx.push(2 * i - 2, 2 * i - 1, 2 * i, 2 * i - 1, 2 * i + 1, 2 * i);
+  }
+  const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(pos), 3)); geo.setIndex(idx);
+  const m = new THREE.Mesh(geo, mtnMat); m.material.side = THREE.DoubleSide; scene.add(m);
+}
+
+// The dish: an offset-fed paraboloid (feed outside the aperture, so the face reads clean head-on) on an alt-az pedestal.
+// panel seams on the reflector (24 petals, 5 rings) so the surface reads as built, not as a shaded disc
+const panels = (() => { const c = document.createElement("canvas"); c.width = 1024; c.height = 256; const g = c.getContext("2d");
+  g.fillStyle = "#f7f7f2"; g.fillRect(0, 0, 1024, 256); g.fillStyle = "#c9c6bc";
+  for (let i = 0; i < 24; i++) g.fillRect(i * 1024 / 24, 0, 3, 256); for (let j = 1; j < 5; j++) g.fillRect(0, j * 256 / 5, 1024, 3);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t; })();
+const white = new THREE.MeshStandardMaterial({ color: 0xffffff, map: panels, roughness: 0.42, metalness: 0.05, side: THREE.DoubleSide });
+white.shadowSide = THREE.BackSide;
+const steel = new THREE.MeshStandardMaterial({ color: 0xd4d0c6, roughness: 0.6, metalness: 0.2 });
+const dark = new THREE.MeshStandardMaterial({ color: 0x2b2d42, roughness: 0.7 });
+const G = {
+  bowl: new THREE.SphereGeometry(5, 72, 14, 0, Math.PI * 2, Math.PI - 0.6435, 0.6435),
+  rod: new THREE.CylinderGeometry(1, 1, 1, 10), hub: new THREE.CylinderGeometry(0.75, 0.9, 0.9, 24),
+  ped: new THREE.CylinderGeometry(0.42, 0.7, 5.2, 24), pad: new THREE.BoxGeometry(2.6, 0.35, 2.6), cradle: new THREE.BoxGeometry(1.5, 0.9, 0.9),
+  horn: new THREE.CylinderGeometry(0.34, 0.2, 0.9, 20), rim: new THREE.CylinderGeometry(3.02, 3.02, 0.16, 96, 1, true), box: new THREE.BoxGeometry(1, 1, 1),
+};
+const up = new THREE.Vector3(0, 1, 0), tmp = new THREE.Vector3();
+function rod(parent, a, b, r, mat) {
+  const A = new THREE.Vector3(...a), B = new THREE.Vector3(...b), m = new THREE.Mesh(G.rod, mat);
+  m.position.copy(A).add(B).multiplyScalar(0.5); m.quaternion.setFromUnitVectors(up, tmp.copy(B).sub(A).normalize()); m.scale.set(r, A.distanceTo(B), r);
+  m.castShadow = true; parent.add(m); return m;
+}
+const add = (parent, geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; parent.add(m); return m; };
+const rimMat = (c) => new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide, fog: false, toneMapped: false });
+function dish(x, z) {
+  const r = new THREE.Group(); r.position.set(x, 0, z); scene.add(r);
+  add(r, G.pad, steel, 0, 0.17, 0); add(r, G.ped, steel, 0, 2.6, 0);
+  const az = new THREE.Group(); az.position.y = 5.2; r.add(az); add(az, G.cradle, steel, 0, 0.35, 0);
+  const el = new THREE.Group(); el.position.y = 0.6; az.add(el);
+  add(el, G.bowl, white, 0, 5.6, 0); add(el, G.hub, steel, 0, -0.25, 0);
+  const horn = [0, 3.5, 3.75];
+  rod(el, [0, 1.5, 2.95], horn, 0.09, steel); rod(el, [1.7, 1.35, 2.45], horn, 0.06, steel); rod(el, [-1.7, 1.35, 2.45], horn, 0.06, steel);
+  const h = new THREE.Mesh(G.horn, steel); h.position.set(...horn); h.quaternion.setFromUnitVectors(up, tmp.set(0, 0.6, 1).normalize()); h.castShadow = true; el.add(h);
+  const rim = new THREE.Mesh(G.rim, rimMat(0xf7f7f2)); rim.position.y = 1.6; el.add(rim);
+  return { r, az, el, rim, P: new THREE.Vector3(x, 5.8, z) };
+}
+// Twelve dishes along a gently bending arm, cables in a trench between them, a junction box at each foot.
+const D = [];
+for (let i = 0; i < 12; i++) { const s = i * 15; D.push(dish(7 - s * 0.42 - s * s * 0.0016, -4 - s * 0.9)); }
+for (let i = 0; i < 12; i++) {
+  const a = D[i].r.position, jb = add(scene, G.box, dark, a.x - 1.6, 0.35, a.z - 1.6); jb.scale.set(0.9, 0.7, 0.6);
+  if (i < 11) { const b = D[i + 1].r.position, t = add(scene, G.box, dark, (a.x + b.x) / 2 - 1.6, 0.03, (a.z + b.z) / 2 - 1.6); t.scale.set(0.35, 0.06, a.distanceTo(b)); t.rotation.y = Math.atan2(b.x - a.x, b.z - a.z); }
+}
+const D0 = D[0]; D0.rim.material = rimMat(0xff2e63);
+
+// The dish's readout: the project's own drawing, painted live onto a plane set inside the rim.
+const def = window.SCENES["florida-flight-delays"], S = def.init ? def.init() : {};
+const sc = document.createElement("canvas"); sc.width = 2560; sc.height = Math.round(2560 / 1.614); const sg = sc.getContext("2d");
+const tex = new THREE.CanvasTexture(sc); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+const SW = 4.9, SH = SW / 1.614;
+const screen = new THREE.Mesh(new THREE.PlaneGeometry(SW, SH), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false, fog: false, transparent: true }));
+screen.rotation.x = -Math.PI / 2; screen.position.y = 1.72; screen.visible = false; D0.el.add(screen);
+let lastU = -1, lastLit = -1;
+function paint(u, lit) {
+  if (u === lastU && lit === lastLit) return; lastU = u; lastLit = lit;
+  const w = sc.width, h = sc.height, gr = sg.createLinearGradient(0, 0, 0, h);
+  gr.addColorStop(0, def.bg[0]); gr.addColorStop(1, def.bg[1]); sg.globalAlpha = 1; sg.fillStyle = gr; sg.fillRect(0, 0, w, h);
+  sg.save(); sg.globalAlpha = lit; def.draw(sg, u, w, h, S, window.T); sg.restore(); tex.needsUpdate = true;
+}
+
+// Light: a low blue-hour sun raking across the crust from the left horizon; at night a cold moon from high right.
+const hemi = new THREE.HemisphereLight(0x9aa6e0, 0xe9e4d8, 1.35); scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xffb36b, 2.4); sun.castShadow = true; sun.shadow.mapSize.set(4096, 4096); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.03;
+Object.assign(sun.shadow.camera, { left: -70, right: 70, top: 70, bottom: -70, near: 1, far: 400 }); scene.add(sun, sun.target);
+
+// Colour by time of day: [zenith, mid, horizon] for blue hour and for night. The fog takes the horizon colour.
+const C = (h) => new THREE.Color(h);
+const DUSK = [C("#2b2d42"), C("#6b3f5a"), C("#ff9f1c")], NIGHT = [C("#0b0b1a"), C("#241a3d"), C("#ff2e63")];
+const cz = new THREE.Color(), cm = new THREE.Color(), ch = new THREE.Color(), cc = new THREE.Color();
+const sunDusk = C("#ffb36b"), sunNight = C("#b8c4ff"), hemiDusk = C("#9aa6e0"), hemiNight = C("#3a3f8a"), trace = C("#ff2e63"), phos = C("#39ff14");
+
+// Camera keyframes [pos, look], one set per orientation: portrait recentres on the dish and steps back.
+const hdir = new THREE.Vector3(0.62, 0, 1).normalize(); // the side of dish 01 that faces the camera at its chapter
+const aimT = D0.P.clone().addScaledVector(hdir, 60);
+const SC = D0.P.clone().addScaledVector(hdir, 1.72); // screen centre once dish 01 faces the camera
+const right = new THREE.Vector3(hdir.z, 0, -hdir.x);
+const V = (v) => v.toArray();
+const at = (base, d, rx = 0, y = 0) => V(base.clone().addScaledVector(hdir, d).addScaledVector(right, rx).add(new THREE.Vector3(0, y, 0)));
+let K, fov;
+function keys() {
+  const tall = innerWidth / innerHeight < 0.8;
+  fov = tall ? 50 : 38;
+  K = tall ? [
+    [[0, 3.0, 15], [-9, 12, -40]],
+    [at(D0.P, 22, -3, -1.5), at(D0.P, 0, -1, 0)],
+    [at(SC, 16, 0, -1.6), at(SC, 0, 0, -2.8)],
+    [at(SC, 12.2), at(SC, 0)],
+  ] : [
+    [[-10, 4.2, 15], [0, 6.6, -40]],
+    [at(D0.P, 18, -4, -1), at(D0.P, 0, -1.5, 0)],
+    [at(SC, 9.9, 2.1, 0), at(SC, 0, 2.1, 0)],
+    [at(SC, 5.3), at(SC, 0)],
+  ];
+}
+const v = new THREE.Vector3(), L = new THREE.Vector3(), sm = (t) => t * t * (3 - 2 * t), cl = (t) => Math.max(0, Math.min(1, t));
+function pose(x, slide) {
+  const i = Math.min(2, Math.floor(x)), f = sm(x - i);
+  v.fromArray(K[i][0]).lerp(L.fromArray(K[i + 1][0]), f); v.x -= slide * 16; v.y += slide * 1.2; cam.position.copy(v); // intro: the drone slides in from the left
+  v.fromArray(K[i][1]).lerp(L.fromArray(K[i + 1][1]), f); v.x -= slide * 10; cam.lookAt(v);
+}
+function resize() { keys(); renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setSize(innerWidth, innerHeight, false); cam.aspect = innerWidth / innerHeight; cam.fov = fov; cam.updateProjectionMatrix(); }
+addEventListener("resize", resize); resize();
+
+function aim(d, tx, ty, tz) { const dx = tx - d.P.x, dy = ty - d.P.y, dz = tz - d.P.z; return [Math.atan2(dx, dz), Math.atan2(dy, Math.hypot(dx, dz))]; }
+function setAim(d, az, E) { d.az.rotation.y = az; d.el.rotation.x = Math.PI / 2 - E; }
+
+// Intro (3.4 s): drone slide past the array at dish height while all twelve slew together onto one point of sky;
+// the words rise, then dish 01's rim lights red. Skippable at any moment; reduced motion and #nointro land on the end.
+const words = document.querySelectorAll(".title .w > span"), chap = document.getElementById("chap1"), skipBtn = document.getElementById("skip");
+const intro = { slide: 1, slew: 0, rim: 0 };
+const tl = gsap.timeline({ paused: true, onComplete: done });
+tl.to(intro, { slide: 0, duration: 3.4, ease: "power2.inOut" }, 0)
+  .to(intro, { slew: 1, duration: 2.6, ease: "power3.inOut" }, 0.2)
+  .from(words, { yPercent: 105, duration: 0.6, stagger: 0.07, ease: "power4.out" }, 0.45)
+  .from(".sub", { opacity: 0, y: 10, duration: 0.5, ease: "power2.out" }, 1.9)
+  .to(intro, { rim: 1, duration: 0.25, ease: "steps(3)" }, 2.9)
+  .to({}, { duration: 0.01 }, 3.4);
+function done() { intro.slide = 0; intro.slew = 1; intro.rim = 1; skipBtn.hidden = true; ScrollTrigger.refresh(); }
+skipBtn.onclick = () => tl.progress(1);
+addEventListener("keydown", (e) => { if (e.key === "Escape" && tl.isActive()) tl.progress(1); });
+addEventListener("wheel", () => { if (tl.isActive()) tl.progress(1); }, { passive: true, once: true });
+addEventListener("touchstart", () => { if (tl.isActive()) tl.progress(1); }, { passive: true, once: true });
+if (reduce || location.hash === "#nointro") tl.progress(1); else tl.play();
+
+gsap.registerPlugin(ScrollTrigger);
+let p = 0;
+ScrollTrigger.create({ trigger: ".film", start: "top top", end: "bottom bottom", scrub: 0.7, onUpdate: (s) => { p = s.progress; } });
+
+const hz = new THREE.Vector3(), fwd = new THREE.Vector3();
+const t0 = performance.now(); let seenAt = -1, lastSky = "";
+renderer.setAnimationLoop(() => {
+  const t = (performance.now() - t0) / 1000, x = p * 3;
+  // the array: unison slew onto one patch of sky (az swings 70 degrees, elevation 18 to 54), dish 01 then turns to the camera
+  const skyAz = -2.2 + intro.slew * 1.25, skyE = 0.32 + intro.slew * 0.62;
+  D.forEach((d, i) => { const lag = cl(intro.slew * 1.15 - i * 0.012); setAim(d, -2.2 + lag * 1.25 + Math.sin(t * 0.07 + i) * 0.004, 0.32 + lag * 0.62); });
+  const tk = sm(cl(x / 1.25)); if (tk > 0) { const [a, e] = aim(D0, aimT.x, aimT.y, aimT.z); let da = a - skyAz; da = Math.atan2(Math.sin(da), Math.cos(da)); setAim(D0, skyAz + da * tk, skyE + (e - skyE) * tk); }
+  // night falls between the hero and the chapter
+  const n = sm(cl((x - 0.35) / 1.2));
+  cz.copy(DUSK[0]).lerp(NIGHT[0], n); cm.copy(DUSK[1]).lerp(NIGHT[1], n); ch.copy(DUSK[2]).lerp(NIGHT[2], n);
+  fog.color.copy(ch); fog.near = 30 + n * 10; fog.far = 260 - n * 60; mtnMat.color.copy(ch).lerp(cz, 0.55 + n * 0.2);
+  sun.color.copy(sunDusk).lerp(sunNight, n); sun.intensity = 2.6 - n * 1.3;
+  sun.position.set(-90 + n * 150, 14 + n * 70, -60 + n * 40).add(D0.r.position); sun.target.position.copy(D0.r.position).add(new THREE.Vector3(-20, 0, -30));
+  hemi.color.copy(hemiDusk).lerp(hemiNight, n); hemi.intensity = 1.35 - n * 0.6;
+  // dish 01: the rim lights red at the end of the intro, turns phosphor at night; the readout lights once it faces us
+  D0.rim.material.color.copy(cc.setRGB(0.97, 0.97, 0.95).lerp(trace, intro.rim)).lerp(phos, n);
+  const lit = cl((x - 1.05) / 0.45); screen.visible = lit > 0;
+  if (lit > 0 && seenAt < 0) seenAt = t;
+  paint(seenAt < 0 ? 0 : reduce ? 0.95 : Math.min(0.95, (t - seenAt) / 5), Math.round(lit * 50) / 50);
+  pose(x, intro.slide);
+  // the CSS sky shares the fog colour and puts its horizon stop where the camera's horizon actually is
+  cam.getWorldDirection(fwd); fwd.y = 0; fwd.normalize(); hz.copy(cam.position).addScaledVector(fwd, 5000); cam.updateMatrixWorld(); hz.project(cam);
+  const sky = `${cz.getStyle()}|${cm.getStyle()}|${ch.getStyle()}|${((1 - hz.y) * 50).toFixed(1)}`;
+  if (sky !== lastSky) { lastSky = sky; const [a, b, c, d] = sky.split("|"); root.setProperty("--zen", a); root.setProperty("--mid", b); root.setProperty("--hor", c); root.setProperty("--hz", d + "%"); }
+  const ttl = cl(1 - x * 2.4); titleEl.style.opacity = ttl; if (!tl.isActive()) document.querySelector(".sub").style.opacity = ttl;
+  chap.style.opacity = cl((x - 1.45) * 3) * cl((2.6 - x) * 4);
+  renderer.render(scene, cam);
+});
+</script>
+</body>
+</html>
