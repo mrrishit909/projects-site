@@ -10,7 +10,10 @@
 <meta property="og:description" content="A seismic risk and subsurface infrastructure digital twin: a scripted Blender infrastructure shaft and building kit, a synthetic fault rupture with real attenuation and cascading utility failure, and a descent through soil, sediment, rock and bedrock that hands off, without a cut, into the…">
 <meta property="og:image" content="../../../rift/cover.jpg">
 <meta name="theme-color" content="#000000">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
 <link rel="preload" as="font" type="font/woff2" href="../../../vendor/fonts/InterTight-latin.woff2" crossorigin>
+<link rel="preload" as="image" href="../../../rift/cover-800.webp" fetchpriority="high">
 <link rel="stylesheet" href="../../x.css">
 <style>body::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }
 .screen.chroma { box-shadow: -1px 0 0 rgba(255,70,90,.45), 1px 0 0 rgba(70,210,255,.5), 0 0 0 1px rgba(0,0,0,.6), 0 0 60px -12px rgba(47,143,230,.55), 0 30px 120px -40px rgba(47,143,230,.5); }
@@ -26,7 +29,7 @@
 .hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w60); margin-bottom: 7vh; }
 .hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
 .hero .crumb .n { color: var(--white); }
-.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .14em; text-wrap: balance; }
 .hero .lead { max-width: 46ch; margin: 28px 0 0; }
 .hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
 .hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
@@ -41,16 +44,17 @@ a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
 .ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
 .ch .side .h3 { max-width: 12ch; }
 .ch .body { min-width: 0; }
-.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; overflow-wrap: anywhere; }
 .ch .prose > :first-child { margin-top: 0; }
 .prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
 .prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
 .prose em { color: var(--white); font-style: italic; }
-.prose table { margin: 20px 0; }
+.prose table { margin: 20px 0; display: block; max-width: 100%; overflow-x: auto; }
 .prose th { color: var(--w60); }
-pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; max-width: 100%; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
 .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
 .steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li > * { min-width: 0; }
 .steps li:first-child { border-top: 0; padding-top: 0; }
 .steps .k { color: var(--w60); padding-top: 6px; }
 .steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
@@ -86,7 +90,7 @@ pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070
   .chapters { margin-top: 12vh; }
   .ch { padding: 7vh 0; }
   .ch .prose { font-size: 1rem; }
-  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps li { grid-template-columns: minmax(0, 1fr); padding: 24px 0; }
   .steps .k { padding: 0; }
   .note { padding: 20px; }
   .next { margin-top: 14vh; }
@@ -105,7 +109,7 @@ pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070
   <h1 class="h1 grad" id="title">What Does a Six-Second Rupture Look Like From Bedrock to Street?</h1>
   <p class="lead">A seismic risk and subsurface infrastructure digital twin: a scripted Blender infrastructure shaft and building kit, a synthetic fault rupture with real attenuation and cascading utility failure, and a descent through soil, sediment, rock and bedrock that hands off, without a cut, into the operational street map.</p>
   <div class="meta"><div class="hud-row"><span>Kind<b>Blender</b></span><span>Year<b>2026</b></span><span>Tools<b>11</b></span><span>Status<b>Has demo</b></span></div><div class="links"><a class="brk go" href="../../../rift/demo/" data-cursor="Open">[ Open the live twin ]</a><a class="brk" href="https://github.com/mrrishit909/rift" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a></div></div>
-  <div class="frame"><div class="screen chroma"><video muted loop playsinline autoplay preload="auto" poster="../../../rift/cover.jpg" width="1162" height="720" aria-label="What Does a Six-Second Rupture Look Like From Bedrock to Street?: the project&#x27;s animated loop"><source src="../../../rift/loop.webm" type="video/webm"><source src="../../../rift/loop.mp4" type="video/mp4"></video>
+  <div class="frame"><div class="screen chroma"><video muted loop playsinline preload="none" poster="../../../rift/cover-800.webp" width="1162" height="720" aria-label="What Does a Six-Second Rupture Look Like From Bedrock to Street?: the project&#x27;s animated loop"><source src="../../../rift/loop.webm" type="video/webm"><source src="../../../rift/loop.mp4" type="video/mp4"></video>
     <div class="hud t"><span class="live">Running</span><span class="x">rift/loop.webm</span></div>
     <div class="hud b"><span>[183]</span><span class="x">1162 x 720</span></div></div>
     <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
@@ -123,7 +127,7 @@ pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070
   <a href="../aurelia/" data-cursor="Next">
     <p class="top-line mono"><span>Next project</span><span>Case 184 / 236</span></p>
     <h2 class="h2 grad" id="h-next-project">What Does It Look Like to Bring a Star Online?</h2>
-    <div class="screen chroma"><video muted loop playsinline autoplay preload="none" poster="../../../aurelia/cover.jpg" width="1162" height="720" aria-label="What Does It Look Like to Bring a Star Online?: the project&#x27;s animated loop"><source src="../../../aurelia/loop.webm" type="video/webm"><source src="../../../aurelia/loop.mp4" type="video/mp4"></video></div>
+    <div class="screen chroma"><video muted loop playsinline preload="none" poster="../../../aurelia/cover-800.webp" width="1162" height="720" aria-label="What Does It Look Like to Bring a Star Online?: the project&#x27;s animated loop"><source src="../../../aurelia/loop.webm" type="video/webm"><source src="../../../aurelia/loop.mp4" type="video/mp4"></video></div>
     <p class="sub mono"><span>Blender · three.js · motion design</span><span>2026</span></p>
   </a>
 </section>
@@ -139,7 +143,8 @@ const vids = [...document.querySelectorAll("video")];
 if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
 else {
   const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
-  vids.forEach((v) => vo.observe(v));
+  const go = () => vids.forEach((v) => vo.observe(v));
+  if (document.readyState === "complete") go(); else addEventListener("load", go, { once: true });
 }
 let ticking = false;
 function upd() {

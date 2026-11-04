@@ -5,13 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>About, Rishit Mathur</title>
 <meta name="description" content="Rishit Raj Mathur, data analyst in Tampa, FL. Power BI, SQL, Python and dbt, with every number checked a second way.">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../../vendor/fonts/InterTight-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../x.css">
 <style>
 .ab-hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(28px, 5vw, 80px); align-items: end; min-height: calc(100svh - 160px); padding-bottom: 6vh; }
 .ab-hero .brk { margin-bottom: 28px; }
 .ab-hero .h1 { font-size: clamp(2.9rem, 1.2rem + 5.2vw, 6.4rem); }
-.ab-hero .h1 .ln { display: block; }
+.ab-hero .h1 .ln { display: block; padding-bottom: .14em; margin-bottom: -.14em; }
 .ab-hero .lead { max-width: 38ch; margin: 28px 0 0; }
 .ab-shot { position: relative; }
 .ab-shot .cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; font: 400 var(--fs-hud)/1.5 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--w60); }
@@ -95,7 +97,7 @@
       <span>B.S. BAIS<b>USF, 2026</b></span>
       <span>M.S. candidate<b>USF, 2028</b></span>
       <span>Public repositories<b data-count="219">219</b></span>
-      <span>Live demos<b data-count="30">30</b></span>
+      <span>Verified live demos<b data-count="30">30</b></span>
     </div>
   </div>
 
@@ -183,14 +185,14 @@
 <script type="module">
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (reduce) document.querySelectorAll("video").forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
-// HUD counters: count up from 0 once visible; the final value is already in the markup
+// HUD counters: the final value is in the markup and stays there until visible; then it counts up from 80% of it
 if (!reduce) {
   const io = new IntersectionObserver((es) => es.forEach((e) => {
     if (!e.isIntersecting) return; io.unobserve(e.target);
-    const el = e.target, n = +el.dataset.count, t0 = performance.now();
-    (function f(t) { const k = Math.min(1, (t - t0) / 1400); el.textContent = Math.round(n * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0);
+    const el = e.target, n = +el.dataset.count, a = Math.round(n * 0.8), t0 = performance.now();
+    (function f(t) { const k = Math.min(1, (t - t0) / 1400); el.textContent = Math.round(a + (n - a) * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0);
   }));
-  document.querySelectorAll("[data-count]").forEach((el) => { el.textContent = "0"; io.observe(el); });
+  document.querySelectorAll("[data-count]").forEach((el) => io.observe(el));
 }
 </script>
 </body>

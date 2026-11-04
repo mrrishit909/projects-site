@@ -5,7 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Not found, Rishit Mathur</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="./x.css">
+<script>
+// Served for any missing path, so relative links would resolve against that path. Point them at the /x/ root
+// found in the address; with no /x/ in it, keep the page's own folder.
+(function () { var m = location.pathname.match(/^(.*?\/x\/)/), b = document.createElement("base"); b.href = m ? m[1] : "./"; document.head.appendChild(b); document.documentElement.classList.add("js");
+  // written after the base so even the preload scanner never asks for them relative to the missing path
+  document.write('<link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="x.css">'); })();
+</script>
+<noscript><link rel="stylesheet" href="x.css"></noscript>
 <style>
 .lost { min-height: calc(100svh - 140px); display: grid; place-items: center; text-align: center; padding: 4vh 0; }
 .scope { position: relative; width: min(64vw, 290px, 34svh); aspect-ratio: 1; margin: 0 auto clamp(24px, 4.5vh, 44px); }
@@ -32,7 +39,7 @@
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header class="top"><a class="logo" href="./">Rishit Mathur</a><nav aria-label="Primary"><a href="./work/">Work</a><a href="./about/">About</a><a href="./contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
+<header class="top"><a class="logo" href="./">Rishit Mathur</a><nav aria-label="Primary"><a href="work/">Work</a><a href="about/">About</a><a href="contact/">Contact</a><button class="sound keep" type="button" aria-pressed="false"><i><b></b><b></b><b></b></i><span class="lbl">Sound off</span></button></nav></header>
 
 <main id="main" class="page">
   <section class="wrap lost" aria-labelledby="h1">
@@ -42,16 +49,18 @@
       <h1 id="h1" class="h1 grad rv">Lost in the field.</h1>
       <p class="lead rv">Nothing is running at this address. It may have moved when the site was rebuilt.</p>
       <code class="path rv" id="path" hidden></code>
-      <div class="acts rv"><a class="btn" href="./work/">Back to the work</a><a class="btn ghost" href="./">Home</a></div>
+      <div class="acts rv"><a class="btn" href="work/">Back to the work</a><a class="btn ghost" href="./">Home</a></div>
     </div>
   </section>
 </main>
 
-<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="./work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
+<footer class="site-foot"><span>&copy; 2026 Rishit Raj Mathur, Tampa, FL</span><nav aria-label="Footer"><a href="work/">Work</a><a href="https://github.com/mrrishit909" rel="noopener" target="_blank">GitHub</a><a href="https://www.linkedin.com/in/rishitrajmathur" rel="noopener" target="_blank">LinkedIn</a></nav></footer>
 <canvas class="stars" aria-hidden="true"></canvas>
-<script type="module" src="./x.js"></script>
 <script>
+var xs = document.createElement("script"); xs.type = "module"; xs.src = "x.js"; document.body.appendChild(xs);
 const p = document.getElementById("path"); p.textContent = location.pathname; p.hidden = false;
+// with a <base>, "#main" would point at the base page; keep the skip link on this one
+document.querySelector(".skip").href = location.href.split("#")[0] + "#main";
 </script>
 </body>
 </html>

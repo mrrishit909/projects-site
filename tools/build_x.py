@@ -87,19 +87,23 @@ def asset(slug, name, root="../../../"):
     return f"{root}{slug}/{name}"
 
 
-def media(p, root, label, eager=False):
-    """The project's loop in a screen; its cover where it has no loop."""
+def media(p, root, title, eager=False):
+    """The project's loop in a screen; its cover where it has no loop. The hero (eager) shows the small poster
+    first; every loop starts after window load, once in view (CASE_JS), so posters are the LCP and nothing competes with them.
+    A loop's poster is the small cover-800 (the loop replaces it); a still keeps the full cover.jpg."""
     s = p["slug"]
-    poster = asset(s, "cover.jpg", root)
-    if p["webm"] or p["mp4"]:
+    loop = p["webm"] or p["mp4"]
+    label = f"{title}: the project's animated loop" if loop else f"{title}: screenshot of the project"
+    poster = asset(s, p["thumb"] if loop else "cover.jpg", root)
+    if loop:
         srcs = ""
         if p["webm"]:
             srcs += f'<source src="{asset(s, "loop.webm", root)}" type="video/webm">'
         if p["mp4"]:
             srcs += f'<source src="{asset(s, "loop.mp4", root)}" type="video/mp4">'
-        return (f'<video muted loop playsinline autoplay preload="{"auto" if eager else "none"}" poster="{poster}" '
+        return (f'<video muted loop playsinline preload="none" poster="{poster}" '
                 f'width="1162" height="720" aria-label="{esc(label)}">{srcs}</video>')
-    return f'<img src="{poster}" alt="{esc(label)}" width="1400" height="868"{"" if eager else " loading=\"lazy\""} decoding="async">'
+    return f'<img src="{poster}" alt="{esc(label)}" width="1400" height="868"{" fetchpriority=\"high\"" if eager else " loading=\"lazy\""} decoding="async">'
 
 
 def header(root, current):
@@ -117,7 +121,7 @@ def footer(root):
             f'<canvas class="stars" aria-hidden="true"></canvas>\n<script type="module" src="{root}x.js"></script>')
 
 
-def doc(title, desc, image, root, style, body, script=""):
+def doc(title, desc, image, root, style, body, script="", preload=""):
     return nodash(f"""<!doctype html>
 <html lang="en">
 <head>
@@ -130,8 +134,10 @@ def doc(title, desc, image, root, style, body, script=""):
 <meta property="og:description" content="{esc(desc)}">
 {f'<meta property="og:image" content="{image}">' if image else ''}
 <meta name="theme-color" content="#000000">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
 <link rel="preload" as="font" type="font/woff2" href="{root}../vendor/fonts/InterTight-latin.woff2" crossorigin>
-<link rel="stylesheet" href="{root}x.css">
+{preload}<link rel="stylesheet" href="{root}x.css">
 <style>body::before {{ content: ""; position: fixed; left: 0; right: 0; top: 0; height: 84px; z-index: 25; pointer-events: none; background: linear-gradient(#000 35%, rgba(0,0,0,0)); }}{style}</style>
 </head>
 <body>
@@ -157,7 +163,7 @@ CASE_CSS = """
 .hero .crumb { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--w60); margin-bottom: 7vh; }
 .hero .crumb a { color: var(--w60); text-decoration: none; } .hero .crumb a:hover { color: var(--white); }
 .hero .crumb .n { color: var(--white); }
-.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .06em; text-wrap: balance; }
+.hero .h1 { font-size: clamp(2.6rem, 1.2rem + 4.6vw, 6.4rem); max-width: 15ch; padding-bottom: .14em; text-wrap: balance; }
 .hero .lead { max-width: 46ch; margin: 28px 0 0; }
 .hero .meta { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--w10); }
 .hero .links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
@@ -172,16 +178,17 @@ a.brk.go { color: var(--white); border-color: rgba(159,208,255,.5); }
 .ch .side .mono { color: var(--blue-hi); display: block; margin-bottom: 18px; }
 .ch .side .h3 { max-width: 12ch; }
 .ch .body { min-width: 0; }
-.ch .prose { font-size: 1.06rem; line-height: 1.65; }
+.ch .prose { font-size: 1.06rem; line-height: 1.65; overflow-wrap: anywhere; }
 .ch .prose > :first-child { margin-top: 0; }
 .prose img { width: 100%; height: auto; margin: 28px 0; border: 1px solid rgba(159,208,255,.22); background: #07090c; }
 .prose ul { padding-left: 1.1em; } .prose li::marker { color: var(--blue); }
 .prose em { color: var(--white); font-style: italic; }
-.prose table { margin: 20px 0; }
+.prose table { margin: 20px 0; display: block; max-width: 100%; overflow-x: auto; }
 .prose th { color: var(--w60); }
-pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
+pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; max-width: 100%; background: #05070a; border: 1px solid var(--w10); border-left: 1px solid var(--blue); font: 400 12.5px/1.6 var(--mono); color: var(--blue-hi); }
 .steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
 .steps li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px 20px; padding: 30px 0; border-top: 1px solid var(--w06); }
+.steps li > * { min-width: 0; }
 .steps li:first-child { border-top: 0; padding-top: 0; }
 .steps .k { color: var(--w60); padding-top: 6px; }
 .steps h3 { margin: 0 0 12px; font-weight: 300; font-size: 1.35rem; line-height: 1.2; letter-spacing: -.01em; }
@@ -217,7 +224,7 @@ pre { margin: 18px 0 0; padding: 18px 20px; overflow-x: auto; background: #05070
   .chapters { margin-top: 12vh; }
   .ch { padding: 7vh 0; }
   .ch .prose { font-size: 1rem; }
-  .steps li { grid-template-columns: 1fr; padding: 24px 0; }
+  .steps li { grid-template-columns: minmax(0, 1fr); padding: 24px 0; }
   .steps .k { padding: 0; }
   .note { padding: 20px; }
   .next { margin-top: 14vh; }
@@ -233,7 +240,8 @@ const vids = [...document.querySelectorAll("video")];
 if (matchMedia("(prefers-reduced-motion: reduce)").matches) vids.forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
 else {
   const vo = new IntersectionObserver((es) => es.forEach((e) => { const v = e.target; if (e.isIntersecting) { if (v.preload === "none") { v.preload = "auto"; v.load(); } v.play().catch(() => {}); } else v.pause(); }), { rootMargin: "200px 0px" });
-  vids.forEach((v) => vo.observe(v));
+  const go = () => vids.forEach((v) => vo.observe(v));
+  if (document.readyState === "complete") go(); else addEventListener("load", go, { once: true });
 }
 let ticking = false;
 function upd() {
@@ -256,7 +264,6 @@ CHAPTERS = [("problem", "The problem", "What needed answering"), ("built", "What
 def case_page(p, idx, total, nxt):
     s, root = p["slug"], "../../"
     title = plain(p["title"])
-    label = f"{title}: the project's animated loop"
     tech = p.get("tech") or []
     links = [f'<a class="brk" href="{esc(p["repo"])}" target="_blank" rel="noopener" data-cursor="Code">[ Code on GitHub ]</a>'] if p.get("repo") else []
     if p.get("demo"):
@@ -296,7 +303,7 @@ def case_page(p, idx, total, nxt):
   <h1 class="h1 grad" id="title">{esc(title)}</h1>
   <p class="lead">{esc(plain(p["tagline"]))}</p>
   <div class="meta"><div class="hud-row">{hud}</div><div class="links">{"".join(links)}</div></div>
-  <div class="frame"><div class="screen chroma">{media(p, "../../../", label, eager=True)}
+  <div class="frame"><div class="screen chroma">{media(p, "../../../", title, eager=True)}
     <div class="hud t"><span class="{playing}">{"Running" if playing else "Still"}</span><span class="x">{esc(s)}{"/loop.webm" if p["webm"] else "/cover.jpg"}</span></div>
     <div class="hud b"><span>[{n}]</span><span class="x">1162 x 720</span></div></div>
     <i class="corner a"></i><i class="corner b"></i><i class="corner c"></i><i class="corner d"></i></div>
@@ -311,7 +318,7 @@ def case_page(p, idx, total, nxt):
   <a href="../{nxt["slug"]}/" data-cursor="Next">
     <p class="top-line mono"><span>Next project</span><span>Case {nxt["_i"]:03d} / {total}</span></p>
     <h2 class="h2 grad" id="h-next-project">{esc(nt)}</h2>
-    <div class="screen chroma">{media(nxt, "../../../", f"{nt}: the project's animated loop")}</div>
+    <div class="screen chroma">{media(nxt, "../../../", nt)}</div>
     <p class="sub mono"><span>{esc(plain(nxt.get("kind", "")))}</span><span>{year(nxt)}</span></p>
   </a>
 </section>
@@ -319,7 +326,8 @@ def case_page(p, idx, total, nxt):
 <div class="readhud" aria-hidden="true"><span>Case <b>{n}</b></span><span class="c">Chapter <b>00</b> / {k:02d}</span><span>Read <b class="p">00%</b></span></div>
 {footer(root)}"""
     desc = plain(p["tagline"], 300)
-    return doc(f"{title}, Rishit Mathur", desc, f"../../../{s}/cover.jpg" if p["has_cover"] else "", root, CASE_CSS, body, CASE_JS)
+    pre = f'<link rel="preload" as="image" href="../../../{s}/{p["thumb"] if p["webm"] or p["mp4"] else "cover.jpg"}" fetchpriority="high">\n'
+    return doc(f"{title}, Rishit Mathur", desc, f"../../../{s}/cover.jpg" if p["has_cover"] else "", root, CASE_CSS, body, CASE_JS, pre)
 
 
 # ---------------------------------------------------------------------------------------------- work index
@@ -349,7 +357,7 @@ WORK_CSS = """
 .chips button[aria-pressed="true"] sup { color: var(--blue-hi); }
 .status { display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; color: var(--w60); }
 .status b { color: var(--white); font-weight: 400; }
-.nojs .tools-js { display: none; }
+html:not(.js) .tools-js { display: none; }
 #items { list-style: none; margin: 34px 0 0; padding: 0; }
 #items li[hidden] { display: none; }
 #items a { text-decoration: none; display: block; }
@@ -385,7 +393,7 @@ WORK_CSS = """
 .screens .t { font-size: 1.05rem; line-height: 1.25; font-weight: 300; letter-spacing: -.01em; }
 .screens li.big .t { font-size: clamp(1.15rem, .9rem + .7vw, 1.6rem); }
 .screens .y { font: 400 var(--fs-hud)/1 var(--mono); letter-spacing: .12em; color: var(--w60); }
-.screens .k { grid-column: 2 / -1; font: 400 var(--fs-hud)/1.5 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--w60); }
+.screens .k { grid-column: 2 / -1; font: 400 12px/1.5 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--w60); }
 .empty { padding: 14vh 0 10vh; text-align: center; }
 .empty .mono { color: var(--w60); display: block; margin-bottom: 22px; }
 .empty .h2 { max-width: 18ch; margin: 0 auto 32px; text-wrap: balance; }
@@ -415,10 +423,9 @@ const list = $("#items"), items = [...list.children], input = $("#q"), chips = [
 const viewBtns = [...document.querySelectorAll(".views button")], count = $("#count"), shown = $("#shown"), empty = $("#empty");
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches, touch = matchMedia("(hover: none), (pointer: coarse)").matches;
 const top8 = new Set(chips.map((c) => c.dataset.kind).filter((k) => k && k !== "Other"));
-document.querySelector(".tools").classList.remove("nojs");
 const hay = data.map((d) => (d.title + " " + d.kind + " " + d.tech.join(" ")).toLowerCase());
 let state = { q: "", kind: "", view: "screens" };
-function readURL() { const u = new URLSearchParams(location.search); state = { q: u.get("q") || "", kind: u.get("kind") || "", view: u.get("view") === "list" ? "list" : "screens" }; }
+function readURL() { const u = new URLSearchParams(location.search); const k = u.get("kind") || ""; state = { q: u.get("q") || "", kind: chips.some((c) => c.dataset.kind === k) ? k : "", view: u.get("view") === "list" ? "list" : "screens" }; }
 function writeURL(push) {
   const u = new URLSearchParams(); if (state.q) u.set("q", state.q); if (state.kind) u.set("kind", state.kind); if (state.view !== "screens") u.set("view", state.view);
   const s = u.toString(), url = location.pathname + (s ? "?" + s : "");
@@ -487,6 +494,11 @@ readURL(); render();
 </script>"""
 
 
+def img_attrs(i):
+    """Above the fold on Work: the first tiles load eagerly, the first one first."""
+    return ' fetchpriority="high"' if i == 1 else "" if i <= 4 else ' loading="lazy"'
+
+
 def work_page(projects):
     total = len(projects)
     groups = {}
@@ -504,8 +516,9 @@ def work_page(projects):
         kind = plain(p.get("kind", ""))
         loop = ([["loop.webm", "video/webm"]] if p["webm"] else []) + ([["loop.mp4", "video/mp4"]] if p["mp4"] else [])
         data.append({"slug": s, "title": t, "kind": kind, "group": group(p.get("kind")), "tech": [plain(x) for x in p.get("tech") or []], "loop": loop})
-        rows.append(f'<li><a href="../p/{s}/" data-cursor="{"Play" if loop else "Open"}">'
-                    f'<span class="screen"><img src="../../{s}/{p["thumb"]}" alt="" width="800" height="496" loading="lazy" decoding="async"><span class="badge">Running</span></span>'
+        big = (i - 1) % 10 in (0, 7)
+        rows.append(f'<li{" class=\"big\"" if big else ""}><a href="../p/{s}/" data-cursor="{"Play" if loop else "Open"}">'
+                    f'<span class="screen"><img src="../../{s}/{p["thumb"]}" alt="" width="800" height="496"{img_attrs(i)} decoding="async">{'<span class="badge">Running</span>' if loop else ''}</span>'
                     f'<span class="n">{i:03d}</span><span class="t">{esc(t)}</span><span class="y">{year(p)}</span>'
                     f'<span class="k">{esc(kind)}</span></a></li>')
     demos = sum(1 for p in projects if p.get("demo"))
@@ -517,10 +530,10 @@ def work_page(projects):
 <div class="wrap">
 <section class="head" aria-labelledby="work-title">
   <h1 class="h1 grad" id="work-title">Work<sup><span id="count">{total}</span></sup></h1>
-  <p class="lead">Every project, each one running its own loop. Search it, filter it, open the case study.</p>
+  <p class="lead">{loops} of {total} projects running their own loop. Search them, filter them, open the case study.</p>
   <div class="hud-row"><span>Projects<b>{total}</b></span><span>Demo links<b>{demos}</b></span><span>Loops<b>{loops}</b></span><span>Tools<b>{tools}</b></span><span>Showing<b id="shown">{total:03d}</b></span></div>
 </section>
-<div class="tools nojs">
+<div class="tools">
   <div class="tools-js">
     <div class="bar">
       <div class="search"><label class="mono" for="q">[ Search ]</label><input id="q" type="search" placeholder="Title, kind or tool" autocomplete="off" spellcheck="false"></div>
@@ -529,7 +542,7 @@ def work_page(projects):
     <div class="chips" role="group" aria-label="Filter by kind">{"".join(chips)}</div>
   </div>
 </div>
-<ol id="items" class="list" aria-label="Projects">
+<ol id="items" class="screens" aria-label="Projects">
 {chr(10).join(rows)}
 </ol>
 <div class="empty" id="empty" hidden><span class="mono">[ 000 results ]</span><h2 class="h2 grad">No project matches <span id="empty-q">these filters</span>.</h2><button class="btn" type="button" data-clear>Clear filters</button></div>
@@ -538,7 +551,8 @@ def work_page(projects):
 {footer("../")}
 <script type="application/json" id="work-data">{blob}</script>"""
     return doc("Work, Rishit Mathur", f"All {total} projects by Rishit Mathur: analytics, machine learning and data systems, each with a case study.",
-               "", "../", WORK_CSS, body, WORK_JS)
+               "", "../", WORK_CSS, body, WORK_JS,
+               f'<link rel="preload" as="image" href="../../{projects[0]["slug"]}/{projects[0]["thumb"]}" fetchpriority="high">\n')
 
 
 def main():

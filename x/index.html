@@ -86,6 +86,7 @@ body.in .hero p, body.in .hero .facts { opacity: 1; }
 .calm .line::before, .calm .cta::before { display: none; }
 .calm main { background: linear-gradient(180deg, rgba(0,0,0,0) 0, rgba(0,0,0,.85) 100vh); position: relative; z-index: 3; }
 @media (max-width: 760px) {
+  .line small, .hero .facts, .foot, .index, .counter small, .tag { font-size: 12px !important; }
   .hero h1 .ln > span { transform: none; transition: none; }
   .hero { grid-template-columns: 1fr; bottom: calc(var(--pad) + 2px); }
   .hero .facts { gap: 14px; font-size: 10px; }
