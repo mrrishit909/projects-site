@@ -76,7 +76,7 @@ const edgeGeo = new THREE.EdgesGeometry(new THREE.PlaneGeometry(A * 1.035, 1.055
 const glowGeo = new THREE.PlaneGeometry(A * 1.2, 1.2);
 const glowTex = (() => { const c = document.createElement("canvas"); c.width = 256; c.height = 160; const g = c.getContext("2d"), r = g.createRadialGradient(128, 80, 10, 128, 80, 128); r.addColorStop(0, "rgba(70,150,255,.55)"); r.addColorStop(1, "rgba(70,150,255,0)"); g.fillStyle = r; g.fillRect(0, 0, 256, 160); return new THREE.CanvasTexture(c); })();
 const edgeMat = new THREE.LineBasicMaterial({ color: 0x9fd0ff, transparent: true, opacity: 0.5 });
-function screen(slug, { glow = true, edge = true, tint = 0xd2d6dc } = {}) {
+function screen(slug, { glow = true, edge = true, tint = 0xe9edf2 } = {}) {
   const mat = new THREE.MeshBasicMaterial({ map: coverTex(slug), color: tint, toneMapped: false });
   const g = new THREE.Group(), mesh = new THREE.Mesh(panelGeo, mat); g.add(mesh);
   let gl = null, ed = null;
@@ -90,7 +90,7 @@ const WALL = phone ? 16 : 32, COLS = 4;
 const wall = slugs.slice(0, WALL).map((slug, i) => {
   const s = screen(slug); scene.add(s.g);
   const L = Math.floor(i / 16), r = Math.floor((i % 16) / COLS), c = i % COLS;
-  s.stacked = new THREE.Vector3((c - (COLS - 1) / 2) * (A + 0.16) + (phone ? 0 : 1.9), (1.5 - r) * 1.16 + (phone ? 1.4 : 0.25), -L * 0.62);
+  s.stacked = new THREE.Vector3((c - (COLS - 1) / 2) * (A + 0.16) + (phone ? 0 : 1.9), (1.5 - r) * 1.16 + (phone ? 1.4 + Math.max(0, 2.2 - innerHeight / innerWidth) * 4.2 : 0.25), -L * 0.62);
   const a = Math.atan2(s.stacked.y - 0.3, s.stacked.x - (phone ? 0 : 1.9)) + (rand() - 0.5) * 0.6, rad = 7 + rand() * 9;
   s.out = new THREE.Vector3(Math.cos(a) * rad * 1.3, Math.sin(a) * rad * 0.8, -4 - rand() * 14);
   s.spin = (rand() - 0.5) * 0.9; s.bob = rand() * 6.28; s.scale = 1;
@@ -103,7 +103,7 @@ const fieldSlugs = [...new Set([...CH.map((c) => c[0]), ...slugs.slice(WALL)])].
 const field = fieldSlugs.map((slug, i) => {
   const s = screen(slug); scene.add(s.g);
   const ch = CH.find((c) => c[0] === slug);
-  if (ch) { s.pos = new THREE.Vector3(ch[2] * (phone ? 0.9 : 3.9), phone ? -1.35 : 0.2, camZ(ch[1]) - (phone ? 5.4 : 6.4)); s.scale = phone ? 1.55 : 2.25; s.feature = true; }
+  if (ch) { s.pos = new THREE.Vector3(ch[2] * (phone ? 0.9 : 2.25), phone ? -1.35 : -1.15, camZ(ch[1]) - (phone ? 5.4 : 6.4)); s.scale = phone ? 1.55 : 1.85; s.feature = true; }
   else { const a = rand() * Math.PI * 2, rad = 2.8 + rand() * (phone ? 4 : 8); s.pos = new THREE.Vector3(Math.cos(a) * rad * 1.25, Math.sin(a) * rad * 0.62, -78 - (i / fieldSlugs.length) * 104 - rand() * 4); s.scale = 0.8 + rand() * 1.5; }
   s.spin = (rand() - 0.5) * 0.5; s.bob = rand() * 6.28;
   return s;
@@ -186,6 +186,7 @@ function placeTags(on) {
 let lenis = null, prog = 0, vel = 0;
 if (!reduce && window.Lenis) { lenis = new Lenis({ autoRaf: true, lerp: 0.08, wheelMultiplier: 0.85 }); window.__lenis = lenis; lenis.on("scroll", (e) => { prog = e.progress || 0; vel = e.velocity || 0; }); }
 else addEventListener("scroll", () => { prog = scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight); }, { passive: true });
+document.addEventListener("focusin", (e) => { const el = e.target.closest(".line, .cta"); if (!el || reduce) return; const f = (+el.dataset.from + Math.min(1, +el.dataset.to)) / 2, h = document.documentElement.scrollHeight - innerHeight; lenis ? lenis.scrollTo(f * h, { immediate: true }) : scrollTo(0, f * h); });
 addEventListener("keydown", (e) => { if (!lenis) return; const h = document.documentElement.scrollHeight - innerHeight; if (e.key === "End") lenis.scrollTo(h); if (e.key === "Home") lenis.scrollTo(0); });
 
 const lines = [...document.querySelectorAll(".line, .cta")], idx = [...document.querySelectorAll(".index span")];
@@ -238,20 +239,21 @@ function loop() {
   $(".scrollcue").style.opacity = introK >= 1 ? 1 - smooth(0.01, 0.05, p) : 0;
   $(".foot").style.opacity = smooth(0.05, 0.1, p) * (1 - smooth(0.9, 0.93, p));
   $(".index").style.opacity = smooth(0.32, 0.36, p) * (1 - smooth(0.87, 0.9, p));
-  const c = $(".counter"); c.style.opacity = smooth(0.21, 0.23, p) * (1 - smooth(0.3, 0.32, p)); $("#cnt").textContent = String(Math.round(smooth(0.2, 0.32, p) * 236)).padStart(3, "0");
-  lines.forEach((el) => { const a = +el.dataset.from, b = +el.dataset.to, o = smooth(a, a + 0.025, p) * (1 - smooth(b - 0.025, b, p)); el.style.opacity = o.toFixed(3); el.style.visibility = o > 0.01 ? "visible" : "hidden"; el.style.transform = `translate(-50%, calc(-50% + ${((1 - smooth(a, a + 0.035, p)) * 18).toFixed(1)}px))`; if (el.classList.contains("cta")) el.style.pointerEvents = o > 0.5 ? "auto" : "none"; });
+  const c = $(".counter"); c.style.opacity = smooth(0.21, 0.23, p) * (1 - smooth(0.3, 0.32, p)); $("#cnt").textContent = String(tunnel.children.filter((m) => m.isMesh && m.position.z > cam.position.z).length).padStart(3, "0");
+  lines.forEach((el) => { const a = +el.dataset.from, b = +el.dataset.to, o = smooth(a, a + 0.025, p) * (1 - smooth(b - 0.025, b, p)); el.style.opacity = o.toFixed(3); el.style.transform = `translate(-50%, calc(-50% + ${((1 - smooth(a, a + 0.035, p)) * 18).toFixed(1)}px))`; if (el.classList.contains("cta")) el.style.pointerEvents = o > 0.5 ? "auto" : "none"; });
   const m = p < 0.19 ? 0 : p < 0.33 ? 1 : p < 0.46 ? 2 : p < 0.6 ? 3 : p < 0.74 ? 4 : p < 0.9 ? 5 : 6;
   idx.forEach((s, k) => s.classList.toggle("on", k === m - 2));
   if ($("#modt").textContent !== mods[m][1]) { $("#modn").textContent = mods[m][0]; $("#modt").textContent = mods[m][1]; if (window.xSound) window.xSound.blip(660 + m * 70); }
   if (frame++ % 12 === 0 && videoOn) schedule();
   placeTags(p > 0.34 && p < 0.9 && !lines.some((el) => +el.style.opacity > 0.05));
   composer.render();
-  requestAnimationFrame(loop);
+  if (!reduce) requestAnimationFrame(loop);
 }
 await Promise.race([phone ? document.fonts.ready.then(() => new Promise((r) => setTimeout(r, 1200))) : Promise.all(first), new Promise((r) => setTimeout(r, 6000))]);
 $("#pct").textContent = "100%"; $("#pre circle").style.strokeDashoffset = 0;
 let videoOn = false;
-const later = () => { slugs.slice(WALL).forEach((s) => coverTex(s).userData.load()); setTimeout(() => (videoOn = true), 1200); };
+const later = () => { slugs.slice(WALL).forEach((s) => coverTex(s).userData.load()); if (!reduce) setTimeout(() => (videoOn = true), 1200); };
 (window.requestIdleCallback || setTimeout)(later, { timeout: 2500 });
 setTimeout(() => { $("#pre").classList.add("done"); introStart = performance.now(); document.body.classList.add("in"); }, reduce ? 0 : 450);
-requestAnimationFrame(loop);
+if (reduce) { introK = 1; prog = 0; const still = () => loop(); still(); Promise.all(first).then(still); setTimeout(still, 1500); addEventListener("resize", still); }
+else requestAnimationFrame(loop);

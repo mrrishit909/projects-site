@@ -71,6 +71,10 @@ if (nav) {
   nav.appendChild(m);
   const close = () => { top.classList.remove("open"); m.setAttribute("aria-expanded", "false"); m.textContent = "Menu"; };
   m.addEventListener("click", () => { const o = !top.classList.contains("open"); top.classList.toggle("open", o); m.setAttribute("aria-expanded", o); m.textContent = o ? "Close" : "Menu"; if (o) nav.querySelector("a")?.focus(); });
-  addEventListener("keydown", (e) => { if (e.key === "Escape" && top.classList.contains("open")) { close(); m.focus(); } });
+  addEventListener("keydown", (e) => {
+    if (!top.classList.contains("open")) return;
+    if (e.key === "Escape") { close(); m.focus(); return; }
+    if (e.key === "Tab") { const f = [...top.querySelectorAll("a, button")].filter((x) => x.offsetParent); const i = f.indexOf(document.activeElement); if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); } else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); } }
+  });
   nav.addEventListener("click", (e) => { if (e.target.closest("a")) close(); });
 }
