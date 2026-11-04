@@ -1,0 +1,30 @@
+FIXTURE rows per table: {"activity_coverage": 22, "activity_events": 59, "activity_events_raw": 2, "activity_quarantine": 2, "app_owners": 6, "app_users": 8, "applications": 22, "contract_versions": 23, "dataset_sources": 4, "datasets": 4, "exception_events": 3, "feature_entitlements": 1, "license_pools": 24, "owner_review_lines": 71, "owner_reviews": 7, "proposal_lines": 72, "reclaim_proposals": 7, "renewal_windows": 2, "scenario_requests": 5, "seat_assignment_ends": 2, "seat_assignments": 257, "user_directory_snapshots": 254}
+FIXTURE contract_versions: 23 applications: 22
+GOLDEN 2026-06-30T10:00:00Z contract versions 23 assignments 257
+GOLDEN 2027-02-01T00:00:00Z contract versions 23 assignments 257
+SCENARIOS SC-B19 [{"contract_version_id": "CV-1", "delta_vs_current_interval_minor": null, "proposed_seats": 89, "result": "ss_below_floor", "scenario_cost_annual_minor": null, "scenario_cost_interval_minor": null, "scenario_id": "SC-B19-1"}, {"contract_version_id": "CV-1", "delta_vs_current_interval_minor": -20000, "proposed_seats": 90, "result": "ok", "scenario_cost_annual_minor": 2160000, "scenario_cost_interval_minor": 180000, "scenario_id": "SC-B19-2"}]
+CV-1 at 2026-06-30T10:00:00Z {"active": 50, "as_of": "2026-06-30T10:00:00Z", "assigned": 80, "assigned_utilization": "0.8000", "classes": {"ACTIVE": 50, "DIRECTORY_DISABLED": 0, "ENDED": 2, "EXCEPTION": 0, "NOT_IN_DIRECTORY": 0, "RETENTION_HOLD": 0, "SERVICE": 0, "SHARED": 0, "STALE": 30, "UNKNOWN_ACTIVITY": 0}, "contract_version_id": "CV-1", "coverage_state": "COMPLETE", "ended": 2, "immediate_recoverable_interval_minor": 0, "not_yet_started": 1, "observed_active_utilization": "0.6250", "opportunity": {"interval_minor": 30000, "month_minor": 30000, "residual_minor": 0}, "orphan_seats": 0, "purchased": 100, "realized_minor": 0, "recoverable_from": "2026-07-01T00:00:00Z", "recoverable_seats": 0, "released_seats": 15, "unassigned_in_commitment": 20}
+CV CV-1 APP-1 seat monthly purchased 100 floor 90 price 2000
+CV CV-2 APP-F03A seat annual purchased 15 floor 0 price 23999
+CV CV-2B APP-F03B seat annual purchased 15 floor 0 price 24000
+CV CV-3 APP-B02 seat monthly purchased 0 floor 0 price 2000
+CV CV-4 APP-B26 named_user monthly purchased 50 floor 40 price 2000
+CV CV-5 APP-B26 concurrent monthly purchased 50 floor 40 price 2000
+CV CV-6 APP-B27 seat monthly purchased 10 floor 5 price 2000
+CV CV-B01 APP-B01 seat monthly purchased 3 floor 0 price 2000
+CV CV-B04 APP-B04 seat monthly purchased 1 floor 0 price 2000
+CV CV-B05 APP-B05 seat monthly purchased 2 floor 0 price 2000
+CV CV-B06 APP-B06 seat monthly purchased 1 floor 0 price 2000
+CV CV-B10 APP-B10 seat monthly purchased 100 floor 90 price 2000
+CV CV-B14 APP-B14 seat monthly purchased 2 floor 0 price 2000
+CV CV-B15 APP-B15 seat monthly purchased 1 floor 0 price 2000
+CV CV-B16 APP-B16 seat monthly purchased 1 floor 0 price 2000
+CV CV-B17 APP-B17 seat monthly purchased 1 floor 0 price 2000
+CV CV-B20 APP-B20 seat monthly purchased 2 floor 0 price 2000
+CV CV-B21 APP-B21 seat monthly purchased 1 floor 0 price 2000
+CV CV-B22 APP-B22 seat monthly purchased 100 floor 0 price 2000
+CV CV-B23 APP-B23 seat monthly purchased 1 floor 0 price 2000
+CV CV-B23B APP-B23B seat monthly purchased 1 floor 0 price 2000
+CV CV-B25 APP-B25 seat monthly purchased 1 floor 0 price 2000
+CV CV-B29 APP-B29 seat monthly purchased 100 floor 90 price 2000
+committed golden equals the regenerated golden

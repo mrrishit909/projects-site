@@ -1,0 +1,23 @@
+{
+ "SC-B19": [
+  {
+   "contract_version_id": "CV-1",
+   "delta_vs_current_interval_minor": null,
+   "proposed_seats": 89,
+   "result": "ss_below_floor",
+   "scenario_cost_annual_minor": null,
+   "scenario_cost_interval_minor": null,
+   "scenario_id": "SC-B19-1"
+  },
+  {
+   "contract_version_id": "CV-1",
+   "delta_vs_current_interval_minor": -20000,
+   "proposed_seats": 90,
+   "result": "ok",
+   "scenario_cost_annual_minor": 2160000,
+   "scenario_cost_interval_minor": 180000,
+   "scenario_id": "SC-B19-2"
+  }
+ ],
+ "label": "SIMULATED data. Fictional vendors, users and seats. Output of apps/seatsignal/tests/reference_calc.py over apps/seatsignal/data/fixture. No account was changed."
+}

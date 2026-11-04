@@ -1,0 +1,32 @@
+{
+ "conclusion": "success",
+ "label": "SIMULATED data",
+ "manifest": {
+  "cases": 48,
+  "defer": 17,
+  "fail": 0,
+  "partial": 0,
+  "pass": 31
+ },
+ "manifest_api": {
+  "defer": 0,
+  "fail": 0,
+  "ids": 15,
+  "partial": 4,
+  "pass": 11
+ },
+ "manifest_sql": {
+  "defer": 0,
+  "fail": 0,
+  "ids": 44,
+  "partial": 1,
+  "pass": 43
+ },
+ "profile": "full",
+ "pytest": "35 passed",
+ "run_id": 41814760166,
+ "sha": "4f852dbadb33c1cdb2aceee25568e91c7d113508",
+ "slug": "seatsignal",
+ "source": "runner log lines 'manifest:', 'manifest-sql:', 'manifest-api:' and the pytest summary",
+ "workflow": "verify-project"
+}

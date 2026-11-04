@@ -1,0 +1,2499 @@
+{
+ "meta": {
+  "dataset_version": "base",
+  "contract_version": 3,
+  "source": "apps/seatsignal/docs/fixture-plan.md",
+  "note": "Synthetic fixture, fictional vendors, no account was changed. Rows marked workflow (reclaim_proposals, proposal_lines, owner_reviews, owner_review_lines, scenario_requests) are not seeded: the API suite replays them through the transitions (seeds may only be draft, version 1).",
+  "synthetic": true
+ },
+ "app_users": [
+  {
+   "actor_id": "U-ANA",
+   "role": "it_asset_analyst",
+   "active": true
+  },
+  {
+   "actor_id": "U-ANA2",
+   "role": "it_asset_analyst",
+   "active": true
+  },
+  {
+   "actor_id": "U-OWN",
+   "role": "app_owner",
+   "active": true
+  },
+  {
+   "actor_id": "U-OWN2",
+   "role": "app_owner",
+   "active": true
+  },
+  {
+   "actor_id": "U-PRO",
+   "role": "procurement_manager",
+   "active": true
+  },
+  {
+   "actor_id": "U-VIEW",
+   "role": "viewer",
+   "active": true
+  },
+  {
+   "actor_id": "U-LDR",
+   "role": "viewer",
+   "active": true
+  },
+  {
+   "actor_id": "U-OLD",
+   "role": "it_asset_analyst",
+   "active": false
+  }
+ ],
+ "datasets": [
+  {
+   "dataset_id": "DS-1",
+   "loaded_by": "U-LDR"
+  }
+ ],
+ "dataset_sources": [
+  {
+   "dataset_id": "DS-1",
+   "source": "sso"
+  }
+ ],
+ "applications": [
+  {
+   "app_id": "APP-1",
+   "name": "Meridian Notes",
+   "vendor_name": "Quillpoint Software Ltd",
+   "dataset_id": "DS-1"
+  }
+ ],
+ "feature_entitlements": [
+  {
+   "feature_entitlement_id": "FE-1",
+   "app_id": "APP-1",
+   "name": "Premium tier",
+   "dataset_id": "DS-1"
+  }
+ ],
+ "contract_versions": [
+  {
+   "contract_version_id": "CV-1",
+   "app_id": "APP-1",
+   "version_no": 1,
+   "billing_unit": "seat",
+   "purchased_seats": 100,
+   "unit_price_minor": 2000,
+   "currency": "USD",
+   "billing_interval": "monthly",
+   "committed_seat_floor": 90,
+   "noncancelable_until": "2027-01-01T00:00:00Z",
+   "effective_from": "2026-01-01T00:00:00Z",
+   "effective_to": null,
+   "dataset_id": "DS-1"
+  }
+ ],
+ "license_pools": [
+  {
+   "pool_id": "P-1",
+   "contract_version_id": "CV-1",
+   "feature_entitlement_id": null,
+   "pool_seats": 60,
+   "dataset_id": "DS-1"
+  },
+  {
+   "pool_id": "P-2",
+   "contract_version_id": "CV-1",
+   "feature_entitlement_id": "FE-1",
+   "pool_seats": 40,
+   "dataset_id": "DS-1"
+  }
+ ],
+ "renewal_windows": [
+  {
+   "contract_version_id": "CV-1",
+   "window_start": "2026-12-02T00:00:00Z",
+   "window_end": "2027-01-01T00:00:00Z",
+   "dataset_id": "DS-1"
+  }
+ ],
+ "seat_assignments": [
+  {
+   "assignment_id": "A-000",
+   "pool_id": "P-1",
+   "identity_id": "ID-000",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-001",
+   "pool_id": "P-1",
+   "identity_id": "ID-001",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-002",
+   "pool_id": "P-1",
+   "identity_id": "ID-002",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-003",
+   "pool_id": "P-1",
+   "identity_id": "ID-003",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-004",
+   "pool_id": "P-1",
+   "identity_id": "ID-004",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-005",
+   "pool_id": "P-1",
+   "identity_id": "ID-005",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-006",
+   "pool_id": "P-1",
+   "identity_id": "ID-006",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-007",
+   "pool_id": "P-1",
+   "identity_id": "ID-007",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-008",
+   "pool_id": "P-1",
+   "identity_id": "ID-008",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-009",
+   "pool_id": "P-1",
+   "identity_id": "ID-009",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-010",
+   "pool_id": "P-1",
+   "identity_id": "ID-010",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-011",
+   "pool_id": "P-1",
+   "identity_id": "ID-011",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-012",
+   "pool_id": "P-1",
+   "identity_id": "ID-012",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-013",
+   "pool_id": "P-1",
+   "identity_id": "ID-013",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-014",
+   "pool_id": "P-1",
+   "identity_id": "ID-014",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-015",
+   "pool_id": "P-1",
+   "identity_id": "ID-015",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-016",
+   "pool_id": "P-1",
+   "identity_id": "ID-016",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-017",
+   "pool_id": "P-1",
+   "identity_id": "ID-017",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-018",
+   "pool_id": "P-1",
+   "identity_id": "ID-018",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-019",
+   "pool_id": "P-1",
+   "identity_id": "ID-019",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-020",
+   "pool_id": "P-1",
+   "identity_id": "ID-020",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-021",
+   "pool_id": "P-1",
+   "identity_id": "ID-021",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-022",
+   "pool_id": "P-1",
+   "identity_id": "ID-022",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-023",
+   "pool_id": "P-1",
+   "identity_id": "ID-023",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-024",
+   "pool_id": "P-1",
+   "identity_id": "ID-024",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-025",
+   "pool_id": "P-1",
+   "identity_id": "ID-025",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-026",
+   "pool_id": "P-1",
+   "identity_id": "ID-026",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-027",
+   "pool_id": "P-1",
+   "identity_id": "ID-027",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-028",
+   "pool_id": "P-1",
+   "identity_id": "ID-028",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-029",
+   "pool_id": "P-1",
+   "identity_id": "ID-029",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-030",
+   "pool_id": "P-1",
+   "identity_id": "ID-030",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-031",
+   "pool_id": "P-1",
+   "identity_id": "ID-031",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-032",
+   "pool_id": "P-1",
+   "identity_id": "ID-032",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-033",
+   "pool_id": "P-1",
+   "identity_id": "ID-033",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-034",
+   "pool_id": "P-1",
+   "identity_id": "ID-034",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-035",
+   "pool_id": "P-1",
+   "identity_id": "ID-035",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-036",
+   "pool_id": "P-1",
+   "identity_id": "ID-036",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-037",
+   "pool_id": "P-1",
+   "identity_id": "ID-037",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-038",
+   "pool_id": "P-1",
+   "identity_id": "ID-038",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-039",
+   "pool_id": "P-1",
+   "identity_id": "ID-039",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-040",
+   "pool_id": "P-1",
+   "identity_id": "ID-040",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-041",
+   "pool_id": "P-1",
+   "identity_id": "ID-041",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-042",
+   "pool_id": "P-1",
+   "identity_id": "ID-042",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-043",
+   "pool_id": "P-1",
+   "identity_id": "ID-043",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-044",
+   "pool_id": "P-1",
+   "identity_id": "ID-044",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-045",
+   "pool_id": "P-1",
+   "identity_id": "ID-045",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-046",
+   "pool_id": "P-1",
+   "identity_id": "ID-046",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-047",
+   "pool_id": "P-1",
+   "identity_id": "ID-047",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-048",
+   "pool_id": "P-1",
+   "identity_id": "ID-048",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-049",
+   "pool_id": "P-1",
+   "identity_id": "ID-049",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-050",
+   "pool_id": "P-1",
+   "identity_id": "ID-050",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-051",
+   "pool_id": "P-1",
+   "identity_id": "ID-051",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-052",
+   "pool_id": "P-1",
+   "identity_id": "ID-052",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-053",
+   "pool_id": "P-1",
+   "identity_id": "ID-053",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-054",
+   "pool_id": "P-1",
+   "identity_id": "ID-054",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-055",
+   "pool_id": "P-1",
+   "identity_id": "ID-055",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-056",
+   "pool_id": "P-1",
+   "identity_id": "ID-056",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-057",
+   "pool_id": "P-1",
+   "identity_id": "ID-057",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-058",
+   "pool_id": "P-1",
+   "identity_id": "ID-058",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-059",
+   "pool_id": "P-1",
+   "identity_id": "ID-059",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-060",
+   "pool_id": "P-2",
+   "identity_id": "ID-060",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-061",
+   "pool_id": "P-2",
+   "identity_id": "ID-061",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-062",
+   "pool_id": "P-2",
+   "identity_id": "ID-062",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-063",
+   "pool_id": "P-2",
+   "identity_id": "ID-063",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-064",
+   "pool_id": "P-2",
+   "identity_id": "ID-064",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-065",
+   "pool_id": "P-2",
+   "identity_id": "ID-065",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-066",
+   "pool_id": "P-2",
+   "identity_id": "ID-066",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-067",
+   "pool_id": "P-2",
+   "identity_id": "ID-067",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-068",
+   "pool_id": "P-2",
+   "identity_id": "ID-068",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-069",
+   "pool_id": "P-2",
+   "identity_id": "ID-069",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-070",
+   "pool_id": "P-2",
+   "identity_id": "ID-070",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-071",
+   "pool_id": "P-2",
+   "identity_id": "ID-071",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-072",
+   "pool_id": "P-2",
+   "identity_id": "ID-072",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-073",
+   "pool_id": "P-2",
+   "identity_id": "ID-073",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-074",
+   "pool_id": "P-2",
+   "identity_id": "ID-074",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-075",
+   "pool_id": "P-2",
+   "identity_id": "ID-075",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-076",
+   "pool_id": "P-2",
+   "identity_id": "ID-076",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-077",
+   "pool_id": "P-2",
+   "identity_id": "ID-077",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-078",
+   "pool_id": "P-2",
+   "identity_id": "ID-078",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-079",
+   "pool_id": "P-2",
+   "identity_id": "ID-079",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-B03",
+   "pool_id": "P-2",
+   "identity_id": "ID-B03",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": "2026-06-30T10:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-B13",
+   "pool_id": "P-2",
+   "identity_id": "ID-B13",
+   "assigned_at": "2026-02-01T00:00:00Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  },
+  {
+   "assignment_id": "A-B12",
+   "pool_id": "P-2",
+   "identity_id": "ID-B12",
+   "assigned_at": "2026-06-30T10:00:01Z",
+   "ended_at": null,
+   "dataset_id": "DS-1"
+  }
+ ],
+ "seat_assignment_ends": [
+  {
+   "end_id": "E-B13",
+   "assignment_id": "A-B13",
+   "ended_at": "2026-06-10T00:00:00Z",
+   "available_at": "2026-06-20T00:00:00Z",
+   "dataset_id": "DS-1"
+  }
+ ],
+ "user_directory_snapshots": [
+  {
+   "snapshot_id": 1,
+   "identity_id": "ID-000",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 2,
+   "identity_id": "ID-001",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 3,
+   "identity_id": "ID-002",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 4,
+   "identity_id": "ID-003",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 5,
+   "identity_id": "ID-004",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 6,
+   "identity_id": "ID-005",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 7,
+   "identity_id": "ID-006",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 8,
+   "identity_id": "ID-007",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 9,
+   "identity_id": "ID-008",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 10,
+   "identity_id": "ID-009",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 11,
+   "identity_id": "ID-010",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 12,
+   "identity_id": "ID-011",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 13,
+   "identity_id": "ID-012",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 14,
+   "identity_id": "ID-013",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 15,
+   "identity_id": "ID-014",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 16,
+   "identity_id": "ID-015",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 17,
+   "identity_id": "ID-016",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 18,
+   "identity_id": "ID-017",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 19,
+   "identity_id": "ID-018",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 20,
+   "identity_id": "ID-019",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 21,
+   "identity_id": "ID-020",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 22,
+   "identity_id": "ID-021",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 23,
+   "identity_id": "ID-022",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 24,
+   "identity_id": "ID-023",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 25,
+   "identity_id": "ID-024",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 26,
+   "identity_id": "ID-025",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 27,
+   "identity_id": "ID-026",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 28,
+   "identity_id": "ID-027",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 29,
+   "identity_id": "ID-028",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 30,
+   "identity_id": "ID-029",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 31,
+   "identity_id": "ID-030",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 32,
+   "identity_id": "ID-031",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 33,
+   "identity_id": "ID-032",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 34,
+   "identity_id": "ID-033",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 35,
+   "identity_id": "ID-034",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 36,
+   "identity_id": "ID-035",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 37,
+   "identity_id": "ID-036",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 38,
+   "identity_id": "ID-037",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 39,
+   "identity_id": "ID-038",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 40,
+   "identity_id": "ID-039",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 41,
+   "identity_id": "ID-040",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 42,
+   "identity_id": "ID-041",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 43,
+   "identity_id": "ID-042",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 44,
+   "identity_id": "ID-043",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 45,
+   "identity_id": "ID-044",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 46,
+   "identity_id": "ID-045",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 47,
+   "identity_id": "ID-046",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 48,
+   "identity_id": "ID-047",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 49,
+   "identity_id": "ID-048",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 50,
+   "identity_id": "ID-049",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 51,
+   "identity_id": "ID-050",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 52,
+   "identity_id": "ID-051",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 53,
+   "identity_id": "ID-052",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 54,
+   "identity_id": "ID-053",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 55,
+   "identity_id": "ID-054",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 56,
+   "identity_id": "ID-055",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 57,
+   "identity_id": "ID-056",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 58,
+   "identity_id": "ID-057",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 59,
+   "identity_id": "ID-058",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 60,
+   "identity_id": "ID-059",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 61,
+   "identity_id": "ID-060",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 62,
+   "identity_id": "ID-061",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 63,
+   "identity_id": "ID-062",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 64,
+   "identity_id": "ID-063",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 65,
+   "identity_id": "ID-064",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 66,
+   "identity_id": "ID-065",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 67,
+   "identity_id": "ID-066",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 68,
+   "identity_id": "ID-067",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 69,
+   "identity_id": "ID-068",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 70,
+   "identity_id": "ID-069",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 71,
+   "identity_id": "ID-070",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 72,
+   "identity_id": "ID-071",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 73,
+   "identity_id": "ID-072",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 74,
+   "identity_id": "ID-073",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 75,
+   "identity_id": "ID-074",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 76,
+   "identity_id": "ID-075",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 77,
+   "identity_id": "ID-076",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 78,
+   "identity_id": "ID-077",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 79,
+   "identity_id": "ID-078",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 80,
+   "identity_id": "ID-079",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 81,
+   "identity_id": "ID-B03",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 82,
+   "identity_id": "ID-B13",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  },
+  {
+   "snapshot_id": 83,
+   "identity_id": "ID-B12",
+   "captured_at": "2026-02-01T00:00:00Z",
+   "identity_class": "person",
+   "directory_status": "active",
+   "retention_hold": false,
+   "dataset_id": "DS-1"
+  }
+ ],
+ "activity_events": [
+  {
+   "event_id": "E-000",
+   "app_id": "APP-1",
+   "identity_id": "ID-000",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-001",
+   "app_id": "APP-1",
+   "identity_id": "ID-001",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-002",
+   "app_id": "APP-1",
+   "identity_id": "ID-002",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-003",
+   "app_id": "APP-1",
+   "identity_id": "ID-003",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-004",
+   "app_id": "APP-1",
+   "identity_id": "ID-004",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-005",
+   "app_id": "APP-1",
+   "identity_id": "ID-005",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-006",
+   "app_id": "APP-1",
+   "identity_id": "ID-006",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-007",
+   "app_id": "APP-1",
+   "identity_id": "ID-007",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-008",
+   "app_id": "APP-1",
+   "identity_id": "ID-008",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-009",
+   "app_id": "APP-1",
+   "identity_id": "ID-009",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-010",
+   "app_id": "APP-1",
+   "identity_id": "ID-010",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-011",
+   "app_id": "APP-1",
+   "identity_id": "ID-011",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-012",
+   "app_id": "APP-1",
+   "identity_id": "ID-012",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-013",
+   "app_id": "APP-1",
+   "identity_id": "ID-013",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-014",
+   "app_id": "APP-1",
+   "identity_id": "ID-014",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-015",
+   "app_id": "APP-1",
+   "identity_id": "ID-015",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-016",
+   "app_id": "APP-1",
+   "identity_id": "ID-016",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-017",
+   "app_id": "APP-1",
+   "identity_id": "ID-017",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-018",
+   "app_id": "APP-1",
+   "identity_id": "ID-018",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-019",
+   "app_id": "APP-1",
+   "identity_id": "ID-019",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-020",
+   "app_id": "APP-1",
+   "identity_id": "ID-020",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-021",
+   "app_id": "APP-1",
+   "identity_id": "ID-021",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-022",
+   "app_id": "APP-1",
+   "identity_id": "ID-022",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-023",
+   "app_id": "APP-1",
+   "identity_id": "ID-023",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-024",
+   "app_id": "APP-1",
+   "identity_id": "ID-024",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-025",
+   "app_id": "APP-1",
+   "identity_id": "ID-025",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-026",
+   "app_id": "APP-1",
+   "identity_id": "ID-026",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-027",
+   "app_id": "APP-1",
+   "identity_id": "ID-027",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-028",
+   "app_id": "APP-1",
+   "identity_id": "ID-028",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-029",
+   "app_id": "APP-1",
+   "identity_id": "ID-029",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-030",
+   "app_id": "APP-1",
+   "identity_id": "ID-030",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-031",
+   "app_id": "APP-1",
+   "identity_id": "ID-031",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-032",
+   "app_id": "APP-1",
+   "identity_id": "ID-032",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-033",
+   "app_id": "APP-1",
+   "identity_id": "ID-033",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-034",
+   "app_id": "APP-1",
+   "identity_id": "ID-034",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-035",
+   "app_id": "APP-1",
+   "identity_id": "ID-035",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-036",
+   "app_id": "APP-1",
+   "identity_id": "ID-036",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-037",
+   "app_id": "APP-1",
+   "identity_id": "ID-037",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-038",
+   "app_id": "APP-1",
+   "identity_id": "ID-038",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-039",
+   "app_id": "APP-1",
+   "identity_id": "ID-039",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-040",
+   "app_id": "APP-1",
+   "identity_id": "ID-040",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-041",
+   "app_id": "APP-1",
+   "identity_id": "ID-041",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-042",
+   "app_id": "APP-1",
+   "identity_id": "ID-042",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-043",
+   "app_id": "APP-1",
+   "identity_id": "ID-043",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-044",
+   "app_id": "APP-1",
+   "identity_id": "ID-044",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-045",
+   "app_id": "APP-1",
+   "identity_id": "ID-045",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-046",
+   "app_id": "APP-1",
+   "identity_id": "ID-046",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-047",
+   "app_id": "APP-1",
+   "identity_id": "ID-047",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-048",
+   "app_id": "APP-1",
+   "identity_id": "ID-048",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-049",
+   "app_id": "APP-1",
+   "identity_id": "ID-049",
+   "observed_at": "2026-06-27T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-N70",
+   "app_id": "APP-1",
+   "identity_id": "ID-070",
+   "observed_at": "2026-06-20T08:00:00Z",
+   "activity_class": "admin",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-N71",
+   "app_id": "APP-1",
+   "identity_id": "ID-071",
+   "observed_at": "2026-06-21T08:00:00Z",
+   "activity_class": "service",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-N72",
+   "app_id": "APP-1",
+   "identity_id": "ID-072",
+   "observed_at": "2026-05-30T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  },
+  {
+   "event_id": "E-N73",
+   "app_id": "APP-1",
+   "identity_id": "ID-073",
+   "observed_at": "2026-06-30T10:00:00Z",
+   "activity_class": "user",
+   "source": "sso",
+   "dataset_id": "DS-1"
+  }
+ ],
+ "activity_coverage": [
+  {
+   "coverage_id": "COV-1-1",
+   "app_id": "APP-1",
+   "window_start": "2026-05-31T00:00:00Z",
+   "window_end": "2026-06-15T00:00:00Z",
+   "complete": true,
+   "dataset_id": "DS-1"
+  },
+  {
+   "coverage_id": "COV-1-2",
+   "app_id": "APP-1",
+   "window_start": "2026-06-15T00:00:00Z",
+   "window_end": "2026-07-01T00:00:00Z",
+   "complete": true,
+   "dataset_id": "DS-1"
+  }
+ ],
+ "app_owners": [
+  {
+   "app_id": "APP-1",
+   "actor_id": "U-OWN"
+  }
+ ],
+ "reclaim_proposals": [
+  {
+   "proposal_id": "P-1",
+   "app_id": "APP-1",
+   "contract_version_id": "CV-1",
+   "state": "accepted",
+   "created_by": "U-ANA",
+   "accepted_at": "2026-06-30T09:30:00Z"
+  }
+ ],
+ "proposal_lines": [
+  {
+   "line_id": "L-P-1-01",
+   "proposal_id": "P-1",
+   "assignment_id": "A-050",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-02",
+   "proposal_id": "P-1",
+   "assignment_id": "A-051",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-03",
+   "proposal_id": "P-1",
+   "assignment_id": "A-052",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-04",
+   "proposal_id": "P-1",
+   "assignment_id": "A-053",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-05",
+   "proposal_id": "P-1",
+   "assignment_id": "A-054",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-06",
+   "proposal_id": "P-1",
+   "assignment_id": "A-055",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-07",
+   "proposal_id": "P-1",
+   "assignment_id": "A-056",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-08",
+   "proposal_id": "P-1",
+   "assignment_id": "A-057",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-09",
+   "proposal_id": "P-1",
+   "assignment_id": "A-058",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-10",
+   "proposal_id": "P-1",
+   "assignment_id": "A-059",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-11",
+   "proposal_id": "P-1",
+   "assignment_id": "A-060",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-12",
+   "proposal_id": "P-1",
+   "assignment_id": "A-061",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-13",
+   "proposal_id": "P-1",
+   "assignment_id": "A-062",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-14",
+   "proposal_id": "P-1",
+   "assignment_id": "A-063",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-15",
+   "proposal_id": "P-1",
+   "assignment_id": "A-064",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-16",
+   "proposal_id": "P-1",
+   "assignment_id": "A-065",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-17",
+   "proposal_id": "P-1",
+   "assignment_id": "A-066",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-18",
+   "proposal_id": "P-1",
+   "assignment_id": "A-067",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-19",
+   "proposal_id": "P-1",
+   "assignment_id": "A-068",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  },
+  {
+   "line_id": "L-P-1-20",
+   "proposal_id": "P-1",
+   "assignment_id": "A-069",
+   "included": true,
+   "class_at_freeze": "STALE",
+   "coverage_state_at_freeze": "COMPLETE",
+   "contract_version_id": "CV-1",
+   "unit_price_minor": 2000,
+   "billing_interval": "monthly",
+   "exception_id": null,
+   "exception_reason": null,
+   "exception_evidence_ref": null,
+   "frozen_as_of": "2026-06-30T09:00:00Z",
+   "dataset_id": "DS-1"
+  }
+ ],
+ "owner_reviews": [
+  {
+   "review_id": "R-P-1",
+   "proposal_id": "P-1",
+   "reviewer_id": "U-OWN",
+   "submitted_at": "2026-06-30T09:15:00Z",
+   "request_id": "req-review-P-1"
+  }
+ ],
+ "owner_review_lines": [
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-01",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-02",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-03",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-04",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-05",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-06",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-07",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-08",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-09",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-10",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-11",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-12",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-13",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-14",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-15",
+   "decision": "release"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-16",
+   "decision": "keep"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-17",
+   "decision": "keep"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-18",
+   "decision": "keep"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-19",
+   "decision": "defer"
+  },
+  {
+   "review_id": "R-P-1",
+   "line_id": "L-P-1-20",
+   "decision": "defer"
+  }
+ ]
+}

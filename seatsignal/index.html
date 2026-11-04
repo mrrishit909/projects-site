@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" class="case">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="SeatSignal: a synthetic SaaS seat reconciliation and renewal planner. It reconciles purchased, assigned and active seats per contract version, shows missing telemetry as unknown instead of inactive, keeps owner exceptions as append-only evidence, and separates the modeled value of releasing seats from the cash a committed floor and a non-cancelable date allow. Nothing is executed. Nothing here is real data.">
+<title>Which Software Seats Can Safely Be Released at Renewal, and What Is That Worth in Cash? · Rishit Raj Mathur</title>
+<meta name="theme-color" content="#071d16">
+<meta property="og:title" content="Which Software Seats Can Safely Be Released at Renewal, and What Is That Worth in Cash? · Rishit Raj Mathur">
+<meta property="og:description" content="SeatSignal: a synthetic SaaS seat reconciliation and renewal planner. It reconciles purchased, assigned and active seats per contract version, shows missing telemetry as unknown instead of inactive, keeps owner exceptions as append-only evidence, and separates the modeled value of releasing seats from the cash a committed floor and a non-cancelable date allow. Nothing is executed. Nothing here is real data.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://mrrishit909.github.io/projects/seatsignal/">
+<meta property="og:image" content="https://mrrishit909.github.io/projects/seatsignal/cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://mrrishit909.github.io/projects/seatsignal/">
+<link rel="preload" as="font" type="font/woff2" href="../vendor/fonts/Bricolage-display.woff2" crossorigin>
+<link rel="stylesheet" href="../atelier.css?v=3434bd444f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23071d16'/%3E%3Crect x='7' y='7' width='18' height='4' fill='%23c4ab7d'/%3E%3Crect x='9' y='13' width='14' height='6' fill='%23c4ab7d'/%3E%3Crect x='7' y='21' width='18' height='4' fill='%23c4ab7d'/%3E%3C/svg%3E">
+<script type="importmap">{ "imports": { "three": "../vendor/three/three.module.min.js" } }</script>
+<script>document.documentElement.classList.add("js")</script>
+<script src="../case.js?v=2bb0a8a7f7" defer></script>
+</head>
+<body>
+<a class="skip" href="#reading">Skip to the case study</a>
+<header class="top on-green"><a class="brand" href="https://mrrishit909.github.io/projects/">Rishit Raj Mathur</a><nav aria-label="Site"><a href="../#work">Home</a><a href="../all.html">Archive</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="../#contact">Contact</a></nav></header>
+<main>
+<section class="case-hero on-green" aria-labelledby="title">
+  <p class="kicker label"><span>Dashboard · SaaS licensing · Renewal planning · FastAPI · React &middot; 2026-11</span></p>
+  <h1 class="display long" id="title">Which Software Seats Can Safely Be Released at Renewal, and What Is That Worth in Cash?</h1>
+  <p class="tagline lead">SeatSignal: a synthetic SaaS seat reconciliation and renewal planner. It reconciles purchased, assigned and active seats per contract version, shows missing telemetry as unknown instead of inactive, keeps owner exceptions as append-only evidence, and separates the modeled value of releasing seats from the cash a committed floor and a non-cancelable date allow. Nothing is executed. Nothing here is real data.</p>
+  <div class="object" aria-hidden="true"><canvas class="case-canvas" data-config="network" data-words="[&quot;Facts&quot;, &quot;Dimensions&quot;, &quot;Measures&quot;, &quot;Report&quot;]"></canvas><img class="object-still" src="../assets/config-network.webp" alt="" width="900" height="640" fetchpriority="high" decoding="async"><p class="marks label"><span>Facts</span><span>Dimensions</span><span>Measures</span><span>Report</span></p></div>
+  <dl class="summary">
+    <div><dt>Problem</dt><dd>Counting inactive seats overstates a saving. A gap in the usage feed looks like inactivity, service and shared accounts are not unused, and a committed or locked-in contract does not shrink…</dd></div>
+    <div><dt>Role</dt><dd>Built and written by Rishit Raj Mathur; the case study names its sources and checks.</dd></div>
+    <div><dt>Tools</dt><dd>Python 3.12 (stdlib-only independent reference calculator), PostgreSQL (immutable evidence, append-only events, guarded ss_* functions, one grants file), FastAPI, TypeScript + React + Vite (engine in the browser), Playwright, axe-core, Lighthouse, Vitest, GitHub Actions only; no local build, HyperFrames and Remotion renders, openpyxl and LibreOffice workbook</dd></div>
+    <div><dt>Status</dt><dd>Case study with a live demo</dd></div>
+    <div><dt>Evidence</dt><dd><a href="https://mrrishit909.github.io/projects-site/labs/seatsignal/">Open SeatSignal</a> &middot; <a href="https://mrrishit909.github.io/projects-site/labs/seatsignal/evidence/source/" target="_blank" rel="noopener">Code on GitHub</a></dd></div>
+  </dl>
+</section>
+<div class="handoff" aria-hidden="true"></div>
+<div class="reading on-ivory" id="reading">
+<div class="wrap">
+  <figure class="cover"><img src="cover.jpg" srcset="cover-800.webp 800w, cover.jpg 1400w" sizes="(max-width: 900px) calc(100vw - 40px), 1068px" alt="Screenshot of Which Software Seats Can Safely Be Released at Renewal, and What Is That Worth in Cash?" width="1400" height="800" fetchpriority="high" decoding="async"><figcaption>The project as it runs: SeatSignal: a synthetic SaaS seat reconciliation and renewal planner. It reconciles purchased, assigned and active seats per contract version, shows missing telemetry as unknown instead of inactive, keeps owner exceptions as append-only evidence, and separates the modeled value of releasing seats from the cash a committed floor and a non-cancelable date allow. Nothing is executed. Nothing here is real data.</figcaption></figure>
+  
+  <p class="note"><b>Everything is synthetic</b>: 22 invented applications, 23 contract versions and every figure come from a hand-specified fixture checked against an independent Python reference. A modeled opportunity is never realized: no account is removed and no contract is cancelled. The static demo computes in the browser; the API and database run in CI only and are not hosted. The web does not create proposals or reviews, the renewal calendar is empty because the fixture has no renewal window, and the entitlement table is loaded but unused in the cost plan. The last independent audit listed these as open.</p>
+  <section class="s" id="problem"><h2><span class="n">01</span>The problem</h2><div class="body"><p>Counting inactive seats overstates a saving. A gap in the usage feed looks like inactivity, service and shared accounts are not unused, and a committed or locked-in contract does not shrink when one account is deleted today.</p></div></section><section class="s" id="built"><h2><span class="n">02</span>What I built</h2><div class="body"><p>Ten seat classes with a first-match rule, unknown coverage kept as unknown, frozen reclaim proposals with one owner decision per line, append-only exceptions, and a split between opportunity per billing interval and recoverable seats under the committed floor and the non-cancelable date. A renewal quantity scenario checks the floor and costs the plan, and an Excel workbook recomputes the figures from the rows.</p></div></section><section class="s" id="how"><h2><span class="n">03</span>How it was built</h2><div class="body"><ol class="steps"><li><span class="n">01</span><div><h3>The decision and the contract</h3><p>One contract fixes the row sets, the classes, the 30 day window, the money rules and the error codes, and says what is out of scope: deprovisioning, cancellation notices, FX and real identity connectors.</p></div></li><li><span class="n">02</span><div><h3>A hand fixture first</h3><p>100 seats purchased, 80 assigned, 50 active, 15 released: 0.8000, 0.6250 and 30000 per interval, with 0 recoverable until the lock-in ends. 44 case ids assert it and its boundaries, including real two-session races.</p></div></li><li><span class="n">03</span><div><h3>An independent reference</h3><p>A stdlib-only Python calculator derives every class and figure from the rows. PostgreSQL, the browser engine and Excel are each compared with it; the engine matches byte for byte on 23 contract versions at every case instant.</p></div></li><li><span class="n">04</span><div><h3>Opportunity versus cash</h3><p>With a floor of 90 and 15 seats released, 10 seats are recoverable after the lock-in, 20000 per interval from 2027-02-01. An annual price of 23999 gives 359985 = 12 x 29998 + 9.</p></div></li><li><span class="n">05</span><div><h3>Evidence</h3><p>168 browser tests pass, axe finds no violation in 21 route and state files, Lighthouse accessibility is 100 on the landing page and the workspace. The workbook recalculates 6,656 formula cells with 1,273 of 1,273 reconciliation differences exactly 0.</p></div></li></ol></div></section><section class="s" id="results"><h2><span class="n">04</span>Results</h2><div class="body"><p><b>Measured on the synthetic release candidate</b> (commit 4f852db): manifest 48 cases with 0 failures (SQL 43 pass and 1 partial of 44, API 11 pass and 4 partial of 15), 35 API tests, 66 unit tests, 184 browser tests. These describe generated data and this code; they say nothing about any real license estate or saving.</p></div></section><section class="s" id="next-steps"><h2><span class="n">05</span>What I&#x27;d do next</h2><div class="body"><ul><li>Publish the static demo and re-read the mobile compositions.</li><li>Renewal windows in the web fixture, and the entitlement side of the cost plan.</li><li>Independent review of the motion recording and frame pacing.</li></ul></div></section>
+  <nav class="neighbours" aria-label="Neighbouring case studies">
+    <a class="prev-link" href="../commitlens/"><span class="label">Previous</span><span class="t">Which Notice Deadline and Review Date Apply Today, and From Which Contract Version?</span></a>
+    <a class="next-link" href="../sec-10k-rag/"><span class="label">Next</span><span class="t">Ask the 10-K</span><video muted loop playsinline preload="none" aria-hidden="true" poster="../sec-10k-rag/cover-800.webp"><source src="../sec-10k-rag/loop.webm" type="video/webm"><source src="../sec-10k-rag/loop.mp4" type="video/mp4"></video></a>
+  </nav>
+</div>
+<footer class="foot case-foot"><span>&copy; 2026 Rishit Raj Mathur</span><nav aria-label="Footer"><a href="../#work">Home</a><a href="../all.html">Archive</a><a href="https://mrrishit909.github.io/resume.pdf">Résumé</a><a href="../#contact">Contact</a><a href="https://github.com/mrrishit909" target="_blank" rel="noopener">GitHub</a></nav></footer>
+</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,7 @@
+{
+ "cutoffs": [
+  "2026-06-30T10:00:00Z",
+  "2027-02-01T00:00:00Z"
+ ],
+ "label": "SIMULATED data. Fictional vendors, users and seats. Output of apps/seatsignal/tests/reference_calc.py over apps/seatsignal/data/fixture. No account was changed."
+}
