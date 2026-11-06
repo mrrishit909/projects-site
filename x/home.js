@@ -58,39 +58,32 @@ const pmrem = new THREE.PMREMGenerator(renderer);
 let envMap = null; const metals = [];
 function envFrom(t) { const e = t.clone(); e.mapping = THREE.EquirectangularReflectionMapping; e.needsUpdate = true; envMap = pmrem.fromEquirectangular(e).texture; metals.forEach((m) => { m.envMap = envMap; m.needsUpdate = true; }); }
 
-scene.add(new THREE.AmbientLight(0x6f88b0, 0.5));
-const moon = new THREE.DirectionalLight(0xcfe0ff, 2.6); moon.position.set(-7, 10, 9); scene.add(moon);
+scene.add(new THREE.AmbientLight(0x7a94cc, 0.7));
+const moon = new THREE.DirectionalLight(0xdfeaff, 3.2); moon.position.set(-9, 11, 7); scene.add(moon);
 moon.castShadow = true; moon.shadow.mapSize.set(2048, 2048); moon.shadow.bias = -0.0004; moon.shadow.normalBias = 0.03; moon.shadow.radius = 4;
 Object.assign(moon.shadow.camera, { left: -9, right: 9, top: 9, bottom: -9, near: 1, far: 40 });
 const rim = new THREE.DirectionalLight(0xff9a5c, 1.1); rim.position.set(8, 3, -6); scene.add(rim); // warm back light for colour contrast
 
 // ---------- 1. the server cube ----------
 const rackTex = canvasTex(256, 256, (g, w, h) => {
-  const bg = g.createLinearGradient(0, 0, w, h); bg.addColorStop(0, "#4f86f0"); bg.addColorStop(1, "#2349b8");
-  g.fillStyle = bg; g.fillRect(0, 0, w, h);                       // saturated cobalt body
-  g.strokeStyle = "#b9d4ff"; g.lineWidth = 8; g.strokeRect(4, 4, w - 8, h - 8); // bright bevel edge
-  g.fillStyle = "#16307a"; g.fillRect(18, 18, w - 36, h - 36);
-  for (let i = 0; i < 4; i++) {
-    const y = 28 + i * 52, sl = g.createLinearGradient(0, y, 0, y + 40); sl.addColorStop(0, "#0d1b4a"); sl.addColorStop(1, "#1b3a8f");
-    g.fillStyle = sl; g.fillRect(28, y, w - 56, 40);
-    g.fillStyle = "#7fe3ff"; g.fillRect(28, y, w - 56, 3);
-    g.fillStyle = "#3f79ff"; g.fillRect(28, y + 37, w - 56, 2);
-    for (let k = 0; k < 6; k++) { g.fillStyle = k % 3 ? "#5cf2c2" : "#ffb84d"; g.fillRect(40 + k * 11, y + 16, 5, 5); } // status LEDs
-  }
-  g.fillStyle = "#9fefff"; g.fillRect(12, 22, 4, h - 44); g.fillRect(w - 16, 22, 4, h - 44);
+  const bg = g.createLinearGradient(0, 0, 0, h); bg.addColorStop(0, "#3d74ee"); bg.addColorStop(1, "#2650c8");
+  g.fillStyle = bg; g.fillRect(0, 0, w, h);                         // one continuous cobalt skin
+  g.fillStyle = "#1b3b9a"; g.fillRect(0, 0, w, 3); g.fillRect(0, h - 3, w, 3); g.fillRect(0, 0, 3, h); g.fillRect(w - 3, 0, 3, h); // hairline seams only
+  for (let i = 0; i < 9; i++) { const y = 46 + i * 18; g.fillStyle = "rgba(10,24,80,.55)"; g.fillRect(40, y, w - 80, 7); g.fillStyle = "rgba(170,210,255,.35)"; g.fillRect(40, y + 7, w - 80, 1.5); } // vents
+  g.fillStyle = "#8feaff"; g.fillRect(40, 24, 64, 4);               // one light strip
+  for (let k = 0; k < 4; k++) { g.fillStyle = k % 2 ? "#5cf2c2" : "#ffb84d"; g.fillRect(w - 80 + k * 12, 22, 6, 6); }
 });
 const rackGlow = canvasTex(256, 256, (g, w, h) => {
   g.fillStyle = "#000"; g.fillRect(0, 0, w, h);
-  for (let i = 0; i < 4; i++) { g.fillStyle = "#9fd4ff"; g.fillRect(28, 30 + i * 52, w - 56, 3); }
-  g.fillStyle = "#6fd0ff"; g.fillRect(14, 22, 4, h - 44); g.fillRect(w - 18, 22, 4, h - 44);
+  g.fillStyle = "#8feaff"; g.fillRect(40, 24, 64, 4);
 });
 const cube = new THREE.Group(); scene.add(cube);
-const rackMat = new THREE.MeshStandardMaterial({ map: rackTex, emissiveMap: rackGlow, emissive: 0x7fb8ff, emissiveIntensity: 0.9, metalness: 0.45, roughness: 0.32, envMapIntensity: 1.6, color: 0xffffff });
+const rackMat = new THREE.MeshStandardMaterial({ map: rackTex, emissiveMap: rackGlow, emissive: 0x7fb8ff, emissiveIntensity: 1.2, metalness: 0.15, roughness: 0.42, envMapIntensity: 0.9, color: 0xffffff });
 metals.push(rackMat);
 const modGeo = new THREE.BoxGeometry(1, 1, 1);
 for (let x = -1; x <= 1; x++) for (let y = -1; y <= 1; y++) for (let z = -1; z <= 1; z++) {
   if (!x && !y && (!z || z === 1)) continue;
-  const m = new THREE.Mesh(modGeo, rackMat); m.position.set(x * 1.03, y * 1.03, z * 1.03); m.userData.home = m.position.clone(); m.castShadow = m.receiveShadow = true; cube.add(m);
+  const m = new THREE.Mesh(modGeo, rackMat); m.position.set(x * 1.0, y * 1.0, z * 1.0); m.userData.home = m.position.clone(); m.castShadow = m.receiveShadow = true; cube.add(m);
 }
 const coreMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(3, 3.3, 3.6), toneMapped: false });
 const core = new THREE.Mesh(modGeo, coreMat); core.scale.setScalar(0.9); cube.add(core);
