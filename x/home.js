@@ -24,7 +24,8 @@ let renderer;
 try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" }); }
 catch (e) { document.documentElement.classList.add("nogl"); throw e; }
 renderer.setClearColor(0x000000, 1); renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.15;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 const scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x000000, 0.02);
 const cam = new THREE.PerspectiveCamera(phone ? 60 : 40, 1, 0.1, 600); scene.add(cam);
 const composer = new EffectComposer(renderer);
@@ -58,20 +59,25 @@ let envMap = null; const metals = [];
 function envFrom(t) { const e = t.clone(); e.mapping = THREE.EquirectangularReflectionMapping; e.needsUpdate = true; envMap = pmrem.fromEquirectangular(e).texture; metals.forEach((m) => { m.envMap = envMap; m.needsUpdate = true; }); }
 
 scene.add(new THREE.AmbientLight(0x6f88b0, 0.5));
-const moon = new THREE.DirectionalLight(0xbcd2ff, 1.4); moon.position.set(-6, 10, 8); scene.add(moon);
+const moon = new THREE.DirectionalLight(0xcfe0ff, 2.6); moon.position.set(-7, 10, 9); scene.add(moon);
+moon.castShadow = true; moon.shadow.mapSize.set(2048, 2048); moon.shadow.bias = -0.0004; moon.shadow.normalBias = 0.03; moon.shadow.radius = 4;
+Object.assign(moon.shadow.camera, { left: -9, right: 9, top: 9, bottom: -9, near: 1, far: 40 });
+const rim = new THREE.DirectionalLight(0xff9a5c, 1.1); rim.position.set(8, 3, -6); scene.add(rim); // warm back light for colour contrast
 
 // ---------- 1. the server cube ----------
 const rackTex = canvasTex(256, 256, (g, w, h) => {
-  g.fillStyle = "#59636f"; g.fillRect(0, 0, w, h);
-  g.strokeStyle = "#a9b4c2"; g.lineWidth = 10; g.strokeRect(5, 5, w - 10, h - 10);
-  g.fillStyle = "#3a434f"; g.fillRect(18, 18, w - 36, h - 36);
+  const bg = g.createLinearGradient(0, 0, w, h); bg.addColorStop(0, "#4f86f0"); bg.addColorStop(1, "#2349b8");
+  g.fillStyle = bg; g.fillRect(0, 0, w, h);                       // saturated cobalt body
+  g.strokeStyle = "#b9d4ff"; g.lineWidth = 8; g.strokeRect(4, 4, w - 8, h - 8); // bright bevel edge
+  g.fillStyle = "#16307a"; g.fillRect(18, 18, w - 36, h - 36);
   for (let i = 0; i < 4; i++) {
-    const y = 30 + i * 52;
-    g.fillStyle = "#1a2029"; g.fillRect(28, y, w - 56, 40);
-    g.fillStyle = "#cfe8ff"; g.fillRect(28, y, w - 56, 3);
-    g.fillStyle = "#3d5f8c"; g.fillRect(28, y + 37, w - 56, 2);
+    const y = 28 + i * 52, sl = g.createLinearGradient(0, y, 0, y + 40); sl.addColorStop(0, "#0d1b4a"); sl.addColorStop(1, "#1b3a8f");
+    g.fillStyle = sl; g.fillRect(28, y, w - 56, 40);
+    g.fillStyle = "#7fe3ff"; g.fillRect(28, y, w - 56, 3);
+    g.fillStyle = "#3f79ff"; g.fillRect(28, y + 37, w - 56, 2);
+    for (let k = 0; k < 6; k++) { g.fillStyle = k % 3 ? "#5cf2c2" : "#ffb84d"; g.fillRect(40 + k * 11, y + 16, 5, 5); } // status LEDs
   }
-  g.fillStyle = "#8fe1ff"; g.fillRect(14, 22, 4, h - 44); g.fillRect(w - 18, 22, 4, h - 44);
+  g.fillStyle = "#9fefff"; g.fillRect(12, 22, 4, h - 44); g.fillRect(w - 16, 22, 4, h - 44);
 });
 const rackGlow = canvasTex(256, 256, (g, w, h) => {
   g.fillStyle = "#000"; g.fillRect(0, 0, w, h);
@@ -79,12 +85,12 @@ const rackGlow = canvasTex(256, 256, (g, w, h) => {
   g.fillStyle = "#6fd0ff"; g.fillRect(14, 22, 4, h - 44); g.fillRect(w - 18, 22, 4, h - 44);
 });
 const cube = new THREE.Group(); scene.add(cube);
-const rackMat = new THREE.MeshStandardMaterial({ map: rackTex, emissiveMap: rackGlow, emissive: 0x7fb8ff, emissiveIntensity: 0.7, metalness: 0.8, roughness: 0.4, color: 0xd8e0ea });
+const rackMat = new THREE.MeshStandardMaterial({ map: rackTex, emissiveMap: rackGlow, emissive: 0x7fb8ff, emissiveIntensity: 0.9, metalness: 0.45, roughness: 0.32, envMapIntensity: 1.6, color: 0xffffff });
 metals.push(rackMat);
 const modGeo = new THREE.BoxGeometry(1, 1, 1);
 for (let x = -1; x <= 1; x++) for (let y = -1; y <= 1; y++) for (let z = -1; z <= 1; z++) {
   if (!x && !y && (!z || z === 1)) continue;
-  const m = new THREE.Mesh(modGeo, rackMat); m.position.set(x * 1.24, y * 1.24, z * 1.24); m.userData.home = m.position.clone(); cube.add(m);
+  const m = new THREE.Mesh(modGeo, rackMat); m.position.set(x * 1.03, y * 1.03, z * 1.03); m.userData.home = m.position.clone(); m.castShadow = m.receiveShadow = true; cube.add(m);
 }
 const coreMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(3, 3.3, 3.6), toneMapped: false });
 const core = new THREE.Mesh(modGeo, coreMat); core.scale.setScalar(0.9); cube.add(core);
@@ -96,10 +102,10 @@ const beamLow = beam.clone(); beamLow.rotation.z = Math.PI; beamLow.position.set
 cube.position.y = 0.55;
 
 {
-  const rock = new THREE.MeshStandardMaterial({ color: 0xa3b0c4, roughness: 0.8, metalness: 0.15, flatShading: true });
+  const rock = new THREE.MeshStandardMaterial({ color: 0x46547a, roughness: 0.85, metalness: 0.15, flatShading: true });
   const crag = () => { const g = new THREE.IcosahedronGeometry(1, 2), p = g.attributes.position; for (let i = 0; i < p.count; i++) { const k = 0.72 + rand() * 0.5; p.setXYZ(i, p.getX(i) * k, p.getY(i) * k * (p.getY(i) > 0 ? 1.4 : 1), p.getZ(i) * k); } g.computeVertexNormals(); return g; };
   [[-8.5, -5, -3, 5, 3.6, 3.5], [-11.5, -4.4, -9, 6, 5, 4], [8.8, -5.2, -2, 5, 3.4, 3.5], [12, -4, -9, 6, 5.5, 4], [0, -7.4, -5, 8, 2.2, 3]].forEach(([x, y, z, sx, sy, sz], i) => {
-    const m = new THREE.Mesh(crag(), rock); metals.push(rock); m.position.set(phone ? x * 0.6 : x, y, z); m.scale.set(sx, sy, sz); m.rotation.set(i * 0.7, i * 1.3, i * 0.4); cube.add(m);
+    const m = new THREE.Mesh(crag(), rock); m.receiveShadow = true; metals.push(rock); m.position.set(phone ? x * 0.6 : x, y, z); m.scale.set(sx, sy, sz); m.rotation.set(i * 0.7, i * 1.3, i * 0.4); cube.add(m);
   });
 }
 
